@@ -220,26 +220,26 @@ ul {
 
 /* Hero */
 .hero {
-  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(1.75rem, 5vw, 3rem);
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: var(--space-lg);
 }
 
-.hero .avatar {
-  width: clamp(200px, 24vw, 260px);
-  height: clamp(200px, 24vw, 260px);
+.hero-avatar {
+  width: clamp(180px, 22vw, 220px);
+  height: clamp(180px, 22vw, 220px);
   border-radius: 50%;
-  border: 4px solid rgba(255, 255, 255, 0.9);
-  background: var(--color-surface);
-  padding: var(--space-2xs);
   object-fit: cover;
-  justify-self: center;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+  border: 4px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
 }
 
 .hero-copy {
   display: grid;
   gap: var(--space-md);
+  justify-items: center;
+  max-width: 60ch;
 }
 
 .hero-kicker {
@@ -259,6 +259,7 @@ ul {
 .hero-points {
   display: grid;
   gap: var(--space-2xs);
+  justify-items: center;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -333,7 +334,8 @@ ul {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
-  margin-top: var(--space-sm);
+  margin: var(--space-sm) 0 0;
+  justify-content: center;
 }
 
 .cta {

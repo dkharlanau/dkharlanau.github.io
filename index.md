@@ -6,99 +6,95 @@ permalink: /
 ---
 
 <section class="hero content-box">
+  <img src="/assets/img/DzmitryiKharlanau.png" alt="Portrait of Dzmitryi Kharlanau" class="hero-avatar" />
   <div class="hero-copy">
-    <p class="hero-kicker">EPAM Systems · Systems Analysis · SAP · Integration</p>
-    <h1>Fix SAP O2C bottlenecks without pausing the business.</h1>
-    <p class="hero-summary">I lead SAP S/4HANA programmes at EPAM Systems. This site shares the operating philosophy behind the run, integration, and AI work I deliver—no direct offers, just the playbook.</p>
-    <ul class="hero-points">
-      <li>Restore reliable run operations in 4–6 weeks</li>
-      <li>Design clean-core integrations teams can own</li>
-      <li>Launch guarded AI workflows on SAP data</li>
-    </ul>
+    <p class="hero-kicker">EPAM Systems · Systems Analyst · SAP O2C</p>
+    <h1>Stabilise SAP Order-to-Cash without stopping the business.</h1>
+    <p class="hero-summary">When O2C issues stall revenue, I parachute in to calm the run, fix integrations, and keep finance out of spreadsheet firefights. The goal: measurable recovery that your teams can own once I leave.</p>
     <div class="hero-actions">
-      <a class="cta" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener">Book a LinkedIn intro</a>
-      <a class="cta secondary" href="/cv/">Browse CV</a>
+      <a class="cta" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener">Start a LinkedIn conversation</a>
+      <a class="cta secondary" href="/cv/">Review detailed experience</a>
     </div>
+    <ul class="hero-points">
+      <li>Rapid triage of run, billing, and credit bottlenecks</li>
+      <li>Transparent integration maps with clear ownership</li>
+      <li>AI and automation that ship with controls and handover</li>
+    </ul>
   </div>
-  <img src="/assets/img/DzmitryiKharlanau.png" alt="Portrait of Dzmitryi Kharlanau" class="avatar" />
 </section>
 
-<section class="content-box" aria-label="How I plug in">
+<section class="content-box" aria-label="How I help">
   <header class="section-header">
-    <p class="section-kicker">What I do</p>
-    <h2>Hands-on help for SAP O2C when it stops behaving.</h2>
-    <p class="section-blurb">No vendor lock-in or slideware. I join your team, audit what’s really happening, and leave you with guardrails you own.</p>
+    <p class="section-kicker">Where I add value</p>
+    <h2>Hands-on support for programmes that can’t slow down.</h2>
+    <p class="section-blurb">Inside the run, shoulder to shoulder with your leads, eliminating the noise that keeps SAP O2C from doing its job.</p>
   </header>
   <div class="value-grid">
     <article class="value-card">
       <h3>O2C reality check</h3>
-      <p>Audit processes end-to-end, surface run debt, and prioritise the fixes that unblock cash flow first.</p>
+      <p>Audit the order-to-cash path, quantify the revenue risk, and agree on the smallest set of fixes with the biggest payoff.</p>
     </article>
     <article class="value-card">
-      <h3>Troubleshoot &amp; steady</h3>
-      <p>Jump into AMS lead roles to close incidents, rebuild playbooks, and keep operations stable while change continues.</p>
+      <h3>AMS &amp; troubleshooting lead</h3>
+      <p>Take point on escalations, steady the queues, and rebuild playbooks so production feels boring again.</p>
     </article>
     <article class="value-card">
       <h3>Integration without knots</h3>
-      <p>Map and simplify APIs, events, and file flows so teams understand ownership and nothing breaks across projects.</p>
+      <p>Map APIs, events, and files, remove brittle hops, and leave behind clean documentation and ownership.</p>
     </article>
     <article class="value-card">
       <h3>AI that earns trust</h3>
-      <p>Embed AI/ML in business flows with measurable safeguards—no hype, just monitored pilots that stick.</p>
-    </article>
-    <article class="value-card">
-      <h3>Consulting with handover</h3>
-      <p>Coach product, run, and integration squads so improvements stay when I leave. The team keeps the keys.</p>
+      <p>Launch automation and ML pilots with clear guardrails, tracked value, and handover that sticks.</p>
     </article>
   </div>
 </section>
 
 <section class="content-box" aria-label="Recent outcomes">
   <header class="section-header">
-    <p class="section-kicker">Proof</p>
-    <h2>Recent wins with cross-functional SAP teams.</h2>
+    <p class="section-kicker">Proof in delivery</p>
+    <h2>Results shipped with cross-functional SAP teams.</h2>
   </header>
   <div class="impact-grid">
     <article class="impact-card">
       <p class="impact-metric">40% faster quote-to-cash</p>
-      <p class="impact-copy">Unified SAP, Salesforce, and bespoke apps for an automotive OEM with clean API hand-offs.</p>
+      <p class="impact-copy">Rebuilt the sales-to-service flow for an automotive OEM by aligning SAP, Salesforce, and custom portals around one data contract.</p>
     </article>
     <article class="impact-card">
       <p class="impact-metric">Zero unplanned downtime</p>
-      <p class="impact-copy">Implemented observability guardrails and staged releases for a manufacturing rollout.</p>
+      <p class="impact-copy">Introduced observability guardrails, clear release cadence, and shared runbooks during a manufacturing S/4HANA rollout.</p>
     </article>
     <article class="impact-card">
-      <p class="impact-metric">AI pilot to prod in 6 weeks</p>
-      <p class="impact-copy">Shipped an exception-handling copilot with risk controls and measurable service levels.</p>
+      <p class="impact-metric">AI pilot live in 6 weeks</p>
+      <p class="impact-copy">Coach supply-chain and finance teams to deploy an exception-handling copilot with measurable service levels and governance.</p>
     </article>
   </div>
 </section>
 
-<section class="content-box" aria-label="How engagement starts">
+<section class="content-box" aria-label="How we work together">
   <header class="section-header">
     <p class="section-kicker">Working rhythm</p>
-    <h2>Three moves to get your SAP O2C back under control.</h2>
+    <h2>A three-step loop your teams can repeat.</h2>
   </header>
   <div class="approach-grid">
     <article class="approach-card">
-      <h3>Frame the problem</h3>
-      <p>Collect failure modes, define success metrics, and surface hidden dependencies.</p>
+      <h3>Listen &amp; locate</h3>
+      <p>Talk to sales, ops, and finance, review the dashboards, and agree on the true root causes.</p>
     </article>
     <article class="approach-card">
-      <h3>Stabilise &amp; pilot</h3>
-      <p>Harden the riskiest flows, document the new runbooks, and pilot automation in one area.</p>
+      <h3>Fix &amp; prove</h3>
+      <p>Patch the riskiest flows, document the new guardrails, and show the metrics turning.</p>
     </article>
     <article class="approach-card">
-      <h3>Scale what works</h3>
-      <p>Expand the guardrails, benchmark improvements, and transition ownership to internal squads.</p>
+      <h3>Transfer &amp; scale</h3>
+      <p>Coach the squads, hand over the playbooks, and replicate the pattern across the roadmap.</p>
     </article>
   </div>
 </section>
 
 <section class="content-box" aria-label="Next step">
   <div class="contact-card">
-    <h2>Need your SAP O2C to behave?</h2>
-    <p>Share your blocker if you'd like EPAM Systems to help. I respond within one business day through LinkedIn. Direct hiring offers aren't accepted—this space is about mindset and method.</p>
+    <h2>Tell me where SAP is hurting.</h2>
+    <p>If it makes sense to bring EPAM Systems in, send a short note through LinkedIn. I respond within one business day. I don’t take direct offers—this site exists to share the way I work.</p>
     <div class="contact-actions">
       <a class="cta" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener">Message on LinkedIn</a>
       <a class="cta secondary" href="/cv/">See detailed experience</a>
