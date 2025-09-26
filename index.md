@@ -10,13 +10,14 @@ permalink: /
     <h1 style="text-align:right; font-weight:bold; font-size:1.2em;">Outcome-driven SAP consulting</h1>
     <img src="/assets/img/DzmitryiKharlanau.png" alt="Portrait of Dzmitryi Kharlanau" class="hero-avatar" />
     <div class="hero-copy">
-      <p class="hero-kicker">SAP · Systems Analyst · Transformation</p>
-
-    <h2>Dzmitryi Kharlanau</h2>
+      <p class="hero-kicker" style="text-align:center;">SAP · Systems Analyst · Transformation</p>
+      <h2 style="text-align:center;">Dzmitryi Kharlanau</h2>
+      <p class="hero-kicker" style="text-align:center;">@EPAM · ex-ABAT</p>
     <p class="hero-summary">Go-live is complete, but results remain unclear: cash is still delayed, costs keep rising, and the same problems appear again and again or never get solved. AMS no longer inspires trust, and the financial impact that was promised is still missing — <span style="display:inline-block; border:2px solid green; padding:2px 6px; border-radius:4px;">it shouldn’t be this way.</span></p>
-       <a class="cta" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener">Message on LinkedIn</a>
-  </div>
-</section>
+       <a class="cta" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">Message on LinkedIn</a>
+     </div>
+   </div>
+ </section>
 
 <section class="content-box" aria-label="How I help">
   <header class="section-header">
@@ -44,5 +45,3 @@ permalink: /
   </div>
 </section>
   
-
- 
