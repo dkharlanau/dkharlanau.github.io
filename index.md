@@ -21,9 +21,9 @@ permalink: /
 
 <section class="content-box" aria-label="How I help">
   <header class="section-header">
-    <p class="section-kicker">Where I add value</p>
+    
     <h2>Hands-on support for programmes that can’t slow down.</h2>
-    <p class="section-blurb">Inside the run, shoulder to shoulder with your leads, eliminating the noise that keeps SAP O2C from doing its job.</p>
+   
   </header>
   <div class="value-grid">
     <article class="value-card">
