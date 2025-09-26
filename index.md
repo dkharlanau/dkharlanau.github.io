@@ -12,7 +12,7 @@ permalink: /
     <p class="hero-kicker">SAP · Systems Analyst · Transformation</p>
 
     <h2>Dzmitryi Kharlanau</h2>
-    <p class="hero-summary">When O2C issues stall revenue, I parachute in to calm the run, fix integrations, and keep finance out of spreadsheet firefights. The goal: measurable recovery that your teams can own once I leave.</p>
+    <p class="hero-summary">Go-live is complete, but results remain unclear: cash is still delayed, costs keep rising, and the same problems appear again and again or never get solved. AMS no longer inspires trust, and the financial impact that was promised is still missing — it shouldn’t be this way.</p>
        <a class="cta" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener">Message on LinkedIn</a>
   </div>
 </section>
