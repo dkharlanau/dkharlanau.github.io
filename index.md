@@ -6,8 +6,8 @@ permalink: /
 ---
 
 <section class="hero content-box">
-  <div style="text-align:center;">
-    <h1 style="text-align:right; font-weight:bold; font-size:1.2em;">Outcome-driven SAP consulting</h1>
+  <div style="text-align:center; position:relative;">
+   <h1 style="position:absolute; top:10px; right:10px; font-weight:bold; font-size:1.2em;">Outcome-driven SAP consulting</h1>
    <img src="/assets/img/DzmitryiKharlanau.png" alt="Portrait of Dzmitryi Kharlanau" class="hero-avatar" style="display:block; margin-left:auto; margin-right:auto;" />
     <div class="hero-copy">
       <p class="hero-kicker" style="text-align:center;">SAP · Systems Analyst · Transformation</p>
