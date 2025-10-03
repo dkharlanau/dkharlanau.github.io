@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>Get acquainted with SAP Business flexible workflow </title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/get-acquainted-sap-business-flexible-workflow-%D0%B4%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9-%D1%85%D0%B0%D1%80%D0%BB%D0%B0%D0%BD%D0%BE%D0%B2">Get acquainted with SAP Business flexible workflow </a></h1>
+    <p class="created">Created on 2022-01-10 15:37</p>
+  <p class="published">Published on 2022-01-10 16:40</p>
+  <div><h2><br></h2><p>It is the second post about SAP business workflow, where the focus is on the Flexible workflow concept in SAP S4/HANA. Which should simplify SAP workflows maintenance and use by key users and SAP consultants. </p><p>The first was about the <a href="https://www.linkedin.com/pulse/get-acquainted-sap-business-workflow-using-idoc-s4hana-%D1%85%D0%B0%D1%80%D0%BB%D0%B0%D0%BD%D0%BE%D0%B2/" target="_blank">Event trigger technique with the use case of managing IDoc exceptions situations with SAP business workflow</a>. </p><h2>SAP flexible workflow</h2><p>The flexible workflow is a general function that allows defining condition-based workflows for business processes. The list of flexible workflows increases with the new releases and the information about the use case, configuration and authorization are and will be provided in the component's help documentation.</p><p>To have a quick look at the functionality we will take the popular process to release purchasing documents in Procurement: set up automatic, one-step, or multi-step approval workflows for purchase orders. It is possible to assign one or more approvers to each step and define approvers by role, users, or teams as approvers. The approvers can then approve or reject their work items in the app&nbsp;My Inbox. Information for the scenario can be found by the link <a href="http:// https://help.sap.com/viewer/af9ef57f504840d2b81be8667206d485/2020.000/en-US/b33a97f3014f43c488ec798633824081.html" target="_blank">Flexible Workflow for Purchase Orders</a>.</p><h3>Configuration </h3><p>There are few steps to activate workflow to be ready for use:</p><ol><li>Scenarios are not visible in the Fiori Workflow Editor app until they have been activated in the back-end system. <em>SAP NetWeaver&gt; Application Server&gt; Business Management&gt; SAP Business Workflow&gt; Flexibler Workflow&gt; Scenario Activation</em>. Activate WS00800238&nbsp;&nbsp;WFL_for_PO Workflow for Purchase Order.</li><li>Set document types that are used for Flexible workflow. <em>Materials Management&gt; Purchasing&gt; Flexible Workflow for Purchase Orders&gt; Activate Flexible Workflow for Purchase Orders</em>.</li><li>Maintain workflow tasks that need to be included in the task filter together with their names and decision keys <em>SAP NetWeaver&gt; SAP Gateway Service Enablement&gt; Content&gt; Workflow Settings&gt; Maintain Task Names and Decision Options</em>.</li></ol><h3>HR-BP-User sincronization </h3><p>It is the prerequisite to use HR and BP to assign the task of releasing PO for a user. </p><p><em>Create a Personnel with the transaction PA30, assign a user to the Personnel number with the communication type, create a business partner with the transaction BP and assign an Identification number using ID type HCM001 with the Personnel number created before. At the end run report /SHCM/RH_SYNC_BUPA_EMPL_ SINGLE to synchronize created master data.</em></p><h2>Fiori app Manage workflows for Purchase orders (F2872)</h2><p>In <strong>/UI2/FLP - SAP Fiori Launchpad</strong>&nbsp;run app Manage workflows for Purchase orders</p><p><strong><u>Create a new Workflow</u></strong></p><p>1. The header contains the name of the workflow, short comment, and validity period:</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C4D12AQEHqv8Muwr7mg" src="https://media.licdn.com/dms/image/v2/C4D12AQEHqv8Muwr7mg/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1641830445733?e=1762387200&amp;v=beta&amp;t=ShodnWjNZK_8eegqf22F9FSWMbr5F3XB9QVYbB1ff4s"></div><p>2. Criteria, when to call a workflow, are set, more than one criteria is allowed:</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQHefI8e_8jaNw" src="https://media.licdn.com/dms/image/v2/C5612AQHefI8e_8jaNw/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1641831184209?e=1762387200&amp;v=beta&amp;t=pCh1KylaCGPruoQI4degcQeVkE-KyM0A5hHY0G_nW-Q"></div><p>3. Add one or more step sequences:</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQFOouAWhXEOgg" src="https://media.licdn.com/dms/image/v2/C5612AQFOouAWhXEOgg/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1641831201145?e=1762387200&amp;v=beta&amp;t=BxY3eZkj6mEEO-Qe6NV9c21eMFfKO3Hl78Knn1zLKdk"></div><p>4. For each step sequence, define recipients and preconditions. You can define the order of the steps:</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQF5ZMssklaycQ" src="https://media.licdn.com/dms/image/v2/C5612AQF5ZMssklaycQ/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1641831209330?e=1762387200&amp;v=beta&amp;t=tsvPw0aW267DIOGcdbjMDHVM9aVXrfcqwgvGr1vc1SU"></div><p>5. Set deadlines for the step:</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQHWSnFGg3bKRw" src="https://media.licdn.com/dms/image/v2/C5612AQHWSnFGg3bKRw/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1641831217986?e=1762387200&amp;v=beta&amp;t=Krhx3Zi_56O1IQqCj6zq7xmywf9dAyP1gY0AwT01wI0"></div><p>6. Use the configuration option that is available using the app <a href="https://www.linkedin.com/pulse/e-mail-template-cds-sap-s4hana-%25D0%25B4%25D0%25BC%25D0%25B8%25D1%2582%25D1%2580%25D0%25B8%25D0%25B9-%25D1%2585%25D0%25B0%25D1%2580%25D0%25BB%25D0%25B0%25D0%25BD%25D0%25BE%25D0%25B2/?trackingId=5rbP4vArF35%2BUpMPkq1Y%2BQ%3D%3D" target="_blank">Maintain Email Templates</a>. It enables you to send an email notification to the recipients of a workflow item when the workflow item is available in the app My Inbox.&nbsp;</p><p>In the end, it should be activated.</p><p><em>*To use this app, ensure the Roles SAP_BR_PURCHASING_MANAGER, SAP_BR_PURCHASER are assigned to the user. </em></p><h3>Integration into Purchasing document </h3><p>Releasing purchasing orders happens via processing items in My Inbox. For each new PO where the criteria are met, a workflow will be started. The status of releasing is visible for PO with the Fiori App <strong>Manage purchase orders</strong></p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQHeJszVFHey2g" src="https://media.licdn.com/dms/image/v2/C5612AQHeJszVFHey2g/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1641831813183?e=1762387200&amp;v=beta&amp;t=jsFlbmo3PMiE2tuJURjY5tdMP7pe29jGu0xLiXjwKFY"></div><h2>Flexible workflow settings</h2><p>Knowing the Workflow scenario get access to ABAP Objects with transactions</p><ul><li><strong>SWETYPV - Type Linkages</strong>: ABAP class  CL_MM_PUR_WF_OBJECT_PO with the Event  SUBMITTED_FOR_APPROVAL</li></ul><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQHv9CwRWX5RGA" src="https://media.licdn.com/dms/image/v2/C5612AQHv9CwRWX5RGA/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1641832018641?e=1762387200&amp;v=beta&amp;t=-M-e1cjVsT-wjHWYHmyAV-3y_mZDLBHG9AZMFSLpimE"></div><ul><li><strong>SWDD_SCENARIO</strong> - Flexible Workflow: Scenario Editor&nbsp;</li></ul><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQFV54okyAg94A" src="https://media.licdn.com/dms/image/v2/C5612AQFV54okyAg94A/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1641832121312?e=1762387200&amp;v=beta&amp;t=1ZyjeJFGYxFQ0dtRJ4bMQf1rH6fnkfFRAZrBREYPwSI"></div><ul><li>Task definition (PFTC_INS)</li></ul><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQEg2jALS35Aag" src="https://media.licdn.com/dms/image/v2/C5612AQEg2jALS35Aag/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1641832177711?e=1762387200&amp;v=beta&amp;t=kZkb7bb24qJ8RLYllZOexEP4XLFyODnIrQcyLoJtreg"></div><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQHSsvQx0vJGDg" src="https://media.licdn.com/dms/image/v2/C5612AQHSsvQx0vJGDg/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1641832303061?e=1762387200&amp;v=beta&amp;t=P9kuRQEFZ5UFiRWitv9bmvGBuH4NeDIE-KmoUaK5gyo"></div><h2><strong>Summary </strong></h2><p>With SAP flexible workflow it is easier to create and manage workflow scenarios. The extended documentation is provided in the component's documentation at sap.help.com. More and more scenarios will be added in the future as pre-built workflows for standard business processes where it makes sense to have them. The major part of configuration can be done by a key user itself. Complexity is reduced by simplifying step's type: it can be user decision or activity ( background and dialog, with or without smart forms ). It is more easily to setup email notifications with Email Templates.</p></div>
+</body>
+</html>

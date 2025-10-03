@@ -1,0 +1,34 @@
+{% assign signals = site.data.home.signals %}
+{% if signals %}
+<section class="section signals" id="contact">
+  <header class="section-heading">
+    {% if signals.eyebrow %}<p class="eyebrow">{{ signals.eyebrow }}</p>{% endif %}
+    {% if signals.title %}<h2>{{ signals.title }}</h2>{% endif %}
+    {% if signals.intro %}<p class="lead">{{ signals.intro }}</p>{% endif %}
+  </header>
+
+  <div class="signals-grid">
+    <article class="signals-social neub-card">
+      <div class="signals-social__header">
+        {% if signals.social_title %}<h3>{{ signals.social_title }}</h3>{% endif %}
+        {% if signals.social_copy %}<p>{{ signals.social_copy }}</p>{% endif %}
+      </div>
+      {% assign library = site.data.social.links %}
+      {% assign links = signals.social_links %}
+      {% include components/social-line.html links=links library=library %}
+    </article>
+
+    {% if signals.callouts %}
+    <div class="signals-callouts">
+      {% for callout in signals.callouts %}
+      <article class="signal-card neub-card">
+        {% if callout.kicker %}<p class="signal-card__kicker">{{ callout.kicker }}</p>{% endif %}
+        <h3>{{ callout.title }}</h3>
+        {% if callout.copy %}<p>{{ callout.copy }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}

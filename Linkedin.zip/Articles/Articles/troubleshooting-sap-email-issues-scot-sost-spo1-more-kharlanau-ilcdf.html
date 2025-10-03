@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>Troubleshooting SAP Email Issues: SCOT, SOST, SPO1, and More</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/troubleshooting-sap-email-issues-scot-sost-spo1-more-kharlanau-ilcdf">Troubleshooting SAP Email Issues: SCOT, SOST, SPO1, and More</a></h1>
+    <p class="created">Created on 2024-12-06 08:59</p>
+  <p class="published">Published on 2024-12-06 18:00</p>
+  <div><p>Ever sent an email in SAP only to see it stuck in <strong>SOST</strong>, wonder why the <strong>SCOT node</strong> isn’t green, or scratch your head over SMTP errors? If you’ve ever struggled with SAP email issues, you know how frustrating it can be when things just don’t work. Is it the SMTP configuration? The mail server? The job not running? Or something completely random?</p><p>Let’s cut through the noise. Here’s a guide to troubleshoot SAP email issues step-by-step, so you can figure out what’s wrong and get those emails flowing again.</p><h3>Step 1: Is SCOT Set Up Correctly?</h3><p>Start with the basics: SCOT is the heart of SAP email communication.</p><ul><li><p>Open <strong>transaction SCOT</strong>.</p></li><li><p>Check if the <strong>SMTP node</strong> is green.<strong>If red</strong>: Double-check the <strong>Mail Host</strong> and <strong>Port</strong>.Example: SMTP Host:  | Port:  (or  for secure mail).<strong>If yellow</strong>: The node might be misconfigured or delayed.</p></li></ul><p><strong>Quick Check</strong>:</p><ul><li><p>Click on the node → Verify the authentication credentials. Are the email server username and password correct?</p></li></ul><hr><h3>Step 2: Can SAP Talk to the SMTP Server?</h3><p>Even if SCOT looks good, SAP might not be able to reach the mail server.</p><ul><li><p>Go to <strong>SMICM</strong>.Navigate to <strong>Goto → Services</strong> and check if the <strong>SMTP service</strong> is running.</p></li><li><p>Use <strong>Telnet</strong> to test from the SAP server:</p></li></ul><hr><h3>Step 3: What’s Happening in SOST?</h3><p>SOST is your go-to transaction to check email statuses:</p><ul><li><p>Open <strong>SOST</strong>.</p></li><li><p>Emails with <strong>red</strong> or <strong>yellow statuses</strong> indicate issues.</p></li></ul><p><strong>Common Issues</strong>:</p><ul><li><p><strong>Red</strong>: Authentication errors, invalid recipients, or server rejection.</p></li><li><p><strong>Yellow</strong>: Emails are queued but not processed.Ensure the job <strong>RSCONN01</strong> is running.</p></li></ul><hr><h3>Step 4: Debugging SCOT and SMTP Errors</h3><p>If SMTP isn’t playing nice, dive into the logs:</p><ul><li><p>Go to <strong>SCOT → Utilities → Trace → Display Trace</strong>.</p></li><li><p>Use <strong>SLG1</strong> to search for <strong>SAPconnect</strong> logs for more details.</p></li></ul><p><strong>Common Errors</strong>:</p><ul><li><p><strong>550 Relay Not Permitted</strong>: Mail server rejects your connection. Fix: Allowlist your SAP system’s IP on the SMTP server.</p></li><li><p><strong>503 Bad Sequence of Commands</strong>: Something’s off in SCOT’s configuration. Recheck credentials and sequence settings.</p></li></ul><hr><h3>Step 5: Are Spool Jobs Holding You Back?</h3><p>If emails are triggered by print or spool jobs, check <strong>SPO1</strong>:</p><ul><li><p>Open <strong>SPO1</strong>.</p></li><li><p>Look for spool requests tied to your emails.<strong>Error in Spool</strong>: Fix the output device in <strong>SPAD</strong> or check the document formatting (e.g., PDF issues).</p></li></ul><hr><h3>Step 6: Key Jobs and Delays</h3><p>For SAP emails to flow smoothly, key background jobs need to run:</p><ul><li><p><strong>RSCONN01</strong>: Processes email queues. Ensure this job runs periodically (e.g., every 5 minutes).</p></li><li><p><strong>SOST Cleanup</strong>: Old or failed emails can clog the queue. Regularly clean them up.</p></li></ul><hr><h3>Step 7: Quick Tips for Common Problems</h3><ol><li><p><strong>Email Formatting Issues</strong>:</p></li><li><p><strong>Recipient Errors</strong>:</p></li><li><p><strong>SMTP Server Down?</strong></p></li><li><p><strong>Still No Emails?</strong></p></li></ol><hr><h3>Why Does This Happen?</h3><p>SAP email issues usually stem from:</p><ul><li><p>Misconfigured SCOT settings.</p></li><li><p>Network issues blocking the SMTP server.</p></li><li><p>Forgotten background jobs (e.g., RSCONN01).</p></li><li><p>Incorrect recipient or formatting errors.</p></li></ul><hr><p><a target="_blank" href="https://www.linkedin.com/in/dkharlanau?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABBLdeYBRDV9XRmMIo8BWaZWNzGTtoVtV3M">Dzmitryi Kharlanau</a>, SAP Senior Consultant, passionate about simplifying complex SAP processes. Got questions or need advice? Feel free to reach out!</p></div>
+</body>
+</html>

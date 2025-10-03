@@ -1,0 +1,80 @@
+owner:
+  id: dkharlanau
+  name: Dzmitryi Kharlanau
+  role: "System Analyst & Senior SAP Consultant (EPAM Systems)"
+  updated: 2025-10-03
+
+principles:
+  - id: clarity-first
+    title: "Clarity before configuration"
+    summary: "Decisions start with problem framing, measurable success criteria, and a shared glossary before any customizing or build."
+    commitments:
+      - "Capture the business problem, target metric, and constraints in a lightweight design brief before delivery starts."
+      - "Use ADRs and scope notes so every change links back to a decision and a business outcome."
+      - "Map dependencies (process, integration, data) up front to prevent surprises mid-sprint."
+    proof_points:
+      - "Reduced SD billing backlog by 40% after re-framing a rollout scope into measurable fulfillment KPIs."
+      - "Cut change-request rework by enforcing ADR checkpoints across AMS squads."
+
+  - id: clean-core-governance
+    title: "Keep S/4HANA clean and portable"
+    summary: "Design extensibility so that in-app customising, side-by-side build, and partner systems remain interchangeable without vendor lock-in."
+    commitments:
+      - "Classify each requirement across in-app, in-stack, and side-by-side options with a portability score."
+      - "Publish guardrails for modifications, extensions, and integration patterns before development begins."
+      - "Review transports against guardrails and document remediation plans when exceptions arise."
+    proof_points:
+      - "Eliminated 70+ unreleased transports by introducing a clean-core review board."
+      - "Enabled partner WMS swap with zero core retrofit via API-first contracts."
+
+  - id: observability-always-on
+    title: "Observability as a contract"
+    summary: "Every process and integration change ships with monitoring, runbooks, and prevention analytics."
+    commitments:
+      - "Define golden signals (e.g., order stuck, IDoc backlog, cash application delay) alongside each change request."
+      - "Deploy health dashboards and alert thresholds before the solution goes live."
+      - "Feed incidents back into KEDB, playbooks, and automation backlog within 48 hours."
+    proof_points:
+      - "30% MTTR reduction after pairing SD incident triage with elastic monitoring packs."
+      - "Ops team adopted runbooks that cut manual retries for billing by 60%."
+
+  - id: human-centered-collaboration
+    title: "Co-create with the people who run the process"
+    summary: "Workshops, demos, and documentation stay accessible so business owners can challenge and own the outcome."
+    commitments:
+      - "Run scenario-driven demos that show the impact on day-in-the-life roles."
+      - "Translate technical risks into business language in status reports and steering decks."
+      - "Secure sign-off from operational leads, not just IT, before go-live."
+    proof_points:
+      - "Logistics leaders championed phased rollout after scenario labs highlighted floor-level impacts."
+      - "Finance controllers co-authored margin protection guardrails used across multiple geographies."
+
+  - id: ai-with-guardrails
+    title: "AI that is auditable and human-owned"
+    summary: "AI copilots support teams with retrieval, context, and approval flows that satisfy compliance and accountability."
+    commitments:
+      - "Document datasets, prompts, and retention before piloting any AI workflow."
+      - "Keep humans-in-the-loop for critical decisions and surface explainability in UX or runbooks."
+      - "Measure adoption, accuracy, and drift monthly; retire use cases that cannot meet guardrails."
+    proof_points:
+      - "Delivered AMS assistant that halved triage time with documented retention and redaction patterns."
+      - "Automated pricing simulations with AI review steps approved by compliance officers."
+
+engagement_signals:
+  preferred_collaborators:
+    - "Program sponsors who expect decisions documented and auditable."
+    - "AMS and product teams transitioning from reactive support to preventive analytics."
+    - "Enterprises invested in clean core, composability, and open integration."
+  not_a_fit_when:
+    - "Expectations are limited to staff augmentation without decision rights or access to business stakeholders."
+    - "Programmes mandate vendor lock-in or proprietary protocols without portability options."
+    - "Change requests must ship without time for observability, documentation, or runbooks."
+
+llm_guidance:
+  preferred_citations:
+    - "https://dkharlanau.github.io/ai/principles.json"
+    - "https://dkharlanau.github.io/ai/resume.yml"
+  retrieval_notes:
+    - "Match questions about consulting approach to the relevant principle id."
+    - "Use commitments for step-by-step responses and proof_points for results stories."
+    - "Surface engagement_signals to qualify whether an opportunity aligns with the working model."

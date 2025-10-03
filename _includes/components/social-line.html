@@ -1,0 +1,40 @@
+{% assign library = include.library | default: site.data.social.links %}
+{% assign items = include.links | default: library %}
+{% assign variant = include.variant | default: 'default' %}
+{% assign show_descriptor = include.show_descriptor %}
+{% if show_descriptor == nil %}
+  {% assign show_descriptor = false %}
+{% endif %}
+
+{% if items and items != empty %}
+<div class="social-line{% if variant == 'compact' %} social-line--compact{% endif %}">
+  <ul class="social-line__icons">
+    {% for item in items %}
+      {% assign reference = item.ref %}
+      {% assign resolved = nil %}
+      {% if reference and library %}
+        {% assign resolved = library | where: 'id', reference | first %}
+      {% endif %}
+      {% assign label = item.label | default: resolved.label %}
+      {% assign handle = item.handle | default: resolved.handle %}
+      {% assign url = item.url | default: resolved.url %}
+      {% assign descriptor = item.descriptor | default: resolved.descriptor %}
+      {% assign icon = item.icon | default: resolved.icon %}
+      {% assign external = item.external %}
+      {% if external == nil %}
+        {% assign external = true %}
+      {% endif %}
+      {% if url %}
+      <li class="social-line__item">
+        <a class="social-icon" href="{{ url }}" aria-label="{{ label }}{% if handle %} ({{ handle }}){% endif %}"{% if external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+          {% if icon %}<span aria-hidden="true">{{ icon }}</span>{% endif %}
+        </a>
+        {% if show_descriptor and descriptor %}
+        <p class="social-icon__descriptor">{{ descriptor }}</p>
+        {% endif %}
+      </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

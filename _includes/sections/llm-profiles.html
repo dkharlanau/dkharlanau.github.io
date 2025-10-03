@@ -1,0 +1,11 @@
+{% assign llm = site.data.home.llm_profiles %}
+{% if llm and llm.links %}
+<section class="section llm-profiles" id="llm-profiles">
+  {% if llm.inline_label %}<span class="llm-inline__label">{{ llm.inline_label }}</span>{% endif %}
+  <ul class="llm-inline__links">
+    {% for link in llm.links %}
+    <li><a href="{{ link.url }}" class="link-arrow" target="_blank" rel="noopener noreferrer">{{ link.label }}</a></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}

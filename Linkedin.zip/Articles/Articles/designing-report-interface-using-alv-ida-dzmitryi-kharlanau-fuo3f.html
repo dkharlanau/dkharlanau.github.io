@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>Designing a Report Interface Using ALV and IDA</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/designing-report-interface-using-alv-ida-dzmitryi-kharlanau-fuo3f">Designing a Report Interface Using ALV and IDA</a></h1>
+    <p class="created">Created on 2024-12-13 11:07</p>
+  <p class="published">Published on 2024-12-13 11:16</p>
+  <div><blockquote><p><em>When it comes to creating engaging and functional SAP reports, ALV (ABAP List Viewer) is one of the most powerful tools at your disposal. From normal table displays to intricate hierarchical representations, ALV ensures data is presented effectively. </em></p></blockquote><p><em>Below, I'll walk you through key SALV features, hierarchical table handling, and some advanced tricks with examples to make your reports not just functional but impressiv</em>e.</p><p></p><h3>SALV functions&nbsp;</h3><ul><li><p>Simple 2D table display CL_SALV_TABLE</p></li><li><p>Hierarchical ALV display CL_SALV_HIERSEQU_TABLE</p></li><li><p>Tree ALV using class CL_SALV_TREE</p></li></ul><hr><h3>Normal ALV Table Display</h3><pre></pre><h3>Adding Default PF STATUS in ALV</h3><pre></pre><h3>Adding Custom PF STATUS in ALV</h3><p>We need to create a PF status with our own buttons as well as the ALV standard buttons.&nbsp;</p><p>We will copy the PF-Status using of any standard SALV_DEMO report using the transaction SE41:&nbsp;</p><p>Menu Painter. After Copying the PF-Status we can add our own buttons.</p><pre></pre><h3>Setting up Layout</h3><pre></pre><h3>Add Header (Top of page) &amp; Footer (End of Page)</h3><pre></pre><h3>Changing Column settings</h3><pre></pre><h3>Add &amp; Handle Hotspot</h3><h3>Apply Colors</h3><pre></pre><h3>Apply Aggregations</h3><pre></pre><h3>Apply Styles to Cell&nbsp;&nbsp;</h3><pre></pre><h3>Apply sorts</h3><pre></pre><h3>ICONs and Tooltips</h3><pre></pre><h3>&nbsp;Columns Specific Grouping</h3><pre></pre><hr><h3>SALV Hierarchical Table&nbsp;</h3><h3>Simple table display</h3><pre></pre><h3>Adding Default PF Status</h3><pre></pre><h3>Add Expand/Collapse Option</h3><pre></pre><hr><h3>IDA</h3><h3>CDS View</h3><p>Handling Large Internal Tables with CL_SALV_GUI_TABLE_IDA(&nbsp;integrated data access ) ..more than 100,000 rows of data.</p><p><strong>Create a CDS view&nbsp;</strong></p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQEI2bNk7FM6uQ" src="https://media.licdn.com/dms/image/v2/D4D12AQEI2bNk7FM6uQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1734088355740?e=1762387200&amp;v=beta&amp;t=lgfonPw0NOe4WslXjsP3Qo9BjnjFIYpvqVg7ldQZyc0"><figcaption></figcaption></figure><p>Call the function&nbsp;</p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQGrk0oH3U-EHg" src="https://media.licdn.com/dms/image/v2/D4D12AQGrk0oH3U-EHg/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1734088376584?e=1762387200&amp;v=beta&amp;t=78sYcJwsCcWGkgStc_AQUQTk_l4A0XCz4UVOCCbmo0E"><figcaption></figcaption></figure><p>Set additional settings</p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQH3k1gZ9ObRQg" src="https://media.licdn.com/dms/image/v2/D4D12AQH3k1gZ9ObRQg/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1734088396677?e=1762387200&amp;v=beta&amp;t=L6ROSRWijTvsBuoXa9V4uKM0TtQZGpXZIuvfF8_OyMI"><figcaption></figcaption></figure><p></p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQGwjHQgniyZGw" src="https://media.licdn.com/dms/image/v2/D4D12AQGwjHQgniyZGw/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1734088411007?e=1762387200&amp;v=beta&amp;t=ycs878TNt4TAQre9B7W5CEPS0mocNoKDRsd_BlCOSB4"><figcaption></figcaption></figure><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQFIW-AqASoWcQ" src="https://media.licdn.com/dms/image/v2/D4D12AQFIW-AqASoWcQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1734088416756?e=1762387200&amp;v=beta&amp;t=2rrDf9cb5BV7I5RinYkKNLNEOIjiKdXnDP2wr1EqutE"><figcaption></figcaption></figure><p></p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQGxsZqjRRMU0A" src="https://media.licdn.com/dms/image/v2/D4D12AQGxsZqjRRMU0A/article-inline_image-shrink_400_744/article-inline_image-shrink_400_744/0/1734088426530?e=1762387200&amp;v=beta&amp;t=KUupCjBHfunfiK0phdjd58OTb4zC2S-52X3Mj_WmNsY"><figcaption></figcaption></figure><p></p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQGdCz2Kv80erQ" src="https://media.licdn.com/dms/image/v2/D4D12AQGdCz2Kv80erQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1734088436873?e=1762387200&amp;v=beta&amp;t=lOzq2kcw7F3U8MhmeJhcQ80LHuuouUOKbAje3KLqWok"><figcaption></figcaption></figure><p></p><h3>Example#1: Display Sales Order Details (table)</h3><pre></pre><h3>Example#2: Apply Filtering</h3><pre></pre><h3>Example #3 Set the parameter</h3><pre></pre><h2>Snippets</h2><pre></pre><h3>Pop-up ALV</h3><pre></pre><p></p><h3>Links</h3><ul><li><p><a href="https://sapyard.com/alv-with-an-editable-row/" target="_blank">https://sapyard.com/alv-with-an-editable-row/</a></p></li><li><p>SALV Documentation (SAP Help)</p></li><li><p>IDA Overview</p></li><li><p>ALV Hierarchical Tables</p></li></ul><p></p><p><a target="_blank" href="https://www.linkedin.com/in/dkharlanau?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABBLdeYBRDV9XRmMIo8BWaZWNzGTtoVtV3M">Dzmitryi Kharlanau</a>, SAP consultant</p><p></p><p></p><p></p><p></p><p></p></div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>Understanding the ABAP Checkpoint Framework: A Practical Guide</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/understanding-abap-checkpoint-framework-practical-guide-kharlanau-kmsef">Understanding the ABAP Checkpoint Framework: A Practical Guide</a></h1>
+    <p class="created">Created on 2024-12-13 11:17</p>
+  <p class="published">Published on 2024-12-26 21:30</p>
+  <div><blockquote><p><em>The </em><strong><em>Checkpoint Framework</em></strong><em> in ABAP is an incredibly useful tool for debugging, testing, and diagnosing issues within your programs. It lets you verify assumptions and trace program behavior using three key elements: </em><strong><em>breakpoints</em></strong><em>, </em><strong><em>log points</em></strong><em>, and </em><strong><em>assertions</em></strong><em>. What's powerful about the framework is that you can manage all these elements from a single cockpit, making it efficient to enable, disable, or analyze checkpoints during runtime.</em></p></blockquote><h3>ey Components of the Checkpoint Framework</h3><h3>1️⃣ BREAK-POINT</h3><p>A <strong>breakpoint</strong> halts program execution at a specific point during runtime, opening the debugger. When used with a checkpoint group, breakpoints can be toggled on or off globally without modifying the code.</p><p><strong>Example:</strong></p><pre></pre><p></p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQFvUsqquAiU7w" src="https://media.licdn.com/dms/image/v2/D4D12AQFvUsqquAiU7w/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1734088725429?e=1762387200&amp;v=beta&amp;t=TI1Yz8d6kf6JwOpjihtR3f5uNp89MhA-r1YCP67ypu4"><figcaption></figcaption></figure><p>This BREAK-POINT will only trigger if the checkpoint group  is active.</p><hr><h3>2️⃣ LOG-POINT</h3><p>Log points capture and record variable values at runtime without interrupting the program's execution. They are invaluable for reviewing program behavior post-execution, especially during testing.</p><p><strong>Example:</strong></p><pre></pre><p>This LOG-POINT records the values of  and  under the subkey  in the checkpoint group log.</p><hr><h3>3️⃣ ASSERT</h3><p>Assertions verify that a logical expression is true. If the condition fails, the behavior is controlled by the checkpoint group configuration—it can trigger a log entry, act as a BREAK-POINT, or even cause a system short dump.</p><p></p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQFBzVLw7k8lPQ" src="https://media.licdn.com/dms/image/v2/D4D12AQFBzVLw7k8lPQ/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1734088746632?e=1762387200&amp;v=beta&amp;t=iVgUhsYhE9pLPjOx04o1BwCaJTzGAH8u_rFX_w6MSL0"><figcaption></figcaption></figure><p><strong>Example:</strong></p><pre></pre><p>This ASSERT ensures that  is not empty and reacts based on the checkpoint group's settings.</p><p></p><h2>and checking...</h2><p>The checkpoint group can be accessed by the transaction SAAB. This can be set globally, personally of for a group of users during a period of time.&nbsp;</p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQF9q_rBtk4ulA" src="https://media.licdn.com/dms/image/v2/D4D12AQF9q_rBtk4ulA/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1734088774267?e=1762387200&amp;v=beta&amp;t=_Lh2RZ1Vp6gaQbs51cLOQL_TK76bQyaGm8jG-EudvhA"><figcaption></figcaption></figure><hr><h3>How to Implement Checkpoints in Your Code</h3><p>Here’s a simple implementation that uses all three checkpoint types:</p><pre></pre><h3>Managing Checkpoint Groups</h3><p>The configuration and management of checkpoint groups are done using transaction <strong>SAAB</strong>. Here's what you can do:</p><ul><li><p><strong>Create or Modify a Checkpoint Group:</strong> Define how BREAK-POINT, LOG-POINT, and ASSERT behave for the group.</p></li><li><p><strong>Activate for Specific Users:</strong> Enable or disable checkpoint groups globally, for individual users, or groups of users.</p></li><li><p><strong>Define Time Periods:</strong> Activate checkpoints for specific durations to minimize performance overhead in production.</p></li></ul><hr><h3>Steps in SAAB:</h3><ol><li><p>Enter transaction .</p></li><li><p>Create or select a checkpoint group.</p></li><li><p>Configure the desired settings for breakpoints, log points, and assertions.</p></li><li><p>Activate the group globally, for yourself, or for a team.</p></li></ol><hr><h3>Why Use the Checkpoint Framework?</h3><ul><li><p>📋 <strong>Centralized Control:</strong> Manage checkpoints without altering your code.</p></li><li><p>🚀 <strong>Efficient Debugging:</strong> Focus on critical sections of your code without using excessive debugging tools.</p></li><li><p>📊 <strong>Enhanced Diagnostics:</strong> Capture detailed logs of runtime behavior for analysis.</p></li><li><p>✅ <strong>Validation at Runtime:</strong> Ensure program assumptions hold true without manually inspecting the code.</p></li></ul><p></p><p><a target="_blank" href="https://www.linkedin.com/in/dkharlanau?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABBLdeYBRDV9XRmMIo8BWaZWNzGTtoVtV3M">Dzmitryi Kharlanau</a>, SAP consultant</p></div>
+</body>
+</html>

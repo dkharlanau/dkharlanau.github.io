@@ -1,0 +1,147 @@
+<html>
+<head>
+  <title>Get acquainted with SAP Business workflow using IDoc handling in SAP S4/HANA</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+    <img src="https://media.licdn.com/mediaC5612AQFak_mT4TTx8w" alt="" title="" />
+      <h1><a href="https://www.linkedin.com/pulse/get-acquainted-sap-business-workflow-using-idoc-s4hana-%D1%85%D0%B0%D1%80%D0%BB%D0%B0%D0%BD%D0%BE%D0%B2">Get acquainted with SAP Business workflow using IDoc handling in SAP S4/HANA</a></h1>
+    <p class="created">Created on 2022-01-03 15:27</p>
+  <p class="published">Published on 2022-01-03 16:37</p>
+  <div><p></p><br><p></p><h2>Introduction to SAP Business workflow </h2><p>SAP Business workflow was a black box for me for a long time. I heart about this tool but have not seen it in the action in productive systems. It becomes obvious later, as it is <strong>not the core component that is usually included in the scope for the design phase for implementation</strong>. The interest for this component comes into reality, only when new processes are requested / improved, when dedicated users/departments<strong> should be notified about the tasks or events and where it is important to monitor and trace the process</strong>. Because of a lack of understanding of SAP business workflow and how it can be used, this component is often underestimated and therefore ignored. </p><p>With the shift to S4/HANA SAP tries to reinvest SAP business workflow with the flexible workflow scenarios and inform of such possibilities. For example, the process of releasing purchase orders contains the possibility to activate the pre-defined flexible workflow scenario. And therefore to involve consultants and key-users to bring attention to SAP Business workflow. Will it be popular in the future or not it is hard to answer now. Despite that, I believe it is <u>helpful to understand which possibilities are available to fulfill the requirements related to developments and processes optimization</u> in SAP S4/HANA or ECC.</p><p>The skeleton and base components of SAP business workflow are presented with a diagram below. The Workflow definition states <strong>when, by whom, and how a series of steps should be executed.</strong> The step is linked to a method of a class or&nbsp;method of a Business object which runs the implementation for a called function.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQEggucAC_UqVw" src="https://media.licdn.com/dms/image/v2/C5612AQEggucAC_UqVw/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1641223896942?e=1762387200&amp;v=beta&amp;t=Wejcq08gIVKV_Xc4jEqJ_RbGiy0FuDhDlX_Ew8tEK8g"></div><p>Some workflows are available, some should be adjusted and the new ones can be created by an SAP consultant using Workflow builder. </p><h2>IDoc management with the assistance of SAP business workflow </h2><p><strong>IDoc</strong> is an SAP object that carries data of a business transaction from one system to another in the form of electronic messages. IDoc is an acronym for Intermediate Document. The purpose of an IDoc is to transfer data or information from SAP to other systems and vice versa.&nbsp;The transfer from SAP to the non-SAP system is done via EDI (Electronic Data Interchange) subsystems whereas, for transfer between two SAP systems, ALE is used.</p><p><strong>The status of an IDoc</strong> shows the stage through which the IDoc passes along its path, for example, "generated" or "ready for dispatch". This data is important for monitoring communication and compiling statistics.</p><p>If errors occur,&nbsp;<strong>work items</strong>&nbsp;associated with SAP tasks are generated. These work items appear in the Business Workplace of the selected recipient. The tasks are identified by&nbsp;<strong>process codes</strong>.</p><p><u>IDoc exception cases monitoring can show how Business workflow can be used to use the workflow for exceptional situations connected to processing EDI messages. What are the trigger points that should run workflow?</u></p><h3>Inbound flow</h3><p>In inbound processing, IDocs are transferred to the interface and stored in the SAP System. The document data is generated in a second step, also in the course of a workflow.</p><p>The picture below is a graphic displaying the path of the IDoc status for an inbound message. <strong>If it stops at a not final status</strong>, then a workflow should be started to inform a dedicated user to correct the error sooner. </p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQGdWbzDyK1Mww" src="https://media.licdn.com/dms/image/v2/C5612AQGdWbzDyK1Mww/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1641225863311?e=1762387200&amp;v=beta&amp;t=ZP5Lpsd1Lgvap_LGVGfzMTEnc3vS9PRiiBFuHCT0aQg"></div><p>The workflow is <strong>started by an event assigned to the inbound processing function module</strong> assigned through the process code to an IDoc message.  </p><p>After a failed attempt to process an incoming message, FM IDOC_ERROR_WORKFLOW_START is called to select a Workflow task from customizing (table TEDE5). </p><p>The error situation with statuses 60 and 56 must be passed to the EDI team ( via an email or message ).</p><p>If the next status after status 62 is the status 51, then inside the functional module to process the incoming message can be set as an additional step call FM IDOC_INPUT_EVENT, which is based on the additional settings: <em>WE46 - Error and Status Processing, WE47 - Status Maintenance, WE42 - Process Codes (Inbound), WE20 - Partner Profiles, SWETYPV - Display/Maint. Event Type Linkages.</em>The assignment between IDoc status and a workflow task is set via a process code: </p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQFUHQsn4Q41og" src="https://media.licdn.com/dms/image/v2/C5612AQFUHQsn4Q41og/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1641227284553?e=1762387200&amp;v=beta&amp;t=k1BmnX3iw2edNzozdyZUv1G4jTBTWo7g6IZqOQA9Pgg"></div><p>Each task (TS) contains an agent rule determination to pick up a right person for setting him a task.</p><h3>Outbound flow</h3><p>In outbound processing, document data is written to IDocs and sent to the receiving system back. The IDoc with the message type STATUS should update the status for the IDoc that was sent from the system out. STATUS IDoc enablement from the EDI mapping subsystem. i.e. As an IDoc is parsed through the EDI subsystem, the subsystem needs to send back a success or failure message to SAP.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQHfBQ6KJW4SwQ" src="https://media.licdn.com/dms/image/v2/C5612AQHfBQ6KJW4SwQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1641225888333?e=1762387200&amp;v=beta&amp;t=uGj9RVyNZhhUCBhEWzSdpdyAzMl93OSGXoyYPCCZouk"></div><p>The same situation, to the function to process the STATUS message an event is set to start a workflow. </p><p>Function Module&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'IDOC_INPUT_STATUS'</p><p> IDoc packet:</p><ul><li> Object Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'IDOCPACKET'</li><li><u> End Event&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'MASSINPUTFINISHED'</u></li></ul><p> IDoc:</p><ul><li> Object Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'IDOCAPPL'</li><li><u> Start Event&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'INPUTERROROCCURRED'</u></li><li><u> End Event&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'ERRORPROCESSCOMPLETD'</u></li></ul><p> </p><h3>Active monitoring </h3><ul><li><em>How do we know, if there are incompletely processed messages due to a technical error? How do we know, if there are messages that have been sent to an external system, but for which no confirmation has been received for a period of reasonable time?</em></li></ul><p>To answer these questions, we can use the transaction WE02 - View IDOC, where we can select all messages for a certain period. Additionally, as of Release 6.10 (ERP),<strong> RSEIDOCA </strong>is available to actively monitor IDoc messages. Based on the criteria for selecting messages, which for a long time are in a certain status(es), the program creates automatically an alert to the responsible user.&nbsp;</p><p>The created version of the program can be scheduled for periodic background execution using transaction SM36 - Background Request.</p><p>When an exceptional situation occurs (according to the selection criteria), the program calls Business workflow TS74508518, which in turn creates an alert to the agent to handle this situation.&nbsp;</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQHU2fTbsl8vJg" src="https://media.licdn.com/dms/image/v2/C5612AQHU2fTbsl8vJg/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1641224560024?e=1762387200&amp;v=beta&amp;t=dsmj13kMYGKe8hClMd6sSF5MMHipGxMkDQpEY7KUXMs"></div><p>When processing a notification from My Inbox, the system will bring up a list of messages that caused the situation.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQHBcDXPRkVfJg" src="https://media.licdn.com/dms/image/v2/C5612AQHBcDXPRkVfJg/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1641224578606?e=1762387200&amp;v=beta&amp;t=rn2aRUNK4mQnXSSWa96lqPV33OWGaxhPMM-UgDMs5P0"></div><p>More information about <a href="https://help.sap.com/viewer/8f3819b0c24149b5959ab31070b64058/7.40.18/en-US/4ab074b6aa3a1997e10000000a421937.html" target="_blank">IDoc processing</a>, and more information about SAP Business workflow with a book <a href="https://www.amazon.de/gp/product/383627826X/ref=dbs_a_def_rwt_hsch_vapi_taft_p1_i0" target="_blank"><strong>Business Workflow Management, Erweiterung, Entwicklung </strong></a>written by Florian Finauer, Steve Hößler, Christoph Kast, Marc Lehmann, Wladimir Zinn </p></div>
+</body>
+</html>

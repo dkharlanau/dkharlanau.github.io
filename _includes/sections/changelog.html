@@ -1,0 +1,28 @@
+{% assign entries = site.data.changelog.entries %}
+<section class="section changelog" id="changelog">
+  <header class="section-heading">
+    <p class="eyebrow">Release history</p>
+    <h1>Site changelog.</h1>
+    <p class="lead">Track UI, content, and data system updates as the CV evolves.</p>
+  </header>
+  {% if entries %}
+  <div class="timeline">
+    {% for entry in entries %}
+    <article class="timeline-item neub-card">
+      <header>
+        <h2>{{ entry.title }}</h2>
+        {% if entry.date %}<p class="timeline-item__meta">{{ entry.date }}</p>{% endif %}
+      </header>
+      {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
+      {% if entry.highlights %}
+      <ul class="timeline-list">
+        {% for highlight in entry.highlights %}
+        <li>{{ highlight }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>

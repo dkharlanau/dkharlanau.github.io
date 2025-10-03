@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>Quick and Useful SAP/ABAP Tips , Week 50 /24</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/quick-useful-sapabap-tips-week-50-24-dzmitryi-kharlanau-apmzf">Quick and Useful SAP/ABAP Tips , Week 50 /24</a></h1>
+    <p class="created">Created on 2024-12-13 11:28</p>
+  <p class="published">Published on 2024-12-29 21:30</p>
+  <div><p><strong>How to Change a Customizing SAP Table to an Application Table</strong> Sometimes you encounter a "Client not modifiable" error. To bypass this:</p><ol><li><p>Use transaction <strong>SE54</strong> to deactivate transport connections.</p></li><li><p>For view clusters, use <strong>SOBJ</strong> to switch off transport links for related views/tables.</p></li><li><p>See SAP Note 356483 for details on managing current settings in test systems.</p></li></ol><hr><p><strong>Trace BAPI/FM Performance</strong> Use <strong>Transaction SAT</strong> to analyze the performance of BAPIs or Function Modules. It provides runtime details and helps optimize code.</p><hr><p><strong>Debugging a Running Job</strong> Want to debug a running background job?</p><ol><li><p>Set a breakpoint in your program.</p></li><li><p>Schedule the job in <strong>SM36</strong>.</p></li><li><p>Go to <strong>SM37</strong>, select the job, type  in the command field, and press Enter. Now you can debug!</p></li></ol><hr><p><strong>Activate &amp;SAP_EDIT in SE16N</strong> To enable editing:</p><ol><li><p>Before implementing note 1420281, use GD-EDIT and GD-SAPEDIT variables.</p></li><li><p>Post-note implementation, explore alternatives as this method may be restricted.</p></li></ol><hr><p><strong>SE16SL - Field-Based Table and Value Search</strong> This tool lets you search any value across all tables in the system. For instance, search for commodity-related fields system-wide.</p><hr><p><strong>Finding a BADI to Implement</strong> To locate a BADI for a transaction:</p><ol><li><p>Go to <strong>SE24</strong> and look for the class .</p></li><li><p>Set a breakpoint in the  method.</p></li><li><p>Run the transaction, and check the  parameter to identify the BADI.</p></li></ol><hr><p><strong>Working with Exceptions</strong> Debug exceptions effectively by setting breakpoints for specific exception types. Use the debugger session to get more details.</p><hr><p><strong>Execute a Transaction Under Another User</strong> To test/debug as another user:</p><ol><li><p>Go to Utilities → Settings → ABAP Editor → Debugging.</p></li><li><p>Select "New Debugger" and configure external request settings for the target user.</p></li></ol><hr><p><strong>Finding a String in ABAP Code</strong> Use the program <strong>RPR_ABAP_SOURCE_SCAN</strong> to locate any string across ABAP programs.</p><hr><p><strong>Turn Off MS Word Editor in Smartforms</strong> To disable MS Word as the default editor for SAPscript/Smartforms:</p><ol><li><p>Run <strong>RSCPSETEDITOR</strong>.</p></li><li><p>Untick the Smart Forms/SAPscript options.</p></li></ol><hr><p><strong>Finding Enhancements for Exits</strong> To identify potential enhancements:</p><ul><li><p>Use transactions <strong>MODACT</strong> for modifications or <strong>MODSAP</strong> for SAP enhancements.</p></li></ul><hr><p><strong>Create a SAP Parameter ID</strong> In <strong>SM30</strong>, maintain the  table to define a new parameter ID. Check table  for existing ones.</p><hr><p><strong>Create a New Number Range</strong> Define and manage number ranges:</p><ol><li><p>Go to <strong>SNRO</strong> for definition.</p></li><li><p>Add the range to the transport menu.</p></li><li><p>Use the following FM:</p></li></ol><hr><p><strong>Create an Archive Object</strong> Steps for creating a custom archiving object:</p><ol><li><p>Use <strong>AOBJ</strong> for structure and program creation.</p></li><li><p>Define hierarchy, tables, and deletion logic.</p></li><li><p>Create/write custom programs for archiving and deletion.</p></li></ol><hr><p><strong>Create a Change Document Object</strong> Use <strong>SCDO</strong> to set up change document objects:</p><ol><li><p>Define the node tables.</p></li><li><p>Configure update programs and activate the solution.</p></li><li><p>Register the BO and callback class via <strong>SPRO</strong>.</p></li></ol><hr><p><strong>Create Authorization Objects and Classes</strong> In <strong>SU21</strong>:</p><ol><li><p>Define a class and create an authorization object.</p></li><li><p>Assign fields and set permitted activities.</p></li><li><p>Use  in your code to validate access.</p></li></ol><p></p><p></p><p></p><p><a target="_blank" href="https://www.linkedin.com/in/dkharlanau?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABBLdeYBRDV9XRmMIo8BWaZWNzGTtoVtV3M">Dzmitryi Kharlanau</a> , SAP consultant</p></div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>Condition Contract Management with SAP S4/HANA</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/condition-contract-management-sap-s4hana-%D0%B4%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9-%D1%85%D0%B0%D1%80%D0%BB%D0%B0%D0%BD%D0%BE%D0%B2">Condition Contract Management with SAP S4/HANA</a></h1>
+    <p class="created">Created on 2022-01-17 13:20</p>
+  <p class="published">Published on 2022-01-17 16:35</p>
+  <div><p>Condition Contract Management ( CCM ) with SAP S4/HANA can be in the use of managing conditions with suppliers and customers, in particular conditions requiring subsequent settlement ( purchase-based and for sales-based subsequent compensations based on business volume or quantity are to be settled with a business partner or with a group of business partners ).&nbsp; It completely replaced the old Rebate management component available in SAP ECC. </p><p>To make the first step is easier with understanding of main CCM elements used in this solution:</p><ol><li><strong>Condition Contract</strong> includes information for conditions requiring subsequent settlement, conditions for calculating the settlement amount and for posting accruals, a settlement calendar for scheduling partial and final settlements, for delta accruals postings.</li><li><strong>Settlement Date Type</strong>: 1) Partial Settlement ( a long validity period can require an intermediate type of settlement, which is called partial settlement ), 2) Final Settlement, 3) Delta Settlement ( Subsequent corrections or late postings can alter the business volume base ), 4) Delta accruals ( Create accruals in an accumulated form ).</li><li><strong>The settlement document</strong> is used to see the created settlement documents in the document flow of a condition contract, to&nbsp;calculate rebate or accruals amounts, to be a link to financial accounting.</li><li><strong>Accruals Processing</strong>: During the posting of transactional documents, such as goods receipts or billing documents, or by posting accruals in an accumulated form with a specific settlement run  Delta Accruals Settlement.</li><li><strong>Detailed Statements</strong>: View an itemization of the business volume for settlement documents.</li></ol><p>In the case of the condition contract settlement, information about the business volume base is determined directly from the transactional documents.&nbsp;</p><p>The main CCM elements with Transaction codes to process them are also presented with a diagram below.</p><div class="slate-resizable-image-embed slate-image-embed__resize-bleed"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQGzu-RP15mWMg" src="https://media.licdn.com/dms/image/v2/C5612AQGzu-RP15mWMg/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1642435728621?e=1762387200&amp;v=beta&amp;t=rawCz-pau7H10gMcrJpvHYOaymEvMr3hMIjVi5oE6W4"></div><p>To customize CCM requires a lot of attention and effort as it consists of numerous customizing sets. You can see a part of them in the diagram below for SD sales rebate processing ( Pricing, Condition contract management, Condition contract settlement ). It is worth it, as afterward the process flows smoothly with periodic jobs and tools allowing mass changes of settlement documents. </p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="No alt text provided for this image" data-media-urn="urn:li:digitalmediaAsset:C5612AQEzOvra69TdPQ" src="https://media.licdn.com/dms/image/v2/C5612AQEzOvra69TdPQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1642435744939?e=1762387200&amp;v=beta&amp;t=TVUSbHlF_pDoyh3GUUE_febklVMKWMktHsC6Ru-J84s"></div><p>Mainly it is used for two end-to-end processes: Procure-to-pay (P2P), order-to-cash (O2C). It has more common with the unified design for settings and UI. </p><p><strong>Procure-to-pay (P2P)</strong></p><p>The procure-to-pay (P2P) process contains all the steps from the entry of purchase orders and goods receipts to invoice verification and payment.</p><p>Scenarios</p><ol><li>Rebates based on purchase orders </li><li>Rebates based on goods receipts </li><li>Rebates based on invoice verification documents </li><li>Rebates based on fixed budgets (fixed amounts)</li></ol><p>You can involve the supplier’s approval for the release of settlement documents. You use output control to send the settlement documents to the supplier. If the supplier accepts the rebate claim, you can release the settlement document.</p><p><strong>Order-to-Cash </strong></p><p>The order-to-cash (O2C) process is the complete process from sales orders to cash receipts. </p><p>Scenarios</p><ol><li>Rebates based on billing documents </li><li>Rebates based on cash sale data </li><li>Rebates based on agreed budgets</li></ol><p>As usually the additional information at the bottom</p><ul><li><a href="https://wiki.scn.sap.com/wiki/display/SSM/Settlement+Management" target="_blank">Settlement Management - SAP Settlement Management - Community Wiki</a></li><li><a href="https://launchpad.support.sap.com/#/notes/2535889" target="_blank">2535889 - CCM - Description of delivered configuration - SAP ONE Support Launchpad</a></li><li><a href="https://launchpad.support.sap.com/#/notes/2481672" target="_blank">2481672 - Condition Contract Management - Useful Documents - SAP ONE Support Launchpad</a></li></ul></div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{% assign cta = site.data.connect.cta %}
+{% if cta %}
+<section class="section connect-section">
+  <a class="cta-card neub-card" href="{{ cta.action.url }}" target="_blank" rel="noopener noreferrer">
+    <div class="cta-card__copy">
+      {% if cta.title %}<h2>{{ cta.title }}</h2>{% endif %}
+      {% if cta.copy %}<p>{{ cta.copy }}</p>{% endif %}
+    </div>
+    <span class="cta-card__action">{{ cta.action.label }} <span aria-hidden="true">↗</span></span>
+  </a>
+</section>
+{% endif %}

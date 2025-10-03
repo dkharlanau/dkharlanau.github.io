@@ -1,0 +1,18 @@
+{% assign shelf = site.data.edu.reading %}
+{% if shelf %}
+<section class="section edu-section" id="learning-shelf">
+  <header class="section-heading">
+    <p class="eyebrow">Reference shelf</p>
+    <h2>Material that’s shaping my point of view.</h2>
+  </header>
+  <div class="reading-grid">
+    {% for book in shelf %}
+    <article class="reading-card neub-card">
+      <h3>{{ book.title }}</h3>
+      {% if book.author %}<p class="reading-card__meta">{{ book.author }}</p>{% endif %}
+      {% if book.note %}<p class="reading-card__note">{{ book.note }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

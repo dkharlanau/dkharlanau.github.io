@@ -1,0 +1,19 @@
+{% assign partners = site.data.connect.partners %}
+{% if partners %}
+<section class="section connect-section" id="partners">
+  <header class="section-heading">
+    <p class="eyebrow">Delivery network</p>
+    <h2>Trusted ecosystem for complex SAP programmes.</h2>
+  </header>
+  <div class="partners-grid">
+    {% for partner in partners %}
+    <article class="partner-card neub-card">
+      <h3>{{ partner.name }}</h3>
+      {% if partner.type %}<p class="partner-card__meta">{{ partner.type }}</p>{% endif %}
+      {% if partner.note %}<p>{{ partner.note }}</p>{% endif %}
+      {% if partner.url %}<a class="link-arrow" href="{{ partner.url }}" target="_blank" rel="noopener noreferrer">Visit</a>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

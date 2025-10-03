@@ -1,0 +1,54 @@
+{% assign hero = site.data.home.hero %}
+{% if hero %}
+<section class="section hero" id="hero">
+  <article class="hero-card neub-card">
+    <header class="hero-header">
+      {% if hero.profile.image %}
+      <img src="{{ hero.profile.image }}" alt="{{ hero.profile.alt | default: hero.title }}" class="hero-avatar profile-photo" />
+      {% endif %}
+      <div class="hero-heading">
+        {% if hero.eyebrow %}<p class="eyebrow">{{ hero.eyebrow }}</p>{% endif %}
+        {% if hero.title %}<h1>{{ hero.title }}</h1>{% endif %}
+        {% if hero.kicker %}<p class="hero-kicker">{{ hero.kicker }}</p>{% endif %}
+        {% if hero.subtitle %}<p class="hero-subtitle">{{ hero.subtitle }}</p>{% endif %}
+        {% if hero.profile.links %}
+        <ul class="hero-links">
+          {% for link in hero.profile.links %}
+          <li><a href="{{ link.url }}" class="link-arrow"{% if link.external %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ link.label }}</a></li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </header>
+    {% if hero.lead %}<p class="lead hero-summary">{{ hero.lead }}</p>{% endif %}
+    {% if hero.points %}
+    <ul class="hero-points">
+      {% for point in hero.points %}
+      <li>{{ point }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% if hero.profile.stats %}
+    <dl class="hero-stats">
+      {% for stat in hero.profile.stats %}
+      <div class="hero-stat">
+        <dt>{{ stat.label }}</dt>
+        <dd>{{ stat.detail }}</dd>
+      </div>
+      {% endfor %}
+    </dl>
+    {% endif %}
+    {% if hero.actions %}
+    <div class="hero-actions">
+      {% for action in hero.actions %}
+      {% assign action_classes = 'button' %}
+      {% if action.style %}
+        {% assign action_classes = action_classes | append: ' button--' | append: action.style %}
+      {% endif %}
+      <a class="{{ action_classes }}" href="{{ action.url }}"{% if action.external %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ action.label }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </article>
+</section>
+{% endif %}

@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>Let’s Talk About the SPTA Framework: Your Guide to Parallel Processing in SAP</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/lets-talk-spta-framework-your-guide-parallel-sap-dzmitryi-kharlanau-1skaf">Let’s Talk About the SPTA Framework: Your Guide to Parallel Processing in SAP</a></h1>
+    <p class="created">Created on 2024-12-13 10:36</p>
+  <p class="published">Published on 2024-12-17 21:30</p>
+  <div><p>If you’ve ever handled large datasets in SAP, you know the pain of running processes sequentially. Long runtimes, memory issues, and a growing queue of tasks can slow everything down. That’s where the <strong>SPTA Framework</strong> comes to the rescue. It’s secure, efficient, and makes parallel processing feel like a breeze.</p><hr><h3>Why the SPTA Framework?</h3><p>When you need to process multiple records or update multiple database tables at once, parallel processing is your best bet. But standard approaches often run into memory issues or require a lot of manual effort to manage tasks. The SPTA Framework, however, handles the complexities for you. It:</p><ul><li><p>Manages ABAP memory efficiently.</p></li><li><p>Simplifies task handling with pre-built tools.</p></li><li><p>Allows secure execution with minimal custom effort.</p></li></ul><hr><h3>The Core Function Module</h3><p>At the heart of the SPTA Framework is . This is the starting point for setting up parallel processing. Here’s how I use it:</p><pre></pre><ul><li><p>: Defines the group of servers for task distribution.</p></li><li><p>, , : These subroutines manage tasks before, during, and after processing.</p></li><li><p>: A structure that stores your input and output parameters.</p></li></ul><hr><h3>Building the Subroutines</h3><p>Now, let’s define what happens in each phase: before, during, and after the tasks are executed.</p><h3>BEFORE_RFC</h3><p>Here, I split the workload into manageable chunks, or “work packets.”</p><pre></pre><h3>IN_RFC</h3><p>This handles the actual processing of each work packet.</p><pre></pre><h3>AFTER_RFC</h3><p>Finally, I collect the results of all completed tasks.</p><pre></pre><hr><h3>Getting the Server Group</h3><p>To optimize performance, I calculate the available resources dynamically. Here’s a snippet I use:</p><pre></pre><h3>Why I Trust the SPTA Framework</h3><p>I’ve used the SPTA Framework for everything from massive data updates to optimizing performance-heavy processes. Its built-in memory safety and ease of implementation save hours of debugging.</p><p></p><p></p><p><a target="_blank" href="https://www.linkedin.com/in/dkharlanau?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABBLdeYBRDV9XRmMIo8BWaZWNzGTtoVtV3M">Dzmitryi Kharlanau</a> , SAP consultant</p><p></p><p></p><p></p></div>
+</body>
+</html>

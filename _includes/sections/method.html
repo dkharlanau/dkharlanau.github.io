@@ -1,0 +1,19 @@
+{% assign method = site.data.home.method %}
+{% if method %}
+<section class="section method" id="method">
+  <header class="section-heading">
+    {% if method.eyebrow %}<p class="eyebrow">{{ method.eyebrow }}</p>{% endif %}
+    {% if method.title %}<h2>{{ method.title }}</h2>{% endif %}
+  </header>
+  {% if method.pillars %}
+  <div class="pillars-grid">
+    {% for pillar in method.pillars %}
+    <article class="pillar neub-card">
+      <h3>{{ pillar.title }}</h3>
+      <p>{{ pillar.copy }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}

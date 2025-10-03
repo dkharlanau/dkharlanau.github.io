@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>ABAP Shared Objects: Practical Use and Implementation</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/abap-shared-objects-practical-use-implementation-dzmitryi-kharlanau-7fjbf">ABAP Shared Objects: Practical Use and Implementation</a></h1>
+    <p class="created">Created on 2024-12-13 10:40</p>
+  <p class="published">Published on 2024-12-24 19:00</p>
+  <div><p>I use these when I need fast, shared access to data across multiple programs. Think of it like a shared stash of data that’s easy to read, rarely changes, and doesn’t need constant database hits. </p><h3>When Do I Use Shared Objects?</h3><p><strong>1. Shared Buffer:</strong> If I’ve got large datasets—like configuration tables or master data—that lots of programs need to access but don’t change often, shared objects work perfectly. They act as a cache, speeding up processing by skipping database calls.</p><p><strong>2. Exclusive Buffer:</strong> Sometimes, I need to keep data alive for just one program across transactions. Let’s say I’m handling user-specific session data. Shared objects make that easy and efficient.</p><hr><h3>How I Set Them Up</h3><p><strong>Step 1: Create a Root Class</strong> I start by creating a class in  and enabling it for shared memory. This class defines the structure of the data I’m going to store.</p><p></p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQGJ6bh42It0Xw" src="https://media.licdn.com/dms/image/v2/D4D12AQGJ6bh42It0Xw/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1734086561948?e=1761782400&amp;v=beta&amp;t=NVtYs9_hX11-8ndB3OEhUBYnN8JhZSpZX-xLQrY7buE"><figcaption></figcaption></figure><p><strong>Step 2: Define a Shared Memory Area</strong> Next, I create the shared memory area in . This step connects the memory to the root class and reserves space for the data.</p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQGqknsKUlrr4A" src="https://media.licdn.com/dms/image/v2/D4D12AQGqknsKUlrr4A/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1734086588476?e=1761782400&amp;v=beta&amp;t=yFRZrQxIr-r27Cs5_E6ElDzwWPyocaSp_hPByOCP1Ro"><figcaption></figcaption></figure><p><strong>Step 3: Write Data to Shared Memory</strong> Here’s how I push data into shared memory. I create the shared object, lock it for write access, and attach my data.</p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQEbZFIeW9Ypmw" src="https://media.licdn.com/dms/image/v2/D4D12AQEbZFIeW9Ypmw/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1734086600531?e=1761782400&amp;v=beta&amp;t=6sQzS8naHeoP06AqUe-Gby3ubgPaXqX7mt1J2o6xhak"><figcaption></figcaption></figure><p><strong>Step 4: Read Data from Shared Memory</strong> When I need the data, I attach the shared memory area in read mode and grab what I need.</p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQHMK63Ph-i0cQ" src="https://media.licdn.com/dms/image/v2/D4D12AQHMK63Ph-i0cQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1734086610540?e=1761782400&amp;v=beta&amp;t=u51L5Pk6aijiqI2k1-Ro7YNg3b_2fkP6_eGcI5HRP9M"><figcaption></figcaption></figure><h3>#5 Monitor shared areas</h3><p>Using the transaction SHMM</p><figure><img data-media-urn="urn:li:digitalmediaAsset:D4D12AQF-mmm4LkV5Og" src="https://media.licdn.com/dms/image/v2/D4D12AQF-mmm4LkV5Og/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1734086651028?e=1761782400&amp;v=beta&amp;t=FyDgDUPtWzdv4YIZfMZI2WrSeZ1AcJXYRZG-kolJgI8"><figcaption></figcaption></figure><p></p><h3>Why I Love Shared Objects</h3><p>They’re fast and reliable. I’ve used them to cache pricing data, manage user sessions, and even store temporary configuration tables for processes. But here’s the catch: they only stick around as long as the SAP system is running. A system restart or instance crash wipes them out.</p><hr><h3>Things to Watch Out For</h3><ol><li><p><strong>System Restarts:</strong> Shared objects vanish when the SAP instance goes down. I always reload data after a restart.</p></li><li><p><strong>Monitoring:</strong> I keep an eye on my shared objects using . It’s the best way to see what’s in memory and clean up if needed.</p></li><li><p><strong>Class Changes:</strong> If I tweak the root class, the existing objects need to be deleted and recreated. It’s a bit of a hassle, but manageable.</p></li></ol><hr><h3>Shared Objects vs. Other Tools</h3><p>I use shared objects for structured, high-performance data access. If I only need temporary values between user screens,  and  work fine. For global, lightweight storage, shared buffers () can help, but shared objects give me way more control.</p><p></p><p></p><p><a target="_blank" href="https://www.linkedin.com/in/dkharlanau?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABBLdeYBRDV9XRmMIo8BWaZWNzGTtoVtV3M">Dzmitryi Kharlanau</a> , SAP consultant</p><p></p></div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% assign recent = site.data.edu.recent %}
+{% if recent %}
+<section class="section edu-section" id="learning-recent">
+  <header class="section-heading">
+    <p class="eyebrow">Recently completed</p>
+    <h2>Fresh certifications and workshops.</h2>
+  </header>
+  <div class="timeline">
+    {% for item in recent %}
+    <article class="timeline-item neub-card">
+      <header>
+        <h3>{{ item.title }}</h3>
+        {% if item.finished %}<p class="timeline-item__meta">{{ item.provider }} · {{ item.finished }}</p>{% elsif item.provider %}<p class="timeline-item__meta">{{ item.provider }}</p>{% endif %}
+      </header>
+      {% if item.notes %}<p>{{ item.notes }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

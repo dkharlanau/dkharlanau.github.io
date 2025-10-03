@@ -1,0 +1,148 @@
+<html>
+<head>
+  <title>
+In-Depth Look: Safety Time / Actual Range of Coverage / Firm Zone / Planning Time Fence in SAP MM </title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/in-depth-look-safety-time-actual-range-coverage-sap-mm-kharlanau-5gttf">
+In-Depth Look: Safety Time / Actual Range of Coverage / Firm Zone / Planning Time Fence in SAP MM </a></h1>
+    <p class="created">Created on 2024-12-04 09:56</p>
+  <p class="published">Published on 2024-12-04 17:00</p>
+  <div><p><strong> </strong>Quick Guide: When to Use MRP Tools</p><h3>1. Firm Zone</h3><ul><li><p><strong>Use for</strong>: Stabilizing procurement schedules; manual changes only.</p></li><li><p><strong>Where</strong>: Scheduling agreements, purchase orders.</p></li></ul><h3>2. Coverage Profile</h3><ul><li><p><strong>Use for</strong>: Dynamic stock levels based on demand.</p></li><li><p><strong>Where</strong>: Materials with fluctuating consumption.</p></li></ul><h3>3. Fixed Horizon (P1, P2)</h3><ul><li><p><strong>Use for</strong>: Limiting automatic changes in a fixed period.</p></li><li><p><strong>Where</strong>: P1 (manual fixing), P2 (automatic fixing).</p></li></ul><h3>4. Safety Days</h3><ul><li><p><strong>Use for</strong>: Adding a buffer for delays.</p></li><li><p><strong>Where</strong>: Critical lead-time materials.</p></li></ul><h3>5. Planning Time Fence</h3><ul><li><p><strong>Use for</strong>: Preventing MRP changes within a time fence.</p></li><li><p><strong>Where</strong>: Use with P1, P2, P3 MRP types.</p></li></ul><h3>6. Days' Supply</h3><ul><li><p><strong>Use for</strong>: Checking how long stock/receipts will cover demand.</p></li><li><p><strong>Where</strong>: Stock/requirements list for quick analysis.</p></li></ul><p><strong>Choose based on stability, flexibility, or buffering needs!</strong></p><hr><h3>📌 What Is a Coverage Profile?</h3><p>A <strong>Coverage Profile</strong> ensures that materials are available to meet demand for a defined number of days by setting:</p><ul><li><p><strong>Minimum coverage days</strong>: Minimum stock availability.</p></li><li><p><strong>Maximum coverage days</strong>: Prevents excess stock.</p></li></ul><p>SAP <strong>dynamically</strong> calculates the replenishment quantity to ensure stock stays within this range.</p><hr><h3>🛠️ How to Configure Coverage Profiles</h3><ul><li><p><strong>SPRO Path</strong>: Logistics → MM → MRP → Lot Size → Define Coverage Profile.</p></li><li><p><strong>Define Parameters</strong>: Enter min/max coverage days and target stock levels.</p></li><li><p><strong>Assign to Materials</strong>: Use the <strong>MRP 1 View</strong> in the Material Master.</p></li></ul><p><strong>Example</strong>:</p><ol><li><p>Daily Requirement = 20 units</p></li><li><p>Minimum Coverage = 3 days → Minimum stock = 60 units</p></li><li><p>Maximum Coverage = 7 days → Maximum stock = 140 units</p></li><li><p>If stock = 50 units, SAP proposes an order for 90 units to reach 140.</p></li></ol><hr><h3>📋 Coverage Profile and MD01n (MRP Live)</h3><p>Coverage Profiles have restrictions in <strong>MRP Live (MD01n)</strong>:</p><ul><li><p><strong>Plant Level</strong>: If defined, MD01n switches to <strong>classic MRP logic</strong>.</p></li><li><p><strong>MRP Area Level</strong>: Ignored by MD01n. Use <strong>classic MRP</strong> instead.</p></li></ul><p><strong>Reference</strong>: SAP Note 3373153 explains that MD01n does not support Coverage Profiles at the MRP area level.</p><p></p><h3>Coverage Profile and Safety Time in MRP: A Practical Guide</h3><p>Effective materials planning requires precise control over stock levels and lead times to balance availability and costs. SAP's <strong>Coverage Profile</strong> and <strong>Safety Time/Actual Range of Coverage</strong> are two powerful tools for achieving this balance in <strong>Material Requirements Planning (MRP)</strong>.</p><p>Here’s a clear, practical breakdown of how these tools work and how to use them effectively.</p><hr><h3>#1 Coverage Profile: Defining Stock Levels Dynamically</h3><p>A <strong>Coverage Profile</strong> is used to dynamically adjust safety stock levels based on average consumption over defined time periods. It ensures your stock levels adapt to fluctuating requirements without overstocking or stockouts.</p><hr><h3>How It Works</h3><p>At the <strong>Plant Level</strong>, the coverage profile is defined with these parameters:</p><ol><li><p><strong>Period Indicator (M)</strong>: Define up to <strong>three time periods</strong> (e.g., weekly, monthly).</p></li><li><p><strong>Number of Periods</strong>: The system calculates the average daily requirements based on this duration.</p></li><li><p><strong>Type (Work/Calendar Days)</strong>: Specify whether the periods are measured in working or calendar days.</p></li><li><p><strong>Coverage Days</strong>: Multiply the range of coverage by the average consumption in the period.</p></li></ol><hr><h3>Key Stock Levels Calculated</h3><ol><li><p><strong>Minimum Stock Level</strong></p></li><li><p><strong>Maximum Stock Level</strong></p></li><li><p><strong>Target Stock Level</strong> (Dynamic Safety Stock)</p></li></ol><hr><h3>Example: Dynamic Safety Stock Calculation</h3><p><strong>Scenario</strong>:</p><ul><li><p><strong>Average Daily Requirement</strong>: 15 pieces.</p></li><li><p>Coverage Profile:Minimum Range: 3 days.Maximum Range: 7 days. Target Range: 5 days.</p></li></ul><p><strong>Calculations</strong>:</p><ul><li><p><strong>Minimum Stock Level</strong>: 15×3=4515 \times 3 = 4515×3=45 pieces.</p></li><li><p><strong>Maximum Stock Level</strong>: 15×7=10515 \times 7 = 10515×7=105 pieces.</p></li><li><p><strong>Target Stock Level</strong>: 15×5=7515 \times 5 = 7515×5=75 pieces.</p></li></ul><p>If the available quantity is <strong>40 pieces</strong> (below the minimum stock level of 45), the system creates a <strong>procurement proposal</strong> for <strong>35 pieces</strong> to reach the target stock level of 75.</p><hr><h3>Where to Check These Values</h3><ul><li><p><strong>MRP Evaluations</strong>:View calculated values in the <strong>stock/requirements list</strong> or <strong>MRP list</strong>.Use the <strong>Period Totals Display</strong> to analyze stock and coverage details.</p></li></ul><hr><h3>🎯 Safety Time / Actual Range of Coverage</h3><h3>What Does It Do?</h3><p>Safety Time<strong> shifts the requirement dates forward </strong>by a specified number of workdays, ensuring materials are available earlier. It complements Safety Stock, which buffers by quantity.</p><hr><h3>🛠️ How to Configure Safety Time</h3><ul><li><p>In the <strong>Material Master (MRP 2 View)</strong>:</p></li><li><p><strong>Optional</strong>: Define <strong>Period Profiles</strong> in Customizing to adjust Safety Time for seasonal demand or sub-day precision.</p></li></ul><p><strong>Example</strong>:</p><ul><li><p>Requirement Date: Jan 31</p></li><li><p>Safety Time: 2 days → Planned Order Date: Jan 29</p></li><li><p>Actual Requirement Date remains Jan 31.</p></li></ul><hr><h3>🛠️ Key Features of Safety Time</h3><ul><li><p><strong>Dynamic Adjustments</strong>: Group multiple requirements into one order if using weekly/monthly lot sizes.</p></li><li><p><strong>Sub-Day Adjustments</strong>: Use percentages to define Safety Time, e.g., 2.2 days (2 days + 20%).</p></li></ul><p><strong>Example of Sub-Day Splits</strong>:</p><ul><li><p>Daily Requirement = 100 units</p></li><li><p>Distribution:20% (20 units) shifted 1 day earlier80% (80 units) shifted 2 days earlier</p></li></ul><hr><h3>📋 Stock Days’ Supply vs. Receipt Days’ Supply</h3><ul><li><p><strong>Stock Days’ Supply</strong>: Days current stock can cover demand.</p></li><li><p><strong>Receipt Days’ Supply</strong>: Includes upcoming receipts in calculations. Both are recalculated during each planning run and displayed in MRP lists.</p></li></ul><hr><h3>What Is a Planning Time Fence in SAP MRP?</h3><p>The <strong>Planning Time Fence (PTF)</strong> is a defined time period during which the MRP process limits changes to <strong>planned orders</strong> or <strong>procurement proposals</strong>, aiming to stabilize short-term production schedules. It’s a critical tool for avoiding constant rescheduling that disrupts workflows.</p><p>However, <strong>PTF doesn’t work automatically with all MRP types</strong>, including standard <strong>PD (MRP)</strong>, unless additional settings like <strong>firming types</strong> or <strong>manual firming of orders</strong> are applied. Without these, MRP will override orders even within the Planning Time Fence.</p><hr><h3>MRP Types That Work with Planning Time Fence</h3><p>The Planning Time Fence is effective only with certain <strong>MRP types</strong> where firming rules are explicitly incorporated. These include:</p><ol><li><p><strong>P1 (Manual Firming of Proposals Within the PTF)</strong></p></li><li><p><strong>P2 (Automatic Firming)</strong></p></li><li><p><strong>P3 (Firming and Restriction)</strong></p></li><li><p><strong>Time-Phased MRP (Types R1, R2, etc.)</strong></p></li></ol><hr><h3>How the Planning Time Fence Works</h3><p><strong>Set the Planning Time Fence</strong>:</p><ul><li><p>Defined in the material master under <strong>MRP 1 View</strong> ( field).</p></li><li><p>Specifies the number of days during which planning proposals or rescheduling are restricted.</p></li></ul><p><strong>MRP Type Dependency</strong>:</p><ul><li><p>In <strong>PD</strong>, the system <strong>does not respect the PTF</strong> unless manual firming (fixing) of orders is applied.</p></li><li><p>For P1, P2, and P3, orders within the time fence are firmed or restricted automatically.</p></li></ul><p><strong>Behavior in MRP Runs</strong>:</p><ul><li><p>Proposals <strong>outside</strong> the PTF are adjusted normally.</p></li><li><p>Proposals <strong>inside</strong> the PTF are handled based on firming rules (or ignored if restricted).</p></li></ul><hr><p><strong>Example: Using P1 with a Planning Time Fence</strong></p><p><strong>Scenario:</strong></p><ul><li><p>Material: Finished Product A.</p></li><li><p>MRP Type: P1.</p></li><li><p>Planning Time Fence: 10 days.</p></li></ul><p></p><p><strong>What Happens:</strong></p><p><strong>Inside the PTF (Days 1–10)</strong>:</p><ol><li><p>Existing planned orders are <strong>firmed</strong> and cannot be changed automatically by MRP.</p></li><li><p>No new proposals are created for requirements within this period unless manually added.</p></li></ol><p><strong>Outside the PTF (Days 11+): </strong>MRP generates new proposals or adjusts existing ones based on demand.</p><p></p><p></p><p><strong>Setting Up Planning Time Fence in SAP</strong></p><ol><li><p>Open the <strong>Material Master</strong> in SAP.</p></li><li><p>Go to <strong>MRP 1 View</strong>.</p></li><li><p>Enter the desired <strong>MRP Type</strong> (e.g., P1, P2, or P3).</p></li><li><p>Locate the field <strong>Planning Time Fence</strong> and set the number of days (e.g., ).</p></li><li><p>Save the material.</p></li></ol><p></p><p><strong>Why Doesn’t It Work with PD Alone?</strong></p><p>The <strong>PD (MRP)</strong> type by itself doesn’t respect the Planning Time Fence unless:</p><ul><li><p>You manually firm planned orders inside the fence.</p></li><li><p>You configure specific planning strategies (e.g., firming types or exception messages) to limit changes.</p></li></ul><p>This limitation makes PD unsuitable if you need strict control over short-term planning.</p><hr><h3>What’s the Firm Zone in Purchase Documents?</h3><p>The <strong>Firm Zone</strong> is like a "no-touch" period for your purchase orders or schedule lines. It’s a time frame where <strong>MRP can’t mess with your procurement plans</strong>—no automatic changes to quantities, dates, or requirements. If something needs tweaking, it has to be done manually by you or your team.</p><p>It’s a lifesaver when you want stability in your procurement process and don’t want suppliers to get confused by constant changes.</p><hr><h3>Where Do You Find the Firm Zone?</h3><p>You’ll mostly see it in <strong>scheduling agreements</strong>. It’s divided into:</p><p><strong>Firm Zone</strong>:</p><ul><li><p>Changes are <strong>not allowed</strong> in this period.</p></li><li><p>Procurement proposals and schedule lines remain fixed.</p></li></ul><p><strong>Trade-Off Zone</strong> (optional):</p><ul><li><p>Changes are <strong>allowed with caution</strong>, often with cost or approval implications.</p></li></ul><p><strong>Planning Zone</strong>:</p><ul><li><p>Outside the Firm Zone, changes are allowed freely based on demand.</p></li></ul><hr><h3>How Does It Work?</h3><h3>Example: Scheduling Agreement with Firm Zone</h3><ul><li><p><strong>Firm Zone</strong>: 10 days.</p></li><li><p><strong>Trade-Off Zone</strong>: Days 11–20.</p></li></ul><p><strong>What happens?</strong></p><ul><li><p>Any schedule line inside the next 10 days is locked. You can’t change it unless you do it manually.</p></li><li><p>For days 11–20, you can make changes, but your supplier might charge extra if they’ve already started planning or producing.</p></li><li><p>Beyond day 20, MRP can freely adjust based on new requirements.</p></li></ul><hr><h3>Why Use a Firm Zone?</h3><ul><li><p><strong>Avoid Chaos</strong>: Stabilizes your procurement process and prevents constant adjustments.</p></li><li><p><strong>Improve Supplier Relationships</strong>: Suppliers trust the schedules they get.</p></li><li><p><strong>Save Costs</strong>: Reduces last-minute changes that can lead to expedited shipping or extra fees.</p></li></ul><hr><h3>How to Set Up the Firm Zone in SAP</h3><ol><li><p>Go to the <strong>Scheduling Agreement</strong>.</p></li><li><p>Define the <strong>Firm Zone</strong> and optional <strong>Trade-Off Zone</strong> under delivery schedule settings.</p></li><li><p>Save the agreement, and you’re good to go.</p></li></ol><hr><p>SAP consultant with expertise in SD, MM, LE, and ABAP ( <a target="_blank">Dzmitryi Kharlanau</a> ). Have questions or need help? Let’s connect!</p><p>#SAP, #PP-MRP</p><p></p></div>
+</body>
+</html>

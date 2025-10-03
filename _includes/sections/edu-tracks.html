@@ -1,0 +1,27 @@
+{% assign tracks = site.data.edu.tracks %}
+{% if tracks %}
+<section class="section edu-section" id="learning-focus">
+  <header class="section-heading">
+    <p class="eyebrow">Focus areas</p>
+    <h2>What I’m learning right now.</h2>
+  </header>
+  <div class="edu-grid">
+    {% for track in tracks %}
+    <article class="edu-card neub-card">
+      <header class="edu-card__header">
+        <h3>{{ track.area }}</h3>
+        {% if track.status %}<span class="edu-pill">{{ track.status }}</span>{% endif %}
+      </header>
+      {% if track.focus %}<p class="edu-card__copy">{{ track.focus }}</p>{% endif %}
+      {% if track.resources %}
+      <ul class="edu-chip-list">
+        {% for resource in track.resources %}
+        <li>{{ resource }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

@@ -1,0 +1,53 @@
+{% assign services = site.data.home.services %}
+{% if services %}
+<section class="section services" id="services">
+  <header class="section-heading">
+    {% if services.eyebrow %}<p class="eyebrow">{{ services.eyebrow }}</p>{% endif %}
+    {% if services.title %}<h2>{{ services.title }}</h2>{% endif %}
+  </header>
+  {% if services.cards %}
+  <div class="services-grid">
+    {% for card in services.cards %}
+    {% if card.url %}
+    <a class="service-card neub-card" href="{{ card.url }}"{% if card.external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+    {% else %}
+    <article class="service-card neub-card">
+    {% endif %}
+      <header class="service-card__header">
+        <h3>{{ card.title }}</h3>
+        {% if card.icon %}<span class="service-card__icon" aria-hidden="true">{{ card.icon }}</span>{% endif %}
+      </header>
+      <div class="service-card__body">
+        {% if card.focus %}
+        <div class="service-card__section">
+          <span class="service-card__badge">Focus</span>
+          <p>{{ card.focus }}</p>
+        </div>
+        {% endif %}
+        {% if card.value %}
+        <div class="service-card__section">
+          <span class="service-card__badge service-card__badge--value">Value</span>
+          <p>{{ card.value }}</p>
+        </div>
+        {% endif %}
+        {% if card.summary %}
+        <p class="service-card__summary">{{ card.summary }}</p>
+        {% endif %}
+      </div>
+      {% if card.chips %}
+      <ul class="chip-list">
+        {% for chip in card.chips %}
+        <li>{{ chip }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    {% if card.url %}
+    </a>
+    {% else %}
+    </article>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}

@@ -1,0 +1,178 @@
+<html>
+<head>
+  <title>E-Mail-Template with CDS in SAP S/4HANA</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+    <img src="https://media.licdn.com/mediaC4D12AQH38G3TcvBmqw" alt="" title="" />
+      <h1><a href="https://www.linkedin.com/pulse/e-mail-template-cds-sap-s4hana-%D0%B4%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9-%D1%85%D0%B0%D1%80%D0%BB%D0%B0%D0%BD%D0%BE%D0%B2">E-Mail-Template with CDS in SAP S/4HANA</a></h1>
+    <p class="created">Created on 2021-12-21 18:00</p>
+  <p class="published">Published on 2021-12-21 18:34</p>
+  <div><p>It is the common desire to be aware of the current state, status of the critical processes where reaction for an issue resolution should be quick or where to be convenient a notification is necessary. </p><p>As an SAP consultant, I anticipate probable solutions to inform a user via sending an email</p><ol><li>With SAP Business workflow is set to create a task and send an email notification via event creation.</li><li>A custom program that runs periodically or is triggered by an event ( by processing an output type ) to build and send an email dynamically using CL_BCS. W</li><li>To create a log via the program's run and make it available per the user's request.</li><li>?</li></ol><p>With SAP S4 on-premise or cloud <strong>Email template CDS</strong> is available to build an email quicker and easier. It relates to option #2, but on this side, it simplifies the process of email creation.</p><p><em>* CDS (Core data services) is a layer above "pure database" in order to define semantically-enriched data models.</em></p><p><strong><u>How can I  access Email templates and from which parts does it consist? </u></strong></p><p>In ABAP Workbench (SE80): Create&gt; More&gt; E-Mail template. Using one of the pre-delivered Email templates ( <em>SD_SLS_DEFAULT_EMAIL_TEMPLATE Sales Document Default Email Template</em> ), we can see a possible use for it.&nbsp;</p><p>In the picture below, you can see the structure of an Email template. It contains the header part where it is necessary to specify a CDS view and the Body part: the Subject and Email body with linking variables from CDS view, Translations. It is also possible with the special workaround to include pictures into the email body. </p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="Альтернативный текст для этого изображения не предоставлен" data-media-urn="urn:li:digitalmediaAsset:C4D12AQFZ34CQ99iYfA" src="https://media.licdn.com/dms/image/v2/C4D12AQFZ34CQ99iYfA/article-inline_image-shrink_1500_2232/article-inline_image-shrink_1500_2232/0/1640110601513?e=1762387200&amp;v=beta&amp;t=aXyN_BqDtLjsqUxqqx3wpnfKKdeIl6Uqa129xDcVwhM"></div><p><strong><u>(!) The main restriction and disadvantage</u></strong>: it is only possible to pass a single line as the entry for processing. It means, if we need to list sales documents items as well with the sales document header, <strong>the approach will not work</strong>. And it is clear, to pre-build such function to work with several associations of CDS views, or with several sources requires a compex framework to cover it into the HTML structure. </p><p><strong><u>What is about the coding?</u></strong></p><p>Using the Email template SD_SLS_DEFAULT_EMAIL_TEMPLATE with CDS view, it is necessary to use cl_smtg_email_api for passing the name of the Email template and the key to retrieve the entry from the CDS View ( <em>~ a sales document header details</em> ). </p><p>Here is the short list of lines needed to prepare and send an email.</p><pre spellcheck="false">DATA:&nbsp;lo_api&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TYPE&nbsp;REF&nbsp;TO&nbsp;if_smtg_email_api
+
+&nbsp;&nbsp;TRY.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DATA(lo_message)&nbsp;=&nbsp;NEW&nbsp;cl_bcs_message(&nbsp;).
+
+"&nbsp;Get&nbsp;email&nbsp;template
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lo_api&nbsp;=&nbsp;cl_smtg_email_api=&gt;get_instance(&nbsp;
+               iv_template_id&nbsp;=&nbsp;'SD_SLS_DEFAULT_EMAIL_TEMPLATE'&nbsp;).
+      
+" Which sales order we will emailing?
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DATA(lt_data_key)&nbsp;=&nbsp;VALUE&nbsp;if_smtg_email_template=&gt;ty_gt_data_key(&nbsp;
+                          (&nbsp;name&nbsp;=&nbsp;'SALESDOCUMENT'&nbsp;
+                            value&nbsp;=&nbsp;'0000000102'&nbsp;)&nbsp;).
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lo_api-&gt;render_bcs_message(&nbsp;io_bcs_message&nbsp;&nbsp;=&nbsp;lo_message
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iv_language&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;'E'
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it_data_key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;lt_data_key&nbsp;&nbsp;).
+
+"&nbsp;Add&nbsp;recipient
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lo_message-&gt;add_recipient(&nbsp;'myemail@gmail.com'&nbsp;).
+
+"&nbsp;Set&nbsp;send&nbsp;immediately&nbsp;flag
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lo_message-&gt;set_send_immediately(&nbsp;iv_immediately&nbsp;=&nbsp;abap_true&nbsp;).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DATA(lt_error_recipients)&nbsp;=&nbsp;lo_message-&gt;send(&nbsp;).
+
+
+"&nbsp;Email&nbsp;errors
+&nbsp;&nbsp;&nbsp;&nbsp;CATCH&nbsp;cx_bcs_send&nbsp;INTO&nbsp;DATA(lo_bcs_error).&nbsp;
+"Email&nbsp;template&nbsp;errors
+&nbsp;&nbsp;&nbsp;&nbsp;CATCH&nbsp;cx_smtg_email_common&nbsp;INTO&nbsp;DATA(lo_stmg_error).&nbsp;
+&nbsp;&nbsp;ENDTRY.
+</pre><p><strong><u>What is as a result?</u></strong></p><p>In the end, an email is built and prefilled with variables, it contains a list of recipients, a subject, and the content. Everything that is needed to notify a responsible person about the status/event.</p><div class="slate-resizable-image-embed slate-image-embed__resize-full-width"><img alt="Альтернативный текст для этого изображения не предоставлен" data-media-urn="urn:li:digitalmediaAsset:C4D12AQHIoqW7-3lzlQ" src="https://media.licdn.com/dms/image/v2/C4D12AQHIoqW7-3lzlQ/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1640110670606?e=1762387200&amp;v=beta&amp;t=im_5jymrjgC97A6uzw8t-YdATclGjtSmZTUGmfB969M"></div><p><br></p></div>
+</body>
+</html>

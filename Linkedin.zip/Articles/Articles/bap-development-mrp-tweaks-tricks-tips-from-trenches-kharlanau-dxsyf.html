@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>ABAP Development for MRP: Tweaks, Tricks, and Tips from the Trenches</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/bap-development-mrp-tweaks-tricks-tips-from-trenches-kharlanau-dxsyf">ABAP Development for MRP: Tweaks, Tricks, and Tips from the Trenches</a></h1>
+    <p class="created">Created on 2024-12-13 11:41</p>
+  <p class="published">Published on 2025-01-01 12:00</p>
+  <div><blockquote><p><em>– From your friendly neighborhood SAP SD consultant with a decade of ABAP wizardry…</em></p></blockquote><h3>Adding Custom Columns to MD04: Make It Shine with MD_ADD_COL_OVERVIEW</h3><p>Ever stared at MD04 and thought, “Man, I wish I could see that extra info right here”? Well, you’re in luck! With the <strong>MD_ADD_COL_OVERVIEW</strong> BAdI, you can sprinkle in those additional fields you desperately need. Here’s a quick snippet to get those columns popping:</p><pre></pre><p>Pretty straightforward, right? This method lets you activate and customize those extra columns. Just make sure you’ve got your fields lined up and ready to display!</p><hr><h3>Filling in the Extra Columns: IF_EX_MD_ADD_COL_EZPS~FILL_ADD_COLUMNS</h3><p>Once you’ve got your columns set up, you need to populate them with data. Here’s how you can do it:</p><pre></pre><p>This little beauty grabs the sales area () from  based on the sales document number and fetches the corresponding text from . Then, it fills your custom column with that text. Simple and effective!</p><hr><h3>MRP on HANA: Navigating the New Landscape</h3><p>With S/4HANA shaking things up, MRP has seen some serious changes. Here’s the lowdown:</p><ul><li><p><strong>Classic BAdIs vs. HANA-Optimized BAdIs</strong>: If you’re still using those old-school planning transactions like MD50 or MD51, your classic BAdIs (like ) are safe and sound. But if you’re rocking HANA-optimized transactions (think MD01, MD02, MD03), you need to switch gears and use the new <strong>BAdI MD_ADD_ELEMENTS</strong> to tweak your MRP data.</p></li><li><p><strong>Why the Change?</strong>: HANA’s blazing fast, and the planning processes have been revamped to leverage its power. The new BAdI ensures that any custom logic you inject meshes well with the optimized data reading processes.</p></li></ul><p>Here’s a heads-up: <strong>BAdI MD_ADD_ELEMENTS</strong> is powerful but risky. It lets you overhaul MRP data during planning runs, stock/requirements list construction, and more. Use it sparingly and always double-check your changes to avoid data inconsistencies.</p><hr><h3>Must-Know BAdIs for MRP: Your Toolkit</h3><p>Alright, let’s dive into some of the most useful BAdIs for MRP. Whether you’re tweaking MRP elements, customizing display logic, or handling purchase requisitions, there’s a BAdI for you.</p><ol><li><p><strong>MD_CHANGE_MRP_DATA</strong>:</p></li><li><p><strong>MD_SUBCONT_LOGIC</strong>:</p></li><li><p><strong>MD_ADD_ELEMENTS</strong>:</p></li><li><p><strong>MD_DISPLAY_ELEMENT</strong>:</p></li><li><p><strong>MD_MRP_PARAMETERS</strong>:</p></li><li><p><strong>MD_ADD_COL_EZPS</strong>:</p></li><li><p><strong>MD_PURREQ_CHANGE &amp; MD_PLDORD_CHANGE</strong>:</p></li><li><p><strong>MD_PURREQ_POST &amp; MD_PLDORD_POST</strong>:</p></li></ol><p>…and the list goes on! There are BAdIs for everything from source determination () to production version selection (). Want to see them all? Fire up SE18 and search for BAdIs starting with “MD”.</p><hr><h3>Handling MRP Live on SAP HANA: Key Considerations</h3><p>Switching to MRP Live on HANA? Here are some essentials:</p><ul><li><p><strong>BAdI Compatibility</strong>: Not all classic BAdIs work with HANA-optimized planning transactions. Use <strong>MD_ADD_ELEMENTS</strong> instead of  for HANA-optimized scenarios.</p></li><li><p><strong>Performance Matters</strong>: HANA is all about speed. Ensure your custom code is optimized to run efficiently on HANA’s in-memory architecture.</p></li><li><p><strong>Testing is Crucial</strong>: With great power comes great responsibility. Thoroughly test any changes to avoid disrupting your planning runs.</p></li></ul><hr><h3>Pro Tips for ABAP MRP Development</h3><ol><li><p><strong>Stay Updated with Notes</strong>: SAP Notes like <strong>2268085</strong> for MRP Live and <strong>1783556</strong> for storage location determination are gold mines. Keep them handy!</p></li><li><p><strong>Use the Right BAdI</strong>: Picking the wrong BAdI can lead to messy results. Make sure you understand the process flow and choose accordingly.</p></li><li><p><strong>Document Everything</strong>: Custom logic can get complex. Document your enhancements thoroughly to make maintenance a breeze.</p></li><li><p><strong>Leverage SAP’s Documentation</strong>: The SPRO path “Production – Material Requirements Planning – Business Add-Ins for Requirements Planning” is your friend. Dive in for detailed configurations and examples.</p></li><li><p><strong>Think Ahead</strong>: With S/4HANA evolving, future-proof your customizations by aligning with SAP’s best practices and leveraging new frameworks like CDS views where possible.</p></li></ol><p></p><p></p><p><a target="_blank" href="https://www.linkedin.com/in/dkharlanau?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABBLdeYBRDV9XRmMIo8BWaZWNzGTtoVtV3M">Dzmitryi Kharlanau</a> , SAP consultant</p><p></p><p></p></div>
+</body>
+</html>

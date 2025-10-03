@@ -1,0 +1,148 @@
+<html>
+<head>
+  <title>
+Domain-Driven Design (DDD): Some Insights from Reading</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/domain-driven-design-ddd-some-insights-from-reading-kharlanau-ukysf">
+Domain-Driven Design (DDD): Some Insights from Reading</a></h1>
+    <p class="created">Created on 2024-12-04 16:02</p>
+  <p class="published">Published on 2024-12-18 16:30</p>
+  <div><p>Domain-Driven Design (DDD) is one of those methodologies that you don’t fully appreciate until you see it in action. After reading Eric Evans’ book and diving into projects that used DDD principles, I came to understand how it simplifies building complex applications by focusing on <strong>what truly matters—the domain</strong>.</p><hr><h3>What Is a Domain?</h3><p>In software, the <strong>domain</strong> refers<strong> to the subject area your application </strong>is designed to address. Think of it as the s<strong>phere of knowledge or activity</strong> that your software revolves around.</p><blockquote><p>Example: For an e-commerce app, the domain includes orders, payments, and inventory.</p></blockquote><p>The domain often ties closely to the <strong>business logic</strong>, which governs how the components <strong>interact to achieve the desired outcomes</strong>.</p><hr><h3>What Is Domain-Driven Design?</h3><p>Introduced by Eric Evans in his book, <strong>DDD focuses on aligning the software model with the domain</strong>. It’s about connecting the software’s structure to real-world business problems, evolving as the domain evolves.</p><p><strong>Core Principles</strong>:</p><ol><li><p><strong>Focus on the Core Domain</strong>: Invest most effort in areas critical to the business.</p></li><li><p><strong>Model the Domain</strong>: Build <strong>a clear representation</strong> of the business within your software.</p></li><li><p><strong>Collaborate with Domain Experts</strong>: Continuously involve people <strong>who understand the business </strong>inside and out.</p></li></ol><hr><h3>Key Terms in DDD</h3><ul><li><p><strong>Context</strong>: The setting that gives meaning to a model or statement.</p></li><li><p><strong>Model</strong>: A system of abstractions describing aspects of the domain to solve problems.</p></li><li><p><strong>Ubiquitous Language</strong>: <strong>A shared language used by the entire team</strong>, reflecting the domain model.</p></li><li><p><strong>Bounded Context</strong>: A boundary within which a specific model applies.</p></li></ul><hr><h3>Strategic Design: Mapping the Big Picture</h3><h3>Core Domain + Subdomains</h3><p>DDD recognizes that not all parts of a system are equally important.</p><ul><li><p><strong>Core Domain</strong>: The heart of your business logic. Invest the most effort here.</p></li><li><p><strong>Supporting Domains</strong>: Complement the core but are less critical.</p></li><li><p><strong>Generic Subdomains</strong>: Common to many businesses and usually reusable.</p></li></ul><p></p><h3>Context Mapping</h3><p>When multiple <strong>Bounded Contexts</strong> interact, integration becomes crucial.</p><ul><li><p><strong>Shared Kernel</strong>: A shared part of the model.</p></li><li><p><strong>Open Host Service</strong>: A contract for interacting with other contexts.</p></li><li><p><strong>Partnership</strong>: Two teams working closely with aligned goals.</p></li></ul><hr><h3>Tactical Design: Tools for Modeling</h3><h3>Aggregates</h3><p>An <strong>Aggregate</strong> is a cluster of related entities and value objects with a single entry point, called the <strong>Aggregate Root</strong>. <strong>Rules</strong>:</p><ol><li><p>Protect business invariants within the boundary.</p></li><li><p>Keep aggregates small.</p></li><li><p>Reference other aggregates only by ID.</p></li><li><p>Use eventual consistency for updates.</p></li></ol><p></p><h3>Entities and Value Objects</h3><ul><li><p><strong>Entity</strong>: Identified by a unique ID and has a lifecycle.</p></li><li><p><strong>Value Object</strong>: Immutable and identified by its attributes.</p></li></ul><p></p><h3>Domain Events</h3><p>Capture significant changes or occurrences in the domain. For example: <em>"OrderPlaced"</em>. Use these to trigger workflows or notify other parts of the system.</p><p></p><h3>Services</h3><p>Operations that don’t belong to any specific entity or value object. Example: <em>CalculateDiscountService</em>.</p><p></p><h3>Repositories</h3><p>Provide access to aggregates. They abstract the persistence layer, offering methods like <em>findById</em> or <em>save</em>.</p><p></p><h3>Factories</h3><p>Encapsulate logic for creating complex objects or aggregates.</p><hr><h3>Ubiquitous Language: A Shared Understanding</h3><p>The <strong>Ubiquitous Language</strong> is the backbone of DDD. It ensures that everyone—developers, domain experts, and stakeholders—uses the same terms. This clarity prevents misunderstandings and keeps the team aligned.</p><hr><h3>Advantages of DDD</h3><ol><li><p>Shared language improves collaboration between technical and business teams.</p></li><li><p>Modular design makes systems easier to change and evolve.</p></li><li><p>Ensures software solves real problems, not just technical challenges.</p></li></ol><hr><h3>Challenges of DDD</h3><ol><li><p>Without domain experts, building the right model is impossible.</p></li><li><p>DDD thrives on continuous improvement, which may feel slow for teams used to waterfall models.</p></li><li><p>If your project’s complexity is more technical than business-related, DDD might overcomplicate things.</p></li></ol><hr><h3>How to Start with DDD</h3><ol><li><p>Work closely with domain experts to build a shared understanding.</p></li><li><p>Split the system into <strong>Bounded Contexts</strong> and define their responsibilities.</p></li><li><p><strong>Use Aggregates Wisely</strong>: Keep them small and focused.</p></li><li><p>Involve the whole team—developers and domain experts—in modeling and design.</p></li><li><p>Continuously refine the model as your understanding grows.</p></li></ol><hr><p>DDD isn’t just about writing code; it’s about solving business problems with software. It brings structure, clarity, and focus to complex projects. Reading Eric Evans’ book opened my eyes to how crucial the domain is in development (<a target="_blank" href="https://www.linkedin.com/in/dkharlanau?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABBLdeYBRDV9XRmMIo8BWaZWNzGTtoVtV3M">Dzmitryi Kharlanau</a>). If you’re building systems with high business complexity, DDD might be the approach you need.</p><p></p></div>
+</body>
+</html>

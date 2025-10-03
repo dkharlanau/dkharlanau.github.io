@@ -1,0 +1,257 @@
+---
+layout: default
+title: "Dzmitryi Kharlanau | Curriculum Vitae"
+description: "AI-ready SAP Order-to-Cash CV for Dzmitryi Kharlanau, including experience, skills, certifications, and projects."
+permalink: /cv/
+---
+
+{%- assign resume = site.data.resume -%}
+{%- assign resume_links = resume.links | where_exp: "link", "link.url contains 'http'" -%}
+{%- assign skills_primary = resume.skills | slice: 0, 24 -%}
+{%- assign primary_education = resume.education | first -%}
+
+<section class="content-box resume">
+  <header class="resume-header">
+    <div class="resume-title">
+      <p class="resume-kicker">Curriculum Vitae</p>
+      <h1>{{ resume.name }}</h1>
+      <p class="resume-headline">{{ resume.headline }}</p>
+      {% if primary_education %}
+      <p class="resume-location">{{ primary_education.notes | default: primary_education.school }}</p>
+      {% endif %}
+    </div>
+    <div class="resume-contact">
+      <dl>
+        {% if resume.contact.email %}
+        <div>
+          <dt>Email</dt>
+          <dd><a href="mailto:{{ resume.contact.email }}">{{ resume.contact.email }}</a></dd>
+        </div>
+        {% endif %}
+        {% if resume.contact.site %}
+        <div>
+          <dt>Website</dt>
+          <dd><a href="{{ resume.contact.site }}" target="_blank" rel="noopener">{{ resume.contact.site }}</a></dd>
+        </div>
+        {% endif %}
+        <div>
+          <dt>Company</dt>
+          <dd><a href="https://www.epam.com" target="_blank" rel="noopener">EPAM Systems</a></dd>
+        </div>
+        {% if resume.contact.linkedin %}
+        <div>
+          <dt>LinkedIn</dt>
+          <dd><a href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener">{{ resume.contact.linkedin }}</a></dd>
+        </div>
+        {% endif %}
+      </dl>
+      <div class="resume-downloads">
+        <a class="cta" href="{{ '/_data/resume.yml' | relative_url }}" download>Download YAML</a>
+        <a class="cta secondary" href="{{ '/ai/resume.json' | relative_url }}" download>Download JSON</a>
+      </div>
+      <p class="resume-contact-note">For new collaborations reach out via LinkedIn or through the EPAM Systems account team.</p>
+    </div>
+  </header>
+
+  {% if resume.summary %}
+  <section class="resume-section">
+    <h2>Executive Summary</h2>
+    <p>{{ resume.summary }}</p>
+  </section>
+  {% endif %}
+
+  {% if resume.experience %}
+  <section class="resume-section">
+    <h2>Experience</h2>
+    <div class="resume-list">
+      {% for role in resume.experience %}
+      <article class="resume-item">
+        <header>
+          <h3>{{ role.title }} &middot; {{ role.company }}</h3>
+          <p class="resume-meta">
+            {% if role.start %}
+              {%- assign start_date = role.start -%}
+              {%- if start_date.size == 4 -%}
+                {{ start_date }}
+              {%- else -%}
+                {{ start_date | append: '-01' | date: '%b %Y' }}
+              {%- endif -%}
+            {% endif %}
+            –
+            {% if role.current %}
+              Present
+            {% elsif role.end %}
+              {%- assign end_date = role.end -%}
+              {%- if end_date.size == 4 -%}
+                {{ end_date }}
+              {%- else -%}
+                {{ end_date | append: '-01' | date: '%b %Y' }}
+              {%- endif -%}
+            {% else %}
+              {{ 'Previous' }}
+            {% endif %}
+            {% if role.location %}
+              &middot; {{ role.location }}
+            {% endif %}
+          </p>
+        </header>
+        {% if role.summary %}
+        <p>{{ role.summary }}</p>
+        {% endif %}
+        {% if role.highlights %}
+        <ul class="resume-highlights">
+          {% for bullet in role.highlights %}
+          <li>{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if resume.education %}
+  <section class="resume-section">
+    <h2>Education</h2>
+    <div class="resume-list">
+      {% for edu in resume.education %}
+      <article class="resume-item">
+        <header>
+          <h3>{{ edu.school }}{% if edu.degree %}, {{ edu.degree }}{% endif %}</h3>
+          <p class="resume-meta">
+            {% if edu.start %}
+              {{ edu.start }}
+            {% endif %}
+            {% if edu.end %}
+              – {{ edu.end }}
+            {% endif %}
+          </p>
+        </header>
+        {% if edu.field %}
+        <p>{{ edu.field }}</p>
+        {% endif %}
+        {% if edu.notes %}
+        <p class="resume-notes">{{ edu.notes }}</p>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if skills_primary %}
+  <section class="resume-section">
+    <h2>Core Skills</h2>
+    <ul class="resume-tags">
+      {% for skill in skills_primary %}
+      <li>{{ skill }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if resume.certifications %}
+  <section class="resume-section">
+    <h2>Certifications</h2>
+    <div class="resume-list">
+      {% for cert in resume.certifications %}
+      <article class="resume-item">
+        <header>
+          <h3>{{ cert.name }}</h3>
+          <p class="resume-meta">
+            {% if cert.issuer %}{{ cert.issuer }}{% endif %}
+            {% if cert.issued %} &middot; Issued {{ cert.issued }}{% endif %}
+          </p>
+        </header>
+        {% if cert.url %}
+        <p><a href="{{ cert.url }}" target="_blank" rel="noopener">View credential</a></p>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if resume.projects %}
+  <section class="resume-section">
+    <h2>Selected Projects</h2>
+    <div class="resume-list">
+      {% for project in resume.projects %}
+      <article class="resume-item">
+        <header>
+          <h3>{{ project.title }}</h3>
+          <p class="resume-meta">
+            {% if project.start %}{{ project.start }}{% endif %}
+            {% if project.end %} – {{ project.end }}{% endif %}
+          </p>
+        </header>
+        {% if project.summary %}
+        <p>{{ project.summary }}</p>
+        {% endif %}
+        {% if project.highlights %}
+        <ul class="resume-highlights">
+          {% for bullet in project.highlights %}
+          <li>{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% if project.url %}
+        <p><a href="{{ project.url }}" target="_blank" rel="noopener">Project reference</a></p>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if resume.languages %}
+  <section class="resume-section">
+    <h2>Languages</h2>
+    <ul class="resume-tags">
+      {% for lang in resume.languages %}
+      <li>{{ lang.name }}{% if lang.proficiency %} — {{ lang.proficiency }}{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</section>
+
+{% assign same_as = resume_links | map: 'url' %}
+{% assign knowledge_topics = skills_primary | slice: 0, 12 %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": {{ resume.name | jsonify }},
+  "jobTitle": {{ resume.headline | jsonify }},
+  "url": {{ resume.contact.site | jsonify }},
+  "image": {{ '/assets/img/DzmitryiKharlanau.png' | absolute_url | jsonify }},
+  "worksFor": {
+    "@type": "Organization",
+    "name": "EPAM Systems",
+    "url": "https://www.epam.com"
+  },
+  "sameAs": {{ same_as | jsonify }},
+  {% if resume.contact.linkedin %}
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "contactType": "Business inquiries",
+      "url": {{ resume.contact.linkedin | jsonify }},
+      "availableLanguage": ["English"]
+    }
+  ],
+  {% endif %}
+  {% if resume.contact.email %}
+  "email": {{ resume.contact.email | prepend: 'mailto:' | jsonify }},
+  {% endif %}
+  {% if primary_education %}
+  "alumniOf": {
+    "@type": "EducationalOrganization",
+    "name": {{ primary_education.notes | default: primary_education.school | jsonify }}
+  },
+  {% endif %}
+  "knowsAbout": {{ knowledge_topics | jsonify }}
+}
+</script>

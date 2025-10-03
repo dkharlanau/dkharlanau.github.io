@@ -1,0 +1,39 @@
+{% assign section_keys = include.sections | default: page.sections %}
+{% if section_keys %}
+  {% for key in section_keys %}
+    {% case key %}
+      {% when 'hero' %}
+        {% include sections/hero.html %}
+      {% when 'signals' %}
+        {% include sections/signals.html %}
+      {% when 'services' %}
+        {% include sections/services.html %}
+      {% when 'method' %}
+        {% include sections/method.html %}
+      {% when 'credentials' %}
+        {% include sections/credentials.html %}
+      {% when 'edu-hero' %}
+        {% include sections/edu-hero.html %}
+      {% when 'edu-tracks' %}
+        {% include sections/edu-tracks.html %}
+      {% when 'edu-recent' %}
+        {% include sections/edu-recent.html %}
+      {% when 'edu-reading' %}
+        {% include sections/edu-reading.html %}
+      {% when 'llm-profiles' %}
+        {% include sections/llm-profiles.html %}
+      {% when 'changelog' %}
+        {% include sections/changelog.html %}
+      {% when 'connect-hero' %}
+        {% include sections/connect-hero.html %}
+      {% when 'connect-engagements' %}
+        {% include sections/connect-engagements.html %}
+      {% when 'connect-partners' %}
+        {% include sections/connect-partners.html %}
+      {% when 'connect-cta' %}
+        {% include sections/connect-cta.html %}
+      {% when 'final-cta' %}
+        {% include sections/final-cta.html %}
+    {% endcase %}
+  {% endfor %}
+{% endif %}

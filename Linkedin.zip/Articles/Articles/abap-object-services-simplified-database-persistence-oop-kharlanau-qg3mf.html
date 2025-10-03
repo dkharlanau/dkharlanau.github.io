@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>ABAP Object Services: Simplified Database Persistence with OOP</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/abap-object-services-simplified-database-persistence-oop-kharlanau-qg3mf">ABAP Object Services: Simplified Database Persistence with OOP</a></h1>
+    <p class="created">Created on 2024-12-13 10:58</p>
+  <p class="published">Published on 2024-12-26 18:45</p>
+  <div><blockquote><p>ABAP Object Services (AOS) is a powerful framework that brings <strong>object-relational mapping (ORM)</strong> to ABAP. It allows developers to interact with database tables through <strong>object-oriented programming (OOP)</strong> principles, simplifying CRUD operations and making applications more maintainable and modular.</p></blockquote><h3>Why Use ABAP Object Services?</h3><p>When you’re dealing with complex database structures and relationships, writing procedural code for CRUD operations can get messy. AOS offers the following advantages:</p><ul><li><p><strong>Modularity:</strong> Each persistent object encapsulates its data and logic, making it easier to test and maintain.</p></li><li><p><strong>Efficiency:</strong> Object-oriented design reduces boilerplate code and promotes reuse.</p></li><li><p><strong>Improved Maintainability:</strong> Changes are localized to persistent classes, making enhancements and debugging easier.</p></li></ul><hr><h3>Key Components of ABAP Object Services</h3><h3>1. Persistence Service</h3><p>Handles the heavy lifting of synchronizing object instances with database tables. Think of it as the bridge between your ABAP classes and the DB layer.</p><h3>2. Query Service</h3><p>Provides an OOP-friendly API for searching database records, returning them as objects.</p><h3>3. Transaction Service</h3><p>Ensures that operations on objects (create, update, delete) follow transactional consistency.</p><hr><h3>Getting Started with Persistent Objects</h3><p>Here’s how you can design, configure, and use persistent objects in ABAP.</p><h3>Step 1: Create a Persistent Class</h3><ul><li><p>Use SE24 to define a new class.</p></li><li><p>Mark it as <strong>Persistent Class</strong> during creation.</p></li><li><p>SAP will automatically include the  interface in the class.</p></li></ul><p>SAP also generates a <strong>class agent</strong> for this persistent class. You’ll use the agent to create, read, update, and delete object instances.</p><h3>Step 2: Map Persistent Classes</h3><ul><li><p>Open the class in the Class Builder (SE24).</p></li><li><p>Click the <strong>Persistence</strong> button to map the class fields to database table fields.</p></li></ul><hr><h3>Using Persistent Objects</h3><h3>Creating Persistent Objects</h3><pre></pre><p>Reading Persistent Objects</p><pre></pre><p>Updating Persistent Objects</p><pre></pre><p>Deleting Persistent Objects</p><pre></pre><h3>Querying Persistent Objects</h3><p>The query service allows you to search the database with filters and retrieve results as object collections.</p><pre></pre><h3>Practical Scenarios for ABAP Object Services</h3><ul><li><p><strong>Data Consistency:</strong> Use persistent objects to ensure transactional consistency across related tables.</p></li><li><p><strong>Modular Development:</strong> Encapsulate business logic and DB interaction in reusable classes.</p></li><li><p><strong>Query Efficiency:</strong> Retrieve related records using object-oriented queries instead of complex joins.</p></li></ul><hr><h3>Tips for Using AOS</h3><ul><li><p><strong>Test Incrementally:</strong> Since AOS splits your code into smaller units, you can test each CRUD operation independently.</p></li><li><p><strong>Error Handling:</strong> Always handle exceptions like  or  for robust code.</p></li><li><p><strong>Understand Class Agents:</strong> SAP-generated agents manage the link between your objects and the database.</p></li></ul><p></p><p></p><p><a target="_blank" href="https://www.linkedin.com/in/dkharlanau?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABBLdeYBRDV9XRmMIo8BWaZWNzGTtoVtV3M">Dzmitryi Kharlanau</a>, SAP Consultant</p><p></p><p></p></div>
+</body>
+</html>

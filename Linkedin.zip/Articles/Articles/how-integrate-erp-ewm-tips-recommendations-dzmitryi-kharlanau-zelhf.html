@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>How to integrate SAP ERP with EWM: tips and recommendations</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/how-integrate-erp-ewm-tips-recommendations-dzmitryi-kharlanau-zelhf">How to integrate SAP ERP with EWM: tips and recommendations</a></h1>
+    <p class="created">Created on 2024-08-20 10:51</p>
+  <p class="published">Published on 2024-08-20 17:15</p>
+  <div><p>If you’re like me, you've probably faced the challenge of getting your ERP system to play nice with your EWM system. It can be difficult from the beginning, but once you figure it out, it makes everything run so much smoother. I’ve got you covered with some simple steps to make the integration smooth and stress-free.</p><p></p><h3>How to Activate ERP-EWM Integration</h3><p>To get things rolling, you need to activate the integration between your ERP and EWM systems. It’s like flipping a switch—literally. You’ll find this switch in your system settings under:</p><ul><li><p><strong>Logistics Execution -&gt; Extended Warehouse Management Integration -&gt; Basic Configuration of the EWM Connection -&gt; Edit EWM-specific Parameters</strong></p></li></ul><p>If you’ve got the right business function (LOG_LE_INTEGRATION) activated in an ERP system with Enhancement Package 3, this is where you do it. If you’re working with an older ERP version, the path is a bit different:</p><ul><li><p><strong>Logistics Execution -&gt; Service Parts Management (SPM) -&gt; Integrate SPM with Other Components -&gt; Maintain Extended WM-Specific Parameters</strong></p></li></ul><p></p><p></p><h3>Making Sure EWM and ERP Work Together</h3><p>To ensure your EWM-managed warehouse and other warehouses or picking methods in ERP work well together, there’s a feature called "Delivery Split by Warehouse Number" that you’ll need to activate. This keeps everything organized by making sure items processed in EWM and other picking items don’t end up mixed together in the same delivery.</p><p></p><h3>Tips for Goods Issue Processing</h3><p>Once you’ve sent an outbound delivery to EWM for picking, you generally can’t change it anymore. But, if you need to make changes in ERP before it hits EWM, you can delay the distribution. Just tweak the settings for your warehouse number or delivery type.</p><p>Using CRM for sales orders? If you're doing direct deliveries, changes to sales orders can still flow through to the outbound delivery in EWM, as long as the delivery is still changeable.</p><p></p><h2>Inbound Delivery Creation Scenarios</h2><p><strong>Option 1: Based on Purchase Orders</strong></p><p>You can create inbound deliveries directly from purchase orders using transactions <strong>VL31N</strong> or <strong>VL34</strong>. Alternatively, you can use the IDoc <strong>DELVRY05</strong> with the function module <strong>IDOC_INPUT_DESADV1</strong>.</p><p><strong>Key Point:</strong> Once you distribute these inbound deliveries to EWM, you can't change them anymore in ERP. However, if you need to make changes before they hit EWM, you can delay the distribution.</p><p><strong>Option 2: Using Transaction VL60</strong></p><p>Another way to create inbound deliveries is through transaction <strong>VL60</strong> or by using the IDoc <strong>DELVRY05</strong> with the function module <strong>/SPE/IDOC_INPUT_DESADV1</strong>.</p><p><strong>Key Point:</strong> These deliveries are sent immediately to EWM, but the good news is, they remain changeable in ERP after distribution. If you run into any errors, these deliveries can be saved with the status "On Hold," giving you a chance to fix things up. Plus, you get access to configurable validations and enrichments that only apply to this type.</p><p><strong>Option 3: Automatic Creation</strong></p><p>Finally, the system can automatically create inbound deliveries during specific processes like two-step stock transfers, transportation cross-docking, correction deliveries, or goods movements.</p><p><strong>Key Point:</strong> These behave similarly to the deliveries created in Option 1. You can't delay their distribution to EWM, but that’s usually not a problem because these scenarios don’t typically require changes in ERP after the fact.</p><p></p><h3>Handling Order BOMs and Invoicing</h3><p>Order BOMs (Bills of Materials) work well with EWM if they’re defined as “kit-to-order” in the system. But, not all BOM types play nicely with EWM, so be sure you’re using the right one. Also, if you want to create invoices before the goods issue, make sure you’ve got the LOG_LE_INTEGRATION function activated—otherwise, this feature is only available through SAP CRM.</p><p></p><h3>Route Determination and Cross-Docking</h3><p>One thing to keep in mind: EWM doesn’t automatically pull the route determined in ERP, so plan your shipments accordingly. For more precise planning, let EWM handle route determination and scheduling.</p><p>If you’re into transportation cross-docking, you’ll need to configure route determination within EWM itself, especially if you’re using CRM for sales orders.</p><p></p><h3>Recommendations for Stock Transfers and Replenishment</h3><p><strong>Two-Step Stock Transfers</strong></p><p>If the receiving warehouse is managed by EWM , you’ll need to use a two-step transfer process. This is especially important when<strong> the goods receipt is posted using an inbound delivery.</strong></p><p><strong>Tip:</strong> Use the outbound delivery message <strong>SPED</strong> to create the inbound delivery instead of relying on the shipping notification IDoc. This method is generally more reliable. If you’re transferring handling units (HUs) between warehouses, ensure that you have at least activated the lean HU status update or the unique HU number assignment. </p><p>!!! <strong>But remember, with unique HU number assignment, cross-delivery handling units can’t be used</strong>.</p><p><strong>One-Step Transfers:</strong> These are only feasible if the receiving warehouse<strong> isn’t EWM-managed</strong>. Otherwise, the inbound delivery required for goods receipt won’t be created, making the process impossible.</p><p></p><p><strong>Stock Transfer Differences</strong></p><p>During stock transfers, you might <strong>encounter quantity differences</strong> at goods receipt. You have two main options:</p><ol><li><p><strong>Assign the Difference to the Carrier or Supplying Warehouse. </strong>In this scenario,<strong> a correction delivery is automatically created by the system</strong>, prompting EWM to check and adjust the stock accordingly.</p></li><li><p><strong>Post the Difference Directly.</strong> If the supplying warehouse isn’t EWM-managed, the system won’t create a correction delivery. Instead, it will immediately post a positive or negative quantity difference to the supplying storage location, depending on the nature of the discrepancy.</p></li></ol><p><strong>Note:</strong> The stock transfer differences process assumes that at least the receiving warehouse is EWM-managed since the reason for the deviation is communicated to ERP only in connection with an EWM system.</p><p></p><h3>Recommendations for Working with Handling Units</h3><p>When working with handling units (HUs) in an ERP-EWM environment, it's important to understand <strong>how to manage cross-delivery HUs</strong>, packaging material items, and handling units for held inbound deliveries. </p><p></p><p><strong>Cross-Delivery Handling Units</strong></p><p>Cross-delivery handling units are primarily used in ERP to transfer packaging information <strong>between EWM warehouses during a two-step stock transfer</strong>. However, ERP <strong>doesn’t fully support cross-delivery HUs</strong>, and you may encounter display restrictions in some transactions.</p><p></p><p><strong>What to Do:</strong></p><ul><li><p>If you don’t need to transfer cross-delivery HUs to another EWM system, consider converting them to simple HUs during the transfer to ERP. To do this, go to the IMG activity: <strong>Extended Warehouse Management -&gt; ERP Integration -&gt; General Settings -&gt; Set up Control Parameter for ERP Version Control</strong> in the supplying EWM system. In the detail view for the ERP system under <strong>Outbound Delivery</strong>, select the option <strong>"Cross-delivery HUs are communicated to ERP as normal HUs."</strong> This will send cross-delivery HUs as single delivery HUs, meaning the same HU number will appear multiple times in ERP, each assigned to the relevant delivery.</p></li></ul><p><strong>Note:</strong> You<strong> cannot use cross-delivery HUs together with a unique HU number assignment</strong>.</p><p><strong>Tip:</strong> If you need to use cross-delivery HUs in two-step stock transfer processes and want to transfer all HU information to the receiving EWM warehouse, use the outbound delivery message <strong>SPED</strong>. </p><p><strong>!!!</strong> Just be aware that cross-delivery HUs can’t be sent via the shipping notification IDoc <strong>DESADV</strong> to the receiving warehouse.</p><p></p><h3>Packaging Material Items</h3><p>If you want the packaging material used in stock to be part of your EWM deliveries, you can add these items manually.</p><p><strong>Key Points:</strong></p><ul><li><p>This is possible for inbound deliveries, and as of Enhancement Package 3, also for outbound deliveries.</p></li><li><p>However, be cautious with goods movement-relevant packaging items in ERP inbound deliveries that exist only in ERP (i.e., they aren’t EWM-relevant). These can cause stock discrepancies between ERP and EWM, particularly when they are automatically created in ERP during an HU-related update from EWM.</p></li></ul><p></p><h3>Handling Units for Held Inbound Deliveries</h3><p>When you create an inbound delivery of the second type (using VL60, for instance) in ERP, and an error occurs, the system can save the delivery in an "On Hold" status. However, there's a catch: the system won’t save the handling units for these inbound deliveries because the packaging function was designed only for validated, error-free deliveries.</p><p><strong>What to Do:</strong></p><ul><li><p>You’ll need to manually add the packaging information after completing the inbound delivery during the goods receipt in EWM.</p></li></ul><p></p></div>
+</body>
+</html>

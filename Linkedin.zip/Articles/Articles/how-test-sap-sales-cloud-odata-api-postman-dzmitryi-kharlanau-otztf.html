@@ -1,0 +1,147 @@
+<html>
+<head>
+  <title>How to Test SAP Sales Cloud OData API with Postman</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+    <img src="https://media.licdn.com/mediaD4D12AQH2zSfEK4B3yg" alt="" title="" />
+      <h1><a href="https://www.linkedin.com/pulse/how-test-sap-sales-cloud-odata-api-postman-dzmitryi-kharlanau-otztf">How to Test SAP Sales Cloud OData API with Postman</a></h1>
+    <p class="created">Created on 2025-07-31 17:47</p>
+  <p class="published">Published on 2025-07-31 18:19</p>
+  <div><p>APIs are not magic. They’re a set of predefined rules — like Lego connectors — that let your app talk to another system. Booking.com, Check24, and other aggregators built entire billion-dollar businesses on top of this concept: search once, pull from 50+ backends. That’s APIs in action.</p><p>But an API is not a server. Not a database. Just a <strong>contract</strong> — a doorway into those systems.</p><hr><h3>REST and OData — The SAP Flavor</h3><p>REST (Representational State Transfer) is the dominant style for building APIs over HTTP. It’s lightweight. It’s readable. It uses verbs like GET, POST, PUT.</p><p><strong>OData</strong> is SAP's flavor of REST — originally from Microsoft, now standardized via OASIS. Think of OData as <strong>SQL over HTTP</strong>:</p><ul><li><p>You can $filter</p></li><li><p>You can $orderby</p></li><li><p>You can even $expand to pull related data</p></li></ul><p>The SAP Sales Cloud OData API is a perfect use case for this.</p><hr><h3>Why Postman?</h3><p><strong>Postman</strong> is the go-to tool to explore and test any API — and SAP Sales Cloud is no exception. It lets you:</p><ul><li><p>Create <strong>collections</strong> of requests (per object: Quote, Lead, Account)</p></li><li><p>Run <strong>pre- and post-request scripts</strong></p></li><li><p>Use <strong>environments</strong> and <strong>variables</strong></p></li><li><p>Import the <strong>metadata</strong> file and auto-generate calls (yes, even WSDL-ish)</p></li></ul><hr><h3>Auth — Keep It Simple</h3><p>Use <strong>Basic Auth</strong>: just your SAP Sales Cloud credentials. If needed, Postman supports other types (OAuth, Certificates), but for most testing, Basic is enough.</p><hr><h3>Example: Get a Sales Quote by ID</h3><pre></pre><p><strong>Breakdown:</strong></p><ul><li><p>https://my######.crm.ondemand.com — your system host</p></li><li><p>/sap/c4c/odata/v1/c4codataapi/ — the OData endpoint</p></li><li><p>SalesQuoteCollection — the entity set (like a DB table)</p></li><li><p>?$filter=ID eq 'Q-778345' — your query condition</p></li><li><p>&amp;$format=xml — optional: choose XML or JSON</p></li></ul><hr><h2>GET Requests</h2><p>Before making a GET request, ask yourself: <strong>what object do I need, and what field will I use in follow-up calls?</strong> In real integration work, you often chain requests — get ID from one → use it in another. Master this logic.</p><p><strong>Object Collections = Structured Tables</strong></p><p>SAP objects aren't monoliths — they are composed of tables (collections):</p><ul><li><p>Master table = 1:1 data (Account name, Role)</p></li><li><p>Dependent collections = 1:n (Addresses, Attachments, Sales Data)</p></li></ul><p>To get master data → CorporateAccountCollection To get contacts linked to account → CorporateAccountHasContactPerson</p><p>Use SAP OData documentation to browse all collections.</p><hr><p><strong>Metadata = Structure Blueprint</strong></p><p>Entity types, field names, data types, constraints.</p><pre></pre><p>Look for:</p><ul><li><p>&lt;EntityType Name="Opportunity"&gt; — object name</p></li><li><p>&lt;PropertyRef Name="ObjectID"/&gt; — primary key</p></li><li><p>&lt;Property Name="XYZ" ... /&gt; — full field list</p></li></ul><p>Use metadata to:</p><ul><li><p>Know what’s filterable (sap:filterable="true")</p></li><li><p>Know required fields (Nullable="false")</p></li><li><p>Understand data types (Edm.String, Edm.Decimal, etc.)</p></li></ul><hr><p><strong>Use Parameters Effectively</strong></p><p>Use logical operators: eq, ne, lt, le, gt, ge, startswith, endswith, contains. Supports and, or, brackets for grouping.</p><p>Supports null and wildcards</p><p>Dates &amp; Time. Use ISO 8601 ( 2025-08-01T00:00:00 )</p><p>$orderby=ATTR desc, ..</p><p>$format ( ?$format=json   or   ?$format=xml )</p><p>$select ( ?$select=ID,ProbabilityPercent )</p><hr><h2>X-CSRF-Token — Your Key to POST, PATCH, DELETE</h2><p>A CSRF (Cross-Site Request Forgery) attack doesn’t hit the system head-on. It hijacks <strong>a legit user session</strong>.</p><p>Here’s how it works:</p><ul><li><p>A user is logged into SAP Sales Cloud.</p></li><li><p>A hacker tricks that user into triggering a malicious HTTP request (via email, image, iframe, etc.).</p></li><li><p>The system thinks the request is real — and processes it.</p></li></ul><p>Boom — data is changed or deleted.</p><p>To block this, SAP Sales Cloud <strong>requires an X-CSRF-Token</strong> for any <strong>write operation.</strong></p><pre></pre><p>In response, SAP returns the token in the <strong>response headers. That's it.</strong></p><p>Once you have it, include that token in the header of your POST, PATCH, or DELETE requests in Postman as Header param. The token is <strong>valid per session</strong>, so reuse it until it expires.</p><hr><h2>POST Requests — Create or Get Lost</h2><p>You’re not just reading data. You’re pushing data in. That’s POST.And you better do it right, or you’ll hit a 403 wall.</p><p>Every POST has 3 parts:</p><ol><li><p><strong>URL</strong> → your endpoint and collection</p></li><li><p><strong>Headers</strong> → where you prove you’re allowed (hello, x-csrf-token)</p></li><li><p><strong>Body</strong> → the JSON payload with the fields you want to create</p></li></ol><p> Common Failures</p><ul><li><p><strong>Missing x-csrf-token</strong> → 403 Forbidden</p></li><li><p><strong>Unknown property</strong> → 400 Property 'ABC' not found</p></li><li><p><strong>System field in body</strong> → Update not allowed for properties: ID</p></li></ul><hr><p>Want to create 10 visits in one go? Use $batch.</p><pre></pre><p>Change in the Header param Content-Type to <strong>multipart/mixed; boundary=batch#BATCHNAME#</strong></p><pre></pre><hr><h2>PATCH Requests — Controlled Updates</h2><p>You’re not creating. You’re not deleting. You’re doing <strong>updates</strong>.</p><p>The request URL must include the API endpoint, the target collection, and the specific ObjectID.The ObjectID must be placed <strong>in parentheses and single quotes</strong> within the URL.</p><p>Every PATCH request is built from 3 parts:</p><ol><li><p><strong>URL</strong> → with ObjectID of the record you want to update</p></li><li><p><strong>Headers</strong> → must include x-csrf-token</p></li><li><p><strong>Body</strong> → only the fields you want to change</p></li></ol><p> Just like POST, PATCH supports batch updates. Same structure, different action.</p><hr><h2>DELETE — Clean Up</h2><p>You don’t need it anymore? Then remove it.</p><p>Every DELETE request has 3 parts:</p><ol><li><p><strong>Base URL to the API</strong></p></li><li><p><strong>Collection name</strong> (e.g. VisitCollection)</p></li><li><p>ObjectID in parentheses and single quotes</p></li></ol><p>You can’t delete <em>everything</em>. Some data can be protected.</p><hr><p>There’s also a solid external article worth checking out:  <a href="https://c4ciseasy.com/test-sap-sales-cloud-odata-api-with-postman/" target="_blank"><strong>Test SAP Sales Cloud OData API with Postman – </strong></a><a href="http://c4ciseasy.com" target="_blank"><strong>c4ciseasy.com</strong></a><strong> </strong>It gives another practical perspective and complements what we’ve covered here. <strong>Recommended reading</strong> — especially if you're getting started or want to validate your setup.</p></div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>Why You Should Use SAP Event Mesh for Event-Based Scenarios – A No-Nonsense Guide</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/why-you-should-use-sap-event-mesh-event-based-guide-kharlanau-fxbwf">Why You Should Use SAP Event Mesh for Event-Based Scenarios – A No-Nonsense Guide</a></h1>
+    <p class="created">Created on 2024-11-06 13:50</p>
+  <p class="published">Published on 2024-11-06 16:30</p>
+  <div><p>Alright, let’s talk about<a href="https://help.sap.com/docs/event-mesh/event-mesh/what-is-sap-event-mesh" target="_blank"> <em>SAP Event Mesh</em></a> and why it’s awesome for event-based scenarios. </p><p>SAP Event Mesh is a tool <strong>on the SAP Business Technology Platform (BTP) </strong>that lets apps communicate with each other<strong> using asynchronous events. </strong></p><p>Translation? Apps don’t need to constantly poke each other for updates; instead, they send notifications only when something actually <em>happens</em> – like a change, an update, or any new activity worth sharing.</p><hr><h3>How Does SAP Event Mesh Work?</h3><p>You’ve got an event provider (let’s say SAP S/4HANA Cloud) that <em>notices</em> when something changes – maybe a customer’s address is updated. <strong>That’s the “event.</strong>” Event Mesh takes that notification and alerts <strong>any applications that care about it</strong> (the “event consumers”). </p><p>So, if you have a Node.js app on SAP BTP, it can “subscribe” to these events, wait for that update to pop up, and then spring into action. It’s like <strong>setting up notifications for specific triggers, but for your business data</strong>.</p><hr><h3>Why Go Event-Based?</h3><p>Here’s why event-based design is cool:</p><ol><li><p>You get updates as they happen, no lag, no refreshes.</p></li><li><p>Instead of constantly checking for changes, apps can “sit tight” and only act when there’s something to act on.</p></li><li><p>Instead of flooding the system with unnecessary checks, you save on bandwidth and keep things lean.</p></li></ol><hr><h3>A Quick Example</h3><p>Imagine you’re using SAP Master Data Governance (MDG) to manage customer info on SAP S/4HANA Cloud. A customer updates their address – that’s a “change of state.” SAP Event Mesh broadcasts this update to any app that’s subscribed to it. Your apps get notified and can either fetch the new address or send alerts to stakeholders. Simple, real-time, and efficient.</p><hr><h3>Getting Started</h3><p>You don’t have to build these events from scratch. SAP Business Accelerator Hub has a bunch of pre-defined event objects ready to go, along <strong>with the familiar OData and SOAP APIs</strong>. It’s like a buffet of event types for you to explore, plug in, and use.</p></div>
+</body>
+</html>

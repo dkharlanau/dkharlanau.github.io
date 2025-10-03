@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>Why Extensions Are the Last Resort for SAP S/4HANA Cloud (and How to Do It Right)</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/why-extensions-last-resort-sap-s4hana-cloud-how-do-right-kharlanau-ca0yf">Why Extensions Are the Last Resort for SAP S/4HANA Cloud (and How to Do It Right)</a></h1>
+    <p class="created">Created on 2024-11-06 13:53</p>
+  <p class="published">Published on 2024-11-06 20:30</p>
+  <div><p>In the SAP world, everyone’s talking about the <em>clean core</em>—keeping your system as close to the original, out-of-the-box state as possible. Why? Because every extension you add makes things more complex, harder to maintain, and potentially a nightmare during upgrades. So, let’s dive into why extensions should be avoided (whenever you can) and the right way to approach them when you can’t.</p><hr><h3>Keep it Simple: Don’t Add Extensions if You Don’t Have To</h3><p>The first rule of the clean core? Don’t add extensions unless absolutely necessary. Before you start developing something new, take a good look at what SAP S/4HANA Cloud already offers. Many of the features you need might already be there, ready to use, just waiting for a bit of configuration. Only when your business processes have been optimized and still have gaps that standard SAP can’t fill should you even think about extensions. Keeping extensions to a minimum keeps your ERP lean, reducing complexity and future headaches.</p><hr><h3>If You Must Extend, Keep It Structured</h3><p>So, you’ve decided an extension is essential. Here’s the deal: SAP requires a solid governance structure to approve extensions, meaning every extension needs a clear purpose and must add significant value. Companies should document <em>why</em> the extension is necessary and <em>how</em> it will enhance business functions, rather than just adding it because it seems convenient.</p><hr><h3>Extensions vs. Upgrades: Why Compatibility Matters</h3><p>An extension that isn’t “clean core-compliant” can break your ERP system during upgrades, causing anything from minor glitches to full-scale failures. To avoid this, SAP recommends creating extensions that adapt seamlessly during system upgrades. The trick? Ensuring the extension is separate from SAP S/4HANA Cloud code, built using SAP’s extensibility model. This way, when SAP rolls out updates, your extensions don’t suddenly collapse.</p><p>Let’s break it down by extension type:</p><ol><li><p><strong>On-stack extensions</strong> (within SAP S/4HANA Cloud): Key-user extensions or developer extensions that need close integration with the core.</p></li><li><p><strong>Side-by-side extensions</strong> (on SAP Business Technology Platform): Great for features that don’t need to sit directly in the ERP, keeping things modular.</p></li></ol><p>Using this approach gives you a clear boundary between SAP’s code and your customizations.</p><hr><h3>Stick to “Released” Tools Only</h3><p>Another key clean-core rule: only use approved APIs and extension points like BAdIs or BO extension points. This keeps things transparent, so everyone knows what’s custom versus what’s SAP. Non-released objects are tempting but risky since they don’t have SAP’s guarantee for compatibility, which could mean trouble down the line.</p><hr><h3>Cloud-First Extensions: ABAP Cloud and the Three-Tier Model</h3><p>For extensions to work smoothly in the cloud, SAP introduced some guidelines. Here’s the quick version:</p><ol><li><p><strong>ABAP Cloud Development Model</strong>: This is SAP’s way of adapting ABAP for the cloud—keeping the language familiar but with some restrictions. Only approved ABAP Cloud objects are allowed, and syntax checks ensure that only compatible code makes it in.</p></li><li><p><strong>Three-Tier Extensibility Model</strong>: SAP offers different versions of S/4HANA:</p></li></ol><p>Each option offers different levels of extensibility, with the public cloud being the strictest. The three-tier model is SAP’s way of saying, “Choose your level of flexibility—but be prepared for the trade-offs.”</p></div>
+</body>
+</html>

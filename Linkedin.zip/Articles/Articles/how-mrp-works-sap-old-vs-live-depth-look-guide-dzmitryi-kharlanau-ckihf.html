@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>How MRP Works in SAP: Old vs. MRP Live / Depth look / Guide </title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/how-mrp-works-sap-old-vs-live-depth-look-guide-dzmitryi-kharlanau-ckihf">How MRP Works in SAP: Old vs. MRP Live / Depth look / Guide </a></h1>
+    <p class="created">Created on 2024-12-10 10:02</p>
+  <p class="published">Published on 2024-12-10 10:36</p>
+  <div><p>Material Requirements Planning (MRP) is the backbone of production and procurement planning in SAP. Whether you’re dealing with the classic MRP or the new <strong>MRP Live on HANA</strong>, understanding the differences is key to leveraging the right tool for your business needs.</p><h3>What Does MRP Do?</h3><p>At its core, MRP answers these questions:</p><ol><li><p><strong>What materials are needed?</strong></p></li><li><p><strong>How many are needed?</strong></p></li><li><p><strong>When are they needed?</strong></p></li></ol><p>It ensures that the right materials are available at the right time to avoid production delays or excess inventory.</p><hr><h3>Understanding the MRP Planning Process</h3><h3>1. Net Requirements Calculation</h3><p>This is the first step in the planning run, where the system determines whether<strong> there’s a need for procurement or production</strong>.</p><p><strong>How It Works</strong>:</p><ul><li><p>The system checks <strong>available stock</strong> and <strong>receipts</strong> (e.g., planned orders, purchase orders).</p></li><li><p>It compares these against <strong>requirements</strong> (e.g., sales orders, forecasts, dependent demands).</p></li><li><p>If <strong>requirements &gt; available stock</strong>, the system identifies a <strong>shortage</strong> and triggers a procurement proposal.</p></li></ul><p></p><p><strong>Key Formula</strong>:</p><figure><img data-media-urn="urn:li:digitalmediaAsset:D5612AQHCxCVLKjs9vg" src="https://media.licdn.com/dms/image/v2/D5612AQHCxCVLKjs9vg/article-inline_image-shrink_400_744/article-inline_image-shrink_400_744/0/1733825313052?e=1761782400&amp;v=beta&amp;t=ufCkox-3K7vbP6KYG_JSlMpYGAiVC2vLq9HNLqDqqo4"><figcaption></figcaption></figure><p></p><h3>2. Calculating Procurement Quantity</h3><p>Once a shortage is identified, the system calculates the quantity needed to cover the requirements. It considers:</p><ul><li><p><strong>Lot Sizing Rules</strong>: Determines the order quantity based on predefined settings:</p></li><li><p><strong>Safety Stock</strong>: Ensures a buffer is maintained by adding it to the procurement quantity.</p></li></ul><p><strong>Example</strong>: If the net requirement is <strong>50 units</strong>, and safety stock is <strong>10 units</strong>, the system calculates the procurement proposal as <strong>60 units</strong>.</p><p></p><h3>3. Scheduling</h3><p>Once the quantity is calculated, the system determines when the materials are required. Scheduling involves two key steps:</p><p><strong>a. Basic Scheduling</strong></p><ul><li><p>Calculates the <strong>planned order dates</strong> based on:Requirement date.Lead times (procurement, production, in-house transport).</p></li></ul><p><strong>b. Lead Time Offset</strong></p><ul><li><p>For procurement: Considers <strong>planned delivery time</strong> and <strong>goods receipt processing time</strong> from the material master.</p></li><li><p>For production: Considers <strong>setup time</strong>, <strong>processing time</strong>, and <strong>queue time</strong> from the work center.</p></li></ul><h3>Output:</h3><ul><li><p><strong>Start Date</strong>: When production or procurement should begin.</p></li><li><p><strong>Finish Date</strong>: When the material will be available.</p></li></ul><p></p><h3>4. Determining the Procurement Proposal</h3><p>After scheduling, the system determines the appropriate <strong>procurement type</strong> based on the material master settings:</p><ul><li><p><strong>E (In-House Production)</strong>: The system generates a <strong>planned order</strong> for internal manufacturing.</p></li><li><p><strong>F (External Procurement)</strong>: The system generates a <strong>purchase requisition</strong> or <strong>schedule line</strong> for external suppliers.</p></li><li><p><strong>X (Both Production and Procurement)</strong>: The system decides based on strategy or planning rules.</p></li></ul><p></p><h3>5. BOM Explosion and Determining Dependent Requirements</h3><p>If the material is produced in-house, the system explodes the <strong>Bill of Materials (BOM)</strong> to calculate the components required to produce the finished product.</p><p><strong>How It Works</strong>:</p><ol><li><p>The system identifies the <strong>BOM components</strong> and their quantities.</p></li><li><p>It calculates <strong>dependent requirements</strong> for each component based on the planned order quantity.</p></li><li><p>These dependent requirements become input for further MRP runs, ensuring raw materials and subcomponents are planned appropriately.</p></li></ol><p><strong>Example</strong>: For a <strong>bike</strong> requiring:</p><ul><li><p>1 frame.</p></li><li><p>2 wheels.</p></li><li><p>1 chain.</p></li></ul><p>If the planned order is for <strong>10 bikes</strong>, the dependent requirements would be:</p><ul><li><p>10 frames.</p></li><li><p>20 wheels.</p></li><li><p>10 chains.</p></li></ul><p></p><h3>MRP Output</h3><p>At the end of the planning process, the system generates the following:</p><ol><li><p><strong>Planned Orders</strong>: For in-house production.</p></li><li><p><strong>Purchase Requisitions</strong>: For external procurement.</p></li><li><p><strong>Exception Messages</strong>: Alerts for rescheduling, quantity adjustments, or potential issues.</p></li></ol><hr><h3>How Classic MRP (Old) Works</h3><p><strong>Classic MRP</strong> uses a <strong>sequential, batch-based process</strong> to generate procurement proposals and production plans. Here’s how it works:</p><p><strong>Scope</strong>: MRP runs for a specific plant or material and considers:</p><p></p><p><strong>Key Features</strong></p><p><strong>MRP Programs</strong>:</p><ul><li><p>MD01: Run MRP for all materials in a plant.</p></li><li><p>MD02: Single-material, multi-level planning.</p></li><li><p>MD03: Single-material, single-level planning.</p></li></ul><p><strong>Performance</strong>: Slower as it processes materials one at a time.</p><p><strong>Planning File</strong>: Tracks which materials need planning based on changes in stock, sales, or BOM.</p><p></p><p><strong>Output</strong>:</p><ul><li><p>Planned orders for production.</p></li><li><p>Purchase requisitions for procurement.</p></li><li><p>Exception messages (e.g., rescheduling, delays).</p></li></ul><p></p><p><strong>Limitations</strong>:</p><ol><li><p><strong>Performance Bottlenecks</strong>: Sequential processing slows down with large datasets.</p></li><li><p><strong>Static Planning</strong>: Limited to periodic batch runs.</p></li><li><p><strong>Limited Parallelism</strong>: Cannot fully utilize modern multi-core CPUs.</p></li></ol><hr><p>Key Differences: Classic MRP vs. MRP Live</p><p></p><figure><img data-media-urn="urn:li:digitalmediaAsset:D5612AQG8xTcmtUkrzw" src="https://media.licdn.com/dms/image/v2/D5612AQG8xTcmtUkrzw/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1733825090318?e=1761782400&amp;v=beta&amp;t=mnx2aGfOTpN8P-cpKO4VHdGPJQzpOSGzwND0xzN8yFQ"><figcaption></figcaption></figure><hr><h3>When to Stick to Classic MRP</h3><ol><li><p><strong>Coverage Profiles</strong>: If you rely heavily on dynamic safety stock with MRP areas, classic MRP may still be needed.</p></li><li><p><strong>Complex Customizations</strong>: Some enhancements or Z-programs designed for classic MRP may not work with MRP Live.</p></li></ol><hr><h3>Will Rescheduling Check Automatically Move Unfixed Schedule Lines?</h3><p></p><h3>What Should You Do?</h3><p><strong>Monitor Exception Messages</strong>:</p><ul><li><p><strong>10</strong>: Reschedule in.</p></li><li><p><strong>15</strong>: Reschedule out.</p></li><li><p><strong>26</strong>: Cancel process.</p></li></ul><p><strong>Manually Adjust Schedule Lines</strong>: Use <strong>ME38</strong> to modify or delete the schedule lines based on MRP proposals.</p><p><strong>Avoid Past Due Schedule Lines</strong>:</p><p><strong>Consider Automation</strong> (if applicable).</p><p></p><p>No, the <strong>rescheduling check</strong> in SAP <strong>does not automatically move schedule lines</strong>, even if they are <strong>unfixed</strong>. Instead, it <strong>creates exception messages</strong> to notify the MRP controller about the changes that should be made. The MRP controller must manually adjust the schedule lines based on these proposals.</p><p></p></div>
+</body>
+</html>

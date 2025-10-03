@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>How Exchange Rates Are Determined in SAP Billing Documents</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/how-exchange-rates-determined-sap-billing-documents-kharlanau-3p5cf">How Exchange Rates Are Determined in SAP Billing Documents</a></h1>
+    <p class="created">Created on 2024-10-02 07:01</p>
+  <p class="published">Published on 2024-10-04 16:45</p>
+  <div><p>When working with billing documents in SAP, you might have noticed that exchange rates aren’t always as straightforward as you’d expect. In fact, SAP uses <strong>three different exchange rates</strong> in billing documents, and each one serves a different purpose. Let’s break them down so you can see what’s going on behind the scenes.</p><h3>1. Exchange Rate for Price Determination (VBRP-KURSK)</h3><p>This exchange rate deals with converting the local currency to the document currency for price determination. It’s basically how the system figures out the price in the right currency.</p><ul><li><p>The key here is the <strong>"Pricing Exchange Rate type"</strong> (field ), which you can set up in the <strong>Copy Control</strong> configuration in transactions <strong>VTFL</strong> or <strong>VTFA</strong>.</p></li><li><p>Depending on your settings, the exchange rate could come from different sources, such as the <strong>sales order</strong>, the <strong>billing date</strong>, or even the <strong>current date</strong>.</p></li></ul><p>For example:</p><ul><li><p>Option <strong>A</strong>: The system copies the exchange rate from the sales order.</p></li><li><p>Option <strong>B</strong>: The price exchange rate matches the accounting rate.</p></li><li><p>Option <strong>C</strong>: The exchange rate is determined based on the billing date.</p></li></ul><p>You can even create a custom data transfer routine to tweak how dates like the billing date or pricing date affect this exchange rate.</p><h3>2. Exchange Rate for FI Postings (VBRK-KURRF)</h3><p>This one’s for the <strong>Financial (FI) postings</strong> in SAP. It converts the local currency to the document currency specifically for accounting.</p><ul><li><p>If there’s a manual exchange rate entered in the sales order (), it gets copied over to the billing document. If not, the system automatically pulls the rate from the <strong>currency tables</strong> (transactions <strong>OB08</strong>, <strong>OB07</strong>, and <strong>OB22</strong>) based on the billing date.</p></li><li><p>For <strong>intercompany billing</strong>, the system always recalculates the exchange rate () because the local currencies might differ between the sales order and the intercompany invoice.</p></li></ul><p>In short, if there’s no manual entry, SAP will default to the standard exchange rate from the currency tables.</p><h3>3. Exchange Rate for Condition Currency (KOMV-KKURS)</h3><p>This exchange rate handles the conversion between the <strong>condition currency</strong> and the <strong>local currency</strong> for pricing conditions.</p><ul><li><p>Typically, the exchange rate is based on the <strong>pricing date</strong>.</p></li><li><p>However, if you're dealing with copied conditions in a billing document, the exchange rate won’t automatically refresh. If you need it to update, you might need to tweak your settings or check out notes like <strong>Note 97487</strong>.</p></li></ul><p>In cases where you need the exchange rate to be based on the <strong>billing date</strong> instead, refer to <strong>Note 92613</strong>.</p><p></p><h3>What to Do When Exchange Rates Seem Wrong</h3><p>If the exchange rates in your billing document seem off, it's important to know which one you're dealing with. The system uses different exchange rates for pricing, FI postings, and conditions, and these can be influenced by a number of factors like the billing date, pricing date, or manual entries in the sales order.</p><p>For more details on how to influence exchange rate determination or troubleshooting specific issues, refer to SAP Notes like <strong>22781</strong>, <strong>170183</strong>, and <strong>367149</strong>. These can guide you through customizations and adjustments you might need.</p></div>
+</body>
+</html>

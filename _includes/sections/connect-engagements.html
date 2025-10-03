@@ -1,0 +1,25 @@
+{% assign engagements = site.data.connect.engagements %}
+{% if engagements %}
+<section class="section connect-section" id="engagements">
+  <header class="section-heading">
+    <p class="eyebrow">Engagement modes</p>
+    <h2>Choose the path that fits your runway.</h2>
+  </header>
+  <div class="engagement-grid">
+    {% for item in engagements %}
+    <article class="engagement-card neub-card">
+      <header>
+        <h3>{{ item.label }}</h3>
+      </header>
+      {% if item.description %}<p>{{ item.description }}</p>{% endif %}
+      <div class="engagement-card__footer">
+        {% if item.response %}<p class="engagement-card__note">{{ item.response }}</p>{% endif %}
+        {% if item.url %}
+        <a class="link-arrow" href="{{ item.url }}"{% if item.channel == 'Email' %}{% else %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.channel }}</a>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

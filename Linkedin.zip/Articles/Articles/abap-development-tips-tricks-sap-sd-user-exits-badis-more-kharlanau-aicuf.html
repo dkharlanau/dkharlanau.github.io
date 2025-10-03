@@ -1,0 +1,146 @@
+<html>
+<head>
+  <title>ABAP Development Tips and Tricks for SAP SD: User Exits, BAdIs, and More</title>
+  <style>
+    body {
+      margin: 0 auto;
+      width: 744px;
+      font-family: Source Serif Pro, serif;
+      line-height: 32px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 21px;
+    }
+    h1, h2, h3 {
+      font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+    }
+    h1 a, h1 a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 {
+      line-height: 48px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 42px;
+      margin: 32px 0 20px;
+    }
+    h2 {
+      line-height: 32px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 26px;
+      margin: 28px 0;
+    }
+    h3 {
+      line-height: 28px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 21px;
+      margin: 24px 0;
+    }
+    p {
+      margin: 32px 0;
+    }
+    .created, .published {
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 15px;
+      line-height: 15px;
+      margin: 20px 0;
+    }
+    .created + .published {
+      margin-top: -12px;
+    }
+    blockquote {
+      font-family: Georgia, Source Serif Pro, serif;
+      font-style: italic;
+      font-size: 24px;
+      line-height: 36px;
+      margin: 48px 120px;
+      text-align: center;
+    }
+    a {
+      word-wrap: break-word;
+      outline: none;
+      text-decoration: none;
+      background-color: transparent;
+      border: 0;
+      color: #008CC9;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #8C68CB;
+    }
+    .center {
+      text-align: center;
+    }
+    iframe {
+      display: block;
+      margin: 44px auto;
+    }
+    *:not(pre) + pre, pre:first-of-type {
+      margin-top: 32px;
+      padding-top: 32px;
+    }
+    pre:only-of-type {
+      margin: 32px 0;
+      padding: 32px;
+    }
+    pre {
+      background: #F3F6F8;
+      overflow-x: auto;
+      display: block;
+      font-size: 13px;
+      font-family: monospace;
+      line-height: 13px;
+      padding: 0 32px 32px;
+      white-space: pre;
+    }
+    a.embedded {
+      background: #F3F6F8;
+      display: block;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    img {
+      height: auto;
+      max-width: 100%;
+    }
+    .slate-image-embed__resize-full-width img {
+      width: 100%;
+    }
+    .series-logo {
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      background-clip: content-box;
+      border: 4px solid transparent;
+      border-radius: 6px;
+      object-fit: scale-down;
+      float: left;
+    }
+    .series-title {
+      font-size: 16px;
+      font-weight: 600;
+      vertical-align: top;
+    }
+    .series-description {
+      color: rgba(0,0,0,.6);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    div {
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+      <h1><a href="https://www.linkedin.com/pulse/abap-development-tips-tricks-sap-sd-user-exits-badis-more-kharlanau-aicuf">ABAP Development Tips and Tricks for SAP SD: User Exits, BAdIs, and More</a></h1>
+    <p class="created">Created on 2024-12-13 11:37</p>
+  <p class="published">Published on 2024-12-24 19:45</p>
+  <div><blockquote><p><em>– From the desk of an SAP SD consultant with over a decade of experience…</em></p></blockquote><p>Alright folks, let’s talk real-world ABAP development in the Sales and Distribution (SD) module. After working more than 10 years on countless SD implementations, enhancements, and upgrades, I’ve realized one thing for sure: nothing beats knowing exactly where and how to tweak the system without reinventing the wheel. Especially in SD, the standard SAP functionality is great, but sooner or later, you’ll hit scenarios where you need that custom logic—and that’s where user exits, BAdIs, and a clear understanding of underlying structures come into play.</p><p>Below, I’ll walk through a bunch of common scenarios, useful enhancements, and practical approaches pulled straight from everyday consulting life. Consider this a bit of a ‘field guide’ to navigating SD-specific ABAP adjustments, document flow fixes, pricing logic enhancements, and dealing with foreign trade or accounting integration. Let’s dive in.</p><hr><h3>Fixing SD Document Status and Incompletion: The Good Old SDVBUK00</h3><p>Ever had a situation where your SD documents just don’t show the right status or the incompletion log is off? SAP delivered a handy report <strong>SDVBUK00</strong>. You can call this program from SE38, plug in the affected document numbers, and—here’s the kicker—remove the test flag so the actual changes get saved. This utility updates the document status and flow to the currently valid status, ironing out odd inconsistencies. Don’t forget that if you have custom logic around doc status, you might need to run this program after a big data load or a system copy to keep things consistent.</p><hr><h3>Integrating Pricing and Account Determination (SD-FI) Logic</h3><p>If you’re messing with billing logic, you’ll probably come across the internal functions and user exits dealing with invoice creation and accounting documents. For instance:</p><ul><li><p><strong>MV60AF0B_BELEG_SICHERN / BELEG_SICHERN_INTERN</strong> handle saving the billing document.</p></li><li><p><strong>Function modules like </strong>RV_INVOICE_DOCUMENT_ADD and RV_ACCOUNTING_DOCUMENT_CREATE step in to actually build the accounting doc.</p></li><li><p>During this process, RV_INVOICE_ACCOUNT_DETERM is called for account determination.</p></li></ul><p>This function uses condition records in TKOMV[] to determine which G/L accounts (like main and accrual accounts) to post to. If you’re dealing with cross-company scenarios or have custom CO (Controlling) group fields, you’ll need to enhance structures like KOMV or KOMPCV and fill them appropriately. Don’t hesitate to build Z tables and new condition tables to store your specialized account determination logic.</p><p><strong>Key prerequisites for custom account determination</strong>:</p><ul><li><p>Extend structures KOMPCV and KOMV with new fields (e.g., CO_SD_GROUP).</p></li><li><p>Use <strong>EXIT_SAPLV60B_001</strong> to fill XKOMV with these new fields.</p></li><li><p>Create new condition tables for G/L determination keyed by your custom fields.</p></li><li><p>Maintain Z-tables and views to hold additional mapping logic.</p></li></ul><hr><h3>BAPI_SALESORDER_SIMULATE Limitations and Alternatives</h3><p>A classic gotcha: The BAPI BAPI_SALESORDER_SIMULATE doesn’t always return item-level error details if one item fails—sometimes the whole result set looks empty. To work around this, use BAPI_SALESDOCUMENT_CREATE with TESTRUN = 'X' and BEHAVE_WHEN_ERROR = 'P'. This ensures erroneous items are noted in the RETURN table, and all other item data (if correct) is displayed properly. It’s a subtle difference but can save you hours of debugging when dealing with simulation and validation scenarios.</p><hr><h3>Updating Data in Billing Documents</h3><p>If you thought you could just jump into user exits to change billing header or item data (XVBRK, XVBRP) at save time, think again. SAP’s standard approach doesn’t allow straightforward changes in the standard user exits at the moment of save. If you need to do so, consider implementing solutions proposed in notes (e.g., <strong>132723</strong>) which suggest modifications in include <strong>RV60AFZZ</strong> at USEREXIT_NUMBER_RANGE. This is a bit of a workaround, so test thoroughly.</p><hr><h3>Preference Indicators in SD Documents (PREFE)</h3><p>Preference processing in SD—like setting VBAP-PREFE or VBRP-PREFE—is typically tied to pricing logic. If your scenario requires populating preference indicators without standard conditions or replacing the logic (for example, free-of-charge deliveries), you can do so via user exits or BAdIs. After implementing the necessary notes, leverage the BAdI or user exit to fill these fields. You’ll have KOMK, KOMP, and in billing, VBRP available with all pricing data to craft your logic.</p><hr><h3>Text Determination Enhancements (VOTX, VOTXN)</h3><p>If you need to tweak text determination, check out the user exits documented in note <strong>78317</strong>. You have work areas like FTVCOM, FXTHEAD, and FXVBPA at your disposal. Keep in mind that these are often not fully populated by default, so you may need to populate them yourself. This gives you flexibility to insert new logic or filters when determining texts for headers and items.</p><hr><h3>Enhancing the SD Document Flow Display</h3><p>Ever wanted to display additional documents or custom attributes in the SD document flow? Look into the enhancements described in note <strong>2399773</strong>. You can add documents, change attributes (like creation date, custom statuses), and influence what’s shown in the document tree (header or item-level view). Understanding these exits and enhancement points is critical if your client wants a rich, custom doc flow representation that includes non-standard or external documents.</p><hr><h3>Foreign Trade Data Enhancements in SD and MM</h3><p>Foreign trade data in SD and MM documents can be influenced by user exits available in enhancement V50EPROP. For example, EXIT_SAPLV50E_001 allows you to propose foreign trade header data. Similar exits exist for items and for checking completeness of foreign trade data. Remember, for data consistency reasons, you can’t overwrite certain fields (like MANDT, EXNUM, etc.), so be careful and review the documentation before coding.</p><hr><h3>Restricting Item Deletion in VA02</h3><p>Need to stop certain users from deleting line items in a sales order? There’s no direct config toggle for that. However, you can implement logic in MV45AFZZ (USEREXIT_SAVE_DOCUMENT_PREPARE) to throw an error on save, or better yet, catch it earlier at USEREXIT_CHECK_XVBAP_FOR_DELET in MV45AFZB. The second approach is cleaner: it warns the user immediately when they try to delete, not after they’ve changed other data. This ensures a better user experience and prevents needless rework.</p><hr><h3>User Exits for the Accounting Interface (SAPLV60B)</h3><p>When it’s time to transfer billing docs to accounting, user exits in SAPLV60B are your best friends. They let you tweak header, customer, G/L, and tax lines before the FI documents are posted. Some commonly used exits:</p><ul><li><p>EXIT_SAPLV60B_001: Change header data in ACCHD.</p></li><li><p>EXIT_SAPLV60B_004: Change G/L account line (for adding quantity specs).</p></li><li><p>EXIT_SAPLV60B_002: Influence customer line in ACCIT.</p></li><li><p>… and many more, each focusing on different segments of the accounting document.</p></li></ul><p>If you need a custom reconciliation account or have unique accrual logic, these exits are your go-to.</p><hr><h3>Handling BOMs and BAPI_SALESORDER_CREATEFROMDAT2</h3><p>When dealing with materials that have large BOMs (more than 9 sub-items), passing item numbers manually to BAPI_SALESORDER_CREATEFROMDAT2 can cause overwriting issues. The trick: pass INT_NUMBER_ASSIGNMENT = 'X' so SAP internally assigns proper item numbers, preventing collisions. This little gem can save hours of frustration when integrating with external systems.</p><hr><h3>Storage Location Determination and MRP Areas</h3><p>Determining storage locations in sales orders isn’t standard. You can achieve it via USEREXIT_SOURCE_DETERMINATION (in MV45AFZB). Just be careful with when you fill the plant and storage location—if you set them too early or too late, you might mess up MRP area determination. SAP Note <strong>387482</strong> warns about using USEREXIT_MOVE_FIELD_TO_VBAP for storage location—it’s not recommended. Follow SAP’s guidance and place your custom logic where it’s intended.</p><hr><h3>Pricing Table Changes from KONV to PRCD_ELEMENTS in S/4HANA</h3><p>In S/4HANA, condition data in KONV is replaced by the new PRCD_ELEMENTS table and related APIs. If you’re used to KONV, you’ll need to adapt. Instead of direct SELECTs, consider using the new factory class CL_PRC_RESULT_FACTORY and methods like GET_PRICE_ELEMENT_DB. Also, if you need to append custom fields, don’t append them directly to PRCD_ELEMENTS. Instead, append them to the structures PRCS_ELEMENTS_DATA and PRCD_ELEM_DRAFT. And if you rely on V_KONV, a CDS view is now available to get pricing conditions. This migration is crucial to be future-proof in S/4HANA environments.</p><hr><h3>Custom Fields and Logic</h3><p>The SAP Fiori ‘Custom Fields and Logic’ app and BAdIs like SD_SLS_MODIFY_HEAD_BUSINESS or SD_SLS_MODIFY_ITEM_BUSINESS let you tweak business data or tax data in sales docs at runtime—without old-school modification. This is a cleaner, more upgrade-friendly approach. Use it to dynamically set pricing dates, tax fields, or even add custom attributes without diving deep into ancient user exits. Future SAP development leans towards BAdIs and custom fields over traditional user exits, so it’s smart to start using these new tools.</p><hr><h3>Flexible Billing Document Numbering</h3><p>If you need flexible billing numbering logic based on attributes of the billing doc, check out BAdI SD_BIL_FLEX_NUMBERING. With it, you can route newly created billing documents to different number range intervals or even custom prefixes. This is extremely handy if you’re dealing with multiple company codes, countries, or business lines that each need their own number range logic.</p><hr><h3>Classic User Exits in Sales Document Processing</h3><p>Finally, let’s not forget the massive library of user exits for sales orders and related documents in programs like MV45AFZ* and RV45AFZ*. These exits let you do everything from restricting deletions, adding custom validation rules, transferring fields from VBAP to VBEP, or setting up your own pricing triggers. Just remember:</p><ul><li><p><strong>MV45AFZZ</strong>: Common place for header/item field assignments, saving logic, and pricing prep.</p></li><li><p><strong>MV45AFZB</strong>: Checks at item, schedule line, and even source determination.</p></li><li><p><strong>MV45AFZA</strong>, <strong>MV45AFZ4</strong>: For material determination, listing/exclusion, and free goods.</p></li><li><p><strong>FV45EFZ1</strong>: For preventing schedule line changes automatically.</p></li><li><p><strong>RV45PFZA</strong>: For setting custom status fields at header or item level (e.g., VBUK, VBUP).</p></li></ul><p>Understanding where each exit is triggered in the doc processing flow helps you pick the right one and avoid side effects.</p><p></p><p></p><p><a target="_blank" href="https://www.linkedin.com/in/dkharlanau?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAABBLdeYBRDV9XRmMIo8BWaZWNzGTtoVtV3M">Dzmitryi Kharlanau</a>, SAP SD consultant</p></div>
+</body>
+</html>
