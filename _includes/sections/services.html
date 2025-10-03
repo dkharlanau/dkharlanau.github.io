@@ -18,29 +18,16 @@
         {% if card.icon %}<span class="service-card__icon" aria-hidden="true">{{ card.icon }}</span>{% endif %}
       </header>
       <div class="service-card__body">
-        {% if card.focus %}
-        <div class="service-card__section">
-          <span class="service-card__badge">Focus</span>
-          <p>{{ card.focus }}</p>
-        </div>
+        {% if card.subtitle %}
+        <p class="service-card__subtitle">{{ card.subtitle }}</p>
         {% endif %}
-        {% if card.value %}
-        <div class="service-card__section">
-          <span class="service-card__badge service-card__badge--value">Value</span>
-          <p>{{ card.value }}</p>
-        </div>
+        {% if card.description %}
+        <p class="service-card__description">{{ card.description }}</p>
         {% endif %}
         {% if card.summary %}
         <p class="service-card__summary">{{ card.summary }}</p>
         {% endif %}
       </div>
-      {% if card.chips %}
-      <ul class="chip-list">
-        {% for chip in card.chips %}
-        <li>{{ chip }}</li>
-        {% endfor %}
-      </ul>
-      {% endif %}
     {% if card.url %}
     </a>
     {% else %}
