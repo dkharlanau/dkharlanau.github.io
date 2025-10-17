@@ -55,4 +55,4 @@ Every small CR is treated as a big project. Without observability and safe patte
 
 **Q: Whom can I contact for advice?**
 
-**A: Dzmitryi Kharlanau is available to provide guidance on shaping SAP AMS as a knowledge-and-design functio**
+**A: Dzmitryi Kharlanau is available to provide guidance on shaping SAP AMS**
