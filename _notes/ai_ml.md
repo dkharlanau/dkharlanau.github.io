@@ -1,5 +1,6 @@
 ---
 title: "AI & ML Around SAP"
+description: "Blueprint for SAP AI sidecars: keep S/4 deterministic while AI/ML services predict demand, flag O2C risks, and automate actions without breaking clean core."
 subtitle: "Deterministic core. Probabilistic edge."
 tags:
   - AI
@@ -7,6 +8,13 @@ tags:
   - SAP
 excerpt: "Keep SAP clean while probabilistic services around it drive forecasts, risk signals, and intelligent automation."
 permalink: /notes/ai-ml/
+further_reading:
+  - label: "Reduce SAP order-to-cash incidents with the AMS playbook"
+    url: "/notes/ams/"
+  - label: "Design a clean core S/4HANA with composable ERP guardrails"
+    url: "/notes/composable-erp/"
+  - label: "Deliver SAP mini apps that close process gaps fast"
+    url: "/notes/tools-mini-apps/"
 ---
 
 Enterprise systems like SAP were designed as **deterministic machines**. Their strength is predictability: every transaction posts the same way, every document follows strict rules. But the world is shifting — demand forecasts, delivery risks, and customer churn are not rules, they are **probabilities**. And this is where AI and ML come in.

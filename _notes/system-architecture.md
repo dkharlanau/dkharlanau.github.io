@@ -1,5 +1,6 @@
 ---
 title: "Operating a Neubrutalist design system"
+description: "Neubrutalist SAP site playbook: declarative data, reusable sections, and machine-readable feeds that keep AI copilots aligned with event-driven integrations."
 eyebrow: "Practitioner note"
 subtitle: "How the CV AI site stays modular, observable, and ready for AI copilots."
 date: 2025-02-01
@@ -10,6 +11,13 @@ tags:
   - design-system
   - ai-ops
 summary: "Key principles that keep the site structure extensible for new services, notes, and AI-driven experiences."
+further_reading:
+  - label: "Blend SAP AI/ML sidecars with event-driven clean core integrations"
+    url: "/notes/ai-ml/"
+  - label: "Architect composable ERP guardrails for SAP order-to-cash programmes"
+    url: "/notes/composable-erp/"
+  - label: "Prototype SAP mini apps that extend UX without breaking portability"
+    url: "/notes/tools-mini-apps/"
 ---
 
 The Neubrutalist system lives on three pillars: declarative data, componentised sections, and machine-readable exports.

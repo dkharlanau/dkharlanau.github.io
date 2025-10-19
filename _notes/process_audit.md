@@ -1,5 +1,6 @@
 ---
 title: "Process Audit & Diagnostics"
+description: "Process audit playbook to expose SAP order-to-cash breakpoints, MDG defects, and integration debt, turning incident noise into measurable remediation pipeline."
 subtitle: "Trace where value leaks across Order-to-Cash, Procure-to-Pay, and integration layers."
 tags:
   - Audit
@@ -8,6 +9,13 @@ tags:
   - P2P
   - Integration
 excerpt: "How I run SAP process and integration audits to expose breakpoints, control gaps, and custom-code risk."
+further_reading:
+  - label: "Stabilise SAP AMS operations with order-to-cash prevention loops"
+    url: "/notes/ams/"
+  - label: "Govern SAP integration blueprint with system architecture guardrails"
+    url: "/notes/system-architecture/"
+  - label: "Apply consulting principles that keep clean core S/4HANA changes auditable"
+    url: "/notes/consulting-principles/"
 ---
 
 I am a System Analyst and Senior SAP consultant at EPAM Systems. When sponsors feel Order-to-Cash, Procure-to-Pay, or custom integrations are leaking value, I run structured audits to expose where the flow breaks and how to fix it. The goal: **restore control, shorten lead times, and keep S/4HANA portable.**

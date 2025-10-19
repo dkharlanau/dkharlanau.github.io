@@ -42,5 +42,15 @@ layout: default
     <div class="note-body">
       {{ content }}
     </div>
+    {% if page.further_reading %}
+    <aside class="note-further">
+      <h2>Further reading</h2>
+      <ul class="note-further__list">
+        {% for item in page.further_reading %}
+        <li><a href="{{ item.url }}" class="link-arrow">{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </aside>
+    {% endif %}
   </article>
 </section>

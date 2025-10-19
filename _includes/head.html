@@ -1,0 +1,111 @@
+{% assign canonical_url = page.url | absolute_url %}
+{% assign og_image = page.og_image | default: '/assets/og/default.png' | absolute_url %}
+{% assign site_name = 'Dzmitryi Kharlanau' %}
+{% assign is_home = page.url == '/' or page.permalink == '/' %}
+{% assign is_cv = page.url == '/cv/' or page.permalink == '/cv/' %}
+{% assign is_note = page.collection == 'notes' %}
+
+{% assign computed_title = page.seo_title %}
+{% if computed_title == nil or computed_title == '' %}
+  {% if is_home %}
+    {% assign computed_title = 'Dzmitryi Kharlanau — SAP O2C, Integration & AI/ML Consultant' %}
+  {% elsif is_cv %}
+    {% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP O2C & Integration' %}
+  {% elsif is_note %}
+    {% assign computed_title = page.title | append: ' — Dzmitryi Kharlanau | SAP O2C & Integration' %}
+  {% else %}
+    {% assign computed_title = page.title | default: site.title %}
+  {% endif %}
+{% endif %}
+
+{% assign default_description = 'SAP · Systems & Integration · Automation for Lower TCO' %}
+{% if is_home %}
+  {% assign default_description = 'SAP consulting with clarity, clean-core S/4HANA, and open, event-driven integrations. Order-to-Cash stabilisation, AMS transformation, AI/ML sidecar services.' %}
+{% elsif is_note and page.description %}
+  {% assign default_description = page.description %}
+{% elsif is_cv %}
+  {% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau — SAP O2C, Integration, and automation consulting.' %}
+{% endif %}
+{% assign meta_description = page.description | default: default_description | strip_html | normalize_whitespace %}
+
+<title>{{ computed_title | strip_html | normalize_whitespace }}</title>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5KDHJLQ3');</script>
+<!-- End Google Tag Manager -->
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#ffcc00" />
+<meta name="msapplication-TileColor" content="#f9f5d6" />
+<meta name="author" content="{{ site.author.name | default: site_name }}" />
+<meta name="description" content="{{ meta_description | truncate: 160, '' }}" />
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+
+<link rel="canonical" href="{{ canonical_url }}" />
+<link rel="alternate" type="application/rss+xml" title="Dzmitryi Kharlanau — Updates" href="{{ '/changelog/index.xml' | absolute_url }}" />
+<link rel="alternate" type="application/json" href="{{ '/ai/catalog.json' | absolute_url }}" title="Data Catalog" />
+<link rel="alternate" type="application/json" href="{{ '/ai/resume.json' | absolute_url }}" title="Resume JSON" />
+<link rel="alternate" type="application/yaml" href="{{ '/ai/resume.yml' | absolute_url }}" title="Resume YAML" />
+<link rel="sitemap" type="application/xml" href="{{ '/sitemap.xml' | absolute_url }}" />
+<link rel="sitemap" type="application/xml" href="{{ '/sitemap-data.xml' | absolute_url }}" />
+
+<link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicons/icon-32.png' | relative_url }}" />
+<link rel="icon" type="image/png" sizes="64x64" href="{{ '/assets/favicons/icon-64.png' | relative_url }}" />
+<link rel="icon" type="image/png" sizes="192x192" href="{{ '/assets/favicons/icon-192.png' | relative_url }}" />
+<link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/favicons/icon-180.png' | relative_url }}" />
+<link rel="manifest" href="{{ '/assets/favicons/site.webmanifest' | relative_url }}" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="preload" as="image" href="{{ '/assets/img/DzmitryiKharlanau.webp' | absolute_url }}" imagesrcset="{{ '/assets/img/DzmitryiKharlanau.avif' | absolute_url }} 1x" />
+<link rel="me" href="https://www.linkedin.com/in/dkharlanau" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="{{ site_name }}" />
+<meta property="og:title" content="{{ computed_title | strip_html | normalize_whitespace }}" />
+<meta property="og:description" content="{{ meta_description | truncate: 200, '' }}" />
+<meta property="og:url" content="{{ canonical_url }}" />
+<meta property="og:image" content="{{ og_image }}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@{{ site.twitter.username | default: 'dkharlanau' }}" />
+
+<link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "url": "https://dkharlanau.github.io",
+  "name": "Dzmitryi Kharlanau",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://dkharlanau.github.io/search/?q={query}",
+    "query-input": "required name=query"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://dkharlanau.github.io/#dkharlanau",
+  "name": "Dzmitryi Kharlanau",
+  "url": "https://dkharlanau.github.io",
+  "image": "https://dkharlanau.github.io/assets/img/DzmitryiKharlanau.png",
+  "jobTitle": "Senior SAP SD / O2C Consultant",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "EPAM Systems"
+  },
+  "sameAs": [
+    "https://www.linkedin.com/in/dkharlanau",
+    "https://x.com/dkharlanau",
+    "https://medium.com/@dkharlanau",
+    "https://hashnode.com/@dkharlanau"
+  ]
+}
+</script>

@@ -1,11 +1,19 @@
 ---
 title: "SAP AMS Playbook"
+description: "SAP AMS playbook to cut repeat incidents, shift from patching to prevention, and wire in knowledge, observability, and O2C guardrails for measurable MTTR drops."
 subtitle: "Stop the patch factory. Build a knowledge engine."
 tags:
   - AMS
   - SAP
   - Operations
 excerpt: "Shift AMS from ticket closure to root-cause elimination, analytics, and continual improvement."
+further_reading:
+  - label: "Audit SAP process debt before it breaks O2C fulfilment"
+    url: "/notes/process-audit/"
+  - label: "Use composable ERP strategy to keep S/4HANA clean core"
+    url: "/notes/composable-erp/"
+  - label: "Enable AI/ML around SAP without risking service stability"
+    url: "/notes/ai-ml/"
 ---
 
 Incidents and change requests close, SLAs look green, but people still complain, money still leaks, and the same problems come back with a new ticket number. This is not stability. This is expensive standstill. **Many teams still miss this.** They treat AMS as a patch queue, not a knowledge-and-design function—so costs rise and the same issues return. Running AMS to deliver stability **and** steady improvements is a skill most don’t practice.

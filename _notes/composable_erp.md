@@ -1,5 +1,6 @@
 ---
 title: "Composable ERP — Philosophy & Playbook"
+description: "Composable ERP strategy to keep clean core S/4HANA, protect SAP order-to-cash, and run event-driven integrations on portable tech with cost guardrails."
 eyebrow: "Opinionated essay"
 subtitle: "S/4HANA as the core. Best‑of‑breed at the edges. Open contracts. Zero drama."
 tags:
@@ -8,6 +9,13 @@ tags:
   - Clean Core
   - Best of Breed
   - Composable Enterprise
+further_reading:
+  - label: "Cut MTTR with the SAP AMS order-to-cash stabilisation approach"
+    url: "/notes/ams/"
+  - label: "Deploy AI/ML sidecars that respect clean core S/4HANA boundaries"
+    url: "/notes/ai-ml/"
+  - label: "Govern SAP integration architecture for event-driven resilience"
+    url: "/notes/system-architecture/"
 ---
 
 > I like S/4HANA as the backbone for finance and logistics. I don’t love platform decisions made because a slide says “use only SAP‑branded everything.” Capability first. Open technology. No avoidable lock‑in.
@@ -100,7 +108,8 @@ channels:
             bpId: { type: string }
             changed: { type: array, items: { type: string } }
 ```
-- Stable topics, schema‑versioned payloads, idempotent consumers.
+- Stable topics, schema-versioned payloads, idempotent consumers.
+- Treat SAP Integration Suite Event Mesh (sap integration suite event mesh) as just another broker: same contracts, runtime exit tests, and observability you control.
 
 **Data products**
 - Curated views for O2C and MDG quality with owners, SLAs, lineage, and access policy.

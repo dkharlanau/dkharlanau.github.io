@@ -1,0 +1,45 @@
+---
+layout: null
+permalink: /sitemap-pages.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {% assign pages = site.pages | where_exp: 'item', 'item.sitemap != false' %}
+  {% for page in pages %}
+    {% assign page_path = page.url | default: page.permalink %}
+    {% if page_path %}
+      {% unless page_path == '/sitemap.xml' or page_path == '/sitemap-pages.xml' or page_path == '/sitemap-data.xml' or page_path contains 'feed.xml' or page_path contains '404' %}
+    <url>
+      <loc>{{ page_path | absolute_url }}</loc>
+      {% assign page_lastmod = page.last_modified_at | default: page.date | default: page.data.updated_at | default: nil %}
+      {% if page_lastmod %}<lastmod>{{ page_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
+      {% if page.data.changefreq %}<changefreq>{{ page.data.changefreq }}</changefreq>{% elsif page.changefreq %}<changefreq>{{ page.changefreq }}</changefreq>{% endif %}
+      {% if page.data.priority %}<priority>{{ page.data.priority }}</priority>{% elsif page.priority %}<priority>{{ page.priority }}</priority>{% endif %}
+    </url>
+      {% endunless %}
+    {% endif %}
+  {% endfor %}
+  {% for collection in site.collections %}
+    {% unless collection.label == 'posts' %}
+      {% for doc in collection.docs %}
+        {% if doc.sitemap != false %}
+    <url>
+      <loc>{{ doc.url | absolute_url }}</loc>
+      {% assign doc_lastmod = doc.last_modified_at | default: doc.date | default: nil %}
+      {% if doc_lastmod %}<lastmod>{{ doc_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
+      {% if doc.data.changefreq %}<changefreq>{{ doc.data.changefreq }}</changefreq>{% endif %}
+      {% if doc.data.priority %}<priority>{{ doc.data.priority }}</priority>{% endif %}
+    </url>
+        {% endif %}
+      {% endfor %}
+    {% endunless %}
+  {% endfor %}
+  {% for post in site.posts %}
+    {% if post.sitemap != false %}
+    <url>
+      <loc>{{ post.url | absolute_url }}</loc>
+      <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
+    </url>
+    {% endif %}
+  {% endfor %}
+</urlset>

@@ -1,25 +1,33 @@
 ---
 title: "Mini Apps & Prototypes"
+description: "Mini apps for SAP order-to-cash: handlers, BP/CVI validators, and dashboards that cut MTTR, reduce manual retries, and keep clean-core S/4HANA audit-ready."
 eyebrow: "Services"
 subtitle: "I design and build small utilities and prototypes that unblock delivery without touching the SAP core."
 tags:
   - Automation
   - UX
   - Prototyping
+further_reading:
+  - label: "Use AI/ML sidecars to extend SAP order-to-cash decisions"
+    url: "/notes/ai-ml/"
+  - label: "Transform SAP AMS into a prevention-focused knowledge engine"
+    url: "/notes/ams/"
+  - label: "Run process diagnostics to prioritise the next automation candidate"
+    url: "/notes/process-audit/"
 ---
 
 ## What I build
 
 Small, outcome‑focused tools that remove tedious manual work or unblock analysis fast. Typical shapes:
 
-- **Exception handlers** that enrich and retry failed IDocs or AIF messages with one click.
+- **IDoc AIF reprocessing** handlers (idoc aif reprocessing) that enrich and retry failed interfaces with one click.
 - **One‑click reconciliations** that stitch SAP + spreadsheets + partner APIs and flag deltas.
 - **Operational dashboards** that show the next best action, not a 40‑field SAP screen.
-- **BP/CVI validators** for MDG rules, duplicate checks, postal/format fixes before posting.
+- **BP/CVI validators** for SAP MDG business partner rules (sap mdg business partner), duplicate checks, postal/format fixes before posting.
 - **Cutover simulators** that dry‑run steps, validate prerequisites, and produce ready checklists.
 - **OData inspectors** to explore v2/v4 services, filter/expand, and generate example payloads.
-- **BRFplus helpers** for decision table edits with guardrails, audit, and export.
-- **Event‑first monitors** that correlate events (Kafka/Event Mesh) with interface health.
+- **BRFplus decision tables** with guardrails, audit, diff, and export.
+- **Event‑first monitors** across Kafka and SAP Integration Suite Event Mesh to correlate interface health.
 
 ## Why teams use this
 

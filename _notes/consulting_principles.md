@@ -1,11 +1,19 @@
 ---
 title: "Consulting Principles"
+description: "Principles for SAP order-to-cash consulting: set measurable outcomes, guard the clean core, embed observability, co-create with owners, and ship auditable AI."
 subtitle: "How I run SAP programmes with clarity, clean core, and observability."
 tags:
   - Consulting
   - SAP
   - Delivery
 excerpt: "Five principles that anchor how I deliver SAP consulting engagements so sponsors know what to expect."
+further_reading:
+  - label: "Shift SAP AMS into a knowledge engine with measurable MTTR cuts"
+    url: "/notes/ams/"
+  - label: "Run process audit diagnostics before revenue leaks hit SAP SD"
+    url: "/notes/process-audit/"
+  - label: "Adopt composable ERP strategy without breaking clean core S/4"
+    url: "/notes/composable-erp/"
 ---
 
 I am a System Analyst and Senior SAP consultant at EPAM Systems. Every engagement—run stabilisation, transformation, or AI enablement—follows a small set of principles. They help sponsors know what to expect, and they give delivery teams a common frame for decisions.

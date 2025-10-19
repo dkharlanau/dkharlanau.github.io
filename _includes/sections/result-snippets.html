@@ -1,0 +1,33 @@
+{% assign result = site.data.home.result_snippets %}
+{% if result %}
+<section class="section result-snippets" id="results">
+  <header class="section-heading">
+    {% if result.eyebrow %}<p class="eyebrow">{{ result.eyebrow }}</p>{% endif %}
+    {% if result.title %}<h2>{{ result.title }}</h2>{% endif %}
+  </header>
+  {% if result.items %}
+  <div class="result-snippets__grid">
+    {% for item in result.items %}
+    <article class="result-snippet neub-card" itemscope itemtype="https://schema.org/CreativeWork">
+      <h3 itemprop="headline">{{ item.title }}</h3>
+      <p itemprop="text">{{ item.body }}</p>
+      <meta itemprop="author" content="Dzmitryi Kharlanau" />
+      <meta itemprop="creator" content="Dzmitryi Kharlanau" />
+    </article>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "{{ item.title | strip_html | normalize_whitespace | replace: '\"', '\\\"' }}",
+      "author": {"@id": "https://dkharlanau.github.io/#dkharlanau"},
+      "publisher": {"@id": "https://dkharlanau.github.io/#dkharlanau"},
+      "articleBody": "{{ item.body | strip_html | normalize_whitespace | replace: '\"', '\\\"' }}",
+      "mainEntityOfPage": "{{ '/' | absolute_url }}#results",
+      "inLanguage": "en"
+    }
+    </script>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}

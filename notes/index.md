@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Field Notes & Dispatches"
-description: "Working notes on SAP O2C leadership, integration architecture, and AI-enabled operations."
+title: "Notes — Dzmitryi Kharlanau | SAP O2C & Integration"
+description: "Working notes on SAP order-to-cash consulting, clean-core S/4HANA strategy, event-driven integration, and AI-enabled operations."
 permalink: /notes/
 ---
 

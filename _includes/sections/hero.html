@@ -4,7 +4,14 @@
   <article class="hero-card neub-card">
     <header class="hero-header">
       {% if hero.profile.image %}
-      <img src="{{ hero.profile.image }}" alt="{{ hero.profile.alt | default: hero.title }}" class="hero-avatar profile-photo" />
+      {% assign hero_image = hero.profile.image %}
+      {% assign hero_image_webp = hero.profile.image_webp | default: hero_image | replace: '.png', '.webp' %}
+      {% assign hero_image_avif = hero.profile.image_avif | default: hero_image | replace: '.png', '.avif' %}
+      <picture>
+        {% if hero_image_avif %}<source srcset="{{ hero_image_avif }}" type="image/avif" />{% endif %}
+        {% if hero_image_webp %}<source srcset="{{ hero_image_webp }}" type="image/webp" />{% endif %}
+        <img src="{{ hero_image }}" alt="{{ hero.profile.alt | default: hero.title }}" class="hero-avatar profile-photo" width="400" height="400" loading="lazy" decoding="async" />
+      </picture>
       {% endif %}
       <div class="hero-heading">
         {% if hero.eyebrow %}<p class="eyebrow">{{ hero.eyebrow }}</p>{% endif %}
