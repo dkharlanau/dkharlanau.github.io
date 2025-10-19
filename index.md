@@ -1,7 +1,7 @@
 ﻿---
 layout: default
-title: "Dzmitryi Kharlanau — SAP O2C, Integration & AI/ML Consultant"
-description: "SAP consulting with clarity, clean-core S/4HANA, and open, event-driven integrations. Order-to-Cash stabilisation, AMS transformation, AI/ML sidecar services."
+title: "Dzmitryi Kharlanau — System Analyst & SAP Transformation Consultant"
+description: "System Analyst & SAP Transformation Consultant — senior SAP solution leader with 12+ years across Order-to-Cash, logistics, and data; delivering clean-core S/4HANA, resilient integrations, and intelligent automation."
 permalink: /
 sections:
   - hero
