@@ -1,28 +1,49 @@
-{% assign entries = site.data.changelog.entries %}
+{% assign changelog = site.data.changelog %}
 <section class="section changelog" id="changelog">
   <header class="section-heading">
-    <p class="eyebrow">Release history</p>
-    <h1>Site changelog.</h1>
-    <p class="lead">Track UI, content, and data system updates as the CV evolves.</p>
+    <p class="eyebrow">Project snapshot</p>
+    <h1>Where this CV was launched.</h1>
+    <p class="lead">Consulting contexts and the release moment for the AI-ready resume hub.</p>
   </header>
-  {% if entries %}
-  <div class="timeline">
-    {% for entry in entries %}
-    <article class="timeline-item neub-card">
-      <header>
-        <h2>{{ entry.title }}</h2>
-        {% if entry.date %}<p class="timeline-item__meta">{{ entry.date }}</p>{% endif %}
-      </header>
-      {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
-      {% if entry.highlights %}
-      <ul class="timeline-list">
-        {% for highlight in entry.highlights %}
-        <li>{{ highlight }}</li>
-        {% endfor %}
-      </ul>
+  {% if changelog %}
+  <div class="changelog-overview">
+    {% if changelog.release %}
+    <article class="neub-card changelog-card">
+      <p class="eyebrow">Release date</p>
+      {% if changelog.release.label or changelog.release.date %}
+      <h2 class="changelog-card__title">
+        {% if changelog.release.label %}
+          {{ changelog.release.label }}
+        {% else %}
+          {{ changelog.release.date | date: "%-d %B %Y" }}
+        {% endif %}
+      </h2>
+      {% endif %}
+      {% if changelog.release.date %}
+      <p class="changelog-card__meta">{{ changelog.release.date | date: "%-d %B %Y" }}</p>
+      {% endif %}
+      {% if changelog.release.summary %}<p>{{ changelog.release.summary }}</p>{% endif %}
+      {% if changelog.release.medium_story %}
+      <p><a class="link-arrow" href="{{ changelog.release.medium_story.url }}" target="_blank" rel="noopener noreferrer">{{ changelog.release.medium_story.label }}</a></p>
       {% endif %}
     </article>
-    {% endfor %}
+    {% endif %}
+    {% if changelog.workplaces %}
+    <article class="neub-card changelog-card">
+      <p class="eyebrow">Working context</p>
+      <ul class="workplaces-list">
+        {% for workplace in changelog.workplaces %}
+        <li class="workplaces-list__item">
+          <span class="workplace-name">
+            {% if workplace.url %}<a href="{{ workplace.url }}" target="_blank" rel="noopener noreferrer">{{ workplace.name }}</a>{% else %}{{ workplace.name }}{% endif %}
+          </span>
+          {% if workplace.role %}<span class="workplace-role">{{ workplace.role }}</span>{% endif %}
+          {% if workplace.timeframe %}<span class="workplace-time">{{ workplace.timeframe }}</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+    {% endif %}
   </div>
   {% endif %}
 </section>

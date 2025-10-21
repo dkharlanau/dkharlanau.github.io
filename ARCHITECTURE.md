@@ -29,9 +29,7 @@ This site is a Jekyll project tuned for fast storytelling iterations, structured
 - To add a new note, drop a Markdown file in `_notes/` with at least `title`, `date`, and optional `tags`, `summary`, `subtitle`.
 
 ### Standalone pages
-- `/edu/` pulls from `_data/edu.yml` and uses the `edu-*` section partials to render active learning tracks, recent completions, and reading list.
-- `/changelog/` reads `_data/changelog.yml` through `changelog.html` to provide release notes in a timeline layout.
-- `/connect/` references `_data/connect.yml` to outline engagement paths, partner ecosystem, and the partnership CTA.
+- `/changelog/` reads `_data/changelog.yml` through `changelog.html` to provide a release snapshot view.
 - The `/legal/` directory houses evergreen policies (code of conduct, terms of engagement, privacy notice, professional disclosure, responsible AI statement, accessibility statement) authored as standalone Markdown pages.
 
 ## AI & automation

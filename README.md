@@ -14,7 +14,7 @@ Personal brand site for Dzmitryi Kharlanau, built on Jekyll with a light Neubrut
 - Resume data is centralised in `_data/resume.yml` and powers both `cv/index.html` and `ai/resume.json`.
 - Notes sit inside `_notes/` and use the `_layouts/note.html` template; the listing is published at `/notes/`.
 - AI-friendly mirrors exist in `/ai`, currently `resume.json`, `resume.yml`, and `home.json`.
-- Education roadmap (`/edu/`), changelog (`/changelog/`), and partnership (`/connect/`) pages pull from `_data/edu.yml`, `_data/changelog.yml`, and `_data/connect.yml` respectively.
+- Changelog page (`/changelog/`) pulls from `_data/changelog.yml` via the `changelog` section partial.
 - Legal policies live under `/legal/` as standalone Markdown pages (code of conduct, terms, privacy, professional disclosure, responsible AI, accessibility).
 - The homepage `llm-profiles` section surfaces quick links to `/ai/resume.json`, `/ai/resume.yml`, and `/LLM.txt` for copilot handoff.
 - Social channels are defined in `_data/social.yml` and rendered through the reusable `_includes/components/social-line.html` component used across sections and the footer.

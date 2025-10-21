@@ -15,7 +15,15 @@
       {% endif %}
       <div class="hero-heading">
         {% if hero.eyebrow %}<p class="eyebrow">{{ hero.eyebrow }}</p>{% endif %}
-        {% if hero.title %}<h1>{{ hero.title }}</h1>{% endif %}
+        {% if hero.title_lines %}
+        <h1 class="hero-title">
+          {% for line in hero.title_lines %}
+          <span class="hero-title-line">{{ line }}</span>
+          {% endfor %}
+        </h1>
+        {% elsif hero.title %}
+        <h1>{{ hero.title }}</h1>
+        {% endif %}
         {% if hero.kicker %}<p class="hero-kicker">{{ hero.kicker }}</p>{% endif %}
         {% if hero.subtitle %}<p class="hero-subtitle">{{ hero.subtitle }}</p>{% endif %}
         {% if hero.profile.links %}

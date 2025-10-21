@@ -222,11 +222,23 @@ img {
   letter-spacing: -0.01em;
 }
 
+.hero-title {
+  display: grid;
+  gap: var(--space-3xs);
+}
+
+.hero-title-line {
+  display: block;
+}
+
 .hero-links {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
   margin-top: clamp(var(--space-xs), 2vw, var(--space-sm));
+  justify-content: flex-end;
+  justify-self: stretch;
+  width: 100%;
 }
 
 .hero-links li {
@@ -1184,6 +1196,56 @@ img {
   color: var(--color-ink-soft);
 }
 
+.changelog-overview {
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.changelog-card {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.changelog-card__title {
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+}
+
+.changelog-card__meta {
+  font-weight: 600;
+  color: var(--color-ink-muted);
+}
+
+.workplaces-list {
+  display: grid;
+  gap: var(--space-sm);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.workplaces-list__item {
+  display: grid;
+  gap: var(--space-3xs);
+  border-left: 3px solid var(--color-border);
+  padding-left: var(--space-sm);
+}
+
+.workplace-name {
+  font-weight: 600;
+}
+
+.workplace-role {
+  color: var(--color-ink-soft);
+}
+
+.workplace-time {
+  font-size: 0.9rem;
+  color: var(--color-ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
 .note-further {
   margin-top: var(--space-xl);
   padding-top: var(--space-lg);
@@ -1286,13 +1348,13 @@ img {
 
   .hero-links {
     flex-direction: column;
-    align-items: stretch;
+    justify-content: flex-start;
+    align-items: flex-end;
     gap: var(--space-xs);
   }
 
   .hero-links .link-arrow {
-    width: 100%;
-    justify-content: center;
+    width: auto;
   }
 
   .button {
