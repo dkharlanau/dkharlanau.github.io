@@ -4,52 +4,35 @@
 {% assign author_id = 'https://dkharlanau.github.io/#dkharlanau' %}
 {% assign og_image = page.og_image | default: '/assets/og/default.png' | absolute_url %}
 {% assign page_description = page.description | default: page.summary | default: page.excerpt | strip_html | normalize_whitespace %}
-{% assign resume_json_url = '/ai/resume.json' | absolute_url %}
-{% assign resume_yaml_url = '/ai/resume.yml' | absolute_url %}
+{% assign datasets = site.data.datasets | default: empty %}
+{% assign primary_dataset = datasets | first %}
+{% assign catalog_id = 'https://dkharlanau.github.io/ai/catalog.json#catalog' %}
+{% assign catalog_url = 'https://dkharlanau.github.io/ai/catalog.json' %}
 
+{% if primary_dataset %}
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Dataset",
-  "name": "Dzmitryi Kharlanau Resume Dataset",
-  "description": "Structured resume formats (JSON and YAML) for copilots, sourcing agents, and automation workflows.",
-  "creator": {
-    "@type": "Person",
-    "@id": "{{ author_id }}"
-  },
-  "license": "https://creativecommons.org/licenses/by/4.0/",
-  "url": "{{ resume_json_url }}",
-  "distribution": [
-    {
-      "@type": "DataDownload",
-      "encodingFormat": "application/json",
-      "contentUrl": "{{ resume_json_url }}"
-    },
-    {
-      "@type": "DataDownload",
-      "encodingFormat": "application/x-yaml",
-      "contentUrl": "{{ resume_yaml_url }}"
-    }
-  ]
-}
+{{ primary_dataset | jsonify }}
 </script>
+{% endif %}
 
+{% if datasets and datasets.size > 0 %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "DataCatalog",
-  "@id": "https://dkharlanau.github.io/ai/catalog.json#catalog",
+  "@id": "{{ catalog_id }}",
   "name": "DKharlanau Professional Data Catalog",
-  "url": "https://dkharlanau.github.io/ai/catalog.json",
-  "dataset": [
-    {"@type": "Dataset", "@id": "https://dkharlanau.github.io/ai/resume.yml"},
-    {"@type": "Dataset", "@id": "https://dkharlanau.github.io/ai/resume.json"},
-    {"@type": "Dataset", "@id": "https://dkharlanau.github.io/ai/principles.json"},
-    {"@type": "Dataset", "@id": "https://dkharlanau.github.io/ai/recommendations.json"},
-    {"@type": "Dataset", "@id": "https://dkharlanau.github.io/LLM.txt"}
-  ]
+  "url": "{{ catalog_url }}",
+  "creator": {
+    "@type": "Person",
+    "@id": "{{ author_id }}",
+    "name": "Dzmitryi Kharlanau",
+    "url": "{{ site_home }}"
+  },
+  "dataset": {{ datasets | jsonify }}
 }
 </script>
+{% endif %}
 
 {% if page.collection == 'notes' %}
 <script type="application/ld+json">
