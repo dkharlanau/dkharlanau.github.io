@@ -6,7 +6,6 @@ permalink: /
 sections:
   - hero
   - services
-  - result-snippets
   - credentials
   - llm-profiles
  
