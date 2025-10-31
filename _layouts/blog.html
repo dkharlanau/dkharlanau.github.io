@@ -1,0 +1,59 @@
+---
+layout: default
+---
+{% assign published_on = page.date | default: page.published %}
+{% assign updated_on = page.updated %}
+
+<section class="section note-detail">
+  <div class="note-backlink">
+    <a class="link-arrow" href="/blog/">Back to blog</a>
+  </div>
+  <article class="note-article neub-card">
+    <header class="note-header">
+      {% if page.eyebrow or page.category %}
+      <p class="eyebrow">{{ page.eyebrow | default: page.category }}</p>
+      {% endif %}
+      <h1>{{ page.title }}</h1>
+      {% if page.subtitle %}<p class="note-subtitle">{{ page.subtitle }}</p>{% endif %}
+      {% if published_on or updated_on or page.tags %}
+      <dl class="note-meta">
+        {% if published_on %}
+        <div>
+          <dt>Published</dt>
+          <dd>{{ published_on | date: "%d %b %Y" }}</dd>
+        </div>
+        {% endif %}
+        {% if updated_on %}
+        <div>
+          <dt>Updated</dt>
+          <dd>{{ updated_on | date: "%d %b %Y" }}</dd>
+        </div>
+        {% endif %}
+        {% if page.tags %}
+        <div>
+          <dt>Tags</dt>
+          <dd>
+            <ul class="note-tags">
+              {% for tag in page.tags %}<li>{{ tag }}</li>{% endfor %}
+            </ul>
+          </dd>
+        </div>
+        {% endif %}
+      </dl>
+      {% endif %}
+    </header>
+    <div class="note-body">
+      {{ content }}
+    </div>
+    {% if page.further_reading %}
+    <aside class="note-further">
+      <h2>Further reading</h2>
+      <ul class="note-further__list">
+        {% for item in page.further_reading %}
+        <li><a href="{{ item.url }}" class="link-arrow">{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </aside>
+    {% endif %}
+  </article>
+</section>
