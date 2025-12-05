@@ -2,6 +2,7 @@
 title: "Consulting Principles"
 description: "Principles for SAP order-to-cash consulting: set measurable outcomes, guard the clean core, embed observability, co-create with owners, and ship auditable AI."
 subtitle: "How I run SAP programmes with clarity, clean core, and observability."
+permalink: /notes/consulting-principles/
 tags:
   - Consulting
   - SAP

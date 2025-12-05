@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Professional Disclosure"
-description: "Employment, affiliations, and disclosure statement for Dzmitryi Kharlanau."
+description: "Professional disclosure for Dzmitryi Kharlanau — employment with EPAM Systems, certifications, independence policy, and contact channels for reference checks."
 permalink: /legal/professional-disclosure/
 ---
 

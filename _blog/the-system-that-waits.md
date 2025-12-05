@@ -1,7 +1,7 @@
 ---
 layout: blog
 title: "The System That Waits"
-description: "Batch architecture is where fast systems admit they need rhythm, traceability, and deliberate recovery paths."
+description: "Batch architecture is where fast systems admit they need rhythm, traceability, and deliberate recovery paths to survive unpredictable loads and failures."
 date: 2025-10-31
 tags:
   - batch processing

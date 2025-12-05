@@ -3,6 +3,7 @@ title: "Composable ERP — Philosophy & Playbook"
 description: "Composable ERP strategy to keep clean core S/4HANA, protect SAP order-to-cash, and run event-driven integrations on portable tech with cost guardrails."
 eyebrow: "Opinionated essay"
 subtitle: "S/4HANA as the core. Best‑of‑breed at the edges. Open contracts. Zero drama."
+permalink: /notes/composable-erp/
 tags:
   - ERP
   - Architecture

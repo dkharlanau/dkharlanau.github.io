@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Privacy Notice"
-description: "How personal data is handled when you interact with this site or my consulting services."
+description: "Privacy notice for dkharlanau.github.io and consulting outreach: what limited data is collected, how it is used, retention periods, and how to request updates or deletion."
 permalink: /legal/privacy/
 ---
 

@@ -19,6 +19,6 @@ Personal brand site for Dzmitryi Kharlanau, built on Jekyll with a light Neubrut
 - The homepage `llm-profiles` section surfaces quick links to `/ai/resume.json`, `/ai/resume.yml`, and `/LLM.txt` for copilot handoff.
 - Social channels are defined in `_data/social.yml` and rendered through the reusable `_includes/components/social-line.html` component used across sections and the footer.
 - Structured data scripts live in `_includes/seo/structured-data.html`, wiring Person, WebSite, Breadcrumb, and Article metadata automatically.
-- Static sitemap: run `python bin/build_static_sitemap.py` to regenerate `sitemap-static.xml` for search-console submissions.
+- Sitemaps: `sitemap.xml` indexes `sitemap-pages.xml` (pages, notes, blog) and `sitemap-data.xml` (JSON/YAML assets); `ai/sitemap.xml` exposes the `ai/home.json` snapshot.
 
 See `ARCHITECTURE.md` for deeper guidance on extending the system.

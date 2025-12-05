@@ -2,6 +2,7 @@
 title: "Process Audit & Diagnostics"
 description: "Process audit playbook to expose SAP order-to-cash breakpoints, MDG defects, and integration debt, turning incident noise into measurable remediation pipeline."
 subtitle: "Trace where value leaks across Order-to-Cash, Procure-to-Pay, and integration layers."
+permalink: /notes/process-audit/
 tags:
   - Audit
   - SAP

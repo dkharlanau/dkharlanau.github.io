@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Responsible AI Statement"
-description: "How AI tooling is applied across consulting engagements and this website."
+description: "Responsible AI guidelines for my SAP consulting work and this site: transparency, data minimisation, security, bias checks, and human accountability for AI-assisted outputs."
 permalink: /legal/responsible-ai/
 ---
 

@@ -26,7 +26,8 @@
 {% elsif is_cv %}
   {% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau — System Analyst & SAP Transformation Consultant.' %}
 {% endif %}
-{% assign meta_description = page.description | default: default_description | strip_html | normalize_whitespace %}
+{% assign content_fallback = page.summary | default: page.excerpt %}
+{% assign meta_description = page.description | default: content_fallback | default: default_description | strip_html | normalize_whitespace %}
 
 <title>{{ computed_title | strip_html | normalize_whitespace }}</title>
 

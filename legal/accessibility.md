@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Accessibility Statement"
-description: "Commitment to accessible digital experiences across this site and consulting deliverables."
+description: "Accessibility statement for dkharlanau.github.io and my consulting deliverables — keyboard-friendly layouts, WCAG-minded contrast, semantic HTML, and an ongoing improvement loop."
 permalink: /legal/accessibility/
 ---
 

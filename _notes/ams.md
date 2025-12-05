@@ -2,6 +2,7 @@
 title: "SAP AMS Playbook"
 description: "SAP AMS playbook to cut repeat incidents, shift from patching to prevention, and wire in knowledge, observability, and O2C guardrails for measurable MTTR drops."
 subtitle: "Stop the patch factory. Build a knowledge engine."
+permalink: /notes/ams/
 tags:
   - AMS
   - SAP
@@ -26,7 +27,7 @@ Incidents and change requests close, SLAs look green, but people still complain,
 
 This is not a “support” problem. It is a **knowledge and control** problem.
 
-# What AMS Is (and Isn’t)
+## What AMS Is (and Isn’t)
 
 **AMS (Application Management Support) in SAP** is not only “keep the system alive today.” Done right, AMS is a **knowledge-driven service** that makes the business more effective quarter by quarter.
 

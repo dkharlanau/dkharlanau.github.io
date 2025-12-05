@@ -3,6 +3,7 @@ title: "Operating a Neubrutalist design system"
 description: "Neubrutalist SAP site playbook: declarative data, reusable sections, and machine-readable feeds that keep AI copilots aligned with event-driven integrations."
 eyebrow: "Practitioner note"
 subtitle: "How the CV AI site stays modular, observable, and ready for AI copilots."
+permalink: /notes/system-architecture/
 date: 2025-02-01
 published: 2025-02-01
 updated: 2025-02-03

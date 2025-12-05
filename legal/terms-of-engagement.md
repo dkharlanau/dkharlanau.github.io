@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Terms of Engagement"
-description: "Baseline terms for consulting collaborations with Dzmitryi Kharlanau."
+description: "Baseline terms for SAP consulting with Dzmitryi Kharlanau: scope control, delivery cadence, billing, IP ownership, confidentiality, and governing law expectations."
 permalink: /legal/terms-of-engagement/
 ---
 

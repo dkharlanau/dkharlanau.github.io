@@ -3,6 +3,7 @@ title: "Mini Apps & Prototypes"
 description: "Mini apps for SAP order-to-cash: handlers, BP/CVI validators, and dashboards that cut MTTR, reduce manual retries, and keep clean-core S/4HANA audit-ready."
 eyebrow: "Services"
 subtitle: "I design and build small utilities and prototypes that unblock delivery without touching the SAP core."
+permalink: /notes/tools-mini-apps/
 tags:
   - Automation
   - UX

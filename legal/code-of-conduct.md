@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Professional Code of Conduct"
-description: "Standards that guide my client work and collaborations as a Senior SAP consultant."
+description: "Professional code of conduct I follow on SAP programmes: confidentiality, realistic delivery commitments, ethical decision-making, and transparent collaboration with clients and partners."
 permalink: /legal/code-of-conduct/
 ---
 
