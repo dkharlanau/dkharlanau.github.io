@@ -18,7 +18,7 @@ permalink: /search/
     <button type="submit">Search</button>
   </form>
 
-  <div id="search-status" class="lead"></div>
+  <div id="search-status" class="lead" role="status" aria-live="polite" aria-atomic="true"></div>
   <ul id="search-results" class="notes-grid"></ul>
   <p id="search-help" class="note-subtitle">Search looks at page titles and descriptions. Try specific keywords for better matches.</p>
 </section>
