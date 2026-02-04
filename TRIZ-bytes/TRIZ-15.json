@@ -1,0 +1,72 @@
+{
+  "id": "TRIZ-15",
+  "title": "Dynamics",
+  "intent": "Allow a system to change its structure, behavior, or parameters over time instead of remaining static.",
+  "triz_principle": {
+    "number": 15,
+    "name": "Dynamics",
+    "definition": "Allow the characteristics of an object or system to change to be optimal at different stages or conditions."
+  },
+  "problem_understanding": {
+    "core_contradiction": "We want stable systems, but static designs become inefficient as conditions change.",
+    "why_this_hurts": "A solution optimized for yesterday’s context becomes technical debt when scale, load, or business priorities shift.",
+    "typical_signals": [
+      "hard-coded limits and thresholds",
+      "manual reconfiguration for routine changes",
+      "same process used for startup, growth, and scale phases",
+      "systems that work only under 'normal' conditions"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Design the system to adapt its behavior automatically or semi-automatically.",
+    "key_rule": "Make change a first-class capability, not an exception.",
+    "how_it_resolves_the_contradiction": "The system remains stable in intent while adjusting its form to match current conditions."
+  },
+  "application_patterns": {
+    "consulting": [
+      "governance models that evolve by maturity stage",
+      "dynamic resource allocation instead of fixed staffing",
+      "decision thresholds that adapt to risk and volume"
+    ],
+    "software_engineering": [
+      "configuration-driven behavior instead of code changes",
+      "feature flags and runtime toggles",
+      "auto-scaling based on load and performance"
+    ],
+    "architecture": [
+      "elastic infrastructure",
+      "policy engines instead of static rules",
+      "self-healing systems with health-based reactions"
+    ],
+    "enterprise_sap": [
+      "dynamic validation rules based on data criticality",
+      "volume-based workflow routing in MDG",
+      "time-dependent business rules (phased rollouts)"
+    ]
+  },
+  "anti_patterns": [
+    "dynamic behavior without observability or control",
+    "over-automation that hides decision logic",
+    "mixing static assumptions with dynamic execution"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "system behavior must vary by load, phase, or risk",
+      "manual tuning is frequent and repetitive",
+      "future conditions are uncertain"
+    ],
+    "do_not_use_when": [
+      "strict repeatability is required",
+      "dynamic behavior would confuse users or auditors"
+    ]
+  },
+  "diagnostic_questions": [
+    "Which parameters change regularly but are hard-coded?",
+    "Where do we manually adapt the system today?",
+    "What behavior should differ between low and high load?"
+  ],
+  "example": {
+    "before": "Validation rules and workflows are fixed regardless of volume or risk.",
+    "after": "Rules and workflows adapt dynamically based on context and thresholds."
+  }
+}

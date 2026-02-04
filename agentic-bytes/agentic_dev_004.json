@@ -1,0 +1,88 @@
+{
+  "byte_id": "agentic_dev_004",
+  "title": "Chunking: How Knowledge Must Be Cut for RAG",
+  "level": "foundation",
+  "domain": [
+    "agentic-development",
+    "rag",
+    "knowledge-engineering"
+  ],
+  "intent": "Learn how to structure knowledge so an agent can reliably retrieve and use it without confusion or hallucination.",
+  "core_idea": {
+    "one_liner": "RAG does not fail because of models — it fails because of bad chunking.",
+    "why_it_matters": [
+      "The model can only reason over what it retrieves.",
+      "Poor chunking causes partial context and wrong conclusions.",
+      "Good chunks turn documents into reusable knowledge units."
+    ]
+  },
+  "definition": {
+    "chunk": "A self-contained unit of knowledge that can be retrieved and understood independently."
+  },
+  "golden_rules": [
+    "One chunk = one idea.",
+    "A chunk must make sense without neighboring text.",
+    "If you cannot explain a chunk in 30 seconds, it is too big."
+  ],
+  "recommended_chunk_sizes": {
+    "concepts": "150–300 tokens",
+    "procedures_checklists": "200–400 tokens",
+    "decision_rules": "100–250 tokens",
+    "reference_tables": "as rows, not prose blocks"
+  },
+  "bad_chunking_patterns": [
+    "Splitting by fixed token size only",
+    "Cutting mid-sentence or mid-idea",
+    "One chunk covering multiple decisions",
+    "Large narrative documents with no internal structure"
+  ],
+  "good_chunking_patterns": [
+    "Semantic boundaries (concept, rule, checklist, example)",
+    "Stable templates (same fields every time)",
+    "Explicit titles and summaries per chunk"
+  ],
+  "agent_friendly_templates": [
+    "Decision Byte",
+    "Anti-pattern Byte",
+    "Checklist Byte",
+    "Mapping Byte",
+    "RCA Byte"
+  ],
+  "micro_example": {
+    "scenario": "MDG replication troubleshooting guide",
+    "bad_chunk": "10 pages covering queues, errors, mappings, governance mixed together.",
+    "good_chunks": [
+      "Queue backlog diagnosis",
+      "Web service error patterns",
+      "Value mapping failures",
+      "Authorization-related replication blocks"
+    ]
+  },
+  "retrieval_failure_modes": [
+    "Right document, wrong chunk",
+    "Partial rule without conditions",
+    "Example retrieved without explanation",
+    "Conflicting chunks retrieved together"
+  ],
+  "guards": [
+    "Each chunk must have a title and intent.",
+    "Chunks must be versioned when meaning changes.",
+    "Never mix procedures and opinions in the same chunk."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "Chunking is like cutting a book into index cards that still make sense on their own.",
+    "one_sentence_definition": "A good chunk is the smallest unit of knowledge that still tells the whole truth."
+  },
+  "practical_checklist": [
+    "Does this chunk answer one clear question?",
+    "Can it stand alone without other chunks?",
+    "Is its size appropriate for retrieval?",
+    "Would I reuse this chunk in another agent?"
+  ],
+  "tags": [
+    "rag",
+    "chunking",
+    "knowledge-design",
+    "retrieval-quality"
+  ]
+}

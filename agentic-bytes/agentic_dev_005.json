@@ -1,0 +1,96 @@
+{
+  "byte_id": "agentic_dev_005",
+  "title": "Metadata: Teaching Agents What a Chunk Is About",
+  "level": "foundation",
+  "domain": [
+    "agentic-development",
+    "rag",
+    "metadata"
+  ],
+  "intent": "Understand how metadata turns raw text chunks into navigable, filterable, and trustworthy knowledge for agents.",
+  "core_idea": {
+    "one_liner": "Without metadata, RAG is blind; with metadata, it can reason.",
+    "why_it_matters": [
+      "Vectors give similarity, metadata gives control.",
+      "Agents must know context, scope, and freshness.",
+      "Good metadata reduces hallucinations and wrong retrieval."
+    ]
+  },
+  "definition": {
+    "metadata": "Structured attributes attached to a chunk that describe its meaning, scope, origin, and validity."
+  },
+  "must_have_metadata": [
+    {
+      "field": "domain",
+      "purpose": "Logical area (e.g. SAP, MDG, agentic-dev, data-quality)."
+    },
+    {
+      "field": "system_or_context",
+      "purpose": "Which system or environment it applies to (S/4, MDG, BTP, generic)."
+    },
+    {
+      "field": "type",
+      "purpose": "Decision, checklist, anti-pattern, concept, RCA, mapping."
+    },
+    {
+      "field": "version",
+      "purpose": "Knowledge evolves; agents must prefer newer versions."
+    },
+    {
+      "field": "validity",
+      "purpose": "Is it current, deprecated, or conditional?"
+    }
+  ],
+  "optional_but_powerful_metadata": [
+    "process (O2C, P2P, MDG, UAT, Cutover)",
+    "risk_level (low/medium/high)",
+    "confidence (expert-verified vs heuristic)",
+    "owner (who is responsible for this knowledge)",
+    "last_reviewed_date"
+  ],
+  "how_agents_use_metadata": [
+    "Filter chunks before vector search (reduce noise).",
+    "Resolve conflicts (prefer higher version or confidence).",
+    "Ask follow-up questions when validity is conditional.",
+    "Explain answers with proper scope ('this applies to S/4 only')."
+  ],
+  "micro_example": {
+    "chunk_title": "MDG BP Replication – Queue Backlog Diagnosis",
+    "metadata_example": {
+      "domain": "SAP",
+      "system_or_context": "MDG-S/4",
+      "type": "RCA",
+      "process": "Master Data Replication",
+      "version": "1.2",
+      "validity": "current",
+      "risk_level": "high"
+    }
+  },
+  "failure_modes_without_metadata": [
+    "Correct chunk retrieved in wrong context",
+    "Outdated rules mixed with current ones",
+    "Generic advice applied to regulated scenarios",
+    "Agent overconfident in heuristic knowledge"
+  ],
+  "guards": [
+    "Every chunk must have minimum metadata.",
+    "Version bumps are mandatory on semantic change.",
+    "Deprecated chunks must not be deleted silently."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "Metadata tells the agent when, where, and how a piece of knowledge is allowed to be used.",
+    "one_sentence_definition": "Metadata is the difference between remembering and understanding."
+  },
+  "practical_checklist": [
+    "Can the agent filter this chunk correctly?",
+    "Is the scope explicit?",
+    "Is the version and freshness clear?",
+    "Would a wrong context make this advice dangerous?"
+  ],
+  "tags": [
+    "metadata",
+    "rag",
+    "knowledge-governance",
+    "agent-control"
+  ]
+}

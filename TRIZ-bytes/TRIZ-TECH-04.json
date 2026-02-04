@@ -1,0 +1,49 @@
+{
+  "id": "TRIZ-TECH-04",
+  "title": "X-Operator (Exaggeration / Extremes)",
+  "intent": "Force breakthrough ideas by pushing a system parameter to an extreme and observing what must change to make it work.",
+  "technique": {
+    "name": "Exaggeration / Extremes (often used in OTSM-TRIZ trainings)",
+    "definition": "Deliberately exaggerate a parameter (very high/very low) to reveal hidden constraints and new solution paths."
+  },
+  "inputs": {
+    "target_parameter": "The variable tied to the contradiction (e.g., 'lead time', 'validation strictness', 'cost').",
+    "extreme_directions": [
+      "make it 10× bigger",
+      "make it near-zero"
+    ]
+  },
+  "procedure": [
+    "Pick one parameter that matters most.",
+    "Run two extremes:",
+    "  - Extreme A: 'What if this parameter is 10× bigger?'",
+    "  - Extreme B: 'What if this parameter is ~0 (almost eliminated)?'",
+    "For each extreme, answer:",
+    "  - What breaks first?",
+    "  - What must be removed or added to survive?",
+    "  - What new constraints appear?",
+    "Translate extreme insights back into realistic solutions (often these become Separation-on-Condition or new architecture boundaries)."
+  ],
+  "outputs": {
+    "extreme_A_breakpoints": [],
+    "extreme_B_breakpoints": [],
+    "solution_hypotheses": [
+      "introduce fast/slow lanes",
+      "automate the expensive checks",
+      "move checks to boundary",
+      "change the contract with the environment"
+    ]
+  },
+  "common_mistakes": [
+    "Staying realistic too early (kills the point)",
+    "Not translating insights back to implementable steps",
+    "Picking a parameter that is not the real bottleneck"
+  ],
+  "example": {
+    "consulting": {
+      "parameter": "Approval lead time",
+      "extreme_A": "If approvals take 30 days, what must be pre-approved?",
+      "insight": "Standard cases should be auto-approved; humans handle exceptions only."
+    }
+  }
+}

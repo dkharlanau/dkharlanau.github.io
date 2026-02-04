@@ -1,0 +1,310 @@
+{
+  "id": "mdg_design_patterns_pack_v0_1",
+  "type": "pattern_pack",
+  "purpose": "Architecture patterns for SAP MDG / MDM programs covering Create, Update, Migration/Cutover, and Day-2 operations.",
+  "version": "0.1",
+  "patterns": [
+    {
+      "pattern_id": "pat_system_of_record_boundary",
+      "title": "System-of-Record Boundary",
+      "category": "foundation",
+      "problem": "Teams change master data in multiple systems and then argue where the truth is; replication issues become endless.",
+      "forces": [
+        "Business needs speed",
+        "Downstream systems have constraints and custom logic",
+        "Auditability requires one accountable source"
+      ],
+      "solution": "Define for each attribute group a single System of Record and explicitly define what is allowed downstream (read-only copy vs local-only fields). Enforce 'no silent fixes' in targets.",
+      "mdg_mechanics": [
+        "AttributeGroup registry: canonical_source + replication_targets",
+        "Governance policy: bypass forbidden unless exception",
+        "Runbook for replication errors"
+      ],
+      "pitfalls": [
+        "Not defining exceptions (people will bypass anyway)",
+        "Leaving 'gray zones' where both systems can change the same fields"
+      ],
+      "evidence_metrics": [
+        "bypass_rate",
+        "manual_post_replication_fix_rate"
+      ],
+      "best_for": [
+        "BP",
+        "Material",
+        "Reference Data"
+      ]
+    },
+    {
+      "pattern_id": "pat_attribute_group_tiering",
+      "title": "Attribute-Group Tiering (Tier1/2/3) + Control Strength",
+      "category": "governance_design",
+      "problem": "Governance becomes heavy everywhere or weak everywhere. Both lead to bypass and drift.",
+      "solution": "Tier attribute groups by risk/value and map tiers to control strength (error/warn/report), workflow strictness, and exception policy.",
+      "mdg_mechanics": [
+        "Tier drives validation severity and routing",
+        "Tier1: blocking + owner decision + expiry exceptions",
+        "Tier3: guidance + derivation + minimal approval"
+      ],
+      "pitfalls": [
+        "Tiering by politics not by impact",
+        "Too many Tier1 groups (capacity collapse)"
+      ],
+      "evidence_metrics": [
+        "approval_cycle_time_p90",
+        "bypass_rate",
+        "exception_repeat_rate"
+      ],
+      "best_for": [
+        "Scaling governance",
+        "Reducing friction"
+      ]
+    },
+    {
+      "pattern_id": "pat_create_with_guided_entry",
+      "title": "Create with Guided Entry (Prevent Rework)",
+      "category": "create",
+      "problem": "New master data creation creates rework loops and delays because requesters don’t understand what fields mean and what values are valid.",
+      "solution": "Provide guided entry: glossary snippets, examples, allowed values, defaulting/derivations, and steward precheck before owner approval.",
+      "mdg_mechanics": [
+        "Steward checklist pre-routing",
+        "Glossary term links on UI fields",
+        "Derivations for low-risk fields"
+      ],
+      "pitfalls": [
+        "Only adding validations (blocking) without guidance",
+        "Letting AI invent values without LoV sources"
+      ],
+      "evidence_metrics": [
+        "rework_loops_per_cr",
+        "approval_cycle_time_p90"
+      ],
+      "best_for": [
+        "BP onboarding",
+        "Material creation"
+      ]
+    },
+    {
+      "pattern_id": "pat_change_request_funnel",
+      "title": "CR Funnel: Triage → Decide → Improve (Not only Approve)",
+      "category": "update",
+      "problem": "Everything becomes an approval problem; repeated exceptions indicate the system is not learning.",
+      "solution": "Treat CR stream as input to improvement: triage recurring issues, route to rule lifecycle review, and maintain a governance backlog (Run + Improve).",
+      "mdg_mechanics": [
+        "Ticket/CR taxonomy: data issue vs rule issue vs reference mismatch vs technical replication",
+        "Weekly governance ops review",
+        "Rule lifecycle (keep/kill/simplify)"
+      ],
+      "pitfalls": [
+        "Approving exceptions forever",
+        "No feedback loop from incidents to rules/definitions"
+      ],
+      "evidence_metrics": [
+        "exception_repeat_rate",
+        "rule_exception_concentration",
+        "repeat_incident_rate"
+      ],
+      "best_for": [
+        "Day-2 stability"
+      ]
+    },
+    {
+      "pattern_id": "pat_rule_lifecycle_kill_simplify",
+      "title": "Rule Lifecycle: Keep / Kill / Simplify",
+      "category": "rule_management",
+      "problem": "Rules accumulate, block business, and nobody remembers why they exist.",
+      "solution": "Every rule must have intent, owner, metrics, review date, and an explicit lifecycle decision. Concentration metrics identify top pain rules.",
+      "mdg_mechanics": [
+        "Rule Proposal Template (no template = no rule)",
+        "Review cadence for top offenders",
+        "Downgrade severity or move to derivation"
+      ],
+      "pitfalls": [
+        "Rules without owners",
+        "No metrics linked to rule intent"
+      ],
+      "evidence_metrics": [
+        "blocking_error_rate_by_rule",
+        "rule_exception_concentration",
+        "bypass_rate"
+      ],
+      "best_for": [
+        "Mature MDG programs",
+        "Reducing friction"
+      ]
+    },
+    {
+      "pattern_id": "pat_reference_data_alignment",
+      "title": "Reference Data Alignment (LoV / Customizing Mismatch Shield)",
+      "category": "reference_data",
+      "problem": "Replication fails or downstream rejects values because code lists/customizing differ across systems.",
+      "solution": "Maintain reference data as a governed product: registry, ownership, value mapping, and reconciliation between MDG and consumers.",
+      "mdg_mechanics": [
+        "Reference Data ownership per value set",
+        "Value mapping artifacts",
+        "Reconciliation reports and thresholds"
+      ],
+      "pitfalls": [
+        "Treating LoV as 'config' owned by IT only",
+        "Not versioning code sets"
+      ],
+      "evidence_metrics": [
+        "customizing_mismatch_rate",
+        "replication_error_rate_by_category"
+      ],
+      "best_for": [
+        "Sales Office, Payment Terms, Incoterms, Regions"
+      ]
+    },
+    {
+      "pattern_id": "pat_dual_maintenance_bridge",
+      "title": "Dual Maintenance Bridge (Temporary) with Expiry",
+      "category": "migration",
+      "problem": "During migration/cutover, both legacy and new systems must run. Without governance, drift explodes.",
+      "solution": "If dual maintenance is unavoidable, formalize it: define which attributes can change where, enforce expiry, and reconcile differences daily/weekly.",
+      "mdg_mechanics": [
+        "Temporary policy with end date",
+        "Reconciliation process",
+        "Exception template for unavoidable local changes"
+      ],
+      "pitfalls": [
+        "Dual maintenance without expiry becomes permanent bypass",
+        "No reconciliation ownership"
+      ],
+      "evidence_metrics": [
+        "cross_system_mismatch_rate",
+        "manual_post_replication_fix_rate",
+        "bypass_rate"
+      ],
+      "best_for": [
+        "Phased rollout migrations"
+      ]
+    },
+    {
+      "pattern_id": "pat_cutover_load_with_verification",
+      "title": "Cutover Load with Verification Gates",
+      "category": "migration",
+      "problem": "Bulk loads succeed technically but business data is wrong; defects appear only after go-live.",
+      "solution": "Use gated cutover: stage → validate → dry-run → reconcile → sign-off → load → post-load verification. Verification uses contracts + Tier1 checks.",
+      "mdg_mechanics": [
+        "Bulk Change Plan Template",
+        "Verification checklist per attribute group",
+        "Post-load reconciliation vs source extracts"
+      ],
+      "pitfalls": [
+        "Only technical success criteria (job finished)",
+        "No rollback plan or no sampling verification"
+      ],
+      "evidence_metrics": [
+        "verification_mismatch_rate",
+        "bulk_change_success_rate",
+        "repeat_incident_rate"
+      ],
+      "best_for": [
+        "Big migrations",
+        "S/4 transformations"
+      ]
+    },
+    {
+      "pattern_id": "pat_delta_vs_full_load_strategy",
+      "title": "Delta vs Full Load Strategy (Migration & Ongoing Feeds)",
+      "category": "migration",
+      "problem": "Repeated full loads are slow and risky; pure delta can miss corrections and cause inconsistency.",
+      "solution": "Define load strategy per entity: initial full load + periodic reconciled delta + exception correction path. Treat deltas as governed events with traceability.",
+      "mdg_mechanics": [
+        "Load event logging",
+        "Reconciliation checkpoints",
+        "Exception path for missed deltas"
+      ],
+      "pitfalls": [
+        "Deltas without stable keys and matching rules",
+        "No backfill mechanism"
+      ],
+      "evidence_metrics": [
+        "verification_mismatch_rate",
+        "repeat_error_top10_share"
+      ],
+      "best_for": [
+        "Ongoing integration streams"
+      ]
+    },
+    {
+      "pattern_id": "pat_replication_error_taxonomy_runbooks",
+      "title": "Replication Error Taxonomy + Runbooks",
+      "category": "operations",
+      "problem": "Replication errors are treated case-by-case; mean time to recover is high; the same failures repeat.",
+      "solution": "Classify errors into categories (semantic/technical/customizing) and attach runbooks with owners, steps, and escalation rules.",
+      "mdg_mechanics": [
+        "Interface registry + monitoring locations",
+        "Error category mapping",
+        "Ops cadence and SLA"
+      ],
+      "pitfalls": [
+        "Everything goes to IT (business semantics ignored)",
+        "No ownership for semantic errors"
+      ],
+      "evidence_metrics": [
+        "replication_error_rate_by_category",
+        "mean_time_to_recover",
+        "repeat_error_top10_share"
+      ],
+      "best_for": [
+        "Web services replication",
+        "AIF/IDoc landscapes"
+      ]
+    },
+    {
+      "pattern_id": "pat_mass_change_risk_controls",
+      "title": "Mass Change Risk Controls (Blast Radius Management)",
+      "category": "update",
+      "problem": "Mass updates can cause huge blast radius; teams avoid them and do manual fixes instead.",
+      "solution": "Treat mass changes as governed operations: risk tier, dry run, sampling verification, rollback capability, and post-change metric gates.",
+      "mdg_mechanics": [
+        "Bulk Change Plan Template",
+        "Approval by risk",
+        "Verification gates + monitoring"
+      ],
+      "pitfalls": [
+        "No rollback plan",
+        "No post-change verification"
+      ],
+      "evidence_metrics": [
+        "verification_mismatch_rate",
+        "manual_post_replication_fix_rate"
+      ],
+      "best_for": [
+        "Cleansing waves",
+        "Cutover fixes",
+        "Reference updates"
+      ]
+    },
+    {
+      "pattern_id": "pat_governance_release_management",
+      "title": "Governance Release Management (Rules/Workflow Changes without Chaos)",
+      "category": "change_management",
+      "problem": "Rule and workflow changes break trust; users are surprised by new blocking validations.",
+      "solution": "Classify governance changes by impact (low/medium/high), communicate intent + examples, and monitor adoption KPIs after release.",
+      "mdg_mechanics": [
+        "Change classification (low/medium/high)",
+        "Release note template linked to rule IDs",
+        "Post-release monitoring (tickets, bypass, rework)"
+      ],
+      "pitfalls": [
+        "Silent deployments",
+        "Big-bang redesign"
+      ],
+      "evidence_metrics": [
+        "support_ticket_spike_after_change",
+        "bypass_rate",
+        "rework_loops_per_cr"
+      ],
+      "best_for": [
+        "Day-2 governance evolution"
+      ]
+    }
+  ],
+  "recommended_next_actions": [
+    "Pick 6–8 patterns that match your project reality (BP + migration + replication + ref data).",
+    "For each pattern, create one Decision Block: decision question + controls + metrics + examples.",
+    "Create a 'Migration Playbook' page that sequences patterns: SoR boundary → tiering → cutover gates → delta strategy → runbooks → day-2 cadence."
+  ]
+}

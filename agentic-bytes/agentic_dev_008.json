@@ -1,0 +1,97 @@
+{
+  "byte_id": "agentic_dev_008",
+  "title": "Self-Check / Critic: Teaching Agents to Verify Themselves",
+  "level": "foundation",
+  "domain": [
+    "agentic-development",
+    "verification",
+    "reliability"
+  ],
+  "intent": "Understand how to add an explicit self-check step so agents catch their own mistakes before users do.",
+  "core_idea": {
+    "one_liner": "A good agent does not trust its first answer.",
+    "why_it_matters": [
+      "LLMs are confident even when wrong.",
+      "Most failures are obvious in hindsight but unchecked.",
+      "A critic step dramatically reduces hallucinations."
+    ]
+  },
+  "definition": {
+    "self_check": "A deliberate verification step where the agent reviews its own output against rules, evidence, and constraints."
+  },
+  "self_check_patterns": [
+    {
+      "pattern": "Same-model critic",
+      "description": "The same model reviews its own output using a different prompt.",
+      "pros": [
+        "Cheap",
+        "Easy to implement"
+      ],
+      "cons": [
+        "Limited independence"
+      ]
+    },
+    {
+      "pattern": "Role-based critic",
+      "description": "The agent switches to a 'critic' role with strict evaluation criteria.",
+      "pros": [
+        "Clear separation of concerns"
+      ],
+      "cons": [
+        "Still same model"
+      ]
+    },
+    {
+      "pattern": "Second-model critic",
+      "description": "A different model reviews the output.",
+      "pros": [
+        "Higher independence"
+      ],
+      "cons": [
+        "Higher cost"
+      ]
+    }
+  ],
+  "what_the_critic_checks": [
+    "Did we actually answer the question?",
+    "Are all claims supported by retrieved knowledge or tool outputs?",
+    "Does the output follow the contract (schema, tone, scope)?",
+    "Are there contradictions or unsupported assumptions?"
+  ],
+  "micro_example": {
+    "scenario": "Agent generates RCA for slow replication.",
+    "self_check_questions": [
+      "Did I confirm the root cause or just list possibilities?",
+      "Did I use real evidence from tools?",
+      "Am I overstating confidence?"
+    ],
+    "critic_outcome": "Requests additional queue metrics before final answer."
+  },
+  "failure_modes": [
+    "Fake self-check ('looks good')",
+    "Critic ignored when inconvenient",
+    "No action taken after failed check",
+    "Critic allowed to invent new facts"
+  ],
+  "guards": [
+    "Critic cannot add new facts, only flag issues.",
+    "Failed self-check must block final answer.",
+    "Self-check output must be structured."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "The agent pauses and asks: 'How could this be wrong?'",
+    "one_sentence_definition": "A self-check turns confidence into reliability."
+  },
+  "practical_checklist": [
+    "Is there an explicit verification step?",
+    "Are claims tied to evidence?",
+    "Can the agent say 'not enough data'?",
+    "Is the critic allowed to stop the workflow?"
+  ],
+  "tags": [
+    "self-check",
+    "critic",
+    "verification",
+    "hallucination-control"
+  ]
+}

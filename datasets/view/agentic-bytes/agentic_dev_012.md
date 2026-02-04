@@ -1,0 +1,214 @@
+---
+layout: default
+title: "Tracing &amp; Observability: Making Agent Behavior Explainable"
+description: "Understand how to trace, inspect, and explain what an agent did, step by step, in production."
+permalink: /datasets/view/agentic-bytes/agentic_dev_012/
+sitemap: true
+---
+
+<div class="dataset-hero">
+  <p class="eyebrow">Dataset entry</p>
+  <h1 class="dataset-hero__title">Tracing &amp; Observability: Making Agent Behavior Explainable</h1>
+  <div class="dataset-hero__meta">
+    <span class="pill pill--dataset">agentic-bytes</span>
+    <span class="pill pill--type">agentic_byte</span>
+    <span class="pill">agentic_dev_012</span>
+    <span class="pill">tracing</span> <span class="pill">observability</span> <span class="pill">production-agents</span> <span class="pill">explainability</span>
+  </div>
+  <div class="dataset-actions">
+    <a class="button" href="/datasets/agentic-bytes/agentic_dev_012.json">Open JSON</a>
+    <a class="button button--secondary" href="/datasets/agentic-bytes/">Back to list</a>
+  </div>
+</div>
+
+<div class="neub-card dataset-entry-lead">Understand how to trace, inspect, and explain what an agent did, step by step, in production.</div>
+
+<div class="dataset-grid dataset-grid--wide">
+  <div class="neub-card">
+    <h2>Attribution</h2>
+    <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>
+    <p>Canonical: <a href="https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_012.json">https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_012.json</a></p>
+    <p><a class="link-arrow" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+  </div>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Tracing & Observability: Making Agent Behavior Explainable",
+  "description": "Understand how to trace, inspect, and explain what an agent did, step by step, in production.",
+  "url": "https://dkharlanau.github.io/datasets/view/agentic-bytes/agentic_dev_012/",
+  "isAccessibleForFree": true,
+  "creator": {
+    "@type": "Person",
+    "@id": "https://dkharlanau.github.io/#dkharlanau",
+    "name": "Dzmitryi Kharlanau",
+    "url": "https://dkharlanau.github.io/"
+  },
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_012.json"
+    }
+  ],
+  "keywords": [
+    "tracing",
+    "observability",
+    "production-agents",
+    "explainability"
+  ]
+}
+</script>
+
+<div class="dataset-json">
+<details open>
+<summary>JSON (copy / reuse)</summary>
+
+<pre><code class="language-json">{
+  "byte_id": "agentic_dev_012",
+  "title": "Tracing &amp; Observability: Making Agent Behavior Explainable",
+  "level": "foundation",
+  "domain": [
+    "agentic-development",
+    "observability",
+    "production"
+  ],
+  "intent": "Understand how to trace, inspect, and explain what an agent did, step by step, in production.",
+  "core_idea": {
+    "one_liner": "If you cannot explain what the agent did, you cannot run it in production.",
+    "why_it_matters": [
+      "Agents are multi-step systems, not black boxes.",
+      "Debugging without traces is guesswork.",
+      "Auditors, users, and teams will ask 'why did it do that?'"
+    ]
+  },
+  "definition": {
+    "tracing": "Recording each meaningful step of an agent's reasoning, tool usage, and decisions.",
+    "observability": "The ability to understand agent behavior from logs, metrics, and traces."
+  },
+  "what_to_trace": [
+    "User input (sanitized)",
+    "Retrieved chunks (IDs, not raw text)",
+    "Reranking decisions",
+    "Plans and plan versions",
+    "Tool calls (inputs, outputs, errors)",
+    "Self-check results",
+    "Final decision and confidence"
+  ],
+  "what_not_to_trace": [
+    "Raw chain-of-thought text",
+    "Sensitive or personal data",
+    "Secrets or credentials"
+  ],
+  "key_metrics": [
+    {
+      "metric": "success_rate",
+      "meaning": "Percentage of tasks completed without fallback or human escalation"
+    },
+    {
+      "metric": "hallucination_rate",
+      "meaning": "Answers rejected due to missing evidence"
+    },
+    {
+      "metric": "tool_usage_rate",
+      "meaning": "How often tools are used when required"
+    },
+    {
+      "metric": "latency",
+      "meaning": "End-to-end response time"
+    },
+    {
+      "metric": "cost",
+      "meaning": "Tokens and tool calls per task"
+    }
+  ],
+  "micro_example": {
+    "scenario": "User questions an agent's decision",
+    "trace_summary": {
+      "retrieval": [
+        "chunk_342",
+        "chunk_901"
+      ],
+      "reranking": "chunk_342 selected due to higher decision relevance",
+      "tool_calls": [
+        "mdg_queue_check"
+      ],
+      "self_check": "passed",
+      "final_decision": "Replication delay caused by queue backlog"
+    }
+  },
+  "failure_modes": [
+    "No trace for critical steps",
+    "Logging too much noise",
+    "Logs without context or correlation IDs",
+    "Tracing added only after incidents"
+  ],
+  "guards": [
+    "Every agent run must have a trace ID.",
+    "Critical decisions must be traceable.",
+    "Tracing must be enabled by default in production."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "Tracing is the agent's black box recorder.",
+    "one_sentence_definition": "Observability makes agent decisions inspectable and defensible."
+  },
+  "practical_checklist": [
+    "Can I reconstruct the agent's steps?",
+    "Can I explain why a specific answer was given?",
+    "Are errors diagnosable from logs alone?",
+    "Are metrics aligned with real quality?"
+  ],
+  "tags": [
+    "tracing",
+    "observability",
+    "production-agents",
+    "explainability"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "agentic-bytes",
+    "source_project": "cv-ai",
+    "source_path": "agentic-bytes/agentic_dev_012.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_012.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "agentic_byte",
+    "entity_subtype": "level:foundation",
+    "summary": "Understand how to trace, inspect, and explain what an agent did, step by step, in production."
+  }
+}
+</code></pre>
+
+</details>
+</div>

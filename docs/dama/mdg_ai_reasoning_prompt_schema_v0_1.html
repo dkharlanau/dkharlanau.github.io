@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mdg Ai Reasoning Prompt Schema V0 1 | DAMA</title>
+  <meta name="description" content="Mdg Ai Reasoning Prompt Schema V0 1" />
+  <link rel="canonical" href="https://dkharlanau.github.io/docs/dama/mdg_ai_reasoning_prompt_schema_v0_1.html" />
+  <meta property="og:title" content="Mdg Ai Reasoning Prompt Schema V0 1" />
+  <meta property="og:description" content="Mdg Ai Reasoning Prompt Schema V0 1" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://dkharlanau.github.io/docs/dama/mdg_ai_reasoning_prompt_schema_v0_1.html" />
+  <meta property="og:site_name" content="DAMA" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Mdg Ai Reasoning Prompt Schema V0 1" />
+  <meta name="twitter:description" content="Mdg Ai Reasoning Prompt Schema V0 1" />
+  <link rel="stylesheet" href="./assets/dama.css" />
+  <script type="application/ld+json">{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@type&quot;:&quot;Article&quot;,&quot;headline&quot;:&quot;Mdg Ai Reasoning Prompt Schema V0 1&quot;,&quot;description&quot;:&quot;Mdg Ai Reasoning Prompt Schema V0 1&quot;,&quot;keywords&quot;:&quot;&quot;,&quot;datePublished&quot;:&quot;2026-02-03T14:33:32+00:00&quot;,&quot;dateModified&quot;:&quot;2026-02-03T15:29:02+00:00&quot;,&quot;url&quot;:&quot;https://dkharlanau.github.io/docs/dama/mdg_ai_reasoning_prompt_schema_v0_1.html&quot;,&quot;author&quot;:{&quot;@type&quot;:&quot;Person&quot;,&quot;name&quot;:&quot;Dzmitryi Kharlanau&quot;}}</script>
+</head>
+<body>
+  <div class="page">
+    
+<nav class="breadcrumb">
+  <a href="./index.html">DAMA</a>
+  <span>/</span>
+  <span>Mdg Ai Reasoning Prompt Schema V0 1</span>
+</nav>
+    <header>
+      <p class="eyebrow">DAMA Decision Block</p>
+      <h1>Mdg Ai Reasoning Prompt Schema V0 1</h1>
+      <p class="lead">Mdg Ai Reasoning Prompt Schema V0 1</p>
+      <div class="meta">
+        <span>Creator: Dzmitryi Kharlanau</span>
+        <span>Created: 2026-02-03T14:33:32+00:00</span>
+        <span>Updated: 2026-02-03T15:29:02+00:00</span>
+      </div>
+      <p class="muted">None.</p>
+    </header>
+
+    <section>
+      
+<h2 id="decision-question">
+  <a class="anchor" href="#decision-question">#</a>
+  Decision Question
+</h2>
+      <p></p>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>&quot;&quot;</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="context">
+  <a class="anchor" href="#context">#</a>
+  Context
+</h2>
+      <p class="muted">None.</p>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{}</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="inputs">
+  <a class="anchor" href="#inputs">#</a>
+  Inputs
+</h2>
+      <dl><dt>context</dt><dd><dl><dt>domain</dt><dd><p>Business Partner | Material | Reference Data</p></dd><dt>attribute_group</dt><dd><p>string</p></dd><dt>risk_tier</dt><dd><p>Tier1 | Tier2 | Tier3</p></dd><dt>region</dt><dd><p>optional</p></dd><dt>business_context</dt><dd><p>free text (incident, CR, exception, replication error, trend)</p></dd></dl></dd><dt>signals</dt><dd><dl><dt>metrics</dt><dd><ul><li>[object Object]</li></ul></dd><dt>events</dt><dd><ul><li>approval_delay</li><li>repeat_exception</li><li>replication_error</li><li>manual_fix</li><li>bypass_detected</li></ul></dd></dl></dd><dt>available_sources</dt><dd><dl><dt>decision_blocks</dt><dd><ul><li>db_*</li></ul></dd><dt>metrics_framework</dt><dd><p>mdg_metrics_framework_v0_1</p></dd><dt>playbooks</dt><dd><p>mdg_metric_decision_playbooks_v0_1</p></dd><dt>glossary</dt><dd><ul><li>term_id</li></ul></dd><dt>rule_registry</dt><dd><ul><li>rule_id</li></ul></dd></dl></dd></dl>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;context&quot;: {
+    &quot;domain&quot;: &quot;Business Partner | Material | Reference Data&quot;,
+    &quot;attribute_group&quot;: &quot;string&quot;,
+    &quot;risk_tier&quot;: &quot;Tier1 | Tier2 | Tier3&quot;,
+    &quot;region&quot;: &quot;optional&quot;,
+    &quot;business_context&quot;: &quot;free text (incident, CR, exception, replication error, trend)&quot;
+  },
+  &quot;signals&quot;: {
+    &quot;metrics&quot;: [
+      {
+        &quot;metric_id&quot;: &quot;string&quot;,
+        &quot;current_value&quot;: &quot;number|string&quot;,
+        &quot;trend&quot;: &quot;up|down|stable&quot;,
+        &quot;severity&quot;: &quot;normal|warning|critical&quot;
+      }
+    ],
+    &quot;events&quot;: [
+      &quot;approval_delay&quot;,
+      &quot;repeat_exception&quot;,
+      &quot;replication_error&quot;,
+      &quot;manual_fix&quot;,
+      &quot;bypass_detected&quot;
+    ]
+  },
+  &quot;available_sources&quot;: {
+    &quot;decision_blocks&quot;: [
+      &quot;db_*&quot;
+    ],
+    &quot;metrics_framework&quot;: &quot;mdg_metrics_framework_v0_1&quot;,
+    &quot;playbooks&quot;: &quot;mdg_metric_decision_playbooks_v0_1&quot;,
+    &quot;glossary&quot;: [
+      &quot;term_id&quot;
+    ],
+    &quot;rule_registry&quot;: [
+      &quot;rule_id&quot;
+    ]
+  }
+}</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="options">
+  <a class="anchor" href="#options">#</a>
+  Options
+</h2>
+      <div class="cards">
+        
+      </div>
+    </section>
+
+    <section>
+      
+<h2 id="decision-logic">
+  <a class="anchor" href="#decision-logic">#</a>
+  Decision Logic
+</h2>
+      <h3>Preferred Option Rules</h3>
+      
+      <h3>Anti-patterns to Avoid</h3>
+      <p class="muted">None.</p>
+      <h3>Exceptions Flow</h3>
+      <p class="muted">None.</p>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{}</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="controls-enforcement">
+  <a class="anchor" href="#controls-enforcement">#</a>
+  Controls &amp; Enforcement
+</h2>
+      <h3>Policies</h3>
+      <p class="muted">None.</p>
+      <h3>Standards</h3>
+      <p class="muted">None.</p>
+      <h3>Technical Controls</h3>
+      <p class="muted">None.</p>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{}</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="metrics">
+  <a class="anchor" href="#metrics">#</a>
+  Metrics
+</h2>
+      <h3>Operational</h3>
+      <p class="muted">None.</p>
+      <h3>Data Quality Dimensions</h3>
+      <p class="muted">None.</p>
+      <h3>Governance Health</h3>
+      <p class="muted">None.</p>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{}</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="examples">
+  <a class="anchor" href="#examples">#</a>
+  Examples
+</h2>
+      
+    </section>
+
+    <footer>
+      <a href="./index.html">Back to DAMA index</a>
+    </footer>
+  </div>
+</body>
+</html>

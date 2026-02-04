@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$project_root"
+
+if [[ ! -f .ruby-version ]]; then
+  echo "Missing .ruby-version in repo root."
+  exit 1
+fi
+
+required_ruby="$(/bin/cat .ruby-version | /usr/bin/tr -d '[:space:]')"
+current_ruby="$(ruby -e 'print RUBY_VERSION' 2>/dev/null || true)"
+
+if [[ -z "$current_ruby" ]]; then
+  echo "Ruby is not available on PATH."
+  echo "Install Ruby >= ${required_ruby} (see .ruby-version) and try again."
+  exit 1
+fi
+
+version_ge() {
+  [[ "$(/usr/bin/printf '%s\n' "$2" "$1" | /usr/bin/sort -V | /usr/bin/head -n1)" == "$2" ]]
+}
+
+if ! version_ge "$current_ruby" "$required_ruby"; then
+  echo "Ruby version is too old."
+  echo "  required: >= ${required_ruby} (from .ruby-version)"
+  echo "  current:   ${current_ruby} (from ruby on PATH)"
+  echo ""
+  echo "Tip (macOS/Homebrew):"
+  echo "  export PATH=\"/opt/homebrew/opt/ruby/bin:$PATH\""
+  echo ""
+  echo "Tip (rbenv):"
+  echo "  rbenv install -s ${required_ruby}"
+  echo "  rbenv local ${required_ruby}"
+  exit 1
+fi
+
+if [[ "$current_ruby" != "$required_ruby" ]]; then
+  echo "Note: using Ruby ${current_ruby} (>= ${required_ruby})."
+fi
+
+bundler_version="$(/usr/bin/awk '/^BUNDLED WITH$/ {getline; gsub(/^[[:space:]]+/, "", $0); print $0; exit}' Gemfile.lock)"
+if [[ -z "$bundler_version" ]]; then
+  echo "Could not determine Bundler version from Gemfile.lock."
+  exit 1
+fi
+
+if ! gem list -i bundler -v "$bundler_version" >/dev/null 2>&1; then
+  gem install bundler -v "$bundler_version" --no-document
+fi
+
+bundle "_${bundler_version}_" install

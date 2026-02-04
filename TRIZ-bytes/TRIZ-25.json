@@ -1,0 +1,72 @@
+{
+  "id": "TRIZ-25",
+  "title": "Self-Service",
+  "intent": "Reduce coordination cost and delays by letting a system or user perform needed actions independently.",
+  "triz_principle": {
+    "number": 25,
+    "name": "Self-Service",
+    "definition": "Make an object serve itself by performing auxiliary functions independently."
+  },
+  "problem_understanding": {
+    "core_contradiction": "Centralized control ensures quality, but it creates queues, delays, and dependency on gatekeepers.",
+    "why_this_hurts": "Every request waiting for approval or execution by another team increases lead time and frustration.",
+    "typical_signals": [
+      "tickets waiting in queues",
+      "teams blocked by other teams",
+      "manual interventions for routine tasks",
+      "high coordination overhead for simple changes"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Move routine actions closer to where the need arises.",
+    "key_rule": "Centralize rules and guardrails, decentralize execution.",
+    "how_it_resolves_the_contradiction": "Quality is preserved by constraints, while speed improves through autonomy."
+  },
+  "application_patterns": {
+    "consulting": [
+      "self-service analytics instead of central reporting teams",
+      "decision playbooks enabling teams to act without escalation",
+      "clear guardrails instead of case-by-case approvals"
+    ],
+    "software_engineering": [
+      "self-service environment provisioning",
+      "config-driven behavior changes",
+      "developer portals for APIs and tooling"
+    ],
+    "architecture": [
+      "platforms exposing self-service capabilities",
+      "policy enforcement at the edges",
+      "automation replacing manual coordination"
+    ],
+    "enterprise_sap": [
+      "self-service master data requests with built-in validation",
+      "business user–driven configuration within limits",
+      "automated approvals for standard cases"
+    ]
+  },
+  "anti_patterns": [
+    "self-service without guardrails",
+    "pushing complexity to users",
+    "lack of auditability or rollback"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "requests are frequent and routine",
+      "central teams are bottlenecks",
+      "rules are well understood"
+    ],
+    "do_not_use_when": [
+      "actions are rare but high-risk",
+      "users lack necessary context or training"
+    ]
+  },
+  "diagnostic_questions": [
+    "Which requests are repetitive and predictable?",
+    "What rules could replace manual approval?",
+    "Where does waiting add no value?"
+  ],
+  "example": {
+    "before": "Teams submit tickets for every small configuration change.",
+    "after": "Teams adjust configurations themselves within predefined limits."
+  }
+}

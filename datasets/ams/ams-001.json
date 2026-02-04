@@ -1,0 +1,96 @@
+{
+  "id": "ams-001",
+  "title": "Chat-First AMS: One Conversation, One Trace",
+  "hook": "Stop treating support like email archaeology. Run AMS through structured chats that automatically produce the evidence trail.",
+  "idea": "A chat is not 'informal'. It's the best interface for fast triage—if you force it to capture the right facts and convert them into actions, metrics, and artifacts.",
+  "how_it_works": {
+    "entry_point": "Dedicated chat channels by domain (OTC, P2P, MDM/MDG, Integrations, Basis/Infra).",
+    "ticket_creation": "The first message becomes a structured record: system, process, impact, object IDs, timestamps, screenshots/logs, urgency.",
+    "trace": "Chat ↔ ticket ↔ change ↔ RCA are linked. Nothing gets lost, nothing becomes tribal knowledge."
+  },
+  "rules": [
+    "No 'please advise' without data: every request must include impact + example + time window.",
+    "If it’s repeating, it’s not an incident anymore: it becomes a Problem with an owner and a kill-plan.",
+    "If it touches config/code/integration, it’s a Change with test evidence and rollback steps."
+  ],
+  "automation": {
+    "copilot_moves": [
+      "Extract entities (customer/vendor/BP, sales org, company code, IDoc number, interface name, dump ID).",
+      "Classify work type (incident/problem/change) and propose routing.",
+      "Generate the first 5 diagnostic checks based on symptom patterns.",
+      "Draft user-facing updates in plain language: what happened, what we’re doing, when next update."
+    ],
+    "outputs": [
+      "Auto-filled ticket fields and labels",
+      "A mini-runbook attached to the conversation",
+      "RCA draft when repetition is detected"
+    ]
+  },
+  "metrics_you_get": [
+    "Time-to-first-triage (TTFT) from first chat message",
+    "Time-to-meaningful-update (not 'we’re looking')",
+    "Repeat-rate by symptom cluster (30/60 days)",
+    "Escalation quality (percent escalations with required data)"
+  ],
+  "why_it_beats_old_school": [
+    "Less back-and-forth: the system forces clarity upfront.",
+    "Faster diagnosis: patterns + checklists appear instantly.",
+    "Cheaper support: fewer cycles wasted on missing info and re-openings.",
+    "No problem hoarding: repetition triggers prevention work automatically."
+  ],
+  "anti_patterns_to_kill": [
+    "Chats used as untracked side-channel with no trace",
+    "Long threads without a single confirmed fact",
+    "Closing tickets to look green while the same pain returns next week"
+  ],
+  "starter_template": {
+    "message_format": [
+      "Impact: (who is blocked, what process, how many users/orders)",
+      "System/Client: (e.g., S4 PRD / QAS) + timestamp range",
+      "Object IDs: (order, delivery, invoice, BP, IDoc, job name, dump ID)",
+      "What changed recently: (transport, config, master data load, interface change)",
+      "Evidence: (error text, screenshot, log excerpt)"
+    ]
+  },
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "ams",
+    "source_project": "cv-ai",
+    "source_path": "ams/ams-001.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/ams/ams-001.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "ams_byte",
+    "entity_subtype": "",
+    "summary": "Stop treating support like email archaeology. Run AMS through structured chats that automatically produce the evidence trail."
+  }
+}

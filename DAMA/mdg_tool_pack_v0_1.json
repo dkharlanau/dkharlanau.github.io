@@ -1,0 +1,441 @@
+{
+  "id": "mdg_tool_pack_v0_1",
+  "type": "tool_pack",
+  "purpose": "A minimal practical toolkit to operationalize the MDG Governance Reasoning Framework (Decision Blocks + Metrics + Playbooks) for real projects and AI/RAG usage.",
+  "version": "0.1",
+  "status": "draft",
+  "tools": [
+    {
+      "tool_id": "tool_governance_knowledge_data_model_v0_1",
+      "type": "data_model",
+      "title": "Governance Knowledge Data Model (RAG-ready)",
+      "description": "Canonical entities and relations to store Decision Blocks, Metrics, Playbooks, and their links for AI reasoning and operational traceability.",
+      "entities": {
+        "DecisionBlock": {
+          "fields": {
+            "id": "string",
+            "title": "string",
+            "domain": "BP|Material|RefData",
+            "risk_scope": "Tier1|Tier2|Tier3|Mixed",
+            "tags": [
+              "string"
+            ],
+            "linked_metrics": [
+              "metric_id"
+            ],
+            "linked_playbooks": [
+              "playbook_id"
+            ],
+            "linked_attribute_groups": [
+              "attribute_group_id"
+            ],
+            "owner_roles": [
+              "string"
+            ],
+            "version": "string",
+            "status": "draft|active|deprecated",
+            "updated_at": "date"
+          }
+        },
+        "Metric": {
+          "fields": {
+            "metric_id": "string",
+            "layer": "decision_quality|process_health|governance_drift|rule_effectiveness|ownership_capacity",
+            "definition": "string",
+            "thresholds": {
+              "warning": "string|number",
+              "critical": "string|number"
+            },
+            "trend_logic": "string",
+            "linked_blocks": [
+              "db_id"
+            ],
+            "linked_attribute_groups": [
+              "attribute_group_id"
+            ],
+            "version": "string",
+            "status": "draft|active|deprecated"
+          }
+        },
+        "Playbook": {
+          "fields": {
+            "playbook_id": "string",
+            "metric_id": "string",
+            "severity": "warning|critical",
+            "diagnosis_hypotheses": [
+              "string"
+            ],
+            "decision_blocks": [
+              "db_id"
+            ],
+            "actions": [
+              "string"
+            ],
+            "success_criteria": [
+              "string"
+            ],
+            "version": "string",
+            "status": "draft|active|deprecated"
+          }
+        },
+        "AttributeGroup": {
+          "fields": {
+            "attribute_group_id": "string",
+            "domain": "BP|Material|RefData",
+            "name": "string",
+            "tier": "Tier1|Tier2|Tier3",
+            "regulated": "boolean",
+            "business_definition": "string",
+            "accountable_owner_role": "string",
+            "backup_owner_role": "string",
+            "consulted_roles": [
+              "string"
+            ],
+            "linked_rules": [
+              "rule_id"
+            ],
+            "linked_metrics": [
+              "metric_id"
+            ],
+            "linked_blocks": [
+              "db_id"
+            ],
+            "review_date": "date"
+          }
+        },
+        "Rule": {
+          "fields": {
+            "rule_id": "string",
+            "rule_type": "completeness|validity|consistency|uniqueness|derivation",
+            "severity": "error|warning|report",
+            "scope": {
+              "domain": "BP|Material|RefData",
+              "attribute_group_id": "string",
+              "region": "optional string"
+            },
+            "business_rationale": "string",
+            "enforcement_location": "MDG|Downstream|Both",
+            "owner_role": "string",
+            "exception_policy": {
+              "allowed": "boolean",
+              "expiry_required": "boolean",
+              "risk_ack_required": "boolean"
+            },
+            "introduced_version": "string",
+            "review_date": "date",
+            "status": "draft|active|deprecated"
+          }
+        },
+        "GlossaryTerm": {
+          "fields": {
+            "term_id": "string",
+            "name": "string",
+            "definition": "string",
+            "domain": "BP|Material|RefData",
+            "linked_attribute_groups": [
+              "attribute_group_id"
+            ],
+            "linked_rules": [
+              "rule_id"
+            ],
+            "owner_role": "string",
+            "status": "draft|active|deprecated"
+          }
+        }
+      },
+      "relations": [
+        {
+          "from": "DecisionBlock.id",
+          "to": "Metric.metric_id",
+          "relation": "influences|monitors",
+          "note": "Decision blocks should be linked to metrics they affect and monitor."
+        },
+        {
+          "from": "Metric.metric_id",
+          "to": "Playbook.playbook_id",
+          "relation": "triggers",
+          "note": "A metric breach triggers a playbook."
+        },
+        {
+          "from": "AttributeGroup.attribute_group_id",
+          "to": "Rule.rule_id",
+          "relation": "governed_by"
+        },
+        {
+          "from": "AttributeGroup.attribute_group_id",
+          "to": "DecisionBlock.id",
+          "relation": "decided_by"
+        },
+        {
+          "from": "GlossaryTerm.term_id",
+          "to": "Rule.rule_id",
+          "relation": "defines"
+        }
+      ]
+    },
+    {
+      "tool_id": "tool_attribute_group_model_v0_1",
+      "type": "data_model",
+      "title": "Attribute Group Model (Tier + Ownership + Metrics)",
+      "description": "A minimal record to anchor decision rights, governance strictness, rules, and metrics at the level where real decisions happen.",
+      "schema": {
+        "attribute_group_id": "string (e.g., bp.bank, bp.tax, bp.sales, mat.basic, ref.sales_office)",
+        "domain": "BP|Material|RefData",
+        "tier": "Tier1|Tier2|Tier3",
+        "regulated": "boolean",
+        "business_definition": "string",
+        "accountable_owner_role": "string",
+        "backup_owner_role": "string",
+        "consulted_roles": [
+          "string"
+        ],
+        "linked_rules": [
+          "rule_id"
+        ],
+        "linked_metrics": [
+          "metric_id"
+        ],
+        "linked_decision_blocks": [
+          "db_id"
+        ],
+        "review_date": "date"
+      },
+      "example": {
+        "attribute_group_id": "bp.bank",
+        "domain": "BP",
+        "tier": "Tier1",
+        "regulated": true,
+        "business_definition": "Bank details used for payments; incorrect data creates financial and compliance risk.",
+        "accountable_owner_role": "Finance Data Owner",
+        "backup_owner_role": "Finance Steward Lead",
+        "consulted_roles": [
+          "Compliance",
+          "AP Process Owner",
+          "MDG Ops"
+        ],
+        "linked_rules": [
+          "rule_bp_bank_iban_format",
+          "rule_bp_bank_country_consistency"
+        ],
+        "linked_metrics": [
+          "exception_repeat_rate",
+          "decision_consistency_rate",
+          "manual_post_replication_fix_rate"
+        ],
+        "linked_decision_blocks": [
+          "db_attribute_level_ownership_decision_rights_v0_1",
+          "db_rule_lifecycle_management_keep_kill_simplify_v0_1",
+          "db_replication_errors_accountability_runbook_v0_1"
+        ],
+        "review_date": "2026-04-30"
+      }
+    },
+    {
+      "tool_id": "tool_checklist_steward_precheck_v0_1",
+      "type": "checklist",
+      "title": "Steward Precheck Checklist (before routing to owner)",
+      "used_when": "Before sending a CR to the accountable owner; reduce rework and protect owner time.",
+      "checks": [
+        {
+          "id": "st_01",
+          "question": "Is the attribute group identified correctly (e.g., bp.tax vs bp.sales)?",
+          "evidence_required": "attribute_group_id selected and visible"
+        },
+        {
+          "id": "st_02",
+          "question": "Is the risk tier correct for this attribute group?",
+          "evidence_required": "tier value present; if changed, rationale recorded"
+        },
+        {
+          "id": "st_03",
+          "question": "Are relevant glossary definitions visible to the requester (what does the field mean)?",
+          "evidence_required": "glossary_term_ids linked or guidance snippet attached"
+        },
+        {
+          "id": "st_04",
+          "question": "Is this a repeat exception or repeat defect pattern?",
+          "evidence_required": "search result: similar cases / top repeating exceptions"
+        },
+        {
+          "id": "st_05",
+          "question": "Can a derivation/default be used instead of manual entry?",
+          "evidence_required": "derivation exists OR confirmed not possible"
+        },
+        {
+          "id": "st_06",
+          "question": "Is this change urgent? If yes, does it qualify for a formal exception with expiry?",
+          "evidence_required": "urgency flag + exception decision (yes/no) + expiry if yes"
+        },
+        {
+          "id": "st_07",
+          "question": "Are required supporting artifacts attached (e.g., proof, reference, mapping)?",
+          "evidence_required": "attachments present or justification recorded"
+        }
+      ],
+      "outputs": [
+        "clean_routing_to_owner",
+        "reduced_rework",
+        "consistent_case_metadata_for_AI"
+      ]
+    },
+    {
+      "tool_id": "tool_checklist_owner_decision_v0_1",
+      "type": "checklist",
+      "title": "Owner Decision Checklist (approve/reject/exception)",
+      "used_when": "When accountable owner makes the final decision; maximize decision quality and consistency.",
+      "checks": [
+        {
+          "id": "ow_01",
+          "question": "Is this decision consistent with previous similar cases?",
+          "evidence_required": "similar_cases_reference OR explicit rationale for deviation"
+        },
+        {
+          "id": "ow_02",
+          "question": "Is risk acceptable for the tier (Tier1 requires strict rationale)?",
+          "evidence_required": "risk statement and (if Tier1) compliance consult evidence"
+        },
+        {
+          "id": "ow_03",
+          "question": "Is this actually a rule-design problem (should we change simplify/kill a rule instead of approving exceptions)?",
+          "evidence_required": "rule_id referenced OR confirm not rule-related"
+        },
+        {
+          "id": "ow_04",
+          "question": "If exception: does it have expiry and a follow-up owner?",
+          "evidence_required": "expiry_date + follow-up task owner"
+        },
+        {
+          "id": "ow_05",
+          "question": "Is enforcement location correct (MDG vs downstream) for this constraint?",
+          "evidence_required": "enforcement_location confirmed or flagged for architecture review"
+        }
+      ],
+      "outputs": [
+        "higher_decision_consistency",
+        "lower_reversal_rate",
+        "reduced_repeat_exceptions"
+      ]
+    },
+    {
+      "tool_id": "tool_template_rule_proposal_v0_1",
+      "type": "template",
+      "title": "Rule Proposal Template (no template = no rule)",
+      "used_when": "Before implementing a new rule or changing an existing one.",
+      "schema": {
+        "rule_id": "string",
+        "change_type": "new|modify|retire",
+        "business_problem": "string",
+        "affected_attribute_group_id": "string",
+        "tier": "Tier1|Tier2|Tier3",
+        "rule_type": "completeness|validity|consistency|uniqueness|derivation",
+        "severity_proposed": "error|warning|report",
+        "enforcement_location": "MDG|Downstream|Both",
+        "expected_metric_impact": [
+          {
+            "metric_id": "string",
+            "direction": "improve|worsen_possible",
+            "note": "string"
+          }
+        ],
+        "exception_policy": {
+          "allowed": "boolean",
+          "expiry_required": "boolean",
+          "risk_ack_required": "boolean"
+        },
+        "owner_role": "string",
+        "steward_role": "string",
+        "examples_before_after": [
+          "string"
+        ],
+        "rollout_plan": "warning_phase|immediate_blocking|phased",
+        "review_date": "date"
+      },
+      "example": {
+        "rule_id": "rule_bp_tax_vat_required_tier1",
+        "change_type": "new",
+        "business_problem": "Invoices fail or are blocked when VAT number is missing for applicable customers.",
+        "affected_attribute_group_id": "bp.tax",
+        "tier": "Tier1",
+        "rule_type": "completeness",
+        "severity_proposed": "error",
+        "enforcement_location": "MDG",
+        "expected_metric_impact": [
+          {
+            "metric_id": "dq_defect_incident_rate",
+            "direction": "improve",
+            "note": "Reduce invoice blocks caused by missing VAT."
+          },
+          {
+            "metric_id": "bypass_rate",
+            "direction": "worsen_possible",
+            "note": "If rule is too strict, users may bypass; monitor."
+          }
+        ],
+        "exception_policy": {
+          "allowed": true,
+          "expiry_required": true,
+          "risk_ack_required": true
+        },
+        "owner_role": "Finance Data Owner",
+        "steward_role": "Finance Steward",
+        "examples_before_after": [
+          "Before: BP created without VAT → invoice block later",
+          "After: VAT required when country + customer type indicates VAT applicability"
+        ],
+        "rollout_plan": "phased",
+        "review_date": "2026-03-31"
+      }
+    },
+    {
+      "tool_id": "tool_template_exception_request_v0_1",
+      "type": "template",
+      "title": "Exception Request Template (temporary governance, not permanent bypass)",
+      "used_when": "When a rule cannot be met temporarily and business needs continuity.",
+      "schema": {
+        "exception_id": "string",
+        "request_id": "string",
+        "domain": "BP|Material|RefData",
+        "attribute_group_id": "string",
+        "rule_id": "string",
+        "reason": "string",
+        "urgency": "low|medium|high",
+        "risk_tier": "Tier1|Tier2|Tier3",
+        "risk_acknowledged_by_role": "string",
+        "expiry_date": "date",
+        "mitigation": "string",
+        "repeat_indicator": "boolean",
+        "follow_up_task": {
+          "owner_role": "string",
+          "due_date": "date",
+          "goal": "rule_fix|data_fix|reference_alignment|process_change"
+        }
+      },
+      "example": {
+        "exception_id": "exc_2026_00091",
+        "request_id": "cr_771288",
+        "domain": "BP",
+        "attribute_group_id": "bp.bank",
+        "rule_id": "rule_bp_bank_iban_format",
+        "reason": "Bank provided temporary account identifier; IBAN will be issued after compliance check.",
+        "urgency": "high",
+        "risk_tier": "Tier1",
+        "risk_acknowledged_by_role": "Finance Data Owner",
+        "expiry_date": "2026-02-28",
+        "mitigation": "Allow payments only for limited amount; flag record for follow-up.",
+        "repeat_indicator": false,
+        "follow_up_task": {
+          "owner_role": "Finance Steward Lead",
+          "due_date": "2026-02-20",
+          "goal": "data_fix"
+        }
+      }
+    }
+  ],
+  "how_to_use_minimum": [
+    "Create AttributeGroup records for Tier 1 first (5–15 groups max).",
+    "Link each Tier 1 group to: owner, backup, top metrics, and relevant Decision Blocks.",
+    "Enforce: no new rules without Rule Proposal Template.",
+    "Enforce: no exceptions without Exception Template + expiry + follow-up.",
+    "Run weekly cadence using Steward + Owner checklists and track: bypass_rate, exception_repeat_rate, approval_cycle_time_p90."
+  ]
+}

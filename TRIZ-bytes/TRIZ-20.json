@@ -1,0 +1,72 @@
+{
+  "id": "TRIZ-20",
+  "title": "Continuity of Useful Action",
+  "intent": "Maximize value creation by ensuring the system is always performing useful work instead of waiting or idling.",
+  "triz_principle": {
+    "number": 20,
+    "name": "Continuity of Useful Action",
+    "definition": "Carry on work continuously so that all parts of the system are always performing useful functions."
+  },
+  "problem_understanding": {
+    "core_contradiction": "We want efficiency, but systems spend large amounts of time waiting, blocked, or idle.",
+    "why_this_hurts": "Idle time hides bottlenecks, inflates lead time, and creates the illusion of progress while value is not produced.",
+    "typical_signals": [
+      "waiting for approvals or dependencies",
+      "queues growing while resources are idle",
+      "stop-and-go processes",
+      "work started but not finished"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Redesign flow so that useful work continues even when the main path is blocked.",
+    "key_rule": "Optimize for flow of value, not utilization of steps.",
+    "how_it_resolves_the_contradiction": "Through parallelization, pre-work, or alternative tasks, the system keeps producing value instead of stalling."
+  },
+  "application_patterns": {
+    "consulting": [
+      "prepare decision options while approvals are pending",
+      "parallelize analysis streams",
+      "keep a ready backlog of value-adding tasks"
+    ],
+    "software_engineering": [
+      "async workflows to avoid blocking",
+      "background processing for non-critical tasks",
+      "work stealing and dynamic task queues"
+    ],
+    "architecture": [
+      "non-blocking I/O",
+      "message-driven architectures",
+      "separation of critical and non-critical paths"
+    ],
+    "enterprise_sap": [
+      "parallel data preparation while approvals run in MDG",
+      "non-blocking replication queues",
+      "decoupled follow-up processes after master data changes"
+    ]
+  },
+  "anti_patterns": [
+    "busy work that does not create value",
+    "parallelism that increases coordination overhead",
+    "masking true bottlenecks with side activities"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "lead time is dominated by waiting",
+      "teams are blocked by external dependencies",
+      "system throughput is low despite high effort"
+    ],
+    "do_not_use_when": [
+      "parallel work would cause rework or conflicts",
+      "strict sequencing is required for correctness"
+    ]
+  },
+  "diagnostic_questions": [
+    "Where does work wait most of the time?",
+    "What useful work could continue while waiting?",
+    "Which dependencies unnecessarily block progress?"
+  ],
+  "example": {
+    "before": "Development stops completely while waiting for final approval.",
+    "after": "Non-critical improvements and preparation continue while approvals are pending."
+  }
+}

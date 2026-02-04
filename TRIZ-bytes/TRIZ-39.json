@@ -1,0 +1,72 @@
+{
+  "id": "TRIZ-39",
+  "title": "Inert Atmosphere",
+  "intent": "Stabilize sensitive operations by isolating them from disruptive external influences.",
+  "triz_principle": {
+    "number": 39,
+    "name": "Inert Atmosphere",
+    "definition": "Replace a normal environment with an inert or neutral one to prevent unwanted reactions."
+  },
+  "problem_understanding": {
+    "core_contradiction": "We need to change and experiment, but the surrounding environment is too volatile or risky.",
+    "why_this_hurts": "External interference (users, integrations, politics, noise) causes failures before ideas can mature.",
+    "typical_signals": [
+      "experiments fail due to external dependencies",
+      "changes break because of uncontrolled interactions",
+      "teams afraid to try improvements in production-like environments",
+      "high blast radius for small changes"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Create a neutral, isolated environment where changes can be developed safely.",
+    "key_rule": "Isolate sensitivity, not the whole system.",
+    "how_it_resolves_the_contradiction": "Innovation and stabilization can happen without triggering unwanted side effects."
+  },
+  "application_patterns": {
+    "consulting": [
+      "safe spaces for decision experiments",
+      "pilot programs isolated from core operations",
+      "sandbox governance for new policies"
+    ],
+    "software_engineering": [
+      "sandbox and feature-isolated environments",
+      "mocked external dependencies",
+      "chaos-free test modes"
+    ],
+    "architecture": [
+      "isolation zones for risky components",
+      "blast-radius reduction patterns",
+      "separate control planes from data planes"
+    ],
+    "enterprise_sap": [
+      "sandbox MDG workflows for testing new rules",
+      "isolated clients for experimentation",
+      "pilot replication channels before productive rollout"
+    ]
+  },
+  "anti_patterns": [
+    "isolating everything and losing realism",
+    "sandboxes that drift from production",
+    "no clear path from inert to productive environment"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "risk of interference is high",
+      "changes are experimental or sensitive",
+      "failures must not affect core operations"
+    ],
+    "do_not_use_when": [
+      "real interaction effects are essential",
+      "isolation hides critical constraints"
+    ]
+  },
+  "diagnostic_questions": [
+    "Which external factors cause most disruption?",
+    "What needs protection while evolving?",
+    "How can isolation be reduced safely over time?"
+  ],
+  "example": {
+    "before": "New governance rules are tested directly in productive workflows.",
+    "after": "Rules are validated in an isolated sandbox before controlled rollout."
+  }
+}

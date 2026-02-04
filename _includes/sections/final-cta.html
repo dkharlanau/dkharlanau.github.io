@@ -3,7 +3,7 @@
 <section class="section final-cta">
   {% assign action = final_cta.action %}
   {% if action and action.url %}
-  <a class="cta-card neub-card" href="{{ action.url }}"{% if action.external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+  <a class="cta-card" href="{{ action.url }}"{% if action.external %} target="_blank" rel="noopener noreferrer"{% endif %}>
     <div class="cta-card__copy">
       {% if final_cta.title %}<h2>{{ final_cta.title }}</h2>{% endif %}
       {% if final_cta.copy %}<p>{{ final_cta.copy }}</p>{% endif %}
@@ -11,7 +11,7 @@
     <span class="cta-card__action">{{ action.label }} <span aria-hidden="true">↗</span></span>
   </a>
   {% else %}
-  <div class="cta-card neub-card">
+  <div class="cta-card">
     {% if final_cta.title %}<h2>{{ final_cta.title }}</h2>{% endif %}
     {% if final_cta.copy %}<p>{{ final_cta.copy }}</p>{% endif %}
   </div>

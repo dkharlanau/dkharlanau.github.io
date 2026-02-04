@@ -1,0 +1,209 @@
+{
+  "id": "mdg_metric_decision_playbooks_v0_1",
+  "purpose": "Translate breached metrics into deterministic governance actions via linked Decision Blocks.",
+  "rules": [
+    "React to trends, not single spikes",
+    "Prefer smallest viable intervention",
+    "Escalate only if previous step failed"
+  ],
+  "playbooks": [
+    {
+      "metric_id": "bypass_rate",
+      "when": {
+        "warning": ">5% for 2 consecutive periods",
+        "critical": ">10% in any period"
+      },
+      "diagnosis_hypotheses": [
+        "Governance friction too high",
+        "Wrong tiering for attribute groups",
+        "Approval cycle time too long",
+        "Rules misaligned with business flow"
+      ],
+      "decision_blocks": [
+        "db_domain_attribute_prioritization_scope_v0_1",
+        "db_change_management_for_governance_v0_1",
+        "db_rule_lifecycle_management_keep_kill_simplify_v0_1"
+      ],
+      "actions": {
+        "warning": [
+          "Identify top bypassed attribute groups (top 5)",
+          "Re-tier low-impact attributes to Tier 3",
+          "Downgrade selected blocking rules to warnings",
+          "Communicate intent and temporary tolerance window"
+        ],
+        "critical": [
+          "Freeze new governance scope immediately",
+          "Trigger keep/kill/simplify review for top rules",
+          "Shorten approval paths for Tier 3",
+          "Assign executive sponsor for Tier 1 friction review"
+        ]
+      },
+      "success_criteria": [
+        "Bypass rate decreases within 2 periods",
+        "No increase in Tier 1 incidents"
+      ]
+    },
+    {
+      "metric_id": "approval_cycle_time_p90",
+      "when": {
+        "warning": ">3d",
+        "critical": ">7d"
+      },
+      "diagnosis_hypotheses": [
+        "Owner capacity overload",
+        "Too many attributes routed to same approver",
+        "Over-scoped Tier 1",
+        "Missing backup approvers"
+      ],
+      "decision_blocks": [
+        "db_operating_model_day2_day100_v0_1",
+        "db_attribute_level_ownership_decision_rights_v0_1",
+        "db_domain_attribute_prioritization_scope_v0_1"
+      ],
+      "actions": {
+        "warning": [
+          "Add backup approvers for overloaded owners",
+          "Shift non-critical attributes to Tier 2/3 routing",
+          "Introduce SLA-based escalation"
+        ],
+        "critical": [
+          "Reassign ownership for overloaded attribute groups",
+          "Split attribute groups by decision complexity",
+          "Temporarily relax approvals for Tier 3"
+        ]
+      },
+      "success_criteria": [
+        "p90 returns below threshold",
+        "No spike in rework or bypass"
+      ]
+    },
+    {
+      "metric_id": "exception_repeat_rate",
+      "when": {
+        "warning": ">20%",
+        "critical": ">35%"
+      },
+      "diagnosis_hypotheses": [
+        "Rule design incorrect",
+        "Enforcement point wrong",
+        "Business reality not reflected in rules"
+      ],
+      "decision_blocks": [
+        "db_rule_lifecycle_management_keep_kill_simplify_v0_1"
+      ],
+      "actions": {
+        "warning": [
+          "Identify top repeating exceptions (top 3)",
+          "Review rule rationale and scope",
+          "Add expiry and tighter criteria to exceptions"
+        ],
+        "critical": [
+          "Simplify or retire offending rules",
+          "Move rule from error to warning or derivation",
+          "Redesign rule with owner and business examples"
+        ]
+      },
+      "success_criteria": [
+        "Repeat exceptions decrease next period",
+        "Blocking error rate does not increase"
+      ]
+    },
+    {
+      "metric_id": "manual_post_replication_fix_rate",
+      "when": {
+        "warning": ">3%",
+        "critical": ">7%"
+      },
+      "diagnosis_hypotheses": [
+        "Semantic gaps between MDG and downstream",
+        "Reference/customizing mismatch",
+        "Silent operational fixes"
+      ],
+      "decision_blocks": [
+        "db_replication_errors_accountability_runbook_v0_1"
+      ],
+      "actions": {
+        "warning": [
+          "Enforce no-silent-fix policy",
+          "Classify top errors by category",
+          "Align reference data/customizing"
+        ],
+        "critical": [
+          "Block downstream manual fixes",
+          "Force correction at source (MDG)",
+          "Escalate to architecture for enforcement redesign"
+        ]
+      },
+      "success_criteria": [
+        "Manual fixes trend down",
+        "Replication success rate improves"
+      ]
+    },
+    {
+      "metric_id": "decision_consistency_rate",
+      "when": {
+        "warning": "<85%",
+        "critical": "<70%"
+      },
+      "diagnosis_hypotheses": [
+        "Decision rights unclear",
+        "Owners apply different criteria",
+        "Rules or definitions ambiguous"
+      ],
+      "decision_blocks": [
+        "db_attribute_level_ownership_decision_rights_v0_1",
+        "db_rule_lifecycle_management_keep_kill_simplify_v0_1"
+      ],
+      "actions": {
+        "warning": [
+          "Align decision criteria with examples",
+          "Update glossary and rule descriptions",
+          "Run calibration session with owners"
+        ],
+        "critical": [
+          "Reassign accountable owner for affected groups",
+          "Introduce peer review for high-risk decisions",
+          "Freeze rule changes until criteria stabilized"
+        ]
+      },
+      "success_criteria": [
+        "Consistency rate improves",
+        "Reversal rate decreases"
+      ]
+    },
+    {
+      "metric_id": "ownership_coverage_tier1",
+      "when": {
+        "warning": "<95%",
+        "critical": "<85%"
+      },
+      "diagnosis_hypotheses": [
+        "Governance capacity insufficient",
+        "Ownership defined too broadly",
+        "No backup owners"
+      ],
+      "decision_blocks": [
+        "db_attribute_level_ownership_decision_rights_v0_1",
+        "db_domain_attribute_prioritization_scope_v0_1"
+      ],
+      "actions": {
+        "warning": [
+          "Assign missing owners and backups",
+          "Reduce Tier 1 scope if needed"
+        ],
+        "critical": [
+          "Pause new Tier 1 controls",
+          "Re-tier attribute groups to match capacity",
+          "Escalate to governance sponsor"
+        ]
+      },
+      "success_criteria": [
+        "Tier 1 coverage restored",
+        "Approval SLAs stabilize"
+      ]
+    }
+  ],
+  "ai_execution_note": "AI should select the playbook based on breached metric and severity, summarize diagnosis, propose actions in order, and track outcomes against success criteria.",
+  "version": "0.1",
+  "status": "draft"
+}

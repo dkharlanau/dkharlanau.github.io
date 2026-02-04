@@ -1,0 +1,51 @@
+{
+  "id": "TRIZ-TECH-01",
+  "title": "Contradiction Formulation (Engineering Contradiction)",
+  "intent": "Turn a messy situation into a solvable TRIZ problem by expressing it as a trade-off between two parameters.",
+  "technique": {
+    "name": "Engineering (Technical) Contradiction",
+    "definition": "Improve one characteristic of a system, but another characteristic worsens as a result."
+  },
+  "inputs": {
+    "problem_statement": "Plain-language description of the pain (symptoms, constraints, stakeholders).",
+    "improving_parameter": "What you want to improve (speed, quality, cost, reliability, maintainability, etc.).",
+    "worsening_parameter": "What gets worse when you push improvement (complexity, risk, latency, cost, etc.)."
+  },
+  "procedure": [
+    "Write the problem in one sentence: 'We need to improve X, but then Y gets worse.'",
+    "Confirm both sides are measurable (even roughly). Replace vague words with proxy metrics.",
+    "Create 2–3 alternative contradictions using the same parameters but different framing (more 'physics', less opinion).",
+    "Select the contradiction that, if resolved, would remove the biggest bottleneck."
+  ],
+  "outputs": {
+    "contradiction": "We must improve <X> but it worsens <Y>.",
+    "candidate_metrics": [
+      "metric_for_X",
+      "metric_for_Y"
+    ],
+    "variants": [
+      "variant_1",
+      "variant_2"
+    ]
+  },
+  "how_it_connects_to_solution": {
+    "next_step_options": [
+      "Use Contradiction Matrix → Inventive Principles",
+      "Reformulate into a Physical Contradiction (one parameter must be both high and low)",
+      "Run System Operator (9 windows) to discover missing system-level contradictions"
+    ]
+  },
+  "common_mistakes": [
+    "Using opinions instead of parameters ('team is slow')",
+    "Mixing causes and symptoms in X/Y",
+    "Choosing contradictions that are not the real bottleneck"
+  ],
+  "example": {
+    "consulting": {
+      "contradiction": "We must increase governance strictness to reduce data errors, but it increases lead time and user resistance."
+    },
+    "software": {
+      "contradiction": "We must increase validation to reduce incidents, but it increases latency and complexity."
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "byte_id": "agentic_dev_013",
+  "title": "Memory: What Agents Should Remember (and Forget)",
+  "level": "foundation",
+  "domain": [
+    "agentic-development",
+    "memory",
+    "rag"
+  ],
+  "intent": "Understand different types of agent memory and how to use them without creating confusion, drift, or privacy risks.",
+  "core_idea": {
+    "one_liner": "If an agent remembers everything, it understands nothing.",
+    "why_it_matters": [
+      "Uncontrolled memory leads to inconsistent behavior.",
+      "Most agent bugs come from stale or misused memory.",
+      "Memory must be intentional and scoped."
+    ]
+  },
+  "definition": {
+    "agent_memory": "Persisted information that influences future agent behavior beyond the current request."
+  },
+  "memory_types": [
+    {
+      "type": "Session memory",
+      "purpose": "Maintain context within a single conversation or task.",
+      "lifetime": "Minutes to hours",
+      "example": "Clarifications given earlier in the same task"
+    },
+    {
+      "type": "Task memory",
+      "purpose": "Remember intermediate results during a multi-step workflow.",
+      "lifetime": "Until task completion",
+      "example": "Collected metrics during RCA"
+    },
+    {
+      "type": "Long-term knowledge (RAG)",
+      "purpose": "Store stable facts, rules, and procedures.",
+      "lifetime": "Days to months",
+      "example": "Decision rules, checklists, anti-patterns"
+    },
+    {
+      "type": "Preference memory",
+      "purpose": "Remember user or org preferences.",
+      "lifetime": "Explicitly defined",
+      "example": "Preferred output format, approval thresholds"
+    }
+  ],
+  "what_should_not_be_memory": [
+    "One-off errors",
+    "Temporary system states",
+    "Speculative conclusions",
+    "Sensitive personal data"
+  ],
+  "memory_write_rules": [
+    "Memory writes must be explicit, not implicit.",
+    "Every memory item must have a scope and expiry.",
+    "Only validated information can become long-term memory."
+  ],
+  "micro_example": {
+    "scenario": "Agent investigates replication delay",
+    "bad_memory": "Replication is slow in system X (no context, no date).",
+    "good_memory": {
+      "fact": "On 2026-01-12, replication delay in system X was caused by queue backlog.",
+      "scope": "incident-specific",
+      "expiry": "7 days"
+    }
+  },
+  "failure_modes": [
+    "Memory pollution (mixing facts and guesses)",
+    "Stale memory reused as truth",
+    "Hidden memory influencing answers",
+    "Unbounded memory growth"
+  ],
+  "guards": [
+    "Memory entries must be reviewable.",
+    "Long-term memory must be versioned.",
+    "Agents must explain when memory influenced an answer."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "Memory is useful only when you know why you remember something.",
+    "one_sentence_definition": "Good memory makes agents consistent; bad memory makes them unreliable."
+  },
+  "practical_checklist": [
+    "Why is this being remembered?",
+    "For how long is it valid?",
+    "Could this memory mislead the agent later?",
+    "Can we delete or expire it safely?"
+  ],
+  "tags": [
+    "agent-memory",
+    "rag",
+    "state-management",
+    "knowledge-hygiene"
+  ]
+}

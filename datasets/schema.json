@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/datasets/schema.json",
+  "title": "Dzmitryi Kharlanau Dataset Byte Schema",
+  "type": "object",
+  "description": "Loose schema for JSON bytes used as reusable building blocks (articles, prompts, playbooks). The schema is intentionally permissive to avoid breaking domain-specific structures.",
+  "required": ["meta"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Primary identifier for a byte (preferred)."
+    },
+    "byte_id": {
+      "type": "string",
+      "description": "Alternate identifier field used by some datasets."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title. May be inferred if missing.",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "meta": {
+      "type": "object",
+      "required": ["schema", "schema_version", "dataset", "source_project", "source_path", "creator", "attribution"],
+      "properties": {
+        "schema": { "type": "string", "const": "dkharlanau.dataset.byte" },
+        "schema_version": { "type": "string" },
+        "dataset": { "type": "string" },
+        "source_project": { "type": "string" },
+        "source_path": { "type": "string" },
+        "canonical_url": { "type": "string" },
+        "created_at_utc": { "type": "string" },
+        "updated_at_utc": { "type": "string" },
+        "title_inferred": { "type": "boolean" },
+        "entity_type": { "type": "string" },
+        "entity_subtype": { "type": "string" },
+        "summary": { "type": "string" },
+        "creator": {
+          "type": "object",
+          "required": ["name", "role"],
+          "properties": {
+            "name": { "type": "string" },
+            "role": { "type": "string" },
+            "website": { "type": "string" },
+            "linkedin": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
+        "links": {
+          "type": "object",
+          "properties": {
+            "website": { "type": "string" },
+            "linkedin": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "preferred": { "type": "string" },
+            "linkedin": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "attribution": {
+          "type": "object",
+          "required": ["attribution_required", "preferred_citation"],
+          "properties": {
+            "attribution_required": { "type": "boolean" },
+            "preferred_citation": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
+        "license": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "spdx": { "type": "string" },
+            "url": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

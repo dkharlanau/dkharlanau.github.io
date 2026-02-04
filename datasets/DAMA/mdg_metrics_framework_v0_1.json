@@ -1,0 +1,301 @@
+{
+  "id": "mdg_metrics_framework_v0_1",
+  "purpose": "Provide a canonical, AI-readable metrics framework for MDG governance: detect drift, assess decision quality, and trigger the right Decision Blocks.",
+  "principles": [
+    "Metrics measure behavior and outcomes, not documentation volume",
+    "Prefer leading indicators over lagging ones",
+    "Every metric must have thresholds and response rules",
+    "Metrics must map to Decision Blocks for actionability"
+  ],
+  "layers": [
+    "decision_quality",
+    "process_health",
+    "governance_drift",
+    "rule_effectiveness",
+    "ownership_capacity"
+  ],
+  "metrics": [
+    {
+      "metric_id": "decision_consistency_rate",
+      "layer": "decision_quality",
+      "definition": "Share of similar cases receiving the same decision outcome",
+      "thresholds": {
+        "warning": "<85%",
+        "critical": "<70%"
+      },
+      "linked_decision_blocks": [
+        "db_attribute_level_ownership_decision_rights_v0_1",
+        "db_rule_lifecycle_management_keep_kill_simplify_v0_1"
+      ],
+      "ai_interpretation": [
+        "Decision rights unclear",
+        "Owners apply different criteria",
+        "Rules or definitions are ambiguous"
+      ],
+      "recommended_actions": [
+        "Clarify attribute-group ownership",
+        "Align decision criteria and examples",
+        "Review rules causing divergence"
+      ]
+    },
+    {
+      "metric_id": "decision_reversal_rate",
+      "layer": "decision_quality",
+      "definition": "Share of decisions reversed within N days",
+      "thresholds": {
+        "warning": ">5%",
+        "critical": ">10%"
+      },
+      "linked_decision_blocks": [
+        "db_change_management_for_governance_v0_1",
+        "db_rule_lifecycle_management_keep_kill_simplify_v0_1"
+      ],
+      "ai_interpretation": [
+        "Low decision quality",
+        "Unclear rules or rushed approvals"
+      ],
+      "recommended_actions": [
+        "Improve decision guidance",
+        "Add examples and rationale",
+        "Introduce cooling-off or peer review for high-risk cases"
+      ]
+    },
+    {
+      "metric_id": "approval_cycle_time_p90",
+      "layer": "process_health",
+      "definition": "90th percentile approval cycle time",
+      "thresholds": {
+        "warning": ">3d",
+        "critical": ">7d"
+      },
+      "linked_decision_blocks": [
+        "db_operating_model_day2_day100_v0_1",
+        "db_domain_attribute_prioritization_scope_v0_1"
+      ],
+      "ai_interpretation": [
+        "Approval bottlenecks",
+        "Over-scoped governance",
+        "Owner capacity issues"
+      ],
+      "recommended_actions": [
+        "Re-tier attribute groups",
+        "Add backup approvers",
+        "Simplify workflows for Tier 3"
+      ]
+    },
+    {
+      "metric_id": "rework_loops_per_cr",
+      "layer": "process_health",
+      "definition": "Average number of rework iterations per change request",
+      "thresholds": {
+        "warning": ">1.5",
+        "critical": ">2.5"
+      },
+      "linked_decision_blocks": [
+        "db_change_management_for_governance_v0_1",
+        "db_rule_lifecycle_management_keep_kill_simplify_v0_1"
+      ],
+      "ai_interpretation": [
+        "Poor guidance",
+        "Ambiguous validations",
+        "Users do not understand expectations"
+      ],
+      "recommended_actions": [
+        "Improve in-app guidance",
+        "Add AI-assisted suggestions",
+        "Simplify or downgrade blocking rules"
+      ]
+    },
+    {
+      "metric_id": "bypass_rate",
+      "layer": "governance_drift",
+      "definition": "Changes executed outside governance / total changes",
+      "thresholds": {
+        "warning": ">5%",
+        "critical": ">10%"
+      },
+      "linked_decision_blocks": [
+        "db_governance_drift_detection_v0_1",
+        "db_domain_attribute_prioritization_scope_v0_1",
+        "db_change_management_for_governance_v0_1"
+      ],
+      "ai_interpretation": [
+        "Governance friction too high",
+        "Process misaligned with business reality"
+      ],
+      "recommended_actions": [
+        "Analyze bypassed attribute groups",
+        "Re-tier controls",
+        "Reduce approval strictness for low-risk attributes"
+      ]
+    },
+    {
+      "metric_id": "exception_repeat_rate",
+      "layer": "governance_drift",
+      "definition": "Share of exceptions repeating for same rule or attribute group",
+      "thresholds": {
+        "warning": ">20%",
+        "critical": ">35%"
+      },
+      "linked_decision_blocks": [
+        "db_rule_lifecycle_management_keep_kill_simplify_v0_1"
+      ],
+      "ai_interpretation": [
+        "Rule design is wrong",
+        "Enforcement location incorrect"
+      ],
+      "recommended_actions": [
+        "Trigger keep/kill/simplify review",
+        "Move rule to warning or derivation",
+        "Change enforcement point"
+      ]
+    },
+    {
+      "metric_id": "manual_post_replication_fix_rate",
+      "layer": "governance_drift",
+      "definition": "Manual downstream fixes after replication",
+      "thresholds": {
+        "warning": ">3%",
+        "critical": ">7%"
+      },
+      "linked_decision_blocks": [
+        "db_replication_errors_accountability_runbook_v0_1"
+      ],
+      "ai_interpretation": [
+        "Source-of-truth violated",
+        "Integration or semantic gaps"
+      ],
+      "recommended_actions": [
+        "Enforce no-silent-fix policy",
+        "Fix data at source",
+        "Align reference/customizing"
+      ]
+    },
+    {
+      "metric_id": "blocking_error_rate_by_rule",
+      "layer": "rule_effectiveness",
+      "definition": "Blocking validation errors per rule",
+      "thresholds": {
+        "warning": "top10 concentration",
+        "critical": "top5 dominates"
+      },
+      "linked_decision_blocks": [
+        "db_rule_lifecycle_management_keep_kill_simplify_v0_1"
+      ],
+      "ai_interpretation": [
+        "Over-restrictive rules",
+        "Poor UX or unclear definitions"
+      ],
+      "recommended_actions": [
+        "Simplify or narrow scope",
+        "Add derivations",
+        "Improve guidance"
+      ]
+    },
+    {
+      "metric_id": "rule_exception_concentration",
+      "layer": "rule_effectiveness",
+      "definition": "Top 10 rules causing most exceptions",
+      "thresholds": {
+        "warning": ">50%",
+        "critical": ">70%"
+      },
+      "linked_decision_blocks": [
+        "db_rule_lifecycle_management_keep_kill_simplify_v0_1"
+      ],
+      "ai_interpretation": [
+        "Few rules cause most pain"
+      ],
+      "recommended_actions": [
+        "Prioritize lifecycle review for top offenders"
+      ]
+    },
+    {
+      "metric_id": "ownership_coverage_tier1",
+      "layer": "ownership_capacity",
+      "definition": "% of Tier 1 attribute groups with active owner + backup",
+      "thresholds": {
+        "warning": "<95%",
+        "critical": "<85%"
+      },
+      "linked_decision_blocks": [
+        "db_attribute_level_ownership_decision_rights_v0_1"
+      ],
+      "ai_interpretation": [
+        "Governance blind spots",
+        "High risk of drift"
+      ],
+      "recommended_actions": [
+        "Assign missing owners",
+        "Reduce Tier 1 scope if capacity is insufficient"
+      ]
+    },
+    {
+      "metric_id": "backlog_aging_over_sla",
+      "layer": "ownership_capacity",
+      "definition": "Open governance items exceeding SLA",
+      "thresholds": {
+        "warning": ">10%",
+        "critical": ">25%"
+      },
+      "linked_decision_blocks": [
+        "db_operating_model_day2_day100_v0_1"
+      ],
+      "ai_interpretation": [
+        "Capacity overload",
+        "Ineffective prioritization"
+      ],
+      "recommended_actions": [
+        "Freeze scope expansion",
+        "Reprioritize Tier 1",
+        "Add capacity or simplify controls"
+      ]
+    }
+  ],
+  "ai_usage_note": "AI should evaluate metrics trends (not single points), map breached thresholds to linked Decision Blocks, and propose the smallest viable intervention.",
+  "version": "0.1",
+  "status": "draft",
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "DAMA",
+    "source_project": "cv-ai",
+    "source_path": "DAMA/mdg_metrics_framework_v0_1.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/DAMA/mdg_metrics_framework_v0_1.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "title_inferred": true,
+    "entity_type": "mdg_byte",
+    "entity_subtype": "version:0.1",
+    "summary": "Provide a canonical, AI-readable metrics framework for MDG governance: detect drift, assess decision quality, and trigger the right Decision Blocks."
+  },
+  "title": "Mdg Metrics Framework V0 1"
+}

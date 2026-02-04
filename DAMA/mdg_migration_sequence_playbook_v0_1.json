@@ -1,0 +1,232 @@
+{
+  "id": "mdg_migration_sequence_playbook_v0_1",
+  "type": "sequence_playbook",
+  "focus": "Migration / Cutover for MDG programs",
+  "goal": "Move from legacy to MDG+S/4 with controlled risk, zero silent drift, and measurable stabilization in Day-2.",
+  "version": "0.1",
+  "phases": [
+    {
+      "phase_id": "ph_0_scope_and_truth",
+      "name": "Phase 0 — Scope & Truth (before any load design)",
+      "primary_patterns": [
+        "pat_system_of_record_boundary",
+        "pat_attribute_group_tiering",
+        "pat_reference_data_alignment"
+      ],
+      "decisions_to_make": [
+        "Define System of Record per attribute group",
+        "Tier attribute groups (Tier1/2/3) and map to control strength",
+        "Freeze initial Reference Data scope and ownership"
+      ],
+      "required_artifacts": [
+        "systems_registry.json",
+        "interfaces_registry.json",
+        "attribute_groups.json (Tier1 first)",
+        "data_contracts.json",
+        "glossary_core.json"
+      ],
+      "exit_criteria": [
+        "Tier1 attribute groups have owner + backup (>=95% coverage)",
+        "System of Record decisions documented for Tier1 groups",
+        "Top reference value sets identified with owners"
+      ],
+      "gating_metrics": [
+        {
+          "metric_id": "ownership_coverage_tier1",
+          "target": ">=95%",
+          "why_gate": "Migration without ownership becomes endless firefighting."
+        }
+      ]
+    },
+    {
+      "phase_id": "ph_1_migration_design",
+      "name": "Phase 1 — Migration Design (load strategy & controls)",
+      "primary_patterns": [
+        "pat_cutover_load_with_verification",
+        "pat_delta_vs_full_load_strategy",
+        "pat_mass_change_risk_controls"
+      ],
+      "decisions_to_make": [
+        "Choose entity-level load strategy (initial full + reconciled delta)",
+        "Define verification gates per Tier1 attribute group",
+        "Define mass change governance (dry run, sampling, rollback, sign-off)"
+      ],
+      "required_artifacts": [
+        "bulk_change_plan_template.json",
+        "verification_checklists_per_attribute_group.json",
+        "reconciliation_plan.json (what compare, how often, who owns)",
+        "rule_proposal_template.json (for migration-time rules)"
+      ],
+      "exit_criteria": [
+        "For each Tier1 group: verification checklist exists",
+        "Reconciliation checkpoints defined (source vs MDG vs S/4)",
+        "Rollback/containment strategy defined for bulk load failures"
+      ],
+      "gating_metrics": [
+        {
+          "metric_id": "verification_mismatch_rate",
+          "target": "<=2% in dry-run sampling",
+          "why_gate": "If sampling mismatch is high, go-live will explode."
+        }
+      ]
+    },
+    {
+      "phase_id": "ph_2_data_preparation",
+      "name": "Phase 2 — Data Preparation (cleansing, mapping, reference readiness)",
+      "primary_patterns": [
+        "pat_reference_data_alignment",
+        "pat_cutover_load_with_verification"
+      ],
+      "decisions_to_make": [
+        "Define canonical mapping rules (value mapping, transformations, defaults)",
+        "Decide what to cleanse vs what to exception",
+        "Freeze reference data and validate LoV alignment"
+      ],
+      "required_artifacts": [
+        "value_mapping_catalog.json",
+        "cleansing_rules_catalog.json",
+        "exception_request_template.json",
+        "reference_data_alignment_report.json"
+      ],
+      "exit_criteria": [
+        "LoV alignment validated for target go-live scope",
+        "Cleansing backlog burn-down is on track",
+        "Exception policy for migration is defined (expiry + follow-up)"
+      ],
+      "gating_metrics": [
+        {
+          "metric_id": "customizing_mismatch_rate",
+          "target": "near-zero for in-scope value sets",
+          "why_gate": "Misaligned codes create replication failures and business blocks."
+        }
+      ]
+    },
+    {
+      "phase_id": "ph_3_dry_run",
+      "name": "Phase 3 — Dry Run (prove the end-to-end flow)",
+      "primary_patterns": [
+        "pat_cutover_load_with_verification",
+        "pat_replication_error_taxonomy_runbooks",
+        "pat_delta_vs_full_load_strategy"
+      ],
+      "decisions_to_make": [
+        "Confirm end-to-end replication behavior and monitoring",
+        "Classify top failures by category and assign owners",
+        "Tune rules: move non-critical blocking to warning for cutover window (if needed)"
+      ],
+      "required_artifacts": [
+        "replication_error_taxonomy.json",
+        "runbooks/*.json",
+        "monitoring_locations_catalog.json",
+        "dry_run_results_report.json"
+      ],
+      "exit_criteria": [
+        "Top replication failure categories have runbooks + owners",
+        "Mean time to recover is acceptable for dry-run volume",
+        "No silent fixes policy enforced in dry-run"
+      ],
+      "gating_metrics": [
+        {
+          "metric_id": "mean_time_to_recover",
+          "target": "within agreed SLA",
+          "why_gate": "If MTTR is high, go-live will pile up backlogs and manual fixes."
+        },
+        {
+          "metric_id": "replication_error_rate_by_category",
+          "target": "stable and explainable; top causes addressed",
+          "why_gate": "Uncontrolled semantic errors will repeat after go-live."
+        }
+      ]
+    },
+    {
+      "phase_id": "ph_4_cutover_execution",
+      "name": "Phase 4 — Cutover Execution (controlled loading window)",
+      "primary_patterns": [
+        "pat_mass_change_risk_controls",
+        "pat_cutover_load_with_verification"
+      ],
+      "decisions_to_make": [
+        "Execute staged loads with verification gates",
+        "Handle exceptions strictly time-bound",
+        "Escalate immediately on drift signals (no heroism)"
+      ],
+      "required_artifacts": [
+        "cutover_runbook.json",
+        "cutover_command_center_roles.json",
+        "cutover_metrics_dashboard_spec.json",
+        "exception_register.json"
+      ],
+      "exit_criteria": [
+        "Cutover loads executed with signed verification",
+        "Exception register has expiry for all exceptions",
+        "Replication queues stable (no uncontrolled backlog aging)"
+      ],
+      "gating_metrics": [
+        {
+          "metric_id": "backlog_aging_over_sla",
+          "target": "<10% over SLA during cutover",
+          "why_gate": "Aging backlog during cutover is a leading signal of day-1 failure."
+        }
+      ]
+    },
+    {
+      "phase_id": "ph_5_day2_stabilization",
+      "name": "Phase 5 — Day-2 Stabilization (stop drift, learn, harden)",
+      "primary_patterns": [
+        "pat_change_request_funnel",
+        "pat_rule_lifecycle_kill_simplify",
+        "pat_governance_release_management",
+        "pat_replication_error_taxonomy_runbooks"
+      ],
+      "decisions_to_make": [
+        "Establish Run + Improve cadence (weekly governance ops + backlog)",
+        "Kill/simplify top pain rules and fix enforcement points",
+        "Lock 'no silent fixes' and track bypass",
+        "Transition temporary migration exceptions to closure or permanent design"
+      ],
+      "required_artifacts": [
+        "weekly_ops_agenda_template.json",
+        "rule_lifecycle_backlog.json",
+        "post_incident_checklist.json",
+        "release_notes_template.json"
+      ],
+      "exit_criteria": [
+        "Bypass is trending down (<=5%)",
+        "Repeat exceptions trending down",
+        "Manual post-replication fixes approaching zero",
+        "Tier 1 governance stable (ownership + cycle times)"
+      ],
+      "gating_metrics": [
+        {
+          "metric_id": "bypass_rate",
+          "target": "<=5% and trending down",
+          "why_gate": "Bypass indicates governance rejection by reality."
+        },
+        {
+          "metric_id": "exception_repeat_rate",
+          "target": "<=20% and trending down",
+          "why_gate": "Repeating exceptions prove rules or process are wrong."
+        },
+        {
+          "metric_id": "manual_post_replication_fix_rate",
+          "target": "near-zero",
+          "why_gate": "Silent fixes destroy system-of-record integrity."
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "anti_patterns": [
+      "Start cutover before ownership and SoR are defined",
+      "Treat technical job success as business success",
+      "Allow dual maintenance without expiry and reconciliation",
+      "Ignore reference data alignment (LoV) until failures happen",
+      "Deploy new blocking rules silently during cutover window"
+    ],
+    "ai_reasoning_hooks": [
+      "Each phase maps to a set of Decision Blocks; AI can recommend next actions when gates fail.",
+      "Metrics breaches during cutover select playbooks and produce containment actions.",
+      "RAG corpus should include: runbooks, contracts, value mappings, and exception register."
+    ]
+  }
+}

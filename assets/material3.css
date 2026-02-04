@@ -1,0 +1,353 @@
+/* Material 3 inspired design tokens */
+:root {
+    --m3-surface: #ffffff;
+    --m3-surface-variant: #e1e2ec;
+    --m3-primary: #2563eb;
+    --m3-on-primary: #ffffff;
+    --m3-primary-container: #d9e2ff;
+    --m3-on-primary-container: #001945;
+    --m3-outline: #74777f;
+    --m3-radius-xl: 32px;
+    --m3-radius-lg: 24px;
+    --m3-radius-md: 16px;
+
+    --m3-shadow-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --m3-shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --m3-shadow-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --m3-shadow-4: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Material 3 Card */
+.m3-card {
+    background: var(--m3-surface);
+    border-radius: var(--m3-radius-xl);
+    padding: 2.25rem;
+    box-shadow: var(--m3-shadow-2);
+    transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1),
+        box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1),
+        background-color 0.2s ease;
+    border: 1px solid var(--m3-surface-variant);
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    margin: 1.5rem 0;
+}
+
+.m3-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--m3-shadow-4);
+    background-color: #f8f9ff;
+}
+
+.m3-card__header {
+    margin-bottom: 0.75rem;
+}
+
+.m3-card__title {
+    font-family: "Manrope", sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1b1b1f;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.m3-card__summary {
+    font-family: "Manrope", sans-serif;
+    font-size: 1.15rem;
+    color: #44474e;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.m3-card__cta {
+    margin-top: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: var(--m3-primary);
+    font-size: 1.1rem;
+}
+
+.m3-card__cta::after {
+    content: "→";
+    transition: transform 0.2s ease;
+}
+
+.m3-card:hover .m3-card__cta::after {
+    transform: translateX(6px);
+}
+
+/* Container for better flow */
+.m3-card-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Material 3 Hero Styling */
+.hero-card {
+    background: transparent;
+    border-radius: 0;
+    padding: 1.5rem 0;
+    box-shadow: none;
+    border: none;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-avatar {
+    border-radius: 50%;
+    box-shadow: var(--m3-shadow-2);
+    margin-bottom: 1.5rem;
+    border: 4px solid #fff;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.hero-name {
+    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+    /* Reduced as requested */
+    font-weight: 800;
+    color: #1b1b1f;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.hero-role {
+    font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+    letter-spacing: 0;
+    color: #44474e;
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+    max-width: 600px;
+}
+
+.hero-kicker {
+    color: var(--m3-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+}
+
+.hero-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.hero-links .link-arrow {
+    background: var(--m3-primary-container);
+    color: var(--m3-on-primary-container) !important;
+    padding: 0.6rem 1.25rem;
+    border-radius: 100px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.hero-links .link-arrow:hover {
+    transform: scale(1.05);
+    box-shadow: var(--m3-shadow-2);
+}
+
+.hero-links .link-arrow::after {
+    display: none;
+}
+
+/* Page wide Material background */
+body {
+    background-color: #f6f6f9;
+}
+
+main.page-content {
+    max-width: 1000px;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    /* Balanced section spacing */
+}
+
+h2 {
+    font-family: "Manrope", sans-serif;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+    /* Balanced heading size */
+}
+
+/* Data Bytes Grid */
+.data-bytes-grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .data-bytes-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+.m3-byte-card {
+    background: var(--m3-surface);
+    border-radius: var(--m3-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--m3-shadow-1);
+    border: 1px solid var(--m3-surface-variant);
+    transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1),
+        box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1);
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    /* Allow auto height to avoid empty space */
+}
+
+.m3-byte-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--m3-shadow-3);
+    border-color: var(--m3-primary);
+}
+
+.m3-byte-card__subtitle {
+    color: var(--m3-primary);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.m3-byte-card__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1b1b1f;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+.m3-byte-card__summary {
+    font-size: 0.95rem;
+    color: #44474e;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.m3-byte-card__meta {
+    margin-top: auto;
+    /* Push meta to bottom */
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #74777f;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.m3-byte-card__meta::before {
+    content: "📁";
+    font-size: 0.85rem;
+}
+
+/* Material 3 Footer & Sidebar Overrides */
+.site-footer {
+    background-color: var(--m3-surface);
+    border-top: 1px solid var(--m3-surface-variant);
+}
+
+.neub-card {
+    background: var(--m3-surface);
+    border-radius: var(--m3-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--m3-shadow-1);
+    border: 1px solid var(--m3-surface-variant);
+}
+
+.neub-card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Material 3 Dataset Page Styling */
+.dataset-hero {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 0 2rem 0 !important;
+    max-width: 100% !important;
+}
+
+.dataset-hero__title {
+    font-family: "Manrope", sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 5vw, 3rem);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    color: #1b1b1f;
+}
+
+.dataset-list {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.dataset-item {
+    background: var(--m3-surface);
+    border-radius: var(--m3-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--m3-shadow-1);
+    border: 1px solid var(--m3-surface-variant);
+    transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.dataset-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--m3-shadow-3);
+    border-color: var(--m3-primary);
+}
+
+.dataset-item__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1b1b1f;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+.dataset-item__title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.dataset-item__summary {
+    font-size: 0.95rem;
+    color: #44474e;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.dataset-filter input,
+.dataset-select {
+    border-radius: 12px;
+    border: 1px solid var(--m3-surface-variant);
+    box-shadow: var(--m3-shadow-1);
+}

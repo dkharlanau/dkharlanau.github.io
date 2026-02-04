@@ -1,0 +1,72 @@
+{
+  "id": "TRIZ-34",
+  "title": "Discarding and Recovering",
+  "intent": "Improve flow and resilience by intentionally removing elements when they are no longer useful, while keeping the ability to restore them if needed.",
+  "triz_principle": {
+    "number": 34,
+    "name": "Discarding and Recovering",
+    "definition": "Make parts of an object or system disappear after completing their function, or restore them when required."
+  },
+  "problem_understanding": {
+    "core_contradiction": "We want stability and traceability, but keeping everything forever creates clutter, cost, and rigidity.",
+    "why_this_hurts": "Unused artifacts, data, rules, and processes accumulate and slowly strangle system evolution.",
+    "typical_signals": [
+      "obsolete rules still active",
+      "dead configuration nobody dares to remove",
+      "historical data slowing systems",
+      "fear of cleanup because rollback is unclear"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Design explicit lifecycle: create → use → discard → optionally recover.",
+    "key_rule": "Nothing is permanent unless it proves long-term value.",
+    "how_it_resolves_the_contradiction": "The system stays lean while retaining the ability to recover knowledge or functionality when needed."
+  },
+  "application_patterns": {
+    "consulting": [
+      "sunset plans for initiatives and policies",
+      "decision logs with expiry dates",
+      "regular portfolio cleanup cycles"
+    ],
+    "software_engineering": [
+      "feature flags with automatic expiration",
+      "data retention and archival strategies",
+      "deprecate-and-remove workflows"
+    ],
+    "architecture": [
+      "soft deletes with recovery windows",
+      "versioned APIs with retirement plans",
+      "time-based cleanup jobs"
+    ],
+    "enterprise_sap": [
+      "temporary MDG rules removed after migration phases",
+      "archiving obsolete master data",
+      "cleanup of unused workflows and replication settings"
+    ]
+  },
+  "anti_patterns": [
+    "deleting without recovery strategy",
+    "never removing anything 'just in case'",
+    "cleanup driven by crisis instead of policy"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "system complexity grows over time",
+      "many elements have unclear purpose",
+      "change is blocked by legacy clutter"
+    ],
+    "do_not_use_when": [
+      "regulatory rules require permanent retention",
+      "recovery cost would be unacceptable"
+    ]
+  },
+  "diagnostic_questions": [
+    "Which elements no longer deliver value?",
+    "What could safely expire by default?",
+    "How can recovery be made cheap and reliable?"
+  ],
+  "example": {
+    "before": "Old validation rules and workflows remain active long after their original purpose is gone.",
+    "after": "Rules expire automatically and can be restored from versioned history if needed."
+  }
+}

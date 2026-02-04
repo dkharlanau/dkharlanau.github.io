@@ -1,0 +1,180 @@
+---
+layout: default
+title: "Taking Out (Separation)"
+description: "Remove or isolate a problematic or volatile part so the rest of the system can stay stable and simple."
+permalink: /datasets/view/TRIZ-bytes/TRIZ-02/
+sitemap: true
+---
+
+<div class="dataset-hero">
+  <p class="eyebrow">Dataset entry</p>
+  <h1 class="dataset-hero__title">Taking Out (Separation)</h1>
+  <div class="dataset-hero__meta">
+    <span class="pill pill--dataset">TRIZ-bytes</span>
+    <span class="pill pill--type">triz_byte</span>
+    <span class="pill">TRIZ-02</span>
+  </div>
+  <div class="dataset-actions">
+    <a class="button" href="/datasets/TRIZ-bytes/TRIZ-02.json">Open JSON</a>
+    <a class="button button--secondary" href="/datasets/TRIZ-bytes/">Back to list</a>
+  </div>
+</div>
+
+<div class="neub-card dataset-entry-lead">Remove or isolate a problematic or volatile part so the rest of the system can stay stable and simple.</div>
+
+<div class="dataset-grid dataset-grid--wide">
+  <div class="neub-card">
+    <h2>Attribution</h2>
+    <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>
+    <p>Canonical: <a href="https://dkharlanau.github.io/datasets/TRIZ-bytes/TRIZ-02.json">https://dkharlanau.github.io/datasets/TRIZ-bytes/TRIZ-02.json</a></p>
+    <p><a class="link-arrow" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+  </div>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Taking Out (Separation)",
+  "description": "Remove or isolate a problematic or volatile part so the rest of the system can stay stable and simple.",
+  "url": "https://dkharlanau.github.io/datasets/view/TRIZ-bytes/TRIZ-02/",
+  "isAccessibleForFree": true,
+  "creator": {
+    "@type": "Person",
+    "@id": "https://dkharlanau.github.io/#dkharlanau",
+    "name": "Dzmitryi Kharlanau",
+    "url": "https://dkharlanau.github.io/"
+  },
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://dkharlanau.github.io/datasets/TRIZ-bytes/TRIZ-02.json"
+    }
+  ]
+}
+</script>
+
+<div class="dataset-json">
+<details open>
+<summary>JSON (copy / reuse)</summary>
+
+<pre><code class="language-json">{
+  "id": "TRIZ-02",
+  "title": "Taking Out (Separation)",
+  "intent": "Remove or isolate a problematic or volatile part so the rest of the system can stay stable and simple.",
+  "triz_principle": {
+    "number": 2,
+    "name": "Taking Out",
+    "definition": "Separate an interfering part or property from an object, or single out only the necessary part."
+  },
+  "problem_understanding": {
+    "core_contradiction": "We need the system to be reliable and standardized, but one volatile part keeps forcing exceptions and complexity everywhere.",
+    "why_this_hurts": "If a single 'messy' concern is embedded inside the core, it contaminates architecture, increases defect rate, and makes every change expensive.",
+    "typical_signals": [
+      "one special case changes many components",
+      "core code contains many 'if customer X / country Y / legacy Z' branches",
+      "releases are blocked by a single integration or rule set",
+      "risk is concentrated in one area that nobody wants to touch"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Identify the volatile/interfering part and extract it behind a boundary.",
+    "key_rule": "Keep the core clean; move volatility to the edges (adapters, plugins, rules engines, separate services).",
+    "how_it_resolves_the_contradiction": "The stable core remains standardized and testable, while the isolated part can evolve independently without spreading complexity."
+  },
+  "application_patterns": {
+    "consulting": [
+      "separate 'governance rules' from 'local exceptions' into a controlled exception process",
+      "extract one risky topic into a focused workstream with clear SLA and decision rights",
+      "create a 'policy layer' (principles/standards) and an 'exception layer' (approved deviations)"
+    ],
+    "software_engineering": [
+      "extract feature flags/experiments out of core logic",
+      "isolate third-party integrations via adapters",
+      "move complex conditional logic into a rules engine or configuration module",
+      "implement plugin architecture for customer-specific behaviors"
+    ],
+    "architecture": [
+      "anti-corruption layer around legacy systems",
+      "strangler pattern: extract and replace parts gradually",
+      "separate read models (reporting/search) from write model (transaction core)"
+    ],
+    "enterprise_sap": [
+      "take custom enhancements out of the core flow: use BAdIs/user exits as boundary points, not scattered ABAP changes",
+      "isolate country-specific or customer-specific rules in configuration / BRF+ instead of code branches",
+      "separate master data governance (MDG validation/workflow) from distribution (replication adapters)"
+    ]
+  },
+  "anti_patterns": [
+    "extracting without a clear contract (new spaghetti outside the core)",
+    "moving complexity but keeping shared database tables and hidden coupling",
+    "creating a 'special-case service' that becomes a dumping ground"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "one volatile module causes most incidents or delays",
+      "exceptions keep multiplying inside the core",
+      "integration complexity dominates delivery time",
+      "you need to modernize gradually without big-bang rewrites"
+    ],
+    "do_not_use_when": [
+      "the extracted part is not actually volatile (you misdiagnosed the cause)",
+      "extraction adds heavy latency/complexity with no stability gain"
+    ]
+  },
+  "diagnostic_questions": [
+    "Which 10% of components cause 80% of change pain or incidents?",
+    "What part forces the most exceptions and branching logic in the core?",
+    "If we could isolate one dependency, which one would reduce coordination the most?"
+  ],
+  "example": {
+    "before": "Core transaction service contains many customer-specific conditions and tightly embedded third-party API calls.",
+    "after": "Core service exposes a clean contract; customer-specific behavior is a plugin; third-party calls are isolated in an adapter with retries and monitoring."
+  },
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "TRIZ-bytes",
+    "source_project": "cv-ai",
+    "source_path": "TRIZ-bytes/TRIZ-02.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/TRIZ-bytes/TRIZ-02.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "triz_byte",
+    "entity_subtype": "",
+    "summary": "Remove or isolate a problematic or volatile part so the rest of the system can stay stable and simple."
+  }
+}
+</code></pre>
+
+</details>
+</div>

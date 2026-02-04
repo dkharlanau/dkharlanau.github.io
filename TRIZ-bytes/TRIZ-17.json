@@ -1,0 +1,72 @@
+{
+  "id": "TRIZ-17",
+  "title": "Another Dimension",
+  "intent": "Unlock new solution space by moving the problem into an additional dimension instead of optimizing within the same plane.",
+  "triz_principle": {
+    "number": 17,
+    "name": "Another Dimension",
+    "definition": "Move an object or system into a new dimension, or use multi-dimensional arrangements instead of flat ones."
+  },
+  "problem_understanding": {
+    "core_contradiction": "We keep optimizing within the same constraints, but improvements are marginal or blocked.",
+    "why_this_hurts": "When all solutions live in the same dimension (time, org, data, process), trade-offs become zero-sum.",
+    "typical_signals": [
+      "endless prioritization conflicts",
+      "performance vs quality trade-offs with no winners",
+      "process tuning that yields minimal gains",
+      "teams arguing because all changes compete for the same slot"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Introduce an additional dimension to separate concerns that currently compete.",
+    "key_rule": "When trade-offs are stuck, add a dimension instead of refining the plane.",
+    "how_it_resolves_the_contradiction": "Previously conflicting requirements are separated across dimensions and no longer block each other."
+  },
+  "application_patterns": {
+    "consulting": [
+      "separate strategic, tactical, and operational decision timelines",
+      "introduce parallel workstreams instead of sequential prioritization",
+      "use scenarios instead of single forecasts"
+    ],
+    "software_engineering": [
+      "async processing instead of synchronous flows",
+      "temporal versioning instead of in-place updates",
+      "multi-tenant designs instead of single shared state"
+    ],
+    "architecture": [
+      "read/write separation (CQRS)",
+      "event sourcing to add time as a dimension",
+      "sidecar patterns to extend behavior without touching core"
+    ],
+    "enterprise_sap": [
+      "time-dependent master data instead of overwriting values",
+      "parallel validation paths for different risk classes",
+      "simulation layers alongside productive processing"
+    ]
+  },
+  "anti_patterns": [
+    "adding dimensions without clear ownership",
+    "introducing parallelism that increases confusion",
+    "using new dimensions to avoid hard decisions"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "trade-offs are consistently zero-sum",
+      "prioritization conflicts dominate discussions",
+      "optimization within current structure is exhausted"
+    ],
+    "do_not_use_when": [
+      "problem is simple and can be solved directly",
+      "team cannot reason about added complexity"
+    ]
+  },
+  "diagnostic_questions": [
+    "What dimensions are we currently optimizing in?",
+    "Which concern could be moved to a separate timeline, layer, or model?",
+    "What new axis would reduce conflict instead of increasing it?"
+  ],
+  "example": {
+    "before": "All changes compete for the same release window and approval path.",
+    "after": "Low-risk changes flow continuously, while high-risk ones follow a separate, slower dimension."
+  }
+}

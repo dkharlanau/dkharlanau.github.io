@@ -1,0 +1,97 @@
+{
+  "byte_id": "agentic_dev_020",
+  "title": "Ownership, SLAs & Accountability: Who Is Responsible for the Agent",
+  "level": "applied",
+  "domain": [
+    "agentic-development",
+    "operations",
+    "governance"
+  ],
+  "intent": "Understand how to assign clear ownership and service expectations so agents can be operated like real systems, not experiments.",
+  "core_idea": {
+    "one_liner": "If nobody owns the agent, nobody is responsible for its mistakes.",
+    "why_it_matters": [
+      "Agents affect real decisions and systems.",
+      "Incidents require clear escalation paths.",
+      "Without SLAs, quality degrades silently."
+    ]
+  },
+  "definition": {
+    "agent_ownership": "Explicit assignment of responsibility for an agent’s behavior, quality, and lifecycle.",
+    "sla": "Agreed expectations for availability, accuracy, latency, and escalation."
+  },
+  "ownership_roles": [
+    {
+      "role": "Product owner",
+      "responsibility": "Defines agent scope, value, and success criteria."
+    },
+    {
+      "role": "Technical owner",
+      "responsibility": "Ensures reliability, observability, and cost control."
+    },
+    {
+      "role": "Domain owner",
+      "responsibility": "Validates knowledge correctness and updates."
+    }
+  ],
+  "agent_sla_dimensions": [
+    {
+      "dimension": "Availability",
+      "example": "99.5% uptime for support hours"
+    },
+    {
+      "dimension": "Latency",
+      "example": "P95 response time < 5 seconds"
+    },
+    {
+      "dimension": "Accuracy",
+      "example": "≥ 90% correct classification on golden set"
+    },
+    {
+      "dimension": "Escalation",
+      "example": "Human handoff within 10 minutes for critical cases"
+    }
+  ],
+  "incident_handling": [
+    "Detect via metrics or user report",
+    "Identify agent version and knowledge set",
+    "Trigger fallback or disable capability",
+    "Notify owner and stakeholders",
+    "Post-incident review and update evals"
+  ],
+  "micro_example": {
+    "scenario": "Agent gives wrong recommendation in production",
+    "response": {
+      "owner_identified": "Technical owner",
+      "action": "Disable affected decision path",
+      "follow_up": "Update knowledge version and rerun evals"
+    }
+  },
+  "failure_modes": [
+    "Shared ownership (everyone and no one)",
+    "No SLA for accuracy",
+    "Incidents treated as 'AI quirks'",
+    "No post-incident learning"
+  ],
+  "guards": [
+    "Every agent must have named owners.",
+    "SLAs must be measurable.",
+    "Incidents must lead to changes."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "Agents need owners just like services do.",
+    "one_sentence_definition": "Ownership turns AI from a toy into a system."
+  },
+  "practical_checklist": [
+    "Who is on call for this agent?",
+    "What does 'good enough' mean?",
+    "How do we escalate failures?",
+    "Do incidents improve the agent?"
+  ],
+  "tags": [
+    "ownership",
+    "sla",
+    "accountability",
+    "operations"
+  ]
+}

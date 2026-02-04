@@ -1,0 +1,212 @@
+---
+layout: default
+title: "Cost &amp; Latency Budgeting: Designing Agents That Are Economical"
+description: "Understand how to design agents with predictable cost and latency, so they are usable at scale and acceptable for business."
+permalink: /datasets/view/agentic-bytes/agentic_dev_015/
+sitemap: true
+---
+
+<div class="dataset-hero">
+  <p class="eyebrow">Dataset entry</p>
+  <h1 class="dataset-hero__title">Cost &amp; Latency Budgeting: Designing Agents That Are Economical</h1>
+  <div class="dataset-hero__meta">
+    <span class="pill pill--dataset">agentic-bytes</span>
+    <span class="pill pill--type">agentic_byte</span>
+    <span class="pill">agentic_dev_015</span>
+    <span class="pill">cost-control</span> <span class="pill">latency</span> <span class="pill">agent-design</span> <span class="pill">scalability</span>
+  </div>
+  <div class="dataset-actions">
+    <a class="button" href="/datasets/agentic-bytes/agentic_dev_015.json">Open JSON</a>
+    <a class="button button--secondary" href="/datasets/agentic-bytes/">Back to list</a>
+  </div>
+</div>
+
+<div class="neub-card dataset-entry-lead">Understand how to design agents with predictable cost and latency, so they are usable at scale and acceptable for business.</div>
+
+<div class="dataset-grid dataset-grid--wide">
+  <div class="neub-card">
+    <h2>Attribution</h2>
+    <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>
+    <p>Canonical: <a href="https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_015.json">https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_015.json</a></p>
+    <p><a class="link-arrow" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+  </div>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Cost & Latency Budgeting: Designing Agents That Are Economical",
+  "description": "Understand how to design agents with predictable cost and latency, so they are usable at scale and acceptable for business.",
+  "url": "https://dkharlanau.github.io/datasets/view/agentic-bytes/agentic_dev_015/",
+  "isAccessibleForFree": true,
+  "creator": {
+    "@type": "Person",
+    "@id": "https://dkharlanau.github.io/#dkharlanau",
+    "name": "Dzmitryi Kharlanau",
+    "url": "https://dkharlanau.github.io/"
+  },
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_015.json"
+    }
+  ],
+  "keywords": [
+    "cost-control",
+    "latency",
+    "agent-design",
+    "scalability"
+  ]
+}
+</script>
+
+<div class="dataset-json">
+<details open>
+<summary>JSON (copy / reuse)</summary>
+
+<pre><code class="language-json">{
+  "byte_id": "agentic_dev_015",
+  "title": "Cost &amp; Latency Budgeting: Designing Agents That Are Economical",
+  "level": "foundation",
+  "domain": [
+    "agentic-development",
+    "cost-control",
+    "performance"
+  ],
+  "intent": "Understand how to design agents with predictable cost and latency, so they are usable at scale and acceptable for business.",
+  "core_idea": {
+    "one_liner": "An agent that is too slow or too expensive is broken, even if it is smart.",
+    "why_it_matters": [
+      "Agent loops multiply cost quickly.",
+      "Latency kills user trust and adoption.",
+      "Without budgets, agents silently become unsustainable."
+    ]
+  },
+  "definition": {
+    "cost_latency_budget": "Explicit limits on how much time and money an agent is allowed to spend per task."
+  },
+  "main_cost_drivers": [
+    {
+      "driver": "Model calls",
+      "note": "Each reasoning or critic step adds cost."
+    },
+    {
+      "driver": "Context size",
+      "note": "Large prompts and long histories are expensive."
+    },
+    {
+      "driver": "RAG retrieval",
+      "note": "Embedding + search + reranking adds latency."
+    },
+    {
+      "driver": "Tool calls",
+      "note": "External APIs and retries increase both cost and time."
+    }
+  ],
+  "budgeting_strategies": [
+    {
+      "strategy": "Step limits",
+      "description": "Cap the number of reasoning loops or retries."
+    },
+    {
+      "strategy": "Early exit",
+      "description": "Stop when confidence is sufficient."
+    },
+    {
+      "strategy": "Tiered models",
+      "description": "Use cheaper models for simple steps, stronger ones for decisions."
+    },
+    {
+      "strategy": "Caching",
+      "description": "Reuse retrieval results and answers where safe."
+    }
+  ],
+  "latency_targets": {
+    "interactive_agent": "1–3 seconds perceived",
+    "support_agent": "3–10 seconds acceptable",
+    "batch_agent": "minutes acceptable"
+  },
+  "micro_example": {
+    "scenario": "Ticket analysis agent",
+    "bad_design": "Always runs full RAG + critic + reranking.",
+    "good_design": {
+      "step_1": "Try classification with cached rules",
+      "step_2": "Use RAG only if confidence &lt; 0.7",
+      "step_3": "Run critic only for high-risk tickets"
+    }
+  },
+  "failure_modes": [
+    "Unlimited loops",
+    "Always using the largest model",
+    "No distinction between critical and trivial tasks",
+    "Optimizing cost without measuring quality"
+  ],
+  "guards": [
+    "Every agent must have explicit budgets.",
+    "Budget overruns must be logged.",
+    "Agent must degrade gracefully when budget is exhausted."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "Smart agents still need a budget.",
+    "one_sentence_definition": "Cost and latency budgets keep agents usable in the real world."
+  },
+  "practical_checklist": [
+    "Do we know the max cost per task?",
+    "What happens when the budget is exceeded?",
+    "Can we skip expensive steps safely?",
+    "Are latency targets aligned with user expectations?"
+  ],
+  "tags": [
+    "cost-control",
+    "latency",
+    "agent-design",
+    "scalability"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "agentic-bytes",
+    "source_project": "cv-ai",
+    "source_path": "agentic-bytes/agentic_dev_015.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_015.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "agentic_byte",
+    "entity_subtype": "level:foundation",
+    "summary": "Understand how to design agents with predictable cost and latency, so they are usable at scale and acceptable for business."
+  }
+}
+</code></pre>
+
+</details>
+</div>

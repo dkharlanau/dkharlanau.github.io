@@ -1,0 +1,200 @@
+{
+  "byte_id": "CE-03",
+  "title": "Retrieval as a Product: RAG Refinement, Compression, and Long-Context Noise Control",
+  "category": "context_engineering",
+  "audience": [
+    "consultants",
+    "business_analysts",
+    "solution_architects",
+    "enterprise_architects"
+  ],
+  "thesis": "In retrieval-augmented generation (RAG), retrieval is not a plumbing detail. It is a product layer that must be engineered: selecting, compressing, ordering, and validating evidence. Long context does not remove the need for good retrieval; it changes failure modes (noise, length-induced degradation, and position sensitivity).",
+  "research_basis": {
+    "key_findings": [
+      {
+        "claim": "Long context alone does not guarantee better RAG; performance depends on how retrieved evidence is assembled.",
+        "evidence": "Large-scale study varying context length across many LLMs in RAG shows benefits and limitations; longer is not automatically better.",
+        "sources": [
+          "turn0search1"
+        ]
+      },
+      {
+        "claim": "Adding more retrieved passages can improve performance initially and then degrade it (non-monotonic).",
+        "evidence": "Long-context LLMs in RAG show that increasing the number of passages does not consistently help; performance can decline after a point.",
+        "sources": [
+          "turn0search4"
+        ]
+      },
+      {
+        "claim": "Input length itself can hurt LLM performance, independent of distraction from irrelevant content.",
+        "evidence": "Findings show degradation from sheer length even under conditions designed to minimize distraction.",
+        "sources": [
+          "turn0search14"
+        ]
+      },
+      {
+        "claim": "Long-context models still suffer position sensitivity, especially with relevant info in the middle.",
+        "evidence": "Lost-in-the-middle effect yields U-shaped performance depending on position of evidence in context.",
+        "sources": [
+          "turn0search0",
+          "turn0search13"
+        ]
+      }
+    ],
+    "practical_implication": "Treat RAG as evidence engineering: control top-K, reduce noise, compress, and place evidence where it will be used."
+  },
+  "core_concepts": [
+    {
+      "name": "signal_budget",
+      "definition": "Your token budget is mostly a signal budget. Every irrelevant token competes with relevant evidence."
+    },
+    {
+      "name": "evidence_contract",
+      "definition": "A clear rule: the model may only claim what is supported by provided evidence; everything else must be labeled assumption."
+    },
+    {
+      "name": "non_monotonic_retrieval",
+      "definition": "More passages can hurt after a threshold due to noise + length effects + position sensitivity."
+    }
+  ],
+  "engineering_objectives": [
+    "Maximize evidence signal-to-noise ratio",
+    "Minimize length-induced degradation",
+    "Stabilize constraint compliance via placement + redundancy",
+    "Maintain traceability (which chunk supports which claim)"
+  ],
+  "retrieval_pipeline_blueprint": {
+    "name": "RAG Evidence Assembly (REA)",
+    "stages": [
+      {
+        "stage": "S1_candidate_retrieval",
+        "action": "Retrieve N candidates (e.g., N=20–50) using hybrid retrieval (BM25 + embeddings) when possible.",
+        "output": "candidate_chunks[]"
+      },
+      {
+        "stage": "S2_rerank",
+        "action": "Rerank candidates with a cross-encoder or LLM-based reranker; include query + task intent.",
+        "output": "ranked_chunks[]"
+      },
+      {
+        "stage": "S3_diversity_filter",
+        "action": "Remove near-duplicates and enforce topical diversity (prevent 5 chunks saying the same thing).",
+        "output": "diverse_chunks[]"
+      },
+      {
+        "stage": "S4_topK_selection",
+        "action": "Keep top K (typical K=5–10). Tune K with evaluation; do not assume bigger K is better.",
+        "output": "selected_chunks[]",
+        "research_hook": "Non-monotonic effect in long-context RAG.",
+        "sources": [
+          "turn0search4"
+        ]
+      },
+      {
+        "stage": "S5_compression",
+        "action": "Compress each chunk into an atomic evidence card: {fact, scope, exceptions, citation_id}. Keep original text as optional appendix.",
+        "output": "evidence_cards[]",
+        "why": "Mitigates length-induced degradation and improves reasoning focus.",
+        "research_hook": "Input length alone can degrade performance.",
+        "sources": [
+          "turn0search14"
+        ]
+      },
+      {
+        "stage": "S6_ordering",
+        "action": "Order evidence cards by (a) decision-critical constraints, (b) direct answers, (c) supporting details, then (d) appendices.",
+        "output": "ordered_evidence_cards[]",
+        "research_hook": "Position sensitivity / lost-in-the-middle.",
+        "sources": [
+          "turn0search0",
+          "turn0search13"
+        ]
+      }
+    ]
+  },
+  "consulting_protocol": {
+    "name": "Evidence-First Consulting Output (EFCO)",
+    "steps": [
+      {
+        "step": 1,
+        "action": "Ask the model to build an Evidence Board (<= 200–400 tokens) from retrieved chunks.",
+        "acceptance_criteria": "Each item is atomic, testable, and linked to a chunk_id."
+      },
+      {
+        "step": 2,
+        "action": "Freeze the Evidence Board and instruct: reason only over it; mark gaps as UNKNOWN.",
+        "acceptance_criteria": "No new facts appear without an evidence link."
+      },
+      {
+        "step": 3,
+        "action": "Generate the deliverable using an output contract (JSON/decision memo).",
+        "acceptance_criteria": "Every claim maps to evidence_id(s) or is labeled assumption."
+      },
+      {
+        "step": 4,
+        "action": "Run a hallucination audit: list claims with missing evidence; either add evidence or downgrade claim.",
+        "acceptance_criteria": "Zero 'unsupported confident claims'."
+      }
+    ]
+  },
+  "templates": {
+    "evidence_card_schema": {
+      "id": "E1",
+      "fact": "Atomic statement supported by retrieved text",
+      "scope": "Where it applies",
+      "exceptions": "When it fails",
+      "chunk_id": "C3",
+      "confidence": "high|medium|low"
+    },
+    "evidence_board_instruction": "Extract 6–10 evidence cards from the provided chunks. Do not add external facts. If evidence is missing, write UNKNOWN.",
+    "reasoning_instruction": "Now produce the output using only evidence cards. Every non-trivial claim must cite evidence card ids."
+  },
+  "anti_patterns": [
+    {
+      "name": "Unlimited Passages Because 'We Have 128k Context'",
+      "symptom": "You shove 30+ chunks into the prompt.",
+      "damage": "Noise + length-induced performance drop + position misses.",
+      "fix": "Top-K + compression + ordering.",
+      "research_hooks": [
+        "Non-monotonic gains when adding passages in long-context RAG",
+        "Length alone can hurt performance"
+      ],
+      "sources": [
+        "turn0search4",
+        "turn0search14"
+      ]
+    },
+    {
+      "name": "No Evidence Contract",
+      "symptom": "Model produces confident architecture decisions without traceable support.",
+      "damage": "Client-risk: hallucinated constraints, invented vendor features, fake best practices.",
+      "fix": "Evidence Board + claim-to-evidence mapping."
+    }
+  ],
+  "success_metrics": [
+    {
+      "metric": "unsupported_claim_rate",
+      "definition": "Percent of claims lacking evidence_id links",
+      "target": "<= 0.05"
+    },
+    {
+      "metric": "topK_efficiency",
+      "definition": "How many selected chunks are actually used/cited",
+      "target": "High; unused chunks are removed next iteration"
+    },
+    {
+      "metric": "length_penalty_sensitivity",
+      "definition": "Performance drop when adding +X tokens of filler/appendix",
+      "target": "Low after compression + ordering"
+    },
+    {
+      "metric": "stability_across_runs",
+      "definition": "Variance of conclusions across repeated runs with same evidence board",
+      "target": "Low"
+    }
+  ],
+  "next_byte_suggestion": {
+    "byte_id": "CE-04",
+    "title": "Prompt Optimization Becomes Engineering: Automatic Prompt Optimization, Prompt Compilers, and Evaluation Loops"
+  }
+}

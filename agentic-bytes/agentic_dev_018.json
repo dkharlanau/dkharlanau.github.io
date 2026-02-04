@@ -1,0 +1,90 @@
+{
+  "byte_id": "agentic_dev_018",
+  "title": "Single-Agent vs Multi-Agent: When One Brain Is Enough",
+  "level": "applied",
+  "domain": [
+    "agentic-development",
+    "architecture",
+    "multi-agent"
+  ],
+  "intent": "Understand when a single agent is sufficient and when splitting responsibilities across multiple agents makes systems more reliable and maintainable.",
+  "core_idea": {
+    "one_liner": "Multiple agents do not mean more intelligence — they mean clearer responsibilities.",
+    "why_it_matters": [
+      "Multi-agent systems add coordination cost.",
+      "Most problems can be solved by one well-designed agent.",
+      "Splitting roles too early creates chaos."
+    ]
+  },
+  "definitions": {
+    "single_agent": "One agent that plans, retrieves, acts, and verifies within a single loop.",
+    "multi_agent": "Multiple agents with explicit roles that collaborate through defined interfaces."
+  },
+  "when_single_agent_is_enough": [
+    "Linear workflows (analyze → decide → respond)",
+    "Low task complexity",
+    "Tight latency or cost constraints",
+    "Clear ownership and scope"
+  ],
+  "when_multi_agent_makes_sense": [
+    "Distinct roles (planner, executor, critic, retriever)",
+    "Complex tasks with parallel sub-problems",
+    "Need for stronger verification or debate",
+    "Human-like review processes"
+  ],
+  "common_multi_agent_patterns": [
+    {
+      "pattern": "Planner–Executor–Critic",
+      "purpose": "Separate thinking, doing, and verification."
+    },
+    {
+      "pattern": "Retriever–Reasoner",
+      "purpose": "Isolate knowledge access from decision logic."
+    },
+    {
+      "pattern": "Specialist agents",
+      "purpose": "Domain-specific expertise (e.g. SAP, security, finance)."
+    }
+  ],
+  "coordination_rules": [
+    "Agents communicate via structured messages only.",
+    "No shared hidden state.",
+    "Clear authority and stop conditions."
+  ],
+  "micro_example": {
+    "scenario": "UAT defect analysis",
+    "single_agent": "Analyzes ticket, retrieves knowledge, proposes fix.",
+    "multi_agent": {
+      "planner": "Defines investigation steps",
+      "retriever": "Fetches relevant rules and logs",
+      "critic": "Checks consistency and risk"
+    }
+  },
+  "failure_modes": [
+    "Too many agents for a simple task",
+    "Unclear agent ownership",
+    "Circular discussions between agents",
+    "Hidden assumptions passed implicitly"
+  ],
+  "guards": [
+    "Start with one agent; split only when necessary.",
+    "Every agent must have a single clear role.",
+    "Inter-agent communication must be logged."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "More agents mean more structure, not more magic.",
+    "one_sentence_definition": "Multi-agent systems are about separation of concerns, not raw intelligence."
+  },
+  "practical_checklist": [
+    "Can one agent handle this reliably?",
+    "Are roles truly distinct?",
+    "Is coordination overhead justified?",
+    "Can we debug agent interactions?"
+  ],
+  "tags": [
+    "single-agent",
+    "multi-agent",
+    "architecture",
+    "coordination"
+  ]
+}

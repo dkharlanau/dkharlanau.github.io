@@ -1,0 +1,72 @@
+{
+  "id": "TRIZ-16",
+  "title": "Partial or Excessive Actions",
+  "intent": "Achieve better results by deliberately doing less or more than the nominal requirement instead of aiming for exactness.",
+  "triz_principle": {
+    "number": 16,
+    "name": "Partial or Excessive Actions",
+    "definition": "If an exact action is difficult, achieve the required effect by doing slightly less or slightly more."
+  },
+  "problem_understanding": {
+    "core_contradiction": "We aim for exact correctness, but precision is expensive, slow, or unrealistic under constraints.",
+    "why_this_hurts": "Chasing perfect accuracy increases cost and delays, while most value could be delivered earlier with approximation.",
+    "typical_signals": [
+      "long cycles to reach perfect data quality",
+      "over-engineering for rare edge cases",
+      "projects blocked waiting for full completeness",
+      "high cost to close the last 5–10% gap"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Intentionally choose approximation over exactness where it delivers faster or cheaper value.",
+    "key_rule": "Optimize for impact, not mathematical perfection.",
+    "how_it_resolves_the_contradiction": "Most benefits are realized early, while cost and time are kept under control."
+  },
+  "application_patterns": {
+    "consulting": [
+      "80/20 analysis instead of exhaustive studies",
+      "phased recommendations with increasing precision",
+      "decision-making with confidence ranges instead of exact numbers"
+    ],
+    "software_engineering": [
+      "eventual consistency instead of strict immediate consistency",
+      "best-effort processing with retries",
+      "heuristics instead of complex optimization algorithms"
+    ],
+    "architecture": [
+      "approximate caching strategies",
+      "sampling instead of full data scans",
+      "graceful degradation under load"
+    ],
+    "enterprise_sap": [
+      "tolerance-based validations instead of exact matches",
+      "phased data cleansing with priority attributes first",
+      "allowing temporary inconsistencies resolved later by governance"
+    ]
+  },
+  "anti_patterns": [
+    "approximations without clear limits",
+    "normalizing poor quality as acceptable forever",
+    "lack of transparency about reduced precision"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "exact precision is costly but low-value",
+      "speed matters more than completeness",
+      "errors are reversible or low impact"
+    ],
+    "do_not_use_when": [
+      "safety, finance, or legal correctness is mandatory",
+      "errors are irreversible or catastrophic"
+    ]
+  },
+  "diagnostic_questions": [
+    "Where does the last 10% of effort bring little additional value?",
+    "Which approximations would users accept?",
+    "What precision level is actually required for decisions?"
+  ],
+  "example": {
+    "before": "Project waits months to achieve 100% data correctness before go-live.",
+    "after": "Critical data is corrected first; remaining issues are resolved incrementally post go-live."
+  }
+}

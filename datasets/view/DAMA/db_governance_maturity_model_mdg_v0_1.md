@@ -1,0 +1,464 @@
+---
+layout: default
+title: "MDG Governance Maturity Model: assess current level and choose the next upgrade (Level 1–5)"
+description: "MDG Governance Maturity Model: assess current level and choose the next upgrade (Level 1–5)"
+permalink: /datasets/view/DAMA/db_governance_maturity_model_mdg_v0_1/
+sitemap: true
+---
+
+<div class="dataset-hero">
+  <p class="eyebrow">Dataset entry</p>
+  <h1 class="dataset-hero__title">MDG Governance Maturity Model: assess current level and choose the next upgrade (Level 1–5)</h1>
+  <div class="dataset-hero__meta">
+    <span class="pill pill--dataset">DAMA</span>
+    <span class="pill pill--type">data_governance_byte</span>
+    <span class="pill">db_governance_maturity_model_mdg_v0_1</span>
+    <span class="pill">maturity_model</span> <span class="pill">assessment</span> <span class="pill">roadmap</span> <span class="pill">mdg</span> <span class="pill">governance</span> <span class="pill">continuous_improvement</span>
+  </div>
+  <div class="dataset-actions">
+    <a class="button" href="/datasets/DAMA/db_governance_maturity_model_mdg_v0_1.json">Open JSON</a>
+    <a class="button button--secondary" href="/datasets/DAMA/">Back to list</a>
+  </div>
+</div>
+
+<div class="neub-card dataset-entry-lead">MDG Governance Maturity Model: assess current level and choose the next upgrade (Level 1–5)</div>
+
+<div class="dataset-grid dataset-grid--wide">
+  <div class="neub-card">
+    <h2>Attribution</h2>
+    <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>
+    <p>Canonical: <a href="https://dkharlanau.github.io/datasets/DAMA/db_governance_maturity_model_mdg_v0_1.json">https://dkharlanau.github.io/datasets/DAMA/db_governance_maturity_model_mdg_v0_1.json</a></p>
+    <p><a class="link-arrow" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+  </div>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "MDG Governance Maturity Model: assess current level and choose the next upgrade (Level 1–5)",
+  "description": "MDG Governance Maturity Model: assess current level and choose the next upgrade (Level 1–5)",
+  "url": "https://dkharlanau.github.io/datasets/view/DAMA/db_governance_maturity_model_mdg_v0_1/",
+  "isAccessibleForFree": true,
+  "creator": {
+    "@type": "Person",
+    "@id": "https://dkharlanau.github.io/#dkharlanau",
+    "name": "Dzmitryi Kharlanau",
+    "url": "https://dkharlanau.github.io/"
+  },
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://dkharlanau.github.io/datasets/DAMA/db_governance_maturity_model_mdg_v0_1.json"
+    }
+  ],
+  "keywords": [
+    "maturity_model",
+    "assessment",
+    "roadmap",
+    "mdg",
+    "governance",
+    "continuous_improvement"
+  ]
+}
+</script>
+
+<div class="dataset-json">
+<details open>
+<summary>JSON (copy / reuse)</summary>
+
+<pre><code class="language-json">{
+  "id": "db_governance_maturity_model_mdg_v0_1",
+  "type": "decision_block",
+  "title": "MDG Governance Maturity Model: assess current level and choose the next upgrade (Level 1–5)",
+  "dama_alignment": {
+    "knowledge_areas": [
+      "Data Governance",
+      "Data Quality Management",
+      "Metadata Management",
+      "Reference &amp; Master Data",
+      "Data Integration &amp; Interoperability"
+    ],
+    "principles": [
+      "Maturity is measured by behavior and outcomes, not documents",
+      "Each maturity level has a specific failure mode",
+      "Next upgrades should target the bottleneck of the current level"
+    ]
+  },
+  "scope": {
+    "domains": [
+      "Business Partner",
+      "Material",
+      "Reference Data"
+    ],
+    "processes": [
+      "Governance Assessment",
+      "Operating Model Improvement",
+      "Controls &amp; Workflow Evolution",
+      "Metrics and Drift Management"
+    ],
+    "systems": [
+      "MDG",
+      "S/4HANA",
+      "Downstream Consumers",
+      "Reporting/Monitoring"
+    ]
+  },
+  "tags": [
+    "maturity_model",
+    "assessment",
+    "roadmap",
+    "mdg",
+    "governance",
+    "continuous_improvement"
+  ],
+  "decision_question": "What is our current MDG governance maturity level, what is the main bottleneck, and what exact upgrades should we implement next to move one level up without over-engineering?",
+  "context": {
+    "when_to_use": [
+      "Post go-live (Day-2/Day-100) and governance feels unstable",
+      "Stakeholders argue about 'how mature we are'",
+      "You need a roadmap for the next quarter(s)",
+      "Drift indicators are rising and you need structured improvement"
+    ],
+    "preconditions": [
+      "At least minimal governance scope exists (some workflows/rules)",
+      "You can observe basic process signals (cycle times, exceptions, bypass, incidents)"
+    ]
+  },
+  "inputs": {
+    "signals_observable": [
+      "Bypass and manual fixes occur",
+      "Rules exist but are inconsistent or undocumented",
+      "Approvals are unpredictable or depend on individuals",
+      "Exceptions are common and not time-bound",
+      "Incidents recur and root causes are not addressed"
+    ],
+    "constraints": [
+      "Do not jump multiple maturity levels at once",
+      "Maturity improvements require ownership and cadence, not only IT changes",
+      "Different domains may be at different levels"
+    ],
+    "stakeholders": [
+      "Data Governance Lead",
+      "Data Owners",
+      "Data Stewards",
+      "MDG/IT Ops",
+      "Business Process Owners",
+      "Architecture/Integration"
+    ]
+  },
+  "options": [
+    {
+      "id": "A",
+      "name": "Use maturity model to pick next-level upgrades (recommended)",
+      "summary": "Assess current level using observable criteria; implement the smallest set of upgrades that move you one level up.",
+      "tradeoffs": [
+        "Requires honest measurement and transparency",
+        "Some stakeholders resist being labeled 'low maturity'"
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Treat maturity as documentation (avoid)",
+      "summary": "Create policies and decks but do not change operations and metrics.",
+      "tradeoffs": [
+        "Looks good",
+        "Does not reduce bypass or incidents"
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Over-engineer to Level 5 immediately (avoid)",
+      "summary": "Implement complex councils, heavy tooling, and many rules at once.",
+      "tradeoffs": [
+        "Feels comprehensive",
+        "Creates friction and governance collapse"
+      ]
+    }
+  ],
+  "decision_logic": {
+    "assessment_rules": [
+      {
+        "rule": "Assess per domain and per Tier 1 attribute groups",
+        "details": "Do not average everything; maturity differs by domain and critical attributes."
+      },
+      {
+        "rule": "Use observable evidence",
+        "details": "Cycle times, exceptions, bypass, incident repeat rates, ownership coverage, rule registry coverage."
+      }
+    ],
+    "levels": [
+      {
+        "level": 1,
+        "name": "Ad-hoc / firefighting",
+        "signature": [
+          "Data is fixed wherever it breaks (often downstream)",
+          "No stable ownership; approvals are informal",
+          "Incidents repeat; manual corrections are normal"
+        ],
+        "dominant_failure_mode": "Shadow maintenance becomes the real system of record.",
+        "key_indicators": [
+          "High bypass_rate",
+          "High manual_post_replication_fix_rate",
+          "No SLA/cadence",
+          "No rule registry"
+        ],
+        "next_upgrades_to_level_2": [
+          "Define RACI + minimum decision rights for Tier 1 attribute groups",
+          "Introduce exception mechanism with expiry (even simple)",
+          "Assign queue ownership and basic runbooks",
+          "Start tracking minimum leading indicators (bypass, exceptions, approval p90)"
+        ]
+      },
+      {
+        "level": 2,
+        "name": "Defined basics (still fragile)",
+        "signature": [
+          "Workflows exist, but inconsistent and person-dependent",
+          "Rules exist, but many are copied and cause friction",
+          "Exceptions exist but may be overused"
+        ],
+        "dominant_failure_mode": "Rules and approvals create friction → bypass rises.",
+        "key_indicators": [
+          "approval_cycle_time_p90 unstable",
+          "exception_rate rising",
+          "rework_loops_per_cr high",
+          "ownership exists on paper"
+        ],
+        "next_upgrades_to_level_3": [
+          "Attribute-group ownership (beyond domain RACI)",
+          "Risk-tier routing for approvals and rule severities",
+          "Minimal glossary linked to critical rules",
+          "Introduce rule lifecycle reviews (keep/kill/simplify)"
+        ]
+      },
+      {
+        "level": 3,
+        "name": "Operationally managed",
+        "signature": [
+          "Governance has cadence and a backlog (Run + Improve)",
+          "Owners are active for critical attribute groups",
+          "Rules are justified and monitored"
+        ],
+        "dominant_failure_mode": "Slow drift over months if monitoring and lifecycle are weak.",
+        "key_indicators": [
+          "Stable or improving bypass_rate",
+          "Exceptions time-bound and reviewed",
+          "Backlog burn rate exists",
+          "Rule registry coverage good for Tier 1"
+        ],
+        "next_upgrades_to_level_4": [
+          "Governance drift detection with thresholds and response playbook",
+          "Metrics framework with response rules",
+          "Replication error taxonomy and ownership enforced",
+          "Domain/attribute prioritization to prevent scope creep"
+        ]
+      },
+      {
+        "level": 4,
+        "name": "Measured &amp; resilient",
+        "signature": [
+          "Leading indicators prevent crises",
+          "Drift response is controlled, not reactive",
+          "Bulk changes follow risk-tier controls",
+          "Definitions and rules evolve predictably"
+        ],
+        "dominant_failure_mode": "Complexity growth (too many consumers, rules, and edge cases).",
+        "key_indicators": [
+          "Drift alerts trigger interventions and improvements",
+          "Repeat exceptions and repeat incidents trend down",
+          "Duplicate rule count decreases",
+          "High Tier 1 stability with low Tier 3 friction"
+        ],
+        "next_upgrades_to_level_5": [
+          "Consumer-driven governance (data products mindset)",
+          "Automation readiness: recommendations + human-in-the-loop",
+          "Continuous improvement loops across domains (standardized playbooks)",
+          "Formal measurement of decision quality and consistency"
+        ]
+      },
+      {
+        "level": 5,
+        "name": "Adaptive / optimized",
+        "signature": [
+          "Governance is embedded in operations and product thinking",
+          "Decisions are consistent across regions and changes",
+          "Automation supports stewards/owners (recommendations, detection)"
+        ],
+        "dominant_failure_mode": "Over-automation or optimization that ignores human context.",
+        "key_indicators": [
+          "Very low bypass and manual fixes",
+          "High decision consistency rate",
+          "Strong consumer satisfaction and predictable change throughput"
+        ],
+        "next_upgrades": [
+          "Keep optimizing based on consumer outcomes and risk changes",
+          "Maintain human oversight for high-risk decisions"
+        ]
+      }
+    ],
+    "preferred_option_rules": [
+      {
+        "if": [
+          "Stakeholders want a roadmap and alignment",
+          "You see drift or repeated incidents"
+        ],
+        "then": "Choose Option A: assess honestly per domain and implement only next-level upgrades."
+      },
+      {
+        "if": [
+          "Someone wants to jump to complex governance immediately"
+        ],
+        "then": "Reject Option C; enforce one-level-up rule to avoid friction and bypass."
+      }
+    ],
+    "anti_patterns_to_avoid": [
+      "Calling yourself Level 4 because policies exist",
+      "Implementing Level 5 automation while Level 2 basics are broken",
+      "Averaging maturity across domains (hides critical weaknesses)",
+      "Improving everything at once (no bottleneck focus)"
+    ]
+  },
+  "expected_outcomes": {
+    "positive": [
+      "Shared language for maturity and priorities",
+      "Clear roadmap with minimal but effective upgrades",
+      "Reduced drift and fewer repeated incidents over time",
+      "Better justification for governance investments"
+    ],
+    "possible_negative": [
+      "Political resistance to maturity assessment",
+      "Requires evidence and transparency"
+    ]
+  },
+  "controls_enforcement": {
+    "policies": [
+      {
+        "id": "pol_maturity_is_evidence_based_v0_1",
+        "statement": "Governance maturity must be assessed using observable outcomes and operational evidence, not documentation volume."
+      }
+    ],
+    "standards": [
+      {
+        "id": "std_one_level_up_upgrade_v0_1",
+        "statement": "Improvements must target the next maturity level bottleneck; avoid multi-level jumps."
+      }
+    ],
+    "technical_controls": [
+      "Minimum evidence dashboard for assessment (leading + lagging indicators)",
+      "Rule registry and glossary coverage reports",
+      "Operating cadence records and backlog tracking",
+      "Drift playbook execution log"
+    ]
+  },
+  "owner_rights_raci": {
+    "accountable": [
+      "Data Governance Lead / Sponsor"
+    ],
+    "responsible": [
+      "Data Steward Lead",
+      "MDG/IT Ops Lead"
+    ],
+    "consulted": [
+      "Data Owners",
+      "Business Process Owners",
+      "Architecture/Integration"
+    ],
+    "informed": [
+      "Requesters",
+      "Support Teams",
+      "Downstream System Owners"
+    ]
+  },
+  "metrics": {
+    "assessment_core": [
+      {
+        "name": "bypass_rate",
+        "definition": "Changes outside governance / total changes"
+      },
+      {
+        "name": "exception_rate",
+        "definition": "Exceptions per 100 CRs"
+      },
+      {
+        "name": "approval_cycle_time_p90",
+        "definition": "90th percentile approval time"
+      },
+      {
+        "name": "manual_post_replication_fix_rate",
+        "definition": "Manual fixes after replication"
+      },
+      {
+        "name": "repeat_incident_rate",
+        "definition": "Recurring incident categories within 30/60 days"
+      },
+      {
+        "name": "rule_registry_coverage_tier1",
+        "definition": "% of Tier 1 rules with registry entries and owners"
+      },
+      {
+        "name": "glossary_coverage_tier1",
+        "definition": "% of Tier 1 attribute groups with definitions and owners"
+      }
+    ],
+    "target_hint": "Use trends and thresholds; assess per domain and Tier 1 attribute groups rather than global averages."
+  },
+  "examples_generic": [
+    {
+      "scenario": "BP domain has workflows but approvals are inconsistent; exceptions are common; users bypass for urgent orders.",
+      "application": "Assess as Level 2; upgrade to Level 3 by implementing attribute-group ownership, risk-tier routing, and minimal glossary links."
+    },
+    {
+      "scenario": "Material domain is stable; drift is detected early via leading indicators; bulk changes are controlled.",
+      "application": "Assess as Level 4; move toward Level 5 by adding consumer-driven governance and automation readiness with human oversight."
+    }
+  ],
+  "version": "0.1",
+  "status": "draft",
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "DAMA",
+    "source_project": "cv-ai",
+    "source_path": "DAMA/db_governance_maturity_model_mdg_v0_1.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/DAMA/db_governance_maturity_model_mdg_v0_1.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "data_governance_byte",
+    "entity_subtype": "version:0.1",
+    "summary": "MDG Governance Maturity Model: assess current level and choose the next upgrade (Level 1–5)"
+  }
+}
+</code></pre>
+
+</details>
+</div>

@@ -4,9 +4,12 @@ Personal brand site for Dzmitryi Kharlanau, built on Jekyll with a light Neubrut
 
 ## Quick start
 
-1. Ensure Ruby/Bundler are installed, then add a Gemfile (see GitHub Pages defaults) and run `bundle install`.
-2. Serve locally with `bundle exec jekyll serve`.
-3. Deploy via GitHub Pages (repository already follows the expected structure).
+This repo targets Ruby `>= 3.2.3` (see `.ruby-version`).
+
+1. Ensure Ruby is installed and active (`ruby -v` should be `>=` the version in `.ruby-version`).
+2. Install gems with `./bin/setup` (or `bundle install`).
+3. Serve locally with `bundle exec jekyll serve`.
+4. Deploy via GitHub Pages (repository already follows the expected structure).
 
 ## Content model
 

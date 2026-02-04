@@ -7,32 +7,37 @@
 
 {% assign computed_title = page.seo_title %}
 {% if computed_title == nil or computed_title == '' %}
-  {% if is_home %}
-    {% assign computed_title = 'Dzmitryi Kharlanau — System Analyst & SAP Transformation Consultant' %}
-  {% elsif is_cv %}
-    {% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP Transformation & Integration' %}
-  {% elsif is_note %}
-    {% assign computed_title = page.title | append: ' — Dzmitryi Kharlanau | SAP Transformation & Integration' %}
-  {% else %}
-    {% assign computed_title = page.title | default: site.title %}
-  {% endif %}
+{% if is_home %}
+{% assign computed_title = 'Dzmitryi Kharlanau — System Analyst & SAP Transformation Consultant' %}
+{% elsif is_cv %}
+{% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP Transformation & Integration' %}
+{% elsif is_note %}
+{% assign computed_title = page.title | append: ' — Dzmitryi Kharlanau | SAP Transformation & Integration' %}
+{% else %}
+{% assign computed_title = page.title | default: site.title %}
+{% endif %}
 {% endif %}
 
 {% assign default_description = 'SAP · Systems & Integration · Automation for Lower TCO' %}
 {% if is_home %}
-  {% assign default_description = 'System Analyst & SAP Transformation Consultant — senior SAP solution leader with 12+ years across Order-to-Cash, logistics, and data; delivering clean-core S/4HANA, resilient integrations, and intelligent automation.' %}
+{% assign default_description = 'System Analyst & SAP Transformation Consultant — Senior SAP solution consultant with
+12+
+years across Order-to-Cash, logistics, and data; delivering clean-core S/4HANA, resilient integrations, and intelligent
+automation.' %}
 {% elsif is_note and page.description %}
-  {% assign default_description = page.description %}
+{% assign default_description = page.description %}
 {% elsif is_cv %}
-  {% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau — System Analyst & SAP Transformation Consultant.' %}
+{% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau — System Analyst & SAP
+Transformation Consultant.' %}
 {% endif %}
 {% assign content_fallback = page.summary | default: page.excerpt %}
-{% assign meta_description = page.description | default: content_fallback | default: default_description | strip_html | normalize_whitespace %}
+{% assign meta_description = page.description | default: content_fallback | default: default_description | strip_html |
+normalize_whitespace %}
 
 <title>{{ computed_title | strip_html | normalize_whitespace }}</title>
 
 <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5KDHJLQ3');</script>
+<script>(function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f); })(window, document, 'script', 'dataLayer', 'GTM-5KDHJLQ3');</script>
 <!-- End Google Tag Manager -->
 
 <meta charset="utf-8" />
@@ -45,10 +50,16 @@
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
 
 <link rel="canonical" href="{{ canonical_url }}" />
-<link rel="alternate" type="application/rss+xml" title="Dzmitryi Kharlanau — Updates" href="{{ '/changelog/index.xml' | absolute_url }}" />
+<link rel="alternate" type="application/rss+xml" title="Dzmitryi Kharlanau — Updates"
+  href="{{ '/changelog/index.xml' | absolute_url }}" />
 <link rel="alternate" type="application/json" href="{{ '/ai/catalog.json' | absolute_url }}" title="Data Catalog" />
+<link rel="ai:catalog" href="{{ '/ai/catalog.json' | absolute_url }}" />
 <link rel="alternate" type="application/json" href="{{ '/ai/resume.json' | absolute_url }}" title="Resume JSON" />
 <link rel="alternate" type="application/yaml" href="{{ '/ai/resume.yml' | absolute_url }}" title="Resume YAML" />
+<link rel="alternate" type="application/json" href="{{ '/datasets/manifest.json' | absolute_url }}"
+  title="Datasets Manifest" />
+<link rel="alternate" type="application/json" href="{{ '/datasets/schema.json' | absolute_url }}"
+  title="Datasets Schema" />
 <link rel="sitemap" type="application/xml" href="{{ '/sitemap.xml' | absolute_url }}" />
 <link rel="sitemap" type="application/xml" href="{{ '/sitemap-data.xml' | absolute_url }}" />
 
@@ -61,7 +72,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="preload" as="image" href="{{ '/assets/img/DzmitryiKharlanau.webp' | absolute_url }}" imagesrcset="{{ '/assets/img/DzmitryiKharlanau.avif' | absolute_url }} 1x" />
+<link rel="preload" as="image" href="{{ '/assets/img/DzmitryiKharlanau.webp' | absolute_url }}"
+  imagesrcset="{{ '/assets/img/DzmitryiKharlanau.avif' | absolute_url }} 1x" />
 <link rel="me" href="https://www.linkedin.com/in/dkharlanau" />
 
 <meta property="og:type" content="website" />
@@ -74,6 +86,8 @@
 <meta name="twitter:site" content="@{{ site.twitter.username | default: 'dkharlanau' }}" />
 
 <link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}" />
+<link rel="stylesheet" href="{{ '/assets/material3.css' | relative_url }}" />
+<script src="{{ '/assets/dataset-render.js' | relative_url }}" defer></script>
 
 <script type="application/ld+json">
 {
@@ -98,7 +112,7 @@
   "url": "https://dkharlanau.github.io",
   "image": "https://dkharlanau.github.io/assets/img/DzmitryiKharlanau.png",
   "jobTitle": "System Analyst & SAP Transformation Consultant",
-  "description": "Senior SAP solution leader with 12+ years across Order-to-Cash, logistics, and data; modernising S/4HANA landscapes, integrations, and automation",
+  "description": "Senior SAP solution consultant with 12+ years across Order-to-Cash, logistics, and data; modernising S/4HANA landscapes, integrations, and automation",
   "worksFor": {
     "@type": "Organization",
     "name": "EPAM Systems"

@@ -1,0 +1,72 @@
+{
+  "id": "TRIZ-07",
+  "title": "Nested Doll",
+  "intent": "Manage complexity by placing systems or components inside others, creating clear containment and layered responsibility.",
+  "triz_principle": {
+    "number": 7,
+    "name": "Nested Doll",
+    "definition": "Place one object inside another; make a system of nested structures."
+  },
+  "problem_understanding": {
+    "core_contradiction": "We need to handle growing complexity, but exposing everything at the same level overwhelms teams and systems.",
+    "why_this_hurts": "Flat architectures force everyone to understand too much; changes ripple unpredictably across layers.",
+    "typical_signals": [
+      "everything is visible to everyone",
+      "no clear abstraction levels",
+      "developers must understand the whole system to change a part",
+      "configuration and logic mixed together"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Introduce containment and layers so each level deals only with its own concerns.",
+    "key_rule": "Each layer exposes a simple interface and hides its internal complexity.",
+    "how_it_resolves_the_contradiction": "Local reasoning becomes possible while the system still works as a coherent whole."
+  },
+  "application_patterns": {
+    "consulting": [
+      "embed local initiatives inside a global program framework",
+      "define strategy → policy → execution layers",
+      "package complex decisions into reusable playbooks"
+    ],
+    "software_engineering": [
+      "wrap complex logic into modules with simple APIs",
+      "use facades to hide internal workflows",
+      "nest configurations: defaults → overrides → local tweaks"
+    ],
+    "architecture": [
+      "layered architecture with clear responsibility per layer",
+      "platform → product → feature nesting",
+      "infrastructure abstractions over cloud/provider specifics"
+    ],
+    "enterprise_sap": [
+      "global templates containing local extensions",
+      "MDG change requests wrapping object-specific validations",
+      "configuration hierarchies: global → company code → plant"
+    ]
+  },
+  "anti_patterns": [
+    "leaky abstractions between layers",
+    "deep nesting with no clear ownership",
+    "layers that only forward calls without adding value"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "system understanding requires too much context",
+      "changes propagate unpredictably",
+      "you need safe local variation within global rules"
+    ],
+    "do_not_use_when": [
+      "nesting adds indirection without reducing complexity",
+      "performance-critical paths cannot tolerate extra layers"
+    ]
+  },
+  "diagnostic_questions": [
+    "What complexity could be hidden behind a stable interface?",
+    "Which responsibilities should belong to a higher or lower layer?",
+    "Where do teams need protection from internal details?"
+  ],
+  "example": {
+    "before": "Business rules, configuration, and technical logic are mixed in the same code paths.",
+    "after": "Business rules are wrapped in a rule module, configuration is layered, and technical execution is hidden behind a facade."
+  }
+}

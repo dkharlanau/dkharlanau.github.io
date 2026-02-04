@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Decision Rights &amp; RACI for Master Data (Who decides what?) | DAMA</title>
+  <meta name="description" content="Decision Rights &amp; RACI for Master Data (Who decides what?)" />
+  <link rel="canonical" href="https://dkharlanau.github.io/docs/dama/db_governance_decision_rights_v0_1.html" />
+  <meta property="og:title" content="Decision Rights &amp; RACI for Master Data (Who decides what?)" />
+  <meta property="og:description" content="Decision Rights &amp; RACI for Master Data (Who decides what?)" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://dkharlanau.github.io/docs/dama/db_governance_decision_rights_v0_1.html" />
+  <meta property="og:site_name" content="DAMA" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Decision Rights &amp; RACI for Master Data (Who decides what?)" />
+  <meta name="twitter:description" content="Decision Rights &amp; RACI for Master Data (Who decides what?)" />
+  <link rel="stylesheet" href="./assets/dama.css" />
+  <script type="application/ld+json">{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@type&quot;:&quot;Article&quot;,&quot;headline&quot;:&quot;Decision Rights &amp; RACI for Master Data (Who decides what?)&quot;,&quot;description&quot;:&quot;Decision Rights &amp; RACI for Master Data (Who decides what?)&quot;,&quot;keywords&quot;:&quot;accountability, governance, operating_model, ownership, raci&quot;,&quot;datePublished&quot;:&quot;2026-02-03T14:33:32+00:00&quot;,&quot;dateModified&quot;:&quot;2026-02-03T15:29:02+00:00&quot;,&quot;url&quot;:&quot;https://dkharlanau.github.io/docs/dama/db_governance_decision_rights_v0_1.html&quot;,&quot;author&quot;:{&quot;@type&quot;:&quot;Person&quot;,&quot;name&quot;:&quot;Dzmitryi Kharlanau&quot;}}</script>
+</head>
+<body>
+  <div class="page">
+    
+<nav class="breadcrumb">
+  <a href="./index.html">DAMA</a>
+  <span>/</span>
+  <span>Decision Rights &amp; RACI for Master Data (Who decides what?)</span>
+</nav>
+    <header>
+      <p class="eyebrow">DAMA Decision Block</p>
+      <h1>Decision Rights &amp; RACI for Master Data (Who decides what?)</h1>
+      <p class="lead">Decision Rights &amp; RACI for Master Data (Who decides what?)</p>
+      <div class="meta">
+        <span>Creator: Dzmitryi Kharlanau</span>
+        <span>Created: 2026-02-03T14:33:32+00:00</span>
+        <span>Updated: 2026-02-03T15:29:02+00:00</span>
+      </div>
+      
+<div class="tags">
+  <a class="tag" href="./tags/accountability.html">accountability</a><a class="tag" href="./tags/governance.html">governance</a><a class="tag" href="./tags/operatingmodel.html">operating_model</a><a class="tag" href="./tags/ownership.html">ownership</a><a class="tag" href="./tags/raci.html">raci</a>
+</div>
+    </header>
+
+    <section>
+      
+<h2 id="decision-question">
+  <a class="anchor" href="#decision-question">#</a>
+  Decision Question
+</h2>
+      <p>How do we assign decision rights and responsibilities for master data changes so governance is enforceable and does not drift into bypass/shadow processes?</p>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>&quot;How do we assign decision rights and responsibilities for master data changes so governance is enforceable and does not drift into bypass/shadow processes?&quot;</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="context">
+  <a class="anchor" href="#context">#</a>
+  Context
+</h2>
+      <dl><dt>when_to_use</dt><dd><ul><li>Starting or reworking MDG/MDM operating model</li><li>Approvals are slow or inconsistent</li><li>Business bypasses governance by changing data directly downstream</li><li>Multiple teams argue about who &#39;owns&#39; a field</li></ul></dd><dt>preconditions</dt><dd><ul><li>Domains are defined (e.g., BP, Material, Reference Data)</li><li>At least one business function is willing to own outcomes (not just tasks)</li></ul></dd></dl>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;when_to_use&quot;: [
+    &quot;Starting or reworking MDG/MDM operating model&quot;,
+    &quot;Approvals are slow or inconsistent&quot;,
+    &quot;Business bypasses governance by changing data directly downstream&quot;,
+    &quot;Multiple teams argue about who &#39;owns&#39; a field&quot;
+  ],
+  &quot;preconditions&quot;: [
+    &quot;Domains are defined (e.g., BP, Material, Reference Data)&quot;,
+    &quot;At least one business function is willing to own outcomes (not just tasks)&quot;
+  ]
+}</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="inputs">
+  <a class="anchor" href="#inputs">#</a>
+  Inputs
+</h2>
+      <dl><dt>signals_observable</dt><dd><ul><li>Approval cycle time (p50/p90) exceeds agreed SLA or is undefined</li><li>Rejections occur without meaningful comments or clear criteria</li><li>Same attribute is maintained by multiple teams/systems</li><li>Downstream manual fixes are common after replication</li><li>Recurring disputes: &#39;not my responsibility&#39; for data defects</li></ul></dd><dt>constraints</dt><dd><ul><li>Segregation of duties (SoD) requirements (if applicable)</li><li>Regulatory / audit requirements for specific attributes</li><li>Business capacity: named owners must have time to approve</li><li>System landscape complexity (MDG hub, S/4, legacy consumers)</li></ul></dd><dt>stakeholders</dt><dd><ul><li>Data Owner (business accountable role)</li><li>Data Steward (operational quality role)</li><li>IT/MDG Team (custodian/enabler)</li><li>Architecture/Integration</li><li>Compliance/Audit (if required)</li></ul></dd></dl>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;signals_observable&quot;: [
+    &quot;Approval cycle time (p50/p90) exceeds agreed SLA or is undefined&quot;,
+    &quot;Rejections occur without meaningful comments or clear criteria&quot;,
+    &quot;Same attribute is maintained by multiple teams/systems&quot;,
+    &quot;Downstream manual fixes are common after replication&quot;,
+    &quot;Recurring disputes: &#39;not my responsibility&#39; for data defects&quot;
+  ],
+  &quot;constraints&quot;: [
+    &quot;Segregation of duties (SoD) requirements (if applicable)&quot;,
+    &quot;Regulatory / audit requirements for specific attributes&quot;,
+    &quot;Business capacity: named owners must have time to approve&quot;,
+    &quot;System landscape complexity (MDG hub, S/4, legacy consumers)&quot;
+  ],
+  &quot;stakeholders&quot;: [
+    &quot;Data Owner (business accountable role)&quot;,
+    &quot;Data Steward (operational quality role)&quot;,
+    &quot;IT/MDG Team (custodian/enabler)&quot;,
+    &quot;Architecture/Integration&quot;,
+    &quot;Compliance/Audit (if required)&quot;
+  ]
+}</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="options">
+  <a class="anchor" href="#options">#</a>
+  Options
+</h2>
+      <div class="cards">
+        
+<div class="card">
+  <h3>A. Owner-based model (recommended default)</h3>
+  <p>Assign a single accountable Data Owner per domain; Stewards execute quality; IT enforces controls.</p>
+  <h4>Tradeoffs</h4>
+  <ul><li>Requires real business ownership (hard to negotiate)</li><li>Owner must commit to SLA to avoid bottlenecks</li></ul>
+  
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;id&quot;: &quot;A&quot;,
+  &quot;name&quot;: &quot;Owner-based model (recommended default)&quot;,
+  &quot;summary&quot;: &quot;Assign a single accountable Data Owner per domain; Stewards execute quality; IT enforces controls.&quot;,
+  &quot;tradeoffs&quot;: [
+    &quot;Requires real business ownership (hard to negotiate)&quot;,
+    &quot;Owner must commit to SLA to avoid bottlenecks&quot;
+  ]
+}</code></pre>
+</details>
+</div>
+<div class="card">
+  <h3>B. Steward-led approvals (temporary / transitional)</h3>
+  <p>Data Steward approves most changes; Data Owner approves only high-impact changes via thresholds.</p>
+  <h4>Tradeoffs</h4>
+  <ul><li>Risk of weak accountability (quality becomes &#39;IT problem&#39;)</li><li>Owners disengage; governance may drift</li></ul>
+  
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;id&quot;: &quot;B&quot;,
+  &quot;name&quot;: &quot;Steward-led approvals (temporary / transitional)&quot;,
+  &quot;summary&quot;: &quot;Data Steward approves most changes; Data Owner approves only high-impact changes via thresholds.&quot;,
+  &quot;tradeoffs&quot;: [
+    &quot;Risk of weak accountability (quality becomes &#39;IT problem&#39;)&quot;,
+    &quot;Owners disengage; governance may drift&quot;
+  ]
+}</code></pre>
+</details>
+</div>
+<div class="card">
+  <h3>C. Committee approvals (avoid unless mandatory)</h3>
+  <p>Council/committee approves changes by consensus or meetings.</p>
+  <h4>Tradeoffs</h4>
+  <ul><li>High cycle time and high bypass risk</li><li>Hard to scale; ownership becomes diluted</li></ul>
+  
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;id&quot;: &quot;C&quot;,
+  &quot;name&quot;: &quot;Committee approvals (avoid unless mandatory)&quot;,
+  &quot;summary&quot;: &quot;Council/committee approves changes by consensus or meetings.&quot;,
+  &quot;tradeoffs&quot;: [
+    &quot;High cycle time and high bypass risk&quot;,
+    &quot;Hard to scale; ownership becomes diluted&quot;
+  ]
+}</code></pre>
+</details>
+</div>
+      </div>
+    </section>
+
+    <section>
+      
+<h2 id="decision-logic">
+  <a class="anchor" href="#decision-logic">#</a>
+  Decision Logic
+</h2>
+      <h3>Preferred Option Rules</h3>
+      
+<div class="rule">
+  <p class="rule-title">If</p>
+  <ul><li>There is recurring bypass/shadow maintenance</li><li>Approval cycle time is a top complaint</li><li>Ownership is unclear or disputed</li></ul>
+  <p class="rule-title">Then</p>
+  <p>Choose Option A and define decision rights per attribute group with one accountable owner.</p>
+</div>
+<div class="rule">
+  <p class="rule-title">If</p>
+  <ul><li>Business owners are not yet ready to take full load</li><li>You need a fast stabilization phase (e.g., migration/cutover)</li></ul>
+  <p class="rule-title">Then</p>
+  <p>Use Option B with explicit thresholds and a deadline to transition to Option A.</p>
+</div>
+<div class="rule">
+  <p class="rule-title">If</p>
+  <ul><li>Regulation requires multi-party approval</li><li>You can prove capacity and SLA adherence</li></ul>
+  <p class="rule-title">Then</p>
+  <p>Option C only for the regulated subset of attributes, not as a global model.</p>
+</div>
+      <h3>Anti-patterns to Avoid</h3>
+      <ul><li>Approval without ownership (many approvers, nobody accountable)</li><li>IT becomes de-facto owner of business semantics</li><li>Undefined exception path → users bypass governance</li></ul>
+      <h3>Exceptions Flow</h3>
+      <ul><li>Define a &#39;fast-track&#39; exception for urgent operational cases</li><li>Every exception must have: reason, accountable approver, expiry date, and post-review</li><li>Exception quotas (optional): if exceptions exceed threshold → governance redesign trigger</li></ul>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;preferred_option_rules&quot;: [
+    {
+      &quot;if&quot;: [
+        &quot;There is recurring bypass/shadow maintenance&quot;,
+        &quot;Approval cycle time is a top complaint&quot;,
+        &quot;Ownership is unclear or disputed&quot;
+      ],
+      &quot;then&quot;: &quot;Choose Option A and define decision rights per attribute group with one accountable owner.&quot;
+    },
+    {
+      &quot;if&quot;: [
+        &quot;Business owners are not yet ready to take full load&quot;,
+        &quot;You need a fast stabilization phase (e.g., migration/cutover)&quot;
+      ],
+      &quot;then&quot;: &quot;Use Option B with explicit thresholds and a deadline to transition to Option A.&quot;
+    },
+    {
+      &quot;if&quot;: [
+        &quot;Regulation requires multi-party approval&quot;,
+        &quot;You can prove capacity and SLA adherence&quot;
+      ],
+      &quot;then&quot;: &quot;Option C only for the regulated subset of attributes, not as a global model.&quot;
+    }
+  ],
+  &quot;anti_patterns_to_avoid&quot;: [
+    &quot;Approval without ownership (many approvers, nobody accountable)&quot;,
+    &quot;IT becomes de-facto owner of business semantics&quot;,
+    &quot;Undefined exception path → users bypass governance&quot;
+  ],
+  &quot;exceptions_flow&quot;: [
+    &quot;Define a &#39;fast-track&#39; exception for urgent operational cases&quot;,
+    &quot;Every exception must have: reason, accountable approver, expiry date, and post-review&quot;,
+    &quot;Exception quotas (optional): if exceptions exceed threshold → governance redesign trigger&quot;
+  ]
+}</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="controls-enforcement">
+  <a class="anchor" href="#controls-enforcement">#</a>
+  Controls &amp; Enforcement
+</h2>
+      <h3>Policies</h3>
+      
+<table>
+  <thead>
+    <tr><th>id</th><th>statement</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>pol_ownership_required_v0_1</td><td>Every governed attribute must have one accountable Data Owner and one operational Data Steward.</td></tr>
+  </tbody>
+</table>
+      <h3>Standards</h3>
+      
+<table>
+  <thead>
+    <tr><th>id</th><th>statement</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>std_raci_minimum_v0_1</td><td>For each domain, maintain a RACI matrix at attribute-group level (not just object level).</td></tr>
+  </tbody>
+</table>
+      <h3>Technical Controls</h3>
+      <ul><li>Workflow routing based on domain + attribute group</li><li>Mandatory justification fields for critical changes</li><li>Mandatory comment on rejection</li><li>Escalation after SLA breach</li></ul>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;policies&quot;: [
+    {
+      &quot;id&quot;: &quot;pol_ownership_required_v0_1&quot;,
+      &quot;statement&quot;: &quot;Every governed attribute must have one accountable Data Owner and one operational Data Steward.&quot;
+    }
+  ],
+  &quot;standards&quot;: [
+    {
+      &quot;id&quot;: &quot;std_raci_minimum_v0_1&quot;,
+      &quot;statement&quot;: &quot;For each domain, maintain a RACI matrix at attribute-group level (not just object level).&quot;
+    }
+  ],
+  &quot;technical_controls&quot;: [
+    &quot;Workflow routing based on domain + attribute group&quot;,
+    &quot;Mandatory justification fields for critical changes&quot;,
+    &quot;Mandatory comment on rejection&quot;,
+    &quot;Escalation after SLA breach&quot;
+  ]
+}</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="metrics">
+  <a class="anchor" href="#metrics">#</a>
+  Metrics
+</h2>
+      <h3>Operational</h3>
+      
+<table>
+  <thead>
+    <tr><th>name</th><th>target_hint</th><th>definition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>approval_cycle_time_p50</td><td>Define per domain; track weekly</td><td></td></tr><tr><td>approval_cycle_time_p90</td><td>Key for pain; should not explode</td><td></td></tr><tr><td>bypass_rate</td><td></td><td>Share of changes made outside governed process</td></tr><tr><td>rejection_without_comment_rate</td><td>Near 0%</td><td></td></tr>
+  </tbody>
+</table>
+      <h3>Data Quality Dimensions</h3>
+      <ul><li>completeness</li><li>consistency</li><li>validity</li><li>uniqueness</li><li>timeliness</li></ul>
+      <h3>Governance Health</h3>
+      
+<table>
+  <thead>
+    <tr><th>name</th><th>definition</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>ownership_coverage</td><td>% of governed attributes with assigned accountable owner</td></tr><tr><td>exception_rate</td><td>Exceptions per 100 change requests</td></tr>
+  </tbody>
+</table>
+      
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;operational&quot;: [
+    {
+      &quot;name&quot;: &quot;approval_cycle_time_p50&quot;,
+      &quot;target_hint&quot;: &quot;Define per domain; track weekly&quot;
+    },
+    {
+      &quot;name&quot;: &quot;approval_cycle_time_p90&quot;,
+      &quot;target_hint&quot;: &quot;Key for pain; should not explode&quot;
+    },
+    {
+      &quot;name&quot;: &quot;bypass_rate&quot;,
+      &quot;definition&quot;: &quot;Share of changes made outside governed process&quot;
+    },
+    {
+      &quot;name&quot;: &quot;rejection_without_comment_rate&quot;,
+      &quot;target_hint&quot;: &quot;Near 0%&quot;
+    }
+  ],
+  &quot;data_quality_dimensions&quot;: [
+    &quot;completeness&quot;,
+    &quot;consistency&quot;,
+    &quot;validity&quot;,
+    &quot;uniqueness&quot;,
+    &quot;timeliness&quot;
+  ],
+  &quot;governance_health&quot;: [
+    {
+      &quot;name&quot;: &quot;ownership_coverage&quot;,
+      &quot;definition&quot;: &quot;% of governed attributes with assigned accountable owner&quot;
+    },
+    {
+      &quot;name&quot;: &quot;exception_rate&quot;,
+      &quot;definition&quot;: &quot;Exceptions per 100 change requests&quot;
+    }
+  ]
+}</code></pre>
+</details>
+    </section>
+
+    <section>
+      
+<h2 id="examples">
+  <a class="anchor" href="#examples">#</a>
+  Examples
+</h2>
+      
+<div class="example">
+  <p><strong>Scenario:</strong> BP master data changes are delayed for days; business updates directly in S/4 to ship orders.</p>
+  <p><strong>Application:</strong> Assign a Data Owner for BP domain; keep stewards operational; introduce SLA + escalation; add fast-track exception with expiry.</p>
+  
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;scenario&quot;: &quot;BP master data changes are delayed for days; business updates directly in S/4 to ship orders.&quot;,
+  &quot;application&quot;: &quot;Assign a Data Owner for BP domain; keep stewards operational; introduce SLA + escalation; add fast-track exception with expiry.&quot;
+}</code></pre>
+</details>
+</div>
+<div class="example">
+  <p><strong>Scenario:</strong> Two regions fight about who owns tax classification; changes get rejected without comments.</p>
+  <p><strong>Application:</strong> Split decision rights by attribute group; make rejection comment mandatory; define one accountable owner per group.</p>
+  
+<details class="json-block">
+  <summary>JSON snippet</summary>
+  <pre><code>{
+  &quot;scenario&quot;: &quot;Two regions fight about who owns tax classification; changes get rejected without comments.&quot;,
+  &quot;application&quot;: &quot;Split decision rights by attribute group; make rejection comment mandatory; define one accountable owner per group.&quot;
+}</code></pre>
+</details>
+</div>
+    </section>
+
+    <footer>
+      <a href="./index.html">Back to DAMA index</a>
+    </footer>
+  </div>
+</body>
+</html>

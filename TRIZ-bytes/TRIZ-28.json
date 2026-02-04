@@ -1,0 +1,72 @@
+{
+  "id": "TRIZ-28",
+  "title": "Mechanics Substitution",
+  "intent": "Replace rigid, manual, or mechanical approaches with more flexible, informational, or automated ones.",
+  "triz_principle": {
+    "number": 28,
+    "name": "Mechanics Substitution",
+    "definition": "Replace a mechanical means with sensory, informational, or automated means."
+  },
+  "problem_understanding": {
+    "core_contradiction": "We need control and reliability, but manual or rigid mechanisms are slow, error-prone, and hard to scale.",
+    "why_this_hurts": "Human-driven or hard-coded control does not adapt well to complexity, volume, or change.",
+    "typical_signals": [
+      "manual approvals and checks",
+      "hard-coded rules instead of configurable logic",
+      "human monitoring instead of metrics",
+      "operational overload as scale increases"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Substitute manual or rigid control with information-driven or automated mechanisms.",
+    "key_rule": "Automate decisions that are rule-based and observable.",
+    "how_it_resolves_the_contradiction": "Control improves while speed and scalability increase through automation and information feedback."
+  },
+  "application_patterns": {
+    "consulting": [
+      "replace manual reporting with dashboards",
+      "use metrics-driven governance instead of meetings",
+      "automate compliance checks where possible"
+    ],
+    "software_engineering": [
+      "policy-as-code instead of manual enforcement",
+      "automated quality gates in CI/CD",
+      "rule engines instead of nested conditionals"
+    ],
+    "architecture": [
+      "event-driven monitoring instead of manual supervision",
+      "automated scaling and recovery",
+      "declarative configuration over imperative scripts"
+    ],
+    "enterprise_sap": [
+      "BRF+ rules instead of custom ABAP checks",
+      "automated DQ monitoring instead of manual reviews",
+      "workflow conditions driven by data, not roles"
+    ]
+  },
+  "anti_patterns": [
+    "automating poorly understood processes",
+    "black-box automation with no transparency",
+    "automation without override or fallback"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "decisions are repetitive and rule-based",
+      "volume or speed exceeds human capacity",
+      "signals can be measured reliably"
+    ],
+    "do_not_use_when": [
+      "judgment and context are critical",
+      "rules are unstable or unclear"
+    ]
+  },
+  "diagnostic_questions": [
+    "Which manual steps are purely rule-based?",
+    "What signals could replace human judgment here?",
+    "How can automation be monitored and overridden?"
+  ],
+  "example": {
+    "before": "Manual checks and approvals are required for every standard change.",
+    "after": "Automated rules validate and approve standard changes, with humans handling exceptions only."
+  }
+}

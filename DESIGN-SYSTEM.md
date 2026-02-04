@@ -44,11 +44,13 @@ A lightweight design language for Dzmitryi Kharlanau's GitHub Pages site. Runway
 - **Radii:** 12px to 20px, with larger sections using 20px for a calm, modern profile.
 - **Elevation:** Soft, directional shadows only (no hard borders). Default `--shadow-card` and `--shadow-card-soft` provide a subtle lift without heavy outlines.
 - **Philosophy:** Prefer light shadows and tinted surfaces over strong borders; keep elevation consistent across sections.
+- **Material-inspired elevation:** Use `--shadow-elev-1`, `--shadow-elev-2`, and `--shadow-elev-3` for small, medium, and pronounced emphasis while staying understated.
 
 ## Components & Patterns
 ### Content Containers
 - `.content-box`: Primary section wrapper; uses `--color-surface`, border, `--radius-lg`, and `--shadow-subtle`.
 - Sub-cards (`.value-card`, `.program-card`, `.approach-card`, `.presence-card`) balance tints and borders to differentiate hierarchy without stacking shadows.
+- `.section-shell`: Material-inspired surface for blocks inside a page section. Use `.section-shell--tint` for a quiet alternate surface and `.section-shell--flat` when you need a section without elevation.
 
 ### Hero & Stats
 - `.hero`: Two-column grid with responsive collapse at 900px.
@@ -59,10 +61,20 @@ A lightweight design language for Dzmitryi Kharlanau's GitHub Pages site. Runway
 - `.cta`: Primary pill using `--color-accent` with hover to `--color-accent-strong`.
 - `.cta.secondary`: Transparent fill, accent border, soft-hover tint.
 - Focus states rely on `:focus-visible` outline for both keyboard and mouse accessibility.
+- `.link`: Emphasized inline link with animated underline; use `.link--muted` for low-emphasis text links.
+- `.link--pill`: Chip-like link for compact navigation and tag-style actions.
+- `.link-group`: Wrap multiple links consistently; pairs well with `.section-actions`.
 
 ### Tags & Metadata
 - `.tag`: Accent-soft chip, medium weight text, rounded to 999px.
 - `.section-kicker`: Re-usable eyebrow style to introduce sections.
+- `.breadcrumbs`: Navigation trail for hierarchical pages. Use an ordered list and `aria-current="page"` for the current location.
+
+### Dividers
+- `.divider`: Default 1px divider with spacing baked in.
+- `.divider--strong`: Higher-contrast separator for key breaks.
+- `.divider--accent`: Accent-tinted divider for emphasis.
+- `.divider--vertical`: Vertical divider for horizontal stacks.
 
 ### Cards & Grids
 - `.impact-card`: Solid surface with accent border; no gradients.
@@ -84,3 +96,42 @@ A lightweight design language for Dzmitryi Kharlanau's GitHub Pages site. Runway
 2. Prefer existing grid utilities before crafting new layouts.
 3. Keep shadows optional--introduce additional elevation only when a surface needs clear priority.
 4. Document any new component variants in this file to maintain a living system.
+
+## Usage Snippets
+### Section Shell + Actions
+```html
+<section class="section">
+  <header class="section-header">
+    <div class="section-header__meta">
+      <span class="eyebrow">Overview</span>
+      <h2 class="section-header__title">System Health</h2>
+      <p class="section-header__subtitle">Last updated 2 minutes ago</p>
+    </div>
+    <div class="section-actions">
+      <a class="link link--pill" href="#">Export</a>
+      <a class="button button--primary" href="#">Create report</a>
+    </div>
+  </header>
+  <div class="section-shell">
+    <p class="lead">Material-inspired surface for grouped content.</p>
+  </div>
+</section>
+```
+
+### Breadcrumbs
+```html
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/notes">Notes</a></li>
+    <li><span aria-current="page">Design System</span></li>
+  </ol>
+</nav>
+```
+
+### Dividers
+```html
+<hr class="divider" />
+<hr class="divider divider--strong" />
+<div class="divider divider--vertical"></div>
+```

@@ -1,0 +1,138 @@
+{
+  "id": "ams-020",
+  "title": "Knowledge Base as an Engine: Built for RAG, Not for Reading",
+  "hook": "A classic SAP KB is dead text. A modern AMS knowledge base is an execution engine for humans, bots, and AI.",
+  "idea": "If knowledge can’t be retrieved precisely under pressure, it doesn’t exist. AMS knowledge must be structured, opinionated, and machine-readable from day one.",
+  "sap_specific_problem": {
+    "what_fails_today": [
+      "Long wiki pages without decision points",
+      "Search by keywords instead of symptoms",
+      "Knowledge written once and never validated",
+      "Docs that explain SAP, not how *your* system behaves"
+    ]
+  },
+  "rag_first_principles": [
+    "Small atomic chunks beat long explanations.",
+    "Structure beats prose.",
+    "Decisions beat descriptions.",
+    "Examples beat theory."
+  ],
+  "knowledge_atoms": {
+    "incident_atom": [
+      "symptom_pattern",
+      "business_impact_type",
+      "systems_and_clients",
+      "objects_involved",
+      "first_3_checks",
+      "likely_root_causes",
+      "fix_options_ranked",
+      "rollback_or_workaround",
+      "prevention_notes",
+      "evidence_examples"
+    ],
+    "change_atom": [
+      "change_type",
+      "blast_radius",
+      "pre_checks",
+      "test_cases",
+      "verification_steps",
+      "rollback_plan",
+      "known_side_effects"
+    ],
+    "decision_atom": [
+      "situation",
+      "options",
+      "tradeoffs",
+      "recommended_choice",
+      "when_not_to_do_it"
+    ]
+  },
+  "sap_taxonomy": {
+    "dimensions": [
+      "Business flow (OTC, P2P, RTR, MDM)",
+      "Failure mode (data, auth, integration, logic, performance)",
+      "Object type (BP, material, order, IDoc, job)",
+      "Risk level (low/medium/high)",
+      "Change sensitivity (stable/volatile)"
+    ],
+    "rule": "Every knowledge atom must be tagged across at least 3 dimensions."
+  },
+  "knowledge_lifecycle": {
+    "create": "Born from real incidents, changes, and RCAs — never hypothetical.",
+    "validate": "Used at least once in a real case or drill.",
+    "measure": "Track whether it reduced diagnosis or resolution time.",
+    "retire": "Delete or rewrite if it’s unused or misleading."
+  },
+  "automation": {
+    "copilot_moves": [
+      "Convert incident timelines into knowledge atoms automatically.",
+      "Suggest missing atoms for high-incident areas.",
+      "Answer chat questions using KB + live context (RAG).",
+      "Flag stale or contradictory knowledge."
+    ],
+    "human_role": [
+      "Approve and refine atoms.",
+      "Decide what is ‘blessed truth’ vs historical note."
+    ]
+  },
+  "why_this_changes_ams": [
+    "L1/L2 become effective without guessing.",
+    "Experts stop answering the same questions.",
+    "AI assistance becomes reliable instead of hallucinating."
+  ],
+  "metrics_that_keep_it_sharp": [
+    "RAG answer success rate",
+    "KB usage during P1/P2 incidents",
+    "Time-to-first-hypothesis reduction",
+    "Stale atom ratio"
+  ],
+  "anti_patterns_to_kill": [
+    "KB as a dumping ground",
+    "Writing docs after memory fades",
+    "One-size-fits-all SAP explanations"
+  ],
+  "design_question": [
+    "Can the system answer the question faster than the senior consultant?"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "ams",
+    "source_project": "cv-ai",
+    "source_path": "ams/ams-020.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/ams/ams-020.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "ams_byte",
+    "entity_subtype": "",
+    "summary": "A classic SAP KB is dead text. A modern AMS knowledge base is an execution engine for humans, bots, and AI."
+  }
+}

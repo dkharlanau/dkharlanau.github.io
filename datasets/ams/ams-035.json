@@ -1,0 +1,146 @@
+{
+  "id": "ams-035",
+  "title": "Master Data in AMS: Treat Data Quality as Production Reliability",
+  "hook": "In SAP, master data is not ‘data’. It’s executable configuration. Bad data behaves like bad code — it breaks flows, creates incidents, and burns AMS capacity.",
+  "idea": "Modern SAP AMS runs master data reliability: quality gates, replication health, ownership, and prevention loops. Not endless cleansing tickets.",
+  "sap_master_data_realities": {
+    "where_ams_pain_comes_from": [
+      "BP/customer/vendor inconsistencies across systems",
+      "MDG replication lags and failed mappings",
+      "LoV/value mapping drift (prod vs non-prod)",
+      "Dirty partner functions and address logic",
+      "Pricing-relevant master fields missing or wrong"
+    ],
+    "why_it_is_expensive": [
+      "Each bad record creates multiple incidents across teams",
+      "Fixes are manual, risky, and often not verified end-to-end",
+      "Root cause is usually governance, not the record itself"
+    ]
+  },
+  "operating_model": {
+    "data_reliability_stream": [
+      "Replication SLOs (latency, error rate, backlog velocity)",
+      "Quality gates (mandatory validations before activation/replication)",
+      "Data incident families (symptom clusters) with owners",
+      "Preventive rules and automated checks"
+    ],
+    "separation_of_work": [
+      "Incident: unblock business with a safe workaround",
+      "Problem: eliminate the pattern (validation, mapping, governance)",
+      "Change: controlled adjustment of rules, mappings, or processes"
+    ]
+  },
+  "data_quality_gates": {
+    "principles": [
+      "Prevent bad data from entering core flows",
+      "Validate on create/change, not after damage",
+      "Make errors actionable (what to fix, where, who owns it)"
+    ],
+    "examples": [
+      "Partner function completeness for customer types",
+      "Address/transport zone derivation rules",
+      "Payment method/value mapping consistency",
+      "Mandatory sales area fields for OTC-critical customers"
+    ]
+  },
+  "replication_health": {
+    "signals": [
+      "Replication backlog velocity (are we catching up?)",
+      "Error family clustering (same mapping fails repeatedly)",
+      "Mismatch rates between source and target",
+      "Volume anomalies (sudden drops/spikes)"
+    ],
+    "rules": [
+      "If backlog grows for 2 consecutive windows, switch to stabilization mode.",
+      "If the same mapping fails twice, open a Problem and freeze noisy changes."
+    ]
+  },
+  "coordination": {
+    "ownership": [
+      "Data Domain Owner (business semantics)",
+      "MDG/MDM Owner (governance + workflow)",
+      "Integration Owner (replication and mappings)",
+      "AMS Flow Owner (impact on OTC/P2P)"
+    ],
+    "handover_packet_for_data_issues": [
+      "Example records (IDs) + timestamps",
+      "Expected vs actual values",
+      "Replication path (source → middleware → target)",
+      "Error messages and logs",
+      "Business impact statement"
+    ]
+  },
+  "automation": {
+    "copilot_moves": [
+      "Detect data-related incident patterns from tickets and logs.",
+      "Suggest validation rules and where to implement them (MDG vs edge vs S/4).",
+      "Generate ‘data fix packs’: affected records + proposed corrections + verification steps.",
+      "Create RAG-ready knowledge atoms for common data failures."
+    ],
+    "outputs": [
+      "Data incident family heatmap",
+      "Replication SLO dashboard inputs",
+      "Validation backlog ranked by ROI"
+    ]
+  },
+  "why_this_cuts_cost": [
+    "Fewer incidents caused by the same bad patterns.",
+    "Less manual cleansing and less rework.",
+    "Higher trust in master data → fewer downstream failures."
+  ],
+  "anti_patterns_to_kill": [
+    "Endless cleansing without prevention",
+    "Fixing one record without understanding why it happened",
+    "Replication treated as ‘integration team problem’"
+  ],
+  "metrics_that_matter": [
+    "Data-driven incident rate (per flow)",
+    "Replication latency SLO compliance",
+    "Mapping failure repeat rate",
+    "Prevention coverage (gates implemented vs needed)"
+  ],
+  "design_question": [
+    "Which master data rule, if enforced early, would delete the most AMS work?"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "ams",
+    "source_project": "cv-ai",
+    "source_path": "ams/ams-035.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/ams/ams-035.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "ams_byte",
+    "entity_subtype": "",
+    "summary": "In SAP, master data is not ‘data’. It’s executable configuration. Bad data behaves like bad code — it breaks flows, creates incidents, and burns AMS capacity."
+  }
+}

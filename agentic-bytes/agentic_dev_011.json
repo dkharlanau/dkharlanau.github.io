@@ -1,0 +1,100 @@
+{
+  "byte_id": "agentic_dev_011",
+  "title": "Golden Set & Evals: How to Know Your Agent Works",
+  "level": "foundation",
+  "domain": [
+    "agentic-development",
+    "evaluation",
+    "quality"
+  ],
+  "intent": "Learn how to evaluate agents systematically so improvements do not break existing behavior.",
+  "core_idea": {
+    "one_liner": "If you cannot measure agent quality, you cannot improve it.",
+    "why_it_matters": [
+      "Agents regress silently after prompt or knowledge changes.",
+      "Human impressions are inconsistent.",
+      "Evaluation turns agent development into engineering."
+    ]
+  },
+  "definition": {
+    "golden_set": "A curated set of representative questions and tasks with expected outcomes used for repeatable evaluation.",
+    "eval": "A process that compares agent outputs against expectations using clear criteria."
+  },
+  "what_a_good_golden_set_contains": [
+    "Easy, medium, and hard cases",
+    "Edge cases and failure scenarios",
+    "Ambiguous inputs",
+    "Previously broken cases (regressions)"
+  ],
+  "eval_dimensions": [
+    {
+      "dimension": "Correctness",
+      "question": "Is the answer factually and logically correct?"
+    },
+    {
+      "dimension": "Grounding",
+      "question": "Are claims supported by retrieved knowledge or tools?"
+    },
+    {
+      "dimension": "Safety",
+      "question": "Did the agent respect guardrails?"
+    },
+    {
+      "dimension": "Usefulness",
+      "question": "Would a real user consider this helpful?"
+    },
+    {
+      "dimension": "Cost & latency",
+      "question": "Is the quality acceptable for the time and cost?"
+    }
+  ],
+  "eval_patterns": [
+    {
+      "pattern": "Offline eval",
+      "description": "Run the agent against the golden set after any change."
+    },
+    {
+      "pattern": "Regression eval",
+      "description": "Ensure old correct answers stay correct."
+    },
+    {
+      "pattern": "Shadow eval",
+      "description": "Test a new version in parallel without affecting users."
+    }
+  ],
+  "micro_example": {
+    "scenario": "MDG replication troubleshooting agent",
+    "golden_case": {
+      "input": "Replication delayed for only one business partner type",
+      "expected": "Agent asks for object-specific filters and mapping checks",
+      "failure_signal": "Agent suggests generic system performance issues"
+    }
+  },
+  "failure_modes": [
+    "Golden set too small or too clean",
+    "Evaluating only happy paths",
+    "Changing expectations without versioning",
+    "Ignoring eval failures under time pressure"
+  ],
+  "guards": [
+    "Every agent change must run evals.",
+    "Eval results must be stored and compared over time.",
+    "Failing evals block release."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "A golden set is a test exam your agent must pass every time.",
+    "one_sentence_definition": "Evals turn agent behavior into something you can trust."
+  },
+  "practical_checklist": [
+    "Do we have representative test cases?",
+    "Are failures actionable?",
+    "Do evals run automatically?",
+    "Can we detect regressions early?"
+  ],
+  "tags": [
+    "evaluation",
+    "golden-set",
+    "regression",
+    "agent-quality"
+  ]
+}

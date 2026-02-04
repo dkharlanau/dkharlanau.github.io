@@ -1,0 +1,81 @@
+{
+  "byte_id": "agentic_dev_016",
+  "title": "Versioning: How Agents and Knowledge Evolve Safely",
+  "level": "foundation",
+  "domain": [
+    "agentic-development",
+    "versioning",
+    "knowledge-management"
+  ],
+  "intent": "Learn how to change agents, prompts, and knowledge without breaking existing behavior or trust.",
+  "core_idea": {
+    "one_liner": "If you cannot version it, you cannot change it safely.",
+    "why_it_matters": [
+      "Agent behavior changes even with small prompt edits.",
+      "Knowledge updates can invalidate past answers.",
+      "Users and auditors need traceability over time."
+    ]
+  },
+  "definition": {
+    "versioning": "Explicitly tracking and managing changes to agent logic, prompts, tools, and knowledge."
+  },
+  "what_must_be_versioned": [
+    "System and policy prompts",
+    "Decision rules and checklists",
+    "RAG knowledge chunks",
+    "Output schemas",
+    "Tool interfaces"
+  ],
+  "versioning_strategies": [
+    {
+      "strategy": "Semantic versioning",
+      "description": "MAJOR (behavior change), MINOR (new capability), PATCH (fix)."
+    },
+    {
+      "strategy": "Immutable releases",
+      "description": "Never change a released version in place."
+    },
+    {
+      "strategy": "Explicit deprecation",
+      "description": "Mark old versions as deprecated with guidance."
+    }
+  ],
+  "knowledge_versioning_rules": [
+    "Semantic meaning change requires new version.",
+    "Metadata must record version and validity.",
+    "Agents should prefer latest non-deprecated version."
+  ],
+  "micro_example": {
+    "scenario": "Update MDG replication decision rule",
+    "old_version": "v1.0 – based on legacy middleware",
+    "new_version": "v2.0 – includes event-driven replication",
+    "agent_behavior": "Uses v2.0 by default, v1.0 only if explicitly requested"
+  },
+  "failure_modes": [
+    "Silent edits to live knowledge",
+    "No link between answer and version used",
+    "Deleting old rules without migration path",
+    "Mixed versions in one response"
+  ],
+  "guards": [
+    "Every agent run records versions used.",
+    "Deprecated knowledge cannot be used silently.",
+    "Version changes trigger evals."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "Versioning lets you improve without breaking trust.",
+    "one_sentence_definition": "Versioning is how agents change without chaos."
+  },
+  "practical_checklist": [
+    "Can we reproduce an old answer?",
+    "Do we know which version was used?",
+    "Are deprecations visible?",
+    "Are evals tied to versions?"
+  ],
+  "tags": [
+    "versioning",
+    "agent-lifecycle",
+    "knowledge-management",
+    "stability"
+  ]
+}

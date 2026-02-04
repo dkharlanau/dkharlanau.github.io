@@ -1,0 +1,99 @@
+{
+  "byte_id": "agentic_dev_007",
+  "title": "Guardrails: What an Agent Is Never Allowed to Do",
+  "level": "foundation",
+  "domain": [
+    "agentic-development",
+    "safety",
+    "reliability"
+  ],
+  "intent": "Learn how to define hard boundaries so an agent behaves safely, predictably, and does not overstep its authority.",
+  "core_idea": {
+    "one_liner": "Guardrails are not suggestions — they are hard limits on agent behavior.",
+    "why_it_matters": [
+      "LLMs optimize for helpfulness, not safety.",
+      "Most real incidents happen because boundaries were implicit.",
+      "Clear guardrails make agents trustworthy in production."
+    ]
+  },
+  "definition": {
+    "guardrail": "An explicit rule that restricts what an agent can say or do, regardless of user intent."
+  },
+  "core_guardrail_types": [
+    {
+      "type": "Action guardrails",
+      "description": "Limit which tools can be used and in which situations.",
+      "example": "Agent may read data but cannot write or delete records."
+    },
+    {
+      "type": "Knowledge guardrails",
+      "description": "Restrict answers to verified sources only.",
+      "example": "If information is not found in RAG, the agent must say it does not know."
+    },
+    {
+      "type": "Authority guardrails",
+      "description": "Define when human approval is mandatory.",
+      "example": "Any change affecting production requires human confirmation."
+    },
+    {
+      "type": "Output guardrails",
+      "description": "Enforce strict output formats and tone.",
+      "example": "Agent must return valid JSON and no free text."
+    }
+  ],
+  "common_guardrail_rules": [
+    "Do not invent facts or tool results.",
+    "Do not act outside assigned tools.",
+    "Do not bypass required human approval.",
+    "Do not answer outside defined domain or context.",
+    "If uncertain, stop and ask or refuse."
+  ],
+  "micro_example": {
+    "scenario": "User asks the agent to 'quickly fix production data'.",
+    "agent_decision": {
+      "guardrail_triggered": "Authority + Action guardrail",
+      "response": "I cannot modify production data without explicit human approval. I can propose a fix plan instead."
+    }
+  },
+  "failure_modes": [
+    "Implicit guardrails (not written anywhere)",
+    "Overly soft language ('try to avoid')",
+    "Too many exceptions",
+    "Guardrails enforced only in prompts, not in code"
+  ],
+  "implementation_levels": [
+    {
+      "level": "Prompt-level",
+      "notes": "Useful but weakest; can be bypassed."
+    },
+    {
+      "level": "Policy / middleware",
+      "notes": "Checks inputs, outputs, and tool calls."
+    },
+    {
+      "level": "System-level",
+      "notes": "Hard enforcement (permissions, API scopes)."
+    }
+  ],
+  "guards": [
+    "Every critical action must map to an explicit guardrail.",
+    "Guardrails must be testable.",
+    "Violations must be logged."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "Guardrails tell the agent where the cliff is, so it never needs to find out by falling.",
+    "one_sentence_definition": "Guardrails are the rules that protect users, systems, and the agent itself."
+  },
+  "practical_checklist": [
+    "What actions are strictly forbidden?",
+    "When must a human be involved?",
+    "What should the agent do when unsure?",
+    "Are guardrails enforced outside the prompt?"
+  ],
+  "tags": [
+    "guardrails",
+    "agent-safety",
+    "control",
+    "production-agents"
+  ]
+}

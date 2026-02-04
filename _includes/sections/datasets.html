@@ -1,0 +1,22 @@
+{% assign ds = site.data.home.datasets %}
+{% if ds %}
+<section class="section datasets" id="datasets">
+  <header class="section-heading">
+    {% if ds.title %}<h2>{{ ds.title }}</h2>{% endif %}
+  </header>
+
+  {% if ds.cards %}
+  <div class="data-bytes-grid">
+    {% for card in ds.cards %}
+    <a class="m3-byte-card" href="{{ card.url }}" {% if card.external %} target="_blank" rel="noopener noreferrer" {%
+      endif %}>
+      {% if card.subtitle %}<p class="m3-byte-card__subtitle">{{ card.subtitle }}</p>{% endif %}
+      {% if card.title %}<h3 class="m3-byte-card__title">{{ card.title }}</h3>{% endif %}
+      {% if card.summary %}<p class="m3-byte-card__summary">{{ card.summary }}</p>{% endif %}
+      {% if card.meta %}<p class="m3-byte-card__meta">{{ card.meta }}</p>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}

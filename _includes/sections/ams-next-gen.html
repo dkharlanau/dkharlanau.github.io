@@ -1,0 +1,17 @@
+{% assign offer = site.data.home.ams_next_gen %}
+{% if offer %}
+<section class="section ams-next-gen" id="ams-next-gen">
+  {% if offer.card %}
+  <div class="m3-card-container">
+    <a class="m3-card" href="{{ offer.card.url }}" {% if offer.card.external %} target="_blank"
+      rel="noopener noreferrer" {% endif %}>
+      <header class="m3-card__header">
+        {% if offer.card.title %}<h2 class="m3-card__title">{{ offer.card.title }}</h2>{% endif %}
+      </header>
+      {% if offer.card.summary %}<p class="m3-card__summary">{{ offer.card.summary }}</p>{% endif %}
+      {% if offer.card.cta %}<span class="m3-card__cta">{{ offer.card.cta }}</span>{% endif %}
+    </a>
+  </div>
+  {% endif %}
+</section>
+{% endif %}

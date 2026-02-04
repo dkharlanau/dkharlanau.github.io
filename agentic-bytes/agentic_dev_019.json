@@ -1,0 +1,91 @@
+{
+  "byte_id": "agentic_dev_019",
+  "title": "Agent Interfaces & Contracts: How Agents Communicate Safely",
+  "level": "applied",
+  "domain": [
+    "agentic-development",
+    "architecture",
+    "interfaces"
+  ],
+  "intent": "Understand how agents should communicate with other agents and systems using strict contracts instead of free text.",
+  "core_idea": {
+    "one_liner": "Agents must talk like APIs, not like humans.",
+    "why_it_matters": [
+      "Free text breaks coordination.",
+      "Contracts make agent interactions debuggable.",
+      "Clear interfaces prevent cascading failures."
+    ]
+  },
+  "definition": {
+    "agent_interface": "A formally defined input/output contract that governs how an agent receives requests and returns results."
+  },
+  "interface_principles": [
+    "Structured inputs and outputs only",
+    "Explicit success and failure states",
+    "No hidden assumptions",
+    "Backward compatibility where possible"
+  ],
+  "typical_interface_fields": [
+    "request_id",
+    "intent",
+    "inputs",
+    "constraints",
+    "expected_output",
+    "confidence",
+    "status"
+  ],
+  "agent_to_agent_contract_example": {
+    "request": {
+      "request_id": "REQ-1021",
+      "intent": "analyze_replication_issue",
+      "inputs": {
+        "system": "MDG-S4",
+        "object": "BP",
+        "symptom": "delay"
+      },
+      "constraints": {
+        "read_only": true
+      }
+    },
+    "response": {
+      "request_id": "REQ-1021",
+      "status": "completed",
+      "result": {
+        "root_cause": "queue_backlog",
+        "confidence": 0.81
+      }
+    }
+  },
+  "micro_example": {
+    "scenario": "Planner agent delegates to RCA agent",
+    "bad": "Hey, can you check why this is slow?",
+    "good": "Structured request with intent, scope, and constraints."
+  },
+  "failure_modes": [
+    "Free-text delegation",
+    "Implicit context sharing",
+    "Changing contracts without versioning",
+    "Overloading one interface with multiple meanings"
+  ],
+  "guards": [
+    "All agent interactions must use contracts.",
+    "Contracts must be versioned.",
+    "Validation is mandatory before execution."
+  ],
+  "teach_it_in_english": {
+    "simple_explanation": "Agents should communicate the same way services do.",
+    "one_sentence_definition": "Agent interfaces turn cooperation into engineering."
+  },
+  "practical_checklist": [
+    "Is the message machine-readable?",
+    "Can it be validated automatically?",
+    "Is failure explicitly represented?",
+    "Can this interface evolve safely?"
+  ],
+  "tags": [
+    "agent-interfaces",
+    "contracts",
+    "multi-agent",
+    "architecture"
+  ]
+}

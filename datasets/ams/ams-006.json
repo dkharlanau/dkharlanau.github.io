@@ -1,0 +1,121 @@
+{
+  "id": "ams-006",
+  "title": "Contain Custom Code: Stop Z-Code from Owning AMS",
+  "hook": "Most SAP AMS pain is not caused by SAP standard. It’s caused by unmanaged custom code quietly becoming critical infrastructure.",
+  "idea": "Custom code is not evil. Unowned, undocumented, and unbounded custom code is. Modern SAP AMS treats Z-code as a controlled asset with clear contracts, cost, and exit paths.",
+  "sap_truth": {
+    "what_usually_happens": [
+      "Z-program solves an urgent business need",
+      "Logic spreads via copy-paste and implicit dependencies",
+      "Original authors leave",
+      "AMS inherits fear instead of understanding"
+    ],
+    "result": "Every change becomes risky, slow, and expensive."
+  },
+  "operating_model": {
+    "classification": [
+      {
+        "type": "Core-Critical",
+        "definition": "Custom code without which legal or financial posting fails",
+        "rule": "Rare, heavily tested, owned, documented"
+      },
+      {
+        "type": "Business Logic",
+        "definition": "Rules, validations, pricing, mappings",
+        "rule": "Prefer externalization; SAP should not be the brain"
+      },
+      {
+        "type": "Utility / Convenience",
+        "definition": "Reports, helpers, data fixes",
+        "rule": "Safe, isolated, replaceable"
+      }
+    ]
+  },
+  "containment_rules": [
+    "Every Z-object must have a functional owner and a reason to exist.",
+    "No custom logic without an explicit scope and blast radius.",
+    "If logic changes frequently, it does not belong in SAP core.",
+    "If no one can explain it, it cannot stay critical."
+  ],
+  "ams_execution": {
+    "daily": [
+      "Track incidents by Z-object, not just by module.",
+      "Expose which custom code causes repeated pain."
+    ],
+    "strategic": [
+      "Gradually move volatile logic to external services.",
+      "Retire or freeze low-value Z-code.",
+      "Stabilize what must remain."
+    ]
+  },
+  "automation": {
+    "copilot_moves": [
+      "Map incidents to Z-objects and enhancements automatically.",
+      "Detect hotspots: code that generates disproportionate AMS load.",
+      "Generate living documentation from code + tickets + changes."
+    ],
+    "guardrails": [
+      "No silent logic in exits without reference documentation.",
+      "No emergency fixes without traceability."
+    ]
+  },
+  "why_this_reduces_cost": [
+    "Fewer regression incidents after transports.",
+    "Faster root cause analysis.",
+    "Lower dependency on rare SAP-only experts."
+  ],
+  "anti_patterns_to_kill": [
+    "‘We don’t touch this, it’s too risky’",
+    "Hero developers guarding black boxes",
+    "Fixing symptoms around broken custom logic"
+  ],
+  "metrics_that_matter": [
+    "AMS hours by Z-object",
+    "Repeat incidents caused by custom code",
+    "Custom code with no named owner"
+  ],
+  "design_question": [
+    "If this logic disappeared tomorrow, what would actually break?"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "ams",
+    "source_project": "cv-ai",
+    "source_path": "ams/ams-006.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/ams/ams-006.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "ams_byte",
+    "entity_subtype": "",
+    "summary": "Most SAP AMS pain is not caused by SAP standard. It’s caused by unmanaged custom code quietly becoming critical infrastructure."
+  }
+}

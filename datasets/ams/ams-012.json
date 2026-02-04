@@ -1,0 +1,131 @@
+{
+  "id": "ams-012",
+  "title": "Approval Without Paralysis: Decision Gates That Actually Work",
+  "hook": "Approvals are not control. They are latency. Real control comes from clear gates, data, and reversible decisions.",
+  "idea": "SAP AMS needs fewer approvals, but stronger ones. Each gate exists to answer one hard question — fast — using evidence, not opinion.",
+  "sap_problem": {
+    "what_goes_wrong": [
+      "Everyone approves, nobody owns the outcome",
+      "Emergency paths become the default",
+      "CAB meetings replace engineering judgment",
+      "Risk is discussed, not bounded"
+    ]
+  },
+  "decision_gates": [
+    {
+      "gate": "Triage Gate",
+      "question": "Who owns this and what is the next concrete action?",
+      "inputs_required": [
+        "Business impact statement",
+        "Evidence snapshot (errors, objects, time window)",
+        "Work type (incident/problem/change)"
+      ],
+      "output": "Named owner + next step + update time"
+    },
+    {
+      "gate": "Change Gate",
+      "question": "Is this change safe enough to run now?",
+      "inputs_required": [
+        "Blast radius (processes, countries, interfaces)",
+        "Test evidence (what was tested, what was not)",
+        "Rollback plan (time to reverse)"
+      ],
+      "output": "Approve / delay / reroute to standard change"
+    },
+    {
+      "gate": "Risk Gate",
+      "question": "What can go wrong and how fast can we recover?",
+      "inputs_required": [
+        "Failure modes",
+        "Detection signals",
+        "Recovery steps and owner"
+      ],
+      "output": "Go with safeguards or stop"
+    },
+    {
+      "gate": "Problem Gate",
+      "question": "Are we actually removing the cause?",
+      "inputs_required": [
+        "RCA with evidence",
+        "Prevention action",
+        "Verification plan"
+      ],
+      "output": "Accept fix or send back for deeper work"
+    }
+  ],
+  "rules": [
+    "No meeting if inputs are missing — the gate stays closed.",
+    "Every approval creates accountability, not cover.",
+    "If a decision cannot be reversed quickly, the bar is higher."
+  ],
+  "automation": {
+    "copilot_moves": [
+      "Check completeness of gate inputs automatically.",
+      "Highlight missing or weak evidence.",
+      "Estimate rollback time and risk based on history."
+    ],
+    "outputs": [
+      "Gate-ready decision pack",
+      "Clear approve/deny recommendation with rationale"
+    ]
+  },
+  "why_this_is_faster_and_safer": [
+    "Decisions are made once, not debated repeatedly.",
+    "Risk is explicit and bounded.",
+    "Approvals stop being political shields."
+  ],
+  "anti_patterns_to_kill": [
+    "Approving based on seniority",
+    "Emergency labels without evidence",
+    "Approvals with no rollback thinking"
+  ],
+  "metrics_that_expose_friction": [
+    "Decision latency per gate",
+    "Percent of approvals with complete evidence",
+    "Rollback execution success rate"
+  ],
+  "design_question": [
+    "Which approvals reduce risk — and which only reduce responsibility?"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "ams",
+    "source_project": "cv-ai",
+    "source_path": "ams/ams-012.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/ams/ams-012.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "ams_byte",
+    "entity_subtype": "",
+    "summary": "Approvals are not control. They are latency. Real control comes from clear gates, data, and reversible decisions."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "id": "TRIZ-09",
+  "title": "Preliminary Anti-Action",
+  "intent": "Reduce risk and cost by performing preventive actions before a problem fully manifests.",
+  "triz_principle": {
+    "number": 9,
+    "name": "Preliminary Anti-Action",
+    "definition": "If an action is likely to cause harmful effects, introduce countermeasures in advance."
+  },
+  "problem_understanding": {
+    "core_contradiction": "We need to move fast, but changes often introduce defects, incidents, or rework.",
+    "why_this_hurts": "Fixing problems after they occur is more expensive and disruptive than preventing them early.",
+    "typical_signals": [
+      "recurring incidents after releases",
+      "late discovery of data quality issues",
+      "frequent rollback or hotfixes",
+      "teams firefighting instead of building"
+    ]
+  },
+  "solution_logic": {
+    "core_idea": "Anticipate likely failure modes and neutralize them before execution.",
+    "key_rule": "Prevent the most probable damage, not all theoretical risks.",
+    "how_it_resolves_the_contradiction": "Speed is preserved while risk is reduced through targeted, early safeguards."
+  },
+  "application_patterns": {
+    "consulting": [
+      "risk pre-mortems before major decisions",
+      "checklists for common failure points",
+      "early stakeholder alignment to avoid late objections"
+    ],
+    "software_engineering": [
+      "input validation before processing",
+      "static analysis and linters before runtime",
+      "contract tests before integration"
+    ],
+    "architecture": [
+      "circuit breakers to prevent cascading failures",
+      "schema validation before data ingestion",
+      "canary releases to detect issues early"
+    ],
+    "enterprise_sap": [
+      "pre-check reports before MDG change request submission",
+      "data quality rules before replication",
+      "simulation and test runs before cutover activities"
+    ]
+  },
+  "anti_patterns": [
+    "trying to prevent every imaginable risk",
+    "heavy upfront processes that slow delivery",
+    "preventive controls disconnected from real failure modes"
+  ],
+  "usage_guidance": {
+    "use_when": [
+      "the same problems repeat across releases or projects",
+      "late fixes are very expensive",
+      "failure modes are well known"
+    ],
+    "do_not_use_when": [
+      "risks are unknown or highly exploratory",
+      "prevention costs more than recovery"
+    ]
+  },
+  "diagnostic_questions": [
+    "What failures happen most often after changes?",
+    "Which problems are cheap to prevent but expensive to fix?",
+    "What signals could warn us earlier?"
+  ],
+  "example": {
+    "before": "Data errors are discovered only after replication to downstream systems.",
+    "after": "Pre-validation rules catch data issues before replication is triggered."
+  }
+}

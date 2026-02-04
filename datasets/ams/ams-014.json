@@ -1,0 +1,129 @@
+{
+  "id": "ams-014",
+  "title": "Incentives That Shape Behavior: Teams, Bonuses, and Penalties",
+  "hook": "You get the AMS you pay for. If incentives reward speed and silence, you’ll get fragile fixes and hidden problems.",
+  "idea": "Modern SAP AMS aligns incentives with stability, prevention, and learning — not with ticket volume or heroics.",
+  "sap_reality": {
+    "what_bad_incentives_create": [
+      "Fast closures with slow returns",
+      "Avoidance of root-cause work",
+      "Risky emergency changes",
+      "Blame-shifting across teams"
+    ]
+  },
+  "incentive_design": {
+    "team_level": [
+      {
+        "signal": "Repeat Incident Rate",
+        "reward_logic": "Bonus grows when repeats drop quarter-over-quarter."
+      },
+      {
+        "signal": "Change-Induced Incidents",
+        "reward_logic": "Penalty when regressions rise; recovery credits for clean streaks."
+      },
+      {
+        "signal": "Problem Elimination",
+        "reward_logic": "Credits for permanently removing top demand drivers."
+      }
+    ],
+    "individual_level": [
+      {
+        "signal": "Ownership Quality",
+        "meaning": "Did the person drive the issue to closure with evidence and clarity?",
+        "note": "Not about who typed the fix."
+      },
+      {
+        "signal": "Knowledge Contribution",
+        "meaning": "Runbooks, KB updates, standard changes created."
+      }
+    ]
+  },
+  "penalties_with_intent": {
+    "apply_when": [
+      "Same root cause returns within 30/60 days",
+      "Changes deployed without agreed test evidence",
+      "Missing or misleading status communication",
+      "Emergency path abused without justification"
+    ],
+    "never_apply_when": [
+      "Transparent escalation with evidence",
+      "Stopping a change due to risk",
+      "Admitting uncertainty early"
+    ]
+  },
+  "error_budget_link": {
+    "concept": "Failure capacity per period for critical flows.",
+    "rule": "When error budget is burned, risky changes pause and stability work is mandatory.",
+    "effect": "Shifts focus from delivery theater to reliability."
+  },
+  "automation": {
+    "copilot_moves": [
+      "Compute incentive signals automatically from incident/change data.",
+      "Generate neutral evidence packs for bonuses or penalties.",
+      "Flag incentive gaming patterns (fast close + fast reopen)."
+    ],
+    "controls": [
+      "Human review for edge cases",
+      "Transparent formulas visible to all teams"
+    ]
+  },
+  "why_this_works": [
+    "People stop hiding problems.",
+    "Prevention becomes a career-positive move.",
+    "Teams optimize the system, not their numbers."
+  ],
+  "anti_patterns_to_kill": [
+    "Bonuses tied to ticket count",
+    "Penalties for honest bad news",
+    "Hero rewards that bypass process"
+  ],
+  "metrics_that_keep_it_honest": [
+    "Bonus vs stability correlation",
+    "Repeat rate after penalty events",
+    "Knowledge asset growth vs incident volume"
+  ],
+  "design_question": [
+    "What behavior becomes rational under our current incentives?"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "ams",
+    "source_project": "cv-ai",
+    "source_path": "ams/ams-014.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/ams/ams-014.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "ams_byte",
+    "entity_subtype": "",
+    "summary": "You get the AMS you pay for. If incentives reward speed and silence, you’ll get fragile fixes and hidden problems."
+  }
+}
