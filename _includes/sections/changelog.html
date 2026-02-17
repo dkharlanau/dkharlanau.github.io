@@ -44,6 +44,27 @@
       </ul>
     </article>
     {% endif %}
+    {% if changelog.entries %}
+    <article class="neub-card changelog-card changelog-card--entries">
+      <p class="eyebrow">Recent entries</p>
+      <ul class="changelog-entries">
+        {% for entry in changelog.entries %}
+        <li class="changelog-entry">
+          {% if entry.date %}<p class="changelog-entry__date">{{ entry.date | date: "%-d %B %Y" }}</p>{% endif %}
+          {% if entry.title %}<h3 class="changelog-entry__title">{{ entry.title }}</h3>{% endif %}
+          {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
+          {% if entry.links %}
+          <p class="changelog-entry__links">
+            {% for link in entry.links %}
+            <a class="link-arrow" href="{{ link.url }}">{{ link.label }}</a>{% unless forloop.last %} {% endunless %}
+            {% endfor %}
+          </p>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+    {% endif %}
   </div>
   {% endif %}
 </section>
