@@ -1,13 +1,13 @@
 ---
 layout: default
-title: "DAMA Datasets"
-description: "DAMA dataset bytes by Dzmitryi Kharlanau (SAP Lead)."
+title: "DAMA Data Governance Bytes"
+description: "DAMA/MDG data governance bytes by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/DAMA/
 sitemap: true
 ---
 
 <div class="dataset-hero">
-  <p class="eyebrow">Dataset</p>
+  <p class="eyebrow">Governance Framework</p>
   <h1 class="dataset-hero__title">DAMA</h1>
   <p class="lead">10 entries. Filter by search and type. Each entry has a clean page + raw JSON.</p>
   <div class="dataset-actions">

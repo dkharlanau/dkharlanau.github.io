@@ -1,14 +1,14 @@
 ---
 layout: default
-title: "agentic-bytes Datasets"
-description: "agentic-bytes dataset bytes by Dzmitryi Kharlanau (SAP Lead)."
+title: "Agentic Design Repository"
+description: "Agentic development and design bytes by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/agentic-bytes/
 sitemap: true
 ---
 
 <div class="dataset-hero">
-  <p class="eyebrow">Dataset</p>
-  <h1 class="dataset-hero__title">agentic-bytes</h1>
+  <p class="eyebrow">Agentic Design Repository</p>
+  <h1 class="dataset-hero__title">Agentic Design</h1>
   <p class="lead">23 entries. Filter by search and type. Each entry has a clean page + raw JSON.</p>
   <div class="dataset-actions">
     <a class="button" href="/datasets/">All datasets</a>

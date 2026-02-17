@@ -44,24 +44,105 @@ AMS is a frame, not the goal. We keep SAP stable **now**, and we also **develop 
 
 ## FAQ
 
-**Q: Why do costs keep rising even though SLAs are met?**
+<div class="faq-grid">
+  <div class="faq-card">
+    <span class="faq-card__question">Q: Why do costs keep rising even though SLAs are met?</span>
+    <div class="faq-card__answer">
+      Because vendors focus on hours and patching. They close tickets but don’t remove root causes — so OPEX grows and the same issues return.
+      <br><br>
+      <strong>Solution:</strong> Shift AMS to <strong>root-cause elimination</strong> and <strong>productized fixes</strong> (runbooks, automation, monitoring packs).
+    </div>
+  </div>
 
-Because vendors focus on hours and patching. They close tickets but don’t remove root causes — so OPEX grows and the same issues return.
+  <div class="faq-card">
+    <span class="faq-card__question">Q: Why does it feel risky to replace the current vendor?</span>
+    <div class="faq-card__answer">
+      Critical knowledge sits in their inboxes and custom extensions with weak documentation. This creates lock-in.
+      <br><br>
+      <strong>Solution:</strong> Harvest knowledge into <strong>your repos/IdP</strong> — KEDB, interface maps, runbooks. Build <strong>portability by design</strong>, so switching is a choice, not a crisis.
+    </div>
+  </div>
 
-**Solution:** Shift AMS to **root-cause elimination** and **productized fixes** (runbooks, automation, monitoring packs).
+  <div class="faq-card">
+    <span class="faq-card__question">Q: Why is change so slow and fragile?</span>
+    <div class="faq-card__answer">
+      Every small CR is treated as a big project. Without observability and safe patterns, even simple fixes take weeks.
+      <br><br>
+      <strong>Solution:</strong> Establish <strong>fast-track patterns</strong> (data corrections, retries, mappings) and <strong>observability</strong> (heartbeats, backlog age, MDG gates). Small changes move safely and fast.
+    </div>
+  </div>
+</div>
 
-**Q: Why does it feel risky to replace the current vendor?**
+<hr class="section-divider">
 
-Critical knowledge sits in their inboxes and custom extensions with weak documentation. This creates lock-in.
+## The AMS Operating System (Data Bytes)
 
-**Solution:** Harvest knowledge into **your repos/IdP** — KEDB, interface maps, runbooks. Build **portability by design**, so switching is a choice, not a crisis.
+Beyond principles, modern AMS is powered by a library of specific, actionable patterns — "Data Bytes." These are the building blocks of a stable, innovative SAP landscape.
 
-**Q: Why is change so slow and fragile?**
+<div class="dataset-panel">
+  <div class="dataset-filter">
+    <div class="dataset-filter__row">
+      <div style="flex: 1;">
+        <label for="amsByteSearch" class="eyebrow">Search Knowledge Base</label>
+        <input id="amsByteSearch" type="search" placeholder="Filter by title, ID, or summary..." autocomplete="off" class="dataset-select" style="width: 100%; margin-top: var(--space-2xs);" />
+      </div>
+    </div>
+    <div class="dataset-hero__meta" style="margin-top: var(--space-xs);"><span class="pill" id="amsByteCount"></span></div>
+  </div>
 
-Every small CR is treated as a big project. Without observability and safe patterns, even simple fixes take weeks.
+  <div class="data-bytes-grid" id="amsByteList">
+    {% for byte in site.data.ams_bytes %}
+    <article class="m3-byte-card" data-id="{{ byte.id }}" data-title="{{ byte.title | downcase }}" data-summary="{{ byte.summary | downcase }}">
+      <p class="m3-byte-card__subtitle">Byte {{ byte.id }}</p>
+      <h3 class="m3-byte-card__title">
+        <a href="/datasets/view/ams/{{ byte.id }}/">{{ byte.title }}</a>
+      </h3>
+      <p class="m3-byte-card__summary">{{ byte.summary }}</p>
+      <div class="m3-byte-card__meta">
+        <span class="pill pill--type">ams_byte</span>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</div>
 
-**Solution:** Establish **fast-track patterns** (data corrections, retries, mappings) and **observability** (heartbeats, backlog age, MDG gates). Small changes move safely and fast.
+<script>
+(function(){
+  var input = document.getElementById('amsByteSearch');
+  var list = document.getElementById('amsByteList');
+  var count = document.getElementById('amsByteCount');
+  if(!input || !list || !count) return;
+  
+  var items = Array.prototype.slice.call(list.querySelectorAll('.m3-byte-card'));
+  
+  function render(){
+    var q = (input.value || '').trim().toLowerCase();
+    var shown = 0;
+    
+    items.forEach(function(el){
+      var title = el.getAttribute('data-title') || '';
+      var id = el.getAttribute('data-id') || '';
+      var summary = el.getAttribute('data-summary') || '';
+      var hay = id + ' ' + title + ' ' + summary;
+      
+      var ok = !q || hay.indexOf(q) !== -1;
+      el.style.display = ok ? '' : 'none';
+      if(ok) shown++;
+    });
+    
+    count.textContent = shown + ' / ' + items.length + ' bytes visible';
+  }
+  
+  input.addEventListener('input', render);
+  render();
+})();
+</script>
 
-**Q: Whom can I contact for advice?**
+<hr class="section-divider">
 
-**A: Dzmitryi Kharlanau is available to provide guidance on shaping SAP AMS**
+<div class="faq-card" style="border-left: 4px solid var(--color-accent); background: var(--color-accent-soft);">
+  <span class="faq-card__question">Whom can I contact for advice?</span>
+  <div class="faq-card__answer">
+    <strong>Dzmitryi Kharlanau</strong> is available to provide guidance on shaping SAP AMS, process debt reduction, and building agentic operation layers.
+  </div>
+</div>

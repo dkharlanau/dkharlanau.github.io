@@ -1,14 +1,14 @@
 ---
 layout: default
-title: "LLM-prompts Datasets"
-description: "LLM-prompts dataset bytes by Dzmitryi Kharlanau (SAP Lead)."
+title: "LLM Prompt Library"
+description: "Advanced LLM prompt engineering bytes by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/LLM-prompts/
 sitemap: true
 ---
 
 <div class="dataset-hero">
-  <p class="eyebrow">Dataset</p>
-  <h1 class="dataset-hero__title">LLM-prompts</h1>
+  <p class="eyebrow">Prompt Library</p>
+  <h1 class="dataset-hero__title">LLM Prompts</h1>
   <p class="lead">4 entries. Filter by search and type. Each entry has a clean page + raw JSON.</p>
   <div class="dataset-actions">
     <a class="button" href="/datasets/">All datasets</a>

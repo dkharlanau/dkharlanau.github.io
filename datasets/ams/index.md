@@ -1,14 +1,14 @@
 ---
 layout: default
-title: "ams Datasets"
-description: "ams dataset bytes by Dzmitryi Kharlanau (SAP Lead)."
+title: "AMS Operational Knowledge Base"
+description: "Advanced SAP AMS operational bytes by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/ams/
 sitemap: true
 ---
 
 <div class="dataset-hero">
-  <p class="eyebrow">Dataset</p>
-  <h1 class="dataset-hero__title">ams</h1>
+  <p class="eyebrow">Operational Knowledge Base</p>
+  <h1 class="dataset-hero__title">SAP AMS</h1>
   <p class="lead">51 entries. Filter by search and type. Each entry has a clean page + raw JSON.</p>
   <div class="dataset-actions">
     <a class="button" href="/datasets/">All datasets</a>

@@ -3,6 +3,8 @@ layout: default
 title: "Search — Dzmitryi Kharlanau"
 description: "Search across SAP O2C articles, notes, CV highlights, FAQs, and machine-readable datasets on dkharlanau.github.io in one place."
 permalink: /search/
+sitemap: false
+robots: "noindex,follow"
 ---
 
 <section class="section search">

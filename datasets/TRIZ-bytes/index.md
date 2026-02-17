@@ -1,14 +1,14 @@
 ---
 layout: default
-title: "TRIZ-bytes Datasets"
-description: "TRIZ-bytes dataset bytes by Dzmitryi Kharlanau (SAP Lead)."
+title: "TRIZ Inventive Principles"
+description: "TRIZ inventive strategy bytes by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/TRIZ-bytes/
 sitemap: true
 ---
 
 <div class="dataset-hero">
-  <p class="eyebrow">Dataset</p>
-  <h1 class="dataset-hero__title">TRIZ-bytes</h1>
+  <p class="eyebrow">Inventive Principles</p>
+  <h1 class="dataset-hero__title">TRIZ Principles</h1>
   <p class="lead">45 entries. Filter by search and type. Each entry has a clean page + raw JSON.</p>
   <div class="dataset-actions">
     <a class="button" href="/datasets/">All datasets</a>

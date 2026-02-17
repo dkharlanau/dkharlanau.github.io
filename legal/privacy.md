@@ -12,7 +12,7 @@ As a System Analyst and Senior SAP consultant at EPAM Systems, I respect the pri
 ## Site visits
 
 - This site is hosted on GitHub Pages. GitHub may collect standard log data such as IP address and browser information for security and analytics purposes.
-- No tracking cookies or third-party advertising scripts are deployed.
+- Google Tag Manager is used for aggregated analytics instrumentation; no third-party advertising scripts are deployed.
 - Aggregated traffic metrics from GitHub are used only to understand high-level engagement (for example, which pages are most helpful).
 
 ## Contact channels

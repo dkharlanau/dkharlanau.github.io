@@ -1,32 +1,25 @@
 {% assign canonical_url = page.url | absolute_url %}
 {% assign og_image = page.og_image | default: '/assets/og/default.png' | absolute_url %}
 {% assign site_name = 'Dzmitryi Kharlanau' %}
-{% assign is_home = page.url == '/' or page.permalink == '/' %}
-{% assign is_cv = page.url == '/cv/' or page.permalink == '/cv/' %}
-{% assign is_note = page.collection == 'notes' %}
 
-{% assign computed_title = page.seo_title %}
-{% if computed_title == nil or computed_title == '' %}
-{% if is_home %}
-{% assign computed_title = 'Dzmitryi Kharlanau — System Analyst & SAP Transformation Consultant' %}
-{% elsif is_cv %}
-{% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP Transformation & Integration' %}
-{% elsif is_note %}
-{% assign computed_title = page.title | append: ' — Dzmitryi Kharlanau | SAP Transformation & Integration' %}
-{% else %}
 {% assign computed_title = page.title | default: site.title %}
-{% endif %}
+{% if page.url == '/' or page.permalink == '/' %}
+{% assign computed_title = 'Dzmitryi Kharlanau — System Analyst & SAP Transformation Consultant' %}
+{% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
+{% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP Transformation & Integration' %}
+{% elsif page.collection == 'notes' %}
+{% assign computed_title = page.title | append: ' — Dzmitryi Kharlanau | SAP Transformation & Integration' %}
 {% endif %}
 
 {% assign default_description = 'SAP · Systems & Integration · Automation for Lower TCO' %}
-{% if is_home %}
+{% if page.url == '/' or page.permalink == '/' %}
 {% assign default_description = 'System Analyst & SAP Transformation Consultant — Senior SAP solution consultant with
 12+
 years across Order-to-Cash, logistics, and data; delivering clean-core S/4HANA, resilient integrations, and intelligent
 automation.' %}
-{% elsif is_note and page.description %}
+{% elsif page.collection == 'notes' and page.description %}
 {% assign default_description = page.description %}
-{% elsif is_cv %}
+{% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
 {% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau — System Analyst & SAP
 Transformation Consultant.' %}
 {% endif %}
@@ -47,11 +40,9 @@ normalize_whitespace %}
 <meta name="msapplication-TileColor" content="#f4f6f9" />
 <meta name="author" content="{{ site.author.name | default: site_name }}" />
 <meta name="description" content="{{ meta_description | truncate: 160, '' }}" />
-<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+<meta name="robots" content="{{ page.robots | default: 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1' }}" />
 
 <link rel="canonical" href="{{ canonical_url }}" />
-<link rel="alternate" type="application/rss+xml" title="Dzmitryi Kharlanau — Updates"
-  href="{{ '/changelog/index.xml' | absolute_url }}" />
 <link rel="alternate" type="application/json" href="{{ '/ai/catalog.json' | absolute_url }}" title="Data Catalog" />
 <link rel="ai:catalog" href="{{ '/ai/catalog.json' | absolute_url }}" />
 <link rel="alternate" type="application/json" href="{{ '/ai/resume.json' | absolute_url }}" title="Resume JSON" />
@@ -76,7 +67,7 @@ normalize_whitespace %}
   imagesrcset="{{ '/assets/img/DzmitryiKharlanau.avif' | absolute_url }} 1x" />
 <link rel="me" href="https://www.linkedin.com/in/dkharlanau" />
 
-<meta property="og:type" content="website" />
+<meta property="og:type" content="{% if page.collection == 'notes' or page.layout == 'blog' or page.collection == 'blog' %}article{% else %}website{% endif %}" />
 <meta property="og:site_name" content="{{ site_name }}" />
 <meta property="og:title" content="{{ computed_title | strip_html | normalize_whitespace }}" />
 <meta property="og:description" content="{{ meta_description | truncate: 200, '' }}" />

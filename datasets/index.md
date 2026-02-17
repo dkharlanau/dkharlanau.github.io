@@ -1,13 +1,13 @@
 ---
 layout: default
-title: "Datasets"
-description: "Reusable dataset bytes by Dzmitryi Kharlanau (SAP Lead)."
+title: "Operational & Engineering Bytes"
+description: "Curated technical bytes (TRIZ, AMS, Agentic dev, LLM prompts, DAMA/MDG) by Dzmitryi Kharlanau."
 permalink: /datasets/
 sitemap: true
 ---
 
 <div class="dataset-hero">
-  <p class="eyebrow">Datasets</p>
+  <p class="eyebrow">Knowledge Catalog</p>
   <h1 class="dataset-hero__title">Reusable bytes for readers and AI</h1>
   <p class="lead">Curated building blocks (TRIZ, AMS, Agentic development, LLM prompts, DAMA/MDG) — published with attribution so people and crawlers can cite the source.</p>
   <div class="dataset-actions">
@@ -34,7 +34,7 @@ sitemap: true
   </div>
 </a>
 <a class="neub-card dataset-card" href="/datasets/LLM-prompts/">
-  <h2 class="dataset-card__title">LLM-prompts</h2>
+  <h2 class="dataset-card__title">LLM Prompts</h2>
   <p class="dataset-card__desc">Browse 4 reusable bytes with attribution and raw JSON downloads.</p>
   <div class="dataset-card__footer">
     <span class="pill">4 entries</span>
@@ -42,7 +42,7 @@ sitemap: true
   </div>
 </a>
 <a class="neub-card dataset-card" href="/datasets/TRIZ-bytes/">
-  <h2 class="dataset-card__title">TRIZ-bytes</h2>
+  <h2 class="dataset-card__title">TRIZ Principles</h2>
   <p class="dataset-card__desc">Browse 45 reusable bytes with attribution and raw JSON downloads.</p>
   <div class="dataset-card__footer">
     <span class="pill">45 entries</span>
@@ -50,7 +50,7 @@ sitemap: true
   </div>
 </a>
 <a class="neub-card dataset-card" href="/datasets/agentic-bytes/">
-  <h2 class="dataset-card__title">agentic-bytes</h2>
+  <h2 class="dataset-card__title">Agentic Design</h2>
   <p class="dataset-card__desc">Browse 23 reusable bytes with attribution and raw JSON downloads.</p>
   <div class="dataset-card__footer">
     <span class="pill">23 entries</span>
@@ -58,7 +58,7 @@ sitemap: true
   </div>
 </a>
 <a class="neub-card dataset-card" href="/datasets/ams/">
-  <h2 class="dataset-card__title">ams</h2>
+  <h2 class="dataset-card__title">SAP AMS</h2>
   <p class="dataset-card__desc">Browse 51 reusable bytes with attribution and raw JSON downloads.</p>
   <div class="dataset-card__footer">
     <span class="pill">51 entries</span>
