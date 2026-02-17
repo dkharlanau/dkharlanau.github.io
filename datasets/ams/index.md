@@ -14,7 +14,7 @@ sitemap: true
     <a class="button" href="/datasets/">All datasets</a>
     <a class="button button--secondary" href="/datasets/search/">Search all</a>
     <a class="button button--secondary" href="/datasets/types/">Browse by type</a>
-    <a class="button button--secondary" href="/blog/ams-dataset-overview/">Read AMS brief</a>
+    <a class="button button--secondary" href="/notes/ams/">Read AMS brief</a>
   </div>
 </div>
 

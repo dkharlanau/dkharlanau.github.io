@@ -1,0 +1,37 @@
+name: SEO Checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate DAMA pages
+        run: node scripts/generate_dama_pages.js
+
+      - name: Build Jekyll site
+        run: bundle exec jekyll build
+
+      - name: Check local links
+        run: python3 scripts/check_links.py _site
+
+      - name: Check SEO metadata
+        run: python3 scripts/check_seo.py _site

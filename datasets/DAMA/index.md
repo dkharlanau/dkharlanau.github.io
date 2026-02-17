@@ -14,7 +14,7 @@ sitemap: true
     <a class="button" href="/datasets/">All datasets</a>
     <a class="button button--secondary" href="/datasets/search/">Search all</a>
     <a class="button button--secondary" href="/datasets/types/">Browse by type</a>
-    <a class="button button--secondary" href="/blog/dama-dataset-overview/">Read DAMA brief</a>
+    <a class="button button--secondary" href="/docs/dama/index.html">Read DAMA brief</a>
   </div>
 </div>
 

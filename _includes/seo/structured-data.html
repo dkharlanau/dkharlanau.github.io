@@ -4,10 +4,44 @@
 {% assign author_id = 'https://dkharlanau.github.io/#dkharlanau' %}
 {% assign og_image = page.og_image | default: '/assets/og/default.png' | absolute_url %}
 {% assign page_description = page.description | default: page.summary | default: page.excerpt | default: site.description | strip_html | normalize_whitespace %}
+{% assign page_title = page.title | default: site.title | strip_html | normalize_whitespace %}
+{% assign page_modified = page.last_modified_at | default: page.updated | default: page.date | default: site.time %}
+{% assign robots_directive = page.robots | default: '' %}
+{% assign allow_indexing = true %}
+{% if robots_directive contains 'noindex' %}
+{% assign allow_indexing = false %}
+{% endif %}
 {% assign datasets = site.data.datasets | default: empty %}
 {% assign primary_dataset = datasets | first %}
 {% assign catalog_id = 'https://dkharlanau.github.io/ai/catalog.json#catalog' %}
 {% assign catalog_url = 'https://dkharlanau.github.io/ai/catalog.json' %}
+
+{% if allow_indexing %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "{% if page.url == '/notes/' or page.url == '/blog/' or page.url == '/datasets/' or page.url == '/datasets/types/' %}CollectionPage{% else %}WebPage{% endif %}",
+  "@id": "{{ canonical_url }}#webpage",
+  "url": "{{ canonical_url }}",
+  "name": "{{ page_title | replace: '\"', '\\\"' }}",
+  "description": "{{ page_description | truncate: 160 | replace: '\"', '\\\"' }}",
+  "inLanguage": "{{ site.lang | default: 'en' }}",
+  "dateModified": "{{ page_modified | date_to_xmlschema }}",
+  "isPartOf": {
+    "@type": "WebSite",
+    "@id": "{{ site_home }}#website",
+    "url": "{{ site_home }}"
+  },
+  "about": {
+    "@id": "{{ author_id }}"
+  },
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "{{ og_image }}"
+  }
+}
+</script>
+{% endif %}
 
 {% if primary_dataset %}
 <script type="application/ld+json">
@@ -103,6 +137,40 @@
   "itemListElement": [
     {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
     {"@type": "ListItem","position": 2,"name": "Notes","item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url == '/blog/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
+    {"@type": "ListItem","position": 2,"name": "Blog","item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url == '/datasets/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
+    {"@type": "ListItem","position": 2,"name": "Datasets","item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url == '/datasets/types/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
+    {"@type": "ListItem","position": 2,"name": "Datasets","item": "{{ '/datasets/' | absolute_url }}"},
+    {"@type": "ListItem","position": 3,"name": "Types","item": "{{ canonical_url }}"}
   ]
 }
 </script>
