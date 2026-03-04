@@ -1,0 +1,129 @@
+{
+  "id": "ams-009",
+  "title": "Choose What NOT to Fix: Data-Driven AMS Triage",
+  "hook": "If you try to fix everything in SAP, you end up fixing nothing well. Modern AMS is ruthless about priority — using data, not эмоции.",
+  "idea": "The cheapest ticket is the one you never accept as a real problem. Some issues are noise, some are training, some are design debt, and only a subset deserves engineering time.",
+  "sap_specific_reality": {
+    "what_drives_waste": [
+      "Low-impact tickets disguised as 'urgent'",
+      "Edge-case behavior that happens once a year",
+      "Requests that are actually process disagreements",
+      "Fixes that create bigger regression risk than the original pain",
+      "Endless micro-changes that destabilize the landscape"
+    ]
+  },
+  "triage_matrix": {
+    "axes": [
+      {
+        "name": "Business Impact",
+        "levels": [
+          "P0: Financial/legal posting blocked or major revenue flow blocked",
+          "P1: Key operational flow blocked for a group",
+          "P2: Degraded but workarounds exist",
+          "P3: Cosmetic / convenience / preference"
+        ]
+      },
+      {
+        "name": "Repeat Frequency",
+        "levels": [
+          "High: weekly/daily",
+          "Medium: monthly",
+          "Low: rare/one-off"
+        ]
+      },
+      {
+        "name": "Risk of Change",
+        "levels": [
+          "Low: isolated, reversible",
+          "Medium: touches shared config / integration",
+          "High: core posting logic / broad blast radius"
+        ]
+      }
+    ]
+  },
+  "decision_rules": [
+    "High impact + high repeat = kill it permanently (Problem elimination).",
+    "High impact + low repeat = stabilize with runbook + fast workaround; fix only if ROI is real.",
+    "Low impact + high repeat = automate or self-serve; don’t spend experts.",
+    "Low impact + low repeat = accept as debt (explicitly), don’t let it consume AMS."
+  ],
+  "acceptance_is_a_real_action": {
+    "what_it_means": [
+      "We document it as known behavior/limitation.",
+      "We provide a workaround or guidance.",
+      "We set a review date (quarterly) to reassess."
+    ],
+    "why_it_matters": "Unspoken debt becomes endless background pain. Spoken debt becomes controlled."
+  },
+  "automation": {
+    "copilot_moves": [
+      "Auto-score tickets on impact signals (affected docs/users, downtime minutes, error types).",
+      "Detect repeats and link to existing Problems/known errors.",
+      "Suggest the cheapest resolution path: fix / automate / guide / accept."
+    ],
+    "outputs": [
+      "Triage recommendation with explanation",
+      "Draft response to requester (clear, non-defensive, with options)",
+      "Debt register entry when we consciously defer"
+    ]
+  },
+  "why_this_makes_ams_better_and_cheaper": [
+    "Less churn: teams stop being dragged by noise.",
+    "Better quality: real fixes get time and testing.",
+    "More trust: business sees consistent logic behind prioritization."
+  ],
+  "anti_patterns_to_kill": [
+    "Everything is urgent",
+    "Fixing cosmetic issues during instability",
+    "Silent deferrals that return as repeated tickets"
+  ],
+  "metrics_that_force_maturity": [
+    "Percent of tickets routed to: fix vs automate vs guide vs accept",
+    "Debt register size and age",
+    "Repeat incidents from 'accepted' items (should be near zero if guidance works)"
+  ],
+  "design_question": [
+    "What are we paying to keep alive that the business doesn’t truly need?"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "ams",
+    "source_project": "cv-ai",
+    "source_path": "ams/ams-009.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/ams/ams-009.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "ams_byte",
+    "entity_subtype": "",
+    "summary": "If you try to fix everything in SAP, you end up fixing nothing well. Modern AMS is ruthless about priority — using data, not эмоции."
+  }
+}

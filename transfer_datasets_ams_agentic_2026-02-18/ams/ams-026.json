@@ -1,0 +1,252 @@
+{
+  "id": "ams-026",
+  "title": "Effort Estimation That Doesn’t Lie: Size, Risk, and Coordination Cost",
+  "hook": "In SAP AMS, bad estimates don’t just miss deadlines — they create chaos: wrong priorities, broken approvals, and hidden risk.",
+  "idea": "Modern AMS estimates are not ‘hours’. They are a decision tool: size + risk + dependencies + verification cost. The goal is predictable flow, not perfect prediction.",
+  "sap_specific_truth": {
+    "why_effort_is_hard": [
+      "Hidden dependencies (interfaces, roles, master data, country variants)",
+      "Transport/test overhead dominates the actual config change",
+      "‘Small’ changes break big flows due to shared configuration",
+      "Coordination time often exceeds build time"
+    ],
+    "what_old_estimations_miss": [
+      "Blast radius",
+      "Testing and evidence generation",
+      "Rollback planning",
+      "Cross-team handoffs"
+    ]
+  },
+  "estimation_model": {
+    "estimate_dimensions": [
+      {
+        "name": "Size",
+        "scale": [
+          "XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "meaning": "How much work content exists (config/code/data + documentation)."
+      },
+      {
+        "name": "Risk",
+        "scale": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "meaning": "How likely it is to cause incidents or require rollback."
+      },
+      {
+        "name": "Coordination",
+        "scale": [
+          "solo",
+          "few",
+          "many"
+        ],
+        "meaning": "How many parties must align (domains/vendors/business)."
+      },
+      {
+        "name": "Verification",
+        "scale": [
+          "light",
+          "standard",
+          "heavy"
+        ],
+        "meaning": "How much testing/evidence is needed to sleep at night."
+      }
+    ],
+    "simple_output": "Estimate = (Size) + (Risk) + (Coordination) + (Verification) => delivery class and planning slot"
+  },
+  "delivery_classes": [
+    {
+      "class": "Standard Change",
+      "entry_criteria": [
+        "low risk",
+        "repeatable",
+        "pre-approved tests and rollback"
+      ],
+      "planning": "Fast lane, same week"
+    },
+    {
+      "class": "Normal Change",
+      "entry_criteria": [
+        "medium risk or dependencies",
+        "needs targeted regression",
+        "clear blast radius"
+      ],
+      "planning": "Planned slot with evidence gate"
+    },
+    {
+      "class": "High-Risk Change",
+      "entry_criteria": [
+        "core posting impact OR wide blast radius",
+        "heavy verification",
+        "rollback complexity"
+      ],
+      "planning": "Dedicated window, freeze noise around it"
+    }
+  ],
+  "estimation_rules": [
+    "If blast radius is unknown, the estimate is automatically ‘bigger’.",
+    "If dependencies are unclear, add coordination buffer — don’t hide it.",
+    "Testing is not optional effort — it’s the price of change in SAP.",
+    "If an item is repeatedly ‘surprising’, the estimation model is missing a dimension."
+  ],
+  "prioritization_logic": {
+    "inputs": [
+      "Business impact (blocked flow, financial risk, user count)",
+      "Repeat frequency (demand driver strength)",
+      "Risk of change (blast radius)",
+      "Cost of delay (what happens if we do nothing for 2 weeks)",
+      "Strategic value (reduces AMS load / reduces lock-in / improves upgrade safety)"
+    ],
+    "decision_rules": [
+      "High impact + high repeat beats everything (it’s compound cost).",
+      "Low impact + high coordination is a trap — challenge it hard.",
+      "If a change increases lock-in or custom complexity, require stronger ROI."
+    ]
+  },
+  "boards_and_planning": {
+    "boards": [
+      {
+        "name": "Triage Board",
+        "purpose": "Classify + route + assign owner within minutes/hours",
+        "columns": [
+          "new",
+          "needs-evidence",
+          "owned",
+          "waiting-dependency",
+          "resolved",
+          "converted-to-problem"
+        ]
+      },
+      {
+        "name": "Problem Elimination Board",
+        "purpose": "Kill recurrence (the load-killing engine)",
+        "columns": [
+          "candidate",
+          "measured",
+          "root-cause",
+          "fix-design",
+          "implemented",
+          "verified-no-repeat"
+        ]
+      },
+      {
+        "name": "Change Board",
+        "purpose": "Deliver safely with gates",
+        "columns": [
+          "intake",
+          "design",
+          "ready-for-test",
+          "test-evidence",
+          "ready-for-deploy",
+          "deployed",
+          "verified"
+        ]
+      }
+    ],
+    "wip_limits": [
+      "Limit active Problems per domain (prevention needs focus).",
+      "Limit active Changes per release window (quality > volume)."
+    ],
+    "cadence": [
+      "Daily: triage decisions only (owner, next step, next update time).",
+      "Weekly: commit to a small set of Problems (load-killers) + planned changes.",
+      "Monthly: rebalance based on demand drivers and cost-to-serve."
+    ]
+  },
+  "approvals_in_planning": {
+    "principle": "Approvals trigger when risk triggers, not when someone feels nervous.",
+    "gates": [
+      "Ready gate: requirements + evidence completeness",
+      "Test gate: traceability + negative cases",
+      "Deploy gate: rollback + verification checks",
+      "Close gate: business verification + learning artifact created"
+    ]
+  },
+  "handover_and_transfer_in_work": {
+    "rule": "Every handover must transfer: (facts, hypothesis, next checks, owner ask).",
+    "handover_packet": [
+      "What happened (timeline)",
+      "What we know (evidence)",
+      "What we think (hypothesis)",
+      "What we need (specific action)",
+      "What we will do next (if dependency blocks)"
+    ],
+    "why_it_matters": "This prevents ping-pong and protects velocity under pressure."
+  },
+  "automation": {
+    "copilot_moves": [
+      "Suggest Size/Risk/Coordination/Verification ratings based on similar historical items.",
+      "Auto-detect dependencies from objects mentioned (interfaces, roles, plants, company codes).",
+      "Generate a planning card: risks, tests, rollout and verification.",
+      "Highlight estimation drift and explain why it happened (missing blast radius, unknown dependency)."
+    ],
+    "outputs": [
+      "Effort class recommendation",
+      "Auto-created board cards with correct fields",
+      "Weekly planning summary with trade-offs"
+    ]
+  },
+  "anti_patterns_to_kill": [
+    "Estimating only build effort and ignoring test/coordination",
+    "Overloading the week with ‘small’ changes that create regressions",
+    "No WIP limits → everything half-done",
+    "Handover by forwarding a ticket link"
+  ],
+  "metrics_that_prove_maturity": [
+    "Estimate accuracy by class (standard/normal/high-risk)",
+    "Planning stability (committed vs delivered)",
+    "WIP and cycle time trends",
+    "Percent of work spent on top demand drivers",
+    "Handover count per item (lower is better)"
+  ],
+  "design_question": [
+    "Are we planning work — or are we just scheduling surprises?"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "ams",
+    "source_project": "cv-ai",
+    "source_path": "ams/ams-026.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/ams/ams-026.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "ams_byte",
+    "entity_subtype": "",
+    "summary": "In SAP AMS, bad estimates don’t just miss deadlines — they create chaos: wrong priorities, broken approvals, and hidden risk."
+  }
+}

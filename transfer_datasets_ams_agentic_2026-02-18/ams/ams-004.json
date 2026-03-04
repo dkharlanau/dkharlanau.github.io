@@ -1,0 +1,102 @@
+{
+  "id": "ams-004",
+  "title": "No Fiori Dependency: AMS Runs on Signals, Not Screens",
+  "hook": "User interfaces age fast. Signals, events, and data contracts age slowly. AMS should operate on the latter.",
+  "idea": "Support should not depend on someone clicking the right tile. It should depend on objective signals from the system and the business flow.",
+  "stance": {
+    "ui": "Optional. Useful for users, irrelevant for AMS control.",
+    "truth": "Logs, events, status transitions, and metrics.",
+    "control": "Chat + data + automation, not dashboards nobody checks."
+  },
+  "sap_specific_signals": {
+    "technical": [
+      "Short dump trends (ST22 signatures, not raw counts)",
+      "IDoc and interface backlog velocity",
+      "Batch job critical path breaks",
+      "Authorization failure spikes by role",
+      "Update task and LUW failures"
+    ],
+    "functional": [
+      "Blocked document flows (order → delivery → invoice)",
+      "Posting delays in FI/MM",
+      "Replication gaps (e.g., MDG → S/4)",
+      "Inconsistent status combinations"
+    ]
+  },
+  "operating_rules": [
+    "If a signal crosses a threshold, AMS reacts — no user ticket needed.",
+    "If users report an issue before the signal triggers, the signal model is wrong.",
+    "Every signal must map to a runbook or a decision path."
+  ],
+  "automation": {
+    "copilot_moves": [
+      "Translate raw SAP errors into business-impact language.",
+      "Correlate technical signals with functional blockage.",
+      "Suggest likely root causes based on past patterns."
+    ],
+    "actions": [
+      "Auto-open incidents with pre-filled evidence.",
+      "Notify the right domain channel with context, not noise.",
+      "Attach the correct runbook automatically."
+    ]
+  },
+  "why_this_reduces_cost": [
+    "Earlier detection means smaller blast radius.",
+    "Less manual monitoring and less user-driven escalation.",
+    "Fewer 'ghost incidents' caused by temporary glitches."
+  ],
+  "anti_patterns_to_kill": [
+    "Relying on users to notice system failures",
+    "Manual ST22/SM37/WE02 checking as a daily ritual",
+    "Screens as a single source of truth"
+  ],
+  "metrics_that_matter": [
+    "Mean Time To Detect (MTTD)",
+    "Incidents detected before user report (%)",
+    "Signal-to-action latency"
+  ],
+  "design_question": [
+    "What should the system tell us before the business feels pain?"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "ams",
+    "source_project": "cv-ai",
+    "source_path": "ams/ams-004.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/ams/ams-004.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "ams_byte",
+    "entity_subtype": "",
+    "summary": "User interfaces age fast. Signals, events, and data contracts age slowly. AMS should operate on the latter."
+  }
+}

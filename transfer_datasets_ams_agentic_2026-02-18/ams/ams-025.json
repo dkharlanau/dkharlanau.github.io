@@ -1,0 +1,115 @@
+{
+  "id": "ams-025",
+  "title": "Security and SoD as a First-Class AMS Flow",
+  "hook": "In classic SAP AMS, security is a gate at the end. In modern AMS, security is a continuous flow that prevents incidents instead of reacting to them.",
+  "idea": "Authorizations, SoD, and access changes are among the biggest hidden AMS cost drivers. Treat them as a managed product with signals, automation, and clear ownership.",
+  "sap_security_reality": {
+    "where_pain_comes_from": [
+      "Emergency access used as a workaround",
+      "Role drift after org and process changes",
+      "SoD checks done too late or manually",
+      "Access issues discovered only by business failure"
+    ],
+    "truth": "Most security incidents are predictable side effects of change."
+  },
+  "security_flow": {
+    "intake": [
+      "Access request via chat with business context",
+      "Declared purpose and duration",
+      "Linked to process or change"
+    ],
+    "validation": [
+      "Automated SoD check",
+      "Role compatibility check",
+      "Historical risk pattern check"
+    ],
+    "execution": [
+      "Standard role assignment fast lane",
+      "Temporary access with auto-expiry",
+      "Full traceability (who/why/when)"
+    ],
+    "review": [
+      "Post-access verification",
+      "Usage review for emergency roles",
+      "Quarterly cleanup based on real usage"
+    ]
+  },
+  "operating_rules": [
+    "No access without declared business intent.",
+    "Emergency access always expires automatically.",
+    "Repeated access requests trigger role redesign, not faster approvals."
+  ],
+  "automation": {
+    "copilot_moves": [
+      "Pre-fill access requests based on process context.",
+      "Explain SoD conflicts in plain language.",
+      "Detect access patterns that correlate with incidents.",
+      "Suggest role simplification opportunities."
+    ],
+    "outputs": [
+      "Access decision recommendation",
+      "SoD risk snapshot",
+      "Role drift report"
+    ]
+  },
+  "why_this_reduces_ams_load": [
+    "Fewer auth-related incidents.",
+    "Less firefighting around access issues.",
+    "Cleaner roles over time."
+  ],
+  "anti_patterns_to_kill": [
+    "Permanent emergency access",
+    "Manual SoD justification emails",
+    "Treating access as a favor instead of a controlled operation"
+  ],
+  "metrics_that_force_discipline": [
+    "Auth-related incident rate",
+    "Emergency access usage and duration",
+    "SoD violations introduced by changes",
+    "Access requests auto-approved (%)"
+  ],
+  "design_question": [
+    "Which access problems could we eliminate by redesigning roles instead of approving faster?"
+  ],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.1",
+    "dataset": "ams",
+    "source_project": "cv-ai",
+    "source_path": "ams/ams-025.json",
+    "generated_at_utc": "2026-02-03T14:33:32+00:00",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Lead",
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+    },
+    "license": {
+      "name": "",
+      "spdx": "",
+      "url": ""
+    },
+    "links": {
+      "website": "https://dkharlanau.github.io",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "contact": {
+      "preferred": "linkedin",
+      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+    },
+    "canonical_url": "https://dkharlanau.github.io/datasets/ams/ams-025.json",
+    "created_at_utc": "2026-02-03T14:33:32+00:00",
+    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "provenance": {
+      "source_type": "chat_export_extraction",
+      "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
+    },
+    "entity_type": "ams_byte",
+    "entity_subtype": "",
+    "summary": "In classic SAP AMS, security is a gate at the end. In modern AMS, security is a continuous flow that prevents incidents instead of reacting to them."
+  }
+}
