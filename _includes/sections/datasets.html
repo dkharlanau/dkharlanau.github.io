@@ -18,5 +18,16 @@
     {% endfor %}
   </div>
   {% endif %}
+
+  {% if ds.citation %}
+  <div class="neub-card" style="margin-top: 1.5rem;">
+    <h3>How to cite</h3>
+    <p>{{ ds.citation.text }}</p>
+    <p>Concept DOI: <a href="https://doi.org/{{ ds.citation.concept_doi }}" target="_blank" rel="noopener noreferrer">{{ ds.citation.concept_doi }}</a></p>
+    <p>Version DOI (`v1.0.0`): <a href="https://doi.org/{{ ds.citation.version_doi }}" target="_blank" rel="noopener noreferrer">{{ ds.citation.version_doi }}</a></p>
+    <p>Dataset repo: <a href="{{ ds.citation.repo_url }}" target="_blank" rel="noopener noreferrer">{{ ds.citation.repo_url }}</a></p>
+    <p>Dataset landing page: <a href="{{ ds.citation.website_url }}" target="_blank" rel="noopener noreferrer">{{ ds.citation.website_url }}</a></p>
+  </div>
+  {% endif %}
 </section>
 {% endif %}
