@@ -25,9 +25,15 @@ sitemap: true
 
 <div class="dataset-grid dataset-grid--wide">
   <div class="neub-card">
-    <h2>Attribution</h2>
+    <h2>License &amp; citation</h2>
     <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>
     <p>Canonical: <a href="https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_015.json">https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_015.json</a></p>
+    <p>License: <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a> (non-commercial, attribution required).</p>
+    <p>Concept DOI: <a href="https://doi.org/10.5281/zenodo.18862098" target="_blank" rel="noopener noreferrer">10.5281/zenodo.18862098</a></p>
+    <p>Version DOI (`v1.0.0`): <a href="https://doi.org/10.5281/zenodo.18862097" target="_blank" rel="noopener noreferrer">10.5281/zenodo.18862097</a></p>
+    <p>Repository: <a href="https://github.com/dkharlanau/dkharlanau-datasets" target="_blank" rel="noopener noreferrer">https://github.com/dkharlanau/dkharlanau-datasets</a></p>
+    <p>Suggested citation: Dzmitryi Kharlanau. “Cost &amp; Latency Budgeting: Designing Agents That Are Economical” (dataset bytes). CC BY-NC 4.0. DOI: 10.5281/zenodo.18862098. https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_015.json</p>
+    <p>Details: <a href="/legal/datasets/">/legal/datasets/</a></p>
     <p><a class="link-arrow" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
   </div>
 </div>
@@ -40,6 +46,13 @@ sitemap: true
   "description": "Understand how to design agents with predictable cost and latency, so they are usable at scale and acceptable for business.",
   "url": "https://dkharlanau.github.io/datasets/view/agentic-bytes/agentic_dev_015/",
   "isAccessibleForFree": true,
+  "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "citation": "Dzmitryi Kharlanau. “Cost & Latency Budgeting: Designing Agents That Are Economical” (dataset bytes). CC BY-NC 4.0. DOI: 10.5281/zenodo.18862098. https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_015.json",
+  "identifier": "https://doi.org/10.5281/zenodo.18862098",
+  "sameAs": [
+    "https://doi.org/10.5281/zenodo.18862098",
+    "https://github.com/dkharlanau/dkharlanau-datasets"
+  ],
   "creator": {
     "@type": "Person",
     "@id": "https://dkharlanau.github.io/#dkharlanau",
@@ -179,16 +192,17 @@ sitemap: true
     },
     "attribution": {
       "attribution_required": true,
-      "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: https://dkharlanau.github.io"
+      "preferred_citation": "Dzmitryi Kharlanau. “Cost &amp; Latency Budgeting: Designing Agents That Are Economical” (dataset bytes). CC BY-NC 4.0. DOI: 10.5281/zenodo.18862098. https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_015.json"
     },
     "license": {
-      "name": "",
-      "spdx": "",
-      "url": ""
+      "name": "Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)",
+      "spdx": "CC-BY-NC-4.0",
+      "url": "https://creativecommons.org/licenses/by-nc/4.0/"
     },
     "links": {
       "website": "https://dkharlanau.github.io",
-      "linkedin": "https://www.linkedin.com/in/dkharlanau"
+      "linkedin": "https://www.linkedin.com/in/dkharlanau",
+      "repository": "https://github.com/dkharlanau/dkharlanau-datasets"
     },
     "contact": {
       "preferred": "linkedin",
@@ -196,14 +210,19 @@ sitemap: true
     },
     "canonical_url": "https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_015.json",
     "created_at_utc": "2026-02-03T14:33:32+00:00",
-    "updated_at_utc": "2026-02-03T15:29:02+00:00",
+    "updated_at_utc": "2026-03-04T11:23:27+00:00",
     "provenance": {
       "source_type": "chat_export_extraction",
       "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."
     },
     "entity_type": "agentic_byte",
     "entity_subtype": "level:foundation",
-    "summary": "Understand how to design agents with predictable cost and latency, so they are usable at scale and acceptable for business."
+    "summary": "Understand how to design agents with predictable cost and latency, so they are usable at scale and acceptable for business.",
+    "doi": {
+      "concept": "10.5281/zenodo.18862098",
+      "version": "10.5281/zenodo.18862097",
+      "repository": "https://github.com/dkharlanau/dkharlanau-datasets"
+    }
   }
 }
 </code></pre>

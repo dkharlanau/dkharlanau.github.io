@@ -2,6 +2,12 @@
 
 Personal brand site for Dzmitryi Kharlanau, built on Jekyll with a light Neubrutalist design system.
 
+## Datasets: license & citation
+
+- Dataset bytes live under `/datasets/` and are licensed **CC BY-NC 4.0** (non-commercial, attribution required).
+- Citation + license details: `/legal/datasets/` (site) and `LICENSE-DATA` (repo).
+- GitHub “Cite this repository” support: `CITATION.cff`.
+
 ## Quick start
 
 This repo targets Ruby `>= 3.2.3` (see `.ruby-version`).

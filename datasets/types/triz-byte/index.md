@@ -241,8 +241,11 @@ sitemap: true
   </div>
   <aside class="dataset-panel">
     <div class="neub-card">
-      <h2>Attribution</h2>
+      <h2>License &amp; citation</h2>
       <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>
+      <p>License: <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a> (non-commercial, attribution required).</p>
+      <p>Concept DOI: <a href="https://doi.org/10.5281/zenodo.18862098" target="_blank" rel="noopener noreferrer">10.5281/zenodo.18862098</a></p>
+      <p>Details: <a href="/legal/datasets/">/legal/datasets/</a></p>
       <p><a class="link-arrow" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
     </div>
   </aside>

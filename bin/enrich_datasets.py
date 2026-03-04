@@ -26,6 +26,9 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 ROOT = Path(__file__).resolve().parent.parent
 DATASETS_DIR = ROOT / "datasets"
 CONFIG_YML = ROOT / "_config.yml"
+DATASET_REPO_URL = "https://github.com/dkharlanau/dkharlanau-datasets"
+DATASET_CONCEPT_DOI = "10.5281/zenodo.18862098"
+DATASET_VERSION_DOI = "10.5281/zenodo.18862097"
 
 
 @dataclass(frozen=True)
@@ -212,6 +215,10 @@ def enrich_one(obj: Dict[str, Any], *, dataset_name: str, path_rel: str, identit
     if identity.website:
         canonical_url = identity.website.rstrip("/") + "/datasets/" + path_rel
 
+    entry_id = obj.get("id") or obj.get("byte_id") or ""
+    if not isinstance(entry_id, str):
+        entry_id = str(entry_id)
+
     # Preserve created_at across reruns; set updated_at on each run.
     now = _now_iso()
     created_at = now
@@ -236,6 +243,7 @@ def enrich_one(obj: Dict[str, Any], *, dataset_name: str, path_rel: str, identit
         "links": {
             "website": identity.website,
             "linkedin": identity.linkedin,
+            "repository": DATASET_REPO_URL,
         },
         "contact": {
             "preferred": "linkedin",
@@ -250,15 +258,31 @@ def enrich_one(obj: Dict[str, Any], *, dataset_name: str, path_rel: str, identit
         "summary": infer_summary(obj),
         "attribution": {
             "attribution_required": True,
-            "preferred_citation": "Dzmitryi Kharlanau (SAP Lead). Dataset bytes: "
-            + (identity.website or "https://dkharlanau.github.io"),
+            "preferred_citation": "",
+        },
+        "doi": {
+            "concept": DATASET_CONCEPT_DOI,
+            "version": DATASET_VERSION_DOI,
+            "repository": DATASET_REPO_URL,
         },
         "license": {
-            "name": "",
-            "spdx": "",
-            "url": "",
+            "name": "Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)",
+            "spdx": "CC-BY-NC-4.0",
+            "url": "https://creativecommons.org/licenses/by-nc/4.0/",
         },
     }
+
+    # Build a stable, per-entry citation string (human + machine readable).
+    title = obj.get("title")
+    title_s = title.strip() if isinstance(title, str) else ""
+    label = title_s or entry_id or path_rel
+    base_meta["attribution"]["preferred_citation"] = (
+        "Dzmitryi Kharlanau. "
+        f"“{label}” (dataset bytes). "
+        "CC BY-NC 4.0. "
+        f"DOI: {DATASET_CONCEPT_DOI}. "
+        + (canonical_url or (identity.website or "https://dkharlanau.github.io"))
+    )
 
     if isinstance(existing_meta, dict):
         obj["meta"] = _merge_dict(existing_meta, base_meta)
@@ -276,12 +300,21 @@ def enrich_one(obj: Dict[str, Any], *, dataset_name: str, path_rel: str, identit
         meta["entity_type"] = base_meta["entity_type"]
         meta["entity_subtype"] = base_meta["entity_subtype"]
         meta["summary"] = base_meta["summary"]
+        meta["doi"] = base_meta["doi"]
+
+        # Force dataset license + citation (old runs stored blanks we want to overwrite).
+        meta["license"] = base_meta["license"]
+        meta.setdefault("attribution", {})
+        if isinstance(meta["attribution"], dict):
+            meta["attribution"]["attribution_required"] = True
+            meta["attribution"]["preferred_citation"] = base_meta["attribution"]["preferred_citation"]
 
         # Ensure links/contact are present even if an older meta exists.
         meta.setdefault("links", {})
         if isinstance(meta["links"], dict):
             meta["links"].setdefault("website", identity.website)
             meta["links"].setdefault("linkedin", identity.linkedin)
+            meta["links"].setdefault("repository", DATASET_REPO_URL)
         meta.setdefault("contact", {})
         if isinstance(meta["contact"], dict):
             meta["contact"].setdefault("preferred", "linkedin")
@@ -334,6 +367,23 @@ def write_manifest(entries: List[Dict[str, Any]], identity: SiteIdentity) -> Non
         "schema": "dkharlanau.dataset.manifest",
         "schema_version": "1.1",
         "generated_at_utc": _now_iso(),
+        "doi": {
+            "concept": DATASET_CONCEPT_DOI,
+            "version": DATASET_VERSION_DOI,
+            "repository": DATASET_REPO_URL,
+        },
+        "license": {
+            "name": "Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)",
+            "spdx": "CC-BY-NC-4.0",
+            "url": "https://creativecommons.org/licenses/by-nc/4.0/",
+        },
+        "attribution": {
+            "attribution_required": True,
+            "preferred_citation": "Dzmitryi Kharlanau. Dataset bytes (manifest). CC BY-NC 4.0. DOI: "
+            + DATASET_CONCEPT_DOI
+            + ". "
+            + (identity.website.rstrip("/") + "/datasets/manifest.json" if identity.website else "https://dkharlanau.github.io/datasets/manifest.json"),
+        },
         "creator": {
             "name": "Dzmitryi Kharlanau",
             "role": "SAP Lead",
@@ -353,13 +403,19 @@ def write_readme(identity: SiteIdentity) -> None:
     text = (
         "# Datasets\n\n"
         "Curated, machine-readable \"bytes\" for writing and reuse.\n\n"
+        "License\n"
+        "- CC BY-NC 4.0 (Attribution + Non-Commercial): https://creativecommons.org/licenses/by-nc/4.0/\n"
+        f"- Details: {website.rstrip('/')}/legal/datasets/\n\n"
+        "DOI\n"
+        f"- Concept DOI: {DATASET_CONCEPT_DOI}\n"
+        f"- Version DOI (`v1.0.0`): {DATASET_VERSION_DOI}\n\n"
         "Creator\n"
         "- Name: Dzmitryi Kharlanau\n"
         "- Role: SAP Lead\n"
         f"- Website: {website}\n"
         f"- LinkedIn: {linkedin}\n\n"
         "Attribution\n"
-        "- Please cite: Dzmitryi Kharlanau (SAP Lead) and link back to the Website/LinkedIn.\n\n"
+        f"- Please cite the dataset with author, license, and DOI `{DATASET_CONCEPT_DOI}`.\n\n"
         "Index\n"
         "- See `manifest.json` for a complete machine-readable index of all entries.\n"
     )

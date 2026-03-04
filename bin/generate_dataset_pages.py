@@ -27,6 +27,13 @@ DATASETS_DIR = ROOT / "datasets"
 MANIFEST = DATASETS_DIR / "manifest.json"
 CONFIG_YML = ROOT / "_config.yml"
 
+DATA_LICENSE_NAME = "CC BY-NC 4.0"
+DATA_LICENSE_URL = "https://creativecommons.org/licenses/by-nc/4.0/"
+DATA_LEGAL_URL = "/legal/datasets/"
+DATASET_REPO_URL = "https://github.com/dkharlanau/dkharlanau-datasets"
+DATASET_CONCEPT_DOI = "10.5281/zenodo.18862098"
+DATASET_VERSION_DOI = "10.5281/zenodo.18862097"
+
 
 def read_site_url() -> str:
     # Avoid PyYAML dependency; simple parsing for `url:`.
@@ -81,6 +88,7 @@ def json_ld_dataset(
     description: str,
     keywords: List[str],
 ) -> str:
+    citation = f"Dzmitryi Kharlanau. “{name}” (dataset bytes). {DATA_LICENSE_NAME}. DOI: {DATASET_CONCEPT_DOI}. {raw_url}"
     payload: Dict[str, Any] = {
         "@context": "https://schema.org",
         "@type": "Dataset",
@@ -88,6 +96,13 @@ def json_ld_dataset(
         "description": description,
         "url": page_url,
         "isAccessibleForFree": True,
+        "license": DATA_LICENSE_URL,
+        "citation": citation,
+        "identifier": f"https://doi.org/{DATASET_CONCEPT_DOI}",
+        "sameAs": [
+            f"https://doi.org/{DATASET_CONCEPT_DOI}",
+            DATASET_REPO_URL,
+        ],
         "creator": {
             "@type": "Person",
             "@id": f"{site_url}/#dkharlanau",
@@ -218,6 +233,16 @@ def main() -> int:
         "    <a class=\"button button--secondary\" href=\"/datasets/types/\">Browse by type</a>\n"
         "    <a class=\"button button--secondary\" href=\"/datasets/manifest.json\">manifest.json</a>\n"
         "    <a class=\"button button--secondary\" href=\"/datasets/schema.json\">schema.json</a>\n"
+        "  </div>\n"
+        "</div>\n\n"
+        "<div class=\"dataset-grid dataset-grid--wide\">\n"
+        "  <div class=\"neub-card\">\n"
+        "    <h2>License &amp; citation</h2>\n"
+        f"    <p>License: <a href=\"{DATA_LICENSE_URL}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATA_LICENSE_NAME}</a> (non-commercial, attribution required).</p>\n"
+        f"    <p>Concept DOI: <a href=\"https://doi.org/{DATASET_CONCEPT_DOI}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATASET_CONCEPT_DOI}</a></p>\n"
+        f"    <p>Dataset repo: <a href=\"{DATASET_REPO_URL}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATASET_REPO_URL}</a></p>\n"
+        f"    <p>Details: <a href=\"{DATA_LEGAL_URL}\">{DATA_LEGAL_URL}</a></p>\n"
+        f"    <p>Suggested citation: Dzmitryi Kharlanau. “&lt;Title&gt;” (dataset bytes). {DATA_LICENSE_NAME}. DOI: {DATASET_CONCEPT_DOI}. &lt;Canonical URL&gt;</p>\n"
         "  </div>\n"
         "</div>\n\n"
         "<div class=\"dataset-kpis\">\n"
@@ -449,8 +474,11 @@ def main() -> int:
             "  </div>\n"
             "  <aside class=\"dataset-panel\">\n"
             "    <div class=\"neub-card\">\n"
-            "      <h2>Attribution</h2>\n"
+            "      <h2>License &amp; citation</h2>\n"
             "      <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>\n"
+            f"      <p>License: <a href=\"{DATA_LICENSE_URL}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATA_LICENSE_NAME}</a> (non-commercial, attribution required).</p>\n"
+            f"      <p>Concept DOI: <a href=\"https://doi.org/{DATASET_CONCEPT_DOI}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATASET_CONCEPT_DOI}</a></p>\n"
+            f"      <p>Details: <a href=\"{DATA_LEGAL_URL}\">{DATA_LEGAL_URL}</a></p>\n"
             "      <p><a class=\"link-arrow\" href=\"https://www.linkedin.com/in/dkharlanau\" target=\"_blank\" rel=\"noopener noreferrer\">LinkedIn</a></p>\n"
             "    </div>\n"
             "  </aside>\n"
@@ -524,9 +552,12 @@ def main() -> int:
             "  </div>\n"
             "  <aside class=\"dataset-panel\">\n"
             "    <div class=\"neub-card\">\n"
-            "      <h2>Attribution</h2>\n"
+            "      <h2>License &amp; citation</h2>\n"
             "      <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>\n"
-            "      <p>When you reference these bytes, please link back to the site or LinkedIn.</p>\n"
+            f"      <p>License: <a href=\"{DATA_LICENSE_URL}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATA_LICENSE_NAME}</a> (non-commercial, attribution required).</p>\n"
+            f"      <p>Concept DOI: <a href=\"https://doi.org/{DATASET_CONCEPT_DOI}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATASET_CONCEPT_DOI}</a></p>\n"
+            f"      <p>Details: <a href=\"{DATA_LEGAL_URL}\">{DATA_LEGAL_URL}</a></p>\n"
+            f"      <p>Suggested citation: Dzmitryi Kharlanau. “&lt;Title&gt;” (dataset bytes). {DATA_LICENSE_NAME}. DOI: {DATASET_CONCEPT_DOI}. &lt;Canonical URL&gt;</p>\n"
             "      <p><a class=\"link-arrow\" href=\"https://www.linkedin.com/in/dkharlanau\" target=\"_blank\" rel=\"noopener noreferrer\">LinkedIn</a></p>\n"
             "    </div>\n"
             "    <div class=\"neub-card\">\n"
@@ -585,9 +616,15 @@ def main() -> int:
                 + (f"<div class=\"neub-card dataset-entry-lead\">{esc(summary)}</div>\n\n" if summary else "")
                 + "<div class=\"dataset-grid dataset-grid--wide\">\n"
                 "  <div class=\"neub-card\">\n"
-                "    <h2>Attribution</h2>\n"
+                "    <h2>License &amp; citation</h2>\n"
                 "    <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>\n"
                 f"    <p>Canonical: <a href=\"{esc(raw_url)}\">{esc(raw_url)}</a></p>\n"
+                f"    <p>License: <a href=\"{DATA_LICENSE_URL}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATA_LICENSE_NAME}</a> (non-commercial, attribution required).</p>\n"
+                f"    <p>Concept DOI: <a href=\"https://doi.org/{DATASET_CONCEPT_DOI}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATASET_CONCEPT_DOI}</a></p>\n"
+                f"    <p>Version DOI (`v1.0.0`): <a href=\"https://doi.org/{DATASET_VERSION_DOI}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATASET_VERSION_DOI}</a></p>\n"
+                f"    <p>Repository: <a href=\"{DATASET_REPO_URL}\" target=\"_blank\" rel=\"noopener noreferrer\">{DATASET_REPO_URL}</a></p>\n"
+                f"    <p>Suggested citation: Dzmitryi Kharlanau. “{esc(title)}” (dataset bytes). {DATA_LICENSE_NAME}. DOI: {DATASET_CONCEPT_DOI}. {esc(raw_url)}</p>\n"
+                f"    <p>Details: <a href=\"{DATA_LEGAL_URL}\">{DATA_LEGAL_URL}</a></p>\n"
                 "    <p><a class=\"link-arrow\" href=\"https://www.linkedin.com/in/dkharlanau\" target=\"_blank\" rel=\"noopener noreferrer\">LinkedIn</a></p>\n"
                 "  </div>\n"
                 "</div>\n\n"

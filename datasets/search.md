@@ -3,8 +3,7 @@ layout: default
 title: "Dataset Search"
 description: "Search all dataset bytes by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/search/
-sitemap: false
-robots: "noindex,follow"
+sitemap: true
 ---
 
 <div class="dataset-hero">

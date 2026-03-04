@@ -43,6 +43,11 @@ normalize_whitespace %}
 <link rel="alternate" hreflang="en" href="{{ canonical_url }}" />
 <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}" />
 <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}" />
+
+{% if page.url contains '/datasets/' or page.url == '/legal/datasets/' %}
+<link rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/" />
+{% endif %}
+
 <link rel="alternate" type="application/json" href="{{ '/ai/catalog.json' | absolute_url }}" title="Data Catalog" />
 <link rel="ai:catalog" href="{{ '/ai/catalog.json' | absolute_url }}" />
 <link rel="alternate" type="application/json" href="{{ '/ai/resume.json' | absolute_url }}" title="Resume JSON" />

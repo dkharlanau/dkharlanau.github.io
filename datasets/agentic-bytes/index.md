@@ -1,14 +1,14 @@
 ---
 layout: default
-title: "Agentic Design Repository"
-description: "Agentic development and design bytes by Dzmitryi Kharlanau (SAP Lead)."
+title: "agentic-bytes Datasets"
+description: "agentic-bytes dataset bytes by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/agentic-bytes/
 sitemap: true
 ---
 
 <div class="dataset-hero">
-  <p class="eyebrow">Agentic Design Repository</p>
-  <h1 class="dataset-hero__title">Agentic Design</h1>
+  <p class="eyebrow">Dataset</p>
+  <h1 class="dataset-hero__title">agentic-bytes</h1>
   <p class="lead">23 entries. Filter by search and type. Each entry has a clean page + raw JSON.</p>
   <div class="dataset-actions">
     <a class="button" href="/datasets/">All datasets</a>
@@ -152,9 +152,12 @@ sitemap: true
   </div>
   <aside class="dataset-panel">
     <div class="neub-card">
-      <h2>Attribution</h2>
+      <h2>License &amp; citation</h2>
       <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>
-      <p>When you reference these bytes, please link back to the site or LinkedIn.</p>
+      <p>License: <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a> (non-commercial, attribution required).</p>
+      <p>Concept DOI: <a href="https://doi.org/10.5281/zenodo.18862098" target="_blank" rel="noopener noreferrer">10.5281/zenodo.18862098</a></p>
+      <p>Details: <a href="/legal/datasets/">/legal/datasets/</a></p>
+      <p>Suggested citation: Dzmitryi Kharlanau. “&lt;Title&gt;” (dataset bytes). CC BY-NC 4.0. DOI: 10.5281/zenodo.18862098. &lt;Canonical URL&gt;</p>
       <p><a class="link-arrow" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
     </div>
     <div class="neub-card">
