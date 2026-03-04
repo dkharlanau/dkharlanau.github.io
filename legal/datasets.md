@@ -18,13 +18,14 @@ Datasets are licensed under **Creative Commons Attribution-NonCommercial 4.0 Int
 That means:
 - ✅ You can **share** and **adapt** the datasets for **non-commercial** use
 - ✅ **Attribution is required**
+- ✅ Attribution must include a **source link** to the canonical dataset URL
 - ❌ You cannot use the datasets for **commercial** purposes without permission
 
 ## How to cite
 
 Minimum attribution should include:
 - Author: **Dzmitryi Kharlanau**
-- Source: a link to the **canonical dataset URL** (preferred) or https://dkharlanau.github.io/datasets/
+- Source: a **clickable link** to the **canonical dataset URL** (preferred) or https://dkharlanau.github.io/datasets/
 - DOI: **10.5281/zenodo.18862098**
 - License: **CC BY-NC 4.0**
 

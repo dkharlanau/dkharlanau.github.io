@@ -415,7 +415,7 @@ def write_readme(identity: SiteIdentity) -> None:
         f"- Website: {website}\n"
         f"- LinkedIn: {linkedin}\n\n"
         "Attribution\n"
-        f"- Please cite the dataset with author, license, and DOI `{DATASET_CONCEPT_DOI}`.\n\n"
+        f"- Please cite the dataset with author, license, DOI `{DATASET_CONCEPT_DOI}`, and a clickable source link to the canonical URL.\n\n"
         "Index\n"
         "- See `manifest.json` for a complete machine-readable index of all entries.\n"
     )

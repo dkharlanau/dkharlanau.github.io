@@ -17,7 +17,7 @@ Creator
 - LinkedIn: https://www.linkedin.com/in/dkharlanau
 
 Attribution
-- Please cite the dataset with author, license, and DOI `10.5281/zenodo.18862098`.
+- Please cite the dataset with author, license, DOI `10.5281/zenodo.18862098`, and a clickable source link to the canonical URL.
 
 Index
 - See `manifest.json` for a complete machine-readable index of all entries.

@@ -89,7 +89,7 @@ sitemap: true
     <div class="neub-card">
       <h2>License &amp; citation</h2>
       <p>Creator: <strong>Dzmitryi Kharlanau</strong> (SAP Lead).</p>
-      <p>License: <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a> (non-commercial, attribution required).</p>
+      <p>License: <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a> (non-commercial only, attribution with source link required).</p>
       <p>Concept DOI: <a href="https://doi.org/10.5281/zenodo.18862098" target="_blank" rel="noopener noreferrer">10.5281/zenodo.18862098</a></p>
       <p>Details: <a href="/legal/datasets/">/legal/datasets/</a></p>
       <p>Suggested citation: Dzmitryi Kharlanau. “&lt;Title&gt;” (dataset bytes). CC BY-NC 4.0. DOI: 10.5281/zenodo.18862098. &lt;Canonical URL&gt;</p>
