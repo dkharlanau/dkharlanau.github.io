@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Dzmitryi Kharlanau — System Analyst & SAP Transformation Consultant"
-description: "System Analyst and SAP Transformation Consultant with 12+ years in O2C, logistics, and integration, delivering clean-core S/4HANA automation outcomes."
+title: "Dzmitryi Kharlanau — SAP System Analyst"
+description: "SAP System Analyst with 12+ years in O2C, logistics, and integration, delivering clean-core S/4HANA automation outcomes."
 permalink: /
 sections:
   - hero
