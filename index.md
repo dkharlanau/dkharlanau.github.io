@@ -5,6 +5,7 @@ description: "SAP System Analyst with 12+ years in O2C, logistics, and integrati
 permalink: /
 sections:
   - hero
+  - services
   - ams-next-gen
   - datasets
   - credentials
