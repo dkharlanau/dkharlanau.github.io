@@ -3,6 +3,7 @@ layout: default
 title: "SAP Integration Architecture Consulting — APIs, Events, and Clean-Core Boundaries"
 description: "SAP integration architecture consulting for APIs, events, IDoc, OData, Integration Suite, and clean-core boundaries across S/4HANA landscapes."
 permalink: /services/sap-integration-architecture/
+last_modified_at: 2026-04-19
 ---
 
 <section class="section note-detail">
@@ -30,7 +31,7 @@ permalink: /services/sap-integration-architecture/
       </ul>
 
       <h2>Related pages</h2>
-      <p><a href="/notes/composable-erp/">Composable ERP strategy</a> · <a href="/notes/system-architecture/">System architecture note</a> · <a href="/services/sap-ai-ml-enablement/">SAP AI and ML enablement</a></p>
+      <p><a href="/about/">Profile</a> · <a href="/ai/integration-reliability/">AI routing page</a> · <a href="/datasets/DAMA/">DAMA datasets</a> · <a href="/notes/composable-erp/">Composable ERP strategy</a> · <a href="/notes/system-architecture/">System architecture note</a> · <a href="/services/sap-ai-ml-enablement/">SAP AI and ML enablement</a></p>
     </div>
   </article>
 </section>

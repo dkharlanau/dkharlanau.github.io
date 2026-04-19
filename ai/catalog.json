@@ -1,47 +1,24 @@
+---
+layout: null
+permalink: /ai/catalog.json
+sitemap: true
+last_modified_at: 2026-04-19
+---
 {
   "@context": "https://schema.org",
   "@type": "DataCatalog",
+  "@id": "https://dkharlanau.github.io/ai/catalog.json#catalog",
   "name": "DKharlanau Professional Data Catalog",
   "url": "https://dkharlanau.github.io/ai/catalog.json",
-  "dataset": [
-    {
-      "@type": "Dataset",
-      "name": "Resume (YAML)",
-      "url": "https://dkharlanau.github.io/ai/resume.yml",
-      "license": "https://creativecommons.org/licenses/by-nc/4.0/",
-      "isAccessibleForFree": true,
-      "sameAs": "https://dkharlanau.github.io/ai/resume.json",
-      "keywords": ["SAP", "O2C", "Integration", "MDG", "Clean Core"]
-    },
-    {
-      "@type": "Dataset",
-      "name": "Consulting Principles",
-      "url": "https://dkharlanau.github.io/ai/principles.json",
-      "license": "https://creativecommons.org/licenses/by-nc/4.0/",
-      "isAccessibleForFree": true
-    },
-    {
-      "@type": "Dataset",
-      "name": "Engagement Recommendations",
-      "url": "https://dkharlanau.github.io/ai/recommendations.json",
-      "license": "https://creativecommons.org/licenses/by-nc/4.0/",
-      "isAccessibleForFree": true
-    },
-    {
-      "@type": "Dataset",
-      "name": "Dataset Bytes Manifest",
-      "description": "Index of all published dataset bytes (id, title, tags, entity type, summary, path) with attribution.",
-      "url": "https://dkharlanau.github.io/datasets/manifest.json",
-      "license": "https://creativecommons.org/licenses/by-nc/4.0/",
-      "isAccessibleForFree": true
-    },
-    {
-      "@type": "Dataset",
-      "name": "Dataset Bytes Schema",
-      "description": "JSON Schema describing the attribution and metadata contract for dataset bytes.",
-      "url": "https://dkharlanau.github.io/datasets/schema.json",
-      "license": "https://creativecommons.org/licenses/by-nc/4.0/",
-      "isAccessibleForFree": true
-    }
-  ]
+  "description": "Machine-readable profile and dataset catalog for SAP AMS improvement, operational continuity, incident prevention, structured handover, and practical AI work.",
+  "creator": {
+    "@type": "Person",
+    "@id": "https://dkharlanau.github.io/#dkharlanau",
+    "name": "Dzmitryi Kharlanau",
+    "url": "https://dkharlanau.github.io/about/"
+  },
+  "about": {
+    "@id": "https://dkharlanau.github.io/#dkharlanau"
+  },
+  "dataset": {{ site.data.datasets | jsonify }}
 }

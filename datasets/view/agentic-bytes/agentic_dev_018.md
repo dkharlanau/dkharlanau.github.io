@@ -4,6 +4,8 @@ title: "Single-Agent vs Multi-Agent: When One Brain Is Enough"
 description: "Understand when a single agent is sufficient and when splitting responsibilities across multiple agents makes systems more reliable and maintainable."
 permalink: /datasets/view/agentic-bytes/agentic_dev_018/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+dataset_detail_page: true
 ---
 
 <div class="dataset-hero">
@@ -201,7 +203,7 @@ sitemap: true
     },
     "canonical_url": "https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_018.json",
     "created_at_utc": "2026-02-03T14:33:32+00:00",
-    "updated_at_utc": "2026-03-04T19:03:44+00:00",
+    "updated_at_utc": "2026-04-13T08:37:04+00:00",
     "provenance": {
       "source_type": "chat_export_extraction",
       "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."

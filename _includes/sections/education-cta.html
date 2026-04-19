@@ -1,0 +1,19 @@
+{% assign cta = site.data.edu.cta %}
+{% if cta %}
+<section class="section education-page education-page__cta">
+  <article class="education-cta-card">
+    <div class="education-cta-card__copy">
+      {% if cta.eyebrow %}<p class="eyebrow">{{ cta.eyebrow }}</p>{% endif %}
+      {% if cta.title %}<h2>{{ cta.title }}</h2>{% endif %}
+      {% if cta.body %}<p class="lead">{{ cta.body }}</p>{% endif %}
+    </div>
+    {% if cta.links %}
+    <div class="education-cta-card__actions">
+      {% for link in cta.links %}
+      <a class="{% if forloop.first %}button button--primary{% else %}link link--pill{% endif %}" href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ link.label }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </article>
+</section>
+{% endif %}

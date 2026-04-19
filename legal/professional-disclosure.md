@@ -3,6 +3,7 @@ layout: default
 title: "Professional Disclosure"
 description: "Professional disclosure for Dzmitryi Kharlanau — employment with EPAM Systems, certifications, independence policy, and contact channels for reference checks."
 permalink: /legal/professional-disclosure/
+last_modified_at: 2026-04-19
 ---
 
 # Professional Disclosure
@@ -33,3 +34,4 @@ permalink: /legal/professional-disclosure/
 
 - LinkedIn: [linkedin.com/in/dkharlanau](https://www.linkedin.com/in/dkharlanau)
 - EPAM Systems (corporate): [epam.com](https://www.epam.com)
+- Canonical profile page: [/about/](/about/)

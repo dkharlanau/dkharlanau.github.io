@@ -17,12 +17,22 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: "3.2.3"
           bundler-cache: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Check public repo hygiene
+        run: python3 scripts/check_public_repo.py
+
+      - name: Install Python test dependencies
+        run: python3 -m pip install pytest
+
+      - name: Run Python tests
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
 
       - name: Generate DAMA pages
         run: node scripts/generate_dama_pages.js

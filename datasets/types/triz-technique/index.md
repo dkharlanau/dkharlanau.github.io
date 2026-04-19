@@ -4,6 +4,8 @@ title: "triz_technique"
 description: "Dataset bytes of type triz_technique by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/types/triz-technique/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+data_catalog_page: true
 ---
 
 <div class="dataset-hero">

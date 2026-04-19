@@ -8,6 +8,16 @@ Personal brand site for Dzmitryi Kharlanau, built on Jekyll with a light Neubrut
 - Citation + license details: `/legal/datasets/` (site) and `LICENSE-DATA` (repo).
 - GitHub “Cite this repository” support: `CITATION.cff`.
 
+## Logos, brands, and trademarks
+
+- Third-party company logos, product marks, and brand assets are **not** covered by the dataset or repository content license unless a file explicitly says otherwise.
+- Before adding or reusing any third-party logo or icon, verify the applicable license, public brand-guidelines, or obtain written permission from the rights holder.
+- If permission is unclear, do not commit the asset. Link to the company website or use plain text instead.
+- Keep any approved third-party logo use narrow and referential only. Do not imply endorsement, partnership, certification, or affiliation unless that relationship is real and can be stated publicly.
+- When a third-party asset is added, record its source and usage basis in the relevant data file or commit context so provenance is clear.
+- Repository maintainers and contributors are responsible for securing any required permissions before publishing branded assets.
+- Nothing in this repository should be treated as legal advice or as a substitute for brand approval from the rights holder.
+
 ## Quick start
 
 This repo targets Ruby `>= 3.2.3` (see `.ruby-version`).

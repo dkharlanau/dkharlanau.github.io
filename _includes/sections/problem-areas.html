@@ -1,0 +1,19 @@
+{% assign section = site.data.home.problem_areas %}
+{% if section %}
+<section class="section home-problems" id="problem-areas">
+  <div class="home-split">
+    <header class="section-heading">
+      {% if section.eyebrow %}<p class="eyebrow">{{ section.eyebrow }}</p>{% endif %}
+      {% if section.title %}<h2>{{ section.title }}</h2>{% endif %}
+      {% if section.lead %}<p class="lead">{{ section.lead }}</p>{% endif %}
+    </header>
+    {% if section.items %}
+    <ul class="problem-list">
+      {% for item in section.items %}
+      <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</section>
+{% endif %}

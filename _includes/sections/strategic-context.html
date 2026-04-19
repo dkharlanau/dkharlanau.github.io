@@ -1,0 +1,66 @@
+{% assign section = site.data.home.strategic_context %}
+{% if section %}
+<section class="section strategic-context" id="strategic-context">
+  <header class="strategic-context__header">
+    {% if section.eyebrow %}<p class="strategic-context__eyebrow">{{ section.eyebrow }}</p>{% endif %}
+    {% if section.title %}<h2 class="strategic-context__title">{{ section.title }}</h2>{% endif %}
+    {% if section.statement %}<p class="strategic-context__statement">{{ section.statement }}</p>{% endif %}
+  </header>
+
+  <div class="strategic-context__grid">
+    <article class="strategic-context__card strategic-context__card--primary">
+      <div class="strategic-context__meta">
+        <span class="material-symbols-outlined" aria-hidden="true">{{ section.hero_cards.primary.icon }}</span>
+        <span>{{ section.hero_cards.primary.label }}</span>
+      </div>
+      <div class="strategic-context__ghost">{{ section.hero_cards.primary.value }}</div>
+      <h3>{{ section.hero_cards.primary.title }}</h3>
+      <div class="strategic-context__source">
+        <span>{{ section.hero_cards.primary.source }}</span>
+        <span class="strategic-context__source-line" aria-hidden="true"></span>
+      </div>
+    </article>
+
+    <article class="strategic-context__card strategic-context__card--visual">
+      <div class="strategic-context__visual-surface" aria-hidden="true"></div>
+      <div class="strategic-context__visual-copy">
+        <p>{{ section.hero_cards.visual.quote }}</p>
+        <span class="material-symbols-outlined" aria-hidden="true">{{ section.hero_cards.visual.icon }}</span>
+      </div>
+    </article>
+
+    <article class="strategic-context__card strategic-context__card--ratio">
+      <span class="strategic-context__kicker">{{ section.hero_cards.ratio.label }}</span>
+      <strong>{{ section.hero_cards.ratio.value }}</strong>
+      <p>{{ section.hero_cards.ratio.detail }}</p>
+      <div class="strategic-context__ratio-bar" aria-hidden="true">
+        <span></span>
+        <span></span>
+      </div>
+    </article>
+
+    <article class="strategic-context__card strategic-context__card--multiplier">
+      <span class="material-symbols-outlined strategic-context__multiplier-icon" aria-hidden="true">{{ section.hero_cards.multiplier.icon }}</span>
+      <span class="strategic-context__kicker">{{ section.hero_cards.multiplier.label }}</span>
+      <h3>
+        {{ section.hero_cards.multiplier.title }}
+        <strong>{{ section.hero_cards.multiplier.emphasis }}</strong>
+        {{ section.hero_cards.multiplier.detail }}
+      </h3>
+      <div class="strategic-context__tags">
+        {% for tag in section.hero_cards.multiplier.tags %}
+        <span>{{ tag }}</span>
+        {% endfor %}
+      </div>
+    </article>
+  </div>
+
+  <blockquote class="strategic-context__quote">
+    <p>{{ section.quote }}</p>
+    <footer>
+      <span class="strategic-context__quote-line" aria-hidden="true"></span>
+      <span>{{ section.quote_source }}</span>
+    </footer>
+  </blockquote>
+</section>
+{% endif %}

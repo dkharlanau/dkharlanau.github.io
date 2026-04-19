@@ -1,0 +1,33 @@
+{% assign edu = site.data.edu %}
+{% if edu.hero %}
+<section class="section education-page education-page__hero" id="education-top">
+  <article class="education-poster">
+    <div class="education-poster__copy">
+      {% if edu.hero.eyebrow %}<p class="eyebrow">{{ edu.hero.eyebrow }}</p>{% endif %}
+      {% if edu.hero.title %}<h1>{{ edu.hero.title }}</h1>{% endif %}
+      {% if edu.hero.intro %}<p class="lead">{{ edu.hero.intro }}</p>{% endif %}
+      {% if edu.hero.anchors %}
+      <div class="education-poster__actions">
+        {% for anchor in edu.hero.anchors %}
+        <a class="{% if forloop.first %}button button--primary{% else %}link link--pill{% endif %}" href="{{ anchor.href }}">{{ anchor.label }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% if edu.hero.highlights %}
+    <dl class="education-poster__stats">
+      {% for item in edu.hero.highlights %}
+      <div class="education-stat">
+        {% if item.href %}
+        <dt><a href="{{ item.href }}">{{ item.label }}</a></dt>
+        {% else %}
+        <dt>{{ item.label }}</dt>
+        {% endif %}
+        <dd>{{ item.value }}</dd>
+      </div>
+      {% endfor %}
+    </dl>
+    {% endif %}
+  </article>
+</section>
+{% endif %}

@@ -3,6 +3,7 @@ layout: default
 title: "SAP O2C Process Audit — Diagnose Revenue Leakage and Delivery Breakpoints"
 description: "SAP O2C process audit for blocked orders, billing backlog, credit issues, integration failures, and clean-core remediation priorities."
 permalink: /services/sap-o2c-process-audit/
+last_modified_at: 2026-04-19
 ---
 
 <section class="section note-detail">
@@ -30,7 +31,7 @@ permalink: /services/sap-o2c-process-audit/
       </ul>
 
       <h2>Related pages</h2>
-      <p><a href="/notes/process-audit/">Process audit playbook</a> · <a href="/services/sap-ams-consulting/">SAP AMS consulting</a> · <a href="/cv/">CV</a></p>
+      <p><a href="/about/">Profile</a> · <a href="/services/sap-ams-consulting/">SAP AMS consulting</a> · <a href="/datasets/ams/">AMS datasets</a> · <a href="/ai/integration-reliability/">Integration reliability route</a> · <a href="/notes/process-audit/">Process audit playbook</a> · <a href="/cv/">CV</a></p>
     </div>
   </article>
 </section>

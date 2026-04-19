@@ -4,6 +4,8 @@ title: "Chunking: How Knowledge Must Be Cut for RAG"
 description: "Learn how to structure knowledge so an agent can reliably retrieve and use it without confusion or hallucination."
 permalink: /datasets/view/agentic-bytes/agentic_dev_004/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+dataset_detail_page: true
 ---
 
 <div class="dataset-hero">
@@ -199,7 +201,7 @@ sitemap: true
     },
     "canonical_url": "https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_004.json",
     "created_at_utc": "2026-02-03T14:33:32+00:00",
-    "updated_at_utc": "2026-03-04T19:03:44+00:00",
+    "updated_at_utc": "2026-04-13T08:37:04+00:00",
     "provenance": {
       "source_type": "chat_export_extraction",
       "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."

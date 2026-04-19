@@ -3,6 +3,7 @@ layout: default
 title: "Privacy Notice"
 description: "Privacy notice for dkharlanau.github.io and consulting outreach: what limited data is collected, how it is used, retention periods, and how to request updates or deletion."
 permalink: /legal/privacy/
+last_modified_at: 2026-04-19
 ---
 
 # Privacy Notice
@@ -38,3 +39,4 @@ As a System Analyst and Senior SAP consultant at EPAM Systems, I respect the pri
 ## Updates
 
 - This notice is reviewed periodically as regulations and tooling evolve. The latest version is always available on this page.
+- Canonical profile and public contact route: [/about/](/about/)

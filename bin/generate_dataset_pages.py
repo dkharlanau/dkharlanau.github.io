@@ -188,6 +188,7 @@ def main() -> int:
     site_url = read_site_url()
     manifest = load_manifest()
     entries: List[Dict[str, Any]] = manifest.get("entries", [])
+    manifest_lastmod = str(manifest.get("generated_at_utc") or "")
 
     by_dataset: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
     by_type: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
@@ -223,6 +224,8 @@ def main() -> int:
         "description: \"Reusable dataset bytes by Dzmitryi Kharlanau (SAP Lead).\"\n"
         "permalink: /datasets/\n"
         "sitemap: true\n"
+        + (f"last_modified_at: {manifest_lastmod}\n" if manifest_lastmod else "")
+        + "data_catalog_page: true\n"
         "---\n\n"
         "<div class=\"dataset-hero\">\n"
         "  <p class=\"eyebrow\">Datasets</p>\n"
@@ -262,6 +265,8 @@ def main() -> int:
         "description: \"Search all dataset bytes by Dzmitryi Kharlanau (SAP Lead).\"\n"
         "permalink: /datasets/search/\n"
         "sitemap: true\n"
+        + (f"last_modified_at: {manifest_lastmod}\n" if manifest_lastmod else "")
+        + "data_catalog_page: true\n"
         "---\n\n"
         "<div class=\"dataset-hero\">\n"
         "  <p class=\"eyebrow\">Datasets</p>\n"
@@ -397,6 +402,8 @@ def main() -> int:
         "description: \"Browse dataset bytes by entity type.\"\n"
         "permalink: /datasets/types/\n"
         "sitemap: true\n"
+        + (f"last_modified_at: {manifest_lastmod}\n" if manifest_lastmod else "")
+        + "data_catalog_page: true\n"
         "---\n\n"
         "<div class=\"dataset-hero\">\n"
         "  <p class=\"eyebrow\">Datasets</p>\n"
@@ -441,6 +448,8 @@ def main() -> int:
             f"description: \"Dataset bytes of type {esc(t_name)} by Dzmitryi Kharlanau (SAP Lead).\"\n"
             f"permalink: /datasets/types/{slug(t_name)}/\n"
             "sitemap: true\n"
+            + (f"last_modified_at: {manifest_lastmod}\n" if manifest_lastmod else "")
+            + "data_catalog_page: true\n"
             "---\n\n"
             "<div class=\"dataset-hero\">\n"
             "  <p class=\"eyebrow\">Type</p>\n"
@@ -518,6 +527,8 @@ def main() -> int:
             f"description: \"{esc(dataset_name)} dataset bytes by Dzmitryi Kharlanau (SAP Lead).\"\n"
             f"permalink: /datasets/{esc(dataset_name)}/\n"
             "sitemap: true\n"
+            + (f"last_modified_at: {manifest_lastmod}\n" if manifest_lastmod else "")
+            + "data_catalog_page: true\n"
             "---\n\n"
             "<div class=\"dataset-hero\">\n"
             "  <p class=\"eyebrow\">Dataset</p>\n"
@@ -598,6 +609,8 @@ def main() -> int:
                 f"description: \"{esc(description)}\"\n"
                 f"permalink: /datasets/view/{esc(dataset_name)}/{esc(entry_id)}/\n"
                 "sitemap: true\n"
+                + (f"last_modified_at: {manifest_lastmod}\n" if manifest_lastmod else "")
+                + "dataset_detail_page: true\n"
                 "---\n\n"
                 "<div class=\"dataset-hero\">\n"
                 "  <p class=\"eyebrow\">Dataset entry</p>\n"

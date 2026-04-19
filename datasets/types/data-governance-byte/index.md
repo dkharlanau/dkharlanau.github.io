@@ -4,6 +4,8 @@ title: "data_governance_byte"
 description: "Dataset bytes of type data_governance_byte by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/types/data-governance-byte/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+data_catalog_page: true
 ---
 
 <div class="dataset-hero">

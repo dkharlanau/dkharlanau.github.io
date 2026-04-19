@@ -1,0 +1,78 @@
+{% assign section = site.data.home.tech_stack %}
+{% if section %}
+<section class="section tech-stack-editorial" id="stack">
+  <header class="tech-stack-editorial__header">
+    <span class="tech-stack-editorial__eyebrow">Technology</span>
+    <h2 class="tech-stack-editorial__title">What I work with</h2>
+    {% if section.intro %}<p class="tech-stack-editorial__intro">{{ section.intro }}</p>{% endif %}
+  </header>
+
+  <div class="tech-stack-simple">
+    <article class="tech-stack-simple__column">
+      <div class="tech-stack-simple__head">
+        <span class="material-symbols-outlined" aria-hidden="true">settings_input_component</span>
+        <h3>SAP and process</h3>
+      </div>
+      <ul class="tech-stack-simple__list">
+        {% for item in section.items limit: 3 %}
+        <li>
+          <strong>{{ item.label }}</strong>
+          <p>{{ item.summary }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+
+    <article class="tech-stack-simple__column">
+      <div class="tech-stack-simple__head">
+        <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+        <h3>AI and automation</h3>
+      </div>
+      <ul class="tech-stack-simple__list">
+        {% for item in section.items offset: 2 limit: 3 %}
+        <li>
+          <strong>{{ item.label }}</strong>
+          <p>{{ item.summary }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+
+    <article class="tech-stack-simple__column">
+      <div class="tech-stack-simple__head">
+        <span class="material-symbols-outlined" aria-hidden="true">code</span>
+        <h3>Build and delivery</h3>
+      </div>
+      <ul class="tech-stack-simple__list">
+        {% for item in section.items offset: 5 limit: 4 %}
+        <li>
+          <strong>{{ item.label }}</strong>
+          <p>{{ item.summary }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+  </div>
+
+  <section class="tech-stack-editorial__callout">
+    <div class="tech-stack-editorial__callout-copy">
+      <h3>Clean core, side-by-side delivery</h3>
+      {% if section.paragraphs and section.paragraphs[1] %}
+      <p>{{ section.paragraphs[1] }}</p>
+      {% elsif section.paragraphs and section.paragraphs.first %}
+      <p>{{ section.paragraphs.first }}</p>
+      {% endif %}
+      <div class="tech-stack-editorial__callout-stats">
+        <div>
+          <strong>Clean Core</strong>
+          <span>Design Principle</span>
+        </div>
+        <div>
+          <strong>Side-by-Side</strong>
+          <span>Execution Model</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+{% endif %}

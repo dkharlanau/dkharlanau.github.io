@@ -1,0 +1,23 @@
+{% assign section = site.data.home.contact %}
+{% if section %}
+<section class="section home-cta" id="contact">
+  <div class="home-cta__card">
+    <div class="home-cta__header">
+      {% if section.eyebrow %}<p class="eyebrow">{{ section.eyebrow }}</p>{% endif %}
+      <h2>{{ section.title | default: "Start with the problem" }}</h2>
+      {% if section.lead %}<p class="home-cta__lead">{{ section.lead }}</p>{% endif %}
+    </div>
+
+    {% if section.links %}
+    <div class="home-cta__actions">
+      {% for link in section.links limit: 2 %}
+      <a class="home-hero__action{% if forloop.first %} home-hero__action--primary{% endif %}" href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+        <span>{{ link.label }}</span>
+        {% if link.external %}<span aria-hidden="true">↗</span>{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}

@@ -1,0 +1,35 @@
+{% assign section = site.data.home.directions %}
+{% if section %}
+<section class="section home-section directions" id="directions">
+  <div class="home-section__header">
+    {% if section.eyebrow %}<p class="eyebrow">{{ section.eyebrow }}</p>{% endif %}
+    {% if section.title %}<h2>{{ section.title }}</h2>{% endif %}
+    {% if section.lead %}<p class="home-section__intro">{{ section.lead }}</p>{% endif %}
+  </div>
+
+  {% if section.items %}
+  <div class="home-direction-list">
+    {% for item in section.items %}
+    <article class="home-direction-row">
+      <div class="home-direction-row__category">
+        {{ item.category }}
+      </div>
+      <div class="home-direction-row__content">
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.summary }}</p>
+        {% if item.links %}
+        <div class="home-inline-links">
+          {% for link in item.links %}
+          <a href="{{ link.url }}">
+            {{ link.label }}
+          </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}

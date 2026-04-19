@@ -1,0 +1,17 @@
+{% assign section = site.data.home.ai_links %}
+{% if section %}
+<section class="section home-ai-links" id="ai-links">
+  <header class="section-heading">
+    {% if section.eyebrow %}<p class="eyebrow">{{ section.eyebrow }}</p>{% endif %}
+    {% if section.title %}<h2>{{ section.title }}</h2>{% endif %}
+    {% if section.lead %}<p class="lead">{{ section.lead }}</p>{% endif %}
+  </header>
+  {% if section.links %}
+  <ul class="resource-list">
+    {% for link in section.links %}
+    <li><a class="link-arrow" href="{{ link.url }}">{{ link.label }}</a></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+{% endif %}

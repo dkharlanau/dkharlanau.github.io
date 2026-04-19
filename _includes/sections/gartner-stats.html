@@ -1,0 +1,148 @@
+{% assign section = site.data.home.gartner_stats %}
+{% if section %}
+{% assign risk = section.items[0] %}
+{% assign lockin = section.items[1] %}
+{% assign tco = section.items[2] %}
+{% assign clean_core = section.items[3] %}
+{% assign open_agents = section.items[4] %}
+{% assign scale = section.items[5] %}
+<section class="section gartner-stats signals-editorial-lab" id="gartner">
+  <div class="signals-editorial-lab__hero">
+    <div class="signals-editorial-lab__badge">
+      <span class="material-symbols-outlined" aria-hidden="true">analytics</span>
+      <span>Research Archive 2025</span>
+    </div>
+    <h2 class="signals-editorial-lab__title">Market Signals &amp; Strategic Pulses.</h2>
+    {% if section.intro %}<p class="signals-editorial-lab__intro">{{ section.intro }}</p>{% endif %}
+  </div>
+
+  <div class="signals-editorial-lab__grid">
+    <article class="signals-lab-card signals-lab-card--feature">
+      <div class="signals-lab-card__topline">
+        <h3>Industry Signals</h3>
+        <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+      </div>
+      <div class="signals-lab-card__body">
+        <p class="signals-lab-card__micro">Current State</p>
+        {% if section.quote %}
+        <p class="signals-lab-card__feature-copy">{{ section.quote }}</p>
+        {% endif %}
+      </div>
+    </article>
+
+    {% if risk %}
+    <article class="signals-lab-card signals-lab-card--risk">
+      <div>
+        <span class="material-symbols-outlined signals-lab-card__icon" aria-hidden="true">warning</span>
+        <h3>{{ risk.label }}</h3>
+      </div>
+      <div>
+        <div class="signals-lab-card__metric">{{ risk.value }}</div>
+        <p class="signals-lab-card__copy">{{ risk.detail }}</p>
+      </div>
+      {% if risk.source_label and risk.source_url %}
+      <a class="signals-lab-card__source" href="{{ risk.source_url }}" target="_blank" rel="noopener noreferrer">
+        {{ risk.source_label }} <span aria-hidden="true">{{ site.data.icons.external | default: "↗" }}</span>
+      </a>
+      {% endif %}
+    </article>
+    {% endif %}
+
+    <div class="signals-lab-duo">
+      {% if lockin %}
+      <article class="signals-lab-card signals-lab-card--duo">
+        <div>
+          <h3>{{ lockin.label }}</h3>
+          <p>Architecture modularity</p>
+        </div>
+        <div class="signals-lab-card__duo-value">{{ lockin.value }}</div>
+      </article>
+      {% endif %}
+      {% if tco %}
+      <article class="signals-lab-card signals-lab-card--duo">
+        <div>
+          <h3>{{ tco.label }}</h3>
+          <p>OpEx optimization</p>
+        </div>
+        <div class="signals-lab-card__duo-value">{{ tco.value }}</div>
+      </article>
+      {% endif %}
+    </div>
+
+    {% if clean_core %}
+    <article class="signals-lab-card signals-lab-card--core">
+      <div class="signals-lab-card__core-content">
+        <h3>{{ clean_core.value }}</h3>
+        <p>{{ clean_core.detail }}</p>
+        <div class="signals-lab-card__tags">
+          <span>Zero-Mod</span>
+          <span>Cloud-Native</span>
+        </div>
+      </div>
+      <div class="signals-lab-card__ghost material-symbols-outlined" aria-hidden="true">layers</div>
+    </article>
+    {% endif %}
+
+    {% if open_agents %}
+    <article class="signals-lab-card signals-lab-card--open">
+      <h3>{{ open_agents.value }}: {{ open_agents.label }}</h3>
+      <p class="signals-lab-card__open-copy">{{ open_agents.detail }}</p>
+      <div class="signals-lab-card__meta">
+        <span>Open architecture</span>
+        <span>Vendor choice</span>
+      </div>
+    </article>
+    {% endif %}
+
+    {% if scale %}
+    <article class="signals-lab-card signals-lab-card--scale">
+      <div class="signals-lab-card__topline">
+        <h3>{{ scale.label }}</h3>
+        <span class="material-symbols-outlined" aria-hidden="true">rocket_launch</span>
+      </div>
+      <div class="signals-lab-card__scale-content">
+        <div class="signals-lab-card__scale-value">{{ scale.value }}</div>
+        <p>{{ scale.detail }}</p>
+      </div>
+      <div class="signals-lab-card__progress" aria-hidden="true"><span></span></div>
+    </article>
+    {% endif %}
+  </div>
+
+  <div class="signals-journal">
+    <h3 class="signals-journal__title">Observation Journal</h3>
+    <div class="signals-journal__list">
+      <a class="signals-journal__row" href="{{ lockin.source_url | default: '#' }}" {% if lockin.source_url %}target="_blank" rel="noopener noreferrer"{% endif %}>
+        <div class="signals-journal__label-wrap">
+          <span class="material-symbols-outlined" aria-hidden="true">description</span>
+          <span class="signals-journal__label">Reduced Switching Cost Matters</span>
+        </div>
+        <div class="signals-journal__meta">
+          <span>LOCK-IN</span>
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </div>
+      </a>
+      <a class="signals-journal__row" href="{{ risk.source_url | default: '#' }}" {% if risk.source_url %}target="_blank" rel="noopener noreferrer"{% endif %}>
+        <div class="signals-journal__label-wrap">
+          <span class="material-symbols-outlined" aria-hidden="true">description</span>
+          <span class="signals-journal__label">Agent Programs Need Governance</span>
+        </div>
+        <div class="signals-journal__meta">
+          <span>RISK</span>
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </div>
+      </a>
+      <a class="signals-journal__row" href="{{ clean_core.source_url | default: '#' }}" {% if clean_core.source_url %}target="_blank" rel="noopener noreferrer"{% endif %}>
+        <div class="signals-journal__label-wrap">
+          <span class="material-symbols-outlined" aria-hidden="true">description</span>
+          <span class="signals-journal__label">Clean Core Supports Lower TCO</span>
+        </div>
+        <div class="signals-journal__meta">
+          <span>ARCHITECTURE</span>
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}

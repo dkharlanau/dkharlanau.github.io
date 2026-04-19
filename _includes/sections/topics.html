@@ -1,0 +1,16 @@
+{% assign section = site.data.home.topics %}
+{% if section %}
+<section class="section home-topics" id="topics">
+  <header class="section-heading">
+    {% if section.eyebrow %}<p class="eyebrow">{{ section.eyebrow }}</p>{% endif %}
+    {% if section.title %}<h2>{{ section.title }}</h2>{% endif %}
+  </header>
+  {% if section.items %}
+  <nav class="topic-cloud" aria-label="Browse by topic">
+    {% for item in section.items %}
+    <a href="{{ item.url }}">{{ item.label }}</a>
+    {% endfor %}
+  </nav>
+  {% endif %}
+</section>
+{% endif %}

@@ -1,0 +1,51 @@
+{% assign section = site.data.home.analysis_problem %}
+{% if section %}
+<section class="section analysis-problem" id="analysis-problem">
+  <div class="analysis-problem__hero">
+    <div class="analysis-problem__copy">
+      {% if section.eyebrow %}<p class="analysis-problem__eyebrow">{{ section.eyebrow }}</p>{% endif %}
+      {% if section.title %}<h2 class="analysis-problem__title">{{ section.title }}</h2>{% endif %}
+      {% if section.statement %}<p class="analysis-problem__statement">{{ section.statement }}</p>{% endif %}
+      {% if section.intro %}<p class="analysis-problem__intro">{{ section.intro }}</p>{% endif %}
+      {% if section.quote %}
+      <blockquote class="analysis-problem__quote">
+        <p>{{ section.quote }}</p>
+      </blockquote>
+      {% endif %}
+    </div>
+
+    <div class="analysis-problem__visual" aria-hidden="true">
+      <div class="analysis-problem__visual-surface">
+        <div class="analysis-problem__visual-main"></div>
+        {% for card in section.visual_cards %}
+        <article class="analysis-problem__visual-card analysis-problem__visual-card--{{ card.tone | default: 'neutral' }}">
+          <span class="material-symbols-outlined">{{ card.icon }}</span>
+          <h3>{{ card.title }}</h3>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% if section.deep_dive %}
+  <div class="analysis-problem__grid">
+    {% for item in section.deep_dive %}
+    <article class="analysis-problem__detail">
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.detail }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if section.cta %}
+  <div class="analysis-problem__cta">
+    <div class="analysis-problem__cta-copy">
+      <h3>{{ section.cta.title }}</h3>
+      <p>{{ section.cta.detail }}</p>
+    </div>
+    <a class="analysis-problem__cta-link" href="{{ section.cta.url }}">{{ section.cta.label }}</a>
+  </div>
+  {% endif %}
+</section>
+{% endif %}

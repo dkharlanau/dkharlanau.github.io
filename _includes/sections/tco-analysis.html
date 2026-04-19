@@ -1,0 +1,100 @@
+{% assign section = site.data.home.tco_analysis %}
+{% if section %}
+<section class="section tco-editorial" id="tco-analysis">
+  <header class="tco-editorial__header">
+    {% if section.badge %}<p class="tco-editorial__badge">{{ section.badge }}</p>{% endif %}
+    {% if section.title %}<h2 class="tco-editorial__title">{{ section.title }}</h2>{% endif %}
+    {% if section.subtitle %}<p class="tco-editorial__subtitle">{{ section.subtitle }}</p>{% endif %}
+  </header>
+
+  {% if section.cost_drivers %}
+  <section class="tco-editorial__block">
+    <div class="tco-editorial__block-head">
+      <h3>Hidden cost drivers</h3>
+      <span>01 / Operational drag</span>
+    </div>
+    <div class="tco-editorial__drivers">
+      {% for item in section.cost_drivers %}
+      <article class="tco-editorial__driver">
+        <span class="material-symbols-outlined tco-editorial__driver-icon" aria-hidden="true">{{ item.icon }}</span>
+        <h4>{{ item.title }}</h4>
+        <p>{{ item.summary }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if section.loop %}
+  <section class="tco-editorial__block">
+    <div class="tco-editorial__block-head">
+      <h3>The inefficiency loop</h3>
+      <span>02 / Systemic failure</span>
+    </div>
+    <div class="tco-editorial__loop">
+      <div class="tco-editorial__loop-row">
+        {% for item in section.loop %}
+        <div class="tco-editorial__loop-step">
+          <div class="tco-editorial__loop-node {% if forloop.last %}tco-editorial__loop-node--dark{% endif %}">
+            <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+          </div>
+          <p>{{ item.label }}</p>
+        </div>
+        {% unless forloop.last %}
+        <div class="tco-editorial__loop-arrow" aria-hidden="true">→</div>
+        {% endunless %}
+        {% endfor %}
+      </div>
+
+      {% if section.loop_effects %}
+      <div class="tco-editorial__effects">
+        {% for effect in section.loop_effects %}
+        <div class="tco-editorial__effect">
+          <span class="material-symbols-outlined" aria-hidden="true">{{ effect.icon }}</span>
+          <p>{{ effect.label }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if section.solution %}
+  <section class="tco-editorial__solution">
+    <div class="tco-editorial__solution-copy">
+      <div class="tco-editorial__solution-kicker">
+        <span></span>
+        <p>{{ section.solution.eyebrow }}</p>
+      </div>
+      <h3>{{ section.solution.title }}</h3>
+      <p class="tco-editorial__solution-summary">{{ section.solution.summary }}</p>
+
+      {% if section.solution.items %}
+      <div class="tco-editorial__solution-items">
+        {% for item in section.solution.items %}
+        <article class="tco-editorial__solution-item {% if forloop.first %}tco-editorial__solution-item--accent{% endif %}">
+          <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+          <div>
+            <h4>{{ item.title }}</h4>
+            <p>{{ item.detail }}</p>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="tco-editorial__visual" aria-hidden="true">
+      <div class="tco-editorial__visual-surface"></div>
+      {% if section.solution.metric %}
+      <div class="tco-editorial__metric">
+        <strong>{{ section.solution.metric.value }}</strong>
+        <p>{{ section.solution.metric.label }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+</section>
+{% endif %}

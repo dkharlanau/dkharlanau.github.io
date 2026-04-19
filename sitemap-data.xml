@@ -2,14 +2,24 @@
 layout: null
 permalink: /sitemap-data.xml
 ---
+{% assign resume_yaml = site.pages | where: "url", "/ai/resume.yml" | first %}
+{% assign resume_json = site.pages | where: "url", "/ai/resume.json" | first %}
+{% assign principles_json = site.pages | where: "url", "/ai/principles.json" | first %}
+{% assign recommendations_json = site.pages | where: "url", "/ai/recommendations.json" | first %}
+{% assign catalog_json = site.pages | where: "url", "/ai/catalog.json" | first %}
+{% assign discovery_map_json = site.pages | where: "url", "/ai/discovery-map.json" | first %}
+{% assign llm_legacy = site.pages | where: "url", "/LLM.txt" | first %}
+{% assign llm_lower = site.pages | where: "url", "/llms.txt" | first %}
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://dkharlanau.github.io/ai/resume.yml</loc><lastmod>2025-10-03</lastmod></url>
-  <url><loc>https://dkharlanau.github.io/ai/resume.json</loc><lastmod>2025-10-03</lastmod></url>
-  <url><loc>https://dkharlanau.github.io/ai/principles.json</loc><lastmod>2025-10-03</lastmod></url>
-  <url><loc>https://dkharlanau.github.io/ai/recommendations.json</loc><lastmod>2025-10-03</lastmod></url>
-  <url><loc>https://dkharlanau.github.io/ai/catalog.json</loc><lastmod>2025-10-03</lastmod></url>
-  <url><loc>https://dkharlanau.github.io/LLM.txt</loc><lastmod>2025-10-03</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/ai/resume.yml</loc><lastmod>{{ resume_yaml.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/ai/resume.json</loc><lastmod>{{ resume_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/ai/principles.json</loc><lastmod>{{ principles_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/ai/recommendations.json</loc><lastmod>{{ recommendations_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/ai/catalog.json</loc><lastmod>{{ catalog_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/ai/discovery-map.json</loc><lastmod>{{ discovery_map_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/LLM.txt</loc><lastmod>{{ llm_legacy.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/llms.txt</loc><lastmod>{{ llm_lower.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/datasets/manifest.json</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/datasets/schema.json</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
 </urlset>

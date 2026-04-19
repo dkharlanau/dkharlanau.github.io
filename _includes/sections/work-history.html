@@ -1,0 +1,41 @@
+{% assign section = site.data.home.work_history %}
+{% if section %}
+<section class="section home-section work-history" id="work">
+  <div class="home-section__header">
+    {% if section.eyebrow %}<p class="eyebrow">{{ section.eyebrow }}</p>{% endif %}
+    <h2>{{ section.title }}</h2>
+  </div>
+  
+  <div class="home-work-list">
+    {% for group in section.groups %}
+      {% for item in group.items %}
+      {% assign brand = site.data.brands[item.brand] %}
+      {% assign logo = item.logo | default: brand.logo %}
+      {% assign logo_alt = item.company | default: brand.label %}
+      <article class="home-work-entry">
+        {% if logo %}
+        <div class="home-work-entry__logo">
+          <img src="{{ logo }}" alt="{{ logo_alt }}">
+        </div>
+        {% endif %}
+        <div class="home-work-entry__content">
+          <div class="home-work-entry__header">
+            <h3>{{ item.company }}</h3>
+            {% if item.period %}<span class="home-work-entry__period">{{ item.period }}</span>{% endif %}
+          </div>
+          <p class="home-work-entry__role">{{ item.role }}</p>
+          <p class="home-work-entry__note">{{ item.note }}</p>
+          {% if item.url %}
+          <div class="home-work-entry__link-row">
+            <a class="home-work-entry__link" href="{{ item.url }}" target="_blank" rel="noopener noreferrer">
+              Visit {{ item.company }} <span style="font-size: 0.8em; opacity: 0.5;">↗</span>
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

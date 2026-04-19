@@ -1,0 +1,61 @@
+{% assign section = site.data.home.ai_costs_outcomes %}
+{% if section %}
+<section class="section ai-costs-outcomes" id="ai-costs-outcomes">
+  <header class="ai-costs-outcomes__header">
+    {% if section.eyebrow %}
+    <div class="ai-costs-outcomes__badge">
+      <span class="material-symbols-outlined" aria-hidden="true">analytics</span>
+      <span>{{ section.eyebrow }}</span>
+    </div>
+    {% endif %}
+    <h2 class="ai-costs-outcomes__title">{{ section.title }}</h2>
+    <p class="ai-costs-outcomes__statement">{{ section.statement }}</p>
+  </header>
+
+  <div class="ai-costs-outcomes__grid">
+    <div class="ai-costs-outcomes__main">
+      <div class="ai-costs-outcomes__visual" aria-hidden="true"></div>
+
+      <div class="ai-costs-outcomes__copy">
+        <p class="ai-costs-outcomes__quote">{{ section.intro_quote }}</p>
+        <p class="ai-costs-outcomes__detail">{{ section.intro_detail }}</p>
+      </div>
+
+      <article class="ai-costs-outcomes__mandate">
+        <span class="material-symbols-outlined" aria-hidden="true">info</span>
+        <div>
+          <h3>{{ section.mandate.title }}</h3>
+          <p>{{ section.mandate.detail }}</p>
+        </div>
+      </article>
+    </div>
+
+    <aside class="ai-costs-outcomes__stats">
+      {% for item in section.stats %}
+      <article class="ai-costs-outcomes__stat ai-costs-outcomes__stat--{{ item.tone }}">
+        <div>
+          <span class="ai-costs-outcomes__stat-label">{{ item.label }}</span>
+          <strong>{{ item.value }}</strong>
+          <p>{{ item.detail }}</p>
+        </div>
+        <div class="ai-costs-outcomes__stat-meta">
+          <span>{{ item.source }}</span>
+          <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+        </div>
+      </article>
+      {% endfor %}
+    </aside>
+  </div>
+
+  <section class="ai-costs-outcomes__audit">
+    <div class="ai-costs-outcomes__audit-grid">
+      {% for item in section.audit_items %}
+      <article class="ai-costs-outcomes__audit-item">
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.detail }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+</section>
+{% endif %}

@@ -3,6 +3,7 @@ layout: default
 title: "SAP AI and ML Enablement — Sidecar AI Around Clean-Core S/4HANA"
 description: "SAP AI and ML enablement for sidecar services, retrieval, forecasting, risk scoring, and governance around clean-core S/4HANA."
 permalink: /services/sap-ai-ml-enablement/
+last_modified_at: 2026-04-19
 ---
 
 <section class="section note-detail">
@@ -30,7 +31,7 @@ permalink: /services/sap-ai-ml-enablement/
       </ul>
 
       <h2>Related pages</h2>
-      <p><a href="/notes/ai-ml/">AI and ML around SAP</a> · <a href="/services/sap-integration-architecture/">Integration architecture consulting</a> · <a href="/faq/">FAQ</a></p>
+      <p><a href="/about/">Profile</a> · <a href="/ai/practical-ai-for-sap-support/">AI routing page</a> · <a href="/legal/responsible-ai/">Responsible AI</a> · <a href="/notes/ai-ml/">AI and ML around SAP</a> · <a href="/services/sap-integration-architecture/">Integration architecture consulting</a> · <a href="/faq/">FAQ</a></p>
     </div>
   </article>
 </section>

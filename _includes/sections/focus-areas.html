@@ -1,0 +1,20 @@
+{% assign section = site.data.home.focus_areas %}
+{% if section %}
+<section class="section home-focus" id="focus">
+  <header class="section-heading">
+    {% if section.eyebrow %}<p class="eyebrow">{{ section.eyebrow }}</p>{% endif %}
+    {% if section.title %}<h2>{{ section.title }}</h2>{% endif %}
+    {% if section.lead %}<p class="lead">{{ section.lead }}</p>{% endif %}
+  </header>
+  {% if section.items %}
+  <div class="home-card-grid home-card-grid--three">
+    {% for item in section.items %}
+    <article class="home-card">
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.summary }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}

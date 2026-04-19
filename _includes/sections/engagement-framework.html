@@ -1,0 +1,87 @@
+{% assign section = site.data.home.engagement_framework %}
+{% if section %}
+<section class="section engagement-framework" id="engagement-framework">
+  <header class="engagement-framework__hero">
+    <div class="engagement-framework__kicker">
+      <span class="engagement-framework__line" aria-hidden="true"></span>
+      <span>{{ section.eyebrow }}</span>
+    </div>
+    <h2 class="engagement-framework__title">{{ section.title }}</h2>
+    {% if section.intro %}<p class="engagement-framework__intro">{{ section.intro }}</p>{% endif %}
+  </header>
+
+  <div class="engagement-framework__statement">
+    <p>
+      "{{ section.statement_prefix }} <strong>{{ section.statement_emphasis }}</strong> {{ section.statement_suffix }}"
+    </p>
+  </div>
+
+  {% if section.layers %}
+  <div class="engagement-framework__grid">
+    {% for layer in section.layers %}
+    <article class="engagement-layer">
+      <div class="engagement-layer__top">
+        <div>
+          <p class="engagement-layer__step">{{ layer.step }}</p>
+          <h3>{{ layer.title }}</h3>
+        </div>
+        {% if layer.icon %}<span class="material-symbols-outlined" aria-hidden="true">{{ layer.icon }}</span>{% endif %}
+      </div>
+
+      {% if layer.quote %}
+      <blockquote class="engagement-layer__quote">
+        <p>{{ layer.quote }}</p>
+      </blockquote>
+      {% endif %}
+
+      {% if layer.summary %}<p class="engagement-layer__summary">{{ layer.summary }}</p>{% endif %}
+
+      {% if layer.bullets %}
+      <ul class="engagement-layer__bullets">
+        {% for item in layer.bullets %}
+        <li>
+          <span class="material-symbols-outlined" aria-hidden="true">error</span>
+          <span>{{ item }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if layer.mini_cards %}
+      <div class="engagement-layer__mini-grid">
+        {% for card in layer.mini_cards %}
+        <div class="engagement-layer__mini-card">
+          <span>{{ card.label }}</span>
+          <p>{{ card.value }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if layer.metrics %}
+      <dl class="engagement-layer__metrics">
+        {% for metric in layer.metrics %}
+        <div>
+          <dt>{{ metric.label }}</dt>
+          <dd>{{ metric.value }}</dd>
+        </div>
+        {% endfor %}
+      </dl>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="engagement-framework__closing">
+    <blockquote class="engagement-framework__closing-quote">
+      "{{ section.closing_prefix }} <strong>{{ section.closing_emphasis }}</strong> {{ section.closing_suffix }}"
+    </blockquote>
+    <div class="engagement-framework__visual" aria-hidden="true">
+      <div class="engagement-framework__visual-grid"></div>
+      <span class="material-symbols-outlined">verified</span>
+      <p>{{ section.visual_label }}</p>
+    </div>
+  </div>
+</section>
+{% endif %}

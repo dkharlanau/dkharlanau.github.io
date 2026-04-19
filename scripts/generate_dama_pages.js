@@ -214,13 +214,12 @@ function renderDecisionPage(data, slug) {
   <div class="page">
     ${renderBreadcrumb(title, basePath)}
     <header>
-      <p class="eyebrow">DAMA Decision Block</p>
       <h1>${escapeHtml(title)}</h1>
       <p class="lead">${escapeHtml(description)}</p>
       <div class="meta">
-        ${creatorName ? `<span>Creator: ${escapeHtml(creatorName)}</span>` : ""}
-        ${createdAt ? `<span>Created: ${escapeHtml(createdAt)}</span>` : ""}
-        ${updatedAt ? `<span>Updated: ${escapeHtml(updatedAt)}</span>` : ""}
+        ${creatorName ? `<span>👤 ${escapeHtml(creatorName)}</span>` : ""}
+        ${createdAt ? `<span>📅 Created: ${escapeHtml(createdAt)}</span>` : ""}
+        ${updatedAt ? `<span>🔄 Updated: ${escapeHtml(updatedAt)}</span>` : ""}
       </div>
       ${renderTags(tags, basePath)}
     </header>
@@ -228,19 +227,19 @@ function renderDecisionPage(data, slug) {
     <section>
       ${renderSectionAnchor("decision-question", "Decision Question")}
       <p>${escapeHtml(data.decision_question || "")}</p>
-      ${renderJsonDetails("JSON snippet", data.decision_question || "")}
+      ${renderJsonDetails("View Raw Source", data.decision_question || "")}
     </section>
 
     <section>
       ${renderSectionAnchor("context", "Context")}
       ${renderDefinitionList(data.context || {})}
-      ${renderJsonDetails("JSON snippet", data.context || {})}
+      ${renderJsonDetails("View Raw Source", data.context || {})}
     </section>
 
     <section>
       ${renderSectionAnchor("inputs", "Inputs")}
       ${renderDefinitionList(data.inputs || {})}
-      ${renderJsonDetails("JSON snippet", data.inputs || {})}
+      ${renderJsonDetails("View Raw Source", data.inputs || {})}
     </section>
 
     <section>
@@ -255,7 +254,7 @@ function renderDecisionPage(data, slug) {
   <p>${escapeHtml(option.summary || "")}</p>
   <h4>Tradeoffs</h4>
   ${tradeoffs}
-  ${renderJsonDetails("JSON snippet", option)}
+  ${renderJsonDetails("View Raw Source", option)}
 </div>`;
           })
           .join("")}
@@ -280,7 +279,7 @@ function renderDecisionPage(data, slug) {
       ${renderList(data.decision_logic?.anti_patterns_to_avoid || [])}
       <h3>Exceptions Flow</h3>
       ${renderList(data.decision_logic?.exceptions_flow || [])}
-      ${renderJsonDetails("JSON snippet", data.decision_logic || {})}
+      ${renderJsonDetails("View Raw Source", data.decision_logic || {})}
     </section>
 
     <section>
@@ -291,7 +290,7 @@ function renderDecisionPage(data, slug) {
       ${renderKeyValueTable(data.controls_enforcement?.standards || [])}
       <h3>Technical Controls</h3>
       ${renderList(data.controls_enforcement?.technical_controls || [])}
-      ${renderJsonDetails("JSON snippet", data.controls_enforcement || {})}
+      ${renderJsonDetails("View Raw Source", data.controls_enforcement || {})}
     </section>
 
     <section>
@@ -302,7 +301,7 @@ function renderDecisionPage(data, slug) {
       ${renderList(data.metrics?.data_quality_dimensions || [])}
       <h3>Governance Health</h3>
       ${renderKeyValueTable(data.metrics?.governance_health || [])}
-      ${renderJsonDetails("JSON snippet", data.metrics || {})}
+      ${renderJsonDetails("View Raw Source", data.metrics || {})}
     </section>
 
     <section>
@@ -312,7 +311,7 @@ function renderDecisionPage(data, slug) {
 <div class="example">
   <p><strong>Scenario:</strong> ${escapeHtml(example.scenario || "")}</p>
   <p><strong>Application:</strong> ${escapeHtml(example.application || "")}</p>
-  ${renderJsonDetails("JSON snippet", example)}
+  ${renderJsonDetails("View Raw Source", example)}
 </div>`)
         .join("")}
     </section>
@@ -563,25 +562,41 @@ header {
   margin-bottom: 32px;
 }
 
-h1, h2, h3, h4 {
+h1 {
+  margin: 0 0 16px;
+  line-height: 1.2;
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+h2 {
+  margin: 40px 0 16px;
+  line-height: 1.3;
+  font-size: clamp(1.5rem, 3vw, 1.75rem);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+h3, h4 {
   margin: 0 0 12px;
   line-height: 1.3;
 }
 
-h2 { margin-top: 32px; }
-
-p { margin: 0 0 12px; }
+p { margin: 0 0 16px; }
 
 .lead {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   color: var(--muted);
+  line-height: 1.6;
 }
 
 .eyebrow {
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--accent);
   margin-bottom: 8px;
 }
 
@@ -602,10 +617,20 @@ p { margin: 0 0 12px; }
 .meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  font-size: 0.9rem;
+  gap: 16px;
+  font-size: 0.85rem;
   color: var(--muted);
-  margin: 16px 0;
+  margin: 24px 0;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .tags {
@@ -616,13 +641,19 @@ p { margin: 0 0 12px; }
 
 .tag {
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--muted);
   text-decoration: none;
   font-size: 0.85rem;
-  border: 1px solid rgba(43, 108, 176, 0.2);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.tag:hover {
+  background: var(--border);
+  color: var(--text);
 }
 
 .anchor {
@@ -658,18 +689,22 @@ p { margin: 0 0 12px; }
 }
 
 dl {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 12px 24px;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 0 24px 0;
 }
 
 dt {
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 8px;
 }
 
 dd {
   margin: 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--border);
 }
 
 ul {
@@ -695,16 +730,30 @@ table th {
   background: #f5f7fa;
 }
 
-.json-block {
-  margin: 12px 0 0;
+.json-block summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 8px 12px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  display: inline-block;
+  border: 1px solid var(--border);
+  transition: background 0.2s;
+}
+
+.json-block summary:hover {
+  background: #e2e8f0;
 }
 
 pre {
-  background: var(--code-bg);
-  padding: 12px;
+  background: #1e293b;
+  color: #f8fafc;
+  padding: 16px;
   border-radius: 8px;
   overflow: auto;
   border: 1px solid var(--border);
+  margin-top: 12px;
 }
 
 code {

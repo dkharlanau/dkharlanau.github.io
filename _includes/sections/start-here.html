@@ -1,0 +1,19 @@
+{% assign section = site.data.home.start_here %}
+{% if section %}
+<section class="section home-start-here" id="start-here">
+  <header class="section-heading home-journal-header">
+    {% if section.title %}<h2>{{ section.title }}</h2>{% endif %}
+    {% if section.lead %}<p class="lead">{{ section.lead }}</p>{% endif %}
+  </header>
+  {% if section.links %}
+  <div class="start-here-grid">
+    {% for link in section.links %}
+    <a class="start-here-card{% if link.style == 'primary' %} start-here-card--primary{% endif %}" href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+      <span class="start-here-card__label">{{ link.label }}</span>
+      {% if link.meta %}<span class="start-here-card__meta">{{ link.meta }}</span>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}

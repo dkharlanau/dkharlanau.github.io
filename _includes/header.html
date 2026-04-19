@@ -1,13 +1,18 @@
 <header class="site-header">
     <div class="wrapper">
         <nav class="site-nav">
+            <div class="site-header__branding">
+                <a href="/">Dzmitryi Kharlanau</a>
+            </div>
             <div class="nav-links">
-                <a href="/" class="nav-link">Home</a>
+                <a href="/about/" class="nav-link">About</a>
                 <a href="/services/" class="nav-link">Services</a>
-                <a href="/notes/" class="nav-link">Notes</a>
-                <a href="/cv/" class="nav-link">CV</a>
+                <a href="/ai/" class="nav-link">AI sources</a>
+                <a href="/datasets/" class="nav-link">Datasets</a>
                 <a href="/faq/" class="nav-link">FAQ</a>
-                <a href="/search/" class="nav-link">Search</a>
+                {% unless page.url == "/" or page.url == "/index.html" %}
+                <a href="/" class="nav-link nav-link--back">Back to main</a>
+                {% endunless %}
             </div>
         </nav>
     </div>

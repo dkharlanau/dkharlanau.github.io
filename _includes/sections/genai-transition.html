@@ -1,0 +1,78 @@
+{% assign section = site.data.home.genai_transition %}
+{% if section %}
+<section class="section genai-transition" id="genai-transition">
+  <header class="genai-transition__header">
+    <h2 class="genai-transition__title">{{ section.title }}</h2>
+    <p class="genai-transition__statement">{{ section.statement }}</p>
+    <div class="genai-transition__intro">
+      <p>{{ section.intro }}</p>
+    </div>
+  </header>
+
+  <div class="genai-transition__comparison">
+    <article class="genai-transition__panel genai-transition__panel--old">
+      <div class="genai-transition__panel-head">
+        <span class="material-symbols-outlined" aria-hidden="true">{{ section.old_model.icon }}</span>
+        <h3>{{ section.old_model.eyebrow }}</h3>
+      </div>
+      <ul class="genai-transition__list">
+        {% for item in section.old_model.items %}
+        <li>
+          <span>{{ item.label }}</span>
+          <p>{{ item.detail }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+
+    <article class="genai-transition__panel genai-transition__panel--new">
+      <div class="genai-transition__panel-head">
+        <span class="material-symbols-outlined" aria-hidden="true">{{ section.genai_needs.icon }}</span>
+        <h3>{{ section.genai_needs.eyebrow }}</h3>
+      </div>
+      <ul class="genai-transition__list">
+        {% for item in section.genai_needs.items %}
+        <li>
+          <span>{{ item.label }}</span>
+          <p>{{ item.detail }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+  </div>
+
+  <section class="genai-transition__side-by-side">
+    <div class="genai-transition__side-by-side-head">
+      <h3>{{ section.side_by_side.title }}</h3>
+      <span aria-hidden="true"></span>
+    </div>
+    <div class="genai-transition__side-by-side-body">
+      <div class="genai-transition__side-by-side-copy">
+        <p>{{ section.side_by_side.intro }}</p>
+      </div>
+      <div class="genai-transition__capabilities">
+        {% for item in section.side_by_side.items %}
+        <article class="genai-transition__capability">
+          <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+          <p>{{ item.label }}</p>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <div class="genai-transition__visual" aria-hidden="true"></div>
+
+  <footer class="genai-transition__closing">
+    <h3>{{ section.closing_quote }}</h3>
+    <div class="genai-transition__closing-note">
+      <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
+      <p>
+        {{ section.closing_note }}
+        <br>
+        <strong>{{ section.closing_emphasis }}</strong>
+      </p>
+    </div>
+  </footer>
+</section>
+{% endif %}

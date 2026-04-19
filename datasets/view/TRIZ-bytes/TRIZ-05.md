@@ -4,6 +4,8 @@ title: "Merging"
 description: "Reduce overhead and latency by combining related elements, activities, or responsibilities when separation creates friction."
 permalink: /datasets/view/TRIZ-bytes/TRIZ-05/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+dataset_detail_page: true
 ---
 
 <div class="dataset-hero">
@@ -176,7 +178,7 @@ sitemap: true
     },
     "canonical_url": "https://dkharlanau.github.io/datasets/TRIZ-bytes/TRIZ-05.json",
     "created_at_utc": "2026-02-03T14:33:32+00:00",
-    "updated_at_utc": "2026-03-04T11:23:27+00:00",
+    "updated_at_utc": "2026-04-13T08:37:04+00:00",
     "provenance": {
       "source_type": "chat_export_extraction",
       "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."

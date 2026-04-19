@@ -1,0 +1,96 @@
+{% assign section = site.data.home.problem_story %}
+{% if section %}
+<section class="section problem-editorial" id="problem">
+  <header class="problem-editorial__header">
+    <div class="problem-editorial__kicker">
+      <span class="problem-editorial__line" aria-hidden="true"></span>
+      <span>{{ section.eyebrow | default: "Deep Dive Series" }}</span>
+    </div>
+    <h2 class="problem-editorial__title">{{ section.title }}</h2>
+    {% if section.quote or section.intro %}
+    <p class="problem-editorial__quote">"{{ section.quote | default: section.intro }}"</p>
+    {% endif %}
+  </header>
+
+  <div class="problem-editorial__layout">
+    <div class="problem-editorial__main">
+      <section class="problem-editorial__prose">
+        {% if section.paragraphs and section.paragraphs.first %}
+        <p class="problem-editorial__lede">{{ section.paragraphs.first }}</p>
+        {% endif %}
+
+        <div class="problem-editorial__diagram">
+          <div class="problem-editorial__issue">
+            <span class="material-symbols-outlined" aria-hidden="true">dynamic_feed</span>
+            <h3>Fragmented Intel</h3>
+            <p>The hidden tax of re-diagnosing issues that have already been solved elsewhere in the support landscape.</p>
+          </div>
+          <div class="problem-editorial__issue">
+            <span class="material-symbols-outlined" aria-hidden="true">sync_problem</span>
+            <h3>Blurred Ownership</h3>
+            <p>When vendors and internal teams overlap, responsibility dilutes and recurring cost escalates.</p>
+          </div>
+        </div>
+
+        {% if section.summary %}
+        <p>{{ section.paragraphs[1] }} <strong>{{ section.summary }}</strong></p>
+        {% elsif section.paragraphs[2] %}
+        <p>{{ section.paragraphs[2] }}</p>
+        {% endif %}
+      </section>
+
+      <section class="problem-editorial__feature">
+        <div class="problem-editorial__feature-copy">
+          <h3>{{ section.trap_title | default: "The Modernization Trap" }}</h3>
+          <p>{{ section.trap_detail | default: section.paragraphs[2] }}</p>
+          <a href="#tco-analysis" class="problem-editorial__feature-link">Explore Strategy Framework</a>
+        </div>
+        <div class="problem-editorial__feature-visual" aria-hidden="true">
+          <div class="problem-editorial__feature-orbit"></div>
+          <div class="problem-editorial__feature-grid"></div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="problem-editorial__side">
+      <div class="problem-editorial__insight">
+        <h4>Key Insight</h4>
+        <p>Operational continuity depends too heavily on external partners, creating a dependency loop.</p>
+      </div>
+
+      <div class="problem-editorial__image-card">
+        <div class="problem-editorial__image-overlay">
+          <span>Impact Report</span>
+          <p>Cost of information decay</p>
+        </div>
+      </div>
+
+      <div class="problem-editorial__editorial-note">
+        <div class="problem-editorial__editorial-top">
+          <div class="problem-editorial__editorial-avatar">
+            <span class="material-symbols-outlined" aria-hidden="true">person</span>
+          </div>
+          <div>
+            <p class="problem-editorial__editorial-label">Editorial Team</p>
+            <p class="problem-editorial__editorial-meta">Operational Strategy</p>
+          </div>
+        </div>
+        <blockquote>
+          <p>"Complexity is the baseline. The goal is to turn it into structured intelligence."</p>
+        </blockquote>
+      </div>
+
+      <div class="problem-editorial__meta">
+        <div>
+          <span>Reading Time</span>
+          <strong>4 Minutes</strong>
+        </div>
+        <div>
+          <span>Topic</span>
+          <strong>{{ section.topic | default: "AI Economics" }}</strong>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endif %}

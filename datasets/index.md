@@ -4,6 +4,8 @@ title: "Datasets"
 description: "Reusable dataset bytes by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+data_catalog_page: true
 ---
 
 <div class="dataset-hero">
@@ -30,9 +32,9 @@ sitemap: true
 </div>
 
 <div class="dataset-kpis">
-  <div class="dataset-kpi"><div class="dataset-kpi__label">Total entries</div><p class="dataset-kpi__value">133</p><p class="dataset-kpi__hint">Across all collections</p></div>
-  <div class="dataset-kpi"><div class="dataset-kpi__label">Collections</div><p class="dataset-kpi__value">5</p><p class="dataset-kpi__hint">Browse by topic</p></div>
-  <div class="dataset-kpi"><div class="dataset-kpi__label">Entity types</div><p class="dataset-kpi__value">7</p><p class="dataset-kpi__hint">Filter across datasets</p></div>
+  <div class="dataset-kpi"><div class="dataset-kpi__label">Total entries</div><p class="dataset-kpi__value">150</p><p class="dataset-kpi__hint">Across all collections</p></div>
+  <div class="dataset-kpi"><div class="dataset-kpi__label">Collections</div><p class="dataset-kpi__value">6</p><p class="dataset-kpi__hint">Browse by topic</p></div>
+  <div class="dataset-kpi"><div class="dataset-kpi__label">Entity types</div><p class="dataset-kpi__value">8</p><p class="dataset-kpi__hint">Filter across datasets</p></div>
 </div>
 
 <div class="dataset-collection-grid">
@@ -65,6 +67,14 @@ sitemap: true
   <p class="dataset-card__desc">Browse 23 reusable bytes with attribution and raw JSON downloads.</p>
   <div class="dataset-card__footer">
     <span class="pill">23 entries</span>
+    <span class="link-arrow">Open</span>
+  </div>
+</a>
+<a class="neub-card dataset-card" href="/datasets/ai-business-signals/">
+  <h2 class="dataset-card__title">ai-business-signals</h2>
+  <p class="dataset-card__desc">Browse 17 reusable bytes with attribution and raw JSON downloads.</p>
+  <div class="dataset-card__footer">
+    <span class="pill">17 entries</span>
     <span class="link-arrow">Open</span>
   </div>
 </a>

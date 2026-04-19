@@ -4,6 +4,8 @@ title: "Mdg Migration Sequence Playbook V0 1"
 description: "Mdg Migration Sequence Playbook V0 1"
 permalink: /datasets/view/DAMA/mdg_migration_sequence_playbook_v0_1/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+dataset_detail_page: true
 ---
 
 <div class="dataset-hero">
@@ -334,7 +336,7 @@ sitemap: true
     },
     "canonical_url": "https://dkharlanau.github.io/datasets/DAMA/mdg_migration_sequence_playbook_v0_1.json",
     "created_at_utc": "2026-02-03T14:33:32+00:00",
-    "updated_at_utc": "2026-03-04T11:23:27+00:00",
+    "updated_at_utc": "2026-04-13T08:37:04+00:00",
     "provenance": {
       "source_type": "chat_export_extraction",
       "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."

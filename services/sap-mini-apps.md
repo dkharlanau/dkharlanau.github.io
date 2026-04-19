@@ -3,6 +3,7 @@ layout: default
 title: "SAP Mini Apps and Automation Tools — Fast Prototypes for O2C and Integration"
 description: "SAP mini apps and automation tools for IDoc retries, BP validation, cutover simulation, reconciliation, and operational dashboards."
 permalink: /services/sap-mini-apps/
+last_modified_at: 2026-04-19
 ---
 
 <section class="section note-detail">
@@ -30,7 +31,7 @@ permalink: /services/sap-mini-apps/
       </ul>
 
       <h2>Related pages</h2>
-      <p><a href="/notes/tools-mini-apps/">Mini apps and prototypes</a> · <a href="/services/sap-ams-consulting/">SAP AMS consulting</a> · <a href="/search/">Search</a></p>
+      <p><a href="/about/">Profile</a> · <a href="/services/sap-ams-consulting/">SAP AMS consulting</a> · <a href="/datasets/agentic-bytes/">Agentic datasets</a> · <a href="/ai/practical-ai-for-sap-support/">AI routing page</a> · <a href="/notes/tools-mini-apps/">Mini apps and prototypes</a> · <a href="/search/">Search</a></p>
     </div>
   </article>
 </section>

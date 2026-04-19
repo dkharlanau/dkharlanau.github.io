@@ -1,0 +1,76 @@
+{% assign timeline = site.data.edu.timeline %}
+{% if timeline and timeline.items %}
+<section class="section education-page" id="education-timeline">
+  <header class="section-heading">
+    {% if timeline.eyebrow %}<p class="eyebrow">{{ timeline.eyebrow }}</p>{% endif %}
+    {% if timeline.title %}<h2>{{ timeline.title }}</h2>{% endif %}
+    {% if timeline.intro %}<p class="lead">{{ timeline.intro }}</p>{% endif %}
+  </header>
+
+  <div class="education-timeline-shell">
+    <div class="education-filter-bar" role="toolbar" aria-label="Timeline filter">
+      <button type="button" class="education-filter is-active" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" class="education-filter" data-filter="education" aria-pressed="false">Education</button>
+      <button type="button" class="education-filter" data-filter="course" aria-pressed="false">Courses</button>
+      <button type="button" class="education-filter" data-filter="certification" aria-pressed="false">Certifications</button>
+    </div>
+
+    <div class="education-timeline-list" data-education-timeline>
+      {% for item in timeline.items %}
+      <article class="education-timeline-item" data-kind="{{ item.kind }}">
+        <div class="education-timeline-item__rail" aria-hidden="true">
+          <span class="education-timeline-item__dot"></span>
+        </div>
+        <div class="education-timeline-item__body">
+          <header class="education-timeline-item__header">
+            <p class="education-timeline-item__date">{{ item.date }}</p>
+            <div class="education-timeline-item__titlewrap">
+              <div class="education-timeline-item__meta">
+                <span class="education-chip education-chip--{{ item.kind }}">{{ item.kind }}</span>
+                {% if item.emphasis %}<span class="education-chip">{{ item.emphasis }}</span>{% endif %}
+              </div>
+              <h3>{{ item.title }}</h3>
+              <p class="education-timeline-item__provider">{{ item.provider }}</p>
+            </div>
+          </header>
+          {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+          {% if item.url %}
+          <p><a class="link" href="{{ item.url }}" target="_blank" rel="noopener noreferrer">View credential</a></p>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const section = document.getElementById('education-timeline');
+      if (!section || section.dataset.enhanced === 'true') return;
+      section.dataset.enhanced = 'true';
+
+      const filters = Array.from(section.querySelectorAll('.education-filter'));
+      const items = Array.from(section.querySelectorAll('[data-kind]'));
+
+      const setFilter = (value) => {
+        filters.forEach((button) => {
+          const active = button.dataset.filter === value;
+          button.classList.toggle('is-active', active);
+          button.setAttribute('aria-pressed', String(active));
+        });
+
+        items.forEach((item) => {
+          const show = value === 'all' || item.dataset.kind === value;
+          item.hidden = !show;
+        });
+      };
+
+      filters.forEach((button) => {
+        button.addEventListener('click', () => setFilter(button.dataset.filter));
+      });
+
+      setFilter('all');
+    })();
+  </script>
+</section>
+{% endif %}

@@ -4,11 +4,15 @@ title: "Datasets License & Citation"
 description: "License and citation guidance for the published dataset bytes."
 permalink: /legal/datasets/
 sitemap: true
+last_modified_at: 2026-04-19
 ---
 
 # Datasets license & citation
 
 This page covers **machine-readable datasets and endpoints** published on this site (dataset bytes, manifests/schemas, and AI-oriented JSON/YAML/TXT endpoints).
+
+Canonical profile and attribution target:
+- [About Dzmitryi Kharlanau](/about/)
 
 ## License
 
@@ -41,6 +45,12 @@ Zenodo:
 
 Commercial licensing inquiries:
 - https://www.linkedin.com/in/dkharlanau
+
+## Related sources
+
+- Canonical profile: [/about/](/about/)
+- AI sources: [/ai/](/ai/)
+- Datasets index: [/datasets/](/datasets/)
 
 ## Site materials
 

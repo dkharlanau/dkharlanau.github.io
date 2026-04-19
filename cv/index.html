@@ -10,212 +10,173 @@ permalink: /cv/
 {%- assign skills_primary = resume.skills | slice: 0, 24 -%}
 {%- assign primary_education = resume.education | first -%}
 
-<section class="content-box resume">
-  <header class="resume-header">
-    <div class="resume-title">
-      <p class="resume-kicker">Curriculum Vitae</p>
-      <h1>{{ resume.name }}</h1>
-      <p class="resume-headline">{{ resume.headline }}</p>
-      {% if primary_education %}
-      <p class="resume-location">{{ primary_education.notes | default: primary_education.school }}</p>
-      {% endif %}
-    </div>
-    <div class="resume-contact">
-      <dl>
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Curriculum Vitae</p>
+    <h1>{{ resume.name }}</h1>
+    <p class="lead">{{ resume.headline }}</p>
+    {% if primary_education %}
+    <p class="eyebrow">{{ primary_education.notes | default: primary_education.school }}</p>
+    {% endif %}
+    
+    <div class="resume-contact-editorial">
+      <div class="resume-links-grid">
         {% if resume.contact.email %}
-        <div>
-          <dt>Email</dt>
-          <dd><a href="mailto:{{ resume.contact.email }}">{{ resume.contact.email }}</a></dd>
-        </div>
-        {% endif %}
-        {% if resume.contact.site %}
-        <div>
-          <dt>Website</dt>
-          <dd><a href="{{ resume.contact.site }}" target="_blank" rel="noopener">{{ resume.contact.site }}</a></dd>
+        <div class="resume-link-item">
+          <span class="label">Email</span>
+          <a href="mailto:{{ resume.contact.email }}">{{ resume.contact.email }}</a>
         </div>
         {% endif %}
         <div>
-          <dt>Company</dt>
-          <dd><a href="https://www.epam.com" target="_blank" rel="noopener">EPAM Systems</a></dd>
+          <span class="label">Company</span>
+          <a href="https://www.epam.com" target="_blank" rel="noopener">EPAM Systems</a>
         </div>
         {% if resume.contact.linkedin %}
-        <div>
-          <dt>LinkedIn</dt>
-          <dd><a href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener">{{ resume.contact.linkedin }}</a></dd>
+        <div class="resume-link-item">
+          <span class="label">LinkedIn</span>
+          <a href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener">Profile</a>
         </div>
         {% endif %}
-      </dl>
-      <div class="resume-downloads">
-        <a class="cta" href="{{ '/ai/resume.yml' | relative_url }}" download>Download YAML</a>
-        <a class="cta secondary" href="{{ '/ai/resume.json' | relative_url }}" download>Download JSON</a>
       </div>
-      <p class="resume-contact-note">For new collaborations reach out via LinkedIn or through the EPAM Systems account team.</p>
+      <div class="section-actions">
+        <a class="button button--primary" href="{{ '/ai/resume.yml' | relative_url }}" download>Download YAML</a>
+        <a class="button" href="{{ '/ai/resume.json' | relative_url }}" download>Download JSON</a>
+      </div>
     </div>
   </header>
+</section>
 
-  {% if resume.summary %}
-  <section class="resume-section">
-    <h2>Executive Summary</h2>
-    <p>{{ resume.summary }}</p>
-  </section>
-  {% endif %}
+<hr class="divider" />
 
-  {% if resume.experience %}
-  <section class="resume-section">
-    <h2>Experience</h2>
-    <div class="resume-list">
-      {% for role in resume.experience %}
-      <article class="resume-item">
-        <header>
-          <h3>{{ role.title }} &middot; {{ role.company }}</h3>
-          <p class="resume-meta">
-            {% if role.start %}
-              {%- assign start_date = role.start -%}
-              {%- if start_date.size == 4 -%}
-                {{ start_date }}
-              {%- else -%}
-                {{ start_date | append: '-01' | date: '%b %Y' }}
-              {%- endif -%}
-            {% endif %}
-            –
-            {% if role.current %}
-              Present
-            {% elsif role.end %}
-              {%- assign end_date = role.end -%}
-              {%- if end_date.size == 4 -%}
-                {{ end_date }}
-              {%- else -%}
-                {{ end_date | append: '-01' | date: '%b %Y' }}
-              {%- endif -%}
-            {% else %}
-              {{ 'Previous' }}
-            {% endif %}
-            {% if role.location %}
-              &middot; {{ role.location }}
-            {% endif %}
-          </p>
-        </header>
+{% if resume.summary %}
+<section class="section">
+  <div class="section-shell">
+    <header class="section-header">
+      <div class="section-header__meta">
+        <p class="eyebrow">Overview</p>
+        <h2 class="section-header__title">Executive Summary</h2>
+      </div>
+    </header>
+    <div class="prose">
+      <p>{{ resume.summary }}</p>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if resume.experience %}
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Professional</p>
+    <h2 class="section-title">Experience</h2>
+  </header>
+  
+  <div class="resume-list editorial-feed">
+    {% for role in resume.experience %}
+    <article class="resume-item feed-item">
+      <div class="feed-item__side">
+        <p class="feed-item__date">
+          {% if role.start %}
+            {%- assign start_date = role.start -%}
+            {%- if start_date.size == 4 -%}{{ start_date }}{%- else -%}{{ start_date | append: '-01' | date: '%b %Y' }}{%- endif -%}
+          {% endif %}
+          –
+          {% if role.current %}Present{% elsif role.end %}
+            {%- assign end_date = role.end -%}
+            {%- if end_date.size == 4 -%}{{ end_date }}{%- else -%}{{ end_date | append: '-01' | date: '%b %Y' }}{%- endif -%}
+          {% else %}Previous{% endif %}
+        </p>
+      </div>
+      <div class="feed-item__main">
+        <h3 class="feed-item__title">{{ role.title }}</h3>
+        <p class="feed-item__subtitle">{{ role.company }}{% if role.location %} &middot; {{ role.location }}{% endif %}</p>
+        
         {% if role.summary %}
-        <p>{{ role.summary }}</p>
+        <div class="feed-item__desc">
+          <p>{{ role.summary }}</p>
+        </div>
         {% endif %}
+        
         {% if role.highlights %}
-        <ul class="resume-highlights">
+        <ul class="resume-highlights editorial-list">
           {% for bullet in role.highlights %}
           <li>{{ bullet }}</li>
           {% endfor %}
         </ul>
         {% endif %}
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 
-  {% if resume.education %}
-  <section class="resume-section">
-    <h2>Education</h2>
+<hr class="divider" />
+
+{% if resume.education %}
+<section class="section">
+  <div class="section-shell section-shell--flat">
+    <header class="section-header">
+      <div class="section-header__meta">
+        <p class="eyebrow">Academics</p>
+        <h2 class="section-header__title">Education</h2>
+      </div>
+      <div class="section-header__actions">
+        <a class="link-arrow" href="{{ '/education/' | relative_url }}">View timeline</a>
+      </div>
+    </header>
     <div class="resume-list">
       {% for edu in resume.education %}
-      <article class="resume-item">
-        <header>
-          <h3>{{ edu.school }}{% if edu.degree %}, {{ edu.degree }}{% endif %}</h3>
-          <p class="resume-meta">
-            {% if edu.start %}
-              {{ edu.start }}
-            {% endif %}
-            {% if edu.end %}
-              – {{ edu.end }}
-            {% endif %}
-          </p>
-        </header>
-        {% if edu.field %}
-        <p>{{ edu.field }}</p>
-        {% endif %}
-        {% if edu.notes %}
-        <p class="resume-notes">{{ edu.notes }}</p>
-        {% endif %}
-      </article>
+      <div class="resume-item-simple">
+        <h3 class="h4">{{ edu.school }}{% if edu.degree %}, {{ edu.degree }}{% endif %}</h3>
+        <p class="meta">{{ edu.start }}{% if edu.end %} – {{ edu.end }}{% endif %}{% if edu.field %} &middot; {{ edu.field }}{% endif %}</p>
+        {% if edu.notes %}<p class="notes">{{ edu.notes }}</p>{% endif %}
+      </div>
       {% endfor %}
     </div>
-  </section>
-  {% endif %}
-
-  {% if skills_primary %}
-  <section class="resume-section">
-    <h2>Core Skills</h2>
-    <ul class="resume-tags">
-      {% for skill in skills_primary %}
-      <li>{{ skill }}</li>
-      {% endfor %}
-    </ul>
-  </section>
-  {% endif %}
-
-  {% if resume.certifications %}
-  <section class="resume-section">
-    <h2>Certifications</h2>
-    <div class="resume-list">
-      {% for cert in resume.certifications %}
-      <article class="resume-item">
-        <header>
-          <h3>{{ cert.name }}</h3>
-          <p class="resume-meta">
-            {% if cert.issuer %}{{ cert.issuer }}{% endif %}
-            {% if cert.issued %} &middot; Issued {{ cert.issued }}{% endif %}
-          </p>
-        </header>
-        {% if cert.url %}
-        <p><a href="{{ cert.url }}" target="_blank" rel="noopener">View credential</a></p>
-        {% endif %}
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
-
-  {% if resume.projects %}
-  <section class="resume-section">
-    <h2>Selected Projects</h2>
-    <div class="resume-list">
-      {% for project in resume.projects %}
-      <article class="resume-item">
-        <header>
-          <h3>{{ project.title }}</h3>
-          <p class="resume-meta">
-            {% if project.start %}{{ project.start }}{% endif %}
-            {% if project.end %} – {{ project.end }}{% endif %}
-          </p>
-        </header>
-        {% if project.summary %}
-        <p>{{ project.summary }}</p>
-        {% endif %}
-        {% if project.highlights %}
-        <ul class="resume-highlights">
-          {% for bullet in project.highlights %}
-          <li>{{ bullet }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-        {% if project.url %}
-        <p><a href="{{ project.url }}" target="_blank" rel="noopener">Project reference</a></p>
-        {% endif %}
-      </article>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
-
-  {% if resume.languages %}
-  <section class="resume-section">
-    <h2>Languages</h2>
-    <ul class="resume-tags">
-      {% for lang in resume.languages %}
-      <li>{{ lang.name }}{% if lang.proficiency %} — {{ lang.proficiency }}{% endif %}</li>
-      {% endfor %}
-    </ul>
-  </section>
-  {% endif %}
+  </div>
 </section>
+{% endif %}
+
+{% if skills_primary %}
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Capabilities</p>
+    <h2 class="section-title">Core Skills</h2>
+  </header>
+  <ul class="pill-cloud">
+    {% for skill in skills_primary %}
+    <li class="pill">{{ skill }}</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if resume.certifications %}
+<section class="section">
+  <div class="section-shell">
+    <header class="section-header">
+      <div class="section-header__meta">
+        <p class="eyebrow">Credentials</p>
+        <h2 class="section-header__title">Certifications</h2>
+      </div>
+      <div class="section-header__actions">
+        <a class="link-arrow" href="{{ '/education/' | relative_url }}">Browse all</a>
+      </div>
+    </header>
+    <div class="resume-list grid-two-col">
+      {% for cert in resume.certifications %}
+      <div class="cert-item">
+        <h3 class="h4">{{ cert.name }}</h3>
+        <p class="meta">{% if cert.issuer %}{{ cert.issuer }}{% endif %}{% if cert.issued %} &middot; {{ cert.issued }}{% endif %}</p>
+        {% if cert.url %}<a class="link" href="{{ cert.url }}" target="_blank" rel="noopener">View cert</a>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 
 {% assign same_as = resume_links | map: 'url' %}
 {% assign knowledge_topics = skills_primary | slice: 0, 12 %}

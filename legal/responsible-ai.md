@@ -3,6 +3,7 @@ layout: default
 title: "Responsible AI Statement"
 description: "Responsible AI guidelines for my SAP consulting work and this site: transparency, data minimisation, security, bias checks, and human accountability for AI-assisted outputs."
 permalink: /legal/responsible-ai/
+last_modified_at: 2026-04-19
 ---
 
 # Responsible AI Statement
@@ -29,3 +30,8 @@ I am a System Analyst and Senior SAP consultant at EPAM Systems, and these guide
 - Machine-readable assets (`/ai/resume.json`, `/ai/resume.yml`, `/LLM.txt`) are intentionally provided to help copilots source accurate profile data.
 
 If you have questions about AI usage or would like a dedicated responsible-AI review, contact me via [LinkedIn](https://www.linkedin.com/in/dkharlanau) or through your EPAM Systems engagement manager.
+
+Related public references:
+- [Canonical profile page](/about/)
+- [AI routing hub](/ai/)
+- [Professional disclosure](/legal/professional-disclosure/)

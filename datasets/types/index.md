@@ -4,6 +4,8 @@ title: "Dataset Types"
 description: "Browse dataset bytes by entity type."
 permalink: /datasets/types/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+data_catalog_page: true
 ---
 
 <div class="dataset-hero">
@@ -22,6 +24,14 @@ sitemap: true
   <p class="dataset-card__desc">Browse 23 entries across all collections.</p>
   <div class="dataset-card__footer">
     <span class="pill">23 entries</span>
+    <span class="link-arrow">Open</span>
+  </div>
+</a>
+<a class="neub-card dataset-card" href="/datasets/types/ai-business-signal/">
+  <h2 class="dataset-card__title">ai_business_signal</h2>
+  <p class="dataset-card__desc">Browse 17 entries across all collections.</p>
+  <div class="dataset-card__footer">
+    <span class="pill">17 entries</span>
     <span class="link-arrow">Open</span>
   </div>
 </a>

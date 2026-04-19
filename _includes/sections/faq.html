@@ -1,0 +1,41 @@
+{% assign section = site.data.home.faq %}
+{% if section and section.items %}
+<section class="section faq faq-editorial" id="faq">
+  <header class="faq-editorial__header">
+    {% if section.eyebrow %}<p class="faq-editorial__badge">{{ section.eyebrow }}</p>{% endif %}
+    {% if section.title %}<h2 class="faq-editorial__title">{{ section.title }}</h2>{% endif %}
+    {% if section.lead %}<p class="faq-editorial__lead">{{ section.lead }}</p>{% endif %}
+  </header>
+
+  <div class="faq-editorial__list">
+    {% for item in section.items %}
+    <article class="faq-editorial__item">
+      <div class="faq-editorial__item-row">
+        <div class="faq-editorial__icon" aria-hidden="true">
+          <span class="material-symbols-outlined">
+            {% case forloop.index %}
+            {% when 1 %}help_outline
+            {% when 2 %}layers
+            {% when 3 %}sync_problem
+            {% when 4 %}security
+            {% else %}schedule
+            {% endcase %}
+          </span>
+        </div>
+        <div class="faq-editorial__content">
+          <h3>{{ item.question }}</h3>
+          {% if forloop.index == 2 %}
+          <div class="faq-editorial__callout">
+            <p>{{ item.answer }}</p>
+          </div>
+          {% else %}
+          <p>{{ item.answer }}</p>
+          {% endif %}
+        </div>
+      </div>
+      {% unless forloop.last %}<div class="faq-editorial__divider" aria-hidden="true"></div>{% endunless %}
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

@@ -3,6 +3,7 @@ layout: default
 title: "SAP AMS Consulting — Incident Reduction and Knowledge Transfer"
 description: "SAP AMS consulting to reduce repeat incidents, improve MTTR, remove vendor lock-in, and turn support into a prevention-driven operating model."
 permalink: /services/sap-ams-consulting/
+last_modified_at: 2026-04-19
 ---
 
 <section class="section note-detail">
@@ -31,7 +32,7 @@ permalink: /services/sap-ams-consulting/
       </ul>
 
       <h2>Related pages</h2>
-      <p><a href="/notes/ams/">SAP AMS playbook</a> · <a href="/services/sap-o2c-process-audit/">SAP O2C process audit</a> · <a href="/faq/">FAQ</a></p>
+      <p><a href="/about/">Profile</a> · <a href="/ai/sap-ams-improvement/">AI routing page</a> · <a href="/datasets/ams/">AMS datasets</a> · <a href="/notes/ams/">SAP AMS playbook</a> · <a href="/services/sap-o2c-process-audit/">SAP O2C process audit</a> · <a href="/faq/">FAQ</a></p>
     </div>
   </article>
 </section>

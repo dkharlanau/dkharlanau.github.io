@@ -1,0 +1,19 @@
+{% assign analysis = site.data.edu.analysis %}
+{% if analysis %}
+<section class="section education-page" id="education-analysis">
+  <header class="section-heading">
+    {% if analysis.eyebrow %}<p class="eyebrow">{{ analysis.eyebrow }}</p>{% endif %}
+    {% if analysis.title %}<h2>{{ analysis.title }}</h2>{% endif %}
+  </header>
+  {% if analysis.items %}
+  <div class="education-analysis-grid">
+    {% for item in analysis.items %}
+    <article class="education-analysis-card">
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.body }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}

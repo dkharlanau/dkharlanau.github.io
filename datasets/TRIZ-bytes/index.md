@@ -4,6 +4,8 @@ title: "TRIZ-bytes Datasets"
 description: "TRIZ-bytes dataset bytes by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/TRIZ-bytes/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+data_catalog_page: true
 ---
 
 <div class="dataset-hero">

@@ -4,6 +4,8 @@ title: "llm_prompt_byte"
 description: "Dataset bytes of type llm_prompt_byte by Dzmitryi Kharlanau (SAP Lead)."
 permalink: /datasets/types/llm-prompt-byte/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+data_catalog_page: true
 ---
 
 <div class="dataset-hero">

@@ -139,9 +139,10 @@ def collect_ai_assets() -> Iterable[Tuple[str, Path]]:
             continue
         relative = path.relative_to(ROOT)
         assets.append((ensure_path("/" + "/".join(relative.parts)), path))
-    txt_file = ROOT / "LLM.txt"
-    if txt_file.exists():
-        assets.append(("/LLM.txt", txt_file))
+    for txt_name in ("LLM.txt", "llms.txt"):
+        txt_file = ROOT / txt_name
+        if txt_file.exists():
+            assets.append((f"/{txt_name}", txt_file))
     return assets
 
 

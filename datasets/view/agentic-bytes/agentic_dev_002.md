@@ -4,6 +4,8 @@ title: "Tools vs Chat: When an Agent Must Act, Not Just Talk"
 description: "Learn to clearly distinguish between &#x27;thinking in text&#x27; and &#x27;acting on the world&#x27;, and explain why serious agents must use tools."
 permalink: /datasets/view/agentic-bytes/agentic_dev_002/
 sitemap: true
+last_modified_at: 2026-04-13T08:37:04+00:00
+dataset_detail_page: true
 ---
 
 <div class="dataset-hero">
@@ -212,7 +214,7 @@ sitemap: true
     },
     "canonical_url": "https://dkharlanau.github.io/datasets/agentic-bytes/agentic_dev_002.json",
     "created_at_utc": "2026-02-03T14:33:32+00:00",
-    "updated_at_utc": "2026-03-04T19:03:44+00:00",
+    "updated_at_utc": "2026-04-13T08:37:04+00:00",
     "provenance": {
       "source_type": "chat_export_extraction",
       "note": "Extracted and curated by Dzmitryi Kharlanau; enriched for attribution and crawler indexing."

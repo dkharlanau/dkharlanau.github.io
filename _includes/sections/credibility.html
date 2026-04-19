@@ -1,0 +1,109 @@
+{% assign section = site.data.home.credibility %}
+{% assign tech_section = site.data.home.tech_stack %}
+{% if section %}
+<section class="section home-credibility cred-editorial" id="credibility">
+  <header class="cred-editorial__header">
+    <div class="cred-editorial__kicker">
+      <span class="cred-editorial__line"></span>
+      {% if section.eyebrow %}<span>{{ section.eyebrow }}</span>{% endif %}
+    </div>
+    <h2 class="cred-editorial__title">Professional Background</h2>
+  </header>
+
+  <div class="cred-editorial__summary">
+    <div class="cred-editorial__portrait-wrap">
+      <img
+        class="cred-editorial__portrait"
+        src="/assets/img/DzmitryiKharlanau.png"
+        alt="Portrait of Dzmitryi Kharlanau"
+        loading="lazy"
+      >
+      <div class="cred-editorial__portrait-note">
+        <span>Location</span>
+        <p>Enterprise Hub</p>
+      </div>
+    </div>
+
+    <div class="cred-editorial__copy">
+      {% if section.lead %}
+      <p class="cred-editorial__lead">{{ section.lead }}</p>
+      {% endif %}
+
+      <div class="cred-editorial__quote">
+        <p>"{{ section.quote | default: 'With extensive experience across SAP support ecosystems and emerging AI technologies, I bridge the gap between technical complexity and business strategy.' }}"</p>
+      </div>
+
+      {% if section.link_url and section.link_label %}
+      <a class="cred-editorial__link" href="{{ section.link_url }}" target="_blank" rel="noopener noreferrer">
+        <span>{{ section.link_label }}</span>
+        <span aria-hidden="true">→</span>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if section.stats %}
+  <div class="cred-editorial__pillars">
+    {% for stat in section.stats limit: 3 %}
+    <article class="cred-editorial__pillar">
+      <div>
+        <h3>{{ stat.value }}</h3>
+        <p>{{ stat.detail }}</p>
+      </div>
+      <span>{{ forloop.index0 | plus: 1 | prepend: '0' }} / Pillars</span>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if tech_section and tech_section.items %}
+  <div class="tech-stack-simple">
+    <article class="tech-stack-simple__column">
+      <div class="tech-stack-simple__head">
+        <span class="material-symbols-outlined" aria-hidden="true">settings_input_component</span>
+        <h3>SAP and process</h3>
+      </div>
+      <ul class="tech-stack-simple__list">
+        {% for item in tech_section.items limit: 3 %}
+        <li>
+          <strong>{{ item.label }}</strong>
+          <p>{{ item.summary }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+
+    <article class="tech-stack-simple__column">
+      <div class="tech-stack-simple__head">
+        <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+        <h3>AI and automation</h3>
+      </div>
+      <ul class="tech-stack-simple__list">
+        {% for item in tech_section.items offset: 2 limit: 3 %}
+        <li>
+          <strong>{{ item.label }}</strong>
+          <p>{{ item.summary }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+
+    <article class="tech-stack-simple__column">
+      <div class="tech-stack-simple__head">
+        <span class="material-symbols-outlined" aria-hidden="true">code</span>
+        <h3>Build and delivery</h3>
+      </div>
+      <ul class="tech-stack-simple__list">
+        {% for item in tech_section.items offset: 5 limit: 4 %}
+        <li>
+          <strong>{{ item.label }}</strong>
+          <p>{{ item.summary }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+  </div>
+  {% endif %}
+
+</section>
+{% endif %}

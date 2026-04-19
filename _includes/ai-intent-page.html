@@ -1,0 +1,103 @@
+{% assign intent = site.data.discovery_map.intents | where: "id", page.intent_id | first %}
+{% if intent %}
+<section class="section">
+  <header class="dataset-hero dataset-hero--library">
+    <p class="eyebrow">AI Intent Entity</p>
+    <h1 class="dataset-hero__title">{{ intent.title }}</h1>
+    <p class="dataset-hero__subtitle">{{ intent.summary }}</p>
+  </header>
+
+  <div class="dataset-grid">
+    <article class="neub-card dataset-section">
+      <div class="note-body">
+        <p>{{ intent.use_when }}</p>
+
+        <h2>Problems This Covers</h2>
+        <ul>
+          {% for item in intent.target_problems %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+
+        <h2>Signals And Keywords</h2>
+        <ul class="problem-list">
+          {% for item in intent.query_signals %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </article>
+
+    <aside class="dataset-panel">
+      <article class="neub-card dataset-section">
+        <h2>Where AI Should Look Next</h2>
+        <ul class="resource-list">
+          {% for step in intent.routing %}
+          <li>{{ step }}</li>
+          {% endfor %}
+        </ul>
+      </article>
+
+      <article class="neub-card dataset-section">
+        <h2>Related Datasets</h2>
+        <ul class="resource-list">
+          {% for item in intent.related.datasets %}
+          <li><a class="link-arrow" href="{{ item.url }}">{{ item.label }}</a></li>
+          {% endfor %}
+        </ul>
+      </article>
+
+      <article class="neub-card dataset-section">
+        <h2>Related Notes</h2>
+        <ul class="resource-list">
+          {% for item in intent.related.notes %}
+          <li><a class="link-arrow" href="{{ item.url }}">{{ item.label }}</a></li>
+          {% endfor %}
+        </ul>
+      </article>
+
+      <article class="neub-card dataset-section">
+        <h2>Related Services</h2>
+        <ul class="resource-list">
+          {% for item in intent.related.services %}
+          <li><a class="link-arrow" href="{{ item.url }}">{{ item.label }}</a></li>
+          {% endfor %}
+        </ul>
+      </article>
+    </aside>
+  </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "{{ page.url | absolute_url }}#intent",
+  "url": "{{ page.url | absolute_url }}",
+  "name": {{ intent.title | jsonify }},
+  "description": {{ intent.description | jsonify }},
+  "keywords": {{ intent.keywords | jsonify }},
+  "about": {
+    "@id": "https://dkharlanau.github.io/#dkharlanau"
+  },
+  "mentions": [
+    {% assign first_url = true %}
+    {% for item in intent.related.datasets %}
+      {% unless first_url %},{% endunless %}
+      {% assign first_url = false %}
+      {"@type": "Thing", "url": "{{ item.url | absolute_url }}"}
+    {% endfor %}
+    {% for item in intent.related.notes %}
+      {% unless first_url %},{% endunless %}
+      {% assign first_url = false %}
+      {"@type": "Thing", "url": "{{ item.url | absolute_url }}"}
+    {% endfor %}
+    {% for item in intent.related.services %}
+      {% unless first_url %},{% endunless %}
+      {% assign first_url = false %}
+      {"@type": "Thing", "url": "{{ item.url | absolute_url }}"}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}

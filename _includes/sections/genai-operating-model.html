@@ -1,0 +1,80 @@
+{% assign section = site.data.home.genai_operating_model %}
+{% if section %}
+<section class="section genai-operating-model" id="genai-operating-model">
+  <header class="genai-operating-model__header">
+    <h2 class="genai-operating-model__title">{{ section.title }}</h2>
+    <p class="genai-operating-model__statement">{{ section.statement }}</p>
+    <div class="genai-operating-model__intro">
+      <p>{{ section.intro }}</p>
+    </div>
+  </header>
+
+  <div class="genai-operating-model__comparison">
+    <article class="genai-operating-model__panel genai-operating-model__panel--old">
+      <div class="genai-operating-model__panel-head">
+        <span class="material-symbols-outlined" aria-hidden="true">{{ section.old_model.icon }}</span>
+        <h3>{{ section.old_model.eyebrow }}</h3>
+      </div>
+      <ul class="genai-operating-model__list">
+        {% for item in section.old_model.items %}
+        <li>
+          <span>{{ item.label }}</span>
+          <p>{{ item.detail }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+
+    <article class="genai-operating-model__panel genai-operating-model__panel--new">
+      <div class="genai-operating-model__panel-head">
+        <span class="material-symbols-outlined" aria-hidden="true">{{ section.new_needs.icon }}</span>
+        <h3>{{ section.new_needs.eyebrow }}</h3>
+      </div>
+      <ul class="genai-operating-model__list">
+        {% for item in section.new_needs.items %}
+        <li>
+          <span>{{ item.label }}</span>
+          <p>{{ item.detail }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+  </div>
+
+  <section class="genai-operating-model__why">
+    <div class="genai-operating-model__why-head">
+      <h3>{{ section.why_it_matters.title }}</h3>
+      <span aria-hidden="true"></span>
+    </div>
+    <div class="genai-operating-model__why-body">
+      <div class="genai-operating-model__why-copy">
+        {% for paragraph in section.why_it_matters.paragraphs %}
+        <p>{{ paragraph }}</p>
+        {% endfor %}
+      </div>
+      <div class="genai-operating-model__capabilities">
+        {% for item in section.why_it_matters.items %}
+        <article class="genai-operating-model__capability">
+          <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+          <p>{{ item.label }}</p>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <div class="genai-operating-model__visual" aria-hidden="true"></div>
+
+  <footer class="genai-operating-model__closing">
+    <h3>{{ section.closing_quote }}</h3>
+    <div class="genai-operating-model__closing-note">
+      <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
+      <p>
+        {{ section.closing_note }}
+        <br>
+        <strong>{{ section.closing_emphasis }}</strong>
+      </p>
+    </div>
+  </footer>
+</section>
+{% endif %}
