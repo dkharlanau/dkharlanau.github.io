@@ -1,80 +1,88 @@
 # CV AI Readable Website
 
-This repository publishes an AI-readable professional website for Dzmitryi Kharlanau.
+Это мой публичный профессиональный сайт.
 
-The purpose is simple:
+Я использую его как понятный, управляемый и AI-readable слой поверх обычного профиля в LinkedIn.
 
-- make the professional profile easier to find in search
-- make contact paths clearer
-- make public work easier to spread, cite, and reference
-- provide machine-readable profile sources for AI systems, search agents, and retrieval tools
+## Коротко обо мне
 
-## Positioning
+Меня зовут Dzmitryi Kharlanau.
 
-This is not just a personal homepage.
+Я работаю на стыке SAP, AMS-heavy delivery, integration, logistics, MDG-related work и практического использования современных AI-инструментов.
 
-It is a public profile surface designed to help people and systems quickly understand:
+Этот сайт нужен мне не как "еще одна визитка", а как более точная и управляемая профессиональная поверхность:
 
-- who this person is
-- what kind of work he is closest to
-- which public sources are canonical
-- which credentials, datasets, and publications support that positioning
+- чтобы меня было легче находить через поиск
+- чтобы было проще понять, чем я реально занимаюсь
+- чтобы у меня был один канонический публичный профиль
+- чтобы публикации, сертификаты, датасеты и структурированные профили можно было удобно ссылать и распространять
 
-The repository is intentionally biased toward discoverability, clarity, and reuse of public professional information.
+## Мой подход
 
-## Core Hypothesis
+Я считаю, что профессиональный профиль больше не должен жить только внутри одной платформы.
 
-LinkedIn is useful, but it is not enough as a complete professional identity layer.
+LinkedIn важен, но этого уже недостаточно:
 
-The working hypothesis behind this site is that a separate AI-readable website improves:
+- там мало контроля над структурой и подачей
+- сложно выстроить собственную каноническую логику профиля
+- не очень удобно делать профиль machine-readable
+- не все публичные доказательства, ссылки и материалы удобно собирать в одном месте
 
-- search visibility
-- control over professional positioning
-- linkable proof points
-- machine-readable profile accuracy
-- long-term portability beyond one platform
+Поэтому мой подход такой:
 
-In practice, LinkedIn remains an important public channel, but this site exists in addition to LinkedIn so the profile can be easier to reference, interpret, and distribute.
+- LinkedIn остается важным публичным профилем
+- отдельный сайт становится моим главным управляемым слоем позиционирования
+- структурированные файлы помогают поиску, AI-системам и людям быстрее понять профиль
+- публичные доказательства лучше держать в виде ссылок, реестров, заметок и машиночитаемых источников
 
-## What The Site Publishes
+## Почему этот сайт существует как дополнение к LinkedIn
 
-- a canonical public profile
-- structured résumé/profile data
-- public certifications and badge links where available
-- public writing and dataset references
-- AI-readable endpoints such as `resume.yml`, `resume.json`, `profile-audit.json`, and `llms.txt`
+Я рассматриваю этот сайт как дополнение к LinkedIn, а не замену.
 
-## Search And Distribution Goal
+LinkedIn дает охват, сеть контактов и стандартную профессиональную точку входа.
 
-The website is meant to help recruiters, collaborators, buyers, search engines, and AI systems land on one clear public source instead of piecing together fragmented profile data from multiple places.
+Собственный сайт дает другое:
 
-That means the repo should favor:
+- контроль над формулировками
+- более точное позиционирование
+- независимость от одной платформы
+- лучшую индексируемость
+- удобные ссылки на публичные материалы
+- машиночитаемые профили для AI, поиска и retrieval
 
-- concise public positioning
-- evidence-backed claims
-- clean links to credentials and publications
-- machine-readable sources that can be indexed safely
+Именно поэтому я сознательно держу и LinkedIn, и отдельный профильный сайт.
 
-## Datasets, License, And Citation
+## Что я советую другим
 
-- Dataset bytes under `/datasets/` are licensed **CC BY-NC 4.0** unless stated otherwise.
-- Citation and dataset license details live in `/legal/datasets/` and `LICENSE-DATA`.
-- Repository citation support is provided through `CITATION.cff`.
+Я в целом советую другим специалистам делать так же.
 
-## Logos, Brands, And Trademarks
+Если у человека есть серьезный профессиональный профиль, публичные материалы, статьи, сертификаты, проекты или четкая специализация, то одного LinkedIn обычно мало.
 
-- Third-party company logos, product marks, and brand assets are not covered by the repository content license unless a file explicitly says otherwise.
-- Before adding or reusing any third-party logo or icon, verify the applicable license, public brand guidelines, or obtain written permission from the rights holder.
-- If permission is unclear, do not commit the asset.
-- Keep any approved logo use narrow and referential only. Do not imply endorsement, partnership, certification, or affiliation unless that relationship is real and can be stated publicly.
+Хорошая связка выглядит так:
 
-## Maintenance Note
+- LinkedIn как стандартная публичная точка входа
+- собственный сайт как канонический профиль и слой позиционирования
+- структурированные публичные данные как основа для поиска, AI-систем и нормального распространения профиля
 
-This repository should be treated as a public-facing profile and discovery asset.
+На практике это дает более устойчивую профессиональную идентичность и меньше зависимости от одной платформы.
 
-When updating it, prefer:
+## Что публикуется в этом репозитории
 
-- verified facts over stronger wording
-- positioning over implementation detail
-- clear public evidence over generic claims
-- durable, linkable sources over platform-specific fragments
+В этом репозитории лежат публичные профильные материалы:
+
+- каноническая профильная страница
+- structured résumé / profile data
+- ссылки на публичные сертификаты и badges
+- публичные публикации, заметки и dataset references
+- AI-readable endpoints, например `resume.yml`, `resume.json`, `profile-audit.json` и `llms.txt`
+
+## Важный принцип
+
+Этот репозиторий должен оставаться публичным, аккуратным и доказательным.
+
+Поэтому при обновлениях я предпочитаю:
+
+- точность вместо лишнего усиления
+- проверяемые факты вместо общих заявлений
+- ясное позиционирование вместо технического шума
+- канонические публичные ссылки вместо разрозненных платформенных фрагментов
