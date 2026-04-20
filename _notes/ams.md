@@ -8,6 +8,8 @@ tags:
   - SAP
   - Operations
 excerpt: "Shift AMS from ticket closure to root-cause elimination, analytics, and continual improvement."
+date: 2025-10-03
+last_modified_at: 2026-02-17
 further_reading:
   - label: "Audit SAP process debt before it breaks O2C fulfilment"
     url: "/notes/process-audit/"

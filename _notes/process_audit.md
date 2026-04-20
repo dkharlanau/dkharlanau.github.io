@@ -10,6 +10,8 @@ tags:
   - P2P
   - Integration
 excerpt: "How I run SAP process and integration audits to expose breakpoints, control gaps, and custom-code risk."
+date: 2025-10-03
+last_modified_at: 2025-12-05
 further_reading:
   - label: "Stabilise SAP AMS operations with order-to-cash prevention loops"
     url: "/notes/ams/"

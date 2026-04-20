@@ -8,6 +8,8 @@ tags:
   - SAP
   - Delivery
 excerpt: "Five principles that anchor how I deliver SAP consulting engagements so sponsors know what to expect."
+date: 2025-10-03
+last_modified_at: 2025-12-05
 further_reading:
   - label: "Shift SAP AMS into a knowledge engine with measurable MTTR cuts"
     url: "/notes/ams/"

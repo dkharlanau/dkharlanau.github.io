@@ -11,6 +11,8 @@ tags:
   - Best of Breed
   - Composable Enterprise
 excerpt: "Composable ERP strategy for SAP finance, logistics, and integration teams that want clean-core S/4HANA with portable edge services."
+date: 2025-10-03
+last_modified_at: 2026-03-11
 further_reading:
   - label: "Cut MTTR with the SAP AMS order-to-cash stabilisation approach"
     url: "/notes/ams/"

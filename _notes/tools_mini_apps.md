@@ -8,6 +8,8 @@ tags:
   - Automation
   - UX
   - Prototyping
+date: 2025-10-03
+last_modified_at: 2025-12-05
 further_reading:
   - label: "Use AI/ML sidecars to extend SAP order-to-cash decisions"
     url: "/notes/ai-ml/"

@@ -7,6 +7,8 @@ tags:
   - Machine Learning
   - SAP
 excerpt: "Keep SAP clean while probabilistic services around it drive forecasts, risk signals, and intelligent automation."
+date: 2025-10-03
+last_modified_at: 2025-10-19
 permalink: /notes/ai-ml/
 further_reading:
   - label: "Reduce SAP order-to-cash incidents with the AMS playbook"

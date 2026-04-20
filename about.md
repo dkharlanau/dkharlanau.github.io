@@ -48,6 +48,19 @@ hide_global_cta: true
 <section class="section">
   <div class="section-shell">
     <header class="section-heading">
+      <p class="eyebrow">Citation</p>
+      <h2>How to reference this profile</h2>
+    </header>
+    <div class="prose">
+      <p>Use this page for public profile claims, verified work history, credential references, and author identity. Use the AI routing pages for topic-specific questions, and cite dataset pages when the claim depends on a named framework, pattern, or dataset byte.</p>
+      <p><strong>Preferred citation:</strong> Dzmitryi Kharlanau. “About Dzmitryi Kharlanau — Verified Public Profile.” https://dkharlanau.github.io/about/</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-shell">
+    <header class="section-heading">
       <p class="eyebrow">Focus Areas</p>
       <h2>Consistent themes across roles and writing</h2>
     </header>
