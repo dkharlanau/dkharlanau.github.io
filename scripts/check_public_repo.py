@@ -18,7 +18,10 @@ DISALLOWED_PATH_RE = re.compile(
     r"_site|\.jekyll-cache|\.sass-cache|\.pytest_cache|__pycache__|"
     r"Complete_LinkedIn[^/]*|LinkedinComplete|LinkedInComplete"
     r")(?:/|$)|"
+    r"(^|/)Basic_LinkedInDataExport_[^/]+\.zip(?:/|$)|"
     r"(^|/)\.env(?:\.|$)|"
+    r"(^|/)li2resume\.local\.[^/]+$|"
+    r"(^|/)scripts/li2resume\.config\.(?:json|ya?ml)$|"
     r"(^|/).*\.py[cod]$|"
     r"(^|/).*\.log$|"
     r"(^|/).*\.tmp$|"
@@ -29,10 +32,18 @@ DISALLOWED_PATH_RE = re.compile(
 
 SECRET_PATTERNS = [
     re.compile(r"-----BEGIN (?:RSA |DSA |EC |OPENSSH |PGP )?PRIVATE KEY-----"),
-    re.compile(r"\b(?:api[_-]?key|client[_-]?secret|secret|password|passwd|private[_-]?key)\b\s*[:=]\s*['\"]?[^'\"\s]{8,}", re.I),
+    re.compile(
+        r"\b(?:api[_-]?key|client[_-]?secret|secret|password|passwd|private[_-]?key)\b"
+        r"\s*[:=]\s*['\"]?(?!os\.(?:environ|getenv)\b)[^'\"\s]{8,}",
+        re.I,
+    ),
     re.compile(r"\b(?:authorization|bearer)\b\s*[:=]\s*['\"]?(?:bearer\s+)?[A-Za-z0-9._~+/=-]{16,}", re.I),
     re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{20,}\b"),
     re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"),
+]
+
+LOCAL_REFERENCE_PATTERNS = [
+    re.compile(r"\bBasic_LinkedInDataExport_\d{2}-\d{2}-\d{4}\.zip/", re.I),
 ]
 
 TEXT_SUFFIXES = {
@@ -80,6 +91,8 @@ def scan_secret_patterns(path: str) -> list[str]:
     if not is_text_candidate(path):
         return []
     file_path = ROOT / path
+    if not file_path.exists():
+        return []
     try:
         text = file_path.read_text(encoding="utf-8", errors="ignore")
     except OSError as exc:
@@ -90,6 +103,10 @@ def scan_secret_patterns(path: str) -> list[str]:
         for pattern in SECRET_PATTERNS:
             if pattern.search(line):
                 findings.append(f"{path}:{line_no}: possible secret or credential")
+                break
+        for pattern in LOCAL_REFERENCE_PATTERNS:
+            if pattern.search(line):
+                findings.append(f"{path}:{line_no}: local export path reference")
                 break
     return findings
 

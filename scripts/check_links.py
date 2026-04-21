@@ -28,9 +28,10 @@ def is_external(url):
 
 
 def normalize_path(base_dir, url):
-    if url.startswith("/"):
-        return url.lstrip("/")
-    return os.path.normpath(os.path.join(base_dir, url))
+    local_path = urlparse(url).path
+    if local_path.startswith("/"):
+        return local_path.lstrip("/")
+    return os.path.normpath(os.path.join(base_dir, local_path))
 
 
 def main():
