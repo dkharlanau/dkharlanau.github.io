@@ -19,7 +19,7 @@ further_reading:
     url: "/notes/composable-erp/"
 ---
 
-I am a System Analyst and Senior SAP consultant at EPAM Systems. Every engagement—run stabilisation, transformation, or AI enablement—follows a small set of principles. They help sponsors know what to expect, and they give delivery teams a common frame for decisions.
+I am a System Analyst and Senior SAP consultant at [EPAM Systems](https://www.epam.com). Every engagement—run stabilisation, transformation, or AI enablement—follows a small set of principles. They help sponsors know what to expect, and they give delivery teams a common frame for decisions.
 
 ## 1. Clarity before configuration
 

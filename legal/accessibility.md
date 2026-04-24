@@ -7,7 +7,7 @@ permalink: /legal/accessibility/
 
 # Accessibility Statement
 
-I am a System Analyst and Senior SAP consultant at EPAM Systems, and I aim to make this website—and the solutions I deliver—usable by as many people as possible.
+I am a System Analyst and Senior SAP consultant at [EPAM Systems](https://www.epam.com), and I aim to make this website—and the solutions I deliver—usable by as many people as possible.
 
 ## Site experience
 
@@ -18,7 +18,7 @@ I am a System Analyst and Senior SAP consultant at EPAM Systems, and I aim to ma
 ## Ongoing improvements
 
 - Regularly review pages with automated testing tools (e.g., WAVE, axe) and manual checks.
-- Incorporate feedback from users encountering accessibility issues; please report concerns through [LinkedIn](https://www.linkedin.com/in/dkharlanau) or your EPAM Systems engagement manager.
+- Incorporate feedback from users encountering accessibility issues; please report concerns through [LinkedIn](https://www.linkedin.com/in/dkharlanau) or your [EPAM Systems](https://www.epam.com) engagement manager.
 - Accessibility requirements are captured in statements of work so deliverables meet client compliance targets.
 
 ## Third-party content

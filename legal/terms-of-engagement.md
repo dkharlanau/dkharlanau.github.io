@@ -7,7 +7,7 @@ permalink: /legal/terms-of-engagement/
 
 # Terms of Engagement
 
-As a System Analyst and Senior SAP consultant at EPAM Systems, these terms outline how I structure SAP consulting collaborations. When a project is executed through EPAM Systems, the EPAM master services agreement or statement of work takes precedence.
+As a System Analyst and Senior SAP consultant at [EPAM Systems](https://www.epam.com), these terms outline how I structure SAP consulting collaborations. When a project is executed through [EPAM Systems](https://www.epam.com), the EPAM master services agreement or statement of work takes precedence.
 
 ## Scope and deliverables
 
@@ -30,7 +30,7 @@ As a System Analyst and Senior SAP consultant at EPAM Systems, these terms outli
 ## Intellectual property
 
 - Final deliverables, documentation, and code created specifically for your engagement become your property upon full payment, subject to any third-party licensing terms.
-- Reusable accelerators, frameworks, or methodologies developed prior to the engagement remain my intellectual property or EPAM Systems’ property, while you retain a non-exclusive licence to use them within the agreed solution.
+- Reusable accelerators, frameworks, or methodologies developed prior to the engagement remain my intellectual property or [EPAM Systems](https://www.epam.com)’ property, while you retain a non-exclusive licence to use them within the agreed solution.
 
 ## Confidentiality
 
@@ -49,6 +49,6 @@ As a System Analyst and Senior SAP consultant at EPAM Systems, these terms outli
 ## Governing law
 
 - Unless otherwise agreed, engagements delivered directly by me are governed by the laws of the European Union member state where services are rendered.
-- EPAM Systems engagements follow the governing law stipulated in the EPAM contract.
+- [EPAM Systems](https://www.epam.com) engagements follow the governing law stipulated in the EPAM contract.
 
-For contract-specific questions or to request customised terms, contact me at [LinkedIn](https://www.linkedin.com/in/dkharlanau) or reach out through your EPAM Systems account director.
+For contract-specific questions or to request customised terms, contact me at [LinkedIn](https://www.linkedin.com/in/dkharlanau) or reach out through your [EPAM Systems](https://www.epam.com) account director.

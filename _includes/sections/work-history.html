@@ -20,7 +20,7 @@
         {% endif %}
         <div class="home-work-entry__content">
           <div class="home-work-entry__header">
-            <h3>{{ item.company }}</h3>
+            <h3>{% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener noreferrer">{{ item.company }}</a>{% else %}{{ item.company }}{% endif %}</h3>
             {% if item.period %}<span class="home-work-entry__period">{{ item.period }}</span>{% endif %}
           </div>
           <p class="home-work-entry__role">{{ item.role }}</p>

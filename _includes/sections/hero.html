@@ -2,36 +2,90 @@
 {% if hero %}
 <section class="section hero home-hero" id="hero">
   <div class="home-hero__stack">
-    <h1 class="home-hero__title">{{ hero.title }}</h1>
-    {% if hero.subtitle %}<p class="home-hero__subtitle">{{ hero.subtitle }}</p>{% endif %}
-    {% if hero.lead %}<p class="home-hero__lead">{{ hero.lead }}</p>{% endif %}
-    {% if hero.current_role %}<p class="home-hero__current">{{ hero.current_role }}</p>{% endif %}
-    {% if hero.profile.image and hero.name %}
-    <div class="home-hero__person">
-      <div class="home-hero__avatar">
-        <picture>
-          {% if hero.profile.image_avif %}<source srcset="{{ hero.profile.image_avif }}" type="image/avif">{% endif %}
-          {% if hero.profile.image_webp %}<source srcset="{{ hero.profile.image_webp }}" type="image/webp">{% endif %}
-          <img src="{{ hero.profile.image }}" alt="{{ hero.profile.alt | default: hero.name }}" loading="eager" />
-        </picture>
+    <div class="home-hero__copy">
+      {% if hero.availability %}
+      <p class="home-hero__badge">
+        <span class="home-hero__badge-dot" aria-hidden="true"></span>
+        <span>{{ hero.availability }}</span>
+      </p>
+      {% endif %}
+      <h1 class="home-hero__title">{{ hero.title }}</h1>
+      {% if hero.subtitle %}<p class="home-hero__subtitle">{{ hero.subtitle }}</p>{% endif %}
+      {% if hero.lead %}<p class="home-hero__lead">{{ hero.lead }}</p>{% endif %}
+      {% if hero.current_role or hero.perspective %}
+      <div class="home-hero__intro">
+        {% if hero.current_role %}<p class="home-hero__current">{{ hero.current_role }}</p>{% endif %}
+        {% if hero.perspective %}<p class="home-hero__perspective">{{ hero.perspective }}</p>{% endif %}
       </div>
-      <p class="home-hero__person-name">{{ hero.name }}</p>
-    </div>
-    {% endif %}
+      {% endif %}
 
-    {% if hero.profile.contacts %}
-    <div class="home-hero__actions">
-      {% for link in hero.profile.contacts %}
-      <a
-        href="{{ link.url }}"
-        class="home-hero__action{% if link.style == 'primary' %} home-hero__action--primary{% endif %}"
-        {% if link.external %}target="_blank" rel="noopener noreferrer"{% endif %}>
-        <span>{{ link.label }}</span>
-        {% if link.external %}<span aria-hidden="true">{{ site.data.icons.external | default: "↗" }}</span>{% endif %}
-      </a>
-      {% endfor %}
+      {% if hero.profile.image and hero.name or hero.profile.contacts %}
+      <div class="home-hero__contact">
+        {% if hero.profile.image and hero.name %}
+        <div class="home-hero__person">
+          <div class="home-hero__avatar">
+            <picture>
+              {% if hero.profile.image_avif %}<source srcset="{{ hero.profile.image_avif }}" type="image/avif">{% endif %}
+              {% if hero.profile.image_webp %}<source srcset="{{ hero.profile.image_webp }}" type="image/webp">{% endif %}
+              <img src="{{ hero.profile.image }}" alt="{{ hero.profile.alt | default: hero.name }}" loading="eager" />
+            </picture>
+          </div>
+          <div class="home-hero__person-copy">
+            <p class="home-hero__person-name">{{ hero.name }}</p>
+            <p class="home-hero__person-meta">SAP operations and transformation consulting</p>
+          </div>
+        </div>
+        {% endif %}
+        {% if hero.profile.contacts %}
+        <div class="home-hero__actions">
+        {% for link in hero.profile.contacts %}
+        <a
+          href="{{ link.url }}"
+          class="home-hero__action{% if link.style == 'primary' %} home-hero__action--primary{% endif %}"
+          {% if link.external %}target="_blank" rel="noopener noreferrer"{% endif %}>
+          <span>{{ link.label }}</span>
+          {% if link.external %}<span aria-hidden="true">{{ site.data.icons.external | default: "↗" }}</span>{% endif %}
+        </a>
+        {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
     </div>
-    {% endif %}
+
+    <div class="home-hero__visual" aria-hidden="true">
+      <div class="home-hero__visual-header">
+        <span>Lower TCO $ ↓<br>Less dependency<br>More innovation ↑</span>
+        <strong>
+          Operating value loop
+        </strong>
+    
+      </div>
+      <ol class="home-hero__loop">
+        <li>
+          <span>01</span>
+          <strong>Reduce run cost</strong>
+          <b>↓ 10–20% delivery overhead</b>
+          <em>Cut repeated analysis, recurring support effort, and avoidable coordination overhead.</em>
+        </li>
+        <li>
+          <span>02</span>
+          <strong>Reduce dependency</strong>
+          <b>↑ 20–40% reusable knowledge</b>
+          <em>Move critical vendor-held context into a client-owned operational asset.</em>
+        </li>
+        <li>
+          <span>03</span>
+          <strong>Create innovation capacity</strong>
+          <b>↑ 15–25% capacity for change</b>
+          <em>Free time and budget for automation, AI, and clean-core change that actually scales.</em>
+        </li>
+      </ol>
+      <div class="home-hero__signal">
+        <span>Practical AI</span>
+        <strong>Built on reusable operational knowledge around a clean core.</strong>
+      </div>
+    </div>
   </div>
 </section>
 {% endif %}

@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "SAP Consulting Services — Dzmitryi Kharlanau | AMS, O2C, Integration"
-description: "SAP consulting services for AMS transformation, O2C process audits, composable ERP architecture, AI/ML enablement, and mini apps around clean-core S/4HANA."
+description: "SAP consulting path for diagnosing SAP transformation friction, stabilizing O2C and integration operations, structuring operational memory, and extending with side-by-side AI and automation."
 permalink: /services/
-last_modified_at: 2026-04-19
+last_modified_at: 2026-04-24
 ---
 
 <section class="section">
@@ -16,51 +16,46 @@ last_modified_at: 2026-04-19
 <section class="section">
   <header class="section-heading">
     <p class="eyebrow">Services</p>
-    <h1>SAP consulting for clean-core transformation</h1>
-    <p class="lead">I help teams stabilise SAP operations, fix recurring O2C and integration issues, and deliver edge automation without turning S/4HANA into a customization trap.</p>
+    <h1>A practical path for SAP transformation work</h1>
+    <p class="lead">I help teams diagnose where change loses value, stabilize noisy operations, structure reusable operational memory, and extend SAP with side-by-side AI and automation without turning S/4HANA into a customization trap.</p>
   </header>
 
   <div class="services-grid">
-    <a class="service-card" href="/services/sap-ams-consulting/">
-      <h3 class="service-card__title">SAP AMS transformation</h3>
-      <p class="service-card__subtitle">Reduce repeat incidents, vendor lock-in, and MTTR.</p>
-      <p class="service-card__summary">Shift AMS from ticket closure to prevention with KEDB, observability, and productized fixes.</p>
-      <div class="service-card__footer">
-        <span class="link-arrow">Learn more</span>
-      </div>
-    </a>
-
     <a class="service-card" href="/services/sap-o2c-process-audit/">
-      <h3 class="service-card__title">SAP process audit and diagnostics</h3>
-      <p class="service-card__subtitle">Expose O2C, P2P, and integration breakpoints.</p>
-      <p class="service-card__summary">Audit incident patterns, backlog drivers, custom code, and control gaps to create a measurable remediation pipeline.</p>
+      <p class="eyebrow">1. Diagnose</p>
+      <h3 class="service-card__title">SAP Transformation Friction Audit</h3>
+      <p class="service-card__subtitle">Find where change loses value across process, data, integration, handover, and support.</p>
+      <p class="service-card__summary">Trace incident patterns, backlog drivers, ownership gaps, custom code, and control breaks into a clear remediation map.</p>
       <div class="service-card__footer">
         <span class="link-arrow">Learn more</span>
       </div>
     </a>
 
-    <a class="service-card" href="/services/sap-integration-architecture/">
-      <h3 class="service-card__title">Composable ERP strategy</h3>
-      <p class="service-card__subtitle">Keep S/4HANA as the core, design portable services at the edge.</p>
-      <p class="service-card__summary">Define boundaries, contracts, and platform choices so new capabilities stay replaceable and cost-transparent.</p>
+    <a class="service-card" href="/services/sap-ams-consulting/">
+      <p class="eyebrow">2. Stabilize</p>
+      <h3 class="service-card__title">O2C / Integration / AMS Improvement</h3>
+      <p class="service-card__subtitle">Reduce operational noise and make the process reliable enough for further change.</p>
+      <p class="service-card__summary">Shift support from ticket closure to prevention with KEDB, observability, ownership clarity, and productized fixes.</p>
+      <div class="service-card__footer">
+        <span class="link-arrow">Learn more</span>
+      </div>
+    </a>
+
+    <a class="service-card" href="/ai/operational-continuity/">
+      <p class="eyebrow">3. Structure</p>
+      <h3 class="service-card__title">Operational Memory and Handover Model</h3>
+      <p class="service-card__subtitle">Turn project and support knowledge into reusable runbooks, KEDB, decision logs, and ownership maps.</p>
+      <p class="service-card__summary">Capture what usually stays tribal, then make it usable during incidents, transitions, audits, and future delivery work.</p>
       <div class="service-card__footer">
         <span class="link-arrow">Learn more</span>
       </div>
     </a>
 
     <a class="service-card" href="/services/sap-ai-ml-enablement/">
-      <h3 class="service-card__title">SAP AI and ML enablement</h3>
-      <p class="service-card__subtitle">Add probabilistic services without breaking deterministic ERP.</p>
-      <p class="service-card__summary">Design sidecar AI patterns, retrieval workflows, governance, and integration rails around SAP.</p>
-      <div class="service-card__footer">
-        <span class="link-arrow">Learn more</span>
-      </div>
-    </a>
-
-    <a class="service-card" href="/services/sap-mini-apps/">
-      <h3 class="service-card__title">Mini apps and SAP automation tools</h3>
-      <p class="service-card__subtitle">Fast prototypes that remove manual retries and analysis bottlenecks.</p>
-      <p class="service-card__summary">Build small apps for AIF/IDoc handling, BP validation, cutover simulation, and operational dashboards.</p>
+      <p class="eyebrow">4. Extend</p>
+      <h3 class="service-card__title">Side-by-Side AI and Automation</h3>
+      <p class="service-card__subtitle">Build AI-assisted workflows, mini-apps, retrieval, diagnostics, and automation outside the SAP core.</p>
+      <p class="service-card__summary">Design sidecar AI patterns, small operator tools, integration rails, and governance around deterministic S/4HANA processes.</p>
       <div class="service-card__footer">
         <span class="link-arrow">Learn more</span>
       </div>
@@ -77,8 +72,8 @@ last_modified_at: 2026-04-19
   </header>
   <div class="faq-items">
     <article class="faq-item">
-      <h3>AMS is meeting SLAs but the same incidents keep coming back</h3>
-      <p>This usually means the support model is optimized for closure, not prevention. I focus on repeat-rate, backlog age, and root-cause removal.</p>
+      <h3>Transformation work is moving, but value keeps leaking between teams</h3>
+      <p>This usually means the problem is not one module or one backlog. I map where process, data, integration, handover, and support friction turns change into operational noise.</p>
     </article>
     <article class="faq-item">
       <h3>You need SAP changes but want to protect clean core S/4HANA</h3>
@@ -86,7 +81,7 @@ last_modified_at: 2026-04-19
     </article>
     <article class="faq-item">
       <h3>The programme needs quick wins before a larger transformation</h3>
-      <p>Short-cycle audits, mini apps, and targeted automation are the fastest way to prove value before committing to bigger delivery tracks.</p>
+      <p>Short-cycle audits, operational memory, mini apps, and targeted automation are the fastest way to prove value before committing to bigger delivery tracks.</p>
     </article>
   </div>
 </section>
@@ -97,7 +92,7 @@ last_modified_at: 2026-04-19
       <p class="eyebrow">Next step</p>
       <h2>Start with the narrowest problem worth fixing</h2>
     </header>
-    <p class="lead">The strongest entry points are usually one repeat incident pattern, one audit slice, or one manual workflow that clearly wastes time or money. From there, the site already links to the deeper playbooks, CV, FAQ, and search.</p>
+    <p class="lead">The strongest entry point is usually one visible friction pattern: a repeat incident class, a noisy interface, a handover gap, or a manual workflow that clearly wastes time or money. From there, the work can move through diagnose, stabilize, structure, and extend without jumping straight into a large programme.</p>
     <div class="section-actions">
       <a class="button button--primary" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">Contact on LinkedIn</a>
       <a class="button" href="/about/">Open profile</a>
@@ -122,7 +117,7 @@ last_modified_at: 2026-04-19
   "serviceType": "SAP consulting",
   "areaServed": "Global",
   "url": "https://dkharlanau.github.io/services/",
-  "description": "Consulting services for SAP AMS transformation, process diagnostics, composable ERP architecture, AI/ML enablement, and mini apps around clean-core S/4HANA."
+  "description": "Consulting path for SAP transformation friction audits, O2C and integration stabilization, operational memory and handover models, and side-by-side AI and automation around clean-core S/4HANA."
 }
 </script>
 
@@ -133,10 +128,10 @@ last_modified_at: 2026-04-19
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "When is SAP AMS transformation the right starting point?",
+      "name": "When is a SAP transformation friction audit the right starting point?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It is the right starting point when SLAs look acceptable but repeat incidents, backlog age, and vendor dependency keep increasing. The goal is to shift support from patching to prevention."
+        "text": "It is the right starting point when change is happening but value is lost across process, data, integration, handover, and support boundaries. The goal is to find the friction before scaling more delivery work."
       }
     },
     {
@@ -149,10 +144,10 @@ last_modified_at: 2026-04-19
     },
     {
       "@type": "Question",
-      "name": "What is the fastest way to prove value before a larger SAP programme?",
+      "name": "What is the fastest way to prove value before a larger SAP transformation programme?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Start with one audit slice, one repeat incident pattern, or one manual workflow where the time or cost waste is already visible. That creates a narrow, measurable quick win."
+        "text": "Start with one audit slice, one repeat incident pattern, one handover gap, or one manual workflow where the time or cost waste is already visible. That creates a narrow, measurable quick win."
       }
     }
   ]

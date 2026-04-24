@@ -82,7 +82,7 @@ hide_global_cta: true
       {% for item in resume.experience limit: 6 %}
       <article class="profile-list__item">
         <h3>{{ item.title }}</h3>
-        <p>{{ item.company }} · {{ item.start }}{% if item.current %} to present{% elsif item.end %} to {{ item.end }}{% endif %}</p>
+        <p>{% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener noreferrer">{{ item.company }}</a>{% else %}{{ item.company }}{% endif %} · {{ item.start }}{% if item.current %} to present{% elsif item.end %} to {{ item.end }}{% endif %}</p>
         <p>{{ item.summary }}</p>
       </article>
       {% endfor %}

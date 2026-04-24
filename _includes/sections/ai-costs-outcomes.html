@@ -47,15 +47,22 @@
     </aside>
   </div>
 
-  <section class="ai-costs-outcomes__audit">
-    <div class="ai-costs-outcomes__audit-grid">
-      {% for item in section.audit_items %}
-      <article class="ai-costs-outcomes__audit-item">
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.detail }}</p>
-      </article>
+  {% if section.references %}
+  <footer class="ai-costs-outcomes__references" aria-label="References">
+    <h3>References</h3>
+    <ul>
+      {% for reference in section.references %}
+      <li>
+        <a href="{{ reference.url }}" target="_blank" rel="noopener noreferrer">
+          <span>{{ reference.label }}</span>
+          {{ reference.title }}
+          <span aria-hidden="true">{{ site.data.icons.external | default: "↗" }}</span>
+        </a>
+      </li>
       {% endfor %}
-    </div>
-  </section>
+    </ul>
+  </footer>
+  {% endif %}
+
 </section>
 {% endif %}

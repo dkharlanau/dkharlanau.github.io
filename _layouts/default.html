@@ -23,7 +23,9 @@
   <!-- End Google Tag Manager (noscript) -->
 
   <a class="skip-link" href="#content">Skip to main content</a>
+  {% unless is_home %}
   {% include header.html %}
+  {% endunless %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
     {{ content }}
     {% unless page.hide_global_cta %}

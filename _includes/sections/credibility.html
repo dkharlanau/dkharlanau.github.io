@@ -12,12 +12,16 @@
 
   <div class="cred-editorial__summary">
     <div class="cred-editorial__portrait-wrap">
-      <img
-        class="cred-editorial__portrait"
-        src="/assets/img/DzmitryiKharlanau.png"
-        alt="Portrait of Dzmitryi Kharlanau"
-        loading="lazy"
-      >
+      <picture>
+        <source srcset="/assets/img/DzmitryiKharlanau.avif" type="image/avif">
+        <source srcset="/assets/img/DzmitryiKharlanau.webp" type="image/webp">
+        <img
+          class="cred-editorial__portrait"
+          src="/assets/img/DzmitryiKharlanau.png"
+          alt="Portrait of Dzmitryi Kharlanau"
+          loading="lazy"
+        >
+      </picture>
       <div class="cred-editorial__portrait-note">
         <span>Location</span>
         <p>Enterprise Hub</p>
@@ -25,6 +29,13 @@
     </div>
 
     <div class="cred-editorial__copy">
+      {% if section.narrative %}
+      <div class="cred-editorial__narrative">
+        {% for paragraph in section.narrative %}
+        <p{% if forloop.first %} class="cred-editorial__lead"{% endif %}>{{ paragraph }}</p>
+        {% endfor %}
+      </div>
+      {% else %}
       {% if section.lead %}
       <p class="cred-editorial__lead">{{ section.lead }}</p>
       {% endif %}
@@ -32,29 +43,16 @@
       <div class="cred-editorial__quote">
         <p>"{{ section.quote | default: 'With extensive experience across SAP support ecosystems and emerging AI technologies, I bridge the gap between technical complexity and business strategy.' }}"</p>
       </div>
+      {% endif %}
 
       {% if section.link_url and section.link_label %}
-      <a class="cred-editorial__link" href="{{ section.link_url }}" target="_blank" rel="noopener noreferrer">
+      <a class="cred-editorial__link" href="{{ section.link_url }}" target="_blank" rel="noopener noreferrer" aria-label="Contact Dzmitryi Kharlanau on LinkedIn">
         <span>{{ section.link_label }}</span>
         <span aria-hidden="true">→</span>
       </a>
       {% endif %}
     </div>
   </div>
-
-  {% if section.stats %}
-  <div class="cred-editorial__pillars">
-    {% for stat in section.stats limit: 3 %}
-    <article class="cred-editorial__pillar">
-      <div>
-        <h3>{{ stat.value }}</h3>
-        <p>{{ stat.detail }}</p>
-      </div>
-      <span>{{ forloop.index0 | plus: 1 | prepend: '0' }} / Pillars</span>
-    </article>
-    {% endfor %}
-  </div>
-  {% endif %}
 
   {% if tech_section and tech_section.items %}
   <div class="tech-stack-simple">

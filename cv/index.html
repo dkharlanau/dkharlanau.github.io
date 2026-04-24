@@ -89,7 +89,7 @@ permalink: /cv/
       </div>
       <div class="feed-item__main">
         <h3 class="feed-item__title">{{ role.title }}</h3>
-        <p class="feed-item__subtitle">{{ role.company }}{% if role.location %} &middot; {{ role.location }}{% endif %}</p>
+        <p class="feed-item__subtitle">{% if role.url %}<a href="{{ role.url }}" target="_blank" rel="noopener">{{ role.company }}</a>{% else %}{{ role.company }}{% endif %}{% if role.location %} &middot; {{ role.location }}{% endif %}</p>
         
         {% if role.summary %}
         <div class="feed-item__desc">
@@ -168,7 +168,7 @@ permalink: /cv/
       {% for cert in resume.certifications %}
       <div class="cert-item">
         <h3 class="h4">{{ cert.name }}</h3>
-        <p class="meta">{% if cert.issuer %}{{ cert.issuer }}{% endif %}{% if cert.issued %} &middot; {{ cert.issued }}{% endif %}</p>
+        <p class="meta">{% if cert.issuer == "EPAM Systems" %}<a href="https://www.epam.com" target="_blank" rel="noopener">EPAM Systems</a>{% elsif cert.issuer %}{{ cert.issuer }}{% endif %}{% if cert.issued %} &middot; {{ cert.issued }}{% endif %}</p>
         {% if cert.url %}<a class="link" href="{{ cert.url }}" target="_blank" rel="noopener">View cert</a>{% endif %}
       </div>
       {% endfor %}

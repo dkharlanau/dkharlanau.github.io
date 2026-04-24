@@ -6,6 +6,13 @@
       {% if section.eyebrow %}<p class="analysis-problem__eyebrow">{{ section.eyebrow }}</p>{% endif %}
       {% if section.title %}<h2 class="analysis-problem__title">{{ section.title }}</h2>{% endif %}
       {% if section.statement %}<p class="analysis-problem__statement">{{ section.statement }}</p>{% endif %}
+      {% if section.intro_paragraphs %}
+      <div class="analysis-problem__intro">
+        {% for paragraph in section.intro_paragraphs %}
+        <p>{{ paragraph }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
       {% if section.intro %}<p class="analysis-problem__intro">{{ section.intro }}</p>{% endif %}
       {% if section.quote %}
       <blockquote class="analysis-problem__quote">
@@ -16,7 +23,14 @@
 
     <div class="analysis-problem__visual" aria-hidden="true">
       <div class="analysis-problem__visual-surface">
-        <div class="analysis-problem__visual-main"></div>
+        <div class="analysis-problem__visual-main">
+          {% if section.visual_image and section.visual_image.src %}
+          <picture>
+            {% if section.visual_image.webp %}<source srcset="{{ section.visual_image.webp }}" type="image/webp">{% endif %}
+            <img src="{{ section.visual_image.src }}" alt="" loading="lazy" width="1200" height="675" />
+          </picture>
+          {% endif %}
+        </div>
         {% for card in section.visual_cards %}
         <article class="analysis-problem__visual-card analysis-problem__visual-card--{{ card.tone | default: 'neutral' }}">
           <span class="material-symbols-outlined">{{ card.icon }}</span>
@@ -40,10 +54,8 @@
 
   {% if section.cta %}
   <div class="analysis-problem__cta">
-    <div class="analysis-problem__cta-copy">
-      <h3>{{ section.cta.title }}</h3>
-      <p>{{ section.cta.detail }}</p>
-    </div>
+    <h3>{{ section.cta.title }}</h3>
+    <p>{{ section.cta.detail }}</p>
     <a class="analysis-problem__cta-link" href="{{ section.cta.url }}">{{ section.cta.label }}</a>
   </div>
   {% endif %}

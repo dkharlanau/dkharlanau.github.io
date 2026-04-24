@@ -8,7 +8,7 @@ last_modified_at: 2026-04-19
 
 # Privacy Notice
 
-As a System Analyst and Senior SAP consultant at EPAM Systems, I respect the privacy of visitors and partners. This notice explains what limited personal data is collected through this site and how it is used.
+As a System Analyst and Senior SAP consultant at [EPAM Systems](https://www.epam.com), I respect the privacy of visitors and partners. This notice explains what limited personal data is collected through this site and how it is used.
 
 ## Site visits
 
@@ -19,7 +19,7 @@ As a System Analyst and Senior SAP consultant at EPAM Systems, I respect the pri
 ## Contact channels
 
 - When you reach out via LinkedIn or Calendly, the information you submit is used solely to respond to your enquiry and coordinate the engagement.
-- For EPAM Systems projects, your data is handled in accordance with EPAM’s privacy policies and contractual commitments.
+- For [EPAM Systems](https://www.epam.com) projects, your data is handled in accordance with EPAM’s privacy policies and contractual commitments.
 
 ## AI-ready downloads
 
@@ -29,11 +29,11 @@ As a System Analyst and Senior SAP consultant at EPAM Systems, I respect the pri
 ## Data retention
 
 - Communications related to potential or active engagements are retained for up to 24 months to maintain historical context, unless you request earlier deletion (subject to legal retention requirements).
-- Documentation generated during paid work is stored within EPAM Systems’ or the client’s governance framework.
+- Documentation generated during paid work is stored within [EPAM Systems](https://www.epam.com)’ or the client’s governance framework.
 
 ## Your rights
 
-- You may request access to, correction of, or deletion of personal data held about you by contacting me directly at [LinkedIn](https://www.linkedin.com/in/dkharlanau) or through EPAM Systems support channels.
+- You may request access to, correction of, or deletion of personal data held about you by contacting me directly at [LinkedIn](https://www.linkedin.com/in/dkharlanau) or through [EPAM Systems](https://www.epam.com) support channels.
 - If you believe your data has been mishandled, please reach out immediately so it can be addressed.
 
 ## Updates

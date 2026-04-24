@@ -16,7 +16,7 @@
         <img src="{{ logo }}" alt="{{ logo_alt }}" style="max-width: 100%; max-height: 2rem; object-fit: contain; filter: grayscale(100%); opacity: 0.8;">
       </div>
       {% endif %}
-      <h3>{{ partner.name }}</h3>
+      <h3>{% if partner.url %}<a href="{{ partner.url }}" target="_blank" rel="noopener noreferrer">{{ partner.name }}</a>{% else %}{{ partner.name }}{% endif %}</h3>
       {% if partner.type %}<p class="partner-card__meta">{{ partner.type }}</p>{% endif %}
       {% if partner.note %}<p>{{ partner.note }}</p>{% endif %}
       {% if partner.url %}<a class="link-arrow" href="{{ partner.url }}" target="_blank" rel="noopener noreferrer">Visit</a>{% endif %}

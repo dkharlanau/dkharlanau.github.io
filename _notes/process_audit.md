@@ -21,7 +21,7 @@ further_reading:
     url: "/notes/consulting-principles/"
 ---
 
-I am a System Analyst and Senior SAP consultant at EPAM Systems. When sponsors feel Order-to-Cash, Procure-to-Pay, or custom integrations are leaking value, I run structured audits to expose where the flow breaks and how to fix it. The goal: **restore control, shorten lead times, and keep S/4HANA portable.**
+I am a System Analyst and Senior SAP consultant at [EPAM Systems](https://www.epam.com). When sponsors feel Order-to-Cash, Procure-to-Pay, or custom integrations are leaking value, I run structured audits to expose where the flow breaks and how to fix it. The goal: **restore control, shorten lead times, and keep S/4HANA portable.**
 
 ## Audit focus areas
 
