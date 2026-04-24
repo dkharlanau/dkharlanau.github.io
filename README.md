@@ -1,100 +1,67 @@
-# CV AI Readable Website
+# Dzmitryi Kharlanau — Professional Website
 
-Это мой публичный профессиональный сайт.
+This is my public professional website and profile repository.
 
-Я использую его как понятный, управляемый и AI-readable слой поверх обычного профиля в LinkedIn.
+I use it as a controlled, transparent, and AI-readable layer around my professional background, public references, certificates, publications, and selected structured profile data.
 
-## Коротко обо мне
+## About me
 
-Меня зовут Dzmitryi Kharlanau.
+I am **Dzmitryi Kharlanau**, a Senior SAP Consultant working across SAP support, logistics, migration, master data, operational analysis, and SAP transformation environments.
 
-Я работаю на стыке SAP, AMS-heavy delivery, integration, logistics, MDG-related work и практического использования современных AI-инструментов.
+My SAP path started in 2014 through SAP University Alliances, TERP10, and SAP SD certification.
 
-Этот сайт нужен мне не как "еще одна визитка", а как более точная и управляемая профессиональная поверхность:
+Over the years, I have worked on multiple SAP projects in different roles: consultant, team lead / coordinator, developer, and operational analyst. This gave me a practical view of how SAP work really happens — across business processes, support pressure, migration activities, master data, integrations, custom logic, and delivery constraints.
 
-- чтобы меня было легче находить через поиск
-- чтобы было проще понять, чем я реально занимаюсь
-- чтобы у меня был один канонический публичный профиль
-- чтобы публикации, сертификаты, датасеты и структурированные профили можно было удобно ссылать и распространять
+Today, my focus is the gap between SAP transformation and real operations: handover, support knowledge, integration boundaries, master data quality, clean-core decisions, and practical AI-enabled workflows.
 
-## Мой подход
+I actively work with modern AI tools and AI-assisted development workflows. I use them to explore how support knowledge, diagnostics, retrieval, automation, documentation, and side-by-side tools can improve enterprise operations.
 
-Я считаю, что профессиональный профиль больше не должен жить только внутри одной платформы.
+I try to keep developing across SAP, architecture, practical AI, and product thinking.
 
-LinkedIn важен, но этого уже недостаточно:
+## Why this site exists
 
-- там мало контроля над структурой и подачей
-- сложно выстроить собственную каноническую логику профиля
-- не очень удобно делать профиль machine-readable
-- не все публичные доказательства, ссылки и материалы удобно собирать в одном месте
+LinkedIn is useful, but it is not enough as the only professional source.
 
-Поэтому мой подход такой:
+This site gives me one canonical public profile that I can control, structure, reference, and keep machine-readable for search engines and AI systems.
 
-- LinkedIn остается важным публичным профилем
-- отдельный сайт становится моим главным управляемым слоем позиционирования
-- структурированные файлы помогают поиску, AI-системам и людям быстрее понять профиль
-- публичные доказательства лучше держать в виде ссылок, реестров, заметок и машиночитаемых источников
+It exists to make my background easier to understand and verify.
 
-## Почему этот сайт существует как дополнение к LinkedIn
+## What this site is about
 
-Я рассматриваю этот сайт как дополнение к LinkedIn, а не замену.
+The site focuses on practical SAP transformation and operations topics:
 
-LinkedIn дает охват, сеть контактов и стандартную профессиональную точку входа.
+- SAP AMS improvement
+- SAP transformation execution
+- change-to-run handover
+- support knowledge reuse
+- master data and process reliability
+- integration and operational complexity
+- clean-core boundaries
+- practical AI around SAP operations
+- side-by-side automation and support workflows
 
-Собственный сайт дает другое:
+The main idea is that SAP transformation does not fail only in design. It often fails later — in handover, data, integrations, ownership, support readiness, and daily operations.
 
-- контроль над формулировками
-- более точное позиционирование
-- независимость от одной платформы
-- лучшую индексируемость
-- удобные ссылки на публичные материалы
-- машиночитаемые профили для AI, поиска и retrieval
+## What this repository contains
 
-Именно поэтому я сознательно держу и LinkedIn, и отдельный профильный сайт.
+This repository may include:
 
-## Что я советую другим
-
-Я в целом советую другим специалистам делать так же.
-
-Если у человека есть серьезный профессиональный профиль, публичные материалы, статьи, сертификаты, проекты или четкая специализация, то одного LinkedIn обычно мало.
-
-Хорошая связка выглядит так:
-
-- LinkedIn как стандартная публичная точка входа
-- собственный сайт как канонический профиль и слой позиционирования
-- структурированные публичные данные как основа для поиска, AI-систем и нормального распространения профиля
-
-На практике это дает более устойчивую профессиональную идентичность и меньше зависимости от одной платформы.
-
-## Что публикуется в этом репозитории
-
-В этом репозитории лежат публичные профильные материалы:
-
-- каноническая профильная страница
+- website source files
 - structured résumé / profile data
-- ссылки на публичные сертификаты и badges
-- публичные публикации, заметки и dataset references
-- AI-readable endpoints, например `resume.yml`, `resume.json`, `profile-audit.json` и `llms.txt`
+- public certificate and badge references
+- publication and note references
+- AI-readable files such as `llms.txt`, `resume.json`, or `resume.yml`
 
-## Ограничения GitHub Pages для agent discovery
+## Networking
 
-Этот сайт остается на обычном GitHub Pages.
+I am open to relevant professional networking, SAP transformation discussions, AMS improvement topics, and practical AI / automation topics around enterprise operations.
 
-Из-за этого я могу публиковать статические машиночитаемые файлы, discovery-страницы и HTML `<link>`-подсказки, но не могу честно реализовать часть header-based функций на уровне origin:
+You can reach me on LinkedIn:
 
-- HTTP `Link` response headers
-- negotiation по `Accept: text/markdown`
-- `Vary: Accept` и ответ `Content-Type: text/markdown`
+[Dzmitryi Kharlanau](https://uk.linkedin.com/in/dkharlanau)
 
-Если позже сайт будет стоять за Cloudflare или другим programmable edge, тогда эти вещи можно добавить уже на уровне edge/proxy, не ломая Jekyll-структуру.
+## Independence
 
-## Важный принцип
+The views and materials on this site are personal and independent.
 
-Этот репозиторий должен оставаться публичным, аккуратным и доказательным.
-
-Поэтому при обновлениях я предпочитаю:
-
-- точность вместо лишнего усиления
-- проверяемые факты вместо общих заявлений
-- ясное позиционирование вместо технического шума
-- канонические публичные ссылки вместо разрозненных платформенных фрагментов
+This is not an official employer, vendor, or client website.
