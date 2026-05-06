@@ -6,13 +6,13 @@ I use it as a controlled, transparent, and AI-readable layer around my professio
 
 ## About me
 
-I am **Dzmitryi Kharlanau**, a Senior SAP Consultant working across SAP support, logistics, migration, master data, operational analysis, and SAP transformation environments.
+I am **Dzmitryi Kharlanau**, a Senior SAP Consultant working across SAP AMS support, logistics, migration, master data, operational analysis, and process optimization.
 
 My SAP path started in 2014 through SAP University Alliances, TERP10, and SAP SD certification.
 
 Over the years, I have worked on multiple SAP projects in different roles: consultant, team lead / coordinator, developer, and operational analyst. This gave me a practical view of how SAP work really happens — across business processes, support pressure, migration activities, master data, integrations, custom logic, and delivery constraints.
 
-Today, my focus is the gap between SAP transformation and real operations: handover, support knowledge, integration boundaries, master data quality, clean-core decisions, and practical AI-enabled workflows.
+Today, my focus is SAP AMS, support knowledge, incident analysis, SD/MM issues, master data problems, process optimization, and practical AI-assisted support workflows.
 
 I actively work with modern AI tools and AI-assisted development workflows. I use them to explore how support knowledge, diagnostics, retrieval, automation, documentation, and side-by-side tools can improve enterprise operations.
 
@@ -28,19 +28,19 @@ It exists to make my background easier to understand and verify.
 
 ## What this site is about
 
-The site focuses on practical SAP transformation and operations topics:
+The site focuses on practical SAP AMS, support, and process optimization topics:
 
 - SAP AMS improvement
-- SAP transformation execution
+- SAP support and process optimization
 - change-to-run handover
 - support knowledge reuse
 - master data and process reliability
 - integration and operational complexity
 - clean-core boundaries
-- practical AI around SAP operations
+- practical AI-assisted SAP support
 - side-by-side automation and support workflows
 
-The main idea is that SAP transformation does not fail only in design. It often fails later — in handover, data, integrations, ownership, support readiness, and daily operations.
+The main idea is that SAP support quality depends on practical handover, clean data, reliable integrations, clear ownership, support readiness, and daily operating discipline.
 
 ## What this repository contains
 
@@ -54,7 +54,7 @@ This repository may include:
 
 ## Networking
 
-I am open to relevant professional networking, SAP transformation discussions, AMS improvement topics, and practical AI / automation topics around enterprise operations.
+I am open to relevant professional networking, SAP AMS improvement topics, SAP support discussions, and practical AI / automation topics around support operations.
 
 You can reach me on LinkedIn:
 

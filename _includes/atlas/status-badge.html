@@ -1,0 +1,14 @@
+{% assign atlas_status = include.status | default: page.status | default: 'reviewed' %}
+{% assign atlas_verified = include.verified | default: page.verified %}
+<span class="atlas-status atlas-status--{{ atlas_status | replace: '_', '-' }}">
+  {% if atlas_status == 'needs_verification' %}
+    Needs verification
+  {% elsif atlas_status == 'reviewed' %}
+    Reviewed
+  {% else %}
+    {{ atlas_status | replace: '_', ' ' | capitalize }}
+  {% endif %}
+</span>
+{% if atlas_verified == false or atlas_verified == 'false' %}
+<span class="atlas-status atlas-status--limited">Conservative summary</span>
+{% endif %}

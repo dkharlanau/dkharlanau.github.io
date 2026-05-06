@@ -5,24 +5,28 @@
 
 {% assign computed_title = page.title | default: site.title %}
 {% if page.url == '/' or page.permalink == '/' %}
-{% assign computed_title = 'Dzmitryi Kharlanau — SAP AMS + AI for Operational Continuity' %}
+{% assign computed_title = 'SAP AMS | AI Support Automation & Process Optimization | Dzmitryi Kharlanau' %}
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
-{% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP AMS, Integration & Continuity' %}
+{% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP AMS, Integration & Process Optimization' %}
 {% elsif page.collection == 'notes' %}
-{% assign computed_title = page.title | append: ' — Dzmitryi Kharlanau | SAP AMS & Operational Continuity' %}
+{% assign computed_title = page.title | append: ' — Dzmitryi Kharlanau | SAP AMS & Support Automation' %}
 {% endif %}
 
-{% assign default_description = 'SAP AMS improvement, operational continuity, structured handover, incident prevention, and practical AI for enterprise support-heavy environments.' %}
+{% assign default_description = 'SAP AMS support, AI-assisted support automation, incident analysis, SD/MM issues, master data problems, and process optimization for SAP AMS teams.' %}
 {% if page.url == '/' or page.permalink == '/' %}
-{% assign default_description = 'Buyer-facing profile for SAP-heavy environments that need AMS improvement, fewer repeat incidents, stronger handover, operational continuity, and practical AI.' %}
+{% assign default_description = 'Dzmitryi Kharlanau is an SAP AMS consultant focused on SAP support, AI-assisted support automation, incident analysis, SD/MM issues, master data problems, and process optimization for SAP AMS teams.' %}
 {% elsif page.collection == 'notes' and page.description %}
 {% assign default_description = page.description %}
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
-{% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau — SAP AMS, integration, operational continuity, and practical AI consultant.' %}
+{% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau: SAP AMS, SAP support, integration, incident analysis, and practical AI-assisted support workflows.' %}
 {% endif %}
 {% assign content_fallback = page.summary | default: page.excerpt %}
 {% assign meta_description = page.description | default: content_fallback | default: default_description | strip_html |
 normalize_whitespace %}
+{% assign social_title = computed_title %}
+{% if page.url == '/' or page.permalink == '/' %}
+{% assign social_title = 'SAP AMS & AI Support Automation | Dzmitryi Kharlanau' %}
+{% endif %}
 
 <title>{{ computed_title | strip_html | normalize_whitespace }}</title>
 
@@ -89,13 +93,13 @@ normalize_whitespace %}
 <meta property="og:type" content="{% if page.collection == 'notes' or page.layout == 'blog' or page.collection == 'blog' %}article{% else %}website{% endif %}" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="{{ site_name }}" />
-<meta property="og:title" content="{{ computed_title | strip_html | normalize_whitespace }}" />
+<meta property="og:title" content="{{ social_title | strip_html | normalize_whitespace }}" />
 <meta property="og:description" content="{{ meta_description | truncate: 200, '' }}" />
 <meta property="og:url" content="{{ canonical_url }}" />
 <meta property="og:image" content="{{ og_image }}" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@{{ site.twitter.username | default: 'dkharlanau' }}" />
-<meta name="twitter:title" content="{{ computed_title | strip_html | normalize_whitespace }}" />
+<meta name="twitter:title" content="{{ social_title | strip_html | normalize_whitespace }}" />
 <meta name="twitter:description" content="{{ meta_description | truncate: 200, '' }}" />
 <meta name="twitter:image" content="{{ og_image }}" />
 {% if page.last_modified_at or page.updated %}

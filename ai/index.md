@@ -53,7 +53,7 @@ last_modified_at: 2026-04-19
     <div class="ai-resource-item__mark" aria-hidden="true">4</div>
     <div class="ai-resource-item__body">
       <h2>Consulting Principles</h2>
-      <p>Operating heuristics for SAP AMS improvement, continuity, architecture, and change design.</p>
+      <p>Operating heuristics for SAP AMS improvement, support knowledge, architecture, and change design.</p>
     </div>
     <a href="/ai/principles.json" class="link-arrow">Open</a>
   </article>

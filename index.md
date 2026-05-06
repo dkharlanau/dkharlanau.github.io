@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Dzmitryi Kharlanau — SAP AMS + AI for Operational Continuity"
-description: "Buyer-facing profile for SAP AMS improvement, incident prevention, operational continuity, structured handover, and practical AI in support-heavy enterprise environments."
+title: "SAP AMS | AI Support Automation & Process Optimization | Dzmitryi Kharlanau"
+description: "Dzmitryi Kharlanau is an SAP AMS consultant focused on SAP support, AI-assisted support automation, incident analysis, SD/MM issues, master data problems, and process optimization for SAP AMS teams."
 permalink: /
 hide_global_cta: true
 last_modified_at: 2026-04-24

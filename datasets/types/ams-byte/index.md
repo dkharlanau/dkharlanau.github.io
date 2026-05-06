@@ -76,7 +76,7 @@ data_catalog_page: true
 </article>
 <article class="dataset-item" data-id="ams-009" data-title="choose what not to fix: data-driven ams triage" data-tags="" data-type="ams_byte">
   <h2 class="dataset-item__title"><a href="/datasets/view/ams/ams-009/">Choose What NOT to Fix: Data-Driven AMS Triage</a></h2>
-  <p class="dataset-item__summary">If you try to fix everything in SAP, you end up fixing nothing well. Modern AMS is ruthless about priority — using data, not эмоции.</p>
+  <p class="dataset-item__summary">If you try to fix everything in SAP, you end up fixing nothing well. Modern AMS is ruthless about priority — using data, not emotion.</p>
   <div class="dataset-item__meta"><span class="pill pill--type">ams_byte</span> <span class="pill pill--dataset">ams</span> <span class="pill">ams-009</span> <a class="pill" href="/datasets/ams/ams-009.json">json</a></div>
 </article>
 <article class="dataset-item" data-id="ams-010" data-title="ams contracts that don’t lie: slas, slos, and penalties with teeth" data-tags="" data-type="ams_byte">
