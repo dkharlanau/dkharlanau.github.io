@@ -36,7 +36,39 @@ Every new page or section must support the existing visual system:
 
 If the agent cannot identify the existing layout pattern for a new item, it must create a draft or issue instead of adding a visually inconsistent page.
 
-## 3. Content placement rules
+## 3. Homepage protection rule
+
+The homepage is protected by default.
+
+Agent-assisted work for Professional Radar, Atlas, news, datasets, services, templates, and validation must not modify the homepage unless the current GitHub issue explicitly says that homepage changes are in scope.
+
+Protected homepage-related files may include, depending on the current site structure:
+- `index.md`;
+- `_data/home.yml`;
+- homepage-only section configuration;
+- homepage hero copy;
+- homepage positioning copy;
+- homepage CTA wording;
+- homepage navigation/section ordering.
+
+Allowed without a dedicated homepage issue:
+- read and inspect homepage files;
+- document homepage patterns in inventory;
+- mention homepage risks in docs;
+- propose a separate issue for homepage changes.
+
+Not allowed without a dedicated homepage issue:
+- changing hero text;
+- changing primary positioning;
+- adding news/signals to the homepage;
+- adding new homepage sections;
+- changing CTA wording;
+- changing homepage section order;
+- silently fixing homepage drift.
+
+If a task discovers a homepage problem, create or update a GitHub issue. Do not fix it inside an unrelated task.
+
+## 4. Content placement rules
 
 | Content type | Place it here | Do not place it here |
 |---|---|---|
@@ -48,7 +80,7 @@ If the agent cannot identify the existing layout pattern for a new item, it must
 | Personal positioning | Home / About / Services | News item |
 | Social draft source | Materialist OS social drafts | Public page unless approved |
 
-## 4. Page type rules
+## 5. Page type rules
 
 ### Home page
 
@@ -58,7 +90,10 @@ Purpose:
 - strategic frame;
 - key CTAs.
 
-Allowed updates:
+Default rule:
+- homepage is read-only unless a GitHub issue explicitly authorizes homepage changes.
+
+Allowed updates only with explicit homepage scope:
 - small copy refinement;
 - updated trust metrics only with source;
 - new navigation link if a major site section is added;
@@ -162,7 +197,7 @@ Avoid:
 - non-structured commentary;
 - content without source or citation context.
 
-## 5. Visual consistency rules
+## 6. Visual consistency rules
 
 Before changing or adding a page, the agent must inspect the nearest existing page or component pattern.
 
@@ -185,7 +220,7 @@ Do not introduce:
 - inconsistent button labels;
 - duplicate navigation concepts.
 
-## 6. Information architecture rules
+## 7. Information architecture rules
 
 Every new page must answer:
 
@@ -198,7 +233,7 @@ Every new page must answer:
 
 If these questions cannot be answered, do not add the page directly. Create a draft or issue.
 
-## 7. Design review checklist
+## 8. Design review checklist
 
 Before accepting a site update:
 
@@ -212,34 +247,37 @@ Before accepting a site update:
 - Is there any duplicate text already elsewhere on the site?
 - Does it support the broader positioning, not only SAP AMS?
 - Does it avoid hype, vendor worship, and generic AI copy?
+- Does it avoid homepage files unless explicitly authorized by the issue?
 
-## 8. Agent update workflow
+## 9. Agent update workflow
 
 For any site addition, the agent should follow this sequence:
 
 ```text
 1. Inspect existing site structure and nearest similar page.
 2. Identify content type: home / service / Atlas / news / dataset / legal / source.
-3. Select target path and layout pattern.
-4. Generate a small draft or patch.
-5. Check internal links and metadata.
-6. Run site validation/build if available.
-7. Report changed files, design pattern used, validation result, and remaining risk.
+3. If content type or target file is homepage-related, stop unless the issue explicitly authorizes homepage changes.
+4. Select target path and layout pattern.
+5. Generate a small draft or patch.
+6. Check internal links and metadata.
+7. Run site validation/build if available.
+8. Report changed files, design pattern used, validation result, and remaining risk.
 ```
 
-## 9. When to create an issue instead of changing the site
+## 10. When to create an issue instead of changing the site
 
 Create an issue when:
 
 - the correct page location is unclear;
 - the new content requires a new layout pattern;
 - homepage positioning would change;
+- homepage files would need to be modified;
 - navigation would change significantly;
 - a new content type is introduced;
 - the update depends on weak or incomplete sources;
 - the design impact is larger than a small content addition.
 
-## 10. Relationship to Professional Radar
+## 11. Relationship to Professional Radar
 
 Professional Radar may propose:
 - news items;
@@ -252,7 +290,7 @@ But every public site update must pass this contract first.
 
 The public site should remain coherent even if Professional Radar produces many signals.
 
-## 11. Keep this file current
+## 12. Keep this file current
 
 Update this contract when:
 - the site design system changes;
@@ -260,4 +298,5 @@ Update this contract when:
 - new page types are introduced;
 - Atlas structure changes;
 - Professional Radar starts producing visually inconsistent updates;
-- repeated placement mistakes appear.
+- repeated placement mistakes appear;
+- homepage protection policy changes.
