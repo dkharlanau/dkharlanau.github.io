@@ -1,0 +1,1162 @@
+# Atlas Topic Index
+# Purpose: structured topic index for public knowledge pages so Professional Radar
+# and agent-assisted updates can route content to the correct page without guessing.
+# Created for: issue #2
+# Last updated: 2026-05-26
+
+meta:
+  name: "Dzmitryi Kharlanau — Atlas Topic Index"
+  description: "Topic-to-page routing index for public knowledge pages on SAP AMS, support, process reliability, integration, master data, AI-assisted support, and architecture."
+  canonical: "https://dkharlanau.github.io/ai/discovery-map.json"
+  updated_at: "2026-05-26"
+  version: "1.0"
+
+# Fallback routing rule: unknown topics route to watch/unclassified, not random page.
+fallback:
+  rule: "If a topic does not match any cluster or keywords below, route it to the watch/unclassified queue and do not place it on an existing page. Create an issue for review instead."
+  target_page: null
+  target_cluster: "unclassified"
+  action: "create_issue"
+
+# Topic clusters map requested topic areas to canonical pages.
+# Each entry has: id, title, path, topic_cluster, keywords, allowed_update_types,
+# source_policy, last_reviewed, related_pages, agent_notes.
+topic_clusters:
+
+  # --- SAP AMS improvement ---
+  - id: sap-ams-improvement
+    title: "SAP AMS Improvement"
+    path: "/ai/sap-ams-improvement/"
+    topic_cluster: "SAP AMS improvement"
+    keywords:
+      - "SAP AMS"
+      - "AMS improvement"
+      - "repeat incident reduction"
+      - "KEDB"
+      - "runbooks"
+      - "operational knowledge"
+      - "MTTR"
+      - "support transformation"
+      - "vendor lock-in"
+    allowed_update_types:
+      - "factual_update"
+      - "source_addition"
+      - "practical_pattern"
+      - "checklist"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-20"
+    related_pages:
+      - "/services/sap-ams-consulting/"
+      - "/atlas/automation/operational-memory-for-sap-ams/"
+      - "/notes/ams/"
+      - "/datasets/ams/"
+    agent_notes: |
+      AI intent routing page. Consumed by ai-intent-page.html via intent_id.
+      Update only the discovery_map.yml intent data; the page template is static.
+      Related to AMS consulting service and operational memory Atlas page.
+
+  - id: sap-ams-consulting
+    title: "SAP AMS Consulting — Incident Reduction and Knowledge Transfer"
+    path: "/services/sap-ams-consulting/"
+    topic_cluster: "SAP AMS improvement"
+    keywords:
+      - "SAP AMS consulting"
+      - "incident reduction"
+      - "knowledge transfer"
+      - "MTTR"
+      - "vendor dependency"
+      - "repeat incidents"
+      - "observability"
+      - "KEDB"
+      - "runbook"
+    allowed_update_types:
+      - "factual_update"
+      - "service_copy_refinement"
+      - "related_link"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-19"
+    related_pages:
+      - "/ai/sap-ams-improvement/"
+      - "/services/sap-o2c-process-audit/"
+      - "/datasets/ams/"
+      - "/notes/ams/"
+      - "/atlas/automation/operational-memory-for-sap-ams/"
+    agent_notes: |
+      Service detail page. Required structure: problem, deliverables, related links.
+      Must end with section-actions or section-shell--premium with contact/profile links.
+      Do not change service positioning without reviewing the full services index.
+
+  - id: ams-cost-center-catalyst
+    title: "AMS Cost Center or Catalyst — SAP AMS Analysis Questions"
+    path: "/services/ams-cost-center-catalyst/"
+    topic_cluster: "SAP AMS improvement"
+    keywords:
+      - "AMS analysis"
+      - "TCO"
+      - "cost center"
+      - "catalyst"
+      - "SLA quality"
+      - "change throughput"
+      - "clean core"
+      - "AI readiness"
+      - "ownership"
+    allowed_update_types:
+      - "question_addition"
+      - "factual_update"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-24"
+    related_pages:
+      - "/services/sap-ams-consulting/"
+      - "/services/sap-o2c-process-audit/"
+      - "/ai/sap-ams-improvement/"
+      - "/datasets/ams/"
+    agent_notes: |
+      Structured analysis questionnaire page. Additions should be new diagnostic
+      questions that fit the six-lane model (Stabilize/Structure/Extend/Reduce).
+      Do not turn this into a generic blog post.
+
+  # --- Incident prevention ---
+  - id: incident-prevention-rca
+    title: "Incident Prevention and RCA"
+    path: "/ai/incident-prevention-rca/"
+    topic_cluster: "incident prevention"
+    keywords:
+      - "incident prevention"
+      - "RCA"
+      - "root cause analysis"
+      - "observability"
+      - "problem management"
+      - "repeat incident reduction"
+      - "incident clustering"
+    allowed_update_types:
+      - "factual_update"
+      - "source_addition"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-20"
+    related_pages:
+      - "/services/sap-ams-consulting/"
+      - "/services/sap-o2c-process-audit/"
+      - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
+      - "/notes/ams/"
+    agent_notes: |
+      AI intent routing page. Route here for RCA, observability, and prevention loops.
+      Cross-link to diagnostics pages and service pages.
+
+  - id: sap-sales-order-block-diagnosis
+    title: "SAP Sales Order Block Diagnosis"
+    path: "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
+    topic_cluster: "incident prevention"
+    keywords:
+      - "sales order block"
+      - "diagnosis"
+      - "credit block"
+      - "delivery block"
+      - "billing block"
+      - "incompletion"
+      - "master data"
+      - "custom rule"
+      - "O2C"
+    allowed_update_types:
+      - "factual_update"
+      - "diagnostic_step"
+      - "evidence_list"
+      - "clarification"
+    source_policy: "requires_verification"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/concepts/order-to-cash/"
+      - "/atlas/concepts/sap-atp-is-not-inventory/"
+      - "/services/sap-ams-consulting/"
+      - "/ai/incident-prevention-rca/"
+    agent_notes: |
+      Diagnostic page. Status: needs_verification. Currently noindex.
+      Updates require verification against target SAP context.
+      Do not remove the noindex until verified.
+
+  - id: sap-invoice-split-analysis
+    title: "SAP Invoice Split Analysis"
+    path: "/atlas/diagnostics/sap-invoice-split-analysis/"
+    topic_cluster: "incident prevention"
+    keywords:
+      - "invoice split"
+      - "billing"
+      - "VF04"
+      - "billing document"
+      - "consolidated invoice"
+    allowed_update_types:
+      - "factual_update"
+      - "diagnostic_step"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/concepts/order-to-cash/"
+      - "/atlas/maps/order-to-cash-map/"
+      - "/services/sap-o2c-process-audit/"
+    agent_notes: |
+      Diagnostic page. Add new split causes or trace steps only with verified SAP behavior.
+
+  - id: sap-goods-receipt-diagnostics
+    title: "SAP Goods Receipt Diagnostics"
+    path: "/atlas/diagnostics/sap-goods-receipt-diagnostics/"
+    topic_cluster: "incident prevention"
+    keywords:
+      - "goods receipt"
+      - "GR/IR"
+      - "MIGO"
+      - "physical receipt"
+      - "stock"
+      - "invoice matching"
+      - "accounting"
+    allowed_update_types:
+      - "factual_update"
+      - "diagnostic_step"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/sap/gr-ir-clearing-explained/"
+      - "/services/sap-ams-consulting/"
+    agent_notes: |
+      Diagnostic page. Add new divergence patterns only with evidence.
+
+  - id: pos-sales-not-reflected-in-sap
+    title: "POS Sales Not Reflected in SAP"
+    path: "/atlas/diagnostics/pos-sales-not-reflected-in-sap/"
+    topic_cluster: "incident prevention"
+    keywords:
+      - "POS"
+      - "retail"
+      - "sales transmission"
+      - "IDoc"
+      - "WPOS"
+      - "store"
+      - "posting"
+    allowed_update_types:
+      - "factual_update"
+      - "diagnostic_step"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/concepts/store-receiving-sap-retail/"
+      - "/ai/integration-reliability/"
+    agent_notes: |
+      Diagnostic page. Retail-specific integration failure trace.
+
+  # --- Operational continuity ---
+  - id: operational-continuity
+    title: "SAP Support Knowledge and Structured Handover"
+    path: "/ai/operational-continuity/"
+    topic_cluster: "operational continuity"
+    keywords:
+      - "operational continuity"
+      - "support knowledge"
+      - "structured handover"
+      - "ownership clarity"
+      - "knowledge transfer"
+      - "organizational latency"
+    allowed_update_types:
+      - "factual_update"
+      - "source_addition"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-20"
+    related_pages:
+      - "/atlas/automation/operational-memory-for-sap-ams/"
+      - "/services/sap-ams-consulting/"
+      - "/notes/ams/"
+      - "/datasets/ams/"
+    agent_notes: |
+      AI intent routing page. Route here for handover, ownership, and knowledge preservation.
+
+  - id: operational-memory-for-sap-ams
+    title: "Operational Memory for SAP AMS"
+    path: "/atlas/automation/operational-memory-for-sap-ams/"
+    topic_cluster: "operational continuity"
+    keywords:
+      - "operational memory"
+      - "KEDB"
+      - "runbooks"
+      - "decision logs"
+      - "support continuity"
+      - "knowledge reuse"
+      - "tribal knowledge"
+    allowed_update_types:
+      - "factual_update"
+      - "practical_pattern"
+      - "checklist"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/ai-operations/ai-ready-process-documentation/"
+      - "/services/sap-ams-consulting/"
+      - "/ai/operational-continuity/"
+    agent_notes: |
+      Atlas page. Covers runbooks, KEDB, decision logs. Evergreen content.
+      Link to ai-ready-process-documentation for documentation structure.
+
+  - id: ai-ready-process-documentation
+    title: "AI-Ready Process Documentation"
+    path: "/atlas/ai-operations/ai-ready-process-documentation/"
+    topic_cluster: "operational continuity"
+    keywords:
+      - "AI-ready documentation"
+      - "process documentation"
+      - "retrieval"
+      - "support agents"
+      - "structured knowledge"
+      - "operational memory"
+    allowed_update_types:
+      - "factual_update"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/automation/operational-memory-for-sap-ams/"
+      - "/ai/practical-ai-for-sap-support/"
+    agent_notes: |
+      Atlas page. Documentation structuring for retrieval and AI agents.
+
+  # --- Integration reliability ---
+  - id: integration-reliability
+    title: "Integration Reliability"
+    path: "/ai/integration-reliability/"
+    topic_cluster: "integration reliability"
+    keywords:
+      - "integration reliability"
+      - "AIF"
+      - "IDoc"
+      - "EDI"
+      - "OData"
+      - "API"
+      - "Integration Suite"
+      - "Event Mesh"
+      - "clean core"
+    allowed_update_types:
+      - "factual_update"
+      - "source_addition"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-20"
+    related_pages:
+      - "/services/sap-integration-architecture/"
+      - "/notes/composable_erp/"
+      - "/notes/system-architecture/"
+      - "/datasets/TRIZ-bytes/"
+      - "/datasets/DAMA/"
+    agent_notes: |
+      AI intent routing page. Route here for AIF, IDoc, API, event-driven design,
+      clean-core boundaries. Cross-link to integration architecture service.
+
+  - id: sap-integration-architecture
+    title: "SAP Integration Architecture Consulting"
+    path: "/services/sap-integration-architecture/"
+    topic_cluster: "integration reliability"
+    keywords:
+      - "integration architecture"
+      - "API design"
+      - "event-driven"
+      - "clean core"
+      - "portability"
+      - "contract versioning"
+      - "broker"
+      - "schema"
+    allowed_update_types:
+      - "factual_update"
+      - "service_copy_refinement"
+      - "related_link"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-19"
+    related_pages:
+      - "/ai/integration-reliability/"
+      - "/services/sap-ai-ml-enablement/"
+      - "/notes/composable_erp/"
+      - "/notes/system-architecture/"
+    agent_notes: |
+      Service detail page. Focus on architecture boundaries, contracts, portability.
+      Must end with section-actions or section-shell--premium.
+
+  # --- MDG / Business Partner governance ---
+  - id: mdg-bp-governance
+    title: "MDG and Business Partner Governance"
+    path: "/ai/mdg-bp-governance/"
+    topic_cluster: "MDG / Business Partner governance"
+    keywords:
+      - "MDG"
+      - "Business Partner"
+      - "BP"
+      - "CVI"
+      - "data governance"
+      - "master data quality"
+      - "ownership clarity"
+      - "rejection patterns"
+    allowed_update_types:
+      - "factual_update"
+      - "source_addition"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-20"
+    related_pages:
+      - "/atlas/data-quality/sap-master-data-quality/"
+      - "/atlas/data-quality/master-data-governance-failure-modes/"
+      - "/datasets/DAMA/"
+      - "/services/sap-o2c-process-audit/"
+    agent_notes: |
+      AI intent routing page. Route here for MDG, BP/CVI, governance design,
+      ownership, master-data quality. Cross-link to data-quality Atlas pages.
+
+  - id: sap-master-data-quality
+    title: "SAP Master Data Quality"
+    path: "/atlas/data-quality/sap-master-data-quality/"
+    topic_cluster: "MDG / Business Partner governance"
+    keywords:
+      - "master data quality"
+      - "data governance"
+      - "business partner"
+      - "supplier"
+      - "material master"
+      - "organizational extension"
+      - "duplicate data"
+      - "stale data"
+    allowed_update_types:
+      - "factual_update"
+      - "practical_pattern"
+      - "diagnostic_question"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/data-quality/master-data-governance-failure-modes/"
+      - "/atlas/ai-operations/ai-ready-process-documentation/"
+    agent_notes: |
+      Atlas page. Evergreen content on master data as root cause of support issues.
+      Add new failure modes only with evidence from real support contexts.
+
+  - id: master-data-governance-failure-modes
+    title: "Master Data Governance Failure Modes"
+    path: "/atlas/data-quality/master-data-governance-failure-modes/"
+    topic_cluster: "MDG / Business Partner governance"
+    keywords:
+      - "governance failure"
+      - "master data"
+      - "ownership gap"
+      - "rejection"
+      - "workflow"
+      - "stewardship"
+      - "data quality"
+    allowed_update_types:
+      - "factual_update"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/data-quality/sap-master-data-quality/"
+      - "/ai/mdg-bp-governance/"
+    agent_notes: |
+      Atlas page. Governance gaps that become repeated AMS issues.
+
+  - id: sap-partner-determination-failures
+    title: "SAP Partner Determination Failures"
+    path: "/atlas/sap/sap-partner-determination-failures/"
+    topic_cluster: "MDG / Business Partner governance"
+    keywords:
+      - "partner determination"
+      - "sold-to"
+      - "ship-to"
+      - "bill-to"
+      - "payer"
+      - "partner roles"
+      - "master data"
+      - "SD"
+    allowed_update_types:
+      - "factual_update"
+      - "diagnostic_step"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/data-quality/sap-master-data-quality/"
+      - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
+    agent_notes: |
+      Atlas SAP page. Practical troubleshooting for missing/wrong partner roles.
+
+  # --- SD/MM process reliability ---
+  - id: order-to-cash
+    title: "Order to Cash"
+    path: "/atlas/concepts/order-to-cash/"
+    topic_cluster: "SD/MM process reliability"
+    keywords:
+      - "order to cash"
+      - "O2C"
+      - "sales order"
+      - "delivery"
+      - "billing"
+      - "cash collection"
+      - "revenue recognition"
+      - "SD"
+      - "FI"
+    allowed_update_types:
+      - "factual_update"
+      - "source_addition"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/concepts/sap-atp-is-not-inventory/"
+      - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
+      - "/services/sap-o2c-process-audit/"
+      - "/atlas/maps/order-to-cash-map/"
+    agent_notes: |
+      Atlas concept page. Evergreen. Core O2C explanation with SAP context.
+      Do not add release-specific claims without verification.
+
+  - id: order-to-cash-map
+    title: "Order to Cash Map"
+    path: "/atlas/maps/order-to-cash-map/"
+    topic_cluster: "SD/MM process reliability"
+    keywords:
+      - "order to cash map"
+      - "O2C map"
+      - "process trace"
+      - "document flow"
+      - "checkpoint"
+      - "evidence"
+    allowed_update_types:
+      - "factual_update"
+      - "checkpoint_addition"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/concepts/order-to-cash/"
+      - "/atlas/diagnostics/sap-invoice-split-analysis/"
+    agent_notes: |
+      Atlas map page. Process tracing companion to O2C concept.
+      Add new checkpoints only if they are universal, not landscape-specific.
+
+  - id: procure-to-pay-map
+    title: "Procure to Pay Map"
+    path: "/atlas/maps/procure-to-pay-map/"
+    topic_cluster: "SD/MM process reliability"
+    keywords:
+      - "procure to pay"
+      - "P2P"
+      - "purchasing"
+      - "goods receipt"
+      - "invoice verification"
+      - "GR/IR"
+      - "MM"
+      - "FI"
+    allowed_update_types:
+      - "factual_update"
+      - "checkpoint_addition"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/sap/gr-ir-clearing-explained/"
+      - "/atlas/diagnostics/sap-goods-receipt-diagnostics/"
+    agent_notes: |
+      Atlas map page. P2P process trace. Currently minimal; safe to expand with verified checkpoints.
+
+  - id: sap-pricing-procedure-debugging
+    title: "SAP Pricing Procedure Debugging"
+    path: "/atlas/sap/sap-pricing-procedure-debugging/"
+    topic_cluster: "SD/MM process reliability"
+    keywords:
+      - "pricing procedure"
+      - "condition technique"
+      - "VK11"
+      - "VK13"
+      - "pricing condition"
+      - "SD"
+      - "billing"
+    allowed_update_types:
+      - "factual_update"
+      - "diagnostic_step"
+      - "clarification"
+    source_policy: "requires_verification"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/diagnostics/sap-invoice-split-analysis/"
+      - "/services/sap-ams-consulting/"
+    agent_notes: |
+      Atlas SAP page. Status: reviewed. Conservative troubleshooting frame.
+      Do not add landscape-specific configuration assumptions.
+
+  - id: sap-item-category-determination
+    title: "SAP Item Category Determination"
+    path: "/atlas/sap/sap-item-category-determination/"
+    topic_cluster: "SD/MM process reliability"
+    keywords:
+      - "item category"
+      - "item category determination"
+      - "schedule line"
+      - "delivery relevance"
+      - "billing relevance"
+      - "SD"
+    allowed_update_types:
+      - "factual_update"
+      - "diagnostic_step"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
+      - "/atlas/concepts/order-to-cash/"
+    agent_notes: |
+      Atlas SAP page. Small configuration item with large downstream impact.
+
+  - id: gr-ir-clearing-explained
+    title: "SAP GR/IR Clearing Explained"
+    path: "/atlas/sap/gr-ir-clearing-explained/"
+    topic_cluster: "SD/MM process reliability"
+    keywords:
+      - "GR/IR"
+      - "goods receipt"
+      - "invoice receipt"
+      - "clearing"
+      - "accounting"
+      - "MM"
+      - "FI"
+    allowed_update_types:
+      - "factual_update"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/diagnostics/sap-goods-receipt-diagnostics/"
+      - "/atlas/maps/procure-to-pay-map/"
+    agent_notes: |
+      Atlas SAP page. Accounting bridge between GR and IR.
+
+  # --- Logistics / process reliability ---
+  - id: sap-atp-is-not-inventory
+    title: "SAP ATP Is Not Inventory"
+    path: "/atlas/concepts/sap-atp-is-not-inventory/"
+    topic_cluster: "logistics / process reliability"
+    keywords:
+      - "ATP"
+      - "available-to-promise"
+      - "inventory"
+      - "stock visibility"
+      - "customer commitment"
+      - "availability check"
+      - "SD"
+    allowed_update_types:
+      - "factual_update"
+      - "diagnostic_question"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/concepts/order-to-cash/"
+      - "/atlas/concepts/sap-stock-exists-not-promisable/"
+      - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
+    agent_notes: |
+      Atlas concept page. Core distinction. Evergreen.
+      Do not confuse ATP with simple stock quantity.
+
+  - id: sap-stock-exists-not-promisable
+    title: "SAP Stock Exists but Is Not Promisable"
+    path: "/atlas/concepts/sap-stock-exists-not-promisable/"
+    topic_cluster: "logistics / process reliability"
+    keywords:
+      - "stock exists"
+      - "not promisable"
+      - "allocation"
+      - "channel"
+      - "quality block"
+      - "reservation"
+      - "production"
+      - "ATP"
+    allowed_update_types:
+      - "factual_update"
+      - "diagnostic_question"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/concepts/sap-atp-is-not-inventory/"
+      - "/atlas/concepts/order-to-cash/"
+    agent_notes: |
+      Atlas concept page. Specific case of ATP/inventory mismatch.
+
+  - id: store-receiving-sap-retail
+    title: "Store Receiving in SAP Retail"
+    path: "/atlas/concepts/store-receiving-sap-retail/"
+    topic_cluster: "logistics / process reliability"
+    keywords:
+      - "store receiving"
+      - "SAP Retail"
+      - "sellable inventory"
+      - "logistics"
+      - "delivery"
+      - "store operations"
+    allowed_update_types:
+      - "factual_update"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/diagnostics/pos-sales-not-reflected-in-sap/"
+      - "/atlas/concepts/order-to-cash/"
+    agent_notes: |
+      Atlas concept page. Handoff from logistics to sellable inventory.
+
+  # --- Practical AI for SAP support ---
+  - id: practical-ai-for-sap-support
+    title: "Practical AI for SAP Support"
+    path: "/ai/practical-ai-for-sap-support/"
+    topic_cluster: "practical AI for SAP support"
+    keywords:
+      - "practical AI"
+      - "SAP support copilot"
+      - "agentic tooling"
+      - "retrieval"
+      - "human-in-the-loop"
+      - "operator workflows"
+      - "sidecar AI"
+      - "deterministic core"
+    allowed_update_types:
+      - "factual_update"
+      - "source_addition"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-20"
+    related_pages:
+      - "/atlas/ai-operations/ai-agent-for-sap-support/"
+      - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
+      - "/services/sap-ai-ml-enablement/"
+      - "/services/sap-mini-apps/"
+      - "/datasets/agentic-bytes/"
+    agent_notes: |
+      AI intent routing page. Route here for practical AI around SAP support,
+      copilots, operator tools, human-in-the-loop. Not for generic AI strategy.
+
+  - id: ai-agent-for-sap-support
+    title: "AI Agent for SAP Support"
+    path: "/atlas/ai-operations/ai-agent-for-sap-support/"
+    topic_cluster: "practical AI for SAP support"
+    keywords:
+      - "AI agent"
+      - "support agent"
+      - "retrieval"
+      - "diagnosis"
+      - "escalation"
+      - "human approval"
+      - "audit trail"
+      - "authorization"
+    allowed_update_types:
+      - "factual_update"
+      - "practical_pattern"
+      - "architecture_update"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
+      - "/ai/practical-ai-for-sap-support/"
+      - "/services/sap-ai-ml-enablement/"
+    agent_notes: |
+      Atlas page. Architecture pattern for AI-assisted SAP support.
+      Emphasize: retrieval, escalation, human review, NOT autonomous change.
+
+  - id: authorization-aware-ai-for-sap
+    title: "Authorization-Aware AI for SAP"
+    path: "/atlas/ai-operations/authorization-aware-ai-for-sap/"
+    topic_cluster: "practical AI for SAP support"
+    keywords:
+      - "authorization-aware AI"
+      - "data boundaries"
+      - "user context"
+      - "access control"
+      - "SAP security"
+      - "AI governance"
+    allowed_update_types:
+      - "factual_update"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/ai-operations/ai-agent-for-sap-support/"
+      - "/legal/responsible-ai/"
+    agent_notes: |
+      Atlas page. AI must respect user-specific access and data boundaries.
+      Link to responsible-ai legal page.
+
+  - id: sap-ai-ml-enablement
+    title: "SAP AI and ML Enablement"
+    path: "/services/sap-ai-ml-enablement/"
+    topic_cluster: "practical AI for SAP support"
+    keywords:
+      - "AI enablement"
+      - "ML enablement"
+      - "sidecar AI"
+      - "side-by-side"
+      - "clean core"
+      - "forecasting"
+      - "risk scoring"
+      - "retrieval"
+      - "governance"
+    allowed_update_types:
+      - "factual_update"
+      - "service_copy_refinement"
+      - "related_link"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-19"
+    related_pages:
+      - "/ai/practical-ai-for-sap-support/"
+      - "/services/sap-mini-apps/"
+      - "/legal/responsible-ai/"
+    agent_notes: |
+      Service detail page. Sidecar AI pattern around clean-core S/4HANA.
+      Must end with section-actions or section-shell--premium.
+
+  - id: sap-mini-apps
+    title: "SAP Mini Apps and Automation Tools"
+    path: "/services/sap-mini-apps/"
+    topic_cluster: "practical AI for SAP support"
+    keywords:
+      - "mini apps"
+      - "automation tools"
+      - "IDoc retry"
+      - "BP validation"
+      - "cutover"
+      - "reconciliation"
+      - "dashboard"
+      - "prototype"
+    allowed_update_types:
+      - "factual_update"
+      - "example_addition"
+      - "service_copy_refinement"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-19"
+    related_pages:
+      - "/services/sap-ams-consulting/"
+      - "/services/sap-ai-ml-enablement/"
+      - "/datasets/agentic-bytes/"
+      - "/notes/tools_mini_apps/"
+    agent_notes: |
+      Service detail page. Fast prototypes for narrow pain points.
+      Add new examples only if they are real or clearly labeled as illustrative.
+
+  # --- Clean-core and side-by-side automation ---
+  - id: rule-based-automation-vs-ai
+    title: "Rule-Based Automation vs AI"
+    path: "/atlas/automation/rule-based-automation-vs-ai/"
+    topic_cluster: "clean-core and side-by-side automation"
+    keywords:
+      - "rule-based automation"
+      - "AI-assisted"
+      - "deterministic"
+      - "probabilistic"
+      - "decision boundary"
+      - "automation"
+      - "clean core"
+    allowed_update_types:
+      - "factual_update"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/automation/agent-assisted-development-workflows/"
+      - "/services/sap-ai-ml-enablement/"
+    agent_notes: |
+      Atlas page. Decision framework for what stays deterministic vs AI-assisted.
+
+  - id: agent-assisted-development-workflows
+    title: "Agent-Assisted Development Workflows"
+    path: "/atlas/automation/agent-assisted-development-workflows/"
+    topic_cluster: "clean-core and side-by-side automation"
+    keywords:
+      - "agent-assisted"
+      - "development workflows"
+      - "support tooling"
+      - "knowledge work"
+      - "automation"
+      - "developer productivity"
+    allowed_update_types:
+      - "factual_update"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/automation/rule-based-automation-vs-ai/"
+      - "/services/sap-mini-apps/"
+    agent_notes: |
+      Atlas page. Practical boundaries for using agents in knowledge work.
+
+  - id: composable-erp
+    title: "Composable ERP Strategy"
+    path: "/notes/composable_erp/"
+    topic_cluster: "clean-core and side-by-side automation"
+    keywords:
+      - "composable ERP"
+      - "clean core"
+      - "side-by-side"
+      - "API"
+      - "event"
+      - "modular"
+      - "portability"
+    allowed_update_types:
+      - "factual_update"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/notes/system-architecture/"
+      - "/services/sap-integration-architecture/"
+    agent_notes: |
+      Note page (notes collection). Strategic framing for composable architecture.
+      Source file: _notes/composable_erp.md. Not an Atlas page.
+      Updates should follow note collection conventions.
+
+  - id: system-architecture
+    title: "System Architecture"
+    path: "/notes/system-architecture/"
+    topic_cluster: "clean-core and side-by-side automation"
+    keywords:
+      - "system architecture"
+      - "landscape design"
+      - "integration"
+      - "boundaries"
+      - "scalability"
+    allowed_update_types:
+      - "factual_update"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/notes/composable_erp/"
+      - "/services/sap-integration-architecture/"
+    agent_notes: |
+      Note page (notes collection). Architecture thinking and boundary decisions.
+      Source file: _notes/system-architecture.md.
+
+  # --- Support knowledge reuse ---
+  - id: sap-support-knowledge-notes
+    title: "SAP AMS Playbook"
+    path: "/notes/ams/"
+    topic_cluster: "support knowledge reuse"
+    keywords:
+      - "AMS playbook"
+      - "support knowledge"
+      - "playbook"
+      - "operating model"
+      - "incident handling"
+      - "vendor boundaries"
+      - "team topology"
+    allowed_update_types:
+      - "factual_update"
+      - "practical_pattern"
+      - "checklist"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/atlas/automation/operational-memory-for-sap-ams/"
+      - "/ai/operational-continuity/"
+      - "/services/sap-ams-consulting/"
+    agent_notes: |
+      Note page (notes collection). Practical AMS operating model.
+      Cross-link to operational-memory Atlas page and AMS consulting service.
+
+  - id: consulting-principles
+    title: "Consulting Principles"
+    path: "/notes/consulting_principles/"
+    topic_cluster: "support knowledge reuse"
+    keywords:
+      - "consulting principles"
+      - "operating heuristics"
+      - "delivery"
+      - "change design"
+      - "AMS"
+    allowed_update_types:
+      - "factual_update"
+      - "principle_addition"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-05-06"
+    related_pages:
+      - "/notes/ams/"
+      - "/services/sap-ams-consulting/"
+    agent_notes: |
+      Note page (notes collection). Operating heuristics for SAP AMS work.
+
+  # --- TCO-aware architecture ---
+  - id: sap-o2c-process-audit
+    title: "SAP O2C Process Audit"
+    path: "/services/sap-o2c-process-audit/"
+    topic_cluster: "TCO-aware architecture"
+    keywords:
+      - "O2C audit"
+      - "process audit"
+      - "revenue leakage"
+      - "delivery breakpoint"
+      - "blocked orders"
+      - "billing backlog"
+      - "credit"
+      - "integration"
+    allowed_update_types:
+      - "factual_update"
+      - "service_copy_refinement"
+      - "related_link"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-04-19"
+    related_pages:
+      - "/services/sap-ams-consulting/"
+      - "/atlas/concepts/order-to-cash/"
+      - "/ai/integration-reliability/"
+      - "/datasets/ams/"
+    agent_notes: |
+      Service detail page. Revenue leakage and O2C breakpoint diagnosis.
+      Must end with section-actions or section-shell--premium.
+
+  # --- Vendor lock-in awareness ---
+  # Covered by sap-ams-improvement and sap-integration-architecture entries above.
+  # No separate page yet; topic is addressed within AMS improvement and integration pages.
+  # Marked as planned/future placeholder below.
+
+  # --- Watch / unclassified ---
+  - id: watch-unclassified
+    title: "Watch / Unclassified"
+    path: null
+    topic_cluster: "unclassified"
+    keywords: []
+    allowed_update_types: []
+    source_policy: "requires_review"
+    last_reviewed: "2026-05-26"
+    related_pages: []
+    agent_notes: |
+      Fallback target. Unknown topics route here. Do not place content on existing
+      pages without review. Create an issue for human classification.
+
+  # --- Future / planned placeholders ---
+  - id: sd-mm-process-reliability-future
+    title: "SD/MM Process Reliability — Future Placeholder"
+    path: null
+    topic_cluster: "SD/MM process reliability"
+    keywords:
+      - "SD/MM"
+      - "process reliability"
+      - "sales"
+      - "materials management"
+    allowed_update_types:
+      - "page_creation"
+    source_policy: "requires_review"
+    last_reviewed: "2026-05-26"
+    related_pages:
+      - "/atlas/concepts/order-to-cash/"
+      - "/atlas/maps/order-to-cash-map/"
+      - "/atlas/sap/sap-pricing-procedure-debugging/"
+      - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
+    agent_notes: |
+      No dedicated SD/MM reliability landing page yet. Topic is distributed across
+      O2C concept, pricing debugging, item category, sales order block diagnosis,
+      and goods receipt diagnostics. Consider creating a curated landing page
+      under atlas/ if the topic cluster grows.
+
+  - id: logistics-process-reliability-future
+    title: "Logistics / Process Reliability — Future Placeholder"
+    path: null
+    topic_cluster: "logistics / process reliability"
+    keywords:
+      - "logistics"
+      - "process reliability"
+      - "fulfillment"
+      - "ATP"
+      - "inventory"
+    allowed_update_types:
+      - "page_creation"
+    source_policy: "requires_review"
+    last_reviewed: "2026-05-26"
+    related_pages:
+      - "/atlas/concepts/sap-atp-is-not-inventory/"
+      - "/atlas/concepts/sap-stock-exists-not-promisable/"
+      - "/atlas/concepts/store-receiving-sap-retail/"
+      - "/atlas/diagnostics/sap-goods-receipt-diagnostics/"
+    agent_notes: |
+      No dedicated logistics reliability landing page yet. Topic is distributed
+      across ATP, stock promisability, store receiving, and GR diagnostics.
+
+  - id: vendor-lock-in-awareness-future
+    title: "Vendor Lock-In Awareness — Future Placeholder"
+    path: null
+    topic_cluster: "vendor lock-in awareness"
+    keywords:
+      - "vendor lock-in"
+      - "portability"
+      - "switching cost"
+      - "vendor dependency"
+    allowed_update_types:
+      - "page_creation"
+    source_policy: "requires_review"
+    last_reviewed: "2026-05-26"
+    related_pages:
+      - "/ai/sap-ams-improvement/"
+      - "/services/sap-integration-architecture/"
+      - "/services/sap-ams-consulting/"
+    agent_notes: |
+      No dedicated vendor lock-in page yet. Topic is addressed within AMS improvement
+      (vendor dependency) and integration architecture (portability, contracts) pages.
+      Consider a focused Atlas page if the topic cluster grows.
+
+  - id: tco-aware-architecture-future
+    title: "TCO-Aware Architecture — Future Placeholder"
+    path: null
+    topic_cluster: "TCO-aware architecture"
+    keywords:
+      - "TCO"
+      - "total cost of ownership"
+      - "cost architecture"
+      - "cost-aware"
+    allowed_update_types:
+      - "page_creation"
+    source_policy: "requires_review"
+    last_reviewed: "2026-05-26"
+    related_pages:
+      - "/services/ams-cost-center-catalyst/"
+      - "/services/sap-integration-architecture/"
+      - "/services/sap-ams-consulting/"
+    agent_notes: |
+      No dedicated TCO architecture page yet. Topic is addressed within AMS cost-center
+      analysis and integration architecture pages. Consider a focused Atlas page
+      if the topic cluster grows.
+
+# --- End of topic clusters ---
+
+# Routing helper for agents
+# Usage: match incoming topic against keywords and topic_cluster fields.
+# If multiple entries match, prefer the entry with the most specific topic_cluster.
+# If no match, use fallback.rule.
+routing_notes: |
+  1. Match incoming topic string against keywords (case-insensitive substring match).
+  2. If multiple entries match, prefer Atlas pages over AI intent pages over service pages.
+  3. For updates, prefer the page whose allowed_update_types includes the update type.
+  4. If no match, route to watch-unclassified and create an issue.
+  5. Never route to a page with status "needs_verification" unless the update is
+     explicitly a verification or clarification.
+  6. Do not route news items to Atlas pages unless they have evergreen value.
+     See site-content-design-contract.md §7 for content placement rules.
