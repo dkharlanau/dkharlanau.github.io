@@ -223,19 +223,31 @@ def check_templates(strict=False):
 
 def check_news_section(strict=False):
     print("\n== Checking /news/ section ==")
-    news_dir = REPO_ROOT / "news"
-    if not news_dir.exists():
+    # News items may be in _news/ (collection) or news/ (static)
+    news_dirs = []
+    for d in [REPO_ROOT / "news", REPO_ROOT / "_news"]:
+        if d.exists():
+            news_dirs.append(d)
+
+    if not news_dirs:
         info("/news/ directory does not exist yet — news section is pending (issue #3)")
         return False  # Not an error
 
-    news_files = list(news_dir.rglob("*.md"))
-    if not news_files:
-        info("/news/ exists but contains no .md files yet")
+    all_news_files = []
+    for nd in news_dirs:
+        for f in nd.rglob("*.md"):
+            # Skip listing/index pages — they are not news items
+            if f.name == "index.md":
+                continue
+            all_news_files.append(f)
+
+    if not all_news_files:
+        info("/news/ exists but contains no news item .md files yet")
         return False
 
-    ok(f"/news/ exists with {len(news_files)} file(s)")
+    ok(f"/news/ exists with {len(all_news_files)} news item(s)")
     errors = 0
-    for nf in news_files:
+    for nf in all_news_files:
         text = nf.read_text(encoding="utf-8")
         if not text.startswith("---"):
             errors += fail(f"{nf.name}: missing front matter", strict)
