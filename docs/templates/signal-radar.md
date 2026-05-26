@@ -15,6 +15,12 @@ tags:
 
 {{SHORT_SUMMARY}}
 
+**Source:** [{{SOURCE_NAME}}]({{SOURCE_URL}})
+**Date checked:** {{DATE_CHECKED}}
+**Confidence:** {{CONFIDENCE}}
+**Related page/topic:** {{RELATED_TOPIC}}
+**Practical implication:** {{PRACTICAL_IMPACT}}
+
 **Key points:**
 
 - {{POINT_1}}

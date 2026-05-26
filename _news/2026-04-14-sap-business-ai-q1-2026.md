@@ -2,6 +2,7 @@
 layout: note
 title: SAP Business AI Q1 2026
 date: 2026-04-14
+permalink: /news/2026-04-14-sap-business-ai-q1-2026/
 source: SAP S/4HANA What's New
 source_url: https://help.sap.com/docs/SAP_S4HANA_CLOUD
 confidence: high

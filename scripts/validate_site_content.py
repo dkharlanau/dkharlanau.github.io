@@ -197,11 +197,8 @@ def check_templates(strict=False):
                     )
 
         # Check front matter defaults for noindex/sitemap false on templates
-        # Atlas templates (atlas-fact-update, practical-process-note) may use index
-        # because they target public Atlas pages; others should default to noindex.
-        # Atlas templates don't need sitemap:false since they target public pages.
-        is_atlas_template = tf.name.startswith("atlas-") or tf.name.startswith("practical-")
-        if tf.name != "README.md":
+        # Skip for docs/templates/ since that directory is excluded from Jekyll build
+        if tf.name != "README.md" and "docs/templates" not in str(tf):
             has_robots = "robots:" in text
             if not has_robots:
                 errors += fail(

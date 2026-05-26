@@ -7,6 +7,12 @@
 **Update type:** {{UPDATE_TYPE}} # fact, process, source, deprecation
 **Date:** {{DATE}}
 
+**Source:** {{SOURCE}}
+**Date checked:** {{DATE_CHECKED}}
+**Confidence:** {{CONFIDENCE}}
+**Related page/topic:** [{{RELATED_TOPIC}}]({{RELATED_URL}})
+**Practical implication:** {{PRACTICAL_IMPACT}}
+
 ## Change summary
 
 {{CHANGE_SUMMARY}}
