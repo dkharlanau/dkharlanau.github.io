@@ -4,6 +4,12 @@ title: "Professional Radar Weekly — {{WEEK_START}} to {{WEEK_END}}"
 date: {{DATE}}
 ---
 
+**Source:** Professional Radar Pipeline
+**Date checked:** {{DATE_CHECKED}}
+**Confidence:** {{CONFIDENCE}}
+**Related page/topic:** [Professional Radar](https://github.com/metalhatscats/materialistOS/tree/main/professional-radar)
+**Practical implication:** Weekly operational review of professional signals and content decisions
+
 ## Executive summary
 
 {{EXECUTIVE_SUMMARY}}

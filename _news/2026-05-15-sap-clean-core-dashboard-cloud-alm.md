@@ -2,6 +2,7 @@
 layout: note
 title: SAP Clean Core Dashboard and Cloud ALM Integration
 date: 2026-05-15
+permalink: /news/2026-05-15-sap-clean-core-dashboard-cloud-alm/
 source: SAP S/4HANA What's New
 source_url: https://help.sap.com/docs/SAP_S4HANA_CLOUD
 confidence: high

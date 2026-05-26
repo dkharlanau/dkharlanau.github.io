@@ -10,6 +10,12 @@ tags:
 
 {{DESCRIPTION}}
 
+**Source:** {{SOURCE}}
+**Date checked:** {{DATE_CHECKED}}
+**Confidence:** {{CONFIDENCE}}
+**Related page/topic:** [{{RELATED_TOPIC}}]({{RELATED_URL}})
+**Practical implication:** {{PRACTICAL_IMPACT}}
+
 ## What it is
 
 {{WHAT_IT_IS}}
@@ -21,9 +27,5 @@ tags:
 ## Practical application
 
 {{PRACTICAL_APPLICATION}}
-
-## Related
-
-- [{{RELATED_PAGE}}]({{RELATED_URL}})
 
 *Last updated: {{LAST_UPDATED}}*

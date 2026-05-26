@@ -2,6 +2,7 @@
 layout: note
 title: SAP S/4HANA Compatibility Packs Final Transition
 date: 2026-05-26
+permalink: /news/2026-05-26-sap-s4hana-compatibility-packs-final-transition/
 source: SAP S/4HANA What's New
 source_url: https://help.sap.com/docs/SAP_S4HANA_CLOUD
 confidence: high
