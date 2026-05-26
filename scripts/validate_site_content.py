@@ -249,6 +249,26 @@ def check_news_section(strict=False):
     errors = 0
     for nf in all_news_files:
         text = nf.read_text(encoding="utf-8")
+
+        # --- Reject sample/draft files in production _news/ ---
+        if nf.parent.name == "_news":
+            lower_name = nf.name.lower()
+            if "sample" in lower_name or "draft" in lower_name:
+                errors += fail(
+                    f"{nf.name}: sample/draft files are not allowed in _news/. "
+                    "Move to docs/templates/ and remove 'sample' or 'draft' from filename.",
+                    strict,
+                )
+            # Also reject content that contains explicit SAMPLE/DRAFT markers
+            # (templates in docs/templates/ are allowed to have these)
+            if "SAMPLE" in text or "DRAFT" in text.upper():
+                # Only flag if it's in the production collection
+                errors += fail(
+                    f"{nf.name}: contains SAMPLE/DRAFT marker — "
+                    "remove before publishing or move to docs/templates/.",
+                    strict,
+                )
+
         if not text.startswith("---"):
             errors += fail(f"{nf.name}: missing front matter", strict)
         else:
