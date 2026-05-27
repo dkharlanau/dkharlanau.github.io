@@ -9,7 +9,7 @@ This document defines the content types for Professional Radar site output. Not 
 ### 1. `signal` (aka `radar`)
 **What:** Dated external event, market update, SAP release, or AI tooling change.
 **Example:** SAP Business AI Q1 2026 release, S/4HANA compatibility pack announcement.
-**Target:** `_news/` collection (Jekyll) → permalink `/news/:slug/`
+**Target:** `_radar/` collection (Jekyll) → permalink `/radar/:slug/`
 **Filename:** `YYYY-MM-DD-slug.md` (date-prefixed, required)
 **Front matter:**
 ```yaml
@@ -78,7 +78,7 @@ Signal comes in
 Scoring assigns decision: news / atlas_update / social_candidate / ignore / watch
     ↓
 If news → classify as content type:
-    - signal → _news/
+    - signal → _radar/
     - knowledge_byte → _notes/ or atlas/
     - article → _blog/
     - page_update → direct edit
@@ -92,8 +92,7 @@ PR for review
 
 ## Migration Notes
 
-- `_news/` currently contains signals. Future migration to `_radar/` is planned (#14).
-- Until migration, signals use `_news/` with `layout: note` and clear tagging.
+- `_radar/` contains dated signals. `_news/` is kept for backward compatibility.
 - Knowledge bytes can be added to `_notes/` immediately.
 - Articles can be added to `_blog/` immediately.
 
@@ -108,5 +107,5 @@ Each content type has specific validation rules in `scripts/validate_site_conten
 ## Related
 
 - `docs/routing-contract.md` — decision vocabulary
-- Issue #14 — `_news` → `_radar` migration
+- Issue #14 — `_news` → `_radar` migration (completed)
 - Issue #15 — classification rules in generation pipeline

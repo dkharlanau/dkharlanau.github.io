@@ -219,15 +219,15 @@ def check_templates(strict=False):
 
 
 def check_news_section(strict=False):
-    print("\n== Checking /news/ section ==")
-    # News items may be in _news/ (collection) or news/ (static)
+    print("\n== Checking /news/ and /radar/ sections ==")
+    # News items may be in _news/ (collection), news/ (static), or _radar/ (new collection)
     news_dirs = []
-    for d in [REPO_ROOT / "news", REPO_ROOT / "_news"]:
+    for d in [REPO_ROOT / "news", REPO_ROOT / "_news", REPO_ROOT / "_radar"]:
         if d.exists():
             news_dirs.append(d)
 
     if not news_dirs:
-        info("/news/ directory does not exist yet — news section is pending (issue #3)")
+        info("/news/ and /radar/ directories do not exist yet — news section is pending")
         return False  # Not an error
 
     all_news_files = []
@@ -239,20 +239,20 @@ def check_news_section(strict=False):
             all_news_files.append(f)
 
     if not all_news_files:
-        info("/news/ exists but contains no news item .md files yet")
+        info("/news/ and /radar/ exist but contain no news item .md files yet")
         return False
 
-    ok(f"/news/ exists with {len(all_news_files)} news item(s)")
+    ok(f"Found {len(all_news_files)} news/radar item(s) across {len(news_dirs)} dir(s)")
     errors = 0
     for nf in all_news_files:
         text = nf.read_text(encoding="utf-8")
 
-        # --- Reject sample/draft files in production _news/ ---
-        if nf.parent.name == "_news":
+        # --- Reject sample/draft files in production _news/ or _radar/ ---
+        if nf.parent.name in ("_news", "_radar"):
             lower_name = nf.name.lower()
             if "sample" in lower_name or "draft" in lower_name:
                 errors += fail(
-                    f"{nf.name}: sample/draft files are not allowed in _news/. "
+                    f"{nf.name}: sample/draft files are not allowed in {nf.parent.name}/. "
                     "Move to docs/templates/ and remove 'sample' or 'draft' from filename.",
                     strict,
                 )
@@ -277,7 +277,12 @@ def check_news_section(strict=False):
                     if not isinstance(front, dict):
                         errors += fail(f"{nf.name}: front matter is not a dict", strict)
                     else:
-                        required_news = {"title", "date", "permalink"}
+                        # _radar/ items use collection permalink from _config.yml
+                        # _news/ items must have explicit permalink for backward compat
+                        if nf.parent.name == "_news":
+                            required_news = {"title", "date", "permalink"}
+                        else:
+                            required_news = {"title", "date"}
                         missing = required_news - set(front.keys())
                         if missing:
                             errors += fail(
