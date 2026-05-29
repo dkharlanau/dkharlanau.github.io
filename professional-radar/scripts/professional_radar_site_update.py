@@ -56,6 +56,33 @@ def generate_filename(candidate: dict) -> str:
     return f"{date_str}-{title_slug}.md"
 
 
+def normalize_candidate(candidate: dict) -> dict:
+    """Normalize engine-style signals to the expected site format."""
+    normalized = dict(candidate)
+
+    # Map engine-style fields to site-style fields
+    if not normalized.get("source") and normalized.get("source_name"):
+        normalized["source"] = normalized["source_name"]
+    if not normalized.get("source_url") and normalized.get("item_url"):
+        normalized["source_url"] = normalized["item_url"]
+    if not normalized.get("date") and normalized.get("published_at"):
+        normalized["date"] = normalized["published_at"][:10]
+    elif not normalized.get("date") and normalized.get("checked_at"):
+        normalized["date"] = normalized["checked_at"][:10]
+    if not normalized.get("topics") and normalized.get("topic"):
+        normalized["topics"] = [normalized["topic"]]
+    elif not normalized.get("topics") and normalized.get("tags"):
+        normalized["topics"] = normalized["tags"]
+    if not normalized.get("short_summary") and normalized.get("summary"):
+        normalized["short_summary"] = normalized["summary"]
+    if not normalized.get("key_points") and normalized.get("summary"):
+        normalized["key_points"] = [f"Engine signal: {normalized['summary'][:100]}..."]
+    if not normalized.get("practical_impact") and normalized.get("summary"):
+        normalized["practical_impact"] = normalized["summary"]
+
+    return normalized
+
+
 def build_frontmatter(candidate: dict, is_news: bool = False) -> dict:
     """Build YAML frontmatter dict for a radar/news item."""
     date = candidate.get("date", datetime.now().strftime("%Y-%m-%d"))
@@ -242,19 +269,24 @@ def main():
                 print(f"    - default: {DEFAULT_CANDIDATES_DIR}")
         sys.exit(0)
 
+    # Normalize engine-style candidates before validation
+    normalized = []
+    for candidate in candidates:
+        normalized.append(normalize_candidate(candidate))
+
     # Validate candidates
     accepted = []
     rejected = []
 
     if not args.skip_validation:
-        for candidate in candidates:
+        for candidate in normalized:
             errors = validate_candidate(candidate)
             if errors:
                 rejected.append((candidate, errors))
             else:
                 accepted.append(candidate)
     else:
-        accepted = candidates
+        accepted = normalized
 
     # Apply limit
     if args.limit is not None:
