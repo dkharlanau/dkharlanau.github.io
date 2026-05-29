@@ -1,0 +1,387 @@
+#!/usr/bin/env python3
+"""
+Professional Radar Site Update
+
+Takes accepted radar candidates and creates or updates site collection files
+(_radar/ and optionally _news/). Supports dry-run and apply modes.
+
+Intended workflow:
+  1. Dry-run to preview changes
+  2. Inspect preview and confirm candidates
+  3. Apply with --limit 1 (or more) to create/update files
+  4. Run validation and build
+
+Usage:
+  python3 professional-radar/scripts/professional_radar_site_update.py --dry-run
+  python3 professional-radar/scripts/professional_radar_site_update.py --apply --limit 1
+  python3 professional-radar/scripts/professional_radar_site_update.py --source-dir datasets/ai-business-signals --dry-run
+"""
+
+import argparse
+import json
+import os
+import re
+import sys
+from datetime import datetime
+from pathlib import Path
+
+try:
+    import yaml
+except ImportError:
+    print("ERROR: PyYAML is required. Install: pip install pyyaml")
+    sys.exit(1)
+
+# --- Paths ---
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+RADAR_DIR = REPO_ROOT / "_radar"
+NEWS_DIR = REPO_ROOT / "_news"
+DEFAULT_CANDIDATES_DIR = REPO_ROOT / "professional-radar" / "candidates"
+
+# --- Config ---
+CONFIDENCE_ALLOWED = {"high", "medium", "low"}
+RADAR_REQUIRED_FIELDS = {"layout", "title", "date", "source", "source_url", "confidence", "topics"}
+
+
+def slugify(text: str) -> str:
+    """Convert title to URL-friendly slug."""
+    slug = re.sub(r"[^\w\s-]", "", text.lower().strip())
+    slug = re.sub(r"[\s_]+", "-", slug)
+    return slug.strip("-").strip()
+
+
+def generate_filename(candidate: dict) -> str:
+    """Generate filename from candidate data."""
+    date_str = candidate.get("date", datetime.now().strftime("%Y-%m-%d"))
+    title_slug = slugify(candidate.get("title", "untitled"))
+    return f"{date_str}-{title_slug}.md"
+
+
+def normalize_candidate(candidate: dict) -> dict:
+    """Normalize engine-style signals to the expected site format."""
+    normalized = dict(candidate)
+
+    # Map engine-style fields to site-style fields
+    if not normalized.get("source") and normalized.get("source_name"):
+        normalized["source"] = normalized["source_name"]
+    if not normalized.get("source_url") and normalized.get("item_url"):
+        normalized["source_url"] = normalized["item_url"]
+    if not normalized.get("date") and normalized.get("published_at"):
+        normalized["date"] = normalized["published_at"][:10]
+    elif not normalized.get("date") and normalized.get("checked_at"):
+        normalized["date"] = normalized["checked_at"][:10]
+    if not normalized.get("topics") and normalized.get("topic"):
+        normalized["topics"] = [normalized["topic"]]
+    elif not normalized.get("topics") and normalized.get("tags"):
+        normalized["topics"] = normalized["tags"]
+    if not normalized.get("short_summary") and normalized.get("summary"):
+        normalized["short_summary"] = normalized["summary"]
+    if not normalized.get("key_points") and normalized.get("summary"):
+        normalized["key_points"] = [f"Engine signal: {normalized['summary'][:100]}..."]
+    if not normalized.get("practical_impact") and normalized.get("summary"):
+        normalized["practical_impact"] = normalized["summary"]
+
+    return normalized
+
+
+def build_frontmatter(candidate: dict, is_news: bool = False) -> dict:
+    """Build YAML frontmatter dict for a radar/news item."""
+    date = candidate.get("date", datetime.now().strftime("%Y-%m-%d"))
+    title = candidate.get("title", "Untitled")
+    source = candidate.get("source", "Unknown")
+    source_url = candidate.get("source_url", "")
+    confidence = candidate.get("confidence", "medium")
+    topics = candidate.get("topics", [])
+
+    if isinstance(topics, str):
+        topics = [topics]
+
+    fm = {
+        "layout": "note",
+        "title": title,
+        "date": date,
+        "source": source,
+        "source_url": source_url,
+        "confidence": confidence,
+        "topics": topics,
+    }
+
+    if is_news:
+        date_str = date
+        title_slug = slugify(title)
+        fm["permalink"] = f"/news/{date_str}-{title_slug}/"
+
+    return fm
+
+
+def build_body(candidate: dict) -> str:
+    """Build markdown body from candidate fields."""
+    lines = []
+
+    short_summary = candidate.get("short_summary", "")
+    if short_summary:
+        lines.append(short_summary)
+        lines.append("")
+
+    key_points = candidate.get("key_points", [])
+    if key_points:
+        lines.append("**Key points:**")
+        lines.append("")
+        for point in key_points:
+            lines.append(f"- {point}")
+        lines.append("")
+
+    practical_impact = candidate.get("practical_impact", "")
+    if practical_impact:
+        lines.append("**Practical impact:**")
+        lines.append("")
+        lines.append(practical_impact)
+        lines.append("")
+
+    source = candidate.get("source", "Unknown")
+    source_url = candidate.get("source_url", "")
+    if source_url:
+        lines.append(f"*Source: [{source}]({source_url})*")
+    else:
+        lines.append(f"*Source: {source}*")
+
+    lines.append("")
+    lines.append("*Generated by Professional Radar — manual review required before publishing.*")
+
+    return "\n".join(lines)
+
+
+def build_markdown(candidate: dict, is_news: bool = False) -> str:
+    """Build full markdown content for a radar or news item."""
+    fm = build_frontmatter(candidate, is_news=is_news)
+    body = build_body(candidate)
+    yaml_fm = yaml.dump(fm, default_flow_style=False, allow_unicode=True, sort_keys=False)
+    return f"---\n{yaml_fm}---\n\n{body}\n"
+
+
+def load_candidates(source_dir: str = None, source_file: str = None) -> list:
+    """Load candidate signals from directory or file."""
+    candidates = []
+    loaded_from = []
+
+    if source_file:
+        path = Path(source_file)
+        if path.exists():
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, list):
+                candidates.extend(data)
+            elif isinstance(data, dict):
+                candidates.append(data)
+            loaded_from.append(str(path))
+
+    elif source_dir:
+        path = Path(source_dir)
+        if path.exists():
+            for json_file in sorted(path.glob("*.json")):
+                with open(json_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                if isinstance(data, list):
+                    candidates.extend(data)
+                elif isinstance(data, dict):
+                    candidates.append(data)
+                loaded_from.append(str(json_file))
+
+    else:
+        # Try default candidates directory
+        if DEFAULT_CANDIDATES_DIR.exists():
+            for json_file in sorted(DEFAULT_CANDIDATES_DIR.glob("*.json")):
+                with open(json_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                if isinstance(data, list):
+                    candidates.extend(data)
+                elif isinstance(data, dict):
+                    candidates.append(data)
+                loaded_from.append(str(json_file))
+
+    return candidates, loaded_from
+
+
+def validate_candidate(candidate: dict) -> list:
+    """Validate a candidate for quality and safety. Returns list of error strings."""
+    errors = []
+
+    # Required fields
+    for field in ("title", "date", "source"):
+        if not candidate.get(field):
+            errors.append(f"missing required field: {field}")
+
+    # Confidence check
+    confidence = candidate.get("confidence", "medium")
+    if confidence not in CONFIDENCE_ALLOWED:
+        errors.append(f"invalid confidence: {confidence}")
+    elif confidence == "low":
+        errors.append("confidence is 'low' — candidate rejected for publication")
+
+    # Content quality
+    if not candidate.get("key_points") and not candidate.get("practical_impact"):
+        errors.append("no key_points or practical_impact — weak signal")
+
+    return errors
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Professional Radar Site Update — publish accepted signals to _radar/ and _news/"
+    )
+    parser.add_argument("--dry-run", action="store_true", default=True,
+                        help="Preview what files would be created (default)")
+    parser.add_argument("--apply", action="store_true",
+                        help="Actually create/update site files")
+    parser.add_argument("--limit", type=int, default=None,
+                        help="Process at most N candidates")
+    parser.add_argument("--source-dir", type=str, default=None,
+                        help="Directory containing candidate JSON files")
+    parser.add_argument("--source-file", type=str, default=None,
+                        help="Single JSON file containing candidate(s)")
+    parser.add_argument("--radar-dir", type=str, default=str(RADAR_DIR),
+                        help="Output directory for radar files (default: _radar/)")
+    parser.add_argument("--news-dir", type=str, default=str(NEWS_DIR),
+                        help="Output directory for news files (default: _news/)")
+    parser.add_argument("--skip-news", action="store_true",
+                        help="Do not generate _news/ items (radar only)")
+    parser.add_argument("--skip-validation", action="store_true",
+                        help="Skip candidate validation (not recommended)")
+    parser.add_argument("--verbose", "-v", action="store_true",
+                        help="Verbose output")
+
+    args = parser.parse_args()
+
+    if args.apply:
+        args.dry_run = False
+
+    # Load candidates
+    candidates, loaded_from = load_candidates(args.source_dir, args.source_file)
+
+    if not candidates:
+        print("No candidates found.")
+        if not loaded_from:
+            print("  Searched:")
+            if args.source_dir:
+                print(f"    - source_dir: {args.source_dir}")
+            if args.source_file:
+                print(f"    - source_file: {args.source_file}")
+            if not args.source_dir and not args.source_file:
+                print(f"    - default: {DEFAULT_CANDIDATES_DIR}")
+        sys.exit(0)
+
+    # Normalize engine-style candidates before validation
+    normalized = []
+    for candidate in candidates:
+        normalized.append(normalize_candidate(candidate))
+
+    # Validate candidates
+    accepted = []
+    rejected = []
+
+    if not args.skip_validation:
+        for candidate in normalized:
+            errors = validate_candidate(candidate)
+            if errors:
+                rejected.append((candidate, errors))
+            else:
+                accepted.append(candidate)
+    else:
+        accepted = normalized
+
+    # Apply limit
+    if args.limit is not None:
+        accepted = accepted[:args.limit]
+
+    # Report
+    print(f"Candidates loaded: {len(candidates)}")
+    print(f"Accepted: {len(accepted)}")
+    print(f"Rejected: {len(rejected)}")
+    if args.limit:
+        print(f"Limit applied: {args.limit}")
+
+    if rejected:
+        print("\nRejected candidates:")
+        for candidate, errors in rejected:
+            title = candidate.get("title", "Untitled")
+            print(f"  - {title}: {', '.join(errors)}")
+
+    if not accepted:
+        print("\nNo accepted candidates to process.")
+        sys.exit(0)
+
+    # Process accepted candidates
+    radar_dir = Path(args.radar_dir)
+    news_dir = Path(args.news_dir) if not args.skip_news else None
+
+    created_files = []
+    updated_files = []
+    skipped_files = []
+
+    print(f"\n{'DRY RUN' if args.dry_run else 'APPLY'} — radar items:")
+    for candidate in accepted:
+        filename = generate_filename(candidate)
+        filepath = radar_dir / filename
+        exists = filepath.exists()
+        content = build_markdown(candidate, is_news=False)
+
+        if args.dry_run:
+            action = "UPDATE" if exists else "CREATE"
+            print(f"  [{action}] {filepath}")
+            if args.verbose:
+                print(f"    Frontmatter: {build_frontmatter(candidate, is_news=False)}")
+        else:
+            radar_dir.mkdir(parents=True, exist_ok=True)
+            with open(filepath, "w", encoding="utf-8") as f:
+                f.write(content)
+            if exists:
+                updated_files.append(str(filepath))
+            else:
+                created_files.append(str(filepath))
+            print(f"  {'UPDATED' if exists else 'CREATED'} {filepath}")
+
+    if news_dir:
+        print(f"\n{'DRY RUN' if args.dry_run else 'APPLY'} — news items:")
+        for candidate in accepted:
+            filename = generate_filename(candidate)
+            filepath = news_dir / filename
+            exists = filepath.exists()
+            content = build_markdown(candidate, is_news=True)
+
+            if args.dry_run:
+                action = "UPDATE" if exists else "CREATE"
+                print(f"  [{action}] {filepath}")
+            else:
+                news_dir.mkdir(parents=True, exist_ok=True)
+                with open(filepath, "w", encoding="utf-8") as f:
+                    f.write(content)
+                if exists:
+                    updated_files.append(str(filepath))
+                else:
+                    created_files.append(str(filepath))
+                print(f"  {'UPDATED' if exists else 'CREATED'} {filepath}")
+
+    # Summary
+    print(f"\n{'='*50}")
+    print("Summary")
+    print(f"{'='*50}")
+    print(f"Mode:          {'DRY RUN' if args.dry_run else 'APPLY'}")
+    print(f"Created files: {len(created_files)}")
+    print(f"Updated files: {len(updated_files)}")
+    print(f"Skipped files: {len(skipped_files)}")
+    if created_files:
+        print("Created:")
+        for f in created_files:
+            print(f"  - {f}")
+    if updated_files:
+        print("Updated:")
+        for f in updated_files:
+            print(f"  - {f}")
+
+    if not args.dry_run:
+        print("\nNext steps:")
+        print("  python3 professional-radar/scripts/professional_radar_validate.py --all --stage site")
+        print("  bundle exec jekyll build")
+
+
+if __name__ == "__main__":
+    main()
