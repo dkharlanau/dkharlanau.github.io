@@ -1,0 +1,454 @@
+version: '2026-05-30'
+source: docs/linkedin-editorial-policy.md
+language:
+  default: English
+  scope: SAP / Professional Radar / LinkedIn output
+  level: B2 professional English
+  style: compact, clear, direct
+voice:
+  persona: practical SAP consultant
+  mindset: AMS / troubleshooting
+  tone:
+  - human
+  - direct
+  - slightly skeptical
+  - operational, not inspirational
+  prohibited_tones:
+  - corporate marketing
+  - AI hype
+  - fake certainty
+  - generic AI-summary
+  rules:
+  - No invented achievements or metrics
+  - No percentage claims without evidence
+  - No time-saving claims without evidence
+  - Short paragraphs
+  - One useful idea per post
+  - Concrete SAP/AMS/process implications
+banned_patterns:
+  phrases:
+  - In today's fast-paced world...
+  - AI is transforming everything...
+  - Here are 5 reasons why...
+  - I'm excited to share...
+  - Game-changer
+  - Revolutionary
+  - Unlock the power of...
+  - The future of X is here
+  - This got me thinking...
+  - What do you think?
+  - New patterns for...
+  structures:
+  - Hook → 3 bullets → CTA
+  - Repeated emoji bullets
+  - Generic hype opening → summary → weak CTA
+  metrics:
+  - by X%
+  - from X hours to Y hours
+  - X% reduction
+  - X% improvement
+  - X hours on average
+default_post_structure:
+  sections:
+  - name: Signal
+    required: true
+    description: What the external source reports
+  - name: Why it matters
+    required: true
+    description: Professional interpretation of relevance
+  - name: Practical check
+    required: true
+    description: What teams should verify
+  - name: My take
+    required: true
+    description: Skeptical professional opinion
+linkedin_output:
+  main_post:
+    source_url: PROHIBITED
+    raw_links: PROHIBITED
+    source_line: PROHIBITED
+    hashtags: PROHIBITED unless explicitly justified
+    internal_labels: PROHIBITED
+    operator_approval_notices: PROHIBITED
+    fake_metrics: PROHIBITED
+    character_limit: 3000
+  first_comment:
+    format: 'Source: <source_title> — <url>'
+    required: true
+  lens_interpretation: Main post must include compact professional interpretation
+    through the selected lens
+site_output:
+  title:
+    unique: true
+    search_oriented: true
+    no_generic_source_title: true
+    no_date_in_visible_title: true
+  filename:
+    date_prefix: YYYY-MM-DD-
+    required: true
+  atlas_check:
+    required_before_create: true
+    similarity_threshold: 0.7
+    actions:
+    - create
+    - update_existing
+    - digest_only
+    - reject
+  default_action: digest_only if similar content exists
+sap_notes_rule:
+  classification: signals
+  default_output: digest/support-signal items
+  standalone_condition: high impact AND clear practical implication
+style_patterns:
+- name: signal_note
+  description: Start with external signal. Explain why it matters. End with operational
+    implication.
+- name: consultant_takeaway
+  description: Start with practical SAP/AMS problem. Connect source to problem. End
+    with what teams should check.
+- name: risk_note
+  description: Start with risk or hidden cost. Explain mechanism. End with small control/check.
+- name: process_note
+  description: Start with process failure mode. Explain where AI/automation helps
+    or not. End with realistic next step.
+- name: contrarian_note
+  description: Start with what people overestimate. Explain what matters more. End
+    with balanced takeaway.
+hard_blockers:
+- id: source_url_in_main_post
+  description: Source URL in LinkedIn main post
+  severity: fail
+  regex: https?://\S+
+- id: invented_metrics
+  description: Invented percentage or time-saving metric
+  severity: fail
+  regex: (by \d+%|from \d+\.?\d* (hours?|days?) to \d+\.?\d* \d+% (reduction|improvement|increase|decrease)|\d+\.?\d*
+    (hours?|days?) on average)
+- id: generic_ai_tone
+  description: Generic AI-summary tone (banned phrases)
+  severity: fail
+  patterns: banned_patterns.phrases
+- id: no_my_take
+  description: No 'My take' or professional interpretation
+  severity: fail
+  check: presence of professional opinion section
+- id: no_atlas_check
+  description: No Atlas/existing-content check before create
+  severity: fail
+- id: duplicate_radar_and_news
+  description: Duplicate _radar and _news output without justification
+  severity: fail
+- id: ready_without_build_test
+  description: Recommendation says READY but Jekyll build not tested
+  severity: fail
+quality_gate:
+  human_voice_score:
+    min: 4
+    max: 5
+  template_risk: must be low
+  repeated_structure_check: must pass
+  specific_takeaway: required
+  not_marketing: required
+radar_lenses:
+  transformation:
+    description: Operating model, delivery model, adoption path, governance, change
+      execution.
+    keywords:
+    - operating model
+    - governance
+    - adoption
+    - change
+    - delivery model
+    - transformation
+    - migration
+    - upgrade
+    - digital transformation
+    question: What does this mean for the operating model and change execution?
+    default_priority: 3
+    allowed_actions:
+    - create
+    - digest_only
+    - update_existing
+  integration:
+    description: Interfaces, APIs, middleware, IDocs, BTP/CPI, event flows, dependency
+      tracing.
+    keywords:
+    - interface
+    - api
+    - middleware
+    - idoc
+    - btp
+    - cpi
+    - event
+    - dependency
+    - integration
+    - connector
+    - sync
+    question: Does this change cross-system assumptions or integration failure modes?
+    default_priority: 3
+    allowed_actions:
+    - create
+    - digest_only
+  tco:
+    description: Cost-to-serve, support effort, upgrade cost, tool sprawl, vendor
+      dependency, maintenance load.
+    keywords:
+    - cost
+    - budget
+    - maintenance
+    - effort
+    - tool sprawl
+    - vendor
+    - pricing
+    - license
+    - roi
+    - investment
+    question: Does this reduce real cost or add another tool layer?
+    default_priority: 3
+    allowed_actions:
+    - create
+    - digest_only
+  architecture:
+    description: Architecture decisions, clean core, extensibility, evidence chain,
+      solution design.
+    keywords:
+    - architecture
+    - clean core
+    - extensibility
+    - design
+    - solution
+    - blueprint
+    - framework
+    - pattern
+    - evidence
+    question: Does this change the architecture review outcome or just shift the bottleneck?
+    default_priority: 3
+    allowed_actions:
+    - create
+    - digest_only
+    - update_existing
+  business_process:
+    description: Order-to-cash, procure-to-pay, master data quality, lead time, process
+      reliability.
+    keywords:
+    - order-to-cash
+    - procure-to-pay
+    - lead time
+    - process
+    - workflow
+    - otc
+    - p2p
+    - supply chain
+    - logistics
+    question: Does diagnostic speed translate to process reliability or just faster
+      alerts?
+    default_priority: 3
+    allowed_actions:
+    - create
+    - digest_only
+  ams_support:
+    description: Incident handling, RCA, KT, runbooks, monitoring, repeated tickets,
+      support quality.
+    keywords:
+    - incident
+    - rca
+    - support
+    - ticket
+    - runbook
+    - monitoring
+    - help desk
+    - troubleshooting
+    - debugging
+    question: Does this reduce incident cost or add new skill requirements?
+    default_priority: 2
+    allowed_actions:
+    - create
+    - digest_only
+  data_master_data:
+    description: BP/customer/vendor/material data, MDG, data quality, governance,
+      replication, ownership.
+    keywords:
+    - master data
+    - mdg
+    - data quality
+    - bp
+    - customer
+    - vendor
+    - material
+    - replication
+    - governance
+    question: Can this detect data quality issues before they cascade?
+    default_priority: 3
+    allowed_actions:
+    - create
+    - digest_only
+  ai_operating_model:
+    description: How AI changes work allocation, review loops, evidence, human control,
+      agent-assisted delivery.
+    keywords:
+    - ai
+    - agent
+    - automation
+    - machine learning
+    - llm
+    - copilot
+    - joule
+    - review loop
+    - human control
+    question: How does this change work allocation and evidence visibility?
+    default_priority: 3
+    allowed_actions:
+    - create
+    - digest_only
+lens_selection_rules:
+  primary: 1 lens per signal
+  secondary: up to 2 lenses per signal
+  explanation_required: why these lenses were selected
+  prohibited: do not force every signal into AMS/support
+site_content_sections:
+- Signal
+- Selected lens
+- Why it matters
+- Practical check
+- My take
+- Related Atlas topics
+lens_config:
+  primary_max: 1
+  secondary_max: 2
+  explanation_required: true
+  prohibited_forced_lens: ams_support
+  selection_method: keyword_scoring
+  tie_breaker: default_priority
+source_validation:
+  allowed_domains:
+  - sap.com
+  - help.sap.com
+  - support.sap.com
+  - news.sap.com
+  - blogs.sap.com
+  - community.sap.com
+  - s4hana.cloud.sap
+  - btp.cloud.sap
+  - saparchitecture.center
+  - sap.com/architecture
+  required_checks:
+  - url_reachable
+  - domain_allowed
+  - canonical_url_resolved
+  - not_404
+  failure_action: reject
+  timeout_seconds: 15
+contract_enforcement:
+  mandatory_checks:
+  - source_url_in_main_post
+  - invented_metrics
+  - generic_ai_tone
+  - no_my_take
+  - no_atlas_check
+  - duplicate_radar_and_news
+  - ready_without_build_test
+  - repeated_structure_check
+  - template_risk
+  - human_voice_score
+  check_functions:
+    source_url_in_main_post: check_no_url_in_linkedin_main_post
+    invented_metrics: check_no_invented_metrics
+    generic_ai_tone: check_no_banned_phrases
+    no_my_take: check_has_my_take
+    no_atlas_check: check_atlas_check_performed
+    duplicate_radar_and_news: check_no_duplicate_collections
+    ready_without_build_test: check_jekyll_build_tested
+    repeated_structure_check: check_not_repeated_structure
+    template_risk: check_template_risk_low
+    human_voice_score: check_human_voice_score_min_4
+repeated_structure_detection:
+  track_last_n: 5
+  similarity_threshold: 0.7
+  checks:
+  - opening_phrase
+  - section_structure
+  - my_take_pattern
+  - closing_phrase
+template_risk_assessment:
+  high_risk_indicators:
+  - same opening phrase repeated within 5 drafts
+  - same My take pattern repeated within 3 drafts
+  - same section structure (Signal -> Lens -> Why -> Check -> My take) without variation
+  - source summary copied verbatim
+  - identical closing phrase
+  assessment_rules:
+    low: 0-1 high-risk indicators
+    medium: 2-3 high-risk indicators
+    high: 4+ high-risk indicators
+human_voice_score:
+  criteria:
+  - name: specific_take
+    points: 1
+    description: Has a specific, non-generic professional opinion
+  - name: no_hype
+    points: 1
+    description: No AI hype, marketing language, or buzzwords
+  - name: source_backed
+    points: 1
+    description: Interpretation connects to source signal, not invented
+  - name: operational_focus
+    points: 1
+    description: Focuses on practical implications, not abstract concepts
+  - name: unique_expression
+    points: 1
+    description: Uses original phrasing, not templated language
+  minimum: 4
+  maximum: 5
+atlas_check_rules:
+  directory_checks:
+    report_missing: true
+    missing_action: report_and_create
+    create_on_missing: false
+  matching_rules:
+  - name: exact_source_url
+    weight: 1.0
+    description: Exact match of source_url in existing content
+  - name: canonical_url
+    weight: 0.8
+    description: Canonical URL match (normalized, stripped tracking params)
+  - name: slug_match
+    weight: 0.7
+    description: URL path slug matches
+  - name: title_similarity
+    weight: 0.7
+    threshold: 0.7
+    description: Title similarity via SequenceMatcher
+  - name: topic_match
+    weight: 0.5
+    description: Topic tag matches
+  action_thresholds:
+    create:
+      max_score: 0.0
+      description: No significant match found
+    update_existing:
+      min_score: 0.9
+      description: Exact or near-exact source match
+    digest_only:
+      min_score: 0.5
+      description: Similar topic or title exists
+    reject:
+      min_score: 0.95
+      description: Duplicate with identical content
+my_take_variation:
+  prohibited_patterns:
+  - The real question is whether...
+  - Evidence chain visibility matters...
+  - Worth watching, but...
+  - TCO only improves when...
+  - Most teams already have too many...
+  generation_rules:
+  - Derive from signal content + lens + source, not from template
+  - Never use the same My take pattern twice within 5 drafts
+  - Must connect to the specific source signal, not generic observation
+  - Must differ from lens interpretation question
+  variation_dimensions:
+  - focus_on_risk_vs_opportunity
+  - focus_on_implementation_vs_theory
+  - focus_on_team_vs_technology
+  - focus_on_cost_vs_value
+  - focus_on_short_term_vs_long_term
