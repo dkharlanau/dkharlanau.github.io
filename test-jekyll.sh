@@ -1,0 +1,1 @@
+python3 professional-radar/scripts/professional_radar_author_voice_generator.py --jekyll-tested --skip-source-validation
