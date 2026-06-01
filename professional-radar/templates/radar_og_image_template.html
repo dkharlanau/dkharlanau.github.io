@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px;
+    height: 630px;
+    background: #0f172a;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 48px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: {{CATEGORY_COLOR}};
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .hashtag {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: {{CATEGORY_COLOR}};
+    background: rgba(255,255,255,0.08);
+    padding: 6px 14px;
+    border-radius: 6px;
+  }
+  .date {
+    font-size: 16px;
+    color: #94a3b8;
+    font-weight: 500;
+  }
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .title {
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #f8fafc;
+    letter-spacing: -0.02em;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .source {
+    font-size: 18px;
+    color: #64748b;
+    font-weight: 500;
+  }
+  .confidence {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: {{CONFIDENCE_COLOR}};
+    padding: 4px 10px;
+    border: 1px solid {{CONFIDENCE_COLOR}};
+    border-radius: 4px;
+  }
+  .brand {
+    font-size: 14px;
+    color: #475569;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: {{CATEGORY_COLOR}};
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="header">
+    <span class="hashtag"><span class="dot"></span>{{CATEGORY}}</span>
+    <span class="date">{{DATE}}</span>
+  </div>
+  <div class="main">
+    <h1 class="title">{{TITLE}}</h1>
+  </div>
+  <div class="footer">
+    <span class="source">{{SOURCE}}</span>
+    <span class="confidence">{{CONFIDENCE}}</span>
+  </div>
+  <div class="brand" style="text-align: right; margin-top: 12px;">Professional Radar</div>
+</body>
+</html>
