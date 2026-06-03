@@ -1,0 +1,16 @@
+---
+layout: note
+---
+{{ content }}
+
+{% if page.source_url %}
+<p><strong>Source:</strong> <a href="{{ page.source_url }}">{{ page.source | default: page.source_url }}</a></p>
+{% endif %}
+
+{% if page.confidence or page.enterprise_relevance or page.selected_lens %}
+<p>
+  {% if page.selected_lens %}<strong>Lens:</strong> {{ page.selected_lens }}{% endif %}
+  {% if page.confidence %}{% if page.selected_lens %}<br>{% endif %}<strong>Confidence:</strong> {{ page.confidence }}/5{% endif %}
+  {% if page.enterprise_relevance %}<br><strong>Enterprise relevance:</strong> {{ page.enterprise_relevance }}/5{% endif %}
+</p>
+{% endif %}
