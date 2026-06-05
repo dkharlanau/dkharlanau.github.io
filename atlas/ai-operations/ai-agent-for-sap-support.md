@@ -23,6 +23,7 @@ related:
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /ai/practical-ai-for-sap-support/
   - /services/sap-ai-ml-enablement/
+  - /atlas/ai-operations/practical-ai-ml-for-sap-support/
 source_files:
   - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/ams-use-cases/ai-agent-for-sap-support.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
@@ -80,6 +81,7 @@ robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
       <li><a href="/ai/practical-ai-for-sap-support/">Practical AI for SAP support</a></li>
       <li><a href="/services/sap-ai-ml-enablement/">SAP AI and ML enablement</a></li>
       <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a></li>
+      <li><a href="/atlas/ai-operations/practical-ai-ml-for-sap-support/">Practical AI and ML for SAP Support</a></li>
     </ul>
   </section>
 
