@@ -64,6 +64,8 @@ ATLAS_FILES = sorted([
     "atlas/sap/sap-pricing-procedure-debugging.md",
 ])
 
+CHECK_MODE_TIMESTAMP = "CHECK_MODE"
+
 
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -124,8 +126,7 @@ def build_permalink_map():
         dirs[:] = [d for d in dirs if d not in {
             "_site", ".git", "vendor", "node_modules", 
             "Kimi_Agent_SAP Atlas Expansion",
-            "Basic_LinkedInDataExport_04-10-2026.zip"
-        }]
+        } and not d.startswith("Basic_LinkedInDataExport_") and not d.startswith("Basic_LinkInDataExport_")]
         for f in files:
             if f.endswith(".md"):
                 abs_path = Path(root) / f
@@ -141,8 +142,15 @@ def build_permalink_map():
     return all_pages
 
 
-def generate_manifest(all_pages):
-    """Generate atlas/manifest.json."""
+def _now(check_mode):
+    """Return current timestamp or deterministic placeholder in check mode."""
+    if check_mode:
+        return CHECK_MODE_TIMESTAMP
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def generate_manifest(all_pages, check_mode=False):
+    """Generate atlas/manifest.json. Returns dict. Writes to disk unless check_mode."""
     entries = []
     for rel_path in ATLAS_FILES:
         abs_path = REPO_DIR / rel_path
@@ -173,7 +181,7 @@ def generate_manifest(all_pages):
     manifest = {
         "schema": "dkharlanau.atlas.manifest",
         "schema_version": "1.0",
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": _now(check_mode),
         "canonical_url": "https://dkharlanau.github.io/atlas/manifest.json",
         "count": len(entries),
         "verified_count": sum(1 for e in entries if e["verified"]),
@@ -182,19 +190,20 @@ def generate_manifest(all_pages):
         "entries": entries,
     }
 
-    out_path = REPO_DIR / "atlas" / "manifest.json"
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(manifest, f, indent=2, ensure_ascii=False, cls=DateTimeEncoder)
+    if not check_mode:
+        out_path = REPO_DIR / "atlas" / "manifest.json"
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(manifest, f, indent=2, ensure_ascii=False, cls=DateTimeEncoder)
 
     return manifest
 
 
-def generate_llms_full(all_pages):
-    """Generate llms-full.txt with verified pages only."""
+def generate_llms_full(all_pages, check_mode=False):
+    """Generate llms-full.txt with verified pages only. Returns text. Writes to disk unless check_mode."""
     lines = []
     lines.append("Atlas Full-Text Manifest")
     lines.append("=" * 50)
-    lines.append(f"Generated: {datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}")
+    lines.append(f"Generated: {_now(check_mode)}")
     lines.append("Canonical: https://dkharlanau.github.io/llms-full.txt")
     lines.append("Source: https://dkharlanau.github.io/atlas/manifest.json")
     lines.append("")
@@ -239,15 +248,18 @@ def generate_llms_full(all_pages):
 
     lines.append(f"END OF MANIFEST — {verified_count} verified pages included")
 
-    out_path = REPO_DIR / "llms-full.txt"
-    with open(out_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
+    text = "\n".join(lines)
 
-    return verified_count
+    if not check_mode:
+        out_path = REPO_DIR / "llms-full.txt"
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(text)
+
+    return text
 
 
-def generate_related(all_pages):
-    """Generate ai/rag/related.json from frontmatter related links."""
+def generate_related(all_pages, check_mode=False):
+    """Generate ai/rag/related.json from frontmatter related links. Returns (edges, broken_links, dict). Writes to disk unless check_mode."""
     edges = []
     broken_links = []
 
@@ -262,12 +274,17 @@ def generate_related(all_pages):
 
         for link in related:
             target = all_pages.get(link)
+            edge_base = {
+                "source_url": permalink,
+                "source_title": title,
+                "source_section": section,
+                "source_status": fm.get("status", ""),
+                "source_verified": bool(fm.get("verified", False)),
+                "source_tags": tags,
+            }
             if target:
                 edges.append({
-                    "source_url": permalink,
-                    "source_title": title,
-                    "source_section": section,
-                    "source_tags": tags,
+                    **edge_base,
                     "target_url": link,
                     "target_title": target["title"],
                     "target_file": target["file"],
@@ -281,10 +298,7 @@ def generate_related(all_pages):
                 if abs_guess.exists():
                     target_fm, _ = parse_frontmatter(abs_guess)
                     edges.append({
-                        "source_url": permalink,
-                        "source_title": title,
-                        "source_section": section,
-                        "source_tags": tags,
+                        **edge_base,
                         "target_url": link,
                         "target_title": target_fm.get("title", ""),
                         "target_file": file_guess,
@@ -302,7 +316,7 @@ def generate_related(all_pages):
     related_json = {
         "schema": "dkharlanau.atlas.related",
         "schema_version": "1.0",
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": _now(check_mode),
         "canonical_url": "https://dkharlanau.github.io/ai/rag/related.json",
         "description": (
             "Static related-content graph for Atlas pages. "
@@ -315,13 +329,187 @@ def generate_related(all_pages):
         "warnings": broken_links,
     }
 
-    out_dir = REPO_DIR / "ai" / "rag"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / "related.json"
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(related_json, f, indent=2, ensure_ascii=False, cls=DateTimeEncoder)
+    if not check_mode:
+        out_dir = REPO_DIR / "ai" / "rag"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_path = out_dir / "related.json"
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(related_json, f, indent=2, ensure_ascii=False, cls=DateTimeEncoder)
 
-    return edges, broken_links
+    return edges, broken_links, related_json
+
+
+def _normalize_timestamp_in_json(text):
+    """Replace generated_at timestamp with CHECK_MODE placeholder for comparison."""
+    return re.sub(
+        r'"generated_at":\s*"[^"]+"',
+        f'"generated_at": "{CHECK_MODE_TIMESTAMP}"',
+        text,
+    )
+
+
+def _normalize_timestamp_in_llms(text):
+    """Replace Generated: timestamp with CHECK_MODE placeholder for comparison."""
+    return re.sub(
+        r'^Generated:\s*\S+',
+        f'Generated: {CHECK_MODE_TIMESTAMP}',
+        text,
+        flags=re.MULTILINE,
+    )
+
+
+def _load_json_file(path):
+    """Load and return JSON file contents as string."""
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+def _load_text_file(path):
+    """Load and return text file contents as string."""
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+def run_check(all_pages):
+    """Validate existing artifacts against regenerated content. Returns list of issues."""
+    issues = []
+
+    # --- manifest.json ---
+    print("\n[CHECK 1/5] manifest.json")
+    manifest_generated = generate_manifest(all_pages, check_mode=True)
+    manifest_path = REPO_DIR / "atlas" / "manifest.json"
+    if not manifest_path.exists():
+        issues.append("manifest.json: file missing")
+    else:
+        try:
+            manifest_committed_text = _load_json_file(manifest_path)
+            manifest_committed = json.loads(manifest_committed_text)
+        except json.JSONDecodeError as e:
+            issues.append(f"manifest.json: invalid JSON — {e}")
+            manifest_committed = {}
+
+        if manifest_committed:
+            # Normalize timestamps
+            gen_norm = json.loads(_normalize_timestamp_in_json(json.dumps(manifest_generated, indent=2, ensure_ascii=False, cls=DateTimeEncoder)))
+            com_norm = json.loads(_normalize_timestamp_in_json(manifest_committed_text))
+            if gen_norm != com_norm:
+                issues.append("manifest.json: stale — committed file differs from source")
+            else:
+                print("  ✓ manifest.json is up to date")
+
+        # Semantic checks
+        if manifest_committed.get("count") != 22:
+            issues.append(f"manifest.json: expected 22 entries, found {manifest_committed.get('count')}")
+        if manifest_committed.get("verified_count") != 14:
+            issues.append(f"manifest.json: expected 14 verified, found {manifest_committed.get('verified_count')}")
+        if manifest_committed.get("unverified_count") != 8:
+            issues.append(f"manifest.json: expected 8 unverified, found {manifest_committed.get('unverified_count')}")
+
+    # --- llms-full.txt ---
+    print("\n[CHECK 2/5] llms-full.txt")
+    llms_generated = generate_llms_full(all_pages, check_mode=True)
+    llms_path = REPO_DIR / "llms-full.txt"
+    if not llms_path.exists():
+        issues.append("llms-full.txt: file missing")
+    else:
+        llms_committed = _load_text_file(llms_path)
+        gen_norm = _normalize_timestamp_in_llms(llms_generated)
+        com_norm = _normalize_timestamp_in_llms(llms_committed)
+        if gen_norm != com_norm:
+            issues.append("llms-full.txt: stale — committed file differs from source")
+        else:
+            print("  ✓ llms-full.txt is up to date")
+
+    # Semantic checks on committed file
+    if llms_path.exists():
+        # Verify only reviewed+verified pages included
+        for rel_path in ATLAS_FILES:
+            abs_path = REPO_DIR / rel_path
+            fm, _ = parse_frontmatter(abs_path)
+            title = fm.get("title", "")
+            if fm.get("status") == "reviewed" and fm.get("verified"):
+                if f"PAGE: {title}" not in llms_committed:
+                    issues.append(f"llms-full.txt: missing verified page '{title}'")
+            else:
+                if f"PAGE: {title}" in llms_committed:
+                    issues.append(f"llms-full.txt: unverified page '{title}' should not be included")
+
+        # Private path leak check
+        leak_patterns = ["source_files", "private-source", "kb-drafts", "/Users/", ".env"]
+        for pattern in leak_patterns:
+            if pattern in llms_committed:
+                issues.append(f"llms-full.txt: private leak — contains '{pattern}'")
+
+        # LinkedIn export name check
+        if "Basic_LinkedInDataExport" in llms_committed or "Basic_LinkInDataExport" in llms_committed:
+            issues.append("llms-full.txt: contains LinkedIn export reference")
+
+    # --- related.json ---
+    print("\n[CHECK 3/5] related.json")
+    edges, broken_links, related_generated = generate_related(all_pages, check_mode=True)
+    related_path = REPO_DIR / "ai" / "rag" / "related.json"
+    if not related_path.exists():
+        issues.append("related.json: file missing")
+    else:
+        try:
+            related_committed_text = _load_json_file(related_path)
+            related_committed = json.loads(related_committed_text)
+        except json.JSONDecodeError as e:
+            issues.append(f"related.json: invalid JSON — {e}")
+            related_committed = {}
+
+        if related_committed:
+            gen_norm = json.loads(_normalize_timestamp_in_json(json.dumps(related_generated, indent=2, ensure_ascii=False, cls=DateTimeEncoder)))
+            com_norm = json.loads(_normalize_timestamp_in_json(related_committed_text))
+            if gen_norm != com_norm:
+                issues.append("related.json: stale — committed file differs from source")
+            else:
+                print("  ✓ related.json is up to date")
+
+        # Semantic checks
+        if related_committed.get("count") != 50:
+            issues.append(f"related.json: expected 50 edges, found {related_committed.get('count')}")
+        if related_committed.get("broken_link_count") != 0:
+            issues.append(f"related.json: expected 0 broken links, found {related_committed.get('broken_link_count')}")
+        if related_committed.get("warnings"):
+            issues.append(f"related.json: warnings array not empty")
+
+        # Private path leak check
+        for pattern in leak_patterns:
+            if pattern in related_committed_text:
+                issues.append(f"related.json: private leak — contains '{pattern}'")
+
+    # --- Cross-validate manifest vs related ---
+    print("\n[CHECK 4/5] Cross-validation")
+    if manifest_committed and related_committed:
+        manifest_urls = {e["url"] for e in manifest_committed.get("entries", [])}
+        related_sources = {e["source_url"] for e in related_committed.get("edges", [])}
+        related_targets = {e["target_url"] for e in related_committed.get("edges", [])}
+        # All related sources must be in manifest
+        orphan_sources = related_sources - manifest_urls
+        if orphan_sources:
+            issues.append(f"related.json: sources not in manifest: {orphan_sources}")
+        else:
+            print("  ✓ All related sources present in manifest")
+
+    # --- Frontmatter tag consistency ---
+    print("\n[CHECK 5/5] Frontmatter tag consistency")
+    tag_issues = []
+    for rel_path in ATLAS_FILES:
+        abs_path = REPO_DIR / rel_path
+        fm, _ = parse_frontmatter(abs_path)
+        tags = fm.get("tags", []) or []
+        if not tags:
+            tag_issues.append(f"{rel_path}: no tags")
+        for tag in tags:
+            if not re.match(r'^[a-z0-9-]+$', tag):
+                tag_issues.append(f"{rel_path}: invalid tag '{tag}'")
+    if tag_issues:
+        issues.extend(tag_issues)
+    else:
+        print("  ✓ All 22 articles have valid tags")
+
+    return issues
 
 
 def main():
@@ -343,10 +531,17 @@ def main():
     print(f"Site pages indexed: {len(all_pages)}")
 
     if args.check:
-        # Validation-only mode
         print("\n[CHECK MODE] Validating existing artifacts...")
-        # TODO: add validation logic if needed
-        return
+        issues = run_check(all_pages)
+        print("\n" + "=" * 40)
+        if issues:
+            print(f"CHECK FAILED — {len(issues)} issue(s):")
+            for issue in issues:
+                print(f"  ✗ {issue}")
+            sys.exit(1)
+        else:
+            print("CHECK PASSED — all artifacts are up to date and valid.")
+            sys.exit(0)
 
     # Generate manifest
     print("\n[1/3] Generating atlas/manifest.json ...")
@@ -362,7 +557,7 @@ def main():
 
     # Generate related.json
     print("\n[3/3] Generating ai/rag/related.json ...")
-    edges, broken = generate_related(all_pages)
+    edges, broken, _ = generate_related(all_pages)
     print(f"  Edges: {len(edges)}")
     print(f"  Broken links: {len(broken)}")
     if broken:
