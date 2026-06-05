@@ -51,7 +51,7 @@ sitemap: false
 | Domain | Public Candidates | Private Candidates |
 |---|---|---|
 | SAP AMS | 1 | 20+ |
-| SAP SD / Order to Cash | 0 | 30+ |
+| SAP SD / Order to Cash | 0 | 24+ |
 | SAP MM / Procurement / P2P | 0 | 40+ |
 | Master Data / Data Quality | 0 | 15+ |
 | Integrations / IDoc / AIF / API | 1 | 25+ |
@@ -66,39 +66,43 @@ sitemap: false
 
 ## 3. Top 30 Atlas Candidates
 
-### Immediate batch (Batch 1 — this PR)
-1. AI-ML Sidecars for SAP (`_notes/ai_ml.md` → `atlas/ai-operations/`)
-2. Mini Apps for SAP Operations (`_notes/tools_mini_apps.md` → `atlas/automation/`)
-3. IDoc and AIF Integration Diagnostics (`_notes/ams.md` IDoc content → `atlas/diagnostics/`)
-4. SAP Clean Core Strategy (news/general knowledge → `atlas/concepts/`)
-5. SAP MM Procurement Overview (general SAP knowledge → `atlas/sap/`)
-6. Consulting Principles for SAP Programmes (`_notes/consulting_principles.md` → `atlas/concepts/`)
+### Immediate batch (Batch 1 — merged)
+1. ✅ AI-ML Sidecars for SAP (`_notes/ai_ml.md` → `atlas/ai-operations/ai-ml-sidecars-for-sap`)
+2. ✅ Mini Apps for SAP Operations (`_notes/tools_mini_apps.md` → `atlas/automation/mini-apps-for-sap-operations`)
+3. ✅ IDoc and AIF Integration Diagnostics (`_notes/ams.md` IDoc content → `atlas/diagnostics/idoc-aif-integration-diagnostics`)
+4. ✅ SAP Clean Core Strategy (news/general knowledge → `atlas/concepts/sap-clean-core-strategy`)
+5. ✅ SAP MM Procurement Overview (general SAP knowledge → `atlas/sap/sap-mm-procurement-overview`)
+6. ✅ Consulting Principles for SAP Programmes (`_notes/consulting_principles.md` → `atlas/concepts/consulting-principles-for-sap`)
 
-### Deferred to Batch 2 (next PR)
-7. SAP Batch Processing in Enterprise Context (`_blog/the-system-that-waits.md` → needs SAP angle)
-8. Master Data Replication Patterns (private source → needs rewrite)
-9. SAP Pricing Condition Technique Deep-Dive (private source → needs fact review)
-10. SAP Credit Management Diagnostics (private source → needs fact review)
-11. SAP Delivery Block Analysis (private source → needs fact review)
-12. SAP Billing Document Diagnostics (private source → needs fact review)
-13. SAP Partner Determination Deep-Dive (private source → needs fact review)
-14. SAP ATP Configuration Overview (private source → needs fact review)
-15. SAP Store Receiving Deep-Dive (private source → needs fact review)
-16. SAP POS Integration Diagnostics (private source → needs fact review)
-17. SAP GR/IR Clearing Deep-Dive (private source → needs fact review)
-18. SAP Invoice Verification Patterns (private source → needs fact review)
-19. SAP Movement Types and Inventory (private source → needs fact review)
-20. SAP Stock Transfer and In-Transit (private source → needs fact review)
-21. SAP Three-Way Match Diagnostics (private source → needs fact review)
-22. SAP Procurement KPIs (private source → needs rewrite)
-23. SAP Sales KPIs (private source → needs rewrite)
-24. SAP Integration Suite Event Mesh (private source → needs fact review)
-25. SAP Ariba Integration Context (private source → needs fact review)
-26. SAP Business Network Context (private source → needs fact review)
-27. SAP EWM Integration Overview (private source → needs fact review)
-28. SAP TM Integration Overview (private source → needs fact review)
-29. SAP IBP Integration Overview (private source → needs fact review)
-30. SAP MDG Governance Patterns (private source → needs rewrite)
+### Batch 2 (merged)
+7. ✅ SAP Credit Management Diagnostics (private source → `atlas/diagnostics/sap-credit-management-diagnostics`)
+8. ✅ SAP Delivery Block Analysis (private source → `atlas/diagnostics/sap-delivery-block-analysis`)
+9. ✅ SAP Billing Block Analysis (private source → `atlas/diagnostics/sap-billing-block-analysis`)
+10. ✅ SAP Incompletion Procedure Diagnostics (private source → `atlas/diagnostics/sap-incompletion-procedure-diagnostics`)
+11. ✅ SAP Pricing Condition Technique (private source → `atlas/sap/sap-pricing-condition-technique`)
+12. ✅ SAP Account Determination Diagnostics (private source → `atlas/sap/sap-account-determination-diagnostics`)
+
+### Deferred to Batch 3 (next PR)
+13. SAP Invoice Verification Patterns (private source → needs fact review)
+14. SAP Movement Types and Inventory (private source → needs fact review)
+15. SAP Stock Transfer and In-Transit (private source → needs fact review)
+16. SAP Three-Way Match Diagnostics (private source → needs fact review)
+17. SAP Procurement KPIs (private source → needs rewrite)
+18. SAP GR/IR Clearing Deep-Dive (already exists as `gr-ir-clearing-explained` — consider expansion)
+19. SAP MM Sourcing / Info Records / Source List (private source → needs fact review)
+20. SAP Purchase Order Creation Diagnostics (private source → needs fact review)
+
+### Deferred to Batch 4 (later)
+21. SAP Integration Suite Event Mesh (private source → needs fact review)
+22. SAP Ariba Integration Context (private source → needs fact review)
+23. SAP Business Network Context (private source → needs fact review)
+24. SAP EWM Integration Overview (private source → needs fact review)
+25. SAP TM Integration Overview (private source → needs fact review)
+26. SAP IBP Integration Overview (private source → needs fact review)
+27. SAP MDG Governance Patterns (private source → needs rewrite)
+28. Master Data Replication Patterns (private source → needs rewrite)
+29. SAP Business Partner Governance (private source → needs fact review)
+30. SAP Customer/Vendor Master Diagnostics (private source → needs fact review)
 
 ---
 
@@ -136,28 +140,33 @@ sitemap: false
 
 ## 7. Recommended Publishing Batches
 
-### Batch 1 (this PR): 6 pages
+### Batch 1 (merged): 6 pages
 - **Theme:** SAP operations knowledge — AI sidecars, mini apps, integration diagnostics, clean core, procurement overview, consulting principles
 - **Source:** Public `_notes/` rewritten as knowledge
 - **Status:** `needs_verification`
 - **Robots:** `noindex,follow`
 - **Sitemap:** `false`
 
-### Batch 2 (next PR): 6–8 pages
-- **Theme:** SAP diagnostics deep-dives — credit, delivery, billing, ATP, partner determination
-- **Source:** Private source rewritten and verified against public SAP docs
+### Batch 2 (merged): 6 pages
+- **Theme:** SAP diagnostics deep-dives — credit management, delivery blocks, billing blocks, incompletion procedure, pricing condition technique, account determination
+- **Source:** Private source used for topic discovery only; all pages rewritten from scratch as conservative diagnostic frames
 - **Status:** `needs_verification`
 - **Robots:** `noindex,follow`
+- **Sitemap:** `false`
 
 ### Batch 3 (next PR): 6–8 pages
-- **Theme:** Procurement and inventory — GR/IR, invoice verification, movement types, stock transfer, three-way match
+- **Theme:** Procurement and inventory — invoice verification, movement types, stock transfer, three-way match, sourcing, purchase order creation
 - **Source:** Private source rewritten and verified
 - **Status:** `needs_verification`
+- **Robots:** `noindex,follow`
+- **Sitemap:** `false`
 
 ### Batch 4 (later): 6–8 pages
-- **Theme:** Integration and master data — IDoc deep-dive, AIF, Event Mesh, MDG, replication
+- **Theme:** Integration and master data — Event Mesh, Ariba, EWM, TM, IBP, MDG, business partner governance, replication
 - **Source:** Private source rewritten and verified
 - **Status:** `needs_verification`
+- **Robots:** `noindex,follow`
+- **Sitemap:** `false`
 
 ---
 
@@ -176,7 +185,7 @@ sitemap: false
 
 | Batch | Pages | Indexing Criteria |
 |---|---|---|
-| I1 | Already verified (18 pages) | Already indexed or ready |
+| I1 | Already verified (14 pages) | Already indexed or ready |
 | I2 | Batch 1 after 2-week review | Conservative, no system-specific claims |
 | I3 | Batch 2 after 4-week review | Verified against public docs |
 | I4 | Batch 3+ after 6-week review | Full verification complete |
@@ -185,10 +194,10 @@ sitemap: false
 
 ## 10. Current Atlas Counts
 
-- **Total Atlas pages:** 26
-- **Verified:** 18
-- **Unverified:** 8
-- **Related edges:** 68
+- **Total Atlas pages:** 38
+- **Verified:** 14
+- **Unverified:** 24
+- **Related edges:** 110
 - **Broken links:** 0
 
 ### After Batch 1
@@ -197,6 +206,13 @@ sitemap: false
 - **Unverified:** 14 (+6)
 - **Related edges:** ~80 (+12 estimated)
 - **Broken links:** 0 (target)
+
+### After Batch 2
+- **Total Atlas pages:** 38 (+6)
+- **Verified:** 14 (unchanged)
+- **Unverified:** 24 (+6)
+- **Related edges:** 110 (+18)
+- **Broken links:** 0
 
 ---
 
