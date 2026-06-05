@@ -1,4 +1,5 @@
 ---
+
 title: Operational Memory for SAP AMS
 layout: default
 description: How structured runbooks, KEDB entries, and decision logs improve SAP AMS support continuity.
@@ -12,6 +13,11 @@ business_process: Support operations
 status: reviewed
 verified: true
 last_reviewed: 2026-05-06
+
+tags:
+  - automation
+  - sap-ams
+  - operational-memory
 related: 
   - "/atlas/ai-operations/ai-ready-process-documentation/"
   - "/services/sap-ams-consulting/"

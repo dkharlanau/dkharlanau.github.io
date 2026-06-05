@@ -1,4 +1,5 @@
 ---
+
 layout: default
 title: "AI Agent for SAP Support"
 description: "A practical architecture pattern for AI-assisted SAP support with retrieval, escalation, authorization boundaries, and human review."
@@ -13,6 +14,11 @@ status: reviewed
 verified: true
 last_reviewed: 2026-05-06
 author: Dzmitryi Kharlanau
+
+tags:
+  - ai-operations
+  - sap-ams
+  - operational-memory
 related:
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /ai/practical-ai-for-sap-support/

@@ -1,0 +1,732 @@
+Atlas Full-Text Manifest
+==================================================
+Generated: 2026-06-05T08:11:17Z
+Canonical: https://dkharlanau.github.io/llms-full.txt
+Source: https://dkharlanau.github.io/atlas/manifest.json
+
+This file contains the full text of reviewed and verified Atlas pages only.
+Pages with status=needs_verification or verified=false are excluded.
+Source file paths are excluded to protect private draft locations.
+
+==================================================
+
+PAGE: AI Agent for SAP Support
+URL: /atlas/ai-operations/ai-agent-for-sap-support/
+SECTION: ai-operations
+DOMAIN: AI-assisted operations
+TYPE: operating pattern
+SAP AREA: SAP support / BTP-adjacent architecture
+BUSINESS PROCESS: Support operations
+TAGS: ai-operations, sap-ams, operational-memory
+REVIEWED: 2026-05-06
+----------------------------------------
+Home
+    Knowledge Atlas
+    AI Operations
+    AI Agent for SAP Support
+  
+
+  
+    Atlas AI Operations
+    AI agent for SAP support
+    A support assistant should retrieve context, structure the diagnosis, and escalate cleanly. It should not guess its way through ERP risk.
+    
+  
+
+  
+    
+      ProcessSupport operations
+      PatternRetrieval, diagnosis, escalation, human review
+      Reviewed06 May 2026
+    
+  
+
+  
+    Core idea
+    An AI agent for SAP support is most useful when it acts as a disciplined support layer: it retrieves relevant context, summarizes the issue, suggests diagnostic paths, prepares tickets, and routes uncertainty to humans.
+    The goal is not autonomous configuration change. The goal is faster, more consistent first-pass support while preserving authorization boundaries, auditability, and human accountability.
+
+    Minimum safe architecture
+    
+      Knowledge retrieval: approved runbooks, process notes, KEDB entries, public documentation, and system-specific support material where access is allowed.
+      Authorization awareness: the agent should not expose data or suggest actions outside the user context.
+      Structured diagnosis: the answer should separate evidence, likely cause, recommended next check, and escalation path.
+      Human approval: any material process change, master-data change, financial impact, or configuration change needs controlled review.
+      Traceability: responses should point to the sources used and leave an audit trail where the organization requires it.
+    
+
+    Good use cases
+    Useful first use cases are ticket enrichment, incident summarization, runbook retrieval, duplicate issue detection, first-pass classification, and suggested diagnostic checklists. These are valuable because they reduce support friction without pretending the model owns the ERP decision.
+
+    Support takeaway
+    A credible SAP support agent should be conservative by design. It should say when it does not know, ask for missing evidence, and escalate early when the issue touches authorization, finance, compliance, master data, or configuration.
+  
+
+  
+    Related Pages
+    
+      Practical AI for SAP support
+      SAP AI and ML enablement
+      SAP Sales Order Block Diagnosis
+
+==================================================
+
+PAGE: AI-Ready Process Documentation
+URL: /atlas/ai-operations/ai-ready-process-documentation/
+SECTION: ai-operations
+DOMAIN: AI-assisted operations
+TYPE: AI operations
+SAP AREA: Support knowledge management
+BUSINESS PROCESS: Support operations
+TAGS: ai-operations, sap-ams, operational-memory
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasAi OperationsAI-Ready Process Documentation
+
+Knowledge Atlas
+
+AI-ready process documentation
+
+AI-assisted support improves when process knowledge is structured, current, scoped, and tied to evidence instead of scattered across chats and old handovers.
+
+DomainAI-assisted operationsTypeAI operationsReviewed2026-05-06
+
+Where this fits
+
+This page connects operational memory, runbooks, knowledge-base design, and AI retrieval. It is useful before building a support copilot or ticket assistant.
+
+Common issues
+
+Documentation describes ideal process flow but not exceptions, ownership, diagnostic evidence, or escalation boundaries.
+
+Runbooks are stale, unversioned, and not linked to system context or common symptoms.
+
+AI retrieval finds the wrong content because documents lack clear scope and metadata.
+
+Diagnostic questions
+
+Does each process note say where it applies, who owns it, and when it was last reviewed?
+
+Are exceptions and support symptoms documented with evidence requirements?
+
+Can a reader or retrieval system distinguish official process from draft notes?
+
+Related pages
+
+AI Agent for SAP Support
+
+Operational Memory for SAP AMS
+
+==================================================
+
+PAGE: Authorization-Aware AI for SAP
+URL: /atlas/ai-operations/authorization-aware-ai-for-sap/
+SECTION: ai-operations
+DOMAIN: AI-assisted operations
+TYPE: AI operations
+SAP AREA: Security / authorization-aware retrieval
+BUSINESS PROCESS: Support operations
+TAGS: ai-operations, sap-ams, data-quality
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasAi OperationsAuthorization-Aware AI
+
+Knowledge Atlas
+
+Authorization-aware AI for SAP
+
+An AI support layer must respect the same access boundaries that protect SAP data from human misuse.
+
+DomainAI-assisted operationsTypeAI operationsReviewed2026-05-06
+
+Where this fits
+
+Authorization-aware AI belongs in any SAP support assistant, retrieval workflow, ticket summarizer, or agent that reads operational data.
+
+Common issues
+
+The AI has broader data access than the user asking the question.
+
+Retrieved context leaks company-code, plant, customer, supplier, finance, or personnel information across boundaries.
+
+The model suggests an action the user could not perform in the source system.
+
+Diagnostic questions
+
+Whose authorization context is used for retrieval?
+
+Can the answer reveal data indirectly through summaries or aggregates?
+
+Is every action recommendation routed through human approval and system authorization?
+
+Related pages
+
+AI Agent for SAP Support
+
+SAP Master Data Quality
+
+==================================================
+
+PAGE: Agent-Assisted Development Workflows
+URL: /atlas/automation/agent-assisted-development-workflows/
+SECTION: automation
+DOMAIN: Automation
+TYPE: agentic workflow
+SAP AREA: Developer automation / support tooling
+BUSINESS PROCESS: Knowledge work
+TAGS: automation, ai-operations, sap-ams
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasAutomationAgent-Assisted Development Workflows
+
+Knowledge Atlas
+
+Agent-assisted development workflows
+
+Agentic workflows are useful when they turn goals into inspected, traceable work. They are risky when they hide assumptions or change systems without review.
+
+DomainAutomationTypeagentic workflowReviewed2026-05-06
+
+Where this fits
+
+This page connects AI-assisted development, documentation, support tooling, and operational analysis. The useful pattern is supervised execution with explicit scope, tests, and review.
+
+Common issues
+
+An agent is asked to implement without first inspecting the repository, data, or operational context.
+
+The workflow produces output but no traceable reasoning, source mapping, or verification result.
+
+Humans review only the final artifact instead of reviewing assumptions, scope, and tests.
+
+Diagnostic questions
+
+What is the agent allowed to read, change, and publish?
+
+What evidence proves the result is correct?
+
+Where is human approval required before changes reach production or public pages?
+
+Related pages
+
+Rule-Based Automation vs AI
+
+AI Agent for SAP Support
+
+==================================================
+
+PAGE: Operational Memory for SAP AMS
+URL: /atlas/automation/operational-memory-for-sap-ams/
+SECTION: automation
+DOMAIN: Automation
+TYPE: automation pattern
+SAP AREA: AMS support knowledge
+BUSINESS PROCESS: Support operations
+TAGS: automation, sap-ams, operational-memory
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasAutomationOperational Memory for SAP AMS
+
+Knowledge Atlas
+
+Operational memory for SAP AMS
+
+AMS improves when support knowledge is structured as reusable memory, not trapped in tickets, chats, and individual consultants.
+
+DomainAutomationTypeautomation patternReviewed2026-05-06
+
+Where this fits
+
+Operational memory is the layer between incident closure and real prevention. It captures what was learned so the next support case starts from evidence, not rediscovery.
+
+Common issues
+
+Tickets are closed with minimal resolution text and no reusable diagnostic pattern.
+
+Critical knowledge lives in personal notes, vendor chats, or one consultant’s memory.
+
+Runbooks exist but are not connected to symptoms, ownership, evidence, or review cadence.
+
+Diagnostic questions
+
+Which incidents repeat, and what knowledge would prevent rediscovery?
+
+Does the KEDB describe symptoms, evidence, cause, fix, owner, and prevention?
+
+Can a new support person safely follow the runbook without hidden context?
+
+Related pages
+
+AI-Ready Process Documentation
+
+SAP AMS consulting
+
+==================================================
+
+PAGE: Rule-Based Automation vs AI
+URL: /atlas/automation/rule-based-automation-vs-ai/
+SECTION: automation
+DOMAIN: Automation
+TYPE: automation pattern
+SAP AREA: Support automation
+BUSINESS PROCESS: Support operations
+TAGS: automation, sap-ams, ai-operations
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasAutomationRule-Based Automation vs AI
+
+Knowledge Atlas
+
+Rule-based automation vs AI
+
+Not every support workflow needs a model. Some need better deterministic rules, ownership, and audit trail.
+
+DomainAutomationTypeautomation patternReviewed2026-05-06
+
+Where this fits
+
+This page helps decide whether a SAP support task should be handled by a deterministic rule, workflow automation, AI assistance, or human review.
+
+Common issues
+
+Teams use AI for problems that are better solved with validation rules, workflow, monitoring, or clear ownership.
+
+Rule-based automation becomes brittle when the process has ambiguous inputs and exceptions.
+
+AI suggestions become risky when they trigger actions without approval or traceability.
+
+Diagnostic questions
+
+Is the decision rule stable, explicit, and auditable?
+
+Does the task require interpretation, summarization, similarity matching, or uncertainty handling?
+
+What is the consequence of a wrong action, and where should human approval sit?
+
+Related pages
+
+AI Agent for SAP Support
+
+Authorization-Aware AI for SAP
+
+==================================================
+
+PAGE: Order to Cash
+URL: /atlas/concepts/order-to-cash/
+SECTION: concepts
+DOMAIN: Business operations
+TYPE: business process
+SAP AREA: SD / FI integration
+BUSINESS PROCESS: Order to cash
+TAGS: order-to-cash, sap-sd
+REVIEWED: 2026-05-06
+----------------------------------------
+Home
+    Knowledge Atlas
+    Concepts
+    Order to Cash
+  
+
+  
+    Atlas Concept
+    Order to cash
+    The operating chain that turns customer demand into delivery, billing, accounting, and cash collection.
+    
+  
+
+  
+    
+      ProcessOrder to cash
+      SAP areaSD with finance and logistics touchpoints
+      Reviewed06 May 2026
+    
+  
+
+  
+    Core idea
+    Order to cash is the end-to-end flow from customer demand to financial settlement. In a SAP-heavy environment it usually spans sales order capture, availability, delivery, goods issue, billing, accounting, receivables, and dispute handling.
+
+    Why it matters
+    O2C is where customer promise, inventory reality, logistics execution, pricing, tax, credit, and revenue recognition meet. Weakness in one area often appears as a support ticket somewhere else: an order block, a failed delivery, a billing split, a pricing dispute, or a delayed cash collection.
+
+    Useful operating view
+    
+      Demand: customer, product, quantity, requested date, and commercial terms.
+      Commitment: availability, credit/risk controls, pricing, and order validation.
+      Execution: delivery creation, picking, packing, goods issue, and shipment handoff.
+      Billing: invoice creation, account determination, tax, and customer communication.
+      Cash: receivables, payment, clearing, disputes, and credit feedback.
+    
+
+    Support takeaway
+    O2C diagnostics should follow the document flow and the business event sequence. Ask where the process stopped, which document exists, which document is missing, and which team owns the failed control. This prevents “SAP issue” from becoming a vague label for a cross-functional operating problem.
+  
+
+  
+    Related Atlas Pages
+    
+      SAP ATP Is Not Inventory
+      SAP Sales Order Block Diagnosis
+      SAP O2C process audit
+
+==================================================
+
+PAGE: SAP ATP Is Not Inventory
+URL: /atlas/concepts/sap-atp-is-not-inventory/
+SECTION: concepts
+DOMAIN: SAP operations
+TYPE: business concept
+SAP AREA: SD availability check / ATP
+BUSINESS PROCESS: Order to cash
+TAGS: order-to-cash, sap-sd, diagnostics
+REVIEWED: 2026-05-06
+----------------------------------------
+Home
+    Knowledge Atlas
+    Concepts
+    SAP ATP Is Not Inventory
+  
+
+  
+    Atlas Concept
+    SAP ATP is not inventory
+    ATP is promise logic. Inventory is stock visibility. Confusing the two creates bad support tickets and bad customer commitments.
+    
+  
+
+  
+    
+      ProcessOrder to cash
+      SAP areaAvailability check / ATP
+      Reviewed06 May 2026
+    
+  
+
+  
+    Core idea
+    Available-to-promise answers a commitment question: what quantity can the business responsibly promise to a customer, and when? It is not the same as asking what quantity exists physically in a plant or warehouse.
+    Inventory can exist and still be unavailable for a new promise. It may already be committed to another order, blocked for quality, reserved for production, held in the wrong location, or not considered by the relevant availability check configuration.
+
+    Why the distinction matters
+    Many support issues start with a simple mismatch: a user sees stock in one report, but the sales order confirms less than expected. The first reaction is often “ATP is wrong.” A better first question is: which supply and demand elements is the check allowed to consider for this material, plant, date, and document context?
+    The answer depends on master data, configuration, document type, timing, existing commitments, and sometimes product allocation or supply protection rules. The exact behavior is landscape-specific.
+
+    Practical diagnostic questions
+    
+      Is the stock physically available, unrestricted, and relevant for the plant or storage location being checked?
+      Are existing sales orders, reservations, or dependent requirements already consuming the supply?
+      Are purchase orders, production orders, or planned receipts included in the check scope?
+      Is the requested delivery date before the next reliable receipt?
+      Is a product allocation, supply protection, or special stock rule changing the result?
+    
+
+    Support takeaway
+    Do not diagnose ATP from stock quantity alone. Diagnose it as a time-based promise calculation shaped by business commitments, supply reliability, and configuration. A useful ATP support note should include the material, plant, requested date, confirmed date, confirmed quantity, visible stock, open requirements, open receipts, and the document context that triggered the check.
+  
+
+  
+    Related Atlas Pages
+    
+      Order to Cash
+      SAP Sales Order Block Diagnosis
+      SAP AMS consulting
+
+==================================================
+
+PAGE: SAP Stock Exists but Is Not Promisable
+URL: /atlas/concepts/sap-stock-exists-not-promisable/
+SECTION: concepts
+DOMAIN: SAP operations
+TYPE: business concept
+SAP AREA: ATP / availability / stock status
+BUSINESS PROCESS: Order to cash
+TAGS: order-to-cash, sap-sd, diagnostics, retail
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasConceptsStock Exists but Is Not Promisable
+
+Knowledge Atlas
+
+SAP stock exists, but it is not always promisable
+
+A practical explanation of why visible stock can still fail availability, ATP, allocation, or channel commitment checks.
+
+DomainSAP operationsTypebusiness conceptReviewed2026-05-06
+
+Where this fits
+
+This page sits between inventory reporting and customer commitment. It is useful when business users say stock is visible in one place, but an order, store channel, or online promise still cannot use it.
+
+Common issues
+
+Stock is in the wrong plant, storage location, channel, or stock type for the process being checked.
+
+Stock is physically present but already committed, reserved, blocked, or not included in the relevant availability logic.
+
+Retail, e-commerce, and distribution channels may apply allocation or promise rules that differ from simple unrestricted stock visibility.
+
+Diagnostic questions
+
+Which stock figure is the user looking at, and which process is trying to consume or promise it?
+
+Is the stock unrestricted, relevant to the checked location, and available on the requested date?
+
+Is another document, allocation rule, or protection rule already consuming the quantity?
+
+Related pages
+
+SAP ATP Is Not Inventory
+
+Order to Cash
+
+Sales Order Block Diagnosis
+
+==================================================
+
+PAGE: Store Receiving in SAP Retail
+URL: /atlas/concepts/store-receiving-sap-retail/
+SECTION: concepts
+DOMAIN: Retail operations
+TYPE: business concept
+SAP AREA: Retail / inventory management
+BUSINESS PROCESS: Retail replenishment
+TAGS: retail, sap-sd, order-to-cash
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasConceptsStore Receiving in SAP Retail
+
+Knowledge Atlas
+
+Store receiving in SAP Retail
+
+Store receiving is not only a goods receipt posting. It is the handoff from supply chain execution to sales-floor availability.
+
+DomainRetail operationsTypebusiness conceptReviewed2026-05-06
+
+Where this fits
+
+Store receiving is the point where distribution-center or supplier delivery becomes store stock that can be counted, replenished, sold, and audited.
+
+Common issues
+
+Goods arrive physically but are not posted in time, creating visibility gaps for replenishment and availability.
+
+Discrepancies are handled informally instead of being recorded as structured evidence.
+
+Store staff may receive during peak operational pressure, which increases errors and delays.
+
+Diagnostic questions
+
+Has the delivery physically arrived, and is there proof of delivery?
+
+Has system receipt been posted against the expected reference?
+
+Were shortages, damages, overages, or wrong-store deliveries recorded in a way finance and supply chain can use?
+
+Related pages
+
+POS Sales Not Reflected in SAP
+
+SAP Stock Exists but Is Not Promisable
+
+==================================================
+
+PAGE: Master Data Governance Failure Modes
+URL: /atlas/data-quality/master-data-governance-failure-modes/
+SECTION: data-quality
+DOMAIN: Data operations
+TYPE: data quality
+SAP AREA: MDG / master data governance
+BUSINESS PROCESS: Cross-process operations
+TAGS: master-data, data-quality, sap-ams
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasData QualityGovernance Failure Modes
+
+Knowledge Atlas
+
+Master data governance failure modes
+
+Weak governance shows up as operational friction: blocked orders, payment failures, reporting distrust, migration cleanup, and repeated support handling.
+
+DomainData operationsTypedata qualityReviewed2026-05-06
+
+Where this fits
+
+Governance failure modes explain why the same data defect keeps returning after individual records are repaired.
+
+Common issues
+
+No clear owner for creation, extension, blocking, change approval, or retirement of master data.
+
+Rules exist in documentation but not in workflow, validation, monitoring, or accountability.
+
+Migration cleanup is treated as a one-time project instead of a continuous quality obligation.
+
+Diagnostic questions
+
+Who owns the object and who approves change?
+
+Which quality rule failed, and was it preventable at entry time?
+
+Is this a single bad record or a pattern across objects, plants, company codes, or suppliers?
+
+Related pages
+
+SAP Master Data Quality
+
+SAP Partner Determination Failures
+
+==================================================
+
+PAGE: SAP Master Data Quality
+URL: /atlas/data-quality/sap-master-data-quality/
+SECTION: data-quality
+DOMAIN: Data operations
+TYPE: data quality
+SAP AREA: Master data / MDG-adjacent
+BUSINESS PROCESS: Cross-process operations
+TAGS: master-data, data-quality, sap-ams
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasData QualitySAP Master Data Quality
+
+Knowledge Atlas
+
+SAP master data quality
+
+Master data quality is not an abstract data-management concern. In SAP support, it is often the hidden cause behind blocked processes and repeated tickets.
+
+DomainData operationsTypedata qualityReviewed2026-05-06
+
+Where this fits
+
+Master data quality sits behind sales, procurement, inventory, finance, logistics, planning, and reporting. When support only fixes transaction symptoms, the same data problem returns.
+
+Common issues
+
+Required views or organizational extensions are missing.
+
+Names, addresses, units of measure, payment terms, partner roles, or classifications are inconsistent.
+
+Ownership is unclear, so support corrects records one by one without changing governance.
+
+Diagnostic questions
+
+Which master data object controls the failed process step?
+
+Is the problem missing data, inconsistent data, duplicate data, wrong ownership, or stale migration residue?
+
+Can the issue be prevented with validation, workflow, stewardship, or monitoring?
+
+Related pages
+
+Master Data Governance Failure Modes
+
+AI-Ready Process Documentation
+
+==================================================
+
+PAGE: Order to Cash Map
+URL: /atlas/maps/order-to-cash-map/
+SECTION: maps
+DOMAIN: Business operations
+TYPE: process map
+SAP AREA: SD / FI / logistics integration
+BUSINESS PROCESS: Order to cash
+TAGS: order-to-cash, sap-sd, sap-mm
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasMapsOrder to Cash Map
+
+Knowledge Atlas
+
+Order to cash map
+
+A map for tracing where an O2C process stopped and which evidence should exist at each stage.
+
+DomainBusiness operationsTypeprocess mapReviewed2026-05-06
+
+Where this fits
+
+This map is the companion to the Order to Cash concept page. It focuses on process tracing rather than general explanation.
+
+Core checkpoints
+
+Demand captured: customer, material, quantity, date, price context, and partner roles.
+
+Commitment made: availability, credit, pricing, and document validation.
+
+Fulfillment executed: delivery, picking, packing, goods issue, and logistics handoff.
+
+Billing posted: invoice, account determination, tax, output, and receivables impact.
+
+Cash resolved: payment, clearing, deductions, disputes, and credit feedback.
+
+Diagnostic questions
+
+What is the last document that exists?
+
+What is the expected next document or posting?
+
+Which master data, configuration, interface, or approval controls that transition?
+
+Related pages
+
+Order to Cash
+
+SAP Invoice Split Analysis
+
+==================================================
+
+PAGE: Procure to Pay Map
+URL: /atlas/maps/procure-to-pay-map/
+SECTION: maps
+DOMAIN: Business operations
+TYPE: process map
+SAP AREA: MM / FI integration
+BUSINESS PROCESS: Procure to pay
+TAGS: procure-to-pay, sap-mm, procurement
+REVIEWED: 2026-05-06
+----------------------------------------
+HomeKnowledge AtlasMapsProcure to Pay Map
+
+Knowledge Atlas
+
+Procure to pay map
+
+A practical map for connecting procurement demand, purchasing documents, goods receipt, invoice verification, and financial clearing.
+
+DomainBusiness operationsTypeprocess mapReviewed2026-05-06
+
+Where this fits
+
+Procure to pay connects business demand with supplier commitment, physical receipt, invoice verification, and payment readiness.
+
+Core flow
+
+Demand is captured as a purchase requisition, MRP proposal, service request, or manual procurement need.
+
+The purchasing process turns that demand into a purchase order or another purchasing document.
+
+Goods receipt or service acceptance confirms that the supplier delivered what the business can recognize.
+
+Invoice verification compares commercial, receipt, and invoice evidence before finance clears or blocks payment.
+
+Diagnostic questions
+
+Where did the chain stop: requisition, order, receipt, invoice, clearing, or payment?
+
+Is the issue caused by document status, master data, tolerance, approval, or finance integration?
+
+Which team owns the failed control?
+
+Related pages
+
+GR/IR Clearing Explained
+
+Goods Receipt Diagnostics
+
+==================================================
+
+END OF MANIFEST — 14 verified pages included

@@ -1,4 +1,5 @@
 ---
+
 title: Master Data Governance Failure Modes
 layout: default
 description: Common governance failure modes that turn SAP master data problems into repeated support issues.
@@ -12,6 +13,11 @@ business_process: Cross-process operations
 status: reviewed
 verified: true
 last_reviewed: 2026-05-06
+
+tags:
+  - master-data
+  - data-quality
+  - sap-ams
 related: 
   - "/atlas/data-quality/sap-master-data-quality/"
   - "/atlas/sap/sap-partner-determination-failures/"

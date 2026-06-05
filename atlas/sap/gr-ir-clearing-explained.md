@@ -1,4 +1,5 @@
 ---
+
 title: SAP GR/IR Clearing Explained
 layout: default
 description: A conservative explanation of GR/IR clearing in procurement and invoice verification.
@@ -12,6 +13,11 @@ business_process: Procure to pay
 status: needs_verification
 verified: false
 last_reviewed: 2026-05-06
+
+tags:
+  - procure-to-pay
+  - sap-mm
+  - procurement
 related: 
   - "/atlas/maps/procure-to-pay-map/"
   - "/atlas/diagnostics/sap-goods-receipt-diagnostics/"

@@ -1,4 +1,5 @@
 ---
+
 title: Agent-Assisted Development Workflows
 layout: default
 description: A practical view of agent-assisted workflows for knowledge work, support tooling, and developer automation.
@@ -12,6 +13,11 @@ business_process: Knowledge work
 status: reviewed
 verified: true
 last_reviewed: 2026-05-06
+
+tags:
+  - automation
+  - ai-operations
+  - sap-ams
 related: 
   - "/atlas/automation/rule-based-automation-vs-ai/"
   - "/atlas/ai-operations/ai-agent-for-sap-support/"

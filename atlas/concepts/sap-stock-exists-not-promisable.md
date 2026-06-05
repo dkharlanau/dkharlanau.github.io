@@ -1,4 +1,5 @@
 ---
+
 title: SAP Stock Exists but Is Not Promisable
 layout: default
 description: Why SAP stock visibility can differ from what can be promised to a customer or channel.
@@ -12,6 +13,12 @@ business_process: Order to cash
 status: reviewed
 verified: true
 last_reviewed: 2026-05-06
+
+tags:
+  - order-to-cash
+  - sap-sd
+  - diagnostics
+  - retail
 related: 
   - "/atlas/concepts/sap-atp-is-not-inventory/"
   - "/atlas/concepts/order-to-cash/"

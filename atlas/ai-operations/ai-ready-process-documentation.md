@@ -1,4 +1,5 @@
 ---
+
 title: AI-Ready Process Documentation
 layout: default
 description: How to structure SAP process documentation so AI-assisted support can retrieve and use it safely.
@@ -12,6 +13,11 @@ business_process: Support operations
 status: reviewed
 verified: true
 last_reviewed: 2026-05-06
+
+tags:
+  - ai-operations
+  - sap-ams
+  - operational-memory
 related: 
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/automation/operational-memory-for-sap-ams/"

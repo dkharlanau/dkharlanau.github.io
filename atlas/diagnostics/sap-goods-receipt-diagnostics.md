@@ -1,4 +1,5 @@
 ---
+
 title: SAP Goods Receipt Diagnostics
 layout: default
 description: A practical support diagnostic guide for SAP goods receipt issues.
@@ -12,6 +13,12 @@ business_process: Procure to pay
 status: needs_verification
 verified: false
 last_reviewed: 2026-05-06
+
+tags:
+  - procure-to-pay
+  - sap-mm
+  - diagnostics
+  - procurement
 related: 
   - "/atlas/maps/procure-to-pay-map/"
   - "/atlas/sap/gr-ir-clearing-explained/"

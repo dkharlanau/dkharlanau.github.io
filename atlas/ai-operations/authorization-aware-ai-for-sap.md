@@ -1,4 +1,5 @@
 ---
+
 title: Authorization-Aware AI for SAP
 layout: default
 description: A practical pattern for AI-assisted SAP support that respects user authorization and data boundaries.
@@ -12,6 +13,11 @@ business_process: Support operations
 status: reviewed
 verified: true
 last_reviewed: 2026-05-06
+
+tags:
+  - ai-operations
+  - sap-ams
+  - data-quality
 related: 
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/data-quality/sap-master-data-quality/"

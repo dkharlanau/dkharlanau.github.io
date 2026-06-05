@@ -1,4 +1,5 @@
 ---
+
 layout: default
 title: "Order to Cash"
 description: "A concise operational explanation of order to cash as the chain from customer demand to fulfillment, billing, and payment."
@@ -13,6 +14,10 @@ status: reviewed
 verified: true
 last_reviewed: 2026-05-06
 author: Dzmitryi Kharlanau
+
+tags:
+  - order-to-cash
+  - sap-sd
 related:
   - /atlas/concepts/sap-atp-is-not-inventory/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/

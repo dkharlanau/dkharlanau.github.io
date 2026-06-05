@@ -1,4 +1,5 @@
 ---
+
 layout: default
 title: "SAP Sales Order Block Diagnosis"
 description: "A practical diagnostic frame for separating common SAP sales order block causes in AMS support."
@@ -13,6 +14,11 @@ status: needs_verification
 verified: false
 last_reviewed: 2026-05-06
 author: Dzmitryi Kharlanau
+
+tags:
+  - order-to-cash
+  - sap-sd
+  - diagnostics
 related:
   - /atlas/concepts/order-to-cash/
   - /atlas/concepts/sap-atp-is-not-inventory/

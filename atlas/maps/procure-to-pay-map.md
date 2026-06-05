@@ -1,4 +1,5 @@
 ---
+
 title: Procure to Pay Map
 layout: default
 description: A concise map of the procure-to-pay operating chain from demand to invoice and clearing.
@@ -12,6 +13,11 @@ business_process: Procure to pay
 status: reviewed
 verified: true
 last_reviewed: 2026-05-06
+
+tags:
+  - procure-to-pay
+  - sap-mm
+  - procurement
 related: 
   - "/atlas/sap/gr-ir-clearing-explained/"
   - "/atlas/diagnostics/sap-goods-receipt-diagnostics/"

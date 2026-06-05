@@ -1,4 +1,5 @@
 ---
+
 layout: default
 title: "SAP ATP Is Not Inventory"
 description: "A practical explanation of why SAP available-to-promise is customer commitment logic, not a simple inventory count."
@@ -13,6 +14,11 @@ status: reviewed
 verified: true
 last_reviewed: 2026-05-06
 author: Dzmitryi Kharlanau
+
+tags:
+  - order-to-cash
+  - sap-sd
+  - diagnostics
 related:
   - /atlas/concepts/order-to-cash/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
