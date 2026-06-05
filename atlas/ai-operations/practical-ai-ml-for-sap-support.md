@@ -73,11 +73,11 @@ sitemap: false
       <li><strong>Features need consistency.</strong> What the model sees in training must match what it sees in production.</li>
     </ul>
 
-    <h2>Three-tier extensibility</h2>
+    <h2>Extensibility placement</h2>
     <p>SAP’s clean-core model maps naturally to AI/ML placement:</p>
     <ul>
-      <li><strong>Tier A/B — inside S/4:</strong> fields, validations, BRF+, lightweight enhancements. Deterministic rules stay close to transactions.</li>
-      <li><strong>Tier C — side-by-side:</strong> separate services that talk to S/4 via released APIs and events. Probabilistic logic lives here, returning results with confidence and reason codes.</li>
+      <li><strong>In-stack (in-app):</strong> fields, validations, BRF+, lightweight enhancements inside S/4. Deterministic rules stay close to transactions.</li>
+      <li><strong>Side-by-side and remote:</strong> separate services that talk to S/4 via released APIs and events. Probabilistic logic lives here, returning results with confidence and reason codes.</li>
     </ul>
 
     <h2>Principles for safe AI/ML around SAP</h2>
