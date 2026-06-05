@@ -53,6 +53,26 @@ verified: true
       <p>Trace interface failures to partner profiles, segments, master data, or timing issues.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-credit-management-diagnostics/">
+      <h2>SAP Credit Management Diagnostics</h2>
+      <p>A first-pass structure for separating credit block causes from delivery, billing, and master data issues.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-delivery-block-analysis/">
+      <h2>SAP Delivery Block Analysis</h2>
+      <p>A first-pass structure for understanding why a sales order cannot create a delivery.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-billing-block-analysis/">
+      <h2>SAP Billing Block Analysis</h2>
+      <p>A first-pass structure for understanding why a sales document cannot be billed.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-incompletion-procedure-diagnostics/">
+      <h2>SAP Incompletion Procedure Diagnostics</h2>
+      <p>A first-pass structure for finding why a sales document is incomplete and what that blocks downstream.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
   </div>
 </section>
 
