@@ -1,23 +1,23 @@
 ---
 layout: default
-title: "Professional Signals — Dzmitryi Kharlanau"
-description: "Dated professional signals on SAP AMS, integration reliability, master data, and practical AI for support operations."
-permalink: /news/
+title: "Professional Radar — Dzmitryi Kharlanau"
+description: "Monitored professional signals, observations, and review candidates. Durable knowledge belongs in the Atlas after review."
+permalink: /radar/
 robots: noindex,follow
 sitemap: false
 ---
 
 <section class="section notes-landing">
   <header class="section-heading">
-    <p class="eyebrow">Professional Signals</p>
+    <p class="eyebrow">Professional Radar</p>
     <h1>{{ page.title }}</h1>
-    <p class="lead">Dated professional signals that may later inform Atlas updates. Evergreen explanations belong in the <a href="/atlas/">Knowledge Atlas</a>.</p>
+    <p class="lead">Professional Radar collects signals, observations, and review candidates. Durable knowledge belongs in the <a href="/atlas/">Knowledge Atlas</a> after review.</p>
   </header>
 
   <div class="notes-grid">
-    {% assign items = site.news | sort: 'date' | reverse %}
+    {% assign items = site.radar | sort: 'date' | reverse %}
     {% if items == empty %}
-    <p class="lead">No signals published yet. This section is being prepared.</p>
+    <p class="lead">No radar signals published yet. This section is being prepared.</p>
     {% else %}
     {% for item in items %}
     <article class="note-card neub-card">
@@ -40,6 +40,13 @@ sitemap: false
         <ul class="note-tags">
           {% for topic in item.topics %}
           <li>{{ topic }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% if item.tags %}
+        <ul class="note-tags">
+          {% for tag in item.tags %}
+          <li>{{ tag }}</li>
           {% endfor %}
         </ul>
         {% endif %}
