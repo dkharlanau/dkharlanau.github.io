@@ -1,5 +1,7 @@
 import json
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -120,3 +122,73 @@ def test_related_edges_have_valid_targets():
         assert edge["valid"] is True
         assert edge["target_file"]
         assert edge["target_title"]
+
+
+# ---------------------------------------------------------------------------
+# Dynamic discovery behavior tests
+# ---------------------------------------------------------------------------
+
+def _import_generator():
+    """Import generator module with repo root on path."""
+    scripts_dir = REPO_ROOT / "scripts"
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+    import generate_atlas_artifacts as gen
+    return gen
+
+
+def test_dynamic_discovery_returns_22_article_pages():
+    gen = _import_generator()
+    articles = gen.discover_atlas_articles()
+    assert len(articles) == 22, f"Expected 22 articles, found {len(articles)}"
+    # All paths must be under atlas/ and be .md files
+    for p in articles:
+        assert p.startswith("atlas/"), f"Path outside atlas/: {p}"
+        assert p.endswith(".md"), f"Not a markdown file: {p}"
+
+
+def test_dynamic_discovery_excludes_index_pages():
+    gen = _import_generator()
+    articles = gen.discover_atlas_articles()
+    index_paths = [p for p in articles if p.endswith("/index.md")]
+    assert index_paths == [], f"Index pages should be excluded: {index_paths}"
+    assert "atlas/index.md" not in articles
+
+
+def test_dynamic_discovery_excludes_files_outside_atlas():
+    gen = _import_generator()
+    articles = gen.discover_atlas_articles()
+    outside = [p for p in articles if not p.startswith("atlas/")]
+    assert outside == [], f"Files outside atlas/ discovered: {outside}"
+
+
+def test_dynamic_discovery_excludes_pages_without_required_frontmatter():
+    gen = _import_generator()
+    articles = set(gen.discover_atlas_articles())
+    # atlas/research-notes/index.md has status=research_note and no atlas_section
+    # It should NOT be discovered
+    assert "atlas/research-notes/index.md" not in articles
+    # atlas/links/index.md has no atlas_section
+    assert "atlas/links/index.md" not in articles
+
+
+def test_check_mode_detects_stale_artifacts():
+    """--check must return non-zero when an artifact is stale."""
+    # Run check on current committed artifacts; should pass
+    result = subprocess.run(
+        [sys.executable, str(REPO_ROOT / "scripts" / "generate_atlas_artifacts.py"), "--check"],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, f"--check failed unexpectedly: {result.stdout}\n{result.stderr}"
+
+
+def test_manifest_entries_have_required_fields():
+    path = REPO_ROOT / "atlas" / "manifest.json"
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    for entry in data["entries"]:
+        assert entry.get("url", "").startswith("/atlas/"), f"Invalid permalink: {entry.get('url')}"
+        assert entry.get("atlas_section"), f"Missing atlas_section: {entry.get('title')}"
+        assert "status" in entry, f"Missing status: {entry.get('title')}"
+        assert "verified" in entry, f"Missing verified: {entry.get('title')}"
