@@ -20,6 +20,7 @@ permalink: /atlas/automation/
   <a class="atlas-card" href="/atlas/automation/rule-based-automation-vs-ai/"><h2>Rule-Based Automation vs AI</h2><p>How to decide what should stay deterministic and what can become AI-assisted.</p><span class="link-arrow">Read page</span></a>
   <a class="atlas-card" href="/atlas/automation/operational-memory-for-sap-ams/"><h2>Operational Memory for SAP AMS</h2><p>Runbooks, KEDB, decision logs, and structured context for recurring support issues.</p><span class="link-arrow">Read page</span></a>
   <a class="atlas-card" href="/atlas/automation/agent-assisted-development-workflows/"><h2>Agent-Assisted Development Workflows</h2><p>Practical boundaries for using agents in knowledge work, support tooling, and development.</p><span class="link-arrow">Read page</span></a>
+  <a class="atlas-card" href="/atlas/automation/mini-apps-for-sap-operations/"><h2>Mini Apps and Prototypes for SAP Operations</h2><p>Small, outcome-focused tools that remove manual work without breaking the core.</p><span class="link-arrow">Read page</span></a>
 </div></section>
 
 {% include atlas/author-block.html %}

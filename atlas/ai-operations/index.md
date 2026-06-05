@@ -43,6 +43,11 @@ verified: true
       <p>How to structure process knowledge so retrieval and support agents can use it safely.</p>
       <span class="link-arrow">Read AI operations page</span>
     </a>
+    <a class="atlas-card" href="/atlas/ai-operations/ai-ml-sidecars-for-sap/">
+      <h2>AI and ML Sidecars for SAP</h2>
+      <p>Deterministic core, probabilistic edge: when and how to use AI/ML around SAP safely.</p>
+      <span class="link-arrow">Read AI operations page</span>
+    </a>
   </div>
 </section>
 

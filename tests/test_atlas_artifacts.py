@@ -13,10 +13,10 @@ def test_manifest_json_is_valid():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.manifest"
-    assert data["count"] == 26
+    assert data["count"] == 32
     assert data["verified_count"] == 14
-    assert data["unverified_count"] == 12
-    assert len(data["entries"]) == 26
+    assert data["unverified_count"] == 18
+    assert len(data["entries"]) == 32
 
 
 def test_related_json_is_valid():
@@ -25,10 +25,10 @@ def test_related_json_is_valid():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.related"
-    assert data["count"] == 68
+    assert data["count"] == 92
     assert data["broken_link_count"] == 0
     assert data["warnings"] == []
-    assert len(data["edges"]) == 68
+    assert len(data["edges"]) == 92
 
 
 def test_manifest_no_private_paths():
@@ -140,7 +140,7 @@ def _import_generator():
 def test_dynamic_discovery_returns_22_article_pages():
     gen = _import_generator()
     articles = gen.discover_atlas_articles()
-    assert len(articles) == 26, f"Expected 26 articles, found {len(articles)}"
+    assert len(articles) == 32, f"Expected 32 articles, found {len(articles)}"
     # All paths must be under atlas/ and be .md files
     for p in articles:
         assert p.startswith("atlas/"), f"Path outside atlas/: {p}"
