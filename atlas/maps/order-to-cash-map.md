@@ -1,4 +1,5 @@
 ---
+
 title: Order to Cash Map
 layout: default
 description: A concise process map for order to cash across demand, commitment, fulfillment, billing, and cash.
@@ -12,6 +13,11 @@ business_process: Order to cash
 status: reviewed
 verified: true
 last_reviewed: 2026-05-06
+
+tags:
+  - order-to-cash
+  - sap-sd
+  - sap-mm
 related: 
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-invoice-split-analysis/"

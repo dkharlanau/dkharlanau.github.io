@@ -1,4 +1,5 @@
 ---
+
 title: Rule-Based Automation vs AI
 layout: default
 description: A practical decision frame for deterministic automation and AI-assisted support workflows.
@@ -12,6 +13,11 @@ business_process: Support operations
 status: reviewed
 verified: true
 last_reviewed: 2026-05-06
+
+tags:
+  - automation
+  - sap-ams
+  - ai-operations
 related: 
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/ai-operations/authorization-aware-ai-for-sap/"

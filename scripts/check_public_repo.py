@@ -19,6 +19,7 @@ DISALLOWED_PATH_RE = re.compile(
     r"Complete_LinkedIn[^/]*|LinkedinComplete|LinkedInComplete"
     r")(?:/|$)|"
     r"(^|/)Basic_LinkedInDataExport_[^/]+\.zip(?:/|$)|"
+    r"(^|/)Basic_LinkInDataExport_[^/]+\.zip(?:/|$)|"
     r"(^|/)\.env(?:\.|$)|"
     r"(^|/)li2resume\.local\.[^/]+$|"
     r"(^|/)scripts/li2resume\.config\.(?:json|ya?ml)$|"
@@ -44,6 +45,7 @@ SECRET_PATTERNS = [
 
 LOCAL_REFERENCE_PATTERNS = [
     re.compile(r"\bBasic_LinkedInDataExport_\d{2}-\d{2}-\d{4}\.zip/", re.I),
+    re.compile(r"\bBasic_LinkInDataExport_\d{2}-\d{2}-\d{4}\.zip/", re.I),
 ]
 
 TEXT_SUFFIXES = {

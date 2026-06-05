@@ -1,4 +1,5 @@
 ---
+
 title: POS Sales Not Reflected in SAP
 layout: default
 description: A support diagnostic guide for retail POS sales that do not appear correctly in SAP downstream processes.
@@ -12,6 +13,12 @@ business_process: Store operations
 status: needs_verification
 verified: false
 last_reviewed: 2026-05-06
+
+tags:
+  - retail
+  - diagnostics
+  - sap-sd
+  - integration
 related: 
   - "/atlas/concepts/store-receiving-sap-retail/"
   - "/atlas/data-quality/sap-master-data-quality/"

@@ -1,4 +1,5 @@
 ---
+
 title: SAP Partner Determination Failures
 layout: default
 description: A conservative diagnostic guide for partner determination issues in SAP sales documents.
@@ -12,6 +13,12 @@ business_process: Order to cash
 status: needs_verification
 verified: false
 last_reviewed: 2026-05-06
+
+tags:
+  - order-to-cash
+  - sap-sd
+  - master-data
+  - diagnostics
 related: 
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"

@@ -1,4 +1,5 @@
 ---
+
 title: Store Receiving in SAP Retail
 layout: default
 description: A practical explanation of store receiving as the point where retail logistics becomes sellable inventory.
@@ -12,6 +13,11 @@ business_process: Retail replenishment
 status: reviewed
 verified: true
 last_reviewed: 2026-05-06
+
+tags:
+  - retail
+  - sap-sd
+  - order-to-cash
 related: 
   - "/atlas/diagnostics/pos-sales-not-reflected-in-sap/"
   - "/atlas/concepts/sap-stock-exists-not-promisable/"

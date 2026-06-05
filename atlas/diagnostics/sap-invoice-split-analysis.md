@@ -1,4 +1,5 @@
 ---
+
 title: SAP Invoice Split Analysis
 layout: default
 description: A support diagnostic guide for understanding why SAP may create multiple billing documents.
@@ -12,6 +13,11 @@ business_process: Order to cash
 status: needs_verification
 verified: false
 last_reviewed: 2026-05-06
+
+tags:
+  - order-to-cash
+  - sap-sd
+  - diagnostics
 related: 
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"

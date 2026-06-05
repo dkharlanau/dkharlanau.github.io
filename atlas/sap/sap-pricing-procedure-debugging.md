@@ -1,4 +1,5 @@
 ---
+
 layout: default
 title: "SAP Pricing Procedure Debugging"
 description: "A conservative support frame for investigating pricing procedure issues in SAP sales documents."
@@ -13,6 +14,11 @@ status: needs_verification
 verified: false
 last_reviewed: 2026-05-06
 author: Dzmitryi Kharlanau
+
+tags:
+  - order-to-cash
+  - sap-sd
+  - diagnostics
 related:
   - /atlas/concepts/order-to-cash/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
