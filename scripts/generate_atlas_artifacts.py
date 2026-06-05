@@ -38,33 +38,58 @@ except ImportError:
 REPO_DIR = Path(__file__).resolve().parent.parent
 ATLAS_DIR = REPO_DIR / "atlas"
 
-# Ordered list of Atlas article files (not section index pages)
-ATLAS_FILES = sorted([
-    "atlas/ai-operations/ai-agent-for-sap-support.md",
-    "atlas/ai-operations/ai-ready-process-documentation.md",
-    "atlas/ai-operations/authorization-aware-ai-for-sap.md",
-    "atlas/automation/agent-assisted-development-workflows.md",
-    "atlas/automation/operational-memory-for-sap-ams.md",
-    "atlas/automation/rule-based-automation-vs-ai.md",
-    "atlas/concepts/order-to-cash.md",
-    "atlas/concepts/sap-atp-is-not-inventory.md",
-    "atlas/concepts/sap-stock-exists-not-promisable.md",
-    "atlas/concepts/store-receiving-sap-retail.md",
-    "atlas/data-quality/master-data-governance-failure-modes.md",
-    "atlas/data-quality/sap-master-data-quality.md",
-    "atlas/diagnostics/pos-sales-not-reflected-in-sap.md",
-    "atlas/diagnostics/sap-goods-receipt-diagnostics.md",
-    "atlas/diagnostics/sap-invoice-split-analysis.md",
-    "atlas/diagnostics/sap-sales-order-block-diagnosis.md",
-    "atlas/maps/order-to-cash-map.md",
-    "atlas/maps/procure-to-pay-map.md",
-    "atlas/sap/gr-ir-clearing-explained.md",
-    "atlas/sap/sap-item-category-determination.md",
-    "atlas/sap/sap-partner-determination-failures.md",
-    "atlas/sap/sap-pricing-procedure-debugging.md",
-])
-
 CHECK_MODE_TIMESTAMP = "CHECK_MODE"
+
+
+def discover_atlas_articles():
+    """Dynamically discover public Atlas article pages under atlas/.
+
+    Inclusion rules (all must be true):
+      - path matches atlas/**/*.md
+      - frontmatter has permalink starting with /atlas/
+      - frontmatter has atlas_section
+      - frontmatter has status
+      - frontmatter has verified
+      - not a section/index page (path does not end with /index.md)
+      - not marked sitemap: false unless atlas_include: true is present
+
+    Returns a sorted list of relative POSIX paths.
+    """
+    articles = []
+    for md_path in sorted(ATLAS_DIR.rglob("*.md")):
+        rel_path = md_path.relative_to(REPO_DIR).as_posix()
+
+        # Exclude section/index pages by path pattern
+        if rel_path.endswith("/index.md") or rel_path == "atlas/index.md":
+            continue
+
+        fm, _ = parse_frontmatter(md_path)
+        if not fm:
+            continue
+
+        # Required frontmatter signals
+        permalink = fm.get("permalink", "")
+        if not permalink or not permalink.startswith("/atlas/"):
+            continue
+        if "atlas_section" not in fm:
+            continue
+        if "status" not in fm:
+            continue
+        if "verified" not in fm:
+            continue
+
+        # Exclude noindex/sitemap:false pages unless explicitly included
+        # OR unless they have all required article frontmatter (article pages
+        # may set sitemap:false while still belonging to the Atlas manifest).
+        sitemap = fm.get("sitemap", True)
+        atlas_include = fm.get("atlas_include", False)
+        has_article_signals = all(k in fm for k in ("atlas_section", "status", "verified"))
+        if sitemap is False and not atlas_include and not has_article_signals:
+            continue
+
+        articles.append(rel_path)
+
+    return sorted(articles)
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -149,10 +174,10 @@ def _now(check_mode):
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def generate_manifest(all_pages, check_mode=False):
+def generate_manifest(all_pages, atlas_files, check_mode=False):
     """Generate atlas/manifest.json. Returns dict. Writes to disk unless check_mode."""
     entries = []
-    for rel_path in ATLAS_FILES:
+    for rel_path in atlas_files:
         abs_path = REPO_DIR / rel_path
         fm, _ = parse_frontmatter(abs_path)
 
@@ -198,7 +223,7 @@ def generate_manifest(all_pages, check_mode=False):
     return manifest
 
 
-def generate_llms_full(all_pages, check_mode=False):
+def generate_llms_full(all_pages, atlas_files, check_mode=False):
     """Generate llms-full.txt with verified pages only. Returns text. Writes to disk unless check_mode."""
     lines = []
     lines.append("Atlas Full-Text Manifest")
@@ -215,7 +240,7 @@ def generate_llms_full(all_pages, check_mode=False):
     lines.append("")
 
     verified_count = 0
-    for rel_path in ATLAS_FILES:
+    for rel_path in atlas_files:
         abs_path = REPO_DIR / rel_path
         fm, body = parse_frontmatter(abs_path)
 
@@ -258,12 +283,12 @@ def generate_llms_full(all_pages, check_mode=False):
     return text
 
 
-def generate_related(all_pages, check_mode=False):
+def generate_related(all_pages, atlas_files, check_mode=False):
     """Generate ai/rag/related.json from frontmatter related links. Returns (edges, broken_links, dict). Writes to disk unless check_mode."""
     edges = []
     broken_links = []
 
-    for rel_path in ATLAS_FILES:
+    for rel_path in atlas_files:
         abs_path = REPO_DIR / rel_path
         fm, _ = parse_frontmatter(abs_path)
         permalink = fm.get("permalink", "")
@@ -370,13 +395,13 @@ def _load_text_file(path):
         return f.read()
 
 
-def run_check(all_pages):
+def run_check(all_pages, atlas_files):
     """Validate existing artifacts against regenerated content. Returns list of issues."""
     issues = []
 
     # --- manifest.json ---
     print("\n[CHECK 1/5] manifest.json")
-    manifest_generated = generate_manifest(all_pages, check_mode=True)
+    manifest_generated = generate_manifest(all_pages, atlas_files, check_mode=True)
     manifest_path = REPO_DIR / "atlas" / "manifest.json"
     if not manifest_path.exists():
         issues.append("manifest.json: file missing")
@@ -407,7 +432,7 @@ def run_check(all_pages):
 
     # --- llms-full.txt ---
     print("\n[CHECK 2/5] llms-full.txt")
-    llms_generated = generate_llms_full(all_pages, check_mode=True)
+    llms_generated = generate_llms_full(all_pages, atlas_files, check_mode=True)
     llms_path = REPO_DIR / "llms-full.txt"
     if not llms_path.exists():
         issues.append("llms-full.txt: file missing")
@@ -423,7 +448,7 @@ def run_check(all_pages):
     # Semantic checks on committed file
     if llms_path.exists():
         # Verify only reviewed+verified pages included
-        for rel_path in ATLAS_FILES:
+        for rel_path in atlas_files:
             abs_path = REPO_DIR / rel_path
             fm, _ = parse_frontmatter(abs_path)
             title = fm.get("title", "")
@@ -446,7 +471,7 @@ def run_check(all_pages):
 
     # --- related.json ---
     print("\n[CHECK 3/5] related.json")
-    edges, broken_links, related_generated = generate_related(all_pages, check_mode=True)
+    edges, broken_links, related_generated = generate_related(all_pages, atlas_files, check_mode=True)
     related_path = REPO_DIR / "ai" / "rag" / "related.json"
     if not related_path.exists():
         issues.append("related.json: file missing")
@@ -495,7 +520,7 @@ def run_check(all_pages):
     # --- Frontmatter tag consistency ---
     print("\n[CHECK 5/5] Frontmatter tag consistency")
     tag_issues = []
-    for rel_path in ATLAS_FILES:
+    for rel_path in atlas_files:
         abs_path = REPO_DIR / rel_path
         fm, _ = parse_frontmatter(abs_path)
         tags = fm.get("tags", []) or []
@@ -530,9 +555,13 @@ def main():
     all_pages = build_permalink_map()
     print(f"Site pages indexed: {len(all_pages)}")
 
+    # Discover Atlas articles dynamically
+    atlas_files = discover_atlas_articles()
+    print(f"Atlas articles discovered: {len(atlas_files)}")
+
     if args.check:
         print("\n[CHECK MODE] Validating existing artifacts...")
-        issues = run_check(all_pages)
+        issues = run_check(all_pages, atlas_files)
         print("\n" + "=" * 40)
         if issues:
             print(f"CHECK FAILED — {len(issues)} issue(s):")
@@ -545,19 +574,19 @@ def main():
 
     # Generate manifest
     print("\n[1/3] Generating atlas/manifest.json ...")
-    manifest = generate_manifest(all_pages)
+    manifest = generate_manifest(all_pages, atlas_files)
     print(f"  Entries: {manifest['count']}")
     print(f"  Verified: {manifest['verified_count']}")
     print(f"  Unverified: {manifest['unverified_count']}")
 
     # Generate llms-full.txt
     print("\n[2/3] Generating llms-full.txt ...")
-    verified_count = generate_llms_full(all_pages)
+    verified_count = generate_llms_full(all_pages, atlas_files)
     print(f"  Verified pages included: {verified_count}")
 
     # Generate related.json
     print("\n[3/3] Generating ai/rag/related.json ...")
-    edges, broken, _ = generate_related(all_pages)
+    edges, broken, _ = generate_related(all_pages, atlas_files)
     print(f"  Edges: {len(edges)}")
     print(f"  Broken links: {len(broken)}")
     if broken:
