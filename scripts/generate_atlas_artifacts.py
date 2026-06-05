@@ -422,13 +422,16 @@ def run_check(all_pages, atlas_files):
             else:
                 print("  ✓ manifest.json is up to date")
 
-        # Semantic checks
-        if manifest_committed.get("count") != 22:
-            issues.append(f"manifest.json: expected 22 entries, found {manifest_committed.get('count')}")
-        if manifest_committed.get("verified_count") != 14:
-            issues.append(f"manifest.json: expected 14 verified, found {manifest_committed.get('verified_count')}")
-        if manifest_committed.get("unverified_count") != 8:
-            issues.append(f"manifest.json: expected 8 unverified, found {manifest_committed.get('unverified_count')}")
+        # Semantic checks — compare committed against generated expectations
+        expected_count = manifest_generated.get("count")
+        expected_verified = manifest_generated.get("verified_count")
+        expected_unverified = manifest_generated.get("unverified_count")
+        if manifest_committed.get("count") != expected_count:
+            issues.append(f"manifest.json: expected {expected_count} entries, found {manifest_committed.get('count')}")
+        if manifest_committed.get("verified_count") != expected_verified:
+            issues.append(f"manifest.json: expected {expected_verified} verified, found {manifest_committed.get('verified_count')}")
+        if manifest_committed.get("unverified_count") != expected_unverified:
+            issues.append(f"manifest.json: expected {expected_unverified} unverified, found {manifest_committed.get('unverified_count')}")
 
     # --- llms-full.txt ---
     print("\n[CHECK 2/5] llms-full.txt")
@@ -491,9 +494,10 @@ def run_check(all_pages, atlas_files):
             else:
                 print("  ✓ related.json is up to date")
 
-        # Semantic checks
-        if related_committed.get("count") != 50:
-            issues.append(f"related.json: expected 50 edges, found {related_committed.get('count')}")
+        # Semantic checks — compare committed against generated expectations
+        expected_edges = len(edges)
+        if related_committed.get("count") != expected_edges:
+            issues.append(f"related.json: expected {expected_edges} edges, found {related_committed.get('count')}")
         if related_committed.get("broken_link_count") != 0:
             issues.append(f"related.json: expected 0 broken links, found {related_committed.get('broken_link_count')}")
         if related_committed.get("warnings"):
@@ -532,7 +536,7 @@ def run_check(all_pages, atlas_files):
     if tag_issues:
         issues.extend(tag_issues)
     else:
-        print("  ✓ All 22 articles have valid tags")
+        print(f"  ✓ All {len(atlas_files)} articles have valid tags")
 
     return issues
 

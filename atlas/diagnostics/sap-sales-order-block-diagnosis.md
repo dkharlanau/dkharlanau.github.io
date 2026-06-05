@@ -23,6 +23,7 @@ related:
   - /atlas/concepts/order-to-cash/
   - /atlas/concepts/sap-atp-is-not-inventory/
   - /services/sap-ams-consulting/
+  - /atlas/diagnostics/sap-process-audit/
 source_files:
   - "private-source/kb-drafts/sap-domain-atlas/publishing/article-backlog.md"
   - "private-source/kb-drafts/sap-domain-atlas/domains/sales/concepts/delivery-block.md"
@@ -84,6 +85,7 @@ sitemap: false
       <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
       <li><a href="/atlas/concepts/sap-atp-is-not-inventory/">SAP ATP Is Not Inventory</a></li>
       <li><a href="/services/sap-ams-consulting/">SAP AMS consulting</a></li>
+      <li><a href="/atlas/diagnostics/sap-process-audit/">SAP Process Audit</a></li>
     </ul>
   </section>
 
