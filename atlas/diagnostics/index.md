@@ -48,6 +48,11 @@ verified: true
       <p>Trace missing retail sales from POS transmission to downstream posting.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
+    <a class="atlas-card" href="/atlas/diagnostics/idoc-aif-integration-diagnostics/">
+      <h2>IDoc and AIF Integration Diagnostics</h2>
+      <p>Trace interface failures to partner profiles, segments, master data, or timing issues.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
   </div>
 </section>
 

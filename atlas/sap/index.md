@@ -48,6 +48,11 @@ verified: true
       <p>The accounting bridge between received goods and supplier invoices.</p>
       <span class="link-arrow">Read SAP page</span>
     </a>
+    <a class="atlas-card" href="/atlas/sap/sap-mm-procurement-overview/">
+      <h2>SAP MM Procurement Overview</h2>
+      <p>The procure-to-pay chain in SAP MM, where it breaks, and what to check first.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
   </div>
 </section>
 

@@ -48,6 +48,16 @@ verified: true
       <p>The handoff from logistics delivery to sellable inventory and store operations.</p>
       <span class="link-arrow">Read concept</span>
     </a>
+    <a class="atlas-card" href="/atlas/concepts/sap-clean-core-strategy/">
+      <h2>SAP Clean Core Strategy</h2>
+      <p>Keep the core standard, extend at the edges, and know where the line is.</p>
+      <span class="link-arrow">Read concept</span>
+    </a>
+    <a class="atlas-card" href="/atlas/concepts/consulting-principles-for-sap/">
+      <h2>Consulting Principles for SAP Programmes</h2>
+      <p>Five principles for running SAP engagements with traceable decisions and observable outcomes.</p>
+      <span class="link-arrow">Read concept</span>
+    </a>
   </div>
 </section>
 
