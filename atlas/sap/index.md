@@ -53,6 +53,16 @@ verified: true
       <p>The procure-to-pay chain in SAP MM, where it breaks, and what to check first.</p>
       <span class="link-arrow">Read SAP page</span>
     </a>
+    <a class="atlas-card" href="/atlas/sap/sap-pricing-condition-technique/">
+      <h2>SAP Pricing Condition Technique</h2>
+      <p>How SAP assembles a sales price from conditions, and why the chain breaks more often than individual settings.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/sap/sap-account-determination-diagnostics/">
+      <h2>SAP Account Determination Diagnostics</h2>
+      <p>A first-pass structure for finding why a sales transaction posts to the wrong revenue or clearing account.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
   </div>
 </section>
 
