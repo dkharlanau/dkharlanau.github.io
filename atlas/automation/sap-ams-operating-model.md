@@ -67,24 +67,24 @@ sitemap: false
     <ul>
       <li>A patch factory that closes tickets while the same problem returns.</li>
       <li>Tribal knowledge trapped in mailboxes, chats, or one consultant’s memory.</li>
-      <li>Vendor lock-in where poor documentation and custom extensions make switching impossible.</li>
+      <li>Vendor lock-in where poor documentation and undocumented custom extensions make switching difficult.</li>
       <li>Green reports that hide red reality in operations and finance.</li>
     </ul>
 
     <h2>Common issues</h2>
     <ul>
       <li>First-line support lacks process or integration depth, so fixes are superficial and repeats are high.</li>
-      <li>Resolution text in tickets is minimal and not connected to symptoms, ownership, or review cadence.</li>
-      <li>Knowledge sits with the vendor; changing the partner means losing operational memory.</li>
+      <li>Ticket closure is measured without linking resolution quality to prevention, ownership, or downstream process improvement.</li>
+      <li>Operational knowledge and tooling are vendor-controlled, making transitions costly and risky.</li>
       <li>OPEX climbs while the same IDoc failures, order blocks, and billing splits keep returning.</li>
     </ul>
 
     <h2>Diagnostic questions</h2>
     <ul>
-      <li>Which incidents repeat, and what knowledge would prevent rediscovery?</li>
-      <li>Does the KEDB describe symptoms, evidence, cause, fix, owner, and prevention?</li>
-      <li>Can a new support person follow the runbook without hidden context?</li>
-      <li>Is operational memory owned by the organization, or by the current vendor?</li>
+      <li>Which incidents repeat, and what knowledge or design change would prevent rediscovery?</li>
+      <li>Does the support model measure prevention and repeat-incident rate, or only ticket closure?</li>
+      <li>Can a new support person resolve a known issue using documented runbooks without hidden context?</li>
+      <li>Is operational memory, tooling, and process knowledge owned by the organization, or by the current vendor?</li>
     </ul>
 
     <h2>Support takeaway</h2>

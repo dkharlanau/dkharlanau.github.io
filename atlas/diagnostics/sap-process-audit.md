@@ -62,7 +62,7 @@ sitemap: false
 
     <h3>Order-to-Cash</h3>
     <ul>
-      <li>Analyse fulfilment stages from intake to billing: ATP, pricing, delivery creation, goods issue, billing completion.</li>
+      <li>Analyze fulfilment stages from intake to billing: ATP, pricing, delivery creation, goods issue, billing completion.</li>
       <li>Inspect backlog drivers: blocked deliveries, incomplete billing documents, IDoc rejections, credit holds.</li>
       <li>Map incident history to specific process steps and quantify revenue impact.</li>
       <li>Evaluate extension footprint for clean-core alignment and documentation.</li>
