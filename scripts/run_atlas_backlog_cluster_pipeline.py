@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
 """
-Atlas Backlog Cluster Pipeline
+Atlas Backlog Cluster Pipeline (Idempotent)
 
-Processes 1,133 low_value_rejected candidates into stable clusters,
+Processes low_value_rejected candidates into stable clusters,
 creates a sanitized decision ledger, and produces a promotion report.
 
-Rules:
+Idempotency rules:
+- Loads existing ledger first
+- Skips already-processed candidate IDs
+- Skips known content_fingerprints
+- Only appends genuinely new candidates
+- Never overwrites previous final_state without --force-reclassify
+- --force-reclassify requires a reason
+
+Safety rules:
 - No private paths in any output
 - No draft references
 - No raw corpus text
@@ -145,9 +153,20 @@ def load_csv(path: Path) -> list[dict]:
         return list(csv.DictReader(f))
 
 
+def load_existing_ledger() -> tuple[dict[str, dict], set[str]]:
+    """Load existing ledger and return (candidate_by_id, known_fingerprints)."""
+    if not LEDGER_JSON_PATH.exists():
+        return {}, set()
+    with open(LEDGER_JSON_PATH, "r", encoding="utf-8") as f:
+        ledger = json.load(f)
+    candidates = ledger.get("candidates", [])
+    by_id = {c["candidate_id"]: c for c in candidates}
+    fingerprints = {c["content_fingerprint"] for c in candidates}
+    return by_id, fingerprints
+
+
 def sanitize_topic(topic: str) -> str:
     """Remove any potentially private or sensitive text."""
-    # Strip paths, emails, etc.
     topic = re.sub(r"/Users/[^\s]+", "", topic)
     topic = re.sub(r"[\w.-]+@[\w.-]+\.\w+", "", topic)
     topic = topic.strip()
@@ -158,7 +177,6 @@ def sanitize_source_bucket(sap_area: str) -> str:
     """Normalize source bucket names; strip file extensions."""
     sap_area = sap_area.strip().lower()
     sap_area = re.sub(r"\.md$", "", sap_area)
-    # Normalize article backlog names
     if sap_area in ("article-backlog", "mm-procurement-article-backlog", "retail-article-backlog"):
         return "article-backlog"
     return sap_area
@@ -167,7 +185,6 @@ def sanitize_source_bucket(sap_area: str) -> str:
 def assign_cluster_id(sap_area: str, category: str) -> str:
     """Create a stable cluster ID from domain + category."""
     bucket = sanitize_source_bucket(sap_area)
-    # Normalize category to a slug
     cat_slug = re.sub(r"[^a-z0-9]+", "-", category.lower()).strip("-")
     if not cat_slug:
         cat_slug = "general"
@@ -185,42 +202,32 @@ def determine_final_state(row: dict, cluster_size: int) -> tuple[str, str | None
     reason = row.get("reason", "").strip()
     candidate_id = row.get("id", "").strip()
 
-    # Article backlog items that overlap with existing coverage
     if sap_area == "article-backlog" or candidate_id.startswith("ARTICLE-"):
-        # Map to the most relevant existing page
         target = _map_article_to_existing_page(topic, sap_area)
         if target:
             return "duplicate_existing", target, f"Article overlaps with existing Atlas page: {target}"
         return "ignored_low_value", None, "Article idea is generic and overlaps with existing coverage"
 
-    # Generic AI concepts
     if sap_area == "ai-enterprise-operations":
         return "ignored_low_value", None, "Generic AI/ML concept without SAP operational diagnostic value"
 
-    # Generic MDG concepts
     if sap_area == "master-data-governance":
         return "ignored_low_value", None, "Generic MDG concept without new operational diagnostic value"
 
-    # Generic planning concepts
     if sap_area == "planning":
         return "ignored_low_value", None, "Generic planning concept without SAP operational diagnostic value"
 
-    # Generic KPIs
     if sap_area == "analytics-kpis":
         return "ignored_low_value", None, "Generic KPI/formula without SAP-specific operational diagnostic value"
 
-    # Generic logistics concepts
     if sap_area == "logistics":
         return "ignored_low_value", None, "Generic logistics concept without SAP diagnostic value"
 
-    # Generic sales concepts
     if sap_area == "sales":
-        # The 15 non-generic ones are technical enablement
         if "technical enablement" in reason.lower():
             return "ignored_low_value", None, "Technical enablement topic; not operational diagnostic"
         return "ignored_low_value", None, "Generic sales concept without operational diagnostic value"
 
-    # Generic procurement concepts
     if sap_area == "mm-procurement":
         if "too specialized" in reason.lower():
             return "ignored_low_value", None, "Too specialized for general Atlas scope"
@@ -228,20 +235,17 @@ def determine_final_state(row: dict, cluster_size: int) -> tuple[str, str | None
             return "ignored_low_value", None, "E-procurement/Ariba-specific; not core SAP support diagnostic"
         return "ignored_low_value", None, "Generic procurement concept without operational diagnostic value"
 
-    # Generic retail concepts
     if sap_area == "retail":
         if "retail pricing" in reason.lower():
             return "ignored_low_value", None, "Retail pricing concept; not core SAP support diagnostic"
         return "ignored_low_value", None, "Generic retail concept without core SAP operational diagnostic value"
 
-    # Fallback
     return "ignored_low_value", None, "Generic concept without SAP operational diagnostic value"
 
 
 def _map_article_to_existing_page(topic: str, sap_area: str) -> str | None:
     """Map article backlog topic to an existing Atlas page."""
     t = topic.lower()
-    # Sales articles
     if any(k in t for k in ("sales document", "copy control", "sales area", "output determination")):
         return "/atlas/diagnostics/sap-sales-order-block-diagnosis.md"
     if any(k in t for k in ("pricing", "surcharge", "discount", "rebate", "condition type")):
@@ -252,7 +256,6 @@ def _map_article_to_existing_page(topic: str, sap_area: str) -> str | None:
         return "/atlas/diagnostics/sap-credit-management-diagnostics.md"
     if any(k in t for k in ("customer master", "business partner")):
         return "/atlas/diagnostics/sap-customer-vendor-master-diagnostics.md"
-    # Procurement articles
     if any(k in t for k in ("purchasing group", "purchasing organization", "plant")):
         return "/atlas/diagnostics/sap-purchase-order-diagnostics.md"
     if any(k in t for k in ("source-to-pay", "procure-to-pay", "sourcing")):
@@ -269,7 +272,6 @@ def _map_article_to_existing_page(topic: str, sap_area: str) -> str | None:
         return "/atlas/diagnostics/sap-invoice-verification-diagnostics.md"
     if any(k in t for k in ("release strategy", "approval")):
         return "/atlas/diagnostics/sap-release-strategy-diagnostics.md"
-    # Retail articles
     if any(k in t for k in ("store cannot sell", "phantom stock", "store stock")):
         return "/atlas/diagnostics/sap-retail-replenishment-diagnostics.md"
     if any(k in t for k in ("store-as-plant", "store-as-customer", "site master")):
@@ -280,20 +282,16 @@ def _map_article_to_existing_page(topic: str, sap_area: str) -> str | None:
         return "/atlas/diagnostics/sap-retail-replenishment-diagnostics.md"
     if any(k in t for k in ("pos", "sales feedback", "tender")):
         return "/atlas/diagnostics/pos-sales-not-reflected-in-sap.md"
-    # Planning articles
     if any(k in t for k in ("forecast", "demand planning", "s&op", "ibp")):
         return "/atlas/sap/sap-ibp-integration-overview.md"
-    # Logistics articles
     if any(k in t for k in ("goods receipt", "gr", "inbound")):
         return "/atlas/diagnostics/sap-goods-receipt-diagnostics.md"
     if any(k in t for k in ("movement type", "inventory")):
         return "/atlas/diagnostics/sap-movement-types-diagnostics.md"
     if any(k in t for k in ("stock transfer", "in transit")):
         return "/atlas/diagnostics/sap-stock-transfer-diagnostics.md"
-    # Master data articles
     if any(k in t for k in ("master data", "data quality", "duplicate")):
         return "/atlas/data-quality/sap-master-data-quality.md"
-    # AI articles
     if any(k in t for k in ("ai", "ml", "agent", "llm", "automation")):
         return "/atlas/ai-operations/ai-agent-for-sap-support.md"
     return None
@@ -307,47 +305,83 @@ def build_clusters(rows: list[dict]) -> dict[str, list[dict]]:
     return dict(clusters)
 
 
-def process_candidates(rows: list[dict]) -> list[dict]:
+def process_candidates(
+    rows: list[dict],
+    existing_by_id: dict[str, dict],
+    existing_fps: set[str],
+    force_reclassify: str | None,
+) -> tuple[list[dict], dict[str, int]]:
+    """
+    Process candidates with idempotency.
+    Returns: (results, skip_counts)
+    """
     clusters = build_clusters(rows)
-    results = []
+    results: list[dict] = []
+    skip_counts: dict[str, int] = {
+        "already_processed_id": 0,
+        "already_processed_fingerprint": 0,
+        "force_reclassify": 0,
+        "new": 0,
+    }
+
     for row in rows:
-        cid = assign_cluster_id(row["sap_area"], row.get("category", ""))
-        cluster_size = len(clusters[cid])
-        final_state, target_page, reason = determine_final_state(row, cluster_size)
+        cid = row.get("id", "").strip()
+        topic = row.get("topic", "").strip()
+        category = row.get("category", "").strip()
         fingerprint = content_fingerprint(
             f"{row.get('id','')}:{row.get('topic','')}:{row.get('category','')}:{row.get('reason','')}"
         )
+
+        # Skip by existing ID
+        if cid in existing_by_id and not force_reclassify:
+            skip_counts["already_processed_id"] += 1
+            continue
+
+        # Skip by fingerprint (unless force reclassify)
+        if fingerprint in existing_fps and not force_reclassify:
+            skip_counts["already_processed_fingerprint"] += 1
+            continue
+
+        # If force reclassify, keep the old entry and add a new one with updated state
+        if cid in existing_by_id and force_reclassify:
+            skip_counts["force_reclassify"] += 1
+
+        cluster_size = len(clusters.get(assign_cluster_id(row["sap_area"], row.get("category", "")), [row]))
+        final_state, target_page, reason = determine_final_state(row, cluster_size)
+
         results.append({
-            "candidate_id": row.get("id", "").strip(),
-            "sanitized_topic": sanitize_topic(row.get("topic", "")),
+            "candidate_id": cid,
+            "sanitized_topic": sanitize_topic(topic),
             "sanitized_source_bucket": sanitize_source_bucket(row["sap_area"]),
             "domain": sanitize_source_bucket(row["sap_area"]),
-            "category": row.get("category", "").strip(),
+            "category": category,
             "original_priority": row.get("priority", "").strip() or "P2",
-            "cluster_id": cid,
+            "cluster_id": assign_cluster_id(row["sap_area"], row.get("category", "")),
             "final_state": final_state,
             "target_page": target_page,
             "reason": reason,
             "processed_run_id": RUN_ID,
             "processed_date": PROCESSED_DATE,
             "content_fingerprint": fingerprint,
+            "force_reclassify_reason": force_reclassify if (cid in existing_by_id and force_reclassify) else None,
         })
-    return results
+        skip_counts["new"] += 1
+
+    return results, skip_counts
 
 
-def generate_ledger_json(results: list[dict]) -> None:
+def generate_ledger_json(all_results: list[dict]) -> None:
     LEDGER_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
     ledger = {
         "schema": "dkharlanau.atlas.backlog_decision_ledger",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "run_id": RUN_ID,
         "processed_date": PROCESSED_DATE,
-        "total_candidates": len(results),
+        "total_candidates": len(all_results),
         "clusters": {},
-        "candidates": results,
+        "candidates": all_results,
     }
-    # Build cluster summary
-    for r in results:
+    for r in all_results:
         cid = r["cluster_id"]
         if cid not in ledger["clusters"]:
             ledger["clusters"][cid] = {
@@ -360,7 +394,6 @@ def generate_ledger_json(results: list[dict]) -> None:
         ledger["clusters"][cid]["candidate_count"] += 1
         ledger["clusters"][cid]["final_states"][r["final_state"]] += 1
 
-    # Convert Counter to dict for JSON serialization
     for cid in ledger["clusters"]:
         ledger["clusters"][cid]["final_states"] = dict(ledger["clusters"][cid]["final_states"])
 
@@ -368,19 +401,19 @@ def generate_ledger_json(results: list[dict]) -> None:
         json.dump(ledger, f, indent=2, ensure_ascii=False)
 
 
-def generate_ledger_md(results: list[dict]) -> None:
+def generate_ledger_md(all_results: list[dict]) -> None:
     LEDGER_MD_PATH.parent.mkdir(parents=True, exist_ok=True)
     lines = [
         "# Atlas Backlog Decision Ledger",
         "",
         f"**Run ID:** `{RUN_ID}`  ",
         f"**Processed:** {PROCESSED_DATE}  ",
-        f"**Total Candidates:** {len(results)}",
+        f"**Total Candidates:** {len(all_results)}",
         "",
         "## Summary by Final State",
         "",
     ]
-    state_counts = Counter(r["final_state"] for r in results)
+    state_counts = Counter(r["final_state"] for r in all_results)
     for state, count in state_counts.most_common():
         lines.append(f"- **{state}:** {count}")
     lines.append("")
@@ -391,7 +424,7 @@ def generate_ledger_md(results: list[dict]) -> None:
         "| Cluster ID | Domain | Category | Count | States |",
         "|---|---|---|---|---|",
     ])
-    clusters = build_clusters_from_results(results)
+    clusters = build_clusters_from_results(all_results)
     for cid in sorted(clusters.keys()):
         c = clusters[cid]
         states_str = ", ".join(f"{k}={v}" for k, v in sorted(c["final_states"].items()))
@@ -401,12 +434,12 @@ def generate_ledger_md(results: list[dict]) -> None:
     lines.extend([
         "## Candidates (first 50)",
         "",
-        "Full 1,133-row detail is in `atlas_backlog_decision_ledger.json`.",
+        "Full detail is in `atlas_backlog_decision_ledger.json`.",
         "",
         "| # | Candidate ID | Topic | Domain | Cluster | State | Target | Reason |",
         "|---|---|---|---|---|---|---|---|",
     ])
-    for i, r in enumerate(results[:50], start=1):
+    for i, r in enumerate(all_results[:50], start=1):
         topic = r['sanitized_topic'].replace('|', '\\|')
         reason = r['reason'].replace('|', '\\|')
         target = r['target_page'] or "—"
@@ -434,10 +467,10 @@ def build_clusters_from_results(results: list[dict]) -> dict:
     return dict(clusters)
 
 
-def generate_report(results: list[dict]) -> None:
+def generate_report(all_results: list[dict], skip_counts: dict[str, int]) -> None:
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    state_counts = Counter(r["final_state"] for r in results)
-    clusters = build_clusters_from_results(results)
+    state_counts = Counter(r["final_state"] for r in all_results)
+    clusters = build_clusters_from_results(all_results)
     total_clusters = len(clusters)
     pages_created = state_counts.get("promoted_page", 0)
     pages_extended = state_counts.get("merged_existing", 0)
@@ -453,7 +486,7 @@ def generate_report(results: list[dict]) -> None:
         "",
         "## Executive Summary",
         "",
-        f"- **Total rows processed:** {len(results)}",
+        f"- **Total rows processed:** {len(all_results)}",
         f"- **Total clusters:** {total_clusters}",
         f"- **Pages created:** {pages_created}",
         f"- **Pages extended:** {pages_extended}",
@@ -461,9 +494,17 @@ def generate_report(results: list[dict]) -> None:
         f"- **Glossary-only clusters:** {glossary_only}",
         f"- **Ignored clusters:** {ignored}",
         "",
-        "## State Breakdown",
+        "## Skip Counts (Idempotency)",
         "",
     ]
+    for key, count in skip_counts.items():
+        lines.append(f"- **{key}:** {count}")
+    lines.append("")
+
+    lines.extend([
+        "## State Breakdown",
+        "",
+    ])
     for state, count in state_counts.most_common():
         lines.append(f"- **{state}:** {count}")
     lines.append("")
@@ -487,13 +528,13 @@ def generate_report(results: list[dict]) -> None:
         "- No draft references are present.",
         "- No file source lists are included.",
         "- No raw corpus text or private snippets are included.",
-        "- Raw export files (`RECOVERY_LOW_VALUE_REJECTED_1133.csv`, `.md`) are **not committed**.",
+        "- Raw export files are **not committed**.",
         "- All new or extended pages (if any) are marked `needs_verification`, `noindex,follow`, and excluded from sitemap.",
         "",
         "## Validation Results",
         "",
-        f"- Input rows: {len(results)}",
-        f"- Assigned rows: {len(results)}",
+        f"- Input rows: {len(all_results)}",
+        f"- Assigned rows: {len(all_results)}",
         f"- Unassigned rows: 0",
         f"- Duplicate candidate IDs: 0",
         f"- Empty clusters: 0",
@@ -537,7 +578,6 @@ def validate(results: list[dict]) -> list[str]:
     if missing_target:
         errors.append(f"Create/merge candidates missing target_page: {missing_target[:10]}")
 
-    # Check for private paths in ledger outputs
     for path in (LEDGER_JSON_PATH, LEDGER_MD_PATH, REPORT_PATH):
         if not path.exists():
             continue
@@ -553,6 +593,8 @@ def validate(results: list[dict]) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Atlas Backlog Cluster Pipeline")
     parser.add_argument("--validate-only", action="store_true", help="Only run validation on existing ledger")
+    parser.add_argument("--force-reclassify", metavar="REASON", help="Force reclassify already-processed candidates (requires a reason)")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would be processed without writing files")
     args = parser.parse_args()
 
     if args.validate_only:
@@ -575,25 +617,47 @@ def main() -> int:
         print(f"CSV not found: {CSV_PATH}")
         return 1
 
+    # Load existing ledger for idempotency
+    existing_by_id, existing_fps = load_existing_ledger()
+    print(f"Existing ledger: {len(existing_by_id)} candidates, {len(existing_fps)} fingerprints")
+
     rows = load_csv(CSV_PATH)
-    results = process_candidates(rows)
+    new_results, skip_counts = process_candidates(rows, existing_by_id, existing_fps, args.force_reclassify)
 
-    generate_ledger_json(results)
-    generate_ledger_md(results)
-    generate_report(results)
+    # Merge: keep existing + add new (or force-reclassified)
+    if args.force_reclassify:
+        # When force reclassifying, we keep old entries AND add new ones with updated state
+        all_results = list(existing_by_id.values()) + new_results
+    else:
+        all_results = list(existing_by_id.values()) + new_results
 
-    errors = validate(results)
+    if args.dry_run:
+        print("DRY RUN — no files written.")
+        print(f"  Existing candidates: {len(existing_by_id)}")
+        print(f"  New candidates to process: {len(new_results)}")
+        print(f"  Skip counts: {skip_counts}")
+        print(f"  Total after merge: {len(all_results)}")
+        return 0
+
+    generate_ledger_json(all_results)
+    generate_ledger_md(all_results)
+    generate_report(all_results, skip_counts)
+
+    errors = validate(all_results)
     if errors:
         print("Validation FAILED:")
         for e in errors:
             print(f"  - {e}")
         return 1
 
-    print(f"Pipeline complete. {len(results)} candidates processed.")
+    print(f"Pipeline complete. {len(all_results)} total candidates in ledger.")
+    print(f"  Newly processed this run: {len(new_results)}")
+    print(f"  Skipped (already known):  {skip_counts['already_processed_id'] + skip_counts['already_processed_fingerprint']}")
+    print(f"  Force reclassified:       {skip_counts['force_reclassify']}")
     print(f"  Ledger JSON: {LEDGER_JSON_PATH}")
     print(f"  Ledger MD:   {LEDGER_MD_PATH}")
     print(f"  Report:      {REPORT_PATH}")
-    state_counts = Counter(r["final_state"] for r in results)
+    state_counts = Counter(r["final_state"] for r in all_results)
     for state, count in state_counts.most_common():
         print(f"    {state}: {count}")
     return 0
