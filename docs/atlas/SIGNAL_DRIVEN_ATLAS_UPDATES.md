@@ -188,6 +188,15 @@ Use when:
 
 ## Quality Gates
 
+Quality gates are documented in
+`docs/atlas/ATLAS_SIGNAL_QUALITY_GATES.md`.
+
+Dry-run quality command:
+
+```sh
+python3 scripts/validate_atlas_proposal.py --proposal path/to/atlas-proposal.json
+```
+
 Before a PR, a proposal must pass these gates:
 
 - source URL and date are present
