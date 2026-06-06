@@ -212,6 +212,9 @@ Before a PR, a proposal must pass these gates:
 
 ## Review And PR Boundary
 
+PR review workflow is documented in
+`docs/atlas/ATLAS_SIGNAL_PR_WORKFLOW.md`.
+
 Signal-driven updates are proposal-first. An agent may open a PR, but must not
 push directly to `main` and must not rely on GitHub Pages publishing until a
 human review/merge happens.
