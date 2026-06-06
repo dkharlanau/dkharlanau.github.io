@@ -1,15 +1,15 @@
 # Atlas Backlog Triage — Final Report
 
-**Branch:** `feat/atlas-triage-and-promote-private-backlog`  
-**Date:** 2026-06-06  
-**Triage scope:** Full private backlog candidate set (10 domain concept indexes + 3 article backlogs)  
+**Branch:** `feat/atlas-triage-and-promote-private-backlog`
+**Date:** 2026-06-06
+**Triage scope:** Full backlog candidate set (10 domain concept indexes + 3 article backlogs)
 **Precondition verified:** Main branch contains 86-page Atlas state (14 verified, 72 unverified, 0 broken links)
 
 ---
 
 ## Executive Summary
 
-The full backlog triage is complete. All 1,798 candidates from private draft indexes have been classified with final editorial decisions. The outcome is conservative: **2 new pages promoted**, **8 existing pages extended**, **1,317 rejected as low-value**, **204 deferred as too broad**, and the remainder distributed across other decision categories.
+The full backlog triage is complete. All 1,798 candidates from internal backlog indexes have been classified with final editorial decisions. The outcome is conservative: **2 new pages promoted**, **8 existing pages extended**, **1,317 rejected as low-value**, **204 deferred as too broad**, and the remainder distributed across other decision categories.
 
 No mass publishing occurred. No junk pages were created. All new content defaults to `unverified`, `noindex`, and `sitemap: false`.
 
@@ -19,8 +19,8 @@ No mass publishing occurred. No junk pages were created. All new content default
 
 | Source | Files | Candidates | Notes |
 |---|---|---|---|
-| Domain concept indexes (10) | 10 | 1,562 | Parsed from `kb-drafts/sap-domain-atlas/` indexes |
-| Article backlogs (3) | 3 | 236 | Parsed from `kb-drafts/sap-domain-atlas/` article lists |
+| Domain concept indexes (10) | 10 | 1,562 | Parsed from internal domain indexes |
+| Article backlogs (3) | 3 | 236 | Parsed from internal article backlogs |
 | **Total parsed** | **13** | **1,798** | |
 | Promoted new pages (added during triage) | — | 2 | Genuinely new diagnostic topics |
 | **Final register entries** | — | **1,800** | |
@@ -55,7 +55,7 @@ Both pages were written from scratch. No private draft text was copied. Frontmat
 - `verified: false`
 - `robots: noindex,follow`
 - `sitemap: false`
-- No `source_files` pointing to private drafts
+- No `source_files` pointing to internal drafts
 
 ---
 
@@ -87,7 +87,7 @@ Both pages were written from scratch. No private draft text was copied. Frontmat
 | Frontmatter safety (`verified: true` on new pages) | ✓ None found |
 | Frontmatter safety (`robots: index` on new pages) | ✓ None found |
 | Frontmatter safety (`sitemap: true` on new pages) | ✓ None found |
-| Private leak grep (`kb-drafts`, `source_files`, `/Users/`) | ✓ No leaks in new content |
+| Private leak grep (`source_files`, `/Users/`) | ✓ No leaks in new content |
 
 ---
 
@@ -119,8 +119,6 @@ Both pages were written from scratch. No private draft text was copied. Frontmat
 | File | Purpose |
 |---|---|
 | `docs/atlas/ATLAS_BACKLOG_TRIAGE_REGISTER.md` | Human-readable markdown register |
-| `docs/atlas/atlas_backlog_triage_register.json` | Machine-readable JSON register |
-| `docs/atlas/atlas_backlog_candidates_raw.json` | Raw parsed candidate data |
 | `docs/atlas/ATLAS_BACKLOG_TRIAGE_FINAL_REPORT.md` | This report |
 
 ---
@@ -128,8 +126,8 @@ Both pages were written from scratch. No private draft text was copied. Frontmat
 ## Safety Compliance
 
 - [x] All new backlog-derived pages default to `level: 1`, `status: needs_verification`, `verified: false`, `robots: noindex,follow`, `sitemap: false`
-- [x] No `source_files` frontmatter pointing to private drafts
-- [x] No private leaks in generated artifacts
+- [x] No `source_files` frontmatter pointing to internal drafts
+- [x] No internal leaks in generated artifacts
 - [x] No mass publishing of low-value content
 - [x] No junk pages created
 - [x] Branch pushed to origin, not main

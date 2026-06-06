@@ -7,7 +7,7 @@ Generated: 2026-06-06
 - Total candidates scanned: 1800
 - Promoted as new pages: 2
 - Extended into existing pages: 8
-- Source: Private draft indexes under `kb-drafts/sap-domain-atlas/`
+- Source: Internal backlog triage (domain concept indexes + article backlogs)
 - Triage date: 2026-06-06
 
 ## Decisions by Category
