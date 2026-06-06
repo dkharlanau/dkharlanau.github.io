@@ -31,6 +31,17 @@ def test_related_json_is_valid():
     assert len(data["edges"]) == 278
 
 
+def test_compact_signal_index_is_valid():
+    path = REPO_ROOT / "ai" / "atlas-compact-index.json"
+    assert path.exists(), "atlas-compact-index.json missing"
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    assert data["schema"] == "dkharlanau.atlas.compact_signal_index"
+    assert data["count"] == 88
+    assert len(data["entries"]) == 88
+    assert data["fallback"]["decision"] == "needs_research"
+
+
 def test_manifest_no_private_paths():
     path = REPO_ROOT / "atlas" / "manifest.json"
     with open(path, "r", encoding="utf-8") as f:
@@ -38,6 +49,15 @@ def test_manifest_no_private_paths():
     forbidden = ["source_files", "private-source", "kb-drafts", "/Users/", ".env"]
     for pattern in forbidden:
         assert pattern not in text, f"manifest.json contains forbidden pattern: {pattern}"
+
+
+def test_compact_signal_index_no_private_paths():
+    path = REPO_ROOT / "ai" / "atlas-compact-index.json"
+    with open(path, "r", encoding="utf-8") as f:
+        text = f.read()
+    forbidden = ["source_files", "private-source", "kb-drafts", "/Users/", ".env"]
+    for pattern in forbidden:
+        assert pattern not in text, f"atlas-compact-index.json contains forbidden pattern: {pattern}"
 
 
 def test_llms_full_no_private_paths():
@@ -59,11 +79,13 @@ def test_related_json_no_private_paths():
 
 
 def test_no_linkedin_export_names_in_artifacts():
-    for name in ["manifest.json", "llms-full.txt", "related.json"]:
+    for name in ["manifest.json", "llms-full.txt", "related.json", "atlas-compact-index.json"]:
         if name == "manifest.json":
             path = REPO_ROOT / "atlas" / name
         elif name == "related.json":
             path = REPO_ROOT / "ai" / "rag" / name
+        elif name == "atlas-compact-index.json":
+            path = REPO_ROOT / "ai" / name
         else:
             path = REPO_ROOT / name
         with open(path, "r", encoding="utf-8") as f:
@@ -192,3 +214,29 @@ def test_manifest_entries_have_required_fields():
         assert entry.get("atlas_section"), f"Missing atlas_section: {entry.get('title')}"
         assert "status" in entry, f"Missing status: {entry.get('title')}"
         assert "verified" in entry, f"Missing verified: {entry.get('title')}"
+
+
+def test_compact_signal_index_entries_have_required_fields():
+    path = REPO_ROOT / "ai" / "atlas-compact-index.json"
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    required = {
+        "path",
+        "url",
+        "title",
+        "description",
+        "atlas_section",
+        "sap_area",
+        "business_process",
+        "last_reviewed",
+        "tags",
+        "headings",
+        "sap_domain_keywords",
+        "matching_terms",
+    }
+    for entry in data["entries"]:
+        missing = required - set(entry)
+        assert not missing, f"Compact index entry missing {missing}: {entry.get('title')}"
+        assert entry["url"].startswith("/atlas/"), f"Invalid Atlas URL: {entry.get('url')}"
+        assert (REPO_ROOT / entry["path"]).exists(), f"Missing source page: {entry['path']}"
+        assert entry["matching_terms"], f"Missing matching terms: {entry['path']}"
