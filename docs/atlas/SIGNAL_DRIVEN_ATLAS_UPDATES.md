@@ -132,6 +132,18 @@ does not load full page bodies and does not edit public pages.
 
 ## Proposal Types
 
+Proposal output is documented in
+`docs/atlas/ATLAS_SIGNAL_PROPOSAL_FORMAT.md`.
+
+Dry-run proposal command:
+
+```sh
+python3 scripts/propose_atlas_update.py \
+  --signal path/to/enriched-signal.json \
+  --match path/to/matcher-result.json \
+  --output path/to/atlas-proposal.json
+```
+
 ### Existing Page Update
 
 Use when a signal adds a source-backed fact, example, risk, checklist item, or
