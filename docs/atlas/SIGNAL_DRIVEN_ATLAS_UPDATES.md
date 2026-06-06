@@ -117,6 +117,8 @@ Use simple index matching for v1:
 
 RAG/vector search is not part of v1. It should be reconsidered only after
 matcher failures show that better frontmatter/tags are insufficient.
+The v1/v2 decision is documented in
+`docs/atlas/ATLAS_SIGNAL_RAG_EVALUATION.md`.
 
 Dry-run matcher command:
 
