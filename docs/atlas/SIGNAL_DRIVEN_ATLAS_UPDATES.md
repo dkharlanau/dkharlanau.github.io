@@ -88,6 +88,10 @@ python3 scripts/generate_atlas_artifacts.py --check
 
 ## Signal Classification
 
+Structured signal decision records use `ai/signal-to-atlas.schema.json`.
+The state and field policy is documented in
+`docs/atlas/SIGNAL_TO_ATLAS_SCHEMA.md`.
+
 For v1, classify each enriched signal with simple public metadata:
 
 - source name, URL, publication date, author or organization when available
