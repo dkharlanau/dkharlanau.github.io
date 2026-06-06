@@ -109,6 +109,17 @@ sitemap: false
       <li>Escalate to logistics if the physical shipment never arrived or was damaged.</li>
     </ul>
 
+    <h2>Retail-specific: DC-to-store delivery failures</h2>
+    <p>In retail, stock transfers from a DC to a store often use stock transport orders (STOs) with SD deliveries. When a store does not receive expected stock, the issue may be in the STO, the delivery, the shipment, or the carrier.</p>
+    <ul>
+      <li><strong>Check STO status:</strong> ME23N shows whether the STO is released, partially delivered, or fully delivered.</li>
+      <li><strong>Check delivery block:</strong> VL03N or VL06O shows if the outbound delivery is blocked for picking, packing, or goods issue.</li>
+      <li><strong>Check picking status:</strong> the delivery may be created but not yet picked due to DC capacity or wave scheduling.</li>
+      <li><strong>Check shipment status:</strong> VT03N or carrier tracking shows if the shipment is in transit, delayed, or delivered.</li>
+      <li><strong>Check store receiving:</strong> the delivery may have arrived physically but the store has not posted the goods receipt.</li>
+    </ul>
+    <p>A useful DC-to-store delivery ticket should include: STO number, delivery number, shipment number, expected delivery date, current status, and whether the issue is isolated to one store or affects multiple stores on the same route.</p>
+
     <h2>Support takeaway</h2>
     <p>Stock transfer issues are usually process gaps between shipping and receiving, not system errors. A useful stock transfer ticket should include: source plant, destination plant, material, transfer document or PO number, goods issue document, expected receipt date, and current in-transit quantity.</p>
 

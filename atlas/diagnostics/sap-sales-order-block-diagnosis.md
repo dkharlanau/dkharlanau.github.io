@@ -71,6 +71,16 @@ sitemap: false
     <h2>Evidence to collect</h2>
     <p>A good diagnostic note should capture order number, item, block type, user-visible message, customer, material, sales area, requested delivery date, credit status if relevant, and the business reason the user expected the order to continue.</p>
 
+    <h2>Retail-specific: ATP mismatch</h2>
+    <p>In retail and omnichannel environments, ATP checks often aggregate inventory across DCs and eligible stores. A mismatch occurs when the system shows stock as available but the assigned fulfillment location cannot actually deliver.</p>
+    <ul>
+      <li><strong>Check ATP scope of check:</strong> confirm whether the ATP configuration includes the store or DC that is being used for fulfillment. A store may be excluded from the scope.</li>
+      <li><strong>Check inventory accuracy:</strong> the location may show system stock that does not match physical stock due to shrinkage, unrecorded damage, or cycle count delays.</li>
+      <li><strong>Check reservation timeout:</strong> online orders often create a temporary reservation at the fulfillment location. If the reservation expires before picking is complete, the stock may be sold to another channel.</li>
+      <li><strong>Check store receiving backlog:</strong> goods may have arrived at the store but not yet been posted as goods receipt, so ATP does not see them.</li>
+    </ul>
+    <p>A useful ATP mismatch ticket should include: order number, material, the location that was checked, the location assigned for fulfillment, current system stock at that location, and whether the issue is recurring for this product or location.</p>
+
     <h2>Support takeaway</h2>
     <p>Do not release blocks blindly. A block is often the only visible control protecting delivery, finance, compliance, or customer communication. Diagnose the control first, then decide whether to correct master data, change configuration, release the order, or escalate the business rule.</p>
   </div>

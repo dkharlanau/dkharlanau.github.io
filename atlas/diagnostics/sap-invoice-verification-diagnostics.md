@@ -116,6 +116,17 @@ sitemap: false
     <h2>Support takeaway</h2>
     <p>Do not release blocked invoices without documenting the variance reason and the business approval. A useful invoice verification ticket should include: PO number, invoice number, supplier, variance type (price/quantity/tax/reference), expected versus actual values, and whether the issue is recurring.</p>
 
+    <h2>Invoice blocking and release workflow</h2>
+    <p>Blocked invoices are a standard control in invoice verification. The support goal is to identify the block reason, verify the business justification for release, and ensure that releasing the invoice does not create duplicate payment or bypass procurement controls.</p>
+    <ul>
+      <li><strong>Check MRBR:</strong> the blocked invoice report lists all invoices blocked for price, quantity, tax, or reference reasons. Review the block reason code.</li>
+      <li><strong>Check PO history (EKBE):</strong> compare the invoice quantity and price against the goods receipt and purchase order to confirm the variance.</li>
+      <li><strong>Check tolerance settings:</strong> the block may be automatic because the variance exceeds the configured tolerance for the company code or supplier.</li>
+      <li><strong>Check approval workflow:</strong> some organizations require a separate approval step before a blocked invoice can be released. Verify that the approver has the correct authorization.</li>
+      <li><strong>Check for duplicates:</strong> before releasing, confirm that the same invoice has not already been posted or paid under a different document number.</li>
+    </ul>
+    <p>A useful invoice blocking ticket should include: invoice number, PO number, supplier, block reason, expected versus actual quantity and price, and whether the variance is approved by procurement or finance.</p>
+
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not an invoice verification configuration guide. It does not cover automatic invoice verification setup, EDI invoicing, or complex tax scenarios. It does not replace the judgment of a finance controller or procurement manager.</p>
 

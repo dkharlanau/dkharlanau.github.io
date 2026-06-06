@@ -115,6 +115,17 @@ sitemap: false
     <h2>Support takeaway</h2>
     <p>PR issues are usually upstream master data or account assignment problems. A useful ticket should include: PR number, material, plant, error message, account assignment, and whether the issue is isolated or recurring.</p>
 
+    <h2>MRP exception handling</h2>
+    <p>MRP exceptions are messages that indicate planning problems requiring human intervention. When MRP generates unexpected purchase requisitions, the support goal is to identify whether the exception is a master data issue, a demand signal problem, or a planning parameter mismatch.</p>
+    <ul>
+      <li><strong>Check MD04 / MD05:</strong> the MRP list shows exception messages per material and plant. Common messages include stockout (01), excess (02), late receipt (03), and early receipt (07).</li>
+      <li><strong>Check MRP parameters:</strong> lot size, safety stock, reorder point, and procurement type in the material master may produce PRs that do not match business intent.</li>
+      <li><strong>Check demand signals:</strong> sales orders, planned independent requirements, or reservations may have changed after the last MRP run, creating new exceptions.</li>
+      <li><strong>Check supply signals:</strong> purchase orders, production orders, or planned orders may have been delayed or cancelled, causing MRP to propose new PRs.</li>
+      <li><strong>Check MRP controller assignment:</strong> the material may be assigned to an MRP controller who is not monitoring exceptions for that group.</li>
+    </ul>
+    <p>A useful MRP exception ticket should include: material number, plant, exception message number, MRP run date, the PR or planned order number if one was created, and whether the exception is isolated or affects a group of materials.</p>
+
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a PR configuration guide. It does not cover MRP logic, approval workflow design, or catalog integration. It does not replace SAP's purchasing documentation.</p>
 

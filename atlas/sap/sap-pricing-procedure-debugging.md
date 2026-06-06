@@ -70,6 +70,17 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>A useful pricing ticket should include the document number, item, pricing date, expected condition, actual condition result, customer/material context, and a screenshot or extract of the pricing analysis available in that system. Avoid asking a configurator to “fix pricing” without showing which part of the pricing chain failed.</p>
+
+    <h2>Retail-specific: price discrepancy</h2>
+    <p>In retail, price discrepancies often appear at the POS when the selling price in SAP does not match the price expected by the customer or the promotion price advertised.</p>
+    <ul>
+      <li><strong>Check condition record validity:</strong> VK13 or VK14 shows whether the price or discount condition record is valid for the store, article, and date. A record may have expired or not yet started.</li>
+      <li><strong>Check POS price load timing:</strong> in many retail landscapes, prices are loaded to the POS system on a schedule. A price change in SAP may not reach the POS until the next load cycle.</li>
+      <li><strong>Check store assortment inclusion:</strong> a promotion price may be valid only for stores in a specific assortment or cluster. The affected store may not be included.</li>
+      <li><strong>Check tax or jurisdiction:</strong> the store may be in a different tax jurisdiction than expected, causing the final price to differ.</li>
+      <li><strong>Check manual override:</strong> a user may have manually changed the price at the POS or in SAP, bypassing the automatic condition.</li>
+    </ul>
+    <p>A useful price discrepancy ticket should include: article number, store number, expected price, actual price, transaction date, promotion or campaign ID if applicable, and whether the issue affects one store or multiple stores.</p>
   </div>
 
   <section class="atlas-related">
