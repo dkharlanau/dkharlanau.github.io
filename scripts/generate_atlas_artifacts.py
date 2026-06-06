@@ -6,6 +6,7 @@ Regenerates the static Atlas discovery layer:
   - atlas/manifest.json      — machine-readable index of all Atlas pages
   - llms-full.txt            — full-text concatenation of verified pages
   - ai/rag/related.json      — related-content graph from frontmatter
+  - ai/atlas-compact-index.json — compact signal-matching index
 
 Usage:
     python3 scripts/generate_atlas_artifacts.py
@@ -143,6 +144,93 @@ def strip_jekyll_and_html(text):
     return text.strip()
 
 
+def extract_headings(body, max_headings=12):
+    """Extract compact markdown/HTML headings for matching."""
+    headings = []
+    for line in body.splitlines():
+        stripped = line.strip()
+        md_match = re.match(r"^#{2,4}\s+(.+)$", stripped)
+        html_match = re.match(r"^<h([2-4])[^>]*>(.*?)</h\1>$", stripped, re.I)
+        text = ""
+        if md_match:
+            text = md_match.group(1)
+        elif html_match:
+            text = html_match.group(2)
+        if text:
+            clean = strip_jekyll_and_html(text)
+            clean = re.sub(r"\s+", " ", clean).strip()
+            if clean and clean not in headings:
+                headings.append(clean)
+        if len(headings) >= max_headings:
+            break
+    return headings
+
+
+def _keyword_terms(*values):
+    terms = []
+    for value in values:
+        if not value:
+            continue
+        if isinstance(value, list):
+            candidates = value
+        else:
+            candidates = [value]
+        for candidate in candidates:
+            text = str(candidate).strip()
+            if not text:
+                continue
+            normalized = re.sub(r"\s+", " ", text.lower())
+            if normalized not in terms:
+                terms.append(normalized)
+    return terms
+
+
+def _token_terms(text):
+    tokens = re.findall(r"[a-z0-9][a-z0-9+-]{2,}", text.lower())
+    stopwords = {
+        "the", "and", "for", "with", "from", "that", "this", "how", "when",
+        "where", "what", "why", "into", "page", "sap",
+    }
+    result = []
+    for token in tokens:
+        if token in stopwords:
+            continue
+        if token not in result:
+            result.append(token)
+    return result
+
+
+def _matching_terms(fm, headings):
+    phrase_terms = _keyword_terms(
+        fm.get("title", ""),
+        fm.get("description", ""),
+        fm.get("domain", ""),
+        fm.get("subdomain", ""),
+        fm.get("concept_type", ""),
+        fm.get("sap_area", ""),
+        fm.get("business_process", ""),
+        fm.get("tags", []) or [],
+        headings,
+    )
+    token_text = " ".join(phrase_terms)
+    token_terms = _token_terms(token_text)
+    combined = []
+    for term in phrase_terms + token_terms:
+        if term and term not in combined:
+            combined.append(term)
+    return combined[:80]
+
+
+def _sap_domain_keywords(fm):
+    return _keyword_terms(
+        fm.get("domain", ""),
+        fm.get("subdomain", ""),
+        fm.get("sap_area", ""),
+        fm.get("business_process", ""),
+        fm.get("tags", []) or [],
+    )[:40]
+
+
 def build_permalink_map():
     """Build a map of permalink -> file info for the whole site."""
     all_pages = {}
@@ -165,6 +253,64 @@ def build_permalink_map():
                         "fm": fm,
                     }
     return all_pages
+
+
+def generate_compact_signal_index(atlas_files, check_mode=False):
+    """Generate ai/atlas-compact-index.json for signal-to-page matching."""
+    entries = []
+    for rel_path in atlas_files:
+        abs_path = REPO_DIR / rel_path
+        fm, body = parse_frontmatter(abs_path)
+        headings = extract_headings(body)
+        entry = {
+            "path": rel_path,
+            "url": fm.get("permalink", ""),
+            "title": fm.get("title", ""),
+            "description": fm.get("description", ""),
+            "atlas_section": fm.get("atlas_section", ""),
+            "domain": fm.get("domain", ""),
+            "subdomain": fm.get("subdomain", ""),
+            "concept_type": fm.get("concept_type", ""),
+            "sap_area": fm.get("sap_area", ""),
+            "business_process": fm.get("business_process", ""),
+            "status": fm.get("status", ""),
+            "verified": bool(fm.get("verified", False)),
+            "last_reviewed": serialize_value(fm.get("last_reviewed", "")),
+            "tags": fm.get("tags", []) or [],
+            "headings": headings,
+            "sap_domain_keywords": _sap_domain_keywords(fm),
+            "matching_terms": _matching_terms(fm, headings),
+        }
+        entries.append(entry)
+
+    index = {
+        "schema": "dkharlanau.atlas.compact_signal_index",
+        "schema_version": "1.0",
+        "generated_at": _now(check_mode),
+        "canonical_url": "https://dkharlanau.github.io/ai/atlas-compact-index.json",
+        "description": (
+            "Compact public Atlas index for matching enriched professional "
+            "signals to existing Atlas pages. Built from public frontmatter "
+            "and headings only; no private notes, draft paths, or full body text."
+        ),
+        "source": "scripts/generate_atlas_artifacts.py",
+        "count": len(entries),
+        "entries": entries,
+        "fallback": {
+            "decision": "needs_research",
+            "reason": (
+                "If no candidate clears the matcher threshold, do not update "
+                "or create a page automatically."
+            ),
+        },
+    }
+
+    if not check_mode:
+        out_path = REPO_DIR / "ai" / "atlas-compact-index.json"
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(index, f, indent=2, ensure_ascii=False, cls=DateTimeEncoder)
+
+    return index
 
 
 def _now(check_mode):
@@ -400,7 +546,7 @@ def run_check(all_pages, atlas_files):
     issues = []
 
     # --- manifest.json ---
-    print("\n[CHECK 1/5] manifest.json")
+    print("\n[CHECK 1/6] manifest.json")
     manifest_generated = generate_manifest(all_pages, atlas_files, check_mode=True)
     manifest_path = REPO_DIR / "atlas" / "manifest.json"
     if not manifest_path.exists():
@@ -434,7 +580,7 @@ def run_check(all_pages, atlas_files):
             issues.append(f"manifest.json: expected {expected_unverified} unverified, found {manifest_committed.get('unverified_count')}")
 
     # --- llms-full.txt ---
-    print("\n[CHECK 2/5] llms-full.txt")
+    print("\n[CHECK 2/6] llms-full.txt")
     llms_generated = generate_llms_full(all_pages, atlas_files, check_mode=True)
     llms_path = REPO_DIR / "llms-full.txt"
     if not llms_path.exists():
@@ -473,7 +619,7 @@ def run_check(all_pages, atlas_files):
             issues.append("llms-full.txt: contains LinkedIn export reference")
 
     # --- related.json ---
-    print("\n[CHECK 3/5] related.json")
+    print("\n[CHECK 3/6] related.json")
     edges, broken_links, related_generated = generate_related(all_pages, atlas_files, check_mode=True)
     related_path = REPO_DIR / "ai" / "rag" / "related.json"
     if not related_path.exists():
@@ -508,8 +654,46 @@ def run_check(all_pages, atlas_files):
             if pattern in related_committed_text:
                 issues.append(f"related.json: private leak — contains '{pattern}'")
 
+    # --- compact signal index ---
+    print("\n[CHECK 4/6] atlas-compact-index.json")
+    compact_generated = generate_compact_signal_index(atlas_files, check_mode=True)
+    compact_path = REPO_DIR / "ai" / "atlas-compact-index.json"
+    compact_committed = {}
+    compact_committed_text = ""
+    if not compact_path.exists():
+        issues.append("atlas-compact-index.json: file missing")
+    else:
+        try:
+            compact_committed_text = _load_json_file(compact_path)
+            compact_committed = json.loads(compact_committed_text)
+        except json.JSONDecodeError as e:
+            issues.append(f"atlas-compact-index.json: invalid JSON — {e}")
+
+        if compact_committed:
+            gen_norm = json.loads(_normalize_timestamp_in_json(json.dumps(compact_generated, indent=2, ensure_ascii=False, cls=DateTimeEncoder)))
+            com_norm = json.loads(_normalize_timestamp_in_json(compact_committed_text))
+            if gen_norm != com_norm:
+                issues.append("atlas-compact-index.json: stale — committed file differs from source")
+            else:
+                print("  ✓ atlas-compact-index.json is up to date")
+
+        if compact_committed.get("count") != len(atlas_files):
+            issues.append(f"atlas-compact-index.json: expected {len(atlas_files)} entries, found {compact_committed.get('count')}")
+        for entry in compact_committed.get("entries", []):
+            path = entry.get("path", "")
+            if not path or not (REPO_DIR / path).exists():
+                issues.append(f"atlas-compact-index.json: entry path missing: {path}")
+            if not entry.get("url", "").startswith("/atlas/"):
+                issues.append(f"atlas-compact-index.json: invalid Atlas URL for {path}")
+            if not entry.get("matching_terms"):
+                issues.append(f"atlas-compact-index.json: missing matching_terms for {path}")
+
+        for pattern in leak_patterns:
+            if pattern in compact_committed_text:
+                issues.append(f"atlas-compact-index.json: private leak — contains '{pattern}'")
+
     # --- Cross-validate manifest vs related ---
-    print("\n[CHECK 4/5] Cross-validation")
+    print("\n[CHECK 5/6] Cross-validation")
     if manifest_committed and related_committed:
         manifest_urls = {e["url"] for e in manifest_committed.get("entries", [])}
         related_sources = {e["source_url"] for e in related_committed.get("edges", [])}
@@ -522,7 +706,7 @@ def run_check(all_pages, atlas_files):
             print("  ✓ All related sources present in manifest")
 
     # --- Frontmatter tag consistency ---
-    print("\n[CHECK 5/5] Frontmatter tag consistency")
+    print("\n[CHECK 6/6] Frontmatter tag consistency")
     tag_issues = []
     for rel_path in atlas_files:
         abs_path = REPO_DIR / rel_path
@@ -577,25 +761,30 @@ def main():
             sys.exit(0)
 
     # Generate manifest
-    print("\n[1/3] Generating atlas/manifest.json ...")
+    print("\n[1/4] Generating atlas/manifest.json ...")
     manifest = generate_manifest(all_pages, atlas_files)
     print(f"  Entries: {manifest['count']}")
     print(f"  Verified: {manifest['verified_count']}")
     print(f"  Unverified: {manifest['unverified_count']}")
 
     # Generate llms-full.txt
-    print("\n[2/3] Generating llms-full.txt ...")
+    print("\n[2/4] Generating llms-full.txt ...")
     verified_count = generate_llms_full(all_pages, atlas_files)
     print(f"  Verified pages included: {verified_count}")
 
     # Generate related.json
-    print("\n[3/3] Generating ai/rag/related.json ...")
+    print("\n[3/4] Generating ai/rag/related.json ...")
     edges, broken, _ = generate_related(all_pages, atlas_files)
     print(f"  Edges: {len(edges)}")
     print(f"  Broken links: {len(broken)}")
     if broken:
         for bl in broken:
             print(f"    BROKEN: {bl['source_url']} -> {bl['target_url']}")
+
+    # Generate compact signal index
+    print("\n[4/4] Generating ai/atlas-compact-index.json ...")
+    compact_index = generate_compact_signal_index(atlas_files)
+    print(f"  Entries: {compact_index['count']}")
 
     print("\n" + "=" * 40)
     print("All artifacts generated successfully.")
