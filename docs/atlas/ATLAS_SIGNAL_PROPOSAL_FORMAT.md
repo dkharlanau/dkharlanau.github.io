@@ -89,6 +89,16 @@ Every proposal includes:
 }
 ```
 
+## Quality Gate
+
+Validate a proposal before PR review:
+
+```sh
+python3 scripts/validate_atlas_proposal.py --proposal path/to/atlas-proposal.json
+```
+
+Gate policy is documented in `docs/atlas/ATLAS_SIGNAL_QUALITY_GATES.md`.
+
 ## Sample Proposals
 
 - `ai/atlas-proposals/examples/existing-page-update.json`
