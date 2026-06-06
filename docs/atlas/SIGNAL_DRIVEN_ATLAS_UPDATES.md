@@ -118,6 +118,18 @@ Use simple index matching for v1:
 RAG/vector search is not part of v1. It should be reconsidered only after
 matcher failures show that better frontmatter/tags are insufficient.
 
+Dry-run matcher command:
+
+```sh
+python3 scripts/match_atlas_signal.py \
+  --signal path/to/enriched-signal.json \
+  --index ai/atlas-compact-index.json \
+  --output path/to/matcher-result.json
+```
+
+The matcher returns ranked candidates with confidence scores and reasons. It
+does not load full page bodies and does not edit public pages.
+
 ## Proposal Types
 
 ### Existing Page Update
