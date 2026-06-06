@@ -17,12 +17,25 @@ REPORT_MD = REPO_ROOT / "docs" / "atlas" / "ATLAS_LOW_VALUE_CLUSTER_PROMOTION_RE
 
 EXPECTED_TOTAL = 1133
 
+ALLOWED_STATES = {
+    "promoted_page",
+    "merged_existing",
+    "clustered_future",
+    "glossary_only",
+    "ignored_low_value",
+    "duplicate_existing",
+    "deferred_needs_research",
+    "blocked_private_risk",
+}
+
 FORBIDDEN_PATTERNS = [
     "source_files",
     "kb-drafts",
     "/Users/",
     "private draft",
     "Kimi_Agent_SAP Atlas Expansion",
+    ".env",
+    "secrets",
 ]
 
 
@@ -36,7 +49,6 @@ def main() -> int:
     # 1. Ledger JSON must exist
     if not LEDGER_JSON.exists():
         errors.append(f"Ledger JSON missing: {LEDGER_JSON}")
-        # Can't continue without JSON
         for e in errors:
             fail(e)
         return 1
@@ -46,38 +58,75 @@ def main() -> int:
 
     candidates = ledger.get("candidates", [])
 
-    # 2. Total count
+    # 2. Schema version present
+    if not ledger.get("version"):
+        errors.append("Ledger missing 'version' field")
+    if not ledger.get("schema"):
+        errors.append("Ledger missing 'schema' field")
+
+    # 3. processed_run_id present
+    if not ledger.get("run_id"):
+        errors.append("Ledger missing 'run_id' field")
+
+    # 4. Total count
     if len(candidates) != EXPECTED_TOTAL:
         errors.append(f"Expected {EXPECTED_TOTAL} candidates, got {len(candidates)}")
 
-    # 3. No duplicate candidate IDs
+    # 5. Summary counts match row counts
+    ledger_total = ledger.get("total_candidates")
+    if ledger_total is not None and ledger_total != len(candidates):
+        errors.append(f"total_candidates ({ledger_total}) != actual candidates ({len(candidates)})")
+
+    # 6. No duplicate candidate IDs
     ids = [c["candidate_id"] for c in candidates]
     if len(ids) != len(set(ids)):
         dupes = [item for item, count in Counter(ids).items() if count > 1]
         errors.append(f"Duplicate candidate IDs: {dupes}")
 
-    # 4. Every candidate has final_state
+    # 7. Every candidate has final_state in allowed enum
     missing_state = [c["candidate_id"] for c in candidates if not c.get("final_state")]
     if missing_state:
         errors.append(f"Candidates missing final_state: {missing_state[:10]}")
 
-    # 5. promoted_page / merged_existing must have target_page
+    invalid_state = [
+        c["candidate_id"]
+        for c in candidates
+        if c.get("final_state") and c["final_state"] not in ALLOWED_STATES
+    ]
+    if invalid_state:
+        errors.append(f"Candidates with invalid final_state: {invalid_state[:10]}")
+
+    # 8. target_page required for promoted_page / merged_existing / duplicate_existing
     missing_target = [
         c["candidate_id"]
         for c in candidates
-        if c.get("final_state") in ("promoted_page", "merged_existing")
+        if c.get("final_state") in ("promoted_page", "merged_existing", "duplicate_existing")
         and not c.get("target_page")
     ]
     if missing_target:
-        errors.append(f"promoted_page/merged_existing missing target_page: {missing_target[:10]}")
+        errors.append(f"promoted_page/merged_existing/duplicate_existing missing target_page: {missing_target[:10]}")
 
-    # 6. Every cluster has at least one candidate
+    # 9. Every cluster has at least one candidate
     clusters = ledger.get("clusters", {})
     empty_clusters = [cid for cid, c in clusters.items() if c.get("candidate_count", 0) == 0]
     if empty_clusters:
         errors.append(f"Empty clusters: {empty_clusters[:10]}")
 
-    # 7. Safety: no forbidden patterns in ledger outputs
+    # 10. content_fingerprint unique or duplicate explicitly justified
+    fp_counts = Counter(c["content_fingerprint"] for c in candidates)
+    duplicate_fps = [fp for fp, count in fp_counts.items() if count > 1]
+    if duplicate_fps:
+        # Allow duplicates if they have force_reclassify_reason
+        unjustified = []
+        for fp in duplicate_fps:
+            dupes = [c for c in candidates if c["content_fingerprint"] == fp]
+            has_justification = any(c.get("force_reclassify_reason") for c in dupes)
+            if not has_justification:
+                unjustified.append(fp)
+        if unjustified:
+            errors.append(f"Duplicate fingerprints without force_reclassify_reason: {unjustified[:5]}")
+
+    # 11. Safety: no forbidden patterns in ledger outputs
     for path in (LEDGER_JSON, LEDGER_MD, REPORT_MD):
         if not path.exists():
             continue
@@ -86,14 +135,14 @@ def main() -> int:
             if pattern in text:
                 errors.append(f"{path.name} contains forbidden pattern: {pattern}")
 
-    # 8. No private paths in candidate fields
+    # 12. No private paths in candidate fields
     for c in candidates:
         for field in ("sanitized_topic", "sanitized_source_bucket", "reason", "target_page"):
             val = c.get(field) or ""
             if "/Users/" in val or "/private/" in val or ".env" in val:
                 errors.append(f"Candidate {c['candidate_id']} field {field} contains private path")
 
-    # 9. No raw private text markers
+    # 13. No raw private text markers
     raw_markers = ["raw corpus", "private excerpt", "kb-draft", "source file"]
     for path in (LEDGER_JSON, LEDGER_MD, REPORT_MD):
         if not path.exists():
@@ -105,6 +154,11 @@ def main() -> int:
                 if f"no {marker}" in text.lower() or f"no {marker}s" in text.lower():
                     continue
                 errors.append(f"{path.name} contains raw private text marker: {marker}")
+
+    # 14. No empty reasons
+    empty_reason = [c["candidate_id"] for c in candidates if not c.get("reason", "").strip()]
+    if empty_reason:
+        errors.append(f"Candidates with empty reason: {empty_reason[:10]}")
 
     if errors:
         print("Atlas backlog ledger validation FAILED:")
