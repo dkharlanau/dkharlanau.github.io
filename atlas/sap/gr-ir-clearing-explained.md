@@ -121,6 +121,17 @@ author: Dzmitryi Kharlanau
 
 <p>Escalate when the mismatch indicates a process problem rather than a data cleanup task. Examples: repeated quantity differences from the same vendor suggest a receiving or vendor communication issue; persistent price differences suggest procurement is not updating outline agreements or info records; large old open items with no supporting documents may indicate fraud, theft, or system bypass. Data cleanup (MR11, F.13, manual clearing) should only be done after the root cause is understood and approved by finance.</p>
 
+<h2>Retail-specific: month-end close issues</h2>
+<p>Retail month-end closing faces unique challenges due to high transaction volume, POS reconciliation, markdown accruals, and inventory adjustments.</p>
+<ul>
+  <li><strong>GR/IR open items:</strong> high-volume retail procurement creates large numbers of unmatched GR/IR lines. Check FBL3N for old items and MR11 for cleanup.</li>
+  <li><strong>POS posting status:</strong> missing or delayed POS data (WPUUMS IDocs) causes revenue and inventory postings to be incomplete at period end. Check WE02 for failed IDocs.</li>
+  <li><strong>Markdown accruals:</strong> end-of-season markdowns may require accrual postings that are not yet reflected in the general ledger.</li>
+  <li><strong>Inventory adjustment accounts:</strong> cycle counts, shrinkage postings, and damage write-offs accumulate in adjustment accounts that must be reviewed before close.</li>
+  <li><strong>Timing:</strong> retail often operates with tight close windows. GR/IR, POS, and inventory postings that span period boundaries can delay close.</li>
+</ul>
+<p>A useful month-end close ticket should include: the period being closed, the specific account or process that is blocked, the volume of open items, and whether the issue is recurring every month-end.</p>
+
 </div>
 
 <section class="atlas-related"><h2>Related pages</h2><ul>

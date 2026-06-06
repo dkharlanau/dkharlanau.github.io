@@ -78,6 +78,18 @@ author: Dzmitryi Kharlanau
 
 </ul>
 
+<h2>Stock reconciliation</h2>
+<p>Stock reconciliation aligns system inventory with physical counts. Discrepancies discovered during or after goods receipt indicate process gaps in receiving, recording, or handling.</p>
+<ul>
+  <li><strong>Check physical count vs. system:</strong> compare the counted quantity against MMBE or MB52 for the storage location. Identify when the discrepancy first appeared.</li>
+  <li><strong>Check goods receipt documents:</strong> review MKPF/MSEG for the material document to confirm quantity, movement type, and storage location posted.</li>
+  <li><strong>Check for unposted returns:</strong> goods may have been physically returned to the supplier but the return delivery was not posted in the system.</li>
+  <li><strong>Check for partial receipts:</strong> a partial receipt may have been posted against the full PO quantity, or vice versa, creating a quantity mismatch.</li>
+  <li><strong>Check quality inspection status:</strong> stock posted to quality inspection or blocked status is not visible as unrestricted inventory. Verify the usage decision.</li>
+  <li><strong>Check for cross-location posting:</strong> the receipt may have been posted to the wrong storage location or plant.</li>
+</ul>
+<p>A useful stock reconciliation ticket should include: material number, plant, storage location, physical count, system count, the last goods receipt document number, and whether the discrepancy is recurring for this material or location.</p>
+
 </div>
 
 <section class="atlas-related"><h2>Related pages</h2><ul>

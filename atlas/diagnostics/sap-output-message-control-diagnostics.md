@@ -114,6 +114,19 @@ sitemap: false
     <h2>Support takeaway</h2>
     <p>Output issues are usually condition technique or communication method problems. A useful ticket should include: document number, output type, expected medium, actual result, NAST status, error text, and whether the issue is isolated or recurring.</p>
 
+    <h2>Purchase order output troubleshooting</h2>
+    <p>PO output issues are a common support ticket in procurement. When a supplier reports they did not receive a purchase order, the support goal is to trace the output from creation through processing to delivery.</p>
+    <ul>
+      <li><strong>Check output determination (NACE):</strong> verify that the output type for purchase orders is active for the document type and purchasing organization.</li>
+      <li><strong>Check condition records (VV23):</strong> confirm that an output condition record exists for the supplier, document type, and output medium (print, email, EDI, Business Network).</li>
+      <li><strong>Check NAST table:</strong> review the output message status. Status 0 = not processed, 1 = successfully processed, 2 = error.</li>
+      <li><strong>Check SOST for email:</strong> if the medium is email, SOST shows send status, recipient address, and any delivery errors.</li>
+      <li><strong>Check SP01 for print:</strong> if the medium is print, SP01 shows spool requests and printer status.</li>
+      <li><strong>Check WE02 for EDI:</strong> if the medium is EDI or IDoc, WE02 shows IDoc generation status and any segment errors.</li>
+      <li><strong>Check partner master:</strong> the supplier master (LFA1/LFB1) must have correct communication data for the chosen medium.</li>
+    </ul>
+    <p>A useful PO output ticket should include: PO number, output type, expected medium, supplier number, NAST status, error text if any, and whether the issue affects one supplier or multiple suppliers.</p>
+
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not an output determination configuration guide. It does not cover Smart Forms, Adobe Forms, or condition technique design. It does not replace SAP's output management documentation.</p>
 
