@@ -1,0 +1,576 @@
+# Atlas Taxonomy — SAP Landscape Backbone
+# Purpose: machine-readable taxonomy for SAP S/4HANA and modern SAP product/technology landscape
+# Schema version: 1.0
+# Created: 2026-06-06
+# Safety: all skeleton pages are unverified review candidates (noindex, sitemap:false)
+# Source: SAP S/4HANA 2025 Feature Scope Description (public-safe topic discovery only)
+
+meta:
+  schema: dkharlanau.atlas.taxonomy
+  schema_version: "1.0"
+  canonical_url: https://dkharlanau.github.io/data/atlas/taxonomy.yml
+  generated_at: "2026-06-06"
+  description: |
+    Hierarchical taxonomy of SAP landscape pages: maps, domains, products,
+    technologies, and integrations. Used by agents for page routing,
+    related-content linking, and taxonomy extension.
+
+# ─── Maps (landscape navigation pages) ───
+- id: sap-s4hana-landscape-map
+  type: map
+  parent: null
+  title: "SAP S/4HANA Landscape Map"
+  permalink: "/atlas/maps/sap-s4hana-landscape-map/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+  related_technologies: []
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-product-landscape-map
+  type: map
+  parent: null
+  title: "SAP Product Landscape Map"
+  permalink: "/atlas/maps/sap-product-landscape-map/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-mdg
+    - sap-ariba
+    - sap-ewm
+    - sap-tm
+    - sap-ibp
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-integration-suite
+  related_technologies: []
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-technology-landscape-map
+  type: map
+  parent: null
+  title: "SAP Technology Landscape Map"
+  permalink: "/atlas/maps/sap-technology-landscape-map/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - abap-platform
+    - abap-cloud
+    - rap
+    - cap
+    - cds-views
+    - odata
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-integration-landscape-map
+  type: map
+  parent: null
+  title: "SAP Integration Landscape Map"
+  permalink: "/atlas/maps/sap-integration-landscape-map/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-integration-suite
+    - sap-btp
+  related_technologies:
+    - business-events
+    - idoc
+    - odata
+  related_diagnostics: []
+  status: skeleton
+
+# ─── S/4HANA Domains (functional areas) ───
+- id: sales-domain
+  type: domain
+  parent: sap-s4hana-landscape-map
+  title: "Sales"
+  permalink: "/atlas/sap/sales-domain/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+  related_technologies:
+    - fiori-ui5
+    - odata
+    - cds-views
+  related_diagnostics:
+    - /atlas/diagnostics/sap-sales-order-block-diagnosis/
+    - /atlas/diagnostics/sap-invoice-split-analysis/
+  status: skeleton
+
+- id: service-domain
+  type: domain
+  parent: sap-s4hana-landscape-map
+  title: "Service"
+  permalink: "/atlas/sap/service-domain/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+  related_technologies:
+    - fiori-ui5
+    - odata
+  related_diagnostics: []
+  status: skeleton
+
+- id: manufacturing-domain
+  type: domain
+  parent: sap-s4hana-landscape-map
+  title: "Manufacturing"
+  permalink: "/atlas/sap/manufacturing-domain/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-ibp
+  related_technologies:
+    - fiori-ui5
+    - odata
+  related_diagnostics: []
+  status: skeleton
+
+- id: sourcing-procurement-domain
+  type: domain
+  parent: sap-s4hana-landscape-map
+  title: "Sourcing and Procurement"
+  permalink: "/atlas/sap/sourcing-and-procurement-domain/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-ariba
+  related_technologies:
+    - fiori-ui5
+    - odata
+    - cds-views
+  related_diagnostics:
+    - /atlas/diagnostics/sap-source-determination-diagnostics/
+    - /atlas/diagnostics/sap-incompletion-procedure-diagnostics/
+  status: skeleton
+
+- id: supply-chain-domain
+  type: domain
+  parent: sap-s4hana-landscape-map
+  title: "Supply Chain"
+  permalink: "/atlas/sap/supply-chain-domain/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-ewm
+    - sap-tm
+    - sap-ibp
+  related_technologies:
+    - fiori-ui5
+    - odata
+  related_diagnostics: []
+  status: skeleton
+
+- id: analytics-technology-domain
+  type: domain
+  parent: sap-s4hana-landscape-map
+  title: "Analytics Technology"
+  permalink: "/atlas/sap/analytics-technology-domain/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - odata
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
+
+- id: enterprise-technology-domain
+  type: domain
+  parent: sap-s4hana-landscape-map
+  title: "Enterprise Technology"
+  permalink: "/atlas/sap/enterprise-technology-domain/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-mdg
+  related_technologies:
+    - abap-platform
+    - abap-cloud
+    - rap
+    - cap
+    - cds-views
+    - odata
+    - fiori-ui5
+    - business-events
+    - idoc
+    - output-control
+  related_diagnostics:
+    - /atlas/diagnostics/sap-business-partner-replication-diagnostics/
+    - /atlas/diagnostics/sap-customer-master-replication-diagnostics/
+    - /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
+  status: skeleton
+
+# ─── Products ───
+- id: sap-s4hana
+  type: product
+  parent: null
+  title: "SAP S/4HANA"
+  permalink: "/atlas/sap/sap-s4hana/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-btp
+    - sap-mdg
+  related_technologies:
+    - abap-platform
+    - abap-cloud
+    - rap
+    - cap
+    - cds-views
+    - odata
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-btp
+  type: product
+  parent: null
+  title: "SAP BTP"
+  permalink: "/atlas/sap/sap-btp/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-integration-suite
+  related_technologies:
+    - cap
+    - odata
+    - fiori-ui5
+    - business-events
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-mdg
+  type: product
+  parent: null
+  title: "SAP MDG"
+  permalink: "/atlas/sap/sap-mdg/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - odata
+    - fiori-ui5
+  related_diagnostics:
+    - /atlas/diagnostics/sap-business-partner-replication-diagnostics/
+    - /atlas/diagnostics/sap-customer-master-replication-diagnostics/
+    - /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
+  status: skeleton
+
+- id: sap-ariba
+  type: product
+  parent: null
+  title: "SAP Ariba"
+  permalink: "/atlas/sap/sap-ariba/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - odata
+    - business-events
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-ewm
+  type: product
+  parent: null
+  title: "SAP EWM"
+  permalink: "/atlas/sap/sap-ewm/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-tm
+  related_technologies:
+    - odata
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-tm
+  type: product
+  parent: null
+  title: "SAP TM"
+  permalink: "/atlas/sap/sap-tm/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-ewm
+  related_technologies:
+    - odata
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-ibp
+  type: product
+  parent: null
+  title: "SAP IBP"
+  permalink: "/atlas/sap/sap-ibp/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-datasphere
+  related_technologies:
+    - odata
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-datasphere
+  type: product
+  parent: null
+  title: "SAP Datasphere"
+  permalink: "/atlas/sap/sap-datasphere/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-analytics-cloud
+    - sap-ibp
+  related_technologies:
+    - cds-views
+    - odata
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-analytics-cloud
+  type: product
+  parent: null
+  title: "SAP Analytics Cloud"
+  permalink: "/atlas/sap/sap-analytics-cloud/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-datasphere
+  related_technologies:
+    - cds-views
+    - odata
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-integration-suite
+  type: product
+  parent: null
+  title: "SAP Integration Suite"
+  permalink: "/atlas/sap/sap-integration-suite/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - odata
+    - business-events
+    - idoc
+  related_diagnostics: []
+  status: skeleton
+
+# ─── Technologies ───
+- id: abap-platform
+  type: technology
+  parent: enterprise-technology-domain
+  title: "ABAP Platform"
+  permalink: "/atlas/sap/abap-platform/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+  related_technologies:
+    - abap-cloud
+    - rap
+    - cds-views
+  related_diagnostics: []
+  status: skeleton
+
+- id: abap-cloud
+  type: technology
+  parent: enterprise-technology-domain
+  title: "ABAP Cloud"
+  permalink: "/atlas/sap/abap-cloud/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - abap-platform
+    - rap
+    - cap
+    - cds-views
+  related_diagnostics: []
+  status: skeleton
+
+- id: rap
+  type: technology
+  parent: enterprise-technology-domain
+  title: "RAP"
+  permalink: "/atlas/sap/rap/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - abap-cloud
+    - cds-views
+    - odata
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
+
+- id: cap
+  type: technology
+  parent: enterprise-technology-domain
+  title: "CAP"
+  permalink: "/atlas/sap/cap/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-btp
+    - sap-s4hana
+  related_technologies:
+    - abap-cloud
+    - cds-views
+    - odata
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
+
+- id: cds-views
+  type: technology
+  parent: enterprise-technology-domain
+  title: "CDS Views"
+  permalink: "/atlas/sap/cds-views/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - rap
+    - odata
+    - abap-cloud
+  related_diagnostics: []
+  status: skeleton
+
+- id: odata
+  type: technology
+  parent: enterprise-technology-domain
+  title: "OData"
+  permalink: "/atlas/sap/odata/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - cds-views
+    - rap
+    - fiori-ui5
+    - cap
+  related_diagnostics: []
+  status: skeleton
+
+- id: fiori-ui5
+  type: technology
+  parent: enterprise-technology-domain
+  title: "Fiori / UI5"
+  permalink: "/atlas/sap/fiori-ui5/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - odata
+    - cds-views
+    - rap
+    - cap
+  related_diagnostics: []
+  status: skeleton
+
+# ─── Integrations ───
+- id: business-events
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "Business Events"
+  permalink: "/atlas/sap/business-events/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-integration-suite
+    - sap-btp
+  related_technologies:
+    - odata
+  related_diagnostics: []
+  status: skeleton
+
+- id: idoc
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "IDoc"
+  permalink: "/atlas/sap/idoc/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-integration-suite
+  related_technologies:
+    - odata
+  related_diagnostics: []
+  status: skeleton
+
+- id: output-control
+  type: integration
+  parent: enterprise-technology-domain
+  title: "Output Control"
+  permalink: "/atlas/sap/output-control/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+  related_technologies:
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
