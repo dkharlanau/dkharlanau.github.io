@@ -24,10 +24,6 @@ related:
   - /atlas/concepts/sap-atp-is-not-inventory/
   - /services/sap-ams-consulting/
   - /atlas/diagnostics/sap-process-audit/
-source_files:
-  - "private-source/kb-drafts/sap-domain-atlas/publishing/article-backlog.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/sales/concepts/delivery-block.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/sales/concepts/billing-document.md"
 robots: noindex,follow
 sitemap: false
 ---

@@ -21,9 +21,6 @@ tags:
 related: 
   - "/atlas/automation/rule-based-automation-vs-ai/"
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/ai-assistant-vs-copilot-vs-agent.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/human-in-the-loop.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Agent-Assisted Development Workflows
 h1: Agent-assisted development workflows

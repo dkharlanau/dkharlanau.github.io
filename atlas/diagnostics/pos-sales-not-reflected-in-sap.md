@@ -22,9 +22,6 @@ tags:
 related: 
   - "/atlas/concepts/store-receiving-sap-retail/"
   - "/atlas/data-quality/sap-master-data-quality/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/retail/troubleshooting/pos-sales-not-reflected.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/retail/concepts/pos-sales-data.md"
 robots: noindex,follow
 short_title: POS Sales Not Reflected
 h1: POS sales not reflected in SAP

@@ -21,9 +21,6 @@ tags:
 related: 
   - "/atlas/sap/gr-ir-clearing-explained/"
   - "/atlas/diagnostics/sap-goods-receipt-diagnostics/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/mm-procurement/purchasing/procure-to-pay.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/mm-procurement/process-map.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Procure to Pay Map
 h1: Procure to pay map

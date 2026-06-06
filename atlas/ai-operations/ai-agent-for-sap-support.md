@@ -24,8 +24,6 @@ related:
   - /ai/practical-ai-for-sap-support/
   - /services/sap-ai-ml-enablement/
   - /atlas/ai-operations/practical-ai-ml-for-sap-support/
-source_files:
-  - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/ams-use-cases/ai-agent-for-sap-support.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 ---
 

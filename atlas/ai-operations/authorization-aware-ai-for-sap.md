@@ -21,8 +21,6 @@ tags:
 related: 
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/data-quality/sap-master-data-quality/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/governance/authorization-aware-ai.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Authorization-Aware AI
 h1: Authorization-aware AI for SAP

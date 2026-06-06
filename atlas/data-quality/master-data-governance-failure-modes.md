@@ -21,9 +21,6 @@ tags:
 related: 
   - "/atlas/data-quality/sap-master-data-quality/"
   - "/atlas/sap/sap-partner-determination-failures/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/master-data-governance/concepts/business-partner-governance.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/master-data-governance/concepts/supplier-master-governance.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Governance Failure Modes
 h1: Master data governance failure modes

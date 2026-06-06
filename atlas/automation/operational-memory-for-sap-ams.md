@@ -21,9 +21,6 @@ tags:
 related: 
   - "/atlas/ai-operations/ai-ready-process-documentation/"
   - "/services/sap-ams-consulting/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/data-readiness/ai-ready-process-documentation.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/ams-use-cases/ai-assisted-documentation.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Operational Memory for SAP AMS
 h1: Operational memory for SAP AMS

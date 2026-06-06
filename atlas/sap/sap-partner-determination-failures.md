@@ -22,8 +22,6 @@ tags:
 related: 
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/sales/concepts/partner-determination.md"
 robots: noindex,follow
 short_title: Partner Determination Failures
 h1: SAP partner determination failures

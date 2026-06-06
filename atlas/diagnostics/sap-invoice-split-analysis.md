@@ -21,8 +21,6 @@ tags:
 related: 
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/sales/concepts/invoice-split.md"
 robots: noindex,follow
 short_title: Invoice Split Analysis
 h1: SAP invoice split analysis

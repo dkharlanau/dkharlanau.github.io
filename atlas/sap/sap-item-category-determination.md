@@ -22,8 +22,6 @@ related:
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
   - "/atlas/sap/sap-pricing-procedure-debugging/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/sales/concepts/item-category.md"
 robots: noindex,follow
 short_title: Item Category Determination
 h1: SAP item category determination
