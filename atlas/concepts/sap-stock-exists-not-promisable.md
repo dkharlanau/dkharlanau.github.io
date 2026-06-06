@@ -23,9 +23,6 @@ related:
   - "/atlas/concepts/sap-atp-is-not-inventory/"
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/retail/troubleshooting/stock-exists-but-not-promisable.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/sales/concepts/atp.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Stock Exists but Is Not Promisable
 h1: SAP stock exists, but it is not always promisable

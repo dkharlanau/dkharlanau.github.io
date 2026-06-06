@@ -22,9 +22,6 @@ related:
   - /atlas/concepts/sap-atp-is-not-inventory/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /services/sap-o2c-process-audit/
-source_files:
-  - "private-source/kb-drafts/sap-domain-atlas/domains/sales/process-map.md"
-  - "private-source/kb-drafts/sap-domain-atlas/cross-domain/document-flow-map.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 ---
 

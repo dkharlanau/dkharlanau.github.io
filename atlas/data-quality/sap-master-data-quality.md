@@ -21,9 +21,6 @@ tags:
 related: 
   - "/atlas/data-quality/master-data-governance-failure-modes/"
   - "/atlas/ai-operations/ai-ready-process-documentation/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/ams-use-cases/ai-assisted-master-data-quality.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/master-data-governance/concepts/business-partner-governance.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: SAP Master Data Quality
 h1: SAP master data quality

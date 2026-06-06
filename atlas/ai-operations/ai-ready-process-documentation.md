@@ -21,9 +21,6 @@ tags:
 related: 
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/automation/operational-memory-for-sap-ams/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/data-readiness/ai-ready-process-documentation.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/ams-use-cases/ai-assisted-documentation.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: AI-Ready Process Documentation
 h1: AI-ready process documentation

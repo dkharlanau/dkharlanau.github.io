@@ -22,10 +22,6 @@ tags:
 related: 
   - "/atlas/maps/procure-to-pay-map/"
   - "/atlas/sap/gr-ir-clearing-explained/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/logistics/concepts/warehouse/goods-receipt.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/mm-procurement/inventory-management/goods-receipt.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/mm-procurement/troubleshooting/goods-receipt-blocked.md"
 robots: noindex,follow
 short_title: Goods Receipt Diagnostics
 h1: SAP goods receipt diagnostics

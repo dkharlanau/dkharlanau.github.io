@@ -12,7 +12,7 @@ sap_area: MM / FI / invoice verification
 business_process: Procure to pay
 status: needs_verification
 verified: false
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-09
 
 tags:
   - procure-to-pay
@@ -21,9 +21,8 @@ tags:
 related: 
   - "/atlas/maps/procure-to-pay-map/"
   - "/atlas/diagnostics/sap-goods-receipt-diagnostics/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/mm-procurement/invoice-verification/gr-ir-clearing.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/mm-procurement/troubleshooting/gr-ir-mismatch.md"
+  - "/atlas/diagnostics/sap-three-way-match-diagnostics/"
+  - "/atlas/sap/sap-mm-procurement-overview/"
 robots: noindex,follow
 short_title: GR/IR Clearing Explained
 h1: SAP GR/IR clearing explained
@@ -48,13 +47,17 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP operations</dd></div><div><dt>Type</dt><dd>SAP concept</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP operations</dd></div><div><dt>Type</dt><dd>SAP concept</dd></div><div><dt>Reviewed</dt><dd>2026-06-09</dd></div></dl></aside>
 
 <div class="note-body">
 
 <h2>Where this fits</h2>
 
 <p>GR/IR sits between goods receipt and invoice verification. It helps separate the physical receipt event from the supplier invoice event.</p>
+
+<h2>How GR/IR works</h2>
+
+<p>When a goods receipt (GR) is posted in MIGO, SAP creates an accounting entry that debits the stock or consumption account and credits the GR/IR clearing account. When the invoice is posted in MIRO, SAP debits the GR/IR clearing account and credits the vendor account. If quantities and prices match perfectly, the GR/IR line items net to zero and can be cleared. If they do not match, a balance remains on the GR/IR account until the difference is resolved or written off. The GR/IR account is therefore a temporary suspense account, not a permanent liability.</p>
 
 <h2>Common issues</h2>
 
@@ -66,6 +69,17 @@ author: Dzmitryi Kharlanau
 
 <li>Old balances remain because reversals, returns, cancellations, or invoice corrections were not handled consistently.</li>
 
+</ul>
+
+<h2>Common mismatch patterns</h2>
+
+<ul>
+  <li><strong>Quantity differences</strong> — invoice quantity is higher or lower than the total GR quantity for the PO line. Common with partial deliveries, over-shipments, or returns not updated in SAP.</li>
+  <li><strong>Price differences</strong> — invoice price differs from the PO net price due to price changes, scales, or unplanned delivery costs added in MIRO.</li>
+  <li><strong>Tax differences</strong> — tax code or tax amount on the invoice does not match the PO or GR. Often caused by vendor invoice formatting or jurisdiction changes.</li>
+  <li><strong>Currency differences</strong> — foreign-currency POs create exchange rate variances between GR date and invoice date. The GR/IR account may show a residual in local currency even when foreign currency matches.</li>
+  <li><strong>Timing differences</strong> — GR posted in one period, invoice posted in another, or month-end closing prevents clearing until the next period.</li>
+  <li><strong>Returns and credit memos</strong> — a return delivery or credit memo was posted but did not correctly reference the original GR or invoice, leaving unmatched items.</li>
 </ul>
 
 <h2>Diagnostic questions</h2>
@@ -80,6 +94,33 @@ author: Dzmitryi Kharlanau
 
 </ul>
 
+<h2>Where to check</h2>
+
+<ul>
+  <li><strong>FBL3N</strong> — line items on the GR/IR clearing account. Look for open debits and credits that do not net to zero.</li>
+  <li><strong>ME23N</strong> — PO history tab shows the full document flow: GRs, invoices, returns, and credit memos per PO line.</li>
+  <li><strong>MIGO</strong> — review GR documents, movement types, and whether returns were posted correctly.</li>
+  <li><strong>MIRO / MIR4</strong> — invoice documents, blocked reasons, and variance details. Check for unplanned delivery costs.</li>
+  <li><strong>MR11</strong> — GR/IR maintenance: lists open items and allows write-off of small, approved differences.</li>
+  <li><strong>F.13</strong> — automatic clearing program for GR/IR and other clearing accounts. Useful for mass clearing when document assignments match.</li>
+</ul>
+
+<h2>Tables and fields</h2>
+
+<ul>
+  <li><strong>BSEG</strong> — accounting document segment; contains GR/IR account postings with PO reference (EBELN, EBELP).</li>
+  <li><strong>BSIS</strong> — open items for the GR/IR account; key for FBL3N and reconciliation.</li>
+  <li><strong>EKBE</strong> — PO history; aggregates GR and invoice references per PO item.</li>
+  <li><strong>MKPF</strong> — GR document header.</li>
+  <li><strong>MSEG</strong> — GR document items; links to PO and accounting.</li>
+  <li><strong>RBKP</strong> — invoice document header.</li>
+  <li><strong>RSEG</strong> — invoice document items; links to PO and GR.</li>
+</ul>
+
+<h2>When to escalate</h2>
+
+<p>Escalate when the mismatch indicates a process problem rather than a data cleanup task. Examples: repeated quantity differences from the same vendor suggest a receiving or vendor communication issue; persistent price differences suggest procurement is not updating outline agreements or info records; large old open items with no supporting documents may indicate fraud, theft, or system bypass. Data cleanup (MR11, F.13, manual clearing) should only be done after the root cause is understood and approved by finance.</p>
+
 </div>
 
 <section class="atlas-related"><h2>Related pages</h2><ul>
@@ -87,6 +128,10 @@ author: Dzmitryi Kharlanau
 <li><a href="/atlas/maps/procure-to-pay-map/">Procure to Pay Map</a></li>
 
 <li><a href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">Goods Receipt Diagnostics</a></li>
+
+<li><a href="/atlas/diagnostics/sap-three-way-match-diagnostics/">Three-Way Match Diagnostics</a></li>
+
+<li><a href="/atlas/sap/sap-mm-procurement-overview/">MM Procurement Overview</a></li>
 
 </ul></section>
 

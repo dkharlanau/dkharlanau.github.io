@@ -21,9 +21,6 @@ tags:
 related: 
   - "/atlas/diagnostics/pos-sales-not-reflected-in-sap/"
   - "/atlas/concepts/sap-stock-exists-not-promisable/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/retail/concepts/store-receiving.md"
-  - "private-source/kb-drafts/sap-domain-atlas/domains/pos-store-operations/concepts/store-receiving.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Store Receiving in SAP Retail
 h1: Store receiving in SAP Retail

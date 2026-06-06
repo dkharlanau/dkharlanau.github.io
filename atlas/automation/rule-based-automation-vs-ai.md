@@ -22,8 +22,6 @@ related:
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
   - "/atlas/ai-operations/practical-ai-ml-for-sap-support/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/ai-enterprise-operations/concepts/rule-based-automation-vs-ai.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Rule-Based Automation vs AI
 h1: Rule-based automation vs AI

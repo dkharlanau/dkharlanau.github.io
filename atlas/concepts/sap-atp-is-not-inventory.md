@@ -23,8 +23,6 @@ related:
   - /atlas/concepts/order-to-cash/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /services/sap-ams-consulting/
-source_files:
-  - "private-source/kb-drafts/sap-domain-atlas/domains/sales/concepts/atp.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 ---
 

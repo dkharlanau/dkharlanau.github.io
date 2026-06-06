@@ -22,9 +22,6 @@ tags:
 related:
   - /atlas/concepts/order-to-cash/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
-source_files:
-  - "private-source/kb-drafts/sap-domain-atlas/domains/sales/concepts/pricing-procedure.md"
-  - "private-source/kb-drafts/sap-domain-atlas/publishing/seo-topic-map.md"
 robots: noindex,follow
 sitemap: false
 ---

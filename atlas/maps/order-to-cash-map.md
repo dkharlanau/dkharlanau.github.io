@@ -21,9 +21,6 @@ tags:
 related: 
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-invoice-split-analysis/"
-source_files: 
-  - "private-source/kb-drafts/sap-domain-atlas/domains/sales/process-map.md"
-  - "private-source/kb-drafts/sap-domain-atlas/cross-domain/document-flow-map.md"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Order to Cash Map
 h1: Order to cash map
