@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Event Contracts"
 permalink: /atlas/concepts/event-contracts/
 parent: Concepts

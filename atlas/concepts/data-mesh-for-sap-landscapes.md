@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Data Mesh for SAP Landscapes"
 permalink: /atlas/concepts/data-mesh-for-sap-landscapes/
 parent: Concepts

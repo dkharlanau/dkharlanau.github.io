@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Semantic Layer"
 permalink: /atlas/concepts/semantic-layer/
 parent: Concepts

@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Event-Driven Architecture"
 permalink: /atlas/concepts/event-driven-architecture/
 parent: Concepts

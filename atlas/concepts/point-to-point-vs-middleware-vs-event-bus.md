@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Point-to-Point vs Middleware vs Event Bus"
 permalink: /atlas/concepts/point-to-point-vs-middleware-vs-event-bus/
 parent: Concepts

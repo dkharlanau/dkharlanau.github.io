@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "SAP Data Products Map"
 permalink: /atlas/maps/sap-data-products-map/
 nav_order: 13

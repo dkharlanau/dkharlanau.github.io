@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Data Mesh Architecture Map"
 permalink: /atlas/maps/data-mesh-architecture-map/
 nav_order: 12

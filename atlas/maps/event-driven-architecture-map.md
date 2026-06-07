@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Event-Driven Architecture Map"
 permalink: /atlas/maps/event-driven-architecture-map/
 nav_order: 11

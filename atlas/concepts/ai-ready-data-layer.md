@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "AI-Ready Data Layer"
 permalink: /atlas/concepts/ai-ready-data-layer/
 parent: Concepts

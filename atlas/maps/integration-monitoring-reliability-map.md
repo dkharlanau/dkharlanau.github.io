@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Integration Monitoring and Reliability Map"
 permalink: /atlas/maps/integration-monitoring-reliability-map/
 nav_order: 14

@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Integration Architecture Map"
 permalink: /atlas/maps/integration-architecture-map/
 nav_order: 10

@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Event Catalog"
 permalink: /atlas/concepts/event-catalog/
 parent: Concepts

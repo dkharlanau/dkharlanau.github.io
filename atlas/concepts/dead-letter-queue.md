@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Dead Letter Queue"
 permalink: /atlas/concepts/dead-letter-queue/
 parent: Concepts
