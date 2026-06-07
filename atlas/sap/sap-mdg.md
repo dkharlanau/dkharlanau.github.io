@@ -21,9 +21,14 @@ tags:
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
+  - /atlas/maps/data-mesh-architecture-map/
+  - /atlas/maps/sap-data-products-map/
   - /atlas/sap/sap-s4hana/
   - /atlas/data-quality/sap-master-data-quality/
   - /atlas/data-quality/sap-mdg-governance-patterns/
+  - /atlas/concepts/data-mesh-for-sap-landscapes/
+  - /atlas/concepts/sap-data-product/
+  - /atlas/concepts/data-quality-controls/
 robots: noindex,follow
 sitemap: false
 ---

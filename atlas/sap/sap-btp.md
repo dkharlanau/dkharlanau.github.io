@@ -22,9 +22,15 @@ related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
   - /atlas/maps/sap-technology-landscape-map/
+  - /atlas/maps/integration-architecture-map/
+  - /atlas/maps/event-driven-architecture-map/
+  - /atlas/maps/integration-monitoring-reliability-map/
   - /atlas/sap/sap-s4hana/
   - /atlas/sap/sap-integration-suite/
   - /atlas/sap/cap/
+  - /atlas/concepts/sap-integration-architecture/
+  - /atlas/concepts/sap-event-driven-architecture/
+  - /atlas/concepts/ai-ready-data-layer/
 robots: noindex,follow
 sitemap: false
 ---

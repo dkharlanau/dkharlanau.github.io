@@ -21,8 +21,14 @@ tags:
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-integration-landscape-map/
+  - /atlas/maps/integration-architecture-map/
+  - /atlas/maps/integration-monitoring-reliability-map/
   - /atlas/sap/sap-s4hana/
   - /atlas/sap/sap-integration-suite/
+  - /atlas/concepts/sap-integration-architecture/
+  - /atlas/concepts/integration-pattern-decision-matrix/
+  - /atlas/concepts/rest-vs-odata-vs-soap-vs-idoc-vs-events/
+  - /atlas/concepts/retry-and-error-handling/
 robots: noindex,follow
 sitemap: false
 ---

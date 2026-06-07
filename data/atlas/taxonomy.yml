@@ -1838,3 +1838,749 @@
     - /atlas/diagnostics/sap-idoc-status-diagnostics/
     - /atlas/diagnostics/sap-process-audit/
   status: skeleton
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# INTEGRATION & DATA ARCHITECTURE GRAPH — appended 2026-06-07
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─── New Maps (5) ───
+- id: integration-architecture-map
+  type: map
+  parent: null
+  title: "Integration Architecture Map"
+  permalink: "/atlas/maps/integration-architecture-map/"
+  source_refs:
+    - sap-integration-suite-docs
+    - sap-btp-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - rest-apis
+    - soap
+    - idoc
+    - business-events
+    - edi
+    - api-gateways
+    - ipaas-middleware
+    - cloud-connector
+    - integration-monitoring
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+    - /atlas/diagnostics/sap-idoc-status-diagnostics/
+    - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+  status: skeleton
+
+- id: event-driven-architecture-map
+  type: map
+  parent: null
+  title: "Event-Driven Architecture Map"
+  permalink: "/atlas/maps/event-driven-architecture-map/"
+  source_refs:
+    - sap-event-mesh-docs
+    - cloudevents-spec
+    - asyncapi-spec
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - business-events
+    - apis
+    - odata
+    - rest-apis
+    - message-queues
+    - api-gateways
+    - ipaas-middleware
+    - cloud-connector
+    - integration-monitoring
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+  status: skeleton
+
+- id: data-mesh-architecture-map
+  type: map
+  parent: null
+  title: "Data Mesh Architecture Map"
+  permalink: "/atlas/maps/data-mesh-architecture-map/"
+  source_refs:
+    - data-mesh-principles
+    - sap-datasphere-docs
+    - sap-analytics-cloud-docs
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-mdg
+  related_technologies:
+    - cds-views
+    - cds-analytical-views
+    - odata
+    - data-products
+    - data-federation
+    - semantic-layer
+    - data-quality-lineage
+    - bw-bw-bridge
+    - kpis-operational-analytics
+  related_diagnostics:
+    - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
+  status: skeleton
+
+- id: sap-data-products-map
+  type: map
+  parent: null
+  title: "SAP Data Products Map"
+  permalink: "/atlas/maps/sap-data-products-map/"
+  source_refs:
+    - sap-datasphere-docs
+    - sap-community-datasphere
+    - data-mesh-principles
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-mdg
+  related_technologies:
+    - cds-views
+    - cds-analytical-views
+    - odata
+    - data-products
+    - data-federation
+    - semantic-layer
+    - data-quality-lineage
+    - bw-bw-bridge
+  related_diagnostics:
+    - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
+  status: skeleton
+
+- id: integration-monitoring-reliability-map
+  type: map
+  parent: null
+  title: "Integration Monitoring and Reliability Map"
+  permalink: "/atlas/maps/integration-monitoring-reliability-map/"
+  source_refs:
+    - sap-integration-suite-docs
+    - opentelemetry-docs
+    - sap-event-mesh-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - business-events
+    - idoc
+    - rest-apis
+    - soap
+    - message-queues
+    - api-gateways
+    - ipaas-middleware
+    - cloud-connector
+    - integration-monitoring
+    - application-logs
+    - alerting
+    - job-monitoring
+    - audit-trails
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+    - /atlas/diagnostics/sap-idoc-status-diagnostics/
+    - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+    - /atlas/diagnostics/sap-output-message-control-diagnostics/
+  status: skeleton
+
+# ─── New Integration Concepts (12) ───
+- id: sap-integration-architecture
+  type: concept
+  parent: integration-architecture-map
+  title: "SAP Integration Architecture"
+  permalink: "/atlas/concepts/sap-integration-architecture/"
+  source_refs:
+    - sap-integration-suite-docs
+    - sap-btp-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - rest-apis
+    - soap
+    - idoc
+    - business-events
+    - edi
+    - api-gateways
+    - ipaas-middleware
+    - cloud-connector
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+  status: skeleton
+
+- id: integration-pattern-decision-matrix
+  type: concept
+  parent: integration-architecture-map
+  title: "Integration Pattern Decision Matrix"
+  permalink: "/atlas/concepts/integration-pattern-decision-matrix/"
+  source_refs:
+    - sap-integration-suite-docs
+    - sap-api-business-hub
+  related_products:
+    - sap-s4hana
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - rest-apis
+    - soap
+    - idoc
+    - business-events
+    - edi
+    - message-queues
+  related_diagnostics: []
+  status: skeleton
+
+- id: rest-vs-odata-vs-soap-vs-idoc-vs-events
+  type: concept
+  parent: integration-architecture-map
+  title: "REST vs OData vs SOAP vs IDoc vs Events"
+  permalink: "/atlas/concepts/rest-vs-odata-vs-soap-vs-idoc-vs-events/"
+  source_refs:
+    - sap-help-odata
+    - sap-help-idoc
+    - sap-integration-suite-docs
+  related_products:
+    - sap-s4hana
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - rest-apis
+    - soap
+    - idoc
+    - business-events
+  related_diagnostics: []
+  status: skeleton
+
+- id: synchronous-vs-asynchronous-integration
+  type: concept
+  parent: integration-architecture-map
+  title: "Synchronous vs Asynchronous Integration"
+  permalink: "/atlas/concepts/synchronous-vs-asynchronous-integration/"
+  source_refs:
+    - sap-integration-suite-docs
+    - sap-event-mesh-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - rest-apis
+    - business-events
+    - message-queues
+    - ipaas-middleware
+  related_diagnostics: []
+  status: skeleton
+
+- id: point-to-point-vs-middleware-vs-event-bus
+  type: concept
+  parent: integration-architecture-map
+  title: "Point-to-Point vs Middleware vs Event Bus"
+  permalink: "/atlas/concepts/point-to-point-vs-middleware-vs-event-bus/"
+  source_refs:
+    - sap-integration-suite-docs
+    - sap-event-mesh-docs
+    - kafka-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - business-events
+    - message-queues
+    - api-gateways
+    - ipaas-middleware
+    - cloud-connector
+  related_diagnostics: []
+  status: skeleton
+
+- id: api-contracts
+  type: concept
+  parent: integration-architecture-map
+  title: "API Contracts"
+  permalink: "/atlas/concepts/api-contracts/"
+  source_refs:
+    - sap-api-business-hub
+    - sap-help-odata
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - rest-apis
+    - soap
+    - api-gateways
+  related_diagnostics: []
+  status: skeleton
+
+- id: event-contracts
+  type: concept
+  parent: event-driven-architecture-map
+  title: "Event Contracts"
+  permalink: "/atlas/concepts/event-contracts/"
+  source_refs:
+    - cloudevents-spec
+    - asyncapi-spec
+    - sap-event-mesh-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - business-events
+    - apis
+    - message-queues
+    - api-gateways
+  related_diagnostics: []
+  status: skeleton
+
+- id: data-contracts
+  type: concept
+  parent: data-mesh-architecture-map
+  title: "Data Contracts"
+  permalink: "/atlas/concepts/data-contracts/"
+  source_refs:
+    - data-mesh-principles
+    - sap-datasphere-docs
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-mdg
+  related_technologies:
+    - cds-views
+    - odata
+    - data-products
+    - data-quality-lineage
+    - semantic-layer
+  related_diagnostics:
+    - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
+  status: skeleton
+
+- id: idempotency
+  type: concept
+  parent: integration-monitoring-reliability-map
+  title: "Idempotency"
+  permalink: "/atlas/concepts/idempotency/"
+  source_refs:
+    - microservices-io-idempotency
+    - sap-integration-suite-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - rest-apis
+    - business-events
+    - message-queues
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+  status: skeleton
+
+- id: retry-and-error-handling
+  type: concept
+  parent: integration-monitoring-reliability-map
+  title: "Retry and Error Handling"
+  permalink: "/atlas/concepts/retry-and-error-handling/"
+  source_refs:
+    - sap-integration-suite-docs
+    - sap-event-mesh-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - business-events
+    - message-queues
+    - ipaas-middleware
+    - integration-monitoring
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+  status: skeleton
+
+- id: dead-letter-queue
+  type: concept
+  parent: integration-monitoring-reliability-map
+  title: "Dead Letter Queue"
+  permalink: "/atlas/concepts/dead-letter-queue/"
+  source_refs:
+    - aws-dlq-docs
+    - sap-event-mesh-docs
+    - kafka-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - business-events
+    - message-queues
+    - ipaas-middleware
+    - integration-monitoring
+    - alerting
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+  status: skeleton
+
+- id: event-catalog
+  type: concept
+  parent: event-driven-architecture-map
+  title: "Event Catalog"
+  permalink: "/atlas/concepts/event-catalog/"
+  source_refs:
+    - eventcatalog-dev
+    - asyncapi-spec
+    - cloudevents-spec
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - business-events
+    - apis
+    - message-queues
+    - api-gateways
+  related_diagnostics: []
+  status: skeleton
+
+- id: integration-ownership-model
+  type: concept
+  parent: integration-architecture-map
+  title: "Integration Ownership Model"
+  permalink: "/atlas/concepts/integration-ownership-model/"
+  source_refs:
+    - sap-integration-suite-docs
+    - data-mesh-principles
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - business-events
+    - ipaas-middleware
+    - api-gateways
+    - integration-monitoring
+  related_diagnostics: []
+  status: skeleton
+
+# ─── New Data Architecture Concepts (8) ───
+- id: event-driven-architecture
+  type: concept
+  parent: event-driven-architecture-map
+  title: "Event-Driven Architecture"
+  permalink: "/atlas/concepts/event-driven-architecture/"
+  source_refs:
+    - cloudevents-spec
+    - asyncapi-spec
+    - sap-event-mesh-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - business-events
+    - apis
+    - message-queues
+    - api-gateways
+    - ipaas-middleware
+    - cloud-connector
+    - integration-monitoring
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+  status: skeleton
+
+- id: sap-event-driven-architecture
+  type: concept
+  parent: event-driven-architecture-map
+  title: "SAP Event-Driven Architecture"
+  permalink: "/atlas/concepts/sap-event-driven-architecture/"
+  source_refs:
+    - sap-event-mesh-docs
+    - sap-help-enterprise-events
+    - cloudevents-spec
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - business-events
+    - apis
+    - odata
+    - message-queues
+    - api-gateways
+    - ipaas-middleware
+    - cloud-connector
+    - integration-monitoring
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+  status: skeleton
+
+- id: data-mesh-for-sap-landscapes
+  type: concept
+  parent: data-mesh-architecture-map
+  title: "Data Mesh for SAP Landscapes"
+  permalink: "/atlas/concepts/data-mesh-for-sap-landscapes/"
+  source_refs:
+    - data-mesh-principles
+    - sap-datasphere-docs
+    - sap-community-datasphere
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-mdg
+  related_technologies:
+    - cds-views
+    - cds-analytical-views
+    - odata
+    - data-products
+    - data-federation
+    - semantic-layer
+    - data-quality-lineage
+    - bw-bw-bridge
+  related_diagnostics:
+    - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
+  status: skeleton
+
+- id: data-product
+  type: concept
+  parent: data-mesh-architecture-map
+  title: "Data Product"
+  permalink: "/atlas/concepts/data-product/"
+  source_refs:
+    - data-mesh-principles
+    - sap-datasphere-docs
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-mdg
+  related_technologies:
+    - cds-views
+    - cds-analytical-views
+    - odata
+    - data-products
+    - semantic-layer
+    - data-quality-lineage
+    - data-federation
+  related_diagnostics:
+    - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
+  status: skeleton
+
+- id: sap-data-product
+  type: concept
+  parent: sap-data-products-map
+  title: "SAP Data Product"
+  permalink: "/atlas/concepts/sap-data-product/"
+  source_refs:
+    - sap-datasphere-docs
+    - sap-community-datasphere
+    - data-mesh-principles
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-mdg
+  related_technologies:
+    - cds-views
+    - cds-analytical-views
+    - odata
+    - data-products
+    - semantic-layer
+    - data-quality-lineage
+    - data-federation
+    - bw-bw-bridge
+  related_diagnostics:
+    - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
+  status: skeleton
+
+- id: data-federation
+  type: concept
+  parent: data-mesh-architecture-map
+  title: "Data Federation"
+  permalink: "/atlas/concepts/data-federation/"
+  source_refs:
+    - sap-datasphere-docs
+    - sap-community-federation
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - odata
+    - data-products
+    - semantic-layer
+    - bw-bw-bridge
+  related_diagnostics: []
+  status: skeleton
+
+- id: data-lineage
+  type: concept
+  parent: data-mesh-architecture-map
+  title: "Data Lineage"
+  permalink: "/atlas/concepts/data-lineage/"
+  source_refs:
+    - sap-datasphere-docs
+    - sap-community-datasphere
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-mdg
+  related_technologies:
+    - cds-views
+    - cds-analytical-views
+    - odata
+    - data-products
+    - data-quality-lineage
+    - semantic-layer
+  related_diagnostics:
+    - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
+  status: skeleton
+
+- id: data-quality-controls
+  type: concept
+  parent: data-mesh-architecture-map
+  title: "Data Quality Controls"
+  permalink: "/atlas/concepts/data-quality-controls/"
+  source_refs:
+    - sap-datasphere-docs
+    - sap-community-datasphere
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-mdg
+  related_technologies:
+    - cds-views
+    - odata
+    - data-products
+    - data-quality-lineage
+    - semantic-layer
+  related_diagnostics:
+    - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
+  status: skeleton
+
+- id: semantic-layer
+  type: concept
+  parent: data-mesh-architecture-map
+  title: "Semantic Layer"
+  permalink: "/atlas/concepts/semantic-layer/"
+  source_refs:
+    - sap-datasphere-docs
+    - sap-community-semantic
+    - sap-analytics-cloud-docs
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - cds-analytical-views
+    - odata
+    - data-products
+    - data-federation
+    - kpis-operational-analytics
+    - embedded-analytics
+  related_diagnostics: []
+  status: skeleton
+
+# ─── New AI/Agent Concepts (3) ───
+- id: ai-ready-data-layer
+  type: concept
+  parent: ai-agentic-landscape-map
+  title: "AI-Ready Data Layer"
+  permalink: "/atlas/concepts/ai-ready-data-layer/"
+  source_refs:
+    - sap-datasphere-docs
+    - sap-community-vector
+    - sap-news-business-ai
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-joule
+  related_technologies:
+    - cds-views
+    - odata
+    - data-products
+    - semantic-layer
+    - sap-business-ai
+    - ai-agents
+    - rag
+    - vector-search
+    - embeddings
+    - knowledge-graphs
+  related_diagnostics: []
+  status: skeleton
+
+- id: knowledge-graph-for-sap-operations
+  type: concept
+  parent: ai-agentic-landscape-map
+  title: "Knowledge Graph for SAP Operations"
+  permalink: "/atlas/concepts/knowledge-graph-for-sap-operations/"
+  source_refs:
+    - sap-community-knowledge-graph
+    - sap-datasphere-docs
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+    - sap-joule
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - rag
+    - vector-search
+    - embeddings
+    - knowledge-graphs
+    - agent-memory
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+  status: skeleton
+
+- id: cdc-change-data-capture
+  type: concept
+  parent: data-mesh-architecture-map
+  title: "Change Data Capture (CDC)"
+  permalink: "/atlas/concepts/cdc-change-data-capture/"
+  source_refs:
+    - sap-community-cdc
+    - sap-datasphere-docs
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - odata
+    - data-products
+    - data-federation
+    - bw-bw-bridge
+  related_diagnostics: []
+  status: skeleton

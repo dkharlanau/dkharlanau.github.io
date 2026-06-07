@@ -21,9 +21,17 @@ tags:
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
+  - /atlas/maps/integration-architecture-map/
+  - /atlas/maps/event-driven-architecture-map/
+  - /atlas/maps/data-mesh-architecture-map/
+  - /atlas/maps/sap-data-products-map/
+  - /atlas/maps/integration-monitoring-reliability-map/
   - /atlas/sap/sap-btp/
   - /atlas/sap/abap-platform/
   - /atlas/sap/abap-cloud/
+  - /atlas/concepts/sap-integration-architecture/
+  - /atlas/concepts/data-mesh-for-sap-landscapes/
+  - /atlas/concepts/sap-data-product/
 robots: noindex,follow
 sitemap: false
 ---

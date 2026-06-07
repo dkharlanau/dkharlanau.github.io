@@ -22,10 +22,18 @@ related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
   - /atlas/maps/sap-integration-landscape-map/
+  - /atlas/maps/integration-architecture-map/
+  - /atlas/maps/event-driven-architecture-map/
+  - /atlas/maps/integration-monitoring-reliability-map/
   - /atlas/sap/sap-btp/
   - /atlas/sap/sap-s4hana/
   - /atlas/sap/business-events/
   - /atlas/sap/idoc/
+  - /atlas/concepts/sap-integration-architecture/
+  - /atlas/concepts/integration-pattern-decision-matrix/
+  - /atlas/concepts/sap-event-driven-architecture/
+  - /atlas/concepts/event-contracts/
+  - /atlas/concepts/idempotency/
 robots: noindex,follow
 sitemap: false
 ---

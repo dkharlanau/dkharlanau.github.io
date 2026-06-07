@@ -21,9 +21,15 @@ tags:
 related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-product-landscape-map/
+  - /atlas/maps/data-analytics-landscape-map/
+  - /atlas/maps/data-mesh-architecture-map/
+  - /atlas/maps/sap-data-products-map/
   - /atlas/sap/analytics-technology-domain/
   - /atlas/sap/sap-s4hana/
   - /atlas/sap/sap-datasphere/
+  - /atlas/concepts/data-mesh-for-sap-landscapes/
+  - /atlas/concepts/semantic-layer/
+  - /atlas/concepts/sap-data-product/
 robots: noindex,follow
 sitemap: false
 ---

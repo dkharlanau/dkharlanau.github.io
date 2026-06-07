@@ -22,12 +22,16 @@ related:
   - /atlas/maps/sap-s4hana-landscape-map/
   - /atlas/maps/sap-technology-landscape-map/
   - /atlas/maps/sap-integration-landscape-map/
+  - /atlas/maps/integration-architecture-map/
   - /atlas/sap/sap-s4hana/
   - /atlas/sap/sap-btp/
   - /atlas/sap/cds-views/
   - /atlas/sap/rap/
   - /atlas/sap/cap/
   - /atlas/sap/fiori-ui5/
+  - /atlas/concepts/sap-integration-architecture/
+  - /atlas/concepts/integration-pattern-decision-matrix/
+  - /atlas/concepts/rest-vs-odata-vs-soap-vs-idoc-vs-events/
 robots: noindex,follow
 sitemap: false
 ---
