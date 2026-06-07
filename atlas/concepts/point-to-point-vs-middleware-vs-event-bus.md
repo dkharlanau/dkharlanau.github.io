@@ -14,7 +14,6 @@ related:
   - /atlas/concepts/synchronous-vs-asynchronous-integration/
   - /atlas/concepts/event-driven-architecture/
   - /atlas/sap/sap-integration-suite/
-  - /atlas/sap/ipaas-middleware/
 ---
 
 # Point-to-Point vs Middleware vs Event Bus
@@ -93,7 +92,6 @@ Three integration topologies with different coupling, scalability, and operation
 - [Synchronous vs Asynchronous Integration](/atlas/concepts/synchronous-vs-asynchronous-integration/)
 - [Event-Driven Architecture](/atlas/concepts/event-driven-architecture/)
 - [SAP Integration Suite](/atlas/sap/sap-integration-suite/)
-- [iPaaS and Middleware](/atlas/sap/ipaas-middleware/)
 
 ## Source references
 

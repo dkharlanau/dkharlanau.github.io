@@ -21,7 +21,6 @@ related:
   - /atlas/sap/cds-views/
   - /atlas/sap/cds-analytical-views/
   - /atlas/sap/odata/
-  - /atlas/sap/data-products/
   - /atlas/sap/data-quality-lineage/
 ---
 
@@ -55,7 +54,6 @@ This map catalogs common SAP data products, their source systems, consumers, qua
 - [CDS Views](/atlas/sap/cds-views/)
 - [CDS Analytical Views](/atlas/sap/cds-analytical-views/)
 - [OData](/atlas/sap/odata/)
-- [Data Products](/atlas/sap/data-products/)
 - [Data Quality and Lineage](/atlas/sap/data-quality-lineage/)
 
 ## SAP data product examples
