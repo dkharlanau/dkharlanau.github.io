@@ -4,16 +4,15 @@
 # Created: 2026-06-06
 # Safety: all skeleton pages are unverified review candidates (noindex, sitemap:false)
 # Source: SAP S/4HANA 2025 Feature Scope Description (public-safe topic discovery only)
-
-meta:
-  schema: dkharlanau.atlas.taxonomy
-  schema_version: "1.0"
-  canonical_url: https://dkharlanau.github.io/data/atlas/taxonomy.yml
-  generated_at: "2026-06-06"
-  description: |
-    Hierarchical taxonomy of SAP landscape pages: maps, domains, products,
-    technologies, and integrations. Used by agents for page routing,
-    related-content linking, and taxonomy extension.
+#
+# Schema: dkharlanau.atlas.taxonomy
+# Schema version: 1.0
+# Canonical URL: https://dkharlanau.github.io/data/atlas/taxonomy.yml
+# Generated: 2026-06-06
+# Description:
+#   Hierarchical taxonomy of SAP landscape pages: maps, domains, products,
+#   technologies, and integrations. Used by agents for page routing,
+#   related-content linking, and taxonomy extension.
 
 # ─── Maps (landscape navigation pages) ───
 - id: sap-s4hana-landscape-map
@@ -573,4 +572,1269 @@ meta:
   related_technologies:
     - fiori-ui5
   related_diagnostics: []
+  status: skeleton
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# GAP AUDIT EXPANSION — appended 2026-06-06
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─── New Maps (4) ───
+- id: data-analytics-landscape-map
+  type: map
+  parent: null
+  title: "Data and Analytics Landscape Map"
+  permalink: "/atlas/maps/data-analytics-landscape-map/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - odata
+    - cds-analytical-views
+    - embedded-analytics
+    - bw-bw-bridge
+    - data-products
+    - data-federation
+    - semantic-layer
+    - kpis-operational-analytics
+    - data-quality-lineage
+  related_diagnostics: []
+  status: skeleton
+
+- id: ai-agentic-landscape-map
+  type: map
+  parent: null
+  title: "AI and Agentic Technology Landscape Map"
+  permalink: "/atlas/maps/ai-agentic-landscape-map/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-joule
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - rag
+    - knowledge-graphs
+    - vector-search
+    - embeddings
+    - tool-calling
+    - mcp
+    - agent-memory
+    - evaluation-guardrails
+    - human-approval-workflows
+  related_diagnostics: []
+  status: skeleton
+
+- id: developer-tooling-landscape-map
+  type: map
+  parent: null
+  title: "Developer Tooling Landscape Map"
+  permalink: "/atlas/maps/developer-tooling-landscape-map/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - abap-cloud
+    - cap
+    - rap
+    - github
+    - cicd
+    - automated-validation
+    - documentation-as-code
+    - static-site-generation
+    - yaml-registries
+    - schema-validation
+    - testing
+    - python-automation
+    - agent-workflows
+    - local-first-tooling
+  related_diagnostics: []
+  status: skeleton
+
+- id: operations-observability-landscape-map
+  type: map
+  parent: null
+  title: "Operations and Observability Landscape Map"
+  permalink: "/atlas/maps/operations-observability-landscape-map/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - business-events
+    - idoc
+    - odata
+    - application-logs
+    - integration-monitoring
+    - job-monitoring
+    - alerting
+    - audit-trails
+    - identity-access
+    - roles-authorizations
+    - secrets-management
+    - change-control
+    - transport-governance
+    - incident-triage
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+    - /atlas/diagnostics/sap-idoc-status-diagnostics/
+    - /atlas/diagnostics/sap-output-message-control-diagnostics/
+    - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+  status: skeleton
+
+# ─── New Products (3) ───
+- id: sap-build
+  type: product
+  parent: null
+  title: "SAP Build"
+  permalink: "/atlas/sap/sap-build/"
+  source_refs:
+    - sap-help-portal
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-signavio
+  related_technologies:
+    - fiori-ui5
+    - odata
+    - workflow-process-automation
+    - cap
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-signavio
+  type: product
+  parent: null
+  title: "SAP Signavio"
+  permalink: "/atlas/sap/sap-signavio/"
+  source_refs:
+    - sap-help-portal
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-build
+  related_technologies:
+    - workflow-process-automation
+    - odata
+    - fiori-ui5
+  related_diagnostics: []
+  status: skeleton
+
+- id: sap-joule
+  type: product
+  parent: null
+  title: "SAP Joule"
+  permalink: "/atlas/sap/sap-joule/"
+  source_refs:
+    - sap-help-portal
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - rag
+    - vector-search
+    - embeddings
+    - odata
+    - cds-views
+  related_diagnostics: []
+  status: skeleton
+
+# ─── New Technologies (3) ───
+- id: apis
+  type: technology
+  parent: enterprise-technology-domain
+  title: "APIs"
+  permalink: "/atlas/sap/apis/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - odata
+    - rest-apis
+    - soap
+    - edi
+    - webhooks
+    - message-queues
+    - api-gateways
+    - ipaas-middleware
+    - cloud-connector
+    - integration-monitoring
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+  status: skeleton
+
+- id: workflow-process-automation
+  type: technology
+  parent: enterprise-technology-domain
+  title: "Workflow and Process Automation"
+  permalink: "/atlas/sap/workflow-process-automation/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-build
+    - sap-signavio
+  related_technologies:
+    - apis
+    - odata
+    - fiori-ui5
+    - cap
+    - rap
+  related_diagnostics: []
+  status: skeleton
+
+- id: extensibility-clean-core
+  type: technology
+  parent: enterprise-technology-domain
+  title: "Extensibility and Clean Core"
+  permalink: "/atlas/sap/extensibility-clean-core/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - abap-cloud
+    - rap
+    - cap
+    - cds-views
+    - odata
+    - fiori-ui5
+    - apis
+    - workflow-process-automation
+  related_diagnostics: []
+  status: skeleton
+
+# ─── New Integrations (9) ───
+- id: rest-apis
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "REST APIs"
+  permalink: "/atlas/sap/rest-apis/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - business-events
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+  status: skeleton
+
+- id: soap
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "SOAP"
+  permalink: "/atlas/sap/soap/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - idoc
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-idoc-status-diagnostics/
+  status: skeleton
+
+- id: edi
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "EDI"
+  permalink: "/atlas/sap/edi/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - idoc
+    - business-events
+  related_diagnostics:
+    - /atlas/diagnostics/sap-idoc-status-diagnostics/
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+  status: skeleton
+
+- id: webhooks
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "Webhooks"
+  permalink: "/atlas/sap/webhooks/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - business-events
+    - odata
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+  status: skeleton
+
+- id: message-queues
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "Message Queues"
+  permalink: "/atlas/sap/message-queues/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - business-events
+    - idoc
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+  status: skeleton
+
+- id: api-gateways
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "API Gateways"
+  permalink: "/atlas/sap/api-gateways/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - rest-apis
+    - soap
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+  status: skeleton
+
+- id: ipaas-middleware
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "iPaaS and Middleware"
+  permalink: "/atlas/sap/ipaas-middleware/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - rest-apis
+    - soap
+    - message-queues
+    - api-gateways
+    - cloud-connector
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+  status: skeleton
+
+- id: cloud-connector
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "Cloud Connector"
+  permalink: "/atlas/sap/cloud-connector/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - ipaas-middleware
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+  status: skeleton
+
+- id: integration-monitoring
+  type: integration
+  parent: sap-integration-landscape-map
+  title: "Integration Monitoring"
+  permalink: "/atlas/sap/integration-monitoring/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - apis
+    - odata
+    - business-events
+    - idoc
+    - rest-apis
+    - soap
+    - message-queues
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+    - /atlas/diagnostics/sap-idoc-status-diagnostics/
+    - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+  status: skeleton
+
+# ─── New Data/Analytics Technologies (8) ───
+- id: cds-analytical-views
+  type: technology
+  parent: analytics-technology-domain
+  title: "CDS Analytical Views"
+  permalink: "/atlas/sap/cds-analytical-views/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - odata
+    - embedded-analytics
+    - semantic-layer
+    - data-quality-lineage
+  related_diagnostics: []
+  status: skeleton
+
+- id: embedded-analytics
+  type: technology
+  parent: analytics-technology-domain
+  title: "Embedded Analytics"
+  permalink: "/atlas/sap/embedded-analytics/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - cds-analytical-views
+    - odata
+    - fiori-ui5
+    - semantic-layer
+    - kpis-operational-analytics
+  related_diagnostics: []
+  status: skeleton
+
+- id: bw-bw-bridge
+  type: technology
+  parent: analytics-technology-domain
+  title: "BW and BW Bridge"
+  permalink: "/atlas/sap/bw-bw-bridge/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+  related_technologies:
+    - cds-views
+    - odata
+    - data-federation
+    - semantic-layer
+  related_diagnostics: []
+  status: skeleton
+
+- id: data-products
+  type: technology
+  parent: analytics-technology-domain
+  title: "Data Products"
+  permalink: "/atlas/sap/data-products/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - cds-analytical-views
+    - odata
+    - semantic-layer
+    - data-quality-lineage
+    - data-federation
+  related_diagnostics: []
+  status: skeleton
+
+- id: data-federation
+  type: technology
+  parent: analytics-technology-domain
+  title: "Data Federation"
+  permalink: "/atlas/sap/data-federation/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - odata
+    - bw-bw-bridge
+    - data-products
+    - semantic-layer
+  related_diagnostics: []
+  status: skeleton
+
+- id: semantic-layer
+  type: technology
+  parent: analytics-technology-domain
+  title: "Semantic Layer"
+  permalink: "/atlas/sap/semantic-layer/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - cds-analytical-views
+    - odata
+    - embedded-analytics
+    - data-products
+    - data-federation
+    - kpis-operational-analytics
+  related_diagnostics: []
+  status: skeleton
+
+- id: kpis-operational-analytics
+  type: technology
+  parent: analytics-technology-domain
+  title: "KPIs and Operational Analytics"
+  permalink: "/atlas/sap/kpis-operational-analytics/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - cds-views
+    - odata
+    - fiori-ui5
+    - embedded-analytics
+    - semantic-layer
+  related_diagnostics: []
+  status: skeleton
+
+- id: data-quality-lineage
+  type: technology
+  parent: analytics-technology-domain
+  title: "Data Quality and Lineage"
+  permalink: "/atlas/sap/data-quality-lineage/"
+  source_refs:
+    - fsd-s4hana-2025
+  related_products:
+    - sap-s4hana
+    - sap-datasphere
+    - sap-mdg
+  related_technologies:
+    - cds-views
+    - odata
+    - cds-analytical-views
+    - data-products
+  related_diagnostics:
+    - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
+  status: skeleton
+
+# ─── New AI/Agentic Technologies (12) ───
+- id: sap-business-ai
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "SAP Business AI"
+  permalink: "/atlas/sap/sap-business-ai/"
+  source_refs:
+    - sap-help-portal
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-joule
+    - sap-datasphere
+    - sap-analytics-cloud
+  related_technologies:
+    - ai-agents
+    - rag
+    - vector-search
+    - embeddings
+    - tool-calling
+    - mcp
+    - agent-memory
+    - evaluation-guardrails
+    - human-approval-workflows
+    - odata
+    - cds-views
+  related_diagnostics: []
+  status: skeleton
+
+- id: ai-agents
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "AI Agents"
+  permalink: "/atlas/sap/ai-agents/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-joule
+  related_technologies:
+    - sap-business-ai
+    - rag
+    - knowledge-graphs
+    - vector-search
+    - embeddings
+    - tool-calling
+    - mcp
+    - agent-memory
+    - evaluation-guardrails
+    - human-approval-workflows
+  related_diagnostics: []
+  status: skeleton
+
+- id: rag
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "RAG"
+  permalink: "/atlas/sap/rag/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-joule
+    - sap-datasphere
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - vector-search
+    - embeddings
+    - knowledge-graphs
+    - agent-memory
+  related_diagnostics: []
+  status: skeleton
+
+- id: knowledge-graphs
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "Knowledge Graphs"
+  permalink: "/atlas/sap/knowledge-graphs/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-datasphere
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - rag
+    - vector-search
+    - embeddings
+  related_diagnostics: []
+  status: skeleton
+
+- id: vector-search
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "Vector Search"
+  permalink: "/atlas/sap/vector-search/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-datasphere
+    - sap-joule
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - rag
+    - embeddings
+    - knowledge-graphs
+  related_diagnostics: []
+  status: skeleton
+
+- id: embeddings
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "Embeddings"
+  permalink: "/atlas/sap/embeddings/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-datasphere
+    - sap-joule
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - rag
+    - vector-search
+    - knowledge-graphs
+  related_diagnostics: []
+  status: skeleton
+
+- id: tool-calling
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "Tool Calling"
+  permalink: "/atlas/sap/tool-calling/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-joule
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - mcp
+    - agent-memory
+    - evaluation-guardrails
+  related_diagnostics: []
+  status: skeleton
+
+- id: mcp
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "MCP"
+  permalink: "/atlas/sap/mcp/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - tool-calling
+    - agent-memory
+    - evaluation-guardrails
+  related_diagnostics: []
+  status: skeleton
+
+- id: agent-memory
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "Agent Memory"
+  permalink: "/atlas/sap/agent-memory/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-joule
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - rag
+    - tool-calling
+    - mcp
+    - evaluation-guardrails
+  related_diagnostics: []
+  status: skeleton
+
+- id: evaluation-guardrails
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "Evaluation and Guardrails"
+  permalink: "/atlas/sap/evaluation-guardrails/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-joule
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - tool-calling
+    - mcp
+    - agent-memory
+    - human-approval-workflows
+  related_diagnostics: []
+  status: skeleton
+
+- id: human-approval-workflows
+  type: technology
+  parent: ai-agentic-landscape-map
+  title: "Human Approval Workflows"
+  permalink: "/atlas/sap/human-approval-workflows/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-joule
+    - sap-build
+    - sap-signavio
+  related_technologies:
+    - sap-business-ai
+    - ai-agents
+    - evaluation-guardrails
+    - workflow-process-automation
+  related_diagnostics: []
+  status: skeleton
+
+# ─── New Developer Technologies (11) ───
+- id: github
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "GitHub"
+  permalink: "/atlas/sap/github/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - cicd
+    - automated-validation
+    - documentation-as-code
+    - static-site-generation
+    - testing
+    - python-automation
+    - agent-workflows
+  related_diagnostics: []
+  status: skeleton
+
+- id: cicd
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "CI/CD"
+  permalink: "/atlas/sap/cicd/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - github
+    - automated-validation
+    - testing
+    - python-automation
+    - agent-workflows
+    - local-first-tooling
+  related_diagnostics: []
+  status: skeleton
+
+- id: automated-validation
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "Automated Validation"
+  permalink: "/atlas/sap/automated-validation/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - github
+    - cicd
+    - testing
+    - schema-validation
+    - python-automation
+    - agent-workflows
+  related_diagnostics: []
+  status: skeleton
+
+- id: documentation-as-code
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "Documentation as Code"
+  permalink: "/atlas/sap/documentation-as-code/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - github
+    - static-site-generation
+    - yaml-registries
+    - schema-validation
+    - local-first-tooling
+  related_diagnostics: []
+  status: skeleton
+
+- id: static-site-generation
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "Static Site Generation"
+  permalink: "/atlas/sap/static-site-generation/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - github
+    - documentation-as-code
+    - yaml-registries
+    - schema-validation
+    - local-first-tooling
+  related_diagnostics: []
+  status: skeleton
+
+- id: yaml-registries
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "YAML Registries"
+  permalink: "/atlas/sap/yaml-registries/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - github
+    - documentation-as-code
+    - static-site-generation
+    - schema-validation
+    - local-first-tooling
+  related_diagnostics: []
+  status: skeleton
+
+- id: schema-validation
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "Schema Validation"
+  permalink: "/atlas/sap/schema-validation/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - github
+    - automated-validation
+    - documentation-as-code
+    - yaml-registries
+    - testing
+    - python-automation
+  related_diagnostics: []
+  status: skeleton
+
+- id: testing
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "Testing"
+  permalink: "/atlas/sap/testing/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - github
+    - cicd
+    - automated-validation
+    - schema-validation
+    - python-automation
+    - agent-workflows
+  related_diagnostics: []
+  status: skeleton
+
+- id: python-automation
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "Python Automation"
+  permalink: "/atlas/sap/python-automation/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - github
+    - cicd
+    - automated-validation
+    - testing
+    - schema-validation
+    - agent-workflows
+  related_diagnostics: []
+  status: skeleton
+
+- id: agent-workflows
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "Agent Workflows"
+  permalink: "/atlas/sap/agent-workflows/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-joule
+  related_technologies:
+    - github
+    - cicd
+    - automated-validation
+    - testing
+    - python-automation
+    - local-first-tooling
+    - sap-business-ai
+    - ai-agents
+  related_diagnostics: []
+  status: skeleton
+
+- id: local-first-tooling
+  type: technology
+  parent: developer-tooling-landscape-map
+  title: "Local-First Tooling"
+  permalink: "/atlas/sap/local-first-tooling/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - github
+    - cicd
+    - documentation-as-code
+    - static-site-generation
+    - yaml-registries
+    - testing
+    - agent-workflows
+  related_diagnostics: []
+  status: skeleton
+
+# ─── New Operations Technologies (11) ───
+- id: application-logs
+  type: technology
+  parent: operations-observability-landscape-map
+  title: "Application Logs"
+  permalink: "/atlas/sap/application-logs/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - integration-monitoring
+    - alerting
+    - audit-trails
+    - job-monitoring
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+  status: skeleton
+
+- id: job-monitoring
+  type: technology
+  parent: operations-observability-landscape-map
+  title: "Job Monitoring"
+  permalink: "/atlas/sap/job-monitoring/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - application-logs
+    - alerting
+    - audit-trails
+    - integration-monitoring
+  related_diagnostics:
+    - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+  status: skeleton
+
+- id: alerting
+  type: technology
+  parent: operations-observability-landscape-map
+  title: "Alerting"
+  permalink: "/atlas/sap/alerting/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - application-logs
+    - integration-monitoring
+    - job-monitoring
+    - audit-trails
+    - incident-triage
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+  status: skeleton
+
+- id: audit-trails
+  type: technology
+  parent: operations-observability-landscape-map
+  title: "Audit Trails"
+  permalink: "/atlas/sap/audit-trails/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - application-logs
+    - alerting
+    - identity-access
+    - roles-authorizations
+    - secrets-management
+    - change-control
+    - transport-governance
+  related_diagnostics:
+    - /atlas/diagnostics/sap-idoc-status-diagnostics/
+    - /atlas/diagnostics/sap-output-message-control-diagnostics/
+  status: skeleton
+
+- id: identity-access
+  type: technology
+  parent: operations-observability-landscape-map
+  title: "Identity and Access"
+  permalink: "/atlas/sap/identity-access/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - roles-authorizations
+    - secrets-management
+    - audit-trails
+    - change-control
+  related_diagnostics: []
+  status: skeleton
+
+- id: roles-authorizations
+  type: technology
+  parent: operations-observability-landscape-map
+  title: "Roles and Authorizations"
+  permalink: "/atlas/sap/roles-authorizations/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - identity-access
+    - audit-trails
+    - change-control
+    - transport-governance
+  related_diagnostics: []
+  status: skeleton
+
+- id: secrets-management
+  type: technology
+  parent: operations-observability-landscape-map
+  title: "Secrets Management"
+  permalink: "/atlas/sap/secrets-management/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - identity-access
+    - audit-trails
+    - change-control
+  related_diagnostics: []
+  status: skeleton
+
+- id: change-control
+  type: technology
+  parent: operations-observability-landscape-map
+  title: "Change Control"
+  permalink: "/atlas/sap/change-control/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - audit-trails
+    - identity-access
+    - roles-authorizations
+    - secrets-management
+    - transport-governance
+  related_diagnostics: []
+  status: skeleton
+
+- id: transport-governance
+  type: technology
+  parent: operations-observability-landscape-map
+  title: "Transport Governance"
+  permalink: "/atlas/sap/transport-governance/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+  related_technologies:
+    - audit-trails
+    - roles-authorizations
+    - change-control
+    - incident-triage
+  related_diagnostics: []
+  status: skeleton
+
+- id: incident-triage
+  type: technology
+  parent: operations-observability-landscape-map
+  title: "Incident Triage"
+  permalink: "/atlas/sap/incident-triage/"
+  source_refs:
+    - public-docs
+  related_products:
+    - sap-s4hana
+    - sap-btp
+    - sap-integration-suite
+  related_technologies:
+    - alerting
+    - application-logs
+    - integration-monitoring
+    - job-monitoring
+    - audit-trails
+    - transport-governance
+  related_diagnostics:
+    - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+    - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+    - /atlas/diagnostics/sap-idoc-status-diagnostics/
+    - /atlas/diagnostics/sap-process-audit/
   status: skeleton
