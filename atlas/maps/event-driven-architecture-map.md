@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Event-Driven Architecture Map"
 permalink: /atlas/maps/event-driven-architecture-map/
 nav_order: 11
@@ -21,9 +21,7 @@ related:
   - /atlas/sap/business-events/
   - /atlas/sap/odata/
   - /atlas/sap/rest-apis/
-  - /atlas/sap/message-queues/
   - /atlas/sap/api-gateways/
-  - /atlas/sap/ipaas-middleware/
   - /atlas/sap/cloud-connector/
   - /atlas/sap/integration-monitoring/
 ---
@@ -58,9 +56,7 @@ This map documents event-driven architecture (EDA) patterns, standards, and oper
 - [Business Events](/atlas/sap/business-events/)
 - [OData](/atlas/sap/odata/)
 - [REST APIs](/atlas/sap/rest-apis/)
-- [Message Queues](/atlas/sap/message-queues/)
 - [API Gateways](/atlas/sap/api-gateways/)
-- [iPaaS and Middleware](/atlas/sap/ipaas-middleware/)
 - [Cloud Connector](/atlas/sap/cloud-connector/)
 - [Integration Monitoring](/atlas/sap/integration-monitoring/)
 

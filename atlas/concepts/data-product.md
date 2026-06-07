@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Data Product"
 permalink: /atlas/concepts/data-product/
 parent: Concepts

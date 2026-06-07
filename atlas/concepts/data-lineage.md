@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Data Lineage"
 permalink: /atlas/concepts/data-lineage/
 parent: Concepts

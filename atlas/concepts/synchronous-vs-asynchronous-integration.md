@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Synchronous vs Asynchronous Integration"
 permalink: /atlas/concepts/synchronous-vs-asynchronous-integration/
 parent: Concepts

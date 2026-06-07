@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Integration Monitoring and Reliability Map"
 permalink: /atlas/maps/integration-monitoring-reliability-map/
 nav_order: 14
@@ -16,15 +16,11 @@ related:
   - /atlas/sap/sap-btp/
   - /atlas/sap/sap-integration-suite/
   - /atlas/sap/integration-monitoring/
-  - /atlas/sap/application-logs/
-  - /atlas/sap/alerting/
   - /atlas/sap/job-monitoring/
   - /atlas/sap/audit-trails/
   - /atlas/sap/business-events/
   - /atlas/sap/idoc/
-  - /atlas/sap/message-queues/
   - /atlas/sap/api-gateways/
-  - /atlas/sap/ipaas-middleware/
   - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
   - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
   - /atlas/diagnostics/sap-idoc-status-diagnostics/
@@ -57,15 +53,11 @@ This map connects integration monitoring, reliability patterns, and operational 
 ## Connected technologies
 
 - [Integration Monitoring](/atlas/sap/integration-monitoring/)
-- [Application Logs](/atlas/sap/application-logs/)
-- [Alerting](/atlas/sap/alerting/)
 - [Job Monitoring](/atlas/sap/job-monitoring/)
 - [Audit Trails](/atlas/sap/audit-trails/)
 - [Business Events](/atlas/sap/business-events/)
 - [IDoc](/atlas/sap/idoc/)
-- [Message Queues](/atlas/sap/message-queues/)
 - [API Gateways](/atlas/sap/api-gateways/)
-- [iPaaS and Middleware](/atlas/sap/ipaas-middleware/)
 
 ## Connected diagnostics
 

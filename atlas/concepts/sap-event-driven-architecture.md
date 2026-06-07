@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "SAP Event-Driven Architecture"
 permalink: /atlas/concepts/sap-event-driven-architecture/
 parent: Concepts

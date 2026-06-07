@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Data Federation"
 permalink: /atlas/concepts/data-federation/
 parent: Concepts

@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Change Data Capture (CDC)"
 permalink: /atlas/concepts/cdc-change-data-capture/
 parent: Concepts

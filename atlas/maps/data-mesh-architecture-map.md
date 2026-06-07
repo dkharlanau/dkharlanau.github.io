@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Data Mesh Architecture Map"
 permalink: /atlas/maps/data-mesh-architecture-map/
 nav_order: 12
@@ -25,11 +25,8 @@ related:
   - /atlas/sap/cds-views/
   - /atlas/sap/cds-analytical-views/
   - /atlas/sap/odata/
-  - /atlas/sap/data-products/
-  - /atlas/sap/data-federation/
   - /atlas/sap/semantic-layer/
   - /atlas/sap/data-quality-lineage/
-  - /atlas/sap/bw-bw-bridge/
 ---
 
 # Data Mesh Architecture Map
@@ -69,11 +66,8 @@ This map applies data mesh principles to SAP-centric enterprise landscapes. It c
 - [CDS Views](/atlas/sap/cds-views/)
 - [CDS Analytical Views](/atlas/sap/cds-analytical-views/)
 - [OData](/atlas/sap/odata/)
-- [Data Products](/atlas/sap/data-products/)
-- [Data Federation](/atlas/sap/data-federation/)
 - [Semantic Layer](/atlas/sap/semantic-layer/)
 - [Data Quality and Lineage](/atlas/sap/data-quality-lineage/)
-- [BW and BW Bridge](/atlas/sap/bw-bw-bridge/)
 
 ## Checklists
 

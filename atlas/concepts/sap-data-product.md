@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "SAP Data Product"
 permalink: /atlas/concepts/sap-data-product/
 parent: Concepts

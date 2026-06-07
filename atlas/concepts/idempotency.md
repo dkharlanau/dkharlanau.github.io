@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Idempotency"
 permalink: /atlas/concepts/idempotency/
 parent: Concepts

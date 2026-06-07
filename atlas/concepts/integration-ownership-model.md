@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Integration Ownership Model"
 permalink: /atlas/concepts/integration-ownership-model/
 parent: Concepts

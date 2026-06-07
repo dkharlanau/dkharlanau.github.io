@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Knowledge Graph for SAP Operations"
 permalink: /atlas/concepts/knowledge-graph-for-sap-operations/
 parent: Concepts

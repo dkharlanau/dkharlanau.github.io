@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "REST vs OData vs SOAP vs IDoc vs Events"
 permalink: /atlas/concepts/rest-vs-odata-vs-soap-vs-idoc-vs-events/
 parent: Concepts

@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Integration Pattern Decision Matrix"
 permalink: /atlas/concepts/integration-pattern-decision-matrix/
 parent: Concepts

@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "API Contracts"
 permalink: /atlas/concepts/api-contracts/
 parent: Concepts

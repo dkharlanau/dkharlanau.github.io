@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Data Quality Controls"
 permalink: /atlas/concepts/data-quality-controls/
 parent: Concepts

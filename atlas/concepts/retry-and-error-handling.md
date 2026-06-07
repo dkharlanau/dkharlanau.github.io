@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "Retry and Error Handling"
 permalink: /atlas/concepts/retry-and-error-handling/
 parent: Concepts

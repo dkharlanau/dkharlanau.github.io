@@ -1,5 +1,5 @@
 ---
-layout: atlas
+layout: default
 title: "SAP Integration Architecture"
 permalink: /atlas/concepts/sap-integration-architecture/
 parent: Concepts
