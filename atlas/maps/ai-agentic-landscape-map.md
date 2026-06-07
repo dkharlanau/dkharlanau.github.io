@@ -61,7 +61,7 @@ sitemap: false
     <p>Help architects and operations teams understand where AI capabilities sit, how they retrieve context, and what controls are needed for safe deployment.</p>
 
     <h2>Where it sits in the landscape</h2>
-    <p><a href="/atlas/sap/sap-joule/">SAP Joule</a> is the copilot interface. <a href="/atlas/sap/sap-business-ai/">SAP Business AI</a> is the underlying platform. <a href="/atlas/sap/rag/">RAG</a> is the primary retrieval pattern. <a href="/atlas/sap/agent-memory/">Agent memory</a> and <a href="/atlas/sap/evaluation-guardrails/">evaluation guardrails</a> are operational concerns that span all layers.</p>
+    <p><a href="/atlas/sap/sap-joule/">SAP Joule</a> is the copilot interface. <a href="/atlas/sap/sap-business-ai/">SAP Business AI</a> is the underlying platform. <a href="/atlas/sap/rag/">RAG</a> is the primary retrieval pattern. Agent memory and <a href="/atlas/sap/evaluation-guardrails/">evaluation guardrails</a> are operational concerns that span all layers.</p>
 
     <h2>Main objects / data</h2>
     <ul>
@@ -122,7 +122,7 @@ sitemap: false
       <li><a href="/atlas/sap/ai-agents/">AI Agents</a></li>
       <li><a href="/atlas/sap/rag/">RAG</a></li>
       <li><a href="/atlas/sap/vector-search/">Vector Search</a></li>
-      <li><a href="/atlas/sap/agent-memory/">Agent Memory</a></li>
+      <li>Agent Memory</li>
       <li><a href="/atlas/sap/evaluation-guardrails/">Evaluation and Guardrails</a></li>
       <li><a href="/atlas/sap/human-approval-workflows/">Human Approval Workflows</a></li>
     </ul>

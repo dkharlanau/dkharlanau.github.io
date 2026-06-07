@@ -61,14 +61,14 @@ sitemap: false
     <p>Help AMS and Basis teams orient quickly: which tool covers which layer, where to look first during an incident, and how change control connects to observability.</p>
 
     <h2>Where it sits in the landscape</h2>
-    <p>Operations tooling wraps around S/4HANA and satellite systems. Application logs (SLG1, SM21, ST22) and <a href="/atlas/sap/job-monitoring/">job monitoring</a> (SM37) are core. <a href="/atlas/sap/integration-monitoring/">Integration monitoring</a> and IDoc monitoring span system boundaries. <a href="/atlas/sap/alerting/">Alerting</a> and <a href="/atlas/sap/audit-trails/">audit trails</a> provide cross-layer visibility.</p>
+    <p>Operations tooling wraps around S/4HANA and satellite systems. Application logs (SLG1, SM21, ST22) and <a href="/atlas/sap/job-monitoring/">job monitoring</a> (SM37) are core. <a href="/atlas/sap/integration-monitoring/">Integration monitoring</a> and IDoc monitoring span system boundaries. Alerting and <a href="/atlas/sap/audit-trails/">audit trails</a> provide cross-layer visibility.</p>
 
     <h2>Main objects / data</h2>
     <ul>
       <li>Logs: application logs, system logs, security audit logs, change documents.</li>
       <li>Jobs: background jobs, scheduled tasks, workflow items, IDoc status.</li>
-      <li>Security: <a href="/atlas/sap/identity-access/">identity and access</a>, <a href="/atlas/sap/roles-authorizations/">roles and authorizations</a>, <a href="/atlas/sap/secrets-management/">secrets management</a>.</li>
-      <li>Change: <a href="/atlas/sap/change-control/">change control</a>, <a href="/atlas/sap/transport-governance/">transport governance</a>, deployment records.</li>
+      <li>Security: <a href="/atlas/sap/identity-access/">identity and access</a>, roles and authorizations, secrets management.</li>
+      <li>Change: change control, transport governance, deployment records.</li>
     </ul>
 
     <h2>Integrations</h2>

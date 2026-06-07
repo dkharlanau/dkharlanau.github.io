@@ -110,7 +110,7 @@ sitemap: false
     <ul>
       <li>Dashboard shows stale data due to failed Datasphere replication.</li>
       <li>CDS view timeout after S/4HANA upgrade due to schema changes.</li>
-      <li><a href="/atlas/sap/kpis-operational-analytics/">KPIs</a> mismatch between embedded analytics and Analytics Cloud.</li>
+      <li>KPIs mismatch between embedded analytics and Analytics Cloud.</li>
       <li>Authorization gaps preventing analytical data access post-migration.</li>
     </ul>
 
@@ -123,7 +123,7 @@ sitemap: false
       <li><a href="/atlas/sap/embedded-analytics/">Embedded Analytics</a></li>
       <li><a href="/atlas/sap/semantic-layer/">Semantic Layer</a></li>
       <li><a href="/atlas/sap/data-quality-lineage/">Data Quality and Lineage</a></li>
-      <li><a href="/atlas/sap/kpis-operational-analytics/">KPIs and Operational Analytics</a></li>
+      <li>KPIs and Operational Analytics</li>
     </ul>
 
     <h2>Source references</h2>

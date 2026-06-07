@@ -61,14 +61,14 @@ sitemap: false
     <p>Help development teams choose the right tools for SAP-side and platform-side work, and understand how modern practices apply to enterprise landscapes.</p>
 
     <h2>Where it sits in the landscape</h2>
-    <p>Developer tooling spans SAP-native tools (ABAP Git, ADT) and platform tools (<a href="/atlas/sap/github/">GitHub</a>, <a href="/atlas/sap/cicd/">CI/CD</a>, <a href="/atlas/sap/python-automation/">Python automation</a>). The Atlas itself is an example of <a href="/atlas/sap/documentation-as-code/">documentation-as-code</a> and <a href="/atlas/sap/static-site-generation/">static site generation</a>.</p>
+    <p>Developer tooling spans SAP-native tools (ABAP Git, ADT) and platform tools (GitHub, <a href="/atlas/sap/cicd/">CI/CD</a>, <a href="/atlas/sap/python-automation/">Python automation</a>). The Atlas itself is an example of <a href="/atlas/sap/documentation-as-code/">documentation-as-code</a> and <a href="/atlas/sap/static-site-generation/">static site generation</a>.</p>
 
     <h2>Main objects / data</h2>
     <ul>
       <li>Version control: Git repositories, branch policies, pull requests.</li>
-      <li>Build and deploy: CI/CD pipelines, <a href="/atlas/sap/automated-validation/">automated validation</a>, artifact registries.</li>
-      <li>Documentation: Markdown sources, <a href="/atlas/sap/yaml-registries/">YAML registries</a>, <a href="/atlas/sap/schema-validation/">schema validation</a>.</li>
-      <li>Quality: <a href="/atlas/sap/testing/">testing</a> frameworks, linting, static analysis.</li>
+      <li>Build and deploy: CI/CD pipelines, automated validation, artifact registries.</li>
+      <li>Documentation: Markdown sources, YAML registries, schema validation.</li>
+      <li>Quality: testing frameworks, linting, static analysis.</li>
     </ul>
 
     <h2>Integrations</h2>
@@ -98,7 +98,7 @@ sitemap: false
       <li>Git-based workflows bring traceability and rollback to SAP development.</li>
       <li>Automated validation catches issues before transport.</li>
       <li>Documentation-as-code keeps knowledge in sync with code.</li>
-      <li><a href="/atlas/sap/local-first-tooling/">Local-first tooling</a> reduces cloud dependency for daily work.</li>
+      <li>Local-first tooling reduces cloud dependency for daily work.</li>
     </ul>
 
     <h2>Weak sides / risks</h2>
@@ -119,17 +119,17 @@ sitemap: false
 
     <h2>Related Atlas links</h2>
     <ul>
-      <li><a href="/atlas/sap/github/">GitHub</a></li>
+      <li>GitHub</li>
       <li><a href="/atlas/sap/cicd/">CI/CD</a></li>
-      <li><a href="/atlas/sap/automated-validation/">Automated Validation</a></li>
+      <li>Automated Validation</li>
       <li><a href="/atlas/sap/documentation-as-code/">Documentation-as-Code</a></li>
       <li><a href="/atlas/sap/static-site-generation/">Static Site Generation</a></li>
-      <li><a href="/atlas/sap/yaml-registries/">YAML Registries</a></li>
-      <li><a href="/atlas/sap/schema-validation/">Schema Validation</a></li>
-      <li><a href="/atlas/sap/testing/">Testing</a></li>
+      <li>YAML Registries</li>
+      <li>Schema Validation</li>
+      <li>Testing</li>
       <li><a href="/atlas/sap/python-automation/">Python Automation</a></li>
       <li><a href="/atlas/sap/agent-workflows/">Agent Workflows</a></li>
-      <li><a href="/atlas/sap/local-first-tooling/">Local-First Tooling</a></li>
+      <li>Local-First Tooling</li>
     </ul>
 
     <h2>Source references</h2>
