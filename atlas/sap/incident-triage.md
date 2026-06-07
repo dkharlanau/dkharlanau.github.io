@@ -22,7 +22,7 @@ related:
   - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
   - /atlas/diagnostics/sap-idoc-status-diagnostics/
   - /atlas/sap/job-monitoring/
-  - /atlas/sap/integration-monitoring-ops/
+  - /atlas/sap/integration-monitoring/
   - /atlas/sap/sap-s4hana/
 robots: noindex,follow
 sitemap: false
@@ -128,7 +128,7 @@ sitemap: false
       <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP IDoc Status Diagnostics</a></li>
       <li><a href="/atlas/sap/job-monitoring/">Job Monitoring</a></li>
-      <li><a href="/atlas/sap/integration-monitoring-ops/">Integration Monitoring</a></li>
+      <li><a href="/atlas/sap/integration-monitoring/">Integration Monitoring</a></li>
       <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
     </ul>
 
@@ -148,7 +148,7 @@ sitemap: false
     <h2>Related pages</h2>
     <ul>
       <li><a href="/atlas/sap/job-monitoring/">Job Monitoring</a></li>
-      <li><a href="/atlas/sap/integration-monitoring-ops/">Integration Monitoring</a></li>
+      <li><a href="/atlas/sap/integration-monitoring/">Integration Monitoring</a></li>
       <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
     </ul>
   </section>

@@ -22,7 +22,7 @@ related:
   - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
   - /atlas/sap/sap-s4hana/
   - /atlas/sap/sap-btp/
-  - /atlas/sap/integration-monitoring-ops/
+  - /atlas/sap/integration-monitoring/
 robots: noindex,follow
 sitemap: false
 ---
@@ -126,7 +126,7 @@ sitemap: false
       <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a></li>
       <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
       <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/integration-monitoring-ops/">Integration Monitoring</a></li>
+      <li><a href="/atlas/sap/integration-monitoring/">Integration Monitoring</a></li>
     </ul>
 
     <h2>Source references</h2>
@@ -146,7 +146,7 @@ sitemap: false
     <ul>
       <li><a href="/atlas/sap/sap-s4hana/">SAP S/4HANA</a></li>
       <li><a href="/atlas/sap/sap-btp/">SAP BTP</a></li>
-      <li><a href="/atlas/sap/integration-monitoring-ops/">Integration Monitoring</a></li>
+      <li><a href="/atlas/sap/integration-monitoring/">Integration Monitoring</a></li>
     </ul>
   </section>
 
