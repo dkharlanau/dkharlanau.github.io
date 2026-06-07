@@ -54,21 +54,21 @@ Agentic AI for IT operations moved from experiment to early production in 2025. 
 
 ## What changed
 
-- **Enterprise agent adoption accelerated.** By H1 2025, 79% of surveyed enterprises had adopted AI agents, and 66% of those reported measurable productivity gains. [CAIS: H1 2025 Insights, H2 2025 Imperatives](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
-- **Microsoft Copilot Studio mainstreamed.** 90% of Fortune 500 companies have used Microsoft Copilot Studio to build custom AI agents and automations. [CAIS: H1 2025 Insights](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
-- **AIOps market growth.** The global AIOps market is projected to grow from ~$15.9 billion in 2025 to ~$19.3 billion in 2026, with Gartner predicting 80% of IT operations teams will adopt AIOps platforms by 2026. [Juejin: 2026 Lightweight Operations Comparison](https://juejin.cn/post/7644451660773326899)
+- **Enterprise agent adoption accelerated.** Industry surveys and aggregated reports suggest AI agent adoption grew through 2025, with customer service agents showing measurable productivity gains in early deployments. [CAIS: H1 2025 Insights, H2 2025 Imperatives](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
+- **Microsoft Copilot Studio mainstreamed.** Aggregated industry reporting suggests broad Fortune 500 experimentation with Copilot Studio for custom agent building, though verified penetration rates are not available from primary sources. [CAIS: H1 2025 Insights](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
+- **AIOps market growth.** Analysts project continued AIOps market expansion through 2026, with multiple industry reports predicting broad IT operations team adoption as platforms mature. [Juejin: 2026 Lightweight Operations Comparison](https://juejin.cn/post/7644451660773326899)
 - **SAP-certified agentic partners emerged.** KTern.AI earned SAP Business AI certification in 2025 and published agentic modernization case studies via the SAP BTP Discovery Center. [KTern.AI: 2025 Recap](https://ktern.com/article/leading-the-agentic-revolution-ktern-ais-2025-year-in-review/)
-- **Prompt injection risks surfaced.** Microsoft assigned CVE-2026-21520 to a Copilot Studio prompt injection vulnerability, signaling that agentic platforms inherit new vulnerability classes that patches alone cannot fully eliminate. [VentureBeat: Microsoft patched a Copilot Studio prompt injection](https://venturebeat.com/security/microsoft-salesforce-copilot-agentforce-prompt-injection-cve-agent-remediation-playbook)
+- **Prompt injection risks surfaced.** Security researchers disclosed prompt injection vulnerabilities in agentic platforms (including Microsoft Copilot Studio), signaling that agentic platforms inherit new vulnerability classes that patches alone cannot fully eliminate. [VentureBeat: Microsoft patched a Copilot Studio prompt injection](https://venturebeat.com/security/microsoft-salesforce-copilot-agentforce-prompt-injection-cve-agent-remediation-playbook)
 
 ## Evidence
 
 | Signal | Source | Confidence |
 |--------|--------|------------|
-| 79% enterprise agent adoption | CAIS newsletter (aggregated surveys) | Medium |
-| 90% Fortune 500 using Copilot Studio | Microsoft / CAIS aggregation | Medium |
-| AIOps market size and Gartner prediction | Industry report aggregation | Medium |
+| 79% enterprise agent adoption | CAIS newsletter (aggregated surveys) | Low (weak signal) |
+| Broad Fortune 500 Copilot Studio experimentation | Microsoft / CAIS aggregation | Low (weak signal) |
+| AIOps market size and Gartner prediction | Industry report aggregation | Low (weak signal) |
 | KTern.AI SAP Business AI certification | KTern.AI official blog | High |
-| CVE-2026-21520 prompt injection | VentureBeat security reporting | High |
+| Prompt injection vulnerabilities disclosed | VentureBeat security reporting | Medium |
 
 ## Why it matters
 
@@ -104,10 +104,10 @@ SAP AMS teams handle repetitive, structured incidents: IDoc errors, sales order 
 ## Sources
 
 1. [H1 2025 Insights, H2 2025 Imperatives, and 2026 Predictions: How Agentic AI Will Define the Next Competitive Edge](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
-   - type: article
+   - type: weak_signal
    - accessed: 2026-06-07
-   - confidence: medium
-   - used for: Enterprise agent adoption statistics, Copilot Studio penetration, productivity gains
+   - confidence: low
+   - used for: Enterprise agent adoption direction, Copilot Studio penetration trends (aggregated surveys; treat as orientation only)
 
 2. [2025 set the pace, 2026 wins the race: ABAP AI with Joule, VS Code, and CCM](https://community.sap.com/t5/technology-blog-posts-by-sap/2025-set-the-pace-2026-wins-the-race-abap-ai-with-joule-vs-code-and-ccm/ba-p/14302433)
    - type: official
@@ -124,14 +124,14 @@ SAP AMS teams handle repetitive, structured incidents: IDoc errors, sales order 
 4. [Microsoft patched a Copilot Studio prompt injection. The data exfiltrated anyway](https://venturebeat.com/security/microsoft-salesforce-copilot-agentforce-prompt-injection-cve-agent-remediation-playbook)
    - type: article
    - accessed: 2026-06-07
-   - confidence: high
-   - used for: CVE-2026-21520 and agentic security risks
+   - confidence: medium
+   - used for: Agentic security risks, prompt injection vulnerabilities (security journalism; verify against vendor security advisories)
 
 5. [2026年中小型团队轻量化运维方案怎么选：五大主流产品深度对比](https://juejin.cn/post/7644451660773326899)
-   - type: article
+   - type: weak_signal
    - accessed: 2026-06-07
-   - confidence: medium
-   - used for: AIOps market size and Gartner adoption predictions
+   - confidence: low
+   - used for: AIOps market direction and analyst adoption predictions (aggregated industry reporting; not a primary source)
 
   </div>
 

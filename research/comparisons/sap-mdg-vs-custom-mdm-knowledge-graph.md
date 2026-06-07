@@ -56,10 +56,10 @@ Use SAP MDG when you need preconfigured, domain-specific governance workflows (b
 ## What changed
 
 - **MDG on S/4HANA maturity.** SAP MDG is available both as part of S/4HANA on-premise and as a cloud edition (SaaS) for business partner and product master data, with the One Domain Model alignment across SAP applications. [SAP Community: FAQ about SAP Master Data Governance](https://community.sap.com/t5/technology-blogs-by-sap/faq-about-sap-master-data-governance-sap-mdg/ba-p/13443069)
-- **SAP MDM end-of-life.** SAP MDM (the older standalone product) is end-of-life and no longer on SAP's roadmap. MDG is the strategic successor. [ACBaltica: What is SAP MDG?](https://acbaltica.com/products/sap-business-technology-platform/sap-master-data-governance/)
+- **SAP MDM no longer strategic.** SAP MDM (the older standalone product) is no longer on SAP's strategic roadmap; MDG is the successor for master data governance. [SAP Community: FAQ about SAP Master Data Governance](https://community.sap.com/t5/technology-blogs-by-sap/faq-about-sap-master-data-governance-sap-mdg/ba-p/13443069)
 - **Knowledge graph platforms enterprise-ready.** Neo4j, Amazon Neptune, Oracle Graph, and RDF stores (GraphDB, Stardog) are production-ready for enterprise knowledge graphs, with native LLM integrations and GraphRAG capabilities. [Neo4j: Graph Intelligence Platform 2025](https://neo4j.com/blog/news/2025-ai-scalability/)
 - **Neo4j agent memory launch.** Neo4j launched dedicated AI memory and context graph capabilities in 2025, positioning graph databases as persistent reasoning engines for agentic systems. [Neo4j: 2025 Year of AI and Scalability](https://neo4j.com/blog/news/2025-ai-scalability/)
-- **SAP HANA Cloud knowledge graph generation.** SAP announced automatic knowledge graph generation from HANA metadata as a Q1 2026 capability, potentially bridging SAP's relational world with graph semantics. [Delaware.pro: ERP augmentés par l'IA](https://www.delaware.pro/fr-fr/blogs/erp-augmentes-par-lia-2025-bilan-sap-microsoft-perspectives-2026)
+- **SAP HANA Cloud knowledge graph generation.** SAP partner reports suggest automatic knowledge graph generation from HANA metadata is on the roadmap; verify against official SAP release notes before planning around this capability. [Delaware.pro: ERP augmentés par l'IA](https://www.delaware.pro/fr-fr/blogs/erp-augmentes-par-lia-2025-bilan-sap-microsoft-perspectives-2026)
 
 ## Evidence
 
@@ -75,7 +75,7 @@ Use SAP MDG when you need preconfigured, domain-specific governance workflows (b
 | Operational overhead | Low (SAP-managed) | High (custom development) |
 | Cost model | SAP license / subscription | Infrastructure + development |
 
-Sources: [SAP MDG FAQ](https://community.sap.com/t5/technology-blogs-by-sap/faq-about-sap-master-data-governance-sap-mdg/ba-p/13443069), [ACBaltica SAP MDG](https://acbaltica.com/products/sap-business-technology-platform/sap-master-data-governance/), [Neo4j blog](https://neo4j.com/blog/news/2025-ai-scalability/), [Delaware.pro SAP perspectives](https://www.delaware.pro/fr-fr/blogs/erp-augmentes-par-lia-2025-bilan-sap-microsoft-perspectives-2026)
+Sources: [SAP MDG FAQ](https://community.sap.com/t5/technology-blogs-by-sap/faq-about-sap-master-data-governance-sap-mdg/ba-p/13443069) (high confidence), [Neo4j blog](https://neo4j.com/blog/news/2025-ai-scalability/) (high confidence), [Delaware.pro SAP perspectives](https://www.delaware.pro/fr-fr/blogs/erp-augmentes-par-lia-2025-bilan-sap-microsoft-perspectives-2026) (low confidence, weak signal)
 
 ## Why it matters
 
@@ -116,11 +116,11 @@ Master data quality is the root cause of many SAP support incidents: duplicate c
    - confidence: high
    - used for: MDG domains, S/4HANA integration, MDM vs MDG distinction
 
-2. [What is SAP Master Data Governance? — ACBaltica](https://acbaltica.com/products/sap-business-technology-platform/sap-master-data-governance/)
-   - type: article
+2. [FAQ about SAP Master Data Governance (SAP MDG)](https://community.sap.com/t5/technology-blogs-by-sap/faq-about-sap-master-data-governance-sap-mdg/ba-p/13443069)
+   - type: official
    - accessed: 2026-06-07
-   - confidence: medium
-   - used for: MDG benefits, MDM end-of-life, cloud edition overview
+   - confidence: high
+   - used for: MDG domains, S/4HANA integration, MDM vs MDG distinction, MDM strategic direction
 
 3. [2025: Year of AI and Scalability — Neo4j](https://neo4j.com/blog/news/2025-ai-scalability/)
    - type: official
@@ -129,10 +129,10 @@ Master data quality is the root cause of many SAP support incidents: duplicate c
    - used for: Neo4j AI memory, context graphs, agent ecosystem integrations
 
 4. [ERP augmentés par l'IA : décryptage 2025 chez SAP et Microsoft, cap sur 2026 — Delaware.pro](https://www.delaware.pro/fr-fr/blogs/erp-augmentes-par-lia-2025-bilan-sap-microsoft-perspectives-2026)
-   - type: article
+   - type: weak_signal
    - accessed: 2026-06-07
-   - confidence: medium
-   - used for: SAP HANA Cloud knowledge graph generation announcement
+   - confidence: low
+   - used for: SAP HANA Cloud knowledge graph generation roadmap (partner blog; verify against official SAP release notes)
 
 5. [SAP Master Data Governance Documentation](https://pages.community.sap.com/topics/master-data-governance/product-documentation)
    - type: official

@@ -54,20 +54,20 @@ Yes—for information retrieval and classification. No—for autonomous resoluti
 
 ## What changed
 
-- **Enterprise agent adoption reached mainstream.** By H1 2025, 79% of enterprises had adopted AI agents, with 66% reporting productivity gains. Customer service agents specifically increased issue resolution rates by ~14% per hour with ~9% less handling time. [CAIS: H1 2025 Insights](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
-- **AIOps market maturation.** The global AIOps market is projected to grow to ~$19.3 billion in 2026, with Gartner predicting 80% IT operations team adoption. [Juejin: 2026 Lightweight Operations Comparison](https://juejin.cn/post/7644451660773326899)
+- **Enterprise agent adoption reached mainstream.** Industry surveys and aggregated reports suggest AI agent adoption accelerated through 2025, with customer service agents showing measurable productivity gains in early deployments. [CAIS: H1 2025 Insights](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
+- **AIOps market maturation.** Analysts project continued growth in the AIOps market through 2026, with multiple industry reports predicting broad IT operations team adoption as platforms mature. [Juejin: 2026 Lightweight Operations Comparison](https://juejin.cn/post/7644451660773326899)
 - **SAP-certified agentic solutions.** KTern.AI earned SAP Business AI certification and demonstrated agentic modernization in the SAP BTP Discovery Center, including technical debt analysis and migration path automation. [KTern.AI: 2025 Recap](https://ktern.com/article/leading-the-agentic-revolution-ktern-ais-2025-year-in-review/)
-- **Agentic security risks documented.** CVE-2026-21520 (Microsoft Copilot Studio prompt injection) and CVE-2025-32711 (M365 Copilot EchoLeak) demonstrate that agentic platforms inherit prompt injection vulnerabilities that patches cannot fully eliminate. [VentureBeat: Microsoft patched a Copilot Studio prompt injection](https://venturebeat.com/security/microsoft-salesforce-copilot-agentforce-prompt-injection-cve-agent-remediation-playbook)
+- **Agentic security risks documented.** Security researchers disclosed prompt injection vulnerabilities in agentic platforms (including Microsoft Copilot Studio) that demonstrate agentic platforms inherit attack surfaces patches cannot fully eliminate. [VentureBeat: Microsoft patched a Copilot Studio prompt injection](https://venturebeat.com/security/microsoft-salesforce-copilot-agentforce-prompt-injection-cve-agent-remediation-playbook)
 - **Conservative AI for SAP support pattern established.** The Atlas [AI Agent for SAP Support](/atlas/ai-operations/ai-agent-for-sap-support/) page defines a minimum safe architecture: knowledge retrieval, authorization awareness, structured diagnosis, human approval, and traceability.
 
 ## Evidence
 
 | Claim | Evidence | Confidence |
 |-------|----------|------------|
-| Agents improve ticket resolution speed | CAIS aggregated survey data | Medium |
-| AIOps market growing rapidly | Industry report aggregation | Medium |
+| Agents improve ticket resolution speed | CAIS aggregated survey data | Low (weak signal) |
+| AIOps market growing rapidly | Industry report aggregation | Low (weak signal) |
 | SAP-certified agents exist | KTern.AI official certification | High |
-| Agentic platforms have security vulnerabilities | CVE-2026-21520, CVE-2025-32711 | High |
+| Agentic platforms have security vulnerabilities | Security journalism; verify against vendor advisories | Medium |
 | Conservative SAP support agent pattern is safe | Atlas AI Agent for SAP Support page | High |
 
 ## Why it matters
@@ -105,16 +105,16 @@ SAP AMS teams spend significant time on repetitive triage: reading tickets, sear
 ## Sources
 
 1. [H1 2025 Insights, H2 2025 Imperatives, and 2026 Predictions: How Agentic AI Will Define the Next Competitive Edge](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
-   - type: article
+   - type: weak_signal
    - accessed: 2026-06-07
-   - confidence: medium
-   - used for: Enterprise agent adoption statistics, customer service productivity gains
+   - confidence: low
+   - used for: Enterprise agent adoption direction, customer service productivity trends (aggregated surveys; treat as orientation only)
 
 2. [2026年中小型团队轻量化运维方案怎么选：五大主流产品深度对比](https://juejin.cn/post/7644451660773326899)
-   - type: article
+   - type: weak_signal
    - accessed: 2026-06-07
-   - confidence: medium
-   - used for: AIOps market size, Gartner adoption predictions
+   - confidence: low
+   - used for: AIOps market direction, analyst adoption predictions (aggregated industry reporting; not a primary source)
 
 3. [KTern.AI 2025 Recap: Leading the Agentic SAP Revolution & 2026 Path](https://ktern.com/article/leading-the-agentic-revolution-ktern-ais-2025-year-in-review/)
    - type: article
@@ -125,8 +125,8 @@ SAP AMS teams spend significant time on repetitive triage: reading tickets, sear
 4. [Microsoft patched a Copilot Studio prompt injection. The data exfiltrated anyway](https://venturebeat.com/security/microsoft-salesforce-copilot-agentforce-prompt-injection-cve-agent-remediation-playbook)
    - type: article
    - accessed: 2026-06-07
-   - confidence: high
-   - used for: CVE-2026-21520, agentic security risks, prompt injection
+   - confidence: medium
+   - used for: Agentic security risks, prompt injection vulnerabilities (security journalism; verify against vendor security advisories for specific CVE details)
 
 5. [AI Agent for SAP Support — Atlas](https://dkharlanau.github.io/atlas/ai-operations/ai-agent-for-sap-support/)
    - type: official

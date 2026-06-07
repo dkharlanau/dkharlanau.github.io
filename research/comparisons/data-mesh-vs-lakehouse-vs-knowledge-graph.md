@@ -55,10 +55,10 @@ Data lakehouse is the pragmatic baseline for most SAP-centric enterprises today:
 ## What changed
 
 - **Data mesh canonized (2022).** Zhamak Dehghani's *Data Mesh* (O'Reilly, 2022) established the four principles: domain ownership, data as product, self-serve platform, federated computational governance. [O'Reilly: Data Mesh](https://www.oreilly.com/library/view/data-mesh/9781492092384/)
-- **Lakehouse mainstreamed.** Databricks, Snowflake, and the "Fundamentals of Data Engineering" textbook (O'Reilly) position the lakehouse as the default modern data architecture, combining data lake storage with warehouse performance. [FreeComputerBooks: Fundamentals of Data Engineering](https://freecomputerbooks.com/books/Fundamentals-of-Data-Engineering.pdf)
+- **Lakehouse mainstreamed.** Databricks, Snowflake, and the "Fundamentals of Data Engineering" textbook (O'Reilly, 2022) position the lakehouse as the default modern data architecture, combining data lake storage with warehouse performance. [O'Reilly: Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/)
 - **Knowledge graph for AI memory.** Neo4j and other graph platforms launched dedicated AI memory and context graph capabilities in 2025, making knowledge graphs a core component of agentic AI architectures. [Neo4j: 2025 Year of AI and Scalability](https://neo4j.com/blog/news/2025-ai-scalability/)
 - **Provenance open-source project.** Provenance implements data mesh principles with AI agents as first-class participants, showing how mesh and AI can intersect. [GitHub: provenance-logic/provenance](https://github.com/provenance-logic/provenance)
-- **Event-driven data mesh.** Adam Bellemare's *Building an Event-Driven Data Mesh* (O'Reilly, 2023) connected streaming and event-driven patterns to data mesh, offering a practical implementation path. [Data Eclosion: Data Mesh Books](https://www.data-eclosion.com/en/data-mesh-definition/)
+- **Event-driven Data Mesh patterns.** Adam Bellemare's *Building an Event-Driven Data Mesh* (O'Reilly, 2023) connected streaming and event-driven patterns to data mesh, offering a practical implementation path. [O'Reilly: Building an Event-Driven Data Mesh](https://www.oreilly.com/library/view/building-an-event-driven/9781098155789/)
 
 ## Evidence
 
@@ -73,7 +73,7 @@ Data lakehouse is the pragmatic baseline for most SAP-centric enterprises today:
 | SAP fit | Strong (standard ETL/ELT) | Moderate (requires domain maturity) | Moderate (requires graph modeling) |
 | Best for | Reporting, BI, ML training | Scale, domain autonomy, data products | Relationship analysis, AI context |
 
-Sources: [O'Reilly Data Mesh](https://www.oreilly.com/library/view/data-mesh/9781492092384/), [Fundamentals of Data Engineering](https://freecomputerbooks.com/books/Fundamentals-of-Data-Engineering.pdf), [Neo4j blog](https://neo4j.com/blog/news/2025-ai-scalability/), [Provenance GitHub](https://github.com/provenance-logic/provenance), [Building an Event-Driven Data Mesh](https://www.data-eclosion.com/en/data-mesh-definition/)
+Sources: [O'Reilly Data Mesh](https://www.oreilly.com/library/view/data-mesh/9781492092384/) (high confidence), [O'Reilly Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/) (high confidence), [Neo4j blog](https://neo4j.com/blog/news/2025-ai-scalability/) (high confidence), [Provenance GitHub](https://github.com/provenance-logic/provenance) (medium confidence), [O'Reilly Building an Event-Driven Data Mesh](https://www.oreilly.com/library/view/building-an-event-driven/9781098155789/) (high confidence)
 
 ## Why it matters
 
@@ -131,10 +131,10 @@ SAP enterprises have spent decades building centralized data warehouses. The lak
    - confidence: medium
    - used for: Data mesh implementation with AI agents
 
-5. [Building an Event-Driven Data Mesh — Adam Bellemare, O'Reilly 2023](https://www.data-eclosion.com/en/data-mesh-definition/)
+5. [Building an Event-Driven Data Mesh — Adam Bellemare, O'Reilly 2023](https://www.oreilly.com/library/view/building-an-event-driven/9781098155789/)
    - type: paper
    - accessed: 2026-06-07
-   - confidence: medium
+   - confidence: high
    - used for: Event-driven data mesh patterns, streaming architecture
 
   </div>

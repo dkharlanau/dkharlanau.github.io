@@ -55,11 +55,11 @@ SAP Business AI is a multi-layer stack: Joule (copilot + agents), embedded AI ac
 ## What changed
 
 - **Joule GA expansion.** Joule became generally available for SAP S/4HANA Cloud Public Edition 2502, SAP Start, and SAP Build Work Zone as of early 2025. [SAP Community: SAP User Experience Q1/2025 Update](https://community.sap.com/t5/technology-blog-posts-by-sap/sap-user-experience-q1-2025-update-part-1-many-new-innovations-available-ai/ba-p/14012822)
-- **Joule agents announced.** At SAP TechEd 2025, SAP introduced "Joule agents" as autonomous AI services that can reason through complex business problems (e.g., claims resolution) without step-by-step human instruction. [SAP News: SAP TechEd Japan 2025-2026](https://news.sap.com/japan/2026/02/26876/)
-- **SAP-RPT-1 LLM.** SAP revealed a proprietary large language model named SAP-RPT-1, positioned for predictive business scenarios, demonstrated at SAP TechEd Japan 2025-2026. [SAP News: SAP TechEd Japan 2025-2026](https://news.sap.com/japan/2026/02/26876/)
-- **350+ AI scenarios catalogued.** As of January 2026, SAP Business AI listed more than 350 embedded and custom AI scenarios in its public catalog. [SAP News: SAP TechEd Japan 2025-2026](https://news.sap.com/japan/2026/02/26876/)
-- **Joule for Consultants.** A dedicated consultant-facing Joule variant added attachment answering and custom instructions; custom document grounding and web grounding are planned for H1 2026. [SAP News: SAP TechEd Japan 2025-2026](https://news.sap.com/japan/2026/02/26876/)
-- **ABAP AI acceleration.** SAP shipped Joule for Developers (code explanation, generation, test creation) and an ABAP AI SDK for custom scenarios in 2025, with agentic ABAP AI workflows planned for 2026. [SAP Community: 2025 set the pace, 2026 wins the race](https://community.sap.com/t5/technology-blog-posts-by-sap/2025-set-the-pace-2026-wins-the-race-abap-ai-with-joule-vs-code-and-ccm/ba-p/14302433)
+- **Joule agents announced.** SAP introduced "Joule agents" as autonomous AI services that can reason through complex business problems; these are in pilot or controlled release as of early 2026. [SAP News: SAP TechEd Japan 2025-2026](https://news.sap.com/japan/2026/02/26876/)
+- **SAP-RPT-1 LLM.** SAP revealed a proprietary large language model named SAP-RPT-1, positioned for predictive business scenarios; public documentation and API access remain limited as of mid-2026. [SAP News: SAP TechEd Japan 2025-2026](https://news.sap.com/japan/2026/02/26876/)
+- **AI scenarios catalogued.** SAP Business AI maintains a public catalog of embedded and custom AI scenarios; the exact count varies by release and should be verified against the current official catalog for your SAP edition. [SAP News: SAP TechEd Japan 2025-2026](https://news.sap.com/japan/2026/02/26876/)
+- **Joule for Consultants.** A dedicated consultant-facing Joule variant added attachment answering and custom instructions; additional grounding capabilities are on the roadmap. [SAP News: SAP TechEd Japan 2025-2026](https://news.sap.com/japan/2026/02/26876/)
+- **ABAP AI acceleration.** SAP shipped Joule for Developers (code explanation, generation, test creation) and an ABAP AI SDK for custom scenarios in 2025; agentic ABAP AI workflows remain on the roadmap. [SAP Community: 2025 set the pace, 2026 wins the race](https://community.sap.com/t5/technology-blog-posts-by-sap/2025-set-the-pace-2026-wins-the-race-abap-ai-with-joule-vs-code-and-ccm/ba-p/14302433)
 
 ## Evidence
 
@@ -67,7 +67,7 @@ SAP Business AI is a multi-layer stack: Joule (copilot + agents), embedded AI ac
 |--------|--------|------------|
 | Joule GA for S/4HANA Cloud Public 2502 | SAP official blog (Q1 2025 UX update) | High |
 | Joule agents and SAP-RPT-1 announced | SAP TechEd Japan keynote coverage | Medium |
-| 350+ AI scenarios in catalog | SAP Japan news (Jan 2026) | Medium |
+| AI scenarios catalog exists | SAP Japan event coverage | Medium |
 | Joule for Consultants roadmap | SAP TechEd Japan keynote | Medium |
 | ABAP AI SDK and Joule for Developers | SAP official community blog | High |
 

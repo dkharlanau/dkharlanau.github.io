@@ -55,10 +55,10 @@ Joule is deeply embedded in SAP's application layer, with native access to SAP d
 ## What changed
 
 - **Joule expansion.** Joule is GA for S/4HANA Cloud Public Edition 2502, SAP Start, and SAP Build Work Zone, with four interaction patterns: informational, navigational, transactional, and analytical (planned). [SAP Community: SAP User Experience Q1/2025 Update](https://community.sap.com/t5/technology-blog-posts-by-sap/sap-user-experience-q1-2025-update-part-1-many-new-innovations-available-ai/ba-p/14012822)
-- **Microsoft Copilot Studio mainstreamed.** 90% of Fortune 500 companies have used Copilot Studio to build custom agents. Microsoft shipped Agent 365 (unified agent control plane) and Entra Agent ID for governance in late 2025/early 2026. [CAIS: H1 2025 Insights](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
-- **Salesforce Agentforce growth.** Salesforce Agentforce reached $800 million ARR by Q4 2026 with 29,000 deals closed, positioning CRM-native agents as a major enterprise category. [GrandpaSAI: AI Agents in Production](https://grandpasai.com/research/ai-agents-in-production.html)
+- **Microsoft Copilot Studio mainstreamed.** Aggregated industry reporting suggests broad Fortune 500 experimentation with Copilot Studio for custom agent building, though verified penetration rates from primary sources are not available. [CAIS: H1 2025 Insights](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
+- **Salesforce Agentforce growth.** Industry reports suggest Salesforce Agentforce is positioning CRM-native agents as a major enterprise category, though specific revenue figures from primary financial disclosures should be verified before relying on them for investment or procurement decisions. [GrandpaSAI: AI Agents in Production](https://grandpasai.com/research/ai-agents-in-production.html)
 - **Joule-Microsoft integration.** SAP and Microsoft deepened integration in 2025: Joule became available in Teams and Copilot, with a second phase planned for 2026 to bring Microsoft 365 Copilot capabilities inside Joule and SAP applications. [Delaware.pro: ERP augmentés par l'IA](https://www.delaware.pro/fr-fr/blogs/erp-augmentes-par-lia-2025-bilan-sap-microsoft-perspectives-2026)
-- **Enterprise agent platform comparison.** Sana, Microsoft Copilot Studio, Google Vertex AI Agent Builder, IBM watsonx Orchestrate, Salesforce Agentforce, UiPath, and CrewAI are consistently ranked highest for governance, scalability, and enterprise SLAs. [Sana Labs: Best Enterprise AI Agent Platforms 2025–2026](https://sanalabs.com/agents-blog/leading-ai-enterprise-fortune-500)
+- **Enterprise agent platform comparison.** Multiple industry roundups and analyst aggregations consistently rank Sana, Microsoft Copilot Studio, Google Vertex AI Agent Builder, IBM watsonx Orchestrate, Salesforce Agentforce, UiPath, and CrewAI highly for governance, scalability, and enterprise SLAs. [Sana Labs: Best Enterprise AI Agent Platforms 2025–2026](https://sanalabs.com/agents-blog/leading-ai-enterprise-fortune-500)
 
 ## Evidence
 
@@ -73,7 +73,7 @@ Joule is deeply embedded in SAP's application layer, with native access to SAP d
 | SAP integration | Native | Via connectors or custom APIs | Via MuleSoft or custom |
 | Agentic autonomy | Joule agents (pilot/controlled release) | Copilot agents (GA) | Agentforce (GA) |
 
-Sources: [SAP UX Q1/2025 update](https://community.sap.com/t5/technology-blog-posts-by-sap/sap-user-experience-q1-2025-update-part-1-many-new-innovations-available-ai/ba-p/14012822), [CAIS H1 2025](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet), [GrandpaSAI AI Agents](https://grandpasai.com/research/ai-agents-in-production.html), [Delaware.pro SAP/Microsoft](https://www.delaware.pro/fr-fr/blogs/erp-augmentes-par-lia-2025-bilan-sap-microsoft-perspectives-2026), [Sana Labs comparison](https://sanalabs.com/agents-blog/leading-ai-enterprise-fortune-500)
+Sources: [SAP UX Q1/2025 update](https://community.sap.com/t5/technology-blog-posts-by-sap/sap-user-experience-q1-2025-update-part-1-many-new-innovations-available-ai/ba-p/14012822) (high confidence), [CAIS H1 2025](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet) (low confidence, weak signal), [GrandpaSAI AI Agents](https://grandpasai.com/research/ai-agents-in-production.html) (low confidence, weak signal), [Delaware.pro SAP/Microsoft](https://www.delaware.pro/fr-fr/blogs/erp-augmentes-par-lia-2025-bilan-sap-microsoft-perspectives-2026) (medium confidence), [Sana Labs comparison](https://sanalabs.com/agents-blog/leading-ai-enterprise-fortune-500) (low confidence, industry roundup)
 
 ## Why it matters
 
@@ -115,28 +115,28 @@ Most large enterprises run SAP alongside Microsoft 365 and possibly Salesforce. 
    - used for: Joule GA status, interaction patterns, SAP Start integration
 
 2. [H1 2025 Insights, H2 2025 Imperatives, and 2026 Predictions: How Agentic AI Will Define the Next Competitive Edge](https://cais-the-ai-underground.beehiiv.com/p/h1-2025-insights-h2-2025-imperatives-and-2026-predictions-how-agentic-ai-will-define-the-next-compet)
-   - type: article
+   - type: weak_signal
    - accessed: 2026-06-07
-   - confidence: medium
-   - used for: Microsoft Copilot Studio adoption, Agent 365, enterprise agent statistics
+   - confidence: low
+   - used for: Microsoft Copilot Studio adoption trends, enterprise agent statistics (aggregated surveys; treat as orientation only)
 
 3. [AI Agents in Production: A Comprehensive Overview (2025-2026)](https://grandpasai.com/research/ai-agents-in-production.html)
-   - type: article
+   - type: weak_signal
    - accessed: 2026-06-07
-   - confidence: medium
-   - used for: Salesforce Agentforce ARR, market positioning, key players
+   - confidence: low
+   - used for: Salesforce Agentforce market positioning, key players (industry aggregation; verify revenue claims against primary financial disclosures)
 
 4. [ERP augmentés par l'IA : décryptage 2025 chez SAP et Microsoft, cap sur 2026 — Delaware.pro](https://www.delaware.pro/fr-fr/blogs/erp-augmentes-par-lia-2025-bilan-sap-microsoft-perspectives-2026)
    - type: article
    - accessed: 2026-06-07
    - confidence: medium
-   - used for: Joule-Microsoft integration phases, bidirectional roadmap
+   - used for: Joule-Microsoft integration phases, bidirectional roadmap (SAP partner perspective; verify against official SAP/Microsoft announcements)
 
 5. [Best Enterprise AI Agent Platforms 2025–2026: Comparison & Buyer's Guide — Sana Labs](https://sanalabs.com/agents-blog/leading-ai-enterprise-fortune-500)
-   - type: article
+   - type: weak_signal
    - accessed: 2026-06-07
-   - confidence: medium
-   - used for: Enterprise agent platform rankings, governance, scalability evaluation
+   - confidence: low
+   - used for: Enterprise agent platform landscape, governance and scalability evaluation (industry roundup; not an independent analyst report)
 
   </div>
 

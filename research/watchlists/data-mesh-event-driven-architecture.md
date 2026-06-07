@@ -57,7 +57,7 @@ Data mesh—decentralized domain-oriented data ownership with data-as-a-product 
 - **Data Mesh book published (2022).** Zhamak Dehghani's *Data Mesh: Delivering Data-Driven Value at Scale* (O'Reilly, 2022) established the canonical principles. [O'Reilly: Data Mesh](https://www.oreilly.com/library/view/data-mesh/9781492092384/)
 - **CloudEvents graduated CNCF.** CloudEvents reached graduated status in the Cloud Native Computing Foundation, with native support in Azure Event Grid, AWS EventBridge, Google Cloud Eventarc, and Knative. [The New Stack: CNCF CloudEvents](https://thenewstack.io/cncf-cloudevents-a-lil-message-envelope-that-travels-far/)
 - **AsyncAPI 3.0 released.** The AsyncAPI specification—described as "the OpenAPI of event-driven APIs"—released version 3.0 in late 2023, separating operations from channels and reducing ambiguities. It is now part of the Linux Foundation. [AsyncAPI Initiative](https://www.asyncapi.com/en)
-- **Event-driven Data Mesh book published (2023).** Adam Bellemare's *Building an Event-Driven Data Mesh* (O'Reilly, 2023) connected data mesh principles to streaming and event-driven patterns. [Data Eclosion: Data Mesh Books](https://www.data-eclosion.com/en/data-mesh-definition/)
+- **Event-driven Data Mesh patterns.** Adam Bellemare's *Building an Event-Driven Data Mesh* (O'Reilly, 2023) connected data mesh principles to streaming and event-driven patterns. [O'Reilly: Building an Event-Driven Data Mesh](https://www.oreilly.com/library/view/building-an-event-driven/9781098155789/)
 - **Provenance open-source project.** Provenance (Apache 2.0) implements data mesh principles with AI agents as first-class participants, extending Dehghani's framework. [GitHub: provenance-logic/provenance](https://github.com/provenance-logic/provenance)
 
 ## Evidence
@@ -120,10 +120,10 @@ SAP landscapes generate massive event volumes: sales orders, purchase orders, go
    - confidence: high
    - used for: AsyncAPI 3.0 specification, tooling, Linux Foundation governance
 
-4. [Building an Event-Driven Data Mesh — Adam Bellemare, O'Reilly 2023](https://www.data-eclosion.com/en/data-mesh-definition/)
+4. [Building an Event-Driven Data Mesh — Adam Bellemare, O'Reilly 2023](https://www.oreilly.com/library/view/building-an-event-driven/9781098155789/)
    - type: paper
    - accessed: 2026-06-07
-   - confidence: medium
+   - confidence: high
    - used for: Event-driven data mesh patterns and streaming architecture
 
 5. [Provenance — GitHub](https://github.com/provenance-logic/provenance)

@@ -129,10 +129,10 @@ SAP support memory is traditionally stored in documents: Word files, wikis, KEDB
    - used for: KGoT reasoning, bias mitigation, graph representations
 
 5. [Knowledge Graph Construction AI Market Research Report 2034 — DataIntelo](https://dataintelo.com/report/knowledge-graph-construction-ai-market)
-   - type: article
+   - type: weak_signal
    - accessed: 2026-06-07
-   - confidence: medium
-   - used for: Enterprise knowledge graph platform landscape, selection criteria
+   - confidence: low
+   - used for: Enterprise knowledge graph platform landscape, selection criteria (market research aggregation; treat as orientation only, not investment guidance)
 
   </div>
 
