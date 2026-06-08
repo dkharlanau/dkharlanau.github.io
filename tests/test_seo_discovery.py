@@ -418,7 +418,7 @@ def test_indexnow_script_has_dry_run():
     path = REPO_ROOT / "scripts" / "indexnow_submit.py"
     text = path.read_text(encoding="utf-8")
     assert "dry_run" in text
-    assert "--dry-run" in text or "dry_run" in text
+    assert "--submit" in text
 
 
 def test_indexnow_script_checks_indexable():
