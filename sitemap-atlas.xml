@@ -1,0 +1,41 @@
+---
+layout: null
+permalink: /sitemap-atlas.xml
+sitemap: false
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {% assign atlas_pages = site.pages | where_exp: 'item', 'item.permalink contains "/atlas/"' %}
+  {% for page in atlas_pages %}
+    {% assign verified = page.verified | default: false %}
+    {% assign status = page.status | default: '' %}
+    {% assign robots_directive = page.robots | default: '' %}
+    {% assign is_noindex = false %}
+    {% if robots_directive contains 'noindex' %}{% assign is_noindex = true %}{% endif %}
+    {% if verified == true and status == 'reviewed' and is_noindex == false and page.sitemap != false %}
+    <url>
+      <loc>{{ page.url | absolute_url }}</loc>
+      {% assign page_lastmod = page.last_modified_at | default: page.last_reviewed | default: page.date | default: nil %}
+      {% if page_lastmod %}<lastmod>{{ page_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
+    </url>
+    {% endif %}
+  {% endfor %}
+  {% for collection in site.collections %}
+    {% for doc in collection.docs %}
+      {% if doc.permalink contains '/atlas/' or doc.url contains '/atlas/' %}
+        {% assign doc_verified = doc.verified | default: false %}
+        {% assign doc_status = doc.status | default: '' %}
+        {% assign doc_robots = doc.robots | default: '' %}
+        {% assign doc_is_noindex = false %}
+        {% if doc_robots contains 'noindex' %}{% assign doc_is_noindex = true %}{% endif %}
+        {% if doc_verified == true and doc_status == 'reviewed' and doc_is_noindex == false and doc.sitemap != false %}
+    <url>
+      <loc>{{ doc.url | absolute_url }}</loc>
+      {% assign doc_lastmod = doc.last_modified_at | default: doc.last_reviewed | default: doc.date | default: nil %}
+      {% if doc_lastmod %}<lastmod>{{ doc_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
+    </url>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+</urlset>

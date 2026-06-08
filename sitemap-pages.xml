@@ -8,14 +8,27 @@ permalink: /sitemap-pages.xml
   {% for page in pages %}
     {% assign page_path = page.url | default: page.permalink %}
     {% if page_path %}
-      {% unless page_path == '/sitemap.xml' or page_path == '/sitemap-pages.xml' or page_path == '/sitemap-data.xml' or page_path contains 'feed.xml' or page_path contains '404' %}
+      {% unless page_path == '/sitemap.xml' or page_path == '/sitemap-pages.xml' or page_path == '/sitemap-data.xml' or page_path == '/sitemap-atlas.xml' or page_path contains 'feed.xml' or page_path contains '404' %}
+        {% assign robots_directive = page.robots | default: '' %}
+        {% assign is_noindex = false %}
+        {% if robots_directive contains 'noindex' %}{% assign is_noindex = true %}{% endif %}
+        {% assign is_atlas = false %}
+        {% if page_path contains '/atlas/' %}{% assign is_atlas = true %}{% endif %}
+        {% assign is_research = false %}
+        {% if page_path contains '/research/' %}{% assign is_research = true %}{% endif %}
+        {% assign atlas_verified = page.verified | default: false %}
+        {% assign atlas_status = page.status | default: '' %}
+        {% assign atlas_ok = true %}
+        {% if is_atlas %}
+          {% unless atlas_verified == true and atlas_status == 'reviewed' %}{% assign atlas_ok = false %}{% endunless %}
+        {% endif %}
+        {% unless is_noindex or is_research or atlas_ok == false %}
     <url>
       <loc>{{ page_path | absolute_url }}</loc>
-      {% assign page_lastmod = page.last_modified_at | default: page.date | default: page.data.updated_at | default: nil %}
+      {% assign page_lastmod = page.last_modified_at | default: page.date | default: page.updated | default: nil %}
       {% if page_lastmod %}<lastmod>{{ page_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
-      {% if page.data.changefreq %}<changefreq>{{ page.data.changefreq }}</changefreq>{% elsif page.changefreq %}<changefreq>{{ page.changefreq }}</changefreq>{% endif %}
-      {% if page.data.priority %}<priority>{{ page.data.priority }}</priority>{% elsif page.priority %}<priority>{{ page.priority }}</priority>{% endif %}
     </url>
+        {% endunless %}
       {% endunless %}
     {% endif %}
   {% endfor %}
@@ -23,23 +36,42 @@ permalink: /sitemap-pages.xml
     {% unless collection.label == 'posts' %}
       {% for doc in collection.docs %}
         {% if doc.sitemap != false %}
+          {% assign doc_robots = doc.robots | default: '' %}
+          {% assign doc_is_noindex = false %}
+          {% if doc_robots contains 'noindex' %}{% assign doc_is_noindex = true %}{% endif %}
+          {% assign doc_is_atlas = false %}
+          {% if doc.url contains '/atlas/' %}{% assign doc_is_atlas = true %}{% endif %}
+          {% assign doc_is_research = false %}
+          {% if doc.url contains '/research/' %}{% assign doc_is_research = true %}{% endif %}
+          {% assign doc_atlas_verified = doc.verified | default: false %}
+          {% assign doc_atlas_status = doc.status | default: '' %}
+          {% assign doc_atlas_ok = true %}
+          {% if doc_is_atlas %}
+            {% unless doc_atlas_verified == true and doc_atlas_status == 'reviewed' %}{% assign doc_atlas_ok = false %}{% endunless %}
+          {% endif %}
+          {% unless doc_is_noindex or doc_is_research or doc_atlas_ok == false %}
     <url>
       <loc>{{ doc.url | absolute_url }}</loc>
-      {% assign doc_lastmod = doc.last_modified_at | default: doc.date | default: nil %}
+      {% assign doc_lastmod = doc.last_modified_at | default: doc.date | default: doc.updated | default: nil %}
       {% if doc_lastmod %}<lastmod>{{ doc_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
-      {% if doc.data.changefreq %}<changefreq>{{ doc.data.changefreq }}</changefreq>{% endif %}
-      {% if doc.data.priority %}<priority>{{ doc.data.priority }}</priority>{% endif %}
     </url>
+          {% endunless %}
         {% endif %}
       {% endfor %}
     {% endunless %}
   {% endfor %}
   {% for post in site.posts %}
     {% if post.sitemap != false %}
+      {% assign post_robots = post.robots | default: '' %}
+      {% assign post_is_noindex = false %}
+      {% if post_robots contains 'noindex' %}{% assign post_is_noindex = true %}{% endif %}
+      {% unless post_is_noindex %}
     <url>
       <loc>{{ post.url | absolute_url }}</loc>
-      <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
+      {% assign post_lastmod = post.last_modified_at | default: post.date | default: post.updated | default: nil %}
+      {% if post_lastmod %}<lastmod>{{ post_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
     </url>
+      {% endunless %}
     {% endif %}
   {% endfor %}
 </urlset>
