@@ -159,7 +159,7 @@ This is an **informational signal**, not an enforceable directive. It communicat
 
 - JSON-LD must **reflect visible page content**. No fake ratings, reviews, offers, or organization claims.
 - No fake `sameAs` links. Only links present in `resume.yml` schema are emitted.
-- No structured data on noindex pages **unless** the project already allows it and it does not imply indexing. The current `_includes/seo/structured-data.html` wraps schema in `{% if allow_indexing %}`.
+- No structured data on noindex pages **unless** the project already allows it and it does not imply indexing. The current `_includes/seo/structured-data.html` wraps schema in `{% raw %}{% if allow_indexing %}{% endraw %}`.
 - Prefer shared includes/layouts over duplicated page-by-page markup.
 
 ---

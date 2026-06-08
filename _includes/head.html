@@ -102,8 +102,10 @@ normalize_whitespace %}
 <meta name="twitter:title" content="{{ social_title | strip_html | normalize_whitespace }}" />
 <meta name="twitter:description" content="{{ meta_description | truncate: 200, '' }}" />
 <meta name="twitter:image" content="{{ og_image }}" />
-{% if page.last_modified_at or page.updated %}
-<meta property="article:modified_time" content="{{ page.last_modified_at | default: page.updated | date_to_xmlschema }}" />
+{% assign modified_raw = page.last_modified_at | default: page.updated %}
+{% assign modified_test = modified_raw | date: '%s' %}
+{% if modified_test != modified_raw %}
+<meta property="article:modified_time" content="{{ modified_raw | date_to_xmlschema }}" />
 {% endif %}
 
 <link rel="stylesheet" href="{{ '/assets/material3.css' | relative_url }}?v={{ asset_version }}" />

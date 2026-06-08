@@ -26,7 +26,8 @@ permalink: /sitemap-pages.xml
     <url>
       <loc>{{ page_path | absolute_url }}</loc>
       {% assign page_lastmod = page.last_modified_at | default: page.date | default: page.updated | default: nil %}
-      {% if page_lastmod %}<lastmod>{{ page_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
+      {% assign page_lastmod_test = page_lastmod | date: '%s' %}
+      {% if page_lastmod_test != page_lastmod %}<lastmod>{{ page_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
     </url>
         {% endunless %}
       {% endunless %}
@@ -53,7 +54,8 @@ permalink: /sitemap-pages.xml
     <url>
       <loc>{{ doc.url | absolute_url }}</loc>
       {% assign doc_lastmod = doc.last_modified_at | default: doc.date | default: doc.updated | default: nil %}
-      {% if doc_lastmod %}<lastmod>{{ doc_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
+      {% assign doc_lastmod_test = doc_lastmod | date: '%s' %}
+      {% if doc_lastmod_test != doc_lastmod %}<lastmod>{{ doc_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
     </url>
           {% endunless %}
         {% endif %}
@@ -69,7 +71,8 @@ permalink: /sitemap-pages.xml
     <url>
       <loc>{{ post.url | absolute_url }}</loc>
       {% assign post_lastmod = post.last_modified_at | default: post.date | default: post.updated | default: nil %}
-      {% if post_lastmod %}<lastmod>{{ post_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
+      {% assign post_lastmod_test = post_lastmod | date: '%s' %}
+      {% if post_lastmod_test != post_lastmod %}<lastmod>{{ post_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
     </url>
       {% endunless %}
     {% endif %}

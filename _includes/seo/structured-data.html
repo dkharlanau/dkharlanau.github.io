@@ -6,6 +6,7 @@
 {% assign page_description = page.description | default: page.summary | default: page.excerpt | default: site.description | strip_html | normalize_whitespace %}
 {% assign page_title = page.title | default: site.title | strip_html | normalize_whitespace %}
 {% assign page_modified = page.last_modified_at | default: page.updated | default: page.date %}
+{% assign page_modified_test = page_modified | date: '%s' %}
 {% assign robots_directive = page.robots | default: '' %}
 {% assign allow_indexing = true %}
 {% if robots_directive contains 'noindex' %}
@@ -39,7 +40,7 @@
   "name": "{{ page_title | replace: '\"', '\\\"' }}",
   "description": "{{ page_description | truncate: 160 | replace: '\"', '\\\"' }}",
   "inLanguage": "{{ site.lang | default: 'en' }}",
-  {% if page_modified %}"dateModified": "{{ page_modified | date_to_xmlschema }}",{% endif %}
+  {% if page_modified_test != page_modified %}"dateModified": "{{ page_modified | date_to_xmlschema }}",{% endif %}
   "isPartOf": {
     "@type": "WebSite",
     "@id": "{{ site_home }}#website",
@@ -161,7 +162,9 @@
 
 {% if page.collection == 'notes' %}
 {% assign article_published = page.date | default: page.published %}
+{% assign article_published_test = article_published | date: '%s' %}
 {% assign article_modified = page.last_modified_at | default: page.updated %}
+{% assign article_modified_test = article_modified | date: '%s' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -174,8 +177,8 @@
     "name": {{ resume.name | jsonify }},
     "url": {{ resume.schema.url | jsonify }}
   },
-  {% if article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
-  {% if article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
+  {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
+  {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
   "publisher": {
     "@type": "Person",
     "@id": "{{ author_id }}",
@@ -200,7 +203,9 @@
 </script>
 {% elsif page.layout == 'blog' or page.collection == 'blog' %}
 {% assign article_published = page.date | default: page.published %}
+{% assign article_published_test = article_published | date: '%s' %}
 {% assign article_modified = page.last_modified_at | default: page.updated %}
+{% assign article_modified_test = article_modified | date: '%s' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -213,8 +218,8 @@
     "name": {{ resume.name | jsonify }},
     "url": {{ resume.schema.url | jsonify }}
   },
-  {% if article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
-  {% if article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
+  {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
+  {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
   "publisher": {
     "@type": "Person",
     "@id": "{{ author_id }}",
@@ -240,7 +245,9 @@
 </script>
 {% elsif page.layout == 'blog' or page.collection == 'blog' %}
 {% assign article_published = page.date | default: page.published %}
+{% assign article_published_test = article_published | date: '%s' %}
 {% assign article_modified = page.last_modified_at | default: page.updated %}
+{% assign article_modified_test = article_modified | date: '%s' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -253,8 +260,8 @@
     "name": {{ resume.name | jsonify }},
     "url": {{ resume.schema.url | jsonify }}
   },
-  {% if article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
-  {% if article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
+  {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
+  {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
   "publisher": {
     "@type": "Person",
     "@id": "{{ author_id }}",
@@ -280,7 +287,9 @@
 </script>
 {% elsif page.url contains '/atlas/' and page.url != '/atlas/' %}
 {% assign article_published = page.last_reviewed | default: page.date | default: page.published %}
+{% assign article_published_test = article_published | date: '%s' %}
 {% assign article_modified = page.last_modified_at | default: page.updated %}
+{% assign article_modified_test = article_modified | date: '%s' %}
 {% assign atlas_section_name = page.atlas_section | default: 'Atlas' | capitalize %}
 <script type="application/ld+json">
 {
@@ -294,8 +303,8 @@
     "name": {{ resume.name | jsonify }},
     "url": {{ resume.schema.url | jsonify }}
   },
-  {% if article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
-  {% if article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
+  {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
+  {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
   "publisher": {
     "@type": "Person",
     "@id": "{{ author_id }}",
