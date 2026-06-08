@@ -190,3 +190,86 @@ def test_fixture_fake_schema_has_forbidden_fields():
     for block in blocks:
         found = _has_fake_schema_fields(block)
         assert set(found) == {"aggregateRating", "reviewCount", "ratingValue", "offers", "price", "availability"}
+
+
+# ---------------------------------------------------------------------------
+# Discovery audit: baseline / strict / warn-only mode tests
+# ---------------------------------------------------------------------------
+
+import scripts.audit_discovery_outputs as audit_mod
+
+
+def test_baseline_file_is_valid_json():
+    """The baseline JSON must be a valid list of entries with required fields."""
+    baseline_path = REPO_ROOT / "data" / "seo" / "discovery-audit-baseline.json"
+    assert baseline_path.exists(), "Baseline file must exist"
+    data = json.loads(baseline_path.read_text(encoding="utf-8"))
+    assert isinstance(data, list), "Baseline must be a list"
+    for entry in data:
+        assert "id" in entry, "Baseline entry must have id"
+        assert "pattern" in entry, "Baseline entry must have pattern"
+        assert "type" in entry, "Baseline entry must have type"
+        assert "reason" in entry, "Baseline entry must have reason"
+        assert "first_seen" in entry, "Baseline entry must have first_seen"
+        assert "cleanup" in entry, "Baseline entry must have cleanup"
+
+
+def test_strict_mode_fails_on_fixture_violations():
+    """Running audit on the fixture site in strict mode must exit non-zero."""
+    result = audit_mod.main([str(FIXTURE_SITE), "--strict"])
+    assert result != 0, "Strict mode must fail when fixture has violations"
+
+
+def test_warn_only_mode_exits_zero_for_fixture():
+    """Running audit on the fixture site with --warn-only must exit 0."""
+    # The fixture has no baseline entries, so warn-only will see new violations
+    # and should still fail. We need to test with an empty baseline or verify
+    # that warn-only correctly reports new vs known.
+    # For the fixture, all violations are new (no baseline), so warn-only
+    # should still exit non-zero because new violations are always blocking.
+    result = audit_mod.main([str(FIXTURE_SITE), "--warn-only"])
+    assert result != 0, "Warn-only must still fail for NEW violations not in baseline"
+
+
+def test_baseline_match_finds_known_violations():
+    """match_baseline must correctly identify violations that match baseline patterns."""
+    baseline = [
+        {"id": "test-001", "pattern": "private path leak"},
+        {"id": "test-002", "pattern": "unsupported fake field 'review'"},
+    ]
+    assert audit_mod.match_baseline("private path leak in sitemap: /private/", baseline) is not None
+    assert audit_mod.match_baseline("unsupported fake field 'review' in JSON-LD", baseline) is not None
+    assert audit_mod.match_baseline("completely new violation", baseline) is None
+
+
+def test_private_path_violations_never_silently_ignored():
+    """Private path violations must only be ignored if explicitly in baseline."""
+    baseline = []  # empty baseline
+    violation = "private path leak in sitemap-pages.xml: https://dkharlanau.github.io/private/secret/"
+    assert audit_mod.match_baseline(violation, baseline) is None
+
+
+def test_jsonld_fake_fields_remain_detectable():
+    """JSON-LD fake fields must be detected even with baseline filtering."""
+    baseline = [{"id": "test", "pattern": "some other issue"}]
+    violation = "unsupported fake field 'aggregateRating' in JSON-LD at about/index.html"
+    assert audit_mod.match_baseline(violation, baseline) is None
+    # It should be reported as a new violation
+
+
+def test_load_baseline_returns_empty_for_missing_file():
+    """load_baseline must return empty list for non-existent file."""
+    result = audit_mod.load_baseline(Path("/nonexistent/baseline.json"))
+    assert result == []
+
+
+def test_load_baseline_parses_valid_json():
+    """load_baseline must parse a valid JSON list."""
+    tmp = REPO_ROOT / "tests" / "fixtures" / "discovery_audit" / "test_baseline.json"
+    tmp.write_text('[{"id":"t1","pattern":"test"}]', encoding="utf-8")
+    try:
+        result = audit_mod.load_baseline(tmp)
+        assert len(result) == 1
+        assert result[0]["id"] == "t1"
+    finally:
+        tmp.unlink()

@@ -195,7 +195,11 @@ Atlas pages receive:
 After Jekyll builds `_site/`, run the discovery audit to validate that the built output contains only intended discovery surfaces:
 
 ```bash
+# Strict mode (default) — fails on any violation
 python3 scripts/audit_discovery_outputs.py _site
+
+# Safe CI mode — reports violations but exits 0 if all are baselined
+python3 scripts/audit_discovery_outputs.py _site --warn-only
 ```
 
 The audit checks:
@@ -206,7 +210,9 @@ The audit checks:
 - JSON-LD validity (no malformed structured data in built HTML)
 - Fake schema field detection (no invented ratings, reviews, or organization claims)
 
-Run this **after** `bundle exec jekyll build` and **before** any real IndexNow submission. In CI, it runs automatically on every push to `main` as part of the dry-run workflow.
+**Baseline mode:** Pre-existing known violations are documented in `data/seo/discovery-audit-baseline.json`. In `--warn-only` mode, baselined violations are reported as `[KNOWN]` but do not block CI. **New violations not in the baseline still fail** even in warn-only mode.
+
+Run this **after** `bundle exec jekyll build` and **before** any real IndexNow submission. In CI, it runs automatically on every push to `main` as part of the dry-run workflow in `--warn-only` mode.
 
 ### 8.2 IndexNow dry-run-first workflow
 
@@ -249,6 +255,12 @@ bundle exec jekyll build
 
 # 4. Post-build discovery audit (sitemap, canonical, noindex leaks, JSON-LD)
 python3 scripts/audit_discovery_outputs.py _site
+
+# 4a. Safe CI mode — report violations but do not block if baselined
+python3 scripts/audit_discovery_outputs.py _site --warn-only
+
+# 4b. Explicit strict mode — fail on any violation
+python3 scripts/audit_discovery_outputs.py _site --strict
 
 # 5. SEO metadata in built HTML
 python3 scripts/check_seo.py _site

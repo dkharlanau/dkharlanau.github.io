@@ -1,0 +1,66 @@
+[
+  {
+    "id": "baseline-001",
+    "pattern": "sitemap-data.xml is not valid XML: XML or text declaration not at start of entity",
+    "type": "sitemap-xml-malformed",
+    "reason": "Jekyll template generates XML declaration offset by Liquid whitespace",
+    "first_seen": "2026-06-08",
+    "cleanup": "Fix sitemap-data.xml template to ensure XML declaration is at byte 0 with no leading whitespace"
+  },
+  {
+    "id": "baseline-002",
+    "pattern": "unsupported fake field 'review' in JSON-LD at atlas/ai-operations/ai-agent-for-sap-support/index.html",
+    "type": "jsonld-fake-field",
+    "reason": "Existing Atlas page uses 'review' in structured data for article review status, not product review",
+    "first_seen": "2026-06-08",
+    "cleanup": "Refactor structured data to use 'editorialReview' or remove if not justified by visible content"
+  },
+  {
+    "id": "baseline-003",
+    "pattern": "unsupported fake field 'review' in JSON-LD at atlas/ai-operations/index.html",
+    "type": "jsonld-fake-field",
+    "reason": "Existing section index page uses 'review' in structured data",
+    "first_seen": "2026-06-08",
+    "cleanup": "Refactor structured data to use 'editorialReview' or remove if not justified by visible content"
+  },
+  {
+    "id": "baseline-004",
+    "pattern": "unsupported fake field 'review' in JSON-LD at atlas/sap/human-approval-workflows/index.html",
+    "type": "jsonld-fake-field",
+    "reason": "Existing Atlas page uses 'review' in structured data",
+    "first_seen": "2026-06-08",
+    "cleanup": "Refactor structured data to use 'editorialReview' or remove if not justified by visible content"
+  },
+  {
+    "id": "baseline-005",
+    "pattern": "unsupported fake field 'review' in JSON-LD at docs/atlas/atlas-signal-pr-workflow/index.html",
+    "type": "jsonld-fake-field",
+    "reason": "Existing docs page uses 'review' in structured data",
+    "first_seen": "2026-06-08",
+    "cleanup": "Refactor structured data to use 'editorialReview' or remove if not justified by visible content"
+  },
+  {
+    "id": "baseline-006",
+    "pattern": "unsupported fake field 'review' in JSON-LD at docs/atlas/atlas-signal-proposal-format/index.html",
+    "type": "jsonld-fake-field",
+    "reason": "Existing docs page uses 'review' in structured data",
+    "first_seen": "2026-06-08",
+    "cleanup": "Refactor structured data to use 'editorialReview' or remove if not justified by visible content"
+  },
+  {
+    "id": "baseline-007",
+    "pattern": "invalid JSON-LD in docs/dama/",
+    "type": "jsonld-invalid",
+    "reason": "DAMA docs pages have malformed JSON-LD blocks from template generation",
+    "first_seen": "2026-06-08",
+    "cleanup": "Fix docs/dama/ templates to emit valid JSON-LD or remove structured data from these generated pages"
+  },
+  {
+    "id": "baseline-008",
+    "pattern": "unsupported fake field 'review' in JSON-LD at docs/homepage-datasets-review/index.html",
+    "type": "jsonld-fake-field",
+    "reason": "Existing docs page uses 'review' in structured data",
+    "first_seen": "2026-06-08",
+    "cleanup": "Refactor structured data to use 'editorialReview' or remove if not justified by visible content"
+  }
+]

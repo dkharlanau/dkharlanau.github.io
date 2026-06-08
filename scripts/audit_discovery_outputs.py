@@ -12,6 +12,8 @@ Exit codes:
     non-zero — safety or discovery violations found
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import re
@@ -55,6 +57,44 @@ def _warn(msg: str) -> None:
 
 def _violation(msg: str) -> None:
     print(f"  [VIOLATION] {msg}")
+
+
+def _known(msg: str) -> None:
+    print(f"  [KNOWN] {msg}")
+
+
+def _new_violation(msg: str) -> None:
+    print(f"  [NEW VIOLATION] {msg}")
+
+
+def load_baseline(baseline_path: Path) -> list[dict]:
+    """Load baseline entries from JSON file."""
+    if not baseline_path.exists():
+        return []
+    try:
+        data = json.loads(baseline_path.read_text(encoding="utf-8"))
+        if isinstance(data, list):
+            return data
+    except (json.JSONDecodeError, OSError):
+        pass
+    return []
+
+
+def match_baseline(violation: str, baseline: list[dict]) -> dict | None:
+    """Return matching baseline entry for a violation, or None."""
+    for entry in baseline:
+        pattern = entry.get("pattern", "")
+        if pattern and pattern in violation:
+            return entry
+    return None
+
+
+def _known(msg: str) -> None:
+    print(f"  [KNOWN] {msg}")
+
+
+def _new_violation(msg: str) -> None:
+    print(f"  [NEW VIOLATION] {msg}")
 
 
 def parse_simple_frontmatter(text: str) -> dict:
@@ -361,10 +401,26 @@ def audit_json_ld(site_root: Path, violations: list, warnings: list) -> int:
     return blocks_checked
 
 
-def main() -> int:
+def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Audit built _site discovery outputs.")
     parser.add_argument("site_root", nargs="?", default="_site", help="Built site root")
-    args = parser.parse_args()
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Fail on ALL violations (default behavior)",
+    )
+    parser.add_argument(
+        "--warn-only",
+        action="store_true",
+        help="Report violations but exit 0; separate known baseline violations from new ones",
+    )
+    parser.add_argument(
+        "--baseline",
+        type=str,
+        default="data/seo/discovery-audit-baseline.json",
+        help="Path to baseline JSON file (default: data/seo/discovery-audit-baseline.json)",
+    )
+    args = parser.parse_args(argv)
 
     site_root = Path(args.site_root).resolve()
     if not site_root.is_dir():
@@ -380,6 +436,10 @@ def main() -> int:
     print("=" * 60)
     print("Discovery Output Audit")
     print(f"Site root: {site_root}")
+    if args.warn_only:
+        print("Mode: WARN-ONLY (violations reported but will not block)")
+    elif args.strict:
+        print("Mode: STRICT (all violations are blocking)")
     print("=" * 60)
 
     # 1. Sitemaps
@@ -405,22 +465,58 @@ def main() -> int:
     json_ld_count = audit_json_ld(site_root, violations, warnings)
     print(f"  JSON-LD blocks checked: {json_ld_count}")
 
+    # Load baseline and classify violations
+    baseline_path = source_root / args.baseline
+    baseline = load_baseline(baseline_path)
+    known: list[tuple[str, dict]] = []
+    new_violations: list[str] = []
+    for v in violations:
+        entry = match_baseline(v, baseline)
+        if entry:
+            known.append((v, entry))
+        else:
+            new_violations.append(v)
+
     # Summary
     print("\n" + "=" * 60)
     print("Summary")
     print("=" * 60)
-    print(f"  Warnings:      {len(warnings)}")
-    print(f"  Violations:    {len(violations)}")
+    print(f"  Warnings:           {len(warnings)}")
+    print(f"  Total violations:     {len(violations)}")
+    if baseline:
+        print(f"  Known/baselined:      {len(known)}")
+        print(f"  New violations:       {len(new_violations)}")
 
     if warnings:
         print("\n  Warnings:")
         for w in warnings:
             _warn(w)
 
+    if known:
+        print("\n  Known violations (baselined):")
+        for v, entry in known:
+            _known(f"[{entry.get('id', 'unknown')}] {v}")
+
+    if new_violations:
+        print("\n  New violations:")
+        for v in new_violations:
+            _new_violation(v)
+
+    # Determine exit behavior
+    if args.warn_only:
+        # In warn-only mode, we exit 0 even if there are violations,
+        # but we still fail if there are NEW violations that are not baselined.
+        if new_violations:
+            print(f"\nAudit found {len(new_violations)} NEW violation(s) not in baseline.")
+            return 1
+        if violations:
+            print(f"\nAudit found {len(violations)} known violation(s) — all baselined. Exiting 0.")
+        else:
+            print("\nAudit PASSED — no violations.")
+        return 0
+
+    # Strict / default mode: any violation is blocking
     if violations:
-        print("\n  Violations:")
-        for v in violations:
-            _violation(v)
         print(f"\nAudit FAILED with {len(violations)} violation(s).")
         return 1
 

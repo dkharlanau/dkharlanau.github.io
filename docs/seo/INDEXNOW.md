@@ -91,10 +91,19 @@ Caps the submission batch. If more URLs are discovered, the script reports the o
 Before submitting, run the post-build discovery audit to validate that the built `_site/` output contains only indexable, canonical URLs and that no private or noindex pages have leaked into sitemaps or structured data:
 
 ```bash
+# Default: strict mode — fails on any violation
 python3 scripts/audit_discovery_outputs.py _site
+
+# Safe mode for CI: report violations but exit 0 if all are baselined
+python3 scripts/audit_discovery_outputs.py _site --warn-only
+
+# Explicit strict mode (same as default)
+python3 scripts/audit_discovery_outputs.py _site --strict
 ```
 
 Run this after `bundle exec jekyll build` and before any real IndexNow submission.
+
+The audit supports a **baseline** file (`data/seo/discovery-audit-baseline.json`) that documents pre-existing known violations. In `--warn-only` mode, baselined violations are reported as `[KNOWN]` but do not block CI. **New violations not in the baseline still fail** even in warn-only mode.
 
 ---
 
