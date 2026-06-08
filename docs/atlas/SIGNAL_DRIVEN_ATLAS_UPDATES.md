@@ -242,6 +242,13 @@ python3 scripts/generate_atlas_artifacts.py --check
 python3 scripts/check_public_repo.py
 ```
 
+Research-to-Atlas proposal validation:
+
+```sh
+python3 scripts/generate_research_atlas_proposals.py --check
+PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_research_atlas_proposals.py
+```
+
 Before PRs that change public pages:
 
 ```sh
