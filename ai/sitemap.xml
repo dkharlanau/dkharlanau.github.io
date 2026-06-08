@@ -4,19 +4,37 @@ permalink: /ai/sitemap.xml
 sitemap: false
 ---
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
-        xmlns:ai="https://dkharlanau.github.io/ns/ai">
-{% assign ai_resources = "/ai/home.json|Home snapshot|application/json|weekly" | split: "," %}
-  {% for resource in ai_resources %}
-    {% assign parts = resource | split: "|" %}
-    <url>
-      <loc>{{ parts[0] | absolute_url }}</loc>
-      <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
-      <changefreq>{{ parts[3] }}</changefreq>
-      <priority>0.7</priority>
-      <ai:title>{{ parts[1] }}</ai:title>
-      <ai:format>{{ parts[2] }}</ai:format>
-    </url>
-  {% endfor %}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://dkharlanau.github.io/ai/home.json</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
+  <url>
+    <loc>https://dkharlanau.github.io/ai/catalog.json</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
+  <url>
+    <loc>https://dkharlanau.github.io/ai/discovery-map.json</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
+  <url>
+    <loc>https://dkharlanau.github.io/ai/resume.json</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
+  <url>
+    <loc>https://dkharlanau.github.io/ai/resume.yml</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
+  <url>
+    <loc>https://dkharlanau.github.io/ai/principles.json</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
+  <url>
+    <loc>https://dkharlanau.github.io/ai/recommendations.json</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
+  <url>
+    <loc>https://dkharlanau.github.io/ai/profile-audit.json</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
 </urlset>

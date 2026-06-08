@@ -1,3 +1,24 @@
+# robots.txt — dkharlanau.github.io
+# Canonical: https://dkharlanau.github.io/robots.txt
+#
+# AI Crawler Policy (documented choice)
+# -------------------------------------
+# OAI-SearchBot    → ALLOW  (ChatGPT Search visibility desired)
+# ChatGPT-User     → ALLOW  (User-facing ChatGPT browsing)
+# GPTBot           → BLOCK  (OpenAI training crawler; search bot is separate)
+# Claude-SearchBot → ALLOW  (Claude search visibility desired)
+# Claude-User      → ALLOW  (User-facing Claude browsing)
+# ClaudeBot        → BLOCK  (Anthropic training crawler)
+# Google-Extended  → BLOCK  (Google training crawler)
+# PerplexityBot    → ALLOW  (Perplexity search visibility)
+# CCBot            → ALLOW  (Common Crawl retrieval)
+# FacebookBot      → ALLOW  (Meta search/retrieval)
+#
+# Content-Signal is informational, not enforceable:
+# ai-train=no  → do not use for model training without permission
+# search=yes   → search indexing welcome
+# ai-input=yes → AI retrieval and user-directed answering allowed
+
 User-agent: *
 Allow: /
 Content-Signal: ai-train=no, search=yes, ai-input=yes
@@ -36,6 +57,8 @@ Allow: /
 User-agent: FacebookBot
 Allow: /
 
+# Sitemap references — canonical sitemap index first, then section sitemaps
 Sitemap: https://dkharlanau.github.io/sitemap.xml
+Sitemap: https://dkharlanau.github.io/sitemap-pages.xml
 Sitemap: https://dkharlanau.github.io/sitemap-data.xml
-Sitemap: https://dkharlanau.github.io/ai/sitemap.xml
+Sitemap: https://dkharlanau.github.io/sitemap-atlas.xml
