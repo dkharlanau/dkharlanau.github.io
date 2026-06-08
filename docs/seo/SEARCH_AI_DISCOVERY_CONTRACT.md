@@ -188,7 +188,52 @@ Atlas pages receive:
 
 ---
 
-## 8. Validation Commands
+## 8. Discovery Audit and IndexNow Workflow
+
+### 8.1 Post-build discovery audit
+
+After Jekyll builds `_site/`, run the discovery audit to validate that the built output contains only intended discovery surfaces:
+
+```bash
+python3 scripts/audit_discovery_outputs.py _site
+```
+
+The audit checks:
+- Sitemap validity (well-formed XML, correct namespace, no duplicate entries)
+- Canonical URL consistency (all sitemap URLs use `https://dkharlanau.github.io/`)
+- Noindex leak detection (no `noindex` pages appear in sitemap)
+- Private path leak detection (no `/research/`, `/DAMA/`, `/agentic-bytes/`, `/TRIZ-bytes/`, `/LLM-prompts/` in sitemap)
+- JSON-LD validity (no malformed structured data in built HTML)
+- Fake schema field detection (no invented ratings, reviews, or organization claims)
+
+Run this **after** `bundle exec jekyll build` and **before** any real IndexNow submission. In CI, it runs automatically on every push to `main` as part of the dry-run workflow.
+
+### 8.2 IndexNow dry-run-first workflow
+
+IndexNow submission follows a **dry-run-first, manual-submit-only** policy:
+
+1. **Default is dry-run.** `python3 scripts/indexnow_submit.py` (no flags) prints the URLs that would be submitted without making any network request.
+2. **Real submission requires `--submit`.** Explicit opt-in prevents accidental bulk notifies.
+3. **GitHub workflow runs dry-run on every push.** `.github/workflows/indexnow-dry-run.yml` executes the script in dry-run mode automatically.
+4. **Real submission is manual only.** Use `workflow_dispatch` with `submit: true` to trigger a real submission. This requires the `INDEXNOW_KEY` repository secret.
+
+### 8.3 IndexNow safety confirmations
+
+- **No automatic real submission in CI.** The push-triggered workflow never passes `--submit`.
+- **Changed-URL targeting by default.** Manual dispatch uses `--from-git-diff` to submit only URLs affected by the latest commit range, minimizing noise.
+- **Batch limits.** `--max-urls N` caps the submission batch; overflow exits without submitting.
+- **Key verification.** `--require-key-file` confirms the verification `.txt` file is present at the site root before any network request.
+- **Indexability gate.** The script enforces the same rules as sitemap inclusion (see §2.1). Noindex, draft, research, unverified Atlas, and private paths are never submitted.
+
+### 8.4 IndexNow scope and limitations
+
+- IndexNow notifies Bing, Yandex, Seznam.cz, and other participating engines.
+- **Google does not participate in IndexNow.** It is not a Google indexing guarantee.
+- Use IndexNow as a supplementary signal, not a replacement for sitemap hygiene, canonical quality, or structured-data correctness.
+
+---
+
+## 9. Validation Commands
 
 Run these in order before committing:
 
@@ -199,28 +244,35 @@ python3 scripts/check_public_repo.py
 # 2. Atlas artifact consistency
 python3 scripts/generate_atlas_artifacts.py --check
 
-# 3. SEO metadata in built HTML (requires _site/)
+# 3. Build the site
+bundle exec jekyll build
+
+# 4. Post-build discovery audit (sitemap, canonical, noindex leaks, JSON-LD)
+python3 scripts/audit_discovery_outputs.py _site
+
+# 5. SEO metadata in built HTML
 python3 scripts/check_seo.py _site
 
-# 4. Broken link check (requires _site/)
+# 6. Broken link check
 python3 scripts/check_links.py _site
 
-# 5. Sitemap / robots / structured-data tests
+# 7. Sitemap / robots / structured-data tests
 pytest tests/test_seo_discovery.py -v
 
-# 6. All existing tests
+# 8. All existing tests
 pytest tests/ -v
 
-# 7. Git whitespace check
+# 9. Git whitespace check
 git diff --check
 ```
 
-If Jekyll is unavailable locally, rely on GitHub CI for the `_site`-dependent checks (`check_seo.py`, `check_links.py`). Do not claim those passed locally.
+If Jekyll is unavailable locally, rely on GitHub CI for the `_site`-dependent checks (`audit_discovery_outputs.py`, `check_seo.py`, `check_links.py`). Do not claim those passed locally.
 
 ---
 
-## 9. Change Log
+## 10. Change Log
 
 | Date | Change |
 |------|--------|
+| 2026-06-08 | v1.1 — Added discovery audit (`audit_discovery_outputs.py`), IndexNow dry-run-first workflow, manual real-submit gating, and updated validation pipeline |
 | 2026-06-08 | v1.0 — Initial contract after sitemap architecture refactor, structured data additions, and IndexNow support |
