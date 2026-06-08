@@ -232,6 +232,7 @@ def build_registry_entry(
     known_weak_sources: list[str] = []
     watch_terms: list[str] = []
     related_pages: list[str] = []
+    maintenance_override: dict[str, Any] | None = None
 
     if existing:
         safe_to_auto_update = existing.get("safe_to_auto_update", False)
@@ -240,9 +241,17 @@ def build_registry_entry(
         known_weak_sources = existing.get("known_weak_sources", [])
         watch_terms = existing.get("watch_terms", [])
         related_pages = existing.get("related_pages", [])
+        maintenance_override = existing.get("maintenance_override")
 
     # Merge detected weak sources with known ones
     all_weak = list(set(weak_sources + known_weak_sources))
+
+    # Apply maintenance override to update_priority if present and no safety violations
+    effective_update_priority = update_priority
+    if maintenance_override and not safety_violations:
+        overridden = maintenance_override.get("update_priority")
+        if overridden in ("high", "medium", "low", "none"):
+            effective_update_priority = overridden
 
     entry: dict[str, Any] = {
         "path": rel_path,
@@ -256,7 +265,7 @@ def build_registry_entry(
         "last_reviewed": last_reviewed.isoformat() if last_reviewed else None,
         "last_meaningful_update": last_meaningful_update.isoformat() if last_meaningful_update else None,
         "source_confidence": source_confidence,
-        "update_priority": update_priority,
+        "update_priority": effective_update_priority,
         "staleness_status": staleness,
         "staleness_reason": staleness_reason,
         "maintenance_notes": maintenance_notes,
@@ -266,6 +275,7 @@ def build_registry_entry(
         "safe_to_auto_update": safe_to_auto_update,
         "requires_human_review": requires_human_review,
         "safety_violations": safety_violations,
+        "maintenance_override": maintenance_override,
     }
 
     return entry
@@ -392,6 +402,7 @@ def run_scan(check_mode: bool = False) -> int:
     watch_count = 0
     weak_source_count = 0
     high_priority_count = 0
+    overridden_count = 0
 
     for rel_path, md_path, url, section in pages:
         fm, body = parse_frontmatter(md_path)
@@ -409,6 +420,8 @@ def run_scan(check_mode: bool = False) -> int:
             weak_source_count += 1
         if entry["update_priority"] == "high":
             high_priority_count += 1
+        if entry.get("maintenance_override"):
+            overridden_count += 1
 
     # Sort entries for stability
     registry_entries.sort(key=lambda e: e["path"])
@@ -442,9 +455,19 @@ def run_scan(check_mode: bool = False) -> int:
     print(f"Stale pages:              {stale_count}")
     print(f"Watch pages:              {watch_count}")
     print(f"Weak-source pages:        {weak_source_count}")
+    print(f"Overridden pages:         {overridden_count}")
     print(f"Safety violations:        {safety_violations_total}")
     print(f"New changelog events:     {len(new_events)}")
     print("-" * 60)
+
+    if overridden_count > 0:
+        print("OVERRIDDEN PAGES (intentional maintenance state):")
+        for entry in registry_entries:
+            override = entry.get("maintenance_override")
+            if override:
+                reason = override.get("reason", "No reason given")
+                print(f"  {entry['path']}: {reason}")
+        print("-" * 60)
 
     if safety_violations_total > 0:
         print("SAFETY VIOLATIONS DETECTED:")
