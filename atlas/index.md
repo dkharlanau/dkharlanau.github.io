@@ -54,6 +54,11 @@ verified: true
       <p>Support-oriented diagnostic patterns for repeat incidents and process blockers.</p>
       <span class="link-arrow">Open diagnostics</span>
     </a>
+    <a class="atlas-card" href="/scenarios/">
+      <h2>Scenarios</h2>
+      <p>Business pain mapped to SAP process context, cost drivers, and diagnostic workflows.</p>
+      <span class="link-arrow">Open scenarios</span>
+    </a>
     <a class="atlas-card" href="/atlas/ai-operations/">
       <h2>AI Operations</h2>
       <p>AI-assisted support, operational memory, governance, and human review patterns.</p>
