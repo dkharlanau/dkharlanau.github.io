@@ -1,38 +1,169 @@
 # AGENTS.md
 
-Project-specific guidance for coding agents working in this public GitHub Pages repository.
-Use this file as the short operational source of truth. Open deeper docs only when the task needs them.
+Project-specific guidance for AI coding and research agents working in this public GitHub Pages repository.
+Use this file as the main entry point. Open deeper docs only when the task needs them.
 
-## Project Snapshot
+## Repository Purpose
 
-- Stack: Jekyll/GitHub Pages, Ruby `3.2.3`, Python generator/check scripts, and one Node generator for DAMA pages.
-- Main site content: `_data/`, `_notes/`, `_blog/`, `services/`, `legal/`, `index.md`, and `assets/main.css`.
-- Layout and rendering: `_layouts/`, `_includes/`, `_includes/sections/`, and `_includes/seo/structured-data.html`.
-- Canonical datasets: `datasets/` plus machine-readable mirrors in `ai/`.
-- Generated public dataset pages live under `datasets/view/` and `docs/dama/`; update the generator when changing their structure.
+This is the public personal site and structured knowledge base of **Dzmitryi Kharlanau**, an SAP consultant focused on SAP AMS diagnostics, SD/MM/MM-PUR/MDG support, BP/customer/vendor replication, integration troubleshooting, and AI-ready support knowledge systems.
 
-## Public Repo Safety
+The site serves three purposes:
+1. **Public entity signal** — who Dzmitryi Kharlanau is, what he works on, and where his expertise lies.
+2. **Knowledge Atlas** — curated, conservative diagnostic and conceptual content for SAP support and operations.
+3. **Scenarios** — business-pain-to-diagnostic-workflow mappings that connect Atlas content to real support cost and process outcomes.
 
-- Treat every committed file as public. Do not commit LinkedIn exports, raw dumps, local configs, secrets, private notes, bytecode, caches, `_site/`, or temporary transfer folders.
+Everything committed to this repository is public. Treat every file accordingly.
+
+## High-Level Site Structure
+
+| Area | Path | Purpose |
+|------|------|---------|
+| Home | `index.md` | Positioning, trust signals, CTAs |
+| About / Profile | `about.md` | Canonical human-readable and machine-readable profile |
+| Services | `services/` | Consulting service descriptions and engagement model |
+| Knowledge Atlas | `atlas/` | Curated diagnostic, conceptual, and SAP-specific content |
+| Scenarios | `scenarios/` | Business pain mapped to SAP process context and diagnostic workflows |
+| Research / Radar | `research/`, `_radar/`, `_news/` | Research briefs, comparisons, watchlists, signal tracking |
+| Datasets | `datasets/` | Canonical machine-readable dataset collections |
+| AI-readable exports | `ai/` | JSON/YAML machine endpoints (resume, catalog, discovery map, etc.) |
+| Blog | `_blog/`, `blog/index.md` | Long-form essays |
+| Notes | `_notes/`, `notes/index.md` | Short-form working notes |
+| Legal | `legal/` | Privacy, terms, disclosure, responsible AI, accessibility |
+
+## Atlas Purpose
+
+The Atlas is a curated working knowledge base for concepts that matter during SAP support, process analysis, operational memory work, and side-by-side AI design. It is intentionally conservative: reviewed pages first, raw research notes kept private or noindex.
+
+Atlas sections:
+- `atlas/concepts/` — Durable concept explanations (order-to-cash, ATP vs inventory, etc.)
+- `atlas/diagnostics/` — Support-oriented diagnostic patterns for repeat incidents
+- `atlas/sap/` — SAP configuration and support explanations with conservative boundaries
+- `atlas/maps/` — Process, document-flow, data dependency, and cross-domain navigation maps
+- `atlas/ai-operations/` — AI-assisted support, operational memory, governance, human review
+- `atlas/data-quality/` — Master data, quality signals, governance failure modes
+- `atlas/automation/` — Support automation, agentic workflows, developer automation
+- `atlas/research-notes/` — **Noindex working area** — useful but not polished expert content
+- `atlas/links/` — Reference routes to profile, services, datasets
+
+## Scenarios Purpose
+
+Scenarios connect business pain to SAP diagnostic workflows. Each scenario follows a consistent pattern:
+1. Business pain
+2. Process context
+3. SAP touchpoints
+4. Root causes (master data / configuration / integration)
+5. Cost drivers
+6. Diagnostic workflow
+7. Solution patterns
+8. AI / automation opportunity (with conservative boundaries)
+9. Related Atlas links
+
+Scenarios are complementary to Atlas: Atlas pages are diagnostic deep-dives; Scenarios are workflow lenses showing why those diagnostics matter to business outcomes.
+
+## Research / Radar Purpose
+
+- `research/briefs/` — Short research briefs on emerging topics
+- `research/comparisons/` — Side-by-side technology comparisons
+- `research/watchlists/` — Tracking lists for emerging signals
+- `_radar/` — Signal radar entries (dated, collection-driven)
+- `_news/` — News and signal updates
+
+Research content is opinionated but conservative. It does not claim official SAP endorsement.
+
+## Services / Entity Positioning
+
+Services describe the engagement model:
+1. **Diagnose** — SAP transformation friction audit
+2. **Stabilize** — O2C / integration / AMS improvement
+3. **Structure** — Operational memory and handover model
+4. **Extend** — Side-by-side AI and automation
+
+The services layer is the commercial signal. It must remain accurate, non-exaggerated, and aligned with the Atlas evidence layer.
+
+## Content Safety Rules
+
+- **Every committed file is public.** Do not commit LinkedIn exports, raw dumps, local configs, secrets, private notes, bytecode, caches, `_site/`, or temporary transfer folders.
 - Do not add personal email or phone data unless the task explicitly says it should be public.
-- Before adding or reusing any third-party logo, icon, trademark, or brand asset, verify the license, applicable brand-guidelines, or obtain written permission from the rights holder. If permission is unclear, do not commit the asset.
+- Before adding or reusing any third-party logo, icon, trademark, or brand asset, verify the license or obtain written permission.
 - Keep canonical dataset content under `datasets/`; do not reintroduce root duplicate folders such as `TRIZ-bytes/`, `DAMA/`, `LLM-prompts/`, `agentic-bytes/`, or dated transfer folders.
-- Use `scripts/check_public_repo.py` before publishing changes that touch repo structure, datasets, resume data, or config.
+- **Never expose client names, ticket numbers, internal incident IDs, or proprietary system details.**
+- **Never publish private corpus content.** Draft notes, raw research, and unverified material stay local or in noindex areas.
 
-## Working Rules
+## Verification / Indexing Rules
 
-- Prefer data edits in `_data/*.yml` for repeatable content and page edits in the existing Markdown files for standalone pages.
-- Prefer reusing existing section partials and CSS tokens over adding one-off layouts.
-- For dataset metadata, use `bin/enrich_datasets.py`; for dataset pages, use `bin/generate_dataset_pages.py`; for DAMA standalone pages, use `scripts/generate_dama_pages.js`.
-- Keep generated files and generators in sync. If generated output changes, record which generator command produced it.
-- Avoid broad cleanup outside the requested area unless it is public-safety related and covered by this guide.
+The repository uses a three-level content verification system:
 
-## Validation
+| Level | Status | Frontmatter | Indexing |
+|-------|--------|-------------|----------|
+| 1 — Review candidate | `needs_verification` | `verified: false`, `robots: noindex,follow`, `sitemap: false` | **Noindex** |
+| 2 — Verified | `reviewed` | `verified: true`, `robots: index,follow`, `sitemap: true` | **Indexable** |
+| 3 — Flagship | `reviewed` + source-backed | `verified: true`, strong internal links, cited sources | **Strong signal** |
 
-Run the smallest relevant set first, then the full sequence before publishing:
+- Only Level 2+ pages appear in `llms-full.txt`.
+- Only Level 2+ pages appear in section sitemaps.
+- The `scenarios/index.md` and all scenario pages are currently **Level 1** (`needs_verification`, `noindex`).
+- Do not mark any page verified without human review.
+- Do not add unverified pages to sitemap or `llms-full.txt`.
+
+Read `docs/ai/CONTENT_VERIFICATION_POLICY.md` for the full policy.
+
+## Common Commands
 
 ```sh
+# Setup
 ./bin/setup
+
+# Full validation sequence (run before publishing)
+PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
+python3 scripts/check_public_repo.py
+bundle exec jekyll build
+python3 scripts/check_links.py _site
+python3 scripts/check_seo.py _site
+
+# Dataset generators
+python3 bin/enrich_datasets.py
+python3 bin/generate_dataset_pages.py
+node scripts/generate_dama_pages.js
+
+# Atlas artifact generation
+python3 scripts/generate_atlas_artifacts.py
+
+# Local preview
+bundle exec jekyll serve
+```
+
+## What Agents May Edit
+
+- `_data/*.yml` — repeatable content (resume, home, certifications, etc.)
+- `atlas/**/*.md` — new or existing Atlas pages (follow verification rules)
+- `scenarios/*.md` — new or existing Scenario pages (default to Level 1)
+- `research/**/*.md` — research briefs, comparisons, watchlists
+- `datasets/**/*.json` — dataset entries (follow schema)
+- `ai/*.json`, `ai/*.yml` — machine-readable exports
+- `docs/ai/*.md` — AI readiness documentation
+- `_includes/atlas/*.html` — Atlas components (author block, disclaimer, status badge)
+- `_includes/sections/*.html` — section partials
+- `scripts/*.py`, `bin/*.py` — generators and validators
+- `tests/*.py` — test files
+
+## What Agents Must Not Edit
+
+- `index.md` (homepage) — unless explicitly instructed
+- `about.md` (profile) — unless explicitly instructed
+- `services/*.md` — unless explicitly instructed
+- `legal/*.md` — unless explicitly instructed
+- `_site/` — generated; never edit directly
+- `llms-full.txt` — generated by `scripts/generate_atlas_artifacts.py`
+- `sitemap-*.xml` — generated; never edit directly
+- `robots.txt` — unless explicitly instructed
+- Any file containing private corpus, client data, or unverified draft material
+- Any verified page's `verified: true` status — agents may not promote content
+
+## Validation Commands
+
+Before any PR that touches content, structure, datasets, or config:
+
+```sh
 PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
 python3 scripts/check_public_repo.py
 bundle exec jekyll build
@@ -40,8 +171,38 @@ python3 scripts/check_links.py _site
 python3 scripts/check_seo.py _site
 ```
 
-Local hooks are opt-in:
+Run the smallest relevant set first, then the full sequence before publishing.
 
-```sh
-git config core.hooksPath .githooks
-```
+## PR Rules
+
+- One logical change per PR.
+- Include a clear description of what changed and why.
+- If adding Atlas or Scenario pages, note their verification level.
+- If changing generated files, note which generator command produced them.
+- Do not mix content changes with unrelated cleanup.
+- Use the PR template in `.github/PULL_REQUEST_TEMPLATE/atlas-signal-update.md` when applicable.
+
+## No-Private-Corpus Rule
+
+- Draft notes, raw research, and unverified material must stay in local working directories or noindex collections.
+- Do not commit private working notes to public paths.
+- Do not expose internal incident details, client names, or proprietary configuration.
+- If in doubt, leave it out.
+
+## No-Invented-Validation-Success Rule
+
+- Agents must not claim a page is verified, reviewed, or source-backed unless the frontmatter and human review history confirm it.
+- Agents must not invent external links, citations, or validation results.
+- Agents must not claim SEO or AI discoverability improvements without running the actual validation commands.
+
+## Deeper Documentation
+
+- `PROJECT_MAP.md` — compact repository map
+- `docs/ai/ENTITY_MODEL.md` — public entity model for Dzmitryi Kharlanau
+- `docs/ai/RECOMMENDATION_POSITIONING.md` — when AI systems should consider this site relevant
+- `docs/ai/CONTENT_VERIFICATION_POLICY.md` — full verification and indexing policy
+- `docs/ai/AGENT_TASK_PATTERNS.md` — safe task templates for future agents
+- `docs/ai/AI_VISIBILITY_AUDIT.md` — how to test AI/search visibility
+- `docs/site-structure-inventory.md` — full site structure inventory
+- `docs/site-content-design-contract.md` — design and editorial contract
+- `ARCHITECTURE.md` — technical architecture
