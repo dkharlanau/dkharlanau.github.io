@@ -88,6 +88,34 @@ article → blog post or LinkedIn long-form
 LinkedIn post → short-form signal
 ```
 
+### Automated proposal generation
+
+A script scans all research pages and generates structured Atlas update candidates:
+
+```sh
+python3 scripts/generate_research_atlas_proposals.py
+```
+
+This produces `ai/research-atlas-proposals.json`, which contains:
+- source research page metadata
+- proposed action: `create`, `extend`, `ignore`, or `needs_review`
+- candidate Atlas target page (if known)
+- rationale and confidence
+- source confidence warnings
+- safety flags
+
+Safety rules:
+- Proposals never edit Atlas pages directly.
+- Proposals never mark content as verified.
+- Proposals never create public pages automatically.
+- Research pages remain `noindex` and `sitemap: false`.
+
+Validate existing proposals:
+
+```sh
+python3 scripts/generate_research_atlas_proposals.py --check
+```
+
 Promotion criteria:
 - Evidence level upgraded from `low` to `medium` or `high`
 - Sources verified and updated
