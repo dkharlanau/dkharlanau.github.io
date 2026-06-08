@@ -16,7 +16,8 @@ sitemap: false
     <url>
       <loc>{{ page.url | absolute_url }}</loc>
       {% assign page_lastmod = page.last_modified_at | default: page.last_reviewed | default: page.date | default: nil %}
-      {% if page_lastmod %}<lastmod>{{ page_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
+      {% assign page_lastmod_test = page_lastmod | date: '%s' %}
+      {% if page_lastmod_test != page_lastmod %}<lastmod>{{ page_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
     </url>
     {% endif %}
   {% endfor %}
@@ -32,7 +33,8 @@ sitemap: false
     <url>
       <loc>{{ doc.url | absolute_url }}</loc>
       {% assign doc_lastmod = doc.last_modified_at | default: doc.last_reviewed | default: doc.date | default: nil %}
-      {% if doc_lastmod %}<lastmod>{{ doc_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
+      {% assign doc_lastmod_test = doc_lastmod | date: '%s' %}
+      {% if doc_lastmod_test != doc_lastmod %}<lastmod>{{ doc_lastmod | date_to_xmlschema }}</lastmod>{% endif %}
     </url>
         {% endif %}
       {% endif %}
