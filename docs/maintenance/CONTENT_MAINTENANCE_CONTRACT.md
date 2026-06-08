@@ -53,8 +53,28 @@ For each relevant Atlas and Research page, the registry stores:
 | `safe_to_auto_update` | boolean | Default `false`; must be manually enabled |
 | `requires_human_review` | boolean | Default `true` for research and unverified pages |
 | `safety_violations` | list | Auto-detected safety issues |
+| `maintenance_override` | dict \| null | Optional override for intentional maintenance states |
 
-### 3.1 How future agents should use the registry
+### 3.1 `maintenance_override`
+
+An optional field that documents an intentional maintenance state and suppresses false-positive priority alerts. Use it when a page is intentionally unverified, noindex, or contains warning text that would otherwise trigger weak-source detection.
+
+| Sub-field | Type | Description |
+|-----------|------|-------------|
+| `reason` | string | Human-readable explanation of why the override exists |
+| `update_priority` | string | Override value: `high` / `medium` / `low` / `none` |
+| `weak_sources_ignored` | boolean | Whether weak-source markers are intentional on this page |
+| `staleness_ignored` | boolean | Whether staleness is intentional for this page |
+
+**Rules:**
+
+- `maintenance_override` is a manual field. The scanner preserves it but never creates it automatically.
+- Safety violations **always** take precedence over overrides. If a page has both an override and a safety violation, the violation wins and `update_priority` remains `high`.
+- Research pages with wrong indexing (`missing noindex`, `sitemap: true`) must still fail even with an override.
+- `verified: true` with weak-source markers must still be flagged even with an override.
+- Do not use overrides to hide real content problems.
+
+### 3.2 How future agents should use the registry
 
 1. **Read the registry first** before deciding which pages to touch.
 2. **Filter by `update_priority`** to find pages that need attention.
@@ -234,13 +254,14 @@ python3 scripts/content_maintenance_scan.py --check
 1. Discovers all Atlas and Research Markdown files.
 2. Parses frontmatter using PyYAML.
 3. Builds or updates registry entries.
-4. Preserves manual fields (`safe_to_auto_update`, `maintenance_notes`, `watch_terms`, `related_pages`).
+4. Preserves manual fields (`safe_to_auto_update`, `maintenance_notes`, `watch_terms`, `related_pages`, `maintenance_override`).
 5. Detects weak-source markers in page bodies.
 6. Computes staleness from `last_reviewed` or `last_meaningful_update`.
 7. Checks safety violations.
-8. Generates initial `metadata_changed` events for new pages.
-9. Prints a concise report.
-10. Exits non-zero only for safety violations.
+8. Applies `maintenance_override` to `update_priority` if present and no safety violations exist.
+9. Generates initial `metadata_changed` events for new pages.
+10. Prints a concise report (including overridden pages).
+11. Exits non-zero only for safety violations.
 
 ### 7.3 Staleness thresholds
 

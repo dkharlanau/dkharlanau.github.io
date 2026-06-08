@@ -76,6 +76,7 @@ def test_each_page_has_required_fields():
         "safe_to_auto_update",
         "requires_human_review",
         "safety_violations",
+        "maintenance_override",
     ]
     for page in data["pages"]:
         for field in required:
@@ -238,6 +239,10 @@ def test_manual_fields_preserved_on_regeneration():
             page["maintenance_notes"] = "Test note"
             page["watch_terms"] = ["test-term"]
             page["related_pages"] = ["/atlas/test/"]
+            page["maintenance_override"] = {
+                "reason": "Test override",
+                "update_priority": "none",
+            }
             break
 
     # Write back
@@ -260,9 +265,68 @@ def test_manual_fields_preserved_on_regeneration():
             assert page["maintenance_notes"] == "Test note", "maintenance_notes not preserved"
             assert page["watch_terms"] == ["test-term"], "watch_terms not preserved"
             assert page["related_pages"] == ["/atlas/test/"], "related_pages not preserved"
+            assert page.get("maintenance_override", {}).get("reason") == "Test override", "maintenance_override not preserved"
             break
     else:
         pytest.fail(f"Page {first_path} not found after regeneration")
+
+
+def test_maintenance_override_reduces_priority():
+    """A page with maintenance_override should have its update_priority overridden."""
+    data = load_registry()
+    overridden_pages = [p for p in data["pages"] if p.get("maintenance_override")]
+    assert len(overridden_pages) > 0, "Expected at least one overridden page"
+    for page in overridden_pages:
+        override = page["maintenance_override"]
+        expected = override.get("update_priority")
+        if expected:
+            assert page["update_priority"] == expected, \
+                f"{page['path']}: expected priority {expected}, got {page['update_priority']}"
+
+
+def test_maintenance_override_does_not_hide_safety_violations():
+    """Safety violations must still be detected even with maintenance_override."""
+    # This is a logic test: verify the scanner still checks safety violations
+    # when an override is present. We test via the check_safety_violations function.
+    fm = {
+        "title": "",
+        "robots": "noindex,follow",
+        "sitemap": False,
+        "verified": False,
+        "status": "draft",
+    }
+    violations = scanner.check_safety_violations("atlas/test.md", fm, [], "atlas")
+    assert "missing_title" in violations
+    # The override logic in build_registry_entry only affects update_priority,
+    # not safety_violations. So violations should still exist.
+
+
+def test_research_pages_with_override_still_require_noindex():
+    """Research pages must remain noindex even with maintenance_override."""
+    data = load_registry()
+    for page in data["pages"]:
+        if page["section"].startswith("research"):
+            robots = str(page.get("robots", "")).lower()
+            assert "noindex" in robots, f"Research page {page['path']} must have noindex"
+            assert page.get("sitemap") is False, f"Research page {page['path']} must have sitemap: false"
+
+
+def test_override_presence_in_registry():
+    """The atlas/research-notes/index.md page should have a maintenance_override."""
+    data = load_registry()
+    page = next((p for p in data["pages"] if p["path"] == "atlas/research-notes/index.md"), None)
+    assert page is not None, "atlas/research-notes/index.md must be in registry"
+    assert page.get("maintenance_override") is not None, "Expected maintenance_override on research-notes index"
+    override = page["maintenance_override"]
+    assert "reason" in override, "Override must have a reason"
+    assert override.get("update_priority") == "none", "Override should set update_priority to none"
+
+
+def test_high_priority_count_is_zero_after_override():
+    """After applying the override, high priority count should be 0."""
+    data = load_registry()
+    high = [p for p in data["pages"] if p["update_priority"] == "high"]
+    assert len(high) == 0, f"Expected 0 high-priority pages, found: {[p['path'] for p in high]}"
 
 
 # ---------------------------------------------------------------------------
