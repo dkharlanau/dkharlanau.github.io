@@ -96,6 +96,8 @@ sitemap: false
     <ul>
       <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a></li>
       <li><a href="/atlas/diagnostics/sap-credit-management-diagnostics/">SAP Credit Management Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-delivery-processing-diagnostics/">SAP Delivery Processing Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-returns-processing-diagnostics/">SAP Returns Processing Diagnostics</a></li>
       <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
     </ul>
   </section>

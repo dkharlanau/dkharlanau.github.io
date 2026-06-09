@@ -127,6 +127,7 @@ sitemap: false
       <li><a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">SAP Business Partner Replication Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-vendor-master-replication-diagnostics/">SAP Vendor Master Replication Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-customer-master-replication-diagnostics/">SAP Customer Master Replication Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-material-master-extension-diagnostics/">SAP Material Master Extension Diagnostics</a></li>
       <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a></li>
     </ul>
   </section>

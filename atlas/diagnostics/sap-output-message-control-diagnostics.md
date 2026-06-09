@@ -139,6 +139,7 @@ sitemap: false
       <li><a href="/atlas/diagnostics/idoc-aif-integration-diagnostics/">Idoc Aif Integration Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-inbound-processing-diagnostics/">SAP Inbound Processing Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-outbound-processing-diagnostics/">SAP Outbound Processing Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-spool-output-diagnostics/">SAP Spool and Print Output Diagnostics</a></li>
     </ul>
   </section>
 

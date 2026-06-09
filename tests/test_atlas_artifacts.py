@@ -13,10 +13,10 @@ def test_manifest_json_is_valid():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.manifest"
-    assert data["count"] == 151
+    assert data["count"] == 159
     assert data["verified_count"] == 14
-    assert data["unverified_count"] == 137
-    assert len(data["entries"]) == 151
+    assert data["unverified_count"] == 145
+    assert len(data["entries"]) == 159
 
 
 def test_related_json_is_valid():
@@ -25,10 +25,10 @@ def test_related_json_is_valid():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.related"
-    assert data["count"] == 671
+    assert data["count"] == 702
     assert data["broken_link_count"] == 0
     assert data["warnings"] == []
-    assert len(data["edges"]) == 671
+    assert len(data["edges"]) == 702
 
 
 def test_compact_signal_index_is_valid():
@@ -37,8 +37,8 @@ def test_compact_signal_index_is_valid():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.compact_signal_index"
-    assert data["count"] == 151
-    assert len(data["entries"]) == 151
+    assert data["count"] == 159
+    assert len(data["entries"]) == 159
     assert data["fallback"]["decision"] == "needs_research"
 
 
@@ -162,7 +162,7 @@ def _import_generator():
 def test_dynamic_discovery_returns_22_article_pages():
     gen = _import_generator()
     articles = gen.discover_atlas_articles()
-    assert len(articles) == 151, f"Expected 151 articles, found {len(articles)}"
+    assert len(articles) == 159, f"Expected 159 articles, found {len(articles)}"
     # All paths must be under atlas/ and be .md files
     for p in articles:
         assert p.startswith("atlas/"), f"Path outside atlas/: {p}"

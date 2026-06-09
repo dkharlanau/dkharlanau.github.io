@@ -138,6 +138,7 @@ sitemap: false
       <li><a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-release-strategy-diagnostics/">SAP Release Strategy Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-source-determination-diagnostics/">SAP Source Determination Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-mrp-exception-diagnostics/">SAP MRP Exception Diagnostics</a></li>
       <li><a href="/atlas/sap/sap-mm-procurement-overview/">SAP Mm Procurement Overview</a></li>
     </ul>
   </section>

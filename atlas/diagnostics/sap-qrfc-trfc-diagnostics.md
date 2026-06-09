@@ -124,6 +124,7 @@ sitemap: false
       <li><a href="/atlas/diagnostics/idoc-aif-integration-diagnostics/">Idoc Aif Integration Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP Idoc Status Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-rfc-destination-diagnostics/">SAP RFC Destination Diagnostics</a></li>
     </ul>
   </section>
 
