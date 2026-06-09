@@ -13,6 +13,9 @@ status: needs_verification
 verified: false
 last_reviewed: 2026-06-09
 author: Dzmitryi Kharlanau
+level: 1
+robots: noindex,follow
+sitemap: false
 tags:
   - material-master
   - master-data
