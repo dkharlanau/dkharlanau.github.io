@@ -162,6 +162,54 @@ verified: true
       <p>Find why subcontracting components are not issued, finished goods are not received, or costs are misallocated.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-batch-determination-diagnostics/">
+      <h2>SAP Batch Determination Diagnostics</h2>
+      <p>Find why batch determination fails, returns the wrong batch, or cannot find a valid batch in MM, SD, or WM.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-mrp-exception-diagnostics/">
+      <h2>SAP MRP Exception Diagnostics</h2>
+      <p>Find why MRP produces exception messages, why planned orders or purchase requisitions are not created, or why a material appears overstocked or short.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Sales and Delivery Execution</p>
+    <h2>Delivery, returns, and logistics execution diagnostics</h2>
+  </header>
+  <div class="atlas-card-grid">
+    <a class="atlas-card" href="/atlas/diagnostics/sap-delivery-processing-diagnostics/">
+      <h2>SAP Delivery Processing Diagnostics</h2>
+      <p>Find why a delivery cannot be picked, packed, or posted with goods issue.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-returns-processing-diagnostics/">
+      <h2>SAP Returns Processing Diagnostics</h2>
+      <p>Find why a customer return cannot be created, received, credited, or reconciled.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Basis and System Operations</p>
+    <h2>Background jobs, spool, and system-level diagnostics</h2>
+  </header>
+  <div class="atlas-card-grid">
+    <a class="atlas-card" href="/atlas/diagnostics/sap-background-job-diagnostics/">
+      <h2>SAP Background Job Failure Diagnostics</h2>
+      <p>Find why a background job failed, was cancelled, did not start, or produced incorrect results.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-spool-output-diagnostics/">
+      <h2>SAP Spool and Print Output Diagnostics</h2>
+      <p>Find why a spool request failed, why print output was not generated, or why a document output never reached the printer.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
   </div>
 </section>
 
@@ -209,6 +257,11 @@ verified: true
     <a class="atlas-card" href="/atlas/diagnostics/sap-outbound-processing-diagnostics/">
       <h2>SAP Outbound Processing Diagnostics</h2>
       <p>Find why an outbound message was not created, not sent, or arrived corrupted at the partner.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-rfc-destination-diagnostics/">
+      <h2>SAP RFC Destination Diagnostics</h2>
+      <p>Find why an RFC destination fails, why tRFC or qRFC queues are stuck, or why cross-system calls return errors.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
   </div>
@@ -268,6 +321,11 @@ verified: true
     <a class="atlas-card" href="/atlas/diagnostics/sap-organizational-data-diagnostics/">
       <h2>SAP Organizational Data Diagnostics</h2>
       <p>Find why a master data object is missing organizational assignments, has wrong ones, or fails validation.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-material-master-extension-diagnostics/">
+      <h2>SAP Material Master Extension Diagnostics</h2>
+      <p>Find why a material master cannot be extended to a new plant, sales organization, or view, or why a material is blocked for a business process.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
   </div>

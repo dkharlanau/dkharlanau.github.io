@@ -124,6 +124,7 @@ sitemap: false
     <ul>
       <li><a href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">SAP Goods Receipt Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-material-document-diagnostics/">SAP Material Document Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-batch-determination-diagnostics/">SAP Batch Determination Diagnostics</a></li>
       <li><a href="/atlas/sap/sap-mm-procurement-overview/">SAP Mm Procurement Overview</a></li>
     </ul>
   </section>
