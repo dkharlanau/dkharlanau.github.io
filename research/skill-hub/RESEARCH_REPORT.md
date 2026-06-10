@@ -8,7 +8,7 @@ sitemap: false
 
 ## Executive Summary
 
-This research base documents the evidence, patterns, and decision rules collected across 7 parallel research tracks covering 17 domains relevant to agent skill design. It contains 86 curated sources (42 Tier 1, 39 Tier 2, 5 Tier 3), 17 domain research notes, and 6 synthesis artifacts that map candidate skills, artifacts, decision rules, quality gates, output patterns, and recommended next work batches.
+This research base documents the evidence, patterns, and decision rules collected across 7 parallel research tracks covering 19 domains relevant to agent skill design. It contains **84 curated sources** (41 Tier 1, 39 Tier 2, 4 Tier 3), **19 domain research notes**, and 6 synthesis artifacts that map candidate skills, artifacts, decision rules, quality gates, output patterns, and recommended next work batches.
 
 **Goal**: Provide a source-backed foundation for creating and strengthening agent skills and public skill pages, ensuring every skill is grounded in authoritative practitioner guidance rather than generic advice.
 
@@ -32,9 +32,9 @@ This research base documents the evidence, patterns, and decision rules collecte
 
 | Tier | Count | Description |
 |---|---|---|
-| Tier 1 — Official / Standard | 42 | Official documentation, standards bodies, peer-reviewed research, government playbooks |
+| Tier 1 — Official / Standard | 41 | Official documentation, standards bodies, peer-reviewed research, government playbooks |
 | Tier 2 — Strong Practitioner / Open Source | 39 | Mature open-source projects, respected practitioner blogs, vendor best-practice guides |
-| Tier 3 — Supporting / Community | 5 | Community discussions, niche practitioner posts, supplementary references |
+| Tier 3 — Supporting / Community | 4 | Community discussions, niche practitioner posts, supplementary references |
 
 **Safety rules enforced**: No private material, no client names, no copyrighted framework text copied, no fake citations, no weak sources as authoritative. All sources are paraphrased and linked.
 
@@ -80,9 +80,11 @@ This research base documents the evidence, patterns, and decision rules collecte
 ```
 research/skill-hub/
 ├── README.md
+├── RESEARCH_REPORT.md
 ├── source-quality-rules.md
 ├── research-method.md
-├── source-registry.yml (86 sources)
+├── source-registry.yml (84 sources)
+├── validate_research_registry.py
 ├── domains/
 │   ├── data-governance.md
 │   ├── data-quality.md

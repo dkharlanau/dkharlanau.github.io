@@ -27,6 +27,7 @@ research/skill-hub/
     data-quality.md
     metadata-management.md
     master-data-management.md
+    data-lineage.md
     business-analysis.md
     requirements-and-acceptance-criteria.md
     architecture-decisions.md
@@ -89,4 +90,18 @@ research/skill-hub/
 
 ## Research Status
 
-See `RESEARCH_REPORT.md` for the latest research summary, source counts, and recommended next steps.
+**Current state**: 19 of 19 planned domain notes are committed across 7 tracks.
+
+**Source registry**: 84 sources fully registered (Tracks A–G). All source IDs referenced in domain notes and synthesis files are consolidated in `source-registry.yml`.
+
+| Track | Domains | Sources | Status |
+|---|---|---:|---|
+| A — Data Governance | data-governance, data-quality, metadata-management, master-data-management, data-lineage | 11 | Complete |
+| B — Business Analysis | business-analysis, requirements-and-acceptance-criteria | 10 | Complete |
+| C — Architecture | architecture-decisions, non-functional-requirements | 10 | Complete |
+| D — Integration | integration-architecture, api-design, event-driven-architecture | 11 | Complete |
+| E — Operations | observability-and-sre, incident-management, root-cause-analysis, change-impact-analysis | 12 | Complete |
+| F — Professional Skills | professional-operating-skills | 20 | Complete |
+| G — AI Agent Skills | ai-agent-skills | 10 | Complete |
+
+See `RESEARCH_REPORT.md` for the latest research summary and recommended next steps.
