@@ -191,9 +191,9 @@ status: draft | reviewed | approved
 
   <section>
     <h2>Agent instructions</h2>
-    <p>AI agents should use this skill as an operational instruction set for producing structured requirements from unstructured input.</p>
+    <p>When using this skill, an AI agent must:</p>
     <ul>
-      <li><strong>Gather all raw stakeholder statements first.</strong> Do not summarize or filter before classification.</li>
+      <li><strong>Gather all raw stakeholder statements first.</strong> Do not summarize or filter before classification. Ask: what is the complaint, what is the proposed solution, what is the constraint, what is the risk?</li>
       <li><strong>Classify each statement</strong> as need, solution, assumption, constraint, risk, or complaint before writing any requirement.</li>
       <li><strong>Never write a requirement without an acceptance criterion.</strong> If the criterion is missing, flag the item as an unclassified need.</li>
       <li><strong>Separate facts from assumptions explicitly.</strong> Label assumptions and state the risk if each assumption is false.</li>
