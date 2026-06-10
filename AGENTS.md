@@ -26,9 +26,31 @@ Everything committed to this repository is public. Treat every file accordingly.
 | Research / Radar | `research/`, `_radar/`, `_news/` | Research briefs, comparisons, watchlists, signal tracking |
 | Datasets | `datasets/` | Canonical machine-readable dataset collections |
 | AI-readable exports | `ai/` | JSON/YAML machine endpoints (resume, catalog, discovery map, etc.) |
+| Agent Skills | `agent-skills/` | Portable agent skill packages for Codex, Claude Code, and similar tools |
 | Blog | `_blog/`, `blog/index.md` | Long-form essays |
 | Notes | `_notes/`, `notes/index.md` | Short-form working notes |
 | Legal | `legal/` | Privacy, terms, disclosure, responsible AI, accessibility |
+
+## Agent Skills Purpose
+
+`agent-skills/` contains portable, installable agent skill packages that complement the human-readable [Skill Hub](../skill-hub/) pages. Each skill is a compact operational instruction set for AI agents (Claude Code, Codex, and similar tools).
+
+Key principles:
+- **Source of truth:** `agent-skills/skills/<skill-name>/` is the source of truth. `.agents/skills/` and `.claude/skills/` are generated exports.
+- **Do not edit generated exports by hand.** Edit the source and re-run the exporter.
+- **Use profiles:** Install only the skills relevant to your current role or project.
+- **Validate before commit:** Run `python3 agent-skills/exporters/validate_agent_skills.py` before committing changes.
+
+Export commands:
+```bash
+# For Codex
+python3 agent-skills/exporters/export_codex_skills.py --profile sap-ams
+
+# For Claude Code
+python3 agent-skills/exporters/export_claude_skills.py --profile sap-ams
+```
+
+Read `agent-skills/README.md` for full documentation.
 
 ## Atlas Purpose
 
