@@ -23,10 +23,6 @@ research/skill-hub/
   RESEARCH_REPORT.md               # Final research summary and recommendations
 
   domains/                           # Domain-specific research notes
-    data-governance.md
-    data-quality.md
-    metadata-management.md
-    master-data-management.md
     business-analysis.md
     requirements-and-acceptance-criteria.md
     architecture-decisions.md
@@ -40,6 +36,8 @@ research/skill-hub/
     change-impact-analysis.md
     professional-operating-skills.md
     ai-agent-skills.md
+    # TODO: data-governance.md, data-quality.md, metadata-management.md,
+    #       master-data-management.md, data-lineage.md (Track A domains pending)
 
   synthesis/                         # Cross-domain synthesis
     skill-candidate-map.md
@@ -89,4 +87,8 @@ research/skill-hub/
 
 ## Research Status
 
-See `RESEARCH_REPORT.md` for the latest research summary, source counts, and recommended next steps.
+**Current state**: 14 of 17 planned domain notes are committed. Track A (Data Governance: data-governance, data-quality, metadata-management, master-data-management, data-lineage) domain notes are pending.
+
+**Source registry**: 20 sources fully registered (src-501–src-520, Track F). Sources for Tracks A–E and G are defined inline within domain notes but not yet consolidated into `source-registry.yml`. A follow-up PR is needed to complete the registry.
+
+See `RESEARCH_REPORT.md` for the latest research summary and recommended next steps.
