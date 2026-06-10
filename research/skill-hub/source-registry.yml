@@ -1,4 +1,653 @@
 sources:
+
+  - id: src-001
+    title: "DAMA-DMBOK 2nd Edition"
+    url: "https://dama.org/content/body-knowledge"
+    publisher: "DAMA International"
+    author: "DAMA International"
+    date: "2017"
+    tier: 1
+    type: official_docs
+    topics: ['data-governance', 'data-quality', 'metadata-management', 'master-data-management']
+    reliability_notes: "Official DAMA body of knowledge for data management. Defines governance frameworks, stewardship models, and data quality dimensions."
+    citation_allowed: yes
+
+  - id: src-002
+    title: "AWS Well-Architected Data Analytics Lens"
+    url: "https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/welcome.html"
+    publisher: "Amazon Web Services"
+    author: "AWS"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['data-governance', 'data-quality', 'data-classification']
+    reliability_notes: "AWS official guidance for data analytics architecture including classification, lineage, and quality patterns."
+    citation_allowed: yes
+
+  - id: src-003
+    title: "Microsoft Purview Data Governance"
+    url: "https://learn.microsoft.com/en-us/purview/governance-solutions"
+    publisher: "Microsoft"
+    author: "Microsoft"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['data-governance', 'access-control', 'metadata-management']
+    reliability_notes: "Microsoft official documentation for Purview data governance, RBAC, and access control."
+    citation_allowed: yes
+
+  - id: src-004
+    title: "Confluent Schema Registry"
+    url: "https://docs.confluent.io/platform/current/schema-registry/develop/api.html"
+    publisher: "Confluent"
+    author: "Confluent"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['event-driven-architecture', 'schema-registry', 'data-contracts']
+    reliability_notes: "Official Confluent Schema Registry API documentation. Defines compatibility modes and ruleSet attachments."
+    citation_allowed: yes
+
+  - id: src-006
+    title: "DataHub Documentation"
+    url: "https://datahubproject.io/docs/"
+    publisher: "LinkedIn / Acryl Data"
+    author: "DataHub Project"
+    date: "2024"
+    tier: 2
+    type: open_source_docs
+    topics: ['metadata-management', 'data-lineage', 'data-catalog']
+    reliability_notes: "Open-source metadata platform documentation. Covers ingestion, lineage, and governance workflows."
+    citation_allowed: yes
+
+  - id: src-007
+    title: "OpenLineage Specification"
+    url: "https://openlineage.io/docs/"
+    publisher: "OpenLineage Project"
+    author: "OpenLineage"
+    date: "2024"
+    tier: 1
+    type: open_source_docs
+    topics: ['data-lineage', 'metadata-management', 'orchestration']
+    reliability_notes: "Open standard for data lineage collection. Defines Job, Run, and Dataset event models."
+    citation_allowed: yes
+
+  - id: src-008
+    title: "Great Expectations Documentation"
+    url: "https://docs.greatexpectations.io/docs/"
+    publisher: "Great Expectations"
+    author: "Great Expectations"
+    date: "2024"
+    tier: 2
+    type: open_source_docs
+    topics: ['data-quality', 'validation', 'testing']
+    reliability_notes: "Open-source data validation framework. Defines Expectation Suites, Checkpoints, and Data Docs."
+    citation_allowed: yes
+
+  - id: src-009
+    title: "dbt Documentation"
+    url: "https://docs.getdbt.com/"
+    publisher: "dbt Labs"
+    author: "dbt Labs"
+    date: "2024"
+    tier: 2
+    type: open_source_docs
+    topics: ['data-quality', 'data-transformation', 'testing']
+    reliability_notes: "Official dbt documentation covering tests, snapshots, and documentation generation."
+    citation_allowed: yes
+
+  - id: src-010
+    title: "Data Mesh Principles"
+    url: "https://martinfowler.com/articles/data-mesh-principles.html"
+    publisher: "Martin Fowler / ThoughtWorks"
+    author: "Zhamak Dehghani"
+    date: "2022"
+    tier: 2
+    type: engineering_blog
+    topics: ['data-governance', 'federated-governance', 'domain-oriented']
+    reliability_notes: "Foundational article on Data Mesh architecture. Defines domain-oriented decentralized data ownership."
+    citation_allowed: yes
+
+  - id: src-011
+    title: "Databricks Unity Catalog"
+    url: "https://docs.databricks.com/en/data-governance/unity-catalog/index.html"
+    publisher: "Databricks"
+    author: "Databricks"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['data-governance', 'data-catalog', 'access-control']
+    reliability_notes: "Databricks official documentation for Unity Catalog governance and data discovery."
+    citation_allowed: yes
+
+  - id: src-012
+    title: "SAP Master Data Governance (MDG)"
+    url: "https://help.sap.com/docs/SAP_MASTER_DATA_GOVERNANCE"
+    publisher: "SAP"
+    author: "SAP"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['master-data-management', 'data-governance', 'data-quality']
+    reliability_notes: "Official SAP MDG help documentation. Covers governance workflows, data quality rules, and stewardship."
+    citation_allowed: yes
+
+  - id: src-101
+    title: "USDS Discovery Sprint Guide"
+    url: "https://sprint.usds.gov/"
+    publisher: "U.S. Digital Service"
+    author: "USDS"
+    date: "2020"
+    tier: 1
+    type: official_docs
+    topics: ['problem-framing', 'discovery', 'user-research']
+    reliability_notes: "Official USDS guide for running 2-4 week discovery sprints with problem framing and stakeholder interviews."
+    citation_allowed: yes
+
+  - id: src-102
+    title: "GOV.UK Service Manual"
+    url: "https://www.gov.uk/service-manual"
+    publisher: "UK Government Digital Service"
+    author: "GDS"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['service-design', 'discovery', 'alpha', 'beta']
+    reliability_notes: "UK government standard for digital service delivery. Defines Discovery → Alpha → Beta → Live lifecycle."
+    citation_allowed: yes
+
+  - id: src-103
+    title: "U.S. Digital Service Playbook"
+    url: "https://playbook.usds.gov/"
+    publisher: "U.S. Digital Service"
+    author: "USDS"
+    date: "2014"
+    tier: 1
+    type: official_docs
+    topics: ['digital-service', 'user-needs', 'agile']
+    reliability_notes: "Thirteen plays for successful digital projects. Play 1: Understand what people need."
+    citation_allowed: yes
+
+  - id: src-104
+    title: "The 2020 Scrum Guide"
+    url: "https://scrumguides.org/scrum-guide.html"
+    publisher: "Scrum.org"
+    author: "Ken Schwaber, Jeff Sutherland"
+    date: "2020"
+    tier: 1
+    type: official_docs
+    topics: ['scrum', 'agile', 'definition-of-done']
+    reliability_notes: "Canonical definition of Scrum and Definition of Done."
+    citation_allowed: yes
+
+  - id: src-105
+    title: "BPMN 2.0 Specification"
+    url: "https://www.omg.org/bpmn/"
+    publisher: "Object Management Group"
+    author: "OMG"
+    date: "2013"
+    tier: 1
+    type: official_docs
+    topics: ['process-modeling', 'bpmn', 'workflow']
+    reliability_notes: "De-facto international standard for process modeling. Defines Process, Collaboration, and Choreography diagrams."
+    citation_allowed: yes
+
+  - id: src-106
+    title: "SBVR Vocabulary"
+    url: "https://www.brcommunity.com/articles.php?id=b280"
+    publisher: "Business Rules Community / OMG"
+    author: "OMG"
+    date: "unknown"
+    tier: 1
+    type: official_docs
+    topics: ['business-rules', 'vocabulary', 'semantics']
+    reliability_notes: "OMG standard for business rules in controlled natural language."
+    citation_allowed: yes
+
+  - id: src-107
+    title: "18F Methods"
+    url: "https://methods.18f.gov/"
+    publisher: "18F / GSA"
+    author: "18F"
+    date: "2024"
+    tier: 2
+    type: official_docs
+    topics: ['user-research', 'design-methods', 'discovery']
+    reliability_notes: "Public catalog of human-centered design methods."
+    citation_allowed: yes
+
+  - id: src-108
+    title: "Agile Alliance Glossary"
+    url: "https://agilealliance.org/agile101/agile-glossary/"
+    publisher: "Agile Alliance"
+    author: "Agile Alliance"
+    date: "2024"
+    tier: 2
+    type: community
+    topics: ['agile', 'glossary', 'acceptance-criteria']
+    reliability_notes: "Vendor-neutral glossary for Definition of Ready, Given-When-Then, INVEST."
+    citation_allowed: yes
+
+  - id: src-109
+    title: "Jama RTM Guide"
+    url: "https://www.jamasoftware.com/requirements-management-guide/requirements-traceability/how-to-create-and-use-a-requirements-traceability-matrix-rtm/"
+    publisher: "Jama Software"
+    author: "Jama Software"
+    date: "2024"
+    tier: 2
+    type: engineering_blog
+    topics: ['requirements', 'traceability', 'compliance']
+    reliability_notes: "Practical step-by-step guide to Requirements Traceability Matrix."
+    citation_allowed: yes
+
+  - id: src-110
+    title: "GDS User Research Assessment"
+    url: "https://userresearch.blog.gov.uk/2016/02/15/passing-the-user-research-points-in-your-service-assessment/"
+    publisher: "UK GDS"
+    author: "GDS"
+    date: "2016"
+    tier: 2
+    type: official_docs
+    topics: ['user-research', 'service-assessment', 'quality-gates']
+    reliability_notes: "Candid assessor guidance on user research criteria."
+    citation_allowed: yes
+
+  - id: src-201
+    title: "AWS Well-Architected Framework"
+    url: "https://aws.amazon.com/architecture/well-architected/"
+    publisher: "Amazon Web Services"
+    author: "AWS"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['cloud-architecture', 'well-architected', 'nfr']
+    reliability_notes: "Foundational six-pillar cloud architecture evaluation framework."
+    citation_allowed: yes
+
+  - id: src-202
+    title: "Azure Well-Architected Framework"
+    url: "https://learn.microsoft.com/en-us/azure/well-architected/"
+    publisher: "Microsoft"
+    author: "Microsoft"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['cloud-architecture', 'well-architected', 'trade-offs']
+    reliability_notes: "Five-pillar model with explicit trade-off heatmaps."
+    citation_allowed: yes
+
+  - id: src-203
+    title: "Google Cloud Architecture Framework"
+    url: "https://cloud.google.com/architecture/framework"
+    publisher: "Google Cloud"
+    author: "Google"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['cloud-architecture', 'system-design', 'nfr']
+    reliability_notes: "Six-category framework with System Design as foundational pillar."
+    citation_allowed: yes
+
+  - id: src-204
+    title: "TOGAF 10th Edition"
+    url: "https://www.opengroup.org/togaf"
+    publisher: "The Open Group"
+    author: "The Open Group"
+    date: "2022"
+    tier: 1
+    type: official_docs
+    topics: ['enterprise-architecture', 'togaf', 'capability-mapping']
+    reliability_notes: "Enterprise architecture framework with ADM and principles."
+    citation_allowed: yes
+
+  - id: src-205
+    title: "SAP BTP Guidance Framework"
+    url: "https://architecture.learning.sap.com/"
+    publisher: "SAP"
+    author: "SAP"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['sap-architecture', 'btp', 'decision-guides']
+    reliability_notes: "SAP official architecture guidance for BTP and S/4HANA."
+    citation_allowed: yes
+
+  - id: src-206
+    title: "MADR Template"
+    url: "https://adr.github.io/madr/"
+    publisher: "ADR GitHub Organization"
+    author: "ADR Community"
+    date: "2024"
+    tier: 2
+    type: open_source_docs
+    topics: ['adr', 'madr', 'decision-records']
+    reliability_notes: "Most widely adopted lightweight ADR template."
+    citation_allowed: yes
+
+  - id: src-207
+    title: "ADR Examples (joelparkerhenderson)"
+    url: "https://github.com/joelparkerhenderson/architecture-decision-record"
+    publisher: "GitHub"
+    author: "Joel Parker Henderson"
+    date: "2024"
+    tier: 2
+    type: open_source_docs
+    topics: ['adr', 'examples', 'templates']
+    reliability_notes: "Comprehensive collection of ADR templates and examples."
+    citation_allowed: yes
+
+  - id: src-209
+    title: "SEI ATAM"
+    url: "https://www.sei.cmu.edu/"
+    publisher: "Carnegie Mellon University / SEI"
+    author: "SEI"
+    date: "unknown"
+    tier: 1
+    type: official_docs
+    topics: ['architecture-evaluation', 'quality-attributes', 'atam']
+    reliability_notes: "Foundational academic method for evaluating architectures against quality attributes."
+    citation_allowed: yes
+
+  - id: src-210
+    title: "Avolution ABACUS"
+    url: "https://www.avolution.com.au/"
+    publisher: "Avolution"
+    author: "Avolution"
+    date: "unknown"
+    tier: 3
+    type: other
+    topics: ['capability-mapping', 'architecture-modeling']
+    reliability_notes: "Capability mapping tool vendor. Less authoritative than standards bodies."
+    citation_allowed: yes
+
+  - id: src-212
+    title: "Konishi ADR Operations"
+    url: "https://hidekazu-konishi.com/entry/architecture_decision_records_templates_and_operations.html"
+    publisher: "Hidekazu Konishi"
+    author: "Hidekazu Konishi"
+    date: "2024"
+    tier: 2
+    type: engineering_blog
+    topics: ['adr', 'operations', 'decision-documentation']
+    reliability_notes: "Practitioner synthesis of why ADR practices fail."
+    citation_allowed: yes
+
+  - id: src-301
+    title: "Google AIPs"
+    url: "https://google.aip.dev/"
+    publisher: "Google"
+    author: "Google"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['api-design', 'rest', 'standards']
+    reliability_notes: "Google's public API design standards. Resource-oriented design, versioning, field behavior."
+    citation_allowed: yes
+
+  - id: src-302
+    title: "AsyncAPI Specification"
+    url: "https://www.asyncapi.com/"
+    publisher: "AsyncAPI Initiative"
+    author: "AsyncAPI"
+    date: "2024"
+    tier: 1
+    type: open_source_docs
+    topics: ['event-driven', 'asyncapi', 'contracts']
+    reliability_notes: "Open standard for event-driven APIs. Event contracts, schema registry, code generation."
+    citation_allowed: yes
+
+  - id: src-303
+    title: "OpenTelemetry Documentation"
+    url: "https://opentelemetry.io/docs/what-is-opentelemetry/"
+    publisher: "CNCF / OpenTelemetry"
+    author: "OpenTelemetry"
+    date: "2024"
+    tier: 1
+    type: open_source_docs
+    topics: ['observability', 'tracing', 'metrics']
+    reliability_notes: "CNCF-backed open standard for unified telemetry. Distributed tracing, metrics, logs."
+    citation_allowed: yes
+
+  - id: src-304
+    title: "AWS Well-Architected Framework"
+    url: "https://aws.amazon.com/architecture/well-architected/"
+    publisher: "Amazon Web Services"
+    author: "AWS"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['cloud-architecture', 'reliability', 'deployment']
+    reliability_notes: "Six-pillar framework with integration reliability guidance."
+    citation_allowed: yes
+
+  - id: src-305
+    title: "Stripe Idempotency"
+    url: "https://stripe.com/docs/api/idempotent_requests"
+    publisher: "Stripe"
+    author: "Stripe"
+    date: "2024"
+    tier: 2
+    type: official_docs
+    topics: ['idempotency', 'api-design', 'retries']
+    reliability_notes: "Industry reference for safe retries in payment APIs."
+    citation_allowed: yes
+
+  - id: src-306
+    title: "Martin Fowler EDA"
+    url: "https://martinfowler.com/articles/201701-event-driven.html"
+    publisher: "Martin Fowler"
+    author: "Martin Fowler"
+    date: "2017"
+    tier: 2
+    type: engineering_blog
+    topics: ['event-driven', 'patterns', 'cqrs']
+    reliability_notes: "Taxonomy of four EDA patterns: Event Notification, ECST, Event Sourcing, CQRS."
+    citation_allowed: yes
+
+  - id: src-307
+    title: "Netflix Tech Blog"
+    url: "https://netflixtechblog.com/"
+    publisher: "Netflix"
+    author: "Netflix Engineering"
+    date: "2024"
+    tier: 2
+    type: engineering_blog
+    topics: ['distributed-systems', 'chaos-engineering', 'resilience']
+    reliability_notes: "Mature public examples of distributed systems operational practices."
+    citation_allowed: yes
+
+  - id: src-308
+    title: "DORA 2024 Report"
+    url: "https://dora.dev/"
+    publisher: "Google Cloud / DORA"
+    author: "DORA Research Team"
+    date: "2024"
+    tier: 2
+    type: research_report
+    topics: ['devops', 'metrics', 'software-delivery']
+    reliability_notes: "Largest longitudinal study of software delivery performance."
+    citation_allowed: yes
+
+  - id: src-309
+    title: "Data Contracts Guide"
+    url: "https://datadef.io/guides/en/data-contracts"
+    publisher: "Data Definition"
+    author: "Data Definition"
+    date: "2024"
+    tier: 3
+    type: community
+    topics: ['data-contracts', 'schema-governance']
+    reliability_notes: "Practical implementable breakdown of data contracts."
+    citation_allowed: yes
+
+  - id: src-311
+    title: "Resilience Engineering Notes"
+    url: "https://sre.google/sre-book/table-of-contents/"
+    publisher: "Google SRE"
+    author: "Google"
+    date: "2018"
+    tier: 2
+    type: official_docs
+    topics: ['resilience', 'circuit-breaker', 'retry']
+    reliability_notes: "Google SRE Book chapters on reliability and failure handling."
+    citation_allowed: yes
+
+  - id: src-312
+    title: "Treblle API Governance"
+    url: "https://treblle.com/blog/api-governance-best-practices"
+    publisher: "Treblle"
+    author: "Treblle"
+    date: "2024"
+    tier: 3
+    type: engineering_blog
+    topics: ['api-governance', 'linting', 'breaking-changes']
+    reliability_notes: "Practical checklist-oriented synthesis. OpenAPI-first, Spectral linting, breaking-change detection."
+    citation_allowed: yes
+
+  - id: src-401
+    title: "Anatomy of an Incident (Google SRE)"
+    url: "https://sre.google/static/pdf/Anatomy_Of_An_Incident.pdf"
+    publisher: "Google"
+    author: "Google SRE Team"
+    date: "2022"
+    tier: 1
+    type: official_docs
+    topics: ['incident-management', 'sre', 'roles']
+    reliability_notes: "Defines incident lifecycle and IMAG structure."
+    citation_allowed: yes
+
+  - id: src-402
+    title: "Postmortem Culture (Google SRE Workbook)"
+    url: "https://sre.google/workbook/postmortem-culture/"
+    publisher: "Google"
+    author: "Google SRE Team"
+    date: "2018"
+    tier: 1
+    type: official_docs
+    topics: ['postmortem', 'blameless', 'root-cause']
+    reliability_notes: "Definitive public chapter on blameless postmortems."
+    citation_allowed: yes
+
+  - id: src-403
+    title: "Google SRE Book"
+    url: "https://sre.google/sre-book/table-of-contents/"
+    publisher: "Google"
+    author: "Google SRE Team"
+    date: "2017"
+    tier: 1
+    type: official_docs
+    topics: ['sre', 'incident-management', 'reliability']
+    reliability_notes: "Foundational SRE text with public chapters."
+    citation_allowed: yes
+
+  - id: src-404
+    title: "Google SRE Incident Management Guide"
+    url: "https://sre.google/resources/practices-and-processes/incident-management-guide/"
+    publisher: "Google"
+    author: "Google SRE Team"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['incident-management', 'response', 'postmortem']
+    reliability_notes: "Condensed guide on remediation and learning."
+    citation_allowed: yes
+
+  - id: src-405
+    title: "AWS Post-Event Summaries"
+    url: "https://aws.amazon.com/message/41926"
+    publisher: "Amazon Web Services"
+    author: "AWS"
+    date: "2017"
+    tier: 1
+    type: official_docs
+    topics: ['postmortem', 'outage', 'remediation']
+    reliability_notes: "Detailed technical postmortems from major outages."
+    citation_allowed: yes
+
+  - id: src-406
+    title: "GitHub October 21 Post-Incident Analysis"
+    url: "https://github.blog/2018-10-30-oct21-post-incident-analysis/"
+    publisher: "GitHub"
+    author: "GitHub Engineering"
+    date: "2018"
+    tier: 2
+    type: engineering_blog
+    topics: ['postmortem', 'outage', 'orchestrator']
+    reliability_notes: "Detailed public postmortem of 24-hour outage."
+    citation_allowed: yes
+
+  - id: src-408
+    title: "ITIL 4 Incident Management Overview"
+    url: "https://www.beyond20.com/resources/blog/an-overview-of-the-incident-management-practice-in-itil-4/"
+    publisher: "Beyond20"
+    author: "Beyond20"
+    date: "2024"
+    tier: 2
+    type: engineering_blog
+    topics: ['itil', 'incident-management', 'service-management']
+    reliability_notes: "Practitioner-oriented ITIL 4 summary."
+    citation_allowed: yes
+
+  - id: src-411
+    title: "incident.io Best Practices 2026"
+    url: "https://incident.io/blog/incident-management-best-practices-2026"
+    publisher: "incident.io"
+    author: "incident.io"
+    date: "2026"
+    tier: 2
+    type: engineering_blog
+    topics: ['incident-management', 'best-practices', 'severity']
+    reliability_notes: "Phase-based guide with concrete checklists."
+    citation_allowed: yes
+
+  - id: src-415
+    title: "SAP Incident Processing"
+    url: "https://assets.dm.ux.sap.com/webinars/sap-user-groups-k4u/pdfs/200421_essential_tips_on_end_to_end_sap_incident_processing.pdf"
+    publisher: "SAP"
+    author: "SAP"
+    date: "2020"
+    tier: 1
+    type: official_docs
+    topics: ['sap', 'incident-management', 'support']
+    reliability_notes: "Official SAP guidance on incident quality."
+    citation_allowed: yes
+
+  - id: src-417
+    title: "Rootly SRE Incident Management"
+    url: "https://rootly.com/sre/sre-incident-management-best-practices-boost-reliability"
+    publisher: "Rootly"
+    author: "Rootly"
+    date: "2024"
+    tier: 2
+    type: engineering_blog
+    topics: ['incident-management', 'sre', 'mttr']
+    reliability_notes: "Full lifecycle guide with automation focus."
+    citation_allowed: yes
+
+  - id: src-418
+    title: "Defensive Cloud Outage Postmortem Template"
+    url: "https://defensive.cloud/outage-postmortem-template-and-playbook-based-on-x-cloudflar"
+    publisher: "Defensive Cloud"
+    author: "Defensive Cloud"
+    date: "2024"
+    tier: 2
+    type: engineering_blog
+    topics: ['postmortem', 'template', 'multi-provider']
+    reliability_notes: "Reusable template for multi-provider outages."
+    citation_allowed: yes
+
+  - id: src-419
+    title: "Netflix AWS Degradation Postmortem"
+    url: "http://techblog.netflix.com/2012/10/post-mortem-of-october-222012-aws.html"
+    publisher: "Netflix"
+    author: "Netflix Engineering"
+    date: "2012"
+    tier: 2
+    type: engineering_blog
+    topics: ['postmortem', 'aws', 'resilience']
+    reliability_notes: "Classic example of zone evacuation drill value."
+    citation_allowed: yes
+
   - id: src-501
     title: "UK GDS Service Manual — Discovery Phase Guidance"
     url: "https://hodigital.blog.gov.uk/2025/08/20/deciding-not-to-build-a-new-service-why-stopping-can-be-the-right-outcome/"
@@ -237,4 +886,124 @@ sources:
     type: engineering_blog
     topics: [escalation-writing, meeting-action-plans, evidence-handling]
     reliability_notes: "Practitioner guide referencing Google SRE handbook, IMAG roles, and severity-based communication cadences. Includes concrete templates."
+    citation_allowed: yes
+
+  - id: src-601
+    title: "OpenAI Structured Outputs Guide"
+    url: "https://platform.openai.com/docs/guides/structured-outputs"
+    publisher: "OpenAI"
+    author: "OpenAI"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['structured-outputs', 'json-schema', 'constrained-decoding']
+    reliability_notes: "Canonical reference for constrained decoding. JSON Schema, Pydantic, refusal handling."
+    citation_allowed: yes
+
+  - id: src-602
+    title: "OpenAI Function Calling Guide"
+    url: "https://platform.openai.com/docs/guides/function-calling"
+    publisher: "OpenAI"
+    author: "OpenAI"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['function-calling', 'tools', 'orchestration']
+    reliability_notes: "Canonical multi-turn tool-calling loop. Function schemas, namespaces, parallel calls."
+    citation_allowed: yes
+
+  - id: src-603
+    title: "Anthropic Claude Computer Use"
+    url: "https://docs.anthropic.com/en/docs/build-with-claude/computer-use"
+    publisher: "Anthropic"
+    author: "Anthropic"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['computer-use', 'sandbox', 'human-approval']
+    reliability_notes: "Vision-based GUI automation with safety guardrails."
+    citation_allowed: yes
+
+  - id: src-604
+    title: "Microsoft Agent Framework"
+    url: "https://devblogs.microsoft.com/foundry/introducing-microsoft-agent-framework-the-open-source-engine-for-agentic-ai-apps/"
+    publisher: "Microsoft"
+    author: "Microsoft"
+    date: "2024"
+    tier: 1
+    type: official_docs
+    topics: ['agent-framework', 'orchestration', 'human-in-the-loop']
+    reliability_notes: "Consolidated open-source multi-agent orchestration."
+    citation_allowed: yes
+
+  - id: src-605
+    title: "OpenAI–Anthropic Safety Evaluation"
+    url: "https://openai.com/index/openai-anthropic-safety-evaluation/"
+    publisher: "OpenAI / Anthropic"
+    author: "OpenAI, Anthropic"
+    date: "2024"
+    tier: 1
+    type: research_report
+    topics: ['safety', 'evaluation', 'jailbreak']
+    reliability_notes: "First cross-lab safety evaluation."
+    citation_allowed: yes
+
+  - id: src-606
+    title: "Google ADK Design Patterns"
+    url: "https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/agents/genai-experience-concierge/agent-design-patterns/README.md"
+    publisher: "Google Cloud"
+    author: "Google"
+    date: "2024"
+    tier: 1
+    type: open_source_docs
+    topics: ['agent-design', 'patterns', 'multi-agent']
+    reliability_notes: "Reusable multi-agent control flows."
+    citation_allowed: yes
+
+  - id: src-607
+    title: "LangChain & LlamaIndex Docs"
+    url: "https://python.langchain.com/docs/integrations/providers/llama_index/"
+    publisher: "LangChain / LlamaIndex"
+    author: "LangChain"
+    date: "2024"
+    tier: 2
+    type: open_source_docs
+    topics: ['rag', 'agent', 'orchestration']
+    reliability_notes: "Widely adopted open-source orchestration frameworks."
+    citation_allowed: yes
+
+  - id: src-608
+    title: "SWE-bench / AgentBench"
+    url: "https://arxiv.org/abs/2510.08996"
+    publisher: "arXiv"
+    author: "SWE-bench Team"
+    date: "2025"
+    tier: 1
+    type: research_report
+    topics: ['evaluation', 'benchmark', 'agent']
+    reliability_notes: "Current frontier for agent evaluation."
+    citation_allowed: yes
+
+  - id: src-609
+    title: "Self-Reflection in LLM Agents"
+    url: "https://arxiv.org/abs/2405.06682"
+    publisher: "arXiv"
+    author: "Research Team"
+    date: "2024"
+    tier: 2
+    type: research_report
+    topics: ['reflection', 'self-improvement', 'agent']
+    reliability_notes: "Empirical evidence on reflection effectiveness."
+    citation_allowed: yes
+
+  - id: src-610
+    title: "Agent Memory & Context Management"
+    url: "https://arxiv.org/abs/2604.01599"
+    publisher: "arXiv"
+    author: "Research Team"
+    date: "2026"
+    tier: 2
+    type: research_report
+    topics: ['memory', 'context-management', 'compression']
+    reliability_notes: "Taxonomy of agent memory architectures."
     citation_allowed: yes

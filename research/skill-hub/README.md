@@ -23,6 +23,11 @@ research/skill-hub/
   RESEARCH_REPORT.md               # Final research summary and recommendations
 
   domains/                           # Domain-specific research notes
+    data-governance.md
+    data-quality.md
+    metadata-management.md
+    master-data-management.md
+    data-lineage.md
     business-analysis.md
     requirements-and-acceptance-criteria.md
     architecture-decisions.md
@@ -36,8 +41,6 @@ research/skill-hub/
     change-impact-analysis.md
     professional-operating-skills.md
     ai-agent-skills.md
-    # TODO: data-governance.md, data-quality.md, metadata-management.md,
-    #       master-data-management.md, data-lineage.md (Track A domains pending)
 
   synthesis/                         # Cross-domain synthesis
     skill-candidate-map.md
@@ -87,8 +90,18 @@ research/skill-hub/
 
 ## Research Status
 
-**Current state**: 14 of 17 planned domain notes are committed. Track A (Data Governance: data-governance, data-quality, metadata-management, master-data-management, data-lineage) domain notes are pending.
+**Current state**: 19 of 19 planned domain notes are committed across 7 tracks.
 
-**Source registry**: 20 sources fully registered (src-501–src-520, Track F). Sources for Tracks A–E and G are defined inline within domain notes but not yet consolidated into `source-registry.yml`. A follow-up PR is needed to complete the registry.
+**Source registry**: 84 sources fully registered (Tracks A–G). All source IDs referenced in domain notes and synthesis files are consolidated in `source-registry.yml`.
+
+| Track | Domains | Sources | Status |
+|---|---|---:|---|
+| A — Data Governance | data-governance, data-quality, metadata-management, master-data-management, data-lineage | 11 | Complete |
+| B — Business Analysis | business-analysis, requirements-and-acceptance-criteria | 10 | Complete |
+| C — Architecture | architecture-decisions, non-functional-requirements | 10 | Complete |
+| D — Integration | integration-architecture, api-design, event-driven-architecture | 11 | Complete |
+| E — Operations | observability-and-sre, incident-management, root-cause-analysis, change-impact-analysis | 12 | Complete |
+| F — Professional Skills | professional-operating-skills | 20 | Complete |
+| G — AI Agent Skills | ai-agent-skills | 10 | Complete |
 
 See `RESEARCH_REPORT.md` for the latest research summary and recommended next steps.

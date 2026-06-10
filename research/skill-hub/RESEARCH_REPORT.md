@@ -8,9 +8,7 @@ sitemap: false
 
 ## Executive Summary
 
-This research base documents the evidence, patterns, and decision rules collected across 7 parallel research tracks covering 17 domains relevant to agent skill design. It contains **20 fully registered sources** (Tracks A–E and G sources are defined inline within domain notes and pending consolidation into `source-registry.yml`), **14 committed domain research notes** (3 Track A domains pending), and 6 synthesis artifacts that map candidate skills, artifacts, decision rules, quality gates, output patterns, and recommended next work batches.
-
-> **Audit note (2025-06-10)**: The `source-registry.yml` currently contains Track F sources only (src-501–src-520). Sources for Tracks A–E and G are referenced throughout domain notes and synthesis files but have not yet been consolidated into the registry. A follow-up PR is required to complete the registry and add the 5 pending Track A domain notes.
+This research base documents the evidence, patterns, and decision rules collected across 7 parallel research tracks covering 19 domains relevant to agent skill design. It contains **84 curated sources** (41 Tier 1, 39 Tier 2, 4 Tier 3), **19 domain research notes**, and 6 synthesis artifacts that map candidate skills, artifacts, decision rules, quality gates, output patterns, and recommended next work batches.
 
 **Goal**: Provide a source-backed foundation for creating and strengthening agent skills and public skill pages, ensuring every skill is grounded in authoritative practitioner guidance rather than generic advice.
 
@@ -34,11 +32,9 @@ This research base documents the evidence, patterns, and decision rules collecte
 
 | Tier | Count | Description |
 |---|---|---|
-| Tier 1 — Official / Standard | 4 | Official documentation, standards bodies, peer-reviewed research, government playbooks |
-| Tier 2 — Strong Practitioner / Open Source | 14 | Mature open-source projects, respected practitioner blogs, vendor best-practice guides |
-| Tier 3 — Supporting / Community | 2 | Community discussions, niche practitioner posts, supplementary references |
-
-**Note**: These counts reflect the 20 sources currently in `source-registry.yml` (Track F). Tracks A–E and G sources are defined inline within domain notes and pending registry consolidation.
+| Tier 1 — Official / Standard | 41 | Official documentation, standards bodies, peer-reviewed research, government playbooks |
+| Tier 2 — Strong Practitioner / Open Source | 39 | Mature open-source projects, respected practitioner blogs, vendor best-practice guides |
+| Tier 3 — Supporting / Community | 4 | Community discussions, niche practitioner posts, supplementary references |
 
 **Safety rules enforced**: No private material, no client names, no copyrighted framework text copied, no fake citations, no weak sources as authoritative. All sources are paraphrased and linked.
 
@@ -87,8 +83,14 @@ research/skill-hub/
 ├── RESEARCH_REPORT.md
 ├── source-quality-rules.md
 ├── research-method.md
-├── source-registry.yml (20 sources — Track F only; Tracks A–E and G pending)
+├── source-registry.yml (84 sources)
+├── validate_research_registry.py
 ├── domains/
+│   ├── data-governance.md
+│   ├── data-quality.md
+│   ├── metadata-management.md
+│   ├── master-data-management.md
+│   ├── data-lineage.md
 │   ├── business-analysis.md
 │   ├── requirements-and-acceptance-criteria.md
 │   ├── architecture-decisions.md
@@ -102,8 +104,6 @@ research/skill-hub/
 │   ├── change-impact-analysis.md
 │   ├── professional-operating-skills.md
 │   └── ai-agent-skills.md
-│   # Pending: data-governance.md, data-quality.md, metadata-management.md,
-│   #           master-data-management.md, data-lineage.md
 └── synthesis/
     ├── skill-candidate-map.md
     ├── artifact-template-map.md
