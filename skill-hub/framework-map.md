@@ -220,6 +220,182 @@ verified: true
   </section>
 
   <section>
+    <h2>Testing, QA, and Delivery Validation</h2>
+    <p>Quality assurance and testing practices provide methods for verifying that changes work as intended and do not break existing functionality. In Skill Hub, these become operational validation and delivery skills:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>QA or testing concern</th>
+          <th>Skill Hub skill</th>
+          <th>What the skill does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Test Case Design</td>
+          <td><a href="/skill-hub/testing-quality-delivery/test-case-design-working-skill/">Test Case Design Working Skill</a></td>
+          <td>Write step-by-step test cases that verify requirements and cover edge cases.</td>
+        </tr>
+        <tr>
+          <td>Regression Test Planning</td>
+          <td><a href="/skill-hub/testing-quality-delivery/regression-test-planning-working-skill/">Regression Test Planning Working Skill</a></td>
+          <td>Select what to retest based on change risk, impact area, and historical defect density.</td>
+        </tr>
+        <tr>
+          <td>Defect Triage</td>
+          <td><a href="/skill-hub/testing-quality-delivery/defect-triage-classification-working-skill/">Defect Triage and Classification Working Skill</a></td>
+          <td>Classify defects by severity, priority, root cause area, and owner so the right team fixes them in the right order.</td>
+        </tr>
+        <tr>
+          <td>QA Review and Sign-Off</td>
+          <td><a href="/skill-hub/testing-quality-delivery/qa-review-sign-off-working-skill/">QA Review and Sign-Off Working Skill</a></td>
+          <td>Run a structured quality gate review before release: coverage, defects, docs, risk.</td>
+        </tr>
+        <tr>
+          <td>Deployment Readiness</td>
+          <td><a href="/skill-hub/testing-quality-delivery/deployment-readiness-checklist-working-skill/">Deployment Readiness Checklist Working Skill</a></td>
+          <td>Confirm every prerequisite for safe deployment is complete before go-live.</td>
+        </tr>
+        <tr>
+          <td>UAT Preparation</td>
+          <td><a href="/skill-hub/testing-quality-delivery/uat-preparation-working-skill/">UAT Preparation Working Skill</a></td>
+          <td>Prepare business testers with scenarios, data, access, and defect reporting rules.</td>
+        </tr>
+        <tr>
+          <td>Test Evidence Review</td>
+          <td><a href="/skill-hub/testing-quality-delivery/test-evidence-review-working-skill/">Test Evidence Review Working Skill</a></td>
+          <td>Review executed test evidence for completeness, accuracy, and traceability.</td>
+        </tr>
+        <tr>
+          <td>Release Risk Review</td>
+          <td><a href="/skill-hub/testing-quality-delivery/release-risk-review-working-skill/">Release Risk Review Working Skill</a></td>
+          <td>Assess release risk by weighing open defects, untested areas, and dependency changes.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Principle:</strong> Testing frameworks tell you what to verify. Skill Hub tells you how to write a test case that a business tester can execute without knowing the system internals.</p>
+  </section>
+
+  <section>
+    <h2>Work documentation and handover</h2>
+    <p>Technical writing, knowledge management, and ITIL-style service transition provide methods for capturing and transferring work context. In Skill Hub, these become documentation and handover skills:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Documentation or handover concern</th>
+          <th>Skill Hub skill</th>
+          <th>What the skill does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Handover Package</td>
+          <td><a href="/skill-hub/work-documentation-handover/handover-note-writing-working-skill/">Handover Note Writing Working Skill</a></td>
+          <td>Transfer context, decisions, risks, and next steps so the next team can continue.</td>
+        </tr>
+        <tr>
+          <td>Decision Record</td>
+          <td><a href="/skill-hub/work-documentation-handover/decision-summary-writing-working-skill/">Decision Summary Writing Working Skill</a></td>
+          <td>Document what was decided, what alternatives were rejected, why, and the consequences.</td>
+        </tr>
+        <tr>
+          <td>Action Log</td>
+          <td><a href="/skill-hub/work-documentation-handover/meeting-notes-to-action-log-working-skill/">Meeting Notes to Action Log Working Skill</a></td>
+          <td>Convert raw meeting notes into structured actions with owners and deadlines.</td>
+        </tr>
+        <tr>
+          <td>Process Documentation</td>
+          <td><a href="/skill-hub/work-documentation-handover/process-documentation-working-skill/">Process Documentation Working Skill</a></td>
+          <td>Document how a business process actually works, who owns each step, and where it breaks.</td>
+        </tr>
+        <tr>
+          <td>Incident Record</td>
+          <td><a href="/skill-hub/work-documentation-handover/incident-documentation-working-skill/">Incident Documentation Working Skill</a></td>
+          <td>Write an incident record that captures symptom, diagnosis, resolution, and prevention.</td>
+        </tr>
+        <tr>
+          <td>Knowledge Article</td>
+          <td><a href="/skill-hub/work-documentation-handover/knowledge-article-writing-working-skill/">Knowledge Article Writing Working Skill</a></td>
+          <td>Turn a known fix or procedure into a self-service article that reduces repeat tickets.</td>
+        </tr>
+        <tr>
+          <td>Runbook</td>
+          <td><a href="/skill-hub/work-documentation-handover/runbook-writing-working-skill/">Runbook Writing Working Skill</a></td>
+          <td>Write a step-by-step operational runbook that an on-call engineer can follow safely.</td>
+        </tr>
+        <tr>
+          <td>Status Update</td>
+          <td><a href="/skill-hub/work-documentation-handover/status-update-writing-working-skill/">Status Update Writing Working Skill</a></td>
+          <td>Write a status update that tells the truth about progress, risks, blockers, and next steps.</td>
+        </tr>
+        <tr>
+          <td>Lessons Learned</td>
+          <td><a href="/skill-hub/work-documentation-handover/lessons-learned-capture-working-skill/">Lessons Learned Capture Working Skill</a></td>
+          <td>Capture what worked, what failed, and what to change so the organization learns.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Principle:</strong> ITIL and knowledge management tell you what to document. Skill Hub tells you how to write a handover note that prevents the next team from starting from scratch.</p>
+  </section>
+
+  <section>
+    <h2>Productivity and execution control</h2>
+    <p>Project management and delivery practices provide methods for planning, tracking, and controlling work. In Skill Hub, these become execution skills tied to concrete artifacts:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Execution concern</th>
+          <th>Skill Hub skill</th>
+          <th>What the skill does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Work Breakdown</td>
+          <td><a href="/skill-hub/productivity-execution-control/work-breakdown-planning-working-skill/">Work Breakdown Planning Working Skill</a></td>
+          <td>Decompose a project into work packages with clear boundaries, dependencies, and deliverables.</td>
+        </tr>
+        <tr>
+          <td>Task Clarification</td>
+          <td><a href="/skill-hub/productivity-execution-control/task-clarification-working-skill/">Task Clarification Working Skill</a></td>
+          <td>Turn a vague task into a clear, actionable work item with defined inputs and outputs.</td>
+        </tr>
+        <tr>
+          <td>Priority Triage</td>
+          <td><a href="/skill-hub/productivity-execution-control/priority-triage-working-skill/">Priority Triage Working Skill</a></td>
+          <td>Compare tasks against impact, urgency, and effort to decide what to do now and what to defer.</td>
+        </tr>
+        <tr>
+          <td>Blocker Escalation</td>
+          <td><a href="/skill-hub/productivity-execution-control/blocker-escalation-working-skill/">Blocker Escalation Working Skill</a></td>
+          <td>Escalate a blocked task to the right person with the right context so the blocker is removed.</td>
+        </tr>
+        <tr>
+          <td>Daily Execution Review</td>
+          <td><a href="/skill-hub/productivity-execution-control/daily-execution-review-working-skill/">Daily Execution Review Working Skill</a></td>
+          <td>Run a 10-minute daily review that tracks progress, surfaces blockers, and resets priorities.</td>
+        </tr>
+        <tr>
+          <td>Follow-Up Tracking</td>
+          <td><a href="/skill-hub/productivity-execution-control/follow-up-tracking-working-skill/">Follow-Up Tracking Working Skill</a></td>
+          <td>Track commitments from meetings and messages so nothing is forgotten.</td>
+        </tr>
+        <tr>
+          <td>Delivery Checklist</td>
+          <td><a href="/skill-hub/productivity-execution-control/delivery-checklist-management-working-skill/">Delivery Checklist Management Working Skill</a></td>
+          <td>Build and maintain a checklist that confirms every prerequisite is complete before a milestone.</td>
+        </tr>
+        <tr>
+          <td>Scope Creep Detection</td>
+          <td><a href="/skill-hub/productivity-execution-control/scope-creep-detection-working-skill/">Scope Creep Detection Working Skill</a></td>
+          <td>Detect, document, and challenge scope creep before it consumes budget and schedule.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Principle:</strong> Project management tells you what to plan and track. Skill Hub tells you how to produce a priority triage result that justifies what is done first and what is declined.</p>
+  </section>
+
+  <section>
     <h2>AI-assisted analysis</h2>
     <p>AI tools are increasingly used in professional analysis work. In Skill Hub, these become governance and validation skills for human-AI collaboration:</p>
     <table>
@@ -250,6 +426,36 @@ verified: true
           <td>AI Governance</td>
           <td><a href="/skill-hub/ai-assisted-analysis/ai-accountability-working-skill/">AI Accountability Working Skill</a></td>
           <td>Define who owns AI output, how it is reviewed, and what happens when it is wrong.</td>
+        </tr>
+        <tr>
+          <td>AI Output Review</td>
+          <td><a href="/skill-hub/ai-assisted-analysis/ai-output-review-working-skill/">AI Output Review Working Skill</a></td>
+          <td>Review any AI-generated output for accuracy, completeness, and relevance before it is used.</td>
+        </tr>
+        <tr>
+          <td>AI-Assisted Documentation Review</td>
+          <td><a href="/skill-hub/ai-assisted-analysis/ai-assisted-documentation-review-working-skill/">AI-Assisted Documentation Review Working Skill</a></td>
+          <td>Use AI to help review documents, then validate findings with human judgment.</td>
+        </tr>
+        <tr>
+          <td>AI-Assisted Test Case Generation</td>
+          <td><a href="/skill-hub/ai-assisted-analysis/ai-assisted-test-case-generation-working-skill/">AI-Assisted Test Case Generation Working Skill</a></td>
+          <td>Use AI to draft test cases from requirements, then validate coverage and edge cases.</td>
+        </tr>
+        <tr>
+          <td>AI-Assisted Meeting Synthesis</td>
+          <td><a href="/skill-hub/ai-assisted-analysis/ai-assisted-meeting-synthesis-working-skill/">AI-Assisted Meeting Synthesis Working Skill</a></td>
+          <td>Use AI to extract actions, decisions, and risks from meeting notes or transcripts.</td>
+        </tr>
+        <tr>
+          <td>AI-Assisted Status Reporting</td>
+          <td><a href="/skill-hub/ai-assisted-analysis/ai-assisted-status-reporting-working-skill/">AI-Assisted Status Reporting Working Skill</a></td>
+          <td>Use AI to draft status updates, then review for honesty, accuracy, and risk visibility.</td>
+        </tr>
+        <tr>
+          <td>AI Prompt Briefing</td>
+          <td><a href="/skill-hub/ai-assisted-analysis/ai-prompt-briefing-work-artifacts-working-skill/">AI Prompt Briefing for Work Artifacts Working Skill</a></td>
+          <td>Write prompts that produce useful work artifacts instead of generic explanations.</td>
         </tr>
       </tbody>
     </table>

@@ -22,6 +22,7 @@ verified: true
   <div class="atlas-hero__actions">
     <a class="button button--primary" href="/skill-hub/dama-dmbok/">Data &amp; DAMA skills</a>
     <a class="button" href="/skill-hub/business-analysis/">Business analysis skills</a>
+    <a class="button" href="/skill-hub/testing-quality-delivery/">Testing &amp; QA skills</a>
     <a class="button" href="/skill-hub/architecture/">Architecture skills</a>
     <a class="button" href="/skill-hub/integration-architecture/">Integration skills</a>
     <a class="button" href="/skill-hub/sap-ams/">SAP AMS skills</a>
@@ -107,8 +108,20 @@ verified: true
       <p>Trade-off analysis, option comparison, risk and dependency mapping, evidence-based recommendations, requirements review, traceability matrix, test scenario derivation.</p>
     </div>
     <div class="topic-card">
+      <h3><a href="/skill-hub/testing-quality-delivery/">Testing, QA, and Delivery Validation</a></h3>
+      <p>Test case design, regression planning, defect triage, QA review and sign-off, deployment readiness, UAT preparation, test evidence review, release risk assessment.</p>
+    </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/work-documentation-handover/">Work Documentation and Handover</a></h3>
+      <p>Handover notes, decision summaries, action logs, process documentation, incident records, knowledge articles, runbooks, status updates, lessons learned.</p>
+    </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/productivity-execution-control/">Productivity and Execution Control</a></h3>
+      <p>Work breakdown planning, task clarification, priority triage, blocker escalation, daily execution review, follow-up tracking, delivery checklist management, scope creep detection.</p>
+    </div>
+    <div class="topic-card">
       <h3><a href="/skill-hub/ai-assisted-analysis/">AI-Assisted Analysis</a></h3>
-      <p>Validate AI-generated requirements, convert notes to requirements, turn business problems into backlogs, and define accountability for AI-assisted work.</p>
+      <p>Validate AI output, AI-assisted documentation review, AI-assisted test case generation, AI-assisted meeting synthesis, AI-assisted status reporting, AI prompt briefing, convert notes to requirements, business problem to backlog.</p>
     </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/architecture/">Architecture</a></h3>
@@ -226,6 +239,34 @@ verified: true
     <li><a href="/skill-hub/sap-ams/operational-knowledge-capture-working-skill/">Operational Knowledge Capture</a></li>
     <li><a href="/skill-hub/sap-ams/change-impact-analysis-working-skill/">Change Impact Analysis</a></li>
     <li><a href="/skill-hub/sap-ams/recurring-ticket-pattern-analysis-working-skill/">Recurring Ticket Pattern Analysis</a></li>
+  </ol>
+
+  <h3>Analyst Delivery Path</h3>
+  <ol>
+    <li><a href="/skill-hub/business-analysis/requirements-elicitation-working-skill/">Requirements Elicitation</a></li>
+    <li><a href="/skill-hub/business-analysis/scope-boundary-definition-working-skill/">Scope Boundary Definition</a></li>
+    <li><a href="/skill-hub/decision-validation/requirements-review-checklist-working-skill/">Requirements Review Checklist</a></li>
+    <li><a href="/skill-hub/decision-validation/test-scenario-derivation-working-skill/">Test Scenario Derivation</a></li>
+    <li><a href="/skill-hub/testing-quality-delivery/test-case-design-working-skill/">Test Case Design</a></li>
+    <li><a href="/skill-hub/work-documentation-handover/handover-note-writing-working-skill/">Handover Note Writing</a></li>
+  </ol>
+
+  <h3>AI-Assisted Documentation Path</h3>
+  <ol>
+    <li><a href="/skill-hub/ai-assisted-analysis/convert-notes-to-requirements-working-skill/">Convert Notes to Requirements</a></li>
+    <li><a href="/skill-hub/ai-assisted-analysis/ai-assisted-documentation-review-working-skill/">AI-Assisted Documentation Review</a></li>
+    <li><a href="/skill-hub/work-documentation-handover/decision-summary-writing-working-skill/">Decision Summary Writing</a></li>
+    <li><a href="/skill-hub/work-documentation-handover/knowledge-article-writing-working-skill/">Knowledge Article Writing</a></li>
+    <li><a href="/skill-hub/ai-assisted-analysis/ai-output-review-working-skill/">AI Output Review</a></li>
+  </ol>
+
+  <h3>Delivery Readiness Path</h3>
+  <ol>
+    <li><a href="/skill-hub/decision-validation/risk-dependency-mapping-working-skill/">Risk and Dependency Mapping</a></li>
+    <li><a href="/skill-hub/testing-quality-delivery/regression-test-planning-working-skill/">Regression Test Planning</a></li>
+    <li><a href="/skill-hub/testing-quality-delivery/deployment-readiness-checklist-working-skill/">Deployment Readiness Checklist</a></li>
+    <li><a href="/skill-hub/testing-quality-delivery/qa-review-sign-off-working-skill/">QA Review and Sign-Off</a></li>
+    <li><a href="/skill-hub/work-documentation-handover/status-update-writing-working-skill/">Status Update Writing</a></li>
   </ol>
 
   <h3>AI Agent path</h3>
