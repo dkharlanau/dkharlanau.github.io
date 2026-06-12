@@ -1,4 +1,4 @@
-name: SEO Checks
+name: CI
 
 on:
   pull_request:
@@ -57,3 +57,6 @@ jobs:
 
       - name: Check SEO metadata
         run: python3 scripts/check_seo.py _site
+
+      - name: Validate AI-readable endpoints
+        run: python3 scripts/validate_ai_endpoints.py _site
