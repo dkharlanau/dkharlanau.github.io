@@ -29,6 +29,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install Python dependencies
+        run: python3 -m pip install pytest pyyaml
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -39,9 +42,6 @@ jobs:
 
       - name: Check Atlas artifacts are up to date
         run: python3 scripts/generate_atlas_artifacts.py --check
-
-      - name: Install Python test dependencies
-        run: python3 -m pip install pytest pyyaml
 
       - name: Run Python tests
         run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
