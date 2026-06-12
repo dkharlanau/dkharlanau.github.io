@@ -3816,6 +3816,52 @@ body.page-context--knowledge {
   border-top: 1px solid rgba(17, 24, 39, 0.08);
 }
 
+/* Skill Hub / knowledge-page reading layout: prevent horizontal overflow.
+   Long <pre>/<code> blocks, tables, and unbreakable inline strings must
+   scroll or wrap inside the reading column instead of expanding the page. */
+.page-content--knowledge .section,
+.page-content--knowledge .section > *,
+.note-detail,
+.note-detail > *,
+.atlas-page,
+.atlas-page > *,
+.note-body,
+.note-body > * {
+  min-width: 0;
+}
+
+.note-detail pre,
+.atlas-page pre,
+.page-content--knowledge pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.note-detail code,
+.atlas-page code,
+.page-content--knowledge code {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.note-detail table,
+.atlas-page table,
+.page-content--knowledge table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.note-detail p,
+.atlas-page p,
+.page-content--knowledge p,
+.note-detail li,
+.atlas-page li,
+.page-content--knowledge li {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
 .search-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
