@@ -3,7 +3,7 @@ layout: default
 title: "Skill Hub — Practical Working Skills for Enterprise Consultants and AI Agents"
 description: "A library of practical working skills for enterprise consultants, business analysts, data consultants, solution architects, integration architects, SAP AMS consultants, and AI agents. Not a glossary. Not a framework encyclopedia. Usable work skills."
 permalink: /skill-hub/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-06-12
 status: reviewed
 verified: true
 ---
@@ -96,7 +96,19 @@ verified: true
     </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/business-analysis/">Business Analysis</a></h3>
-      <p>Requirements elicitation, stakeholder analysis, process analysis, gap analysis, acceptance criteria, business rules discovery.</p>
+      <p>Requirements elicitation, stakeholder analysis, process analysis, gap analysis, acceptance criteria, business rules discovery, user story refinement, use case analysis, scope boundary definition, assumption and constraint mapping.</p>
+    </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/systems-analysis/">Systems Analysis</a></h3>
+      <p>State and lifecycle analysis, interface requirement analysis. Map how entities behave inside systems and what data crosses boundaries.</p>
+    </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/decision-validation/">Decision & Validation</a></h3>
+      <p>Trade-off analysis, option comparison, risk and dependency mapping, evidence-based recommendations, requirements review, traceability matrix, test scenario derivation.</p>
+    </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/ai-assisted-analysis/">AI-Assisted Analysis</a></h3>
+      <p>Validate AI-generated requirements, convert notes to requirements, turn business problems into backlogs, and define accountability for AI-assisted work.</p>
     </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/architecture/">Architecture</a></h3>
@@ -144,9 +156,40 @@ verified: true
   <ol>
     <li><a href="/skill-hub/business-analysis/stakeholder-analysis-working-skill/">Stakeholder Analysis</a></li>
     <li><a href="/skill-hub/business-analysis/requirements-elicitation-working-skill/">Requirements Elicitation</a></li>
+    <li><a href="/skill-hub/business-analysis/use-case-analysis-working-skill/">Use Case Analysis</a></li>
     <li><a href="/skill-hub/business-analysis/business-rules-discovery-working-skill/">Business Rules Discovery</a></li>
-    <li><a href="/skill-hub/business-analysis/acceptance-criteria-working-skill/">Acceptance Criteria</a></li>
+    <li><a href="/skill-hub/business-analysis/process-analysis-working-skill/">Process Analysis</a></li>
+    <li><a href="/skill-hub/business-analysis/assumption-constraint-mapping-working-skill/">Assumption and Constraint Mapping</a></li>
     <li><a href="/skill-hub/business-analysis/gap-analysis-working-skill/">Gap Analysis</a></li>
+    <li><a href="/skill-hub/business-analysis/scope-boundary-definition-working-skill/">Scope Boundary Definition</a></li>
+    <li><a href="/skill-hub/business-analysis/user-story-refinement-working-skill/">User Story Refinement</a></li>
+    <li><a href="/skill-hub/business-analysis/acceptance-criteria-working-skill/">Acceptance Criteria</a></li>
+  </ol>
+
+  <h3>Systems Analyst path</h3>
+  <ol>
+    <li><a href="/skill-hub/systems-analysis/state-lifecycle-analysis-working-skill/">State and Lifecycle Analysis</a></li>
+    <li><a href="/skill-hub/systems-analysis/interface-requirement-analysis-working-skill/">Interface Requirement Analysis</a></li>
+    <li><a href="/skill-hub/architecture/system-context-mapping-working-skill/">System Context Mapping</a></li>
+    <li><a href="/skill-hub/integration-architecture/api-integration-working-skill/">API Integration</a></li>
+    <li><a href="/skill-hub/sap-ams/change-impact-analysis-working-skill/">Change Impact Analysis</a></li>
+  </ol>
+
+  <h3>Decision & Validation path</h3>
+  <ol>
+    <li><a href="/skill-hub/decision-validation/trade-off-analysis-working-skill/">Trade-Off Analysis</a></li>
+    <li><a href="/skill-hub/decision-validation/option-comparison-matrix-working-skill/">Option Comparison Matrix</a></li>
+    <li><a href="/skill-hub/decision-validation/risk-dependency-mapping-working-skill/">Risk and Dependency Mapping</a></li>
+    <li><a href="/skill-hub/decision-validation/evidence-based-recommendation-working-skill/">Evidence-Based Recommendation</a></li>
+    <li><a href="/skill-hub/decision-validation/requirements-review-checklist-working-skill/">Requirements Review Checklist</a></li>
+  </ol>
+
+  <h3>AI-Assisted Analysis path</h3>
+  <ol>
+    <li><a href="/skill-hub/ai-assisted-analysis/ai-accountability-working-skill/">AI Accountability</a></li>
+    <li><a href="/skill-hub/ai-assisted-analysis/convert-notes-to-requirements-working-skill/">Convert Notes to Requirements</a></li>
+    <li><a href="/skill-hub/ai-assisted-analysis/validate-ai-generated-requirements-working-skill/">Validate AI-Generated Requirements</a></li>
+    <li><a href="/skill-hub/ai-assisted-analysis/business-problem-to-backlog-working-skill/">Business Problem to Backlog</a></li>
   </ol>
 
   <h3>Data Governance / DAMA path</h3>

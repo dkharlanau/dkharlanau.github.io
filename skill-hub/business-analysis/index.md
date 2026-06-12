@@ -3,7 +3,7 @@ layout: default
 title: "Business Analysis — Skill Group Index"
 description: "Practical working skills for business analysis: requirements elicitation, stakeholder analysis, process analysis, gap analysis, acceptance criteria, and business rules discovery."
 permalink: /skill-hub/business-analysis/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-06-12
 status: reviewed
 verified: true
 ---
@@ -85,9 +85,13 @@ verified: true
   <ol>
     <li><a href="/skill-hub/business-analysis/stakeholder-analysis-working-skill/">Stakeholder Analysis</a> — Know who to talk to.</li>
     <li><a href="/skill-hub/business-analysis/requirements-elicitation-working-skill/">Requirements Elicitation</a> — Capture what they need.</li>
+    <li><a href="/skill-hub/business-analysis/use-case-analysis-working-skill/">Use Case Analysis</a> — Map actors, goals, and system interactions.</li>
     <li><a href="/skill-hub/business-analysis/business-rules-discovery-working-skill/">Business Rules Discovery</a> — Understand the logic behind the needs.</li>
     <li><a href="/skill-hub/business-analysis/process-analysis-working-skill/">Process Analysis</a> — Map how work happens today.</li>
+    <li><a href="/skill-hub/business-analysis/assumption-constraint-mapping-working-skill/">Assumption and Constraint Mapping</a> — Surface what the project rests on.</li>
     <li><a href="/skill-hub/business-analysis/gap-analysis-working-skill/">Gap Analysis</a> — Find what is missing between today and target.</li>
+    <li><a href="/skill-hub/business-analysis/scope-boundary-definition-working-skill/">Scope Boundary Definition</a> — Lock the perimeter before work begins.</li>
+    <li><a href="/skill-hub/business-analysis/user-story-refinement-working-skill/">User Story Refinement</a> — Turn needs into sprint-ready backlog items.</li>
     <li><a href="/skill-hub/business-analysis/acceptance-criteria-working-skill/">Acceptance Criteria</a> — Define how to verify the solution.</li>
   </ol>
 </section>
@@ -98,6 +102,9 @@ verified: true
   </header>
   <ul>
     <li>Business Analysis + <a href="/skill-hub/dama-dmbok/">DAMA / Data</a> = Data requirements, quality rules, and governance ownership.</li>
+    <li>Business Analysis + <a href="/skill-hub/systems-analysis/">Systems Analysis</a> = Entity behavior, lifecycle states, and interface requirements that drive business process design.</li>
+    <li>Business Analysis + <a href="/skill-hub/decision-validation/">Decision & Validation</a> = Requirements that are reviewed, traced, and tested with evidence-based decisions.</li>
+    <li>Business Analysis + <a href="/skill-hub/ai-assisted-analysis/">AI-Assisted Analysis</a> = Requirements elicitation, validation, and backlog creation accelerated by AI with human accountability.</li>
     <li>Business Analysis + <a href="/skill-hub/architecture/">Architecture</a> = Capability mapping, non-functional requirements, and solution design inputs.</li>
     <li>Business Analysis + <a href="/skill-hub/sap-ams/">SAP AMS</a> = Incident triage, change impact analysis, and operational knowledge capture.</li>
     <li>Business Analysis + <a href="/skill-hub/integration-architecture/">Integration</a> = Interface requirements, data mapping, and error handling rules.</li>
