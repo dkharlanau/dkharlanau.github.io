@@ -1,0 +1,133 @@
+name: IndexNow Submit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (no network submission)'
+        required: false
+        default: false
+        type: boolean
+      use_all:
+        description: 'Submit all indexable URLs instead of only changed URLs from git diff'
+        required: false
+        default: false
+        type: boolean
+      max_urls:
+        description: 'Maximum number of URLs to submit'
+        required: false
+        default: 100
+        type: number
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.4"
+          bundler-cache: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: python3 -m pip install pytest pyyaml
+
+      - name: Generate DAMA pages
+        run: node scripts/generate_dama_pages.js
+
+      - name: Build Jekyll site
+        run: bundle exec jekyll build
+
+      - name: Check local links
+        run: python3 scripts/check_links.py _site
+
+      - name: Check SEO metadata
+        run: python3 scripts/check_seo.py _site
+
+      - name: Audit discovery outputs
+        run: python3 scripts/audit_discovery_outputs.py _site --warn-only
+
+      - name: Determine URL scope
+        id: scope
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.use_all }}" = "true" ]; then
+            echo "flag=--all" >> "$GITHUB_OUTPUT"
+            echo "scope=all indexable URLs" >> "$GITHUB_OUTPUT"
+          else
+            echo "flag=--from-git-diff HEAD~1 HEAD" >> "$GITHUB_OUTPUT"
+            echo "scope=changed URLs from git diff (HEAD~1..HEAD)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Report mode
+        run: |
+          echo "Event: ${{ github.event_name }}"
+          echo "URL scope: ${{ steps.scope.outputs.scope }}"
+          if [ "${{ github.event_name }}" = "pull_request" ] || { [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; }; then
+            echo "Mode: DRY RUN (no network submission)"
+          else
+            echo "Mode: REAL SUBMISSION"
+          fi
+
+      - name: Dry-run IndexNow submission
+        if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == true)
+        env:
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+          INDEXNOW_KEY_LOCATION: ${{ vars.INDEXNOW_KEY_LOCATION }}
+        run: |
+          python3 scripts/indexnow_submit.py \
+            --site-dir _site \
+            --report indexnow-report.json \
+            --max-urls ${{ github.event_name == 'workflow_dispatch' && inputs.max_urls || 100 }} \
+            ${{ steps.scope.outputs.flag }}
+
+      - name: Verify IndexNow key secret
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false)
+        env:
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        run: |
+          if [ -z "$INDEXNOW_KEY" ]; then
+            echo "::error::INDEXNOW_KEY secret is required for real submission but is not configured in repository secrets."
+            exit 1
+          fi
+          echo "IndexNow key secret is present."
+
+      - name: Real IndexNow submission
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false)
+        env:
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+          INDEXNOW_KEY_LOCATION: ${{ vars.INDEXNOW_KEY_LOCATION }}
+        run: |
+          python3 scripts/indexnow_submit.py \
+            --submit \
+            --require-key-file \
+            --site-dir _site \
+            --report indexnow-report.json \
+            --max-urls ${{ github.event_name == 'workflow_dispatch' && inputs.max_urls || 100 }} \
+            ${{ steps.scope.outputs.flag }}
+
+      - name: Upload IndexNow report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: indexnow-report-${{ github.run_id }}
+          path: indexnow-report.json
+          if-no-files-found: ignore

@@ -2,7 +2,9 @@ import json
 import os
 import subprocess
 import sys
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Optional
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -26,6 +28,46 @@ def _make_md(tmp_path: Path, rel: str, frontmatter: str) -> Path:
     return p
 
 
+def _make_site_sitemap(tmp_path: Path, urls: list[str]) -> Path:
+    """Create a minimal _site/sitemap-pages.xml with the given URLs."""
+    site_dir = tmp_path / "_site"
+    site_dir.mkdir(exist_ok=True)
+    body = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for url in urls:
+        body += f"  <url><loc>{url}</loc></url>\n"
+    body += "</urlset>\n"
+    (site_dir / "sitemap-pages.xml").write_text(body, encoding="utf-8")
+    return site_dir
+
+
+@contextmanager
+def _patch_sitemap_bypass():
+    """Context manager patches that bypass sitemap and built-site noindex checks."""
+    with patch.object(
+        indexnow_mod, "filter_urls_by_sitemap", lambda urls, site_dir: (urls, {})
+    ):
+        with patch.object(
+            indexnow_mod, "check_url_noindex_in_site", lambda url, site_dir: (True, None)
+        ):
+            yield
+
+
+def _make_built_html(tmp_path: Path, rel_url: str, robots: Optional[str] = None) -> Path:
+    """Create a built HTML file under _site for a canonical URL path."""
+    site_dir = tmp_path / "_site"
+    rel = rel_url.lstrip("/")
+    if not rel:
+        html_path = site_dir / "index.html"
+    else:
+        html_path = site_dir / rel / "index.html"
+    html_path.parent.mkdir(parents=True, exist_ok=True)
+    meta = ""
+    if robots:
+        meta = f'<meta name="robots" content="{robots}">'
+    html_path.write_text(f"<!DOCTYPE html><html><head>{meta}<title>t</title></head><body></body></html>", encoding="utf-8")
+    return html_path
+
+
 # ---------------------------------------------------------------------------
 # IndexNow: default dry-run / no submit without --submit
 # ---------------------------------------------------------------------------
@@ -34,28 +76,30 @@ def _make_md(tmp_path: Path, rel: str, frontmatter: str) -> Path:
 def test_indexnow_defaults_to_dry_run_no_submit(monkeypatch, capsys):
     """Without --submit, the script must default to dry-run and not call the API."""
     monkeypatch.setenv("INDEXNOW_KEY", "test-key-123")
-    with patch.object(indexnow_mod, "submit") as mock_submit:
-        try:
-            result = indexnow_mod.main([])
-        except SystemExit as exc:
-            result = exc.code
-        # dry_run=True means submit is called with dry_run=True
-        mock_submit.assert_called_once()
-        # dry_run is passed as keyword argument
-        assert mock_submit.call_args[1].get("dry_run") is True
-        assert result in (0, None)
+    with _patch_sitemap_bypass():
+        with patch.object(indexnow_mod, "submit") as mock_submit:
+            try:
+                result = indexnow_mod.main([])
+            except SystemExit as exc:
+                result = exc.code
+            # dry_run=True means submit is called with dry_run=True
+            mock_submit.assert_called_once()
+            # dry_run is passed as keyword argument
+            assert mock_submit.call_args[1].get("dry_run") is True
+            assert result in (0, None)
 
 
 def test_indexnow_explicit_submit_calls_api(monkeypatch):
     """With --submit, the script must call the API."""
     monkeypatch.setenv("INDEXNOW_KEY", "test-key-123")
-    with patch.object(indexnow_mod, "submit") as mock_submit:
-        try:
-            result = indexnow_mod.main(["--submit", "--all"])
-        except SystemExit as exc:
-            result = exc.code
-        mock_submit.assert_called_once()
-        assert mock_submit.call_args[1].get("dry_run") is False
+    with _patch_sitemap_bypass():
+        with patch.object(indexnow_mod, "submit") as mock_submit:
+            try:
+                result = indexnow_mod.main(["--submit", "--all"])
+            except SystemExit as exc:
+                result = exc.code
+            mock_submit.assert_called_once()
+            assert mock_submit.call_args[1].get("dry_run") is False
 
 
 # ---------------------------------------------------------------------------
@@ -114,14 +158,15 @@ def test_indexnow_from_git_diff_maps_changed_files(monkeypatch, tmp_path):
     monkeypatch.setenv("INDEXNOW_KEY", "test-key-123")
     fake_git_output = "about.md\nnotes/hello.md\n"
     with patch("subprocess.check_output", return_value=fake_git_output):
-        with patch.object(indexnow_mod, "submit") as mock_submit:
-            try:
-                indexnow_mod.main(["--submit", "--from-git-diff", "HEAD~1", "HEAD"])
-            except SystemExit as exc:
-                pass
-            mock_submit.assert_called_once()
-            urls = mock_submit.call_args[0][0]
-            assert any("/about/" in u for u in urls)
+        with _patch_sitemap_bypass():
+            with patch.object(indexnow_mod, "submit") as mock_submit:
+                try:
+                    indexnow_mod.main(["--submit", "--from-git-diff", "HEAD~1", "HEAD"])
+                except SystemExit as exc:
+                    pass
+                mock_submit.assert_called_once()
+                urls = mock_submit.call_args[0][0]
+                assert any("/about/" in u for u in urls)
 
 
 def test_indexnow_from_git_diff_ignores_non_public_files(monkeypatch):
@@ -130,16 +175,17 @@ def test_indexnow_from_git_diff_ignores_non_public_files(monkeypatch):
     # Include one valid file so submit gets called; rest should be skipped
     fake_git_output = "about.md\nvendor/bundle.js\n.git/config\n_site/index.html\nscripts/test.py\n"
     with patch("subprocess.check_output", return_value=fake_git_output):
-        with patch.object(indexnow_mod, "submit") as mock_submit:
-            try:
-                indexnow_mod.main(["--submit", "--from-git-diff", "HEAD~1", "HEAD"])
-            except SystemExit as exc:
-                pass
-            mock_submit.assert_called_once()
-            urls = mock_submit.call_args[0][0]
-            assert not any("vendor" in u for u in urls)
-            assert not any("/.git/" in u for u in urls)
-            assert not any("_site" in u for u in urls)
+        with _patch_sitemap_bypass():
+            with patch.object(indexnow_mod, "submit") as mock_submit:
+                try:
+                    indexnow_mod.main(["--submit", "--from-git-diff", "HEAD~1", "HEAD"])
+                except SystemExit as exc:
+                    pass
+                mock_submit.assert_called_once()
+                urls = mock_submit.call_args[0][0]
+                assert not any("vendor" in u for u in urls)
+                assert not any("/.git/" in u for u in urls)
+                assert not any("_site" in u for u in urls)
 
 
 # ---------------------------------------------------------------------------
@@ -175,14 +221,15 @@ def test_indexnow_max_urls_enforcement(monkeypatch):
         "https://dkharlanau.github.io/c/",
     }
     with patch.object(indexnow_mod, "discover_indexable_urls", return_value=(fake_urls, {})):
-        with patch.object(indexnow_mod, "submit") as mock_submit:
-            try:
-                indexnow_mod.main(["--submit", "--all", "--max-urls", "2"])
-            except SystemExit as exc:
-                pass
-            mock_submit.assert_called_once()
-            urls = mock_submit.call_args[0][0]
-            assert len(urls) <= 2
+        with _patch_sitemap_bypass():
+            with patch.object(indexnow_mod, "submit") as mock_submit:
+                try:
+                    indexnow_mod.main(["--submit", "--all", "--max-urls", "2"])
+                except SystemExit as exc:
+                    pass
+                mock_submit.assert_called_once()
+                urls = mock_submit.call_args[0][0]
+                assert len(urls) <= 2
 
 
 def test_indexnow_max_urls_zero_means_no_submit(monkeypatch):
@@ -240,3 +287,165 @@ def test_indexnow_require_key_file_accepts_file(monkeypatch, tmp_path):
             except SystemExit as exc:
                 result = exc.code
             assert result in (0, None)
+
+
+# ---------------------------------------------------------------------------
+# IndexNow: sitemap-backed filtering
+# ---------------------------------------------------------------------------
+
+
+def test_indexnow_sitemap_filter_excludes_missing_urls(monkeypatch, tmp_path):
+    """URLs not present in the generated sitemap must be skipped."""
+    monkeypatch.setenv("INDEXNOW_KEY", "test-key-123")
+    monkeypatch.chdir(tmp_path)
+    _make_site_sitemap(tmp_path, ["https://dkharlanau.github.io/about/"])
+    _make_built_html(tmp_path, "/about/")
+    _make_built_html(tmp_path, "/notes/excluded/")
+    fake_urls = {
+        "https://dkharlanau.github.io/about/",
+        "https://dkharlanau.github.io/notes/excluded/",
+    }
+    with patch.object(indexnow_mod, "discover_indexable_urls", return_value=(fake_urls, {})):
+        with patch.object(indexnow_mod, "submit") as mock_submit:
+            try:
+                indexnow_mod.main(["--submit", "--all", "--site-dir", str(tmp_path / "_site")])
+            except SystemExit as exc:
+                pass
+            mock_submit.assert_called_once()
+            urls = mock_submit.call_args[0][0]
+            assert "https://dkharlanau.github.io/about/" in urls
+            assert "https://dkharlanau.github.io/notes/excluded/" not in urls
+
+
+def test_indexnow_sitemap_filter_includes_public_urls(monkeypatch, tmp_path):
+    """URLs present in the generated sitemap must be included."""
+    monkeypatch.setenv("INDEXNOW_KEY", "test-key-123")
+    monkeypatch.chdir(tmp_path)
+    _make_site_sitemap(tmp_path, [
+        "https://dkharlanau.github.io/",
+        "https://dkharlanau.github.io/services/",
+    ])
+    _make_built_html(tmp_path, "")
+    _make_built_html(tmp_path, "/services/")
+    fake_urls = {
+        "https://dkharlanau.github.io/",
+        "https://dkharlanau.github.io/services/",
+    }
+    with patch.object(indexnow_mod, "discover_indexable_urls", return_value=(fake_urls, {})):
+        with patch.object(indexnow_mod, "submit") as mock_submit:
+            try:
+                indexnow_mod.main(["--submit", "--all", "--site-dir", str(tmp_path / "_site")])
+            except SystemExit as exc:
+                pass
+            mock_submit.assert_called_once()
+            urls = mock_submit.call_args[0][0]
+            assert "https://dkharlanau.github.io/" in urls
+            assert "https://dkharlanau.github.io/services/" in urls
+
+
+# ---------------------------------------------------------------------------
+# IndexNow: fail-closed guardrails on selected URLs
+# ---------------------------------------------------------------------------
+
+
+def test_indexnow_fails_if_noindex_url_selected(monkeypatch, tmp_path):
+    """If a selected URL has robots:noindex in built HTML, submission must fail."""
+    monkeypatch.setenv("INDEXNOW_KEY", "test-key-123")
+    monkeypatch.chdir(tmp_path)
+    _make_site_sitemap(tmp_path, ["https://dkharlanau.github.io/notes/bad/"])
+    _make_built_html(tmp_path, "/notes/bad/", robots="noindex, follow")
+    fake_urls = {"https://dkharlanau.github.io/notes/bad/"}
+    with patch.object(indexnow_mod, "discover_indexable_urls", return_value=(fake_urls, {})):
+        with patch.object(indexnow_mod, "submit") as mock_submit:
+            result = indexnow_mod.main(["--submit", "--all", "--site-dir", str(tmp_path / "_site")])
+            assert result != 0
+            mock_submit.assert_not_called()
+
+
+def test_indexnow_fails_if_sitemap_false_url_selected(monkeypatch, tmp_path):
+    """If a selected URL has robots:noindex (sitemap:false pages typically also noindex), submission must fail."""
+    monkeypatch.setenv("INDEXNOW_KEY", "test-key-123")
+    monkeypatch.chdir(tmp_path)
+    _make_site_sitemap(tmp_path, ["https://dkharlanau.github.io/notes/private/"])
+    _make_built_html(tmp_path, "/notes/private/", robots="noindex")
+    fake_urls = {"https://dkharlanau.github.io/notes/private/"}
+    with patch.object(indexnow_mod, "discover_indexable_urls", return_value=(fake_urls, {})):
+        with patch.object(indexnow_mod, "submit") as mock_submit:
+            result = indexnow_mod.main(["--submit", "--all", "--site-dir", str(tmp_path / "_site")])
+            assert result != 0
+            mock_submit.assert_not_called()
+
+
+# ---------------------------------------------------------------------------
+# IndexNow: INDEXNOW_KEY_LOCATION support
+# ---------------------------------------------------------------------------
+
+
+def test_indexnow_reads_key_from_location(monkeypatch, tmp_path):
+    """INDEXNOW_KEY_LOCATION env var should be used as an alternative key source."""
+    key_file = tmp_path / "key.txt"
+    key_file.write_text("location-key", encoding="utf-8")
+    monkeypatch.delenv("INDEXNOW_KEY", raising=False)
+    monkeypatch.setenv("INDEXNOW_KEY_LOCATION", str(key_file))
+    with patch.object(indexnow_mod, "submit"):
+        try:
+            result = indexnow_mod.main(["--submit", "--all"])
+        except SystemExit as exc:
+            result = exc.code
+        assert result in (0, None)
+
+
+# ---------------------------------------------------------------------------
+# IndexNow: report artifact
+# ---------------------------------------------------------------------------
+
+
+def test_indexnow_dry_run_writes_report(monkeypatch, tmp_path):
+    """Dry-run mode must write a JSON report with submitted and skipped URLs."""
+    monkeypatch.setenv("INDEXNOW_KEY", "test-key-123")
+    monkeypatch.chdir(tmp_path)
+    _make_site_sitemap(tmp_path, ["https://dkharlanau.github.io/about/"])
+    _make_built_html(tmp_path, "/about/")
+    fake_urls = {"https://dkharlanau.github.io/about/"}
+    report_path = tmp_path / "report.json"
+    with patch.object(indexnow_mod, "discover_indexable_urls", return_value=(fake_urls, {})):
+        with patch.object(indexnow_mod, "submit"):
+            try:
+                indexnow_mod.main([
+                    "--all",
+                    "--site-dir", str(tmp_path / "_site"),
+                    "--report", str(report_path),
+                ])
+            except SystemExit as exc:
+                pass
+    assert report_path.exists()
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["mode"] == "dry-run"
+    assert "https://dkharlanau.github.io/about/" in report["submitted"]
+    assert report["summary"]["submitted_count"] == 1
+
+
+def test_indexnow_submit_writes_report(monkeypatch, tmp_path):
+    """Submit mode must write a JSON report with mode=submit."""
+    monkeypatch.setenv("INDEXNOW_KEY", "test-key-123")
+    monkeypatch.chdir(tmp_path)
+    _make_site_sitemap(tmp_path, ["https://dkharlanau.github.io/services/"])
+    _make_built_html(tmp_path, "/services/")
+    fake_urls = {"https://dkharlanau.github.io/services/"}
+    report_path = tmp_path / "report.json"
+    with patch.object(indexnow_mod, "discover_indexable_urls", return_value=(fake_urls, {})):
+        with patch.object(indexnow_mod, "submit"):
+            try:
+                indexnow_mod.main([
+                    "--submit",
+                    "--all",
+                    "--site-dir", str(tmp_path / "_site"),
+                    "--report", str(report_path),
+                ])
+            except SystemExit as exc:
+                pass
+    assert report_path.exists()
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["mode"] == "submit"
+    assert "https://dkharlanau.github.io/services/" in report["submitted"]
+    assert report["summary"]["submitted_count"] == 1
