@@ -3,7 +3,7 @@ layout: default
 title: "Framework Map — How Enterprise Frameworks Map to Practical Work"
 description: "A practical map connecting DAMA-DMBOK, BABOK, TOGAF-style architecture, integration architecture, and SAP AMS to usable work skills. Not a framework summary."
 permalink: /skill-hub/framework-map/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-06-12
 status: reviewed
 verified: true
 ---
@@ -115,9 +115,145 @@ verified: true
           <td><a href="/skill-hub/business-analysis/business-rules-discovery-working-skill/">Business Rules Discovery Working Skill</a></td>
           <td>Find hidden rules, separate them from requirements, and document enforcement.</td>
         </tr>
+        <tr>
+          <td>Use Case Modeling</td>
+          <td><a href="/skill-hub/business-analysis/use-case-analysis-working-skill/">Use Case Analysis Working Skill</a></td>
+          <td>Identify actors, goals, and system interactions to reveal missing requirements.</td>
+        </tr>
+        <tr>
+          <td>Requirements Refinement</td>
+          <td><a href="/skill-hub/business-analysis/user-story-refinement-working-skill/">User Story Refinement Working Skill</a></td>
+          <td>Turn vague backlog items into structured, implementable stories with acceptance criteria.</td>
+        </tr>
+        <tr>
+          <td>Scope and Strategy Analysis</td>
+          <td><a href="/skill-hub/business-analysis/scope-boundary-definition-working-skill/">Scope Boundary Definition Working Skill</a></td>
+          <td>Define what is in scope, what is out, and what sits at the boundary to prevent drift.</td>
+        </tr>
+        <tr>
+          <td>Assumption and Constraint Management</td>
+          <td><a href="/skill-hub/business-analysis/assumption-constraint-mapping-working-skill/">Assumption and Constraint Mapping Working Skill</a></td>
+          <td>Surface hidden assumptions, separate them from constraints, and validate before they become risks.</td>
+        </tr>
       </tbody>
     </table>
     <p><strong>Principle:</strong> BABOK tells you what analysis tasks exist. Skill Hub tells you how to run an elicitation session that produces usable output.</p>
+  </section>
+
+  <section>
+    <h2>Systems analysis</h2>
+    <p>Systems analysis techniques provide methods for understanding how entities behave inside systems and how data crosses boundaries. In Skill Hub, these become operational modeling skills:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Systems analysis concern</th>
+          <th>Skill Hub skill</th>
+          <th>What the skill does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>State and Lifecycle Modeling</td>
+          <td><a href="/skill-hub/systems-analysis/state-lifecycle-analysis-working-skill/">State and Lifecycle Analysis Working Skill</a></td>
+          <td>Map entity states, events, transitions, and guards to find missing validation and invalid states.</td>
+        </tr>
+        <tr>
+          <td>Interface Requirements</td>
+          <td><a href="/skill-hub/systems-analysis/interface-requirement-analysis-working-skill/">Interface Requirement Analysis Working Skill</a></td>
+          <td>Define what data crosses a boundary, in which direction, under what conditions, with what quality and error-handling requirements.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Principle:</strong> UML and systems analysis tell you what diagrams exist. Skill Hub tells you how to produce a lifecycle map that prevents invalid states from reaching production.</p>
+  </section>
+
+  <section>
+    <h2>Decision analysis and validation</h2>
+    <p>Decision science and quality assurance provide methods for evaluating options and validating work products. In Skill Hub, these become evidence-based decision and review skills:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Decision or validation concern</th>
+          <th>Skill Hub skill</th>
+          <th>What the skill does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Trade-Off Analysis</td>
+          <td><a href="/skill-hub/decision-validation/trade-off-analysis-working-skill/">Trade-Off Analysis Working Skill</a></td>
+          <td>Compare competing objectives across dimensions so decisions are made on evidence.</td>
+        </tr>
+        <tr>
+          <td>Option Comparison</td>
+          <td><a href="/skill-hub/decision-validation/option-comparison-matrix-working-skill/">Option Comparison Matrix Working Skill</a></td>
+          <td>Compare alternatives side-by-side using weighted criteria so rationale is auditable.</td>
+        </tr>
+        <tr>
+          <td>Risk and Dependency Mapping</td>
+          <td><a href="/skill-hub/decision-validation/risk-dependency-mapping-working-skill/">Risk and Dependency Mapping Working Skill</a></td>
+          <td>Identify what depends on what and expose hidden assumptions before they become blockers.</td>
+        </tr>
+        <tr>
+          <td>Evidence-Based Recommendation</td>
+          <td><a href="/skill-hub/decision-validation/evidence-based-recommendation-working-skill/">Evidence-Based Recommendation Working Skill</a></td>
+          <td>Build recommendations supported by data, traceable to sources, and structured for decision-making.</td>
+        </tr>
+        <tr>
+          <td>Requirements Review</td>
+          <td><a href="/skill-hub/decision-validation/requirements-review-checklist-working-skill/">Requirements Review Checklist Working Skill</a></td>
+          <td>Review requirements for completeness, consistency, testability, and feasibility before build.</td>
+        </tr>
+        <tr>
+          <td>Traceability</td>
+          <td><a href="/skill-hub/decision-validation/traceability-matrix-working-skill/">Traceability Matrix Working Skill</a></td>
+          <td>Map requirements to source, design, test, and release so nothing is orphaned.</td>
+        </tr>
+        <tr>
+          <td>Test Scenario Derivation</td>
+          <td><a href="/skill-hub/decision-validation/test-scenario-derivation-working-skill/">Test Scenario Derivation Working Skill</a></td>
+          <td>Derive concrete test scenarios from requirements so testers know exactly what to verify.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Principle:</strong> Decision science tells you how to evaluate options. Skill Hub tells you how to produce a comparison matrix that a steering committee can act on in one meeting.</p>
+  </section>
+
+  <section>
+    <h2>AI-assisted analysis</h2>
+    <p>AI tools are increasingly used in professional analysis work. In Skill Hub, these become governance and validation skills for human-AI collaboration:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>AI collaboration concern</th>
+          <th>Skill Hub skill</th>
+          <th>What the skill does</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>AI Output Validation</td>
+          <td><a href="/skill-hub/ai-assisted-analysis/validate-ai-generated-requirements-working-skill/">Validate AI-Generated Requirements Working Skill</a></td>
+          <td>Check AI-generated requirements for hallucinations, missing context, and fake certainty before they enter documents.</td>
+        </tr>
+        <tr>
+          <td>Note Conversion</td>
+          <td><a href="/skill-hub/ai-assisted-analysis/convert-notes-to-requirements-working-skill/">Convert Notes to Requirements Working Skill</a></td>
+          <td>Turn raw notes and transcripts into structured requirements without losing nuance.</td>
+        </tr>
+        <tr>
+          <td>Problem Decomposition</td>
+          <td><a href="/skill-hub/ai-assisted-analysis/business-problem-to-backlog-working-skill/">Business Problem to Backlog Working Skill</a></td>
+          <td>Transform vague complaints into structured analysis backlogs with priorities and owners.</td>
+        </tr>
+        <tr>
+          <td>AI Governance</td>
+          <td><a href="/skill-hub/ai-assisted-analysis/ai-accountability-working-skill/">AI Accountability Working Skill</a></td>
+          <td>Define who owns AI output, how it is reviewed, and what happens when it is wrong.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Principle:</strong> AI tools generate drafts quickly. Skill Hub tells you how to validate, structure, and govern that output so it becomes professional work product.</p>
   </section>
 
   <section>
