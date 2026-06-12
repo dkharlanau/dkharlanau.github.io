@@ -8,11 +8,12 @@ Usage:
     python3 scripts/indexnow_submit.py --all --max-urls 50
 
 Rules:
-- Key must come from INDEXNOW_KEY env var or .env.local file.
+- Key must come from INDEXNOW_KEY env var, INDEXNOW_KEY_LOCATION file, or .env.local.
 - Dry-run mode is the DEFAULT; pass --submit to actually submit.
 - Only submits indexable canonical URLs (no noindex, no draft, no research).
 - Never submits unverified Atlas or research pages.
-- Skipped paths are reported with reasons for auditability.
+- Final URL list is intersected with the generated _site sitemap.
+- Skipped paths and submission results are written to a JSON report.
 """
 
 from __future__ import annotations
@@ -25,6 +26,7 @@ import subprocess
 import sys
 import urllib.error
 import urllib.request
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
@@ -32,6 +34,7 @@ BASE_URL = "https://dkharlanau.github.io"
 INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow"
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FRONT_MATTER_RE = re.compile(r"^---\n(.*?)\n---\n", re.DOTALL)
+SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 
 CORE_URLS = {
     f"{BASE_URL}/",
@@ -90,12 +93,22 @@ SHARED_LAYOUT_PATHS = (
 
 
 def load_key() -> str:
-    """Load IndexNow key from env or .env.local."""
+    """Load IndexNow key from env, location file, or .env.local."""
     global _key_source
     key = os.environ.get("INDEXNOW_KEY", "").strip()
     if key:
         _key_source = "env"
         return key
+
+    key_location = os.environ.get("INDEXNOW_KEY_LOCATION", "").strip()
+    if key_location:
+        key_path = Path(key_location)
+        if key_path.exists():
+            key = key_path.read_text(encoding="utf-8").strip().strip('"').strip("'")
+            if key:
+                _key_source = "location"
+                return key
+
     env_local = REPO_ROOT / ".env.local"
     if env_local.exists():
         for line in env_local.read_text(encoding="utf-8").splitlines():
@@ -278,6 +291,125 @@ def git_diff_files(base: str, head: str) -> list[str]:
     return [line for line in output.splitlines() if line]
 
 
+def load_sitemap_urls(site_dir: Path) -> set[str]:
+    """Parse all sitemap XML files under site_dir and return the set of loc URLs."""
+    urls: set[str] = set()
+    if not site_dir.exists():
+        return urls
+
+    sitemap_files = sorted(site_dir.glob("sitemap*.xml"))
+    if not sitemap_files:
+        return urls
+
+    for sitemap_path in sitemap_files:
+        try:
+            tree = ET.parse(sitemap_path)
+            root = tree.getroot()
+        except ET.ParseError:
+            continue
+
+        tag = root.tag.split("}")[-1] if "}" in root.tag else root.tag
+        if tag == "sitemapindex":
+            for sitemap in root.findall(f"{{{SITEMAP_NS}}}sitemap"):
+                loc = sitemap.find(f"{{{SITEMAP_NS}}}loc")
+                if loc is None or not loc.text:
+                    continue
+                # Resolve relative loc against site_dir
+                loc_text = loc.text.strip()
+                loc_path = site_dir / Path(loc_text).name
+                if loc_path.exists():
+                    try:
+                        sub_tree = ET.parse(loc_path)
+                        sub_root = sub_tree.getroot()
+                        for url in sub_root.findall(f"{{{SITEMAP_NS}}}url"):
+                            url_loc = url.find(f"{{{SITEMAP_NS}}}loc")
+                            if url_loc is not None and url_loc.text:
+                                urls.add(url_loc.text.strip())
+                    except ET.ParseError:
+                        continue
+        elif tag == "urlset":
+            for url in root.findall(f"{{{SITEMAP_NS}}}url"):
+                loc = url.find(f"{{{SITEMAP_NS}}}loc")
+                if loc is not None and loc.text:
+                    urls.add(loc.text.strip())
+    return urls
+
+
+def filter_urls_by_sitemap(
+    urls: set[str], site_dir: Path
+) -> tuple[set[str], dict[str, str]]:
+    """Return (urls_in_sitemap, skipped_urls) where skipped URLs are not in sitemap."""
+    sitemap_urls = load_sitemap_urls(site_dir)
+    if not sitemap_urls:
+        # If no sitemap is present, fail closed unless site_dir is missing.
+        if not site_dir.exists():
+            return set(), {u: "site directory missing" for u in urls}
+        return set(), {u: "not_in_sitemap" for u in urls}
+
+    in_sitemap: set[str] = set()
+    skipped: dict[str, str] = {}
+    for url in urls:
+        if url in sitemap_urls:
+            in_sitemap.add(url)
+        else:
+            skipped[url] = "not_in_sitemap"
+    return in_sitemap, skipped
+
+
+def _built_html_path_for_url(url: str, site_dir: Path) -> Path | None:
+    """Map a canonical URL to the corresponding built HTML file in site_dir."""
+    if not url.startswith(BASE_URL):
+        return None
+    rel = url[len(BASE_URL) :]
+    if not rel or rel == "/":
+        return site_dir / "index.html"
+    candidate = site_dir / rel.lstrip("/")
+    if candidate.is_dir():
+        candidate = candidate / "index.html"
+    elif not str(candidate).endswith(".html"):
+        candidate = candidate.with_suffix(candidate.suffix + ".html")
+    if candidate.exists():
+        return candidate
+    return None
+
+
+def check_url_noindex_in_site(url: str, site_dir: Path) -> tuple[bool, str | None]:
+    """Return (is_indexable, reason) by inspecting built HTML for noindex robots meta."""
+    html_path = _built_html_path_for_url(url, site_dir)
+    if html_path is None:
+        return False, "built HTML not found"
+    try:
+        text = html_path.read_text(encoding="utf-8", errors="ignore")
+    except OSError as exc:
+        return False, f"cannot read built HTML: {exc}"
+    match = re.search(
+        r'<meta[^>]+name=["\']robots["\'][^>]+content=["\'](.*?)["\']',
+        text,
+        re.IGNORECASE | re.DOTALL,
+    )
+    if match and "noindex" in match.group(1).lower():
+        return False, "robots:noindex in built HTML"
+    return True, None
+
+
+def write_report(
+    report_path: Path,
+    mode: str,
+    submitted: list[str],
+    skipped: dict[str, str],
+) -> None:
+    report = {
+        "mode": mode,
+        "submitted": submitted,
+        "skipped": [{"url": url, "reason": reason} for url, reason in sorted(skipped.items())],
+        "summary": {
+            "submitted_count": len(submitted),
+            "skipped_count": len(skipped),
+        },
+    }
+    report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+
+
 def submit(urls: list[str], key: str, dry_run: bool) -> None:
     if dry_run:
         print("[DRY RUN] Would submit the following URLs to IndexNow:")
@@ -343,14 +475,34 @@ def main(argv=None) -> int:
         action="store_true",
         help="Require a {key}.txt file to exist in repo root for verification",
     )
+    parser.add_argument(
+        "--site-dir",
+        default="_site",
+        help="Directory of the built Jekyll site (default: _site)",
+    )
+    parser.add_argument(
+        "--report",
+        default="indexnow-report.json",
+        help="Path to JSON report artifact (default: indexnow-report.json)",
+    )
     args = parser.parse_args(argv)
 
+    site_dir = REPO_ROOT / args.site_dir
+    report_path = REPO_ROOT / args.report
+
+    key_required = args.submit or args.require_key_file
     key = load_key()
-    if not key:
-        print("ERROR: INDEXNOW_KEY not set. Export it or add to .env.local", file=sys.stderr)
+    if key_required and not key:
+        print(
+            "ERROR: INDEXNOW_KEY not set. Export it, set INDEXNOW_KEY_LOCATION, or add to .env.local",
+            file=sys.stderr,
+        )
         return 1
 
     if args.require_key_file:
+        if not key:
+            print("ERROR: --require-key-file passed but no key loaded", file=sys.stderr)
+            return 1
         key_file = REPO_ROOT / f"{key}.txt"
         if not key_file.exists():
             print(
@@ -384,7 +536,27 @@ def main(argv=None) -> int:
     else:
         urls.update(CORE_URLS)
 
+    # Sitemap-backed filtering
+    sitemap_urls, sitemap_skipped = filter_urls_by_sitemap(urls, site_dir)
+    skipped.update(sitemap_skipped)
+    urls = sitemap_urls
+
+    # Defense-in-depth: fail if any selected URL is noindex in built site
+    forbidden: list[tuple[str, str]] = []
+    if site_dir.exists():
+        for url in sorted(urls):
+            indexable, reason = check_url_noindex_in_site(url, site_dir)
+            if not indexable:
+                forbidden.append((url, reason))
+
+    if forbidden:
+        print("ERROR: The following selected URLs are not allowed for submission:", file=sys.stderr)
+        for url, reason in forbidden:
+            print(f"  - {url}: {reason}", file=sys.stderr)
+        return 1
+
     if not urls:
+        write_report(report_path, "dry-run" if not args.submit else "submit", [], skipped)
         print("No URLs to submit.")
         if skipped:
             print(f"\nSkipped {len(skipped)} path(s):")
@@ -403,6 +575,7 @@ def main(argv=None) -> int:
         ordered = ordered[: args.max_urls]
 
     if not ordered:
+        write_report(report_path, "dry-run" if not args.submit else "submit", [], skipped)
         print("No URLs to submit after applying --max-urls.")
         if skipped:
             print(f"\nSkipped {len(skipped)} path(s):")
@@ -419,6 +592,8 @@ def main(argv=None) -> int:
         print(f"\nSkipped {len(skipped)} path(s):")
         for path, reason in sorted(skipped.items()):
             print(f"  - {path}: {reason}")
+
+    write_report(report_path, "submit" if args.submit else "dry-run", ordered, skipped)
 
     if args.submit:
         submit(ordered, key, dry_run=False)
