@@ -20,6 +20,8 @@ on:
 jobs:
   indexnow:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -32,13 +34,13 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.2.3"
+          ruby-version: "3.3.4"
           bundler-cache: true
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Build Jekyll site
         run: bundle exec jekyll build
