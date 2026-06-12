@@ -115,6 +115,21 @@ def test_indexnow_rejects_missing_key_for_real_submit(monkeypatch, capsys):
         assert result != 0
 
 
+def test_indexnow_dry_run_allows_missing_key(monkeypatch, capsys):
+    """Dry-run without a key must succeed and not call the API."""
+    monkeypatch.delenv("INDEXNOW_KEY", raising=False)
+    with patch.object(indexnow_mod, "load_key", return_value=""):
+        with _patch_sitemap_bypass():
+            with patch.object(indexnow_mod, "submit") as mock_submit:
+                try:
+                    result = indexnow_mod.main([])
+                except SystemExit as exc:
+                    result = exc.code
+                mock_submit.assert_called_once()
+                assert mock_submit.call_args[1].get("dry_run") is True
+                assert result in (0, None)
+
+
 # ---------------------------------------------------------------------------
 # IndexNow: filters noindex / research / unverified Atlas
 # ---------------------------------------------------------------------------

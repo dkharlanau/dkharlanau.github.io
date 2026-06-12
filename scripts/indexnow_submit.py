@@ -490,8 +490,9 @@ def main(argv=None) -> int:
     site_dir = REPO_ROOT / args.site_dir
     report_path = REPO_ROOT / args.report
 
+    key_required = args.submit or args.require_key_file
     key = load_key()
-    if not key:
+    if key_required and not key:
         print(
             "ERROR: INDEXNOW_KEY not set. Export it, set INDEXNOW_KEY_LOCATION, or add to .env.local",
             file=sys.stderr,
@@ -499,6 +500,9 @@ def main(argv=None) -> int:
         return 1
 
     if args.require_key_file:
+        if not key:
+            print("ERROR: --require-key-file passed but no key loaded", file=sys.stderr)
+            return 1
         key_file = REPO_ROOT / f"{key}.txt"
         if not key_file.exists():
             print(
