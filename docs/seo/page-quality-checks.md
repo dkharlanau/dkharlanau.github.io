@@ -6,6 +6,8 @@ robots: noindex,follow
 sitemap: false
 ---
 
+{% raw %}
+
 # Page Quality Checks
 
 **Path:** `scripts/check_page_quality.py`  
@@ -188,3 +190,5 @@ Update this page when:
 - Page-type classification logic changes.
 - The private-path pattern list changes.
 - The baseline warning count shifts significantly after a content or template fix.
+
+{% endraw %}
