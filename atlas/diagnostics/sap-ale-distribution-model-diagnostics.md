@@ -55,7 +55,7 @@ level: 2
 
   <div class="note-body">
     <h2>Core idea</h2>
-    <p>ALE distribution models define which master data changes are sent to which target systems. When master data is not replicated, arrives at the wrong system, or creates duplicates, the support goal is to identify whether the issue is in the distribution model, change pointers, filter objects, partner profiles, or the target system's handling of the received data.</p>
+    <p>ALE distribution models decide which master data changes go to which target systems. A missing object usually means the model did not select it, the change pointer was not processed, or the target did not accept it. Duplicates usually mean key mapping is missing or wrong. The diagnostic job is to follow the selection chain: model → change pointer → IDoc → target.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -112,8 +112,8 @@ level: 2
       <li>Fix key mapping on the target system if duplicates are being created.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>ALE distribution issues are usually model or profile configuration gaps. A useful ticket should include: object type, message type, source system, target system, change document number, distribution model name, and whether the issue is new or recurring.</p>
+    <h2>What to capture first</h2>
+    <p>Before routing the issue, capture: object type, message type, source and target systems, change document number, distribution model name, and whether the issue is new or recurring. This distinguishes a one-time filter miss from a model gap that will keep producing failures.</p>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not an ALE configuration guide. It does not cover distribution model design, filter object setup, or target system key mapping configuration. It does not replace SAP's ALE documentation.</p>

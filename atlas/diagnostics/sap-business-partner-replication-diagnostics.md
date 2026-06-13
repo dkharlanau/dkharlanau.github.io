@@ -58,7 +58,8 @@ sitemap: true
 
   <div class="note-body">
     <h2>Core idea</h2>
-    <p>Business partner replication moves BP master data from a source system (often MDG or a central system) to target systems. When a BP is missing in the target, has incomplete roles, or creates duplicates, the support goal is to identify whether the issue is in the replication model, key mapping, filter criteria, data quality, or the target system's handling of the received data.</p>
+    <p>Business partner replication moves BP master data from a source system to target systems. Most tickets resolve to one of three handoffs: the source did not select the BP, the target did not accept it, or the accepted BP was mapped to the wrong key. The diagnostic job is to find which handoff failed and why.</p>
+    <p>The fastest way to narrow the issue is to prove the message left the source, then prove the target received it. Everything in between is noise until those two facts are established.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -115,8 +116,8 @@ sitemap: true
       <li>If duplicates exist, evaluate merge or deactivation options with master data governance.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>BP replication issues are usually model, mapping, or data quality problems. A useful ticket should include: BP number, source system, target system, expected roles/data, actual result, replication model name, and any error messages from the replication log or IDoc status.</p>
+    <h2>What to capture first</h2>
+    <p>Before routing the issue, capture: BP number, source and target systems, expected versus actual result, replication model name, and any error from the replication log or IDoc status. A vague "BP missing" report wastes a round of basic questions; these six items let a support engineer start the real diagnosis.</p>
 
     <h2>Escalation signals</h2>
     <ul>

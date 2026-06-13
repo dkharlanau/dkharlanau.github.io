@@ -59,7 +59,7 @@ sitemap: true
 
   <div class="note-body">
     <h2>Core idea</h2>
-    <p>IDocs move data between SAP systems and external systems. A failure can happen when the IDoc is created, dispatched, received, or posted to the application. The diagnostic goal is to read the IDoc status history and locate the first error status, then trace it to partner profile, port, segment, or application validation.</p>
+    <p>IDocs fail at four points: creation, dispatch, receipt, and application posting. The status monitor shows the last failure, but the first error status in the history usually points to the real cause. The diagnostic job is to read the history from oldest to newest and trace the first error to partner profile, port, segment, or application validation.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -118,8 +118,8 @@ sitemap: true
       <li>Clear the qRFC queue and reprocess in correct sequence.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Always read IDoc status history from oldest to newest. The last status is a symptom; the first error status usually points to the real cause. Reprocessing before fixing the cause creates more failed IDocs.</p>
+    <h2>What to capture first</h2>
+    <p>Before routing the issue, capture: IDoc number, direction, message type, partner, first error status, and error text. Reprocessing without fixing the cause produces more failed IDocs and makes the original failure harder to read.</p>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not an IDoc configuration guide. It does not cover partner profile setup, port or RFC destination configuration, IDoc segment design, or AIF mapping. It does not replace SAP's IDoc and ALE documentation.</p>

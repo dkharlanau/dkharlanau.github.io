@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-06-13T18:04:40Z
+Generated: 2026-06-13T18:42:49Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -658,7 +658,7 @@ Home
 
 
     Core idea
-    ALE distribution models define which master data changes are sent to which target systems. When master data is not replicated, arrives at the wrong system, or creates duplicates, the support goal is to identify whether the issue is in the distribution model, change pointers, filter objects, partner profiles, or the target system's handling of the received data.
+    ALE distribution models decide which master data changes go to which target systems. A missing object usually means the model did not select it, the change pointer was not processed, or the target did not accept it. Duplicates usually mean key mapping is missing or wrong. The diagnostic job is to follow the selection chain: model → change pointer → IDoc → target.
 
     Common symptoms
 
@@ -715,8 +715,8 @@ Home
       Fix key mapping on the target system if duplicates are being created.
 
 
-    Support takeaway
-    ALE distribution issues are usually model or profile configuration gaps. A useful ticket should include: object type, message type, source system, target system, change document number, distribution model name, and whether the issue is new or recurring.
+    What to capture first
+    Before routing the issue, capture: object type, message type, source and target systems, change document number, distribution model name, and whether the issue is new or recurring. This distinguishes a one-time filter miss from a model gap that will keep producing failures.
 
     Boundaries and non-goals
     This page is a diagnostic frame, not an ALE configuration guide. It does not cover distribution model design, filter object setup, or target system key mapping configuration. It does not replace SAP's ALE documentation.
@@ -962,7 +962,8 @@ Home
 
 
     Core idea
-    Business partner replication moves BP master data from a source system (often MDG or a central system) to target systems. When a BP is missing in the target, has incomplete roles, or creates duplicates, the support goal is to identify whether the issue is in the replication model, key mapping, filter criteria, data quality, or the target system's handling of the received data.
+    Business partner replication moves BP master data from a source system to target systems. Most tickets resolve to one of three handoffs: the source did not select the BP, the target did not accept it, or the accepted BP was mapped to the wrong key. The diagnostic job is to find which handoff failed and why.
+    The fastest way to narrow the issue is to prove the message left the source, then prove the target received it. Everything in between is noise until those two facts are established.
 
     Common symptoms
 
@@ -1019,8 +1020,8 @@ Home
       If duplicates exist, evaluate merge or deactivation options with master data governance.
 
 
-    Support takeaway
-    BP replication issues are usually model, mapping, or data quality problems. A useful ticket should include: BP number, source system, target system, expected roles/data, actual result, replication model name, and any error messages from the replication log or IDoc status.
+    What to capture first
+    Before routing the issue, capture: BP number, source and target systems, expected versus actual result, replication model name, and any error from the replication log or IDoc status. A vague "BP missing" report wastes a round of basic questions; these six items let a support engineer start the real diagnosis.
 
     Escalation signals
 
@@ -1079,7 +1080,7 @@ Home
 
 
     Core idea
-    Customer master replication moves customer data from a source system to target systems, often through ALE, CVI, or MDG. When a customer is missing, has wrong sales area assignments, or creates duplicates, the support goal is to identify whether the issue is in the replication model, the CVI synchronization, key mapping, or the target system's customer configuration.
+    Customer master replication moves customer data through ALE, CVI, or MDG. The failures that matter most are missing sales area or company code data, duplicate customers in the target, and CVI links that look connected but carry different data. The diagnostic job is to separate replication model gaps from CVI synchronization gaps from key mapping gaps.
 
     Common symptoms
 
@@ -1136,8 +1137,8 @@ Home
       Adjust target number ranges if they conflict with the source numbering.
 
 
-    Support takeaway
-    Customer replication issues are usually model, mapping, or CVI problems. A useful ticket should include: customer number, source system, target system, expected views/data, actual result, replication model, and any IDoc or CVI error messages.
+    What to capture first
+    Before routing the issue, capture: customer number, source and target systems, expected versus actual views, replication model, and any IDoc or CVI error. If CVI is involved, include the BP number and the CVI_LINK status. These facts separate a replication problem from a BP-link problem.
 
     Escalation signals
 
@@ -1196,7 +1197,7 @@ Home
 
 
     Core idea
-    Customer-Vendor Integration (CVI) in S/4HANA synchronizes business partners with customer and vendor master data. When a BP is created but the corresponding customer or vendor is missing, has wrong data, or creates duplicates, the support goal is to identify whether the issue is in the CVI configuration, the BP grouping, the direction of synchronization, or the target master data setup.
+    Customer-Vendor Integration (CVI) in S/4HANA keeps business partners aligned with customer and vendor master data. Most CVI incidents are not data corruption; they are configuration or timing mismatches. Before treating a missing customer or vendor as a master-data defect, confirm whether CVI is expected to create the object, which direction is configured, and whether the required BP role exists.
 
     Common symptoms
 
@@ -1253,8 +1254,8 @@ Home
       Re-run CVI synchronization after correcting configuration or data issues.
 
 
-    Support takeaway
-    CVI synchronization issues are usually configuration or role assignment problems. A useful ticket should include: BP number, customer/vendor number, BP grouping, expected roles, actual result, CVI_LINK status, and any synchronization log errors.
+    What to capture first
+    Before routing the issue, capture: BP number, customer or vendor number, BP grouping, expected roles, actual result, CVI_LINK status, and any synchronization log error. If the BP was created manually, note the creation order; direction mismatches are common when a customer or vendor already exists before the BP.
 
     Boundaries and non-goals
     This page is a diagnostic frame, not a CVI configuration guide. It does not cover CVI setup, BP grouping design, or field mapping configuration. It does not replace SAP's CVI documentation.
@@ -1271,7 +1272,7 @@ Home
 
 
     Customer-vendor integration boundary
-    Customer-Vendor Integration is the S/4HANA mechanism that keeps business partners, customers, and vendors aligned. Most CVI incidents are not data corruption; they are configuration or timing mismatches. Before treating a missing customer or vendor as a master-data defect, confirm whether CVI is expected to create the object, which direction is configured, and whether the required BP role exists.
+    CVI is a bridge, not a cleanup tool. It will not repair a customer that was created before the BP, nor will it guess the right grouping if the BP was created without the FLCU00 or FLVN00 role. Fix the configuration and timing first; manual object creation usually creates more link breaks than it solves.
 
     Practical checklist
 
@@ -1473,7 +1474,7 @@ Home
 
 
     Core idea
-    IDocs move data between SAP systems and external systems. A failure can happen when the IDoc is created, dispatched, received, or posted to the application. The diagnostic goal is to read the IDoc status history and locate the first error status, then trace it to partner profile, port, segment, or application validation.
+    IDocs fail at four points: creation, dispatch, receipt, and application posting. The status monitor shows the last failure, but the first error status in the history usually points to the real cause. The diagnostic job is to read the history from oldest to newest and trace the first error to partner profile, port, segment, or application validation.
 
     Common symptoms
 
@@ -1532,8 +1533,8 @@ Home
       Clear the qRFC queue and reprocess in correct sequence.
 
 
-    Support takeaway
-    Always read IDoc status history from oldest to newest. The last status is a symptom; the first error status usually points to the real cause. Reprocessing before fixing the cause creates more failed IDocs.
+    What to capture first
+    Before routing the issue, capture: IDoc number, direction, message type, partner, first error status, and error text. Reprocessing without fixing the cause produces more failed IDocs and makes the original failure harder to read.
 
     Boundaries and non-goals
     This page is a diagnostic frame, not an IDoc configuration guide. It does not cover partner profile setup, port or RFC destination configuration, IDoc segment design, or AIF mapping. It does not replace SAP's IDoc and ALE documentation.
@@ -1581,7 +1582,7 @@ Home
 
 
     Core idea
-    IDoc status codes tell you where an interface document failed and what layer is responsible. Status 51 means application error, 56 means IDoc missing, 64 means ready for dispatch, 75 means control record error. The support goal is to map the status to the right layer — syntax, partner profile, application, or workflow — and collect the evidence needed before escalating.
+    IDoc status codes map a failure to a layer: application (51), processing function (56), ready for dispatch (64), control record (75), or port transmission (02). The diagnostic job is to use the status to choose the right layer, collect the evidence, and avoid reprocessing until the cause is fixed.
 
     Common symptoms
 
@@ -1637,8 +1638,8 @@ Home
       If the IDoc is corrupted and cannot be reprocessed, request a resend from the partner system.
 
 
-    Support takeaway
-    IDoc status is the primary diagnostic signal. A useful ticket should include: IDoc number, direction, message type, partner, current status, status history, error text, and whether the issue is isolated or批量. Do not reprocess IDocs without understanding why they failed.
+    What to capture first
+    Before routing the issue, capture: IDoc number, direction, message type, partner, current status, status history, and error text. Note whether the failure is isolated or affects multiple IDocs. Status is the primary signal, but the error text and history turn the status into an actionable next step.
 
     Boundaries and non-goals
     This page is a diagnostic frame, not an IDoc configuration guide. It does not cover partner profile setup, port configuration, or AIF mapping. It does not replace SAP's IDoc documentation.
@@ -1892,7 +1893,7 @@ Home
 
 
     Core idea
-    Interface monitoring should detect failures before the business notices them. When monitoring misses IDoc errors, reports false positives, or does not cover new interfaces, the support goal is to identify whether the issue is in the monitoring scope, alert thresholds, job scheduling, or the monitoring tool configuration itself.
+    Interface monitoring is only useful if it alerts the right person before the business reports the failure. Most monitoring gaps are not tool failures; they are scope gaps, thresholds set too high, jobs that stopped running, or new interfaces that were never onboarded. The diagnostic job is to compare what the tool checks against what actually failed.
 
     Common symptoms
 
@@ -1947,8 +1948,8 @@ Home
       Tune the monitoring tool to reduce false positives while maintaining sensitivity for real failures.
 
 
-    Support takeaway
-    Interface monitoring issues are usually scope or configuration gaps. A useful ticket should include: the interface path, message type, partner, expected monitoring behavior, actual behavior, monitoring job name, and any recent changes to the interface or monitoring setup.
+    What to capture first
+    Before routing the issue, capture: interface path, message type, partner, expected versus actual monitoring behavior, monitoring job name, and any recent change to the interface or monitoring setup. If the tool reports green while IDocs are stuck in error, the scope or threshold is usually wrong.
 
     Boundaries and non-goals
     This page is a diagnostic frame, not an interface monitoring configuration guide. It does not cover specific monitoring tools (SolMan, SAP Cloud ALM, third-party) or alert routing design. It does not replace SAP's operations documentation.
@@ -3720,7 +3721,7 @@ Home
 
 
     Core idea
-    Vendor master replication moves supplier data from a source system to target systems, often through ALE, CVI, or MDG. When a vendor is missing, has wrong organizational assignments, or creates duplicates, the support goal is to identify whether the issue is in the replication model, the CVI synchronization, key mapping, or the target system's vendor configuration.
+    Vendor master replication moves supplier data through ALE, CVI, or MDG. The failures that matter most are missing purchasing organization or company code data, duplicate vendors in the target, and bank or tax details that differ between source and target. The diagnostic job is to separate replication model gaps from CVI synchronization gaps from key mapping gaps.
 
     Common symptoms
 
@@ -3777,8 +3778,8 @@ Home
       Adjust target number ranges if they conflict with the source numbering.
 
 
-    Support takeaway
-    Vendor replication issues are usually model, mapping, or CVI problems. A useful ticket should include: vendor number, source system, target system, expected views/data, actual result, replication model, and any IDoc or CVI error messages.
+    What to capture first
+    Before routing the issue, capture: vendor number, source and target systems, expected versus actual views, replication model, and any IDoc or CVI error. If CVI is involved, include the BP number and the CVI_LINK status. These facts separate a replication problem from a BP-link problem.
 
     Escalation signals
 

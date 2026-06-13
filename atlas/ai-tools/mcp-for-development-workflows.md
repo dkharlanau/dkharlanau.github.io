@@ -61,9 +61,9 @@ related:
 
 <h2>What MCP is</h2>
 
-<p>The <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> is an open specification for connecting AI hosts such as Claude Code, Cursor, and Codex CLI to external tools and data sources. It defines a standard way for a host to discover tools, invoke them, and receive results over transports such as stdio or HTTP.</p>
+<p>The <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> is an open specification for connecting AI hosts such as Claude Code, Cursor, and Codex CLI to external tools and data sources. It defines a standard way for a host to discover tools, invoke them, and receive results over stdio or HTTP.</p>
 
-<p>MCP is often described as "USB-C for AI." The practical value is that a tool provider can write one server and any MCP-compatible client can use it, reducing the M×N integration problem.</p>
+<p>The practical value is interoperability: a tool provider writes one server and any MCP-compatible host can use it. The protocol does not define security, scope, or approval; those remain the team's responsibility.</p>
 
 <h2>When to use it</h2>
 
@@ -155,6 +155,8 @@ related:
   <li>Do you audit tool calls and their outcomes?</li>
   <li>Have you tested what happens if a server returns malicious or misleading content?</li>
 </ul>
+
+<p>MCP is a promising interoperability layer, not a security model. The hard work is still defining read/write boundaries, scopes, and approval gates; the protocol only makes the integration less custom.</p>
 
 <h2>Related Atlas pages</h2>
 

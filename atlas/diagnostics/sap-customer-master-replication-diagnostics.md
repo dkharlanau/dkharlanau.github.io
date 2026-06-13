@@ -58,7 +58,7 @@ sitemap: true
 
   <div class="note-body">
     <h2>Core idea</h2>
-    <p>Customer master replication moves customer data from a source system to target systems, often through ALE, CVI, or MDG. When a customer is missing, has wrong sales area assignments, or creates duplicates, the support goal is to identify whether the issue is in the replication model, the CVI synchronization, key mapping, or the target system's customer configuration.</p>
+    <p>Customer master replication moves customer data through ALE, CVI, or MDG. The failures that matter most are missing sales area or company code data, duplicate customers in the target, and CVI links that look connected but carry different data. The diagnostic job is to separate replication model gaps from CVI synchronization gaps from key mapping gaps.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -115,8 +115,8 @@ sitemap: true
       <li>Adjust target number ranges if they conflict with the source numbering.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Customer replication issues are usually model, mapping, or CVI problems. A useful ticket should include: customer number, source system, target system, expected views/data, actual result, replication model, and any IDoc or CVI error messages.</p>
+    <h2>What to capture first</h2>
+    <p>Before routing the issue, capture: customer number, source and target systems, expected versus actual views, replication model, and any IDoc or CVI error. If CVI is involved, include the BP number and the CVI_LINK status. These facts separate a replication problem from a BP-link problem.</p>
 
     <h2>Escalation signals</h2>
     <ul>

@@ -62,7 +62,7 @@ related:
 
 <h2>What problem this solves</h2>
 
-<p>Coding agents can produce hundreds of lines of code in minutes. That code may contain hardcoded secrets, vulnerable dependencies, unsafe input handling, or logic that bypasses authorization. Security review must keep pace with generation speed.</p>
+<p>Coding agents produce code faster than a human can review it. The risk is not that the code is always wrong; it is that unsafe patterns slip through because review discipline has not scaled with generation speed. Hardcoded secrets, vulnerable dependencies, and missing input validation are the most common failures.</p>
 
 <h2>When to use it</h2>
 
@@ -85,19 +85,19 @@ related:
 
 <h3>1. Secrets leakage</h3>
 
-<p>Generated code may include placeholder credentials, API keys, or connection strings. Agents trained on public code may reproduce patterns that look like examples but contain real-looking secrets. Use secret-scanning tools and pre-commit hooks.</p>
+<p>Generated code often contains placeholder credentials or connection strings that look like examples but may be real enough to leak. Secret scanning and pre-commit hooks catch what manual review misses.</p>
 
 <h3>2. Dependency and supply-chain risks</h3>
 
-<p>Agents may add dependencies to solve a problem. Those dependencies can be outdated, unmaintained, or malicious. Review every new dependency, check its source, and scan it with software composition analysis tools.</p>
+<p>Agents add dependencies to solve problems quickly. Those dependencies may be outdated, unmaintained, or malicious. Every new package needs a justification and a software-composition scan.</p>
 
 <h3>3. Unsafe generated patterns</h3>
 
-<p>Common issues include SQL injection, cross-site scripting, path traversal, unsafe deserialization, and missing input validation. Treat generated code with the same scrutiny as code from a junior developer.</p>
+<p>SQL injection, cross-site scripting, path traversal, unsafe deserialization, and missing input validation appear in generated code just as they do in junior code. Static analysis helps, but it does not catch business-logic flaws.</p>
 
 <h3>4. Prompt injection through context</h3>
 
-<p>When agents consume external documentation, MCP resources, or repository context, an attacker can embed instructions in that content. This is especially relevant for MCP servers and for agents that fetch web pages. Treat external content as untrusted.</p>
+<p>External documentation, MCP resources, and fetched web pages can carry embedded instructions. Treat any content the agent did not originate as untrusted, especially when it reaches write-capable tools.</p>
 
 <h2>Security tools</h2>
 
@@ -153,6 +153,8 @@ related:
   <li>Are write-capable MCP tools gated by approval?</li>
   <li>Is there a documented incident response path for AI-generated security issues?</li>
 </ul>
+
+<p>The strongest signal of a mature workflow is not the number of scanners; it is whether the team reads AI-generated diffs as carefully as human-written ones.</p>
 
 <h2>Related Atlas pages</h2>
 
