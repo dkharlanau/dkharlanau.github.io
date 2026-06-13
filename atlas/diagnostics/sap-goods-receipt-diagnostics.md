@@ -12,22 +12,29 @@ sap_area: MM inventory management
 business_process: Procure to pay
 status: needs_verification
 verified: false
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
+author: Dzmitryi Kharlanau
 
 tags:
   - procure-to-pay
   - sap-mm
   - diagnostics
   - procurement
+  - goods-receipt
 related: 
   - "/atlas/maps/procure-to-pay-map/"
   - "/atlas/sap/gr-ir-clearing-explained/"
+  - "/atlas/diagnostics/sap-invoice-verification-diagnostics/"
+  - "/atlas/diagnostics/sap-three-way-match-diagnostics/"
+  - "/atlas/diagnostics/sap-purchase-order-creation-diagnostics/"
+  - "/atlas/diagnostics/sap-material-document-diagnostics/"
+  - "/atlas/diagnostics/sap-movement-types-diagnostics/"
 robots: noindex,follow
 short_title: Goods Receipt Diagnostics
 h1: SAP goods receipt diagnostics
 subtitle: Goods receipt is where physical delivery becomes system evidence. Mistakes ripple into stock, invoice matching, and finance.
 sitemap: false
-author: Dzmitryi Kharlanau
+
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/atlas/">Knowledge Atlas</a></li><li><a href="/atlas/diagnostics/">Diagnostics</a></li><li aria-current="page">Goods Receipt Diagnostics</li></ol></nav>
@@ -46,15 +53,15 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP AMS</dd></div><div><dt>Type</dt><dd>diagnostic guide</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP AMS</dd></div><div><dt>Type</dt><dd>diagnostic guide</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
 <h2>Where this fits</h2>
 
-<p>Goods receipt sits at the boundary of inbound logistics, inventory management, invoice verification, and accounting.</p>
+<p>Goods receipt sits at the boundary of inbound logistics, inventory management, invoice verification, and accounting. A posting failure here usually means the physical delivery, the purchase order, the material master, or the user input are not aligned.</p>
 
-<h2>Common issues</h2>
+<h2>Common symptoms</h2>
 
 <ul>
 
@@ -64,31 +71,117 @@ author: Dzmitryi Kharlanau
 
 <li>A receipt was posted too early, too late, with the wrong quantity, or against the wrong reference.</li>
 
+<li>The receipt quantity does not match the invoice quantity, causing a three-way match block.</li>
+
+<li>Stock is visible physically but not in the system, or posted to the wrong plant or storage location.</li>
+
 </ul>
 
-<h2>Diagnostic questions</h2>
+<h2>Likely causes</h2>
 
 <ul>
 
-<li>What was physically received, and what document is the system expecting?</li>
+<li><strong>PO mismatch:</strong> the delivered material, quantity, or unit of measure differs from the purchase order item.</li>
 
-<li>Is the error about quantity, status, account assignment, quality inspection, batch/serial data, or authorization?</li>
+<li><strong>Status block:</strong> the PO item is marked delivery completed, blocked, or deleted.</li>
 
-<li>What changed after the receipt: stock, purchase order history, inspection status, and invoice matching?</li>
+<li><strong>Master data gap:</strong> the material is not extended to the plant or storage location, or the batch/serial profile is inconsistent.</li>
+
+<li><strong>Quality inspection:</strong> the material requires inspection and cannot be posted directly to unrestricted stock.</li>
+
+<li><strong>Movement type issue:</strong> the wrong movement type is used, or the movement type is not configured for the transaction.</li>
+
+<li><strong>Timing issue:</strong> the invoice arrived before the goods receipt, or the receipt was posted against the wrong period.</li>
 
 </ul>
 
-<h2>Stock reconciliation</h2>
-<p>Stock reconciliation aligns system inventory with physical counts. Discrepancies discovered during or after goods receipt indicate process gaps in receiving, recording, or handling.</p>
+<h2>Where to check in SAP</h2>
+
 <ul>
-  <li><strong>Check physical count vs. system:</strong> compare the counted quantity against MMBE or MB52 for the storage location. Identify when the discrepancy first appeared.</li>
-  <li><strong>Check goods receipt documents:</strong> review MKPF/MSEG for the material document to confirm quantity, movement type, and storage location posted.</li>
-  <li><strong>Check for unposted returns:</strong> goods may have been physically returned to the supplier but the return delivery was not posted in the system.</li>
-  <li><strong>Check for partial receipts:</strong> a partial receipt may have been posted against the full PO quantity, or vice versa, creating a quantity mismatch.</li>
-  <li><strong>Check quality inspection status:</strong> stock posted to quality inspection or blocked status is not visible as unrestricted inventory. Verify the usage decision.</li>
-  <li><strong>Check for cross-location posting:</strong> the receipt may have been posted to the wrong storage location or plant.</li>
+
+<li>MIGO / MB01 — goods receipt entry and error messages.</li>
+
+<li>ME23N — purchase order history showing ordered, delivered, and still-to-deliver quantities.</li>
+
+<li>MB52 / MMBE — stock overview to confirm where stock was posted.</li>
+
+<li>MKPF / MSEG — material document header and item details.</li>
+
+<li>QA33 / QE51N — inspection lot status if quality management is involved.</li>
+
 </ul>
-<p>A useful stock reconciliation ticket should include: material number, plant, storage location, physical count, system count, the last goods receipt document number, and whether the discrepancy is recurring for this material or location.</p>
+
+<h2>Key tables / transactions / objects</h2>
+
+<ul>
+
+<li><strong>MKPF</strong> — material document header.</li>
+
+<li><strong>MSEG</strong> — material document items.</li>
+
+<li><strong>EKBE</strong> — purchase order history.</li>
+
+<li><strong>MARD</strong> — storage location stock.</li>
+
+<li><strong>QALS</strong> — inspection lot data.</li>
+
+</ul>
+
+<h2>Diagnostic workflow</h2>
+
+<ol>
+
+<li>Confirm the physical delivery: material, quantity, batch/serial, supplier, and delivery note.</li>
+
+<li>Check the purchase order in ME23N for expected quantity, open quantity, delivery status, and blocks.</li>
+
+<li>Attempt or review the goods receipt posting in MIGO and capture the exact error message.</li>
+
+<li>Verify material master plant/storage location/batch settings and quality inspection requirements.</li>
+
+<li>Check whether stock was already posted elsewhere or the PO was already delivery-completed.</li>
+
+<li>Post the receipt correctly, or document the variance and route to procurement/quality/logistics.</li>
+
+</ol>
+
+<h2>Typical fixes or next actions</h2>
+
+<ul>
+
+<li>Reverse the incorrect receipt and repost against the correct PO item or quantity.</li>
+
+<li>Update the PO quantity or remove the delivery-completed indicator if the delivery is legitimate.</li>
+
+<li>Extend the material master to the required plant/storage location or resolve batch/serial issues.</li>
+
+<li>Process the inspection lot usage decision if stock is held in quality inspection.</li>
+
+<li>Coordinate with procurement if supplier deliveries repeatedly mismatch PO terms.</li>
+
+</ul>
+
+<h2>Support takeaway</h2>
+
+<p>Goods receipt diagnostics should always reconcile physical evidence, purchase order history, and material document data. A useful ticket should include: material number, PO number, delivery note, quantity expected versus received, exact error message, plant/storage location, and whether the issue is recurring.</p>
+
+<h2>Boundaries and non-goals</h2>
+
+<p>This page is a diagnostic frame, not a warehouse management or quality management configuration guide. It does not cover advanced EWM putaway, QM inspection plans, or customs/inbound logistics scenarios.</p>
+
+<h2>Escalation signals</h2>
+
+<ul>
+
+<li>Receipt failures affect multiple users, plants, or materials at the same time.</li>
+
+<li>The issue involves a closed accounting period, inventory valuation, or intercompany transfer.</li>
+
+<li>Quality inspection stock is blocked and operations cannot use the material.</li>
+
+<li>Supplier deliveries repeatedly mismatch PO terms and procurement must review the relationship.</li>
+
+</ul>
 
 </div>
 
@@ -97,6 +190,16 @@ author: Dzmitryi Kharlanau
 <li><a href="/atlas/maps/procure-to-pay-map/">Procure to Pay Map</a></li>
 
 <li><a href="/atlas/sap/gr-ir-clearing-explained/">GR/IR Clearing Explained</a></li>
+
+<li><a href="/atlas/diagnostics/sap-invoice-verification-diagnostics/">SAP Invoice Verification Diagnostics</a></li>
+
+<li><a href="/atlas/diagnostics/sap-three-way-match-diagnostics/">SAP Three-Way Match Diagnostics</a></li>
+
+<li><a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a></li>
+
+<li><a href="/atlas/diagnostics/sap-material-document-diagnostics/">SAP Material Document Diagnostics</a></li>
+
+<li><a href="/atlas/diagnostics/sap-movement-types-diagnostics/">SAP Movement Types Diagnostics</a></li>
 
 </ul></section>
 

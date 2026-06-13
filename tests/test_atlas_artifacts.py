@@ -14,8 +14,8 @@ def test_manifest_json_is_valid():
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.manifest"
     assert data["count"] == 180
-    assert data["verified_count"] == 14
-    assert data["unverified_count"] == 166
+    assert data["verified_count"] == 26
+    assert data["unverified_count"] == 154
     assert len(data["entries"]) == 180
 
 
@@ -25,10 +25,10 @@ def test_related_json_is_valid():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.related"
-    assert data["count"] == 831
+    assert data["count"] == 856
     assert data["broken_link_count"] == 0
     assert data["warnings"] == []
-    assert len(data["edges"]) == 831
+    assert len(data["edges"]) == 856
 
 
 def test_compact_signal_index_is_valid():

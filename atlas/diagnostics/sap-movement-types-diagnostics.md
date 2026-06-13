@@ -9,9 +9,10 @@ subdomain: Inventory management
 concept_type: diagnostic guide
 sap_area: "MM inventory management"
 business_process: Procure to pay / Inventory
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -23,8 +24,10 @@ related:
   - /atlas/diagnostics/sap-goods-receipt-diagnostics/
   - /atlas/diagnostics/sap-material-document-diagnostics/
   - /atlas/sap/sap-mm-procurement-overview/
-robots: noindex,follow
-sitemap: false
+  - /atlas/diagnostics/sap-stock-transfer-diagnostics/
+  - /atlas/diagnostics/sap-reservation-diagnostics/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +51,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Procure to pay / Inventory</dd></div>
       <div><dt>SAP area</dt><dd>MM inventory management</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until movement type behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -112,6 +115,14 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>Movement type errors are often user selection issues, not system bugs. Before escalating, collect the material document number, the movement type used, the expected movement type, the material, plant, and storage location. A useful movement type ticket should show the business intent and the system result.</p>
+
+    <h2>Escalation signals</h2>
+    <ul>
+      <li>The same wrong movement type is used repeatedly, suggesting training or process design issues.</li>
+      <li>A correction movement affects inventory valuation, financial accounts, or month-end closing.</li>
+      <li>The movement type behavior differs between plants or clients and configuration review is needed.</li>
+      <li>The issue involves special stock (consignment, subcontracting, pipeline) with accounting implications.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a movement type configuration guide. It does not cover custom movement type design, WM movement types, or EWM-specific logic. It does not replace SAP's inventory management documentation.</p>

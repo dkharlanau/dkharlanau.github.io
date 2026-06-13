@@ -9,9 +9,10 @@ subdomain: Master data and MDG
 concept_type: diagnostic guide
 sap_area: "Customer master / CVI / replication"
 business_process: Master data governance
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -24,8 +25,10 @@ related:
   - /atlas/diagnostics/sap-cvi-synchronization-diagnostics/
   - /atlas/diagnostics/sap-key-mapping-diagnostics/
   - /atlas/data-quality/sap-master-data-quality/
-robots: noindex,follow
-sitemap: false
+  - /atlas/diagnostics/sap-bp-relationship-diagnostics/
+  - /atlas/data-quality/master-data-governance-failure-modes/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -49,7 +52,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Master data governance</dd></div>
       <div><dt>SAP area</dt><dd>Customer master / CVI / replication</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until customer master replication behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -114,6 +117,14 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>Customer replication issues are usually model, mapping, or CVI problems. A useful ticket should include: customer number, source system, target system, expected views/data, actual result, replication model, and any IDoc or CVI error messages.</p>
+
+    <h2>Escalation signals</h2>
+    <ul>
+      <li>Customer data is missing or wrong in downstream sales, billing, or service systems.</li>
+      <li>Replication failures affect a key account, distribution channel, or sales organization.</li>
+      <li>A duplicate customer was created and needs merging with approval from sales and finance.</li>
+      <li>The issue involves tax classification, credit segment, or partner function changes beyond standard support scope.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a customer replication configuration guide. It does not cover CVI setup, replication model design, or customer account group configuration. It does not replace SAP's customer master documentation.</p>

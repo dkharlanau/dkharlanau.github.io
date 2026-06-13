@@ -9,9 +9,10 @@ subdomain: Inventory management
 concept_type: diagnostic guide
 sap_area: "MM inventory management"
 business_process: Inventory / Logistics
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -23,8 +24,9 @@ related:
   - /atlas/diagnostics/sap-movement-types-diagnostics/
   - /atlas/diagnostics/sap-material-document-diagnostics/
   - /atlas/diagnostics/sap-goods-receipt-diagnostics/
-robots: noindex,follow
-sitemap: false
+  - /atlas/concepts/sap-stock-exists-not-promisable/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +50,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Inventory / Logistics</dd></div>
       <div><dt>SAP area</dt><dd>MM inventory management</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until stock transfer behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -122,6 +124,14 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>Stock transfer issues are usually process gaps between shipping and receiving, not system errors. A useful stock transfer ticket should include: source plant, destination plant, material, transfer document or PO number, goods issue document, expected receipt date, and current in-transit quantity.</p>
+
+    <h2>Escalation signals</h2>
+    <ul>
+      <li>Stock is physically in transit but missing in the receiving plant, or vice versa, with financial impact.</li>
+      <li>The transfer involves intercompany valuation, tax, or customs requirements beyond standard plant-to-plant posting.</li>
+      <li>Multiple materials or plants show the same stock transfer discrepancy, indicating a configuration issue.</li>
+      <li>The case requires a correction posting that affects inventory valuation or month-end closing.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a stock transfer configuration guide. It does not cover EWM-managed transfers, cross-company code transfers with intercompany billing, or pipeline materials. It does not replace SAP's logistics documentation.</p>

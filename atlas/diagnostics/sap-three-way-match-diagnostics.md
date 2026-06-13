@@ -9,9 +9,10 @@ subdomain: Procurement finance control
 concept_type: diagnostic guide
 sap_area: "MM / FI / invoice verification"
 business_process: Procure to pay
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-09
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 tags:
   - procure-to-pay
@@ -24,8 +25,10 @@ related:
   - /atlas/diagnostics/sap-goods-receipt-diagnostics/
   - /atlas/diagnostics/sap-invoice-split-analysis/
   - /atlas/sap/sap-mm-procurement-overview/
-robots: noindex,follow
-sitemap: false
+  - /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
+  - /atlas/maps/procure-to-pay-map/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -49,7 +52,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Procure to pay</dd></div>
       <div><dt>SAP area</dt><dd>MM / FI / invoice verification</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -116,6 +119,14 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>Three-way match failures are rarely a single-document problem. The operator should trace PO → GR → Invoice in that order, confirm which document is the outlier, and decide whether the fix is data correction or process change. Never clear GR/IR blindly without understanding why the mismatch occurred.</p>
+
+    <h2>Escalation signals</h2>
+    <ul>
+      <li>The PO, GR, and invoice quantities or prices diverge by more than the business tolerance and root cause is unclear.</li>
+      <li>The mismatch points to a recurring supplier issue or possible fraud (duplicate invoices, altered PO prices).</li>
+      <li>Clearing the GR/IR account requires a manual adjustment that affects financial reporting or audit trails.</li>
+      <li>The case involves subcontracting, consignment, or pipeline materials where standard three-way matching does not apply.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This guide does not cover vendor master data issues, tax jurisdiction configuration, or custom invoice validation enhancements. It also does not replace SAP standard help or company-specific approval workflows.</p>

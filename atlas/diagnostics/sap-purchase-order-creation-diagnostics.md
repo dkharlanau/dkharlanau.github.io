@@ -9,9 +9,10 @@ subdomain: Procurement and logistics
 concept_type: diagnostic guide
 sap_area: "MM purchasing"
 business_process: Procure to pay
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -24,8 +25,9 @@ related:
   - /atlas/diagnostics/sap-source-determination-diagnostics/
   - /atlas/diagnostics/sap-release-strategy-diagnostics/
   - /atlas/diagnostics/sap-purchase-requisition-diagnostics/
-robots: noindex,follow
-sitemap: false
+  - /atlas/diagnostics/sap-invoice-verification-diagnostics/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -49,7 +51,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Procure to pay</dd></div>
       <div><dt>SAP area</dt><dd>MM purchasing</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until PO creation behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -115,6 +117,14 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>PO creation blocks are usually master data or sourcing issues, not system bugs. A useful ticket should include: the PR number (if converting), material, plant, supplier, error message, transaction code, and whether the issue is new or recurring.</p>
+
+    <h2>Escalation signals</h2>
+    <ul>
+      <li>PO creation fails for many users or plants, indicating a configuration or authorization change.</li>
+      <li>The error relates to tax calculation, account assignment, or commitment logic that finance must validate.</li>
+      <li>A supplier contract or info record appears incorrect and procurement must confirm the commercial terms.</li>
+      <li>The issue blocks a business-critical procurement category or affects legal/compliance requirements.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a PO configuration guide. It does not cover release strategy setup, approval workflow design, or MRP batch scheduling. It does not replace SAP's purchasing documentation.</p>

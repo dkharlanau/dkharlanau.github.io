@@ -9,9 +9,10 @@ subdomain: Master data and MDG
 concept_type: diagnostic guide
 sap_area: "BP / MDG / replication"
 business_process: Master data governance
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -24,8 +25,10 @@ related:
   - /atlas/diagnostics/sap-customer-master-replication-diagnostics/
   - /atlas/diagnostics/sap-key-mapping-diagnostics/
   - /atlas/data-quality/sap-master-data-quality/
-robots: noindex,follow
-sitemap: false
+  - /atlas/diagnostics/sap-cvi-synchronization-diagnostics/
+  - /atlas/data-quality/master-data-governance-failure-modes/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -49,7 +52,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Master data governance</dd></div>
       <div><dt>SAP area</dt><dd>BP / MDG / replication</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until business partner replication behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -114,6 +117,14 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>BP replication issues are usually model, mapping, or data quality problems. A useful ticket should include: BP number, source system, target system, expected roles/data, actual result, replication model name, and any error messages from the replication log or IDoc status.</p>
+
+    <h2>Escalation signals</h2>
+    <ul>
+      <li>Replication failures affect many business partners or all target systems.</li>
+      <li>A duplicate BP was created in a target system and needs data steward or business approval to merge.</li>
+      <li>The issue involves key mapping, number ranges, or BP grouping changes that require MDG/ BASIS involvement.</li>
+      <li>Missing bank, tax, or address data has compliance, payment, or reporting impact.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a BP replication configuration guide. It does not cover MDG replication model design, key mapping setup, or BP grouping configuration. It does not replace SAP's master data governance documentation.</p>

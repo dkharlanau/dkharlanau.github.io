@@ -11,7 +11,7 @@ sap_area: "IDoc / ALE / EDI"
 business_process: Integration
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-05
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -23,6 +23,7 @@ related:
   - /atlas/diagnostics/idoc-aif-integration-diagnostics/
   - /atlas/diagnostics/sap-inbound-processing-diagnostics/
   - /atlas/diagnostics/sap-outbound-processing-diagnostics/
+  - /atlas/diagnostics/sap-idoc-diagnostics/
 robots: noindex,follow
 sitemap: false
 ---

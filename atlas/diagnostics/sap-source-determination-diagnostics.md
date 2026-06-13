@@ -9,9 +9,10 @@ subdomain: Procurement and logistics
 concept_type: diagnostic guide
 sap_area: "MM purchasing"
 business_process: Procure to pay
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -23,8 +24,9 @@ related:
   - /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
   - /atlas/diagnostics/sap-purchasing-info-record-diagnostics/
   - /atlas/sap/sap-mm-procurement-overview/
-robots: noindex,follow
-sitemap: false
+  - /atlas/maps/procure-to-pay-map/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +50,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Procure to pay</dd></div>
       <div><dt>SAP area</dt><dd>MM purchasing</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until source determination behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -113,6 +115,14 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>Source determination failures are almost always master data gaps. A useful ticket should include: material, plant, purchasing organization, the expected supplier, the transaction where the failure appeared, and whether a source list or info record ever existed.</p>
+
+    <h2>Escalation signals</h2>
+    <ul>
+      <li>No valid source is found for a material across multiple plants or purchasing organizations.</li>
+      <li>The selected source conflicts with an existing contract, quota arrangement, or procurement policy.</li>
+      <li>Info records or outline agreements appear incorrect and procurement must confirm commercial validity.</li>
+      <li>The issue affects a strategic material category or regulatory sourcing requirement.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a source determination configuration guide. It does not cover MRP sourcing logic, scheduling agreements, or outline agreements. It does not replace SAP's purchasing documentation.</p>
