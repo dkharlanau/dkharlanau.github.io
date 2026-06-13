@@ -68,6 +68,11 @@ related:
       <p>AI-assisted support, operational memory, governance, and human review patterns.</p>
       <span class="link-arrow">Open AI operations</span>
     </a>
+    <a class="atlas-card" href="/atlas/ai-tools/">
+      <h2>AI Tools</h2>
+      <p>Repository context packaging, coding agents, MCP, AI code review, testing, and security.</p>
+      <span class="link-arrow">Open AI tools</span>
+    </a>
     <a class="atlas-card" href="/atlas/data-quality/">
       <h2>Data Quality</h2>
       <p>Master data, quality signals, governance failure modes, and operational data problems.</p>

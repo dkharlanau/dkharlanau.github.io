@@ -3,7 +3,7 @@ layout: default
 title: "Skill Hub — Practical Working Skills for Enterprise Consultants and AI Agents"
 description: "A library of practical working skills for enterprise consultants, business analysts, data consultants, solution architects, integration architects, SAP AMS consultants, and AI agents. Not a glossary. Not a framework encyclopedia. Usable work skills."
 permalink: /skill-hub/
-last_modified_at: 2026-06-12
+last_modified_at: 2026-06-13
 status: reviewed
 verified: true
 ---
@@ -26,6 +26,7 @@ verified: true
     <a class="button" href="/skill-hub/architecture/">Architecture skills</a>
     <a class="button" href="/skill-hub/integration-architecture/">Integration skills</a>
     <a class="button" href="/skill-hub/sap-ams/">SAP AMS skills</a>
+    <a class="button" href="/skill-hub/ai-assisted-development/">AI-assisted development skills</a>
   </div>
 </section>
 
@@ -122,6 +123,10 @@ verified: true
     <div class="topic-card">
       <h3><a href="/skill-hub/ai-assisted-analysis/">AI-Assisted Analysis</a></h3>
       <p>Validate AI output, AI-assisted documentation review, AI-assisted test case generation, AI-assisted meeting synthesis, AI-assisted status reporting, AI prompt briefing, convert notes to requirements, business problem to backlog.</p>
+    </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/ai-assisted-development/">AI-Assisted Development</a></h3>
+      <p>Repository context packing with Repomix, coding agent task design, AI-generated code review, AI tool selection, and MCP development workflows.</p>
     </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/architecture/">Architecture</a></h3>
@@ -249,6 +254,15 @@ verified: true
     <li><a href="/skill-hub/decision-validation/test-scenario-derivation-working-skill/">Test Scenario Derivation</a></li>
     <li><a href="/skill-hub/testing-quality-delivery/test-case-design-working-skill/">Test Case Design</a></li>
     <li><a href="/skill-hub/work-documentation-handover/handover-note-writing-working-skill/">Handover Note Writing</a></li>
+  </ol>
+
+  <h3>AI-Assisted Development Path</h3>
+  <ol>
+    <li><a href="/skill-hub/ai-assisted-development/ai-tool-selection-for-development/">AI Tool Selection for Development</a></li>
+    <li><a href="/skill-hub/ai-assisted-development/repository-context-packing-with-repomix/">Repository Context Packing with Repomix</a></li>
+    <li><a href="/skill-hub/ai-assisted-development/ai-coding-agent-task-design/">AI Coding Agent Task Design</a></li>
+    <li><a href="/skill-hub/ai-assisted-development/ai-generated-code-review/">AI-Generated Code Review</a></li>
+    <li><a href="/skill-hub/ai-assisted-development/mcp-development-workflow/">MCP Development Workflow</a></li>
   </ol>
 
   <h3>AI-Assisted Documentation Path</h3>
