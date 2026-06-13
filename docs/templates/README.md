@@ -45,12 +45,13 @@ sitemap: false           # Remove only when reviewed and verified
 
 - Read the [Author and Editorial Profile](../content/author-editorial-profile.md) before writing or editing. It is mandatory input, not optional style advice.
 - Use the profile as a decision system for voice, density, and what to remove. Do not copy phrases or repeat prior article patterns mechanically.
+- No generic AI prose, filler, inflated adjectives, decorative introductions, or forced conclusions.
 - No private or client-specific data. Use generic process language.
 - No hype, no exclamation points, no promotional fluff.
 - One claim per paragraph. Short sentences.
 - Every factual claim needs a source.
 - Confidence levels: `high` (verified against source), `medium` (plausible, one source), `low` (speculative, needs verification).
-- A short, balanced personal author comment may be added near the end of an article when it improves the page; omit it if the topic does not need one.
+- An author perspective may appear near the end when it adds judgment, caution, or interpretation. It must be natural, integrated, and optional. Do not force it, do not use cliché labels such as "My take" or "Author's note" by default, and do not invent personal stories.
 - Tag examples: `sap-ams`, `integration`, `master-data`, `ai-ops`, `diagnostics`, `o2c`, `p2p`.
 
 ## Article creation checklist
@@ -60,8 +61,8 @@ Before submitting a new or updated article:
 - [ ] Profile read — `docs/content/author-editorial-profile.md` and `AGENTS.md` reviewed.
 - [ ] Page type understood — template and collection rules match the content type.
 - [ ] Facts/source boundaries respected — every factual claim has a source; no invented credentials, incidents, or client details.
-- [ ] Author comment decided — added only if it improves the page; omitted if it would add noise.
-- [ ] No generic AI filler — vague adjectives, decorative introductions, and repeated patterns removed.
+- [ ] Author perspective decided — added only if it improves the page; omitted if it would add noise. No cliché labels such as "My take" or "Author's note" by default.
+- [ ] No generic AI filler — vague adjectives, decorative introductions, repeated patterns, and forced conclusions removed.
 
 ## Sample output
 

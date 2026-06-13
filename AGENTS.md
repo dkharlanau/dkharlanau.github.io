@@ -123,14 +123,14 @@ Before writing or editing any **article-like content**, agents must read, in ord
 
 **Article-like content** includes Atlas pages, Skill Hub pages, scenarios, diagnostics pages, blog/articles, glossary expansions with explanatory prose, public-facing guides, content clusters, and SEO/AI-readable educational pages.
 
-The profile is **mandatory input**, not optional style advice. Apply it as a decision system for practical expert framing, clear problem → diagnostic → action structure, sober non-hype language, optional author/editorial comments, and avoiding generic AI-written prose.
+The profile is **mandatory input**, not optional style advice. Apply it as a decision system for practical expert framing, clear problem → diagnostic → action structure, sober non-hype language, optional author perspective, and avoiding generic AI-written prose.
 
 Rules:
 
 - The profile is a **decision system**, not a fixed article template. Do not mechanically copy phrases, examples, or prior article patterns.
 - Do not use the profile to invent personal claims, add unverifiable experience, over-personalize technical pages, replace source-backed facts, change indexing policy, stuff keywords, or paste the same author comment into every article.
 - Apply strong informational editing: remove filler, vague wording, decorative language, and claims that do not help the reader act.
-- A short, balanced personal author comment may be added near the end of an article when it improves the page, but it is optional and must not be forced into every page.
+- An author perspective may appear near the end of an article when it adds useful judgment, caution, or interpretation. It must be natural, integrated, and restrained. Do not force it, do not use cliché labels such as "My take" or "Author's note" by default, and do not invent personal stories.
 
 ## Verification / Indexing Rules
 

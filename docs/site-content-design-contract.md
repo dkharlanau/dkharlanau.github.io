@@ -45,8 +45,10 @@ The profile is mandatory input before drafting or editing. It governs:
 - practical expert framing
 - clear problem → diagnostic → action structure
 - sober, non-hype language
-- optional author/editorial comment when useful
-- avoidance of generic AI-written prose
+- natural, optional author perspective when useful
+- avoidance of generic AI-written prose and forced conclusions
+
+Agents must actively revise text that sounds generated. Cliché labels such as "My take", "Author's note", or "Key takeaway" should not be used by default.
 
 The profile governs editorial framing and voice, not schema, indexing, verification, or structured-data policy. Those remain under `docs/ai/CONTENT_VERIFICATION_POLICY.md`, the page frontmatter, and this contract.
 

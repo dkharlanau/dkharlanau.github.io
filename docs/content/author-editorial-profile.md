@@ -19,26 +19,22 @@ Answer these questions before drafting or editing:
 * What problem does the page diagnose or clarify?
 * What should the reader do differently after reading?
 * What must be source-backed, and what is only framing?
-* Is an author/editorial comment useful here, or would it add noise?
+* Is an author perspective useful here, or would it add noise?
 * Does the draft avoid generic AI prose, hype, and decorative filler?
 
 If the page does not change how a practitioner thinks or acts, revise or do not publish it.
 
 ## Author position
 
-Dzmitryi Kharlanau writes as a practical SAP consultant and AI-systems builder.
+Dzmitryi Kharlanau writes as a practical SAP consultant and AI-systems builder. His perspective comes from operational work: incidents, unclear ownership, repeated analysis, weak handovers, master-data problems, integration failures, configuration ambiguity, and delivery pressure.
 
-The author’s perspective is operational, not promotional. He is interested in how systems actually fail, how people diagnose problems, how knowledge is lost, how support teams repeat work, and how better structures can improve execution.
-
-The text should feel written by someone who understands enterprise work from the inside: incidents, configuration gaps, master-data issues, unclear ownership, handovers, integration failures, delivery pressure, and incomplete context.
+The text should feel written by someone who has been inside enterprise support and implementation work. It should show that the author understands how systems fail in practice, how diagnosis gets delayed, how knowledge gets lost between teams, and how better structure changes execution.
 
 The author does not write to impress. He writes to reduce confusion and make action easier.
 
-## Core editorial intent
+## Editorial judgment
 
-Every text must earn its place by helping the reader understand, diagnose, decide, or act.
-
-Before writing or expanding a page, identify the practical job of the text. If the page does not help the reader do anything more clearly, it is too weak.
+Every text must earn its place by helping the reader understand, diagnose, decide, or act. Before writing or expanding a page, identify the practical job of the text. If the page does not help the reader do anything more clearly, it is too weak.
 
 The text should not merely describe a topic. It should organize the problem so that a practitioner can think better about it.
 
@@ -51,25 +47,53 @@ Good writing here means:
 * fewer false assumptions
 * better operational judgment
 
-## Audience model
+When choosing what matters:
 
-Write for competent, busy practitioners.
-
-Assume the reader has enough background to work with SAP, enterprise systems, AI tooling, or technical operations, but does not have unlimited time or full context.
-
-Do not write for absolute beginners unless the page explicitly requires it. Do not over-explain obvious concepts. Do not hide useful complexity.
-
-The reader should feel that the page respects their time.
+* Start from the reader's problem, not from a definition.
+* Prefer the detail that changes a decision over the detail that looks complete.
+* Keep the operational friction visible: who owns this, what breaks, what is usually missed.
+* Do not pad with general context the practitioner already knows.
+* Do not hide uncertainty behind confident generalizations.
 
 ## Voice
 
-The voice should be calm, practical, precise, and low-drama.
-
-Avoid excitement, motivational tone, sales language, and inflated claims. Do not write like a vendor brochure, startup landing page, generic SEO article, or academic abstract.
-
-The author’s voice is direct but not rough. Skeptical but not cynical. Practical but not shallow.
+The voice is practical, operational, precise, and calm. It is skeptical where needed, useful before polished, human but not chatty, experienced but not self-promotional, direct but not rude, compact but not shallow.
 
 The preferred effect is quiet competence.
+
+Avoid:
+
+* excitement, motivational tone, sales language, inflated claims
+* vendor brochure phrasing
+* startup landing page cadence
+* generic SEO article structure
+* academic abstraction
+* corporate filler that sounds professional but adds no decision value
+
+The author does not perform expertise. He explains what matters and why.
+
+## Anti-AI rules
+
+Generated-looking prose is unacceptable. Actively revise any draft that contains:
+
+* generic openings that could start any article
+* generic conclusions that restate the obvious
+* inflated adjectives without operational meaning
+* fake completeness — claims that every case fits one pattern
+* repeated section patterns copied from prior pages
+* over-balanced neutral filler that refuses to judge
+* vague "important to note" or "it is worth mentioning" phrasing
+* keyword stuffing or phrases chosen for search engines rather than readers
+* advice so general it could apply to any system
+* abstract claims without concrete operational meaning
+* mechanical lists where a paragraph would be clearer
+* mechanical paragraphs where a list would be clearer
+* forced personal comments or author notes
+* phrases copied from prompts or editorial docs
+* examples copied from templates
+* rigid diagnostic structure when the topic needs another shape
+
+If a sentence sounds like it could have been produced by a generic AI summary, rewrite it. Remove filler, add specificity, and ground the claim in the actual system or workflow being discussed.
 
 ## Density over length
 
@@ -118,21 +142,21 @@ The page should guide investigation without pretending that every case has one s
 
 ## SAP Atlas writing logic
 
-Atlas pages should be diagnostic working notes, not encyclopedia pages.
+Atlas pages are diagnostic working notes, not encyclopedia entries. They should read like operational material that helps a support consultant, analyst, or operations engineer think through a real issue.
 
-The article should help the reader understand where an issue usually comes from, what evidence matters, what checks make sense, and what actions are reasonable.
+A good Atlas page gives the reader:
 
-Do not force a rigid structure if the topic needs another shape. Still, each page should have a clear diagnostic spine:
+* the failure pattern and why it matters
+* observable symptoms
+* likely causes grouped by master data, configuration, integration, timing, or ownership
+* where to check and what evidence matters
+* boundaries and non-goals
+* concrete next diagnostic or remediation steps
+* honest limitations
 
-* what kind of problem this is
-* how it usually appears
-* why it happens
-* where to investigate
-* what evidence matters
-* what next actions are sensible
-* what limitations remain
+Do not force a rigid structure if the topic needs another shape. Still, each page should have a clear diagnostic spine.
 
-Avoid generic module descriptions. Prefer operational reasoning.
+Avoid generic module descriptions. Prefer operational reasoning: what fails, how it appears, what evidence separates one cause from another, and what a reasonable next action looks like.
 
 ## AI and tooling writing logic
 
@@ -163,27 +187,32 @@ Headings should help navigation and decision-making. They should not be decorati
 
 The article should be easy to scan, but not shallow.
 
-## Personal author comment
+## Author perspective
 
-When appropriate, add a short personal, balanced author comment near the end of the article.
+When a page would be stronger with a short, natural judgment from the author, add it. Do not force it. Do not use a fixed section title such as "My take", "Author's note", "Key takeaway", or "Final thoughts" unless the specific page genuinely benefits from that label.
 
-This comment should not be emotional, promotional, or self-centered. It should add judgment: what the author considers important, what is often underestimated, what should be treated carefully, or what practical conclusion follows from the article.
+The author perspective should be integrated, restrained, and useful. It may appear as:
 
-The author comment should feel like a measured professional note from Dzmitryi, not like a generic conclusion.
+* a closing paragraph that adds interpretation
+* a short caution about what is often underestimated
+* a practical implication the reader should not miss
+* a prioritization note that helps the reader decide what to check first
+* a restrained observation about where the real risk usually sits
 
-Rules for this section:
+It should add one of these: judgment, prioritization, caution, operational interpretation, practical implication, or a warning about a common blind spot.
+
+Rules:
 
 * Keep it short.
 * Do not invent personal stories.
 * Do not claim direct experience with a specific incident unless the source material explicitly supports it.
 * Do not use dramatic language.
 * Do not repeat the article summary.
-* Add judgment, caution, prioritization, or a practical interpretation.
-* If the topic does not need a personal author comment, omit it.
-* If added, make it clearly separate from the main diagnostic body.
-* The comment must sound thoughtful and restrained.
+* Do not say "I" unless the wording genuinely benefits from it and sounds natural.
+* If the topic does not need an author perspective, omit it.
+* If added, keep it clearly separate from the main diagnostic body but do not isolate it under a performative heading.
 
-The purpose of this section is to make the page feel authored, not generated.
+The purpose is to make the page feel authored by a thinking practitioner, not generated by a system.
 
 ## Handling uncertainty
 
@@ -245,7 +274,7 @@ Ask:
 * Are claims supported or cautiously framed?
 * Is the structure natural for this topic?
 * Does the text sound human, calm, and competent?
-* Is the personal author comment useful if one was added?
+* Is the author perspective useful if one was added?
 * Would Dzmitryi be comfortable publishing this under his name?
 
 If the answer is weak, revise before returning the result.
