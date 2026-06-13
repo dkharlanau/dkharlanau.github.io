@@ -39,6 +39,9 @@ collections:
   news:
     output: true
     permalink: /news/:slug/
+  glossary:
+    output: true
+    permalink: /atlas/glossary/:path/
 defaults:
   - scope:
       path: ""
@@ -60,6 +63,15 @@ defaults:
       type: news
     values:
       layout: note
+  - scope:
+      path: ""
+      type: glossary
+    values:
+      layout: default
+      robots: noindex, follow
+      sitemap: false
+      status: needs_verification
+      verified: false
   - scope:
       path: "agent-skills/skills"
     values:

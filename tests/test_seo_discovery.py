@@ -2,6 +2,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from typing import Optional
 
 import pytest
 
@@ -458,8 +459,35 @@ def _collect_ids(obj: object, ids: list, top_level: bool = True) -> None:
             _collect_ids(item, ids, top_level=False)
 
 
+def _collect_types(obj: object, types: Optional[set] = None) -> set:
+    if types is None:
+        types = set()
+    if isinstance(obj, dict):
+        item_type = obj.get("@type")
+        if isinstance(item_type, str):
+            types.add(item_type)
+        elif isinstance(item_type, list):
+            types.update(t for t in item_type if isinstance(t, str))
+        for value in obj.values():
+            _collect_types(value, types)
+    elif isinstance(obj, list):
+        for item in obj:
+            _collect_types(item, types)
+    return types
+
+
+ALLOWED_NOINDEX_JSONLD_TYPES = {
+    "DefinedTerm",
+    "DefinedTermSet",
+}
+
+
 def test_built_site_no_jsonld_on_noindex_pages():
-    """No JSON-LD blocks should appear on pages that are robots:noindex."""
+    """No rich-result JSON-LD blocks should appear on pages that are robots:noindex.
+
+    Machine-readable metadata types such as DefinedTerm and DefinedTermSet are
+    allowed on intentionally noindex glossary pages.
+    """
     site_dir = REPO_ROOT / "_site"
     if not site_dir.exists():
         pytest.skip("_site not built; run Jekyll build first")
@@ -469,8 +497,20 @@ def test_built_site_no_jsonld_on_noindex_pages():
         content = html_path.read_text(encoding="utf-8", errors="ignore")
         robots_match = META_ROBOTS_RE.search(content)
         robots = robots_match.group(1).lower() if robots_match else ""
-        if "noindex" in robots and SCRIPT_LD_RE.search(content):
-            failures.append(f"{html_path.relative_to(site_dir)}: JSON-LD on noindex page")
+        if "noindex" not in robots:
+            continue
+        blocks = SCRIPT_LD_RE.findall(content)
+        if not blocks:
+            continue
+        for block in blocks:
+            try:
+                data = json.loads(block)
+            except json.JSONDecodeError:
+                failures.append(f"{html_path.relative_to(site_dir)}: invalid JSON-LD on noindex page")
+                break
+            if not _collect_types(data).issubset(ALLOWED_NOINDEX_JSONLD_TYPES):
+                failures.append(f"{html_path.relative_to(site_dir)}: JSON-LD on noindex page")
+                break
 
     assert not failures, "JSON-LD found on noindex pages:\n" + "\n".join(failures[:50])
 

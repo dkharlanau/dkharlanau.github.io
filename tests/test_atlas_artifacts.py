@@ -42,6 +42,23 @@ def test_compact_signal_index_is_valid():
     assert data["fallback"]["decision"] == "needs_research"
 
 
+def test_verified_pages_json_is_valid():
+    path = REPO_ROOT / "ai" / "verified-pages.json"
+    assert path.exists(), "verified-pages.json missing"
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    assert data["schema"] == "dkharlanau.site.verified_pages"
+    assert data["count"] == len(data["entries"])
+    assert data["count"] > 0
+    assert data["collections"]
+    for entry in data["entries"]:
+        assert entry["url"].startswith("/"), f"Invalid URL: {entry.get('url')}"
+        assert entry["title"], f"Missing title for {entry.get('url')}"
+        assert entry["type"] in data["collections"], f"Unknown type {entry.get('type')} for {entry.get('url')}"
+        assert entry.get("verified") is True
+        assert entry.get("status") == "reviewed"
+
+
 def test_manifest_no_private_paths():
     path = REPO_ROOT / "atlas" / "manifest.json"
     with open(path, "r", encoding="utf-8") as f:
@@ -78,13 +95,22 @@ def test_related_json_no_private_paths():
         assert pattern not in text, f"related.json contains forbidden pattern: {pattern}"
 
 
+def test_verified_pages_no_private_paths():
+    path = REPO_ROOT / "ai" / "verified-pages.json"
+    with open(path, "r", encoding="utf-8") as f:
+        text = f.read()
+    forbidden = ["source_files", "private-source", "kb-drafts", "/Users/", ".env"]
+    for pattern in forbidden:
+        assert pattern not in text, f"verified-pages.json contains forbidden pattern: {pattern}"
+
+
 def test_no_linkedin_export_names_in_artifacts():
-    for name in ["manifest.json", "llms-full.txt", "related.json", "atlas-compact-index.json"]:
+    for name in ["manifest.json", "llms-full.txt", "related.json", "atlas-compact-index.json", "verified-pages.json"]:
         if name == "manifest.json":
             path = REPO_ROOT / "atlas" / name
         elif name == "related.json":
             path = REPO_ROOT / "ai" / "rag" / name
-        elif name == "atlas-compact-index.json":
+        elif name in ("atlas-compact-index.json", "verified-pages.json"):
             path = REPO_ROOT / "ai" / name
         else:
             path = REPO_ROOT / name
