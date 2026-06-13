@@ -156,6 +156,18 @@ Rules:
     {% if page.dependencies %},
   "dependencies": {{ page.dependencies | jsonify }}{% endif %}
   {% endif %}
+  {% if page.sources %},
+  "citation": [
+    {% for source in page.sources %}
+    {
+      "@type": "WebPage",
+      "name": {{ source.title | default: source.url | jsonify }},
+      "url": {{ source.url | jsonify }}
+      {% if source.date %},
+      "datePublished": "{{ source.date | date_to_xmlschema }}"{% endif %}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]{% endif %}
 }
 </script>
 {% endif %}
