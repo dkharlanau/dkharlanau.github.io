@@ -12,6 +12,7 @@ sap_area: Master data / MDG-adjacent
 business_process: Cross-process operations
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-05-06
 
 tags:
@@ -22,7 +23,8 @@ related:
   - "/atlas/data-quality/master-data-governance-failure-modes/"
   - "/atlas/ai-operations/ai-ready-process-documentation/"
   - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: SAP Master Data Quality
 h1: SAP master data quality
 subtitle: Master data quality is not an abstract data-management concern. In SAP support, it is often the hidden cause behind blocked processes and repeated tickets.

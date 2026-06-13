@@ -12,6 +12,7 @@ sap_area: Developer automation / support tooling
 business_process: Knowledge work
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-05-06
 
 tags:
@@ -22,7 +23,8 @@ related:
   - "/atlas/automation/rule-based-automation-vs-ai/"
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/ai-operations/ai-ready-process-documentation/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: Agent-Assisted Development Workflows
 h1: Agent-assisted development workflows
 subtitle: Agentic workflows are useful when they turn goals into inspected, traceable work. They are risky when they hide assumptions or change systems without review.

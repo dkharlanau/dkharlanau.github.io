@@ -12,6 +12,7 @@ sap_area: SD / FI / logistics integration
 business_process: Order to cash
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-05-06
 
 tags:
@@ -23,7 +24,8 @@ related:
   - "/atlas/diagnostics/sap-invoice-split-analysis/"
   - "/atlas/concepts/sap-atp-is-not-inventory/"
   - "/atlas/concepts/sap-stock-exists-not-promisable/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: Order to Cash Map
 h1: Order to cash map
 subtitle: A map for tracing where an O2C process stopped and which evidence should exist at each stage.
