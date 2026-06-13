@@ -191,6 +191,7 @@ python3 scripts/check_public_repo.py
 bundle exec jekyll build
 python3 scripts/check_links.py _site
 python3 scripts/check_seo.py _site
+python3 scripts/check_page_quality.py --site-dir _site --fail-on-critical
 ```
 
 Run the smallest relevant set first, then the full sequence before publishing.
