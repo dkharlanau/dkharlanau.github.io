@@ -282,8 +282,9 @@ def test_llms_full_excludes_unverified_pages():
         for e in manifest["entries"]
         if not (e.get("verified") and e.get("status") == "reviewed")
     ]
+    lines = {line.strip() for line in text.splitlines()}
     for title in unverified_titles:
-        assert f"PAGE: {title}" not in text, f"llms-full.txt should not contain unverified: {title}"
+        assert f"PAGE: {title}" not in lines, f"llms-full.txt should not contain unverified: {title}"
 
 
 def test_llms_full_no_private_paths():

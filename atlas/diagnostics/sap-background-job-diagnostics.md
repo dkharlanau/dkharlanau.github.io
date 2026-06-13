@@ -9,13 +9,13 @@ subdomain: Basis and system operations
 concept_type: diagnostic guide
 sap_area: "Basis / CCMS"
 business_process: System operations
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-09
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
-level: 1
-robots: noindex,follow
-sitemap: false
+robots: index,follow
+sitemap: true
 tags:
   - basis
   - background-jobs
@@ -27,6 +27,8 @@ related:
   - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
   - /atlas/diagnostics/sap-idoc-status-diagnostics/
   - /atlas/sap/job-monitoring/
+  - /atlas/diagnostics/sap-alerting-diagnostics/
+  - /atlas/diagnostics/sap-incident-triage-diagnostics/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -50,7 +52,7 @@ related:
     <dl>
       <div><dt>Process</dt><dd>System operations</dd></div>
       <div><dt>SAP area</dt><dd>Basis / CCMS</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until background job behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

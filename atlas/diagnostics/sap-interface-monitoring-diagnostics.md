@@ -23,6 +23,8 @@ related:
 - /atlas/diagnostics/idoc-aif-integration-diagnostics/
 - /atlas/diagnostics/sap-idoc-status-diagnostics/
 - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+- /atlas/diagnostics/sap-cloud-connector-diagnostics/
+- /atlas/diagnostics/sap-api-gateway-diagnostics/
 robots: index,follow
 sitemap: true
 level: 2

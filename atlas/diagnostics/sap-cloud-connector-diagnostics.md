@@ -9,9 +9,9 @@ subdomain: Integration
 concept_type: diagnostic guide
 sap_area: "Cloud Connector / BTP connectivity"
 business_process: "Integration operations"
-status: needs_verification
-verified: false
-level: 1
+status: reviewed
+verified: true
+level: 2
 last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 tags:
@@ -24,8 +24,8 @@ related:
   - /atlas/sap/cloud-connector/
   - /atlas/diagnostics/sap-rest-api-diagnostics/
   - /atlas/diagnostics/sap-rfc-destination-diagnostics/
-robots: noindex,follow
-sitemap: false
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -49,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Integration operations</dd></div>
       <div><dt>SAP area</dt><dd>Cloud Connector / BTP connectivity</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until claims are verified against public SAP documentation.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

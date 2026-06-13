@@ -25,6 +25,8 @@ related:
 - /atlas/sap/incident-triage/
 - /atlas/diagnostics/sap-application-log-diagnostics/
 - /atlas/diagnostics/sap-background-job-diagnostics/
+- /atlas/diagnostics/sap-alerting-diagnostics/
+- /atlas/diagnostics/sap-change-control-diagnostics/
 robots: index,follow
 sitemap: true
 ---

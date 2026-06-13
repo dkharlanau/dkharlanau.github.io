@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-06-13T18:53:45Z
+Generated: 2026-06-13T19:09:34Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -625,6 +625,148 @@ Authorization-Aware AI for SAP
 
 ==================================================
 
+PAGE: IDoc and AIF Integration Diagnostics
+URL: /atlas/diagnostics/idoc-aif-integration-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP operations
+TYPE: diagnostic guide
+SAP AREA: IDoc / AIF / integration
+BUSINESS PROCESS: Cross-process operations
+TAGS: diagnostics, integration, idoc, aif, sap-ams
+REVIEWED: 2026-06-05
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    IDoc and AIF Integration Diagnostics
+
+
+
+    Atlas Diagnostics
+    IDoc and AIF integration diagnostics
+    Trace where interface failures originate, why they repeat, and what evidence to collect before escalating.
+
+
+
+
+
+      ProcessCross-process operations
+      SAP areaIDoc / AIF / integration
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    IDoc and AIF failures are rarely random. They cluster around specific partners, message types, process steps, or master data gaps. A useful diagnostic does not guess the root cause from the error text alone. It maps the failure to the landscape layer — partner profile, port, process code, mapping, or master data — and collects evidence that narrows the search.
+
+    First-pass diagnostic path
+
+      Confirm the message type, partner number, and direction (inbound or outbound).
+      Check the IDoc status and whether the failure is at transmission, syntax, or processing stage.
+      Review the partner profile and port settings for the affected message type.
+      Inspect the IDoc segments for missing or unexpected values, especially control record fields.
+      Check whether the failure is isolated to one partner, one plant, one message type, or one time window.
+      Look for recent changes: transport releases, master data updates, partner profile edits, or network changes.
+
+
+    Common failure patterns
+
+    Partner profile mismatches
+    A partner profile defines which message types a partner can send or receive, and how they are processed. Common issues:
+
+      Message type not defined in the partner profile for the given partner and direction.
+      Process code missing or pointing to a deactivated function module.
+      Port definition changed but not propagated to all affected partners.
+
+
+    Segment and field-level errors
+    IDoc segments must match the expected structure for the message type. Issues include:
+
+      Mandatory segments missing or in wrong order.
+      Field lengths exceeded or invalid characters in key fields.
+      Qualifier values that do not match the partner agreement.
+      Control record fields (sender, receiver, message type) that do not match the payload.
+
+
+    Master data gaps
+    Many IDoc failures are actually master data failures in disguise:
+
+      Material number does not exist or is not extended to the receiving plant.
+      Customer or supplier master missing required roles or tax data.
+      Plant, storage location, or purchasing organization not valid for the document type.
+
+
+    AIF-specific patterns
+    AIF adds a processing and monitoring layer on top of IDoc. When AIF is involved:
+
+      Check the AIF interface determination — is the correct interface and variant selected?
+      Review AIF structure mappings for field conversions and lookups.
+      Inspect AIF index tables for missing or duplicate index values.
+      Check AIF monitoring for error handling and restart capabilities.
+
+
+    Timing and sequencing
+
+      IDoc arrives before the referenced master data is replicated.
+      Multiple IDocs for the same document arrive out of order.
+      Batch job or workflow step that processes the IDoc is delayed or failed.
+
+
+    Diagnostic toolkit
+
+      WE02 / WE05 — IDoc list and detailed display.
+      WE20 — partner profile overview.
+      BD87 — status monitor for application errors.
+      /AIF/ERR — AIF error handling and monitoring.
+      SXI_MONITOR — PI/PO or Integration Suite message monitoring.
+      Application logs (SLG1) — custom or standard logging around interface processing.
+
+
+    Support takeaway
+    A useful IDoc or AIF ticket should include: message type, partner number, direction, IDoc number, status, error text, affected document or material, and whether the failure is recurring. Avoid asking the integration team to "fix IDocs" without showing which layer failed and what changed.
+
+    Boundaries and non-goals
+    This page does not provide transaction-by-transaction instructions. It does not claim that every SAP landscape uses the same partner profile setup or the same AIF configuration. It does not replace SAP's own IDoc and AIF documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+    Next diagnostic steps
+
+      SAP Interface Monitoring Diagnostics — use this when multiple interfaces are affected and you need a monitoring lens.
+      SAP IDoc Status Diagnostics — go here to interpret status codes and identify the processing stage.
+      SAP qRFC and tRFC Diagnostics — check this when IDoc processing depends on RFC queues.
+      SAP Output and Message Control Diagnostics — use this if the failing message is an output IDoc.
+
+
+    Practical checklist
+
+- [ ] Collect message type, partner number, direction, IDoc number, and status. **Synthetic example:** IDoc 1234567890, message type ORDERS, outbound, partner TEST_CUST_01.
+
+- [ ] Check WE02/WE05 for IDoc status and segment-level error text.
+
+- [ ] Review partner profile (WE20), port, and process code for the message type.
+
+- [ ] Inspect /AIF/ERR or SXI_MONITOR if AIF/PI/PO/Integration Suite is involved.
+
+- [ ] Confirm whether the failure is isolated to one partner, plant, message type, or time window.
+
+- [ ] Document recent changes: transports, master data updates, partner profiles, or network.
+
+- [ ] Safety limit: do not mass-reprocess IDocs until the root layer (partner, mapping, or master data) is identified.
+
+
+
+
+    Related Atlas Pages
+
+      SAP Process Audit
+      Mini Apps and Prototypes for SAP Operations
+      Composable ERP for SAP Operations
+      SAP Sales Order Block Diagnosis
+
+==================================================
+
 PAGE: SAP ALE Distribution Model Diagnostics
 URL: /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
 SECTION: diagnostics
@@ -730,6 +872,202 @@ Home
       Idoc Aif Integration Diagnostics
       SAP Idoc Status Diagnostics
       SAP Key Mapping Diagnostics
+
+==================================================
+
+PAGE: SAP Alerting Diagnostics
+URL: /atlas/diagnostics/sap-alerting-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Monitoring / alerting
+BUSINESS PROCESS: SAP AMS support
+TAGS: sap-ams, alerting, monitoring, incident-response, diagnostics
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Alerting Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP alerting diagnostics
+    A first-pass structure for alerting that is missing real failures, generates false positives, or routes to the wrong team.
+
+
+
+
+
+      ProcessSAP AMS support
+      SAP areaMonitoring / alerting
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Alerts exist to shorten incident detection time. When they miss real failures or flood the team with noise, the diagnostic goal is to decide whether the problem is threshold, scope, routing, or the underlying monitoring data.
+
+    Common symptoms
+
+      A production issue is reported by users before any alert fires.
+      Alert volume is so high that real failures are ignored.
+      Alerts fire but are assigned to a team that cannot act on them.
+      An alert fires only after the business impact is already large.
+      Alerts stop after a monitoring tool or agent is restarted.
+
+
+    Likely causes
+
+      Threshold too high: the alert needs a larger queue depth or error count than the critical failure produces.
+      Scope gap: the monitoring rule does not cover the message type, interface, or job that failed.
+      Routing error: the alert notification goes to a mailbox or team without context or authority.
+      Metric lag: the monitoring job runs less frequently than the failure window.
+      Seasonality ignored: thresholds are not adjusted for month-end or batch peaks.
+
+
+    Where to check in SAP
+
+      Monitoring job log (SM37) — check schedule, runtime, and failures.
+      Alert configuration — review thresholds, conditions, and scope.
+      Notification setup — verify recipients, escalation, and suppression rules.
+      Comparison with real state — WE02, SMQ1, SM37, or application log for the same interval.
+      Change history — recent transport or job change that could affect monitoring.
+
+
+    Key tables / transactions / objects
+
+      TBTCO — background job status.
+      EDIDC / EDIDS — IDoc control and status for correlation.
+      TRFCQOUT / TRFCQIN — queue tables for queue-based alerts.
+
+
+    Diagnostic workflow
+
+      Identify the missed or noisy alert and the business impact it represents.
+      Check the monitoring job or agent that produces the alert for failures or delays.
+      Compare the alert condition with the actual system state at the time.
+      Review thresholds and scope: does the rule cover the failing object?
+      Verify routing: who receives the alert and whether they have enough context.
+      Adjust threshold, scope, or routing and confirm with a test event if possible.
+
+
+    Typical fixes or next actions
+
+      Lower thresholds or add layered thresholds for high-priority objects.
+      Expand scope rules to cover new interfaces, jobs, or message types.
+      Route alerts to the team that owns the failing component with actionable context.
+      Tune suppression to reduce noise without hiding real failures.
+      Schedule monitoring jobs more frequently during critical windows.
+
+
+    Support takeaway
+    Alerting issues are usually configuration or scope problems. A useful ticket describes the expected alert, the actual alert behavior, the monitoring job or rule name, and the business impact.
+
+    Boundaries and non-goals
+    This page does not cover alert routing architecture, PagerDuty/ServiceNow integration, or third-party monitoring tool configuration. It focuses on the diagnostic decision of why an alert fails.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+==================================================
+
+PAGE: SAP API Gateway Diagnostics
+URL: /atlas/diagnostics/sap-api-gateway-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: API gateway / API management
+BUSINESS PROCESS: Integration operations
+TAGS: sap-ams, api-gateway, api-management, integration, routing
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP API Gateway Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP API gateway diagnostics
+    A first-pass structure for API gateway routing, authentication, and policy failures.
+
+
+
+
+
+      ProcessIntegration operations
+      SAP areaAPI gateway / API management
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    An API gateway failure is usually visible as a routing, authentication, or policy rejection before the backend service is reached. The diagnostic goal is to identify whether the request is rejected by the gateway or by the backend, and which policy triggers the rejection.
+
+    Common symptoms
+
+      API consumers receive 401/403 even though credentials are correct.
+      Requests to the gateway return 404 or 502 for an existing backend service.
+      Rate-limit or quota errors block legitimate traffic.
+      OAuth token introspection fails at the gateway.
+      Response transformation or header policy breaks the consumer.
+
+
+    Likely causes
+
+      Wrong API proxy or route: the gateway path does not map to the correct backend.
+      Policy order issue: an authentication or transformation policy runs before the request is validated.
+      Rate/quota limit: the consumer exceeded the configured limit.
+      Token scope mismatch: the token is valid but does not include the required scope.
+      Backend timeout: the backend is slow and the gateway returns a timeout.
+
+
+    Where to check in SAP
+
+      API gateway trace or analytics — request/response flow and policy execution.
+      API proxy / API product configuration — routes, policies, and targets.
+      Developer portal / app registration — consumer key, secret, and quota.
+      OAuth token details — issuer, scopes, expiry.
+      Backend service direct test — bypass gateway to confirm backend health.
+
+
+    Key tables / transactions / objects
+
+      Gateway analytics — traffic, error, and latency metrics (tool-specific).
+      API proxy metadata — policy and target definitions.
+      OAuth / IAM logs — token validation and scope decisions.
+
+
+    Diagnostic workflow
+
+      Capture the exact gateway URL, headers, payload, and error response.
+      Check gateway analytics for the same consumer and time window.
+      Identify the failing policy or route in the API proxy configuration.
+      Test the backend service directly, if possible, to isolate gateway vs backend.
+      Verify token scopes, quotas, and consumer registration.
+      Adjust the proxy, policy, or consumer configuration and retest.
+
+
+    Typical fixes or next actions
+
+      Correct the route or target endpoint in the API proxy.
+      Reorder or fix policies so validation happens before transformation.
+      Increase or refine rate limits and quotas for the consumer.
+      Ensure the token includes the required scope for the API resource.
+      Tune timeout settings or fix backend performance.
+
+
+    Support takeaway
+    Gateway tickets are useful when they include the gateway URL, consumer identity, HTTP status, error response, and whether the backend works when called directly.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an API management product configuration guide. It does not cover detailed SAP Integration Suite API Management or third-party gateway setup.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
 
 ==================================================
 
@@ -929,6 +1267,130 @@ Home
 
 ==================================================
 
+PAGE: SAP Background Job Failure Diagnostics
+URL: /atlas/diagnostics/sap-background-job-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Basis / CCMS
+BUSINESS PROCESS: System operations
+TAGS: basis, background-jobs, sap-operations, diagnostics, system-monitoring
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Background Job Failure Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP background job failure diagnostics
+    A first-pass structure for finding why a background job failed, was cancelled, did not start, or produced incorrect results in SAP.
+
+
+
+
+
+      ProcessSystem operations
+      SAP areaBasis / CCMS
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Background jobs in SAP execute periodic or long-running tasks: MRP runs, IDoc processing, billing, payment runs, data archiving, and interface monitoring. When a job fails, the impact can be delayed invoices, stuck IDocs, or missing master data updates. The diagnostic task is to identify whether the failure is in the job definition, the program logic, the data, the authorization, or the system resources.
+
+    Common symptoms
+
+      Job status in SM37 shows "Cancelled" or "Finished" with errors in the job log.
+      Job is scheduled but never starts; status remains "Released" or "Ready."
+      Job runs but produces no output, or the output is incomplete.
+      Job runs longer than expected and is cancelled by the system due to maximum runtime.
+      Job fails with a short dump (ST22) that is not visible in the job log.
+      Job fails with authorization errors or missing variant errors.
+      Job runs successfully in test but fails in production with the same variant.
+
+
+    Likely causes
+
+      Program or variant issue: the ABAP program has a bug, or the variant selects too much data, or a required parameter is missing.
+      Authorization failure: the user assigned to the job does not have the required authorization for the program, table, or transaction.
+      Data lock or enqueue: another process has locked the data the job needs, causing a timeout or dump.
+      Resource exhaustion: the job exceeds available memory, work processes, or database time.
+      Scheduling conflict: the job is scheduled to run when a dependent job is still running, or when the system is in maintenance mode.
+      Target server or work process unavailable: the job is assigned to a specific application server that is down or has no free work processes.
+      External command or program failure: the job calls an external program or RFC that fails.
+
+
+    Where to check in SAP
+
+      SM37 — job overview; check status, start time, end time, and job log.
+      SM35 — batch input session log if the job processes a batch input.
+      ST22 — short dump analysis; check for runtime errors at the same time as the job.
+      SM21 — system log; check for system-level errors, work process restarts, or database issues.
+      SM12 — enqueue lock overview; check if locks are held by other users or jobs.
+      ST03 / ST03N — workload analysis; check resource consumption and response times.
+      SM50 / SM66 — work process overview; check if work processes are available and what they are running.
+      SM59 — RFC destination test if the job calls external systems.
+      SP01 / SP02 — spool request overview if the job produces print output.
+
+
+    Key tables / transactions / objects
+
+      TBTCO — job status overview table.
+      TBTCP — job step details.
+      TBTCO-STATUS — job status codes (P = scheduled, S = released, R = ready, A = cancelled, F = finished).
+      TRBAT / TRJOB — transport-related job tables (if job is transport-related).
+      SNAP — short dump header table (links to ST22).
+      USR02 — user master data; check if the job user is locked or expired.
+
+
+    Diagnostic workflow
+
+      Identify the job name, job count, and the time of failure in SM37.
+      Read the job log in SM37 for the exact error message or cancellation reason.
+      Check ST22 for any short dumps at the same time with the same user or program.
+      Check SM21 for system-level errors (database, work process, memory) at the same time.
+      Verify the job variant: are the selection parameters reasonable? Does the variant exist?
+      Check SM12 for enqueue locks on the tables or documents the job processes.
+      Check SM50/SM66 for work process availability and load at the scheduled time.
+      Test the program with the same variant in dialog mode (if safe) to reproduce the error.
+      If the job calls an RFC, test the RFC destination in SM59.
+
+
+    Typical fixes or next actions
+
+      Correct the program variant to reduce data volume or fix missing parameters.
+      Assign the correct authorizations to the job user or use a service user with the required roles.
+      Reschedule the job to avoid conflicts with other jobs or maintenance windows.
+      Release enqueue locks in SM12 if they are stale (with caution and approval).
+      Increase the maximum runtime or memory allocation if the job is legitimately large.
+      Restart the job in SM37 after fixing the underlying issue.
+      Escalate to the development team if the program has a bug that requires code correction.
+      Escalate to the Basis team if the issue is system resources, database performance, or work process shortage.
+
+
+    Support takeaway
+    Background job failures are usually program, data, or resource issues. A useful ticket should include: job name, job count, scheduled time, actual start/end time, status, exact error message from the job log, program name, variant name, and whether the issue is isolated or recurring.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a job scheduling or Basis administration guide. It does not cover job definition creation, SM36 scheduling, or CCMS monitoring setup. It does not replace SAP's Basis documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Interface Monitoring Diagnostics
+      SAP qRFC and tRFC Diagnostics
+      SAP IDoc Status Diagnostics
+      SAP Job Monitoring
+
+==================================================
+
 PAGE: SAP Business Partner Replication Diagnostics
 URL: /atlas/diagnostics/sap-business-partner-replication-diagnostics/
 SECTION: diagnostics
@@ -1044,6 +1506,202 @@ Home
       SAP Customer Master Replication Diagnostics
       SAP Key Mapping Diagnostics
       SAP Master Data Quality
+
+==================================================
+
+PAGE: SAP Change Control Diagnostics
+URL: /atlas/diagnostics/sap-change-control-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Change and transport management
+BUSINESS PROCESS: SAP AMS support
+TAGS: sap-ams, change-control, transport, seccen, diagnostics
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Change Control Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP change control diagnostics
+    A first-pass structure for transport request failures, import errors, and sequencing issues.
+
+
+
+
+
+      ProcessSAP AMS support
+      SAP areaChange and transport management
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    A transport import failure can block an entire release path. The diagnostic goal is to separate object-lock conflicts, missing prerequisites, source/version mismatches, and import-parameter issues from functional defects in the transport content.
+
+    Common symptoms
+
+      Transport import ends with return code 8 or 12.
+      Import stops because an object is locked by another request.
+      A transport imports in the test system but fails in production.
+      Objects in the transport are reported as already active with a different version.
+      Dependent objects are missing, causing syntax or activation errors after import.
+
+
+    Likely causes
+
+      Object lock conflict: another transport holds a lock on the same object.
+      Missing predecessor: the transport depends on an object change that is not yet imported.
+      Import parameter mismatch: table-content import options differ between systems.
+      Active version differs: the target system has a newer or manually modified version of the object.
+      Cross-client object: the object is not client-specific and import settings are wrong.
+
+
+    Where to check in SAP
+
+      SE01 / SE09 / SE10 — transport organizer and request overview.
+      STMS import queue — import history, return code, and error log.
+      Object directory (SE80) — compare versions between source and target.
+      TMS alert viewer — detailed import logs and warnings.
+      SM37 — background job log for the import job.
+
+
+    Key tables / transactions / objects
+
+      E070 / E071 — transport request headers and object lists.
+      TRBAT / TRJOB — transport job and batch information.
+      TADIR — object directory entries.
+
+
+    Diagnostic workflow
+
+      Identify the transport request, target system, and exact return code or error text.
+      Check the import queue for the failed import and read the detailed log.
+      Determine if the error is a lock conflict, missing predecessor, or version mismatch.
+      Compare the object version in source and target systems.
+      Resolve locks or import missing predecessors in the correct order.
+      Re-import with the appropriate options and verify activation.
+
+
+    Typical fixes or next actions
+
+      Release or delete the conflicting transport lock before re-import.
+      Import missing predecessor transports first.
+      Align import parameters for cross-client or table-content objects.
+      Merge or overwrite object versions only after functional confirmation.
+      Update the deployment checklist to include dependency verification.
+
+
+    Support takeaway
+    Transport failure tickets are useful when they include the transport request number, target system, return code, object name, and any recent parallel transports in the same area.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame for import failures, not a transport strategy or release-management guide. It does not cover ChaRM or detailed TMS configuration.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+==================================================
+
+PAGE: SAP Cloud Connector Diagnostics
+URL: /atlas/diagnostics/sap-cloud-connector-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Cloud Connector / BTP connectivity
+BUSINESS PROCESS: Integration operations
+TAGS: sap-ams, cloud-connector, btp, connectivity, integration
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Cloud Connector Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP cloud connector diagnostics
+    A first-pass structure for SAP BTP Cloud Connector connectivity and tunnel issues.
+
+
+
+
+
+      ProcessIntegration operations
+      SAP areaCloud Connector / BTP connectivity
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    The SAP BTP Cloud Connector bridges on-premise SAP systems and cloud services. Failures usually sit in the tunnel state, the access-control configuration, the destination, or the on-premise service availability.
+
+    Common symptoms
+
+      Cloud application cannot reach the on-premise SAP system.
+      Cloud Connector shows a disconnected or unhealthy tunnel.
+      Destination test in BTP fails with connectivity or authorization errors.
+      Some on-premise systems are reachable while others are not.
+      Performance through the Cloud Connector is inconsistent.
+
+
+    Likely causes
+
+      Tunnel down: Cloud Connector cannot connect to the BTP subaccount.
+      Missing access control: the resource is not exposed for the cloud application.
+      Destination misconfiguration: wrong URL, authentication, or location ID.
+      On-premise service down: the target RFC/HTTP service is not active.
+      Network or firewall change: outbound connectivity to BTP is blocked.
+
+
+    Where to check in SAP
+
+      Cloud Connector admin UI — tunnel state, subaccount connection, and logs.
+      BTP cockpit — destination configuration and connection test.
+      SM59 / SICF — verify the on-premise RFC or HTTP service is active.
+      On-premise network trace — confirm outbound connectivity to BTP endpoints.
+      Application log on BTP and on-premise side for the same time window.
+
+
+    Key tables / transactions / objects
+
+      Cloud Connector logs — tunnel and request logs (file-based, not SAP tables).
+      SM59 — RFC destination test results.
+      SICF — HTTP service activation.
+
+
+    Diagnostic workflow
+
+      Confirm the affected subaccount, Cloud Connector instance, and target on-premise system.
+      Check the Cloud Connector tunnel state and admin UI health indicators.
+      Test the destination from BTP and capture the exact error.
+      Verify access-control entries for the target resource.
+      Check the on-premise service (SM59/SICF) and network path.
+      Review both sides' logs for the failure window and correlate timestamps.
+
+
+    Typical fixes or next actions
+
+      Restart or reconnect the Cloud Connector to the subaccount.
+      Add or correct the access-control entry for the missing resource.
+      Correct destination URL, authentication, or location ID.
+      Activate or fix the on-premise RFC/HTTP service.
+      Update firewall or proxy allow-lists for BTP endpoints.
+
+
+    Support takeaway
+    Cloud Connector tickets are useful when they include the subaccount, Cloud Connector version, destination name, target system, and whether the issue is tunnel, access control, or service side.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a Cloud Connector installation or BTP security configuration guide. It does not cover detailed certificate or SAML setup.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
 
 ==================================================
 
@@ -3106,6 +3764,104 @@ Home
 
 ==================================================
 
+PAGE: SAP REST API Diagnostics
+URL: /atlas/diagnostics/sap-rest-api-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: REST / HTTP / OData / APIs
+BUSINESS PROCESS: Integration operations
+TAGS: sap-ams, rest, api, integration, http
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP REST API Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP REST API diagnostics
+    A first-pass structure for HTTP/REST API failures in and out of SAP systems.
+
+
+
+
+
+      ProcessIntegration operations
+      SAP areaREST / HTTP / OData / APIs
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    REST API failures usually separate into connection, authentication, routing, and payload problems. The diagnostic goal is to reproduce the failing call, capture the HTTP status and response body, and trace which layer rejects it.
+
+    Common symptoms
+
+      External system reports HTTP 4xx or 5xx when calling SAP.
+      SAP cannot reach an external REST endpoint.
+      API call returns success status but the business object is not updated.
+      OData query returns unexpected metadata or entity errors.
+      API performance degrades sharply under load.
+
+
+    Likely causes
+
+      Authentication failure: missing, expired, or incorrectly scoped token/certificate.
+      Routing issue: wrong host, port, path, or API gateway rule.
+      Payload mismatch: JSON/XML format, field naming, or required field missing.
+      Rate limiting: too many requests in a short window.
+      SICF service issue: the HTTP service or handler is not active.
+
+
+    Where to check in SAP
+
+      HTTP trace or tool — capture request, response, status, headers, and body.
+      SICF — verify the HTTP service node is active and correctly mapped.
+      SM59 — RFC/HTTP destination configuration and connection test.
+      SMICM — ICM monitor for HTTP/HTTPS connection issues.
+      SLG1 / application log — errors from the API handler or gateway.
+
+
+    Key tables / transactions / objects
+
+      ICF_NODES / ICFALTNOD — ICF service node metadata.
+      USOBHASH — authorization checks for services.
+      /IWBEP/* — Gateway error and statistics logs.
+
+
+    Diagnostic workflow
+
+      Reproduce the failing API call and record the exact URL, method, headers, and payload.
+      Check the HTTP status code and response body to classify the failure layer.
+      Verify the destination, SICF node, or API gateway configuration.
+      Test authentication independently with a token or certificate check.
+      Validate the payload against the service metadata or Swagger/OData definition.
+      Check ICM, gateway, and application logs for the same time window.
+
+
+    Typical fixes or next actions
+
+      Activate or correct the SICF service node for the API path.
+      Refresh or re-scope the authentication token/certificate.
+      Correct the destination URL, path, or query parameters.
+      Align the payload structure and required fields with the service contract.
+      Adjust call frequency or request batching to respect rate limits.
+
+
+    Support takeaway
+    REST API tickets are useful when they include the full request/response, timestamp, endpoint, and the business object the call was trying to create or update.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an API design or SAP Gateway configuration guide. It does not cover detailed OAuth/SAML setup.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+==================================================
+
 PAGE: SAP RFC Destination Diagnostics
 URL: /atlas/diagnostics/sap-rfc-destination-diagnostics/
 SECTION: diagnostics
@@ -3226,6 +3982,104 @@ Home
       SAP IDoc Status Diagnostics
       SAP Interface Monitoring Diagnostics
       SAP ALE Distribution Model Diagnostics
+
+==================================================
+
+PAGE: SAP SOAP Diagnostics
+URL: /atlas/diagnostics/sap-soap-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: SOAP / Web services / proxies
+BUSINESS PROCESS: Integration operations
+TAGS: sap-ams, soap, web-services, proxy, integration
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP SOAP Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP SOAP diagnostics
+    A first-pass structure for SOAP web-service failures in SAP landscapes.
+
+
+
+
+
+      ProcessIntegration operations
+      SAP areaSOAP / Web services / proxies
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    SOAP failures usually present as XML parsing errors, SOAP faults, or proxy generation issues. The diagnostic goal is to compare the WSDL contract, the generated proxy, the outbound/inbound configuration, and the actual XML payload.
+
+    Common symptoms
+
+      SOAP call returns a SOAP fault instead of the expected response.
+      Proxy generation fails or shows missing methods after a WSDL change.
+      Inbound SOAP message is rejected before reaching the handler.
+      XML namespace or field mismatch causes deserialization errors.
+      Performance is slow for large SOAP payloads.
+
+
+    Likely causes
+
+      WSDL mismatch: consumer or provider was changed without refreshing the proxy or contract.
+      XML namespace issue: the payload uses a different namespace than the service expects.
+      SOAMANAGER configuration gap: endpoint, binding, or security profile is incorrect.
+      Proxy inconsistency: generated proxy does not match the current service definition.
+      Message-size limit: payload exceeds configured ICM or gateway limits.
+
+
+    Where to check in SAP
+
+      SOAMANAGER — service/binding configuration and endpoint settings.
+      SPROXY / SE80 — consumer/provider proxy definition and regeneration.
+      SRT_MONI / SRT_UTIL — SOAP runtime monitoring and error logs.
+      SMICM — ICM connection and HTTPS issues.
+      XML trace — capture actual SOAP envelope for namespace/field comparison.
+
+
+    Key tables / transactions / objects
+
+      SRT_LOGS / SRT_MONI — SOAP runtime monitoring data.
+      ICF_NODES — ICF node activation for web services.
+      SWF_* — web service framework tables.
+
+
+    Diagnostic workflow
+
+      Capture the complete SOAP request and response, including the fault code and text.
+      Compare the WSDL at provider and consumer sides for differences.
+      Regenerate or refresh the proxy if the contract changed.
+      Check SOAMANAGER endpoint, binding, and security settings.
+      Review SRT_MONI or SRT_UTIL for runtime errors and payload traces.
+      Verify XML namespaces and required fields against the service definition.
+
+
+    Typical fixes or next actions
+
+      Refresh the WSDL and regenerate the proxy on the consumer side.
+      Correct endpoint, binding, or security profile in SOAMANAGER.
+      Align XML namespaces and field names with the service contract.
+      Increase message-size limits if the payload is legitimately large.
+      Update deployment checklists to include WSDL refresh after provider changes.
+
+
+    Support takeaway
+    SOAP tickets are useful when they include the SOAP fault, service name, consumer/provider proxy names, WSDL version, and the business operation that failed.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a SOAP service design or SOAMANAGER configuration guide. It does not cover WS-Security in depth.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
 
 ==================================================
 
@@ -3907,4 +4761,4 @@ Operational Memory for SAP AMS
 
 ==================================================
 
-END OF MANIFEST — 41 verified pages included
+END OF MANIFEST — 49 verified pages included

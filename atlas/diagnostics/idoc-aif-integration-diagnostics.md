@@ -9,8 +9,9 @@ subdomain: Integration diagnostics
 concept_type: diagnostic guide
 sap_area: IDoc / AIF / integration
 business_process: Cross-process operations
-status: needs_verification
-verified: false
+status: reviewed
+verified: true
+level: 2
 last_reviewed: 2026-06-05
 author: Dzmitryi Kharlanau
 tags:
@@ -20,12 +21,13 @@ tags:
   - aif
   - sap-ams
 related:
-  - /atlas/diagnostics/sap-process-audit/
-  - /atlas/automation/mini-apps-for-sap-operations/
-  - /atlas/concepts/composable-erp-for-sap-operations/
-  - /atlas/diagnostics/sap-sales-order-block-diagnosis/
-robots: noindex,follow
-sitemap: false
+  - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+  - /atlas/diagnostics/sap-idoc-diagnostics/
+  - /atlas/diagnostics/sap-idoc-status-diagnostics/
+  - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+  - /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -49,7 +51,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Cross-process operations</dd></div>
       <div><dt>SAP area</dt><dd>IDoc / AIF / integration</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until integration claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

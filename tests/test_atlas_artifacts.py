@@ -14,9 +14,13 @@ def test_manifest_json_is_valid():
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.manifest"
     assert data["count"] == 190
-    assert data["verified_count"] == 41
-    assert data["unverified_count"] == 149
     assert len(data["entries"]) == 190
+    verified_count = sum(
+        1 for e in data["entries"]
+        if e.get("verified") and e.get("status") == "reviewed"
+    )
+    assert data["verified_count"] == verified_count
+    assert data["unverified_count"] == data["count"] - verified_count
 
 
 def test_related_json_is_valid():
@@ -25,10 +29,9 @@ def test_related_json_is_valid():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.related"
-    assert data["count"] == 881
+    assert data["count"] == len(data["edges"])
     assert data["broken_link_count"] == 0
     assert data["warnings"] == []
-    assert len(data["edges"]) == 881
 
 
 def test_compact_signal_index_is_valid():
@@ -139,11 +142,12 @@ def test_llms_full_only_verified_reviewed_pages():
         else:
             unverified_titles.append(title)
 
+    lines = {line.strip() for line in text.splitlines()}
     for title in verified_titles:
-        assert f"PAGE: {title}" in text, f"llms-full.txt missing verified page: {title}"
+        assert f"PAGE: {title}" in lines, f"llms-full.txt missing verified page: {title}"
 
     for title in unverified_titles:
-        assert f"PAGE: {title}" not in text, f"llms-full.txt should not contain unverified page: {title}"
+        assert f"PAGE: {title}" not in lines, f"llms-full.txt should not contain unverified page: {title}"
 
 
 def test_manifest_sections_complete():

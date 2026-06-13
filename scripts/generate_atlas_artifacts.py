@@ -691,16 +691,18 @@ def run_check(all_pages, atlas_files):
 
     # Semantic checks on committed file
     if llms_path.exists():
-        # Verify only reviewed+verified pages included
+        # Verify only reviewed+verified pages included (exact line match)
+        llms_pages = set(llms_committed.splitlines())
         for rel_path in atlas_files:
             abs_path = REPO_DIR / rel_path
             fm, _ = parse_frontmatter(abs_path)
             title = fm.get("title", "")
+            page_line = f"PAGE: {title}"
             if fm.get("status") == "reviewed" and fm.get("verified"):
-                if f"PAGE: {title}" not in llms_committed:
+                if page_line not in llms_pages:
                     issues.append(f"llms-full.txt: missing verified page '{title}'")
             else:
-                if f"PAGE: {title}" in llms_committed:
+                if page_line in llms_pages:
                     issues.append(f"llms-full.txt: unverified page '{title}' should not be included")
 
         # Private path leak check

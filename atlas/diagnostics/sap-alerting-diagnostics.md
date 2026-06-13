@@ -9,9 +9,9 @@ subdomain: SAP AMS operations
 concept_type: diagnostic guide
 sap_area: "Monitoring / alerting"
 business_process: "SAP AMS support"
-status: needs_verification
-verified: false
-level: 1
+status: reviewed
+verified: true
+level: 2
 last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 tags:
@@ -23,8 +23,10 @@ tags:
 related:
   - /atlas/diagnostics/sap-application-log-diagnostics/
   - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
-robots: noindex,follow
-sitemap: false
+  - /atlas/diagnostics/sap-background-job-diagnostics/
+  - /atlas/diagnostics/sap-incident-triage-diagnostics/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +50,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>SAP AMS support</dd></div>
       <div><dt>SAP area</dt><dd>Monitoring / alerting</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until claims are verified against public SAP documentation.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
