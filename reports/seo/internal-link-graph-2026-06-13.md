@@ -1,0 +1,435 @@
+# Internal Link Graph Report
+
+**Date:** 2026-06-13
+**Pages scanned:** 692
+
+## Summary
+- **Orphan pages:** 169
+- **Pages with broken links:** 190
+- **Indexable pages linking to noindex:** 777
+
+## Orphan Pages (no inbound links)
+
+- `.well-known/agent-skills/dataset-discovery/index.html` — Dataset Discovery
+- `.well-known/agent-skills/resume-lookup/index.html` — Resume Lookup
+- `.well-known/agent-skills/topic-routing/index.html` — Topic Routing
+- `404.html` — Page Not Found — Dzmitryi Kharlanau
+- `AGENTS/index.html` — AGENTS.md
+- `ARCHITECTURE/index.html` — CV AI Architecture
+- `DESIGN-SYSTEM/index.html` — CV AI Design System
+- `PROJECT_MAP/index.html` — PROJECT_MAP.md
+- `agent-skills/index.html` — Agent Skills
+- `agent-skills/skills/acceptance-criteria/SKILL/index.html` — Acceptance Criteria
+- `agent-skills/skills/acceptance-criteria/references/examples/index.html` — Acceptance Criteria — Examples
+- `agent-skills/skills/acceptance-criteria/references/method/index.html` — Acceptance Criteria — Detailed Method
+- `agent-skills/skills/acceptance-criteria/references/templates/index.html` — Acceptance Criteria — Templates
+- `agent-skills/skills/architecture-decision-record/SKILL/index.html` — Architecture Decision Record
+- `agent-skills/skills/architecture-decision-record/references/examples/index.html` — Architecture Decision Record — Examples
+- `agent-skills/skills/architecture-decision-record/references/method/index.html` — Architecture Decision Record — Detailed Method
+- `agent-skills/skills/architecture-decision-record/references/templates/index.html` — Architecture Decision Record — Templates
+- `agent-skills/skills/change-impact-analysis/SKILL/index.html` — Change Impact Analysis
+- `agent-skills/skills/change-impact-analysis/references/examples/index.html` — Change Impact Analysis — Examples
+- `agent-skills/skills/change-impact-analysis/references/method/index.html` — Change Impact Analysis — Detailed Method
+- `agent-skills/skills/change-impact-analysis/references/templates/index.html` — Change Impact Analysis — Templates
+- `agent-skills/skills/data-governance-ownership/SKILL/index.html` — Data Governance Ownership
+- `agent-skills/skills/data-governance-ownership/references/examples/index.html` — Data Governance Ownership — Examples
+- `agent-skills/skills/data-governance-ownership/references/method/index.html` — Data Governance Ownership — Detailed Method
+- `agent-skills/skills/data-governance-ownership/references/templates/index.html` — Data Governance Ownership — Templates
+- `agent-skills/skills/data-quality-root-cause/SKILL/index.html` — Data Quality Root Cause
+- `agent-skills/skills/data-quality-root-cause/references/examples/index.html` — Data Quality Root Cause — Examples
+- `agent-skills/skills/data-quality-root-cause/references/method/index.html` — Data Quality Root Cause — Detailed Method
+- `agent-skills/skills/data-quality-root-cause/references/templates/index.html` — Data Quality Root Cause — Templates
+- `agent-skills/skills/incident-triage/SKILL/index.html` — Incident Triage
+- `agent-skills/skills/incident-triage/references/examples/index.html` — Incident Triage — Examples
+- `agent-skills/skills/incident-triage/references/method/index.html` — Incident Triage — Detailed Method
+- `agent-skills/skills/incident-triage/references/templates/index.html` — Incident Triage — Templates
+- `agent-skills/skills/integration-observability/SKILL/index.html` — Integration Observability
+- `agent-skills/skills/integration-observability/references/examples/index.html` — Integration Observability — Examples
+- `agent-skills/skills/integration-observability/references/method/index.html` — Integration Observability — Detailed Method
+- `agent-skills/skills/integration-observability/references/templates/index.html` — Integration Observability — Templates
+- `agent-skills/skills/interface-ownership/SKILL/index.html` — Interface Ownership
+- `agent-skills/skills/interface-ownership/references/examples/index.html` — Interface Ownership — Examples
+- `agent-skills/skills/interface-ownership/references/method/index.html` — Interface Ownership — Detailed Method
+- `agent-skills/skills/interface-ownership/references/templates/index.html` — Interface Ownership — Templates
+- `agent-skills/skills/operational-knowledge-capture/SKILL/index.html` — Operational Knowledge Capture
+- `agent-skills/skills/operational-knowledge-capture/references/examples/index.html` — Operational Knowledge Capture — Examples
+- `agent-skills/skills/operational-knowledge-capture/references/method/index.html` — Operational Knowledge Capture — Detailed Method
+- `agent-skills/skills/operational-knowledge-capture/references/templates/index.html` — Operational Knowledge Capture — Templates
+- `agent-skills/skills/recurring-ticket-pattern-analysis/SKILL/index.html` — Recurring Ticket Pattern Analysis
+- `agent-skills/skills/recurring-ticket-pattern-analysis/references/examples/index.html` — Recurring Ticket Pattern Analysis — Examples
+- `agent-skills/skills/recurring-ticket-pattern-analysis/references/method/index.html` — Recurring Ticket Pattern Analysis — Detailed Method
+- `agent-skills/skills/recurring-ticket-pattern-analysis/references/templates/index.html` — Recurring Ticket Pattern Analysis — Templates
+- `agent-skills/skills/requirements-elicitation/SKILL/index.html` — Requirements Elicitation
+- `agent-skills/skills/requirements-elicitation/references/examples/index.html` — Requirements Elicitation — Examples
+- `agent-skills/skills/requirements-elicitation/references/method/index.html` — Requirements Elicitation — Detailed Method
+- `agent-skills/skills/requirements-elicitation/references/templates/index.html` — Requirements Elicitation — Templates
+- `agent-skills/skills/root-cause-analysis/SKILL/index.html` — Root Cause Analysis
+- `agent-skills/skills/root-cause-analysis/references/examples/index.html` — Root Cause Analysis — Examples
+- `agent-skills/skills/root-cause-analysis/references/method/index.html` — Root Cause Analysis — Detailed Method
+- `agent-skills/skills/root-cause-analysis/references/templates/index.html` — Root Cause Analysis — Templates
+- `atlas/diagnostics/sap-retail-replenishment-diagnostics/index.html` — SAP Retail Replenishment Diagnostics
+- `atlas/sap/sap-ariba-integration-context/index.html` — SAP Ariba Integration Context
+- `atlas/sap/sap-business-network-context/index.html` — SAP Business Network Context
+- `atlas/sap/sap-ewm-integration-overview/index.html` — SAP EWM Integration Overview
+- `atlas/sap/sap-ibp-integration-overview/index.html` — SAP IBP Integration Overview
+- `atlas/sap/sap-invoice-verification-patterns/index.html` — SAP Invoice Verification Patterns
+- `atlas/sap/sap-mm-sourcing-overview/index.html` — SAP MM Sourcing Overview
+- `atlas/sap/sap-movement-types-inventory/index.html` — SAP Movement Types and Inventory
+- `atlas/sap/sap-procurement-kpis/index.html` — SAP Procurement KPIs
+- `atlas/sap/sap-signavio/index.html` — SAP Signavio
+- `atlas/sap/sap-stock-transfer-in-transit/index.html` — SAP Stock Transfer and In-Transit Inventory
+- `atlas/sap/sap-tm-integration-overview/index.html` — SAP TM Integration Overview
+- `certifications/index.html` — Certifications | Dzmitryi Kharlanau
+- `changelog/index.html` — Changelog | Dzmitryi Kharlanau
+- `docs/ai/AGENT_TASK_PATTERNS/index.html` — AGENT_TASK_PATTERNS.md
+- `docs/ai/AI_VISIBILITY_AUDIT/index.html` — AI_VISIBILITY_AUDIT.md
+- `docs/ai/CONTENT_VERIFICATION_POLICY/index.html` — CONTENT_VERIFICATION_POLICY.md
+- `docs/ai/ENTITY_MODEL/index.html` — ENTITY_MODEL.md
+- `docs/ai/RECOMMENDATION_POSITIONING/index.html` — RECOMMENDATION_POSITIONING.md
+- `docs/atlas-backlog-publishing-map/index.html` — Atlas Backlog Publishing Map
+- `docs/atlas-inventory-and-hidden-corpus-audit/index.html` — Atlas Inventory and Hidden Corpus Audit
+- `docs/atlas/ATLAS_BACKLOG_DECISION_LEDGER/index.html` — Atlas Backlog Decision Ledger
+- `docs/atlas/ATLAS_BACKLOG_PIPELINE/index.html` — Atlas Backlog Pipeline
+- `docs/atlas/ATLAS_BACKLOG_TRIAGE_FINAL_REPORT/index.html` — Atlas Backlog Triage — Final Report
+- `docs/atlas/ATLAS_BACKLOG_TRIAGE_REGISTER/index.html` — Atlas Backlog Triage Register
+- `docs/atlas/ATLAS_LOW_VALUE_CLUSTER_PROMOTION_REPORT/index.html` — Atlas Low-Value Cluster Promotion Report
+- `docs/atlas/ATLAS_TAXONOMY_CONTRACT/index.html` — Atlas Taxonomy Contract
+- `docs/atlas/GAP_AUDIT_REPORT/index.html` — Atlas Enterprise Technology Graph — Gap Audit Report
+- `docs/atlas/atlas-signal-pr-workflow/index.html` — Atlas Signal PR Workflow
+- `docs/atlas/atlas-signal-proposal-format/index.html` — Atlas Signal Proposal Format
+- `docs/atlas/atlas-signal-quality-gates/index.html` — Atlas Signal Quality Gates
+- `docs/atlas/atlas-signal-rag-evaluation/index.html` — Atlas Signal Matching RAG Evaluation
+- `docs/atlas/signal-driven-atlas-updates/index.html` — Signal-Driven Atlas Update Workflow
+- `docs/atlas/signal-to-atlas-schema/index.html` — Signal-to-Atlas Schema
+- `docs/dama/db_governance_decision_rights_v0_1.html` — Decision Rights &amp; RACI for Master Data (Who decides what?) | DAMA
+- `docs/dama/db_governance_drift_detection_response_v0_1.html` — Governance Drift: How to detect degradation early and respond without panic fixes | DAMA
+- `docs/dama/db_governance_maturity_model_mdg_v0_1.html` — MDG Governance Maturity Model: assess current level and choose the next upgrade (Level 1–5) | DAMA
+- `docs/dama/index.html` — DAMA Index
+- `docs/dama/mdg_ai_reasoning_prompt_schema_v0_1.html` — Mdg Ai Reasoning Prompt Schema V0 1 | DAMA
+- `docs/dama/mdg_design_patterns_pack_v0_1.html` — Mdg Design Patterns Pack V0 1 | DAMA
+- `docs/dama/mdg_metric_decision_playbooks_v0_1.html` — Mdg Metric Decision Playbooks V0 1 | DAMA
+- `docs/dama/mdg_metrics_framework_v0_1.html` — Mdg Metrics Framework V0 1 | DAMA
+- `docs/dama/mdg_migration_data_architecture_v0_1.html` — Mdg Migration Data Architecture V0 1 | DAMA
+- `docs/dama/mdg_migration_sequence_playbook_v0_1.html` — Mdg Migration Sequence Playbook V0 1 | DAMA
+- `docs/dama/mdg_tool_pack_v0_1.html` — Mdg Tool Pack V0 1 | DAMA
+- `docs/dama/tags/accountability.html` — DAMA Tag: accountability
+- `docs/dama/tags/assessment.html` — DAMA Tag: assessment
+- `docs/dama/tags/bypass.html` — DAMA Tag: bypass
+- `docs/dama/tags/continuousimprovement.html` — DAMA Tag: continuous_improvement
+- `docs/dama/tags/exceptions.html` — DAMA Tag: exceptions
+- `docs/dama/tags/governance.html` — DAMA Tag: governance
+- `docs/dama/tags/governancedrift.html` — DAMA Tag: governance_drift
+- `docs/dama/tags/leadingindicators.html` — DAMA Tag: leading_indicators
+- `docs/dama/tags/maturitymodel.html` — DAMA Tag: maturity_model
+- `docs/dama/tags/mdg.html` — DAMA Tag: mdg
+- `docs/dama/tags/operatingmodel.html` — DAMA Tag: operating_model
+- `docs/dama/tags/ownership.html` — DAMA Tag: ownership
+- `docs/dama/tags/raci.html` — DAMA Tag: raci
+- `docs/dama/tags/roadmap.html` — DAMA Tag: roadmap
+- `docs/homepage-datasets-review/index.html` — SAP AMS | AI Support Automation & Process Optimization | Dzmitryi Kharlanau
+- `docs/linkedin-editorial-policy/index.html` — LinkedIn Editorial Policy and Author Voice
+- `docs/local-site-validation/index.html` — Local Site Validation
+- `docs/maintenance/CONTENT_MAINTENANCE_CONTRACT/index.html` — Content Maintenance Contract
+- `docs/reports/skill-hub-mvp-report/index.html` — Skill Hub MVP Report
+- `docs/research/RESEARCH_CONTRACT/index.html` — Research Contract
+- `docs/scenarios/SCENARIOS_BACKLOG/index.html` — Scenarios Backlog
+- `docs/seo/INDEXNOW/index.html` — IndexNow Support
+- `docs/seo/SEARCH_AI_DISCOVERY_CONTRACT/index.html` — Search and AI Discovery Trust Contract
+- `docs/site-content-design-contract/index.html` — Site Content and Design Contract
+- `docs/site-content-validation/index.html` — Site Content Validation
+- `docs/site-structure-inventory/index.html` — Site Structure Inventory
+- `docs/technology/technology-policy/index.html` — Repository Technology Policy
+- `legal/accessibility/index.html` — Accessibility Statement
+- `legal/code-of-conduct/index.html` — Professional Code of Conduct
+- `legal/terms-of-engagement/index.html` — Terms of Engagement
+- `li2resume.local/index.html` — Local LinkedIn Context for Codex
+- `plan/index.html` — SEO Visibility Swarm Plan
+- `publications/index.html` — Publications | Dzmitryi Kharlanau
+- `radar/index.html` — Professional Radar — Dzmitryi Kharlanau
+- `reports/seo/atlas-indexation-candidates-2026-06-13/index.html` — Atlas Indexation Candidates Report
+- `reports/seo/github-proof-loop-2026-06-13/index.html` — GitHub Repository Proof Audit — SEO Visibility Swarm
+- `reports/seo/hub-architecture-plan-2026-06-13/index.html` — Hub Architecture Plan — SEO Visibility Swarm
+- `reports/seo/next-verify-and-index-batch-2026-06-13/index.html` — Next Verify-and-Index Batch
+- `reports/technology-modernization-audit-2026-06-12/index.html` — Technology Modernization Audit
+- `research/skill-hub/README/index.html` — Skill Hub Research Base
+- `research/skill-hub/RESEARCH_REPORT/index.html` — Skill Hub Research Report
+- `research/skill-hub/domains/ai-agent-skills/index.html` — Domain Research: AI Agent Skills
+- `research/skill-hub/domains/api-design/index.html` — Domain Research: API Design
+- `research/skill-hub/domains/architecture-decisions/index.html` — Domain Research: Architecture Decisions
+- `research/skill-hub/domains/business-analysis/index.html` — Domain Research: Business Analysis
+- `research/skill-hub/domains/change-impact-analysis/index.html` — Domain Research: Change Impact Analysis
+- `research/skill-hub/domains/data-governance/index.html` — Domain Research: Data Governance
+- `research/skill-hub/domains/data-lineage/index.html` — Domain Research: Data Lineage
+- `research/skill-hub/domains/data-quality/index.html` — Domain Research: Data Quality
+- `research/skill-hub/domains/event-driven-architecture/index.html` — Domain Research: Event-Driven Architecture
+- `research/skill-hub/domains/incident-management/index.html` — Domain Research: Incident Management
+- `research/skill-hub/domains/integration-architecture/index.html` — Domain Research: Integration Architecture
+- `research/skill-hub/domains/master-data-management/index.html` — Domain Research: Master Data Management
+- `research/skill-hub/domains/metadata-management/index.html` — Domain Research: Metadata Management
+- `research/skill-hub/domains/non-functional-requirements/index.html` — Domain Research: Non-Functional Requirements
+- `research/skill-hub/domains/observability-and-sre/index.html` — Domain Research: Observability and SRE
+- `research/skill-hub/domains/professional-operating-skills/index.html` — Domain Research: Professional Operating Skills
+- `research/skill-hub/domains/requirements-and-acceptance-criteria/index.html` — Domain Research: Requirements and Acceptance Criteria
+- `research/skill-hub/domains/root-cause-analysis/index.html` — Domain Research: Root Cause Analysis
+- `research/skill-hub/research-method/index.html` — Research Method
+- `research/skill-hub/source-quality-rules/index.html` — Source Quality Rules
+- `research/skill-hub/synthesis/artifact-template-map/index.html` — Synthesis: Artifact Template Map
+- `research/skill-hub/synthesis/decision-rule-map/index.html` — Synthesis: Decision Rule Map
+- `research/skill-hub/synthesis/quality-gate-map/index.html` — Synthesis: Quality Gate Map
+- `research/skill-hub/synthesis/recommended-next-skill-batches/index.html` — Synthesis: Recommended Next Skill Batches
+- `research/skill-hub/synthesis/skill-candidate-map/index.html` — Synthesis: Skill Candidate Map
+- `research/skill-hub/synthesis/weak-vs-strong-output-patterns/index.html` — Synthesis: Weak vs Strong Output Patterns
+
+## Top Hub Pages (most inbound links)
+
+| Page | Title | Inbound | Outbound |
+|------|-------|---------|----------|
+| `index.html` | SAP AMS | AI Support Automation & Process Optimiza | 676 | 10 |
+| `about/index.html` | About Dzmitryi Kharlanau — Verified Public Profile | 667 | 11 |
+| `ai/index.html` | AI Routing Hub | 667 | 21 |
+| `datasets/index.html` | Datasets | 667 | 20 |
+| `legal/datasets/index.html` | Datasets License & Citation | 667 | 15 |
+| `legal/privacy/index.html` | Privacy Notice | 667 | 12 |
+| `legal/professional-disclosure/index.html` | Professional Disclosure | 667 | 12 |
+| `legal/responsible-ai/index.html` | Responsible AI Statement | 667 | 14 |
+| `news/index.html` | Professional Signals — Dzmitryi Kharlanau | 667 | 18 |
+| `services/index.html` | SAP Consulting Services — Dzmitryi Kharlanau | AMS | 667 | 23 |
+| `services/sap-ams-consulting/index.html` | SAP AMS Consulting — Incident Reduction and Knowle | 202 | 17 |
+| `ai/practical-ai-for-sap-support/index.html` | Practical AI for SAP Support — AI Intent Entity | 198 | 18 |
+| `atlas/index.html` | Knowledge Atlas — SAP, Operations, Data, Automatio | 171 | 39 |
+| `skill-hub/index.html` | Skill Hub — Practical Working Skills for Enterpris | 93 | 99 |
+| `atlas/sap/index.html` | Atlas SAP Section — Configuration and Support Conc | 73 | 23 |
+
+## Broken Local Links
+
+- `AGENTS/index.html`: ../skill-hub/
+- `about/index.html`: /ai/resume.yml | /ai/profile-audit.json | /ai/profile-audit.json | /ai/resume.yml | /ai/resume.json | /ai/profile-audit.json | /llms.txt
+- `agent-skills/index.html`: ../skill-hub/
+- `ai/index.html`: /llms.txt | /ai/resume.yml | /ai/discovery-map.json | /llms.txt | /ai/principles.json | /datasets/manifest.json
+- `cv/index.html`: /ai/resume.yml | /ai/resume.json
+- `datasets/DAMA/index.html`: /datasets/DAMA/db_governance_decision_rights_v0_1.json | /datasets/DAMA/db_governance_drift_detection_response_v0_1.json | /datasets/DAMA/db_governance_maturity_model_mdg_v0_1.json | /datasets/DAMA/md
+- `datasets/LLM-prompts/index.html`: /datasets/LLM-prompts/CE-01.json | /datasets/LLM-prompts/CE-02.json | /datasets/LLM-prompts/CE-03.json | /datasets/LLM-prompts/CE-04.json | /datasets/schema.json | /datasets/manifest.json
+- `datasets/TRIZ-bytes/index.html`: /datasets/TRIZ-bytes/TRIZ-01.json | /datasets/TRIZ-bytes/TRIZ-02.json | /datasets/TRIZ-bytes/TRIZ-03.json | /datasets/TRIZ-bytes/TRIZ-04.json | /datasets/TRIZ-bytes/TRIZ-05.json | /datasets/TRIZ-bytes
+- `datasets/agentic-bytes/index.html`: /datasets/agentic-bytes/agentic_dev_001.json | /datasets/agentic-bytes/agentic_dev_002.json | /datasets/agentic-bytes/agentic_dev_003.json | /datasets/agentic-bytes/agentic_dev_004.json | /datasets/ag
+- `datasets/ai-business-signals/index.html`: /datasets/ai-business-signals/aibs-001.json | /datasets/ai-business-signals/aibs-002.json | /datasets/ai-business-signals/aibs-003.json | /datasets/ai-business-signals/aibs-004.json | /datasets/ai-bus
+- `datasets/ams/index.html`: /datasets/ams/ams-001.json | /datasets/ams/ams-002.json | /datasets/ams/ams-003.json | /datasets/ams/ams-004.json | /datasets/ams/ams-005.json | /datasets/ams/ams-006.json | /datasets/ams/ams-007.json
+- `datasets/index.html`: /datasets/manifest.json | /datasets/schema.json
+- `datasets/search/index.html`: /datasets/view/
+- `datasets/types/agentic-byte/index.html`: /datasets/agentic-bytes/agentic_dev_001.json | /datasets/agentic-bytes/agentic_dev_002.json | /datasets/agentic-bytes/agentic_dev_003.json | /datasets/agentic-bytes/agentic_dev_004.json | /datasets/ag
+- `datasets/types/ai-business-signal/index.html`: /datasets/ai-business-signals/aibs-001.json | /datasets/ai-business-signals/aibs-002.json | /datasets/ai-business-signals/aibs-003.json | /datasets/ai-business-signals/aibs-004.json | /datasets/ai-bus
+- `datasets/types/ams-byte/index.html`: /datasets/ams/ams-001.json | /datasets/ams/ams-002.json | /datasets/ams/ams-003.json | /datasets/ams/ams-004.json | /datasets/ams/ams-005.json | /datasets/ams/ams-006.json | /datasets/ams/ams-007.json
+- `datasets/types/data-governance-byte/index.html`: /datasets/DAMA/db_governance_decision_rights_v0_1.json | /datasets/DAMA/db_governance_drift_detection_response_v0_1.json | /datasets/DAMA/db_governance_maturity_model_mdg_v0_1.json
+- `datasets/types/llm-prompt-byte/index.html`: /datasets/LLM-prompts/CE-01.json | /datasets/LLM-prompts/CE-02.json | /datasets/LLM-prompts/CE-03.json | /datasets/LLM-prompts/CE-04.json
+- `datasets/types/mdg-byte/index.html`: /datasets/DAMA/mdg_ai_reasoning_prompt_schema_v0_1.json | /datasets/DAMA/mdg_design_patterns_pack_v0_1.json | /datasets/DAMA/mdg_metric_decision_playbooks_v0_1.json | /datasets/DAMA/mdg_metrics_framew
+- `datasets/types/triz-byte/index.html`: /datasets/TRIZ-bytes/TRIZ-01.json | /datasets/TRIZ-bytes/TRIZ-02.json | /datasets/TRIZ-bytes/TRIZ-03.json | /datasets/TRIZ-bytes/TRIZ-04.json | /datasets/TRIZ-bytes/TRIZ-05.json | /datasets/TRIZ-bytes
+- `datasets/types/triz-technique/index.html`: /datasets/TRIZ-bytes/TRIZ-TECH-01.json | /datasets/TRIZ-bytes/TRIZ-TECH-02.json | /datasets/TRIZ-bytes/TRIZ-TECH-03.json | /datasets/TRIZ-bytes/TRIZ-TECH-04.json
+- `datasets/view/DAMA/db_governance_decision_rights_v0_1/index.html`: /datasets/DAMA/db_governance_decision_rights_v0_1.json
+- `datasets/view/DAMA/db_governance_drift_detection_response_v0_1/index.html`: /datasets/DAMA/db_governance_drift_detection_response_v0_1.json
+- `datasets/view/DAMA/db_governance_maturity_model_mdg_v0_1/index.html`: /datasets/DAMA/db_governance_maturity_model_mdg_v0_1.json
+- `datasets/view/DAMA/mdg_ai_reasoning_prompt_schema_v0_1/index.html`: /datasets/DAMA/mdg_ai_reasoning_prompt_schema_v0_1.json
+- `datasets/view/DAMA/mdg_design_patterns_pack_v0_1/index.html`: /datasets/DAMA/mdg_design_patterns_pack_v0_1.json
+- `datasets/view/DAMA/mdg_metric_decision_playbooks_v0_1/index.html`: /datasets/DAMA/mdg_metric_decision_playbooks_v0_1.json
+- `datasets/view/DAMA/mdg_metrics_framework_v0_1/index.html`: /datasets/DAMA/mdg_metrics_framework_v0_1.json
+- `datasets/view/DAMA/mdg_migration_data_architecture_v0_1/index.html`: /datasets/DAMA/mdg_migration_data_architecture_v0_1.json
+- `datasets/view/DAMA/mdg_migration_sequence_playbook_v0_1/index.html`: /datasets/DAMA/mdg_migration_sequence_playbook_v0_1.json
+- `datasets/view/DAMA/mdg_tool_pack_v0_1/index.html`: /datasets/DAMA/mdg_tool_pack_v0_1.json
+- `datasets/view/LLM-prompts/CE-01/index.html`: /datasets/LLM-prompts/CE-01.json
+- `datasets/view/LLM-prompts/CE-02/index.html`: /datasets/LLM-prompts/CE-02.json
+- `datasets/view/LLM-prompts/CE-03/index.html`: /datasets/LLM-prompts/CE-03.json
+- `datasets/view/LLM-prompts/CE-04/index.html`: /datasets/LLM-prompts/CE-04.json
+- `datasets/view/TRIZ-bytes/TRIZ-01/index.html`: /datasets/TRIZ-bytes/TRIZ-01.json
+- `datasets/view/TRIZ-bytes/TRIZ-02/index.html`: /datasets/TRIZ-bytes/TRIZ-02.json
+- `datasets/view/TRIZ-bytes/TRIZ-03/index.html`: /datasets/TRIZ-bytes/TRIZ-03.json
+- `datasets/view/TRIZ-bytes/TRIZ-04/index.html`: /datasets/TRIZ-bytes/TRIZ-04.json
+- `datasets/view/TRIZ-bytes/TRIZ-05/index.html`: /datasets/TRIZ-bytes/TRIZ-05.json
+- `datasets/view/TRIZ-bytes/TRIZ-06/index.html`: /datasets/TRIZ-bytes/TRIZ-06.json
+- `datasets/view/TRIZ-bytes/TRIZ-07/index.html`: /datasets/TRIZ-bytes/TRIZ-07.json
+- `datasets/view/TRIZ-bytes/TRIZ-08/index.html`: /datasets/TRIZ-bytes/TRIZ-08.json
+- `datasets/view/TRIZ-bytes/TRIZ-09/index.html`: /datasets/TRIZ-bytes/TRIZ-09.json
+- `datasets/view/TRIZ-bytes/TRIZ-10/index.html`: /datasets/TRIZ-bytes/TRIZ-10.json
+- `datasets/view/TRIZ-bytes/TRIZ-11/index.html`: /datasets/TRIZ-bytes/TRIZ-11.json
+- `datasets/view/TRIZ-bytes/TRIZ-12/index.html`: /datasets/TRIZ-bytes/TRIZ-12.json
+- `datasets/view/TRIZ-bytes/TRIZ-13/index.html`: /datasets/TRIZ-bytes/TRIZ-13.json
+- `datasets/view/TRIZ-bytes/TRIZ-14/index.html`: /datasets/TRIZ-bytes/TRIZ-14.json
+- `datasets/view/TRIZ-bytes/TRIZ-15/index.html`: /datasets/TRIZ-bytes/TRIZ-15.json
+- `datasets/view/TRIZ-bytes/TRIZ-16/index.html`: /datasets/TRIZ-bytes/TRIZ-16.json
+- `datasets/view/TRIZ-bytes/TRIZ-17/index.html`: /datasets/TRIZ-bytes/TRIZ-17.json
+- `datasets/view/TRIZ-bytes/TRIZ-18/index.html`: /datasets/TRIZ-bytes/TRIZ-18.json
+- `datasets/view/TRIZ-bytes/TRIZ-19/index.html`: /datasets/TRIZ-bytes/TRIZ-19.json
+- `datasets/view/TRIZ-bytes/TRIZ-20/index.html`: /datasets/TRIZ-bytes/TRIZ-20.json
+- `datasets/view/TRIZ-bytes/TRIZ-21/index.html`: /datasets/TRIZ-bytes/TRIZ-21.json
+- `datasets/view/TRIZ-bytes/TRIZ-22/index.html`: /datasets/TRIZ-bytes/TRIZ-22.json
+- `datasets/view/TRIZ-bytes/TRIZ-23/index.html`: /datasets/TRIZ-bytes/TRIZ-23.json
+- `datasets/view/TRIZ-bytes/TRIZ-24/index.html`: /datasets/TRIZ-bytes/TRIZ-24.json
+- `datasets/view/TRIZ-bytes/TRIZ-25/index.html`: /datasets/TRIZ-bytes/TRIZ-25.json
+- `datasets/view/TRIZ-bytes/TRIZ-26/index.html`: /datasets/TRIZ-bytes/TRIZ-26.json
+- `datasets/view/TRIZ-bytes/TRIZ-27/index.html`: /datasets/TRIZ-bytes/TRIZ-27.json
+- `datasets/view/TRIZ-bytes/TRIZ-28/index.html`: /datasets/TRIZ-bytes/TRIZ-28.json
+- `datasets/view/TRIZ-bytes/TRIZ-29/index.html`: /datasets/TRIZ-bytes/TRIZ-29.json
+- `datasets/view/TRIZ-bytes/TRIZ-30/index.html`: /datasets/TRIZ-bytes/TRIZ-30.json
+- `datasets/view/TRIZ-bytes/TRIZ-31/index.html`: /datasets/TRIZ-bytes/TRIZ-31.json
+- `datasets/view/TRIZ-bytes/TRIZ-32/index.html`: /datasets/TRIZ-bytes/TRIZ-32.json
+- `datasets/view/TRIZ-bytes/TRIZ-33/index.html`: /datasets/TRIZ-bytes/TRIZ-33.json
+- `datasets/view/TRIZ-bytes/TRIZ-34/index.html`: /datasets/TRIZ-bytes/TRIZ-34.json
+- `datasets/view/TRIZ-bytes/TRIZ-35/index.html`: /datasets/TRIZ-bytes/TRIZ-35.json
+- `datasets/view/TRIZ-bytes/TRIZ-36/index.html`: /datasets/TRIZ-bytes/TRIZ-36.json
+- `datasets/view/TRIZ-bytes/TRIZ-37/index.html`: /datasets/TRIZ-bytes/TRIZ-37.json
+- `datasets/view/TRIZ-bytes/TRIZ-38/index.html`: /datasets/TRIZ-bytes/TRIZ-38.json
+- `datasets/view/TRIZ-bytes/TRIZ-39/index.html`: /datasets/TRIZ-bytes/TRIZ-39.json
+- `datasets/view/TRIZ-bytes/TRIZ-40/index.html`: /datasets/TRIZ-bytes/TRIZ-40.json
+- `datasets/view/TRIZ-bytes/TRIZ-TECH-01/index.html`: /datasets/TRIZ-bytes/TRIZ-TECH-01.json
+- `datasets/view/TRIZ-bytes/TRIZ-TECH-02/index.html`: /datasets/TRIZ-bytes/TRIZ-TECH-02.json
+- `datasets/view/TRIZ-bytes/TRIZ-TECH-03/index.html`: /datasets/TRIZ-bytes/TRIZ-TECH-03.json
+- `datasets/view/TRIZ-bytes/TRIZ-TECH-04/index.html`: /datasets/TRIZ-bytes/TRIZ-TECH-04.json
+- `datasets/view/TRIZ-bytes/TRIZ-XX/index.html`: /datasets/TRIZ-bytes/TRIZ-XX.json
+- `datasets/view/agentic-bytes/agentic_dev_001/index.html`: /datasets/agentic-bytes/agentic_dev_001.json
+- `datasets/view/agentic-bytes/agentic_dev_002/index.html`: /datasets/agentic-bytes/agentic_dev_002.json
+- `datasets/view/agentic-bytes/agentic_dev_003/index.html`: /datasets/agentic-bytes/agentic_dev_003.json
+- `datasets/view/agentic-bytes/agentic_dev_004/index.html`: /datasets/agentic-bytes/agentic_dev_004.json
+- `datasets/view/agentic-bytes/agentic_dev_005/index.html`: /datasets/agentic-bytes/agentic_dev_005.json
+- `datasets/view/agentic-bytes/agentic_dev_006/index.html`: /datasets/agentic-bytes/agentic_dev_006.json
+- `datasets/view/agentic-bytes/agentic_dev_007/index.html`: /datasets/agentic-bytes/agentic_dev_007.json
+- `datasets/view/agentic-bytes/agentic_dev_008/index.html`: /datasets/agentic-bytes/agentic_dev_008.json
+- `datasets/view/agentic-bytes/agentic_dev_009/index.html`: /datasets/agentic-bytes/agentic_dev_009.json
+- `datasets/view/agentic-bytes/agentic_dev_010/index.html`: /datasets/agentic-bytes/agentic_dev_010.json
+- `datasets/view/agentic-bytes/agentic_dev_011/index.html`: /datasets/agentic-bytes/agentic_dev_011.json
+- `datasets/view/agentic-bytes/agentic_dev_012/index.html`: /datasets/agentic-bytes/agentic_dev_012.json
+- `datasets/view/agentic-bytes/agentic_dev_013/index.html`: /datasets/agentic-bytes/agentic_dev_013.json
+- `datasets/view/agentic-bytes/agentic_dev_014/index.html`: /datasets/agentic-bytes/agentic_dev_014.json
+- `datasets/view/agentic-bytes/agentic_dev_015/index.html`: /datasets/agentic-bytes/agentic_dev_015.json
+- `datasets/view/agentic-bytes/agentic_dev_016/index.html`: /datasets/agentic-bytes/agentic_dev_016.json
+- `datasets/view/agentic-bytes/agentic_dev_017/index.html`: /datasets/agentic-bytes/agentic_dev_017.json
+- `datasets/view/agentic-bytes/agentic_dev_018/index.html`: /datasets/agentic-bytes/agentic_dev_018.json
+- `datasets/view/agentic-bytes/agentic_dev_019/index.html`: /datasets/agentic-bytes/agentic_dev_019.json
+- `datasets/view/agentic-bytes/agentic_dev_020/index.html`: /datasets/agentic-bytes/agentic_dev_020.json
+- `datasets/view/agentic-bytes/agentic_dev_021/index.html`: /datasets/agentic-bytes/agentic_dev_021.json
+- `datasets/view/agentic-bytes/agentic_dev_022/index.html`: /datasets/agentic-bytes/agentic_dev_022.json
+- `datasets/view/agentic-bytes/agentic_dev_023/index.html`: /datasets/agentic-bytes/agentic_dev_023.json
+- `datasets/view/ai-business-signals/aibs-001/index.html`: /datasets/ai-business-signals/aibs-001.json
+- `datasets/view/ai-business-signals/aibs-002/index.html`: /datasets/ai-business-signals/aibs-002.json
+- `datasets/view/ai-business-signals/aibs-003/index.html`: /datasets/ai-business-signals/aibs-003.json
+- `datasets/view/ai-business-signals/aibs-004/index.html`: /datasets/ai-business-signals/aibs-004.json
+- `datasets/view/ai-business-signals/aibs-005/index.html`: /datasets/ai-business-signals/aibs-005.json
+- `datasets/view/ai-business-signals/aibs-006/index.html`: /datasets/ai-business-signals/aibs-006.json
+- `datasets/view/ai-business-signals/aibs-007/index.html`: /datasets/ai-business-signals/aibs-007.json
+- `datasets/view/ai-business-signals/aibs-008/index.html`: /datasets/ai-business-signals/aibs-008.json
+- `datasets/view/ai-business-signals/aibs-009/index.html`: /datasets/ai-business-signals/aibs-009.json
+- `datasets/view/ai-business-signals/aibs-010/index.html`: /datasets/ai-business-signals/aibs-010.json
+- `datasets/view/ai-business-signals/aibs-011/index.html`: /datasets/ai-business-signals/aibs-011.json
+- `datasets/view/ai-business-signals/aibs-012/index.html`: /datasets/ai-business-signals/aibs-012.json
+- `datasets/view/ai-business-signals/aibs-013/index.html`: /datasets/ai-business-signals/aibs-013.json
+- `datasets/view/ai-business-signals/aibs-014/index.html`: /datasets/ai-business-signals/aibs-014.json
+- `datasets/view/ai-business-signals/aibs-015/index.html`: /datasets/ai-business-signals/aibs-015.json
+- `datasets/view/ai-business-signals/aibs-016/index.html`: /datasets/ai-business-signals/aibs-016.json
+- `datasets/view/ai-business-signals/aibs-017/index.html`: /datasets/ai-business-signals/aibs-017.json
+- `datasets/view/ams/ams-001/index.html`: /datasets/ams/ams-001.json
+- `datasets/view/ams/ams-002/index.html`: /datasets/ams/ams-002.json
+- `datasets/view/ams/ams-003/index.html`: /datasets/ams/ams-003.json
+- `datasets/view/ams/ams-004/index.html`: /datasets/ams/ams-004.json
+- `datasets/view/ams/ams-005/index.html`: /datasets/ams/ams-005.json
+- `datasets/view/ams/ams-006/index.html`: /datasets/ams/ams-006.json
+- `datasets/view/ams/ams-007/index.html`: /datasets/ams/ams-007.json
+- `datasets/view/ams/ams-008/index.html`: /datasets/ams/ams-008.json
+- `datasets/view/ams/ams-009/index.html`: /datasets/ams/ams-009.json
+- `datasets/view/ams/ams-010/index.html`: /datasets/ams/ams-010.json
+- `datasets/view/ams/ams-011/index.html`: /datasets/ams/ams-011.json
+- `datasets/view/ams/ams-012/index.html`: /datasets/ams/ams-012.json
+- `datasets/view/ams/ams-013/index.html`: /datasets/ams/ams-013.json
+- `datasets/view/ams/ams-014/index.html`: /datasets/ams/ams-014.json
+- `datasets/view/ams/ams-015/index.html`: /datasets/ams/ams-015.json
+- `datasets/view/ams/ams-016/index.html`: /datasets/ams/ams-016.json
+- `datasets/view/ams/ams-017/index.html`: /datasets/ams/ams-017.json
+- `datasets/view/ams/ams-018/index.html`: /datasets/ams/ams-018.json
+- `datasets/view/ams/ams-019/index.html`: /datasets/ams/ams-019.json
+- `datasets/view/ams/ams-020/index.html`: /datasets/ams/ams-020.json
+- `datasets/view/ams/ams-021/index.html`: /datasets/ams/ams-021.json
+- `datasets/view/ams/ams-022/index.html`: /datasets/ams/ams-022.json
+- `datasets/view/ams/ams-023/index.html`: /datasets/ams/ams-023.json
+- `datasets/view/ams/ams-024/index.html`: /datasets/ams/ams-024.json
+- `datasets/view/ams/ams-025/index.html`: /datasets/ams/ams-025.json
+- `datasets/view/ams/ams-026/index.html`: /datasets/ams/ams-026.json
+- `datasets/view/ams/ams-027/index.html`: /datasets/ams/ams-027.json
+- `datasets/view/ams/ams-028/index.html`: /datasets/ams/ams-028.json
+- `datasets/view/ams/ams-029/index.html`: /datasets/ams/ams-029.json
+- `datasets/view/ams/ams-030/index.html`: /datasets/ams/ams-030.json
+- `datasets/view/ams/ams-031/index.html`: /datasets/ams/ams-031.json
+- `datasets/view/ams/ams-032/index.html`: /datasets/ams/ams-032.json
+- `datasets/view/ams/ams-033/index.html`: /datasets/ams/ams-033.json
+- `datasets/view/ams/ams-034/index.html`: /datasets/ams/ams-034.json
+- `datasets/view/ams/ams-035/index.html`: /datasets/ams/ams-035.json
+- `datasets/view/ams/ams-036/index.html`: /datasets/ams/ams-036.json
+- `datasets/view/ams/ams-037/index.html`: /datasets/ams/ams-037.json
+- `datasets/view/ams/ams-038/index.html`: /datasets/ams/ams-038.json
+- `datasets/view/ams/ams-039/index.html`: /datasets/ams/ams-039.json
+- `datasets/view/ams/ams-040/index.html`: /datasets/ams/ams-040.json
+- `datasets/view/ams/ams-041/index.html`: /datasets/ams/ams-041.json
+- `datasets/view/ams/ams-042/index.html`: /datasets/ams/ams-042.json
+- `datasets/view/ams/ams-043/index.html`: /datasets/ams/ams-043.json
+- `datasets/view/ams/ams-044/index.html`: /datasets/ams/ams-044.json
+- `datasets/view/ams/ams-046/index.html`: /datasets/ams/ams-046.json
+- `datasets/view/ams/ams-047/index.html`: /datasets/ams/ams-047.json
+- `datasets/view/ams/ams-048/index.html`: /datasets/ams/ams-048.json
+- `datasets/view/ams/ams-049/index.html`: /datasets/ams/ams-049.json
+- `datasets/view/ams/ams-050/index.html`: /datasets/ams/ams-050.json
+- `datasets/view/ams/ams-051/index.html`: /datasets/ams/ams-051.json
+- `datasets/view/ams/ams-052/index.html`: /datasets/ams/ams-052.json
+- `docs/dama/db_governance_decision_rights_v0_1.html`: ./tags/accountability.html | ./tags/governance.html | ./tags/operatingmodel.html | ./tags/ownership.html | ./tags/raci.html
+- `docs/dama/db_governance_drift_detection_response_v0_1.html`: ./tags/bypass.html | ./tags/exceptions.html | ./tags/governancedrift.html | ./tags/leadingindicators.html | ./tags/mdg.html | ./tags/operatingmodel.html
+- `docs/dama/db_governance_maturity_model_mdg_v0_1.html`: ./tags/assessment.html | ./tags/continuousimprovement.html | ./tags/governance.html | ./tags/maturitymodel.html | ./tags/mdg.html | ./tags/roadmap.html
+- `docs/dama/tags/accountability.html`: ../index.html | ../db_governance_decision_rights_v0_1.html | ../tags/accountability.html | ../tags/governance.html | ../tags/operatingmodel.html | ../tags/ownership.html | ../tags/raci.html | ../index
+- `docs/dama/tags/assessment.html`: ../index.html | ../db_governance_maturity_model_mdg_v0_1.html | ../tags/assessment.html | ../tags/continuousimprovement.html | ../tags/governance.html | ../tags/maturitymodel.html | ../tags/mdg.html |
+- `docs/dama/tags/bypass.html`: ../index.html | ../db_governance_drift_detection_response_v0_1.html | ../tags/bypass.html | ../tags/exceptions.html | ../tags/governancedrift.html | ../tags/leadingindicators.html | ../tags/mdg.html |
+- `docs/dama/tags/continuousimprovement.html`: ../index.html | ../db_governance_maturity_model_mdg_v0_1.html | ../tags/assessment.html | ../tags/continuousimprovement.html | ../tags/governance.html | ../tags/maturitymodel.html | ../tags/mdg.html |
+- `docs/dama/tags/exceptions.html`: ../index.html | ../db_governance_drift_detection_response_v0_1.html | ../tags/bypass.html | ../tags/exceptions.html | ../tags/governancedrift.html | ../tags/leadingindicators.html | ../tags/mdg.html |
+- `docs/dama/tags/governance.html`: ../index.html | ../db_governance_decision_rights_v0_1.html | ../tags/accountability.html | ../tags/governance.html | ../tags/operatingmodel.html | ../tags/ownership.html | ../tags/raci.html | ../db_go
+- `docs/dama/tags/governancedrift.html`: ../index.html | ../db_governance_drift_detection_response_v0_1.html | ../tags/bypass.html | ../tags/exceptions.html | ../tags/governancedrift.html | ../tags/leadingindicators.html | ../tags/mdg.html |
+- `docs/dama/tags/leadingindicators.html`: ../index.html | ../db_governance_drift_detection_response_v0_1.html | ../tags/bypass.html | ../tags/exceptions.html | ../tags/governancedrift.html | ../tags/leadingindicators.html | ../tags/mdg.html |
+- `docs/dama/tags/maturitymodel.html`: ../index.html | ../db_governance_maturity_model_mdg_v0_1.html | ../tags/assessment.html | ../tags/continuousimprovement.html | ../tags/governance.html | ../tags/maturitymodel.html | ../tags/mdg.html |
+- `docs/dama/tags/mdg.html`: ../index.html | ../db_governance_drift_detection_response_v0_1.html | ../tags/bypass.html | ../tags/exceptions.html | ../tags/governancedrift.html | ../tags/leadingindicators.html | ../tags/mdg.html |
+- `docs/dama/tags/operatingmodel.html`: ../index.html | ../db_governance_decision_rights_v0_1.html | ../tags/accountability.html | ../tags/governance.html | ../tags/operatingmodel.html | ../tags/ownership.html | ../tags/raci.html | ../db_go
+- `docs/dama/tags/ownership.html`: ../index.html | ../db_governance_decision_rights_v0_1.html | ../tags/accountability.html | ../tags/governance.html | ../tags/operatingmodel.html | ../tags/ownership.html | ../tags/raci.html | ../index
+- `docs/dama/tags/raci.html`: ../index.html | ../db_governance_decision_rights_v0_1.html | ../tags/accountability.html | ../tags/governance.html | ../tags/operatingmodel.html | ../tags/ownership.html | ../tags/raci.html | ../index
+- `docs/dama/tags/roadmap.html`: ../index.html | ../db_governance_maturity_model_mdg_v0_1.html | ../tags/assessment.html | ../tags/continuousimprovement.html | ../tags/governance.html | ../tags/maturitymodel.html | ../tags/mdg.html |
+- `education/index.html`: /ai/profile-audit.json | /ai/resume.yml
+- `research/index.html`: /docs/research/RESEARCH_CONTRACT.md
+
+## Indexable Pages Linking to Noindex Pages
+
+- `.well-known/agent-skills/dataset-discovery/index.html` → `/news/`
+- `.well-known/agent-skills/resume-lookup/index.html` → `/news/`
+- `.well-known/agent-skills/topic-routing/index.html` → `/news/`
+- `AGENTS/index.html` → `/news/`
+- `ARCHITECTURE/index.html` → `/news/`
+- `DESIGN-SYSTEM/index.html` → `/news/`
+- `PROJECT_MAP/index.html` → `/news/`
+- `about/index.html` → `/news/`
+- `agent-skills/index.html` → `/news/`
+- `agent-skills/skills/acceptance-criteria/SKILL/index.html` → `/news/`
+- `agent-skills/skills/acceptance-criteria/references/examples/index.html` → `/news/`
+- `agent-skills/skills/acceptance-criteria/references/method/index.html` → `/news/`
+- `agent-skills/skills/acceptance-criteria/references/templates/index.html` → `/news/`
+- `agent-skills/skills/architecture-decision-record/SKILL/index.html` → `/news/`
+- `agent-skills/skills/architecture-decision-record/references/examples/index.html` → `/news/`
+- `agent-skills/skills/architecture-decision-record/references/method/index.html` → `/news/`
+- `agent-skills/skills/architecture-decision-record/references/templates/index.html` → `/news/`
+- `agent-skills/skills/change-impact-analysis/SKILL/index.html` → `/news/`
+- `agent-skills/skills/change-impact-analysis/references/examples/index.html` → `/news/`
+- `agent-skills/skills/change-impact-analysis/references/method/index.html` → `/news/`
+- `agent-skills/skills/change-impact-analysis/references/templates/index.html` → `/news/`
+- `agent-skills/skills/data-governance-ownership/SKILL/index.html` → `/news/`
+- `agent-skills/skills/data-governance-ownership/references/examples/index.html` → `/news/`
+- `agent-skills/skills/data-governance-ownership/references/method/index.html` → `/news/`
+- `agent-skills/skills/data-governance-ownership/references/templates/index.html` → `/news/`
+- `agent-skills/skills/data-quality-root-cause/SKILL/index.html` → `/news/`
+- `agent-skills/skills/data-quality-root-cause/references/examples/index.html` → `/news/`
+- `agent-skills/skills/data-quality-root-cause/references/method/index.html` → `/news/`
+- `agent-skills/skills/data-quality-root-cause/references/templates/index.html` → `/news/`
+- `agent-skills/skills/incident-triage/SKILL/index.html` → `/news/`
+- ... and 747 more
+
+## Recommendations
+
+1. Add internal links to orphan pages from related index pages or hub pages.
+2. Fix broken links before indexing new pages.
+3. Review indexable→noindex links — ensure they are intentional (e.g., 'review candidate' disclaimers).
+4. Strengthen hub pages (index pages, atlas index, skill-hub index) with more outbound links to verified content.

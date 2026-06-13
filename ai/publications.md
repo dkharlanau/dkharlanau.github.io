@@ -10,7 +10,7 @@ hide_global_cta: true
 
 # Publications Dataset
 
-Source: `Basic_LinkedInDataExport_04-10-2026/Publications.csv`
+Source: LinkedIn profile export (Publications.csv)
 
 Updated: 2026-04-24
 

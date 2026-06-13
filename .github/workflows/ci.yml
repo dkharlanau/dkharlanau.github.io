@@ -58,5 +58,17 @@ jobs:
       - name: Check SEO metadata
         run: python3 scripts/check_seo.py _site
 
+      - name: Check indexing policy
+        run: python3 scripts/check_indexing_policy.py --site-dir _site --fail-on-critical
+
+      - name: Check content quality
+        run: python3 scripts/check_content_quality.py --fail-on-critical
+
+      - name: Audit indexability
+        run: python3 scripts/audit_indexability.py --site-dir _site --fail-on-critical
+
+      - name: Audit internal links
+        run: python3 scripts/audit_internal_links.py --site-dir _site
+
       - name: Validate AI-readable endpoints
         run: python3 scripts/validate_ai_endpoints.py _site
