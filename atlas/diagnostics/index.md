@@ -272,6 +272,36 @@ related:
       <p>Find why a spool request failed, why print output was not generated, or why a document output never reached the printer.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-application-log-diagnostics/">
+      <h2>SAP Application Log Diagnostics</h2>
+      <p>Find incident evidence in application logs, system logs, and developer traces.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-alerting-diagnostics/">
+      <h2>SAP Alerting Diagnostics</h2>
+      <p>Find why alerting misses real failures, generates false positives, or routes to the wrong team.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-authorization-diagnostics/">
+      <h2>SAP Authorization and Role Diagnostics</h2>
+      <p>Find missing roles, profile gaps, and authorization failures.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-change-control-diagnostics/">
+      <h2>SAP Change Control Diagnostics</h2>
+      <p>Find transport request failures, import errors, and sequencing issues.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-transport-governance-diagnostics/">
+      <h2>SAP Transport Governance Diagnostics</h2>
+      <p>Find queue conflicts, import-order errors, and governance gaps.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-incident-triage-diagnostics/">
+      <h2>SAP Incident Triage Diagnostics</h2>
+      <p>Classify and route SAP support incidents before deep investigation.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
   </div>
 </section>
 
@@ -324,6 +354,26 @@ related:
     <a class="atlas-card" href="/atlas/diagnostics/sap-rfc-destination-diagnostics/">
       <h2>SAP RFC Destination Diagnostics</h2>
       <p>Find why an RFC destination fails, why tRFC or qRFC queues are stuck, or why cross-system calls return errors.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-rest-api-diagnostics/">
+      <h2>SAP REST API Diagnostics</h2>
+      <p>Find HTTP/REST API connectivity, authentication, and payload failures.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-soap-diagnostics/">
+      <h2>SAP SOAP Diagnostics</h2>
+      <p>Find SOAP web-service failures, proxy errors, and WSDL mismatches.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-cloud-connector-diagnostics/">
+      <h2>SAP Cloud Connector Diagnostics</h2>
+      <p>Find SAP BTP Cloud Connector connectivity, tunnel, and destination issues.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-api-gateway-diagnostics/">
+      <h2>SAP API Gateway Diagnostics</h2>
+      <p>Find API gateway routing, authentication, and policy failures.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
   </div>
