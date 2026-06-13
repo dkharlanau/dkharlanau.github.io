@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Idempotency"
+description: "Idempotency means processing the same event or request multiple times produces the same outcome as processing it once."
+tags:
+  - concept
+  - sap-sd
+  - sap-master-data
+  - sap-wm
+  - sap-retail
+  - sap-s4hana
+  - sap-integration
 permalink: /atlas/concepts/idempotency/
 parent: Concepts
 robots: noindex, follow
@@ -16,6 +25,7 @@ related:
   - /atlas/sap/business-events/
   - /atlas/sap/sap-integration-suite/
 ---
+
 
 # Idempotency
 

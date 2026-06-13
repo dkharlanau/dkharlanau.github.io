@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Data Mesh Architecture Map"
+description: "This map applies data mesh principles to SAP-centric enterprise landscapes. It connects domain-oriented data ownership, data products, contracts, and quality."
+tags:
+  - landscape-map
+  - sap-master-data
+  - sap-s4hana
+  - sap-datasphere
+  - sap-integration
+  - data-quality
+  - ai-operations
 permalink: /atlas/maps/data-mesh-architecture-map/
 nav_order: 12
 parent: Maps
@@ -28,6 +37,7 @@ related:
   - /atlas/sap/semantic-layer/
   - /atlas/sap/data-quality-lineage/
 ---
+
 
 # Data Mesh Architecture Map
 

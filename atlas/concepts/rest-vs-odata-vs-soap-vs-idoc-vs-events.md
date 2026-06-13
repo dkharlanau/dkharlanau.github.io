@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "REST vs OData vs SOAP vs IDoc vs Events"
+description: "A comparative guide to the five most common integration protocols in SAP landscapes."
+tags:
+  - concept
+  - sap-wm
+  - sap-s4hana
+  - sap-integration
+  - ai-operations
+  - integration
+  - data-architecture
 permalink: /atlas/concepts/rest-vs-odata-vs-soap-vs-idoc-vs-events/
 parent: Concepts
 robots: noindex, follow
@@ -17,6 +26,7 @@ related:
   - /atlas/sap/rest-apis/
   - /atlas/sap/soap/
 ---
+
 
 # REST vs OData vs SOAP vs IDoc vs Events
 

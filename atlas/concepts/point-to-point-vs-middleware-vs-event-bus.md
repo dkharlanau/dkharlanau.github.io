@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Point-to-Point vs Middleware vs Event Bus"
+description: "Three integration topologies with different coupling, scalability, and operational characteristics. Point-to-point is direct system-to-system connection."
+tags:
+  - concept
+  - sap-s4hana
+  - sap-integration
+  - data-quality
+  - ai-operations
+  - integration
+  - data-architecture
 permalink: /atlas/concepts/point-to-point-vs-middleware-vs-event-bus/
 parent: Concepts
 robots: noindex, follow
@@ -15,6 +24,7 @@ related:
   - /atlas/concepts/event-driven-architecture/
   - /atlas/sap/sap-integration-suite/
 ---
+
 
 # Point-to-Point vs Middleware vs Event Bus
 

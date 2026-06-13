@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "SAP Integration Architecture"
+description: "SAP Integration Architecture defines how SAP and non-SAP systems exchange data and orchestrate processes."
+tags:
+  - concept
+  - sap-wm
+  - sap-btp
+  - sap-s4hana
+  - sap-integration
+  - data-quality
+  - ai-operations
 permalink: /atlas/concepts/sap-integration-architecture/
 parent: Concepts
 robots: noindex, follow
@@ -20,6 +29,7 @@ related:
   - /atlas/sap/business-events/
   - /atlas/sap/integration-monitoring/
 ---
+
 
 # SAP Integration Architecture
 

@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "SAP Event-Driven Architecture"
+description: "SAP Event-Driven Architecture leverages S/4HANA Business Events, SAP Event Mesh, and CloudEvents standards to enable real-time, decoupled integration between."
+tags:
+  - concept
+  - sap-basis
+  - sap-wm
+  - sap-btp
+  - sap-s4hana
+  - sap-integration
+  - data-quality
 permalink: /atlas/concepts/sap-event-driven-architecture/
 parent: Concepts
 robots: noindex, follow
@@ -17,6 +26,7 @@ related:
   - /atlas/sap/business-events/
   - /atlas/sap/sap-integration-suite/
 ---
+
 
 # SAP Event-Driven Architecture
 

@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Knowledge Graph for SAP Operations"
+description: "A knowledge graph for SAP operations stores entities (systems, transactions, errors, configurations, business objects) and their relationships as."
+tags:
+  - concept
+  - sap-mm
+  - sap-master-data
+  - sap-wm
+  - sap-retail
+  - sap-s4hana
+  - sap-datasphere
 permalink: /atlas/concepts/knowledge-graph-for-sap-operations/
 parent: Concepts
 robots: noindex, follow
@@ -15,6 +24,7 @@ related:
   - /atlas/sap/rag/
   - /atlas/sap/vector-search/
 ---
+
 
 # Knowledge Graph for SAP Operations
 

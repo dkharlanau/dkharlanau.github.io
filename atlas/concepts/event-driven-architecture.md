@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Event-Driven Architecture"
+description: "Event-Driven Architecture (EDA) replaces synchronous request-response chains with asynchronous event publication and subscription."
+tags:
+  - concept
+  - sap-mm
+  - sap-wm
+  - sap-s4hana
+  - sap-integration
+  - ai-operations
+  - automation
 permalink: /atlas/concepts/event-driven-architecture/
 parent: Concepts
 robots: noindex, follow
@@ -17,6 +26,7 @@ related:
   - /atlas/sap/business-events/
   - /atlas/sap/sap-integration-suite/
 ---
+
 
 # Event-Driven Architecture
 

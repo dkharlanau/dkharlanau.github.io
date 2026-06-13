@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "AI-Ready Data Layer"
+description: "An AI-ready data layer makes SAP data accessible, governed, and structured for AI/ML consumption."
+tags:
+  - concept
+  - sap-master-data
+  - sap-s4hana
+  - sap-datasphere
+  - sap-integration
+  - data-quality
+  - ai-operations
 permalink: /atlas/concepts/ai-ready-data-layer/
 parent: Concepts
 robots: noindex, follow
@@ -17,6 +26,7 @@ related:
   - /atlas/sap/rag/
   - /atlas/sap/vector-search/
 ---
+
 
 # AI-Ready Data Layer
 

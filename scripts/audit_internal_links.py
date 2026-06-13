@@ -119,7 +119,7 @@ def main() -> int:
         writer = csv.DictWriter(f, fieldnames=[
             "page", "title", "noindex", "inbound_count", "outbound_count",
             "broken_count", "inbound_from", "broken_links",
-        ])
+        ], lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

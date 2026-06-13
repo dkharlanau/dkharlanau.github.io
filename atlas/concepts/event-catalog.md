@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Event Catalog"
+description: "An event catalog is a centralized discoverability layer that documents every event type, its schema, ownership, producers, consumers, and lifecycle status."
+tags:
+  - concept
+  - sap-s4hana
+  - sap-integration
+  - data-quality
+  - ai-operations
+  - integration
+  - data-architecture
 permalink: /atlas/concepts/event-catalog/
 parent: Concepts
 robots: noindex, follow
@@ -14,6 +23,7 @@ related:
   - /atlas/sap/business-events/
   - /atlas/sap/sap-integration-suite/
 ---
+
 
 # Event Catalog
 

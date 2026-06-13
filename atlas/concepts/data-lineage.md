@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Data Lineage"
+description: "Data lineage tracks the flow of data from origin to destination, showing transformations, dependencies, and impacts across the data lifecycle."
+tags:
+  - concept
+  - sap-s4hana
+  - sap-datasphere
+  - data-quality
+  - ai-operations
+  - automation
+  - integration
 permalink: /atlas/concepts/data-lineage/
 parent: Concepts
 robots: noindex, follow
@@ -14,6 +23,7 @@ related:
   - /atlas/sap/sap-datasphere/
   - /atlas/sap/sap-s4hana/
 ---
+
 
 # Data Lineage
 

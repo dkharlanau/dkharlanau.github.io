@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "SAP Purchase Order Creation Diagnostics"
+title: "SAP Purchase Order Diagnostics"
 description: "Diagnostic guide for SAP purchase order creation failures, from PR conversion through release strategy to posting."
 permalink: /atlas/diagnostics/sap-purchase-order-diagnostics/
 atlas_section: diagnostics

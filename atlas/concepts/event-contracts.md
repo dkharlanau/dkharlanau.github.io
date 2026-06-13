@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Event Contracts"
+description: "An event contract defines the schema, semantics, and versioning rules for every event that crosses a service boundary."
+tags:
+  - concept
+  - sap-wm
+  - sap-s4hana
+  - sap-integration
+  - data-quality
+  - ai-operations
+  - integration
 permalink: /atlas/concepts/event-contracts/
 parent: Concepts
 robots: noindex, follow
@@ -16,6 +25,7 @@ related:
   - /atlas/sap/business-events/
   - /atlas/sap/sap-integration-suite/
 ---
+
 
 # Event Contracts
 

@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Synchronous vs Asynchronous Integration"
+description: "Synchronous integration blocks the caller until the receiver responds. Asynchronous integration decouples producer and consumer through queues, topics, or."
+tags:
+  - concept
+  - sap-sd
+  - sap-mm
+  - sap-master-data
+  - sap-wm
+  - sap-s4hana
+  - sap-integration
 permalink: /atlas/concepts/synchronous-vs-asynchronous-integration/
 parent: Concepts
 robots: noindex, follow
@@ -16,6 +25,7 @@ related:
   - /atlas/concepts/sap-event-driven-architecture/
   - /atlas/concepts/retry-and-error-handling/
 ---
+
 
 # Synchronous vs Asynchronous Integration
 

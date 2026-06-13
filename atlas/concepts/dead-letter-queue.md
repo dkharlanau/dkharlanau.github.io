@@ -1,6 +1,13 @@
 ---
 layout: default
 title: "Dead Letter Queue"
+description: "A Dead Letter Queue (DLQ) is a secondary queue that receives messages after they have failed processing in the primary queue beyond a configured max retry."
+tags:
+  - concept
+  - sap-sd
+  - ai-operations
+  - integration
+  - data-architecture
 permalink: /atlas/concepts/dead-letter-queue/
 parent: Concepts
 robots: noindex, follow
@@ -15,6 +22,7 @@ related:
   - /atlas/sap/sap-integration-suite/
   - /atlas/sap/business-events/
 ---
+
 
 # Dead Letter Queue
 

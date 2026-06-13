@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Data Quality Controls"
+description: "Data quality controls enforce and monitor dimensions of data fitness for use: accuracy, completeness, consistency, timeliness, validity, and uniqueness."
+tags:
+  - concept
+  - sap-master-data
+  - sap-s4hana
+  - sap-datasphere
+  - data-quality
+  - ai-operations
+  - automation
 permalink: /atlas/concepts/data-quality-controls/
 parent: Concepts
 robots: noindex, follow
@@ -16,6 +25,7 @@ related:
   - /atlas/sap/sap-datasphere/
   - /atlas/sap/sap-s4hana/
 ---
+
 
 # Data Quality Controls
 

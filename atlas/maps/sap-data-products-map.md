@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "SAP Data Products Map"
+description: "This map catalogs common SAP data products, their source systems, consumers, quality risks, and integration patterns."
+tags:
+  - landscape-map
+  - sap-sd
+  - sap-mm
+  - sap-master-data
+  - sap-wm
+  - sap-s4hana
+  - sap-datasphere
 permalink: /atlas/maps/sap-data-products-map/
 nav_order: 13
 parent: Maps
@@ -23,6 +32,7 @@ related:
   - /atlas/sap/odata/
   - /atlas/sap/data-quality-lineage/
 ---
+
 
 # SAP Data Products Map
 

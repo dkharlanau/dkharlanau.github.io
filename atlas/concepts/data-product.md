@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Data Product"
+description: "A data product is a self-contained, versioned, discoverable asset that makes explicit commitments to consumers about quality, freshness, schema stability, and."
+tags:
+  - concept
+  - sap-master-data
+  - sap-s4hana
+  - sap-datasphere
+  - sap-integration
+  - data-quality
+  - ai-operations
 permalink: /atlas/concepts/data-product/
 parent: Concepts
 robots: noindex, follow
@@ -18,6 +27,7 @@ related:
   - /atlas/sap/sap-s4hana/
   - /atlas/sap/cds-views/
 ---
+
 
 # Data Product
 
