@@ -12,7 +12,7 @@ sap_area: SD partner determination
 business_process: Order to cash
 status: needs_verification
 verified: false
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - order-to-cash
@@ -22,6 +22,8 @@ tags:
 related: 
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
+  - "/atlas/diagnostics/sap-bp-relationship-diagnostics/"
+  - "/atlas/diagnostics/sap-customer-master-replication-diagnostics/"
 robots: noindex,follow
 short_title: Partner Determination Failures
 h1: SAP partner determination failures
@@ -46,7 +48,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP operations</dd></div><div><dt>Type</dt><dd>support diagnostic</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP operations</dd></div><div><dt>Type</dt><dd>support diagnostic</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
@@ -80,11 +82,29 @@ author: Dzmitryi Kharlanau
 
 </div>
 
+<h2>Partner function fundamentals</h2>
+
+<p>Partner functions are the roles a business partner plays in a document: sold-to, ship-to, bill-to, payer, contact person, or vendor partner. Determination reads partner procedures assigned to the document type and combines them with master-data relationships. If a partner function is missing, the cause is usually one of three things: the function is not in the procedure, the relationship is missing in the customer or business partner, or the partner's master data is not valid for the sales area.</p>
+
+<ul>
+
+<li>Check the partner procedure assigned to the sales document type.</li>
+
+<li>Verify the partner function is maintained in the customer or business partner relationship.</li>
+
+<li>Confirm the partner is valid for the sales area and document date.</li>
+
+</ul>
+
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
 <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
 
 <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">Sales Order Block Diagnosis</a></li>
+
+<li><a href="/atlas/diagnostics/sap-bp-relationship-diagnostics/">SAP BP Relationship Diagnostics</a></li>
+
+<li><a href="/atlas/diagnostics/sap-customer-master-replication-diagnostics/">SAP Customer Master Replication Diagnostics</a></li>
 
 </ul></section>
 

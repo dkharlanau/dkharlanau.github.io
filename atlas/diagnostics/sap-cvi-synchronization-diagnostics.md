@@ -11,7 +11,7 @@ sap_area: "CVI / BP / customer / vendor"
 business_process: Master data governance
 status: needs_verification
 verified: false
-last_reviewed: 2026-06-05
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -24,6 +24,8 @@ related:
   - /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
   - /atlas/diagnostics/sap-customer-master-replication-diagnostics/
   - /atlas/diagnostics/sap-bp-relationship-diagnostics/
+  - /atlas/diagnostics/sap-company-code-data-diagnostics/
+  - /atlas/diagnostics/sap-supplier-master-diagnostics/
 robots: noindex,follow
 sitemap: false
 ---
@@ -129,6 +131,9 @@ sitemap: false
       <li><a href="/atlas/diagnostics/sap-bp-relationship-diagnostics/">SAP BP Relationship Diagnostics</a> — go here if the issue involves related BP roles or relationships.</li>
     </ul>
 
+    <h2>Customer-vendor integration boundary</h2>
+    <p>Customer-Vendor Integration is the S/4HANA mechanism that keeps business partners, customers, and vendors aligned. Most CVI incidents are not data corruption; they are configuration or timing mismatches. Before treating a missing customer or vendor as a master-data defect, confirm whether CVI is expected to create the object, which direction is configured, and whether the required BP role exists.</p>
+
     <h2>Practical checklist</h2>
     <div markdown="1">
 - [ ] Collect BP number, customer/vendor number, BP grouping, and expected roles. **Synthetic example:** BP 1234567890, customer 1000000001, grouping TEST_CUST_GRP.
@@ -153,7 +158,9 @@ sitemap: false
       <li><a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">SAP Business Partner Replication Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-vendor-master-replication-diagnostics/">SAP Vendor Master Replication Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-customer-master-replication-diagnostics/">SAP Customer Master Replication Diagnostics</a></li>
-      <li><a href="/atlas/diagnostics/sap-bp-relationship-diagnostics/">SAP Bp Relationship Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-bp-relationship-diagnostics/">SAP BP Relationship Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-company-code-data-diagnostics/">SAP Company Code Data Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-supplier-master-diagnostics/">SAP Supplier Master Diagnostics</a></li>
     </ul>
   </section>
 
