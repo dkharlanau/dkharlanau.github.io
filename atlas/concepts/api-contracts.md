@@ -6,6 +6,11 @@ tags:
   - concept
   - sap-integration
   - data-architecture
+description: "An API contract is a formal specification of request/response schemas, authentication, error codes, rate limits, and versioning policies."
+tags:
+  - concept
+  - sap-integration
+  - data-architecture
 permalink: /atlas/concepts/api-contracts/
 parent: Concepts
 robots: noindex, follow
@@ -21,6 +26,7 @@ related:
   - /atlas/sap/soap/
   - /atlas/sap/sap-integration-suite/
 ---
+
 
 
 # API Contracts

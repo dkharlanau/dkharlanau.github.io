@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Integration Monitoring and Reliability Map"
+description: "This map connects integration monitoring, reliability patterns, and operational failure modes."
+tags:
+  - landscape-map
+  - sap-btp
+  - sap-s4hana
+  - sap-integration
+  - diagnostics
+  - ai-operations
+  - integration
 permalink: /atlas/maps/integration-monitoring-reliability-map/
 nav_order: 14
 parent: Maps
@@ -27,6 +36,7 @@ related:
   - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
   - /atlas/diagnostics/sap-output-message-control-diagnostics/
 ---
+
 
 # Integration Monitoring and Reliability Map
 

@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Integration Ownership Model"
+description: "An integration ownership model defines who owns APIs, events, contracts, middleware infrastructure, monitoring, and incident response."
+tags:
+  - concept
+  - sap-mm
+  - sap-integration
+  - data-quality
+  - ai-operations
+  - integration
+  - data-architecture
 permalink: /atlas/concepts/integration-ownership-model/
 parent: Concepts
 robots: noindex, follow
@@ -14,6 +23,7 @@ related:
   - /atlas/sap/sap-integration-suite/
   - /atlas/sap/sap-btp/
 ---
+
 
 # Integration Ownership Model
 

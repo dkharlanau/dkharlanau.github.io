@@ -1,6 +1,14 @@
 ---
 layout: default
 title: "Data Federation"
+description: "Data federation enables virtual integration by leaving data in source systems and accessing it remotely in real time."
+tags:
+  - concept
+  - sap-s4hana
+  - sap-datasphere
+  - ai-operations
+  - integration
+  - data-architecture
 permalink: /atlas/concepts/data-federation/
 parent: Concepts
 robots: noindex, follow
@@ -15,6 +23,7 @@ related:
   - /atlas/sap/sap-analytics-cloud/
   - /atlas/sap/sap-s4hana/
 ---
+
 
 # Data Federation
 

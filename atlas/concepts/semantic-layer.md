@@ -1,6 +1,14 @@
 ---
 layout: default
 title: "Semantic Layer"
+description: "A semantic layer provides business-friendly abstractions over raw technical data, hiding schema complexity and exposing dimensions, measures, hierarchies, and."
+tags:
+  - concept
+  - sap-s4hana
+  - sap-datasphere
+  - ai-operations
+  - integration
+  - data-architecture
 permalink: /atlas/concepts/semantic-layer/
 parent: Concepts
 robots: noindex, follow
@@ -17,6 +25,7 @@ related:
   - /atlas/sap/cds-views/
   - /atlas/sap/cds-analytical-views/
 ---
+
 
 # Semantic Layer
 

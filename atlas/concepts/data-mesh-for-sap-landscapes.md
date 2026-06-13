@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Data Mesh for SAP Landscapes"
+description: "Data mesh is a decentralized sociotechnical approach that treats data as a product owned by domain teams."
+tags:
+  - concept
+  - sap-mm
+  - sap-master-data
+  - sap-wm
+  - sap-s4hana
+  - sap-datasphere
+  - data-quality
 permalink: /atlas/concepts/data-mesh-for-sap-landscapes/
 parent: Concepts
 robots: noindex, follow
@@ -20,6 +29,7 @@ related:
   - /atlas/sap/sap-analytics-cloud/
   - /atlas/sap/sap-mdg/
 ---
+
 
 # Data Mesh for SAP Landscapes
 

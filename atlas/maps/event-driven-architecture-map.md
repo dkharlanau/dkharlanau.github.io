@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Event-Driven Architecture Map"
+description: "This map documents event-driven architecture (EDA) patterns, standards, and operational concerns specific to SAP-centric enterprise landscapes."
+tags:
+  - landscape-map
+  - sap-btp
+  - sap-s4hana
+  - sap-integration
+  - data-quality
+  - ai-operations
+  - integration
 permalink: /atlas/maps/event-driven-architecture-map/
 nav_order: 11
 parent: Maps
@@ -25,6 +34,7 @@ related:
   - /atlas/sap/cloud-connector/
   - /atlas/sap/integration-monitoring/
 ---
+
 
 # Event-Driven Architecture Map
 

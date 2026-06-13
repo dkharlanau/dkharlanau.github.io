@@ -1,6 +1,13 @@
 ---
 layout: default
 title: "Retry and Error Handling"
+description: "Retry and error handling patterns ensure transient failures (network timeouts, temporary unavailability) are recovered automatically while permanent failures."
+tags:
+  - concept
+  - sap-integration
+  - ai-operations
+  - integration
+  - data-architecture
 permalink: /atlas/concepts/retry-and-error-handling/
 parent: Concepts
 robots: noindex, follow
@@ -15,6 +22,7 @@ related:
   - /atlas/sap/sap-btp/
   - /atlas/sap/business-events/
 ---
+
 
 # Retry and Error Handling
 

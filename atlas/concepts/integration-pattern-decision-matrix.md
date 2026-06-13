@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Integration Pattern Decision Matrix"
+description: "A decision matrix comparing integration styles across latency, coupling, reliability, monitoring, ownership, SAP fit, and failure modes."
+tags:
+  - concept
+  - sap-sd
+  - sap-mm
+  - sap-basis
+  - sap-wm
+  - sap-s4hana
+  - sap-datasphere
 permalink: /atlas/concepts/integration-pattern-decision-matrix/
 parent: Concepts
 robots: noindex, follow
@@ -17,6 +26,7 @@ related:
   - /atlas/sap/idoc/
   - /atlas/sap/business-events/
 ---
+
 
 # Integration Pattern Decision Matrix
 

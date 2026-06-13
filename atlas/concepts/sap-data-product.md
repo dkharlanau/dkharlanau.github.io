@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "SAP Data Product"
+description: "An SAP data product is a curated, governed, and versioned data asset derived from SAP systems (primarily S/4HANA) and exposed for cross-domain consumption."
+tags:
+  - concept
+  - sap-sd
+  - sap-mm
+  - sap-master-data
+  - sap-wm
+  - sap-s4hana
+  - sap-datasphere
 permalink: /atlas/concepts/sap-data-product/
 parent: Concepts
 robots: noindex, follow
@@ -19,6 +28,7 @@ related:
   - /atlas/sap/sap-datasphere/
   - /atlas/sap/sap-mdg/
 ---
+
 
 # SAP Data Product
 

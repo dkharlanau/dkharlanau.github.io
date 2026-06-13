@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Data Contracts"
+description: "A data contract is a formal agreement between data producers and consumers that defines schema, semantics, quality expectations, SLAs, access policies, and."
+tags:
+  - concept
+  - sap-master-data
+  - sap-s4hana
+  - sap-datasphere
+  - data-quality
+  - ai-operations
+  - integration
 permalink: /atlas/concepts/data-contracts/
 parent: Concepts
 robots: noindex, follow
@@ -17,6 +26,7 @@ related:
   - /atlas/sap/sap-datasphere/
   - /atlas/sap/sap-mdg/
 ---
+
 
 # Data Contracts
 

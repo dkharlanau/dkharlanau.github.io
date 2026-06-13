@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Change Data Capture (CDC)"
+description: "Change Data Capture (CDC) captures inserts, updates, and deletes in real time or near-real time, enabling incremental data replication without full reloads."
+tags:
+  - concept
+  - sap-wm
+  - sap-s4hana
+  - sap-datasphere
+  - ai-operations
+  - integration
+  - data-architecture
 permalink: /atlas/concepts/cdc-change-data-capture/
 parent: Concepts
 robots: noindex, follow
@@ -14,6 +23,7 @@ related:
   - /atlas/sap/sap-s4hana/
   - /atlas/sap/sap-datasphere/
 ---
+
 
 # Change Data Capture (CDC)
 

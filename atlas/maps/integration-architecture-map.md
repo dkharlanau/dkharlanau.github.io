@@ -1,6 +1,15 @@
 ---
 layout: default
 title: "Integration Architecture Map"
+description: "This map connects integration technologies, patterns, and operational concerns across SAP landscapes."
+tags:
+  - landscape-map
+  - sap-btp
+  - sap-s4hana
+  - sap-integration
+  - ai-operations
+  - integration
+  - data-architecture
 permalink: /atlas/maps/integration-architecture-map/
 nav_order: 10
 parent: Maps
@@ -31,6 +40,7 @@ related:
   - /atlas/sap/cloud-connector/
   - /atlas/sap/integration-monitoring/
 ---
+
 
 # Integration Architecture Map
 
