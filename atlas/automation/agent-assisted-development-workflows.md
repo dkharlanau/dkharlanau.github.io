@@ -21,6 +21,7 @@ tags:
 related: 
   - "/atlas/automation/rule-based-automation-vs-ai/"
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
+  - "/atlas/ai-operations/ai-ready-process-documentation/"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Agent-Assisted Development Workflows
 h1: Agent-assisted development workflows
@@ -81,8 +82,8 @@ author: Dzmitryi Kharlanau
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
 <li><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-Based Automation vs AI</a></li>
-
 <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a></li>
+<li><a href="/atlas/ai-operations/ai-ready-process-documentation/">AI-Ready Process Documentation</a></li>
 
 </ul></section>
 

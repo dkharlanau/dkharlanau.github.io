@@ -23,6 +23,8 @@ related:
   - /atlas/concepts/order-to-cash/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /services/sap-ams-consulting/
+  - /atlas/concepts/sap-stock-exists-not-promisable/
+  - /atlas/maps/order-to-cash-map/
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 ---
 
@@ -77,8 +79,8 @@ robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
     <h2>Related Atlas Pages</h2>
     <ul>
       <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
-      <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a></li>
-      <li><a href="/services/sap-ams-consulting/">SAP AMS consulting</a></li>
+      <li><a href="/atlas/concepts/sap-stock-exists-not-promisable/">SAP Stock Exists but Is Not Promisable</a></li>
+      <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a></li>
     </ul>
   </section>
 

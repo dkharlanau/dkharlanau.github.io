@@ -6,6 +6,10 @@ verified: true
 title: Atlas Automation — SAP Support Automation and Agentic Workflows
 description: Curated Knowledge Atlas pages for automation patterns, agent-assisted workflows, and developer automation around SAP support.
 permalink: /atlas/automation/
+related:
+  - /atlas/automation/operational-memory-for-sap-ams/
+  - /atlas/automation/rule-based-automation-vs-ai/
+  - /atlas/ai-operations/ai-agent-for-sap-support/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/atlas/">Knowledge Atlas</a></li><li aria-current="page">Automation</li></ol></nav>
@@ -22,6 +26,18 @@ permalink: /atlas/automation/
   <a class="atlas-card" href="/atlas/automation/agent-assisted-development-workflows/"><h2>Agent-Assisted Development Workflows</h2><p>Practical boundaries for using agents in knowledge work, support tooling, and development.</p><span class="link-arrow">Read page</span></a>
   <a class="atlas-card" href="/atlas/automation/mini-apps-for-sap-operations/"><h2>Mini Apps and Prototypes for SAP Operations</h2><p>Small, outcome-focused tools that remove manual work without breaking the core.</p><span class="link-arrow">Read page</span></a>
 </div></section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Related</p>
+    <h2>Related Atlas pages</h2>
+  </header>
+  <ul>
+    <li><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational Memory for SAP AMS</a></li>
+    <li><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-Based Automation vs AI</a></li>
+    <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a></li>
+  </ul>
+</section>
 
 {% include atlas/author-block.html %}
 {% include atlas/disclaimer.html %}

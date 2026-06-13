@@ -6,6 +6,10 @@ permalink: /atlas/concepts/
 last_modified_at: 2026-05-06
 status: reviewed
 verified: true
+related:
+  - /atlas/concepts/order-to-cash/
+  - /atlas/concepts/sap-atp-is-not-inventory/
+  - /atlas/maps/order-to-cash-map/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -59,6 +63,18 @@ verified: true
       <span class="link-arrow">Read concept</span>
     </a>
   </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Related</p>
+    <h2>Related Atlas pages</h2>
+  </header>
+  <ul>
+    <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
+    <li><a href="/atlas/concepts/sap-atp-is-not-inventory/">SAP ATP Is Not Inventory</a></li>
+    <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a></li>
+  </ul>
 </section>
 
 {% include atlas/author-block.html %}

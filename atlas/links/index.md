@@ -6,6 +6,10 @@ permalink: /atlas/links/
 last_modified_at: 2026-05-06
 status: reviewed
 verified: true
+related:
+  - /atlas/
+  - /atlas/ai-operations/
+  - /atlas/data-quality/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -55,6 +59,18 @@ verified: true
       <span class="link-arrow">Open roadmap</span>
     </a>
   </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Related</p>
+    <h2>Related Atlas pages</h2>
+  </header>
+  <ul>
+    <li><a href="/atlas/">Knowledge Atlas</a></li>
+    <li><a href="/atlas/ai-operations/">AI Operations</a></li>
+    <li><a href="/atlas/data-quality/">Data Quality</a></li>
+  </ul>
 </section>
 
 {% include atlas/author-block.html %}

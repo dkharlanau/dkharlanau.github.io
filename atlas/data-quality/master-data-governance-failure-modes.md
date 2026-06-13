@@ -21,6 +21,8 @@ tags:
 related: 
   - "/atlas/data-quality/sap-master-data-quality/"
   - "/atlas/sap/sap-partner-determination-failures/"
+  - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
+  - "/atlas/automation/operational-memory-for-sap-ams/"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Governance Failure Modes
 h1: Master data governance failure modes
@@ -81,8 +83,8 @@ author: Dzmitryi Kharlanau
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
 <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a></li>
-
-<li><a href="/atlas/sap/sap-partner-determination-failures/">SAP Partner Determination Failures</a></li>
+<li><a href="/atlas/ai-operations/authorization-aware-ai-for-sap/">Authorization-Aware AI for SAP</a></li>
+<li><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational Memory for SAP AMS</a></li>
 
 </ul></section>
 
