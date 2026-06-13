@@ -42,11 +42,14 @@ sitemap: false           # Remove only when reviewed and verified
 
 ## Content rules
 
+- Follow the [Author and Editorial Profile](../content/author-editorial-profile.md) for voice, density, and editing discipline.
+- The profile is a decision system, not a template. Do not copy phrases or repeat prior article patterns mechanically.
 - No private or client-specific data. Use generic process language.
 - No hype, no exclamation points, no promotional fluff.
 - One claim per paragraph. Short sentences.
 - Every factual claim needs a source.
 - Confidence levels: `high` (verified against source), `medium` (plausible, one source), `low` (speculative, needs verification).
+- A short, balanced personal author comment may be added near the end of an article when it improves the page; omit it if the topic does not need one.
 - Tag examples: `sap-ams`, `integration`, `master-data`, `ai-ops`, `diagnostics`, `o2c`, `p2p`.
 
 ## Sample output

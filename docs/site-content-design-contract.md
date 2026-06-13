@@ -36,6 +36,8 @@ Every new page or section must support the existing visual system:
 
 If the agent cannot identify the existing layout pattern for a new item, it must create a draft or issue instead of adding a visually inconsistent page.
 
+Content must also follow the [Author and Editorial Profile](content/author-editorial-profile.md). Use it as a decision system for voice, density, and what to remove — not as a fixed template. Do not mechanically copy phrases or repeat prior article patterns.
+
 ## 3. Homepage protection rule
 
 The homepage is protected by default.

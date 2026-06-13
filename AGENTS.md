@@ -111,6 +111,17 @@ The services layer is the commercial signal. It must remain accurate, non-exagge
 - **Never expose client names, ticket numbers, internal incident IDs, or proprietary system details.**
 - **Never publish private corpus content.** Draft notes, raw research, and unverified material stay local or in noindex areas.
 
+## Writing and Editorial Profile
+
+When writing, editing, expanding, or reviewing Atlas pages, Skill Hub pages, SAP diagnostic materials, AI tooling notes, project documentation, and public articles, follow the **Author and Editorial Profile** in `docs/content/author-editorial-profile.md`.
+
+Key points:
+
+- The profile is a **decision system**, not a fixed article template.
+- Do not mechanically copy phrases, examples, or prior article patterns.
+- Apply strong informational editing: remove filler, vague wording, decorative language, and claims that do not help the reader act.
+- A short, balanced personal author comment may be added near the end of an article when it improves the page, but it is optional and must not be forced into every page.
+
 ## Verification / Indexing Rules
 
 The repository uses a three-level content verification system:
