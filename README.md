@@ -26,6 +26,11 @@ This site gives me one canonical public profile that I can control, structure, r
 
 It exists to make my background easier to understand and verify.
 
+- **Live URL:** https://dkharlanau.github.io
+- **Generated with:** Jekyll + GitHub Pages
+- **Sitemap:** https://dkharlanau.github.io/sitemap.xml
+- **robots.txt:** https://dkharlanau.github.io/robots.txt
+
 ## What this site is about
 
 The site focuses on practical SAP AMS, support, and process optimization topics:
@@ -42,6 +47,18 @@ The site focuses on practical SAP AMS, support, and process optimization topics:
 
 The main idea is that SAP support quality depends on practical handover, clean data, reliable integrations, clear ownership, support readiness, and daily operating discipline.
 
+## Site structure
+
+- **Home** — Positioning and trust signals
+- **About / Profile** — Canonical human-readable and machine-readable profile
+- **Services** — Consulting engagement model (diagnose, stabilize, structure, extend)
+- **Knowledge Atlas** — Curated SAP diagnostics, concepts, and process maps
+- **Scenarios** — Business-pain-to-diagnostic-workflow mappings
+- **Skill Hub** — Practical working skills for enterprise consultants and AI agents
+- **Research / Radar** — Signal tracking and source-backed briefs
+- **Datasets** — Canonical machine-readable dataset collections
+- **AI endpoints** — `llms.txt`, `resume.json`, `resume.yml`, and agent-skill discovery via `.well-known/`
+
 ## What this repository contains
 
 This repository may include:
@@ -51,6 +68,26 @@ This repository may include:
 - public certificate and badge references
 - publication and note references
 - AI-readable files such as `llms.txt`, `resume.json`, or `resume.yml`
+
+## Build and validation
+
+```sh
+# Local preview
+bundle exec jekyll serve
+
+# Full validation sequence (run before publishing)
+PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
+python3 scripts/check_public_repo.py
+bundle exec jekyll build
+python3 scripts/check_links.py _site
+python3 scripts/check_seo.py _site
+python3 scripts/check_indexing_policy.py --site-dir _site
+python3 scripts/check_content_quality.py
+python3 scripts/audit_indexability.py --site-dir _site
+python3 scripts/audit_internal_links.py --site-dir _site
+```
+
+All committed content is public. The repository uses a three-level verification system for content quality and indexing control.
 
 ## Networking
 
@@ -65,3 +102,13 @@ You can reach me on LinkedIn:
 The views and materials on this site are personal and independent.
 
 This is not an official employer, vendor, or client website.
+
+## AI and search transparency
+
+This site is designed to be machine-readable for search engines and AI retrieval systems. It includes:
+
+- A detailed `robots.txt` with per-crawler policies and sitemap references
+- Section-level sitemaps (`sitemap-atlas.xml`, `sitemap-data.xml`, `sitemap-pages.xml`)
+- AI-readable files (`llms.txt`, `resume.json`, `resume.yml`)
+- `.well-known/agent-skills/` for AI agent discovery and topic routing
+- A three-level content verification system that controls which pages are indexed

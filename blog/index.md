@@ -15,7 +15,7 @@ permalink: /blog/
   <div class="notes-grid">
     {% assign posts = site.blog | sort: 'date' | reverse %}
     {% if posts == empty %}
-    <p class="lead">First article coming soon. Check back shortly.</p>
+    <p class="lead">Essays and deep-dives on systems thinking, SAP delivery, and automation patterns that keep enterprise platforms trustworthy.</p>
     {% else %}
     {% for post in posts %}
     <article class="note-card neub-card">
