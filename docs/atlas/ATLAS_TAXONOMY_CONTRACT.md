@@ -66,6 +66,7 @@ All new taxonomy skeleton pages start as `status: needs_verification`, `verified
 5. **No private corpus exposure.** No `source_files`, `private-source`, `kb-drafts`, `/Users/`, or `.env` references.
 6. **No duplicate pages.** Check existing Atlas pages before creating new ones.
 7. **No homepage modification.** Taxonomy pages live under `/atlas/` only.
+8. **Follow the author/editorial profile.** Before drafting or editing, read `docs/content/author-editorial-profile.md`. Use it as a decision system for voice, density, and practical framing, but do not use it to replace source-backed facts or change indexing policy.
 
 ## Machine-Readable Taxonomy
 

@@ -24,9 +24,9 @@ tags:
 
 {{ANALYSIS}}
 
-## My take
+<!-- Optional author perspective: a short, natural judgment, caution, or practical interpretation. Do not use a fixed heading such as "My take" or "Author's note". Integrate it into the closing or a final short paragraph only if it improves the page. Read docs/content/author-editorial-profile.md before drafting. -->
 
-{{MY_TAKE}}
+{{AUTHOR_PERSPECTIVE}}
 
 ## Risk or limitation
 

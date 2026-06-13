@@ -1,5 +1,6 @@
 <!-- TEMPLATE: atlas-diagnostic-page.md -->
 <!-- Copy this file, replace all [bracketed] placeholders, and remove these comments. -->
+<!-- Before drafting, read docs/content/author-editorial-profile.md and apply it as a decision system. Do not mechanically copy phrases or prior diagnostic pages. -->
 
 ---
 layout: default
