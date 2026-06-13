@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "AI-Assisted Analysis — Skill Group Index"
 description: "Practical skills for using AI safely and effectively in professional analysis work: validating AI output, converting notes to requirements, turning problems into backlogs, and defining accountability."

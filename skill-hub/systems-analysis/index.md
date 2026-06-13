@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Systems Analysis — Skill Group Index"
 description: "Practical working skills for systems analysts: mapping entity states, lifecycles, and interface requirements across system boundaries."

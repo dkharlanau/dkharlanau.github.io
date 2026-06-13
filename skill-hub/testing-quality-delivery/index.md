@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Testing, QA, and Delivery Validation — Skill Group Index"
 description: "Practical working skills for testing, quality assurance, and delivery validation: test case design, regression planning, defect triage, QA review, deployment readiness, UAT preparation, test evidence review, and release risk assessment."

@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Architecture Skills"
 description: "Practical working skills for solution architects: capability mapping, design review, decision records, non-functional requirements, and system context mapping."

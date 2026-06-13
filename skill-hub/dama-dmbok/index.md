@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "DAMA / Data — Practical Working Skills"
 description: "Practical working skills for data governance, quality root cause, metadata, master data, lineage, reference data, and integration interoperability. Usable tomorrow."

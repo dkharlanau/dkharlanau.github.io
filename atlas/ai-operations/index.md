@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Atlas AI Operations — AI-Assisted Support and Operational Memory"
 description: "Curated AI operations patterns for SAP support, retrieval, human review, and operational memory."

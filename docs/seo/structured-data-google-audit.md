@@ -98,15 +98,15 @@ Google Search uses schema.org as vocabulary, but the Google Search Central docs 
 | Skill Hub | `skill-hub/**/*.md` | title, description, status/verified | `Article` | none | implement now | Indexable article-like content |
 | Services | `services/*.md` | title, description | `WebPage` | none | implement now | Landing pages, not articles |
 | Dataset detail | `datasets/view/**/*.md` | title, description, inline JSON-LD | `Dataset` | already present | keep inline; validate | Real downloadable datasets |
-| Dataset catalog | `/datasets/`, `/datasets/<collection>/` | data_catalog_page flag | `CollectionPage` + `DataCatalog` | none | keep metadata | Helps machine discovery; not a rich result |
-| AI catalog | `/ai/` | page.url | `CollectionPage` + `DataCatalog` | none | keep metadata | Machine-readable catalog |
+| Dataset catalog | `/datasets/`, `/datasets/<collection>/` | data_catalog_page flag | `CollectionPage` | none | keep metadata | Helps machine discovery; not a rich result |
+| AI catalog | `/ai/` | page.url | `CollectionPage` + `DataCatalog` | none | keep metadata | Canonical machine-readable catalog; unique `@id` |
 | About | `about.md` | profile_page flag, resume data | `ProfilePage` + `Person` + `Organization` | none | keep/improve | Real public profile |
 | Event / Course | none | n/a | `Event` / `Course` | requires explicit front matter | guarded support only | No real events/courses yet |
 | Homepage | `index.md` | n/a | untouched | n/a | defer Organization | Hard constraint |
 
 ## 9. Known limitations
 
-- The `DataCatalog` block embeds the full `_data/datasets.yml` array. It is schema.org metadata and is not claimed as a Google rich result.
+- The `DataCatalog` block embeds the full `_data/datasets.yml` array and is emitted only on `/ai/` so its `@id` stays unique. It is schema.org metadata and is not claimed as a Google rich result.
 - Breadcrumbs are auto-built from URL patterns and known page families. Pages with unusual hierarchies can supply an explicit `breadcrumbs` array in front matter.
 - Event and Course support is template-guarded but not activated because no real event/course content exists.
 - Organization markup is only on `/about/`; homepage Organization is deferred.

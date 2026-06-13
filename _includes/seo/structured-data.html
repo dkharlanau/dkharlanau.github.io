@@ -327,9 +327,10 @@ Rules:
 </script>
 {% endif %}
 
-{% comment %} DataCatalog — schema.org metadata only, not a Google rich result type. {% endcomment %}
+{% comment %} DataCatalog — schema.org metadata only, not a Google rich result type.
+     Emitted only on the canonical /ai/ catalog page so the catalog @id stays unique. {% endcomment %}
 {% if datasets and datasets.size > 0 %}
-{% if page.url == '/ai/' or page.data_catalog_page %}
+{% if page.url == '/ai/' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

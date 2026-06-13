@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Business Analysis — Skill Group Index"
 description: "Practical working skills for business analysis: requirements elicitation, stakeholder analysis, process analysis, gap analysis, acceptance criteria, and business rules discovery."

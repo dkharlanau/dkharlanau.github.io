@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Integration Architecture — Skill Group Index"
 description: "Practical working skills for designing, owning, monitoring, and troubleshooting enterprise integrations in SAP and mixed landscapes."

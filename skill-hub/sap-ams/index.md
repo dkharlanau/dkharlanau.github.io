@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "SAP AMS / Operations — Skill Group Index"
 description: "Practical working skills for SAP Application Management Services and operations: incident triage, root cause analysis, change impact, knowledge capture, and recurring ticket patterns."

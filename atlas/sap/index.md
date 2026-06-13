@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Atlas SAP Section — Configuration and Support Concepts"
 description: "Curated SAP support and configuration explanations with conservative boundaries."

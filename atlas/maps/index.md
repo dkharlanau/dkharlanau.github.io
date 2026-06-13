@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Atlas Maps — Process and Dependency Maps"
 description: "Knowledge Atlas maps for process flow, document flow, data dependency, and cross-domain navigation."

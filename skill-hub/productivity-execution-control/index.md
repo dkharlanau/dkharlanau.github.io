@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Productivity and Execution Control — Skill Group Index"
 description: "Practical working skills for planning work, clarifying tasks, triaging priorities, escalating blockers, reviewing daily execution, tracking follow-ups, managing delivery checklists, and detecting scope creep."
