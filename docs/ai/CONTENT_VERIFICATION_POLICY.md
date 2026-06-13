@@ -110,6 +110,30 @@ This document defines how content moves from draft to published, what gets index
 - Never include proprietary ABAP code, custom configuration names, or system-specific settings.
 - When describing real issues, generalize: "a retail client" not "Client X"; "a repeated goods-receipt issue" not "Ticket 1234567."
 
+## Examples and Synthetic Data Policy
+
+Practical examples improve diagnostic content, but they must not expose private or client-specific information.
+
+- **Allowed:** Generic process descriptions, clearly synthetic document numbers (e.g., `1234567890`, `TEST_VENDOR_01`), public SAP transactions and tables, generalized error patterns.
+- **Forbidden:** Real client or customer names; real vendor, material, or account numbers; SAP ticket numbers, incident IDs, support message numbers, change request IDs; system IDs, host names, client numbers, or landscape-specific paths; screenshots or logs from real systems; custom ABAP code or proprietary configuration names unless they are public sample code.
+- **Labeling:** Mark synthetic examples as **Synthetic example** or **Illustrative scenario**. Generalize real patterns: "a repeated goods-receipt issue" not "Ticket 1234567".
+- **Agent rule:** An agent may add synthetic examples only if they follow this policy. When in doubt, leave the example out.
+
+## Flagship Diagnostic Page Review Checklist
+
+Before a diagnostic page can move from Level 1 to Level 2 or Level 3, the human reviewer must confirm:
+
+1. **Public safety** — no client names, ticket numbers, incident IDs, system IDs, or proprietary details.
+2. **SAP source validation** — SAP-specific claims align with public documentation or are explicitly framed as "check in your landscape."
+3. **Transaction / table / object accuracy** — referenced SAP objects exist and are used correctly for the described symptom.
+4. **Evidence checklist** — the page lists concrete data to collect before escalation.
+5. **Related links** — internal links point to existing Atlas pages, maps, or scenarios; no broken links.
+6. **No private examples** — all examples are synthetic or generalized and labeled if needed.
+7. **Last reviewed date** — `last_reviewed` is set to the review date and is within 90 days for flagship pages.
+8. **Frontmatter correctness** — `status`, `verified`, `robots`, and `sitemap` match the intended verification level.
+
+Only humans may complete this checklist and promote a page.
+
 ## Current Repository State
 
 As of 2026-06-09:

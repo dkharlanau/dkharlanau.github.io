@@ -1,0 +1,23 @@
+{% if page.verified == true %}
+<aside class="atlas-author atlas-trust" aria-label="Why trust this page">
+  <p class="eyebrow">Why trust this page</p>
+  <p>
+    <strong>Reviewed and verified.</strong>
+    This page has been human-reviewed for factual accuracy and public safety.
+    {% assign reviewed_date = page.last_reviewed | default: page.last_modified_at %}
+    {% if reviewed_date %}
+      Last reviewed: <time datetime="{{ reviewed_date | date: '%Y-%m-%d' }}">{{ reviewed_date | date: "%d %b %Y" }}</time>.
+    {% endif %}
+  </p>
+  <p>
+    The content is based on practical SAP support experience and public documentation where cited.
+    It is <strong>not official SAP documentation</strong>.
+    Always validate system-specific behavior in your own SAP landscape and against official vendor documentation.
+  </p>
+  <ul class="atlas-trust__list">
+    <li>No client names, ticket numbers, or proprietary details.</li>
+    <li>Claims are conservative and include landscape-dependent caveats.</li>
+    <li>Related links are checked at the time of review.</li>
+  </ul>
+</aside>
+{% endif %}
