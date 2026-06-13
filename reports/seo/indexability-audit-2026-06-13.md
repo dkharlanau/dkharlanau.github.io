@@ -1,7 +1,13 @@
+---
+layout: default
+title: "Indexability Audit Report"
+robots: noindex, follow
+sitemap: false
+---
+
 # Indexability Audit Report
 
 **Date:** 2026-06-13
-**Site directory:** `/Users/dzmitryikharlanau/Developments/cv-ai/_site`
 **Pages scanned:** 703
 
 ## Summary
@@ -97,17 +103,17 @@ No critical issues detected.
 | ai/practical-ai-for-sap-support/index.html | unverified_but_indexable | Practical AI for SAP Support — AI Intent | yes | yes | index,follow,max-sni | 1 | 894 | 0 |
 | ai/publications/index.html | unverified_but_indexable | Publications Dataset | yes | yes | index,follow,max-sni | 1 | 676 | 0 |
 | ai/sap-ams-improvement/index.html | unverified_but_indexable | SAP AMS Improvement — AI Intent Entity | yes | yes | index,follow,max-sni | 1 | 836 | 0 |
-| atlas/ai-operations/ai-agent-for-sap-support/index.html | unverified_but_indexable | AI Agent for SAP Support | yes | yes | index,follow,max-sni | 1 | 884 | 0 |
+| atlas/ai-operations/ai-agent-for-sap-support/index.html | unverified_but_indexable | AI Agent for SAP Support | yes | yes | index,follow,max-sni | 1 | 899 | 0 |
 | atlas/ai-operations/ai-ml-sidecars-for-sap/index.html | schema_missing_recommended | AI and ML Sidecars for SAP | yes | yes | noindex,follow | 1 | 958 | 0 |
-| atlas/ai-operations/ai-ready-process-documentation/index.html | unverified_but_indexable | AI-Ready Process Documentation | yes | yes | index,follow,max-sni | 1 | 751 | 0 |
-| atlas/ai-operations/authorization-aware-ai-for-sap/index.html | unverified_but_indexable | Authorization-Aware AI for SAP | yes | yes | index,follow,max-sni | 1 | 736 | 0 |
-| atlas/ai-operations/index.html | indexable_ok | Atlas AI Operations — AI-Assisted Suppor | yes | yes | index,follow,max-sni | 1 | 720 | 0 |
+| atlas/ai-operations/ai-ready-process-documentation/index.html | unverified_but_indexable | AI-Ready Process Documentation | yes | yes | index,follow,max-sni | 1 | 766 | 0 |
+| atlas/ai-operations/authorization-aware-ai-for-sap/index.html | unverified_but_indexable | Authorization-Aware AI for SAP | yes | yes | index,follow,max-sni | 1 | 751 | 0 |
+| atlas/ai-operations/index.html | indexable_ok | Atlas AI Operations — AI-Assisted Suppor | yes | yes | index,follow,max-sni | 1 | 735 | 0 |
 | atlas/ai-operations/practical-ai-ml-for-sap-support/index.html | schema_missing_recommended | Practical AI and ML for SAP Support | yes | yes | noindex,follow | 1 | 849 | 0 |
-| atlas/automation/agent-assisted-development-workflows/index.html | unverified_but_indexable | Agent-Assisted Development Workflows | yes | yes | index,follow,max-sni | 1 | 729 | 0 |
-| atlas/automation/index.html | indexable_ok | Atlas Automation — SAP Support Automatio | yes | yes | index,follow,max-sni | 1 | 683 | 0 |
+| atlas/automation/agent-assisted-development-workflows/index.html | unverified_but_indexable | Agent-Assisted Development Workflows | yes | yes | index,follow,max-sni | 1 | 744 | 0 |
+| atlas/automation/index.html | indexable_ok | Atlas Automation — SAP Support Automatio | yes | yes | index,follow,max-sni | 1 | 698 | 0 |
 | atlas/automation/mini-apps-for-sap-operations/index.html | schema_missing_recommended | Mini Apps and Prototypes for SAP Operati | yes | yes | noindex,follow | 1 | 1022 | 0 |
-| atlas/automation/operational-memory-for-sap-ams/index.html | unverified_but_indexable | Operational Memory for SAP AMS | yes | yes | index,follow,max-sni | 1 | 732 | 0 |
-| atlas/automation/rule-based-automation-vs-ai/index.html | unverified_but_indexable | Rule-Based Automation vs AI | yes | yes | index,follow,max-sni | 1 | 732 | 0 |
+| atlas/automation/operational-memory-for-sap-ams/index.html | unverified_but_indexable | Operational Memory for SAP AMS | yes | yes | index,follow,max-sni | 1 | 747 | 0 |
+| atlas/automation/rule-based-automation-vs-ai/index.html | unverified_but_indexable | Rule-Based Automation vs AI | yes | yes | index,follow,max-sni | 1 | 747 | 0 |
 | atlas/automation/sap-ams-operating-model/index.html | schema_missing_recommended | SAP AMS Operating Model | yes | yes | noindex,follow | 1 | 671 | 0 |
 | atlas/concepts/ai-ready-data-layer/index.html | schema_missing_recommended | AI-Ready Data Layer | yes | yes | noindex, follow | 1 | 580 | 0 |
 | atlas/concepts/api-contracts/index.html | schema_missing_recommended | API Contracts | yes | yes | noindex, follow | 1 | 555 | 0 |
@@ -125,30 +131,30 @@ No critical issues detected.
 | atlas/concepts/event-contracts/index.html | schema_missing_recommended | Event Contracts | yes | yes | noindex, follow | 1 | 541 | 0 |
 | atlas/concepts/event-driven-architecture/index.html | schema_missing_recommended | Event-Driven Architecture | yes | yes | noindex, follow | 1 | 585 | 0 |
 | atlas/concepts/idempotency/index.html | schema_missing_recommended | Idempotency | yes | yes | noindex, follow | 1 | 538 | 0 |
-| atlas/concepts/index.html | indexable_ok | Atlas Concepts — Business and SAP Concep | yes | yes | index,follow,max-sni | 1 | 725 | 0 |
+| atlas/concepts/index.html | indexable_ok | Atlas Concepts — Business and SAP Concep | yes | yes | index,follow,max-sni | 1 | 740 | 0 |
 | atlas/concepts/integration-ownership-model/index.html | schema_missing_recommended | Integration Ownership Model | yes | yes | noindex, follow | 1 | 566 | 0 |
 | atlas/concepts/integration-pattern-decision-matrix/index.html | schema_missing_recommended | Integration Pattern Decision Matrix | yes | yes | noindex, follow | 1 | 517 | 0 |
 | atlas/concepts/knowledge-graph-for-sap-operations/index.html | schema_missing_recommended | Knowledge Graph for SAP Operations | yes | yes | noindex, follow | 1 | 513 | 0 |
-| atlas/concepts/order-to-cash/index.html | unverified_but_indexable | Order to Cash | yes | yes | index,follow,max-sni | 1 | 810 | 0 |
+| atlas/concepts/order-to-cash/index.html | unverified_but_indexable | Order to Cash | yes | yes | index,follow,max-sni | 1 | 825 | 0 |
 | atlas/concepts/point-to-point-vs-middleware-vs-event-bus/index.html | schema_missing_recommended | Point-to-Point vs Middleware vs Event Bu | yes | yes | noindex, follow | 1 | 585 | 0 |
 | atlas/concepts/rest-vs-odata-vs-soap-vs-idoc-vs-events/index.html | schema_missing_recommended | REST vs OData vs SOAP vs IDoc vs Events | yes | yes | noindex, follow | 1 | 546 | 0 |
 | atlas/concepts/retry-and-error-handling/index.html | schema_missing_recommended | Retry and Error Handling | yes | yes | noindex, follow | 1 | 570 | 0 |
-| atlas/concepts/sap-atp-is-not-inventory/index.html | unverified_but_indexable | SAP ATP Is Not Inventory | yes | yes | index,follow,max-sni | 1 | 933 | 0 |
+| atlas/concepts/sap-atp-is-not-inventory/index.html | unverified_but_indexable | SAP ATP Is Not Inventory | yes | yes | index,follow,max-sni | 1 | 948 | 0 |
 | atlas/concepts/sap-clean-core-strategy/index.html | schema_missing_recommended | SAP Clean Core Strategy | yes | yes | noindex,follow | 1 | 894 | 0 |
 | atlas/concepts/sap-data-product/index.html | schema_missing_recommended | SAP Data Product | yes | yes | noindex, follow | 1 | 715 | 0 |
 | atlas/concepts/sap-event-driven-architecture/index.html | schema_missing_recommended | SAP Event-Driven Architecture | yes | yes | noindex, follow | 1 | 761 | 0 |
 | atlas/concepts/sap-integration-architecture/index.html | schema_missing_recommended | SAP Integration Architecture | yes | yes | noindex, follow | 1 | 597 | 0 |
-| atlas/concepts/sap-stock-exists-not-promisable/index.html | unverified_but_indexable | SAP Stock Exists but Is Not Promisable | yes | yes | index,follow,max-sni | 1 | 787 | 0 |
+| atlas/concepts/sap-stock-exists-not-promisable/index.html | unverified_but_indexable | SAP Stock Exists but Is Not Promisable | yes | yes | index,follow,max-sni | 1 | 802 | 0 |
 | atlas/concepts/semantic-layer/index.html | schema_missing_recommended | Semantic Layer | yes | yes | noindex, follow | 1 | 486 | 0 |
-| atlas/concepts/store-receiving-sap-retail/index.html | unverified_but_indexable | Store Receiving in SAP Retail | yes | yes | index,follow,max-sni | 1 | 742 | 0 |
+| atlas/concepts/store-receiving-sap-retail/index.html | unverified_but_indexable | Store Receiving in SAP Retail | yes | yes | index,follow,max-sni | 1 | 757 | 0 |
 | atlas/concepts/synchronous-vs-asynchronous-integration/index.html | schema_missing_recommended | Synchronous vs Asynchronous Integration | yes | yes | noindex, follow | 1 | 547 | 0 |
-| atlas/data-quality/index.html | indexable_ok | Atlas Data Quality — SAP Master Data and | yes | yes | index,follow,max-sni | 1 | 652 | 0 |
-| atlas/data-quality/master-data-governance-failure-modes/index.html | unverified_but_indexable | Master Data Governance Failure Modes | yes | yes | index,follow,max-sni | 1 | 741 | 0 |
-| atlas/data-quality/sap-master-data-quality/index.html | unverified_but_indexable | SAP Master Data Quality | yes | yes | index,follow,max-sni | 1 | 739 | 0 |
+| atlas/data-quality/index.html | indexable_ok | Atlas Data Quality — SAP Master Data and | yes | yes | index,follow,max-sni | 1 | 667 | 0 |
+| atlas/data-quality/master-data-governance-failure-modes/index.html | unverified_but_indexable | Master Data Governance Failure Modes | yes | yes | index,follow,max-sni | 1 | 756 | 0 |
+| atlas/data-quality/sap-master-data-quality/index.html | unverified_but_indexable | SAP Master Data Quality | yes | yes | index,follow,max-sni | 1 | 754 | 0 |
 | atlas/data-quality/sap-master-data-replication-patterns/index.html | schema_missing_recommended | SAP Master Data Replication Patterns | yes | yes | noindex,follow | 1 | 1099 | 0 |
 | atlas/data-quality/sap-mdg-governance-patterns/index.html | schema_missing_recommended | SAP MDG Governance Patterns | yes | yes | noindex,follow | 1 | 1095 | 0 |
 | atlas/diagnostics/idoc-aif-integration-diagnostics/index.html | schema_missing_recommended | IDoc and AIF Integration Diagnostics | yes | yes | noindex,follow | 1 | 1073 | 0 |
-| atlas/diagnostics/index.html | indexable_ok | Atlas Diagnostics — SAP Support and AMS  | yes | yes | index,follow,max-sni | 1 | 2031 | 0 |
+| atlas/diagnostics/index.html | indexable_ok | Atlas Diagnostics — SAP Support and AMS  | yes | yes | index,follow,max-sni | 1 | 2046 | 0 |
 | atlas/diagnostics/pos-sales-not-reflected-in-sap/index.html | schema_missing_recommended | POS Sales Not Reflected in SAP | yes | yes | noindex,follow | 1 | 439 | 0 |
 | atlas/diagnostics/sap-account-assignment-diagnostics/index.html | schema_missing_recommended | SAP Account Assignment Diagnostics | yes | yes | noindex,follow | 1 | 876 | 0 |
 | atlas/diagnostics/sap-ale-distribution-model-diagnostics/index.html | schema_missing_recommended, draft_markers | SAP ALE Distribution Model Diagnostics | yes | yes | noindex,follow | 1 | 869 | 0 |
@@ -209,18 +215,18 @@ No critical issues detected.
 | atlas/diagnostics/sap-three-way-match-diagnostics/index.html | schema_missing_recommended | SAP Three-Way Match Diagnostics | yes | yes | noindex,follow | 1 | 1050 | 0 |
 | atlas/diagnostics/sap-vendor-master-replication-diagnostics/index.html | schema_missing_recommended | SAP Vendor Master Replication Diagnostic | yes | yes | noindex,follow | 1 | 899 | 0 |
 | atlas/index.html | indexable_ok | Knowledge Atlas — SAP, Operations, Data, | yes | yes | index,follow,max-sni | 1 | 963 | 0 |
-| atlas/links/index.html | indexable_ok | Atlas Links — Reference Routes | yes | yes | index,follow,max-sni | 1 | 683 | 0 |
+| atlas/links/index.html | indexable_ok | Atlas Links — Reference Routes | yes | yes | index,follow,max-sni | 1 | 698 | 0 |
 | atlas/maps/ai-agentic-landscape-map/index.html | schema_missing_recommended | AI and Agentic Technology Landscape Map | yes | yes | noindex,follow | 1 | 736 | 0 |
 | atlas/maps/data-analytics-landscape-map/index.html | schema_missing_recommended | Data and Analytics Landscape Map | yes | yes | noindex,follow | 1 | 749 | 0 |
 | atlas/maps/data-mesh-architecture-map/index.html | schema_missing_recommended | Data Mesh Architecture Map | yes | yes | noindex, follow | 1 | 239 | 0 |
 | atlas/maps/developer-tooling-landscape-map/index.html | schema_missing_recommended | Developer Tooling Landscape Map | yes | yes | noindex,follow | 1 | 758 | 0 |
 | atlas/maps/event-driven-architecture-map/index.html | schema_missing_recommended | Event-Driven Architecture Map | yes | yes | noindex, follow | 1 | 221 | 0 |
-| atlas/maps/index.html | indexable_ok | Atlas Maps — Process and Dependency Maps | yes | yes | index,follow,max-sni | 1 | 645 | 0 |
+| atlas/maps/index.html | indexable_ok | Atlas Maps — Process and Dependency Maps | yes | yes | index,follow,max-sni | 1 | 660 | 0 |
 | atlas/maps/integration-architecture-map/index.html | schema_missing_recommended | Integration Architecture Map | yes | yes | noindex, follow | 1 | 251 | 0 |
 | atlas/maps/integration-monitoring-reliability-map/index.html | schema_missing_recommended | Integration Monitoring and Reliability M | yes | yes | noindex, follow | 1 | 236 | 0 |
 | atlas/maps/operations-observability-landscape-map/index.html | schema_missing_recommended | Operations and Observability Landscape M | yes | yes | noindex,follow | 1 | 769 | 0 |
-| atlas/maps/order-to-cash-map/index.html | unverified_but_indexable | Order to Cash Map | yes | yes | index,follow,max-sni | 1 | 729 | 0 |
-| atlas/maps/procure-to-pay-map/index.html | unverified_but_indexable | Procure to Pay Map | yes | yes | index,follow,max-sni | 1 | 738 | 0 |
+| atlas/maps/order-to-cash-map/index.html | unverified_but_indexable | Order to Cash Map | yes | yes | index,follow,max-sni | 1 | 744 | 0 |
+| atlas/maps/procure-to-pay-map/index.html | unverified_but_indexable | Procure to Pay Map | yes | yes | index,follow,max-sni | 1 | 753 | 0 |
 | atlas/maps/sap-data-products-map/index.html | schema_missing_recommended | SAP Data Products Map | yes | yes | noindex, follow | 1 | 392 | 0 |
 | atlas/maps/sap-integration-landscape-map/index.html | schema_missing_recommended | SAP Integration Landscape Map | yes | yes | noindex,follow | 1 | 736 | 0 |
 | atlas/maps/sap-product-landscape-map/index.html | schema_missing_recommended | SAP Product Landscape Map | yes | yes | noindex,follow | 1 | 734 | 0 |
@@ -252,7 +258,7 @@ No critical issues detected.
 | atlas/sap/identity-access/index.html | schema_missing_recommended | Identity and Access | yes | yes | noindex,follow | 1 | 808 | 0 |
 | atlas/sap/idoc/index.html | schema_missing_recommended | IDoc | yes | yes | noindex,follow | 1 | 749 | 0 |
 | atlas/sap/incident-triage/index.html | schema_missing_recommended | Incident Triage | yes | yes | noindex,follow | 1 | 802 | 0 |
-| atlas/sap/index.html | indexable_ok | Atlas SAP Section — Configuration and Su | yes | yes | index,follow,max-sni | 1 | 762 | 0 |
+| atlas/sap/index.html | indexable_ok | Atlas SAP Section — Configuration and Su | yes | yes | index,follow,max-sni | 1 | 777 | 0 |
 | atlas/sap/integration-monitoring/index.html | schema_missing_recommended | Integration Monitoring | yes | yes | noindex,follow | 1 | 755 | 0 |
 | atlas/sap/job-monitoring/index.html | schema_missing_recommended | Job Monitoring | yes | yes | noindex,follow | 1 | 808 | 0 |
 | atlas/sap/manufacturing-domain/index.html | schema_missing_recommended | Manufacturing — SAP S/4HANA Domain | yes | yes | noindex,follow | 1 | 806 | 0 |
@@ -301,7 +307,7 @@ No critical issues detected.
 | atlas/sap/supply-chain-domain/index.html | schema_missing_recommended | Supply Chain — SAP S/4HANA Domain | yes | yes | noindex,follow | 1 | 782 | 0 |
 | atlas/sap/vector-search/index.html | schema_missing_recommended | Vector Search | yes | yes | noindex,follow | 1 | 919 | 0 |
 | blog/index.html | unverified_but_indexable | Blog — Dzmitryi Kharlanau on resilient s | yes | yes | index,follow,max-sni | 1 | 290 | 0 |
-| blog/the-system-that-waits/index.html | unverified_but_indexable | The System That Waits | yes | yes | index,follow,max-sni | 1 | 1019 | 0 |
+| blog/the-system-that-waits/index.html | unverified_but_indexable | The System That Waits | yes | yes | index,follow,max-sni | 1 | 1034 | 0 |
 | certifications/index.html | unverified_but_indexable | Certifications | Dzmitryi Kharlanau | yes | yes | index,follow,max-sni | 1 | 1192 | 0 |
 | changelog/index.html | unverified_but_indexable | Changelog | Dzmitryi Kharlanau | yes | yes | index,follow,max-sni | 1 | 379 | 0 |
 | cv/index.html | unverified_but_indexable, broken_local_links | Curriculum Vitae — Dzmitryi Kharlanau |  | yes | yes | index,follow,max-sni | 1 | 1045 | 2 |
@@ -494,17 +500,17 @@ No critical issues detected.
 | docs/atlas/signal-to-atlas-schema/index.html | schema_missing_recommended | Signal-to-Atlas Schema | yes | yes | noindex,follow | 1 | 603 | 0 |
 | docs/atlas-backlog-publishing-map/index.html | schema_missing_recommended, private_paths_exposed | Atlas Backlog Publishing Map | yes | yes | noindex,follow | 1 | 1277 | 0 |
 | docs/atlas-inventory-and-hidden-corpus-audit/index.html | unverified_but_indexable, duplicate_h1, private_paths_exposed | Atlas Inventory and Hidden Corpus Audit | yes | yes | index,follow,max-sni | 2 | 3431 | 0 |
-| docs/dama/db_governance_decision_rights_v0_1.html | unverified_but_indexable, broken_local_links | Decision Rights & RACI for Master Data ( | yes | yes |  | 1 | 1639 | 5 |
-| docs/dama/db_governance_drift_detection_response_v0_1.html | unverified_but_indexable, broken_local_links | Governance Drift: How to detect degradat | yes | yes |  | 1 | 2168 | 6 |
-| docs/dama/db_governance_maturity_model_mdg_v0_1.html | unverified_but_indexable, broken_local_links | MDG Governance Maturity Model: assess cu | yes | yes |  | 1 | 2133 | 6 |
+| docs/dama/db_governance_decision_rights_v0_1.html | unverified_but_indexable, broken_local_links | Decision Rights & RACI for Master Data ( | yes | yes |  | 1 | 1650 | 5 |
+| docs/dama/db_governance_drift_detection_response_v0_1.html | unverified_but_indexable, broken_local_links | Governance Drift: How to detect degradat | yes | yes |  | 1 | 2179 | 6 |
+| docs/dama/db_governance_maturity_model_mdg_v0_1.html | unverified_but_indexable, broken_local_links | MDG Governance Maturity Model: assess cu | yes | yes |  | 1 | 2144 | 6 |
 | docs/dama/index.html | unverified_but_indexable | DAMA Index | yes | yes |  | 1 | 742 | 0 |
-| docs/dama/mdg_ai_reasoning_prompt_schema_v0_1.html | unverified_but_indexable | Mdg Ai Reasoning Prompt Schema V0 1 | DA | yes | yes |  | 1 | 318 | 0 |
-| docs/dama/mdg_design_patterns_pack_v0_1.html | unverified_but_indexable | Mdg Design Patterns Pack V0 1 | DAMA | yes | yes |  | 1 | 182 | 0 |
-| docs/dama/mdg_metric_decision_playbooks_v0_1.html | unverified_but_indexable | Mdg Metric Decision Playbooks V0 1 | DAM | yes | yes |  | 1 | 172 | 0 |
-| docs/dama/mdg_metrics_framework_v0_1.html | unverified_but_indexable | Mdg Metrics Framework V0 1 | DAMA | yes | yes |  | 1 | 1113 | 0 |
-| docs/dama/mdg_migration_data_architecture_v0_1.html | unverified_but_indexable | Mdg Migration Data Architecture V0 1 | D | yes | yes |  | 1 | 162 | 0 |
-| docs/dama/mdg_migration_sequence_playbook_v0_1.html | unverified_but_indexable | Mdg Migration Sequence Playbook V0 1 | D | yes | yes |  | 1 | 162 | 0 |
-| docs/dama/mdg_tool_pack_v0_1.html | unverified_but_indexable | Mdg Tool Pack V0 1 | DAMA | yes | yes |  | 1 | 190 | 0 |
+| docs/dama/mdg_ai_reasoning_prompt_schema_v0_1.html | unverified_but_indexable | Mdg Ai Reasoning Prompt Schema V0 1 | DA | yes | yes |  | 1 | 329 | 0 |
+| docs/dama/mdg_design_patterns_pack_v0_1.html | unverified_but_indexable | Mdg Design Patterns Pack V0 1 | DAMA | yes | yes |  | 1 | 193 | 0 |
+| docs/dama/mdg_metric_decision_playbooks_v0_1.html | unverified_but_indexable | Mdg Metric Decision Playbooks V0 1 | DAM | yes | yes |  | 1 | 183 | 0 |
+| docs/dama/mdg_metrics_framework_v0_1.html | unverified_but_indexable | Mdg Metrics Framework V0 1 | DAMA | yes | yes |  | 1 | 1124 | 0 |
+| docs/dama/mdg_migration_data_architecture_v0_1.html | unverified_but_indexable | Mdg Migration Data Architecture V0 1 | D | yes | yes |  | 1 | 173 | 0 |
+| docs/dama/mdg_migration_sequence_playbook_v0_1.html | unverified_but_indexable | Mdg Migration Sequence Playbook V0 1 | D | yes | yes |  | 1 | 173 | 0 |
+| docs/dama/mdg_tool_pack_v0_1.html | unverified_but_indexable | Mdg Tool Pack V0 1 | DAMA | yes | yes |  | 1 | 201 | 0 |
 | docs/dama/tags/accountability.html | unverified_but_indexable, thin_content, broken_local_links | DAMA Tag: accountability | yes | yes |  | 1 | 93 | 8 |
 | docs/dama/tags/assessment.html | unverified_but_indexable, thin_content, broken_local_links | DAMA Tag: assessment | yes | yes |  | 1 | 109 | 9 |
 | docs/dama/tags/bypass.html | unverified_but_indexable, thin_content, broken_local_links | DAMA Tag: bypass | yes | yes |  | 1 | 100 | 9 |
@@ -545,31 +551,31 @@ No critical issues detected.
 | legal/professional-disclosure/index.html | unverified_but_indexable | Professional Disclosure | yes | yes | index,follow,max-sni | 1 | 385 | 0 |
 | legal/responsible-ai/index.html | unverified_but_indexable | Responsible AI Statement | yes | yes | index,follow,max-sni | 1 | 470 | 0 |
 | legal/terms-of-engagement/index.html | unverified_but_indexable | Terms of Engagement | yes | yes | index,follow,max-sni | 1 | 596 | 0 |
-| news/2026-04-14-sap-business-ai-q1-2026/index.html | unverified_but_indexable | SAP Business AI Q1 2026 | yes | yes | index,follow,max-sni | 1 | 395 | 0 |
-| news/2026-05-15-sap-clean-core-dashboard-cloud-alm/index.html | unverified_but_indexable | SAP Clean Core Dashboard and Cloud ALM I | yes | yes | index,follow,max-sni | 1 | 409 | 0 |
-| news/2026-05-26-sap-s4hana-compatibility-packs-final-transition/index.html | unverified_but_indexable | SAP S/4HANA Compatibility Packs Final Tr | yes | yes | index,follow,max-sni | 1 | 391 | 0 |
+| news/2026-04-14-sap-business-ai-q1-2026/index.html | unverified_but_indexable | SAP Business AI Q1 2026 | yes | yes | index,follow,max-sni | 1 | 410 | 0 |
+| news/2026-05-15-sap-clean-core-dashboard-cloud-alm/index.html | unverified_but_indexable | SAP Clean Core Dashboard and Cloud ALM I | yes | yes | index,follow,max-sni | 1 | 424 | 0 |
+| news/2026-05-26-sap-s4hana-compatibility-packs-final-transition/index.html | unverified_but_indexable | SAP S/4HANA Compatibility Packs Final Tr | yes | yes | index,follow,max-sni | 1 | 406 | 0 |
 | news/index.html | schema_missing_recommended | Professional Signals — Dzmitryi Kharlana | yes | yes | noindex,follow | 1 | 221 | 0 |
-| notes/ai-ml/index.html | unverified_but_indexable | AI & ML Around SAP — Dzmitryi Kharlanau  | yes | yes | index,follow,max-sni | 1 | 1590 | 0 |
-| notes/ams/index.html | unverified_but_indexable | SAP AMS Playbook — Dzmitryi Kharlanau |  | yes | yes | index,follow,max-sni | 1 | 2669 | 0 |
-| notes/composable-erp/index.html | unverified_but_indexable | Composable ERP Strategy for SAP Finance  | yes | yes | index,follow,max-sni | 1 | 1283 | 0 |
-| notes/consulting-principles/index.html | unverified_but_indexable | Consulting Principles — Dzmitryi Kharlan | yes | yes | index,follow,max-sni | 1 | 859 | 0 |
+| notes/ai-ml/index.html | unverified_but_indexable | AI & ML Around SAP — Dzmitryi Kharlanau  | yes | yes | index,follow,max-sni | 1 | 1605 | 0 |
+| notes/ams/index.html | unverified_but_indexable | SAP AMS Playbook — Dzmitryi Kharlanau |  | yes | yes | index,follow,max-sni | 1 | 2684 | 0 |
+| notes/composable-erp/index.html | unverified_but_indexable | Composable ERP Strategy for SAP Finance  | yes | yes | index,follow,max-sni | 1 | 1298 | 0 |
+| notes/consulting-principles/index.html | unverified_but_indexable | Consulting Principles — Dzmitryi Kharlan | yes | yes | index,follow,max-sni | 1 | 874 | 0 |
 | notes/index.html | unverified_but_indexable | Notes — Dzmitryi Kharlanau | SAP O2C & I | yes | yes | index,follow,max-sni | 1 | 544 | 0 |
-| notes/process-audit/index.html | unverified_but_indexable | Process Audit & Diagnostics — Dzmitryi K | yes | yes | index,follow,max-sni | 1 | 877 | 0 |
-| notes/system-architecture/index.html | unverified_but_indexable | Operating a Neubrutalist design system — | yes | yes | index,follow,max-sni | 1 | 432 | 0 |
-| notes/tools-mini-apps/index.html | unverified_but_indexable | Mini Apps & Prototypes — Dzmitryi Kharla | yes | yes | index,follow,max-sni | 1 | 827 | 0 |
+| notes/process-audit/index.html | unverified_but_indexable | Process Audit & Diagnostics — Dzmitryi K | yes | yes | index,follow,max-sni | 1 | 892 | 0 |
+| notes/system-architecture/index.html | unverified_but_indexable | Operating a Neubrutalist design system — | yes | yes | index,follow,max-sni | 1 | 447 | 0 |
+| notes/tools-mini-apps/index.html | unverified_but_indexable | Mini Apps & Prototypes — Dzmitryi Kharla | yes | yes | index,follow,max-sni | 1 | 842 | 0 |
 | publications/index.html | unverified_but_indexable | Publications | Dzmitryi Kharlanau | yes | yes | index,follow,max-sni | 1 | 821 | 0 |
-| radar/finding-the-needle-ai-assisted-debugging/index.html | unverified_but_indexable | Finding the Needle — AI-Assisted Debuggi | yes | yes | index,follow,max-sni | 1 | 474 | 0 |
+| radar/finding-the-needle-ai-assisted-debugging/index.html | unverified_but_indexable | Finding the Needle — AI-Assisted Debuggi | yes | yes | index,follow,max-sni | 1 | 489 | 0 |
 | radar/index.html | schema_missing_recommended | Professional Radar — Dzmitryi Kharlanau | yes | yes | noindex,follow | 1 | 534 | 0 |
-| radar/mulesoft-developer-hub-serves-humans-and-ai-agents/index.html | unverified_but_indexable | How MuleSoft Developer Hub Serves Humans | yes | yes | index,follow,max-sni | 1 | 578 | 0 |
-| radar/sap-ai-native-north-star-architecture/index.html | unverified_but_indexable | SAP AI-Native North Star Architecture: T | yes | yes | index,follow,max-sni | 1 | 456 | 0 |
-| radar/sap-autonomous-supply-chain/index.html | unverified_but_indexable | Autonomous Supply Chain: Why Agentic AI  | yes | yes | index,follow,max-sni | 1 | 433 | 0 |
-| radar/sap-business-ai-q1-2026/index.html | unverified_but_indexable | SAP Business AI Q1 2026 | yes | yes | index,follow,max-sni | 1 | 380 | 0 |
-| radar/sap-clean-core-dashboard-cloud-alm/index.html | unverified_but_indexable | SAP Clean Core Dashboard in Cloud ALM | yes | yes | index,follow,max-sni | 1 | 387 | 0 |
-| radar/sap-s4hana-compatibility-packs-final-transition/index.html | unverified_but_indexable | S/4HANA Compatibility Packs — Final Tran | yes | yes | index,follow,max-sni | 1 | 404 | 0 |
+| radar/mulesoft-developer-hub-serves-humans-and-ai-agents/index.html | unverified_but_indexable | How MuleSoft Developer Hub Serves Humans | yes | yes | index,follow,max-sni | 1 | 593 | 0 |
+| radar/sap-ai-native-north-star-architecture/index.html | unverified_but_indexable | SAP AI-Native North Star Architecture: T | yes | yes | index,follow,max-sni | 1 | 471 | 0 |
+| radar/sap-autonomous-supply-chain/index.html | unverified_but_indexable | Autonomous Supply Chain: Why Agentic AI  | yes | yes | index,follow,max-sni | 1 | 448 | 0 |
+| radar/sap-business-ai-q1-2026/index.html | unverified_but_indexable | SAP Business AI Q1 2026 | yes | yes | index,follow,max-sni | 1 | 395 | 0 |
+| radar/sap-clean-core-dashboard-cloud-alm/index.html | unverified_but_indexable | SAP Clean Core Dashboard in Cloud ALM | yes | yes | index,follow,max-sni | 1 | 402 | 0 |
+| radar/sap-s4hana-compatibility-packs-final-transition/index.html | unverified_but_indexable | S/4HANA Compatibility Packs — Final Tran | yes | yes | index,follow,max-sni | 1 | 419 | 0 |
 | reports/seo/atlas-indexation-candidates-2026-06-13/index.html | unverified_but_indexable, duplicate_h1, draft_markers | Atlas Indexation Candidates Report | yes | yes | index,follow,max-sni | 2 | 6020 | 0 |
 | reports/seo/github-proof-loop-2026-06-13/index.html | unverified_but_indexable, duplicate_h1 | GitHub Repository Proof Audit — SEO Visi | yes | yes | index,follow,max-sni | 2 | 2044 | 0 |
 | reports/seo/hub-architecture-plan-2026-06-13/index.html | unverified_but_indexable, duplicate_h1 | Hub Architecture Plan — SEO Visibility S | yes | yes | index,follow,max-sni | 2 | 3147 | 0 |
-| reports/seo/indexability-audit-2026-06-13/index.html | unverified_but_indexable, duplicate_h1, private_paths_exposed | Indexability Audit Report | yes | yes | index,follow,max-sni | 2 | 18807 | 0 |
+| reports/seo/indexability-audit-2026-06-13/index.html | unverified_but_indexable, duplicate_h1, private_paths_exposed | Indexability Audit Report | yes | yes | index,follow,max-sni | 2 | 18805 | 0 |
 | reports/seo/internal-link-graph-2026-06-13/index.html | unverified_but_indexable, duplicate_h1 | Internal Link Graph Report | yes | yes | index,follow,max-sni | 2 | 5694 | 0 |
 | reports/seo/next-verify-and-index-batch-2026-06-13/index.html | unverified_but_indexable, duplicate_h1 | Next Verify-and-Index Batch | yes | yes | index,follow,max-sni | 2 | 2190 | 0 |
 | reports/seo/plugin-audit-2026-06-13/index.html | unverified_but_indexable, duplicate_h1 | Plugin & Metadata Audit Report | yes | yes | index,follow,max-sni | 2 | 1545 | 0 |
@@ -639,100 +645,100 @@ No critical issues detected.
 | services/sap-integration-architecture/index.html | unverified_but_indexable | SAP Integration Architecture Consulting  | yes | yes | index,follow,max-sni | 1 | 539 | 0 |
 | services/sap-mini-apps/index.html | unverified_but_indexable | SAP Mini Apps and Automation Tools — Fas | yes | yes | index,follow,max-sni | 1 | 534 | 0 |
 | services/sap-o2c-process-audit/index.html | unverified_but_indexable | SAP O2C Process Audit — Diagnose Revenue | yes | yes | index,follow,max-sni | 1 | 542 | 0 |
-| skill-hub/agent-usage-guide/index.html | unverified_but_indexable | Agent Usage Guide — How AI Agents Should | yes | yes | index,follow,max-sni | 1 | 1323 | 0 |
-| skill-hub/ai-assisted-analysis/ai-accountability-working-skill/index.html | unverified_but_indexable | AI Accountability Working Skill | yes | yes | index,follow,max-sni | 1 | 2376 | 0 |
-| skill-hub/ai-assisted-analysis/ai-assisted-documentation-review-working-skill/index.html | unverified_but_indexable, draft_markers | AI-Assisted Documentation Review Working | yes | yes | index,follow,max-sni | 1 | 2402 | 0 |
-| skill-hub/ai-assisted-analysis/ai-assisted-meeting-synthesis-working-skill/index.html | unverified_but_indexable | AI-Assisted Meeting Synthesis Working Sk | yes | yes | index,follow,max-sni | 1 | 2571 | 0 |
-| skill-hub/ai-assisted-analysis/ai-assisted-status-reporting-working-skill/index.html | unverified_but_indexable | AI-Assisted Status Reporting Working Ski | yes | yes | index,follow,max-sni | 1 | 2634 | 0 |
-| skill-hub/ai-assisted-analysis/ai-assisted-test-case-generation-working-skill/index.html | unverified_but_indexable | AI-Assisted Test Case Generation Working | yes | yes | index,follow,max-sni | 1 | 2598 | 0 |
-| skill-hub/ai-assisted-analysis/ai-output-review-working-skill/index.html | unverified_but_indexable | AI Output Review Working Skill | yes | yes | index,follow,max-sni | 1 | 2318 | 0 |
-| skill-hub/ai-assisted-analysis/ai-prompt-briefing-work-artifacts-working-skill/index.html | unverified_but_indexable | AI Prompt Briefing for Work Artifacts Wo | yes | yes | index,follow,max-sni | 1 | 2845 | 0 |
-| skill-hub/ai-assisted-analysis/business-problem-to-backlog-working-skill/index.html | unverified_but_indexable | Business Problem to Backlog Working Skil | yes | yes | index,follow,max-sni | 1 | 2180 | 0 |
-| skill-hub/ai-assisted-analysis/convert-notes-to-requirements-working-skill/index.html | unverified_but_indexable | Convert Notes to Requirements Working Sk | yes | yes | index,follow,max-sni | 1 | 2082 | 0 |
-| skill-hub/ai-assisted-analysis/index.html | indexable_ok | AI-Assisted Analysis — Skill Group Index | yes | yes | index,follow,max-sni | 1 | 1182 | 0 |
-| skill-hub/ai-assisted-analysis/validate-ai-generated-requirements-working-skill/index.html | unverified_but_indexable | Validate AI-Generated Requirements Worki | yes | yes | index,follow,max-sni | 1 | 1971 | 0 |
-| skill-hub/architecture/architecture-decision-record-working-skill/index.html | unverified_but_indexable | Architecture Decision Record | yes | yes | index,follow,max-sni | 1 | 2035 | 0 |
-| skill-hub/architecture/capability-mapping-working-skill/index.html | unverified_but_indexable | Capability Mapping | yes | yes | index,follow,max-sni | 1 | 2007 | 0 |
-| skill-hub/architecture/index.html | indexable_ok | Architecture Skills | yes | yes | index,follow,max-sni | 1 | 722 | 0 |
-| skill-hub/architecture/non-functional-requirements-working-skill/index.html | unverified_but_indexable | Non-Functional Requirements | yes | yes | index,follow,max-sni | 1 | 2249 | 0 |
-| skill-hub/architecture/solution-architecture-review-working-skill/index.html | unverified_but_indexable | Solution Architecture Review | yes | yes | index,follow,max-sni | 1 | 2305 | 0 |
-| skill-hub/architecture/system-context-mapping-working-skill/index.html | unverified_but_indexable | System Context Mapping | yes | yes | index,follow,max-sni | 1 | 2261 | 0 |
-| skill-hub/artifact-templates/index.html | unverified_but_indexable | Artifact Templates — Reusable Templates  | yes | yes | index,follow,max-sni | 1 | 1038 | 0 |
-| skill-hub/business-analysis/acceptance-criteria-working-skill/index.html | unverified_but_indexable | Acceptance Criteria Working Skill | yes | yes | index,follow,max-sni | 1 | 1830 | 0 |
-| skill-hub/business-analysis/assumption-constraint-mapping-working-skill/index.html | unverified_but_indexable | Assumption and Constraint Mapping Workin | yes | yes | index,follow,max-sni | 1 | 2603 | 0 |
-| skill-hub/business-analysis/business-rules-discovery-working-skill/index.html | unverified_but_indexable | Business Rules Discovery Working Skill | yes | yes | index,follow,max-sni | 1 | 1899 | 0 |
-| skill-hub/business-analysis/gap-analysis-working-skill/index.html | unverified_but_indexable | Gap Analysis Working Skill | yes | yes | index,follow,max-sni | 1 | 1760 | 0 |
-| skill-hub/business-analysis/index.html | indexable_ok | Business Analysis — Skill Group Index | yes | yes | index,follow,max-sni | 1 | 883 | 0 |
-| skill-hub/business-analysis/process-analysis-working-skill/index.html | unverified_but_indexable | Process Analysis Working Skill | yes | yes | index,follow,max-sni | 1 | 1825 | 0 |
-| skill-hub/business-analysis/requirements-elicitation-working-skill/index.html | unverified_but_indexable | Requirements Elicitation Working Skill | yes | yes | index,follow,max-sni | 1 | 1814 | 0 |
-| skill-hub/business-analysis/scope-boundary-definition-working-skill/index.html | unverified_but_indexable, draft_markers | Scope Boundary Definition Working Skill | yes | yes | index,follow,max-sni | 1 | 2859 | 0 |
-| skill-hub/business-analysis/stakeholder-analysis-working-skill/index.html | unverified_but_indexable | Stakeholder Analysis Working Skill | yes | yes | index,follow,max-sni | 1 | 1839 | 0 |
-| skill-hub/business-analysis/use-case-analysis-working-skill/index.html | unverified_but_indexable | Use Case Analysis Working Skill | yes | yes | index,follow,max-sni | 1 | 3015 | 0 |
-| skill-hub/business-analysis/user-story-refinement-working-skill/index.html | unverified_but_indexable, draft_markers | User Story Refinement Working Skill | yes | yes | index,follow,max-sni | 1 | 2553 | 0 |
-| skill-hub/dama-dmbok/data-governance-working-skill/index.html | unverified_but_indexable | Data Governance Working Skill | yes | yes | index,follow,max-sni | 1 | 1957 | 0 |
-| skill-hub/dama-dmbok/data-integration-interoperability-working-skill/index.html | unverified_but_indexable | Data Integration & Interoperability Work | yes | yes | index,follow,max-sni | 1 | 2159 | 0 |
-| skill-hub/dama-dmbok/data-lineage-working-skill/index.html | unverified_but_indexable | Data Lineage Working Skill | yes | yes | index,follow,max-sni | 1 | 2038 | 0 |
-| skill-hub/dama-dmbok/data-quality-root-cause-working-skill/index.html | unverified_but_indexable | Data Quality Root Cause Working Skill | yes | yes | index,follow,max-sni | 1 | 2135 | 0 |
-| skill-hub/dama-dmbok/index.html | indexable_ok | DAMA / Data — Practical Working Skills | yes | yes | index,follow,max-sni | 1 | 836 | 0 |
-| skill-hub/dama-dmbok/master-data-management-working-skill/index.html | unverified_but_indexable | Master Data Management Working Skill | yes | yes | index,follow,max-sni | 1 | 2000 | 0 |
-| skill-hub/dama-dmbok/metadata-management-working-skill/index.html | unverified_but_indexable | Metadata Management Working Skill | yes | yes | index,follow,max-sni | 1 | 2012 | 0 |
-| skill-hub/dama-dmbok/reference-data-management-working-skill/index.html | unverified_but_indexable | Reference Data Management Working Skill | yes | yes | index,follow,max-sni | 1 | 2090 | 0 |
-| skill-hub/decision-validation/evidence-based-recommendation-working-skill/index.html | unverified_but_indexable | Evidence-Based Recommendation Writing Wo | yes | yes | index,follow,max-sni | 1 | 2791 | 0 |
-| skill-hub/decision-validation/index.html | indexable_ok | Decision & Validation — Skill Group Inde | yes | yes | index,follow,max-sni | 1 | 966 | 0 |
-| skill-hub/decision-validation/option-comparison-matrix-working-skill/index.html | unverified_but_indexable | Option Comparison Matrix Working Skill | yes | yes | index,follow,max-sni | 1 | 2572 | 0 |
-| skill-hub/decision-validation/requirements-review-checklist-working-skill/index.html | unverified_but_indexable | Requirements Review Checklist Working Sk | yes | yes | index,follow,max-sni | 1 | 2354 | 0 |
-| skill-hub/decision-validation/risk-dependency-mapping-working-skill/index.html | unverified_but_indexable | Risk and Dependency Mapping Working Skil | yes | yes | index,follow,max-sni | 1 | 2561 | 0 |
-| skill-hub/decision-validation/test-scenario-derivation-working-skill/index.html | unverified_but_indexable | Test Scenario Derivation Working Skill | yes | yes | index,follow,max-sni | 1 | 2844 | 0 |
-| skill-hub/decision-validation/traceability-matrix-working-skill/index.html | unverified_but_indexable | Traceability Matrix Drafting Working Ski | yes | yes | index,follow,max-sni | 1 | 2484 | 0 |
-| skill-hub/decision-validation/trade-off-analysis-working-skill/index.html | unverified_but_indexable | Trade-Off Analysis Working Skill | yes | yes | index,follow,max-sni | 1 | 2496 | 0 |
-| skill-hub/framework-map/index.html | unverified_but_indexable | Framework Map — How Enterprise Framework | yes | yes | index,follow,max-sni | 1 | 2718 | 0 |
+| skill-hub/agent-usage-guide/index.html | unverified_but_indexable | Agent Usage Guide — How AI Agents Should | yes | yes | index,follow,max-sni | 1 | 1338 | 0 |
+| skill-hub/ai-assisted-analysis/ai-accountability-working-skill/index.html | unverified_but_indexable | AI Accountability Working Skill | yes | yes | index,follow,max-sni | 1 | 2391 | 0 |
+| skill-hub/ai-assisted-analysis/ai-assisted-documentation-review-working-skill/index.html | unverified_but_indexable, draft_markers | AI-Assisted Documentation Review Working | yes | yes | index,follow,max-sni | 1 | 2417 | 0 |
+| skill-hub/ai-assisted-analysis/ai-assisted-meeting-synthesis-working-skill/index.html | unverified_but_indexable | AI-Assisted Meeting Synthesis Working Sk | yes | yes | index,follow,max-sni | 1 | 2586 | 0 |
+| skill-hub/ai-assisted-analysis/ai-assisted-status-reporting-working-skill/index.html | unverified_but_indexable | AI-Assisted Status Reporting Working Ski | yes | yes | index,follow,max-sni | 1 | 2649 | 0 |
+| skill-hub/ai-assisted-analysis/ai-assisted-test-case-generation-working-skill/index.html | unverified_but_indexable | AI-Assisted Test Case Generation Working | yes | yes | index,follow,max-sni | 1 | 2613 | 0 |
+| skill-hub/ai-assisted-analysis/ai-output-review-working-skill/index.html | unverified_but_indexable | AI Output Review Working Skill | yes | yes | index,follow,max-sni | 1 | 2333 | 0 |
+| skill-hub/ai-assisted-analysis/ai-prompt-briefing-work-artifacts-working-skill/index.html | unverified_but_indexable | AI Prompt Briefing for Work Artifacts Wo | yes | yes | index,follow,max-sni | 1 | 2860 | 0 |
+| skill-hub/ai-assisted-analysis/business-problem-to-backlog-working-skill/index.html | unverified_but_indexable | Business Problem to Backlog Working Skil | yes | yes | index,follow,max-sni | 1 | 2195 | 0 |
+| skill-hub/ai-assisted-analysis/convert-notes-to-requirements-working-skill/index.html | unverified_but_indexable | Convert Notes to Requirements Working Sk | yes | yes | index,follow,max-sni | 1 | 2097 | 0 |
+| skill-hub/ai-assisted-analysis/index.html | indexable_ok | AI-Assisted Analysis — Skill Group Index | yes | yes | index,follow,max-sni | 1 | 1197 | 0 |
+| skill-hub/ai-assisted-analysis/validate-ai-generated-requirements-working-skill/index.html | unverified_but_indexable | Validate AI-Generated Requirements Worki | yes | yes | index,follow,max-sni | 1 | 1986 | 0 |
+| skill-hub/architecture/architecture-decision-record-working-skill/index.html | unverified_but_indexable | Architecture Decision Record | yes | yes | index,follow,max-sni | 1 | 2050 | 0 |
+| skill-hub/architecture/capability-mapping-working-skill/index.html | unverified_but_indexable | Capability Mapping | yes | yes | index,follow,max-sni | 1 | 2022 | 0 |
+| skill-hub/architecture/index.html | indexable_ok | Architecture Skills | yes | yes | index,follow,max-sni | 1 | 737 | 0 |
+| skill-hub/architecture/non-functional-requirements-working-skill/index.html | unverified_but_indexable | Non-Functional Requirements | yes | yes | index,follow,max-sni | 1 | 2264 | 0 |
+| skill-hub/architecture/solution-architecture-review-working-skill/index.html | unverified_but_indexable | Solution Architecture Review | yes | yes | index,follow,max-sni | 1 | 2320 | 0 |
+| skill-hub/architecture/system-context-mapping-working-skill/index.html | unverified_but_indexable | System Context Mapping | yes | yes | index,follow,max-sni | 1 | 2276 | 0 |
+| skill-hub/artifact-templates/index.html | unverified_but_indexable | Artifact Templates — Reusable Templates  | yes | yes | index,follow,max-sni | 1 | 1053 | 0 |
+| skill-hub/business-analysis/acceptance-criteria-working-skill/index.html | unverified_but_indexable | Acceptance Criteria Working Skill | yes | yes | index,follow,max-sni | 1 | 1845 | 0 |
+| skill-hub/business-analysis/assumption-constraint-mapping-working-skill/index.html | unverified_but_indexable | Assumption and Constraint Mapping Workin | yes | yes | index,follow,max-sni | 1 | 2618 | 0 |
+| skill-hub/business-analysis/business-rules-discovery-working-skill/index.html | unverified_but_indexable | Business Rules Discovery Working Skill | yes | yes | index,follow,max-sni | 1 | 1914 | 0 |
+| skill-hub/business-analysis/gap-analysis-working-skill/index.html | unverified_but_indexable | Gap Analysis Working Skill | yes | yes | index,follow,max-sni | 1 | 1775 | 0 |
+| skill-hub/business-analysis/index.html | indexable_ok | Business Analysis — Skill Group Index | yes | yes | index,follow,max-sni | 1 | 898 | 0 |
+| skill-hub/business-analysis/process-analysis-working-skill/index.html | unverified_but_indexable | Process Analysis Working Skill | yes | yes | index,follow,max-sni | 1 | 1840 | 0 |
+| skill-hub/business-analysis/requirements-elicitation-working-skill/index.html | unverified_but_indexable | Requirements Elicitation Working Skill | yes | yes | index,follow,max-sni | 1 | 1829 | 0 |
+| skill-hub/business-analysis/scope-boundary-definition-working-skill/index.html | unverified_but_indexable, draft_markers | Scope Boundary Definition Working Skill | yes | yes | index,follow,max-sni | 1 | 2874 | 0 |
+| skill-hub/business-analysis/stakeholder-analysis-working-skill/index.html | unverified_but_indexable | Stakeholder Analysis Working Skill | yes | yes | index,follow,max-sni | 1 | 1854 | 0 |
+| skill-hub/business-analysis/use-case-analysis-working-skill/index.html | unverified_but_indexable | Use Case Analysis Working Skill | yes | yes | index,follow,max-sni | 1 | 3030 | 0 |
+| skill-hub/business-analysis/user-story-refinement-working-skill/index.html | unverified_but_indexable, draft_markers | User Story Refinement Working Skill | yes | yes | index,follow,max-sni | 1 | 2568 | 0 |
+| skill-hub/dama-dmbok/data-governance-working-skill/index.html | unverified_but_indexable | Data Governance Working Skill | yes | yes | index,follow,max-sni | 1 | 1972 | 0 |
+| skill-hub/dama-dmbok/data-integration-interoperability-working-skill/index.html | unverified_but_indexable | Data Integration & Interoperability Work | yes | yes | index,follow,max-sni | 1 | 2174 | 0 |
+| skill-hub/dama-dmbok/data-lineage-working-skill/index.html | unverified_but_indexable | Data Lineage Working Skill | yes | yes | index,follow,max-sni | 1 | 2053 | 0 |
+| skill-hub/dama-dmbok/data-quality-root-cause-working-skill/index.html | unverified_but_indexable | Data Quality Root Cause Working Skill | yes | yes | index,follow,max-sni | 1 | 2150 | 0 |
+| skill-hub/dama-dmbok/index.html | indexable_ok | DAMA / Data — Practical Working Skills | yes | yes | index,follow,max-sni | 1 | 851 | 0 |
+| skill-hub/dama-dmbok/master-data-management-working-skill/index.html | unverified_but_indexable | Master Data Management Working Skill | yes | yes | index,follow,max-sni | 1 | 2015 | 0 |
+| skill-hub/dama-dmbok/metadata-management-working-skill/index.html | unverified_but_indexable | Metadata Management Working Skill | yes | yes | index,follow,max-sni | 1 | 2027 | 0 |
+| skill-hub/dama-dmbok/reference-data-management-working-skill/index.html | unverified_but_indexable | Reference Data Management Working Skill | yes | yes | index,follow,max-sni | 1 | 2105 | 0 |
+| skill-hub/decision-validation/evidence-based-recommendation-working-skill/index.html | unverified_but_indexable | Evidence-Based Recommendation Writing Wo | yes | yes | index,follow,max-sni | 1 | 2806 | 0 |
+| skill-hub/decision-validation/index.html | indexable_ok | Decision & Validation — Skill Group Inde | yes | yes | index,follow,max-sni | 1 | 981 | 0 |
+| skill-hub/decision-validation/option-comparison-matrix-working-skill/index.html | unverified_but_indexable | Option Comparison Matrix Working Skill | yes | yes | index,follow,max-sni | 1 | 2587 | 0 |
+| skill-hub/decision-validation/requirements-review-checklist-working-skill/index.html | unverified_but_indexable | Requirements Review Checklist Working Sk | yes | yes | index,follow,max-sni | 1 | 2369 | 0 |
+| skill-hub/decision-validation/risk-dependency-mapping-working-skill/index.html | unverified_but_indexable | Risk and Dependency Mapping Working Skil | yes | yes | index,follow,max-sni | 1 | 2576 | 0 |
+| skill-hub/decision-validation/test-scenario-derivation-working-skill/index.html | unverified_but_indexable | Test Scenario Derivation Working Skill | yes | yes | index,follow,max-sni | 1 | 2859 | 0 |
+| skill-hub/decision-validation/traceability-matrix-working-skill/index.html | unverified_but_indexable | Traceability Matrix Drafting Working Ski | yes | yes | index,follow,max-sni | 1 | 2499 | 0 |
+| skill-hub/decision-validation/trade-off-analysis-working-skill/index.html | unverified_but_indexable | Trade-Off Analysis Working Skill | yes | yes | index,follow,max-sni | 1 | 2511 | 0 |
+| skill-hub/framework-map/index.html | unverified_but_indexable | Framework Map — How Enterprise Framework | yes | yes | index,follow,max-sni | 1 | 2733 | 0 |
 | skill-hub/index.html | indexable_ok | Skill Hub — Practical Working Skills for | yes | yes | index,follow,max-sni | 1 | 1361 | 0 |
-| skill-hub/integration-architecture/api-integration-working-skill/index.html | unverified_but_indexable | API Integration Working Skill | yes | yes | index,follow,max-sni | 1 | 1604 | 0 |
-| skill-hub/integration-architecture/data-mesh-working-skill/index.html | unverified_but_indexable | Data Mesh Working Skill | yes | yes | index,follow,max-sni | 1 | 1639 | 0 |
-| skill-hub/integration-architecture/event-driven-architecture-working-skill/index.html | unverified_but_indexable | Event-Driven Architecture Working Skill | yes | yes | index,follow,max-sni | 1 | 1631 | 0 |
-| skill-hub/integration-architecture/index.html | indexable_ok | Integration Architecture — Skill Group I | yes | yes | index,follow,max-sni | 1 | 775 | 0 |
-| skill-hub/integration-architecture/integration-error-handling-working-skill/index.html | unverified_but_indexable | Integration Error Handling Working Skill | yes | yes | index,follow,max-sni | 1 | 1894 | 0 |
-| skill-hub/integration-architecture/integration-observability-working-skill/index.html | unverified_but_indexable | Integration Observability Working Skill | yes | yes | index,follow,max-sni | 1 | 1864 | 0 |
-| skill-hub/integration-architecture/interface-ownership-working-skill/index.html | unverified_but_indexable | Interface Ownership Working Skill | yes | yes | index,follow,max-sni | 1 | 1700 | 0 |
-| skill-hub/productivity-execution-control/blocker-escalation-working-skill/index.html | unverified_but_indexable | Blocker Escalation Working Skill | yes | yes | index,follow,max-sni | 1 | 3196 | 0 |
-| skill-hub/productivity-execution-control/daily-execution-review-working-skill/index.html | unverified_but_indexable | Daily Execution Review Working Skill | yes | yes | index,follow,max-sni | 1 | 3043 | 0 |
-| skill-hub/productivity-execution-control/delivery-checklist-management-working-skill/index.html | unverified_but_indexable | Delivery Checklist Management Working Sk | yes | yes | index,follow,max-sni | 1 | 3135 | 0 |
-| skill-hub/productivity-execution-control/follow-up-tracking-working-skill/index.html | unverified_but_indexable | Follow-Up Tracking Working Skill | yes | yes | index,follow,max-sni | 1 | 3100 | 0 |
-| skill-hub/productivity-execution-control/index.html | indexable_ok | Productivity and Execution Control — Ski | yes | yes | index,follow,max-sni | 1 | 1072 | 0 |
-| skill-hub/productivity-execution-control/priority-triage-working-skill/index.html | unverified_but_indexable | Priority Triage Working Skill | yes | yes | index,follow,max-sni | 1 | 2973 | 0 |
-| skill-hub/productivity-execution-control/scope-creep-detection-working-skill/index.html | unverified_but_indexable | Scope Creep Detection Working Skill | yes | yes | index,follow,max-sni | 1 | 3229 | 0 |
-| skill-hub/productivity-execution-control/task-clarification-working-skill/index.html | unverified_but_indexable | Task Clarification Working Skill | yes | yes | index,follow,max-sni | 1 | 2688 | 0 |
-| skill-hub/productivity-execution-control/work-breakdown-planning-working-skill/index.html | unverified_but_indexable | Work Breakdown Planning Working Skill | yes | yes | index,follow,max-sni | 1 | 2810 | 0 |
-| skill-hub/quality-rules/index.html | unverified_but_indexable | Quality Rules — What Makes a Skill Hub P | yes | yes | index,follow,max-sni | 1 | 1182 | 0 |
-| skill-hub/sap-ams/change-impact-analysis-working-skill/index.html | unverified_but_indexable | Change Impact Analysis — Working Skill | yes | yes | index,follow,max-sni | 1 | 2152 | 0 |
-| skill-hub/sap-ams/incident-triage-working-skill/index.html | unverified_but_indexable | Incident Triage — Working Skill | yes | yes | index,follow,max-sni | 1 | 2013 | 0 |
-| skill-hub/sap-ams/index.html | indexable_ok | SAP AMS / Operations — Skill Group Index | yes | yes | index,follow,max-sni | 1 | 768 | 0 |
-| skill-hub/sap-ams/operational-knowledge-capture-working-skill/index.html | unverified_but_indexable | Operational Knowledge Capture — Working  | yes | yes | index,follow,max-sni | 1 | 2273 | 0 |
-| skill-hub/sap-ams/recurring-ticket-pattern-analysis-working-skill/index.html | unverified_but_indexable | Recurring Ticket Pattern Analysis — Work | yes | yes | index,follow,max-sni | 1 | 2273 | 0 |
-| skill-hub/sap-ams/root-cause-analysis-working-skill/index.html | unverified_but_indexable | Root Cause Analysis — Working Skill | yes | yes | index,follow,max-sni | 1 | 2271 | 0 |
-| skill-hub/skill-page-template/index.html | unverified_but_indexable | Skill Page Template — Standard Structure | yes | yes | index,follow,max-sni | 1 | 1189 | 0 |
-| skill-hub/systems-analysis/index.html | indexable_ok | Systems Analysis — Skill Group Index | yes | yes | index,follow,max-sni | 1 | 862 | 0 |
-| skill-hub/systems-analysis/interface-requirement-analysis-working-skill/index.html | unverified_but_indexable | Interface Requirement Analysis Working S | yes | yes | index,follow,max-sni | 1 | 3301 | 0 |
-| skill-hub/systems-analysis/state-lifecycle-analysis-working-skill/index.html | unverified_but_indexable | State and Lifecycle Analysis Working Ski | yes | yes | index,follow,max-sni | 1 | 2969 | 0 |
-| skill-hub/testing-quality-delivery/defect-triage-classification-working-skill/index.html | unverified_but_indexable | Defect Triage and Classification Working | yes | yes | index,follow,max-sni | 1 | 2815 | 0 |
-| skill-hub/testing-quality-delivery/deployment-readiness-checklist-working-skill/index.html | unverified_but_indexable | Deployment Readiness Checklist Working S | yes | yes | index,follow,max-sni | 1 | 2755 | 0 |
-| skill-hub/testing-quality-delivery/index.html | indexable_ok | Testing, QA, and Delivery Validation — S | yes | yes | index,follow,max-sni | 1 | 1047 | 0 |
-| skill-hub/testing-quality-delivery/qa-review-sign-off-working-skill/index.html | unverified_but_indexable | QA Review and Sign-Off Working Skill | yes | yes | index,follow,max-sni | 1 | 2814 | 0 |
-| skill-hub/testing-quality-delivery/regression-test-planning-working-skill/index.html | unverified_but_indexable | Regression Test Planning Working Skill | yes | yes | index,follow,max-sni | 1 | 2785 | 0 |
-| skill-hub/testing-quality-delivery/release-risk-review-working-skill/index.html | unverified_but_indexable | Release Risk Review Working Skill | yes | yes | index,follow,max-sni | 1 | 2938 | 0 |
-| skill-hub/testing-quality-delivery/test-case-design-working-skill/index.html | unverified_but_indexable | Test Case Design Working Skill | yes | yes | index,follow,max-sni | 1 | 2841 | 0 |
-| skill-hub/testing-quality-delivery/test-evidence-review-working-skill/index.html | unverified_but_indexable | Test Evidence Review Working Skill | yes | yes | index,follow,max-sni | 1 | 2693 | 0 |
-| skill-hub/testing-quality-delivery/uat-preparation-working-skill/index.html | unverified_but_indexable | UAT Preparation Working Skill | yes | yes | index,follow,max-sni | 1 | 3207 | 0 |
-| skill-hub/work-documentation-handover/decision-summary-writing-working-skill/index.html | unverified_but_indexable | Decision Summary Writing Working Skill | yes | yes | index,follow,max-sni | 1 | 2855 | 0 |
-| skill-hub/work-documentation-handover/handover-note-writing-working-skill/index.html | unverified_but_indexable | Handover Note Writing Working Skill | yes | yes | index,follow,max-sni | 1 | 2904 | 0 |
-| skill-hub/work-documentation-handover/incident-documentation-working-skill/index.html | unverified_but_indexable | Incident Documentation Working Skill | yes | yes | index,follow,max-sni | 1 | 3161 | 0 |
-| skill-hub/work-documentation-handover/index.html | indexable_ok | Work Documentation and Handover — Skill  | yes | yes | index,follow,max-sni | 1 | 1087 | 0 |
-| skill-hub/work-documentation-handover/knowledge-article-writing-working-skill/index.html | unverified_but_indexable | Knowledge Article Writing Working Skill | yes | yes | index,follow,max-sni | 1 | 3040 | 0 |
-| skill-hub/work-documentation-handover/lessons-learned-capture-working-skill/index.html | unverified_but_indexable, draft_markers | Lessons Learned Capture Working Skill | yes | yes | index,follow,max-sni | 1 | 3026 | 0 |
-| skill-hub/work-documentation-handover/meeting-notes-to-action-log-working-skill/index.html | unverified_but_indexable, draft_markers | Meeting Notes to Action Log Working Skil | yes | yes | index,follow,max-sni | 1 | 2678 | 0 |
-| skill-hub/work-documentation-handover/process-documentation-working-skill/index.html | unverified_but_indexable | Process Documentation Working Skill | yes | yes | index,follow,max-sni | 1 | 3046 | 0 |
-| skill-hub/work-documentation-handover/runbook-writing-working-skill/index.html | unverified_but_indexable | Runbook Writing Working Skill | yes | yes | index,follow,max-sni | 1 | 3325 | 0 |
-| skill-hub/work-documentation-handover/status-update-writing-working-skill/index.html | unverified_but_indexable | Status Update Writing Working Skill | yes | yes | index,follow,max-sni | 1 | 3075 | 0 |
+| skill-hub/integration-architecture/api-integration-working-skill/index.html | unverified_but_indexable | API Integration Working Skill | yes | yes | index,follow,max-sni | 1 | 1619 | 0 |
+| skill-hub/integration-architecture/data-mesh-working-skill/index.html | unverified_but_indexable | Data Mesh Working Skill | yes | yes | index,follow,max-sni | 1 | 1654 | 0 |
+| skill-hub/integration-architecture/event-driven-architecture-working-skill/index.html | unverified_but_indexable | Event-Driven Architecture Working Skill | yes | yes | index,follow,max-sni | 1 | 1646 | 0 |
+| skill-hub/integration-architecture/index.html | indexable_ok | Integration Architecture — Skill Group I | yes | yes | index,follow,max-sni | 1 | 790 | 0 |
+| skill-hub/integration-architecture/integration-error-handling-working-skill/index.html | unverified_but_indexable | Integration Error Handling Working Skill | yes | yes | index,follow,max-sni | 1 | 1909 | 0 |
+| skill-hub/integration-architecture/integration-observability-working-skill/index.html | unverified_but_indexable | Integration Observability Working Skill | yes | yes | index,follow,max-sni | 1 | 1879 | 0 |
+| skill-hub/integration-architecture/interface-ownership-working-skill/index.html | unverified_but_indexable | Interface Ownership Working Skill | yes | yes | index,follow,max-sni | 1 | 1715 | 0 |
+| skill-hub/productivity-execution-control/blocker-escalation-working-skill/index.html | unverified_but_indexable | Blocker Escalation Working Skill | yes | yes | index,follow,max-sni | 1 | 3211 | 0 |
+| skill-hub/productivity-execution-control/daily-execution-review-working-skill/index.html | unverified_but_indexable | Daily Execution Review Working Skill | yes | yes | index,follow,max-sni | 1 | 3058 | 0 |
+| skill-hub/productivity-execution-control/delivery-checklist-management-working-skill/index.html | unverified_but_indexable | Delivery Checklist Management Working Sk | yes | yes | index,follow,max-sni | 1 | 3150 | 0 |
+| skill-hub/productivity-execution-control/follow-up-tracking-working-skill/index.html | unverified_but_indexable | Follow-Up Tracking Working Skill | yes | yes | index,follow,max-sni | 1 | 3115 | 0 |
+| skill-hub/productivity-execution-control/index.html | indexable_ok | Productivity and Execution Control — Ski | yes | yes | index,follow,max-sni | 1 | 1087 | 0 |
+| skill-hub/productivity-execution-control/priority-triage-working-skill/index.html | unverified_but_indexable | Priority Triage Working Skill | yes | yes | index,follow,max-sni | 1 | 2988 | 0 |
+| skill-hub/productivity-execution-control/scope-creep-detection-working-skill/index.html | unverified_but_indexable | Scope Creep Detection Working Skill | yes | yes | index,follow,max-sni | 1 | 3244 | 0 |
+| skill-hub/productivity-execution-control/task-clarification-working-skill/index.html | unverified_but_indexable | Task Clarification Working Skill | yes | yes | index,follow,max-sni | 1 | 2703 | 0 |
+| skill-hub/productivity-execution-control/work-breakdown-planning-working-skill/index.html | unverified_but_indexable | Work Breakdown Planning Working Skill | yes | yes | index,follow,max-sni | 1 | 2825 | 0 |
+| skill-hub/quality-rules/index.html | unverified_but_indexable | Quality Rules — What Makes a Skill Hub P | yes | yes | index,follow,max-sni | 1 | 1197 | 0 |
+| skill-hub/sap-ams/change-impact-analysis-working-skill/index.html | unverified_but_indexable | Change Impact Analysis — Working Skill | yes | yes | index,follow,max-sni | 1 | 2167 | 0 |
+| skill-hub/sap-ams/incident-triage-working-skill/index.html | unverified_but_indexable | Incident Triage — Working Skill | yes | yes | index,follow,max-sni | 1 | 2028 | 0 |
+| skill-hub/sap-ams/index.html | indexable_ok | SAP AMS / Operations — Skill Group Index | yes | yes | index,follow,max-sni | 1 | 783 | 0 |
+| skill-hub/sap-ams/operational-knowledge-capture-working-skill/index.html | unverified_but_indexable | Operational Knowledge Capture — Working  | yes | yes | index,follow,max-sni | 1 | 2288 | 0 |
+| skill-hub/sap-ams/recurring-ticket-pattern-analysis-working-skill/index.html | unverified_but_indexable | Recurring Ticket Pattern Analysis — Work | yes | yes | index,follow,max-sni | 1 | 2288 | 0 |
+| skill-hub/sap-ams/root-cause-analysis-working-skill/index.html | unverified_but_indexable | Root Cause Analysis — Working Skill | yes | yes | index,follow,max-sni | 1 | 2286 | 0 |
+| skill-hub/skill-page-template/index.html | unverified_but_indexable | Skill Page Template — Standard Structure | yes | yes | index,follow,max-sni | 1 | 1204 | 0 |
+| skill-hub/systems-analysis/index.html | indexable_ok | Systems Analysis — Skill Group Index | yes | yes | index,follow,max-sni | 1 | 877 | 0 |
+| skill-hub/systems-analysis/interface-requirement-analysis-working-skill/index.html | unverified_but_indexable | Interface Requirement Analysis Working S | yes | yes | index,follow,max-sni | 1 | 3316 | 0 |
+| skill-hub/systems-analysis/state-lifecycle-analysis-working-skill/index.html | unverified_but_indexable | State and Lifecycle Analysis Working Ski | yes | yes | index,follow,max-sni | 1 | 2984 | 0 |
+| skill-hub/testing-quality-delivery/defect-triage-classification-working-skill/index.html | unverified_but_indexable | Defect Triage and Classification Working | yes | yes | index,follow,max-sni | 1 | 2830 | 0 |
+| skill-hub/testing-quality-delivery/deployment-readiness-checklist-working-skill/index.html | unverified_but_indexable | Deployment Readiness Checklist Working S | yes | yes | index,follow,max-sni | 1 | 2770 | 0 |
+| skill-hub/testing-quality-delivery/index.html | indexable_ok | Testing, QA, and Delivery Validation — S | yes | yes | index,follow,max-sni | 1 | 1062 | 0 |
+| skill-hub/testing-quality-delivery/qa-review-sign-off-working-skill/index.html | unverified_but_indexable | QA Review and Sign-Off Working Skill | yes | yes | index,follow,max-sni | 1 | 2829 | 0 |
+| skill-hub/testing-quality-delivery/regression-test-planning-working-skill/index.html | unverified_but_indexable | Regression Test Planning Working Skill | yes | yes | index,follow,max-sni | 1 | 2800 | 0 |
+| skill-hub/testing-quality-delivery/release-risk-review-working-skill/index.html | unverified_but_indexable | Release Risk Review Working Skill | yes | yes | index,follow,max-sni | 1 | 2953 | 0 |
+| skill-hub/testing-quality-delivery/test-case-design-working-skill/index.html | unverified_but_indexable | Test Case Design Working Skill | yes | yes | index,follow,max-sni | 1 | 2856 | 0 |
+| skill-hub/testing-quality-delivery/test-evidence-review-working-skill/index.html | unverified_but_indexable | Test Evidence Review Working Skill | yes | yes | index,follow,max-sni | 1 | 2708 | 0 |
+| skill-hub/testing-quality-delivery/uat-preparation-working-skill/index.html | unverified_but_indexable | UAT Preparation Working Skill | yes | yes | index,follow,max-sni | 1 | 3222 | 0 |
+| skill-hub/work-documentation-handover/decision-summary-writing-working-skill/index.html | unverified_but_indexable | Decision Summary Writing Working Skill | yes | yes | index,follow,max-sni | 1 | 2870 | 0 |
+| skill-hub/work-documentation-handover/handover-note-writing-working-skill/index.html | unverified_but_indexable | Handover Note Writing Working Skill | yes | yes | index,follow,max-sni | 1 | 2919 | 0 |
+| skill-hub/work-documentation-handover/incident-documentation-working-skill/index.html | unverified_but_indexable | Incident Documentation Working Skill | yes | yes | index,follow,max-sni | 1 | 3176 | 0 |
+| skill-hub/work-documentation-handover/index.html | indexable_ok | Work Documentation and Handover — Skill  | yes | yes | index,follow,max-sni | 1 | 1102 | 0 |
+| skill-hub/work-documentation-handover/knowledge-article-writing-working-skill/index.html | unverified_but_indexable | Knowledge Article Writing Working Skill | yes | yes | index,follow,max-sni | 1 | 3055 | 0 |
+| skill-hub/work-documentation-handover/lessons-learned-capture-working-skill/index.html | unverified_but_indexable, draft_markers | Lessons Learned Capture Working Skill | yes | yes | index,follow,max-sni | 1 | 3041 | 0 |
+| skill-hub/work-documentation-handover/meeting-notes-to-action-log-working-skill/index.html | unverified_but_indexable, draft_markers | Meeting Notes to Action Log Working Skil | yes | yes | index,follow,max-sni | 1 | 2693 | 0 |
+| skill-hub/work-documentation-handover/process-documentation-working-skill/index.html | unverified_but_indexable | Process Documentation Working Skill | yes | yes | index,follow,max-sni | 1 | 3061 | 0 |
+| skill-hub/work-documentation-handover/runbook-writing-working-skill/index.html | unverified_but_indexable | Runbook Writing Working Skill | yes | yes | index,follow,max-sni | 1 | 3340 | 0 |
+| skill-hub/work-documentation-handover/status-update-writing-working-skill/index.html | unverified_but_indexable | Status Update Writing Working Skill | yes | yes | index,follow,max-sni | 1 | 3090 | 0 |
 
 ## Verified + Indexable Pages
 

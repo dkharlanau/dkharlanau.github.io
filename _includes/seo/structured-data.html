@@ -122,10 +122,15 @@ Rules:
   "headline": {{ page_title | jsonify }},
   "description": {{ page_description | truncate: 160 | jsonify }},
   "author": {
-    "@id": "{{ author_id }}"
+    "@type": "Person",
+    "@id": "{{ author_id }}",
+    "name": {{ resume.name | jsonify }}
   },
   "publisher": {
-    "@id": "{{ organization_id }}"
+    "@type": "Organization",
+    "@id": "{{ organization_id }}",
+    "name": {{ resume.schema.worksFor.name | jsonify }},
+    "url": {{ resume.schema.worksFor.url | jsonify }}
   },
   {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
   {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}

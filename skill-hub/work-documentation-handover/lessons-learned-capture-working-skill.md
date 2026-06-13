@@ -189,7 +189,7 @@ doc_status: draft | reviewed | approved
     <h2>Weak output vs Strong output</h2>
 
     <h3>Weak output</h3>
-    <p>A retrospective meeting produces a whiteboard photo with these notes: "Good: teamwork. Bad: communication. Improve: testing. Action items: TBD." No evidence, no causal explanation, no specific actions, no owners, no deadlines. The photo is saved to a shared folder and never opened again. The next project repeats the same issues.</p>
+    <p>A retrospective meeting produces a whiteboard photo with these notes: "Good: teamwork. Bad: communication. Improve: testing. Action items: not listed." No evidence, no causal explanation, no specific actions, no owners, no deadlines. The photo is saved to a shared folder and never opened again. The next project repeats the same issues.</p>
     <p><strong>Why it fails:</strong> The output is not actionable. It is not evidence-based. It is not tracked. It is not shared. It is a feel-good exercise that produces no change.</p>
 
     <h3>Strong output</h3>

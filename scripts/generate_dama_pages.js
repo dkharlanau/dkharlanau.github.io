@@ -187,6 +187,11 @@ function renderDecisionPage(data, slug) {
           name: creatorName,
         }
       : undefined,
+    publisher: {
+      "@type": "Organization",
+      name: "Dzmitryi Kharlanau",
+      url: "https://dkharlanau.github.io",
+    },
   };
 
   const basePath = "./";

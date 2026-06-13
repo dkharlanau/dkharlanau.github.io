@@ -3,7 +3,7 @@
 Status: operational  
 Purpose: document how to set up Ruby/Jekyll locally and validate the site build  
 Created for: issue #7  
-Last updated: 2026-05-26
+Last updated: 2026-06-13
 
 ---
 
@@ -131,6 +131,19 @@ Checks for:
 - Canonical / `og:url` mismatches
 - Localhost URLs in canonical/og:url
 
+### 6. Page quality check (requires built site)
+
+```bash
+python3 scripts/check_page_quality.py --site-dir _site --fail-on-critical
+```
+
+Page-type-aware gate for:
+- Article/collection `<h1>`, title, description, author, publisher, dates, canonical
+- Open Graph / Twitter metadata completeness
+- Structured-data alignment with visible metadata
+- Private-path and localhost leaks in URL values and visible text
+- Broken template tokens and placeholder text
+
 ---
 
 ## When Ruby is not available
@@ -158,6 +171,7 @@ Jekyll build validation (`bundle exec jekyll build`) and post-build checks (`che
 | `scripts/validate_site_content.py` | Pre-build content validation (issue #5) |
 | `scripts/check_links.py` | Post-build broken link detection |
 | `scripts/check_seo.py` | Post-build SEO metadata validation |
+| `scripts/check_page_quality.py` | Post-build page-type-aware quality gate |
 | `docs/local-site-validation.md` | This documentation |
 
 ---

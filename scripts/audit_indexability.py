@@ -425,10 +425,16 @@ def main() -> int:
 
     # --- Markdown report ------------------------------------------------------
     md_lines = [
+        "---",
+        "layout: default",
+        'title: "Indexability Audit Report"',
+        "robots: noindex, follow",
+        "sitemap: false",
+        "---",
+        "",
         f"# Indexability Audit Report",
         f"",
         f"**Date:** {today}",
-        f"**Site directory:** `{site_dir}`",
         f"**Pages scanned:** {len(rows)}",
         f"",
         f"## Summary",
