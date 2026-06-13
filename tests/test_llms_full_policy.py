@@ -7,6 +7,7 @@ and scripts/generate_atlas_artifacts.py --check.
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
 
 import pytest
@@ -111,3 +112,24 @@ def test_llms_full_no_linkedin_export_references():
 
     assert "Basic_LinkedInDataExport" not in text
     assert "Basic_LinkInDataExport" not in text
+
+
+def test_llms_full_includes_all_verified_atlas_articles():
+    """Every verified+reviewed Atlas article must appear in llms-full.txt."""
+    llms_path = REPO_ROOT / "llms-full.txt"
+    text = llms_path.read_text(encoding="utf-8")
+    llms_urls = set(URL_RE.findall(text))
+
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import generate_atlas_artifacts as gen
+
+    missing: list[str] = []
+    for rel_path in gen.discover_atlas_articles():
+        abs_path = REPO_ROOT / rel_path
+        fm, _ = gen.parse_frontmatter(abs_path)
+        if fm.get("verified") is True and fm.get("status") == "reviewed":
+            url = fm.get("permalink", "")
+            if url and url not in llms_urls:
+                missing.append(f"{rel_path}: {url}")
+
+    assert not missing, "llms-full.txt missing verified Atlas articles:\n" + "\n".join(missing)

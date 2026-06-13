@@ -12,6 +12,7 @@ sap_area: "SAP support / BTP-adjacent architecture"
 business_process: Support operations
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-05-06
 author: Dzmitryi Kharlanau
 
@@ -27,7 +28,8 @@ related:
   - /atlas/ai-operations/ai-ready-process-documentation/
   - /atlas/ai-operations/authorization-aware-ai-for-sap/
   - /atlas/automation/operational-memory-for-sap-ams/
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

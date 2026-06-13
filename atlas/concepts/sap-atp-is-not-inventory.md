@@ -12,6 +12,7 @@ sap_area: "SD availability check / ATP"
 business_process: Order to cash
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-05-06
 author: Dzmitryi Kharlanau
 
@@ -25,7 +26,8 @@ related:
   - /services/sap-ams-consulting/
   - /atlas/concepts/sap-stock-exists-not-promisable/
   - /atlas/maps/order-to-cash-map/
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

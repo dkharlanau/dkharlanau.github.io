@@ -12,6 +12,7 @@ sap_area: "SD / FI integration"
 business_process: Order to cash
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-05-06
 author: Dzmitryi Kharlanau
 
@@ -24,7 +25,8 @@ related:
   - /services/sap-o2c-process-audit/
   - /atlas/maps/order-to-cash-map/
   - /atlas/concepts/sap-stock-exists-not-promisable/
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

@@ -12,6 +12,7 @@ sap_area: Security / authorization-aware retrieval
 business_process: Support operations
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-05-06
 
 tags:
@@ -22,7 +23,8 @@ related:
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/data-quality/sap-master-data-quality/"
   - "/atlas/ai-operations/ai-ready-process-documentation/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: Authorization-Aware AI
 h1: Authorization-aware AI for SAP
 subtitle: An AI support layer must respect the same access boundaries that protect SAP data from human misuse.
