@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-06-13T17:32:51Z
+Generated: 2026-06-13T18:04:40Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -625,6 +625,310 @@ Authorization-Aware AI for SAP
 
 ==================================================
 
+PAGE: SAP ALE Distribution Model Diagnostics
+URL: /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: ALE / master data distribution
+BUSINESS PROCESS: Integration
+TAGS: integration, sap-ale, diagnostics, master-data
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP ALE Distribution Model Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP ALE distribution model diagnostics
+    A first-pass structure for finding why master data is not distributed, arrives at the wrong target, or creates duplicate objects.
+
+
+
+
+
+      ProcessIntegration
+      SAP areaALE / master data distribution
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    ALE distribution models define which master data changes are sent to which target systems. When master data is not replicated, arrives at the wrong system, or creates duplicates, the support goal is to identify whether the issue is in the distribution model, change pointers, filter objects, partner profiles, or the target system's handling of the received data.
+
+    Common symptoms
+
+      Master data change in source system is not reflected in target system.
+      Change pointer exists but no IDoc was generated.
+      IDoc was sent to wrong target system or multiple systems unexpectedly.
+      Target system creates duplicate master data objects instead of updating existing ones.
+      Distribution model shows active but no messages for the object type.
+
+
+    Likely causes
+
+      Missing distribution model entry: the object type or message type is not included in the active distribution model.
+      Change pointer not created: change documents were not written or the change pointer job (BD21) did not process them.
+      Filter object mismatch: the filter object excludes the specific plant, company code, or sales organization from distribution.
+      Partner profile issue: the receiver partner profile does not support the message type or the outbound parameter is missing.
+      Target system key mapping: the target system does not recognize the source key and creates a new object instead of updating.
+
+
+    Where to check in SAP
+
+      BD64 — distribution model display.
+      BD22 — change pointer overview.
+      BD21 — change pointer processing log.
+      WE20 — partner profile outbound parameters.
+      WE02 — generated IDocs for the message type.
+
+
+    Key tables / transactions / objects
+
+      BDCP / BDCPS — change pointers.
+      EDIDC / EDIDS — IDoc control and status.
+      TBD22 / TBD23 — distribution model tables.
+      TBDBE — filter objects.
+
+
+    Diagnostic workflow
+
+      Identify the master data object, message type, source system, and expected target system.
+      Check BD64 for the distribution model: is the object/message type included and active?
+      Check BD22 for change pointers: was a change pointer created for the object change?
+      Run or check BD21 to see if change pointers were processed into IDocs.
+      Check WE20 for the receiver partner profile: does it have the outbound parameter for this message type?
+      Check WE02 for generated IDocs and their status.
+      On the target system, check if the IDoc was received and whether it created or updated the object.
+
+
+    Typical fixes or next actions
+
+      Add the missing object type or message type to the distribution model.
+      Process change pointers with BD21 if they were not automatically processed.
+      Adjust filter objects if the distribution scope is too narrow.
+      Update the partner profile to include the missing outbound parameter.
+      Fix key mapping on the target system if duplicates are being created.
+
+
+    Support takeaway
+    ALE distribution issues are usually model or profile configuration gaps. A useful ticket should include: object type, message type, source system, target system, change document number, distribution model name, and whether the issue is new or recurring.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an ALE configuration guide. It does not cover distribution model design, filter object setup, or target system key mapping configuration. It does not replace SAP's ALE documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      Idoc Aif Integration Diagnostics
+      SAP Idoc Status Diagnostics
+      SAP Key Mapping Diagnostics
+
+==================================================
+
+PAGE: SAP Application Log Diagnostics
+URL: /atlas/diagnostics/sap-application-log-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Application logs / SLG1 / SM21
+BUSINESS PROCESS: SAP AMS support
+TAGS: sap-ams, application-logs, slg1, sm21, diagnostics
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Application Log Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP application log diagnostics
+    A first-pass structure for finding incident evidence in SAP application logs, system logs, and developer traces.
+
+
+
+
+
+      ProcessSAP AMS support
+      SAP areaApplication logs / SLG1 / SM21
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Application logs are often the fastest way to narrow an incident to a component, user, or transaction. When the symptom is vague, the goal is to move from the business report to the concrete log object, time window, and error text.
+
+    Common symptoms
+
+      A process failed but no application error message is visible to the user.
+      The support team needs to prove whether an error originated in SAP or in a connected system.
+      An interface or batch job failed and the job log is too short to explain why.
+      A user reports intermittent failures that are hard to reproduce.
+      A custom program or enhancement behaves unexpectedly after a transport.
+
+
+    Likely causes
+
+      Log object not activated: the application writes to a log object that is not active in SLG0/SLG2.
+      Wrong log level: the log is configured for errors only and omits the warning that explains the root cause.
+      Time-window mismatch: the log is searched outside the actual failure window.
+      Object overwritten: old log entries were deleted by housekeeping before the incident was reported.
+      Trace not collected: a short dump or SQL trace was not captured at the moment of failure.
+
+
+    Where to check in SAP
+
+      SLG1 — application log: filter by log object, sub-object, external ID, or time.
+      SM21 — system log: check for operating-system level or kernel errors around the failure time.
+      ST22 — short dump analysis for ABAP runtime errors.
+      ST05 / SQL trace — capture database activity if the issue is reproducible.
+      SM50 / SM66 — work process overview for stuck or failed dialogs.
+
+
+    Key tables / transactions / objects
+
+      SLG1 / SLG2 — application log entries and display.
+      SNAP — short dump header data.
+      TBPROF / TSP02 — spool and print request tables.
+
+
+    Diagnostic workflow
+
+      Confirm the exact time, user, transaction, and business object involved in the incident.
+      Open SLG1 and filter by the relevant log object/sub-object or external ID.
+      If SLG1 is empty, check SM21 for system-level errors in the same time window.
+      For ABAP dumps, open ST22 and search by date/user/transaction.
+      If the failure is reproducible, run ST05 or SAT to capture SQL or runtime trace.
+      Document the log object, message ID, and timestamp; correlate with business process step.
+
+
+    Typical fixes or next actions
+
+      Activate or extend the relevant log object in SLG0 if logging is missing.
+      Adjust log retention or archive strategy so recent incidents are still available.
+      Add explicit error handling and logging in custom code.
+      Route critical log objects to alerting or incident workflow.
+      Escalate to development or basis if the trace points to a program or kernel issue.
+
+
+    Support takeaway
+    A useful log investigation ticket includes: time window, user/background user, transaction or program name, business object ID, and the exact symptom. Without this context, log searches become slow and inconclusive.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a configuration guide for SAP Log Management or SAP Cloud ALM. It does not cover detailed trace interpretation or code debugging.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+==================================================
+
+PAGE: SAP Authorization and Role Diagnostics
+URL: /atlas/diagnostics/sap-authorization-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Authorization / roles / security
+BUSINESS PROCESS: SAP AMS support
+TAGS: sap-ams, authorization, roles, security, su53
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Authorization and Role Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP authorization and role diagnostics
+    A first-pass structure for authorization failures, missing roles, and profile gaps in SAP support.
+
+
+
+
+
+      ProcessSAP AMS support
+      SAP areaAuthorization / roles / security
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Authorization failures stop users before they can reproduce a functional issue. The diagnostic goal is to capture the missing authorization object, compare it with the user's roles and profiles, and decide whether the fix is a role change, a user exit, or a process change.
+
+    Common symptoms
+
+      User receives 'No authorization' or 'You are not authorized' messages.
+      A transaction starts but specific functions or fields are grayed out.
+      Background job fails with authorization errors under its service user.
+      An interface or RFC call fails with authorization_check errors.
+      Authorization works in one client but not another after a transport.
+
+
+    Likely causes
+
+      Missing authorization object: the role does not contain the required object/activity/value.
+      Organizational level mismatch: the user is authorized for a different company code, plant, or sales organization.
+      Profile not generated: the role was changed but the profile was not regenerated or not assigned.
+      Buffer refresh: user context still holds the old authorization after a role change.
+      User comparison incomplete: the user master record was not compared after role changes.
+
+
+    Where to check in SAP
+
+      SU53 — display authorization check values from the last failed check.
+      PFCG — role maintenance: check objects, organizational levels, and profile generation status.
+      SU01 — user master: compare roles and profiles assigned to the user.
+      ST01 — authorization trace for harder cases.
+      SU56 — authorization buffer for the current user session.
+
+
+    Key tables / transactions / objects
+
+      UST04 / UST12 — user master authorization profiles.
+      AGR_1251 — authorization values in roles.
+      USR02 — user master logon data.
+
+
+    Diagnostic workflow
+
+      Reproduce the error or capture SU53 immediately after it occurs.
+      Identify the missing authorization object, field, and required value.
+      Check whether the user has a role that should contain that object.
+      If the role exists, verify profile generation, user comparison, and buffer refresh.
+      If the role does not contain the object, decide whether to extend the role or change the process.
+      Document the authorization object and value before requesting a security change.
+
+
+    Typical fixes or next actions
+
+      Add the missing authorization object/activity to the correct role and regenerate the profile.
+      Adjust organizational levels if the user works across company codes or plants.
+      Run user comparison for affected users after role changes.
+      Refresh the user context or have the user log off and on again.
+      Escalate to security team if the request conflicts with segregation of duties.
+
+
+    Support takeaway
+    Authorization tickets are most useful when they include the SU53 screenshot or authorization object, the user's roles, the transaction and activity, and the business reason for access.
+
+    Boundaries and non-goals
+    This page is a support diagnostic, not a security role design or SoD review guide. It does not replace the security team's authorization concept.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+==================================================
+
 PAGE: SAP Business Partner Replication Diagnostics
 URL: /atlas/diagnostics/sap-business-partner-replication-diagnostics/
 SECTION: diagnostics
@@ -859,6 +1163,808 @@ Home
 
 ==================================================
 
+PAGE: SAP CVI Synchronization Diagnostics
+URL: /atlas/diagnostics/sap-cvi-synchronization-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: CVI / BP / customer / vendor
+BUSINESS PROCESS: Master data governance
+TAGS: master-data, sap-mdg, diagnostics, cvi
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP CVI Synchronization Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP CVI synchronization diagnostics
+    A first-pass structure for finding why a business partner, customer, or vendor is not synchronized correctly through CVI.
+
+
+
+
+
+      ProcessMaster data governance
+      SAP areaCVI / BP / customer / vendor
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Customer-Vendor Integration (CVI) in S/4HANA synchronizes business partners with customer and vendor master data. When a BP is created but the corresponding customer or vendor is missing, has wrong data, or creates duplicates, the support goal is to identify whether the issue is in the CVI configuration, the BP grouping, the direction of synchronization, or the target master data setup.
+
+    Common symptoms
+
+      Business partner created but no corresponding customer or vendor was generated.
+      Customer or vendor exists but the linked BP has different data or is missing.
+      CVI creates duplicate business partners for the same customer or vendor.
+      BP role assignment is missing or wrong after CVI synchronization.
+      CVI synchronization log shows errors that are not immediately actionable.
+
+
+    Likely causes
+
+      CVI not active for the BP grouping: the BP grouping used for the new BP is not configured for CVI synchronization.
+      Direction mismatch: the synchronization direction is set to BP-to-customer but the customer was created first, or vice versa.
+      Number range conflict: the BP number range overlaps with customer or vendor number ranges, causing collisions.
+      Missing BP role: the BP was created without the FLCU00 (customer) or FLVN00 (vendor) role required for CVI.
+      CVI mapping error: the field mapping between BP and customer/vendor is misconfigured or missing for a specific field.
+
+
+    Where to check in SAP
+
+      FLBP1 / FLBP2 — business partner display to check roles and CVI link.
+      XD03 / XK03 — customer/vendor display to check BP assignment.
+      CVI_LINK — link table between BP and customer/vendor.
+      CVI synchronization log — check for errors during synchronization.
+      BP grouping configuration — check if CVI is active for the grouping.
+
+
+    Key tables / transactions / objects
+
+      BUT000 / BUT001 — BP header and general data.
+      CVI_LINK — CVI link table.
+      KNA1 / KNB1 — customer master data.
+      LFA1 / LFB1 — vendor master data.
+      TBZ9A — BP role definitions.
+
+
+    Diagnostic workflow
+
+      Identify the BP number, customer number, or vendor number and the expected synchronization result.
+      Check FLBP1 for the BP roles (FLCU00 for customer, FLVN00 for vendor).
+      Check CVI_LINK for the relationship between BP and customer/vendor.
+      Check XD03/XK03 for the customer/vendor and verify the BP assignment.
+      Check the CVI synchronization log for errors during the last synchronization run.
+      Verify the BP grouping is configured for CVI and the synchronization direction is correct.
+
+
+    Typical fixes or next actions
+
+      Activate CVI for the BP grouping if it was not configured.
+      Add the missing BP role (FLCU00 or FLVN00) to enable synchronization.
+      Correct the synchronization direction if BP and customer/vendor were created in the wrong order.
+      Fix number range conflicts to prevent duplicate creation.
+      Re-run CVI synchronization after correcting configuration or data issues.
+
+
+    Support takeaway
+    CVI synchronization issues are usually configuration or role assignment problems. A useful ticket should include: BP number, customer/vendor number, BP grouping, expected roles, actual result, CVI_LINK status, and any synchronization log errors.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a CVI configuration guide. It does not cover CVI setup, BP grouping design, or field mapping configuration. It does not replace SAP's CVI documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+    Next diagnostic steps
+
+      SAP Master Data Quality — use this for broader data quality signals and governance context.
+      SAP Business Partner Replication Diagnostics — go here when BP data is replicated between systems.
+      SAP Customer Master Replication Diagnostics — check this when the customer side is missing or wrong.
+      SAP Vendor Master Replication Diagnostics — use this when the vendor side is missing or wrong.
+      SAP BP Relationship Diagnostics — go here if the issue involves related BP roles or relationships.
+
+
+    Customer-vendor integration boundary
+    Customer-Vendor Integration is the S/4HANA mechanism that keeps business partners, customers, and vendors aligned. Most CVI incidents are not data corruption; they are configuration or timing mismatches. Before treating a missing customer or vendor as a master-data defect, confirm whether CVI is expected to create the object, which direction is configured, and whether the required BP role exists.
+
+    Practical checklist
+
+- [ ] Collect BP number, customer/vendor number, BP grouping, and expected roles. **Synthetic example:** BP 1234567890, customer 1000000001, grouping TEST_CUST_GRP.
+
+- [ ] Check FLBP1/FLBP2 for BP roles FLCU00/FLVN00 and the CVI link.
+
+- [ ] Verify CVI_LINK relationship between BP and customer/vendor.
+
+- [ ] Check XD03/XK03 for customer/vendor and confirm BP assignment.
+
+- [ ] Review CVI synchronization log for field-level or direction errors.
+
+- [ ] Confirm the BP grouping is configured for CVI and the synchronization direction matches the creation order.
+
+- [ ] Safety limit: do not manually create a customer/vendor for a BP that should be synchronized; fix CVI config first.
+
+
+
+
+    Related Atlas Pages
+
+      SAP Business Partner Replication Diagnostics
+      SAP Vendor Master Replication Diagnostics
+      SAP Customer Master Replication Diagnostics
+      SAP BP Relationship Diagnostics
+      SAP Company Code Data Diagnostics
+      SAP Supplier Master Diagnostics
+
+==================================================
+
+PAGE: SAP Goods Receipt Diagnostics
+URL: /atlas/diagnostics/sap-goods-receipt-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: MM inventory management
+BUSINESS PROCESS: Procure to pay
+TAGS: procure-to-pay, sap-mm, diagnostics, procurement, goods-receipt
+REVIEWED: 2026-06-13
+----------------------------------------
+HomeKnowledge AtlasDiagnosticsGoods Receipt Diagnostics
+
+Knowledge Atlas
+
+SAP goods receipt diagnostics
+
+Goods receipt is where physical delivery becomes system evidence. Mistakes ripple into stock, invoice matching, and finance.
+
+DomainSAP AMSTypediagnostic guideReviewed2026-06-13
+
+Where this fits
+
+Goods receipt sits at the boundary of inbound logistics, inventory management, invoice verification, and accounting. A posting failure here usually means the physical delivery, the purchase order, the material master, or the user input are not aligned.
+
+Common symptoms
+
+The purchase order is closed, blocked, wrong, or no longer matches the physical delivery.
+
+The material, batch, serial number, storage location, or quality status prevents normal posting.
+
+A receipt was posted too early, too late, with the wrong quantity, or against the wrong reference.
+
+The receipt quantity does not match the invoice quantity, causing a three-way match block.
+
+Stock is visible physically but not in the system, or posted to the wrong plant or storage location.
+
+Likely causes
+
+PO mismatch: the delivered material, quantity, or unit of measure differs from the purchase order item.
+
+Status block: the PO item is marked delivery completed, blocked, or deleted.
+
+Master data gap: the material is not extended to the plant or storage location, or the batch/serial profile is inconsistent.
+
+Quality inspection: the material requires inspection and cannot be posted directly to unrestricted stock.
+
+Movement type issue: the wrong movement type is used, or the movement type is not configured for the transaction.
+
+Timing issue: the invoice arrived before the goods receipt, or the receipt was posted against the wrong period.
+
+Where to check in SAP
+
+MIGO / MB01 — goods receipt entry and error messages.
+
+ME23N — purchase order history showing ordered, delivered, and still-to-deliver quantities.
+
+MB52 / MMBE — stock overview to confirm where stock was posted.
+
+MKPF / MSEG — material document header and item details.
+
+QA33 / QE51N — inspection lot status if quality management is involved.
+
+Key tables / transactions / objects
+
+MKPF — material document header.
+
+MSEG — material document items.
+
+EKBE — purchase order history.
+
+MARD — storage location stock.
+
+QALS — inspection lot data.
+
+Diagnostic workflow
+
+Confirm the physical delivery: material, quantity, batch/serial, supplier, and delivery note.
+
+Check the purchase order in ME23N for expected quantity, open quantity, delivery status, and blocks.
+
+Attempt or review the goods receipt posting in MIGO and capture the exact error message.
+
+Verify material master plant/storage location/batch settings and quality inspection requirements.
+
+Check whether stock was already posted elsewhere or the PO was already delivery-completed.
+
+Post the receipt correctly, or document the variance and route to procurement/quality/logistics.
+
+Typical fixes or next actions
+
+Reverse the incorrect receipt and repost against the correct PO item or quantity.
+
+Update the PO quantity or remove the delivery-completed indicator if the delivery is legitimate.
+
+Extend the material master to the required plant/storage location or resolve batch/serial issues.
+
+Process the inspection lot usage decision if stock is held in quality inspection.
+
+Coordinate with procurement if supplier deliveries repeatedly mismatch PO terms.
+
+Support takeaway
+
+Goods receipt diagnostics should always reconcile physical evidence, purchase order history, and material document data. A useful ticket should include: material number, PO number, delivery note, quantity expected versus received, exact error message, plant/storage location, and whether the issue is recurring.
+
+Boundaries and non-goals
+
+This page is a diagnostic frame, not a warehouse management or quality management configuration guide. It does not cover advanced EWM putaway, QM inspection plans, or customs/inbound logistics scenarios.
+
+Escalation signals
+
+Receipt failures affect multiple users, plants, or materials at the same time.
+
+The issue involves a closed accounting period, inventory valuation, or intercompany transfer.
+
+Quality inspection stock is blocked and operations cannot use the material.
+
+Supplier deliveries repeatedly mismatch PO terms and procurement must review the relationship.
+
+Related pages
+
+Procure to Pay Map
+
+GR/IR Clearing Explained
+
+SAP Invoice Verification Diagnostics
+
+SAP Three-Way Match Diagnostics
+
+SAP Purchase Order Creation Diagnostics
+
+SAP Material Document Diagnostics
+
+SAP Movement Types Diagnostics
+
+==================================================
+
+PAGE: SAP IDoc Diagnostics
+URL: /atlas/diagnostics/sap-idoc-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: IDoc / ALE
+BUSINESS PROCESS: Cross-system integration
+TAGS: sap-ams, idoc, ale, integration, diagnostics
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP IDoc Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP IDoc diagnostics
+    Trace IDoc failures from creation through partner profile to final posting status.
+
+
+
+
+
+      ProcessCross-system integration
+      SAP areaIDoc / ALE
+      Reviewed13 Jun 2026
+          IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    IDocs move data between SAP systems and external systems. A failure can happen when the IDoc is created, dispatched, received, or posted to the application. The diagnostic goal is to read the IDoc status history and locate the first error status, then trace it to partner profile, port, segment, or application validation.
+
+    Common symptoms
+
+      Expected business document was not created from an inbound IDoc.
+      Outbound IDoc was not sent to the partner system.
+      IDoc shows status 51, 56, or 62 in the status monitor.
+      IDoc was sent but the receiving system reports a format error.
+      Duplicate IDocs create duplicate business documents.
+
+
+    Likely causes
+
+      Partner profile missing: the logical system or partner is not configured for the message type.
+      Port issue: RFC or file port used by the IDoc is unavailable.
+      Segment error: mandatory segment is missing or a value violates the IDoc type definition.
+      Application posting error: the IDoc arrived correctly but the business document failed validation.
+      Queue issue: qRFC queue is stuck and prevents sequential processing.
+      Duplicate IDoc: same message was resent and processed twice.
+
+
+    Where to check in SAP
+
+      WE02 / WE05 — IDoc status monitor.
+      WE20 — partner profiles.
+      WE21 — port definitions.
+      BD87 — IDoc reprocessing.
+      SM58 — asynchronous RFC errors.
+      SMQ1 / SMQ2 — qRFC outbound and inbound queues.
+
+
+    Key tables / transactions / objects
+
+      EDIDC — IDoc control record.
+      EDIDD — IDoc data segments.
+      EDIDS — IDoc status records.
+      EDPP1 / EDP13 — partner profile message control.
+      TBDLS — logical systems.
+
+
+    Diagnostic workflow
+
+      Find the IDoc number from the business document reference or message trace.
+      Open WE02/WE05 and review the status history from creation to final status.
+      Identify the first error status and its text.
+      For outbound errors, check partner profile, port, and RFC destination.
+      For inbound errors, check segment data, business document validation, and queue status.
+      Fix the root cause before reprocessing.
+
+
+    Typical fixes or next actions
+
+      Maintain the missing partner profile or message type assignment.
+      Restore the RFC or file port used for transmission.
+      Correct segment values or mapping in the sending system.
+      Fix the underlying business document validation error and reprocess.
+      Clear the qRFC queue and reprocess in correct sequence.
+
+
+    Support takeaway
+    Always read IDoc status history from oldest to newest. The last status is a symptom; the first error status usually points to the real cause. Reprocessing before fixing the cause creates more failed IDocs.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an IDoc configuration guide. It does not cover partner profile setup, port or RFC destination configuration, IDoc segment design, or AIF mapping. It does not replace SAP's IDoc and ALE documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+    Related diagnostics
+
+      SAP IDoc Status Diagnostics
+      SAP ALE Distribution Model Diagnostics
+      SAP qRFC / tRFC Diagnostics
+
+==================================================
+
+PAGE: SAP IDoc Status Diagnostics
+URL: /atlas/diagnostics/sap-idoc-status-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: IDoc / ALE / EDI
+BUSINESS PROCESS: Integration
+TAGS: integration, sap-ale, diagnostics, idoc
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP IDoc Status Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP IDoc status diagnostics
+    A first-pass structure for interpreting IDoc status codes and deciding the next action based on status.
+
+
+
+
+
+      ProcessIntegration
+      SAP areaIDoc / ALE / EDI
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    IDoc status codes tell you where an interface document failed and what layer is responsible. Status 51 means application error, 56 means IDoc missing, 64 means ready for dispatch, 75 means control record error. The support goal is to map the status to the right layer — syntax, partner profile, application, or workflow — and collect the evidence needed before escalating.
+
+    Common symptoms
+
+      IDoc stuck in status 64 and not processed.
+      IDoc in status 51 with application error text that is not immediately clear.
+      IDoc in status 56 with 'IDoc added' but no further processing.
+      Inbound IDoc in status 53 but the business document was not created.
+      Outbound IDoc in status 03 but the partner reports it never arrived.
+
+
+    Likely causes
+
+      Status 51 — application error: the IDoc passed syntax and partner checks but failed during application posting. Often master data or business rule issue.
+      Status 56 — IDoc missing: the IDoc was added to the system but the processing function could not be found or is not assigned.
+      Status 64 — not processed: the IDoc is waiting for a background job or manual trigger to process.
+      Status 75 — control record error: the control record contains invalid partner, message type, or port information.
+      Status 02 — error passing data to port: the port or RFC destination is misconfigured or unreachable.
+
+
+    Where to check in SAP
+
+      WE02 / WE05 — IDoc list and detailed display with status history.
+      BD87 — IDoc reprocessing and status change.
+      SM58 — tRFC error log if the IDoc uses RFC.
+      SMQ1 / SMQ2 — qRFC queues if queued RFC is involved.
+      SLG1 — application log for detailed error messages.
+
+
+    Key tables / transactions / objects
+
+      EDIDC — IDoc control record.
+      EDIDS — IDoc status records.
+      EDID4 / EDID3 — IDoc data records (version-dependent).
+      TBD41 / TBD42 — status code definitions.
+
+
+    Diagnostic workflow
+
+      Identify the IDoc number and the current status from WE02 or WE05.
+      Read the status text and any error messages in the status history.
+      Map the status to the layer: syntax (status 60+), partner/profile (status 56, 75), application (status 51), or transmission (status 02, 03).
+      For status 51, check the application log (SLG1) and the specific error text for master data or business rule issues.
+      For status 64, check if the background job (RBDAPP01) is scheduled and running.
+      For status 02 or 03, check the port, RFC destination, and partner profile.
+
+
+    Typical fixes or next actions
+
+      Reprocess the IDoc with BD87 after correcting the underlying master data or configuration issue.
+      Trigger the background job (RBDAPP01) if IDocs are stuck in status 64.
+      Correct the partner profile or port configuration if the IDoc fails at the profile layer.
+      Fix the control record data if status 75 indicates invalid partner or message type.
+      If the IDoc is corrupted and cannot be reprocessed, request a resend from the partner system.
+
+
+    Support takeaway
+    IDoc status is the primary diagnostic signal. A useful ticket should include: IDoc number, direction, message type, partner, current status, status history, error text, and whether the issue is isolated or批量. Do not reprocess IDocs without understanding why they failed.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an IDoc configuration guide. It does not cover partner profile setup, port configuration, or AIF mapping. It does not replace SAP's IDoc documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      Idoc Aif Integration Diagnostics
+      SAP Inbound Processing Diagnostics
+      SAP Outbound Processing Diagnostics
+
+==================================================
+
+PAGE: SAP Inbound Processing Diagnostics
+URL: /atlas/diagnostics/sap-inbound-processing-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: IDoc / ALE / inbound
+BUSINESS PROCESS: Integration
+TAGS: integration, sap-ale, diagnostics, inbound
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Inbound Processing Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP inbound processing diagnostics
+    A first-pass structure for finding why an inbound message was not received, not posted, or created wrong data.
+
+
+
+
+
+      ProcessIntegration
+      SAP areaIDoc / ALE / inbound
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Inbound processing is the path from an external system into SAP. When an inbound IDoc or message is missing, stuck in status, or posts wrong data, the support goal is to trace the path from receipt through syntax check, partner profile validation, and application posting to identify where it failed and why.
+
+    Common symptoms
+
+      Partner reports a message was sent but no IDoc exists in SAP.
+      Inbound IDoc exists but is stuck in status 64 or 51.
+      IDoc posted successfully but the business document has wrong data.
+      Inbound IDoc creates duplicate business documents.
+      Inbound processing is slow and messages accumulate in the queue.
+
+
+    Likely causes
+
+      Receipt failure: the IDoc never arrived due to network, RFC, or gateway issues.
+      Syntax error: the IDoc structure does not match the expected segment definition.
+      Partner profile mismatch: the sender partner or message type is not configured in the inbound partner profile.
+      Application error: the IDoc passed syntax and profile checks but failed during posting due to master data or business rules.
+      Queue bottleneck: inbound qRFC queues are not processing fast enough.
+
+
+    Where to check in SAP
+
+      WE02 / WE05 — IDoc list filtered by direction 1 (inbound) and partner.
+      SM58 — tRFC error log for inbound RFC failures.
+      SMQ2 — inbound qRFC queue status.
+      SM21 — system log for gateway or connection errors.
+      SLG1 — application log for posting errors.
+
+
+    Key tables / transactions / objects
+
+      EDIDC / EDIDS — IDoc control and status.
+      TRFCQIN — inbound qRFC queue.
+      ARFCSSTATE — tRFC status.
+
+
+    Diagnostic workflow
+
+      Confirm the partner sent the message and capture the message ID or timestamp.
+      Check WE02 for the IDoc with direction 1 (inbound) and the sender partner.
+      If the IDoc does not exist, check SM21 for gateway errors and SM58 for RFC failures.
+      If the IDoc exists, check its status and status history for the failure layer.
+      For status 51, check SLG1 for the application error details.
+      For queue delays, check SMQ2 for queue depth and processing status.
+
+
+    Typical fixes or next actions
+
+      Request a resend from the partner if the IDoc never arrived.
+      Fix syntax errors by correcting the segment data or updating the partner's mapping.
+      Update the inbound partner profile to accept the message type and sender.
+      Fix master data or business rule issues before reprocessing status 51 IDocs.
+      Increase queue processing capacity or tune the queue scheduler if messages accumulate.
+
+
+    Support takeaway
+    Inbound issues are usually receipt, syntax, or application posting problems. A useful ticket should include: sender partner, message type, IDoc number if it exists, expected business document, actual result, and any error text from WE02, SM58, or SLG1.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an inbound processing configuration guide. It does not cover IDoc segment design, partner profile setup, or gateway configuration. It does not replace SAP's IDoc documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      Idoc Aif Integration Diagnostics
+      SAP Idoc Status Diagnostics
+      SAP Integration Error Handling Diagnostics
+
+==================================================
+
+PAGE: SAP Incident Triage Diagnostics
+URL: /atlas/diagnostics/sap-incident-triage-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Incident management / triage
+BUSINESS PROCESS: SAP AMS support
+TAGS: sap-ams, incident-management, triage, support, diagnostics
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Incident Triage Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP incident triage diagnostics
+    A first-pass structure for classifying and routing SAP support incidents.
+
+
+
+
+
+      ProcessSAP AMS support
+      SAP areaIncident management / triage
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Good triage prevents wrong teams, missing evidence, and wasted time. The diagnostic goal in the first minutes is to classify the incident by symptom area, urgency, and the minimum evidence needed before assignment.
+
+    Common symptoms
+
+      Incident description is vague or only says 'system is slow'.
+      Ticket is routed to a team that does not own the failing area.
+      Multiple users report different symptoms for the same underlying issue.
+      Incident is treated as urgent but has no business impact yet.
+      Previous incidents for the same symptom were closed without root cause.
+
+
+    Likely causes
+
+      Missing classification: the ticket lacks module, process, or object information.
+      Incorrect routing: routing rules rely on keywords that do not match the actual failure area.
+      Insufficient evidence: logs, error messages, or timestamps were not collected.
+      Urgency mismatch: priority is set by who reported it, not by business impact.
+      No known-pattern link: the symptom matches a known diagnostic page but was not checked.
+
+
+    Where to check in SAP
+
+      Ticket fields — module, process, object, error text, time, user.
+      Atlas/Skill Hub diagnostic index — find a matching pattern.
+      System status monitors — SM50, SM66, SM37 for workload or job issues.
+      Application log (SLG1) or short dumps (ST22) for the time window.
+      Recent changes — transports, jobs, master data updates.
+
+
+    Key tables / transactions / objects
+
+      Incident/ticket system — classification and routing metadata.
+      SM50 / SM66 — work process overview.
+      TBTCO — background job status.
+
+
+    Diagnostic workflow
+
+      Read the ticket and extract: symptom, process area, object key, time, user, and business impact.
+      Classify as master data, configuration, integration, authorization, batch, or performance.
+      Check for matching diagnostic pages or known patterns in the Atlas.
+      Collect minimum evidence: error text, status, log object, or job name.
+      Set priority based on business impact, not reporter seniority.
+      Route to the team that owns the component and attach the evidence.
+
+
+    Typical fixes or next actions
+
+      Add mandatory classification fields to the incident form.
+      Maintain routing rules based on object type and module keywords.
+      Link frequently seen symptoms to diagnostic pages in the knowledge base.
+      Create an evidence checklist for each major symptom category.
+      Review closed incidents for recurring patterns and update triage guidance.
+
+
+    Support takeaway
+    Triage tickets are most useful when they include a clear symptom, process area, affected object, time, user, and the business impact that justifies the priority.
+
+    Boundaries and non-goals
+    This page is a triage diagnostic, not an ITIL incident-management process guide. It does not cover SLA definitions or escalation policies.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+==================================================
+
+PAGE: SAP Interface Monitoring Diagnostics
+URL: /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: IDoc / ALE / monitoring
+BUSINESS PROCESS: Integration
+TAGS: integration, sap-ale, diagnostics, monitoring
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Interface Monitoring Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP interface monitoring diagnostics
+    A first-pass structure for finding why interface monitoring misses failures, generates false alerts, or does not cover critical paths.
+
+
+
+
+
+      ProcessIntegration
+      SAP areaIDoc / ALE / monitoring
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Interface monitoring should detect failures before the business notices them. When monitoring misses IDoc errors, reports false positives, or does not cover new interfaces, the support goal is to identify whether the issue is in the monitoring scope, alert thresholds, job scheduling, or the monitoring tool configuration itself.
+
+    Common symptoms
+
+      Business users report missing data before the monitoring team is aware.
+      Monitoring dashboard shows green status but IDocs are stuck in error.
+      Alert fatigue from false positives causes real failures to be ignored.
+      New interface went live but was not added to monitoring scope.
+      Monitoring job fails or runs too slowly to catch issues in time.
+
+
+    Likely causes
+
+      Monitoring scope gap: the monitoring job or tool only checks specific message types, partners, or status codes, missing others.
+      Threshold too high: the alert threshold is set to a count or age that does not trigger for small but critical failures.
+      Job failure or delay: the monitoring background job failed, was not scheduled, or runs infrequently.
+      Wrong monitoring object: the tool monitors queue depth but not IDoc status, or monitors RFC but not application errors.
+      New interface not onboarded: the interface was deployed without updating the monitoring configuration.
+
+
+    Where to check in SAP
+
+      SM37 — background job log for monitoring jobs.
+      WE02 / WE05 — IDoc status overview to compare with monitoring results.
+      SMQ1 / SMQ2 — qRFC queue status if queue monitoring is used.
+      SM58 — tRFC error log.
+      SLG1 — application log for monitoring tool errors.
+
+
+    Key tables / transactions / objects
+
+      EDIDC / EDIDS — IDoc control and status.
+      TRFCQOUT / TRFCQIN — tRFC queue tables.
+      TBTCO — background job status.
+
+
+    Diagnostic workflow
+
+      Identify the interface path, message type, and partner that was not monitored.
+      Check the monitoring job log (SM37) for failures, delays, or scope limitations.
+      Compare the monitoring configuration with the actual IDoc or queue status in WE02 / SMQ1.
+      Verify the alert thresholds: count, age, or status codes that trigger alerts.
+      Check if the new interface was added to the monitoring scope during deployment.
+      Review the escalation path: who receives alerts and whether they are actionable.
+
+
+    Typical fixes or next actions
+
+      Expand the monitoring scope to cover all critical message types and partners.
+      Lower the alert threshold or add secondary alerts for high-priority interfaces.
+      Fix or reschedule the monitoring background job.
+      Add new interfaces to monitoring as part of the deployment checklist.
+      Tune the monitoring tool to reduce false positives while maintaining sensitivity for real failures.
+
+
+    Support takeaway
+    Interface monitoring issues are usually scope or configuration gaps. A useful ticket should include: the interface path, message type, partner, expected monitoring behavior, actual behavior, monitoring job name, and any recent changes to the interface or monitoring setup.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an interface monitoring configuration guide. It does not cover specific monitoring tools (SolMan, SAP Cloud ALM, third-party) or alert routing design. It does not replace SAP's operations documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      Idoc Aif Integration Diagnostics
+      SAP Idoc Status Diagnostics
+      SAP Qrfc Trfc Diagnostics
+
+==================================================
+
 PAGE: SAP Invoice Verification Diagnostics
 URL: /atlas/diagnostics/sap-invoice-verification-diagnostics/
 SECTION: diagnostics
@@ -1008,6 +2114,113 @@ Home
       Gr Ir Clearing Explained
       SAP Goods Receipt Diagnostics
       SAP Three Way Match Diagnostics
+
+==================================================
+
+PAGE: SAP Key Mapping Diagnostics
+URL: /atlas/diagnostics/sap-key-mapping-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Key mapping / multi-system
+BUSINESS PROCESS: Master data governance
+TAGS: master-data, sap-mdg, diagnostics, integration
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Key Mapping Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP key mapping diagnostics
+    A first-pass structure for finding why objects have different keys across systems, causing duplicates, broken links, or failed replications.
+
+
+
+
+
+      ProcessMaster data governance
+      SAP areaKey mapping / multi-system
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    In multi-system SAP landscapes, the same business object may have different keys in different systems. Key mapping maintains the relationship between these keys. When mapping is missing, wrong, or inconsistent, replication creates duplicates, interfaces fail, and reporting produces fragmented results. The support goal is to identify which object type is affected, which systems are involved, and whether the gap is in the mapping table, the replication model, or the interface logic.
+
+    Common symptoms
+
+      Replication creates a new object in the target system instead of updating the existing one.
+      Interface reports 'object not found' even though the object exists under a different key.
+      Reporting or analytics shows duplicate records for the same business entity.
+      MDG or ALE replication log shows key mapping errors.
+      Customer or vendor number in S/4 does not match the corresponding BP number or external system key.
+
+
+    Likely causes
+
+      Missing mapping entry: the object was created directly in the target system without going through the mapping process.
+      Wrong mapping entry: the source key is mapped to a different target key than intended.
+      Number range conflict: source and target systems use overlapping number ranges, causing collisions.
+      Mapping table not maintained for new object type: the interface or replication expects mapping but the object type was recently added and mapping is not set up.
+      Manual creation bypass: the object was created manually in the target system, bypassing the mapping logic.
+
+
+    Where to check in SAP
+
+      Key mapping tables — landscape-specific tables that map source keys to target keys.
+      MDG key mapping UI — if MDG manages the mapping.
+      WE02 — IDoc status for ALE replication to see if key mapping errors are reported.
+      Object display in both source and target systems — compare keys and attributes.
+      Number range status (SNRO) — check if ranges overlap between systems.
+
+
+    Key tables / transactions / objects
+
+      Key mapping tables — landscape-specific (e.g., USMD1700 for MDG).
+      CVI_LINK — CVI link between BP and customer/vendor.
+      NRIV — number range intervals.
+
+
+    Diagnostic workflow
+
+      Identify the object type, source system key, target system, and expected target key.
+      Check the key mapping table or MDG key mapping UI for an existing entry.
+      If no entry exists, determine if the object was created manually in the target system or if the mapping was never maintained.
+      If the entry exists but is wrong, trace how the wrong mapping was created.
+      Check number ranges in both systems for overlaps or conflicts.
+      Verify the interface or replication model uses the correct mapping logic.
+
+
+    Typical fixes or next actions
+
+      Create the missing key mapping entry between source and target systems.
+      Correct the wrong mapping entry and evaluate the impact on existing transactions.
+      Adjust number ranges to prevent future collisions.
+      If duplicates were created, evaluate merge, deactivation, or re-keying options with master data governance.
+      Update the interface or replication model to enforce mapping for new object types.
+
+
+    Support takeaway
+    Key mapping issues are usually maintenance gaps or number range conflicts. A useful ticket should include: object type, source system, source key, target system, expected target key, actual target key, and whether the object was created manually or via replication.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a key mapping configuration guide. It does not cover number range design, MDG key mapping setup, or interface mapping logic. It does not replace SAP's multi-system integration documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Business Partner Replication Diagnostics
+      SAP Mdg To S4 Replication Diagnostics
+      SAP Vendor Master Replication Diagnostics
+      SAP Customer Master Replication Diagnostics
 
 ==================================================
 
@@ -1239,6 +2452,112 @@ Home
       SAP Material Document Diagnostics
       SAP Batch Determination Diagnostics
       SAP Mm Procurement Overview
+
+==================================================
+
+PAGE: SAP Outbound Processing Diagnostics
+URL: /atlas/diagnostics/sap-outbound-processing-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: IDoc / ALE / outbound
+BUSINESS PROCESS: Integration
+TAGS: integration, sap-ale, diagnostics, outbound
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Outbound Processing Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP outbound processing diagnostics
+    A first-pass structure for finding why an outbound message was not created, not sent, or arrived corrupted at the partner.
+
+
+
+
+
+      ProcessIntegration
+      SAP areaIDoc / ALE / outbound
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Outbound processing is the path from a SAP business document to an external system. When an expected outbound message is missing, stuck in the system, or arrives corrupted at the partner, the support goal is to trace the path from document creation through output determination, IDoc generation, and transmission to identify where it failed.
+
+    Common symptoms
+
+      Business document was created but no outbound IDoc was generated.
+      Outbound IDoc exists but is stuck in status 30 or 03.
+      Partner reports receiving the message but the data is wrong or incomplete.
+      Multiple outbound IDocs were generated for the same business document.
+      Outbound processing is slow and messages accumulate.
+
+
+    Likely causes
+
+      Output not determined: the output condition technique did not trigger the outbound message for this document.
+      Partner profile missing: the receiver partner or message type is not configured in the outbound partner profile.
+      IDoc generation error: the IDoc was created but failed during segment population due to missing master data.
+      Transmission failure: the IDoc was generated but the RFC destination or port is unreachable.
+      Duplicate trigger: the output was triggered multiple times due to document changes or custom logic.
+
+
+    Where to check in SAP
+
+      WE02 / WE05 — IDoc list filtered by direction 2 (outbound) and partner.
+      NAST — output messages for the business document.
+      WE20 — partner profile outbound parameters.
+      SM59 — RFC destination test.
+      SMQ1 — outbound qRFC queue status.
+
+
+    Key tables / transactions / objects
+
+      EDIDC / EDIDS — IDoc control and status.
+      NAST — output messages.
+      TRFCQOUT — outbound qRFC queue.
+
+
+    Diagnostic workflow
+
+      Identify the business document and the expected outbound message type and partner.
+      Check NAST or the document output screen to see if the output was determined.
+      If output was determined, check WE02 for the generated IDoc and its status.
+      For status 30, check the partner profile (WE20) and RFC destination (SM59).
+      For status 03, confirm with the partner whether the message was received.
+      If the IDoc data is wrong, check the IDoc segments against the business document data.
+
+
+    Typical fixes or next actions
+
+      Create or update the output condition record if the output was not determined.
+      Update the outbound partner profile to include the message type and receiver.
+      Fix master data gaps that cause segment population errors.
+      Fix the RFC destination or port configuration if transmission fails.
+      Investigate duplicate triggers and adjust the change relevance or custom logic.
+
+
+    Support takeaway
+    Outbound issues are usually output determination, partner profile, or transmission problems. A useful ticket should include: business document number, message type, partner, IDoc number if it exists, expected versus actual status, and any error text from NAST, WE02, or SM59.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an outbound processing configuration guide. It does not cover output determination design, IDoc segment mapping, or port configuration. It does not replace SAP's IDoc documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      Idoc Aif Integration Diagnostics
+      SAP Idoc Status Diagnostics
+      SAP Output Message Control Diagnostics
 
 ==================================================
 
@@ -1514,6 +2833,138 @@ Home
 
 ==================================================
 
+PAGE: SAP qRFC and tRFC Diagnostics
+URL: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: RFC / ALE / integration
+BUSINESS PROCESS: Integration
+TAGS: integration, sap-ale, diagnostics, rfc
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP qRFC and tRFC Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP qRFC and tRFC diagnostics
+    A first-pass structure for finding why RFC calls are stuck, failing, or executing out of order.
+
+
+
+
+
+      ProcessIntegration
+      SAP areaRFC / ALE / integration
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Transactional RFC (tRFC) and queued RFC (qRFC) are the transport layers for many SAP integrations including ALE, IDoc, and custom interfaces. When RFC calls are stuck in a queue, fail with connection errors, or execute in the wrong order, the support goal is to identify whether the issue is in the RFC destination, the queue configuration, the executing function module, or the target system availability.
+
+    Common symptoms
+
+      SM58 shows multiple tRFC entries in error status.
+      SMQ1 or SMQ2 shows queues with status SYSFAIL or MANUAL.
+      IDoc status 03 but partner reports the document never arrived.
+      RFC destination test (SM59) fails with connection or authorization error.
+      Queue scheduler is not running or queues are not being processed.
+
+
+    Likely causes
+
+      RFC destination unreachable: the target system is down, network path is broken, or the gateway is not responding.
+      Authorization failure: the RFC user lacks the required authorization in the target system.
+      Queue blocked: a previous failed entry is blocking the entire queue (serialization).
+      Function module error: the called function module fails in the target system due to data or application errors.
+      Queue scheduler not running: the qRFC scheduler (QOUT scheduler or QIN scheduler) is not active.
+
+
+    Where to check in SAP
+
+      SM59 — RFC destination configuration and connection test.
+      SM58 — tRFC monitor and error log.
+      SMQ1 — outbound qRFC queue status.
+      SMQ2 — inbound qRFC queue status.
+      SM50 / SM66 — work process status if RFC is executing synchronously.
+
+
+    Key tables / transactions / objects
+
+      ARFCSDATA / ARFCSSTATE — tRFC data and status.
+      TRFCQOUT / TRFCQIN — qRFC queue tables.
+      RFCDES — RFC destination definitions.
+
+
+    Diagnostic workflow
+
+      Identify the RFC destination, function module, and the error symptom (stuck, failed, out of order).
+      Test the RFC destination in SM59 to confirm basic connectivity.
+      Check SM58 for tRFC errors and read the error text for each failed entry.
+      Check SMQ1 / SMQ2 for queue status. Look for the first failed entry that may be blocking the queue.
+      Verify the RFC user authorization in the target system if the error is authorization-related.
+      Check if the queue scheduler is running and if the queue is registered for scheduling.
+
+
+    Typical fixes or next actions
+
+      Restart or correct the failed RFC entry in SM58 after fixing the underlying issue.
+      Unblock the queue in SMQ1 / SMQ2 by deleting or moving the failed entry if it is blocking subsequent calls.
+      Fix the RFC destination configuration if SM59 test fails.
+      Update the RFC user authorization in the target system.
+      Restart the queue scheduler if it is not running.
+
+
+    Support takeaway
+    qRFC and tRFC issues are usually connectivity, authorization, or queue blocking problems. A useful ticket should include: RFC destination, function module, queue name (if qRFC), error text, SM58 or SMQ1/SMQ2 status, and whether the issue is isolated or affecting multiple interfaces.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an RFC configuration guide. It does not cover RFC destination setup, SNC configuration, or load balancing. It does not replace SAP's RFC documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+    Next diagnostic steps
+
+      SAP Interface Monitoring Diagnostics — use this when multiple interfaces are affected at the same time.
+      IDoc and AIF Integration Diagnostics — go here when RFC errors appear together with IDoc failures.
+      SAP RFC Destination Diagnostics — check this to test connectivity and authorization for the RFC destination.
+      SAP Interface Monitoring Diagnostics — use this when multiple interfaces are affected at the same time.
+
+
+    Practical checklist
+
+- [ ] Collect RFC destination, function module, queue name, and SM58/SMQ1/SMQ2 status. **Synthetic example:** destination TEST_DEST_01, queue Q_1234567890.
+
+- [ ] Test the RFC destination in SM59 and capture the connection or authorization error.
+
+- [ ] Check SM58 for failed tRFC entries and read the error text before restarting.
+
+- [ ] Check SMQ1/SMQ2 for SYSFAIL or MANUAL status and identify the first blocking entry.
+
+- [ ] Verify the RFC user authorization in the target system if authorization is suspected.
+
+- [ ] Confirm the queue scheduler is running and the queue is registered for scheduling.
+
+- [ ] Safety limit: do not delete or move a failed queue entry until the underlying cause is documented.
+
+
+
+
+    Related Atlas Pages
+
+      Idoc Aif Integration Diagnostics
+      SAP Idoc Status Diagnostics
+      SAP Interface Monitoring Diagnostics
+      SAP RFC Destination Diagnostics
+
+==================================================
+
 PAGE: SAP Release Strategy Diagnostics
 URL: /atlas/diagnostics/sap-release-strategy-diagnostics/
 SECTION: diagnostics
@@ -1651,6 +3102,129 @@ Home
       SAP Purchase Order Creation Diagnostics
       SAP Purchase Requisition Diagnostics
       SAP Mm Procurement Overview
+
+==================================================
+
+PAGE: SAP RFC Destination Diagnostics
+URL: /atlas/diagnostics/sap-rfc-destination-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Basis / ALE / RFC
+BUSINESS PROCESS: Integration
+TAGS: rfc, integration, sap-basis, diagnostics, distributed-systems
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP RFC Destination Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP RFC destination diagnostics
+    A first-pass structure for finding why an RFC destination fails, why tRFC or qRFC queues are stuck, or why cross-system calls return errors.
+
+
+
+
+
+      ProcessIntegration
+      SAP areaBasis / ALE / RFC
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    RFC destinations in SAP define how one system calls another. When an RFC fails, the impact can be stuck IDocs, failed master data replication, missing transactional data, or batch job cancellations. The diagnostic task is to isolate whether the failure is in the network layer, the destination configuration, the target system availability, the user credentials, or the called function module.
+
+    Common symptoms
+
+      RFC destination test in SM59 returns "Connection refused," "Name or password incorrect," or "Program not registered."
+      tRFC or qRFC queue in SM58 or SMQ1/SMQ2 shows repeated errors for a specific destination.
+      IDoc is stuck in status 03 (data passed to port) but never arrives at the target system.
+      Master data replication shows success in the source but the object is missing in the target.
+      Background job fails with RFC-related short dump (CALL_FUNCTION_REMOTE_ERROR).
+      Cross-system transaction fails with COMMIT_FAILURE or ROLLBACK_FAILURE.
+      RFC performance is slow, causing timeouts in calling programs.
+
+
+    Likely causes
+
+      Network or firewall: the target system is unreachable due to network changes, firewall rules, or DNS resolution failure.
+      Target system down: the target application server, message server, or gateway is not running.
+      User credentials: the user in the RFC destination is locked, expired, or has incorrect password.
+      Program not registered: for TCP/IP RFC destinations (e.g., PI/PO, external programs), the registered program is not running.
+      Gateway or message server issue: the SAP gateway (sapgwXX) or message server is not responding.
+      Load balancing misconfiguration: the logon group or message server parameters are incorrect.
+      Function module error: the RFC reaches the target system but the called function module fails due to data or authorization issues.
+
+
+    Where to check in SAP
+
+      SM59 — RFC destination administration; test connection, Unicode test, and authorization test.
+      SM58 — tRFC error log; check failed RFC calls and error texts.
+      SMQ1 / SMQ2 — qRFC queue monitor; check outbound and inbound queues.
+      SMGW — gateway monitor; check registered programs and active connections.
+      SMLG — logon group load balancing; check group assignment and server availability.
+      SM21 — system log; check for gateway or work process errors.
+      ST22 — short dump analysis; check for RFC-related dumps in the calling or target system.
+      AL11 — directory listing; check gateway trace files (dev_rd) if needed.
+
+
+    Key tables / transactions / objects
+
+      RFCDES / RFCDOC — RFC destination definitions.
+      ARFCSDATA / ARFCSSTATE — tRFC execution data and status.
+      TRFCQOUT / TRFCQIN — tRFC queue tables.
+      SMQ1 / SMQ2 — qRFC queue monitor transactions.
+      GWY_CONN — gateway connection table (via SMGW).
+      USR02 — user master; check if the RFC user is locked or expired.
+
+
+    Diagnostic workflow
+
+      Identify the RFC destination name and the exact error message from SM59, SM58, or the application log.
+      Test the connection in SM59: connection test, Unicode test, and authorization test.
+      If the connection test fails, check network connectivity (ping, telnet to gateway port) from the Basis team.
+      If the authorization test fails, check the user in USR02 for lock status, password expiry, or missing authorizations.
+      Check SMGW for registered programs if the destination uses a registered RFC server program.
+      Check SM58 for tRFC errors: note the transaction ID, error text, and retry count.
+      Check SMQ1/SMQ2 for qRFC queue status if the destination uses queued RFC.
+      Check ST22 in both source and target systems for RFC-related short dumps.
+      If the connection succeeds but the function fails, check the target system application log (SLG1) for function module errors.
+
+
+    Typical fixes or next actions
+
+      Correct the RFC destination host name, IP address, or gateway service if network details changed.
+      Unlock or reset the password for the RFC user in SU01.
+      Restart the registered RFC program or server if it is not running.
+      Restart the SAP gateway service (sapgwXX) if it is not responding.
+      Reprocess tRFC errors in SM58 after fixing the underlying issue.
+      Clear or restart qRFC queues in SMQ1/SMQ2 if they are stuck.
+      Adjust the RFC timeout or retry settings if the issue is intermittent network latency.
+      Escalate to the network or Basis team if the issue is infrastructure-related.
+
+
+    Support takeaway
+    RFC destination failures are usually network, configuration, or credential issues. A useful ticket should include: RFC destination name, source system, target system, exact error message, SM59 test results, and whether the issue is isolated to one destination or affects multiple.
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an RFC configuration guide. It does not cover RFC destination creation, SNC/SSL setup, or PI/PO adapter configuration. It does not replace SAP's RFC and integration documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP qRFC and tRFC Diagnostics
+      SAP IDoc Status Diagnostics
+      SAP Interface Monitoring Diagnostics
+      SAP ALE Distribution Model Diagnostics
 
 ==================================================
 
@@ -2015,6 +3589,104 @@ Home
 
 ==================================================
 
+PAGE: SAP Transport Governance Diagnostics
+URL: /atlas/diagnostics/sap-transport-governance-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Change and transport governance
+BUSINESS PROCESS: SAP AMS support
+TAGS: sap-ams, transport, governance, change-control, stms
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Transport Governance Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP transport governance diagnostics
+    A first-pass structure for transport queue conflicts, import-order errors, and governance gaps.
+
+
+
+
+
+      ProcessSAP AMS support
+      SAP areaChange and transport governance
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Transport governance keeps multiple change streams from colliding. When imports fail because of queue conflicts, untracked dependencies, or unauthorized changes, the diagnostic goal is to identify the governance gap before fixing the individual transport.
+
+    Common symptoms
+
+      Multiple transports for the same object block each other in the import queue.
+      Production import order differs from the order tested in quality assurance.
+      A transport appears in the queue that was not approved for import.
+      Rollback or overwrite is needed because an earlier transport was skipped.
+      Cross-project transports create conflicts during release windows.
+
+
+    Likely causes
+
+      Parallel development: two work streams modify the same object without coordination.
+      Queue skipping: an earlier transport was bypassed, breaking dependency order.
+      Weak approval gate: transports enter production without proper review.
+      Untracked dependencies: a transport relies on a configuration that is not in the same request.
+      Emergency process bypass: urgent fixes skip normal governance and conflict with scheduled changes.
+
+
+    Where to check in SAP
+
+      STMS import queues — compare order across development, quality, and production.
+      SE01 / SE10 — transport ownership, project assignment, and release status.
+      Change approval records — check approval status and any emergency exceptions.
+      Object lock reports — identify overlapping objects across transports.
+      System change log — recent manual or emergency changes outside TMS.
+
+
+    Key tables / transactions / objects
+
+      E070 / E071 — transport request and object lists.
+      TMSBUFFER — TMS buffer and queue state.
+      TADIR — object directory for overlap analysis.
+
+
+    Diagnostic workflow
+
+      Map the import queue state and the intended import order for the release window.
+      Identify transports that modify the same objects or depend on each other.
+      Check whether any transport was skipped or imported out of order.
+      Review approval records for transports in the production queue.
+      Resolve conflicts by adjusting sequence, merging objects, or deferring changes.
+      Document the governance gap and update the change-control checklist.
+
+
+    Typical fixes or next actions
+
+      Establish object-level coordination when parallel projects touch the same area.
+      Enforce predecessor checks before importing into production.
+      Require documented approval for every transport in the production queue.
+      Add dependency checks to the release-readiness review.
+      Keep emergency fixes in a separate track and merge them back into normal governance.
+
+
+    Support takeaway
+    Governance tickets are most useful when they show the queue state, the conflicting transport numbers, the intended import order, and the business reason for each change.
+
+    Boundaries and non-goals
+    This page is a governance diagnostic, not a full SAP Solution Manager ChaRM or transport strategy design. It focuses on queue and approval gaps that cause import failures.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+==================================================
+
 PAGE: SAP Vendor Master Replication Diagnostics
 URL: /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
 SECTION: diagnostics
@@ -2234,4 +3906,4 @@ Operational Memory for SAP AMS
 
 ==================================================
 
-END OF MANIFEST — 26 verified pages included
+END OF MANIFEST — 41 verified pages included

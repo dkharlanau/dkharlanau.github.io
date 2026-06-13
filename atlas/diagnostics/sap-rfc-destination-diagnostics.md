@@ -1,34 +1,33 @@
 ---
 layout: default
-title: "SAP RFC Destination Diagnostics"
-description: "Diagnostic guide for SAP RFC destination failures, connection errors, and remote function call issues in distributed system landscapes."
+title: SAP RFC Destination Diagnostics
+description: Diagnostic guide for SAP RFC destination failures, connection errors,
+  and remote function call issues in distributed system landscapes.
 permalink: /atlas/diagnostics/sap-rfc-destination-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and RFC
 concept_type: diagnostic guide
-sap_area: "Basis / ALE / RFC"
+sap_area: Basis / ALE / RFC
 business_process: Integration
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-09
+status: reviewed
+verified: true
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
-level: 1
-robots: noindex,follow
-sitemap: false
+level: 2
+robots: index,follow
+sitemap: true
 tags:
-  - rfc
-  - integration
-  - sap-basis
-  - diagnostics
-  - distributed-systems
+- rfc
+- integration
+- sap-basis
+- diagnostics
+- distributed-systems
 related:
-  - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
-  - /atlas/diagnostics/sap-idoc-status-diagnostics/
-  - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
-  - /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+- /atlas/diagnostics/sap-idoc-status-diagnostics/
+- /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+- /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -52,7 +51,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Integration</dd></div>
       <div><dt>SAP area</dt><dd>Basis / ALE / RFC</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until RFC behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

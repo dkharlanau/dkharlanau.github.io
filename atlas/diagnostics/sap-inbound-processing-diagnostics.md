@@ -1,30 +1,31 @@
 ---
 layout: default
-title: "SAP Inbound Processing Diagnostics"
-description: "A conservative diagnostic frame for inbound IDoc and ALE processing issues in SAP."
+title: SAP Inbound Processing Diagnostics
+description: A conservative diagnostic frame for inbound IDoc and ALE processing issues
+  in SAP.
 permalink: /atlas/diagnostics/sap-inbound-processing-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
 concept_type: diagnostic guide
-sap_area: "IDoc / ALE / inbound"
+sap_area: IDoc / ALE / inbound
 business_process: Integration
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
-
 tags:
-  - integration
-  - sap-ale
-  - diagnostics
-  - inbound
+- integration
+- sap-ale
+- diagnostics
+- inbound
 related:
-  - /atlas/diagnostics/idoc-aif-integration-diagnostics/
-  - /atlas/diagnostics/sap-idoc-status-diagnostics/
-  - /atlas/diagnostics/sap-integration-error-handling-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/idoc-aif-integration-diagnostics/
+- /atlas/diagnostics/sap-idoc-status-diagnostics/
+- /atlas/diagnostics/sap-integration-error-handling-diagnostics/
+robots: index,follow
+sitemap: true
+level: 2
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Integration</dd></div>
       <div><dt>SAP area</dt><dd>IDoc / ALE / inbound</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until inbound processing behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

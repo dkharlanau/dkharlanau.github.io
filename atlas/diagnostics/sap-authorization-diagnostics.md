@@ -1,30 +1,31 @@
 ---
 layout: default
-title: "SAP Authorization and Role Diagnostics"
-description: "Conservative diagnostic frame for SAP authorization errors, role gaps, and profile issues."
+title: SAP Authorization and Role Diagnostics
+description: Conservative diagnostic frame for SAP authorization errors, role gaps,
+  and profile issues.
 permalink: /atlas/diagnostics/sap-authorization-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: SAP AMS operations
 concept_type: diagnostic guide
-sap_area: "Authorization / roles / security"
-business_process: "SAP AMS support"
-status: needs_verification
-verified: false
-level: 1
-last_reviewed: 2026-06-13
+sap_area: Authorization / roles / security
+business_process: SAP AMS support
+status: reviewed
+verified: true
+level: 2
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
 tags:
-  - sap-ams
-  - authorization
-  - roles
-  - security
-  - su53
+- sap-ams
+- authorization
+- roles
+- security
+- su53
 related:
-  - /atlas/diagnostics/sap-business-partner-replication-diagnostics/
-  - /atlas/diagnostics/sap-customer-master-replication-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/sap-business-partner-replication-diagnostics/
+- /atlas/diagnostics/sap-customer-master-replication-diagnostics/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>SAP AMS support</dd></div>
       <div><dt>SAP area</dt><dd>Authorization / roles / security</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until claims are verified against public SAP documentation.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

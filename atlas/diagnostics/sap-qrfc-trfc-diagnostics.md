@@ -1,30 +1,31 @@
 ---
 layout: default
-title: "SAP qRFC and tRFC Diagnostics"
-description: "A conservative diagnostic frame for queued and transactional RFC issues in SAP integration."
+title: SAP qRFC and tRFC Diagnostics
+description: A conservative diagnostic frame for queued and transactional RFC issues
+  in SAP integration.
 permalink: /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
 concept_type: diagnostic guide
-sap_area: "RFC / ALE / integration"
+sap_area: RFC / ALE / integration
 business_process: Integration
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
-
 tags:
-  - integration
-  - sap-ale
-  - diagnostics
-  - rfc
+- integration
+- sap-ale
+- diagnostics
+- rfc
 related:
-  - /atlas/diagnostics/idoc-aif-integration-diagnostics/
-  - /atlas/diagnostics/sap-idoc-status-diagnostics/
-  - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/idoc-aif-integration-diagnostics/
+- /atlas/diagnostics/sap-idoc-status-diagnostics/
+- /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+robots: index,follow
+sitemap: true
+level: 2
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Integration</dd></div>
       <div><dt>SAP area</dt><dd>RFC / ALE / integration</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until qRFC and tRFC behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

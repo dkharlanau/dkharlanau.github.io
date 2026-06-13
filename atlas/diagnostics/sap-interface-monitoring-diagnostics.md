@@ -1,30 +1,31 @@
 ---
 layout: default
-title: "SAP Interface Monitoring Diagnostics"
-description: "A conservative diagnostic frame for SAP interface monitoring and alert issues."
+title: SAP Interface Monitoring Diagnostics
+description: A conservative diagnostic frame for SAP interface monitoring and alert
+  issues.
 permalink: /atlas/diagnostics/sap-interface-monitoring-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
 concept_type: diagnostic guide
-sap_area: "IDoc / ALE / monitoring"
+sap_area: IDoc / ALE / monitoring
 business_process: Integration
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
-
 tags:
-  - integration
-  - sap-ale
-  - diagnostics
-  - monitoring
+- integration
+- sap-ale
+- diagnostics
+- monitoring
 related:
-  - /atlas/diagnostics/idoc-aif-integration-diagnostics/
-  - /atlas/diagnostics/sap-idoc-status-diagnostics/
-  - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/idoc-aif-integration-diagnostics/
+- /atlas/diagnostics/sap-idoc-status-diagnostics/
+- /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+robots: index,follow
+sitemap: true
+level: 2
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Integration</dd></div>
       <div><dt>SAP area</dt><dd>IDoc / ALE / monitoring</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until interface monitoring behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

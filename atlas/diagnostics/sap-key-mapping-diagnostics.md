@@ -1,31 +1,32 @@
 ---
 layout: default
-title: "SAP Key Mapping Diagnostics"
-description: "A conservative diagnostic frame for key mapping issues in SAP multi-system landscapes."
+title: SAP Key Mapping Diagnostics
+description: A conservative diagnostic frame for key mapping issues in SAP multi-system
+  landscapes.
 permalink: /atlas/diagnostics/sap-key-mapping-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Master data and MDG
 concept_type: diagnostic guide
-sap_area: "Key mapping / multi-system"
+sap_area: Key mapping / multi-system
 business_process: Master data governance
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
-
 tags:
-  - master-data
-  - sap-mdg
-  - diagnostics
-  - integration
+- master-data
+- sap-mdg
+- diagnostics
+- integration
 related:
-  - /atlas/diagnostics/sap-business-partner-replication-diagnostics/
-  - /atlas/diagnostics/sap-mdg-to-s4-replication-diagnostics/
-  - /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
-  - /atlas/diagnostics/sap-customer-master-replication-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/sap-business-partner-replication-diagnostics/
+- /atlas/diagnostics/sap-mdg-to-s4-replication-diagnostics/
+- /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
+- /atlas/diagnostics/sap-customer-master-replication-diagnostics/
+robots: index,follow
+sitemap: true
+level: 2
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -49,7 +50,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Master data governance</dd></div>
       <div><dt>SAP area</dt><dd>Key mapping / multi-system</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until key mapping behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

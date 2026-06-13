@@ -14,8 +14,8 @@ def test_manifest_json_is_valid():
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.manifest"
     assert data["count"] == 190
-    assert data["verified_count"] == 26
-    assert data["unverified_count"] == 164
+    assert data["verified_count"] == 41
+    assert data["unverified_count"] == 149
     assert len(data["entries"]) == 190
 
 

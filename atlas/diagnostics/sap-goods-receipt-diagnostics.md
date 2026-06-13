@@ -1,5 +1,4 @@
 ---
-
 title: SAP Goods Receipt Diagnostics
 layout: default
 description: A practical support diagnostic guide for SAP goods receipt issues.
@@ -10,31 +9,31 @@ subdomain: Procurement and logistics
 concept_type: diagnostic guide
 sap_area: MM inventory management
 business_process: Procure to pay
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-13
+status: reviewed
+verified: true
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
-
 tags:
-  - procure-to-pay
-  - sap-mm
-  - diagnostics
-  - procurement
-  - goods-receipt
-related: 
-  - "/atlas/maps/procure-to-pay-map/"
-  - "/atlas/sap/gr-ir-clearing-explained/"
-  - "/atlas/diagnostics/sap-invoice-verification-diagnostics/"
-  - "/atlas/diagnostics/sap-three-way-match-diagnostics/"
-  - "/atlas/diagnostics/sap-purchase-order-creation-diagnostics/"
-  - "/atlas/diagnostics/sap-material-document-diagnostics/"
-  - "/atlas/diagnostics/sap-movement-types-diagnostics/"
-robots: noindex,follow
+- procure-to-pay
+- sap-mm
+- diagnostics
+- procurement
+- goods-receipt
+related:
+- /atlas/maps/procure-to-pay-map/
+- /atlas/sap/gr-ir-clearing-explained/
+- /atlas/diagnostics/sap-invoice-verification-diagnostics/
+- /atlas/diagnostics/sap-three-way-match-diagnostics/
+- /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
+- /atlas/diagnostics/sap-material-document-diagnostics/
+- /atlas/diagnostics/sap-movement-types-diagnostics/
+robots: index,follow
 short_title: Goods Receipt Diagnostics
 h1: SAP goods receipt diagnostics
-subtitle: Goods receipt is where physical delivery becomes system evidence. Mistakes ripple into stock, invoice matching, and finance.
-sitemap: false
-
+subtitle: Goods receipt is where physical delivery becomes system evidence. Mistakes
+  ripple into stock, invoice matching, and finance.
+sitemap: true
+level: 2
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/atlas/">Knowledge Atlas</a></li><li><a href="/atlas/diagnostics/">Diagnostics</a></li><li aria-current="page">Goods Receipt Diagnostics</li></ol></nav>
