@@ -12,6 +12,7 @@ Rules:
 {% assign canonical_url = page.url | absolute_url %}
 {% assign site_home = '/' | absolute_url %}
 {% assign author_id = site_home | append: '#dkharlanau' %}
+{% assign organization_id = resume.schema.worksFor.url | default: 'https://www.epam.com' | append: '#organization' %}
 {% assign og_image = page.og_image | default: '/assets/og/default.png' | absolute_url %}
 {% assign article_image = '' %}
 {% if page.og_image %}{% assign article_image = page.og_image | absolute_url %}{% endif %}
@@ -48,7 +49,7 @@ Rules:
 {% elsif page.layout == 'blog' or page.layout == 'note' %}
   {% assign page_type = 'Article' %}
 {% elsif page.url contains '/atlas/' and page.verified == true and page.status == 'reviewed' %}
-  {% assign page_type = 'Article' %}
+  {% assign page_type = 'TechArticle' %}
 {% elsif page.url contains '/skill-hub/' %}
   {% assign page_type = 'Article' %}
 {% else %}
@@ -58,6 +59,7 @@ Rules:
 {% comment %} Normalize common override values. {% endcomment %}
 {% case page_type %}
 {% when 'article' %}{% assign page_type = 'Article' %}
+{% when 'techarticle' %}{% assign page_type = 'TechArticle' %}
 {% when 'webpage' %}{% assign page_type = 'WebPage' %}
 {% when 'profilepage' %}{% assign page_type = 'ProfilePage' %}
 {% when 'collectionpage' %}{% assign page_type = 'CollectionPage' %}
@@ -110,33 +112,45 @@ Rules:
 </script>
 {% endif %}
 
-{% comment %} Article (Google-supported rich result) {% endcomment %}
-{% if page_type == 'Article' %}
+{% comment %} Article / TechArticle (Google-supported rich result) {% endcomment %}
+{% if page_type == 'Article' or page_type == 'TechArticle' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Article",
+  "@type": "{{ page_type }}",
   "@id": "{{ canonical_url }}#article",
   "headline": {{ page_title | jsonify }},
   "description": {{ page_description | truncate: 160 | jsonify }},
   "author": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": {{ resume.schema.url | jsonify }}
+    "@id": "{{ author_id }}"
   },
   "publisher": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": {{ resume.schema.url | jsonify }}
+    "@id": "{{ organization_id }}"
   },
   {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
   {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
   {% if article_image != '' %}"image": "{{ article_image }}",{% endif %}
   {% if page.tags %}"keywords": {{ page.tags | jsonify }},{% endif %}
-  "mainEntityOfPage": "{{ canonical_url }}",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ canonical_url }}#webpage"
+  },
   "url": "{{ canonical_url }}"
+  {% if page.domain or page.sap_area or page.business_process %},
+  "about": {
+    "@type": "Thing",
+    "name": {{ page.domain | default: page.sap_area | default: page.business_process | jsonify }}
+  }{% endif %}
+  {% if page.tags %},
+  "mentions": {{ page.tags | jsonify }}{% endif %}
+  {% if page_type == 'TechArticle' %}
+    {% if page.proficiency_level %},
+  "proficiencyLevel": {{ page.proficiency_level | jsonify }}{% endif %}
+    {% if page.teaches %},
+  "teaches": {{ page.teaches | jsonify }}{% endif %}
+    {% if page.dependencies %},
+  "dependencies": {{ page.dependencies | jsonify }}{% endif %}
+  {% endif %}
 }
 </script>
 {% endif %}
@@ -154,7 +168,9 @@ Rules:
   "image": {{ resume.image | jsonify }},
   "jobTitle": {{ resume.headline | jsonify }},
   "description": {{ resume.summary | jsonify }},
-  "worksFor": {{ resume.schema.worksFor | jsonify }},
+  "worksFor": {
+    "@id": "{{ organization_id }}"
+  },
   "sameAs": {{ resume.schema.sameAs | jsonify }},
   "knowsAbout": {{ resume.schema.knowsAbout | default: resume.skills | slice: 0, 25 | jsonify }},
   "alumniOf": {{ resume.schema.alumniOf | jsonify }},
@@ -175,7 +191,7 @@ Rules:
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "{{ resume.schema.worksFor.url | default: 'https://www.epam.com' }}#organization",
+  "@id": "{{ organization_id }}",
   "name": {{ resume.schema.worksFor.name | jsonify }},
   "url": {{ resume.schema.worksFor.url | jsonify }}
 }
