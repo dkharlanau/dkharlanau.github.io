@@ -8,7 +8,7 @@ sitemap: false
 
 ## Executive Summary
 
-This research base documents the evidence, patterns, and decision rules collected across 7 parallel research tracks covering 19 domains relevant to agent skill design. It contains **84 curated sources** (41 Tier 1, 39 Tier 2, 4 Tier 3), **19 domain research notes**, and 6 synthesis artifacts that map candidate skills, artifacts, decision rules, quality gates, output patterns, and recommended next work batches.
+This research base documents the evidence, patterns, and decision rules collected across 7 parallel research tracks covering 18 domains relevant to agent skill design. It contains **84 curated sources** (41 Tier 1, 39 Tier 2, 4 Tier 3), **18 domain research notes**, and 6 synthesis artifacts that map candidate skills, artifacts, decision rules, quality gates, output patterns, and recommended next work batches.
 
 **Goal**: Provide a source-backed foundation for creating and strengthening agent skills and public skill pages, ensuring every skill is grounded in authoritative practitioner guidance rather than generic advice.
 
