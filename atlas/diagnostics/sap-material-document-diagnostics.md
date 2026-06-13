@@ -9,9 +9,10 @@ subdomain: Inventory management
 concept_type: diagnostic guide
 sap_area: "MM inventory management"
 business_process: Inventory / Logistics
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -23,8 +24,10 @@ related:
   - /atlas/diagnostics/sap-movement-types-diagnostics/
   - /atlas/diagnostics/sap-goods-receipt-diagnostics/
   - /atlas/diagnostics/sap-stock-transfer-diagnostics/
-robots: noindex,follow
-sitemap: false
+  - /atlas/diagnostics/sap-physical-inventory-diagnostics/
+  - /atlas/diagnostics/sap-reservation-diagnostics/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +51,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Inventory / Logistics</dd></div>
       <div><dt>SAP area</dt><dd>MM inventory management</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until material document behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -112,6 +115,14 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>Material document issues are usually user entry or timing problems. A useful ticket should include: material, plant, movement type, expected versus actual quantity, document number if it exists, and the business reason for correction.</p>
+
+    <h2>Escalation signals</h2>
+    <ul>
+      <li>A material document was posted to the wrong material, plant, or storage location and must be reversed.</li>
+      <li>The reversal affects inventory valuation, cost accounting, or a closed accounting period.</li>
+      <li>Multiple documents show the same unexpected movement type or account assignment.</li>
+      <li>The document ties to a production order, sales delivery, or physical inventory adjustment that needs cross-team validation.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a material document configuration guide. It does not cover WM transfer orders, EWM goods movements, or period-end closing procedures. It does not replace SAP's inventory management documentation.</p>

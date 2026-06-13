@@ -9,9 +9,10 @@ subdomain: Procurement and logistics
 concept_type: diagnostic guide
 sap_area: "MM purchasing"
 business_process: Procure to pay
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -23,8 +24,8 @@ related:
   - /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
   - /atlas/diagnostics/sap-purchase-requisition-diagnostics/
   - /atlas/sap/sap-mm-procurement-overview/
-robots: noindex,follow
-sitemap: false
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Procure to pay</dd></div>
       <div><dt>SAP area</dt><dd>MM purchasing</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until release strategy behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -112,6 +113,14 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>Release strategy blocks are usually process or authorization issues, not system errors. A useful ticket should include: document number, release strategy, open release codes, the user who tried to release, the error message, and whether the issue is new or recurring.</p>
+
+    <h2>Escalation signals</h2>
+    <ul>
+      <li>Documents are stuck because an approver is absent, inactive, or lacks authorization.</li>
+      <li>The release strategy classification appears wrong for the document value, material group, or account assignment.</li>
+      <li>Multiple users cannot release any documents, indicating a workflow or substitution configuration issue.</li>
+      <li>The approval limit or strategy must be changed to reflect a new delegation of authority.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a release strategy configuration guide. It does not cover classification design, workflow builder setup, or approval hierarchy modeling. It does not replace SAP's purchasing documentation.</p>

@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-06-13T16:59:22Z
+Generated: 2026-06-13T17:25:34Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -625,6 +625,1513 @@ Authorization-Aware AI for SAP
 
 ==================================================
 
+PAGE: SAP Business Partner Replication Diagnostics
+URL: /atlas/diagnostics/sap-business-partner-replication-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: BP / MDG / replication
+BUSINESS PROCESS: Master data governance
+TAGS: master-data, sap-mdg, diagnostics, replication
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Business Partner Replication Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP business partner replication diagnostics
+    A first-pass structure for finding why a business partner was not replicated, arrived incomplete, or created duplicates in a target system.
+
+
+
+
+
+      ProcessMaster data governance
+      SAP areaBP / MDG / replication
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Business partner replication moves BP master data from a source system (often MDG or a central system) to target systems. When a BP is missing in the target, has incomplete roles, or creates duplicates, the support goal is to identify whether the issue is in the replication model, key mapping, filter criteria, data quality, or the target system's handling of the received data.
+
+    Common symptoms
+
+      BP created in source system but does not appear in target system after expected replication time.
+      BP appears in target but with missing roles, addresses, or bank details.
+      Target system creates a duplicate BP instead of updating the existing one.
+      Replication shows success in the source but the target BP has different data.
+      Specific BP role (customer, vendor, contact) is missing after replication.
+
+
+    Likely causes
+
+      Replication model filter: the BP type, role, or organizational unit is excluded from the replication model.
+      Key mapping missing: the source BP GUID or number is not mapped to the target system key, causing a new BP to be created.
+      Data quality block: the BP data fails validation in the target system (missing required field, invalid format, duplicate tax number).
+      Role-specific filter: the replication model sends the BP header but filters out specific roles or relationships.
+      Target system configuration: the target system has different BP grouping, number ranges, or role assignment rules that conflict with the replicated data.
+
+
+    Where to check in SAP
+
+      MDG Data Replication log (if MDG is the source) — check replication status and error messages.
+      BDCP / BDCPS — change pointers for the BP object.
+      WE02 — IDoc status if ALE is used for replication.
+      Key mapping tables (if custom mapping is used) — check source-to-target key mapping.
+      Target system BP display (FLBP1 / FLBP2) — verify roles, addresses, and assignments.
+
+
+    Key tables / transactions / objects
+
+      BUT000 / BUT001 — BP header and general data.
+      BUT100 / BUT100 — BP roles.
+      BUT020 / ADRC — BP addresses.
+      BKDF / BNKA — BP bank details.
+      BDCP / BDCPS — change pointers.
+
+
+    Diagnostic workflow
+
+      Identify the BP number, source system, target system, and the expected versus actual result.
+      Check the replication log or change pointer status to confirm the BP was selected for replication.
+      Check WE02 or the replication middleware for IDoc or message status.
+      Verify key mapping: does the target system recognize the source BP key or create a new one?
+      Check the target BP in FLBP1/FLBP2 for missing roles, addresses, or data.
+      Compare the source BP data with the target BP data to identify which fields were filtered or failed validation.
+
+
+    Typical fixes or next actions
+
+      Update the replication model to include the missing BP type, role, or organizational unit.
+      Create or correct key mapping between source and target systems.
+      Fix data quality issues in the source BP before replicating.
+      Adjust target system BP grouping or role assignment rules if they conflict with replicated data.
+      If duplicates exist, evaluate merge or deactivation options with master data governance.
+
+
+    Support takeaway
+    BP replication issues are usually model, mapping, or data quality problems. A useful ticket should include: BP number, source system, target system, expected roles/data, actual result, replication model name, and any error messages from the replication log or IDoc status.
+
+    Escalation signals
+
+      Replication failures affect many business partners or all target systems.
+      A duplicate BP was created in a target system and needs data steward or business approval to merge.
+      The issue involves key mapping, number ranges, or BP grouping changes that require MDG/ BASIS involvement.
+      Missing bank, tax, or address data has compliance, payment, or reporting impact.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a BP replication configuration guide. It does not cover MDG replication model design, key mapping setup, or BP grouping configuration. It does not replace SAP's master data governance documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Vendor Master Replication Diagnostics
+      SAP Customer Master Replication Diagnostics
+      SAP Key Mapping Diagnostics
+      SAP Master Data Quality
+
+==================================================
+
+PAGE: SAP Customer Master Replication Diagnostics
+URL: /atlas/diagnostics/sap-customer-master-replication-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Customer master / CVI / replication
+BUSINESS PROCESS: Master data governance
+TAGS: master-data, sap-mdg, diagnostics, replication
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Customer Master Replication Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP customer master replication diagnostics
+    A first-pass structure for finding why a customer was not replicated, arrived with wrong data, or created a duplicate in the target system.
+
+
+
+
+
+      ProcessMaster data governance
+      SAP areaCustomer master / CVI / replication
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Customer master replication moves customer data from a source system to target systems, often through ALE, CVI, or MDG. When a customer is missing, has wrong sales area assignments, or creates duplicates, the support goal is to identify whether the issue is in the replication model, the CVI synchronization, key mapping, or the target system's customer configuration.
+
+    Common symptoms
+
+      Customer created in source system but missing in target system.
+      Customer exists in target but sales area or company code data is missing.
+      Target system creates duplicate customer instead of updating existing one.
+      CVI synchronization creates a business partner but the customer link is broken.
+      Customer partner functions or tax classification differ between source and target.
+
+
+    Likely causes
+
+      Replication model filter: the customer account group or sales area is excluded from replication.
+      CVI synchronization failure: the customer-vendor integration did not create or link the BP correctly.
+      Key mapping missing: the source customer number is not mapped to the target system, causing a new customer to be created.
+      Sales area filter: the replication sends general data but filters out specific sales organizations or distribution channels.
+      Target number range issue: the target system number range is exhausted or configured for external numbering while the source uses internal.
+
+
+    Where to check in SAP
+
+      XD01 / XD02 / XD03 — customer master display in target system.
+      WE02 — IDoc status if ALE replication is used.
+      FLBP1 / FLBP2 — business partner display if CVI is involved.
+      MDG replication log — if MDG is the source.
+      Key mapping tables — source-to-target customer number mapping.
+
+
+    Key tables / transactions / objects
+
+      KNA1 — customer general data.
+      KNB1 — customer company code data.
+      KNVV — customer sales area data.
+      BUT000 / BUT001 — BP header (if CVI is used).
+      CVI_LINK — CVI link table between BP and customer.
+
+
+    Diagnostic workflow
+
+      Identify the customer number, source system, target system, and the expected versus actual result.
+      Check the replication log or IDoc status to confirm the customer was selected and sent.
+      Verify the customer exists in the target system (XD03) and check which views are present.
+      If CVI is used, check FLBP1 for the linked BP and verify the CVI_LINK table.
+      Check key mapping to confirm the source customer maps to the correct target customer.
+      Compare sales area and company code data between source and target.
+
+
+    Typical fixes or next actions
+
+      Update the replication model to include the missing account group or sales area.
+      Create or correct key mapping between source and target customer numbers.
+      Fix CVI synchronization issues by re-running CVI synchronization or correcting the BP link.
+      Extend the customer to the missing sales area or company code in the target system.
+      Adjust target number ranges if they conflict with the source numbering.
+
+
+    Support takeaway
+    Customer replication issues are usually model, mapping, or CVI problems. A useful ticket should include: customer number, source system, target system, expected views/data, actual result, replication model, and any IDoc or CVI error messages.
+
+    Escalation signals
+
+      Customer data is missing or wrong in downstream sales, billing, or service systems.
+      Replication failures affect a key account, distribution channel, or sales organization.
+      A duplicate customer was created and needs merging with approval from sales and finance.
+      The issue involves tax classification, credit segment, or partner function changes beyond standard support scope.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a customer replication configuration guide. It does not cover CVI setup, replication model design, or customer account group configuration. It does not replace SAP's customer master documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Business Partner Replication Diagnostics
+      SAP Cvi Synchronization Diagnostics
+      SAP Key Mapping Diagnostics
+      SAP Master Data Quality
+
+==================================================
+
+PAGE: SAP Invoice Verification Diagnostics
+URL: /atlas/diagnostics/sap-invoice-verification-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: MM invoice verification
+BUSINESS PROCESS: Procure to pay
+TAGS: procure-to-pay, sap-mm, diagnostics, invoice-verification
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Invoice Verification Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP invoice verification diagnostics
+    A first-pass structure for separating invoice blocks caused by price, quantity, tax, or reference mismatches.
+
+
+
+
+
+      ProcessProcure to pay
+      SAP areaMM invoice verification
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Invoice verification is the control point where the supplier's bill is matched against purchase order and goods receipt evidence. A blocked invoice is usually process evidence, not a system error. The support goal is to identify which mismatch element triggered the block and whether it reflects a real discrepancy or a data timing issue.
+
+    Common symptoms
+
+      Invoice posts with a blocking reason that prevents automatic payment.
+      MIRO shows price, quantity, or tax differences beyond tolerance.
+      Invoice references a purchase order item that has no goods receipt or partial receipt.
+      Multiple invoices for the same PO item create duplicate payment risk.
+      Tax code or tax jurisdiction mismatch prevents posting.
+
+
+    Likely causes
+
+      Price variance: invoice price differs from PO price beyond the configured tolerance. May be a valid supplier price change or a wrong PO price.
+      Quantity variance: invoice quantity exceeds GR quantity. May indicate partial delivery, returns not processed, or duplicate invoicing.
+      Reference mismatch: invoice references wrong PO number, item, or delivery note. Common with consolidated invoices or supplier numbering changes.
+      Tax mismatch: tax code on invoice differs from PO or supplier master. Often caused by jurisdiction changes or supplier tax registration updates.
+      Timing issue: GR was posted after invoice was entered, or invoice arrived before PO was released.
+      Master data issue: supplier not extended to company code, payment terms mismatch, or tax number invalid.
+
+
+    Where to check in SAP
+
+      MIRO / MIR7 — invoice entry and blocking reason display.
+      ME23N — purchase order history showing GR and IR quantities.
+      MIR4 — invoice document display with variance details.
+      FBL1N — supplier line items to see if invoice was posted but blocked.
+      PO history tab — compare ordered, delivered, and invoiced quantities.
+
+
+    Key tables / transactions / objects
+
+      RBKP — invoice document header.
+      RSEG — invoice document items.
+      EKBE — PO history (GR and IR records).
+      LFA1 / LFB1 — supplier master (general and company code).
+      T169 — tolerance groups for invoice verification.
+
+
+    Diagnostic workflow
+
+      Confirm the PO number, item, and supplier on the invoice match the system record.
+      Check PO history (EKBE) for GR quantity and IR quantity. Identify the gap.
+      Review the blocking reason in RBKP or MIR4. Determine if it is price, quantity, tax, or reference.
+      Check tolerance settings to see if the variance is within acceptable limits.
+      If the variance is valid, document the business reason and release. If not, return to supplier or correct master data.
+      Verify that releasing the invoice will not create a duplicate payment.
+
+
+    Typical fixes or next actions
+
+      Release the invoice with documented approval if the variance is within business tolerance.
+      Correct the PO price or quantity if the original document was wrong.
+      Post a subsequent debit or credit memo if the supplier issued a corrected invoice.
+      Update supplier master data (tax code, payment terms) if the mismatch stems from master data.
+      Escalate to procurement if the supplier repeatedly invoices outside agreed terms.
+
+
+    Support takeaway
+    Do not release blocked invoices without documenting the variance reason and the business approval. A useful invoice verification ticket should include: PO number, invoice number, supplier, variance type (price/quantity/tax/reference), expected versus actual values, and whether the issue is recurring.
+
+    Invoice blocking and release workflow
+    Blocked invoices are a standard control in invoice verification. The support goal is to identify the block reason, verify the business justification for release, and ensure that releasing the invoice does not create duplicate payment or bypass procurement controls.
+
+      Check MRBR: the blocked invoice report lists all invoices blocked for price, quantity, tax, or reference reasons. Review the block reason code.
+      Check PO history (EKBE): compare the invoice quantity and price against the goods receipt and purchase order to confirm the variance.
+      Check tolerance settings: the block may be automatic because the variance exceeds the configured tolerance for the company code or supplier.
+      Check approval workflow: some organizations require a separate approval step before a blocked invoice can be released. Verify that the approver has the correct authorization.
+      Check for duplicates: before releasing, confirm that the same invoice has not already been posted or paid under a different document number.
+
+    A useful invoice blocking ticket should include: invoice number, PO number, supplier, block reason, expected versus actual quantity and price, and whether the variance is approved by procurement or finance.
+
+    Escalation signals
+
+      The variance exceeds the buyer's or finance team's delegated authority and needs procurement/finance approval.
+      The same supplier repeatedly invoices outside PO terms, suggesting a contractual or master-data problem.
+      Releasing the invoice would create a duplicate payment or bypass a required tax review.
+      The block involves complex tax jurisdiction, intercompany, or EDI invoicing scenarios outside standard MM support scope.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not an invoice verification configuration guide. It does not cover automatic invoice verification setup, EDI invoicing, or complex tax scenarios. It does not replace the judgment of a finance controller or procurement manager.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+    Next diagnostic steps
+
+      Procure to Pay Map — use this map to connect invoice blocks to the full procure-to-pay workflow.
+      SAP Goods Receipt Diagnostics — go here when the invoice block is caused by GR timing or quantity differences.
+      SAP Three-Way Match Diagnostics — check this to reconcile PO, GR, and invoice data.
+      SAP Purchase Order Creation Diagnostics — use this when the invoice references a wrong or blocked PO.
+
+
+    Practical checklist
+
+- [ ] Collect invoice number, PO number, item, supplier, and blocking reason. **Synthetic example:** invoice 1234567890, PO 9876543210, block "Quantity variance".
+
+- [ ] Check MIRO/MIR4 and PO history (EKBE) for ordered, delivered, and invoiced quantities.
+
+- [ ] Compare invoice price, quantity, and tax code against PO and GR within tolerance (T169).
+
+- [ ] Confirm no duplicate invoice exists for the same PO item before releasing.
+
+- [ ] Document the variance reason and the approver who authorized release.
+
+- [ ] Safety limit: do not release blocked invoices that would cause duplicate payment or exceed tolerance without documented approval.
+
+
+
+
+    Related Atlas Pages
+
+      SAP Mm Procurement Overview
+      Gr Ir Clearing Explained
+      SAP Goods Receipt Diagnostics
+      SAP Three Way Match Diagnostics
+
+==================================================
+
+PAGE: SAP Material Document Diagnostics
+URL: /atlas/diagnostics/sap-material-document-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: MM inventory management
+BUSINESS PROCESS: Inventory / Logistics
+TAGS: procure-to-pay, sap-mm, diagnostics, inventory-management
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Material Document Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP material document diagnostics
+    A first-pass structure for finding why a goods movement document is missing, incorrect, or cannot be reversed.
+
+
+
+
+
+      ProcessInventory / Logistics
+      SAP areaMM inventory management
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Every goods movement in SAP creates a material document that records what moved, where, when, and with what accounting impact. When a document is missing, shows wrong quantities, posts to wrong accounts, or cannot be reversed, the support goal is to trace the document chain, identify the mismatch, and determine if a correction movement or reversal is needed.
+
+    Common symptoms
+
+      User reports a goods movement was posted but no material document exists.
+      Material document shows wrong quantity, movement type, or storage location.
+      Reversal fails because the original document is already reversed or cleared.
+      Accounting document linked to the material document shows unexpected GL accounts.
+      Goods movement posted in wrong period and period is now closed.
+
+
+    Likely causes
+
+      User error: wrong quantity, movement type, or storage location entered during posting.
+      Document not saved: the user thought the document was posted but it was only simulated or an error prevented commit.
+      Already reversed: the original document was reversed earlier and a second reversal is not allowed.
+      Period closed: the posting period for MM or FI is closed, preventing new documents or reversals.
+      Valuation mismatch: the material document triggers a valuation that does not match the material's current valuation class or price.
+
+
+    Where to check in SAP
+
+      MIGO — display material document by document number.
+      MB51 — material documents list, filter by material, plant, or movement type.
+      MBST — reversal transaction and error messages.
+      MMRV — allow posting to previous period.
+      FB03 — display accounting document linked to the material document.
+
+
+    Key tables / transactions / objects
+
+      MKPF — material document header.
+      MSEG — material document items.
+      BKPF / BSEG — accounting documents.
+      MBEW — material valuation.
+
+
+    Diagnostic workflow
+
+      Identify the material document number or the expected document that is missing.
+      Check MIGO or MB51 for the document details: material, plant, storage location, movement type, quantity.
+      Verify the accounting document in FB03 to confirm GL accounts and amounts.
+      If reversal is needed, check MBST for the reversal status and any error messages.
+      Check posting period status if the reversal or new posting fails.
+      Determine if the correction should be a reversal, a return movement, or a manual adjustment.
+
+
+    Typical fixes or next actions
+
+      Reverse the incorrect document with MBST if the period is open and the document is not already reversed.
+      Re-post the movement with correct data if the original was wrong.
+      Open the posting period temporarily if the correction is urgent and authorized.
+      If reversal is not possible, use a compensating movement to correct stock or accounting.
+      Document the correction with business justification and approval.
+
+
+    Support takeaway
+    Material document issues are usually user entry or timing problems. A useful ticket should include: material, plant, movement type, expected versus actual quantity, document number if it exists, and the business reason for correction.
+
+    Escalation signals
+
+      A material document was posted to the wrong material, plant, or storage location and must be reversed.
+      The reversal affects inventory valuation, cost accounting, or a closed accounting period.
+      Multiple documents show the same unexpected movement type or account assignment.
+      The document ties to a production order, sales delivery, or physical inventory adjustment that needs cross-team validation.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a material document configuration guide. It does not cover WM transfer orders, EWM goods movements, or period-end closing procedures. It does not replace SAP's inventory management documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Movement Types Diagnostics
+      SAP Goods Receipt Diagnostics
+      SAP Stock Transfer Diagnostics
+
+==================================================
+
+PAGE: SAP Movement Types Diagnostics
+URL: /atlas/diagnostics/sap-movement-types-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: MM inventory management
+BUSINESS PROCESS: Procure to pay / Inventory
+TAGS: procure-to-pay, sap-mm, diagnostics, inventory-management
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Movement Types Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP movement types diagnostics
+    A first-pass structure for finding why a goods movement posts to the wrong stock type, account, or status.
+
+
+
+
+
+      ProcessProcure to pay / Inventory
+      SAP areaMM inventory management
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Movement types in SAP define the direction, stock type, and accounting impact of every goods movement. A wrong movement type does not just misclassify stock — it can post to the wrong account, trigger wrong valuation, create incorrect GR/IR records, or leave inventory in an unusable status. The support goal is to identify which movement type was used, whether it matches the business intent, and what correction is needed.
+
+    Common symptoms
+
+      Goods receipt posted stock to quality inspection instead of unrestricted.
+      Transfer posting created an unexpected accounting entry.
+      Return to vendor did not reduce GR/IR or created a wrong reversal.
+      Movement type is not allowed for the material type or plant.
+      Inventory count adjustment posted to a consumption account instead of inventory.
+
+
+    Likely causes
+
+      Wrong movement type selected: user chose 101 instead of 103, or 311 instead of 301, changing stock type or valuation.
+      Movement type not configured for material type: the material type restricts which movements are allowed.
+      Account modification mismatch: the movement type posts to a G/L account that does not match the material's valuation class.
+      Stock type confusion: unrestricted, quality inspection, blocked, or in transit were not distinguished correctly.
+      Custom movement type: a landscape-specific movement type behaves differently from standard and is not documented.
+
+
+    Where to check in SAP
+
+      MIGO — display the material document and check the movement type on each item.
+      MB51 — material documents list, filter by movement type and material.
+      OMJJ — movement type configuration (transaction-dependent, view-only in production).
+      MB52 — stock overview showing stock types per storage location.
+      Material master — check material type and valuation class.
+
+
+    Key tables / transactions / objects
+
+      T156 — movement types.
+      T156T — movement type texts.
+      MKPF — material document header.
+      MSEG — material document items.
+      MBEW — material valuation.
+
+
+    Diagnostic workflow
+
+      Identify the material document number and item from the user report or error.
+      Check MIGO or MB51 for the movement type used and compare with the business intent.
+      Verify the stock type before and after the movement in MB52.
+      Check if the movement type is allowed for the material type and plant.
+      Review the accounting document (FI) to see if the G/L accounts match expectations.
+      Determine if the movement should be reversed and re-posted with the correct type.
+
+
+    Typical fixes or next actions
+
+      Reverse the incorrect movement with the reversal movement type and re-post correctly.
+      Update user training or MIGO defaults to prevent repeated wrong selection.
+      If the movement type configuration is wrong, escalate to the configuration team with documented evidence.
+      For stock type issues, perform a transfer posting to move stock to the correct status.
+
+
+    Support takeaway
+    Movement type errors are often user selection issues, not system bugs. Before escalating, collect the material document number, the movement type used, the expected movement type, the material, plant, and storage location. A useful movement type ticket should show the business intent and the system result.
+
+    Escalation signals
+
+      The same wrong movement type is used repeatedly, suggesting training or process design issues.
+      A correction movement affects inventory valuation, financial accounts, or month-end closing.
+      The movement type behavior differs between plants or clients and configuration review is needed.
+      The issue involves special stock (consignment, subcontracting, pipeline) with accounting implications.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a movement type configuration guide. It does not cover custom movement type design, WM movement types, or EWM-specific logic. It does not replace SAP's inventory management documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Goods Receipt Diagnostics
+      SAP Material Document Diagnostics
+      SAP Batch Determination Diagnostics
+      SAP Mm Procurement Overview
+
+==================================================
+
+PAGE: SAP Purchase Order Creation Diagnostics
+URL: /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: MM purchasing
+BUSINESS PROCESS: Procure to pay
+TAGS: procure-to-pay, sap-mm, diagnostics, purchasing
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Purchase Order Creation Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP purchase order creation diagnostics
+    A first-pass structure for finding why a purchase order cannot be created, saved, or released.
+
+
+
+
+
+      ProcessProcure to pay
+      SAP areaMM purchasing
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Purchase order creation is the point where internal demand becomes a supplier commitment. Blocks at this stage prevent the entire procurement chain from starting. The support goal is to identify whether the block comes from master data, sourcing, release strategy, authorization, or document conversion issues.
+
+    Common symptoms
+
+      ME21N or ME59N fails with a hard error or warning that prevents saving.
+      Purchase requisition cannot be converted to purchase order.
+      PO is created but immediately blocked by release strategy.
+      Automatic PO creation from PR or MRP does not generate expected orders.
+      PO saves but with wrong supplier, price, or delivery date.
+
+
+    Likely causes
+
+      Missing source of supply: no valid info record, source list, or quota arrangement exists for the material and plant.
+      Supplier master issue: supplier is blocked, not extended to purchasing organization, or missing required roles.
+      Release strategy block: the PO value, material group, or plant triggers a release strategy that requires approval.
+      Authorization issue: the user lacks the activity or field-level authorization to create or change POs for this plant or material.
+      PR conversion issue: the PR has a different plant, purchasing organization, or account assignment that does not match the PO context.
+      Document type mismatch: the PR document type is not configured for automatic PO creation.
+
+
+    Where to check in SAP
+
+      ME21N / ME22N — manual PO creation and error messages.
+      ME59N — automatic PO creation log.
+      ME53N — purchase requisition display to check source of supply.
+      ME23N — existing POs for the same material/supplier to compare.
+      SU53 — authorization check after a failed transaction.
+
+
+    Key tables / transactions / objects
+
+      EKKO / EKPO — purchase order header and items.
+      EBAN / EBKN — purchase requisition header and items.
+      EINA / EINE — purchasing info record general and organization data.
+      A017 — info record validity (condition).
+      LFA1 / LFB1 — supplier master.
+
+
+    Diagnostic workflow
+
+      Identify the exact error message and transaction code where the block appears.
+      Check if the issue is isolated to one material, supplier, plant, or user.
+      Verify the source of supply: info record, source list, quota arrangement, or contract.
+      Check the supplier master for blocks or missing organizational assignments.
+      If release strategy is involved, identify the release code and who can approve.
+      If automatic creation fails, check ME59N log for specific rejection reasons.
+
+
+    Typical fixes or next actions
+
+      Create or extend the source of supply (info record, source list) if missing.
+      Unblock or extend the supplier master to the purchasing organization.
+      Route the PO through the correct release strategy approval workflow.
+      Adjust the PR to match the PO context or create the PO manually with correct data.
+      Escalate authorization issues to the security team with SU53 evidence.
+
+
+    Support takeaway
+    PO creation blocks are usually master data or sourcing issues, not system bugs. A useful ticket should include: the PR number (if converting), material, plant, supplier, error message, transaction code, and whether the issue is new or recurring.
+
+    Escalation signals
+
+      PO creation fails for many users or plants, indicating a configuration or authorization change.
+      The error relates to tax calculation, account assignment, or commitment logic that finance must validate.
+      A supplier contract or info record appears incorrect and procurement must confirm the commercial terms.
+      The issue blocks a business-critical procurement category or affects legal/compliance requirements.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a PO configuration guide. It does not cover release strategy setup, approval workflow design, or MRP batch scheduling. It does not replace SAP's purchasing documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+    Next diagnostic steps
+
+      Procure to Pay Map — use this map to relate the PO creation block to the full procure-to-pay diagnostic path.
+      SAP Release Strategy Diagnostics — go here when the PO is created but blocked for approval.
+      SAP Source Determination Diagnostics — check this if no source of supply is found.
+      SAP Purchase Requisition Diagnostics — use this when the issue is converting a requisition into a purchase order.
+
+
+    Practical checklist
+
+- [ ] Collect PR number, material, plant, purchasing organization, supplier, and exact error message. **Synthetic example:** PR 1234567890, material TEST_MAT_001, plant 0001.
+
+- [ ] Check ME21N/ME59N error log and SU53 if authorization is suspected.
+
+- [ ] Verify source of supply: info record, source list, quota arrangement, or contract in ME53N/ME23N.
+
+- [ ] Confirm supplier master is not blocked and is extended to the purchasing organization.
+
+- [ ] Check release strategy classification if the PO is created but held for approval.
+
+- [ ] Document whether the issue is isolated to one user, material, or plant.
+
+- [ ] Safety limit: do not create a PO with an unapproved supplier or bypass release strategy.
+
+
+
+
+    Related Atlas Pages
+
+      SAP Mm Procurement Overview
+      SAP Source Determination Diagnostics
+      SAP Release Strategy Diagnostics
+      SAP Purchase Requisition Diagnostics
+
+==================================================
+
+PAGE: SAP Purchase Requisition Diagnostics
+URL: /atlas/diagnostics/sap-purchase-requisition-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: MM purchasing
+BUSINESS PROCESS: Procure to pay
+TAGS: procure-to-pay, sap-mm, diagnostics, purchasing
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Purchase Requisition Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP purchase requisition diagnostics
+    A first-pass structure for finding why a purchase requisition cannot be created, approved, or converted to a purchase order.
+
+
+
+
+
+      ProcessProcure to pay
+      SAP areaMM purchasing
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Purchase requisition is the first document in the procure-to-pay chain. It captures internal demand but does not yet commit the organization to a supplier. When a PR is blocked, cannot be created, or fails conversion, the support goal is to identify whether the issue is in master data, account assignment, sourcing, release strategy, or user authorization.
+
+    Common symptoms
+
+      ME51N fails to save or shows a hard error.
+      PR is created but cannot be converted to PO (ME59N or ME21N).
+      PR remains in status 'release strategy active' and cannot be approved.
+      MRP-generated PR has wrong plant, quantity, or delivery date.
+      PR account assignment is rejected during posting or conversion.
+
+
+    Likely causes
+
+      Master data issue: material not extended to plant, supplier blocked, or purchasing organization mismatch.
+      Account assignment error: cost center, WBS element, or GL account is invalid or not open for posting.
+      Release strategy block: the PR value or material group triggers an approval path that is not complete.
+      Source determination failure: no valid info record, source list, or quota arrangement exists for automatic sourcing.
+      Authorization issue: the user lacks authorization to create PRs for the plant, material group, or account assignment type.
+      MRP parameter issue: lot size, safety stock, or planning horizon produced an unexpected PR quantity or date.
+
+
+    Where to check in SAP
+
+      ME53N — display PR and check status, account assignment, and source of supply.
+      ME59N log — automatic PO creation rejection reasons.
+      ME54N — PR release status.
+      MD04 / MD05 — MRP list to see how the PR was generated.
+      SU53 — authorization check after a failed transaction.
+
+
+    Key tables / transactions / objects
+
+      EBAN / EBKN — PR header and items.
+      EKKO / EKPO — PO header and items (for converted PRs).
+      AUFK — WBS / internal order master.
+      CSKS — cost center master.
+
+
+    Diagnostic workflow
+
+      Identify the PR number and the exact error or status that blocks progress.
+      Check ME53N for PR details: material, plant, quantity, account assignment, and source of supply.
+      Verify master data: material plant extension, supplier status, and purchasing organization.
+      Check release status if the PR is blocked for approval.
+      Check MRP parameters if the PR was system-generated and has unexpected values.
+      Test manual PO creation (ME21N) from the PR to isolate conversion issues.
+
+
+    Typical fixes or next actions
+
+      Correct the account assignment if the cost center or WBS element is wrong.
+      Extend the material to the plant or unblock the supplier master.
+      Complete the release strategy approval if the PR is blocked.
+      Create or update the source of supply if automatic sourcing fails.
+      Adjust MRP parameters if system-generated PRs are consistently wrong.
+
+
+    Support takeaway
+    PR issues are usually upstream master data or account assignment problems. A useful ticket should include: PR number, material, plant, error message, account assignment, and whether the issue is isolated or recurring.
+
+    MRP exception handling
+    MRP exceptions are messages that indicate planning problems requiring human intervention. When MRP generates unexpected purchase requisitions, the support goal is to identify whether the exception is a master data issue, a demand signal problem, or a planning parameter mismatch.
+
+      Check MD04 / MD05: the MRP list shows exception messages per material and plant. Common messages include stockout (01), excess (02), late receipt (03), and early receipt (07).
+      Check MRP parameters: lot size, safety stock, reorder point, and procurement type in the material master may produce PRs that do not match business intent.
+      Check demand signals: sales orders, planned independent requirements, or reservations may have changed after the last MRP run, creating new exceptions.
+      Check supply signals: purchase orders, production orders, or planned orders may have been delayed or cancelled, causing MRP to propose new PRs.
+      Check MRP controller assignment: the material may be assigned to an MRP controller who is not monitoring exceptions for that group.
+
+    A useful MRP exception ticket should include: material number, plant, exception message number, MRP run date, the PR or planned order number if one was created, and whether the exception is isolated or affects a group of materials.
+
+    Escalation signals
+
+      Requisitions are stuck across multiple users or plants, suggesting a release strategy or workflow failure.
+      The requested material or service has no approved source, contract, or budget approval.
+      MRP-generated requisitions repeatedly have wrong quantities, dates, or source of supply.
+      The case requires a change to sourcing policy, approval limits, or procurement governance.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a PR configuration guide. It does not cover MRP logic, approval workflow design, or catalog integration. It does not replace SAP's purchasing documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Purchase Order Creation Diagnostics
+      SAP Release Strategy Diagnostics
+      SAP Source Determination Diagnostics
+      SAP MRP Exception Diagnostics
+      SAP Mm Procurement Overview
+
+==================================================
+
+PAGE: SAP Release Strategy Diagnostics
+URL: /atlas/diagnostics/sap-release-strategy-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: MM purchasing
+BUSINESS PROCESS: Procure to pay
+TAGS: procure-to-pay, sap-mm, diagnostics, purchasing
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Release Strategy Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP release strategy diagnostics
+    A first-pass structure for finding why a purchase order or requisition is blocked by approval workflow.
+
+
+
+
+
+      ProcessProcure to pay
+      SAP areaMM purchasing
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Release strategy is the approval workflow that prevents a purchasing document from becoming a binding commitment until authorized users release it. When a document is stuck in release, the support goal is to identify which release strategy was triggered, which release codes are still open, who has the authorization to release, and whether the block is intentional or caused by a classification mismatch.
+
+    Common symptoms
+
+      PO or PR shows status 'release strategy active' but no one can release it.
+      Document was released but reverted to blocked status after a change.
+      Wrong release strategy was selected — a low-value PO triggered a high-value approval path.
+      Release approver is on leave or no longer has the required authorization.
+      Release strategy classification values do not match the document characteristics.
+
+
+    Likely causes
+
+      Classification mismatch: the document's value, material group, or plant does not match the release strategy classification, causing the wrong strategy or no strategy to be selected.
+      Missing release code: one or more release codes in the strategy have not been entered because the approver is unavailable or unaware.
+      Authorization gap: the user attempting to release lacks the required authorization object for the release code and document type.
+      Document change after partial release: changing a released document can reset the release status depending on the change relevance setting.
+      Workflow integration failure: if workflow is used for release notification, the work item may be stuck or sent to the wrong agent.
+
+
+    Where to check in SAP
+
+      ME28 / ME29N — PO release (collective and individual).
+      ME54N — PR release.
+      CL20N — display classification values for the document.
+      SWIA / SWI1 — workflow work items if workflow-driven release is used.
+      SU53 — authorization check after a failed release attempt.
+
+
+    Key tables / transactions / objects
+
+      T16FC / T16FG — release strategy and release group definitions.
+      CEBAN / CEKKO — release status for PR and PO.
+      AUSP — classification values.
+      SWW_WI_1 — workflow work items.
+
+
+    Diagnostic workflow
+
+      Identify the document number, type, and the release strategy that was selected.
+      Check the release status to see which release codes are still open.
+      Verify the classification values (value, material group, plant) match the expected release strategy.
+      Check if the approver has the required authorization for the release code.
+      If workflow is involved, check SWIA for stuck work items.
+      Determine if the document change that triggered re-release was necessary or can be avoided.
+
+
+    Typical fixes or next actions
+
+      Route the document to the correct approver with documented business justification.
+      Correct the classification values if the wrong release strategy was selected.
+      Assign a delegate or temporary approver if the primary approver is unavailable.
+      Escalate authorization issues to the security team with SU53 evidence.
+      If workflow is stuck, restart or forward the work item after confirming the business context.
+
+
+    Support takeaway
+    Release strategy blocks are usually process or authorization issues, not system errors. A useful ticket should include: document number, release strategy, open release codes, the user who tried to release, the error message, and whether the issue is new or recurring.
+
+    Escalation signals
+
+      Documents are stuck because an approver is absent, inactive, or lacks authorization.
+      The release strategy classification appears wrong for the document value, material group, or account assignment.
+      Multiple users cannot release any documents, indicating a workflow or substitution configuration issue.
+      The approval limit or strategy must be changed to reflect a new delegation of authority.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a release strategy configuration guide. It does not cover classification design, workflow builder setup, or approval hierarchy modeling. It does not replace SAP's purchasing documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+    Next diagnostic steps
+
+      Procure to Pay Map — use this map to see how release strategy fits into the wider procurement workflow.
+      SAP Purchase Order Creation Diagnostics — go here when the release block prevents PO creation or saving.
+      SAP Purchase Requisition Diagnostics — check this when the strategy applies to requisitions instead of purchase orders.
+      SAP Invoice Verification Diagnostics — use this downstream if approved POs generate invoice mismatches.
+
+
+    Practical checklist
+
+- [ ] Collect document number, type, release strategy, open release codes, and current status. **Synthetic example:** PO 1234567890, strategy ZS_001, code 01 open.
+
+- [ ] Check ME28/ME29N or ME54N for release status and missing approvers.
+
+- [ ] Verify classification values (value, material group, plant) with CL20N match the strategy.
+
+- [ ] Confirm the approver has the required authorization in SU53 after a failed release attempt.
+
+- [ ] Check SWIA/SWI1 for stuck workflow work items if workflow is used.
+
+- [ ] Document the business justification and assign a delegate if the primary approver is unavailable.
+
+- [ ] Safety limit: do not release a document whose classification or value changed after partial release without procurement confirmation.
+
+
+
+
+    Related Atlas Pages
+
+      SAP Purchase Order Creation Diagnostics
+      SAP Purchase Requisition Diagnostics
+      SAP Mm Procurement Overview
+
+==================================================
+
+PAGE: SAP Source Determination Diagnostics
+URL: /atlas/diagnostics/sap-source-determination-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: MM purchasing
+BUSINESS PROCESS: Procure to pay
+TAGS: procure-to-pay, sap-mm, diagnostics, purchasing
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Source Determination Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP source determination diagnostics
+    A first-pass structure for finding why the system cannot determine a valid supplier for a purchase requisition or order.
+
+
+
+
+
+      ProcessProcure to pay
+      SAP areaMM purchasing
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Source determination is the logic that selects which supplier should fulfill a procurement need. When it fails, the PR cannot be converted to a PO or automatic PO creation produces no result. The support goal is to identify which source element is missing or invalid: info record, source list, quota arrangement, contract, or preferred supplier setting.
+
+    Common symptoms
+
+      ME59N or ME21N reports 'no source of supply could be determined'.
+      PR remains unassigned to a supplier after MRP run.
+      Automatic PO creation skips certain materials even though a supplier exists.
+      Wrong supplier is selected for a material that has multiple potential sources.
+      Source list validity expired but users expected the supplier to remain valid.
+
+
+    Likely causes
+
+      Missing info record: no purchasing info record exists for the material, supplier, and purchasing organization combination.
+      Source list block: the source list entry is blocked, expired, or not marked as relevant for automatic sourcing.
+      Quota arrangement mismatch: the quota arrangement does not cover the required period or plant.
+      Supplier master block: the supplier is blocked for purchasing at the plant or organization level.
+      Plant / org mismatch: the material is not extended to the plant, or the supplier is not assigned to the purchasing organization.
+
+
+    Where to check in SAP
+
+      ME03 — source list display for material and plant.
+      ME13 — info record display.
+      MEQ1 — quota arrangement display.
+      ME53N — PR item to see if a source was proposed.
+      ME59N log — automatic PO creation rejection reasons.
+
+
+    Key tables / transactions / objects
+
+      EINA / EINE — purchasing info record.
+      A017 — info record validity.
+      ESLH / ESLP — source list header and items.
+      EQBS / EQBP — quota arrangement.
+      LFA1 / LFB1 — supplier master.
+
+
+    Diagnostic workflow
+
+      Identify the material, plant, and purchasing organization where source determination failed.
+      Check ME03 for a valid source list entry.
+      Check ME13 for a valid info record.
+      Check MEQ1 for a quota arrangement if multiple suppliers exist.
+      Verify the supplier master is not blocked and is extended to the purchasing organization.
+      If automatic sourcing fails, test manual PO creation (ME21N) to isolate the issue.
+
+
+    Typical fixes or next actions
+
+      Create or extend the purchasing info record for the material and supplier.
+      Update the source list to include the correct supplier with valid dates.
+      Adjust the quota arrangement if the wrong supplier is being selected.
+      Unblock the supplier master or extend it to the required organization.
+      If the material has no fixed source, train users to create POs manually or maintain the info record.
+
+
+    Support takeaway
+    Source determination failures are almost always master data gaps. A useful ticket should include: material, plant, purchasing organization, the expected supplier, the transaction where the failure appeared, and whether a source list or info record ever existed.
+
+    Escalation signals
+
+      No valid source is found for a material across multiple plants or purchasing organizations.
+      The selected source conflicts with an existing contract, quota arrangement, or procurement policy.
+      Info records or outline agreements appear incorrect and procurement must confirm commercial validity.
+      The issue affects a strategic material category or regulatory sourcing requirement.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a source determination configuration guide. It does not cover MRP sourcing logic, scheduling agreements, or outline agreements. It does not replace SAP's purchasing documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Purchase Order Creation Diagnostics
+      SAP Purchasing Info Record Diagnostics
+      SAP Mm Procurement Overview
+
+==================================================
+
+PAGE: SAP Stock Transfer Diagnostics
+URL: /atlas/diagnostics/sap-stock-transfer-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: MM inventory management
+BUSINESS PROCESS: Inventory / Logistics
+TAGS: procure-to-pay, sap-mm, diagnostics, inventory-management
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Stock Transfer Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP stock transfer diagnostics
+    A first-pass structure for finding why stock is stuck in transit, missing at destination, or posted with wrong valuation.
+
+
+
+
+
+      ProcessInventory / Logistics
+      SAP areaMM inventory management
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Stock transfers move goods between plants, storage locations, or stock types. The most common support issue is not the transfer itself but the mismatch between what left the source and what arrived at the destination. In-transit stock is invisible to MRP at the destination until receipt is posted, which creates planning gaps. The support goal is to trace the transfer document, confirm the goods issue, track in-transit status, and verify the receipt.
+
+    Common symptoms
+
+      Stock shows as in transit but never arrived at destination.
+      Destination plant shows shortage while source plant shows the goods issue was posted.
+      Transfer order quantity does not match goods issue or receipt quantity.
+      Valuation difference between source and destination after transfer.
+      MRP at destination does not consider in-transit stock as supply.
+
+
+    Likely causes
+
+      Goods issue posted but receipt not posted: the physical shipment arrived but the receiving plant did not confirm it in the system.
+      Partial shipment: only part of the transfer quantity was shipped, but the full quantity was expected.
+      Wrong movement type: a one-step transfer was used when a two-step transfer was expected, or vice versa.
+      Valuation area mismatch: source and destination plants use different valuation classes or currencies.
+      Delivery or shipment document stuck: the transfer uses SD delivery and the delivery is blocked or incomplete.
+
+
+    Where to check in SAP
+
+      ME23N — if the transfer is PO-based, check the PO history for goods issue and receipt.
+      MIGO — display the material documents for both issue and receipt.
+      MB5T — in-transit stock report per material and plant.
+      MB52 — stock overview at both source and destination.
+      VL03N — if SD delivery is used, check delivery status and shipment.
+
+
+    Key tables / transactions / objects
+
+      EKPO / EKBE — purchase order items and history (for stock transport orders).
+      MKPF / MSEG — material documents.
+      MSLB / MSKA — special stock tables (if consignment or pipeline).
+      LIPS — delivery items (if SD delivery involved).
+
+
+    Diagnostic workflow
+
+      Confirm the transfer type: one-step (301/311) or two-step (303/305, or stock transport order).
+      Check if a goods issue was posted at the source and capture the material document.
+      Check MB5T or MB52 for in-transit quantity.
+      Check if a goods receipt was posted at the destination.
+      If receipt is missing, verify physical arrival and post the receipt or investigate why it was not posted.
+      If quantities differ, trace partial shipments, returns, or damage.
+
+
+    Typical fixes or next actions
+
+      Post the missing goods receipt at the destination if the goods physically arrived.
+      Reverse and re-post the transfer with the correct movement type if the original was wrong.
+      Update MRP views to consider in-transit stock if the planning gap is systematic.
+      Escalate to logistics if the physical shipment never arrived or was damaged.
+
+
+    Retail-specific: DC-to-store delivery failures
+    In retail, stock transfers from a DC to a store often use stock transport orders (STOs) with SD deliveries. When a store does not receive expected stock, the issue may be in the STO, the delivery, the shipment, or the carrier.
+
+      Check STO status: ME23N shows whether the STO is released, partially delivered, or fully delivered.
+      Check delivery block: VL03N or VL06O shows if the outbound delivery is blocked for picking, packing, or goods issue.
+      Check picking status: the delivery may be created but not yet picked due to DC capacity or wave scheduling.
+      Check shipment status: VT03N or carrier tracking shows if the shipment is in transit, delayed, or delivered.
+      Check store receiving: the delivery may have arrived physically but the store has not posted the goods receipt.
+
+    A useful DC-to-store delivery ticket should include: STO number, delivery number, shipment number, expected delivery date, current status, and whether the issue is isolated to one store or affects multiple stores on the same route.
+
+    Support takeaway
+    Stock transfer issues are usually process gaps between shipping and receiving, not system errors. A useful stock transfer ticket should include: source plant, destination plant, material, transfer document or PO number, goods issue document, expected receipt date, and current in-transit quantity.
+
+    Escalation signals
+
+      Stock is physically in transit but missing in the receiving plant, or vice versa, with financial impact.
+      The transfer involves intercompany valuation, tax, or customs requirements beyond standard plant-to-plant posting.
+      Multiple materials or plants show the same stock transfer discrepancy, indicating a configuration issue.
+      The case requires a correction posting that affects inventory valuation or month-end closing.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a stock transfer configuration guide. It does not cover EWM-managed transfers, cross-company code transfers with intercompany billing, or pipeline materials. It does not replace SAP's logistics documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Movement Types Diagnostics
+      SAP Material Document Diagnostics
+      SAP Goods Receipt Diagnostics
+
+==================================================
+
+PAGE: SAP Three-Way Match Diagnostics
+URL: /atlas/diagnostics/sap-three-way-match-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: MM / FI / invoice verification
+BUSINESS PROCESS: Procure to pay
+TAGS: procure-to-pay, sap-mm, diagnostics, invoice-verification
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Three-Way Match Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP Three-Way Match Diagnostics
+    Practical steps to diagnose why PO, GR, and Invoice do not align in SAP.
+
+
+
+
+
+      ProcessProcure to pay
+      SAP areaMM / FI / invoice verification
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Three-way match in SAP compares purchase order (PO) quantities and prices against goods receipt (GR) and supplier invoice. When any leg differs, the invoice blocks or posts with a variance. The goal is to find which leg is wrong, not just clear the block.
+
+    Common symptoms
+
+      Invoice blocked in MIRO with quantity or price variance.
+      GR/IR clearing account shows open items that do not net to zero.
+      Missing goods receipt for a PO line even though the invoice arrived.
+      Duplicate invoice warning (message type F5, F6, or custom check).
+      Partial delivery creates confusion: one PO line has multiple GRs and invoices that do not sum cleanly.
+      Invoice posted but PO history does not show the expected reference.
+
+
+    Likely causes
+
+      GR quantity differs from invoice quantity due to over-delivery, under-delivery, or unit-of-measure conversion.
+      Invoice price differs from PO net price because of price changes, scales, or conditions not copied correctly.
+      Tax code or tax amount mismatch between PO, GR, and invoice.
+      Currency exchange rate differences for foreign-currency POs.
+      GR was reversed or cancelled after invoice posting, leaving an unmatched invoice.
+      Invoice was posted against wrong PO or wrong PO line.
+      Delivery costs or unplanned delivery costs were added in MIRO but not reflected in PO conditions.
+
+
+    Where to check in SAP
+
+      ME23N — PO history tab shows GR and invoice references per line item. Check quantities, dates, and document flow.
+      MIGO — review GR document, movement type, and whether it references the correct PO and line.
+      MIRO / MIR4 — invoice document, blocked reason, and variance details. Check the Messages tab for block reasons.
+      MR11 — GR/IR maintenance: lists open GR/IR items and allows write-off of small differences.
+      FBL3N — line items on the GR/IR clearing account to see open debits and credits.
+      ME2N / ME2L — PO list to confirm delivery status and invoice status per PO.
+
+
+    Key tables / transactions / objects
+
+      EKPO — PO item data (quantity, price, delivery status, invoice status).
+      EKET — PO delivery schedule lines; useful for partial delivery scenarios.
+      MKPF — GR document header.
+      MSEG — GR document items; links to PO via LFBNR, LFPOS, LFBJA.
+      RBKP — invoice document header.
+      RSEG — invoice document items; links to PO and GR.
+      EKBE — PO history (aggregated view of GR and invoice per PO item).
+      BSEG / BSIS — accounting line items for GR/IR account.
+
+
+    Diagnostic workflow
+    Start with the blocked invoice in MIRO or the open GR/IR item in FBL3N. Identify the PO number and line item. In ME23N, compare PO quantity, GR quantity, and invoice quantity. If GR is missing, check MIGO for unprocessed inbound deliveries or warehouse delays. If quantities differ, check whether the tolerance limits in the vendor master or company code allow the difference. If price differs, compare PO conditions (ME23N Conditions tab) with invoice conditions in MIRO. For duplicates, check RBKP for existing invoices with the same reference, amount, and vendor. Use MR11 only after confirming the mismatch is not a real business issue.
+
+    Typical fixes or next actions
+
+      Release the invoice block if the variance is within tolerance and approved.
+      Post a missing GR in MIGO if goods were physically received but not recorded.
+      Request a credit memo from the vendor if the invoice overstates quantity or price.
+      Reverse and repost the invoice against the correct PO line if it was posted incorrectly.
+      Use MR11 to write off small, approved GR/IR differences that will not be cleared by future documents.
+      Update PO price or conditions if the vendor price changed and the business agrees.
+      Escalate to procurement or warehouse if the mismatch indicates a process failure (wrong goods received, theft, or system bypass).
+
+
+    Support takeaway
+    Three-way match failures are rarely a single-document problem. The operator should trace PO → GR → Invoice in that order, confirm which document is the outlier, and decide whether the fix is data correction or process change. Never clear GR/IR blindly without understanding why the mismatch occurred.
+
+    Escalation signals
+
+      The PO, GR, and invoice quantities or prices diverge by more than the business tolerance and root cause is unclear.
+      The mismatch points to a recurring supplier issue or possible fraud (duplicate invoices, altered PO prices).
+      Clearing the GR/IR account requires a manual adjustment that affects financial reporting or audit trails.
+      The case involves subcontracting, consignment, or pipeline materials where standard three-way matching does not apply.
+
+
+    Boundaries and non-goals
+    This guide does not cover vendor master data issues, tax jurisdiction configuration, or custom invoice validation enhancements. It also does not replace SAP standard help or company-specific approval workflows.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Invoice Verification Diagnostics
+      GR/IR Clearing Explained
+      Goods Receipt Diagnostics
+      Invoice Split Analysis
+      MM Procurement Overview
+
+==================================================
+
+PAGE: SAP Vendor Master Replication Diagnostics
+URL: /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
+SECTION: diagnostics
+DOMAIN: SAP AMS
+TYPE: diagnostic guide
+SAP AREA: Vendor master / CVI / replication
+BUSINESS PROCESS: Master data governance
+TAGS: master-data, sap-mdg, diagnostics, replication
+REVIEWED: 2026-06-13
+----------------------------------------
+Home
+    Knowledge Atlas
+    Diagnostics
+    SAP Vendor Master Replication Diagnostics
+
+
+
+    Atlas Diagnostic
+    SAP vendor master replication diagnostics
+    A first-pass structure for finding why a vendor was not replicated, arrived with wrong data, or created a duplicate in the target system.
+
+
+
+
+
+      ProcessMaster data governance
+      SAP areaVendor master / CVI / replication
+      IndexingIndex, reviewed
+
+
+
+
+    Core idea
+    Vendor master replication moves supplier data from a source system to target systems, often through ALE, CVI, or MDG. When a vendor is missing, has wrong organizational assignments, or creates duplicates, the support goal is to identify whether the issue is in the replication model, the CVI synchronization, key mapping, or the target system's vendor configuration.
+
+    Common symptoms
+
+      Vendor created in source system but missing in target system.
+      Vendor exists in target but purchasing organization or company code data is missing.
+      Target system creates duplicate vendor instead of updating existing one.
+      CVI synchronization creates a business partner but the vendor link is broken.
+      Vendor bank details or tax number differ between source and target.
+
+
+    Likely causes
+
+      Replication model filter: the vendor account group or organizational unit is excluded from replication.
+      CVI synchronization failure: the customer-vendor integration (CVI) did not create or link the BP correctly.
+      Key mapping missing: the source vendor number is not mapped to the target system, causing a new vendor to be created.
+      Organizational data filter: the replication sends general data but filters out purchasing organization or company code data.
+      Target number range issue: the target system number range is exhausted or configured for external numbering while the source uses internal.
+
+
+    Where to check in SAP
+
+      XK01 / XK02 / XK03 — vendor master display in target system.
+      WE02 — IDoc status if ALE replication is used.
+      FLBP1 / FLBP2 — business partner display if CVI is involved.
+      MDG replication log — if MDG is the source.
+      Key mapping tables — source-to-target vendor number mapping.
+
+
+    Key tables / transactions / objects
+
+      LFA1 — vendor general data.
+      LFB1 — vendor company code data.
+      LFM1 — vendor purchasing organization data.
+      BUT000 / BUT001 — BP header (if CVI is used).
+      CVI_LINK — CVI link table between BP and vendor.
+
+
+    Diagnostic workflow
+
+      Identify the vendor number, source system, target system, and the expected versus actual result.
+      Check the replication log or IDoc status to confirm the vendor was selected and sent.
+      Verify the vendor exists in the target system (XK03) and check which views are present.
+      If CVI is used, check FLBP1 for the linked BP and verify the CVI_LINK table.
+      Check key mapping to confirm the source vendor maps to the correct target vendor.
+      Compare organizational data (company code, purchasing org) between source and target.
+
+
+    Typical fixes or next actions
+
+      Update the replication model to include the missing account group or organizational data.
+      Create or correct key mapping between source and target vendor numbers.
+      Fix CVI synchronization issues by re-running CVI synchronization or correcting the BP link.
+      Extend the vendor to the missing company code or purchasing organization in the target system.
+      Adjust target number ranges if they conflict with the source numbering.
+
+
+    Support takeaway
+    Vendor replication issues are usually model, mapping, or CVI problems. A useful ticket should include: vendor number, source system, target system, expected views/data, actual result, replication model, and any IDoc or CVI error messages.
+
+    Escalation signals
+
+      Vendor data is missing or wrong in downstream procurement, finance, or payment systems.
+      Replication failures affect a strategic supplier or multiple purchasing organizations.
+      A duplicate vendor was created and needs merging with procurement and finance approval.
+      The issue involves payment terms, bank details, tax number, or purchasing organization data with compliance risk.
+
+
+    Boundaries and non-goals
+    This page is a diagnostic frame, not a vendor replication configuration guide. It does not cover CVI setup, replication model design, or vendor account group configuration. It does not replace SAP's vendor master documentation.
+
+    This is not official SAP documentation and not a replacement for system-specific analysis.
+
+
+
+    Related Atlas Pages
+
+      SAP Business Partner Replication Diagnostics
+      SAP Cvi Synchronization Diagnostics
+      SAP Key Mapping Diagnostics
+      SAP Master Data Quality
+
+==================================================
+
 PAGE: Order to Cash Map
 URL: /atlas/maps/order-to-cash-map/
 SECTION: maps
@@ -727,4 +2234,4 @@ Operational Memory for SAP AMS
 
 ==================================================
 
-END OF MANIFEST — 14 verified pages included
+END OF MANIFEST — 26 verified pages included

@@ -9,9 +9,10 @@ subdomain: Procurement and logistics
 concept_type: diagnostic guide
 sap_area: "MM invoice verification"
 business_process: Procure to pay
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
 tags:
@@ -24,8 +25,10 @@ related:
   - /atlas/sap/gr-ir-clearing-explained/
   - /atlas/diagnostics/sap-goods-receipt-diagnostics/
   - /atlas/diagnostics/sap-three-way-match-diagnostics/
-robots: noindex,follow
-sitemap: false
+  - /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
+  - /atlas/maps/procure-to-pay-map/
+robots: index,follow
+sitemap: true
 ---
 
 
@@ -51,7 +54,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Procure to pay</dd></div>
       <div><dt>SAP area</dt><dd>MM invoice verification</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until invoice verification behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -128,6 +131,14 @@ sitemap: false
       <li><strong>Check for duplicates:</strong> before releasing, confirm that the same invoice has not already been posted or paid under a different document number.</li>
     </ul>
     <p>A useful invoice blocking ticket should include: invoice number, PO number, supplier, block reason, expected versus actual quantity and price, and whether the variance is approved by procurement or finance.</p>
+
+    <h2>Escalation signals</h2>
+    <ul>
+      <li>The variance exceeds the buyer's or finance team's delegated authority and needs procurement/finance approval.</li>
+      <li>The same supplier repeatedly invoices outside PO terms, suggesting a contractual or master-data problem.</li>
+      <li>Releasing the invoice would create a duplicate payment or bypass a required tax review.</li>
+      <li>The block involves complex tax jurisdiction, intercompany, or EDI invoicing scenarios outside standard MM support scope.</li>
+    </ul>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not an invoice verification configuration guide. It does not cover automatic invoice verification setup, EDI invoicing, or complex tax scenarios. It does not replace the judgment of a finance controller or procurement manager.</p>
