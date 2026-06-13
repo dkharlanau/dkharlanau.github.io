@@ -464,3 +464,52 @@ def test_indexnow_submit_writes_report(monkeypatch, tmp_path):
     assert report["mode"] == "submit"
     assert "https://dkharlanau.github.io/services/" in report["submitted"]
     assert report["summary"]["submitted_count"] == 1
+
+
+def test_indexnow_from_git_diff_only_submits_changed_indexable_html(monkeypatch, tmp_path):
+    """--from-git-diff must submit only changed, indexable HTML pages."""
+    monkeypatch.setenv("INDEXNOW_KEY", "test-key-123")
+    monkeypatch.chdir(tmp_path)
+
+    # Create source files.
+    _make_md(tmp_path, "atlas/verified.md", 'permalink: /atlas/verified/\nverified: true\nstatus: reviewed')
+    _make_md(tmp_path, "atlas/draft.md", 'permalink: /atlas/draft/\nverified: false\nstatus: needs_verification\nrobots: noindex\nsitemap: false')
+    _make_md(tmp_path, "notes/noindex.md", 'permalink: /notes/noindex/\nrobots: noindex\nsitemap: false')
+    _make_md(tmp_path, "assets/config.yml", '')  # non-HTML static file
+
+    # Create built HTML matching the sitemap.
+    _make_built_html(tmp_path, "/atlas/verified/")
+    _make_built_html(tmp_path, "/notes/public/")
+
+    sitemap_urls = [
+        "https://dkharlanau.github.io/atlas/verified/",
+        "https://dkharlanau.github.io/notes/public/",
+    ]
+    _make_site_sitemap(tmp_path, sitemap_urls)
+
+    # Simulate a git diff that touches all four file types.
+    fake_git_output = (
+        "atlas/verified.md\n"
+        "atlas/draft.md\n"
+        "notes/noindex.md\n"
+        "assets/config.yml\n"
+    )
+
+    with patch.object(indexnow_mod, "REPO_ROOT", tmp_path):
+        with patch("subprocess.check_output", return_value=fake_git_output):
+            with patch.object(indexnow_mod, "submit") as mock_submit:
+                try:
+                    indexnow_mod.main([
+                        "--submit",
+                        "--from-git-diff", "HEAD~1", "HEAD",
+                        "--site-dir", str(tmp_path / "_site"),
+                    ])
+                except SystemExit as exc:
+                    pass
+
+    mock_submit.assert_called_once()
+    urls = mock_submit.call_args[0][0]
+    assert "https://dkharlanau.github.io/atlas/verified/" in urls
+    assert "https://dkharlanau.github.io/atlas/draft/" not in urls
+    assert "https://dkharlanau.github.io/notes/noindex/" not in urls
+    assert "https://dkharlanau.github.io/assets/config.yml" not in urls
