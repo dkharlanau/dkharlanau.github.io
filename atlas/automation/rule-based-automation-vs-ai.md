@@ -12,7 +12,7 @@ sap_area: Support automation
 business_process: Support operations
 status: reviewed
 verified: true
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - automation
@@ -77,6 +77,8 @@ author: Dzmitryi Kharlanau
 <li>What is the consequence of a wrong action, and where should human approval sit?</li>
 
 </ul>
+
+<p>A good rule is not a defeat. Rules are often the right choice when the cost of a wrong action is high and the input can be validated before execution.</p>
 
 </div>
 

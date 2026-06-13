@@ -12,7 +12,7 @@ sap_area: Developer automation / support tooling
 business_process: Knowledge work
 status: reviewed
 verified: true
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - automation
@@ -76,6 +76,8 @@ author: Dzmitryi Kharlanau
 <li>Where is human approval required before changes reach production or public pages?</li>
 
 </ul>
+
+<p>The useful agentic workflow is one where the human reviewer can inspect assumptions, scope, and evidence without replaying the entire session.</p>
 
 </div>
 

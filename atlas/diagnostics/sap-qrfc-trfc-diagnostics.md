@@ -56,6 +56,7 @@ level: 2
   <div class="note-body">
     <h2>Core idea</h2>
     <p>Transactional RFC (tRFC) and queued RFC (qRFC) are the transport layers for many SAP integrations including ALE, IDoc, and custom interfaces. When RFC calls are stuck in a queue, fail with connection errors, or execute in the wrong order, the support goal is to identify whether the issue is in the RFC destination, the queue configuration, the executing function module, or the target system availability.</p>
+    <p>Always test the RFC destination in SM59 before reprocessing entries in SM58 or SMQ1/SMQ2. Reprocessing a queue against a broken destination just creates the same failure again.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -110,8 +111,8 @@ level: 2
       <li>Restart the queue scheduler if it is not running.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>qRFC and tRFC issues are usually connectivity, authorization, or queue blocking problems. A useful ticket should include: RFC destination, function module, queue name (if qRFC), error text, SM58 or SMQ1/SMQ2 status, and whether the issue is isolated or affecting multiple interfaces.</p>
+    <h2>What to capture first</h2>
+    <p>qRFC and tRFC issues are usually connectivity, authorization, or queue blocking problems. Capture: RFC destination, function module, queue name (if qRFC), error text, SM58 or SMQ1/SMQ2 status, and whether the issue is isolated or affecting multiple interfaces.</p>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not an RFC configuration guide. It does not cover RFC destination setup, SNC configuration, or load balancing. It does not replace SAP's RFC documentation.</p>
@@ -120,9 +121,8 @@ level: 2
 
     <h2>Next diagnostic steps</h2>
     <ul>
-      <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a> — use this when multiple interfaces are affected at the same time.</li>
+      <li><a href="/atlas/diagnostics/sap-rfc-destination-diagnostics/">SAP RFC Destination Diagnostics</a> — test connectivity and authorization for the RFC destination.</li>
       <li><a href="/atlas/diagnostics/idoc-aif-integration-diagnostics/">IDoc and AIF Integration Diagnostics</a> — go here when RFC errors appear together with IDoc failures.</li>
-      <li><a href="/atlas/diagnostics/sap-rfc-destination-diagnostics/">SAP RFC Destination Diagnostics</a> — check this to test connectivity and authorization for the RFC destination.</li>
       <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a> — use this when multiple interfaces are affected at the same time.</li>
     </ul>
 

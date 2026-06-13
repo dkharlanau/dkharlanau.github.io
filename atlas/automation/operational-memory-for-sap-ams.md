@@ -12,7 +12,7 @@ sap_area: AMS support knowledge
 business_process: Support operations
 status: reviewed
 verified: true
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - automation
@@ -77,6 +77,8 @@ author: Dzmitryi Kharlanau
 <li>Can a new support person safely follow the runbook without hidden context?</li>
 
 </ul>
+
+<p>Operational memory decays quickly when tickets are closed without a decision log. The most valuable entries are the ones that explain why a fix was chosen, not just what was changed.</p>
 
 </div>
 

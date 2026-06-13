@@ -57,6 +57,7 @@ sitemap: true
   <div class="note-body">
     <h2>Core idea</h2>
     <p>Stock transfers move goods between plants, storage locations, or stock types. The most common support issue is not the transfer itself but the mismatch between what left the source and what arrived at the destination. In-transit stock is invisible to MRP at the destination until receipt is posted, which creates planning gaps. The support goal is to trace the transfer document, confirm the goods issue, track in-transit status, and verify the receipt.</p>
+    <p>In most cases the goods issue exists but the receipt was never posted. Check the receiving plant's goods receipt queue and physical receiving logs before assuming stock was lost.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -122,8 +123,8 @@ sitemap: true
     </ul>
     <p>A useful DC-to-store delivery ticket should include: STO number, delivery number, shipment number, expected delivery date, current status, and whether the issue is isolated to one store or affects multiple stores on the same route.</p>
 
-    <h2>Support takeaway</h2>
-    <p>Stock transfer issues are usually process gaps between shipping and receiving, not system errors. A useful stock transfer ticket should include: source plant, destination plant, material, transfer document or PO number, goods issue document, expected receipt date, and current in-transit quantity.</p>
+    <h2>What to capture first</h2>
+    <p>Stock transfer issues are usually process gaps between shipping and receiving, not system errors. Capture: source plant, destination plant, material, transfer document or PO number, goods issue document, expected receipt date, and current in-transit quantity.</p>
 
     <h2>Escalation signals</h2>
     <ul>

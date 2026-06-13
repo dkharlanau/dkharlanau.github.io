@@ -61,6 +61,7 @@ sitemap: true
   <div class="note-body">
     <h2>Core idea</h2>
     <p>Invoice verification is the control point where the supplier's bill is matched against purchase order and goods receipt evidence. A blocked invoice is usually process evidence, not a system error. The support goal is to identify which mismatch element triggered the block and whether it reflects a real discrepancy or a data timing issue.</p>
+    <p>In practice, most invoice blocks resolve to one of four variance types—price, quantity, tax, or reference—and the fastest path to resolution is comparing the invoice line against PO history before adjusting tolerance or master data.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -86,6 +87,7 @@ sitemap: true
       <li>MIRO / MIR7 — invoice entry and blocking reason display.</li>
       <li>ME23N — purchase order history showing GR and IR quantities.</li>
       <li>MIR4 — invoice document display with variance details.</li>
+      <li>MRBR — blocked invoices report and release.</li>
       <li>FBL1N — supplier line items to see if invoice was posted but blocked.</li>
       <li>PO history tab — compare ordered, delivered, and invoiced quantities.</li>
     </ul>
@@ -103,7 +105,7 @@ sitemap: true
     <ol>
       <li>Confirm the PO number, item, and supplier on the invoice match the system record.</li>
       <li>Check PO history (EKBE) for GR quantity and IR quantity. Identify the gap.</li>
-      <li>Review the blocking reason in RBKP or MIR4. Determine if it is price, quantity, tax, or reference.</li>
+      <li>Review the blocking reason in RBKP, MIR4, or MRBR. Determine if it is price, quantity, tax, or reference.</li>
       <li>Check tolerance settings to see if the variance is within acceptable limits.</li>
       <li>If the variance is valid, document the business reason and release. If not, return to supplier or correct master data.</li>
       <li>Verify that releasing the invoice will not create a duplicate payment.</li>
@@ -118,19 +120,9 @@ sitemap: true
       <li>Escalate to procurement if the supplier repeatedly invoices outside agreed terms.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Do not release blocked invoices without documenting the variance reason and the business approval. A useful invoice verification ticket should include: PO number, invoice number, supplier, variance type (price/quantity/tax/reference), expected versus actual values, and whether the issue is recurring.</p>
+    <h2>What to capture first</h2>
+    <p>Before routing the ticket, capture: PO number, invoice number, supplier, variance type (price/quantity/tax/reference), expected versus actual values, and whether the issue is recurring. A blocked invoice should not be released without a documented variance reason and business approval.</p>
 
-    <h2>Invoice blocking and release workflow</h2>
-    <p>Blocked invoices are a standard control in invoice verification. The support goal is to identify the block reason, verify the business justification for release, and ensure that releasing the invoice does not create duplicate payment or bypass procurement controls.</p>
-    <ul>
-      <li><strong>Check MRBR:</strong> the blocked invoice report lists all invoices blocked for price, quantity, tax, or reference reasons. Review the block reason code.</li>
-      <li><strong>Check PO history (EKBE):</strong> compare the invoice quantity and price against the goods receipt and purchase order to confirm the variance.</li>
-      <li><strong>Check tolerance settings:</strong> the block may be automatic because the variance exceeds the configured tolerance for the company code or supplier.</li>
-      <li><strong>Check approval workflow:</strong> some organizations require a separate approval step before a blocked invoice can be released. Verify that the approver has the correct authorization.</li>
-      <li><strong>Check for duplicates:</strong> before releasing, confirm that the same invoice has not already been posted or paid under a different document number.</li>
-    </ul>
-    <p>A useful invoice blocking ticket should include: invoice number, PO number, supplier, block reason, expected versus actual quantity and price, and whether the variance is approved by procurement or finance.</p>
 
     <h2>Escalation signals</h2>
     <ul>

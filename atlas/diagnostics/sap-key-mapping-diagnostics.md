@@ -57,6 +57,7 @@ level: 2
   <div class="note-body">
     <h2>Core idea</h2>
     <p>In multi-system SAP landscapes, the same business object may have different keys in different systems. Key mapping maintains the relationship between these keys. When mapping is missing, wrong, or inconsistent, replication creates duplicates, interfaces fail, and reporting produces fragmented results. The support goal is to identify which object type is affected, which systems are involved, and whether the gap is in the mapping table, the replication model, or the interface logic.</p>
+    <p>The first question to answer is whether the object was created directly in the target system. Manual creation is the most common reason a mapping entry is missing.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -111,8 +112,8 @@ level: 2
       <li>Update the interface or replication model to enforce mapping for new object types.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Key mapping issues are usually maintenance gaps or number range conflicts. A useful ticket should include: object type, source system, source key, target system, expected target key, actual target key, and whether the object was created manually or via replication.</p>
+    <h2>What to capture first</h2>
+    <p>Key mapping issues are usually maintenance gaps or number range conflicts. Capture: object type, source system, source key, target system, expected target key, actual target key, and whether the object was created manually or via replication.</p>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a key mapping configuration guide. It does not cover number range design, MDG key mapping setup, or interface mapping logic. It does not replace SAP's multi-system integration documentation.</p>

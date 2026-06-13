@@ -12,7 +12,7 @@ sap_area: Security / authorization-aware retrieval
 business_process: Support operations
 status: reviewed
 verified: true
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - ai-operations
@@ -76,6 +76,8 @@ author: Dzmitryi Kharlanau
 <li>Is every action recommendation routed through human approval and system authorization?</li>
 
 </ul>
+
+<p>Authorization-aware AI is not a one-time setup. Access rules, user roles, and data boundaries change, so the retrieval layer needs to be retested whenever the underlying authorization model changes.</p>
 
 </div>
 

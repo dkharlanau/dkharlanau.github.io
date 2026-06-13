@@ -58,6 +58,7 @@ related:
   <div class="note-body">
     <h2>Core idea</h2>
     <p>RFC destinations in SAP define how one system calls another. When an RFC fails, the impact can be stuck IDocs, failed master data replication, missing transactional data, or batch job cancellations. The diagnostic task is to isolate whether the failure is in the network layer, the destination configuration, the target system availability, the user credentials, or the called function module.</p>
+    <p>The SM59 connection test and authorization test separate network or credential failures from application failures in the target system. Run both before opening a Basis or security ticket.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -128,8 +129,8 @@ related:
       <li>Escalate to the network or Basis team if the issue is infrastructure-related.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>RFC destination failures are usually network, configuration, or credential issues. A useful ticket should include: RFC destination name, source system, target system, exact error message, SM59 test results, and whether the issue is isolated to one destination or affects multiple.</p>
+    <h2>What to capture first</h2>
+    <p>RFC destination failures are usually network, configuration, or credential issues. Capture: RFC destination name, source system, target system, exact error message, SM59 test results, and whether the issue is isolated to one destination or affects multiple.</p>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not an RFC configuration guide. It does not cover RFC destination creation, SNC/SSL setup, or PI/PO adapter configuration. It does not replace SAP's RFC and integration documentation.</p>

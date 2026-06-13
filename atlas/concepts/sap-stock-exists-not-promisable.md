@@ -12,7 +12,7 @@ sap_area: ATP / availability / stock status
 business_process: Order to cash
 status: reviewed
 verified: true
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - order-to-cash
@@ -78,6 +78,8 @@ author: Dzmitryi Kharlanau
 <li>Is another document, allocation rule, or protection rule already consuming the quantity?</li>
 
 </ul>
+
+<p>Stock visibility and promisable stock are two different figures. The gap between them is usually a business rule, not a system error.</p>
 
 </div>
 

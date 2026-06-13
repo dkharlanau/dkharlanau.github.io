@@ -12,7 +12,7 @@ sap_area: Support knowledge management
 business_process: Support operations
 status: reviewed
 verified: true
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - ai-operations
@@ -76,6 +76,8 @@ author: Dzmitryi Kharlanau
 <li>Can a reader or retrieval system distinguish official process from draft notes?</li>
 
 </ul>
+
+<p>Good process documentation is rarely complete on the first pass. The useful version is the one that is reviewed, scoped, and honest about what is still draft.</p>
 
 </div>
 

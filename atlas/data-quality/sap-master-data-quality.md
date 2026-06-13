@@ -12,7 +12,7 @@ sap_area: Master data / MDG-adjacent
 business_process: Cross-process operations
 status: reviewed
 verified: true
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - master-data
@@ -76,6 +76,8 @@ author: Dzmitryi Kharlanau
 <li>Can the issue be prevented with validation, workflow, stewardship, or monitoring?</li>
 
 </ul>
+
+<p>Master data quality work is unglamorous until a blocked order or failed payment reveals the real cost. The best fixes combine a repaired record with a governance change that stops the same defect from recurring.</p>
 
 </div>
 
