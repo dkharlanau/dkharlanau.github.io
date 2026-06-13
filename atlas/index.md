@@ -6,6 +6,10 @@ permalink: /atlas/
 last_modified_at: 2026-05-06
 status: reviewed
 verified: true
+related:
+  - /atlas/concepts/order-to-cash/
+  - /atlas/ai-operations/ai-agent-for-sap-support/
+  - /atlas/data-quality/sap-master-data-quality/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -145,6 +149,18 @@ verified: true
       <a class="button" href="/ai/practical-ai-for-sap-support/">Practical AI for SAP support</a>
     </div>
   </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Related</p>
+    <h2>Related Atlas pages</h2>
+  </header>
+  <ul>
+    <li><a href="/atlas/concepts/order-to-cash/">Order to Cash concept</a></li>
+    <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI agent for SAP support</a></li>
+    <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP master data quality</a></li>
+  </ul>
 </section>
 
 {% include atlas/author-block.html %}

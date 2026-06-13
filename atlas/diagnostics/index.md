@@ -6,6 +6,10 @@ permalink: /atlas/diagnostics/
 last_modified_at: 2026-06-13
 status: reviewed
 verified: true
+related:
+  - /atlas/concepts/order-to-cash/
+  - /atlas/data-quality/sap-master-data-quality/
+  - /atlas/ai-operations/ai-agent-for-sap-support/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -387,6 +391,18 @@ verified: true
       <span class="link-arrow">Read diagnostic</span>
     </a>
   </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Related</p>
+    <h2>Related Atlas pages</h2>
+  </header>
+  <ul>
+    <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
+    <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a></li>
+    <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a></li>
+  </ul>
 </section>
 
 {% include atlas/author-block.html %}

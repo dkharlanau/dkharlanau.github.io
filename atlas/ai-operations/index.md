@@ -6,6 +6,10 @@ permalink: /atlas/ai-operations/
 last_modified_at: 2026-05-06
 status: reviewed
 verified: true
+related:
+  - /atlas/ai-operations/ai-agent-for-sap-support/
+  - /atlas/ai-operations/ai-ready-process-documentation/
+  - /atlas/ai-operations/authorization-aware-ai-for-sap/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -55,6 +59,18 @@ verified: true
   <div class="section-shell section-shell--flat">
     <p class="lead">For the broader public routing page, see <a href="/ai/practical-ai-for-sap-support/">Practical AI for SAP support</a>.</p>
   </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Related</p>
+    <h2>Related Atlas pages</h2>
+  </header>
+  <ul>
+    <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a></li>
+    <li><a href="/atlas/ai-operations/ai-ready-process-documentation/">AI-Ready Process Documentation</a></li>
+    <li><a href="/atlas/ai-operations/authorization-aware-ai-for-sap/">Authorization-Aware AI for SAP</a></li>
+  </ul>
 </section>
 
 {% include atlas/author-block.html %}

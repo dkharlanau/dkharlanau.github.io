@@ -6,6 +6,10 @@ permalink: /atlas/sap/
 last_modified_at: 2026-05-06
 status: reviewed
 verified: true
+related:
+  - /atlas/concepts/sap-atp-is-not-inventory/
+  - /atlas/data-quality/sap-master-data-quality/
+  - /atlas/ai-operations/authorization-aware-ai-for-sap/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -64,6 +68,18 @@ verified: true
       <span class="link-arrow">Read SAP page</span>
     </a>
   </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Related</p>
+    <h2>Related Atlas pages</h2>
+  </header>
+  <ul>
+    <li><a href="/atlas/concepts/sap-atp-is-not-inventory/">SAP ATP Is Not Inventory</a></li>
+    <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a></li>
+    <li><a href="/atlas/ai-operations/authorization-aware-ai-for-sap/">Authorization-Aware AI for SAP</a></li>
+  </ul>
 </section>
 
 {% include atlas/author-block.html %}

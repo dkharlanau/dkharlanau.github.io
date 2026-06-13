@@ -21,6 +21,8 @@ tags:
 related: 
   - "/atlas/diagnostics/pos-sales-not-reflected-in-sap/"
   - "/atlas/concepts/sap-stock-exists-not-promisable/"
+  - "/atlas/maps/order-to-cash-map/"
+  - "/atlas/data-quality/sap-master-data-quality/"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Store Receiving in SAP Retail
 h1: Store receiving in SAP Retail
@@ -80,9 +82,9 @@ author: Dzmitryi Kharlanau
 
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
-<li><a href="/atlas/diagnostics/pos-sales-not-reflected-in-sap/">POS Sales Not Reflected in SAP</a></li>
-
 <li><a href="/atlas/concepts/sap-stock-exists-not-promisable/">SAP Stock Exists but Is Not Promisable</a></li>
+<li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a></li>
+<li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a></li>
 
 </ul></section>
 

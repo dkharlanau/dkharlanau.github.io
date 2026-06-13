@@ -21,6 +21,8 @@ tags:
 related: 
   - "/atlas/ai-operations/ai-ready-process-documentation/"
   - "/services/sap-ams-consulting/"
+  - "/atlas/ai-operations/ai-agent-for-sap-support/"
+  - "/atlas/data-quality/sap-master-data-quality/"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Operational Memory for SAP AMS
 h1: Operational memory for SAP AMS
@@ -81,8 +83,8 @@ author: Dzmitryi Kharlanau
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
 <li><a href="/atlas/ai-operations/ai-ready-process-documentation/">AI-Ready Process Documentation</a></li>
-
-<li><a href="/services/sap-ams-consulting/">SAP AMS consulting</a></li>
+<li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a></li>
+<li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a></li>
 
 </ul></section>
 

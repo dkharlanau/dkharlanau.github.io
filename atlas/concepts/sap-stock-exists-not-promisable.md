@@ -23,6 +23,7 @@ related:
   - "/atlas/concepts/sap-atp-is-not-inventory/"
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
+  - "/atlas/concepts/store-receiving-sap-retail/"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Stock Exists but Is Not Promisable
 h1: SAP stock exists, but it is not always promisable
@@ -83,10 +84,8 @@ author: Dzmitryi Kharlanau
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
 <li><a href="/atlas/concepts/sap-atp-is-not-inventory/">SAP ATP Is Not Inventory</a></li>
-
 <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
-
-<li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">Sales Order Block Diagnosis</a></li>
+<li><a href="/atlas/concepts/store-receiving-sap-retail/">Store Receiving in SAP Retail</a></li>
 
 </ul></section>
 

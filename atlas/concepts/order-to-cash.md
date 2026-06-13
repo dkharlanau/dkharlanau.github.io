@@ -22,6 +22,8 @@ related:
   - /atlas/concepts/sap-atp-is-not-inventory/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /services/sap-o2c-process-audit/
+  - /atlas/maps/order-to-cash-map/
+  - /atlas/concepts/sap-stock-exists-not-promisable/
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 ---
 
@@ -74,8 +76,8 @@ robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
     <h2>Related Atlas Pages</h2>
     <ul>
       <li><a href="/atlas/concepts/sap-atp-is-not-inventory/">SAP ATP Is Not Inventory</a></li>
-      <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a></li>
-      <li><a href="/services/sap-o2c-process-audit/">SAP O2C process audit</a></li>
+      <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a></li>
+      <li><a href="/atlas/concepts/sap-stock-exists-not-promisable/">SAP Stock Exists but Is Not Promisable</a></li>
     </ul>
   </section>
 

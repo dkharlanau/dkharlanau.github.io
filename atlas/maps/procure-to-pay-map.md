@@ -21,6 +21,9 @@ tags:
 related: 
   - "/atlas/sap/gr-ir-clearing-explained/"
   - "/atlas/diagnostics/sap-goods-receipt-diagnostics/"
+  - "/atlas/data-quality/sap-master-data-quality/"
+  - "/atlas/data-quality/master-data-governance-failure-modes/"
+  - "/atlas/automation/operational-memory-for-sap-ams/"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Procure to Pay Map
 h1: Procure to pay map
@@ -82,9 +85,9 @@ author: Dzmitryi Kharlanau
 
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
-<li><a href="/atlas/sap/gr-ir-clearing-explained/">GR/IR Clearing Explained</a></li>
-
-<li><a href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">Goods Receipt Diagnostics</a></li>
+<li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a></li>
+<li><a href="/atlas/data-quality/master-data-governance-failure-modes/">Master Data Governance Failure Modes</a></li>
+<li><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational Memory for SAP AMS</a></li>
 
 </ul></section>
 

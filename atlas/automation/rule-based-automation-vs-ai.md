@@ -22,6 +22,7 @@ related:
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
   - "/atlas/ai-operations/practical-ai-ml-for-sap-support/"
+  - "/atlas/automation/agent-assisted-development-workflows/"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Rule-Based Automation vs AI
 h1: Rule-based automation vs AI
@@ -82,10 +83,8 @@ author: Dzmitryi Kharlanau
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
 <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a></li>
-
 <li><a href="/atlas/ai-operations/authorization-aware-ai-for-sap/">Authorization-Aware AI for SAP</a></li>
-
-<li><a href="/atlas/ai-operations/practical-ai-ml-for-sap-support/">Practical AI and ML for SAP Support</a></li>
+<li><a href="/atlas/automation/agent-assisted-development-workflows/">Agent-Assisted Development Workflows</a></li>
 
 </ul></section>
 
