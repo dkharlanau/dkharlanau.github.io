@@ -1,0 +1,19 @@
+{% assign atlas_status = include.status | default: page.status | default: 'needs_verification' %}
+{% assign atlas_verified = include.verified | default: page.verified %}
+{% assign atlas_reviewed = page.last_reviewed | default: page.last_modified_at | default: page.updated %}
+
+{% if page.url contains '/atlas/' %}
+<div class="atlas-verification" aria-label="Atlas content verification status">
+  {% if atlas_verified == true and atlas_status == 'reviewed' %}
+    <span class="atlas-verification__badge atlas-verification__badge--reviewed">
+      <span aria-hidden="true">✓</span> Reviewed
+      {% if atlas_reviewed %}<time datetime="{{ atlas_reviewed | date_to_xmlschema }}">{{ atlas_reviewed | date: "%d %b %Y" }}</time>{% endif %}
+    </span>
+  {% else %}
+    <span class="atlas-verification__badge atlas-verification__badge--draft">
+      <span aria-hidden="true">◎</span> Needs verification
+    </span>
+    <span class="atlas-verification__note">This Atlas page is a working draft and is not indexed as canonical.</span>
+  {% endif %}
+</div>
+{% endif %}

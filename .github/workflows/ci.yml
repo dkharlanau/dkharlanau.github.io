@@ -76,5 +76,8 @@ jobs:
       - name: Audit internal links
         run: python3 scripts/audit_internal_links.py --site-dir _site
 
+      - name: Audit accessibility and semantic HTML
+        run: python3 scripts/accessibility_audit.py --site-dir _site --fail-on-critical
+
       - name: Validate AI-readable endpoints
         run: python3 scripts/validate_ai_endpoints.py _site
