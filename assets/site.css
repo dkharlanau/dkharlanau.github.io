@@ -3655,9 +3655,76 @@ body.page-context--knowledge {
 .page-content--knowledge > ol,
 .page-content--knowledge > h2,
 .page-content--knowledge > h3,
-.page-content--knowledge > blockquote {
+.page-content--knowledge > blockquote,
+.page-content--knowledge > .breadcrumbs {
   width: min(960px, 100%);
   margin-inline: auto;
+}
+
+/* Editorial inline breadcrumbs.
+   Quiet, single-line navigation that aligns with the reading column.
+   On narrow viewports only the parent section is shown as `‹ Parent`. */
+.breadcrumbs {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--color-ink-muted);
+}
+
+.breadcrumbs ol {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.35em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+
+.breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.breadcrumbs li + li::before {
+  content: "›";
+  flex-shrink: 0;
+  color: var(--color-ink-muted);
+  opacity: 0.55;
+}
+
+.breadcrumbs a {
+  color: var(--color-ink-soft);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumbs a:hover,
+.breadcrumbs a:focus-visible {
+  color: var(--color-accent);
+}
+
+.breadcrumbs [aria-current="page"] {
+  color: var(--color-ink-muted);
+  font-weight: 400;
+  cursor: default;
+}
+
+@media (max-width: 640px) {
+  .breadcrumbs li:not(:nth-last-child(2)) {
+    display: none;
+  }
+
+  .breadcrumbs li:nth-last-child(2)::before {
+    content: "‹";
+    opacity: 0.8;
+  }
 }
 
 .page-content--knowledge > h1 {
