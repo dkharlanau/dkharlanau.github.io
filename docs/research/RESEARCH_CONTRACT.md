@@ -144,6 +144,8 @@ Required sections:
 9. Next actions
 10. Sources
 
+When drafting or editing research pages, also read `docs/content/author-editorial-profile.md`. Use it as a decision system for voice, density, and avoiding generic AI prose. Do not mechanically copy phrases or prior research pages, and do not use the profile to invent claims or override the noindex rule.
+
 ## 11. Maintenance
 
 - Review watchlists quarterly.

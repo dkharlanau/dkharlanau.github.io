@@ -71,6 +71,8 @@ A diagnostic page must contain all of the following sections so readers and AI s
 
 Use `docs/templates/atlas-diagnostic-page.md` as the starting point.
 
+Before drafting, read `docs/content/author-editorial-profile.md`. Apply it as a decision system for voice, density, and what to remove. Do not mechanically copy phrases or prior article patterns.
+
 ### Validation Commands
 ```sh
 bundle exec jekyll build
@@ -130,6 +132,8 @@ Follow the consistent scenario pattern:
 7. Solution patterns
 8. AI / automation opportunity (conservative boundaries)
 9. Related Atlas links
+
+Before drafting, read `docs/content/author-editorial-profile.md`. Apply it as a decision system for practical framing, sober language, and avoiding generic AI prose. Do not mechanically copy phrases or prior article patterns.
 
 ### Validation Commands
 ```sh

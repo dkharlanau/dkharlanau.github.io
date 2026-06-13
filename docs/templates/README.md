@@ -7,11 +7,12 @@ Last updated: 2026-05-26
 
 ## How to use these templates
 
-1. Pick the template that matches the update type.
-2. Copy the template file, replace all bracketed placeholders, and remove the `<!-- TEMPLATE: ... -->` comments.
-3. Follow the content placement rules in `docs/site-content-design-contract.md` before choosing a target page.
-4. Use `_data/atlas_index.yml` to find the correct target page by topic cluster.
-5. Remove the `noindex` front matter only when the content is reviewed and ready for public indexing.
+1. Read `AGENTS.md`, `docs/content/author-editorial-profile.md`, `docs/site-content-design-contract.md`, and the relevant page template or collection rules before creating or editing article-like content.
+2. Pick the template that matches the update type.
+3. Copy the template file, replace all bracketed placeholders, and remove the `<!-- TEMPLATE: ... -->` comments.
+4. Follow the content placement rules in `docs/site-content-design-contract.md` before choosing a target page.
+5. Use `_data/atlas_index.yml` to find the correct target page by topic cluster.
+6. Remove the `noindex` front matter only when the content is reviewed and ready for public indexing.
 
 ## Template inventory
 
@@ -42,12 +43,25 @@ sitemap: false           # Remove only when reviewed and verified
 
 ## Content rules
 
+- Read the [Author and Editorial Profile](../content/author-editorial-profile.md) before writing or editing. It is mandatory input, not optional style advice.
+- Use the profile as a decision system for voice, density, and what to remove. Do not copy phrases or repeat prior article patterns mechanically.
 - No private or client-specific data. Use generic process language.
 - No hype, no exclamation points, no promotional fluff.
 - One claim per paragraph. Short sentences.
 - Every factual claim needs a source.
 - Confidence levels: `high` (verified against source), `medium` (plausible, one source), `low` (speculative, needs verification).
+- A short, balanced personal author comment may be added near the end of an article when it improves the page; omit it if the topic does not need one.
 - Tag examples: `sap-ams`, `integration`, `master-data`, `ai-ops`, `diagnostics`, `o2c`, `p2p`.
+
+## Article creation checklist
+
+Before submitting a new or updated article:
+
+- [ ] Profile read — `docs/content/author-editorial-profile.md` and `AGENTS.md` reviewed.
+- [ ] Page type understood — template and collection rules match the content type.
+- [ ] Facts/source boundaries respected — every factual claim has a source; no invented credentials, incidents, or client details.
+- [ ] Author comment decided — added only if it improves the page; omitted if it would add noise.
+- [ ] No generic AI filler — vague adjectives, decorative introductions, and repeated patterns removed.
 
 ## Sample output
 

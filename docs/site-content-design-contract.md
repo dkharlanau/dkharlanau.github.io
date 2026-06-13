@@ -36,6 +36,20 @@ Every new page or section must support the existing visual system:
 
 If the agent cannot identify the existing layout pattern for a new item, it must create a draft or issue instead of adding a visually inconsistent page.
 
+### Editorial framing for article-like content
+
+Article-like content — Atlas pages, Skill Hub pages, scenarios, diagnostics pages, blog/articles, glossary expansions with explanatory prose, public-facing guides, content clusters, and SEO/AI-readable educational pages — must follow the [Author and Editorial Profile](content/author-editorial-profile.md).
+
+The profile is mandatory input before drafting or editing. It governs:
+
+- practical expert framing
+- clear problem → diagnostic → action structure
+- sober, non-hype language
+- optional author/editorial comment when useful
+- avoidance of generic AI-written prose
+
+The profile governs editorial framing and voice, not schema, indexing, verification, or structured-data policy. Those remain under `docs/ai/CONTENT_VERIFICATION_POLICY.md`, the page frontmatter, and this contract.
+
 ## 3. Homepage protection rule
 
 The homepage is protected by default.

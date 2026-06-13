@@ -24,6 +24,8 @@ tags:
 
 {{ANALYSIS}}
 
+<!-- Before drafting, read docs/content/author-editorial-profile.md. The "My take" section below is an optional author/editorial comment: keep it short, add judgment, do not invent personal stories, and omit it if the topic does not need it. -->
+
 ## My take
 
 {{MY_TAKE}}
