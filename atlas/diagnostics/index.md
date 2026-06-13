@@ -3,7 +3,7 @@ layout: default
 title: "Atlas Diagnostics — SAP Support and AMS Diagnostics"
 description: "Curated diagnostic patterns for SAP AMS, support tickets, operational blockers, and repeat incidents."
 permalink: /atlas/diagnostics/
-last_modified_at: 2026-05-06
+last_modified_at: 2026-06-13
 status: reviewed
 verified: true
 ---
@@ -20,6 +20,64 @@ verified: true
   <p class="eyebrow">Diagnostics</p>
   <h1>Support patterns for repeat SAP incidents and process blockers.</h1>
   <p class="lead">Diagnostics pages are written for the moment when a process is stuck and the team needs a clear first pass: which area is likely involved, what evidence to collect, and where uncertainty remains.</p>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Diagnostic flow</p>
+    <h2>How to use this index</h2>
+  </header>
+  <p>Start with the symptom, not the module. Each process path below maps a business area to a hub page, and each hub page routes to deeper diagnostics. The hubs and most diagnostics pages are review candidates: useful for triage, but not yet promoted to verified status.</p>
+  <ol>
+    <li><strong>Classify the symptom</strong> — is it a blocked document, a missing master data record, an integration failure, or a mismatch between expected and posted data?</li>
+    <li><strong>Pick a process path</strong> — order-to-cash, procure-to-pay, integration, or master data.</li>
+    <li><strong>Use the hub matrix</strong> — match the symptom to the first SAP check and collect the listed evidence.</li>
+    <li><strong>Follow the diagnostic page</strong> — deeper pages provide transactions, tables, and boundaries.</li>
+    <li><strong>Escalate when needed</strong> — customizing changes, cross-module issues, and mass corrections need functional review.</li>
+  </ol>
+
+  <h3>Evidence checklist for any diagnostic</h3>
+  <ul>
+    <li>Document number and item, or object key.</li>
+    <li>Current status and status history.</li>
+    <li>Organizational data (sales area, purchasing organization, plant, company code).</li>
+    <li>Master data keys (use synthetic or generalized identifiers only).</li>
+    <li>Error text, log reference, or IDoc/queue number.</li>
+    <li>Business impact and urgency.</li>
+  </ul>
+
+  <h3>Escalation boundaries</h3>
+  <p>Diagnostic pages help identify where the failure lives. They do not replace functional consultation, customizing change control, or official SAP documentation. Escalate when the fix requires configuration changes, affects financial reporting, crosses legal entities, or could create duplicate data.</p>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Process paths</p>
+    <h2>Diagnostic hubs</h2>
+  </header>
+  <p>These hubs group related diagnostics by process area. They are marked as review candidates until human review is completed.</p>
+  <div class="atlas-card-grid">
+    <a class="atlas-card" href="/atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/">
+      <h2>Order-to-Cash</h2>
+      <p>Sales order blocks, delivery blocks, billing blocks, pricing, credit, and invoice split.</p>
+      <span class="link-arrow">Open hub</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-procurement-diagnostics-hub/">
+      <h2>Procure-to-Pay</h2>
+      <p>Requisitions, purchase orders, release strategy, goods receipt, invoice verification, and three-way match.</p>
+      <span class="link-arrow">Open hub</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-integration-diagnostics-hub/">
+      <h2>Integration</h2>
+      <p>IDoc, AIF, qRFC/tRFC, RFC destinations, ALE, and interface monitoring.</p>
+      <span class="link-arrow">Open hub</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-master-data-diagnostics-hub/">
+      <h2>Master Data</h2>
+      <p>MDG activation, BP/customer/vendor replication, CVI, key mapping, and duplicates.</p>
+      <span class="link-arrow">Open hub</span>
+    </a>
+  </div>
 </section>
 
 <section class="section">
