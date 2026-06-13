@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Semantic Layer"
+title: "Semantic Layer — Concept"
 description: "A semantic layer provides business-friendly abstractions over raw technical data, hiding schema complexity and exposing dimensions, measures, hierarchies, and."
 tags:
   - concept

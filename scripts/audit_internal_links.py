@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Audit internal link graph of the built site.
 
-Produces:
+Produces by default:
   - reports/seo/internal-link-graph-YYYY-MM-DD.csv
   - reports/seo/internal-link-graph-YYYY-MM-DD.md
 
 Usage:
     python3 scripts/audit_internal_links.py [--site-dir _site] [--repo-dir .]
+    python3 scripts/audit_internal_links.py --stdout > /tmp/links.md
+    python3 scripts/audit_internal_links.py --output-dir /tmp/reports
 """
 
 from __future__ import annotations
@@ -64,6 +66,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-dir", default="_site", help="Built site directory")
     parser.add_argument("--repo-dir", default=".", help="Repository root")
+    parser.add_argument("--output-dir", default=None, help="Directory for report files (default: reports/seo)")
+    parser.add_argument("--stdout", action="store_true", help="Print Markdown report to stdout and skip file writes")
     args = parser.parse_args()
 
     site_dir = Path(args.site_dir).resolve()
@@ -73,9 +77,14 @@ def main() -> int:
         return 1
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    csv_path = repo_dir / "reports" / "seo" / f"internal-link-graph-{today}.csv"
-    md_path = repo_dir / "reports" / "seo" / f"internal-link-graph-{today}.md"
-    csv_path.parent.mkdir(parents=True, exist_ok=True)
+    if args.stdout:
+        csv_path = None
+        md_path = None
+    else:
+        out_dir = Path(args.output_dir).resolve() if args.output_dir else repo_dir / "reports" / "seo"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        csv_path = out_dir / f"internal-link-graph-{today}.csv"
+        md_path = out_dir / f"internal-link-graph-{today}.md"
 
     html_files = sorted(site_dir.rglob("*.html"))
 
@@ -115,13 +124,14 @@ def main() -> int:
             "broken_links": " | ".join(broken[rel])[:200],
         })
 
-    with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=[
-            "page", "title", "noindex", "inbound_count", "outbound_count",
-            "broken_count", "inbound_from", "broken_links",
-        ], lineterminator="\n")
-        writer.writeheader()
-        writer.writerows(rows)
+    if csv_path is not None:
+        with open(csv_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=[
+                "page", "title", "noindex", "inbound_count", "outbound_count",
+                "broken_count", "inbound_from", "broken_links",
+            ], lineterminator="\n")
+            writer.writeheader()
+            writer.writerows(rows)
 
     # Orphan pages (no inbound from other content pages)
     orphans = [r for r in rows if r["inbound_count"] == 0 and r["page"] != "index.html"]
