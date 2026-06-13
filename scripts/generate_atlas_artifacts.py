@@ -3,10 +3,11 @@
 Atlas Artifact Generator for dkharlanau.github.io
 
 Regenerates the static Atlas discovery layer:
-  - atlas/manifest.json      — machine-readable index of all Atlas pages
-  - llms-full.txt            — full-text concatenation of verified pages
-  - ai/rag/related.json      — related-content graph from frontmatter
+  - atlas/manifest.json        — machine-readable index of all Atlas pages
+  - llms-full.txt              — full-text concatenation of verified Atlas pages
+  - ai/rag/related.json        — related-content graph from frontmatter
   - ai/atlas-compact-index.json — compact signal-matching index
+  - ai/verified-pages.json     — site-wide inventory of reviewed, verified, indexable pages
 
 Usage:
     python3 scripts/generate_atlas_artifacts.py
@@ -318,6 +319,100 @@ def _now(check_mode):
     if check_mode:
         return CHECK_MODE_TIMESTAMP
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _derive_page_type(rel_path):
+    """Derive a high-level page type from the source path."""
+    parts = rel_path.split("/")
+    if not parts:
+        return "page"
+    return parts[0]
+
+
+def _derive_section(rel_path, fm):
+    """Derive a section label from frontmatter or source path."""
+    if fm.get("atlas_section"):
+        return fm["atlas_section"]
+    parts = rel_path.split("/")
+    if len(parts) >= 2:
+        return parts[1]
+    return ""
+
+
+def _is_indexable(fm):
+    """Return True if frontmatter signals the page should be indexed."""
+    robots = str(fm.get("robots", "")).lower()
+    if "noindex" in robots:
+        return False
+    if fm.get("sitemap") is False:
+        return False
+    return True
+
+
+def generate_verified_inventory(all_pages, check_mode=False):
+    """Generate ai/verified-pages.json — site-wide verified, indexable pages.
+
+    Includes any page with verified=true and status=reviewed that is not
+    marked noindex or sitemap=false. Source file paths are excluded.
+    """
+    entries = []
+    for permalink, info in all_pages.items():
+        rel_path = info["file"]
+        fm = info["fm"]
+
+        # Skip template and excluded paths
+        if rel_path.startswith("docs/templates/"):
+            continue
+        if not fm.get("verified"):
+            continue
+        if fm.get("status") != "reviewed":
+            continue
+        if not _is_indexable(fm):
+            continue
+
+        page_type = _derive_page_type(rel_path)
+        section = _derive_section(rel_path, fm)
+
+        entry = {
+            "url": permalink,
+            "title": fm.get("title", ""),
+            "description": fm.get("description", ""),
+            "type": page_type,
+            "section": section,
+            "status": fm.get("status", ""),
+            "verified": bool(fm.get("verified")),
+            "last_reviewed": serialize_value(fm.get("last_reviewed", "")),
+            "last_modified_at": serialize_value(fm.get("last_modified_at", "")),
+            "author": fm.get("author", ""),
+            "tags": fm.get("tags", []) or [],
+        }
+        entries.append(entry)
+
+    entries.sort(key=lambda e: (e["type"], e["section"], e["url"]))
+
+    inventory = {
+        "schema": "dkharlanau.site.verified_pages",
+        "schema_version": "1.0",
+        "generated_at": _now(check_mode),
+        "canonical_url": "https://dkharlanau.github.io/ai/verified-pages.json",
+        "description": (
+            "Machine-readable inventory of all reviewed and verified indexable "
+            "pages across the public site. Intended for AI agents and search "
+            "crawlers that need to know which pages are trustworthy and "
+            "retrieval-ready."
+        ),
+        "source": "scripts/generate_atlas_artifacts.py",
+        "count": len(entries),
+        "collections": sorted({e["type"] for e in entries}),
+        "entries": entries,
+    }
+
+    if not check_mode:
+        out_path = REPO_DIR / "ai" / "verified-pages.json"
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(inventory, f, indent=2, ensure_ascii=False, cls=DateTimeEncoder)
+
+    return inventory
 
 
 def generate_manifest(all_pages, atlas_files, check_mode=False):
@@ -692,8 +787,47 @@ def run_check(all_pages, atlas_files):
             if pattern in compact_committed_text:
                 issues.append(f"atlas-compact-index.json: private leak — contains '{pattern}'")
 
+    # --- verified-pages.json ---
+    print("\n[CHECK 5/7] verified-pages.json")
+    inventory_generated = generate_verified_inventory(all_pages, check_mode=True)
+    inventory_path = REPO_DIR / "ai" / "verified-pages.json"
+    inventory_committed = {}
+    inventory_committed_text = ""
+    if not inventory_path.exists():
+        issues.append("verified-pages.json: file missing")
+    else:
+        try:
+            inventory_committed_text = _load_json_file(inventory_path)
+            inventory_committed = json.loads(inventory_committed_text)
+        except json.JSONDecodeError as e:
+            issues.append(f"verified-pages.json: invalid JSON — {e}")
+
+        if inventory_committed:
+            gen_norm = json.loads(_normalize_timestamp_in_json(json.dumps(inventory_generated, indent=2, ensure_ascii=False, cls=DateTimeEncoder)))
+            com_norm = json.loads(_normalize_timestamp_in_json(inventory_committed_text))
+            if gen_norm != com_norm:
+                issues.append("verified-pages.json: stale — committed file differs from source")
+            else:
+                print("  ✓ verified-pages.json is up to date")
+
+        expected_inventory_count = len(inventory_generated.get("entries", []))
+        if inventory_committed.get("count") != expected_inventory_count:
+            issues.append(f"verified-pages.json: expected {expected_inventory_count} entries, found {inventory_committed.get('count')}")
+
+        for entry in inventory_committed.get("entries", []):
+            if not entry.get("url", "").startswith("/"):
+                issues.append(f"verified-pages.json: invalid URL {entry.get('url')}")
+            if not entry.get("title"):
+                issues.append(f"verified-pages.json: missing title for {entry.get('url')}")
+            if not entry.get("type"):
+                issues.append(f"verified-pages.json: missing type for {entry.get('url')}")
+
+        for pattern in leak_patterns:
+            if pattern in inventory_committed_text:
+                issues.append(f"verified-pages.json: private leak — contains '{pattern}'")
+
     # --- Cross-validate manifest vs related ---
-    print("\n[CHECK 5/6] Cross-validation")
+    print("\n[CHECK 6/7] Cross-validation")
     if manifest_committed and related_committed:
         manifest_urls = {e["url"] for e in manifest_committed.get("entries", [])}
         related_sources = {e["source_url"] for e in related_committed.get("edges", [])}
@@ -706,7 +840,7 @@ def run_check(all_pages, atlas_files):
             print("  ✓ All related sources present in manifest")
 
     # --- Frontmatter tag consistency ---
-    print("\n[CHECK 6/6] Frontmatter tag consistency")
+    print("\n[CHECK 7/7] Frontmatter tag consistency")
     tag_issues = []
     for rel_path in atlas_files:
         abs_path = REPO_DIR / rel_path
@@ -761,19 +895,19 @@ def main():
             sys.exit(0)
 
     # Generate manifest
-    print("\n[1/4] Generating atlas/manifest.json ...")
+    print("\n[1/5] Generating atlas/manifest.json ...")
     manifest = generate_manifest(all_pages, atlas_files)
     print(f"  Entries: {manifest['count']}")
     print(f"  Verified: {manifest['verified_count']}")
     print(f"  Unverified: {manifest['unverified_count']}")
 
     # Generate llms-full.txt
-    print("\n[2/4] Generating llms-full.txt ...")
+    print("\n[2/5] Generating llms-full.txt ...")
     verified_count = generate_llms_full(all_pages, atlas_files)
     print(f"  Verified pages included: {verified_count}")
 
     # Generate related.json
-    print("\n[3/4] Generating ai/rag/related.json ...")
+    print("\n[3/5] Generating ai/rag/related.json ...")
     edges, broken, _ = generate_related(all_pages, atlas_files)
     print(f"  Edges: {len(edges)}")
     print(f"  Broken links: {len(broken)}")
@@ -782,9 +916,15 @@ def main():
             print(f"    BROKEN: {bl['source_url']} -> {bl['target_url']}")
 
     # Generate compact signal index
-    print("\n[4/4] Generating ai/atlas-compact-index.json ...")
+    print("\n[4/5] Generating ai/atlas-compact-index.json ...")
     compact_index = generate_compact_signal_index(atlas_files)
     print(f"  Entries: {compact_index['count']}")
+
+    # Generate verified page inventory
+    print("\n[5/5] Generating ai/verified-pages.json ...")
+    inventory = generate_verified_inventory(all_pages)
+    print(f"  Verified pages: {inventory['count']}")
+    print(f"  Collections: {', '.join(inventory['collections'])}")
 
     print("\n" + "=" * 40)
     print("All artifacts generated successfully.")
