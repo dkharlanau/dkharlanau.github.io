@@ -201,6 +201,7 @@ function renderDecisionPage(data, slug) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, follow" />
   <title>${escapeHtml(title)} | DAMA</title>
   <meta name="description" content="${escapeHtml(description)}" />
   <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />
@@ -213,7 +214,6 @@ function renderDecisionPage(data, slug) {
   <meta name="twitter:title" content="${escapeHtml(title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
   <link rel="stylesheet" href="${basePath}assets/dama.css" />
-  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body>
   <div class="page">
@@ -352,6 +352,7 @@ function renderIndexPage(items, siteBase) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, follow" />
   <title>DAMA Index</title>
   <meta name="description" content="DAMA decision blocks index." />
   <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />
@@ -361,7 +362,6 @@ function renderIndexPage(items, siteBase) {
   <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />
   <meta name="twitter:card" content="summary" />
   <link rel="stylesheet" href="${basePath}assets/dama.css" />
-  <script type="application/ld+json">${JSON.stringify(indexJsonLd)}</script>
 </head>
 <body>
   <div class="page">
@@ -469,6 +469,7 @@ function renderTagPage(tag, items, siteBase) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, follow" />
   <title>DAMA Tag: ${escapeHtml(tag)}</title>
   <meta name="description" content="DAMA decision blocks tagged ${escapeHtml(tag)}." />
   <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />
@@ -478,7 +479,6 @@ function renderTagPage(tag, items, siteBase) {
   <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />
   <meta name="twitter:card" content="summary" />
   <link rel="stylesheet" href="${basePath}assets/dama.css" />
-  <script type="application/ld+json">${JSON.stringify(tagJsonLd)}</script>
 </head>
 <body>
   <div class="page">

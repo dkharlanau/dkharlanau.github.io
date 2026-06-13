@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Audit generated HTML for indexability, metadata, and SEO quality.
 
-Produces:
+Produces by default:
   - reports/seo/indexability-audit-YYYY-MM-DD.csv
   - reports/seo/indexability-audit-YYYY-MM-DD.md
 
 Usage:
     python3 scripts/audit_indexability.py [--site-dir _site] [--fail-on-critical]
+    python3 scripts/audit_indexability.py --stdout > /tmp/audit.md
+    python3 scripts/audit_indexability.py --output-dir /tmp/reports
 """
 
 from __future__ import annotations
@@ -268,6 +270,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-dir", default="_site", help="Built site directory")
     parser.add_argument("--repo-dir", default=".", help="Repository root")
+    parser.add_argument("--output-dir", default=None, help="Directory for report files (default: reports/seo)")
+    parser.add_argument("--stdout", action="store_true", help="Print Markdown report to stdout and skip file writes")
     parser.add_argument("--fail-on-critical", action="store_true", help="Exit non-zero on critical issues")
     args = parser.parse_args()
 
@@ -278,9 +282,14 @@ def main() -> int:
         return 1
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    csv_path = repo_dir / "reports" / "seo" / f"indexability-audit-{today}.csv"
-    md_path = repo_dir / "reports" / "seo" / f"indexability-audit-{today}.md"
-    csv_path.parent.mkdir(parents=True, exist_ok=True)
+    if args.stdout:
+        csv_path = None
+        md_path = None
+    else:
+        out_dir = Path(args.output_dir).resolve() if args.output_dir else repo_dir / "reports" / "seo"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        csv_path = out_dir / f"indexability-audit-{today}.csv"
+        md_path = out_dir / f"indexability-audit-{today}.md"
 
     sitemap_urls = load_sitemap_urls(site_dir)
     llms_urls = load_llms_full_pages(repo_dir)
@@ -417,11 +426,12 @@ def main() -> int:
         "og_description", "og_image", "twitter_card", "sitemap_included",
         "llms_included", "source_status", "source_verified", "classification",
     ]
-    with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore", lineterminator="\n")
-        writer.writeheader()
-        for row in rows:
-            writer.writerow({k: row.get(k, "") for k in fieldnames})
+    if csv_path is not None:
+        with open(csv_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore", lineterminator="\n")
+            writer.writeheader()
+            for row in rows:
+                writer.writerow({k: row.get(k, "") for k in fieldnames})
 
     # --- Markdown report ------------------------------------------------------
     md_lines = [
@@ -495,11 +505,19 @@ def main() -> int:
         if "noindex" in row["robots"].lower():
             md_lines.append(f"- `{row['output_path']}` — {row['title']}")
 
-    md_path.write_text("\n".join(md_lines), encoding="utf-8")
+    md_text = "\n".join(md_lines)
+    if md_path is not None:
+        md_path.write_text(md_text, encoding="utf-8")
+
+    if args.stdout:
+        print(md_text)
+        return 0
 
     print(f"Audit complete: {len(rows)} pages scanned")
-    print(f"  CSV: {csv_path}")
-    print(f"  MD:  {md_path}")
+    if csv_path is not None:
+        print(f"  CSV: {csv_path}")
+    if md_path is not None:
+        print(f"  MD:  {md_path}")
     if critical_issues:
         print(f"  Critical issues: {len(critical_issues)}")
         for issue in critical_issues[:10]:

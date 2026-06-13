@@ -2,7 +2,7 @@
 
 layout: default
 title: "Practical AI and ML for SAP Support"
-description: "A conservative frame for deciding when AI and ML add value around SAP, and how to keep the deterministic core separate from probabilistic edge services."
+description: "A practical evaluation frame for AI and ML use cases in SAP support work, focusing on incident triage, root-cause patterns, and safe hand-off to deterministic systems."
 permalink: /atlas/ai-operations/practical-ai-ml-for-sap-support/
 atlas_section: ai-operations
 domain: AI-assisted operations

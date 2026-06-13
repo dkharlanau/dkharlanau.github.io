@@ -146,7 +146,33 @@ jobs:
           path: indexnow-report.json
           if-no-files-found: ignore
 
-      - name: IndexNow summary
+      - name: IndexNow status
         if: always()
         run: |
           echo "IndexNow status: ${{ steps.mode.outputs.status }}"
+
+      - name: IndexNow report summary
+        if: always()
+        run: |
+          echo "## IndexNow Report" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f indexnow-report.json ]; then
+            mode=$(python3 -c "import json,sys; print(json.load(open('indexnow-report.json')).get('mode','unknown'))")
+            submitted=$(python3 -c "import json,sys; print(len(json.load(open('indexnow-report.json')).get('submitted',[])))" 2>/dev/null || echo 0)
+            skipped=$(python3 -c "import json,sys; print(len(json.load(open('indexnow-report.json')).get('skipped',[])))" 2>/dev/null || echo 0)
+            echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+            echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Status | ${{ steps.mode.outputs.status }} |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Mode | $mode |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Submitted URLs | $submitted |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Skipped URLs | $skipped |" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "<details><summary>Submitted URLs</summary>" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            python3 -c "import json,sys; [print('- '+u) for u in json.load(open('indexnow-report.json')).get('submitted',[])]" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "</details>" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Status: ${{ steps.mode.outputs.status }}" >> "$GITHUB_STEP_SUMMARY"
+            echo "No report was generated for this run." >> "$GITHUB_STEP_SUMMARY"
+          fi
