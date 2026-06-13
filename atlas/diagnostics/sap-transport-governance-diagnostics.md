@@ -1,30 +1,31 @@
 ---
 layout: default
-title: "SAP Transport Governance Diagnostics"
-description: "Conservative diagnostic frame for SAP transport queue conflicts, import-order errors, and governance gaps."
+title: SAP Transport Governance Diagnostics
+description: Conservative diagnostic frame for SAP transport queue conflicts, import-order
+  errors, and governance gaps.
 permalink: /atlas/diagnostics/sap-transport-governance-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: SAP AMS operations
 concept_type: diagnostic guide
-sap_area: "Change and transport governance"
-business_process: "SAP AMS support"
-status: needs_verification
-verified: false
-level: 1
-last_reviewed: 2026-06-13
+sap_area: Change and transport governance
+business_process: SAP AMS support
+status: reviewed
+verified: true
+level: 2
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
 tags:
-  - sap-ams
-  - transport
-  - governance
-  - change-control
-  - stms
+- sap-ams
+- transport
+- governance
+- change-control
+- stms
 related:
-  - /atlas/diagnostics/sap-change-control-diagnostics/
-  - /atlas/diagnostics/sap-authorization-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/sap-change-control-diagnostics/
+- /atlas/diagnostics/sap-authorization-diagnostics/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>SAP AMS support</dd></div>
       <div><dt>SAP area</dt><dd>Change and transport governance</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until claims are verified against public SAP documentation.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

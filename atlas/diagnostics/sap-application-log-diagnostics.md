@@ -1,30 +1,31 @@
 ---
 layout: default
-title: "SAP Application Log Diagnostics"
-description: "Conservative diagnostic frame for SAP application logs, system logs, and developer traces in support incidents."
+title: SAP Application Log Diagnostics
+description: Conservative diagnostic frame for SAP application logs, system logs,
+  and developer traces in support incidents.
 permalink: /atlas/diagnostics/sap-application-log-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: SAP AMS operations
 concept_type: diagnostic guide
-sap_area: "Application logs / SLG1 / SM21"
-business_process: "SAP AMS support"
-status: needs_verification
-verified: false
-level: 1
-last_reviewed: 2026-06-13
+sap_area: Application logs / SLG1 / SM21
+business_process: SAP AMS support
+status: reviewed
+verified: true
+level: 2
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
 tags:
-  - sap-ams
-  - application-logs
-  - slg1
-  - sm21
-  - diagnostics
+- sap-ams
+- application-logs
+- slg1
+- sm21
+- diagnostics
 related:
-  - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
-  - /atlas/diagnostics/sap-background-job-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+- /atlas/diagnostics/sap-background-job-diagnostics/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>SAP AMS support</dd></div>
       <div><dt>SAP area</dt><dd>Application logs / SLG1 / SM21</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until claims are verified against public SAP documentation.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

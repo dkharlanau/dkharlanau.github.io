@@ -1,31 +1,32 @@
 ---
 layout: default
-title: "SAP IDoc Status Diagnostics"
-description: "A conservative diagnostic frame for IDoc status code issues and status-driven troubleshooting in SAP."
+title: SAP IDoc Status Diagnostics
+description: A conservative diagnostic frame for IDoc status code issues and status-driven
+  troubleshooting in SAP.
 permalink: /atlas/diagnostics/sap-idoc-status-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
 concept_type: diagnostic guide
-sap_area: "IDoc / ALE / EDI"
+sap_area: IDoc / ALE / EDI
 business_process: Integration
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-13
+status: reviewed
+verified: true
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
-
 tags:
-  - integration
-  - sap-ale
-  - diagnostics
-  - idoc
+- integration
+- sap-ale
+- diagnostics
+- idoc
 related:
-  - /atlas/diagnostics/idoc-aif-integration-diagnostics/
-  - /atlas/diagnostics/sap-inbound-processing-diagnostics/
-  - /atlas/diagnostics/sap-outbound-processing-diagnostics/
-  - /atlas/diagnostics/sap-idoc-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/idoc-aif-integration-diagnostics/
+- /atlas/diagnostics/sap-inbound-processing-diagnostics/
+- /atlas/diagnostics/sap-outbound-processing-diagnostics/
+- /atlas/diagnostics/sap-idoc-diagnostics/
+robots: index,follow
+sitemap: true
+level: 2
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -49,7 +50,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Integration</dd></div>
       <div><dt>SAP area</dt><dd>IDoc / ALE / EDI</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until IDoc status behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

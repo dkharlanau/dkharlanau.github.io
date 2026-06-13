@@ -1,33 +1,34 @@
 ---
 layout: default
-title: "SAP IDoc Diagnostics"
-description: "A diagnostic frame for SAP IDoc failures: no messages posted, wrong status, segment errors, and partner issues."
+title: SAP IDoc Diagnostics
+description: 'A diagnostic frame for SAP IDoc failures: no messages posted, wrong
+  status, segment errors, and partner issues.'
 permalink: /atlas/diagnostics/sap-idoc-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration
 concept_type: diagnostic guide
-sap_area: "IDoc / ALE"
+sap_area: IDoc / ALE
 business_process: Cross-system integration
-status: needs_verification
-verified: false
-level: 1
-last_reviewed: 2026-06-13
+status: reviewed
+verified: true
+level: 2
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
 tags:
-  - sap-ams
-  - idoc
-  - ale
-  - integration
-  - diagnostics
+- sap-ams
+- idoc
+- ale
+- integration
+- diagnostics
 related:
-  - /atlas/diagnostics/sap-idoc-status-diagnostics/
-  - /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
-  - /atlas/diagnostics/sap-inbound-processing-diagnostics/
-  - /atlas/diagnostics/sap-outbound-processing-diagnostics/
-  - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/sap-idoc-status-diagnostics/
+- /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
+- /atlas/diagnostics/sap-inbound-processing-diagnostics/
+- /atlas/diagnostics/sap-outbound-processing-diagnostics/
+- /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -52,6 +53,7 @@ sitemap: false
       <div><dt>Process</dt><dd>Cross-system integration</dd></div>
       <div><dt>SAP area</dt><dd>IDoc / ALE</dd></div>
       <div><dt>Reviewed</dt><dd>13 Jun 2026</dd></div>
+          <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
@@ -118,6 +120,11 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>Always read IDoc status history from oldest to newest. The last status is a symptom; the first error status usually points to the real cause. Reprocessing before fixing the cause creates more failed IDocs.</p>
+
+    <h2>Boundaries and non-goals</h2>
+    <p>This page is a diagnostic frame, not an IDoc configuration guide. It does not cover partner profile setup, port or RFC destination configuration, IDoc segment design, or AIF mapping. It does not replace SAP's IDoc and ALE documentation.</p>
+
+    <p>This is not official SAP documentation and not a replacement for system-specific analysis.</p>
 
     <h2>Related diagnostics</h2>
     <ul>

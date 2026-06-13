@@ -1,30 +1,31 @@
 ---
 layout: default
-title: "SAP ALE Distribution Model Diagnostics"
-description: "A conservative diagnostic frame for ALE distribution model issues in SAP master data replication."
+title: SAP ALE Distribution Model Diagnostics
+description: A conservative diagnostic frame for ALE distribution model issues in
+  SAP master data replication.
 permalink: /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Integration and interfaces
 concept_type: diagnostic guide
-sap_area: "ALE / master data distribution"
+sap_area: ALE / master data distribution
 business_process: Integration
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-05
+status: reviewed
+verified: true
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
-
 tags:
-  - integration
-  - sap-ale
-  - diagnostics
-  - master-data
+- integration
+- sap-ale
+- diagnostics
+- master-data
 related:
-  - /atlas/diagnostics/idoc-aif-integration-diagnostics/
-  - /atlas/diagnostics/sap-idoc-status-diagnostics/
-  - /atlas/diagnostics/sap-key-mapping-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/idoc-aif-integration-diagnostics/
+- /atlas/diagnostics/sap-idoc-status-diagnostics/
+- /atlas/diagnostics/sap-key-mapping-diagnostics/
+robots: index,follow
+sitemap: true
+level: 2
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Integration</dd></div>
       <div><dt>SAP area</dt><dd>ALE / master data distribution</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until ALE distribution model behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 

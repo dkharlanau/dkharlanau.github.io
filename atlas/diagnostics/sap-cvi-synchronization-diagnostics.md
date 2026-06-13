@@ -1,33 +1,34 @@
 ---
 layout: default
-title: "SAP CVI Synchronization Diagnostics"
-description: "A conservative diagnostic frame for Customer-Vendor Integration synchronization issues in SAP S/4HANA."
+title: SAP CVI Synchronization Diagnostics
+description: A conservative diagnostic frame for Customer-Vendor Integration synchronization
+  issues in SAP S/4HANA.
 permalink: /atlas/diagnostics/sap-cvi-synchronization-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Master data and MDG
 concept_type: diagnostic guide
-sap_area: "CVI / BP / customer / vendor"
+sap_area: CVI / BP / customer / vendor
 business_process: Master data governance
-status: needs_verification
-verified: false
-last_reviewed: 2026-06-13
+status: reviewed
+verified: true
+last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
-
 tags:
-  - master-data
-  - sap-mdg
-  - diagnostics
-  - cvi
+- master-data
+- sap-mdg
+- diagnostics
+- cvi
 related:
-  - /atlas/diagnostics/sap-business-partner-replication-diagnostics/
-  - /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
-  - /atlas/diagnostics/sap-customer-master-replication-diagnostics/
-  - /atlas/diagnostics/sap-bp-relationship-diagnostics/
-  - /atlas/diagnostics/sap-company-code-data-diagnostics/
-  - /atlas/diagnostics/sap-supplier-master-diagnostics/
-robots: noindex,follow
-sitemap: false
+- /atlas/diagnostics/sap-business-partner-replication-diagnostics/
+- /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
+- /atlas/diagnostics/sap-customer-master-replication-diagnostics/
+- /atlas/diagnostics/sap-bp-relationship-diagnostics/
+- /atlas/diagnostics/sap-company-code-data-diagnostics/
+- /atlas/diagnostics/sap-supplier-master-diagnostics/
+robots: index,follow
+sitemap: true
+level: 2
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -51,7 +52,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Master data governance</dd></div>
       <div><dt>SAP area</dt><dd>CVI / BP / customer / vendor</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until CVI synchronization behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
     </dl>
   </aside>
 
