@@ -52,6 +52,10 @@ Rules:
   {% assign page_type = 'TechArticle' %}
 {% elsif page.url contains '/skill-hub/' %}
   {% assign page_type = 'Article' %}
+{% elsif page.collection == 'glossary' and page.defined_term %}
+  {% assign page_type = 'DefinedTerm' %}
+{% elsif page.collection == 'glossary' and page.defined_term_set %}
+  {% assign page_type = 'DefinedTermSet' %}
 {% else %}
   {% assign page_type = 'WebPage' %}
 {% endif %}
@@ -66,7 +70,54 @@ Rules:
 {% when 'event' %}{% assign page_type = 'Event' %}
 {% when 'course' %}{% assign page_type = 'Course' %}
 {% when 'dataset' %}{% assign page_type = 'Dataset' %}
+{% when 'definedterm' %}{% assign page_type = 'DefinedTerm' %}
+{% when 'definedtermset' %}{% assign page_type = 'DefinedTermSet' %}
 {% endcase %}
+
+{% comment %} DefinedTerm / DefinedTermSet — machine-readable glossary markup. {% endcomment %}
+{% if page_type == 'DefinedTerm' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DefinedTerm",
+  "@id": "{{ canonical_url }}#term",
+  "name": {{ page.defined_term | jsonify }},
+  "termCode": {{ page.term_code | default: page.defined_term | jsonify }},
+  "description": {{ page_description | truncate: 300 | jsonify }},
+  "inDefinedTermSet": {
+    "@type": "DefinedTermSet",
+    "name": "DKharlanau Atlas Glossary",
+    "url": "{{ '/atlas/glossary/' | absolute_url }}"
+  },
+  "url": "{{ canonical_url }}"
+  {% if page.related_terms and page.related_terms.size > 0 %},
+  "subjectOf": [
+    {% for term_url in page.related_terms %}
+    {"@id": "{{ term_url | absolute_url }}#term"}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]{% endif %}
+}
+</script>
+{% endif %}
+
+{% if page_type == 'DefinedTermSet' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DefinedTermSet",
+  "@id": "{{ canonical_url }}#termset",
+  "name": {{ page_title | jsonify }},
+  "description": {{ page_description | truncate: 300 | jsonify }},
+  "url": "{{ canonical_url }}"
+  {% if page.related_terms and page.related_terms.size > 0 %},
+  "hasDefinedTerm": [
+    {% for term_url in page.related_terms %}
+    {"@id": "{{ term_url | absolute_url }}#term"}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]{% endif %}
+}
+</script>
+{% endif %}
 
 {% if allow_indexing %}
 
