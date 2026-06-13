@@ -28,6 +28,7 @@ robots: noindex,follow
 sitemap: false
 ---
 
+
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>
@@ -131,6 +132,29 @@ sitemap: false
     <p>This page is a diagnostic frame, not an invoice verification configuration guide. It does not cover automatic invoice verification setup, EDI invoicing, or complex tax scenarios. It does not replace the judgment of a finance controller or procurement manager.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/maps/procure-to-pay-map/">Procure to Pay Map</a> — use this map to connect invoice blocks to the full procure-to-pay workflow.</li>
+      <li><a href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">SAP Goods Receipt Diagnostics</a> — go here when the invoice block is caused by GR timing or quantity differences.</li>
+      <li><a href="/atlas/diagnostics/sap-three-way-match-diagnostics/">SAP Three-Way Match Diagnostics</a> — check this to reconcile PO, GR, and invoice data.</li>
+      <li><a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a> — use this when the invoice references a wrong or blocked PO.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect invoice number, PO number, item, supplier, and blocking reason. **Synthetic example:** invoice 1234567890, PO 9876543210, block "Quantity variance".
+
+- [ ] Check MIRO/MIR4 and PO history (EKBE) for ordered, delivered, and invoiced quantities.
+
+- [ ] Compare invoice price, quantity, and tax code against PO and GR within tolerance (T169).
+
+- [ ] Confirm no duplicate invoice exists for the same PO item before releasing.
+
+- [ ] Document the variance reason and the approver who authorized release.
+
+- [ ] Safety limit: do not release blocked invoices that would cause duplicate payment or exceed tolerance without documented approval.
+</div>
   </div>
 
   <section class="atlas-related">

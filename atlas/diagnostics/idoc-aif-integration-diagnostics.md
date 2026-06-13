@@ -127,6 +127,31 @@ sitemap: false
     <p>This page does not provide transaction-by-transaction instructions. It does not claim that every SAP landscape uses the same partner profile setup or the same AIF configuration. It does not replace SAP's own IDoc and AIF documentation.</p>
 
     <p><em>This is not official SAP documentation and not a replacement for system-specific analysis.</em></p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a> — use this when multiple interfaces are affected and you need a monitoring lens.</li>
+      <li><a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP IDoc Status Diagnostics</a> — go here to interpret status codes and identify the processing stage.</li>
+      <li><a href="/atlas/diagnostics/sap-qrfc-trfc-diagnostics/">SAP qRFC and tRFC Diagnostics</a> — check this when IDoc processing depends on RFC queues.</li>
+      <li><a href="/atlas/diagnostics/sap-output-message-control-diagnostics/">SAP Output and Message Control Diagnostics</a> — use this if the failing message is an output IDoc.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect message type, partner number, direction, IDoc number, and status. **Synthetic example:** IDoc 1234567890, message type ORDERS, outbound, partner TEST_CUST_01.
+
+- [ ] Check WE02/WE05 for IDoc status and segment-level error text.
+
+- [ ] Review partner profile (WE20), port, and process code for the message type.
+
+- [ ] Inspect /AIF/ERR or SXI_MONITOR if AIF/PI/PO/Integration Suite is involved.
+
+- [ ] Confirm whether the failure is isolated to one partner, plant, message type, or time window.
+
+- [ ] Document recent changes: transports, master data updates, partner profiles, or network.
+
+- [ ] Safety limit: do not mass-reprocess IDocs until the root layer (partner, mapping, or master data) is identified.
+</div>
   </div>
 
   <section class="atlas-related">
