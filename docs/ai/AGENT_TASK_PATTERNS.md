@@ -34,6 +34,7 @@ layout: default
 title: "<Descriptive Title>"
 description: "<Conservative description>"
 permalink: /atlas/diagnostics/<slug>/
+last_modified_at: <YYYY-MM-DD>
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: <e.g., Master data and MDG>
@@ -49,10 +50,26 @@ tags:
   - <tag2>
 related:
   - /atlas/diagnostics/<existing-related-page>/
+source_files:
+  - "private-source/<path-to-source-draft>"
 robots: noindex,follow
 sitemap: false
 ---
 ```
+
+### Required Sections
+A diagnostic page must contain all of the following sections so readers and AI systems can follow the workflow:
+
+1. **Core idea** — the failure pattern and why it matters.
+2. **Common symptoms** — observable behavior or user reports.
+3. **Likely causes** — grouped by master data, configuration, integration, or timing.
+4. **Where to check in SAP** — transactions, tables, or monitoring objects; landscape-dependent caveats.
+5. **Evidence to collect** — document numbers, statuses, keys, and timestamps.
+6. **Boundaries and non-goals** — what the page does not cover and what needs change control.
+7. **Next diagnostic steps** — 2-5 links to adjacent Atlas pages or scenarios.
+8. **Related Atlas pages** — links to maps, concepts, or verified hubs.
+
+Use `docs/templates/atlas-diagnostic-page.md` as the starting point.
 
 ### Validation Commands
 ```sh
@@ -149,6 +166,7 @@ Move a page from Level 1 to Level 2 after human review.
 5. [ ] Frontmatter updated: `status: reviewed`, `verified: true`, `robots: index,follow`, `sitemap: true`
 6. [ ] `last_reviewed` date set to today
 7. [ ] `last_modified_at` updated if content changed
+8. [ ] Examples and synthetic data follow the public-safe examples policy
 
 ### Post-Promotion Commands
 ```sh
@@ -293,6 +311,41 @@ Audit AI-generated content for hype, unsupported claims, and overclaiming.
 - List pages reviewed
 - List issues found and how they were resolved
 - Confirm no unsupported claims remain
+
+---
+
+## Pattern 9: Writing Public-Safe Examples for Diagnostic Content
+
+### Goal
+Keep practical examples useful without exposing client, employer, or proprietary information.
+
+### Allowed Examples
+- Generic process descriptions: "a retail company running S/4HANA 2023"
+- Synthetic document numbers and keys that are clearly invented or standardized (e.g., `1234567890`, `TEST_VENDOR_01`)
+- Public SAP transaction codes, table names, and standard configuration objects
+- Generalized error messages without system IDs or timestamps
+
+### Forbidden Examples
+- Real client or customer names
+- Real vendor names, material numbers, or account numbers
+- SAP ticket numbers, incident IDs, support message numbers, or change request IDs
+- System IDs, host names, client numbers, or landscape-specific paths
+- Screenshots or logs from real systems
+- Custom ABAP code, Z-transactions, or proprietary configuration names unless they are public sample code
+
+### Required Labels
+- Mark synthetic examples as **Synthetic example** or **Illustrative scenario**.
+- When describing a real pattern, generalize it: "a repeated goods-receipt issue" not "Ticket 1234567".
+
+### Validation
+```sh
+python3 scripts/check_public_repo.py
+```
+
+### Final Report Requirements
+- Confirm no real client, ticket, or system identifiers are present
+- Confirm synthetic examples are labeled
+- List any examples that were generalized or removed
 
 ---
 

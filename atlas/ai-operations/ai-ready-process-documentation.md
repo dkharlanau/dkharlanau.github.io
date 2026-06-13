@@ -21,6 +21,7 @@ tags:
 related: 
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/automation/operational-memory-for-sap-ams/"
+  - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: AI-Ready Process Documentation
 h1: AI-ready process documentation
@@ -81,8 +82,8 @@ author: Dzmitryi Kharlanau
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
 <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a></li>
-
 <li><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational Memory for SAP AMS</a></li>
+<li><a href="/atlas/ai-operations/authorization-aware-ai-for-sap/">Authorization-Aware AI for SAP</a></li>
 
 </ul></section>
 

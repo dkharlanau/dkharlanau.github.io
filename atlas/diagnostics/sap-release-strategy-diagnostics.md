@@ -117,6 +117,31 @@ sitemap: false
     <p>This page is a diagnostic frame, not a release strategy configuration guide. It does not cover classification design, workflow builder setup, or approval hierarchy modeling. It does not replace SAP's purchasing documentation.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/maps/procure-to-pay-map/">Procure to Pay Map</a> — use this map to see how release strategy fits into the wider procurement workflow.</li>
+      <li><a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a> — go here when the release block prevents PO creation or saving.</li>
+      <li><a href="/atlas/diagnostics/sap-purchase-requisition-diagnostics/">SAP Purchase Requisition Diagnostics</a> — check this when the strategy applies to requisitions instead of purchase orders.</li>
+      <li><a href="/atlas/diagnostics/sap-invoice-verification-diagnostics/">SAP Invoice Verification Diagnostics</a> — use this downstream if approved POs generate invoice mismatches.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect document number, type, release strategy, open release codes, and current status. **Synthetic example:** PO 1234567890, strategy ZS_001, code 01 open.
+
+- [ ] Check ME28/ME29N or ME54N for release status and missing approvers.
+
+- [ ] Verify classification values (value, material group, plant) with CL20N match the strategy.
+
+- [ ] Confirm the approver has the required authorization in SU53 after a failed release attempt.
+
+- [ ] Check SWIA/SWI1 for stuck workflow work items if workflow is used.
+
+- [ ] Document the business justification and assign a delegate if the primary approver is unavailable.
+
+- [ ] Safety limit: do not release a document whose classification or value changed after partial release without procurement confirmation.
+</div>
   </div>
 
   <section class="atlas-related">

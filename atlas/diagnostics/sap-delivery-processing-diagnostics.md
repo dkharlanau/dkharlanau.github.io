@@ -28,8 +28,6 @@ related:
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /atlas/diagnostics/sap-movement-types-diagnostics/
   - /atlas/diagnostics/sap-batch-determination-diagnostics/
-robots: noindex,follow
-sitemap: false
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

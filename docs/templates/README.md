@@ -18,6 +18,7 @@ Last updated: 2026-05-26
 | Template | Use when | Target location |
 |---|---|---|
 | `news-item.md` | A dated professional signal needs a short entry | News section (when created) or blog collection |
+| `atlas-diagnostic-page.md` | A new SAP diagnostic page is needed | `atlas/diagnostics/<slug>.md` |
 | `atlas-fact-update.md` | A durable Atlas page needs a factual correction or addition | Relevant `atlas/**/*.md` page |
 | `source-addition.md` | A page needs a new source, citation, or reference | Any public knowledge page |
 | `practical-process-note.md` | A new practical pattern, checklist, or process note is ready | Relevant `atlas/**/*.md` or `notes/` page |

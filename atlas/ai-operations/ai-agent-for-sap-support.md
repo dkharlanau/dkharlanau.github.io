@@ -24,6 +24,9 @@ related:
   - /ai/practical-ai-for-sap-support/
   - /services/sap-ai-ml-enablement/
   - /atlas/ai-operations/practical-ai-ml-for-sap-support/
+  - /atlas/ai-operations/ai-ready-process-documentation/
+  - /atlas/ai-operations/authorization-aware-ai-for-sap/
+  - /atlas/automation/operational-memory-for-sap-ams/
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 ---
 
@@ -76,10 +79,9 @@ robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
   <section class="atlas-related">
     <h2>Related Pages</h2>
     <ul>
-      <li><a href="/ai/practical-ai-for-sap-support/">Practical AI for SAP support</a></li>
-      <li><a href="/services/sap-ai-ml-enablement/">SAP AI and ML enablement</a></li>
-      <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a></li>
-      <li><a href="/atlas/ai-operations/practical-ai-ml-for-sap-support/">Practical AI and ML for SAP Support</a></li>
+      <li><a href="/atlas/ai-operations/ai-ready-process-documentation/">AI-Ready Process Documentation</a></li>
+      <li><a href="/atlas/ai-operations/authorization-aware-ai-for-sap/">Authorization-Aware AI for SAP</a></li>
+      <li><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational Memory for SAP AMS</a></li>
     </ul>
   </section>
 

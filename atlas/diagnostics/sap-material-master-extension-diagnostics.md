@@ -27,8 +27,6 @@ related:
   - /atlas/diagnostics/sap-number-range-diagnostics/
   - /atlas/diagnostics/sap-master-data-duplicate-diagnostics/
   - /atlas/sap/sap-mm-procurement-overview/
-robots: noindex,follow
-sitemap: false
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

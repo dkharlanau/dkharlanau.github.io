@@ -1,12 +1,12 @@
 # Internal Link Graph Report
 
 **Date:** 2026-06-13
-**Pages scanned:** 692
+**Pages scanned:** 703
 
 ## Summary
-- **Orphan pages:** 169
+- **Orphan pages:** 176
 - **Pages with broken links:** 190
-- **Indexable pages linking to noindex:** 777
+- **Indexable pages linking to noindex:** 775
 
 ## Orphan Pages (no inbound links)
 
@@ -135,21 +135,28 @@
 - `docs/scenarios/SCENARIOS_BACKLOG/index.html` — Scenarios Backlog
 - `docs/seo/INDEXNOW/index.html` — IndexNow Support
 - `docs/seo/SEARCH_AI_DISCOVERY_CONTRACT/index.html` — Search and AI Discovery Trust Contract
+- `docs/seo/structured-data-google-audit/index.html` — Structured Data Audit — Google-aligned Foundation
+- `docs/seo/structured-data-implementation/index.html` — Structured Data Implementation Guide
 - `docs/site-content-design-contract/index.html` — Site Content and Design Contract
 - `docs/site-content-validation/index.html` — Site Content Validation
 - `docs/site-structure-inventory/index.html` — Site Structure Inventory
 - `docs/technology/technology-policy/index.html` — Repository Technology Policy
 - `legal/accessibility/index.html` — Accessibility Statement
+- `legal/ai-crawler-policy/index.html` — AI Crawler Policy
 - `legal/code-of-conduct/index.html` — Professional Code of Conduct
 - `legal/terms-of-engagement/index.html` — Terms of Engagement
-- `li2resume.local/index.html` — Local LinkedIn Context for Codex
-- `plan/index.html` — SEO Visibility Swarm Plan
 - `publications/index.html` — Publications | Dzmitryi Kharlanau
 - `radar/index.html` — Professional Radar — Dzmitryi Kharlanau
 - `reports/seo/atlas-indexation-candidates-2026-06-13/index.html` — Atlas Indexation Candidates Report
 - `reports/seo/github-proof-loop-2026-06-13/index.html` — GitHub Repository Proof Audit — SEO Visibility Swarm
 - `reports/seo/hub-architecture-plan-2026-06-13/index.html` — Hub Architecture Plan — SEO Visibility Swarm
+- `reports/seo/indexability-audit-2026-06-13/index.html` — Indexability Audit Report
+- `reports/seo/internal-link-graph-2026-06-13/index.html` — Internal Link Graph Report
 - `reports/seo/next-verify-and-index-batch-2026-06-13/index.html` — Next Verify-and-Index Batch
+- `reports/seo/plugin-audit-2026-06-13/index.html` — Plugin &amp; Metadata Audit Report
+- `reports/seo/search-console-handoff-2026-06-13/index.html` — Search Console / IndexNow Handoff Report
+- `reports/seo/social-preview-audit-2026-06-13/index.html` — Social Preview / Open Graph Image Audit
+- `reports/seo/tag-taxonomy-audit-2026-06-13/index.html` — Tag / Taxonomy Audit Report
 - `reports/technology-modernization-audit-2026-06-12/index.html` — Technology Modernization Audit
 - `research/skill-hub/README/index.html` — Skill Hub Research Base
 - `research/skill-hub/RESEARCH_REPORT/index.html` — Skill Hub Research Report
@@ -184,21 +191,21 @@
 
 | Page | Title | Inbound | Outbound |
 |------|-------|---------|----------|
-| `index.html` | SAP AMS | AI Support Automation & Process Optimiza | 676 | 10 |
-| `about/index.html` | About Dzmitryi Kharlanau — Verified Public Profile | 667 | 11 |
-| `ai/index.html` | AI Routing Hub | 667 | 21 |
-| `datasets/index.html` | Datasets | 667 | 20 |
-| `legal/datasets/index.html` | Datasets License & Citation | 667 | 15 |
-| `legal/privacy/index.html` | Privacy Notice | 667 | 12 |
-| `legal/professional-disclosure/index.html` | Professional Disclosure | 667 | 12 |
-| `legal/responsible-ai/index.html` | Responsible AI Statement | 667 | 14 |
-| `news/index.html` | Professional Signals — Dzmitryi Kharlanau | 667 | 18 |
-| `services/index.html` | SAP Consulting Services — Dzmitryi Kharlanau | AMS | 667 | 23 |
-| `services/sap-ams-consulting/index.html` | SAP AMS Consulting — Incident Reduction and Knowle | 202 | 17 |
-| `ai/practical-ai-for-sap-support/index.html` | Practical AI for SAP Support — AI Intent Entity | 198 | 18 |
-| `atlas/index.html` | Knowledge Atlas — SAP, Operations, Data, Automatio | 171 | 39 |
+| `index.html` | SAP AMS | AI Support Automation & Process Optimiza | 687 | 10 |
+| `about/index.html` | About Dzmitryi Kharlanau — Verified Public Profile | 678 | 11 |
+| `ai/index.html` | AI Routing Hub | 678 | 21 |
+| `datasets/index.html` | Datasets | 678 | 20 |
+| `legal/datasets/index.html` | Datasets License & Citation | 678 | 15 |
+| `legal/privacy/index.html` | Privacy Notice | 678 | 12 |
+| `legal/professional-disclosure/index.html` | Professional Disclosure | 678 | 12 |
+| `legal/responsible-ai/index.html` | Responsible AI Statement | 678 | 14 |
+| `news/index.html` | Professional Signals — Dzmitryi Kharlanau | 678 | 18 |
+| `services/index.html` | SAP Consulting Services — Dzmitryi Kharlanau | AMS | 678 | 23 |
+| `services/sap-ams-consulting/index.html` | SAP AMS Consulting — Incident Reduction and Knowle | 206 | 17 |
+| `ai/practical-ai-for-sap-support/index.html` | Practical AI for SAP Support — AI Intent Entity | 202 | 18 |
+| `atlas/index.html` | Knowledge Atlas — SAP, Operations, Data, Automatio | 175 | 42 |
 | `skill-hub/index.html` | Skill Hub — Practical Working Skills for Enterpris | 93 | 99 |
-| `atlas/sap/index.html` | Atlas SAP Section — Configuration and Support Conc | 73 | 23 |
+| `atlas/sap/index.html` | Atlas SAP Section — Configuration and Support Conc | 73 | 26 |
 
 ## Broken Local Links
 
@@ -425,7 +432,7 @@
 - `agent-skills/skills/data-quality-root-cause/references/method/index.html` → `/news/`
 - `agent-skills/skills/data-quality-root-cause/references/templates/index.html` → `/news/`
 - `agent-skills/skills/incident-triage/SKILL/index.html` → `/news/`
-- ... and 747 more
+- ... and 745 more
 
 ## Recommendations
 

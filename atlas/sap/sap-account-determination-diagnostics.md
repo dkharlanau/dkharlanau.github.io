@@ -88,6 +88,29 @@ sitemap: false
     <p>This page is a diagnostic frame, not an account determination configuration guide. It does not cover the technical setup of account determination procedures, condition tables, or access sequences for account keys. It does not replace the judgment of the finance or configuration teams who own the chart of accounts and posting rules.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a> — use this map to place account determination in the wider order-to-cash workflow.</li>
+      <li><a href="/atlas/sap/sap-pricing-procedure-debugging/">SAP Pricing Procedure Debugging</a> — go here when the issue overlaps with pricing conditions and account keys.</li>
+      <li><a href="/atlas/diagnostics/sap-invoice-split-analysis/">SAP Invoice Split Analysis</a> — check this if account determination is affected by billing document splits.</li>
+      <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a> — use this for the end-to-end process context and hand-off points.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect billing document number, item, material, customer, sales org, and expected versus actual G/L account. **Synthetic example:** billing 1234567890, item 10, expected G/L 100000, actual 200000.
+
+- [ ] Check account assignment group on material master and customer master.
+
+- [ ] Review the account determination procedure for the transaction characteristics.
+
+- [ ] Confirm whether a custom enhancement overrides standard account determination.
+
+- [ ] Document recent master data changes and whether the issue is reproducible.
+
+- [ ] Safety limit: do not change account determination rules without finance approval and a reconciliation plan.
+</div>
   </div>
 
   <section class="atlas-related">

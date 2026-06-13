@@ -61,6 +61,12 @@ jobs:
       - name: Check indexing policy
         run: python3 scripts/check_indexing_policy.py --site-dir _site --fail-on-critical
 
+      - name: Check sitemap policy
+        run: python3 scripts/check_sitemap_policy.py --site-dir _site --repo-dir . --fail-on-critical
+
+      - name: Check date consistency
+        run: python3 scripts/check_date_consistency.py --site-dir _site --repo-dir . --fail-on-critical
+
       - name: Check content quality
         run: python3 scripts/check_content_quality.py --fail-on-critical
 
@@ -69,6 +75,9 @@ jobs:
 
       - name: Audit internal links
         run: python3 scripts/audit_internal_links.py --site-dir _site
+
+      - name: Audit accessibility and semantic HTML
+        run: python3 scripts/accessibility_audit.py --site-dir _site --fail-on-critical
 
       - name: Validate AI-readable endpoints
         run: python3 scripts/validate_ai_endpoints.py _site

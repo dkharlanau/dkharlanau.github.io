@@ -21,6 +21,7 @@ tags:
 related: 
   - "/atlas/data-quality/master-data-governance-failure-modes/"
   - "/atlas/ai-operations/ai-ready-process-documentation/"
+  - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: SAP Master Data Quality
 h1: SAP master data quality
@@ -81,8 +82,8 @@ author: Dzmitryi Kharlanau
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
 <li><a href="/atlas/data-quality/master-data-governance-failure-modes/">Master Data Governance Failure Modes</a></li>
-
 <li><a href="/atlas/ai-operations/ai-ready-process-documentation/">AI-Ready Process Documentation</a></li>
+<li><a href="/atlas/ai-operations/authorization-aware-ai-for-sap/">Authorization-Aware AI for SAP</a></li>
 
 </ul></section>
 

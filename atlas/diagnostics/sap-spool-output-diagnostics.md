@@ -26,8 +26,6 @@ related:
   - /atlas/diagnostics/sap-output-message-control-diagnostics/
   - /atlas/diagnostics/sap-background-job-diagnostics/
   - /atlas/sap/output-control/
-robots: noindex,follow
-sitemap: false
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

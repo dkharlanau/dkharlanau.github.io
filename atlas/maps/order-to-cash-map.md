@@ -21,6 +21,8 @@ tags:
 related: 
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-invoice-split-analysis/"
+  - "/atlas/concepts/sap-atp-is-not-inventory/"
+  - "/atlas/concepts/sap-stock-exists-not-promisable/"
 robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
 short_title: Order to Cash Map
 h1: Order to cash map
@@ -85,8 +87,8 @@ author: Dzmitryi Kharlanau
 <section class="atlas-related"><h2>Related pages</h2><ul>
 
 <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
-
-<li><a href="/atlas/diagnostics/sap-invoice-split-analysis/">SAP Invoice Split Analysis</a></li>
+<li><a href="/atlas/concepts/sap-atp-is-not-inventory/">SAP ATP Is Not Inventory</a></li>
+<li><a href="/atlas/concepts/sap-stock-exists-not-promisable/">SAP Stock Exists but Is Not Promisable</a></li>
 
 </ul></section>
 

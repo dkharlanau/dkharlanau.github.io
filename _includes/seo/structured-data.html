@@ -1,44 +1,85 @@
+{% comment %}
+Google-aligned structured data dispatcher.
+
+Rules:
+- Rich-result-oriented JSON-LD is only emitted on indexable pages (robots does not contain "noindex").
+- Homepage markup is intentionally not changed here; WebSite/SearchAction and FAQPage remain in _includes/head.html.
+- schema.org types that are NOT Google-supported rich results (CollectionPage, DataCatalog) are emitted only as machine-readable metadata and documented as such.
+- Use jsonify for all dynamic values; never manually concatenate unescaped JSON strings.
+{% endcomment %}
+
 {% assign resume = site.data.resume %}
 {% assign canonical_url = page.url | absolute_url %}
 {% assign site_home = '/' | absolute_url %}
-{% assign author_id = 'https://dkharlanau.github.io/#dkharlanau' %}
+{% assign author_id = site_home | append: '#dkharlanau' %}
+{% assign organization_id = resume.schema.worksFor.url | default: 'https://www.epam.com' | append: '#organization' %}
 {% assign og_image = page.og_image | default: '/assets/og/default.png' | absolute_url %}
+{% assign article_image = '' %}
+{% if page.og_image %}{% assign article_image = page.og_image | absolute_url %}{% endif %}
 {% assign page_description = page.description | default: page.summary | default: page.excerpt | default: site.description | strip_html | normalize_whitespace %}
 {% assign page_title = page.title | default: site.title | strip_html | normalize_whitespace %}
-{% assign page_modified = page.last_modified_at | default: page.updated | default: page.date %}
+{% assign page_modified = page.last_modified_at | default: page.updated | default: page.last_reviewed %}
 {% assign page_modified_test = page_modified | date: '%s' %}
 {% assign robots_directive = page.robots | default: '' %}
 {% assign allow_indexing = true %}
-{% if robots_directive contains 'noindex' %}
-{% assign allow_indexing = false %}
-{% endif %}
+{% if robots_directive contains 'noindex' %}{% assign allow_indexing = false %}{% endif %}
+
+{% assign article_published = page.date | default: page.published %}
+{% assign article_published_test = article_published | date: '%s' %}
+{% assign article_modified = page.last_modified_at | default: page.updated | default: page.last_reviewed %}
+{% assign article_modified_test = article_modified | date: '%s' %}
+
 {% assign datasets = site.data.datasets | default: empty %}
 {% assign knowledge_surfaces = site.data.knowledge_surfaces | default: empty %}
 {% assign catalog_id = 'https://dkharlanau.github.io/ai/catalog.json#catalog' %}
 {% assign catalog_url = 'https://dkharlanau.github.io/ai/catalog.json' %}
-{% assign is_profile_page = page.profile_page | default: false %}
-{% assign is_ai_catalog_page = false %}
-{% if page.url == '/ai/' %}
-{% assign is_ai_catalog_page = true %}
-{% endif %}
-{% assign is_dataset_catalog_page = false %}
-{% if page.data_catalog_page %}
-{% assign is_dataset_catalog_page = true %}
+
+{% comment %} Determine the primary structured data type for this page. {% endcomment %}
+{% assign page_type = '' %}
+{% if page.structured_data.type %}
+  {% assign page_type = page.structured_data.type %}
+{% elsif page.profile_page %}
+  {% assign page_type = 'ProfilePage' %}
+{% elsif page.data_catalog_page or page.url == '/notes/' or page.url == '/blog/' or page.url == '/news/' or page.url == '/radar/' or page.url == '/atlas/' or page.url == '/skill-hub/' or page.url == '/ai/' or page.url == '/services/' %}
+  {% assign page_type = 'CollectionPage' %}
 {% elsif page.url contains '/datasets/' %}
-  {% unless page.url contains '/datasets/view/' %}
-  {% assign is_dataset_catalog_page = true %}
-  {% endunless %}
+  {% assign page_type = 'WebPage' %}
+{% elsif page.collection == 'notes' or page.collection == 'blog' or page.collection == 'news' or page.collection == 'radar' %}
+  {% assign page_type = 'Article' %}
+{% elsif page.layout == 'blog' or page.layout == 'note' %}
+  {% assign page_type = 'Article' %}
+{% elsif page.url contains '/atlas/' and page.verified == true and page.status == 'reviewed' %}
+  {% assign page_type = 'TechArticle' %}
+{% elsif page.url contains '/skill-hub/' %}
+  {% assign page_type = 'Article' %}
+{% else %}
+  {% assign page_type = 'WebPage' %}
 {% endif %}
 
+{% comment %} Normalize common override values. {% endcomment %}
+{% case page_type %}
+{% when 'article' %}{% assign page_type = 'Article' %}
+{% when 'techarticle' %}{% assign page_type = 'TechArticle' %}
+{% when 'webpage' %}{% assign page_type = 'WebPage' %}
+{% when 'profilepage' %}{% assign page_type = 'ProfilePage' %}
+{% when 'collectionpage' %}{% assign page_type = 'CollectionPage' %}
+{% when 'event' %}{% assign page_type = 'Event' %}
+{% when 'course' %}{% assign page_type = 'Course' %}
+{% when 'dataset' %}{% assign page_type = 'Dataset' %}
+{% endcase %}
+
 {% if allow_indexing %}
+
+{% comment %} WebPage / ProfilePage / CollectionPage {% endcomment %}
+{% if page_type == 'ProfilePage' or page_type == 'CollectionPage' or page_type == 'WebPage' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "{% if is_profile_page %}ProfilePage{% elsif page.url == '/notes/' or page.url == '/blog/' or is_ai_catalog_page or is_dataset_catalog_page %}CollectionPage{% else %}WebPage{% endif %}",
+  "@type": "{{ page_type }}",
   "@id": "{{ canonical_url }}#webpage",
   "url": "{{ canonical_url }}",
-  "name": "{{ page_title | replace: '\"', '\\\"' }}",
-  "description": "{{ page_description | truncate: 160 | replace: '\"', '\\\"' }}",
+  "name": {{ page_title | jsonify }},
+  "description": {{ page_description | truncate: 160 | jsonify }},
   "inLanguage": "{{ site.lang | default: 'en' }}",
   {% if page_modified_test != page_modified %}"dateModified": "{{ page_modified | date_to_xmlschema }}",{% endif %}
   "isPartOf": {
@@ -46,7 +87,8 @@
     "@id": "{{ site_home }}#website",
     "url": "{{ site_home }}"
   },
-  {% if is_profile_page %}"mainEntity": {
+  {% if page_type == 'ProfilePage' %}
+  "mainEntity": {
     "@id": "{{ author_id }}"
   },
   "hasPart": [
@@ -54,7 +96,8 @@
     {"@id": "{{ '/services/' | absolute_url }}#webpage"},
     {"@id": "{{ '/notes/' | absolute_url }}#webpage"},
     {"@id": "{{ '/datasets/' | absolute_url }}#webpage"}
-  ],{% endif %}
+  ],
+  {% endif %}
   "author": {
     "@id": "{{ author_id }}"
   },
@@ -69,7 +112,51 @@
 </script>
 {% endif %}
 
-{% if is_profile_page %}
+{% comment %} Article / TechArticle (Google-supported rich result) {% endcomment %}
+{% if page_type == 'Article' or page_type == 'TechArticle' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "{{ page_type }}",
+  "@id": "{{ canonical_url }}#article",
+  "headline": {{ page_title | jsonify }},
+  "description": {{ page_description | truncate: 160 | jsonify }},
+  "author": {
+    "@id": "{{ author_id }}"
+  },
+  "publisher": {
+    "@id": "{{ organization_id }}"
+  },
+  {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
+  {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
+  {% if article_image != '' %}"image": "{{ article_image }}",{% endif %}
+  {% if page.tags %}"keywords": {{ page.tags | jsonify }},{% endif %}
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ canonical_url }}#webpage"
+  },
+  "url": "{{ canonical_url }}"
+  {% if page.domain or page.sap_area or page.business_process %},
+  "about": {
+    "@type": "Thing",
+    "name": {{ page.domain | default: page.sap_area | default: page.business_process | jsonify }}
+  }{% endif %}
+  {% if page.tags %},
+  "mentions": {{ page.tags | jsonify }}{% endif %}
+  {% if page_type == 'TechArticle' %}
+    {% if page.proficiency_level %},
+  "proficiencyLevel": {{ page.proficiency_level | jsonify }}{% endif %}
+    {% if page.teaches %},
+  "teaches": {{ page.teaches | jsonify }}{% endif %}
+    {% if page.dependencies %},
+  "dependencies": {{ page.dependencies | jsonify }}{% endif %}
+  {% endif %}
+}
+</script>
+{% endif %}
+
+{% comment %} ProfilePage entities {% endcomment %}
+{% if page_type == 'ProfilePage' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -81,7 +168,9 @@
   "image": {{ resume.image | jsonify }},
   "jobTitle": {{ resume.headline | jsonify }},
   "description": {{ resume.summary | jsonify }},
-  "worksFor": {{ resume.schema.worksFor | jsonify }},
+  "worksFor": {
+    "@id": "{{ organization_id }}"
+  },
   "sameAs": {{ resume.schema.sameAs | jsonify }},
   "knowsAbout": {{ resume.schema.knowsAbout | default: resume.skills | slice: 0, 25 | jsonify }},
   "alumniOf": {{ resume.schema.alumniOf | jsonify }},
@@ -96,22 +185,83 @@
   "hasCredential": {{ resume.schema.hasCredential | jsonify }}{% endif %}
 }
 </script>
-{% endif %}
 
 {% if resume.schema.worksFor and resume.schema.worksFor.name %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "{{ resume.schema.worksFor.url | default: 'https://www.epam.com' }}#organization",
+  "@id": "{{ organization_id }}",
   "name": {{ resume.schema.worksFor.name | jsonify }},
   "url": {{ resume.schema.worksFor.url | jsonify }}
 }
 </script>
 {% endif %}
+{% endif %}
 
+{% comment %} Event (Google-supported rich result) — only when explicit front matter exists. {% endcomment %}
+{% if page_type == 'Event' and page.structured_data.name and page.structured_data.start_date %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "@id": "{{ canonical_url }}#event",
+  "name": {{ page.structured_data.name | default: page_title | jsonify }},
+  "description": {{ page.structured_data.description | default: page_description | truncate: 160 | jsonify }},
+  "startDate": "{{ page.structured_data.start_date | date_to_xmlschema }}",
+  {% if page.structured_data.end_date %}"endDate": "{{ page.structured_data.end_date | date_to_xmlschema }}",{% endif %}
+  "eventStatus": "{{ page.structured_data.event_status | default: 'https://schema.org/EventScheduled' }}",
+  "location": {{ page.structured_data.location | jsonify }},
+  {% if article_image != '' %}"image": "{{ article_image }}",{% endif %}
+  "url": "{{ canonical_url }}"
+}
+</script>
+{% endif %}
+
+{% comment %} Course list (Google-supported rich result) — only when >=3 real courses are provided. {% endcomment %}
+{% if page_type == 'Course' and page.structured_data.courses and page.structured_data.courses.size >= 3 %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "@id": "{{ canonical_url }}#courses",
+  "itemListElement": [
+    {% for course in page.structured_data.courses %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "item": {
+        "@type": "Course",
+        "name": {{ course.name | jsonify }},
+        "description": {{ course.description | jsonify }},
+        "provider": {{ course.provider | jsonify }},
+        "url": "{{ course.url | default: canonical_url }}"
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
+
+{% comment %} Dataset (Google-supported rich result) — only when explicit front matter exists. {% endcomment %}
+{% if page_type == 'Dataset' and page.structured_data.name and page.structured_data.distribution %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "@id": "{{ canonical_url }}#dataset",
+  "name": {{ page.structured_data.name | jsonify }},
+  "description": {{ page.structured_data.description | default: page_description | jsonify }},
+  "url": "{{ canonical_url }}",
+  "distribution": {{ page.structured_data.distribution | jsonify }}
+}
+</script>
+{% endif %}
+
+{% comment %} DataCatalog — schema.org metadata only, not a Google rich result type. {% endcomment %}
 {% if datasets and datasets.size > 0 %}
-{% if is_ai_catalog_page or is_dataset_catalog_page %}
+{% if page.url == '/ai/' or page.data_catalog_page %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -129,13 +279,14 @@
   "about": {
     "@id": "{{ author_id }}"
   },
-  "dataset": {{ datasets | jsonify }}{% if is_ai_catalog_page and knowledge_surfaces and knowledge_surfaces.size > 0 %},
+  "dataset": {{ datasets | jsonify }}{% if page.url == '/ai/' and knowledge_surfaces and knowledge_surfaces.size > 0 %},
   "hasPart": {{ knowledge_surfaces | jsonify }}{% endif %}
 }
 </script>
 {% endif %}
 {% endif %}
 
+{% comment %} FAQPage — existing homepage feature, left untouched. {% endcomment %}
 {% if page.url == '/' or page.permalink == '/' %}
 {% assign home_faq = site.data.home.faq %}
 {% if home_faq and home_faq.items and home_faq.items.size > 0 %}
@@ -160,187 +311,29 @@
 {% endif %}
 {% endif %}
 
-{% if page.collection == 'notes' %}
-{% assign article_published = page.date | default: page.published %}
-{% assign article_published_test = article_published | date: '%s' %}
-{% assign article_modified = page.last_modified_at | default: page.updated %}
-{% assign article_modified_test = article_modified | date: '%s' %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "{{ page.title | strip_html | normalize_whitespace | replace: '\"', '\\\"' }}",
-  "description": "{{ page_description | truncate: 160 | replace: '\"', '\\\"' }}",
-  "author": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": {{ resume.schema.url | jsonify }}
-  },
-  {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
-  {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
-  "publisher": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": {{ resume.schema.url | jsonify }}
-  },
-  "image": "{{ og_image }}",
-  "mainEntityOfPage": "{{ canonical_url }}",
-  "url": "{{ canonical_url }}"
-}
-</script>
+{% comment %} BreadcrumbList (Google-supported rich result) for indexable pages with clear hierarchy. {% endcomment %}
+{% if page.url == '/notes/' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "Notes","item": "{{ '/notes/' | absolute_url }}"},
-    {"@type": "ListItem","position": 3,"name": "{{ page.title | strip_html | normalize_whitespace | replace: '\"', '\\\"' }}","item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Notes", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
-{% elsif page.layout == 'blog' or page.collection == 'blog' %}
-{% assign article_published = page.date | default: page.published %}
-{% assign article_published_test = article_published | date: '%s' %}
-{% assign article_modified = page.last_modified_at | default: page.updated %}
-{% assign article_modified_test = article_modified | date: '%s' %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "{{ page.title | strip_html | normalize_whitespace | replace: '\"', '\\\"' }}",
-  "description": "{{ page_description | truncate: 160 | replace: '\"', '\\\"' }}",
-  "author": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": {{ resume.schema.url | jsonify }}
-  },
-  {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
-  {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
-  "publisher": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": {{ resume.schema.url | jsonify }}
-  },
-  "image": "{{ og_image }}",
-  {% if page.tags %}"keywords": [{% for tag in page.tags %}"{{ tag | replace: '\"', '\\\"' }}"{% unless forloop.last %},{% endunless %}{% endfor %}],{% endif %}
-  "mainEntityOfPage": "{{ canonical_url }}",
-  "url": "{{ canonical_url }}"
-}
-</script>
+{% elsif page.collection == 'notes' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "Blog","item": "{{ '/blog/' | absolute_url }}"},
-    {"@type": "ListItem","position": 3,"name": "{{ page.title | strip_html | normalize_whitespace | replace: '\"', '\\\"' }}","item": "{{ canonical_url }}"}
-  ]
-}
-</script>
-{% elsif page.layout == 'blog' or page.collection == 'blog' %}
-{% assign article_published = page.date | default: page.published %}
-{% assign article_published_test = article_published | date: '%s' %}
-{% assign article_modified = page.last_modified_at | default: page.updated %}
-{% assign article_modified_test = article_modified | date: '%s' %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "{{ page.title | strip_html | normalize_whitespace | replace: '\"', '\\\"' }}",
-  "description": "{{ page_description | truncate: 160 | replace: '\"', '\\\"' }}",
-  "author": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": {{ resume.schema.url | jsonify }}
-  },
-  {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
-  {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
-  "publisher": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": {{ resume.schema.url | jsonify }}
-  },
-  "image": "{{ og_image }}",
-  {% if page.tags %}"keywords": [{% for tag in page.tags %}"{{ tag | replace: '\"', '\\\"' }}"{% unless forloop.last %},{% endunless %}{% endfor %}],{% endif %}
-  "mainEntityOfPage": "{{ canonical_url }}",
-  "url": "{{ canonical_url }}"
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "Blog","item": "{{ '/blog/' | absolute_url }}"},
-    {"@type": "ListItem","position": 3,"name": "{{ page.title | strip_html | normalize_whitespace | replace: '\"', '\\\"' }}","item": "{{ canonical_url }}"}
-  ]
-}
-</script>
-{% elsif page.url contains '/atlas/' and page.url != '/atlas/' %}
-{% assign article_published = page.last_reviewed | default: page.date | default: page.published %}
-{% assign article_published_test = article_published | date: '%s' %}
-{% assign article_modified = page.last_modified_at | default: page.updated %}
-{% assign article_modified_test = article_modified | date: '%s' %}
-{% assign atlas_section_name = page.atlas_section | default: 'Atlas' | capitalize %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "TechArticle",
-  "headline": "{{ page.title | strip_html | normalize_whitespace | replace: '\"', '\\\"' }}",
-  "description": "{{ page_description | truncate: 160 | replace: '\"', '\\\"' }}",
-  "author": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": {{ resume.schema.url | jsonify }}
-  },
-  {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
-  {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
-  "publisher": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": {{ resume.schema.url | jsonify }}
-  },
-  "image": "{{ og_image }}",
-  {% if page.tags %}"keywords": [{% for tag in page.tags %}"{{ tag | replace: '\"', '\\\"' }}"{% unless forloop.last %},{% endunless %}{% endfor %}],{% endif %}
-  {% if page.domain %}"about": {
-    "@type": "Thing",
-    "name": "{{ page.domain | replace: '\"', '\\\"' }}{% if page.concept_type %} — {{ page.concept_type | replace: '\"', '\\\"' }}{% endif %}"
-  },{% endif %}
-  "mainEntityOfPage": "{{ canonical_url }}",
-  "url": "{{ canonical_url }}"
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "Knowledge Atlas","item": "{{ '/atlas/' | absolute_url }}"},
-    {"@type": "ListItem","position": 3,"name": "{{ atlas_section_name }}","item": "{{ '/atlas/' | append: page.atlas_section | append: '/' | absolute_url }}"},
-    {"@type": "ListItem","position": 4,"name": "{{ page.title | strip_html | normalize_whitespace | replace: '\"', '\\\"' }}","item": "{{ canonical_url }}"}
-  ]
-}
-</script>
-{% elsif page.url == '/notes/' %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "Notes","item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Notes", "item": "{{ '/notes/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -349,65 +342,73 @@
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "Blog","item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
-{% elsif page.url == '/datasets/' %}
+{% elsif page.collection == 'blog' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "Datasets","item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "{{ '/blog/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
-{% elsif page.url == '/datasets/types/' %}
+{% elsif page.url == '/news/' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "Datasets","item": "{{ '/datasets/' | absolute_url }}"},
-    {"@type": "ListItem","position": 3,"name": "Types","item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "News", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
-{% elsif page.url == '/services/' %}
+{% elsif page.collection == 'news' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "Services","item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "News", "item": "{{ '/news/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
-{% elsif is_profile_page %}
+{% elsif page.url == '/radar/' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "About","item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Radar", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
-{% elsif page.url == '/ai/' %}
+{% elsif page.collection == 'radar' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "AI Sources","item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Radar", "item": "{{ '/radar/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
   ]
 }
 </script>
@@ -416,10 +417,195 @@
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
   "itemListElement": [
-    {"@type": "ListItem","position": 1,"name": "Home","item": "{{ site_home }}"},
-    {"@type": "ListItem","position": 2,"name": "Knowledge Atlas","item": "{{ canonical_url }}"}
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Knowledge Atlas", "item": "{{ canonical_url }}"}
   ]
 }
 </script>
+{% elsif page.url contains '/atlas/' and page.url != '/atlas/' %}
+{% assign atlas_section_url = '/atlas/' | append: page.atlas_section | append: '/' | absolute_url %}
+{% assign atlas_section_name = page.atlas_section | default: 'Atlas' | capitalize %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Knowledge Atlas", "item": "{{ '/atlas/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ atlas_section_name | jsonify }}, "item": "{{ atlas_section_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url == '/skill-hub/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Skill Hub", "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url contains '/skill-hub/' and page.url != '/skill-hub/' %}
+{% assign sh_parts = page.url | split: '/' %}
+{% assign sh_section_slug = sh_parts[2] %}
+{% assign sh_parent_path = '/skill-hub/' | append: sh_section_slug | append: '/' %}
+{% assign sh_parent_page = site.pages | where: 'permalink', sh_parent_path | first %}
+{% assign sh_parent_title = sh_parent_page.title | default: sh_section_slug | capitalize %}
+{% assign sh_parent_url = sh_parent_path | absolute_url %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Skill Hub", "item": "{{ '/skill-hub/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ sh_parent_title | jsonify }}, "item": "{{ sh_parent_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url == '/datasets/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Datasets", "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url == '/datasets/types/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Types", "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url contains '/datasets/types/' and page.url != '/datasets/types/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": "Types", "item": "{{ '/datasets/types/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url contains '/datasets/view/' %}
+{% assign ds_parts = page.url | split: '/' %}
+{% assign ds_collection_slug = ds_parts[3] %}
+{% assign ds_parent_path = '/datasets/' | append: ds_collection_slug | append: '/' %}
+{% assign ds_parent_page = site.pages | where: 'permalink', ds_parent_path | first %}
+{% assign ds_parent_title = ds_parent_page.title | default: ds_collection_slug | capitalize %}
+{% assign ds_parent_url = ds_parent_path | absolute_url %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ ds_parent_title | jsonify }}, "item": "{{ ds_parent_url }}"},
+    {"@type": "ListItem", "position": 4, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url contains '/datasets/' and page.url != '/datasets/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Datasets", "item": "{{ '/datasets/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url == '/services/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Services", "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url contains '/services/' and page.url != '/services/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "Services", "item": "{{ '/services/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url == '/ai/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "AI Sources", "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.url contains '/ai/' and page.url != '/ai/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "AI Sources", "item": "{{ '/ai/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 3, "name": {{ page_title | jsonify }}, "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% elsif page.profile_page %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ canonical_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_home }}"},
+    {"@type": "ListItem", "position": 2, "name": "About", "item": "{{ canonical_url }}"}
+  ]
+}
+</script>
+{% endif %}
+
 {% endif %}

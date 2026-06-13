@@ -412,7 +412,7 @@ def generate_llms_full(all_pages, atlas_files, check_mode=False):
         lines.append("-" * 40)
 
         clean_body = strip_jekyll_and_html(body)
-        lines.append(clean_body)
+        lines.append("\n".join(line.rstrip() for line in clean_body.splitlines()))
         lines.append("")
         lines.append("=" * 50)
         lines.append("")
