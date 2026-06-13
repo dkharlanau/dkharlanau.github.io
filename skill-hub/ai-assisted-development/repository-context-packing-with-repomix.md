@@ -76,7 +76,7 @@ verified: true
       <li><strong>State the goal.</strong> Write one sentence describing what the AI should do with the pack.</li>
       <li><strong>Create a temporary directory.</strong> Use <code>.tmp/repomix/</code> or <code>/tmp/repomix/</code>; never commit packs.</li>
       <li><strong>Draft include patterns.</strong> Start with the directories and file types relevant to the goal.</li>
-      <li><strong>Draft ignore patterns.</strong> Exclude <code>.git/</code>, <code>node_modules/</code>, <code>_site/</code>, <code>dist/</code>, <code>.env</code>, secrets, images, and private working directories.</li>
+      <li><strong>Draft ignore patterns.</strong> Exclude <code>.git/</code>, <code>node_modules/</code>, <code>_site/</code>, <code>dist/</code>, dotenv files, secrets, images, and private working directories.</li>
       <li><strong>Run Repomix.</strong> Use <code>npx repomix@latest</code> with explicit flags.</li>
       <li><strong>Review token count.</strong> If too high, split by concern or use compressed Markdown.</li>
       <li><strong>Inspect the pack.</strong> Search for accidental inclusions such as secrets, private paths, or large generated files.</li>
@@ -117,7 +117,7 @@ npx repomix@latest \
   -o .tmp/repomix/audit.xml \
   --style xml \
   --include "src/**/*.py,tests/**/*.py,README.md,pyproject.toml" \
-  --ignore "**/__pycache__/**,**/.git/**,**/node_modules/**,**/*.png,**/*.jpg,.env,.env.*"
+  --ignore "**/__pycache__/**,**/.git/**,**/node_modules/**,**/*.png,**/*.jpg,*.local"
 </code></pre>
 
     <h3>Repository audit prompt</h3>

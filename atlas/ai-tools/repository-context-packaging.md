@@ -128,8 +128,8 @@ related:
 <h2>Safety and privacy checks</h2>
 
 <ul>
-  <li>Exclude <code>.env</code>, <code>secrets.yml</code>, private keys, and any file containing credentials.</li>
-  <li>Exclude local-only directories such as <code>kb-drafts/</code>, <code>source_files/</code>, or private working notes.</li>
+  <li>Exclude dotenv files, secrets files, private keys, and any file containing credentials.</li>
+  <li>Exclude local-only directories such as draft working folders or private working notes.</li>
   <li>Exclude generated directories such as <code>_site/</code>, <code>dist/</code>, <code>node_modules/</code>, and cache folders.</li>
   <li>Exclude large binaries and images. They add tokens without adding meaning.</li>
   <li>Confirm the tool does not upload code to a cloud service unless that is intentional and approved.</li>

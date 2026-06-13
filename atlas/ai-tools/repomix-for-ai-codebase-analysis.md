@@ -150,8 +150,8 @@ npx repomix@latest \
 <h2>Security and privacy checks</h2>
 
 <ul>
-  <li>Exclude <code>.env</code>, <code>.env.*</code>, secrets managers, and any file with credentials.</li>
-  <li>Exclude private working directories such as <code>kb-drafts/</code>, <code>source_files/</code>, or personal notes.</li>
+  <li>Exclude dotenv files, dotenv local overrides, secrets managers, and any file with credentials.</li>
+  <li>Exclude private working directories such as draft working folders or personal notes.</li>
   <li>Exclude generated artifacts such as <code>_site/</code>, <code>dist/</code>, <code>build/</code>, and cache folders.</li>
   <li>Run Repomix's security check and review its report.</li>
   <li>Open the output file and scan for accidental inclusions before sharing or uploading.</li>
