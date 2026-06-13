@@ -61,7 +61,7 @@ related:
 
 <h2>What problem this solves</h2>
 
-<p>As coding agents produce more pull requests, human reviewers become the bottleneck. AI code review agents can scan a diff for bugs, style issues, missing tests, and security patterns in minutes. The value is speed and consistency on the mechanical parts of review, freeing humans for judgment calls.</p>
+<p>As coding agents produce more pull requests, human reviewers become the bottleneck. AI review agents can scan a diff for bugs, style issues, missing tests, and security patterns in minutes. The value is speed on mechanical checks; the limit is that they do not understand intent, architecture, or domain risk.</p>
 
 <h2>When to use it</h2>
 
@@ -85,13 +85,13 @@ related:
 
 <table>
   <thead>
-    <tr><th>Tool</th><th>Best for</th><th>Limitations</th></tr>
+    <tr><th>Tool</th><th>Use when</th><th>Limits</th></tr>
   </thead>
   <tbody>
-    <tr><td><a href="https://coderabbit.ai/">CodeRabbit</a></td><td>Multi-platform PR review with inline comments, 40+ linters, and learning from feedback</td><td>Can be noisy on large PRs; stores code for 7 days; no BYOK</td></tr>
-    <tr><td><a href="https://github.com/features/copilot">GitHub Copilot code review</a></td><td>Zero-setup review inside GitHub; integrated with CodeQL and ESLint</td><td>GitHub-only; diff-based; limited cross-file reasoning</td></tr>
-    <tr><td><a href="https://www.qodo.ai/">Qodo</a> (CodiumAI)</td><td>Multi-agent review and test generation</td><td>Smaller ecosystem than CodeRabbit or Copilot</td></tr>
-    <tr><td><a href="https://claude.com/code">Claude Code Review</a></td><td>High-precision multi-agent review for teams already on Claude Code Enterprise</td><td>Expensive and slow; GitHub-only; research preview</td></tr>
+    <tr><td><a href="https://coderabbit.ai/">CodeRabbit</a></td><td>You want inline comments across multiple platforms and can tolerate some noise.</td><td>Can be verbose on large PRs; stores code temporarily; no bring-your-own-key.</td></tr>
+    <tr><td><a href="https://github.com/features/copilot">GitHub Copilot code review</a></td><td>You want zero-setup review inside GitHub and already use Copilot.</td><td>GitHub-only; diff-based; limited cross-file reasoning.</td></tr>
+    <tr><td><a href="https://www.qodo.ai/">Qodo</a> (CodiumAI)</td><td>You want multi-agent review and test generation in one tool.</td><td>Smaller ecosystem; configuration overhead.</td></tr>
+    <tr><td><a href="https://claude.com/code">Claude Code Review</a></td><td>You are already on Claude Code Enterprise and need high-precision review.</td><td>Expensive and slow; GitHub-only; research preview.</td></tr>
   </tbody>
 </table>
 
@@ -145,6 +145,8 @@ related:
   <li>Ignoring AI-flagged security findings because "the agent probably hallucinated it."</li>
   <li>Letting an AI reviewer auto-commit fixes without a human diff review.</li>
 </ul>
+
+<p>AI review is most useful when it narrows what the human checks, not when it replaces the check. The best configuration is tight enough that every flagged item is worth a human look.</p>
 
 <h2>Related Atlas pages</h2>
 

@@ -56,7 +56,7 @@ level: 2
 
   <div class="note-body">
     <h2>Core idea</h2>
-    <p>IDoc status codes tell you where an interface document failed and what layer is responsible. Status 51 means application error, 56 means IDoc missing, 64 means ready for dispatch, 75 means control record error. The support goal is to map the status to the right layer — syntax, partner profile, application, or workflow — and collect the evidence needed before escalating.</p>
+    <p>IDoc status codes map a failure to a layer: application (51), processing function (56), ready for dispatch (64), control record (75), or port transmission (02). The diagnostic job is to use the status to choose the right layer, collect the evidence, and avoid reprocessing until the cause is fixed.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -112,8 +112,8 @@ level: 2
       <li>If the IDoc is corrupted and cannot be reprocessed, request a resend from the partner system.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>IDoc status is the primary diagnostic signal. A useful ticket should include: IDoc number, direction, message type, partner, current status, status history, error text, and whether the issue is isolated or批量. Do not reprocess IDocs without understanding why they failed.</p>
+    <h2>What to capture first</h2>
+    <p>Before routing the issue, capture: IDoc number, direction, message type, partner, current status, status history, and error text. Note whether the failure is isolated or affects multiple IDocs. Status is the primary signal, but the error text and history turn the status into an actionable next step.</p>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not an IDoc configuration guide. It does not cover partner profile setup, port configuration, or AIF mapping. It does not replace SAP's IDoc documentation.</p>

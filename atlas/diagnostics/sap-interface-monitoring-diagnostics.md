@@ -55,7 +55,7 @@ level: 2
 
   <div class="note-body">
     <h2>Core idea</h2>
-    <p>Interface monitoring should detect failures before the business notices them. When monitoring misses IDoc errors, reports false positives, or does not cover new interfaces, the support goal is to identify whether the issue is in the monitoring scope, alert thresholds, job scheduling, or the monitoring tool configuration itself.</p>
+    <p>Interface monitoring is only useful if it alerts the right person before the business reports the failure. Most monitoring gaps are not tool failures; they are scope gaps, thresholds set too high, jobs that stopped running, or new interfaces that were never onboarded. The diagnostic job is to compare what the tool checks against what actually failed.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -110,8 +110,8 @@ level: 2
       <li>Tune the monitoring tool to reduce false positives while maintaining sensitivity for real failures.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Interface monitoring issues are usually scope or configuration gaps. A useful ticket should include: the interface path, message type, partner, expected monitoring behavior, actual behavior, monitoring job name, and any recent changes to the interface or monitoring setup.</p>
+    <h2>What to capture first</h2>
+    <p>Before routing the issue, capture: interface path, message type, partner, expected versus actual monitoring behavior, monitoring job name, and any recent change to the interface or monitoring setup. If the tool reports green while IDocs are stuck in error, the scope or threshold is usually wrong.</p>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not an interface monitoring configuration guide. It does not cover specific monitoring tools (SolMan, SAP Cloud ALM, third-party) or alert routing design. It does not replace SAP's operations documentation.</p>

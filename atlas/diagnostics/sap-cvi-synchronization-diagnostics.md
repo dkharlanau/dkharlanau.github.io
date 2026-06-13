@@ -58,7 +58,7 @@ level: 2
 
   <div class="note-body">
     <h2>Core idea</h2>
-    <p>Customer-Vendor Integration (CVI) in S/4HANA synchronizes business partners with customer and vendor master data. When a BP is created but the corresponding customer or vendor is missing, has wrong data, or creates duplicates, the support goal is to identify whether the issue is in the CVI configuration, the BP grouping, the direction of synchronization, or the target master data setup.</p>
+    <p>Customer-Vendor Integration (CVI) in S/4HANA keeps business partners aligned with customer and vendor master data. Most CVI incidents are not data corruption; they are configuration or timing mismatches. Before treating a missing customer or vendor as a master-data defect, confirm whether CVI is expected to create the object, which direction is configured, and whether the required BP role exists.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -115,8 +115,8 @@ level: 2
       <li>Re-run CVI synchronization after correcting configuration or data issues.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>CVI synchronization issues are usually configuration or role assignment problems. A useful ticket should include: BP number, customer/vendor number, BP grouping, expected roles, actual result, CVI_LINK status, and any synchronization log errors.</p>
+    <h2>What to capture first</h2>
+    <p>Before routing the issue, capture: BP number, customer or vendor number, BP grouping, expected roles, actual result, CVI_LINK status, and any synchronization log error. If the BP was created manually, note the creation order; direction mismatches are common when a customer or vendor already exists before the BP.</p>
 
     <h2>Boundaries and non-goals</h2>
     <p>This page is a diagnostic frame, not a CVI configuration guide. It does not cover CVI setup, BP grouping design, or field mapping configuration. It does not replace SAP's CVI documentation.</p>
@@ -133,7 +133,7 @@ level: 2
     </ul>
 
     <h2>Customer-vendor integration boundary</h2>
-    <p>Customer-Vendor Integration is the S/4HANA mechanism that keeps business partners, customers, and vendors aligned. Most CVI incidents are not data corruption; they are configuration or timing mismatches. Before treating a missing customer or vendor as a master-data defect, confirm whether CVI is expected to create the object, which direction is configured, and whether the required BP role exists.</p>
+    <p>CVI is a bridge, not a cleanup tool. It will not repair a customer that was created before the BP, nor will it guess the right grouping if the BP was created without the FLCU00 or FLVN00 role. Fix the configuration and timing first; manual object creation usually creates more link breaks than it solves.</p>
 
     <h2>Practical checklist</h2>
     <div markdown="1">

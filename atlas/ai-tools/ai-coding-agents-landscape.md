@@ -65,13 +65,13 @@ related:
 
 <h2>What problem this solves</h2>
 
-<p>Coding agents can read files, edit code, run tests, and even open pull requests. But they are not interchangeable. Some live in the terminal, some inside an IDE, and some run asynchronously in the cloud. Some work with any model; others lock you into one provider. Choosing the wrong agent for the task produces noise, cost overruns, or unsafe changes.</p>
+<p>Coding agents differ more than their marketing suggests. The right choice depends on where the work happens, how much context the agent can see, and how much autonomy the team is willing to delegate. A terminal agent forced into an IDE workflow, or a cloud agent run without review gates, creates cost and risk that outweigh the productivity gain.</p>
 
 <h2>Three agent shapes</h2>
 
 <h3>1. Terminal agents</h3>
 
-<p>Terminal agents run in your shell. They are editor-agnostic and work well for developers who already live in the terminal, over SSH, or in CI contexts.</p>
+<p>Terminal agents run in the shell. They suit backend work, complex refactors, headless runs, and teams that want to stay editor-agnostic. The trade-off is that the developer must drive the session; there is no inline completion or visual diff.</p>
 
 <table>
   <thead>
@@ -84,11 +84,11 @@ related:
   </tbody>
 </table>
 
-<p>Terminal agents are best for: complex refactors, backend work, long-running tasks, headless runs, and teams that want to stay editor-agnostic.</p>
+<p>Use terminal agents when the work spans many files, runs over SSH, or needs to be scripted into CI. Avoid them when the team lives inside an IDE and values visual diffs.</p>
 
 <h3>2. IDE agents</h3>
 
-<p>IDE agents embed AI into the editor. They excel at daily coding, visual diffs, and inline assistance.</p>
+<p>IDE agents embed AI into the editor. They excel at daily coding, visual diffs, and inline suggestions, but they are usually tied to a specific editor or vendor ecosystem.</p>
 
 <table>
   <thead>
@@ -101,11 +101,11 @@ related:
   </tbody>
 </table>
 
-<p>IDE agents are best for: front-end work, daily editing, visual diff review, and teams that prefer a GUI.</p>
+<p>Use IDE agents for front-end work, small-scope changes, and teams that review through visual diffs. They are less suited to long-running, multi-file tasks that exceed an editor session.</p>
 
 <h3>3. Autonomous engineering agents</h3>
 
-<p>These agents attempt to carry out larger engineering tasks with less continuous supervision.</p>
+<p>Autonomous agents attempt larger tasks with less supervision. They are useful for well-scoped, isolated work, but they need strong stop conditions and human review before any merge.</p>
 
 <table>
   <thead>
@@ -118,7 +118,7 @@ related:
   </tbody>
 </table>
 
-<p>Autonomous agents are best for: well-specified isolated tasks, research, benchmarking, and environments with strong review gates.</p>
+<p>Use autonomous agents for research spikes, benchmarking, or isolated tasks with clear acceptance criteria. Do not use them for production changes without human review at every gate.</p>
 
 <h2>Decision criteria</h2>
 
@@ -137,14 +137,14 @@ related:
   </tbody>
 </table>
 
-<h2>When to use which tool</h2>
+<h2>How to decide</h2>
 
 <ul>
-  <li><strong>Repomix + terminal agent</strong> for architecture audits and focused implementation tasks.</li>
+  <li><strong>Repomix + terminal agent</strong> when the task needs a full codebase snapshot and focused implementation.</li>
   <li><strong>Cursor / Copilot</strong> for daily editing and small-scope changes inside the IDE.</li>
   <li><strong>Claude Code / Codex CLI</strong> for complex, multi-file refactors and terminal-centric workflows.</li>
-  <li><strong>Aider</strong> when you want model choice, git-native workflow, or programmatic invocation.</li>
-  <li><strong>CodeRabbit / Copilot code review</strong> for first-pass review before a human approves.</li>
+  <li><strong>Aider</strong> when model choice, git-native workflow, or programmatic invocation matters more than vendor polish.</li>
+  <li><strong>CodeRabbit / Copilot code review</strong> for first-pass review, not final approval.</li>
 </ul>
 
 <h2>Safety and privacy checks</h2>
@@ -164,6 +164,8 @@ related:
   <li>Using a cloud agent on a private repo without checking data residency.</li>
   <li>Comparing agents by hype instead of by workflow fit.</li>
 </ul>
+
+<p>Most teams overestimate the productivity gain and underestimate the review cost. Start with a narrow scope, measure review time and error rate, and expand only when the agent consistently produces diffs a human can approve without rework.</p>
 
 <h2>Related Atlas pages</h2>
 
