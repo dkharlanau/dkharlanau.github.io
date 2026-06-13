@@ -513,3 +513,58 @@ def test_indexnow_from_git_diff_only_submits_changed_indexable_html(monkeypatch,
     assert "https://dkharlanau.github.io/atlas/draft/" not in urls
     assert "https://dkharlanau.github.io/notes/noindex/" not in urls
     assert "https://dkharlanau.github.io/assets/config.yml" not in urls
+
+
+# ---------------------------------------------------------------------------
+# IndexNow: secret safety
+# ---------------------------------------------------------------------------
+
+
+def test_indexnow_report_does_not_leak_key(monkeypatch, tmp_path):
+    """Report JSON must not contain the IndexNow key."""
+    monkeypatch.setenv("INDEXNOW_KEY", "secret-key-12345")
+    monkeypatch.chdir(tmp_path)
+    _make_site_sitemap(tmp_path, ["https://dkharlanau.github.io/about/"])
+    _make_built_html(tmp_path, "/about/")
+    fake_urls = {"https://dkharlanau.github.io/about/"}
+    report_path = tmp_path / "report.json"
+    with patch.object(indexnow_mod, "discover_indexable_urls", return_value=(fake_urls, {})):
+        with patch.object(indexnow_mod, "submit"):
+            try:
+                indexnow_mod.main([
+                    "--submit",
+                    "--all",
+                    "--site-dir", str(tmp_path / "_site"),
+                    "--report", str(report_path),
+                ])
+            except SystemExit:
+                pass
+    assert report_path.exists()
+    raw = report_path.read_text(encoding="utf-8")
+    assert "secret-key-12345" not in raw
+
+
+def test_indexnow_dry_run_report_succeeds_without_key(monkeypatch, tmp_path):
+    """Dry-run must write a report and succeed when no key is configured."""
+    monkeypatch.delenv("INDEXNOW_KEY", raising=False)
+    monkeypatch.chdir(tmp_path)
+    _make_site_sitemap(tmp_path, ["https://dkharlanau.github.io/about/"])
+    _make_built_html(tmp_path, "/about/")
+    fake_urls = {"https://dkharlanau.github.io/about/"}
+    report_path = tmp_path / "report.json"
+    with patch.object(indexnow_mod, "discover_indexable_urls", return_value=(fake_urls, {})):
+        with patch.object(indexnow_mod, "submit") as mock_submit:
+            try:
+                result = indexnow_mod.main([
+                    "--all",
+                    "--site-dir", str(tmp_path / "_site"),
+                    "--report", str(report_path),
+                ])
+            except SystemExit as exc:
+                result = exc.code
+            mock_submit.assert_called_once()
+            assert result in (0, None)
+    assert report_path.exists()
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["mode"] == "dry-run"
+    assert "https://dkharlanau.github.io/about/" in report["submitted"]
