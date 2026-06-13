@@ -27,8 +27,6 @@ related:
   - /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
   - /atlas/diagnostics/sap-reservation-diagnostics/
   - /atlas/diagnostics/sap-stock-transfer-diagnostics/
-robots: noindex,follow
-sitemap: false
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

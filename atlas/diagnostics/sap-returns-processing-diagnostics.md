@@ -27,8 +27,6 @@ related:
   - /atlas/diagnostics/sap-delivery-block-analysis/
   - /atlas/diagnostics/sap-billing-block-analysis/
   - /atlas/diagnostics/sap-invoice-verification-diagnostics/
-robots: noindex,follow
-sitemap: false
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

@@ -28,8 +28,6 @@ related:
   - /atlas/diagnostics/sap-stock-transfer-diagnostics/
   - /atlas/diagnostics/sap-material-document-diagnostics/
   - /atlas/diagnostics/sap-physical-inventory-diagnostics/
-robots: noindex,follow
-sitemap: false
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

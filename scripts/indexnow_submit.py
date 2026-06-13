@@ -28,6 +28,7 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from urllib.parse import urlparse
 
 
 BASE_URL = "https://dkharlanau.github.io"
@@ -356,8 +357,14 @@ def filter_urls_by_sitemap(
     return in_sitemap, skipped
 
 
+NON_HTML_EXTENSIONS = (".json", ".yml", ".yaml", ".xml", ".txt", ".css", ".js")
+
+
 def _built_html_path_for_url(url: str, site_dir: Path) -> Path | None:
-    """Map a canonical URL to the corresponding built HTML file in site_dir."""
+    """Map a canonical URL to the corresponding built file in site_dir.
+
+    Pretty URLs map to index.html; static-file URLs keep their original extension.
+    """
     if not url.startswith(BASE_URL):
         return None
     rel = url[len(BASE_URL) :]
@@ -366,15 +373,22 @@ def _built_html_path_for_url(url: str, site_dir: Path) -> Path | None:
     candidate = site_dir / rel.lstrip("/")
     if candidate.is_dir():
         candidate = candidate / "index.html"
-    elif not str(candidate).endswith(".html"):
+    elif candidate.suffix.lower() not in (".html",) + NON_HTML_EXTENSIONS:
         candidate = candidate.with_suffix(candidate.suffix + ".html")
     if candidate.exists():
         return candidate
     return None
 
 
+def _url_path_is_non_html(url: str) -> bool:
+    path = urlparse(url).path
+    return path.lower().endswith(NON_HTML_EXTENSIONS)
+
+
 def check_url_noindex_in_site(url: str, site_dir: Path) -> tuple[bool, str | None]:
     """Return (is_indexable, reason) by inspecting built HTML for noindex robots meta."""
+    if _url_path_is_non_html(url):
+        return True, None
     html_path = _built_html_path_for_url(url, site_dir)
     if html_path is None:
         return False, "built HTML not found"

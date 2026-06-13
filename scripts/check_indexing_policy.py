@@ -202,17 +202,34 @@ def check_built_html(site_dir: Path, repo_dir: Path) -> list[str]:
                     if len(h1s) != 1:
                         issues.append(f"{rel}: verified page has {len(h1s)} H1 (expected 1)")
 
-        # Check for broken local links
-        for link in LINK_HREF_RE.findall(content):
+        # Check for broken local links (ignore inline script strings)
+        content_for_links = re.sub(
+            r'<script[^>]*>.*?</script>', '', content,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+        static_extensions = {
+            ".json", ".yml", ".yaml", ".xml", ".txt", ".css", ".js",
+            ".svg", ".png", ".jpg", ".jpeg", ".webp", ".avif", ".pdf",
+        }
+        page_dir = html_path.parent
+        for link in LINK_HREF_RE.findall(content_for_links):
             if not link or link.startswith("#") or ":" in link:
                 continue
-            local = link.lstrip("/")
-            if not local:
-                continue
-            target = site_dir / local
+            # Strip query/fragment markers for filesystem checks
+            link_clean = link.split("?")[0].split("#")[0]
+            if link.startswith("/"):
+                target = site_dir / link_clean.lstrip("/")
+            else:
+                target = page_dir / link_clean
+            try:
+                resolved = target.resolve()
+                resolved.relative_to(site_dir.resolve())
+                target = resolved
+            except (ValueError, OSError):
+                pass
             if target.is_dir():
                 target = target / "index.html"
-            elif not str(target).endswith(".html"):
+            elif target.suffix.lower() not in {".html"} | static_extensions:
                 target = target.with_suffix(".html")
             if not target.exists() and not is_noindex:
                 issues.append(f"{rel}: broken local link '{link}' on indexable page")

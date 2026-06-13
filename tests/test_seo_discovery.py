@@ -306,25 +306,60 @@ def test_structured_data_include_exists():
 def _clean_jekyll_json_block(block: str) -> str:
     """Remove Jekyll/Liquid markup so the result is valid-ish JSON for testing."""
     clean = block
-    # Replace full if/elsif/else/endif blocks with the first branch content
-    def replace_conditional(m):
-        return m.group(1) if m.group(1) else '"placeholder"'
-    clean = re.sub(
-        r'{%\s*if\s+.*?%}(.*?)(?:{%\s*elsif.*?%}.*?){0,}(?:{%\s*else\s*%}.*?)?{%\s*endif\s*%}',
-        replace_conditional,
-        clean,
-        flags=re.DOTALL,
-    )
-    # Remove any remaining liquid tags
+
+    # Remove comments and silent tags that produce no output.
+    clean = re.sub(r'{%\s*comment\s*%}.*?{%\s*endcomment\s*%}', '', clean, flags=re.DOTALL)
+    clean = re.sub(r'{%\s*assign\s+.*?%}', '', clean)
+    clean = re.sub(r'{%\s*capture\s+.*?%}.*?{%\s*endcapture\s*%}', '', clean, flags=re.DOTALL)
+
+    # Resolve nested if/elsif/else/endif blocks by repeatedly replacing the
+    # innermost conditional with its first branch content.
+    TAG_RE = re.compile(r'{%\s*(if|elsif|else|endif)\s*.*?%}')
+
+    def find_innermost_conditional(text: str):
+        """Return (start, end, first_branch) for the innermost if..endif."""
+        stack: list[tuple[int, int]] = []  # (start_index_of_if_tag, content_start_after_if_tag)
+        for match in TAG_RE.finditer(text):
+            tag = match.group(1)
+            if tag == "if":
+                stack.append((match.start(), match.end()))
+            elif tag in ("elsif", "else"):
+                if stack:
+                    # Record the first branch boundary on the first elsif/else at this depth.
+                    if len(stack) == 1 and "first_branch_end" not in locals():
+                        first_branch_end = match.start()
+            elif tag == "endif":
+                if not stack:
+                    continue
+                if_start, content_start = stack.pop()
+                if not stack:
+                    # This endif closes the outermost if in the current text.
+                    first_branch_end = locals().get("first_branch_end", match.start())
+                    first_branch = text[content_start:first_branch_end]
+                    return if_start, match.end(), first_branch
+        return None
+
+    while True:
+        result = find_innermost_conditional(clean)
+        if result is None:
+            break
+        start, end, first_branch = result
+        clean = clean[:start] + first_branch + clean[end:]
+
+    # Remove any remaining liquid tags.
     clean = re.sub(r'{%.*?%}', '', clean)
-    # Replace Jekyll expressions including trailing filters or anchors like #webpage
+
+    # Replace Jekyll expressions including trailing anchors like #webpage.
     clean = re.sub(r'{{.*?}}(?:#[a-zA-Z0-9_-]+)?', '"placeholder"', clean)
-    # Collapse multiple placeholders with em-dashes or other connectors into one
+
+    # Collapse multiple placeholders separated by connectors.
     clean = re.sub(r'"placeholder"\s*[-–—]\s*"placeholder"', '"placeholder"', clean)
-    # Remove trailing commas before closing braces/brackets
+
+    # Remove trailing commas before closing braces/brackets.
     clean = re.sub(r',\s*}', '}', clean)
     clean = re.sub(r',\s*]', ']', clean)
-    # Fix double quotes that may appear from placeholder + existing quotes
+
+    # Fix double quotes that may appear around placeholders.
     clean = clean.replace('""placeholder""', '"placeholder"')
     clean = clean.replace('""placeholder"', '"placeholder"')
     clean = clean.replace('"placeholder""', '"placeholder"')
@@ -384,16 +419,87 @@ def test_structured_data_has_article_for_notes():
     assert "Article" in text
 
 
-def test_structured_data_has_techarticle_for_atlas():
+def test_structured_data_has_article_for_atlas():
     path = REPO_ROOT / "_includes" / "seo" / "structured-data.html"
     text = path.read_text(encoding="utf-8")
-    assert "TechArticle" in text
+    assert "Article" in text
+    assert "TechArticle" not in text, "TechArticle is not a Google-supported Article subtype"
 
 
 def test_structured_data_has_organization():
     path = REPO_ROOT / "_includes" / "seo" / "structured-data.html"
     text = path.read_text(encoding="utf-8")
     assert "Organization" in text
+
+
+# ---------------------------------------------------------------------------
+# Built-site structured data tests
+# ---------------------------------------------------------------------------
+
+
+SCRIPT_LD_RE = re.compile(
+    r'<script\s+type=["\']application/ld\+json["\']\s*>(.*?)</script>',
+    re.IGNORECASE | re.DOTALL,
+)
+META_ROBOTS_RE = re.compile(
+    r'<meta[^>]+name=["\']robots["\'][^>]+content=["\'](.*?)["\']',
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def _collect_ids(obj: object, ids: list, top_level: bool = True) -> None:
+    if isinstance(obj, dict):
+        if top_level and "@id" in obj and isinstance(obj["@id"], str):
+            ids.append(obj["@id"])
+        for value in obj.values():
+            _collect_ids(value, ids, top_level=False)
+    elif isinstance(obj, list):
+        for item in obj:
+            _collect_ids(item, ids, top_level=False)
+
+
+def test_built_site_no_jsonld_on_noindex_pages():
+    """No JSON-LD blocks should appear on pages that are robots:noindex."""
+    site_dir = REPO_ROOT / "_site"
+    if not site_dir.exists():
+        pytest.skip("_site not built; run Jekyll build first")
+
+    failures = []
+    for html_path in sorted(site_dir.rglob("*.html")):
+        content = html_path.read_text(encoding="utf-8", errors="ignore")
+        robots_match = META_ROBOTS_RE.search(content)
+        robots = robots_match.group(1).lower() if robots_match else ""
+        if "noindex" in robots and SCRIPT_LD_RE.search(content):
+            failures.append(f"{html_path.relative_to(site_dir)}: JSON-LD on noindex page")
+
+    assert not failures, "JSON-LD found on noindex pages:\n" + "\n".join(failures[:50])
+
+
+def test_built_site_no_duplicate_jsonld_ids():
+    """Each @id value within one HTML page must be unique."""
+    site_dir = REPO_ROOT / "_site"
+    if not site_dir.exists():
+        pytest.skip("_site not built; run Jekyll build first")
+
+    failures = []
+    for html_path in sorted(site_dir.rglob("*.html")):
+        content = html_path.read_text(encoding="utf-8", errors="ignore")
+        blocks = SCRIPT_LD_RE.findall(content)
+        page_ids: list[str] = []
+        for block in blocks:
+            try:
+                data = json.loads(block)
+            except json.JSONDecodeError:
+                continue
+            _collect_ids(data, page_ids)
+
+        seen = set()
+        for item_id in page_ids:
+            if item_id in seen:
+                failures.append(f"{html_path.relative_to(site_dir)}: duplicate @id '{item_id}'")
+            seen.add(item_id)
+
+    assert not failures, "Duplicate JSON-LD @id values:\n" + "\n".join(failures[:50])
 
 
 # ---------------------------------------------------------------------------

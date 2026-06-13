@@ -114,6 +114,7 @@ normalize_whitespace %}
 <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}?v={{ asset_version }}" />
 <script src="{{ '/assets/dataset-render.js' | relative_url }}?v={{ asset_version }}" defer></script>
 
+{% unless page.robots contains 'noindex' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -127,3 +128,4 @@ normalize_whitespace %}
   }
 }
 </script>
+{% endunless %}
