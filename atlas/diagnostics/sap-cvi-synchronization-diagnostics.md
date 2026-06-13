@@ -119,6 +119,32 @@ sitemap: false
     <p>This page is a diagnostic frame, not a CVI configuration guide. It does not cover CVI setup, BP grouping design, or field mapping configuration. It does not replace SAP's CVI documentation.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a> — use this for broader data quality signals and governance context.</li>
+      <li><a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">SAP Business Partner Replication Diagnostics</a> — go here when BP data is replicated between systems.</li>
+      <li><a href="/atlas/diagnostics/sap-customer-master-replication-diagnostics/">SAP Customer Master Replication Diagnostics</a> — check this when the customer side is missing or wrong.</li>
+      <li><a href="/atlas/diagnostics/sap-vendor-master-replication-diagnostics/">SAP Vendor Master Replication Diagnostics</a> — use this when the vendor side is missing or wrong.</li>
+      <li><a href="/atlas/diagnostics/sap-bp-relationship-diagnostics/">SAP BP Relationship Diagnostics</a> — go here if the issue involves related BP roles or relationships.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect BP number, customer/vendor number, BP grouping, and expected roles. **Synthetic example:** BP 1234567890, customer 1000000001, grouping TEST_CUST_GRP.
+
+- [ ] Check FLBP1/FLBP2 for BP roles FLCU00/FLVN00 and the CVI link.
+
+- [ ] Verify CVI_LINK relationship between BP and customer/vendor.
+
+- [ ] Check XD03/XK03 for customer/vendor and confirm BP assignment.
+
+- [ ] Review CVI synchronization log for field-level or direction errors.
+
+- [ ] Confirm the BP grouping is configured for CVI and the synchronization direction matches the creation order.
+
+- [ ] Safety limit: do not manually create a customer/vendor for a BP that should be synchronized; fix CVI config first.
+</div>
   </div>
 
   <section class="atlas-related">

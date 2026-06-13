@@ -119,6 +119,31 @@ sitemap: false
     <p>This page is a diagnostic frame, not an MDG replication configuration guide. It does not cover DRF setup, SOA configuration, or MDG workflow design. It does not replace SAP's MDG documentation.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a> — use this for broader data quality signals and governance context.</li>
+      <li><a href="/atlas/diagnostics/sap-business-partner-replication-diagnostics/">SAP Business Partner Replication Diagnostics</a> — go here when the replicated object is a business partner.</li>
+      <li><a href="/atlas/diagnostics/sap-key-mapping-diagnostics/">SAP Key Mapping Diagnostics</a> — check this if MDG and S/4 object numbers differ.</li>
+      <li><a href="/atlas/diagnostics/sap-cvi-synchronization-diagnostics/">SAP CVI Synchronization Diagnostics</a> — use this when the replicated object is a BP/customer/vendor with CVI issues.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect MDG change request number, object type, target system, and expected object key. **Synthetic example:** CR 1234567890, object type business partner, target S/4 TEST_01.
+
+- [ ] Check MDG change request status reaches approved/final and review the Data Replication log.
+
+- [ ] Check DRFOUT or SOAMANAGER for message status; if ALE is used, check WE02 for IDoc status.
+
+- [ ] Verify key mapping between MDG and S/4 for the object type.
+
+- [ ] Compare the object in S/4 with MDG staging data for missing fields or organizational assignments.
+
+- [ ] Document the replication model used and any target-system validation errors.
+
+- [ ] Safety limit: do not re-trigger mass replication until the root cause (model, mapping, or target validation) is fixed.
+</div>
   </div>
 
   <section class="atlas-related">

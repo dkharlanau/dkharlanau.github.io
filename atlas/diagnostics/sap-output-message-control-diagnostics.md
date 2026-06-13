@@ -131,6 +131,32 @@ sitemap: false
     <p>This page is a diagnostic frame, not an output determination configuration guide. It does not cover Smart Forms, Adobe Forms, or condition technique design. It does not replace SAP's output management documentation.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a> — use this when output failures appear alongside broader interface symptoms.</li>
+      <li><a href="/atlas/diagnostics/sap-inbound-processing-diagnostics/">SAP Inbound Processing Diagnostics</a> — go here when the failing output is an inbound message.</li>
+      <li><a href="/atlas/diagnostics/sap-outbound-processing-diagnostics/">SAP Outbound Processing Diagnostics</a> — check this when the failing output is an outbound message.</li>
+      <li><a href="/atlas/diagnostics/sap-spool-output-diagnostics/">SAP Spool and Print Output Diagnostics</a> — use this for print-specific failures.</li>
+      <li><a href="/atlas/diagnostics/idoc-aif-integration-diagnostics/">IDoc and AIF Integration Diagnostics</a> — go here when the output medium is IDoc or EDI.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect document number, output type, expected medium, partner/supplier, and NAST status. **Synthetic example:** PO 1234567890, output NEU, medium 6, partner TEST_VENDOR_01.
+
+- [ ] Check the document output screen (VF03/ME23N) and NAST for status and error text.
+
+- [ ] Verify output condition records (VV33/VV23) and output type activation (NACE).
+
+- [ ] Check SOST for email errors, SP01 for spool issues, or WE02 for IDoc output.
+
+- [ ] Confirm partner master communication data matches the chosen medium.
+
+- [ ] Document whether the issue is isolated to one document, partner, or output type.
+
+- [ ] Safety limit: do not resend IDoc or email output to a production partner before confirming the original failure cause.
+</div>
   </div>
 
   <section class="atlas-related">

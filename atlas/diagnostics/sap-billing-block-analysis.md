@@ -89,6 +89,30 @@ sitemap: false
     <p>This page is a diagnostic frame, not a billing configuration guide. It does not cover billing type determination, pricing procedure setup, or revenue recognition rules. It does not replace the judgment of finance or accounting teams who own billing policy.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a> — use this map to see how billing blocks fit into the end-to-end order-to-cash path.</li>
+      <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a> — start here if the block is visible on the sales order.</li>
+      <li><a href="/atlas/diagnostics/sap-delivery-block-analysis/">SAP Delivery Block Analysis</a> — go here if the delivery may still be possible while billing is held.</li>
+      <li><a href="/atlas/diagnostics/sap-invoice-split-analysis/">SAP Invoice Split Analysis</a> — check this if billing creates unexpected splits or missing invoices.</li>
+      <li><a href="/atlas/sap/sap-account-determination-diagnostics/">SAP Account Determination Diagnostics</a> — use this when the wrong G/L account appears after billing.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect order, delivery, billing block reason, goods issue status, and expected invoice date. **Synthetic example:** delivery 1234567890, block "Consolidated invoicing".
+
+- [ ] Check VF01/VF02 or the billing document for the block reason at order and delivery level.
+
+- [ ] Confirm whether goods have already shipped; if yes, treat as a finance escalation.
+
+- [ ] Document the business reason for the block and the approver authorized to release.
+
+- [ ] Verify that releasing will not create duplicate invoices or revenue recognition issues.
+
+- [ ] Safety limit: do not release billing blocks for shipped goods without finance approval.
+</div>
   </div>
 
   <section class="atlas-related">

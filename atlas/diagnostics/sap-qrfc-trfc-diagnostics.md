@@ -116,6 +116,31 @@ sitemap: false
     <p>This page is a diagnostic frame, not an RFC configuration guide. It does not cover RFC destination setup, SNC configuration, or load balancing. It does not replace SAP's RFC documentation.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a> — use this when multiple interfaces are affected at the same time.</li>
+      <li><a href="/atlas/diagnostics/idoc-aif-integration-diagnostics/">IDoc and AIF Integration Diagnostics</a> — go here when RFC errors appear together with IDoc failures.</li>
+      <li><a href="/atlas/diagnostics/sap-rfc-destination-diagnostics/">SAP RFC Destination Diagnostics</a> — check this to test connectivity and authorization for the RFC destination.</li>
+      <li><a href="/atlas/diagnostics/sap-interface-monitoring-diagnostics/">SAP Interface Monitoring Diagnostics</a> — use this when multiple interfaces are affected at the same time.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect RFC destination, function module, queue name, and SM58/SMQ1/SMQ2 status. **Synthetic example:** destination TEST_DEST_01, queue Q_1234567890.
+
+- [ ] Test the RFC destination in SM59 and capture the connection or authorization error.
+
+- [ ] Check SM58 for failed tRFC entries and read the error text before restarting.
+
+- [ ] Check SMQ1/SMQ2 for SYSFAIL or MANUAL status and identify the first blocking entry.
+
+- [ ] Verify the RFC user authorization in the target system if authorization is suspected.
+
+- [ ] Confirm the queue scheduler is running and the queue is registered for scheduling.
+
+- [ ] Safety limit: do not delete or move a failed queue entry until the underlying cause is documented.
+</div>
   </div>
 
   <section class="atlas-related">

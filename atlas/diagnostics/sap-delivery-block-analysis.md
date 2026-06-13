@@ -89,6 +89,30 @@ sitemap: false
     <p>This page is a diagnostic frame, not a delivery block configuration guide. It does not cover the technical setup of block reason codes, authorization objects, or copy control behavior. It does not replace the judgment of operations or finance teams who own the underlying business rules.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a> — use this map to place the delivery block in the wider order-to-cash workflow.</li>
+      <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a> — start here if the block originates at order level rather than delivery level.</li>
+      <li><a href="/atlas/diagnostics/sap-billing-block-analysis/">SAP Billing Block Analysis</a> — check this when delivery exists but billing is stopped.</li>
+      <li><a href="/atlas/diagnostics/sap-delivery-processing-diagnostics/">SAP Delivery Processing Diagnostics</a> — go here when delivery creation succeeds but downstream processing fails.</li>
+      <li><a href="/atlas/diagnostics/sap-credit-management-diagnostics/">SAP Credit Management Diagnostics</a> — use this if the block reason points to credit exposure.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect sales order, delivery block reason, header/item level, and goods issue status. **Synthetic example:** order 1234567890, block "Manual hold" at header level.
+
+- [ ] Check VL10/VA02 for the active block reason and whether other blocks are layered underneath.
+
+- [ ] Confirm if the block is automatic (credit/incompletion) or manual, and document who set it.
+
+- [ ] Verify the delivery due list filters are not hiding the order because of the block.
+
+- [ ] Document the expected shipment date and the business approver who can release.
+
+- [ ] Safety limit: do not remove a manual hold without confirmation from the team that placed it.
+</div>
   </div>
 
   <section class="atlas-related">

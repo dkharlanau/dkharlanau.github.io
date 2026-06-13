@@ -83,6 +83,29 @@ sitemap: false
 
     <h2>Support takeaway</h2>
     <p>Do not release blocks blindly. A block is often the only visible control protecting delivery, finance, compliance, or customer communication. Diagnose the control first, then decide whether to correct master data, change configuration, release the order, or escalate the business rule.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a> — use this map to see how the sales order block fits into the wider order-to-cash process.</li>
+      <li><a href="/atlas/diagnostics/sap-delivery-block-analysis/">SAP Delivery Block Analysis</a> — go here when the order can proceed but delivery creation is stopped.</li>
+      <li><a href="/atlas/diagnostics/sap-billing-block-analysis/">SAP Billing Block Analysis</a> — use this when the order or delivery is blocked from billing.</li>
+      <li><a href="/atlas/diagnostics/sap-credit-management-diagnostics/">SAP Credit Management Diagnostics</a> — check this if the block reason points to credit exposure or risk control.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect order number, item, block reason code, and exact user message. **Synthetic example:** order 1234567890, item 10, block "Credit check".
+
+- [ ] Check VA02/VA03 block reason and incompletion log for the order and item.
+
+- [ ] Confirm whether the block is header-level, item-level, credit-related, or manual.
+
+- [ ] Document the business reason the user expected the order to continue and who can approve release.
+
+- [ ] Verify authorization to release the block in SU53 before attempting removal.
+
+- [ ] Safety limit: do not release credit or compliance blocks without written approval from the owning team.
+</div>
   </div>
 
   <section class="atlas-related">

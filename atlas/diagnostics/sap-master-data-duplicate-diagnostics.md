@@ -118,6 +118,31 @@ sitemap: false
     <p>This page is a diagnostic frame, not a master data merge or de-duplication tool guide. It does not cover MDG duplicate check configuration, data migration cleanup, or merge program design. It does not replace SAP's master data governance documentation.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/data-quality/master-data-governance-failure-modes/">Master Data Governance Failure Modes</a> — use this to understand why duplicates recur and how governance can prevent them.</li>
+      <li><a href="/atlas/diagnostics/sap-key-mapping-diagnostics/">SAP Key Mapping Diagnostics</a> — go here when duplicates came from replication without key mapping.</li>
+      <li><a href="/atlas/diagnostics/sap-number-range-diagnostics/">SAP Number Range Diagnostics</a> — check this if number range overlap caused duplicate keys.</li>
+      <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a> — use this for broader data quality signals and governance context.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect object type, duplicate keys, and identifying fields. **Synthetic example:** BP 1234567890 and 1234567891 share tax number XX1234567890.
+
+- [ ] Search for duplicates by name, tax number, email, bank account, or other identifying fields.
+
+- [ ] Compare creation date, creator, source system, and field differences between duplicates.
+
+- [ ] Check CDHDR/CDPOS change documents and interface logs for the creation source.
+
+- [ ] Determine which record is the master based on usage and data quality.
+
+- [ ] Assess transaction, document, and interface references before merge, deactivation, or re-keying.
+
+- [ ] Safety limit: do not merge or deactivate master data records without a backup and a tested rollback plan.
+</div>
   </div>
 
   <section class="atlas-related">

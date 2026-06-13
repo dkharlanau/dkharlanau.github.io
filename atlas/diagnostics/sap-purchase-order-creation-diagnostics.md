@@ -120,6 +120,31 @@ sitemap: false
     <p>This page is a diagnostic frame, not a PO configuration guide. It does not cover release strategy setup, approval workflow design, or MRP batch scheduling. It does not replace SAP's purchasing documentation.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+
+    <h2>Next diagnostic steps</h2>
+    <ul>
+      <li><a href="/atlas/maps/procure-to-pay-map/">Procure to Pay Map</a> — use this map to relate the PO creation block to the full procure-to-pay diagnostic path.</li>
+      <li><a href="/atlas/diagnostics/sap-release-strategy-diagnostics/">SAP Release Strategy Diagnostics</a> — go here when the PO is created but blocked for approval.</li>
+      <li><a href="/atlas/diagnostics/sap-source-determination-diagnostics/">SAP Source Determination Diagnostics</a> — check this if no source of supply is found.</li>
+      <li><a href="/atlas/diagnostics/sap-purchase-requisition-diagnostics/">SAP Purchase Requisition Diagnostics</a> — use this when the issue is converting a requisition into a purchase order.</li>
+    </ul>
+
+    <h2>Practical checklist</h2>
+    <div markdown="1">
+- [ ] Collect PR number, material, plant, purchasing organization, supplier, and exact error message. **Synthetic example:** PR 1234567890, material TEST_MAT_001, plant 0001.
+
+- [ ] Check ME21N/ME59N error log and SU53 if authorization is suspected.
+
+- [ ] Verify source of supply: info record, source list, quota arrangement, or contract in ME53N/ME23N.
+
+- [ ] Confirm supplier master is not blocked and is extended to the purchasing organization.
+
+- [ ] Check release strategy classification if the PO is created but held for approval.
+
+- [ ] Document whether the issue is isolated to one user, material, or plant.
+
+- [ ] Safety limit: do not create a PO with an unapproved supplier or bypass release strategy.
+</div>
   </div>
 
   <section class="atlas-related">
