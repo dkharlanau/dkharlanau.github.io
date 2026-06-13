@@ -423,7 +423,7 @@ def test_structured_data_has_article_for_atlas():
     path = REPO_ROOT / "_includes" / "seo" / "structured-data.html"
     text = path.read_text(encoding="utf-8")
     assert "Article" in text
-    assert "TechArticle" not in text, "TechArticle is not a Google-supported Article subtype"
+    assert "TechArticle" in text, "Verified Atlas pages should emit TechArticle"
 
 
 def test_structured_data_has_organization():
