@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-06-09T09:59:20Z
+Generated: 2026-06-13T09:42:51Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -24,47 +24,47 @@ Home
     Knowledge Atlas
     AI Operations
     AI Agent for SAP Support
-  
 
-  
+
+
     Atlas AI Operations
     AI agent for SAP support
     A support assistant should retrieve context, structure the diagnosis, and escalate cleanly. It should not guess its way through ERP risk.
-    
-  
 
-  
-    
+
+
+
+
       ProcessSupport operations
       PatternRetrieval, diagnosis, escalation, human review
       Reviewed06 May 2026
-    
-  
 
-  
+
+
+
     Core idea
     An AI agent for SAP support is most useful when it acts as a disciplined support layer: it retrieves relevant context, summarizes the issue, suggests diagnostic paths, prepares tickets, and routes uncertainty to humans.
     The goal is not autonomous configuration change. The goal is faster, more consistent first-pass support while preserving authorization boundaries, auditability, and human accountability.
 
     Minimum safe architecture
-    
+
       Knowledge retrieval: approved runbooks, process notes, KEDB entries, public documentation, and system-specific support material where access is allowed.
       Authorization awareness: the agent should not expose data or suggest actions outside the user context.
       Structured diagnosis: the answer should separate evidence, likely cause, recommended next check, and escalation path.
       Human approval: any material process change, master-data change, financial impact, or configuration change needs controlled review.
       Traceability: responses should point to the sources used and leave an audit trail where the organization requires it.
-    
+
 
     Good use cases
     Useful first use cases are ticket enrichment, incident summarization, runbook retrieval, duplicate issue detection, first-pass classification, and suggested diagnostic checklists. These are valuable because they reduce support friction without pretending the model owns the ERP decision.
 
     Support takeaway
     A credible SAP support agent should be conservative by design. It should say when it does not know, ask for missing evidence, and escalate early when the issue touches authorization, finance, compliance, master data, or configuration.
-  
 
-  
+
+
     Related Pages
-    
+
       Practical AI for SAP support
       SAP AI and ML enablement
       SAP Sales Order Block Diagnosis
@@ -328,24 +328,24 @@ Home
     Knowledge Atlas
     Concepts
     Order to Cash
-  
 
-  
+
+
     Atlas Concept
     Order to cash
     The operating chain that turns customer demand into delivery, billing, accounting, and cash collection.
-    
-  
 
-  
-    
+
+
+
+
       ProcessOrder to cash
       SAP areaSD with finance and logistics touchpoints
       Reviewed06 May 2026
-    
-  
 
-  
+
+
+
     Core idea
     Order to cash is the end-to-end flow from customer demand to financial settlement. In a SAP-heavy environment it usually spans sales order capture, availability, delivery, goods issue, billing, accounting, receivables, and dispute handling.
 
@@ -353,21 +353,21 @@ Home
     O2C is where customer promise, inventory reality, logistics execution, pricing, tax, credit, and revenue recognition meet. Weakness in one area often appears as a support ticket somewhere else: an order block, a failed delivery, a billing split, a pricing dispute, or a delayed cash collection.
 
     Useful operating view
-    
+
       Demand: customer, product, quantity, requested date, and commercial terms.
       Commitment: availability, credit/risk controls, pricing, and order validation.
       Execution: delivery creation, picking, packing, goods issue, and shipment handoff.
       Billing: invoice creation, account determination, tax, and customer communication.
       Cash: receivables, payment, clearing, disputes, and credit feedback.
-    
+
 
     Support takeaway
     O2C diagnostics should follow the document flow and the business event sequence. Ask where the process stopped, which document exists, which document is missing, and which team owns the failed control. This prevents “SAP issue” from becoming a vague label for a cross-functional operating problem.
-  
 
-  
+
+
     Related Atlas Pages
-    
+
       SAP ATP Is Not Inventory
       SAP Sales Order Block Diagnosis
       SAP O2C process audit
@@ -388,24 +388,24 @@ Home
     Knowledge Atlas
     Concepts
     SAP ATP Is Not Inventory
-  
 
-  
+
+
     Atlas Concept
     SAP ATP is not inventory
     ATP is promise logic. Inventory is stock visibility. Confusing the two creates bad support tickets and bad customer commitments.
-    
-  
 
-  
-    
+
+
+
+
       ProcessOrder to cash
       SAP areaAvailability check / ATP
       Reviewed06 May 2026
-    
-  
 
-  
+
+
+
     Core idea
     Available-to-promise answers a commitment question: what quantity can the business responsibly promise to a customer, and when? It is not the same as asking what quantity exists physically in a plant or warehouse.
     Inventory can exist and still be unavailable for a new promise. It may already be committed to another order, blocked for quality, reserved for production, held in the wrong location, or not considered by the relevant availability check configuration.
@@ -415,21 +415,21 @@ Home
     The answer depends on master data, configuration, document type, timing, existing commitments, and sometimes product allocation or supply protection rules. The exact behavior is landscape-specific.
 
     Practical diagnostic questions
-    
+
       Is the stock physically available, unrestricted, and relevant for the plant or storage location being checked?
       Are existing sales orders, reservations, or dependent requirements already consuming the supply?
       Are purchase orders, production orders, or planned receipts included in the check scope?
       Is the requested delivery date before the next reliable receipt?
       Is a product allocation, supply protection, or special stock rule changing the result?
-    
+
 
     Support takeaway
     Do not diagnose ATP from stock quantity alone. Diagnose it as a time-based promise calculation shaped by business commitments, supply reliability, and configuration. A useful ATP support note should include the material, plant, requested date, confirmed date, confirmed quantity, visible stock, open requirements, open receipts, and the document context that triggered the check.
-  
 
-  
+
+
     Related Atlas Pages
-    
+
       Order to Cash
       SAP Sales Order Block Diagnosis
       SAP AMS consulting

@@ -208,7 +208,7 @@ function renderDecisionPage(data, slug) {
   <meta name="twitter:title" content="${escapeHtml(title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
   <link rel="stylesheet" href="${basePath}assets/dama.css" />
-  <script type="application/ld+json">${escapeHtml(JSON.stringify(jsonLd))}</script>
+  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body>
   <div class="page">

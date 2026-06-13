@@ -27,8 +27,6 @@ related:
   - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
   - /atlas/diagnostics/sap-idoc-status-diagnostics/
   - /atlas/sap/job-monitoring/
-robots: noindex,follow
-sitemap: false
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
