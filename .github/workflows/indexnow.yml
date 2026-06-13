@@ -74,14 +74,42 @@ jobs:
             echo "scope=changed URLs from git diff (HEAD~1..HEAD)" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Report mode
+      - name: Check IndexNow key availability
+        id: key
+        if: github.event_name != 'pull_request' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run == true)
+        env:
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        run: |
+          if [ -n "$INDEXNOW_KEY" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "IndexNow key secret is present."
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            if [ "${{ github.event_name }}" = "push" ]; then
+              echo "::warning::INDEXNOW_KEY secret is not configured. Skipping real IndexNow submission."
+            else
+              echo "::error::INDEXNOW_KEY secret is required for real submission but is not configured in repository secrets."
+              exit 1
+            fi
+          fi
+
+      - name: Report IndexNow mode
+        id: mode
         run: |
           echo "Event: ${{ github.event_name }}"
           echo "URL scope: ${{ steps.scope.outputs.scope }}"
-          if [ "${{ github.event_name }}" = "pull_request" ] || { [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; }; then
-            echo "Mode: DRY RUN (no network submission)"
-          else
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Mode: DRY RUN (no network submission; pull request)"
+            echo "status=dry_run" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "Mode: DRY RUN (manual dispatch)"
+            echo "status=dry_run" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.key.outputs.present }}" = "true" ]; then
             echo "Mode: REAL SUBMISSION"
+            echo "status=submitted" >> "$GITHUB_OUTPUT"
+          else
+            echo "Mode: SKIPPED (missing secret)"
+            echo "status=skipped_missing_secret" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Dry-run IndexNow submission
@@ -96,19 +124,8 @@ jobs:
             --max-urls ${{ github.event_name == 'workflow_dispatch' && inputs.max_urls || 100 }} \
             ${{ steps.scope.outputs.flag }}
 
-      - name: Verify IndexNow key secret
-        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false)
-        env:
-          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-        run: |
-          if [ -z "$INDEXNOW_KEY" ]; then
-            echo "::error::INDEXNOW_KEY secret is required for real submission but is not configured in repository secrets."
-            exit 1
-          fi
-          echo "IndexNow key secret is present."
-
       - name: Real IndexNow submission
-        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false)
+        if: steps.key.outputs.present == 'true' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false))
         env:
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
           INDEXNOW_KEY_LOCATION: ${{ vars.INDEXNOW_KEY_LOCATION }}
@@ -128,3 +145,8 @@ jobs:
           name: indexnow-report-${{ github.run_id }}
           path: indexnow-report.json
           if-no-files-found: ignore
+
+      - name: IndexNow summary
+        if: always()
+        run: |
+          echo "IndexNow status: ${{ steps.mode.outputs.status }}"
