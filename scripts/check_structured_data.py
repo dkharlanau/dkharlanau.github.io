@@ -243,6 +243,12 @@ RICH_RESULT_TYPES = {
     "Organization",
 }
 
+# Machine-readable schema.org types that may appear on intentionally noindex pages.
+ALLOWED_NOINDEX_TYPES = {
+    "DefinedTerm",
+    "DefinedTermSet",
+}
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate JSON-LD structured data in a built site.")
@@ -269,18 +275,31 @@ def main() -> int:
         if not blocks:
             continue
 
-        if is_noindex:
-            errors.append(f"{rel}: JSON-LD found on noindex page")
-            continue
-
         page_ids: list[str] = []
-        for block_index, block in enumerate(blocks, start=1):
-            block_label = f"{rel} block {block_index}"
+        parsed_blocks: list[object] = []
+        block_types: set[str] = set()
+        for block in blocks:
             try:
                 data = json.loads(html.unescape(block))
             except json.JSONDecodeError as exc:
-                errors.append(f"{block_label}: invalid JSON ({exc})")
+                errors.append(f"{rel}: invalid JSON-LD ({exc})")
                 continue
+            parsed_blocks.append(data)
+            for item in iter_items(data):
+                if isinstance(item, dict):
+                    item_type = item.get("@type")
+                    if isinstance(item_type, str):
+                        block_types.add(item_type)
+                    elif isinstance(item_type, list):
+                        block_types.update(t for t in item_type if isinstance(t, str))
+
+        if is_noindex:
+            if not block_types.issubset(ALLOWED_NOINDEX_TYPES):
+                errors.append(f"{rel}: JSON-LD found on noindex page")
+                continue
+
+        for block_index, data in enumerate(parsed_blocks, start=1):
+            block_label = f"{rel} block {block_index}"
 
             collect_top_level_ids(data, page_ids)
 
