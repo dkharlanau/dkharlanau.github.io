@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Decision & Validation — Skill Group Index"
 description: "Practical working skills for making evidence-based decisions and validating requirements: trade-off analysis, option comparison, risk dependency mapping, evidence-based recommendations, requirements review, traceability matrix drafting, and test scenario derivation."

@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Atlas Diagnostics — SAP Support and AMS Diagnostics"
 description: "Curated diagnostic patterns for SAP AMS, support tickets, operational blockers, and repeat incidents."

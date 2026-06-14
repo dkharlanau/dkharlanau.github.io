@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Atlas Concepts — Business and SAP Concepts"
 description: "Curated business and SAP concept explanations for operational analysis and support work."

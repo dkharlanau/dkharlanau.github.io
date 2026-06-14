@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Work Documentation and Handover — Skill Group Index"
 description: "Practical working skills for writing handover notes, decision summaries, action logs, process documentation, incident records, knowledge articles, runbooks, status updates, and lessons learned."

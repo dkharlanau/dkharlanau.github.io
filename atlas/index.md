@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Knowledge Atlas — SAP, Operations, Data, Automation, and AI Support Concepts"
 description: "Curated Knowledge Atlas for business, SAP, operations, data, automation, and AI-assisted support concepts."

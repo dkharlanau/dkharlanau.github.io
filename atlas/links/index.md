@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Atlas Links — Reference Routes"
 description: "Reference routes from the Knowledge Atlas to profile, services, AI context, and datasets."

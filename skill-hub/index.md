@@ -1,4 +1,5 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Skill Hub — Practical Working Skills for Enterprise Consultants and AI Agents"
 description: "A library of practical working skills for enterprise consultants, business analysts, data consultants, solution architects, integration architects, SAP AMS consultants, and AI agents. Not a glossary. Not a framework encyclopedia. Usable work skills."
