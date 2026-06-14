@@ -11,6 +11,8 @@ sitemap: false
 <head>
   <meta charset="utf-8" />
   <meta name="robots" content="noindex,follow" />
+  <meta name="description" content="Redirect to SAP Purchase Order Creation Diagnostics." />
+  <meta property="og:url" content="https://dkharlanau.github.io/atlas/diagnostics/sap-purchase-order-creation-diagnostics/" />
   <meta http-equiv="refresh" content="0; url=/atlas/diagnostics/sap-purchase-order-creation-diagnostics/" />
   <title>SAP Purchase Order Diagnostics — Redirect</title>
   <link rel="canonical" href="https://dkharlanau.github.io/atlas/diagnostics/sap-purchase-order-creation-diagnostics/" />
