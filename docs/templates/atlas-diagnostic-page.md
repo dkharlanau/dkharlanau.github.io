@@ -129,9 +129,9 @@ Use generic process language and synthetic examples only.
 <!--
 ---
 layout: default
-title: "SAP Purchase Order Diagnostics"
-description: "A diagnostic guide for purchase order failures, release strategy blocks, and price mismatch symptoms in SAP MM."
-permalink: /atlas/diagnostics/sap-purchase-order-diagnostics/
+title: "SAP Purchase Order Creation Diagnostics"
+description: "A diagnostic guide for purchase order creation failures, release strategy blocks, and price mismatch symptoms in SAP MM."
+permalink: /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
 last_modified_at: 2026-06-13
 atlas_section: diagnostics
 domain: SAP AMS
@@ -169,15 +169,15 @@ sitemap: false
     <li><a href="/">Home</a></li>
     <li><a href="/atlas/">Knowledge Atlas</a></li>
     <li><a href="/atlas/diagnostics/">Diagnostics</a></li>
-    <li aria-current="page">SAP Purchase Order Diagnostics</li>
+    <li aria-current="page">SAP Purchase Order Creation Diagnostics</li>
   </ol>
 </nav>
 
 <article class="section note-detail atlas-page">
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
-    <h1>SAP Purchase Order Diagnostics</h1>
-    <p class="note-subtitle">A diagnostic guide for purchase order failures, release strategy blocks, and price mismatch symptoms in SAP MM.</p>
+    <h1>SAP Purchase Order Creation Diagnostics</h1>
+    <p class="note-subtitle">A diagnostic guide for purchase order creation failures, release strategy blocks, and price mismatch symptoms in SAP MM.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 

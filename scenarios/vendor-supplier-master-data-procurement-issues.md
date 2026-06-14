@@ -20,7 +20,7 @@ tags:
   - diagnostics
 related:
   - /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
-  - /atlas/diagnostics/sap-purchase-order-diagnostics/
+  - /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
   - /atlas/diagnostics/sap-source-determination-diagnostics/
   - /atlas/data-quality/sap-master-data-quality/
   - /atlas/sap/sap-mm-procurement-overview/
@@ -135,7 +135,7 @@ sitemap: false
     <h2>Related Atlas pages</h2>
     <ul>
       <li><a href="/atlas/diagnostics/sap-vendor-master-replication-diagnostics/">SAP Vendor Master Replication Diagnostics</a> — tracing vendor master from MDG or external systems to S/4.</li>
-      <li><a href="/atlas/diagnostics/sap-purchase-order-diagnostics/">SAP Purchase Order Diagnostics</a> — PO-level error patterns and diagnostic steps.</li>
+      <li><a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a> — PO-level error patterns and diagnostic steps.</li>
       <li><a href="/atlas/diagnostics/sap-source-determination-diagnostics/">SAP Source Determination Diagnostics</a> — resolving source list and info record gaps.</li>
       <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP Master Data Quality</a> — data quality patterns and governance rules.</li>
       <li><a href="/atlas/sap/sap-mm-procurement-overview/">SAP MM Procurement Overview</a> — process overview and key SAP objects in procurement.</li>

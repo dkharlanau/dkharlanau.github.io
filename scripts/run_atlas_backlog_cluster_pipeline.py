@@ -75,7 +75,7 @@ EXISTING_PAGES = {
         "/atlas/diagnostics/sap-physical-inventory-diagnostics.md",
     ],
     "mm-procurement": [
-        "/atlas/diagnostics/sap-purchase-order-diagnostics.md",
+        "/atlas/diagnostics/sap-purchase-order-creation-diagnostics.md",
         "/atlas/diagnostics/sap-purchase-requisition-diagnostics.md",
         "/atlas/diagnostics/sap-goods-receipt-diagnostics.md",
         "/atlas/diagnostics/sap-invoice-verification-diagnostics.md",
@@ -257,7 +257,7 @@ def _map_article_to_existing_page(topic: str, sap_area: str) -> str | None:
     if any(k in t for k in ("customer master", "business partner")):
         return "/atlas/diagnostics/sap-customer-vendor-master-diagnostics.md"
     if any(k in t for k in ("purchasing group", "purchasing organization", "plant")):
-        return "/atlas/diagnostics/sap-purchase-order-diagnostics.md"
+        return "/atlas/diagnostics/sap-purchase-order-creation-diagnostics.md"
     if any(k in t for k in ("source-to-pay", "procure-to-pay", "sourcing")):
         return "/atlas/sap/sap-mm-procurement-overview.md"
     if any(k in t for k in ("ariba", "business network", "catalog")):

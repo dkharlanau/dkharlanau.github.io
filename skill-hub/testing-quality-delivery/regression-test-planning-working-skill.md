@@ -282,7 +282,7 @@ status: reviewed
   <section>
     <h2>Related Atlas pages</h2>
     <ul>
-      <li><a href="/atlas/diagnostics/sap-purchase-order-diagnostics/">SAP Purchase Order Diagnostics</a> — Context for procure-to-pay regression testing.</li>
+      <li><a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a> — Context for procure-to-pay regression testing.</li>
       <li><a href="/atlas/diagnostics/sap-sales-order-block-diagnosis/">SAP Sales Order Block Diagnosis</a> — Context for order-to-cash regression testing.</li>
       <li><a href="/atlas/diagnostics/sap-background-job-diagnostics/">SAP Background Job Diagnostics</a> — Reference for regression of scheduled jobs and reports.</li>
     </ul>
