@@ -1,8 +1,7 @@
 ---
 layout: default
 title: SAP Interface Monitoring Diagnostics
-description: A conservative diagnostic frame for SAP interface monitoring and alert
-  issues.
+description: "A conservative diagnostic frame for SAP interface monitoring and alert issues, covering IDoc, ALE, RFC, and gateway health checks."
 permalink: /atlas/diagnostics/sap-interface-monitoring-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
