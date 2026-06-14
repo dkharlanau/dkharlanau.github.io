@@ -12,6 +12,7 @@ sap_area: Support automation
 business_process: Support operations
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-06-13
 
 tags:
@@ -23,7 +24,8 @@ related:
   - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
   - "/atlas/ai-operations/practical-ai-ml-for-sap-support/"
   - "/atlas/automation/agent-assisted-development-workflows/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: Rule-Based Automation vs AI
 h1: Rule-based automation vs AI
 subtitle: Not every support workflow needs a model. Some need better deterministic rules, ownership, and audit trail.
@@ -46,7 +48,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Automation</dd></div><div><dt>Type</dt><dd>automation pattern</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Automation</dd></div><div><dt>Type</dt><dd>automation pattern</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 

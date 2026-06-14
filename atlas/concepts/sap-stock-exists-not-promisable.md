@@ -12,6 +12,7 @@ sap_area: ATP / availability / stock status
 business_process: Order to cash
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-06-13
 
 tags:
@@ -24,7 +25,8 @@ related:
   - "/atlas/concepts/order-to-cash/"
   - "/atlas/diagnostics/sap-sales-order-block-diagnosis/"
   - "/atlas/concepts/store-receiving-sap-retail/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: Stock Exists but Is Not Promisable
 h1: SAP stock exists, but it is not always promisable
 subtitle: A practical explanation of why visible stock can still fail availability, ATP, allocation, or channel commitment checks.
@@ -47,7 +49,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP operations</dd></div><div><dt>Type</dt><dd>business concept</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP operations</dd></div><div><dt>Type</dt><dd>business concept</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 

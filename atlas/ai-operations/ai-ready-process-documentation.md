@@ -12,6 +12,7 @@ sap_area: Support knowledge management
 business_process: Support operations
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-06-13
 
 tags:
@@ -22,7 +23,8 @@ related:
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/automation/operational-memory-for-sap-ams/"
   - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: AI-Ready Process Documentation
 h1: AI-ready process documentation
 subtitle: AI-assisted support improves when process knowledge is structured, current, scoped, and tied to evidence instead of scattered across chats and old handovers.
@@ -45,7 +47,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>AI-assisted operations</dd></div><div><dt>Type</dt><dd>AI operations</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>AI-assisted operations</dd></div><div><dt>Type</dt><dd>AI operations</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 

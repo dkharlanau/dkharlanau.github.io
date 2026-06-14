@@ -12,6 +12,7 @@ sap_area: MDG / master data governance
 business_process: Cross-process operations
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-06-13
 
 tags:
@@ -23,7 +24,8 @@ related:
   - "/atlas/sap/sap-partner-determination-failures/"
   - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
   - "/atlas/automation/operational-memory-for-sap-ams/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: Governance Failure Modes
 h1: Master data governance failure modes
 subtitle: "Weak governance shows up as operational friction: blocked orders, payment failures, reporting distrust, migration cleanup, and repeated support handling."
@@ -46,7 +48,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Data operations</dd></div><div><dt>Type</dt><dd>data quality</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Data operations</dd></div><div><dt>Type</dt><dd>data quality</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 

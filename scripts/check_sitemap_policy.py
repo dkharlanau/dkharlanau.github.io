@@ -162,6 +162,23 @@ def source_for_url(url: str, repo_dir: Path) -> tuple[Path | None, dict]:
     return None, {}
 
 
+def discover_verified_atlas_urls(repo_dir: Path) -> set[str]:
+    """Return canonical URLs for every verified+reviewed Atlas article."""
+    verified: set[str] = set()
+    for md_path in sorted(repo_dir.rglob("*.md")):
+        rel = md_path.relative_to(repo_dir).as_posix()
+        if not rel.startswith("atlas/"):
+            continue
+        if rel.endswith("/index.md"):
+            continue
+        fm = parse_frontmatter(md_path)
+        if fm.get("verified") is True and fm.get("status") == "reviewed":
+            permalink = fm.get("permalink", "")
+            if permalink:
+                verified.add(f"{BASE_URL}{permalink}")
+    return verified
+
+
 def check_url(url: str, repo_dir: Path, site_dir: Path) -> list[str]:
     issues: list[str] = []
     if not url.startswith(BASE_URL):
@@ -229,6 +246,12 @@ def main() -> int:
     all_issues: list[str] = []
     for url in sorted(urls):
         all_issues.extend(check_url(url, repo_dir, site_dir))
+
+    # Every verified Atlas article must be represented in the built sitemap.
+    verified_atlas_urls = discover_verified_atlas_urls(repo_dir)
+    missing_from_sitemap = verified_atlas_urls - urls
+    for url in sorted(missing_from_sitemap):
+        all_issues.append(f"{url}: verified Atlas page missing from sitemap")
 
     if all_issues:
         print(f"Sitemap policy check failed: {len(all_issues)} issue(s)")

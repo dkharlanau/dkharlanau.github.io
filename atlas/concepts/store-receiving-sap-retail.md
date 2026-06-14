@@ -12,6 +12,7 @@ sap_area: Retail / inventory management
 business_process: Retail replenishment
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-05-06
 
 tags:
@@ -23,7 +24,8 @@ related:
   - "/atlas/concepts/sap-stock-exists-not-promisable/"
   - "/atlas/maps/order-to-cash-map/"
   - "/atlas/data-quality/sap-master-data-quality/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: Store Receiving in SAP Retail
 h1: Store receiving in SAP Retail
 subtitle: Store receiving is not only a goods receipt posting. It is the handoff from supply chain execution to sales-floor availability.

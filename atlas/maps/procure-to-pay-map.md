@@ -12,6 +12,7 @@ sap_area: MM / FI integration
 business_process: Procure to pay
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-05-06
 
 tags:
@@ -24,7 +25,8 @@ related:
   - "/atlas/data-quality/sap-master-data-quality/"
   - "/atlas/data-quality/master-data-governance-failure-modes/"
   - "/atlas/automation/operational-memory-for-sap-ams/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: Procure to Pay Map
 h1: Procure to pay map
 subtitle: A practical map for connecting procurement demand, purchasing documents, goods receipt, invoice verification, and financial clearing.

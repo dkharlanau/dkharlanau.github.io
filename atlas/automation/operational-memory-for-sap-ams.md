@@ -12,6 +12,7 @@ sap_area: AMS support knowledge
 business_process: Support operations
 status: reviewed
 verified: true
+level: 2
 last_reviewed: 2026-06-13
 
 tags:
@@ -23,7 +24,8 @@ related:
   - "/services/sap-ams-consulting/"
   - "/atlas/ai-operations/ai-agent-for-sap-support/"
   - "/atlas/data-quality/sap-master-data-quality/"
-robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+robots: index,follow
+sitemap: true
 short_title: Operational Memory for SAP AMS
 h1: Operational memory for SAP AMS
 subtitle: AMS improves when support knowledge is structured as reusable memory, not trapped in tickets, chats, and individual consultants.
@@ -46,7 +48,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Automation</dd></div><div><dt>Type</dt><dd>automation pattern</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Automation</dd></div><div><dt>Type</dt><dd>automation pattern</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
