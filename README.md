@@ -1,114 +1,135 @@
-# Dzmitryi Kharlanau — Professional Website
+# SAP AMS Consultant, SAP Support Diagnostics, SD/MM, Master Data & AI Agents — Dzmitryi Kharlanau
 
-This is my public professional website and profile repository.
+## What this repository is
 
-I use it as a controlled, transparent, and AI-readable layer around my professional background, public references, certificates, publications, and selected structured profile data.
+This repository powers the public professional website for **Dzmitryi Kharlanau**, a Senior SAP Consultant focused on SAP AMS diagnostics, SAP support improvement, SAP SD/MM process issues, master data, integration troubleshooting, and AI-ready support knowledge systems.
 
-## About me
+The site is a controlled public profile layer, a structured knowledge base, and a machine-readable discovery surface for search engines, retrieval systems, and AI agents.
 
-I am **Dzmitryi Kharlanau**, a Senior SAP Consultant working across SAP AMS support, logistics, migration, master data, operational analysis, and process optimization.
+- **Live site:** https://dkharlanau.github.io
+- **About:** https://dkharlanau.github.io/about/
+- **Services:** https://dkharlanau.github.io/services/
+- **Sitemap:** https://dkharlanau.github.io/sitemap.xml
+- **robots.txt:** https://dkharlanau.github.io/robots.txt
+- **llms.txt:** https://dkharlanau.github.io/llms.txt
 
-My SAP path started in 2014 through SAP University Alliances, TERP10, and SAP SD certification.
+## Professional focus
 
-Over the years, I have worked on multiple SAP projects in different roles: consultant, team lead / coordinator, developer, and operational analyst. This gave me a practical view of how SAP work really happens — across business processes, support pressure, migration activities, master data, integrations, custom logic, and delivery constraints.
-
-Today, my focus is SAP AMS, support knowledge, incident analysis, SD/MM issues, master data problems, process optimization, and practical AI-assisted support workflows.
-
-I actively work with modern AI tools and AI-assisted development workflows. I use them to explore how support knowledge, diagnostics, retrieval, automation, documentation, and side-by-side tools can improve enterprise operations.
-
-I try to keep developing across SAP, architecture, practical AI, and product thinking.
+- SAP AMS and production support improvement
+- SAP SD/MM diagnostics across sales, procurement, logistics, inventory, billing, pricing, and delivery flows
+- Business partner, customer, vendor, MDG, and master data issue analysis
+- IDoc, API, middleware, and interface monitoring diagnostics
+- Incident triage, root-cause analysis, support knowledge reuse, and handover quality
+- Practical AI-assisted workflows for documentation, retrieval, diagnostics, and operational memory
 
 ## Why this site exists
 
 LinkedIn is useful, but it is not enough as the only professional source.
 
-This site gives me one canonical public profile that I can control, structure, reference, and keep machine-readable for search engines and AI systems.
+This site gives the professional profile a canonical, citable, structured, and machine-readable home. It helps humans and AI systems understand the same context: what Dzmitryi works on, which knowledge areas are public, which materials are verified, and how the public content should be used.
 
-It exists to make my background easier to understand and verify.
+The goal is professional transparency, safer discovery, and better routing for relevant SAP AMS, enterprise support, and AI-assisted operations conversations.
 
-- **Live URL:** https://dkharlanau.github.io
-- **Generated with:** Jekyll + GitHub Pages
-- **Sitemap:** https://dkharlanau.github.io/sitemap.xml
-- **robots.txt:** https://dkharlanau.github.io/robots.txt
+## Main site areas
 
-## What this site is about
+- **Home** — positioning and trust signals
+- **About** — professional profile and public identity anchor
+- **Services** — consulting model for diagnose, stabilize, structure, and extend work
+- **Atlas** — SAP diagnostics, concepts, maps, AI operations, data quality, and automation notes
+- **Scenarios** — business-pain-to-diagnostic-workflow mappings
+- **Skill Hub** — practical workflows for consultants, analysts, and AI agents
+- **Research / Radar** — source-backed monitoring, comparisons, and watchlists
+- **Datasets** — structured public data collections
+- **AI endpoints** — `llms.txt`, `llms-full.txt`, resume exports, compact indexes, and agent-skill routing
+- **Legal / Citation** — usage, attribution, disclosure, accessibility, and responsible AI boundaries
 
-The site focuses on practical SAP AMS, support, and process optimization topics:
+Useful entry points:
+
+- https://dkharlanau.github.io/atlas/
+- https://dkharlanau.github.io/skill-hub/
+- https://dkharlanau.github.io/datasets/
+- https://dkharlanau.github.io/ai/
+- https://dkharlanau.github.io/legal/professional-disclosure/
+- https://dkharlanau.github.io/CITATION/
+
+## What is ready for AI agents
+
+The repository is designed for controlled public retrieval, not unrestricted scraping or exposure of private material.
+
+Available discovery surfaces include:
+
+- `robots.txt` with crawler and AI-crawler policy
+- `sitemap.xml` plus section sitemaps for pages, datasets, and verified Atlas content
+- `llms.txt` as the AI-readable entry manifest
+- `llms-full.txt` with reviewed Atlas content only
+- `.well-known/agent-skills/` for topic routing and agent discovery
+- `agent-skills/` source packages for portable agent workflows
+- `datasets/manifest.json` and dataset schema files
+- `atlas/manifest.json` and `ai/atlas-compact-index.json` for structured Atlas discovery
+- validation scripts that check public hygiene, indexing policy, links, SEO metadata, and AI-readable endpoints
+
+Only public, intentionally committed content belongs here. Private client information, ticket numbers, internal incident IDs, secrets, local exports, and raw private corpus material must not be committed.
+
+## Knowledge areas covered
+
+The public content is organized around practical enterprise support work:
+
+- SAP AMS operations and support model improvement
+- SAP SD/MM support, including order-to-cash and procure-to-pay issue patterns
+- Procurement, inventory, billing, pricing, delivery, and account-determination diagnostics
+- Business partner, customer, vendor, MDG, and master data governance issues
+- IDoc, API, middleware, and interface monitoring ownership
+- Clean-core and side-by-side automation boundaries
+- AI-assisted documentation, retrieval, analysis, and support workflows
+- Operational memory, reusable runbooks, and knowledge systems for enterprise teams
+
+## Networking and collaboration
+
+Dzmitryi is open to relevant professional conversations around:
 
 - SAP AMS improvement
-- SAP support and process optimization
-- change-to-run handover
-- support knowledge reuse
-- master data and process reliability
-- integration and operational complexity
-- clean-core boundaries
-- practical AI-assisted SAP support
-- side-by-side automation and support workflows
+- support model modernization
+- SAP consulting, delivery, and practical automation
+- AI-assisted support operations
+- knowledge systems for enterprise teams
+- agentic workflows for diagnostics, documentation, and operational memory
 
-The main idea is that SAP support quality depends on practical handover, clean data, reliable integrations, clear ownership, support readiness, and daily operating discipline.
+LinkedIn: https://www.linkedin.com/in/dkharlanau/
 
-## Site structure
+## Trust, citation, and independence
 
-- **Home** — Positioning and trust signals
-- **About / Profile** — Canonical human-readable and machine-readable profile
-- **Services** — Consulting engagement model (diagnose, stabilize, structure, extend)
-- **Knowledge Atlas** — Curated SAP diagnostics, concepts, and process maps
-- **Scenarios** — Business-pain-to-diagnostic-workflow mappings
-- **Skill Hub** — Practical working skills for enterprise consultants and AI agents
-- **Research / Radar** — Signal tracking and source-backed briefs
-- **Datasets** — Canonical machine-readable dataset collections
-- **AI endpoints** — `llms.txt`, `resume.json`, `resume.yml`, and agent-skill discovery via `.well-known/`
+This is a personal independent site. It is not an official employer, client, SAP, or vendor website.
 
-## What this repository contains
+The repository contains public materials only. Content uses controlled verification levels, and unverified pages are kept out of indexing surfaces until reviewed. Citation and license files are included for attribution and reuse boundaries:
 
-This repository may include:
+- `CITATION.md`
+- `CITATION.cff`
+- `LICENSE`
+- `LICENSE-DATA`
+- `AGENTS.md`
 
-- website source files
-- structured résumé / profile data
-- public certificate and badge references
-- publication and note references
-- AI-readable files such as `llms.txt`, `resume.json`, or `resume.yml`
+Public SAP-related notes are practical diagnostic material, not official SAP documentation. Validate any SAP process, configuration, or automation decision in the relevant landscape before acting on it.
 
-## Build and validation
+## Local validation
+
+Use the smallest relevant checks while editing, then run the full sequence before publishing a public-ready change.
 
 ```sh
-# Local preview
-bundle exec jekyll serve
-
-# Full validation sequence (run before publishing)
+./bin/setup
 PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
 python3 scripts/check_public_repo.py
+python3 scripts/generate_atlas_artifacts.py --check
 bundle exec jekyll build
 python3 scripts/check_links.py _site
 python3 scripts/check_seo.py _site
-python3 scripts/check_indexing_policy.py --site-dir _site
-python3 scripts/check_content_quality.py
-python3 scripts/audit_indexability.py --site-dir _site
-python3 scripts/audit_internal_links.py --site-dir _site
+python3 scripts/check_indexing_policy.py --site-dir _site --fail-on-critical
+python3 scripts/check_sitemap_policy.py --site-dir _site --repo-dir . --fail-on-critical
+python3 scripts/check_date_consistency.py --site-dir _site --repo-dir . --fail-on-critical
+python3 scripts/check_content_quality.py --fail-on-critical
+python3 scripts/check_page_quality.py --site-dir _site --fail-on-critical
+python3 scripts/audit_indexability.py --site-dir _site --fail-on-critical --output-dir /tmp/cv-ai-validation-reports
+python3 scripts/audit_internal_links.py --site-dir _site --output-dir /tmp/cv-ai-validation-reports
+python3 scripts/accessibility_audit.py --site-dir _site --fail-on-critical
+python3 scripts/validate_ai_endpoints.py _site
+git diff --check
 ```
-
-All committed content is public. The repository uses a three-level verification system for content quality and indexing control.
-
-## Networking
-
-I am open to relevant professional networking, SAP AMS improvement topics, SAP support discussions, and practical AI / automation topics around support operations.
-
-You can reach me on LinkedIn:
-
-[Dzmitryi Kharlanau](https://uk.linkedin.com/in/dkharlanau)
-
-## Independence
-
-The views and materials on this site are personal and independent.
-
-This is not an official employer, vendor, or client website.
-
-## AI and search transparency
-
-This site is designed to be machine-readable for search engines and AI retrieval systems. It includes:
-
-- A detailed `robots.txt` with per-crawler policies and sitemap references
-- Section-level sitemaps (`sitemap-atlas.xml`, `sitemap-data.xml`, `sitemap-pages.xml`)
-- AI-readable files (`llms.txt`, `resume.json`, `resume.yml`)
-- `.well-known/agent-skills/` for AI agent discovery and topic routing
-- A three-level content verification system that controls which pages are indexed
