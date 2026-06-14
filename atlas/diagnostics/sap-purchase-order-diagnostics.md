@@ -16,7 +16,7 @@ redirect: true
   <meta property="og:url" content="https://dkharlanau.github.io/atlas/diagnostics/sap-purchase-order-creation-diagnostics/" />
   <meta http-equiv="refresh" content="0; url=/atlas/diagnostics/sap-purchase-order-creation-diagnostics/" />
   <title>SAP Purchase Order Diagnostics — Redirect</title>
-  <link rel="canonical" href="https://dkharlanau.github.io/atlas/diagnostics/sap-purchase-order-creation-diagnostics/" />
+  <link rel="canonical" href="https://dkharlanau.github.io/atlas/diagnostics/sap-purchase-order-diagnostics/" />
 </head>
 <body>
   <p>This page has been merged into <a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a>.</p>
