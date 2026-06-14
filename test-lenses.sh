@@ -1,1 +1,0 @@
-python3 professional-radar/scripts/professional_radar_author_voice_generator.py --test-lenses --skip-source-validation
