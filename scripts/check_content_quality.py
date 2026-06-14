@@ -89,6 +89,9 @@ def check_page(path: Path, rel: str) -> list[str]:
     if not fm:
         return issues
 
+    if fm.get("redirect"):
+        return issues
+
     robots = fm.get("robots", "")
     is_noindex = "noindex" in robots.lower()
     status = fm.get("status", "")

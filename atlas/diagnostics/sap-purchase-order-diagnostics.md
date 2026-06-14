@@ -4,6 +4,7 @@ title: "SAP Purchase Order Diagnostics (redirect)"
 permalink: /atlas/diagnostics/sap-purchase-order-diagnostics/
 robots: noindex,follow
 sitemap: false
+redirect: true
 ---
 
 <!DOCTYPE html>
