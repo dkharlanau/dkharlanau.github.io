@@ -16,7 +16,16 @@ Rules:
 {% assign og_image = page.og_image | default: '/assets/og/default.png' | absolute_url %}
 {% assign article_image = '' %}
 {% if page.og_image %}{% assign article_image = page.og_image | absolute_url %}{% endif %}
-{% assign page_description = page.description | default: page.summary | default: page.excerpt | default: site.description | strip_html | normalize_whitespace %}
+{% assign default_description = 'SAP AMS support, AI-assisted support automation, incident analysis, SD/MM issues, master data problems, and process optimization for SAP AMS teams.' %}
+{% if page.url == '/' or page.permalink == '/' %}
+{% assign default_description = site.description | default: default_description %}
+{% elsif page.collection == 'notes' and page.description %}
+{% assign default_description = page.description %}
+{% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
+{% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau: SAP AMS, SAP support, integration, incident analysis, and practical AI-assisted support workflows.' %}
+{% endif %}
+{% assign content_fallback = page.summary | default: page.excerpt %}
+{% assign page_description = page.description | default: content_fallback | default: default_description | strip_html | normalize_whitespace %}
 {% assign page_title = page.title | default: site.title | strip_html | normalize_whitespace %}
 {% assign page_modified = page.last_modified_at | default: page.updated | default: page.last_reviewed %}
 {% assign page_modified_test = page_modified | date: '%s' %}
@@ -83,7 +92,7 @@ Rules:
   "@id": "{{ canonical_url }}#term",
   "name": {{ page.defined_term | jsonify }},
   "termCode": {{ page.term_code | default: page.defined_term | jsonify }},
-  "description": {{ page_description | truncate: 300 | jsonify }},
+  "description": {{ page_description | truncate: 300, '' | jsonify }},
   "inDefinedTermSet": {
     "@type": "DefinedTermSet",
     "name": "DKharlanau Atlas Glossary",
@@ -107,7 +116,7 @@ Rules:
   "@type": "DefinedTermSet",
   "@id": "{{ canonical_url }}#termset",
   "name": {{ page_title | jsonify }},
-  "description": {{ page_description | truncate: 300 | jsonify }},
+  "description": {{ page_description | truncate: 300, '' | jsonify }},
   "url": "{{ canonical_url }}"
   {% if page.related_terms and page.related_terms.size > 0 %},
   "hasDefinedTerm": [
@@ -130,7 +139,7 @@ Rules:
   "@id": "{{ canonical_url }}#webpage",
   "url": "{{ canonical_url }}",
   "name": {{ page_title | jsonify }},
-  "description": {{ page_description | truncate: 160 | jsonify }},
+  "description": {{ page_description | truncate: 160, '' | jsonify }},
   "inLanguage": "{{ site.lang | default: 'en' }}",
   {% if page_modified_test != page_modified %}"dateModified": "{{ page_modified | date_to_xmlschema }}",{% endif %}
   "isPartOf": {
@@ -171,7 +180,7 @@ Rules:
   "@type": "{{ page_type }}",
   "@id": "{{ canonical_url }}#article",
   "headline": {{ page_title | jsonify }},
-  "description": {{ page_description | truncate: 160 | jsonify }},
+  "description": {{ page_description | truncate: 160, '' | jsonify }},
   "author": {
     "@type": "Person",
     "@id": "{{ author_id }}",
@@ -275,7 +284,7 @@ Rules:
   "@type": "Event",
   "@id": "{{ canonical_url }}#event",
   "name": {{ page.structured_data.name | default: page_title | jsonify }},
-  "description": {{ page.structured_data.description | default: page_description | truncate: 160 | jsonify }},
+  "description": {{ page.structured_data.description | default: page_description | truncate: 160, '' | jsonify }},
   "startDate": "{{ page.structured_data.start_date | date_to_xmlschema }}",
   {% if page.structured_data.end_date %}"endDate": "{{ page.structured_data.end_date | date_to_xmlschema }}",{% endif %}
   "eventStatus": "{{ page.structured_data.event_status | default: 'https://schema.org/EventScheduled' }}",
