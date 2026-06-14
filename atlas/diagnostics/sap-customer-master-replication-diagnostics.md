@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Customer Master Replication Diagnostics"
-description: "A conservative diagnostic frame for customer master replication issues in SAP."
+description: "A conservative diagnostic frame for customer master replication issues in SAP, covering BP, customer, and partner data flows."
 permalink: /atlas/diagnostics/sap-customer-master-replication-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS

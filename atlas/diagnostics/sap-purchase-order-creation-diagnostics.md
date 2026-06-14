@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Purchase Order Creation Diagnostics"
-description: "A conservative diagnostic frame for purchase order creation blocks in SAP MM."
+description: "A conservative diagnostic frame for purchase order creation blocks in SAP MM, covering master data, configuration, and approval workflow causes."
 permalink: /atlas/diagnostics/sap-purchase-order-creation-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
