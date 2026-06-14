@@ -1,7 +1,7 @@
 ---
 title: SAP Goods Receipt Diagnostics
 layout: default
-description: A practical support diagnostic guide for SAP goods receipt issues.
+description: "A practical support diagnostic guide for SAP goods receipt issues, covering posting failures, missing purchase order history, and movement types."
 permalink: /atlas/diagnostics/sap-goods-receipt-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS

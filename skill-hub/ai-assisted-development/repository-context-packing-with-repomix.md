@@ -39,7 +39,7 @@ verified: true
 
   <section>
     <h2>Real work situations</h2>
-    <h3>Audit a Jekyll site before adding a new section</h3>
+    <h3>Audit a Jekyll site before adding a new area</h3>
     <p>You need to add a new Atlas section to a Jekyll site. You pack <code>atlas/</code>, <code>_includes/</code>, <code>_layouts/</code>, <code>_data/</code>, <code>scripts/</code>, and <code>tests/</code> with Repomix, excluding <code>_site/</code> and images. The model identifies the frontmatter conventions, the generator scripts, and the test files that will need updating. You avoid breaking the manifest count tests because the pack made the test structure visible.</p>
     <h3>Scope a refactor in a Python project</h3>
     <p>You want to refactor a module with many imports. You pack only the relevant package and its tests. The model maps call sites and proposes a migration plan file by file, rather than editing blindly.</p>

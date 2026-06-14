@@ -28,7 +28,7 @@ related:
 robots: index,follow
 sitemap: true
 short_title: Stock Exists but Is Not Promisable
-h1: SAP stock exists, but it is not always promisable
+h1: SAP Stock Exists but Is Not Promisable
 subtitle: A practical explanation of why visible stock can still fail availability, ATP, allocation, or channel commitment checks.
 author: Dzmitryi Kharlanau
 ---
@@ -41,7 +41,7 @@ author: Dzmitryi Kharlanau
 
 <p class="eyebrow">Knowledge Atlas</p>
 
-<h1>SAP stock exists, but it is not always promisable</h1>
+<h1>SAP Stock Exists but Is Not Promisable</h1>
 
 <p class="note-subtitle">A practical explanation of why visible stock can still fail availability, ATP, allocation, or channel commitment checks.</p>
 

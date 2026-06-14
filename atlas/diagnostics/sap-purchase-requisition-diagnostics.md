@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Purchase Requisition Diagnostics"
-description: "A conservative diagnostic frame for purchase requisition issues in SAP MM."
+description: "A conservative diagnostic frame for purchase requisition issues in SAP MM, covering sourcing, approvals, account assignment, and master data gaps."
 permalink: /atlas/diagnostics/sap-purchase-requisition-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
