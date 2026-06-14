@@ -153,3 +153,44 @@ def test_accessibility_audit_detects_warnings(tmp_path):
     assert "skipped heading level" in result.stdout
     assert "generic anchor text" in result.stdout
     assert "image missing alt text" in result.stdout
+
+
+def test_accessibility_warning_budget_exits_nonzero(tmp_path):
+    """Warning budget should fail when non-critical warnings exceed the budget."""
+    site_dir = tmp_path / "_site"
+    site_dir.mkdir()
+    (site_dir / "warnings.html").write_text(
+        """<!DOCTYPE html>
+<html lang="en">
+<head><title>Warnings</title></head>
+<body>
+  <a class="skip-link" href="#content">Skip to main content</a>
+  <header><nav><a href="/">Home</a></nav></header>
+  <main id="content">
+    <article>
+      <h1>Title</h1>
+      <h3>Skipped h3</h3>
+    </article>
+  </main>
+  <footer><p>Footer</p></footer>
+</body>
+</html>
+""",
+        encoding="utf-8",
+    )
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT),
+            "--site-dir",
+            str(site_dir),
+            "--fail-on-critical",
+            "--warning-budget",
+            "0",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 3
+    assert "warning budget exceeded" in result.stderr

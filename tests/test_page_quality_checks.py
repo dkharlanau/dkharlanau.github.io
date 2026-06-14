@@ -46,7 +46,11 @@ MINIMAL_ARTICLE = """<!doctype html>
 """
 
 
-def run_on_site(pages: dict[str, str], fail_on_critical: bool = False) -> tuple[int, list[dict]]:
+def run_on_site(
+    pages: dict[str, str],
+    fail_on_critical: bool = False,
+    warning_budget: Optional[int] = None,
+) -> tuple[int, list[dict]]:
     from scripts.check_page_quality import main
     import sys
     import io
@@ -61,6 +65,8 @@ def run_on_site(pages: dict[str, str], fail_on_critical: bool = False) -> tuple[
         argv = ["", "--site-dir", str(root)]
         if fail_on_critical:
             argv.append("--fail-on-critical")
+        if warning_budget is not None:
+            argv.extend(["--warning-budget", str(warning_budget)])
         argv.append("--json")
 
         old_stdout = sys.stdout
@@ -221,6 +227,20 @@ def test_warning_only_run_exits_zero():
     code, findings = run_on_site({"atlas/good-article/index.html": content}, fail_on_critical=True)
     assert code == 0
     assert any(f["rule"] == "ARTICLE_META_DESCRIPTION_SHORT" and f["severity"] == "warning" for f in findings)
+
+
+def test_warning_budget_exceeded_exits_nonzero():
+    content = MINIMAL_ARTICLE.replace(
+        '<meta name="description" content="A useful description that is long enough to pass the quality gate without any issues.">',
+        '<meta name="description" content="A description that is short.">',
+    )
+    code, findings = run_on_site(
+        {"atlas/good-article/index.html": content},
+        fail_on_critical=True,
+        warning_budget=0,
+    )
+    assert code == 3
+    assert any(f["severity"] == "warning" for f in findings)
 
 
 def test_private_path_inside_code_block_is_not_critical():

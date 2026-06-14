@@ -7,6 +7,7 @@ scripts/check_structured_data.py.
 
 Usage:
     python3 scripts/check_page_quality.py [--site-dir _site] [--fail-on-critical]
+    python3 scripts/check_page_quality.py [--site-dir _site] [--fail-on-critical] [--warning-budget 40]
 """
 
 from __future__ import annotations
@@ -721,6 +722,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-dir", default="_site", help="Built site root")
     parser.add_argument("--fail-on-critical", action="store_true", help="Exit non-zero on critical findings")
+    parser.add_argument(
+        "--warning-budget",
+        type=int,
+        default=None,
+        help="Fail when warning findings exceed this count.",
+    )
     parser.add_argument("--json", action="store_true", help="Output findings as JSON")
     args = parser.parse_args()
 
@@ -766,8 +773,21 @@ def main() -> int:
         else:
             print(f"Page quality check passed for {stats['pages']} HTML files.")
 
+    warnings_exceed_budget = (
+        args.warning_budget is not None
+        and stats.get("warning", 0) > args.warning_budget
+    )
+    if warnings_exceed_budget:
+        print(
+            f"Page quality warning budget exceeded: "
+            f"{stats.get('warning', 0)} warning(s) > budget {args.warning_budget}.",
+            file=sys.stderr,
+        )
+
     if args.fail_on_critical and stats.get("critical", 0) > 0:
         return 2
+    if warnings_exceed_budget:
+        return 3
     return 0
 
 

@@ -12,6 +12,7 @@ Outputs a report; CI can fail on critical issues.
 
 Usage:
     python3 scripts/accessibility_audit.py [--site-dir _site] [--fail-on-critical]
+    python3 scripts/accessibility_audit.py [--site-dir _site] [--fail-on-critical] [--warning-budget 10]
 """
 
 from __future__ import annotations
@@ -111,6 +112,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-dir", default="_site", help="Built site directory")
     parser.add_argument("--fail-on-critical", action="store_true", help="Exit non-zero on critical issues")
+    parser.add_argument(
+        "--warning-budget",
+        type=int,
+        default=None,
+        help="Fail when warning issues exceed this count.",
+    )
     parser.add_argument("--max-issues", type=int, default=100, help="Max issues to print per category")
     parser.add_argument(
         "--exclude-prefix",
@@ -161,8 +168,21 @@ def main() -> int:
     else:
         print("Accessibility audit: no warnings")
 
+    warnings_exceed_budget = (
+        args.warning_budget is not None
+        and len(all_warnings) > args.warning_budget
+    )
+    if warnings_exceed_budget:
+        print(
+            f"Accessibility warning budget exceeded: "
+            f"{len(all_warnings)} warning(s) > budget {args.warning_budget}.",
+            file=sys.stderr,
+        )
+
     if all_critical and args.fail_on_critical:
         return 2
+    if warnings_exceed_budget:
+        return 3
 
     print(f"Accessibility audit complete: {total_issues} total issue(s) across built site.")
     return 0
