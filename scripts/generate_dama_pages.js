@@ -82,6 +82,48 @@ function buildAbsoluteUrl(siteBase, pathValue) {
   return siteBase ? `${siteBase}${pathValue}` : pathValue;
 }
 
+function readAnalyticsConfig() {
+  const configPath = path.join(repoRoot, "_config.yml");
+  if (!fs.existsSync(configPath)) {
+    return {};
+  }
+  const config = fs.readFileSync(configPath, "utf8");
+  const gaMatch = config.match(/^google_analytics_id:\s*["']?([^"'\n#]+)["']?/m);
+  const gtmMatch = config.match(/^google_tag_manager_id:\s*["']?([^"'\n#]+)["']?/m);
+  return {
+    googleAnalyticsId: gaMatch ? gaMatch[1].trim() : "",
+    googleTagManagerId: gtmMatch ? gtmMatch[1].trim() : "",
+  };
+}
+
+function renderAnalyticsSnippet() {
+  const { googleAnalyticsId, googleTagManagerId } = readAnalyticsConfig();
+  if (googleTagManagerId) {
+    return `
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','${escapeHtml(googleTagManagerId)}');
+  </script>`;
+  }
+  if (googleAnalyticsId) {
+    return `
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=${escapeHtml(googleAnalyticsId)}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', '${escapeHtml(googleAnalyticsId)}');
+  </script>`;
+  }
+  return "";
+}
+
 function renderList(items) {
   if (!items || items.length === 0) return "<p class=\"muted\">None.</p>";
   return `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
@@ -213,6 +255,7 @@ function renderDecisionPage(data, slug) {
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="${escapeHtml(title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
+${renderAnalyticsSnippet()}
   <link rel="stylesheet" href="${basePath}assets/dama.css" />
 </head>
 <body>
@@ -361,6 +404,7 @@ function renderIndexPage(items, siteBase) {
   <meta property="og:type" content="website" />
   <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />
   <meta name="twitter:card" content="summary" />
+${renderAnalyticsSnippet()}
   <link rel="stylesheet" href="${basePath}assets/dama.css" />
 </head>
 <body>
@@ -478,6 +522,7 @@ function renderTagPage(tag, items, siteBase) {
   <meta property="og:type" content="website" />
   <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />
   <meta name="twitter:card" content="summary" />
+${renderAnalyticsSnippet()}
   <link rel="stylesheet" href="${basePath}assets/dama.css" />
 </head>
 <body>

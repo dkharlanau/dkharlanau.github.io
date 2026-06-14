@@ -16,6 +16,7 @@ redirect: true
   <meta property="og:url" content="https://dkharlanau.github.io/atlas/diagnostics/sap-purchase-order-creation-diagnostics/" />
   <meta http-equiv="refresh" content="0; url=/atlas/diagnostics/sap-purchase-order-creation-diagnostics/" />
   <title>SAP Purchase Order Diagnostics — Redirect</title>
+  {% include analytics.html %}
   <link rel="canonical" href="https://dkharlanau.github.io/atlas/diagnostics/sap-purchase-order-diagnostics/" />
 </head>
 <body>
