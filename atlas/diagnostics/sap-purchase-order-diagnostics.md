@@ -19,6 +19,20 @@ redirect: true
   <link rel="canonical" href="https://dkharlanau.github.io/atlas/diagnostics/sap-purchase-order-diagnostics/" />
 </head>
 <body>
-  <p>This page has been merged into <a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a>.</p>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header>
+    <nav aria-label="Redirect notice">
+      <a href="/">Home</a>
+      <a href="/atlas/">Atlas</a>
+    </nav>
+  </header>
+  <main id="main">
+    <h1>SAP Purchase Order Diagnostics — Redirect</h1>
+    <p>This page has been merged into <a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a>.</p>
+    <p>If you are not redirected automatically, <a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">click here</a>.</p>
+  </main>
+  <footer>
+    <p>&copy; Dzmitryi Kharlanau</p>
+  </footer>
 </body>
 </html>
