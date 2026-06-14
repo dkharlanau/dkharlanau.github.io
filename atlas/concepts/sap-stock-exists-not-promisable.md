@@ -13,7 +13,7 @@ business_process: Order to cash
 status: reviewed
 verified: true
 level: 2
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - order-to-cash
@@ -49,7 +49,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP operations</dd></div><div><dt>Type</dt><dd>business concept</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>SAP operations</dd></div><div><dt>Type</dt><dd>business concept</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
@@ -80,6 +80,8 @@ author: Dzmitryi Kharlanau
 <li>Is another document, allocation rule, or protection rule already consuming the quantity?</li>
 
 </ul>
+
+<p>Stock visibility and promisable stock are two different figures. The gap between them is usually a business rule, not a system error.</p>
 
 </div>
 

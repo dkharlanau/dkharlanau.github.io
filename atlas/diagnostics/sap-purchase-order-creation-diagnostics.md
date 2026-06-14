@@ -58,6 +58,7 @@ sitemap: true
   <div class="note-body">
     <h2>Core idea</h2>
     <p>Purchase order creation is the point where internal demand becomes a supplier commitment. Blocks at this stage prevent the entire procurement chain from starting. The support goal is to identify whether the block comes from master data, sourcing, release strategy, authorization, or document conversion issues.</p>
+    <p>The fastest way to narrow the cause is to test the same material and supplier in ME21N directly: if manual creation works, the block is likely in automatic conversion or release strategy.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -115,8 +116,8 @@ sitemap: true
       <li>Escalate authorization issues to the security team with SU53 evidence.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>PO creation blocks are usually master data or sourcing issues, not system bugs. A useful ticket should include: the PR number (if converting), material, plant, supplier, error message, transaction code, and whether the issue is new or recurring.</p>
+    <h2>What to capture first</h2>
+    <p>PO creation blocks are usually master data or sourcing issues, not system bugs. Capture: the PR number (if converting), material, plant, supplier, error message, transaction code, and whether the issue is new or recurring.</p>
 
     <h2>Escalation signals</h2>
     <ul>

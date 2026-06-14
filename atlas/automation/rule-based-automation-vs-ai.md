@@ -13,7 +13,7 @@ business_process: Support operations
 status: reviewed
 verified: true
 level: 2
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - automation
@@ -48,7 +48,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Automation</dd></div><div><dt>Type</dt><dd>automation pattern</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Automation</dd></div><div><dt>Type</dt><dd>automation pattern</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
@@ -79,6 +79,8 @@ author: Dzmitryi Kharlanau
 <li>What is the consequence of a wrong action, and where should human approval sit?</li>
 
 </ul>
+
+<p>A good rule is not a defeat. Rules are often the right choice when the cost of a wrong action is high and the input can be validated before execution.</p>
 
 </div>
 

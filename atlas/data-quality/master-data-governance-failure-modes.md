@@ -13,7 +13,7 @@ business_process: Cross-process operations
 status: reviewed
 verified: true
 level: 2
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - master-data
@@ -48,7 +48,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Data operations</dd></div><div><dt>Type</dt><dd>data quality</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Data operations</dd></div><div><dt>Type</dt><dd>data quality</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
@@ -79,6 +79,8 @@ author: Dzmitryi Kharlanau
 <li>Is this a single bad record or a pattern across objects, plants, company codes, or suppliers?</li>
 
 </ul>
+
+<p>Governance failures become visible when the same ticket type keeps reopening. The signal is not the bad record; it is the absence of an owner, rule, or review loop that should have caught it.</p>
 
 </div>
 

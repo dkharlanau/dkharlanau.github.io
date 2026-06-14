@@ -13,7 +13,7 @@ business_process: Cross-process operations
 status: reviewed
 verified: true
 level: 2
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - master-data
@@ -47,7 +47,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Data operations</dd></div><div><dt>Type</dt><dd>data quality</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Data operations</dd></div><div><dt>Type</dt><dd>data quality</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
@@ -78,6 +78,8 @@ author: Dzmitryi Kharlanau
 <li>Can the issue be prevented with validation, workflow, stewardship, or monitoring?</li>
 
 </ul>
+
+<p>Master data quality work is unglamorous until a blocked order or failed payment reveals the real cost. The best fixes combine a repaired record with a governance change that stops the same defect from recurring.</p>
 
 </div>
 

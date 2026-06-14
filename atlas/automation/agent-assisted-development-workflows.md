@@ -13,7 +13,7 @@ business_process: Knowledge work
 status: reviewed
 verified: true
 level: 2
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - automation
@@ -47,7 +47,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Automation</dd></div><div><dt>Type</dt><dd>agentic workflow</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Automation</dd></div><div><dt>Type</dt><dd>agentic workflow</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
@@ -78,6 +78,8 @@ author: Dzmitryi Kharlanau
 <li>Where is human approval required before changes reach production or public pages?</li>
 
 </ul>
+
+<p>The useful agentic workflow is one where the human reviewer can inspect assumptions, scope, and evidence without replaying the entire session.</p>
 
 </div>
 

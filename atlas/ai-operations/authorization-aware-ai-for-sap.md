@@ -13,7 +13,7 @@ business_process: Support operations
 status: reviewed
 verified: true
 level: 2
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - ai-operations
@@ -47,7 +47,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>AI-assisted operations</dd></div><div><dt>Type</dt><dd>AI operations</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>AI-assisted operations</dd></div><div><dt>Type</dt><dd>AI operations</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
@@ -78,6 +78,8 @@ author: Dzmitryi Kharlanau
 <li>Is every action recommendation routed through human approval and system authorization?</li>
 
 </ul>
+
+<p>Authorization-aware AI is not a one-time setup. Access rules, user roles, and data boundaries change, so the retrieval layer needs to be retested whenever the underlying authorization model changes.</p>
 
 </div>
 

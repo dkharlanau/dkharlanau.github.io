@@ -13,7 +13,7 @@ business_process: Support operations
 status: reviewed
 verified: true
 level: 2
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - automation
@@ -48,7 +48,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Automation</dd></div><div><dt>Type</dt><dd>automation pattern</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>Automation</dd></div><div><dt>Type</dt><dd>automation pattern</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
@@ -79,6 +79,8 @@ author: Dzmitryi Kharlanau
 <li>Can a new support person safely follow the runbook without hidden context?</li>
 
 </ul>
+
+<p>Operational memory decays quickly when tickets are closed without a decision log. The most valuable entries are the ones that explain why a fix was chosen, not just what was changed.</p>
 
 </div>
 

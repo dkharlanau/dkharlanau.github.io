@@ -13,7 +13,7 @@ business_process: Support operations
 status: reviewed
 verified: true
 level: 2
-last_reviewed: 2026-05-06
+last_reviewed: 2026-06-13
 
 tags:
   - ai-operations
@@ -47,7 +47,7 @@ author: Dzmitryi Kharlanau
 
 </header>
 
-<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>AI-assisted operations</dd></div><div><dt>Type</dt><dd>AI operations</dd></div><div><dt>Reviewed</dt><dd>2026-05-06</dd></div></dl></aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Domain</dt><dd>AI-assisted operations</dd></div><div><dt>Type</dt><dd>AI operations</dd></div><div><dt>Reviewed</dt><dd>2026-06-13</dd></div></dl></aside>
 
 <div class="note-body">
 
@@ -78,6 +78,8 @@ author: Dzmitryi Kharlanau
 <li>Can a reader or retrieval system distinguish official process from draft notes?</li>
 
 </ul>
+
+<p>Good process documentation is rarely complete on the first pass. The useful version is the one that is reviewed, scoped, and honest about what is still draft.</p>
 
 </div>
 

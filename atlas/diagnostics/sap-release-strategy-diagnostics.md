@@ -56,6 +56,7 @@ sitemap: true
   <div class="note-body">
     <h2>Core idea</h2>
     <p>Release strategy is the approval workflow that prevents a purchasing document from becoming a binding commitment until authorized users release it. When a document is stuck in release, the support goal is to identify which release strategy was triggered, which release codes are still open, who has the authorization to release, and whether the block is intentional or caused by a classification mismatch.</p>
+    <p>The most common release cases I see are not missing approvers but classification mismatches: a changed material group or plant value selected a different strategy than the one the business expected.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -111,8 +112,8 @@ sitemap: true
       <li>If workflow is stuck, restart or forward the work item after confirming the business context.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Release strategy blocks are usually process or authorization issues, not system errors. A useful ticket should include: document number, release strategy, open release codes, the user who tried to release, the error message, and whether the issue is new or recurring.</p>
+    <h2>What to capture first</h2>
+    <p>Release strategy blocks are usually process or authorization issues, not system errors. Capture: document number, release strategy, open release codes, the user who tried to release, the error message, and whether the issue is new or recurring.</p>
 
     <h2>Escalation signals</h2>
     <ul>

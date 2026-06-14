@@ -58,6 +58,7 @@ sitemap: true
   <div class="note-body">
     <h2>Core idea</h2>
     <p>Purchase requisition is the first document in the procure-to-pay chain. It captures internal demand but does not yet commit the organization to a supplier. When a PR is blocked, cannot be created, or fails conversion, the support goal is to identify whether the issue is in master data, account assignment, sourcing, release strategy, or user authorization.</p>
+    <p>Most PR failures are not system errors: they are missing account assignments, unextended materials, or incomplete release strategies surfacing at the first document in the chain.</p>
 
     <h2>Common symptoms</h2>
     <ul>
@@ -114,19 +115,11 @@ sitemap: true
       <li>Adjust MRP parameters if system-generated PRs are consistently wrong.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>PR issues are usually upstream master data or account assignment problems. A useful ticket should include: PR number, material, plant, error message, account assignment, and whether the issue is isolated or recurring.</p>
+    <h2>What to capture first</h2>
+    <p>PR blocks are usually upstream master data or account assignment problems. Capture: PR number, material, plant, error message, account assignment, and whether the issue is isolated or recurring.</p>
 
-    <h2>MRP exception handling</h2>
-    <p>MRP exceptions are messages that indicate planning problems requiring human intervention. When MRP generates unexpected purchase requisitions, the support goal is to identify whether the exception is a master data issue, a demand signal problem, or a planning parameter mismatch.</p>
-    <ul>
-      <li><strong>Check MD04 / MD05:</strong> the MRP list shows exception messages per material and plant. Common messages include stockout (01), excess (02), late receipt (03), and early receipt (07).</li>
-      <li><strong>Check MRP parameters:</strong> lot size, safety stock, reorder point, and procurement type in the material master may produce PRs that do not match business intent.</li>
-      <li><strong>Check demand signals:</strong> sales orders, planned independent requirements, or reservations may have changed after the last MRP run, creating new exceptions.</li>
-      <li><strong>Check supply signals:</strong> purchase orders, production orders, or planned orders may have been delayed or cancelled, causing MRP to propose new PRs.</li>
-      <li><strong>Check MRP controller assignment:</strong> the material may be assigned to an MRP controller who is not monitoring exceptions for that group.</li>
-    </ul>
-    <p>A useful MRP exception ticket should include: material number, plant, exception message number, MRP run date, the PR or planned order number if one was created, and whether the exception is isolated or affects a group of materials.</p>
+    <h2>When the PR came from MRP</h2>
+    <p>If the requisition was system-generated, treat it as an MRP exception. Verify the exception message in MD04/MD05, then check whether the root cause is a demand signal change, a supply delay, or a planning parameter in the material master. For a full diagnostic frame, see <a href="/atlas/diagnostics/sap-mrp-exception-diagnostics/">SAP MRP Exception Diagnostics</a>.</p>
 
     <h2>Escalation signals</h2>
     <ul>
