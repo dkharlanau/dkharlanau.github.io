@@ -169,6 +169,11 @@ related:
       <p>Find why a purchase order cannot be created, saved, or released.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-contract-scheduling-agreement-diagnostics/">
+      <h2>SAP Contract and Scheduling Agreement Diagnostics</h2>
+      <p>Find why a contract release order or scheduling agreement delivery schedule fails.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
     <a class="atlas-card" href="/atlas/diagnostics/sap-source-determination-diagnostics/">
       <h2>SAP Source Determination Diagnostics</h2>
       <p>Find why the system cannot determine a valid supplier for a requisition or order.</p>
@@ -302,6 +307,21 @@ related:
       <p>Classify and route SAP support incidents before deep investigation.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-short-dump-diagnostics/">
+      <h2>SAP Short Dump Diagnostics</h2>
+      <p>Find why an ABAP program terminates with a runtime error.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-update-termination-diagnostics/">
+      <h2>SAP Update Termination Diagnostics</h2>
+      <p>Find why a V1 or V2 update request terminated and left follow-on posting incomplete.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-lock-enqueue-diagnostics/">
+      <h2>SAP Lock / Enqueue Diagnostics</h2>
+      <p>Find why a transaction, update, or background job is blocked by an enqueue lock.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
   </div>
 </section>
 
@@ -374,6 +394,16 @@ related:
     <a class="atlas-card" href="/atlas/diagnostics/sap-api-gateway-diagnostics/">
       <h2>SAP API Gateway Diagnostics</h2>
       <p>Find API gateway routing, authentication, and policy failures.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-odata-service-diagnostics/">
+      <h2>SAP OData Service Diagnostics</h2>
+      <p>Find why an OData service call fails in SAP Gateway or S/4HANA.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-btp-cloud-integration-diagnostics/">
+      <h2>SAP BTP Cloud Integration Diagnostics</h2>
+      <p>Find why a CPI integration flow fails or does not deliver a message.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
   </div>

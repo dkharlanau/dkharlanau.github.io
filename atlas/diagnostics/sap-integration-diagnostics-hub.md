@@ -25,6 +25,8 @@ related:
   - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
   - /atlas/diagnostics/sap-rfc-destination-diagnostics/
   - /atlas/diagnostics/sap-interface-monitoring-diagnostics/
+  - /atlas/diagnostics/sap-odata-service-diagnostics/
+  - /atlas/diagnostics/sap-btp-cloud-integration-diagnostics/
 robots: noindex,follow
 sitemap: false
 ---
@@ -132,6 +134,16 @@ sitemap: false
       <a class="atlas-card" href="/atlas/diagnostics/sap-outbound-processing-diagnostics/">
         <h2>Outbound Processing</h2>
         <p>Message not created, not sent, or corrupted.</p>
+        <span class="link-arrow">Read diagnostic</span>
+      </a>
+      <a class="atlas-card" href="/atlas/diagnostics/sap-odata-service-diagnostics/">
+        <h2>OData Service</h2>
+        <p>S/4HANA and Fiori OData service failures.</p>
+        <span class="link-arrow">Read diagnostic</span>
+      </a>
+      <a class="atlas-card" href="/atlas/diagnostics/sap-btp-cloud-integration-diagnostics/">
+        <h2>BTP Cloud Integration</h2>
+        <p>CPI integration flow and message processing failures.</p>
         <span class="link-arrow">Read diagnostic</span>
       </a>
     </div>

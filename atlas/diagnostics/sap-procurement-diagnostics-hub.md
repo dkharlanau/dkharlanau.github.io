@@ -24,6 +24,7 @@ related:
   - /atlas/diagnostics/sap-release-strategy-diagnostics/
   - /atlas/diagnostics/sap-invoice-verification-diagnostics/
   - /atlas/diagnostics/sap-three-way-match-diagnostics/
+  - /atlas/diagnostics/sap-contract-scheduling-agreement-diagnostics/
 robots: noindex,follow
 sitemap: false
 ---
@@ -96,6 +97,11 @@ sitemap: false
       <a class="atlas-card" href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">
         <h2>Purchase Order Creation</h2>
         <p>PO cannot be created, saved, or released.</p>
+        <span class="link-arrow">Read diagnostic</span>
+      </a>
+      <a class="atlas-card" href="/atlas/diagnostics/sap-contract-scheduling-agreement-diagnostics/">
+        <h2>Contract and Scheduling Agreement</h2>
+        <p>Release orders or delivery schedules against outline agreements fail.</p>
         <span class="link-arrow">Read diagnostic</span>
       </a>
       <a class="atlas-card" href="/atlas/diagnostics/sap-release-strategy-diagnostics/">

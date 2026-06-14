@@ -710,7 +710,7 @@ Generated: 2026-06-06
 | CONCEPT-0662 | Cross-Docking | retail | Replenishment | P1 | low_value_rejected |  | Generic retail concept; not core SAP operational diagnostic |
 | CONCEPT-0663 | Flow-Through | retail | Replenishment | P1 | low_value_rejected |  | Generic retail concept; not core SAP operational diagnostic |
 | CONCEPT-0664 | Procurement | retail | Procurement | P0 | already_covered | atlas/sap/sap-mm-procurement-overview.md | Matches existing: mm procurement overview |
-| CONCEPT-0665 | Purchase Order | retail | Procurement | P0 | already_covered | atlas/diagnostics/sap-purchase-order-diagnostics.md | Matches existing: purchase order creation diagnostics |
+| CONCEPT-0665 | Purchase Order | retail | Procurement | P0 | already_covered | atlas/diagnostics/sap-purchase-order-creation-diagnostics.md | Matches existing: purchase order creation diagnostics |
 | CONCEPT-0666 | Purchase Requisition | retail | Procurement | P0 | already_covered | atlas/diagnostics/sap-purchase-requisition-diagnostics.md | Matches existing: purchase requisition diagnostics |
 | CONCEPT-0667 | Goods Receipt | retail | Procurement | P0 | already_covered | atlas/diagnostics/sap-goods-receipt-diagnostics.md | Matches existing: goods receipt diagnostics |
 | CONCEPT-0668 | GR/IR Clearing | retail | Procurement | P1 | low_value_rejected |  | Generic retail concept; not core SAP operational diagnostic |
@@ -1031,7 +1031,7 @@ Generated: 2026-06-06
 | CONCEPT-0983 | Batch Management | mm-procurement | Material Master Data | P1 | low_value_rejected |  | Generic MM concept; no new operational diagnostic value |
 | CONCEPT-0984 | Material Status | mm-procurement | Material Master Data | P1 | low_value_rejected |  | Generic MM concept; no new operational diagnostic value |
 | CONCEPT-0985 | Purchase Requisition | mm-procurement | Source-to-Pay | P0 | already_covered | atlas/diagnostics/sap-purchase-requisition-diagnostics.md | Matches existing: purchase requisition diagnostics |
-| CONCEPT-0986 | Purchase Order | mm-procurement | Source-to-Pay | P0 | already_covered | atlas/diagnostics/sap-purchase-order-diagnostics.md | Matches existing: purchase order creation diagnostics |
+| CONCEPT-0986 | Purchase Order | mm-procurement | Source-to-Pay | P0 | already_covered | atlas/diagnostics/sap-purchase-order-creation-diagnostics.md | Matches existing: purchase order creation diagnostics |
 | CONCEPT-0987 | RFQ / Quotation | mm-procurement | Source-to-Pay | P1 | low_value_rejected |  | Generic MM concept; no new operational diagnostic value |
 | CONCEPT-0988 | Outline Agreement | mm-procurement | Source-to-Pay | P0 | low_value_rejected |  | Generic MM concept; no new operational diagnostic value |
 | CONCEPT-0989 | Contract | mm-procurement | Source-to-Pay | P0 | already_covered | atlas/diagnostics/sap-subcontracting-procurement-diagnostics.md | Matches existing: subcontracting procurement diagnostics |
