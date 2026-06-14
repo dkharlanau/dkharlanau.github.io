@@ -234,6 +234,21 @@ related:
       <p>Find why MRP produces exception messages, why planned orders or purchase requisitions are not created, or why a material appears overstocked or short.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-schedule-agreement-diagnostics/">
+      <h2>SAP Schedule Agreement Diagnostics</h2>
+      <p>Find why a scheduling agreement or delivery schedule cannot be created, released, or received.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-rfq-quota-arrangement-diagnostics/">
+      <h2>SAP RFQ and Quota Arrangement Diagnostics</h2>
+      <p>Find why an RFQ, quotation, or quota arrangement does not determine the expected supplier split.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-quality-management-inspection-diagnostics/">
+      <h2>SAP Quality Management Inspection Diagnostics</h2>
+      <p>Find why an inspection lot cannot be created, results-recorded, or usage-decided.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
   </div>
 </section>
 
@@ -251,6 +266,40 @@ related:
     <a class="atlas-card" href="/atlas/diagnostics/sap-returns-processing-diagnostics/">
       <h2>SAP Returns Processing Diagnostics</h2>
       <p>Find why a customer return cannot be created, received, credited, or reconciled.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Financial Operations</p>
+    <h2>Tax, G/L, cost objects, bank, and payment diagnostics</h2>
+  </header>
+  <div class="atlas-card-grid">
+    <a class="atlas-card" href="/atlas/diagnostics/sap-tax-determination-diagnostics/">
+      <h2>SAP Tax Determination Diagnostics</h2>
+      <p>Find why a transaction determines the wrong tax code, rate, or jurisdiction.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-gl-account-master-diagnostics/">
+      <h2>SAP GL Account Master Diagnostics</h2>
+      <p>Find why a G/L account cannot be posted to, extended, or used in account determination.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-cost-center-profit-center-diagnostics/">
+      <h2>SAP Cost Center and Profit Center Diagnostics</h2>
+      <p>Find why a cost center or profit center master record blocks posting, assignment, or reporting.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-bank-account-determination-diagnostics/">
+      <h2>SAP Bank Account Determination Diagnostics</h2>
+      <p>Find why a payment run selects the wrong house bank, account, or payment method.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-payment-run-dunning-diagnostics/">
+      <h2>SAP Payment Run and Dunning Diagnostics</h2>
+      <p>Find why a payment proposal or dunning run excludes items, fails, or produces unexpected output.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
   </div>
@@ -300,6 +349,16 @@ related:
     <a class="atlas-card" href="/atlas/diagnostics/sap-incident-triage-diagnostics/">
       <h2>SAP Incident Triage Diagnostics</h2>
       <p>Classify and route SAP support incidents before deep investigation.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-workflow-diagnostics/">
+      <h2>SAP Workflow Diagnostics</h2>
+      <p>Find why workflow items are stuck, routed to the wrong agent, or missed their deadlines.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-plant-maintenance-order-diagnostics/">
+      <h2>SAP Plant Maintenance Order Diagnostics</h2>
+      <p>Find why a PM order or notification cannot be created, released, settled, or completed.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
   </div>
@@ -374,6 +433,16 @@ related:
     <a class="atlas-card" href="/atlas/diagnostics/sap-api-gateway-diagnostics/">
       <h2>SAP API Gateway Diagnostics</h2>
       <p>Find API gateway routing, authentication, and policy failures.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-odata-service-diagnostics/">
+      <h2>SAP OData Service Diagnostics</h2>
+      <p>Find why an OData service fails metadata, activation, or runtime calls.</p>
+      <span class="link-arrow">Read diagnostic</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-fiori-launchpad-diagnostics/">
+      <h2>SAP Fiori Launchpad Diagnostics</h2>
+      <p>Find why a Fiori tile, group, or app is missing or fails to launch.</p>
       <span class="link-arrow">Read diagnostic</span>
     </a>
   </div>
