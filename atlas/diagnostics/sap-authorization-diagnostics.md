@@ -1,8 +1,8 @@
 ---
 layout: default
 title: SAP Authorization and Role Diagnostics
-description: Conservative diagnostic frame for SAP authorization errors, role gaps,
-  and profile issues.
+description: Diagnose SAP authorization failures using SU53, role and profile checks,
+  organizational values, and trace evidence before requesting access changes.
 permalink: /atlas/diagnostics/sap-authorization-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS

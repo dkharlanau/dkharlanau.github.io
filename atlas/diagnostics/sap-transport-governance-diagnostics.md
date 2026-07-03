@@ -1,8 +1,8 @@
 ---
 layout: default
 title: SAP Transport Governance Diagnostics
-description: Conservative diagnostic frame for SAP transport queue conflicts, import-order
-  errors, and governance gaps.
+description: Diagnose SAP transport queue conflicts, dependency order, approval gaps,
+  and parallel changes before adjusting the import sequence.
 permalink: /atlas/diagnostics/sap-transport-governance-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS

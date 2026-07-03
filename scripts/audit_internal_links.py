@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import posixpath
 import re
 import sys
 from collections import defaultdict
@@ -38,19 +39,34 @@ def is_external(url: str) -> bool:
 def normalize_local_path(link: str, site_dir: Path, current_dir: Path) -> Path | None:
     if not link or link.startswith("#") or is_external(url=link):
         return None
-    local = link.lstrip("/")
+
+    local = urlparse(link).path
     if not local:
+        return None
+    if local == "/":
         return site_dir / "index.html"
-    target = site_dir / local
+
+    if local.startswith("/"):
+        target = site_dir / local.lstrip("/")
+    else:
+        target = (current_dir / posixpath.normpath(local)).resolve()
+
     if target.is_dir():
         target = target / "index.html"
-    elif not str(target).endswith(".html"):
-        target = target.with_suffix(".html")
+    elif not target.suffix:
+        pretty_target = target / "index.html"
+        target = pretty_target if pretty_target.exists() else target.with_suffix(".html")
     return target
 
 
 def extract_page_info(html_path: Path) -> dict:
     content = html_path.read_text(encoding="utf-8", errors="ignore")
+    link_content = re.sub(
+        r"<(?:script|style)[^>]*>.*?</(?:script|style)>",
+        "",
+        content,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
     robots_match = META_ROBOTS_RE.search(content)
     robots = robots_match.group(1).lower() if robots_match else ""
     title_match = TITLE_RE.search(content)
@@ -58,7 +74,7 @@ def extract_page_info(html_path: Path) -> dict:
     return {
         "title": title,
         "is_noindex": "noindex" in robots,
-        "links": LINK_HREF_RE.findall(content),
+        "links": LINK_HREF_RE.findall(link_content),
     }
 
 
@@ -143,7 +159,7 @@ def main() -> int:
         if page_info[rel]["is_noindex"]:
             continue
         for link in outbound[rel]:
-            target = normalize_local_path(link, site_dir, site_dir)
+            target = normalize_local_path(link, site_dir, site_dir / Path(rel).parent)
             if target and target.exists():
                 target_rel = target.relative_to(site_dir).as_posix()
                 if target_rel in page_info and page_info[target_rel]["is_noindex"]:
@@ -214,14 +230,18 @@ def main() -> int:
         "4. Strengthen hub pages (index pages, atlas index, skill-hub index) with more outbound links to verified content.",
     ])
 
-    md_path.write_text("\n".join(md_lines), encoding="utf-8")
+    if args.stdout:
+        print("\n".join(md_lines))
+    elif md_path is not None:
+        md_path.write_text("\n".join(md_lines), encoding="utf-8")
 
-    print(f"Link graph audit complete: {len(rows)} pages")
-    print(f"  CSV: {csv_path}")
-    print(f"  MD:  {md_path}")
-    print(f"  Orphans: {len(orphans)}")
-    print(f"  Broken: {len(broken_found)}")
-    print(f"  Indexable→noindex: {len(indexable_to_noindex)}")
+    summary_stream = sys.stderr if args.stdout else sys.stdout
+    print(f"Link graph audit complete: {len(rows)} pages", file=summary_stream)
+    print(f"  CSV: {csv_path}", file=summary_stream)
+    print(f"  MD:  {md_path}", file=summary_stream)
+    print(f"  Orphans: {len(orphans)}", file=summary_stream)
+    print(f"  Broken: {len(broken_found)}", file=summary_stream)
+    print(f"  Indexable→noindex: {len(indexable_to_noindex)}", file=summary_stream)
     return 0
 
 

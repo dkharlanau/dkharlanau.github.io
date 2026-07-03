@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 import pytest
+import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -175,6 +176,42 @@ def test_research_pages_are_noindex_and_sitemap_false():
         if sitemap is not False:
             failures.append(f"{rel}: research page missing sitemap:false")
     assert not failures, "Research pages not properly excluded:\n" + "\n".join(failures)
+
+
+def test_unreviewed_signal_collections_default_to_noindex():
+    """Machine-generated Radar and News drafts must stay out of search until reviewed."""
+    config = yaml.safe_load((REPO_ROOT / "_config.yml").read_text(encoding="utf-8"))
+    defaults = config.get("defaults", [])
+    for collection in ("radar", "news"):
+        matching = [
+            item.get("values", {})
+            for item in defaults
+            if item.get("scope", {}).get("type") == collection
+        ]
+        assert matching, f"Missing _config.yml defaults for {collection}"
+        values = matching[0]
+        assert values.get("status") == "needs_verification"
+        assert values.get("verified") is False
+        assert "noindex" in values.get("robots", "")
+        assert values.get("sitemap") is False
+
+
+def test_internal_docs_are_noindex_but_dama_pages_remain_indexable():
+    config = yaml.safe_load((REPO_ROOT / "_config.yml").read_text(encoding="utf-8"))
+    defaults = config.get("defaults", [])
+    by_path = {
+        item.get("scope", {}).get("path"): item.get("values", {})
+        for item in defaults
+    }
+    assert "noindex" in by_path["docs"]["robots"]
+    assert by_path["docs"]["sitemap"] is False
+    assert by_path["docs/dama"]["robots"] == "index, follow"
+    assert by_path["docs/dama"]["sitemap"] is True
+    assert "noindex" in by_path["reports"]["robots"]
+    assert by_path["reports"]["sitemap"] is False
+    for source_doc in ("AGENTS.md", "ARCHITECTURE.md", "DESIGN-SYSTEM.md", "PROJECT_MAP.md"):
+        assert "noindex" in by_path[source_doc]["robots"]
+        assert by_path[source_doc]["sitemap"] is False
 
 
 def test_atlas_verified_pages_have_canonical_permalink():
@@ -431,6 +468,18 @@ def test_structured_data_has_organization():
     path = REPO_ROOT / "_includes" / "seo" / "structured-data.html"
     text = path.read_text(encoding="utf-8")
     assert "Organization" in text
+
+
+def test_article_publisher_is_site_author_not_employer():
+    path = REPO_ROOT / "_includes" / "seo" / "structured-data.html"
+    text = path.read_text(encoding="utf-8")
+    article_block = text.split(
+        "{% comment %} Article / TechArticle", 1
+    )[1].split("{% comment %} ProfilePage entities", 1)[0]
+    publisher = article_block.split('"publisher":', 1)[1].split("},", 1)[0]
+    assert '"@type": "Person"' in publisher
+    assert '"@id": "{{ author_id }}"' in publisher
+    assert "resume.schema.worksFor" not in publisher
 
 
 # ---------------------------------------------------------------------------

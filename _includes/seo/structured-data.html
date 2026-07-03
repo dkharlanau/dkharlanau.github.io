@@ -24,7 +24,8 @@ Rules:
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
 {% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau: SAP AMS, SAP support, integration, incident analysis, and practical AI-assisted support workflows.' %}
 {% endif %}
-{% assign content_fallback = page.summary | default: page.excerpt %}
+{% assign content_excerpt = content | strip_html | normalize_whitespace %}
+{% assign content_fallback = page.summary | default: page.excerpt | default: content_excerpt %}
 {% assign page_description = page.description | default: content_fallback | default: default_description | strip_html | normalize_whitespace %}
 {% assign page_title = page.title | default: site.title | strip_html | normalize_whitespace %}
 {% assign page_modified = page.last_modified_at | default: page.updated | default: page.last_reviewed %}
@@ -187,10 +188,10 @@ Rules:
     "name": {{ resume.name | jsonify }}
   },
   "publisher": {
-    "@type": "Organization",
-    "@id": "{{ organization_id }}",
-    "name": {{ resume.schema.worksFor.name | jsonify }},
-    "url": {{ resume.schema.worksFor.url | jsonify }}
+    "@type": "Person",
+    "@id": "{{ author_id }}",
+    "name": {{ resume.name | jsonify }},
+    "url": "{{ site_home }}"
   },
   {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
   {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}

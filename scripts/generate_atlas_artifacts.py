@@ -106,15 +106,15 @@ def parse_frontmatter(path):
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    if not content.startswith("---"):
+    if not content.startswith("---\n"):
         return {}, content
 
-    end = content.find("---", 3)
+    end = content.find("\n---\n", 4)
     if end == -1:
         return {}, content
 
-    fm_text = content[3:end].strip()
-    body = content[end + 3:].strip()
+    fm_text = content[4:end].strip()
+    body = content[end + 5:].strip()
 
     try:
         fm = yaml.safe_load(fm_text) or {}
@@ -245,6 +245,8 @@ def build_permalink_map():
             if f.endswith(".md"):
                 abs_path = Path(root) / f
                 rel_path = abs_path.relative_to(REPO_DIR).as_posix()
+                if rel_path.startswith("docs/templates/"):
+                    continue
                 fm, _ = parse_frontmatter(abs_path)
                 permalink = fm.get("permalink", "")
                 if permalink:

@@ -138,6 +138,21 @@ related:
       <p>Runbooks, KEDB, and structured support knowledge for repeat incidents.</p>
       <span class="link-arrow">Read page</span>
     </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-idoc-diagnostics/">
+      <h3>SAP IDoc Diagnostics</h3>
+      <p>Trace an IDoc failure from creation and dispatch through receipt and application posting.</p>
+      <span class="link-arrow">Read page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-authorization-diagnostics/">
+      <h3>SAP Authorization and Role Diagnostics</h3>
+      <p>Separate missing authorization objects, organizational values, profile generation, and user-context issues.</p>
+      <span class="link-arrow">Read page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/diagnostics/sap-transport-governance-diagnostics/">
+      <h3>SAP Transport Governance Diagnostics</h3>
+      <p>Investigate queue conflicts, dependency order, approval gaps, and parallel changes before re-importing.</p>
+      <span class="link-arrow">Read page</span>
+    </a>
   </div>
 </section>
 

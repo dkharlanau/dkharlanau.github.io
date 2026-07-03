@@ -1,8 +1,8 @@
 ---
 layout: default
 title: SAP IDoc Diagnostics
-description: 'A diagnostic frame for SAP IDoc failures: no messages posted, wrong
-  status, segment errors, and partner issues.'
+description: Diagnose SAP IDoc failures through status history, partner profiles,
+  ports, segments, application validation, and RFC queue evidence.
 permalink: /atlas/diagnostics/sap-idoc-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
