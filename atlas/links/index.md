@@ -53,16 +53,6 @@ related:
       <p>Canonical AI routing page for SAP support and operator workflows.</p>
       <span class="link-arrow">Open AI page</span>
     </a>
-    <a class="atlas-card" href="/docs/atlas/editorial-register/">
-      <h2>Editorial register</h2>
-      <p>Noindex register accounting for every private source Markdown file and its editorial action.</p>
-      <span class="link-arrow">Open register</span>
-    </a>
-    <a class="atlas-card" href="/docs/atlas/publishing-roadmap/">
-      <h2>Publishing roadmap</h2>
-      <p>Noindex roadmap for reviewed pages, noindex pages, merge candidates, private files, and archive candidates.</p>
-      <span class="link-arrow">Open roadmap</span>
-    </a>
   </div>
 </section>
 

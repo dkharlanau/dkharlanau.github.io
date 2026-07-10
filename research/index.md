@@ -119,7 +119,7 @@ last_modified_at: 2026-06-07
       <p class="eyebrow">Policy</p>
       <h2>How this section works</h2>
     </header>
-    <p class="lead">All pages are draft, noindex, and excluded from sitemap. Every claim is cited. Sources are rated for confidence. Material graduates to Atlas only after verification and review. See the <a href="/docs/research/RESEARCH_CONTRACT.md">Research Contract</a> for full rules.</p>
+    <p class="lead">All pages are draft, noindex, and excluded from sitemap. Every claim is cited. Sources are rated for confidence. Material graduates to Atlas only after verification and review.</p>
   </div>
 </section>
 
