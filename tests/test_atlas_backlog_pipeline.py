@@ -4,7 +4,15 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
+LEDGER_PATH = REPO_ROOT / "docs" / "atlas" / "atlas_backlog_decision_ledger.json"
+
+pytestmark = pytest.mark.skipif(
+    not LEDGER_PATH.exists(),
+    reason="Backlog ledger is local-only internal docs",
+)
 
 
 def _run_status(*args: str) -> subprocess.CompletedProcess:

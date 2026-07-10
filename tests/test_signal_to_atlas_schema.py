@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = REPO_ROOT / "ai" / "signal-to-atlas.schema.json"
@@ -110,6 +112,10 @@ def test_core_blocks_require_source_and_classification_fields():
     ]
 
 
+@pytest.mark.skipif(
+    not DOC_PATH.exists() or not WORKFLOW_PATH.exists(),
+    reason="Local-only internal docs",
+)
 def test_docs_reference_schema_states_and_validation():
     doc = DOC_PATH.read_text(encoding="utf-8")
     workflow = WORKFLOW_PATH.read_text(encoding="utf-8")

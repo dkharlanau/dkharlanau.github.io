@@ -4,6 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
@@ -118,6 +120,10 @@ def test_cli_returns_zero_for_passing_proposal():
     assert data["passed"] is True
 
 
+@pytest.mark.skipif(
+    not (REPO_ROOT / "docs" / "atlas" / "SIGNAL_DRIVEN_ATLAS_UPDATES.md").exists(),
+    reason="Local-only internal docs",
+)
 def test_docs_reference_quality_gate_command():
     workflow = (REPO_ROOT / "docs" / "atlas" / "SIGNAL_DRIVEN_ATLAS_UPDATES.md").read_text(encoding="utf-8")
     proposal_doc = (REPO_ROOT / "docs" / "atlas" / "ATLAS_SIGNAL_PROPOSAL_FORMAT.md").read_text(encoding="utf-8")
