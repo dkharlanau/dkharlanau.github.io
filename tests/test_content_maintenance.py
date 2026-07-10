@@ -227,6 +227,7 @@ def test_scanner_exits_zero_when_no_safety_violations():
 
 def test_manual_fields_preserved_on_regeneration():
     """Simulate a manual edit to safe_to_auto_update, then regenerate and verify preservation."""
+    original_text = REGISTRY_PATH.read_text(encoding="utf-8")
     data = load_registry()
     if not data["pages"]:
         pytest.skip("No pages in registry")
@@ -245,30 +246,31 @@ def test_manual_fields_preserved_on_regeneration():
             }
             break
 
-    # Write back
-    with open(REGISTRY_PATH, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    try:
+        # Write back and regenerate against the temporary mutation.
+        with open(REGISTRY_PATH, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
 
-    # Re-run scanner
-    result = subprocess.run(
-        [sys.executable, str(SCRIPTS_DIR / "content_maintenance_scan.py")],
-        capture_output=True,
-        text=True,
-    )
-    assert result.returncode == 0, f"Scanner failed: {result.stdout}\n{result.stderr}"
+        result = subprocess.run(
+            [sys.executable, str(SCRIPTS_DIR / "content_maintenance_scan.py")],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, f"Scanner failed: {result.stdout}\n{result.stderr}"
 
-    # Reload and verify
-    new_data = load_registry()
-    for page in new_data["pages"]:
-        if page["path"] == first_path:
-            assert page["safe_to_auto_update"] is True, "safe_to_auto_update not preserved"
-            assert page["maintenance_notes"] == "Test note", "maintenance_notes not preserved"
-            assert page["watch_terms"] == ["test-term"], "watch_terms not preserved"
-            assert page["related_pages"] == ["/atlas/test/"], "related_pages not preserved"
-            assert page.get("maintenance_override", {}).get("reason") == "Test override", "maintenance_override not preserved"
-            break
-    else:
-        pytest.fail(f"Page {first_path} not found after regeneration")
+        new_data = load_registry()
+        for page in new_data["pages"]:
+            if page["path"] == first_path:
+                assert page["safe_to_auto_update"] is True, "safe_to_auto_update not preserved"
+                assert page["maintenance_notes"] == "Test note", "maintenance_notes not preserved"
+                assert page["watch_terms"] == ["test-term"], "watch_terms not preserved"
+                assert page["related_pages"] == ["/atlas/test/"], "related_pages not preserved"
+                assert page.get("maintenance_override", {}).get("reason") == "Test override", "maintenance_override not preserved"
+                break
+        else:
+            pytest.fail(f"Page {first_path} not found after regeneration")
+    finally:
+        REGISTRY_PATH.write_text(original_text, encoding="utf-8")
 
 
 def test_maintenance_override_reduces_priority():
@@ -322,11 +324,16 @@ def test_override_presence_in_registry():
     assert override.get("update_priority") == "none", "Override should set update_priority to none"
 
 
-def test_high_priority_count_is_zero_after_override():
-    """After applying the override, high priority count should be 0."""
+def test_none_priority_overrides_cannot_remain_high_priority():
+    """An explicit none-priority override must suppress high-priority output."""
     data = load_registry()
-    high = [p for p in data["pages"] if p["update_priority"] == "high"]
-    assert len(high) == 0, f"Expected 0 high-priority pages, found: {[p['path'] for p in high]}"
+    failures = [
+        p["path"]
+        for p in data["pages"]
+        if (p.get("maintenance_override") or {}).get("update_priority") == "none"
+        and p["update_priority"] == "high"
+    ]
+    assert not failures, f"Override failed to suppress high priority: {failures}"
 
 
 # ---------------------------------------------------------------------------

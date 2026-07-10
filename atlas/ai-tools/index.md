@@ -1,11 +1,16 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "Atlas AI Tools — AI-Assisted Development, Repository Context, and Agent Workflows"
 description: "Curated Atlas pages for repository context packaging, coding agents, MCP tool integration, AI code review, testing, and security for software and SAP support work."
 permalink: /atlas/ai-tools/
-last_modified_at: 2026-06-13
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
+tags:
+  - ai-tools
+  - developer-automation
+  - ai-operations
 related:
   - /atlas/ai-tools/repository-context-packaging/
   - /atlas/ai-tools/repomix-for-ai-codebase-analysis/

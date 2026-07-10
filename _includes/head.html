@@ -51,8 +51,10 @@ normalize_whitespace %}
 <link rel="about" href="{{ '/about/' | absolute_url }}" title="Canonical Profile" />
 <link rel="describedby" type="application/json" href="{{ '/ai/catalog.json' | absolute_url }}" title="AI Catalog" />
 <link rel="describedby" type="application/json" href="{{ '/ai/discovery-map.json' | absolute_url }}" title="AI Discovery Map" />
+<link rel="describedby" type="application/json" href="{{ '/ai/verified-pages.json' | absolute_url }}" title="Verified Page Inventory" />
 <link rel="describedby" type="application/json" href="{{ '/datasets/manifest.json' | absolute_url }}" title="Datasets Manifest" />
 <link rel="alternate" type="text/plain" href="{{ '/llms.txt' | absolute_url }}" title="LLMs Manifest" />
+<link rel="alternate" type="text/plain" href="{{ '/llms-full.txt' | absolute_url }}" title="Verified Atlas Full Text" />
 <link rel="alternate" type="application/yaml" href="{{ '/ai/resume.yml' | absolute_url }}" title="Resume YAML" />
 <link rel="alternate" type="application/json" href="{{ '/ai/resume.json' | absolute_url }}" title="Resume JSON" />
 <link rel="alternate" type="application/json" href="{{ '/.well-known/agent-skills/index.json' | absolute_url }}" title="Agent Skills Index" />
@@ -107,14 +109,18 @@ normalize_whitespace %}
 <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}?v={{ asset_version }}" />
 <script src="{{ '/assets/dataset-render.js' | relative_url }}?v={{ asset_version }}" defer></script>
 
-{% unless page.robots contains 'noindex' %}
+{% if page.url == '/' or page.permalink == '/' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "@id": "https://dkharlanau.github.io/#website",
-  "url": "https://dkharlanau.github.io",
+  "url": "https://dkharlanau.github.io/",
   "name": "Dzmitryi Kharlanau",
+  "inLanguage": "en",
+  "publisher": {
+    "@id": "https://dkharlanau.github.io/#dkharlanau"
+  },
   "potentialAction": {
     "@type": "SearchAction",
     "target": "https://dkharlanau.github.io/search/?q={query}",
@@ -122,4 +128,4 @@ normalize_whitespace %}
   }
 }
 </script>
-{% endunless %}
+{% endif %}

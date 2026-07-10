@@ -1,9 +1,13 @@
 ---
 author: "Dzmitryi Kharlanau"
 layout: default
-last_modified_at: 2026-05-06
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
+tags:
+  - automation
+  - sap-ams
+  - operational-memory
 title: Atlas Automation — SAP Support Automation and Agentic Workflows
 description: Curated Knowledge Atlas pages for automation patterns, agent-assisted workflows, and developer automation around SAP support.
 permalink: /atlas/automation/

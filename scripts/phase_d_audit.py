@@ -126,7 +126,9 @@ def parse_llms_full(path: Path) -> set[str]:
         return urls
     for line in path.read_text(encoding="utf-8").splitlines():
         if line.startswith("URL:"):
-            urls.add(line.replace("URL:", "").strip())
+            value = line.replace("URL:", "").strip()
+            parsed = urlparse(value)
+            urls.add(parsed.path or value or "/")
     return urls
 
 
@@ -179,7 +181,7 @@ def main():
     if verified_inventory_path.exists():
         data = json.loads(verified_inventory_path.read_text(encoding="utf-8"))
         verified_entries = data.get("entries", [])
-        verified_urls = {e["url"] for e in verified_entries}
+        verified_urls = {urlparse(e["url"]).path or "/" for e in verified_entries}
 
     # Discover source files
     source_by_url: dict[str, dict] = {}

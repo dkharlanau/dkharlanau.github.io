@@ -149,9 +149,9 @@ Read `README.md` and `AGENTS.md` for the human and agent-facing summaries.
 |---|---|---|---|
 | `_site/` | `bundle exec jekyll build` | All source files | Build output — never edit or commit. |
 | `llms-full.txt` | `scripts/generate_atlas_artifacts.py` | Verified Atlas pages | Excludes unverified pages and source paths. |
-| `atlas/manifest.json` | `scripts/generate_atlas_artifacts.py` | Atlas frontmatter | Includes verified/unverified counts and section list. |
-| `ai/rag/related.json` | `scripts/generate_atlas_artifacts.py` | Atlas `related` frontmatter | Edges + broken-link warnings. |
-| `ai/atlas-compact-index.json` | `scripts/generate_atlas_artifacts.py` | Atlas frontmatter + headings | Signal-matching index. |
+| `atlas/manifest.json` | `scripts/generate_atlas_artifacts.py` | Eligible Atlas frontmatter | Reviewed, verified, indexable entries with canonical URLs. |
+| `ai/rag/related.json` | `scripts/generate_atlas_artifacts.py` | Eligible Atlas `related` frontmatter | Relationships where both source and target pass the retrieval policy. |
+| `ai/atlas-compact-index.json` | `scripts/generate_atlas_artifacts.py` | Eligible Atlas frontmatter + headings | Verified-only signal-matching index with canonical URLs. |
 | `datasets/manifest.json` | `bin/enrich_datasets.py` | `datasets/**/*.json` | Machine-readable dataset index. |
 | `datasets/README.md` | `bin/enrich_datasets.py` | `datasets/**/*.json` | Human-readable dataset landing readme. |
 | `datasets/index.md`, `datasets/search.md`, `datasets/types/**`, `datasets/view/**` | `bin/generate_dataset_pages.py` | `datasets/manifest.json` | GitHub Pages-friendly dataset pages. |

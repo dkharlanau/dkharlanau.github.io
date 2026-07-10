@@ -4,9 +4,13 @@ layout: default
 title: "Atlas SAP Section — Configuration and Support Concepts"
 description: "Curated SAP support and configuration explanations with conservative boundaries."
 permalink: /atlas/sap/
-last_modified_at: 2026-05-06
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
+tags:
+  - sap
+  - sap-ams
+  - configuration
 related:
   - /atlas/concepts/sap-atp-is-not-inventory/
   - /atlas/data-quality/sap-master-data-quality/

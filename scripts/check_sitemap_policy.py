@@ -46,6 +46,7 @@ ALLOWLISTED_STATIC_PATHS = {
     "/llms.txt",
     "/datasets/manifest.json",
     "/datasets/schema.json",
+    "/atlas/manifest.json",
 }
 
 

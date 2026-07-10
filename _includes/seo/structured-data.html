@@ -3,7 +3,7 @@ Google-aligned structured data dispatcher.
 
 Rules:
 - Rich-result-oriented JSON-LD is only emitted on indexable pages (robots does not contain "noindex").
-- Homepage markup is intentionally not changed here; WebSite/SearchAction and FAQPage remain in _includes/head.html.
+- WebSite/SearchAction is emitted once on the homepage in _includes/head.html; FAQPage remains in this dispatcher.
 - schema.org types that are NOT Google-supported rich results (CollectionPage, DataCatalog) are emitted only as machine-readable metadata and documented as such.
 - Use jsonify for all dynamic values; never manually concatenate unescaped JSON strings.
 {% endcomment %}
@@ -43,6 +43,7 @@ Rules:
 {% assign knowledge_surfaces = site.data.knowledge_surfaces | default: empty %}
 {% assign catalog_id = 'https://dkharlanau.github.io/ai/catalog.json#catalog' %}
 {% assign catalog_url = 'https://dkharlanau.github.io/ai/catalog.json' %}
+{% assign url_parts = page.url | split: '/' %}
 
 {% comment %} Determine the primary structured data type for this page. {% endcomment %}
 {% assign page_type = '' %}
@@ -51,6 +52,10 @@ Rules:
 {% elsif page.profile_page %}
   {% assign page_type = 'ProfilePage' %}
 {% elsif page.data_catalog_page or page.url == '/notes/' or page.url == '/blog/' or page.url == '/news/' or page.url == '/radar/' or page.url == '/atlas/' or page.url == '/skill-hub/' or page.url == '/ai/' or page.url == '/services/' %}
+  {% assign page_type = 'CollectionPage' %}
+{% elsif page.url contains '/atlas/' and url_parts.size == 3 and page.verified == true and page.status == 'reviewed' %}
+  {% assign page_type = 'CollectionPage' %}
+{% elsif page.url contains '/skill-hub/' and url_parts.size == 3 and page.verified == true and page.status == 'reviewed' %}
   {% assign page_type = 'CollectionPage' %}
 {% elsif page.url contains '/datasets/' %}
   {% assign page_type = 'WebPage' %}
@@ -83,6 +88,30 @@ Rules:
 {% when 'definedterm' %}{% assign page_type = 'DefinedTerm' %}
 {% when 'definedtermset' %}{% assign page_type = 'DefinedTermSet' %}
 {% endcase %}
+
+{% comment %} Resolve the canonical topic collection for article-like pages. {% endcomment %}
+{% assign article_section_url = '' %}
+{% assign article_section_name = page.article_section | default: page.atlas_section | default: page.collection | default: page.domain %}
+{% if page.url contains '/atlas/' and page.atlas_section %}
+  {% assign article_section_path = '/atlas/' | append: page.atlas_section | append: '/' %}
+  {% assign article_section_url = article_section_path | absolute_url %}
+{% elsif page.collection == 'notes' %}
+  {% assign article_section_url = '/notes/' | absolute_url %}
+  {% assign article_section_name = 'Notes' %}
+{% elsif page.collection == 'blog' or page.layout == 'blog' %}
+  {% assign article_section_url = '/blog/' | absolute_url %}
+  {% assign article_section_name = 'Blog' %}
+{% elsif page.collection == 'news' %}
+  {% assign article_section_url = '/news/' | absolute_url %}
+  {% assign article_section_name = 'News' %}
+{% elsif page.collection == 'radar' %}
+  {% assign article_section_url = '/radar/' | absolute_url %}
+  {% assign article_section_name = 'Radar' %}
+{% elsif page.url contains '/skill-hub/' and url_parts.size > 3 %}
+  {% assign article_section_path = '/skill-hub/' | append: url_parts[2] | append: '/' %}
+  {% assign article_section_url = article_section_path | absolute_url %}
+  {% assign article_section_name = url_parts[2] | replace: '-', ' ' | capitalize %}
+{% endif %}
 
 {% comment %} DefinedTerm / DefinedTermSet — machine-readable glossary markup. {% endcomment %}
 {% if page_type == 'DefinedTerm' %}
@@ -165,6 +194,30 @@ Rules:
   "about": {
     "@id": "{{ author_id }}"
   },
+  {% if page_type == 'ProfilePage' or page_type == 'CollectionPage' %}
+  "breadcrumb": {
+    "@id": "{{ canonical_url }}#breadcrumb"
+  },
+  {% endif %}
+  {% if page_type == 'CollectionPage' and page.url contains '/atlas/' and page.url != '/atlas/' %}
+  {% assign collection_items = site.pages | where: 'atlas_section', url_parts[2] | where: 'verified', true | where: 'status', 'reviewed' %}
+  {% if collection_items.size > 0 %}
+  "hasPart": [
+    {% for item in collection_items %}
+    {"@id": "{{ item.url | absolute_url }}#article"}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ],
+  {% endif %}
+  {% elsif page_type == 'CollectionPage' and page.url contains '/skill-hub/' and page.url != '/skill-hub/' %}
+  {% assign collection_items = site.pages | where_exp: 'item', 'item.url contains page.url' | where_exp: 'item', 'item.url != page.url' | where: 'verified', true | where: 'status', 'reviewed' %}
+  {% if collection_items.size > 0 %}
+  "hasPart": [
+    {% for item in collection_items %}
+    {"@id": "{{ item.url | absolute_url }}#article"}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ],
+  {% endif %}
+  {% endif %}
   "primaryImageOfPage": {
     "@type": "ImageObject",
     "url": "{{ og_image }}"
@@ -193,6 +246,19 @@ Rules:
     "name": {{ resume.name | jsonify }},
     "url": "{{ site_home }}"
   },
+  "inLanguage": "{{ site.lang | default: 'en' }}",
+  "isAccessibleForFree": true,
+  "isPartOf": [
+    {
+      "@type": "WebSite",
+      "@id": "{{ site_home }}#website"
+    }{% if article_section_url != '' %},
+    {
+      "@type": "CollectionPage",
+      "@id": "{{ article_section_url }}#webpage"
+    }{% endif %}
+  ],
+  {% if article_section_name %}"articleSection": {{ article_section_name | replace: '-', ' ' | jsonify }},{% endif %}
   {% if article_published_test != article_published %}"datePublished": "{{ article_published | date_to_xmlschema }}",{% endif %}
   {% if article_modified_test != article_modified %}"dateModified": "{{ article_modified | date_to_xmlschema }}",{% endif %}
   {% if article_image != '' %}"image": "{{ article_image }}",{% endif %}
@@ -200,6 +266,9 @@ Rules:
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "{{ canonical_url }}#webpage"
+  },
+  "breadcrumb": {
+    "@id": "{{ canonical_url }}#breadcrumb"
   },
   "url": "{{ canonical_url }}"
   {% if page.domain or page.sap_area or page.business_process %},
@@ -209,6 +278,19 @@ Rules:
   }{% endif %}
   {% if page.tags %},
   "mentions": {{ page.tags | jsonify }}{% endif %}
+  {% if page.related %},
+  "relatedLink": [
+    {% assign first_eligible_related = true %}
+    {% for related_url in page.related %}
+    {% assign related_page = site.pages | where: 'permalink', related_url | first %}
+    {% assign related_noindex = false %}
+    {% if related_page.robots contains 'noindex' %}{% assign related_noindex = true %}{% endif %}
+    {% if related_page.verified == true and related_page.status == 'reviewed' and related_page.sitemap != false and related_noindex == false %}
+    {% unless first_eligible_related %},{% endunless %}{{ related_url | absolute_url | jsonify }}
+    {% assign first_eligible_related = false %}
+    {% endif %}
+    {% endfor %}
+  ]{% endif %}
   {% if page_type == 'TechArticle' %}
     {% if page.proficiency_level %},
   "proficiencyLevel": {{ page.proficiency_level | jsonify }}{% endif %}
