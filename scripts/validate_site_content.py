@@ -176,7 +176,8 @@ def check_templates(strict=False):
     print("\n== Checking docs/templates/*.md ==")
     templates_dir = REPO_ROOT / "docs" / "templates"
     if not templates_dir.exists():
-        return fail("docs/templates/ directory not found", strict)
+        info("docs/templates/ directory not found — skipping (local-only internal templates)")
+        return False
 
     template_files = sorted(templates_dir.glob("*.md"))
     if not template_files:

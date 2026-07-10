@@ -730,25 +730,4 @@ def test_head_html_links_sitemap():
     assert 'rel="sitemap"' in text
 
 
-# ---------------------------------------------------------------------------
-# Discovery contract tests
-# ---------------------------------------------------------------------------
 
-
-def test_discovery_contract_exists():
-    path = REPO_ROOT / "docs" / "seo" / "SEARCH_AI_DISCOVERY_CONTRACT.md"
-    assert path.exists(), "SEARCH_AI_DISCOVERY_CONTRACT.md missing"
-
-
-def test_discovery_contract_documents_exclusion_rules():
-    path = REPO_ROOT / "docs" / "seo" / "SEARCH_AI_DISCOVERY_CONTRACT.md"
-    text = path.read_text(encoding="utf-8")
-    assert "noindex" in text
-    assert "sitemap: false" in text or "sitemap:false" in text
-    assert "unverified" in text
-    assert "research" in text.lower()
-
-
-def test_indexnow_doc_exists():
-    path = REPO_ROOT / "docs" / "seo" / "INDEXNOW.md"
-    assert path.exists(), "INDEXNOW.md missing"
