@@ -15,13 +15,15 @@ This document describes the Google-aligned structured data implementation for th
 - **Single dispatcher:** `_includes/seo/structured-data.html` is included at the bottom of `_layouts/default.html`. It decides which JSON-LD blocks to emit based on page metadata.
 - **No hand-written JSON-LD in content pages** except for dataset detail pages, which are generated with inline `Dataset` markup. The dispatcher does not emit `Dataset` for those pages, so there is no conflict.
 - **Indexability guard:** If a page has `robots: noindex`, the dispatcher emits **no** JSON-LD at all.
-- **Homepage untouched:** The existing `WebSite` + `SearchAction` and `FAQPage` blocks in `_includes/head.html` are not changed.
+- **One WebSite entity:** `WebSite` + `SearchAction` is emitted only on the homepage. Other pages reference the stable website `@id` without redefining it.
+- **Connected article graph:** Articles reference the website, canonical topic collection, author, breadcrumb, section, and eligible related pages.
 
 ## 2. Implemented schema types
 
 ### Google-supported rich result types
 
-- `Article` — notes, blog posts, news, radar signals, verified Atlas pages, Skill Hub pages.
+- `Article` — notes, blog posts, news, radar signals, and Skill Hub leaf pages.
+- `TechArticle` — reviewed, verified Atlas articles.
 - `BreadcrumbList` — indexable pages with a clear hierarchy.
 - `Dataset` — supported via inline markup on dataset detail pages; dispatcher has guarded support for future pages.
 - `ProfilePage` + `Person` — `/about/`.
@@ -40,7 +42,7 @@ This document describes the Google-aligned structured data implementation for th
 
 ### Not implemented
 
-- `TechArticle`, `Product`, `Review`, `AggregateRating`, `LocalBusiness`, `Recipe`, `JobPosting`, etc.
+- `Product`, `Review`, `AggregateRating`, `LocalBusiness`, `Recipe`, `JobPosting`, etc.
 
 ## 3. `@id` conventions
 
@@ -55,6 +57,8 @@ This document describes the Google-aligned structured data implementation for th
 | Person / author | `{{ site.url }}#dkharlanau` |
 | Organization | `{{ employer.url }}#organization` |
 | DataCatalog | `https://dkharlanau.github.io/ai/catalog.json#catalog` |
+
+Article `isPartOf` references the homepage `WebSite` and the relevant Atlas or Skill Hub `CollectionPage`. Reviewed section hubs expose their eligible children through `hasPart`.
 
 ## 4. Front-matter conventions
 
@@ -207,7 +211,9 @@ After deployment, test these live URLs:
 | `https://dkharlanau.github.io/about/` | `ProfilePage`, `Person`, `Organization`, `BreadcrumbList` |
 | `https://dkharlanau.github.io/notes/<slug>/` | `Article`, `BreadcrumbList` |
 | `https://dkharlanau.github.io/blog/<slug>/` | `Article`, `BreadcrumbList` |
-| `https://dkharlanau.github.io/atlas/<section>/<slug>/` (verified) | `Article`, `BreadcrumbList` |
+| `https://dkharlanau.github.io/atlas/<section>/` (verified hub) | `CollectionPage`, `BreadcrumbList` |
+| `https://dkharlanau.github.io/atlas/<section>/<slug>/` (verified) | `TechArticle`, `BreadcrumbList` |
+| `https://dkharlanau.github.io/skill-hub/<section>/` | `CollectionPage`, `BreadcrumbList` |
 | `https://dkharlanau.github.io/skill-hub/<section>/<slug>/` | `Article`, `BreadcrumbList` |
 | `https://dkharlanau.github.io/datasets/view/<collection>/<id>/` | `Dataset` (inline) |
 | `https://dkharlanau.github.io/datasets/` | `CollectionPage`, `DataCatalog`, `BreadcrumbList` |

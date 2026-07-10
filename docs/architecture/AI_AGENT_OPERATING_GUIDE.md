@@ -103,7 +103,7 @@ Rules:
 ## How to avoid duplicate pages
 
 1. Search for existing pages with similar titles or topics before creating a new one.
-2. Use `atlas/manifest.json` and `ai/atlas-compact-index.json` to find existing Atlas coverage.
+2. Use `atlas/manifest.json` and `ai/atlas-compact-index.json` to find reviewed, verified Atlas coverage; search repository source separately for noindex review candidates before proposing a new draft.
 3. Check `docs/site-structure-inventory.md` and `PROJECT_MAP.md` for existing routes.
 4. Prefer updating an existing page over creating a near-duplicate.
 5. Keep one canonical location per claim and link across pages instead of copying text.

@@ -4,9 +4,13 @@ layout: default
 title: "Atlas AI Operations — AI-Assisted Support and Operational Memory"
 description: "Curated AI operations patterns for SAP support, retrieval, human review, and operational memory."
 permalink: /atlas/ai-operations/
-last_modified_at: 2026-05-06
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
+tags:
+  - ai-operations
+  - sap-ams
+  - operational-memory
 related:
   - /atlas/ai-operations/ai-agent-for-sap-support/
   - /atlas/ai-operations/ai-ready-process-documentation/

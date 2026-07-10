@@ -188,14 +188,14 @@ def test_verified_atlas_pages_appear_in_indexable_artifacts():
             continue
         url = fm.get("permalink", "")
         full_url = f"{BASE_URL}{url}"
-        if url not in artifacts["manifest"]:
-            missing["manifest"].append(f"{rel_path}: {url}")
-        if url not in artifacts["compact_index"]:
-            missing["compact_index"].append(f"{rel_path}: {url}")
-        if url not in artifacts["verified_pages"]:
-            missing["verified_pages"].append(f"{rel_path}: {url}")
-        if url not in artifacts["llms_full"]:
-            missing["llms_full"].append(f"{rel_path}: {url}")
+        if full_url not in artifacts["manifest"]:
+            missing["manifest"].append(f"{rel_path}: {full_url}")
+        if full_url not in artifacts["compact_index"]:
+            missing["compact_index"].append(f"{rel_path}: {full_url}")
+        if full_url not in artifacts["verified_pages"]:
+            missing["verified_pages"].append(f"{rel_path}: {full_url}")
+        if full_url not in artifacts["llms_full"]:
+            missing["llms_full"].append(f"{rel_path}: {full_url}")
         if full_url not in sitemap_urls:
             missing["sitemap"].append(f"{rel_path}: {full_url}")
 
@@ -214,9 +214,9 @@ def test_unverified_atlas_pages_do_not_appear_in_indexable_artifacts():
     if sitemap_urls is None:
         pytest.skip("_site not built; sitemap checks skipped")
 
-    # manifest and compact_index intentionally include all Atlas articles; only
-    # enforce exclusion from the strictly indexable artifacts.
     extra: dict[str, list[str]] = {
+        "manifest": [],
+        "compact_index": [],
         "verified_pages": [],
         "llms_full": [],
         "sitemap": [],
@@ -227,10 +227,14 @@ def test_unverified_atlas_pages_do_not_appear_in_indexable_artifacts():
             continue
         url = fm.get("permalink", "")
         full_url = f"{BASE_URL}{url}"
-        if url in artifacts["verified_pages"]:
-            extra["verified_pages"].append(f"{rel_path}: {url}")
-        if url in artifacts["llms_full"]:
-            extra["llms_full"].append(f"{rel_path}: {url}")
+        if full_url in artifacts["manifest"]:
+            extra["manifest"].append(f"{rel_path}: {full_url}")
+        if full_url in artifacts["compact_index"]:
+            extra["compact_index"].append(f"{rel_path}: {full_url}")
+        if full_url in artifacts["verified_pages"]:
+            extra["verified_pages"].append(f"{rel_path}: {full_url}")
+        if full_url in artifacts["llms_full"]:
+            extra["llms_full"].append(f"{rel_path}: {full_url}")
         if full_url in sitemap_urls:
             extra["sitemap"].append(f"{rel_path}: {full_url}")
 
@@ -256,14 +260,21 @@ def test_atlas_verification_consistency_across_artifacts():
         url = fm.get("permalink", "")
         is_verified = _is_verified(fm)
 
-        in_manifest = url in artifacts["manifest"]
-        in_compact = url in artifacts["compact_index"]
-        in_verified_pages = url in artifacts["verified_pages"]
-        in_llms = url in artifacts["llms_full"]
-        in_sitemap = sitemap_urls is not None and f"{BASE_URL}{url}" in sitemap_urls
+        full_url = f"{BASE_URL}{url}"
+        in_manifest = full_url in artifacts["manifest"]
+        in_compact = full_url in artifacts["compact_index"]
+        in_verified_pages = full_url in artifacts["verified_pages"]
+        in_llms = full_url in artifacts["llms_full"]
+        in_sitemap = sitemap_urls is not None and full_url in sitemap_urls
 
-        # manifest/compact_index include all Atlas articles, so only verify
-        # presence/absence for the strictly indexable artifacts.
+        if is_verified != in_manifest:
+            mismatches.append(
+                f"{rel_path}: verified={is_verified} but manifest inclusion={in_manifest}"
+            )
+        if is_verified != in_compact:
+            mismatches.append(
+                f"{rel_path}: verified={is_verified} but compact_index inclusion={in_compact}"
+            )
         if is_verified != in_verified_pages:
             mismatches.append(
                 f"{rel_path}: verified={is_verified} but verified_pages inclusion={in_verified_pages}"
@@ -277,8 +288,8 @@ def test_atlas_verification_consistency_across_artifacts():
                 f"{rel_path}: verified={is_verified} but sitemap inclusion={in_sitemap}"
             )
 
-        if url in manifest_by_url:
-            entry = manifest_by_url[url]
+        if full_url in manifest_by_url:
+            entry = manifest_by_url[full_url]
             if entry.get("verified") != fm.get("verified"):
                 mismatches.append(
                     f"{rel_path}: manifest verified={entry.get('verified')} != "

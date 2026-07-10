@@ -4,9 +4,15 @@ layout: default
 title: "Knowledge Atlas — SAP, Operations, Data, Automation, and AI Support Concepts"
 description: "Curated Knowledge Atlas for business, SAP, operations, data, automation, and AI-assisted support concepts."
 permalink: /atlas/
-last_modified_at: 2026-05-06
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
+tags:
+  - sap-ams
+  - diagnostics
+  - ai-operations
+  - data-quality
+  - automation
 related:
   - /atlas/concepts/order-to-cash/
   - /atlas/ai-operations/ai-agent-for-sap-support/

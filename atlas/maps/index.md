@@ -4,9 +4,13 @@ layout: default
 title: "Atlas Maps — Process and Dependency Maps"
 description: "Knowledge Atlas maps for process flow, document flow, data dependency, and cross-domain navigation."
 permalink: /atlas/maps/
-last_modified_at: 2026-05-06
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
+tags:
+  - process-maps
+  - sap-ams
+  - diagnostics
 related:
   - /atlas/maps/order-to-cash-map/
   - /atlas/maps/procure-to-pay-map/

@@ -349,6 +349,12 @@ def _clean_jekyll_json_block(block: str) -> str:
     clean = re.sub(r'{%\s*comment\s*%}.*?{%\s*endcomment\s*%}', '', clean, flags=re.DOTALL)
     clean = re.sub(r'{%\s*assign\s+.*?%}', '', clean)
     clean = re.sub(r'{%\s*capture\s+.*?%}.*?{%\s*endcapture\s*%}', '', clean, flags=re.DOTALL)
+    clean = re.sub(
+        r'{%\s*unless\s+first_eligible_related\s*%}.*?{%\s*endunless\s*%}',
+        '',
+        clean,
+        flags=re.DOTALL,
+    )
 
     # Resolve nested if/elsif/else/endif blocks by repeatedly replacing the
     # innermost conditional with its first branch content.
@@ -589,6 +595,72 @@ def test_built_site_no_duplicate_jsonld_ids():
             seen.add(item_id)
 
     assert not failures, "Duplicate JSON-LD @id values:\n" + "\n".join(failures[:50])
+
+
+def _built_jsonld(rel_path: str) -> list[dict]:
+    site_dir = REPO_ROOT / "_site"
+    if not site_dir.exists():
+        pytest.skip("_site not built; run Jekyll build first")
+    content = (site_dir / rel_path).read_text(encoding="utf-8")
+    return [json.loads(block) for block in SCRIPT_LD_RE.findall(content)]
+
+
+def test_website_schema_is_emitted_once_on_homepage_only():
+    site_dir = REPO_ROOT / "_site"
+    if not site_dir.exists():
+        pytest.skip("_site not built; run Jekyll build first")
+
+    owners = []
+    for html_path in sorted(site_dir.rglob("*.html")):
+        for block in SCRIPT_LD_RE.findall(html_path.read_text(encoding="utf-8", errors="ignore")):
+            data = json.loads(block)
+            if isinstance(data, dict) and data.get("@type") == "WebSite":
+                owners.append(html_path.relative_to(site_dir).as_posix())
+
+    assert owners == ["index.html"]
+    website = next(item for item in _built_jsonld("index.html") if item.get("@type") == "WebSite")
+    assert website["@id"] == "https://dkharlanau.github.io/#website"
+    assert website["publisher"]["@id"] == "https://dkharlanau.github.io/#dkharlanau"
+
+
+def test_verified_topic_hubs_emit_collection_graphs():
+    atlas_hub = next(
+        item for item in _built_jsonld("atlas/diagnostics/index.html")
+        if item.get("@type") == "CollectionPage"
+    )
+    atlas_parts = {item["@id"] for item in atlas_hub.get("hasPart", [])}
+    assert atlas_hub["@id"] == "https://dkharlanau.github.io/atlas/diagnostics/#webpage"
+    assert "https://dkharlanau.github.io/atlas/diagnostics/sap-idoc-status-diagnostics/#article" in atlas_parts
+
+    skill_hub = next(
+        item for item in _built_jsonld("skill-hub/ai-assisted-development/index.html")
+        if item.get("@type") == "CollectionPage"
+    )
+    skill_parts = {item["@id"] for item in skill_hub.get("hasPart", [])}
+    assert "https://dkharlanau.github.io/skill-hub/ai-assisted-development/ai-coding-agent-task-design/#article" in skill_parts
+
+
+def test_verified_articles_connect_author_website_collection_and_related_pages():
+    article = next(
+        item for item in _built_jsonld("atlas/diagnostics/sap-idoc-status-diagnostics/index.html")
+        if item.get("@type") == "TechArticle"
+    )
+    parent_ids = {item["@id"] for item in article["isPartOf"]}
+    assert article["author"]["@id"] == "https://dkharlanau.github.io/#dkharlanau"
+    assert article["publisher"]["@id"] == "https://dkharlanau.github.io/#dkharlanau"
+    assert article["inLanguage"] == "en"
+    assert article["articleSection"] == "diagnostics"
+    assert "https://dkharlanau.github.io/#website" in parent_ids
+    assert "https://dkharlanau.github.io/atlas/diagnostics/#webpage" in parent_ids
+    assert article["breadcrumb"]["@id"].endswith("#breadcrumb")
+    assert all(url.startswith("https://dkharlanau.github.io/") for url in article["relatedLink"])
+    assert "https://dkharlanau.github.io/atlas/diagnostics/idoc-aif-integration-diagnostics/" not in article["relatedLink"]
+
+
+def test_llms_manifest_uses_one_person_entity_id():
+    text = (REPO_ROOT / "_includes" / "llms-manifest.txt").read_text(encoding="utf-8")
+    assert "https://dkharlanau.github.io/#dkharlanau" in text
+    assert "https://dkharlanau.github.io/about/#person" not in text
 
 
 # ---------------------------------------------------------------------------

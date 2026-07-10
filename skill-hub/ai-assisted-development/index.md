@@ -1,9 +1,10 @@
 ---
+author: "Dzmitryi Kharlanau"
 layout: default
 title: "AI-Assisted Development — Skill Group Index"
 description: "Practical skills for using AI safely and effectively in development work: repository context packing, coding-agent task design, code review, tool selection, and MCP workflows."
 permalink: /skill-hub/ai-assisted-development/
-last_modified_at: 2026-06-13
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
 ---

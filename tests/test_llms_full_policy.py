@@ -47,7 +47,7 @@ def _build_permalink_map() -> dict[str, Path]:
         fm = _parse_frontmatter(md_path)
         permalink = fm.get("permalink", "")
         if permalink:
-            mapping[permalink] = md_path
+            mapping[f"https://dkharlanau.github.io{permalink}"] = md_path
     return mapping
 
 
@@ -128,7 +128,7 @@ def test_llms_full_includes_all_verified_atlas_articles():
         abs_path = REPO_ROOT / rel_path
         fm, _ = gen.parse_frontmatter(abs_path)
         if fm.get("verified") is True and fm.get("status") == "reviewed":
-            url = fm.get("permalink", "")
+            url = f"https://dkharlanau.github.io{fm.get('permalink', '')}"
             if url and url not in llms_urls:
                 missing.append(f"{rel_path}: {url}")
 

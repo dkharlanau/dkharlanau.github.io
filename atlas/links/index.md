@@ -4,9 +4,13 @@ layout: default
 title: "Atlas Links — Reference Routes"
 description: "Reference routes from the Knowledge Atlas to profile, services, AI context, and datasets."
 permalink: /atlas/links/
-last_modified_at: 2026-05-06
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
+tags:
+  - knowledge-atlas
+  - discovery
+  - references
 related:
   - /atlas/
   - /atlas/ai-operations/

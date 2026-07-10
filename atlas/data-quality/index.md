@@ -1,9 +1,13 @@
 ---
 author: "Dzmitryi Kharlanau"
 layout: default
-last_modified_at: 2026-05-06
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
+tags:
+  - data-quality
+  - master-data
+  - sap-mdg
 title: Atlas Data Quality — SAP Master Data and Operational Data Quality
 description: Curated Knowledge Atlas pages for SAP master data, data quality, governance, and support diagnostics.
 permalink: /atlas/data-quality/

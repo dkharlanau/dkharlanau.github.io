@@ -4,9 +4,13 @@ layout: default
 title: "Atlas Concepts — Business and SAP Concepts"
 description: "Curated business and SAP concept explanations for operational analysis and support work."
 permalink: /atlas/concepts/
-last_modified_at: 2026-05-06
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
+tags:
+  - sap-ams
+  - business-process
+  - concepts
 related:
   - /atlas/concepts/order-to-cash/
   - /atlas/concepts/sap-atp-is-not-inventory/

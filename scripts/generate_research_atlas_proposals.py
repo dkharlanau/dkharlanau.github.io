@@ -28,6 +28,7 @@ except ImportError:
     sys.exit(1)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+BASE_URL = "https://dkharlanau.github.io"
 RESEARCH_DIR = REPO_ROOT / "research"
 ATLAS_INDEX_PATH = REPO_ROOT / "ai" / "atlas-compact-index.json"
 OUTPUT_PATH = REPO_ROOT / "ai" / "research-atlas-proposals.json"
@@ -116,6 +117,10 @@ def match_research_to_atlas(research: dict[str, Any], index: dict[str, Any]) -> 
     topics = fm.get("topics", []) or []
     description = fm.get("description", "")
     related_atlas = fm.get("related_atlas", []) or []
+    canonical_related_atlas = {
+        value if value.startswith("http") else f"{BASE_URL}{value}"
+        for value in related_atlas
+    }
 
     query_tokens = token_set([title, description] + topics)
     entries = index.get("entries", [])
@@ -137,7 +142,7 @@ def match_research_to_atlas(research: dict[str, Any], index: dict[str, Any]) -> 
             match_reasons.append(f"term overlap: {', '.join(sorted(overlap)[:5])}")
 
         # Boost if explicitly linked from research frontmatter
-        if entry.get("url", "") in related_atlas:
+        if entry.get("url", "") in canonical_related_atlas:
             score = max(score, UPDATE_THRESHOLD + 0.01)
             match_reasons.append("explicitly linked in research frontmatter")
 

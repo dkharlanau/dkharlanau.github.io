@@ -60,15 +60,20 @@ store full page bodies.
 
 Stable path: `ai/atlas-compact-index.json`
 
+This public index contains only reviewed, verified, indexable Atlas pages. It
+does not expose review candidates or noindex page metadata. Before proposing a
+new draft, also search the repository source to avoid duplicating an existing
+review candidate.
+
 The compact index includes:
 
 - public source path
-- public URL
+- canonical production URL
 - title and description
 - Atlas section
 - domain, subdomain, concept type
 - SAP area and business process
-- status, verification flag, last reviewed date
+- reviewed status, verification flag, last reviewed date
 - tags
 - headings
 - SAP domain/process keywords

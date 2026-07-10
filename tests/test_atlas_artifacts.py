@@ -13,10 +13,14 @@ def test_manifest_json_is_valid():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.manifest"
-    assert data["count"] == 206
-    assert data["verified_count"] == 41
-    assert data["unverified_count"] == 165
-    assert len(data["entries"]) == 206
+    assert data["count"] == len(data["entries"])
+    assert data["verified_count"] == data["count"]
+    assert data["unverified_count"] == 0
+    assert data["eligibility_policy"]
+    for entry in data["entries"]:
+        assert entry["verified"] is True
+        assert entry["status"] == "reviewed"
+        assert entry["url"].startswith("https://dkharlanau.github.io/atlas/")
 
 
 def test_related_json_is_valid():
@@ -25,10 +29,15 @@ def test_related_json_is_valid():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.related"
-    assert data["count"] == 926
+    assert data["count"] == len(data["edges"])
     assert data["broken_link_count"] == 0
     assert data["warnings"] == []
-    assert len(data["edges"]) == 926
+    assert data["eligibility_policy"]
+    for edge in data["edges"]:
+        assert edge["source_verified"] is True
+        assert edge["source_status"] == "reviewed"
+        assert edge["source_url"].startswith("https://dkharlanau.github.io/atlas/")
+        assert edge["target_url"].startswith("https://dkharlanau.github.io/atlas/")
 
 
 def test_compact_signal_index_is_valid():
@@ -37,9 +46,13 @@ def test_compact_signal_index_is_valid():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     assert data["schema"] == "dkharlanau.atlas.compact_signal_index"
-    assert data["count"] == 206
-    assert len(data["entries"]) == 206
+    assert data["count"] == len(data["entries"])
+    assert data["count"] > 0
+    assert data["eligibility_policy"]
     assert data["fallback"]["decision"] == "needs_research"
+    for entry in data["entries"]:
+        assert entry["verified"] is True
+        assert entry["status"] == "reviewed"
 
 
 def test_verified_pages_json_is_valid():
@@ -52,7 +65,7 @@ def test_verified_pages_json_is_valid():
     assert data["count"] > 0
     assert data["collections"]
     for entry in data["entries"]:
-        assert entry["url"].startswith("/"), f"Invalid URL: {entry.get('url')}"
+        assert entry["url"].startswith("https://dkharlanau.github.io/"), f"Invalid URL: {entry.get('url')}"
         assert entry["title"], f"Missing title for {entry.get('url')}"
         assert entry["type"] in data["collections"], f"Unknown type {entry.get('type')} for {entry.get('url')}"
         assert entry.get("verified") is True
@@ -150,17 +163,23 @@ def test_manifest_sections_complete():
     path = REPO_ROOT / "atlas" / "manifest.json"
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    expected_sections = {
-        "ai-operations",
-        "ai-tools",
-        "automation",
-        "concepts",
-        "data-quality",
-        "diagnostics",
-        "maps",
-        "sap",
-    }
+    gen = _import_generator()
+    expected_sections = set()
+    for rel_path in gen.discover_atlas_articles():
+        fm, _ = gen.parse_frontmatter(REPO_ROOT / rel_path)
+        if gen._is_retrieval_eligible(fm):
+            expected_sections.add(fm["atlas_section"])
     assert set(data["sections"]) == expected_sections
+
+
+def test_manifest_related_urls_are_retrieval_eligible():
+    data = json.loads((REPO_ROOT / "atlas" / "manifest.json").read_text(encoding="utf-8"))
+    eligible_urls = {entry["url"] for entry in data["entries"]}
+    for entry in data["entries"]:
+        for related_url in entry["related"]:
+            assert related_url in eligible_urls, (
+                f"{entry['url']} references non-eligible related URL {related_url}"
+            )
 
 
 def test_related_edges_have_valid_targets():
@@ -237,7 +256,7 @@ def test_manifest_entries_have_required_fields():
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     for entry in data["entries"]:
-        assert entry.get("url", "").startswith("/atlas/"), f"Invalid permalink: {entry.get('url')}"
+        assert entry.get("url", "").startswith("https://dkharlanau.github.io/atlas/"), f"Invalid permalink: {entry.get('url')}"
         assert entry.get("atlas_section"), f"Missing atlas_section: {entry.get('title')}"
         assert "status" in entry, f"Missing status: {entry.get('title')}"
         assert "verified" in entry, f"Missing verified: {entry.get('title')}"
@@ -264,6 +283,6 @@ def test_compact_signal_index_entries_have_required_fields():
     for entry in data["entries"]:
         missing = required - set(entry)
         assert not missing, f"Compact index entry missing {missing}: {entry.get('title')}"
-        assert entry["url"].startswith("/atlas/"), f"Invalid Atlas URL: {entry.get('url')}"
+        assert entry["url"].startswith("https://dkharlanau.github.io/atlas/"), f"Invalid Atlas URL: {entry.get('url')}"
         assert (REPO_ROOT / entry["path"]).exists(), f"Missing source page: {entry['path']}"
         assert entry["matching_terms"], f"Missing matching terms: {entry['path']}"

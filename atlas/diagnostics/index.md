@@ -4,9 +4,13 @@ layout: default
 title: "Atlas Diagnostics — SAP Support and AMS Diagnostics"
 description: "Curated diagnostic patterns for SAP AMS, support tickets, operational blockers, and repeat incidents."
 permalink: /atlas/diagnostics/
-last_modified_at: 2026-06-13
+last_modified_at: 2026-07-10
 status: reviewed
 verified: true
+tags:
+  - diagnostics
+  - sap-ams
+  - incident-triage
 related:
   - /atlas/concepts/order-to-cash/
   - /atlas/data-quality/sap-master-data-quality/

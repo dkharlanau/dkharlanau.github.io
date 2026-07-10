@@ -27,7 +27,7 @@ import json
 import os
 import re
 import sys
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 from pathlib import Path
 
 try:
@@ -39,8 +39,10 @@ except ImportError:
 
 REPO_DIR = Path(__file__).resolve().parent.parent
 ATLAS_DIR = REPO_DIR / "atlas"
+BASE_URL = "https://dkharlanau.github.io"
 
 CHECK_MODE_TIMESTAMP = "CHECK_MODE"
+_DETERMINISTIC_TIMESTAMP = None
 
 
 def discover_atlas_articles():
@@ -133,6 +135,18 @@ def serialize_value(v):
     if isinstance(v, dict):
         return {k: serialize_value(vv) for k, vv in v.items()}
     return v
+
+
+def canonical_url(value):
+    """Return a canonical production URL for a public path or URL."""
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    if text.startswith("https://") or text.startswith("http://"):
+        return text
+    if not text.startswith("/"):
+        text = f"/{text}"
+    return f"{BASE_URL}{text}"
 
 
 def strip_jekyll_and_html(text):
@@ -259,15 +273,17 @@ def build_permalink_map():
 
 
 def generate_compact_signal_index(atlas_files, check_mode=False):
-    """Generate ai/atlas-compact-index.json for signal-to-page matching."""
+    """Generate the public, retrieval-eligible Atlas matching index."""
     entries = []
     for rel_path in atlas_files:
         abs_path = REPO_DIR / rel_path
         fm, body = parse_frontmatter(abs_path)
+        if not _is_retrieval_eligible(fm):
+            continue
         headings = extract_headings(body)
         entry = {
             "path": rel_path,
-            "url": fm.get("permalink", ""),
+            "url": canonical_url(fm.get("permalink", "")),
             "title": fm.get("title", ""),
             "description": fm.get("description", ""),
             "atlas_section": fm.get("atlas_section", ""),
@@ -288,14 +304,16 @@ def generate_compact_signal_index(atlas_files, check_mode=False):
 
     index = {
         "schema": "dkharlanau.atlas.compact_signal_index",
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "generated_at": _now(check_mode),
         "canonical_url": "https://dkharlanau.github.io/ai/atlas-compact-index.json",
         "description": (
             "Compact public Atlas index for matching enriched professional "
-            "signals to existing Atlas pages. Built from public frontmatter "
-            "and headings only; no private notes, draft paths, or full body text."
+            "signals to reviewed, verified, indexable Atlas pages. Built from "
+            "public frontmatter and headings only; no unverified page metadata, "
+            "private notes, draft content, or full body text."
         ),
+        "eligibility_policy": "verified=true; status=reviewed; indexable; sitemap-enabled",
         "source": "scripts/generate_atlas_artifacts.py",
         "count": len(entries),
         "entries": entries,
@@ -317,10 +335,25 @@ def generate_compact_signal_index(atlas_files, check_mode=False):
 
 
 def _now(check_mode):
-    """Return current timestamp or deterministic placeholder in check mode."""
+    """Return a source-derived timestamp or a comparison placeholder."""
     if check_mode:
         return CHECK_MODE_TIMESTAMP
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    global _DETERMINISTIC_TIMESTAMP
+    if _DETERMINISTIC_TIMESTAMP is not None:
+        return _DETERMINISTIC_TIMESTAMP
+
+    latest_date = ""
+    for info in build_permalink_map().values():
+        fm = info["fm"]
+        for field in ("last_modified_at", "last_reviewed", "updated", "date"):
+            value = serialize_value(fm.get(field, ""))
+            match = re.match(r"^(\d{4}-\d{2}-\d{2})", str(value))
+            if match and match.group(1) > latest_date:
+                latest_date = match.group(1)
+
+    _DETERMINISTIC_TIMESTAMP = f"{latest_date or '1970-01-01'}T00:00:00Z"
+    return _DETERMINISTIC_TIMESTAMP
 
 
 def _derive_page_type(rel_path):
@@ -351,6 +384,15 @@ def _is_indexable(fm):
     return True
 
 
+def _is_retrieval_eligible(fm):
+    """Return True only for reviewed, verified, indexable public content."""
+    return (
+        fm.get("verified") is True
+        and fm.get("status") == "reviewed"
+        and _is_indexable(fm)
+    )
+
+
 def generate_verified_inventory(all_pages, check_mode=False):
     """Generate ai/verified-pages.json — site-wide verified, indexable pages.
 
@@ -376,7 +418,7 @@ def generate_verified_inventory(all_pages, check_mode=False):
         section = _derive_section(rel_path, fm)
 
         entry = {
-            "url": permalink,
+            "url": canonical_url(permalink),
             "title": fm.get("title", ""),
             "description": fm.get("description", ""),
             "type": page_type,
@@ -394,7 +436,7 @@ def generate_verified_inventory(all_pages, check_mode=False):
 
     inventory = {
         "schema": "dkharlanau.site.verified_pages",
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "generated_at": _now(check_mode),
         "canonical_url": "https://dkharlanau.github.io/ai/verified-pages.json",
         "description": (
@@ -418,19 +460,26 @@ def generate_verified_inventory(all_pages, check_mode=False):
 
 
 def generate_manifest(all_pages, atlas_files, check_mode=False):
-    """Generate atlas/manifest.json. Returns dict. Writes to disk unless check_mode."""
+    """Generate the public manifest of retrieval-eligible Atlas pages."""
     entries = []
     for rel_path in atlas_files:
         abs_path = REPO_DIR / rel_path
         fm, _ = parse_frontmatter(abs_path)
 
-        related = fm.get("related", []) or []
+        if not _is_retrieval_eligible(fm):
+            continue
+
+        related = []
+        for related_url in fm.get("related", []) or []:
+            target = all_pages.get(related_url)
+            if target and _is_retrieval_eligible(target["fm"]):
+                related.append(canonical_url(related_url))
         tags = fm.get("tags", []) or []
 
         entry = {
             "title": fm.get("title", ""),
             "description": fm.get("description", ""),
-            "url": fm.get("permalink", ""),
+            "url": canonical_url(fm.get("permalink", "")),
             "atlas_section": fm.get("atlas_section", ""),
             "domain": fm.get("domain", ""),
             "subdomain": fm.get("subdomain", ""),
@@ -448,12 +497,17 @@ def generate_manifest(all_pages, atlas_files, check_mode=False):
 
     manifest = {
         "schema": "dkharlanau.atlas.manifest",
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "generated_at": _now(check_mode),
         "canonical_url": "https://dkharlanau.github.io/atlas/manifest.json",
+        "description": (
+            "Canonical manifest of reviewed, verified, indexable Atlas articles "
+            "and their eligible public relationships."
+        ),
         "count": len(entries),
         "verified_count": sum(1 for e in entries if e["verified"]),
         "unverified_count": sum(1 for e in entries if not e["verified"]),
+        "eligibility_policy": "verified=true; status=reviewed; indexable; sitemap-enabled",
         "sections": sorted({e["atlas_section"] for e in entries}),
         "entries": entries,
     }
@@ -487,14 +541,12 @@ def generate_llms_full(all_pages, atlas_files, check_mode=False):
         abs_path = REPO_DIR / rel_path
         fm, body = parse_frontmatter(abs_path)
 
-        if not fm.get("verified", False):
-            continue
-        if fm.get("status", "") != "reviewed":
+        if not _is_retrieval_eligible(fm):
             continue
 
         verified_count += 1
         title = fm.get("title", "Untitled")
-        url = fm.get("permalink", "")
+        url = canonical_url(fm.get("permalink", ""))
         tags = fm.get("tags", []) or []
 
         lines.append(f"PAGE: {title}")
@@ -527,7 +579,7 @@ def generate_llms_full(all_pages, atlas_files, check_mode=False):
 
 
 def generate_related(all_pages, atlas_files, check_mode=False):
-    """Generate ai/rag/related.json from frontmatter related links. Returns (edges, broken_links, dict). Writes to disk unless check_mode."""
+    """Generate the public related graph for retrieval-eligible Atlas pages."""
     edges = []
     broken_links = []
 
@@ -535,6 +587,8 @@ def generate_related(all_pages, atlas_files, check_mode=False):
         abs_path = REPO_DIR / rel_path
         fm, _ = parse_frontmatter(abs_path)
         permalink = fm.get("permalink", "")
+        if not _is_retrieval_eligible(fm):
+            continue
         title = fm.get("title", "")
         section = fm.get("atlas_section", "")
         tags = fm.get("tags", []) or []
@@ -543,17 +597,17 @@ def generate_related(all_pages, atlas_files, check_mode=False):
         for link in related:
             target = all_pages.get(link)
             edge_base = {
-                "source_url": permalink,
+                "source_url": canonical_url(permalink),
                 "source_title": title,
                 "source_section": section,
                 "source_status": fm.get("status", ""),
                 "source_verified": bool(fm.get("verified", False)),
                 "source_tags": tags,
             }
-            if target:
+            if target and _is_retrieval_eligible(target["fm"]):
                 edges.append({
                     **edge_base,
-                    "target_url": link,
+                    "target_url": canonical_url(link),
                     "target_title": target["title"],
                     "target_file": target["file"],
                     "relation_source": "frontmatter",
@@ -565,32 +619,34 @@ def generate_related(all_pages, atlas_files, check_mode=False):
                 abs_guess = REPO_DIR / file_guess
                 if abs_guess.exists():
                     target_fm, _ = parse_frontmatter(abs_guess)
-                    edges.append({
-                        **edge_base,
-                        "target_url": link,
-                        "target_title": target_fm.get("title", ""),
-                        "target_file": file_guess,
-                        "relation_source": "frontmatter",
-                        "valid": True,
-                    })
+                    if _is_retrieval_eligible(target_fm):
+                        edges.append({
+                            **edge_base,
+                            "target_url": canonical_url(link),
+                            "target_title": target_fm.get("title", ""),
+                            "target_file": file_guess,
+                            "relation_source": "frontmatter",
+                            "valid": True,
+                        })
                 else:
                     broken_links.append({
-                        "source_url": permalink,
+                        "source_url": canonical_url(permalink),
                         "source_title": title,
-                        "target_url": link,
+                        "target_url": canonical_url(link),
                         "reason": "target page not found",
                     })
 
     related_json = {
         "schema": "dkharlanau.atlas.related",
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "generated_at": _now(check_mode),
         "canonical_url": "https://dkharlanau.github.io/ai/rag/related.json",
         "description": (
-            "Static related-content graph for Atlas pages. "
-            "Generated from frontmatter 'related' fields. "
-            "For agent navigation and future RAG ingestion."
+            "Static related-content graph for reviewed, verified, indexable "
+            "Atlas pages. Generated from frontmatter 'related' fields for "
+            "agent navigation and controlled RAG ingestion."
         ),
+        "eligibility_policy": "source and target are verified, reviewed, indexable, and sitemap-enabled",
         "count": len(edges),
         "broken_link_count": len(broken_links),
         "edges": edges,
@@ -698,7 +754,7 @@ def run_check(all_pages, atlas_files):
             abs_path = REPO_DIR / rel_path
             fm, _ = parse_frontmatter(abs_path)
             title = fm.get("title", "")
-            if fm.get("status") == "reviewed" and fm.get("verified"):
+            if _is_retrieval_eligible(fm):
                 if f"PAGE: {title}" not in llms_committed:
                     issues.append(f"llms-full.txt: missing verified page '{title}'")
             else:
@@ -774,13 +830,14 @@ def run_check(all_pages, atlas_files):
             else:
                 print("  ✓ atlas-compact-index.json is up to date")
 
-        if compact_committed.get("count") != len(atlas_files):
-            issues.append(f"atlas-compact-index.json: expected {len(atlas_files)} entries, found {compact_committed.get('count')}")
+        expected_compact_count = len(compact_generated.get("entries", []))
+        if compact_committed.get("count") != expected_compact_count:
+            issues.append(f"atlas-compact-index.json: expected {expected_compact_count} entries, found {compact_committed.get('count')}")
         for entry in compact_committed.get("entries", []):
             path = entry.get("path", "")
             if not path or not (REPO_DIR / path).exists():
                 issues.append(f"atlas-compact-index.json: entry path missing: {path}")
-            if not entry.get("url", "").startswith("/atlas/"):
+            if not entry.get("url", "").startswith(f"{BASE_URL}/atlas/"):
                 issues.append(f"atlas-compact-index.json: invalid Atlas URL for {path}")
             if not entry.get("matching_terms"):
                 issues.append(f"atlas-compact-index.json: missing matching_terms for {path}")
@@ -817,7 +874,7 @@ def run_check(all_pages, atlas_files):
             issues.append(f"verified-pages.json: expected {expected_inventory_count} entries, found {inventory_committed.get('count')}")
 
         for entry in inventory_committed.get("entries", []):
-            if not entry.get("url", "").startswith("/"):
+            if not entry.get("url", "").startswith(f"{BASE_URL}/"):
                 issues.append(f"verified-pages.json: invalid URL {entry.get('url')}")
             if not entry.get("title"):
                 issues.append(f"verified-pages.json: missing title for {entry.get('url')}")
@@ -905,7 +962,8 @@ def main():
 
     # Generate llms-full.txt
     print("\n[2/5] Generating llms-full.txt ...")
-    verified_count = generate_llms_full(all_pages, atlas_files)
+    llms_full_text = generate_llms_full(all_pages, atlas_files)
+    verified_count = len(re.findall(r"^PAGE: ", llms_full_text, flags=re.MULTILINE))
     print(f"  Verified pages included: {verified_count}")
 
     # Generate related.json

@@ -3,7 +3,7 @@ layout: default
 title: AI Routing Hub
 permalink: /ai/
 description: "AI routing hub for Dzmitryi Kharlanau's profile, discovery map, intent entities, and machine-readable knowledge assets."
-last_modified_at: 2026-06-13
+last_modified_at: 2026-07-10
 ---
 
 <div class="dataset-hero dataset-hero--library">
@@ -74,6 +74,33 @@ last_modified_at: 2026-06-13
       <p>Canonical public page for author identity, expertise, certifications, and reference checks.</p>
     </div>
     <a href="/about/" class="link-arrow">Open</a>
+  </article>
+
+  <article class="ai-resource-item">
+    <div class="ai-resource-item__mark" aria-hidden="true">7</div>
+    <div class="ai-resource-item__body">
+      <h2>Working Notes</h2>
+      <p>Human-readable perspectives on SAP transformation, integration, clean core, and AI-supported operations.</p>
+    </div>
+    <a href="/notes/" class="link-arrow">Open</a>
+  </article>
+
+  <article class="ai-resource-item">
+    <div class="ai-resource-item__mark" aria-hidden="true">8</div>
+    <div class="ai-resource-item__body">
+      <h2>Certification Register</h2>
+      <p>Public learning and certification record with issuer and verification links where available.</p>
+    </div>
+    <a href="/certifications/" class="link-arrow">Open</a>
+  </article>
+
+  <article class="ai-resource-item">
+    <div class="ai-resource-item__mark" aria-hidden="true">9</div>
+    <div class="ai-resource-item__body">
+      <h2>Publication Register</h2>
+      <p>Public articles, SAP technical notes, architecture writing, and reusable knowledge surfaces.</p>
+    </div>
+    <a href="/publications/" class="link-arrow">Open</a>
   </article>
 </div>
 
