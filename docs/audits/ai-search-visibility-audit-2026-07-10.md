@@ -165,6 +165,7 @@ Stable IDs use these conventions:
 | `python3 scripts/check_links.py _site` | Passed; zero broken local links |
 | `python3 scripts/check_seo.py _site` | Passed |
 | `python3 scripts/check_indexing_policy.py --repo-dir . --site-dir _site --fail-on-critical` | Passed |
+| `python3 scripts/check_sitemap_policy.py --repo-dir . --site-dir _site --fail-on-critical` | Passed |
 | `python3 scripts/check_structured_data.py _site` | Passed for 764 HTML pages |
 | `python3 scripts/check_page_quality.py --site-dir _site --fail-on-critical` | Passed; zero critical issues, nine warnings |
 | `git diff --check` | Passed |

@@ -302,6 +302,17 @@ def test_sitemap_data_xml_has_canonical_urls():
     assert "resume.json" in text
 
 
+def test_sitemap_policy_allows_verified_atlas_manifest_endpoint():
+    from scripts.check_sitemap_policy import source_for_url
+
+    source, metadata = source_for_url(
+        "https://dkharlanau.github.io/atlas/manifest.json",
+        REPO_ROOT,
+    )
+    assert source is None
+    assert metadata == {"static": True}
+
+
 # ---------------------------------------------------------------------------
 # llms-full.txt tests
 # ---------------------------------------------------------------------------
