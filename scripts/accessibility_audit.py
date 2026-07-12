@@ -33,7 +33,15 @@ LINK_RE = re.compile(r'<a[^>]+href=["\'](.*?)["\'][^>]*>(.*?)</a>', re.IGNORECAS
 IMG_RE = re.compile(r"<img[^>]*>", re.IGNORECASE | re.DOTALL)
 ALT_RE = re.compile(r'alt=["\'](.*?)["\']', re.IGNORECASE | re.DOTALL)
 SRC_RE = re.compile(r'src=["\'](.*?)["\']', re.IGNORECASE | re.DOTALL)
-SKIP_LINK_RE = re.compile(r'<a[^>]+href=["\']#([^"\']+)["\'][^>]*>.*?(skip|jump).*?</a>', re.IGNORECASE | re.DOTALL)
+# The homepage is available in several languages. Keep the audit semantic rather
+# than English-only by recognising the localized equivalents used by its skip link.
+SKIP_LINK_RE = re.compile(
+    r'<a[^>]+href=["\']#([^"\']+)["\'][^>]*>.*?'
+    r'(skip|jump|zum\s+inhalt|aller\s+au\s+contenu|ir\s+al\s+contenido|'
+    r'ir\s+para\s+o\s+conteúdo|vai\s+al\s+contenuto|przejdź\s+do\s+treści|'
+    r'ga\s+naar\s+inhoud|跳至|انتقل).*?</a>',
+    re.IGNORECASE | re.DOTALL,
+)
 TARGET_RE = re.compile(r'id=["\']([^"\']+)["\']', re.IGNORECASE | re.DOTALL)
 
 

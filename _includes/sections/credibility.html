@@ -1,5 +1,7 @@
-{% assign section = site.data.home.credibility %}
-{% assign tech_section = site.data.home.tech_stack %}
+{% assign localized_home = site.data.home_i18n[page.locale] %}
+{% assign home = localized_home.content | default: site.data.home %}
+{% assign section = home.credibility %}
+{% assign tech_section = home.tech_stack %}
 {% if section %}
 <section class="section home-credibility cred-editorial" id="credibility">
   <header class="cred-editorial__header">
@@ -7,7 +9,7 @@
       <span class="cred-editorial__line"></span>
       {% if section.eyebrow %}<span>{{ section.eyebrow }}</span>{% endif %}
     </div>
-    <h2 class="cred-editorial__title">Professional Background</h2>
+    <h2 class="cred-editorial__title">{{ section.display_title | default: 'Professional Background' }}</h2>
   </header>
 
   <div class="cred-editorial__summary">
@@ -18,13 +20,13 @@
         <img
           class="cred-editorial__portrait"
           src="/assets/img/DzmitryiKharlanau.png"
-          alt="Portrait of Dzmitryi Kharlanau"
+          alt="{{ section.portrait_alt | default: 'Portrait of Dzmitryi Kharlanau' }}"
           loading="lazy"
         >
       </picture>
       <div class="cred-editorial__portrait-note">
-        <span>Location</span>
-        <p>Enterprise Hub</p>
+        <span>{{ section.portrait_label | default: 'Location' }}</span>
+        <p>{{ section.portrait_value | default: 'Enterprise Hub' }}</p>
       </div>
     </div>
 
@@ -46,7 +48,7 @@
       {% endif %}
 
       {% if section.link_url and section.link_label %}
-      <a class="cred-editorial__link" href="{{ section.link_url }}" target="_blank" rel="noopener noreferrer" aria-label="Contact Dzmitryi Kharlanau on LinkedIn">
+      <a class="cred-editorial__link" href="{{ section.link_url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ section.link_aria_label | default: 'Contact Dzmitryi Kharlanau on LinkedIn' }}">
         <span>{{ section.link_label }}</span>
         <span aria-hidden="true">→</span>
       </a>
@@ -59,7 +61,7 @@
     <article class="tech-stack-simple__column">
       <div class="tech-stack-simple__head">
         <span class="material-symbols-outlined" aria-hidden="true">settings_input_component</span>
-        <h3>SAP and process</h3>
+        <h3>{{ tech_section.categories.sap_process | default: 'SAP and process' }}</h3>
       </div>
       <ul class="tech-stack-simple__list">
         {% for item in tech_section.items limit: 3 %}
@@ -74,7 +76,7 @@
     <article class="tech-stack-simple__column">
       <div class="tech-stack-simple__head">
         <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
-        <h3>AI and automation</h3>
+        <h3>{{ tech_section.categories.ai_automation | default: 'AI and automation' }}</h3>
       </div>
       <ul class="tech-stack-simple__list">
         {% for item in tech_section.items offset: 2 limit: 3 %}
@@ -89,7 +91,7 @@
     <article class="tech-stack-simple__column">
       <div class="tech-stack-simple__head">
         <span class="material-symbols-outlined" aria-hidden="true">code</span>
-        <h3>Build and delivery</h3>
+        <h3>{{ tech_section.categories.build_delivery | default: 'Build and delivery' }}</h3>
       </div>
       <ul class="tech-stack-simple__list">
         {% for item in tech_section.items offset: 5 limit: 4 %}

@@ -9,6 +9,8 @@ Rules:
 {% endcomment %}
 
 {% assign resume = site.data.resume %}
+{% assign localized_home = site.data.home_i18n[page.locale] %}
+{% assign structured_language = page.locale | default: site.lang | default: 'en' %}
 {% assign canonical_url = page.url | absolute_url %}
 {% assign site_home = '/' | absolute_url %}
 {% assign author_id = site_home | append: '#dkharlanau' %}
@@ -17,7 +19,9 @@ Rules:
 {% assign article_image = '' %}
 {% if page.og_image %}{% assign article_image = page.og_image | absolute_url %}{% endif %}
 {% assign default_description = 'SAP AMS support, AI-assisted support automation, incident analysis, SD/MM issues, master data problems, and process optimization for SAP AMS teams.' %}
-{% if page.url == '/' or page.permalink == '/' %}
+{% if page.home_locale %}
+{% assign default_description = localized_home.meta.description | default: default_description %}
+{% elsif page.url == '/' or page.permalink == '/' %}
 {% assign default_description = site.description | default: default_description %}
 {% elsif page.collection == 'notes' and page.description %}
 {% assign default_description = page.description %}
@@ -28,6 +32,9 @@ Rules:
 {% assign content_fallback = page.summary | default: page.excerpt | default: content_excerpt %}
 {% assign page_description = page.description | default: content_fallback | default: default_description | strip_html | normalize_whitespace %}
 {% assign page_title = page.title | default: site.title | strip_html | normalize_whitespace %}
+{% if page.home_locale %}
+{% assign page_title = localized_home.meta.title | default: page_title | strip_html | normalize_whitespace %}
+{% endif %}
 {% assign page_modified = page.last_modified_at | default: page.updated | default: page.last_reviewed %}
 {% assign page_modified_test = page_modified | date: '%s' %}
 {% assign robots_directive = page.robots | default: '' %}
@@ -170,7 +177,7 @@ Rules:
   "url": "{{ canonical_url }}",
   "name": {{ page_title | jsonify }},
   "description": {{ page_description | truncate: 160, '' | jsonify }},
-  "inLanguage": "{{ site.lang | default: 'en' }}",
+  "inLanguage": "{{ structured_language }}",
   {% if page_modified_test != page_modified %}"dateModified": "{{ page_modified | date_to_xmlschema }}",{% endif %}
   "isPartOf": {
     "@type": "WebSite",
@@ -246,7 +253,7 @@ Rules:
     "name": {{ resume.name | jsonify }},
     "url": "{{ site_home }}"
   },
-  "inLanguage": "{{ site.lang | default: 'en' }}",
+  "inLanguage": "{{ structured_language }}",
   "isAccessibleForFree": true,
   "isPartOf": [
     {
@@ -448,8 +455,8 @@ Rules:
 {% endif %}
 
 {% comment %} FAQPage — existing homepage feature, left untouched. {% endcomment %}
-{% if page.url == '/' or page.permalink == '/' %}
-{% assign home_faq = site.data.home.faq %}
+{% if page.home_locale %}
+{% assign home_faq = localized_home.content.faq | default: site.data.home.faq %}
 {% if home_faq and home_faq.items and home_faq.items.size > 0 %}
 <script type="application/ld+json">
 {

@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+{% assign page_locale = page.locale | default: site.lang | default: 'en' %}
+{% assign locale_data = site.data.home_i18n[page_locale] %}
+{% assign page_direction = locale_data.meta.dir | default: 'ltr' %}
+<html lang="{{ page_locale }}" dir="{{ page_direction }}">
 
 <head>
   {% include head.html %}
 </head>
 
 {% assign is_home = false %}
-{% if page.url == '/' or page.permalink == '/' %}
+{% if page.home_locale %}
   {% assign is_home = true %}
 {% endif %}
 {% assign page_context = 'page-context--knowledge' %}
@@ -17,10 +20,8 @@
 {% endif %}
 
 <body class="site {{ page_context }}">
-  <a class="skip-link" href="#content">Skip to main content</a>
-  {% unless is_home %}
+  <a class="skip-link" href="#content">{{ locale_data.ui.skip_to_content | default: 'Skip to main content' }}</a>
   {% include header.html %}
-  {% endunless %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
     {{ content }}
     {% unless page.hide_global_cta %}

@@ -1,4 +1,6 @@
-{% assign section = site.data.home.analysis_problem %}
+{% assign localized_home = site.data.home_i18n[page.locale] %}
+{% assign home = localized_home.content | default: site.data.home %}
+{% assign section = home.analysis_problem %}
 {% if section %}
 <section class="section analysis-problem" id="analysis-problem">
   <div class="analysis-problem__hero">

@@ -1,4 +1,6 @@
-{% assign section = site.data.home.faq %}
+{% assign localized_home = site.data.home_i18n[page.locale] %}
+{% assign home = localized_home.content | default: site.data.home %}
+{% assign section = home.faq %}
 {% if section and section.items %}
 <section class="section faq faq-editorial" id="faq">
   <header class="faq-editorial__header">

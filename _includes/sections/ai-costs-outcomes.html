@@ -1,4 +1,8 @@
-{% assign section = site.data.home.ai_costs_outcomes %}
+{% assign localized_home = site.data.home_i18n[page.locale] %}
+{% assign home = localized_home.content | default: site.data.home %}
+{% assign section = home.ai_costs_outcomes %}
+{% assign default_section = site.data.home.ai_costs_outcomes %}
+{% assign references = section.references | default: default_section.references %}
 {% if section %}
 <section class="section ai-costs-outcomes" id="ai-costs-outcomes">
   <header class="ai-costs-outcomes__header">
@@ -47,11 +51,11 @@
     </aside>
   </div>
 
-  {% if section.references %}
-  <footer class="ai-costs-outcomes__references" aria-label="References">
-    <h3>References</h3>
+  {% if references %}
+  <footer class="ai-costs-outcomes__references" aria-label="{{ localized_home.ui.references | default: 'References' }}">
+    <h3>{{ localized_home.ui.references | default: 'References' }}</h3>
     <ul>
-      {% for reference in section.references %}
+      {% for reference in references %}
       <li>
         <a href="{{ reference.url }}" target="_blank" rel="noopener noreferrer">
           <span>{{ reference.label }}</span>

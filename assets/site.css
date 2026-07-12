@@ -185,6 +185,7 @@ img {
 
 .page-content--home {
   max-width: none;
+  min-width: 0;
   padding-left: 0;
   padding-right: 0;
   padding-top: 0;
@@ -192,6 +193,7 @@ img {
 
 .page-content--home > .section {
   width: min(var(--max-width), calc(100% - 2rem));
+  min-width: 0;
   margin-inline: auto;
 }
 
@@ -480,6 +482,32 @@ img {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.2rem;
+}
+
+.language-switcher { position: relative; }
+.language-switcher:not([open]) > .language-switcher__menu { display: none; }
+.language-switcher summary { display: inline-flex; align-items: center; gap: .35rem; min-height: 38px; padding: .34rem .62rem; border-radius: var(--radius-sm); color: var(--color-ink-soft); cursor: pointer; font-size: .82rem; font-weight: 800; list-style: none; }
+.language-switcher summary::-webkit-details-marker { display: none; }
+.language-switcher summary:hover, .language-switcher[open] summary { background: var(--color-accent-soft); color: var(--color-accent-strong); }
+.language-switcher__menu { position: absolute; top: calc(100% + .45rem); right: 0; z-index: 30; width: min(14rem, calc(100vw - 2rem)); padding: .35rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-premium); }
+.language-switcher__menu ul { display: grid; gap: .1rem; list-style: none; }
+.language-switcher__menu a { display: grid; grid-template-columns: 2.5rem 1fr; gap: .5rem; align-items: center; padding: .48rem .55rem; border-radius: .45rem; font-size: .84rem; }
+.language-switcher__menu a:hover, .language-switcher__menu a:focus-visible, .language-switcher__menu a[aria-current="page"] { background: var(--color-accent-soft); color: var(--color-accent-strong); }
+.language-switcher__code { color: var(--color-ink-muted); font-size: .68rem; font-weight: 800; letter-spacing: .08em; }
+
+/* Localized compound words must not widen a single-column mobile grid. */
+.ai-costs-outcomes__grid,
+.ai-costs-outcomes__main,
+.ai-costs-outcomes__stats,
+.ai-costs-outcomes__mandate > div {
+  min-width: 0;
+}
+
+.ai-costs-outcomes h2,
+.ai-costs-outcomes h3,
+.ai-costs-outcomes p,
+.ai-costs-outcomes span {
+  overflow-wrap: anywhere;
 }
 
 .nav-link {
@@ -1565,6 +1593,13 @@ a.dataset-card:hover,
   max-width: none;
 }
 
+/* main.css fixes the footer wrapper at the desktop max width; keep it inside
+   narrow viewports, including localized homepages. */
+.site-footer .wrapper {
+  width: 100%;
+  max-width: var(--max-width);
+}
+
 .footer-meta-links {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -2445,6 +2480,23 @@ body.page-context--home main::after {
   padding: clamp(1.8rem, 4.2vw, 3.8rem);
   text-align: left;
 }
+
+html[lang|="zh"] body { --font-body: "Noto Sans SC", "PingFang SC", sans-serif; --font-display: "Noto Sans SC", "PingFang SC", sans-serif; }
+html[dir="rtl"] body { --font-body: "Noto Sans Arabic", Tahoma, sans-serif; --font-display: "Noto Sans Arabic", Tahoma, sans-serif; text-align: right; }
+html[dir="rtl"] .home-hero__stack { text-align: right; }
+html[dir="rtl"] .home-hero__copy { justify-items: end; }
+html[dir="rtl"] .home-hero__subtitle { border-left: 0; border-right: 3px solid #273133; }
+html[dir="rtl"] .home-hero__contact { justify-content: flex-end; }
+html[dir="rtl"] .home-hero__visual-header em { justify-self: end; }
+html[dir="rtl"] .home-hero__loop li:nth-child(2), html[dir="rtl"] .home-hero__loop li:nth-child(3) { margin-left: 0; }
+html[dir="rtl"] .home-hero__loop li:nth-child(2) { margin-right: clamp(.8rem, 3vw, 2.4rem); }
+html[dir="rtl"] .home-hero__loop li:nth-child(3) { margin-right: clamp(1.6rem, 5vw, 4rem); }
+html[dir="rtl"] .cred-editorial__quote, html[dir="rtl"] .faq-editorial__callout { border-left: 0; border-right: 4px solid #5b6062; }
+html[dir="rtl"] .faq-editorial__callout { border-right-width: 3px; }
+html[dir="rtl"] .cred-editorial__portrait-note { right: auto; left: -1.5rem; }
+html[dir="rtl"] .language-switcher__menu { right: auto; left: 0; text-align: start; }
+html[dir="rtl"] .strategic-context__ghost { right: auto; left: -1.5rem; }
+html[dir="rtl"] .cred-editorial__link:hover span:last-child, html[dir="rtl"] .cred-editorial__link:focus-visible span:last-child { transform: translateX(-.18rem); }
 
 .home-hero__copy {
   display: grid;

@@ -1,4 +1,6 @@
-{% assign section = site.data.home.strategic_context %}
+{% assign localized_home = site.data.home_i18n[page.locale] %}
+{% assign home = localized_home.content | default: site.data.home %}
+{% assign section = home.strategic_context %}
 {% if section %}
 <section class="section strategic-context" id="strategic-context">
   <header class="strategic-context__header">
