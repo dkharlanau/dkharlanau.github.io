@@ -5,28 +5,7 @@
                 <a href="/">Dzmitryi Kharlanau</a>
             </div>
             <div class="nav-links">
-                {% if page.home_locale %}
-                <details class="language-switcher">
-                    <summary aria-label="{{ locale_data.ui.language_switcher_label | default: 'Select language' }}">
-                        <span aria-hidden="true">◎</span>
-                        <span>{{ locale_data.meta.switcher_code | default: 'EN' }}</span>
-                    </summary>
-                    <nav class="language-switcher__menu" aria-label="{{ locale_data.ui.language_switcher_label | default: 'Select language' }}">
-                        <ul>
-                            {% for language in site.data.home_languages %}
-                            <li>
-                                <a href="{{ language.path | relative_url }}" lang="{{ language.code }}"{% if language.code == page.locale %} aria-current="page"{% endif %}>
-                                    <span class="language-switcher__code" aria-hidden="true">{{ language.short }}</span>
-                                    <span dir="auto">{{ language.native_name }}</span>
-                                </a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </nav>
-                </details>
-                {% else %}
                 <a href="/" class="nav-link nav-link--back">Back to main</a>
-                {% endif %}
             </div>
         </nav>
     </div>

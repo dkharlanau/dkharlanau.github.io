@@ -21,7 +21,11 @@
 
 <body class="site {{ page_context }}">
   <a class="skip-link" href="#content">{{ locale_data.ui.skip_to_content | default: 'Skip to main content' }}</a>
+  {% if is_home %}
+  {% include home-language-switcher.html %}
+  {% else %}
   {% include header.html %}
+  {% endif %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
     {{ content }}
     {% unless page.hide_global_cta %}
