@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SAP Agent Tool Registry",
+  "type": "object",
+  "required": ["schema_version", "verification_date", "tools"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "verification_date": {"type": "string", "format": "date"},
+    "tools": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/tool"}}
+  },
+  "$defs": {
+    "tool": {
+      "type": "object",
+      "required": ["id", "name", "repository_url", "maintainer", "status", "domains", "capabilities", "access", "deployment", "transport", "installation", "clients", "authentication", "required_services", "license", "maturity", "production_suitability", "credential_risk", "system_modification_risk", "verification_date", "evidence_sources", "assessment"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "name": {"type": "string"}, "repository_url": {"type": "string", "format": "uri"}, "documentation_url": {"type": "string", "format": "uri"},
+        "maintainer": {"type": "string"}, "status": {"enum": ["official", "community", "experimental"]},
+        "domains": {"type": "array", "minItems": 1, "items": {"type": "string"}}, "capabilities": {"type": "array", "items": {"type": "string"}},
+        "access": {"enum": ["read-only", "write-capable", "mixed"]}, "deployment": {"enum": ["local", "remote", "local-http"]}, "transport": {"enum": ["stdio", "http", "streamable-http"]},
+        "installation": {"type": "string"}, "clients": {"type": "array", "items": {"type": "string"}}, "authentication": {"type": "string"}, "required_services": {"type": "array", "items": {"type": "string"}},
+        "license": {"type": "string"}, "latest_release": {"type": "string"}, "last_meaningful_activity": {"type": "string"}, "archived": {"type": "boolean"},
+        "maturity": {"enum": ["experimental", "emerging", "maintained"]}, "production_suitability": {"enum": ["not-recommended", "evaluate", "conditional"]}, "credential_risk": {"enum": ["none", "low", "medium", "high"]}, "system_modification_risk": {"enum": ["none", "read", "write"]},
+        "verification_date": {"type": "string", "format": "date"}, "evidence_sources": {"type": "array", "minItems": 1, "items": {"type": "string", "format": "uri"}}, "assessment": {"type": "string"}
+      }
+    }
+  }
+}
