@@ -34,6 +34,14 @@ This site is a Jekyll project tuned for fast storytelling iterations, structured
 
 ## AI & automation
 
+### Static SAP agent platform
+
+`/agent-tools/` is a static GitHub Pages section, separate from the protected personal-brand homepage. It serves Markdown, CSS, browser JavaScript, and pre-generated JSON only: no backend, database, runtime endpoint, authentication service, serverless function, or remote MCP process is introduced.
+
+The existing Atlas pipeline remains canonical: reviewed, verified, indexable Atlas frontmatter generates `atlas/manifest.json`, `ai/atlas-compact-index.json`, `ai/rag/related.json`, and `ai/verified-pages.json`. The Agent Tools registry follows a parallel public source flow: `data/agent-tools/tools.json` → `scripts/generate_agent_tool_artifacts.py` → `ai/agent-tools.json` → browser-only directory filtering.
+
+`mcp/sap-diagnostics-mcp` is a separate local stdio package. It consumes a local checkout’s committed public artifacts and remains Level 0 (credential-free, read-only, deterministic). GitHub Pages publishes source and documentation but never executes the package. Remote MCP hosting is a future separate-runtime decision.
+
 - `ai/resume.json`, `ai/resume.yml`, and `ai/home.json` expose resume and homepage data for copilots or APIs.
 - Add further exports by creating files with `layout: null` and serialising data structures using `| jsonify`.
 - `LLM.txt` remains the long-form system profile surface, and the homepage `llm-profiles` section links to all machine-readable variants.

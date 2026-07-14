@@ -4,7 +4,7 @@ layout: default
 title: "Atlas SAP Section — Configuration and Support Concepts"
 description: "Curated SAP support and configuration explanations with conservative boundaries."
 permalink: /atlas/sap/
-last_modified_at: 2026-07-10
+last_modified_at: 2026-07-14
 status: reviewed
 verified: true
 tags:
@@ -70,6 +70,55 @@ related:
     <a class="atlas-card" href="/atlas/sap/sap-account-determination-diagnostics/">
       <h2>SAP Account Determination Diagnostics</h2>
       <p>A first-pass structure for finding why a sales transaction posts to the wrong revenue or clearing account.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Product Portfolio</p>
+    <h2>SAP products — what they do and where they fit</h2>
+  </header>
+  <div class="atlas-card-grid">
+    <a class="atlas-card" href="/atlas/sap/sap-product-portfolio/">
+      <h2>SAP Product Portfolio</h2>
+      <p>Every major SAP product organized by category, with plain-language notes on what each one does and who it is for.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/sap/sap-successfactors/">
+      <h2>SAP SuccessFactors</h2>
+      <p>Cloud HCM suite — core HR, talent management, payroll, and workforce analytics.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/sap/sap-commerce-cloud/">
+      <h2>SAP Commerce Cloud</h2>
+      <p>B2B and B2C e-commerce platform (formerly Hybris) — catalog, pricing, order management, omnichannel.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/sap/sap-concur/">
+      <h2>SAP Concur</h2>
+      <p>Travel and expense management — expense reporting, travel booking, invoice processing.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/sap/sap-fieldglass/">
+      <h2>SAP Fieldglass</h2>
+      <p>External workforce management — contingent workers, consultants, service procurement.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/sap/sap-business-one/">
+      <h2>SAP Business One</h2>
+      <p>ERP for small businesses — finance, sales, purchasing, inventory, light manufacturing.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/sap/sap-grc/">
+      <h2>SAP GRC</h2>
+      <p>Governance, risk, and compliance — access control, SoD analysis, automated monitoring, audit readiness.</p>
+      <span class="link-arrow">Read SAP page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/sap/sap-business-network/">
+      <h2>SAP Business Network</h2>
+      <p>B2B collaboration network — supplier catalogs, logistics coordination, asset data sharing.</p>
       <span class="link-arrow">Read SAP page</span>
     </a>
   </div>
