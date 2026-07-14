@@ -1921,6 +1921,104 @@ a.dataset-card:hover,
   }
 }
 
+/* Static SAP Incident Lab: all evaluation happens in the browser. */
+.incident-lab__layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.incident-lab__panel,
+.incident-lab__result {
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #fff;
+}
+
+.incident-lab__panel h2,
+.incident-lab__result h2 {
+  margin-top: 0.5rem;
+  font-size: 1.45rem;
+}
+
+.incident-lab__panel h3 {
+  margin-top: 1.4rem;
+  font-size: 1rem;
+}
+
+.incident-lab__panel ul {
+  display: grid;
+  gap: 0.45rem;
+  padding-left: 1.1rem;
+}
+
+.incident-lab__panel label {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  color: var(--color-ink-strong);
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.incident-lab select,
+.incident-lab textarea {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--color-ink);
+  font: inherit;
+}
+
+.incident-lab textarea {
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.incident-lab button {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+}
+
+.incident-lab__meta,
+.incident-lab__footer {
+  margin-top: 0.5rem;
+  color: var(--color-ink-muted);
+  font-size: 0.88rem;
+}
+
+.incident-lab__result {
+  margin-top: 1.25rem;
+}
+
+.incident-lab__result ul {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.incident-lab__pass { color: #166534; }
+.incident-lab__fail { color: #9f1239; }
+
+@media (max-width: 720px) {
+  .incident-lab__layout { grid-template-columns: 1fr; }
+}
+
 /* Landing refinement overrides */
 
 .page-context--home .page-content--home {

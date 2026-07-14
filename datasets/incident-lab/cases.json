@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "verification_date": "2026-07-14",
+  "cases": [
+    {
+      "id": "idoc-status-51-vendor-master",
+      "title": "Inbound IDoc status 51 during vendor master processing",
+      "domain": "integration",
+      "difficulty": "foundation",
+      "scenario": "An inbound vendor master IDoc is in status 51. The support request says the partner sent it successfully, but the vendor change is not visible in SAP.",
+      "known_facts": ["The affected object is an inbound vendor master IDoc.", "The current IDoc status is 51.", "The business change is not visible in the target system."],
+      "missing_evidence": ["IDoc number and complete status history", "Application error text and relevant application log", "Message type, partner, and affected volume", "Whether the failure is isolated or repeated"],
+      "expected_atlas_urls": ["/atlas/diagnostics/sap-idoc-status-diagnostics/", "/atlas/diagnostics/sap-vendor-master-replication-diagnostics/"],
+      "acceptable_hypotheses": ["application posting error", "vendor master validation", "missing or inconsistent master data", "mapping or replication issue"],
+      "required_evidence": ["IDoc number", "status history", "error text", "message type", "partner", "timestamp"],
+      "forbidden_actions": ["reprocess the IDoc before the cause is confirmed", "change partner profile without change control", "edit vendor master data without an approved data-owner decision"],
+      "correct_owner": "Integration support owns the technical trace; vendor master-data ownership confirms any data correction.",
+      "human_approval_boundary": "A human owner must confirm the cause and approve any IDoc reprocessing or master-data correction.",
+      "limitations": ["Synthetic training case only.", "Status 51 identifies an application-level failure but does not prove a single root cause."]
+    },
+    {
+      "id": "purchase-order-output-missing",
+      "title": "Purchase order exists but output is missing",
+      "domain": "procure-to-pay",
+      "difficulty": "intermediate",
+      "scenario": "A purchase order was created, approved, and sent for output processing, but the supplier did not receive the expected message.",
+      "known_facts": ["The purchase order exists.", "The release process is complete.", "The supplier reports no received output."],
+      "missing_evidence": ["Output type and processing status", "Message log and timestamp", "Recipient and communication channel", "Whether other purchase orders are affected"],
+      "expected_atlas_urls": ["/atlas/diagnostics/sap-output-message-control-diagnostics/", "/atlas/diagnostics/sap-purchase-order-diagnostics/"],
+      "acceptable_hypotheses": ["message determination issue", "recipient or communication channel issue", "output processing error", "condition record or master-data issue"],
+      "required_evidence": ["purchase order number", "output type", "message status", "message log", "recipient", "timestamp"],
+      "forbidden_actions": ["manually resend output without reviewing the message log", "change message determination in production without change control", "assume the supplier endpoint failed without evidence"],
+      "correct_owner": "Purchasing support owns document and message evidence; integration support joins only when the selected channel is external.",
+      "human_approval_boundary": "A human owner must approve any manual resend or production configuration change.",
+      "limitations": ["Synthetic training case only.", "Output behavior is landscape- and channel-dependent."]
+    },
+    {
+      "id": "business-partner-replication-gap",
+      "title": "Business Partner change is not replicated to the target",
+      "domain": "master-data",
+      "difficulty": "intermediate",
+      "scenario": "A Business Partner address change was approved in the source process, but the target system still shows the prior address.",
+      "known_facts": ["A Business Partner change was approved in the source process.", "The target record has not changed.", "The reported symptom concerns address data."],
+      "missing_evidence": ["Business Partner role and identifiers permitted for the investigation", "Replication message or application log", "Target-side validation result", "Timing between approval, activation, and replication"],
+      "expected_atlas_urls": ["/atlas/diagnostics/sap-business-partner-replication-diagnostics/", "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"],
+      "acceptable_hypotheses": ["activation or workflow timing", "replication error", "role or mapping mismatch", "target validation failure"],
+      "required_evidence": ["Business Partner role", "approval timestamp", "activation status", "replication message", "target validation", "error text"],
+      "forbidden_actions": ["mass-correct business partner data", "reprocess replication before the cause is confirmed", "change mapping rules without governance approval"],
+      "correct_owner": "Master-data governance owns the approved change and data decision; integration support owns message transport and technical error evidence.",
+      "human_approval_boundary": "A data owner must approve any correction, reprocessing, or mapping change.",
+      "limitations": ["Synthetic training case only.", "Do not include personal address data in an agent prompt or public evaluation artifact."]
+    },
+    {
+      "id": "qrfc-queue-blocked",
+      "title": "qRFC queue is blocked after an integration error",
+      "domain": "integration",
+      "difficulty": "advanced",
+      "scenario": "A business process is delayed because a qRFC queue contains a failed entry. The request asks the support team to clear the queue immediately.",
+      "known_facts": ["A qRFC queue has a failed entry.", "The queue delay affects a business process.", "The request proposes immediate queue clearing."],
+      "missing_evidence": ["Queue name, direction, and error text", "Failed unit chronology", "Whether queue ordering protects dependent messages", "Business reconciliation impact"],
+      "expected_atlas_urls": ["/atlas/diagnostics/sap-qrfc-trfc-diagnostics/", "/atlas/diagnostics/sap-interface-monitoring-diagnostics/"],
+      "acceptable_hypotheses": ["application error in queued unit", "dependent message ordering", "RFC destination or authorization problem", "downstream processing failure"],
+      "required_evidence": ["queue name", "direction", "error text", "failed unit", "timestamp", "affected business scope"],
+      "forbidden_actions": ["delete queue entries", "force queue processing before the failed unit is understood", "bypass sequencing controls to restore throughput"],
+      "correct_owner": "Integration support owns queue evidence and recovery coordination; the business-process owner confirms reconciliation after recovery.",
+      "human_approval_boundary": "A human owner must approve any queue intervention after the failed unit and sequencing impact are understood.",
+      "limitations": ["Synthetic training case only.", "Queue operations can change processing order and require landscape-specific operational control."]
+    }
+  ]
+}

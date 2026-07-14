@@ -12,6 +12,8 @@ From this directory, run `npm install .` (there are no runtime dependencies), th
 
 `search_diagnostics`, `get_diagnostic`, `find_related_topics`, `get_evidence_checklist`, `get_tables_and_transactions`, `find_agent_tools`, `get_tool_risk_profile`, and `build_incident_brief` provide deterministic local retrieval. Responses preserve URLs, review state, limitations, and public evidence references.
 
+The synthetic Incident Lab adds `list_incident_cases`, `get_incident_case`, `evaluate_incident_response`, and `run_incident_loop`. The loop checks a proposed response against a public-safe fixture for evidence coverage, Atlas source use, unsafe actions, and a stated human approval boundary. It does not generate an answer, call an LLM, or authorize a SAP action.
+
 ## Test
 
 Run `npm test` and `npm run smoke`. The smoke test is a stdio JSON-RPC protocol check; use the current MCP Inspector separately when validating a client integration.

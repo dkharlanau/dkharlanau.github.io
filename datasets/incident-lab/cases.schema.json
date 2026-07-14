@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SAP Incident Lab Cases",
+  "type": "object",
+  "required": ["schema_version", "verification_date", "cases"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "verification_date": {"type": "string", "format": "date"},
+    "cases": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/case"}}
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "required": ["id", "title", "domain", "difficulty", "scenario", "known_facts", "missing_evidence", "expected_atlas_urls", "acceptable_hypotheses", "required_evidence", "forbidden_actions", "correct_owner", "human_approval_boundary", "limitations"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "title": {"type": "string"}, "domain": {"type": "string"}, "difficulty": {"enum": ["foundation", "intermediate", "advanced"]},
+        "scenario": {"type": "string"}, "known_facts": {"type": "array", "minItems": 1, "items": {"type": "string"}}, "missing_evidence": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "expected_atlas_urls": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^/atlas/"}},
+        "acceptable_hypotheses": {"type": "array", "minItems": 1, "items": {"type": "string"}}, "required_evidence": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "forbidden_actions": {"type": "array", "minItems": 1, "items": {"type": "string"}}, "correct_owner": {"type": "string"}, "human_approval_boundary": {"type": "string"}, "limitations": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      }
+    }
+  }
+}

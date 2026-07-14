@@ -16,7 +16,7 @@ tags: [sap, mcp, agent-tools]
   <h1>SAP Agent Tools</h1>
   <p class="lead">MCP servers, agent skills and machine-readable SAP knowledge for practical SAP work.</p>
   <p>This directory is a static, reviewed registry. It does not run services, hold credentials, or grant SAP access. Check each tool's official documentation before installation.</p>
-  <p><a href="/agent-tools/mcp-for-sap-work/">What MCP means for SAP work</a> · <a href="/agent-tools/connect/">Connection boundaries</a> · <a href="/agent-tools/security/">Security and production risks</a> · <a href="/agent-tools/skills/">SAP AI skills</a></p>
+  <p><a href="/agent-tools/mcp-for-sap-work/">What MCP means for SAP work</a> · <a href="/agent-tools/incident-lab/">SAP Incident Lab</a> · <a href="/agent-tools/connect/">Connection boundaries</a> · <a href="/agent-tools/security/">Security and production risks</a> · <a href="/agent-tools/skills/">SAP AI skills</a></p>
   <form class="agent-tool-filters" aria-label="Filter SAP Agent Tools">
     <label>Search <input name="q" type="search" placeholder="CAP, ABAP, documentation"></label>
     <label>Status <select name="status"><option value="">All</option><option>official</option><option>community</option><option>experimental</option></select></label>

@@ -2,10 +2,10 @@ name: Agent tools validation
 
 on:
   pull_request:
-    paths: ["data/agent-tools/**", "ai/agent-tools.json", "scripts/generate_agent_tool_artifacts.py", "agent-tools/**", "mcp/sap-diagnostics-mcp/**"]
+    paths: ["data/agent-tools/**", "datasets/incident-lab/**", "ai/agent-tools.json", "ai/incident-lab.json", "scripts/generate_agent_tool_artifacts.py", "scripts/generate_incident_lab_artifacts.py", "agent-tools/**", "mcp/sap-diagnostics-mcp/**"]
   push:
     branches: [main]
-    paths: ["data/agent-tools/**", "ai/agent-tools.json", "scripts/generate_agent_tool_artifacts.py", "agent-tools/**", "mcp/sap-diagnostics-mcp/**"]
+    paths: ["data/agent-tools/**", "datasets/incident-lab/**", "ai/agent-tools.json", "ai/incident-lab.json", "scripts/generate_agent_tool_artifacts.py", "scripts/generate_incident_lab_artifacts.py", "agent-tools/**", "mcp/sap-diagnostics-mcp/**"]
 
 jobs:
   static-validation:
@@ -17,6 +17,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
       - run: python3 scripts/generate_agent_tool_artifacts.py --check
+      - run: python3 scripts/generate_incident_lab_artifacts.py --check
       - run: python3 scripts/generate_atlas_artifacts.py --check
       - run: python3 agent-skills/exporters/validate_agent_skills.py
       - run: npm test
