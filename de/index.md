@@ -1,5 +1,7 @@
 ---
 layout: default
+title: "SAP-Transformation, AMS und KI-Bereitschaft | Dzmitryi Kharlanau"
+description: "Senior SAP Consultant für AMS-Verbesserung, SAP-Transformationsplanung, SD/MM- und Logistikprozesse, Stammdaten, Integrationen, KI-Bereitschaft und praxisnahe Automatisierung."
 permalink: /de/
 locale: de
 home_locale: true

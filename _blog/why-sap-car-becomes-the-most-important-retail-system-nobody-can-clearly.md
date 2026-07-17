@@ -51,14 +51,14 @@ related_articles:
 - [UDF versus SAP IBP for Demand](#udf-versus-sap-ibp-for-demand)
 - [UDF versus SAP Predictive Replenishment](#udf-versus-sap-predictive-replenishment)
 - [CAR component 3: Replenishment Planning](#car-component-3-replenishment-planning)
-- [A typical flow](#a-typical-flow)
+- [A typical replenishment flow](#a-typical-replenishment-flow)
 - [Replenishment is not purchase-order execution](#replenishment-is-not-purchase-order-execution)
 - [Intraday replenishment](#intraday-replenishment)
 - [SAP Predictive Replenishment as the newer cloud direction](#sap-predictive-replenishment-as-the-newer-cloud-direction)
 - [CAR component 4: Merchandise Planning](#car-component-4-merchandise-planning)
 - [Merchandise planning is not replenishment](#merchandise-planning-is-not-replenishment)
 - [CAR component 5: Assortment Planning](#car-component-5-assortment-planning)
-- [A typical flow](#a-typical-flow)
+- [A typical assortment flow](#a-typical-assortment-flow)
 - [Assortment is not a forecast](#assortment-is-not-a-forecast)
 - [Assortment limitations](#assortment-limitations)
 - [CAR component 6: Allocation Management](#car-component-6-allocation-management)
@@ -779,7 +779,7 @@ The calculation may consider:
 
 SAP currently describes CAR replenishment features as supporting cost-optimal ordering, stock-spoilage prediction, intraday forecasting and order-plan simulation.
 
-## A typical flow
+## A typical replenishment flow
 
 ```text
 Sales and demand history
@@ -920,7 +920,7 @@ Questions include:
 
 SAP currently describes CAR assortment capabilities as supporting different retail formats, ranking products against KPIs and business requirements, and integrating space considerations for assortment and planogram optimization.
 
-## A typical flow
+## A typical assortment flow
 
 ```text
 Historical sales and demand

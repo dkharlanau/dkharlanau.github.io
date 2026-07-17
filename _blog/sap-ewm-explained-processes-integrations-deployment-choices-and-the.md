@@ -105,7 +105,7 @@ related_articles:
 - [Production supply area](#production-supply-area)
 - [Delivery-based production supply](#delivery-based-production-supply)
 - [Advanced production integration](#advanced-production-integration)
-- [Staging](#staging)
+- [Production staging](#production-staging)
 - [Consumption](#consumption)
 - [Return from production](#return-from-production)
 - [Finished-product receipt](#finished-product-receipt)
@@ -204,7 +204,7 @@ related_articles:
 - [KPIs that matter](#kpis-that-matter)
 - [Inbound](#inbound)
 - [Inventory](#inventory)
-- [Replenishment](#replenishment)
+- [Replenishment KPIs](#replenishment-kpis)
 - [Outbound](#outbound)
 - [Production](#production)
 - [Automation](#automation)
@@ -1823,7 +1823,7 @@ Common components supplied in reusable or recurring quantities.
 
 The exact target design must be validated against the deployed S/4HANA release.
 
-## Staging
+## Production staging
 
 The process may include:
 
@@ -3178,7 +3178,7 @@ Then tune:
 - inventory count adjustment;
 - location utilization.
 
-## Replenishment
+## Replenishment KPIs
 
 - emergency replenishment;
 - pick-face stockout;

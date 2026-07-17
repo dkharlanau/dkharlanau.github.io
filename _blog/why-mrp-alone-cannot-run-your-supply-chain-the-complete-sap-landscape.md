@@ -132,7 +132,7 @@ related_articles:
 - [Part XVII: Applications planners actually use](#part-xvii-applications-planners-actually-use)
 - [Demand planner](#demand-planner)
 - [Supply planner](#supply-planner)
-- [MRP controller](#mrp-controller)
+- [MRP controller applications](#mrp-controller-applications)
 - [Production planner](#production-planner)
 - [Procurement planner](#procurement-planner)
 - [Warehouse planner](#warehouse-planner)
@@ -148,7 +148,7 @@ related_articles:
 - [Part XX: Common mistakes](#part-xx-common-mistakes)
 - [Part XXI: KPIs that matter](#part-xxi-kpis-that-matter)
 - [Demand](#demand)
-- [Supply planning](#supply-planning)
+- [Supply planning KPIs](#supply-planning-kpis)
 - [Inventory](#inventory)
 - [MRP](#mrp)
 - [Procurement](#procurement)
@@ -2160,7 +2160,7 @@ Typical applications:
 - alerts;
 - network visualization.
 
-## MRP controller
+## MRP controller applications
 
 Typical S/4HANA applications may include:
 
@@ -2372,7 +2372,7 @@ The company creates more orders faster but does not improve flow.
 - forecast-value-add;
 - planner override rate.
 
-## Supply planning
+## Supply planning KPIs
 
 - constrained demand fulfilment;
 - capacity overload;

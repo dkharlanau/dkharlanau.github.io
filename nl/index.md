@@ -1,5 +1,7 @@
 ---
 layout: default
+title: "SAP-transformatie, AMS en AI-gereedheid | Dzmitryi Kharlanau"
+description: "Senior SAP-consultant voor AMS-verbetering, SAP-transformatieplanning, SD/MM- en logistieke processen, masterdata, integraties, AI-gereedheid en praktische automatisering."
 permalink: /nl/
 locale: nl
 home_locale: true

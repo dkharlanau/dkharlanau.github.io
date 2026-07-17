@@ -1,5 +1,7 @@
 ---
 layout: default
+title: "تحول SAP وAMS والاستعداد للذكاء الاصطناعي | Dzmitryi Kharlanau"
+description: "مستشار SAP أول لتحسين AMS وتخطيط تحول SAP وعمليات SD/MM واللوجستيات والبيانات الرئيسية والتكاملات والاستعداد للذكاء الاصطناعي والأتمتة العملية."
 permalink: /ar/
 locale: ar
 home_locale: true

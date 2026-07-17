@@ -78,7 +78,7 @@ related_articles:
 - [Allocation](#allocation)
 - [Replenishment](#replenishment)
 - [Allocation Management](#allocation-management)
-- [Replenishment](#replenishment)
+- [Predictive Replenishment](#predictive-replenishment)
 - [Order and Delivery Scheduling](#order-and-delivery-scheduling)
 - [Fresh products](#fresh-products)
 - [Fashion and seasonal retail](#fashion-and-seasonal-retail)
@@ -1321,7 +1321,7 @@ Uses actual sales to rebalance remaining stock.
 
 Distributes finite promotional merchandise.
 
-## Replenishment
+## Predictive Replenishment
 
 SAP Predictive Replenishment currently calculates automated order proposals using demand estimates, service levels, supplier restrictions, minimum quantities and coverage constraints, with prebuilt integrations to S/4HANA Retail, Order and Delivery Scheduling and CAR UDF.
 

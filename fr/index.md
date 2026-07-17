@@ -1,5 +1,7 @@
 ---
 layout: default
+title: "Transformation SAP, AMS et préparation à l’IA | Dzmitryi Kharlanau"
+description: "Senior SAP consultant pour l’amélioration AMS, la planification de transformation SAP, les processus SD/MM et logistiques, les données de référence, les intégrations, la préparation à l’IA et l’automatisation pragmatique."
 permalink: /fr/
 locale: fr
 home_locale: true
