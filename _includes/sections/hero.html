@@ -43,7 +43,7 @@
         {% for link in hero.profile.contacts %}
         <a
           href="{{ link.url }}"
-          class="home-hero__action{% if link.style == 'primary' %} home-hero__action--primary{% endif %}"
+          class="home-hero__action{% if link.style == 'primary' %} home-hero__action--primary{% elsif link.style == 'secondary' %} home-hero__action--secondary{% endif %}"
           {% if link.external %}target="_blank" rel="noopener noreferrer"{% endif %}>
           <span>{{ link.label }}</span>
           {% if link.external %}<span aria-hidden="true">{{ site.data.icons.external | default: "↗" }}</span>{% endif %}
@@ -62,24 +62,14 @@
     
       </div>
       <ol class="home-hero__loop">
+        {% for item in hero.visual.items %}
         <li>
-          <span>01</span>
-          <strong>{{ hero.visual.items[0].title | default: 'Reduce run cost' }}</strong>
-          <b>{{ hero.visual.items[0].metric | default: '↓ 10–20% delivery overhead' }}</b>
-          <em>{{ hero.visual.items[0].detail | default: 'Cut repeated analysis, recurring support effort, and avoidable coordination overhead.' }}</em>
+          <span>0{{ forloop.index }}</span>
+          <strong>{{ item.title }}</strong>
+          <b>{{ item.metric }}</b>
+          <em>{{ item.detail }}</em>
         </li>
-        <li>
-          <span>02</span>
-          <strong>{{ hero.visual.items[1].title | default: 'Reduce dependency' }}</strong>
-          <b>{{ hero.visual.items[1].metric | default: '↑ 20–40% reusable knowledge' }}</b>
-          <em>{{ hero.visual.items[1].detail | default: 'Move critical vendor-held context into a client-owned operational asset.' }}</em>
-        </li>
-        <li>
-          <span>03</span>
-          <strong>{{ hero.visual.items[2].title | default: 'Create innovation capacity' }}</strong>
-          <b>{{ hero.visual.items[2].metric | default: '↑ 15–25% capacity for change' }}</b>
-          <em>{{ hero.visual.items[2].detail | default: 'Free time and budget for automation, AI, and clean-core change that actually scales.' }}</em>
-        </li>
+        {% endfor %}
       </ol>
       <div class="home-hero__signal">
         <span>{{ hero.visual.signal_label | default: 'Practical AI' }}</span>

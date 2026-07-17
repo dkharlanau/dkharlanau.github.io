@@ -1,15 +1,17 @@
 ---
 layout: default
-title: "Blog — Dzmitryi Kharlanau on resilient systems"
-description: "Long-form essays on operating models, integration architecture, and data systems that stay reliable under pressure."
+title: "SAP operations, integration, and automation blog"
+description: "Practical long-form articles on SAP AMS operations, integration architecture, logistics, data, and automation."
 permalink: /blog/
+schema_type: CollectionPage
 ---
 
 <section class="section notes-landing">
   <header class="section-heading">
     <p class="eyebrow">Blog</p>
     <h1>{{ page.title }}</h1>
-    <p class="lead">Deep-dive essays on systems thinking, SAP delivery, and automation patterns that keep enterprise platforms trustworthy.</p>
+    <p class="lead">Long-form articles for SAP practitioners working through support operations, integration architecture, logistics, data, and automation decisions.</p>
+    <p><a class="link-arrow" href="/blog/topics/">Browse categories and tags</a></p>
   </header>
 
   <div class="notes-grid">
@@ -36,7 +38,7 @@ permalink: /blog/
         </ul>
         {% endif %}
       </div>
-      <p>{{ post.summary | default: post.excerpt }}</p>
+      <p>{{ post.summary | default: post.description | default: post.excerpt }}</p>
       <a class="link-arrow" href="{{ post.url }}">Read article</a>
     </article>
     {% endfor %}

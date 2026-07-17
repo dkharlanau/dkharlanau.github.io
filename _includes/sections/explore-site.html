@@ -1,0 +1,26 @@
+{% assign section = site.data.home.explore_site %}
+{% if section %}
+<section class="section explore-site" id="explore-site" aria-labelledby="explore-site-title">
+  <header class="explore-site__header">
+    {% if section.eyebrow %}<p class="eyebrow">{{ section.eyebrow }}</p>{% endif %}
+    <h2 id="explore-site-title">{{ section.title }}</h2>
+    {% if section.lead %}<p class="lead">{{ section.lead }}</p>{% endif %}
+  </header>
+
+  {% if section.items %}
+  <div class="explore-site__grid">
+    {% for item in section.items %}
+    <a class="explore-site__card" href="{{ item.url }}">
+      <span class="explore-site__number" aria-hidden="true">0{{ forloop.index }}</span>
+      <div class="explore-site__content">
+        <span class="explore-site__eyebrow">{{ item.eyebrow }}</span>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.detail }}</p>
+      </div>
+      <span class="explore-site__link">{{ item.label }} <span aria-hidden="true">→</span></span>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}

@@ -3,11 +3,12 @@ layout: default
 ---
 {% assign published_on = page.date | default: page.published %}
 {% assign updated_on = page.updated %}
+{% assign related_posts = site.blog | where_exp: 'post', 'page.related_articles contains post.url' %}
 
 <section class="section note-detail">
-  <div class="note-backlink">
-    <a class="link-arrow" href="/blog/">Back to blog</a>
-  </div>
+  <nav class="note-backlink" aria-label="Breadcrumb">
+    <a href="/">Home</a><span aria-hidden="true"> / </span><a href="/blog/">Blog</a><span aria-hidden="true"> / </span><span aria-current="page">{{ page.title }}</span>
+  </nav>
   <article class="note-article neub-card">
     <header class="note-header">
       {% if page.eyebrow or page.category %}
@@ -17,6 +18,9 @@ layout: default
       {% if page.subtitle %}<p class="note-subtitle">{{ page.subtitle }}</p>{% endif %}
       {% if published_on or updated_on or page.tags %}
       <dl class="note-meta">
+        {% if page.author %}
+        <div><dt>Author</dt><dd><a href="/about/">{{ page.author }}</a></dd></div>
+        {% endif %}
         {% if published_on %}
         <div>
           <dt>Published</dt>
@@ -39,12 +43,21 @@ layout: default
           </dd>
         </div>
         {% endif %}
+        {% if page.reading_time_minutes %}
+        <div><dt>Reading time</dt><dd>{{ page.reading_time_minutes }} min</dd></div>
+        {% endif %}
       </dl>
       {% endif %}
     </header>
     <div class="note-body">
       {{ content }}
     </div>
+    {% if related_posts.size > 0 %}
+    <aside class="note-further" aria-labelledby="related-articles-title">
+      <h2 id="related-articles-title">Related articles</h2>
+      <ul class="note-further__list">{% for post in related_posts %}<li><a href="{{ post.url }}" class="link-arrow">{{ post.title }}</a></li>{% endfor %}</ul>
+    </aside>
+    {% endif %}
     {% if page.further_reading %}
     <aside class="note-further">
       <h2>Further reading</h2>

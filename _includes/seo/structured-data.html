@@ -10,6 +10,7 @@ Rules:
 
 {% assign resume = site.data.resume %}
 {% assign localized_home = site.data.home_i18n[page.locale] %}
+{% assign home_content = localized_home.content | default: site.data.home %}
 {% assign structured_language = page.locale | default: site.lang | default: 'en' %}
 {% assign canonical_url = page.url | absolute_url %}
 {% assign site_home = '/' | absolute_url %}
@@ -18,7 +19,7 @@ Rules:
 {% assign og_image = page.og_image | default: '/assets/og/default.png' | absolute_url %}
 {% assign article_image = '' %}
 {% if page.og_image %}{% assign article_image = page.og_image | absolute_url %}{% endif %}
-{% assign default_description = 'SAP AMS support, AI-assisted support automation, incident analysis, SD/MM issues, master data problems, and process optimization for SAP AMS teams.' %}
+{% assign default_description = 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
 {% if page.home_locale %}
 {% assign default_description = localized_home.meta.description | default: default_description %}
 {% elsif page.url == '/' or page.permalink == '/' %}
@@ -166,6 +167,12 @@ Rules:
 {% endif %}
 
 {% if allow_indexing %}
+
+{% if page.url == '/blog/' %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Blog","@id":"{{ canonical_url }}#blog","url":"{{ canonical_url }}","name":{{ page_title | jsonify }},"description":{{ page_description | truncate: 160, '' | jsonify }},"inLanguage":"{{ structured_language }}","author":{"@id":"{{ author_id }}"},"publisher":{"@id":"{{ author_id }}"}}
+</script>
+{% endif %}
 
 {% comment %} WebPage / ProfilePage / CollectionPage {% endcomment %}
 {% if page_type == 'ProfilePage' or page_type == 'CollectionPage' or page_type == 'WebPage' %}
@@ -479,8 +486,32 @@ Rules:
 {% endif %}
 {% endif %}
 
+{% if page.home_locale and home_content.hero.visual.items %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "{{ canonical_url }}#sap-consulting",
+  "name": "Dzmitryi Kharlanau — SAP Consulting",
+  "url": "{{ canonical_url }}",
+  "description": {{ page_description | truncate: 300, '' | jsonify }},
+  "inLanguage": "{{ structured_language }}",
+  "provider": {"@type": "Person", "@id": "{{ author_id }}", "name": {{ resume.name | jsonify }}},
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": {{ home_content.hero.visual.title | jsonify }},
+    "itemListElement": [
+      {% for item in home_content.hero.visual.items %}
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": {{ item.title | jsonify }}, "description": {{ item.detail | jsonify }}}}{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  }
+}
+</script>
+{% endif %}
+
 {% comment %} BreadcrumbList (Google-supported rich result) for indexable pages with clear hierarchy. {% endcomment %}
-{% if page.url == '/notes/' %}
+{% if allow_indexing and page.url == '/notes/' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -492,7 +523,7 @@ Rules:
   ]
 }
 </script>
-{% elsif page.collection == 'notes' %}
+{% elsif allow_indexing and page.collection == 'notes' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -505,7 +536,7 @@ Rules:
   ]
 }
 </script>
-{% elsif page.url == '/blog/' %}
+{% elsif allow_indexing and page.url == '/blog/' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -517,7 +548,7 @@ Rules:
   ]
 }
 </script>
-{% elsif page.collection == 'blog' %}
+{% elsif allow_indexing and page.collection == 'blog' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

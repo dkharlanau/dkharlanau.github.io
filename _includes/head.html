@@ -7,21 +7,23 @@
 
 {% assign computed_title = page.title | default: site.title %}
 {% if page.home_locale %}
-{% assign computed_title = locale_meta.title | default: 'SAP AMS | AI Support Automation & Process Optimization | Dzmitryi Kharlanau' %}
+{% assign computed_title = locale_meta.title | default: 'SAP Transformation, AMS and AI Readiness Consultant | Dzmitryi Kharlanau' %}
 {% elsif page.url == '/' or page.permalink == '/' %}
-{% assign computed_title = 'SAP AMS | AI Support Automation & Process Optimization | Dzmitryi Kharlanau' %}
+{% assign computed_title = 'SAP Transformation, AMS and AI Readiness Consultant | Dzmitryi Kharlanau' %}
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
 {% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP AMS, Integration & Process Optimization' %}
 {% elsif page.collection == 'notes' %}
 {% assign computed_title = page.title | append: ' — Dzmitryi Kharlanau | SAP AMS & Support Automation' %}
 {% endif %}
 
-{% assign default_description = 'SAP AMS support, AI-assisted support automation, incident analysis, SD/MM issues, master data problems, and process optimization for SAP AMS teams.' %}
+{% assign default_description = 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
 {% if page.home_locale %}
-{% assign default_description = locale_meta.description | default: 'Dzmitryi Kharlanau is an SAP AMS consultant focused on SAP support, AI-assisted support automation, incident analysis, SD/MM issues, master data problems, and process optimization for SAP AMS teams.' %}
+{% assign default_description = locale_meta.description | default: 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
 {% elsif page.url == '/' or page.permalink == '/' %}
-{% assign default_description = 'Dzmitryi Kharlanau is an SAP AMS consultant focused on SAP support, AI-assisted support automation, incident analysis, SD/MM issues, master data problems, and process optimization for SAP AMS teams.' %}
+{% assign default_description = 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
 {% elsif page.collection == 'notes' and page.description %}
+{% assign default_description = page.description %}
+{% elsif page.collection == 'blog' and page.description %}
 {% assign default_description = page.description %}
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
 {% assign default_description = 'Curriculum Vitae and credentials for Dzmitryi Kharlanau: SAP AMS, SAP support, integration, incident analysis, and practical AI-assisted support workflows.' %}
@@ -32,9 +34,9 @@
 normalize_whitespace %}
 {% assign social_title = computed_title %}
 {% if page.home_locale %}
-{% assign social_title = locale_meta.social_title | default: 'SAP AMS & AI Support Automation | Dzmitryi Kharlanau' %}
+{% assign social_title = locale_meta.social_title | default: 'SAP Transformation, AMS and AI Readiness | Dzmitryi Kharlanau' %}
 {% elsif page.url == '/' or page.permalink == '/' %}
-{% assign social_title = 'SAP AMS & AI Support Automation | Dzmitryi Kharlanau' %}
+{% assign social_title = 'SAP Transformation, AMS and AI Readiness | Dzmitryi Kharlanau' %}
 {% endif %}
 
 <title>{{ computed_title | strip_html | normalize_whitespace }}</title>
@@ -58,6 +60,7 @@ normalize_whitespace %}
 <link rel="alternate" hreflang="x-default" href="{{ '/' | absolute_url }}" />
 {% endif %}
 <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}" />
+<link rel="alternate" type="application/atom+xml" title="{{ site.title }} blog" href="{{ '/blog/feed.xml' | absolute_url }}" />
 <!-- GitHub Pages cannot set HTTP Link response headers, so these HTML links are the static-site fallback for agent discovery. -->
 <link rel="index" href="{{ '/ai/' | absolute_url }}" title="AI Routing Hub" />
 <link rel="about" href="{{ '/about/' | absolute_url }}" title="Canonical Profile" />
