@@ -110,26 +110,3 @@ The repository contains public materials only. Content uses controlled verificat
 
 Public SAP-related notes are practical diagnostic material, not official SAP documentation. Validate any SAP process, configuration, or automation decision in the relevant landscape before acting on it.
 
-## Local validation
-
-Use the smallest relevant checks while editing, then run the full sequence before publishing a public-ready change.
-
-```sh
-./bin/setup
-PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
-python3 scripts/check_public_repo.py
-python3 scripts/generate_atlas_artifacts.py --check
-bundle exec jekyll build
-python3 scripts/check_links.py _site
-python3 scripts/check_seo.py _site
-python3 scripts/check_indexing_policy.py --site-dir _site --fail-on-critical
-python3 scripts/check_sitemap_policy.py --site-dir _site --repo-dir . --fail-on-critical
-python3 scripts/check_date_consistency.py --site-dir _site --repo-dir . --fail-on-critical
-python3 scripts/check_content_quality.py --fail-on-critical
-python3 scripts/check_page_quality.py --site-dir _site --fail-on-critical
-python3 scripts/audit_indexability.py --site-dir _site --fail-on-critical --output-dir /tmp/cv-ai-validation-reports
-python3 scripts/audit_internal_links.py --site-dir _site --output-dir /tmp/cv-ai-validation-reports
-python3 scripts/accessibility_audit.py --site-dir _site --fail-on-critical
-python3 scripts/validate_ai_endpoints.py _site
-git diff --check
-```
