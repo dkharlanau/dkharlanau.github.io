@@ -30,8 +30,20 @@ last_modified_at: 2026-04-19
         <li>Recommendations for clean-core remediation, observability, and automation candidates.</li>
       </ul>
 
+      <h2>Diagnostic model</h2>
+      <p>The audit starts with a specific business consequence: an order cannot progress, a delivery is late, billing is incomplete, or a credit, pricing, or data condition keeps returning. It then traces the order through the relevant decision points, including master data, configuration, enhancements, integration, timing, and manual workarounds. This avoids treating every blocked order as an SD configuration issue.</p>
+
+      <h2>Why common fixes fail</h2>
+      <p>Releasing one document can restore today’s throughput while leaving the same control gap for tomorrow. Broad rule changes can remove a visible block but create credit, pricing, or fulfillment risk elsewhere. The audit separates a valid business control from a defective implementation and looks for the narrowest safe remediation before recommending a larger redesign.</p>
+
+      <h2>Where AI may help</h2>
+      <p>AI can summarize incident patterns, group similar blocker descriptions, and prepare evidence for a functional reviewer. It should not autonomously release blocked orders, override credit decisions, or alter pricing and billing logic. Those actions need deterministic checks and accountable approval.</p>
+
+      <h2>Dependencies and boundaries</h2>
+      <p>A useful audit requires representative, sanitized examples and access to the people who own the commercial process, operational execution, SAP configuration, and connected interfaces. It does not replace period-end controls, formal change approval, or system-specific SAP documentation. The immediate deliverable is a prioritised decision model and remediation backlog.</p>
+
       <h2>Related pages</h2>
-      <p><a href="/about/">Profile</a> · <a href="/services/sap-ams-consulting/">SAP AMS consulting</a> · <a href="/datasets/ams/">AMS datasets</a> · <a href="/ai/integration-reliability/">Integration reliability route</a> · <a href="/notes/process-audit/">Process audit playbook</a> · <a href="/cv/">CV</a></p>
+      <p><a href="/about/">Profile</a> · <a href="/services/sap-ams-consulting/">SAP AMS consulting</a> · <a href="/datasets/ams/">AMS datasets</a> · <a href="/ai/integration-reliability/">Integration reliability route</a> · <a href="/atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/">SAP SD order-to-cash diagnostics hub</a> · <a href="/scenarios/delivery-billing-block-order-to-cash-delays/">Delivery and billing block scenario</a> · <a href="/notes/process-audit/">Process audit playbook</a> · <a href="/cv/">CV</a></p>
     </div>
   </article>
 </section>
