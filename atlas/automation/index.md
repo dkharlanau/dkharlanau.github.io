@@ -1,7 +1,7 @@
 ---
 author: "Dzmitryi Kharlanau"
 layout: default
-last_modified_at: 2026-07-10
+last_modified_at: 2026-07-24
 status: reviewed
 verified: true
 tags:
@@ -30,6 +30,7 @@ related:
   <a class="atlas-card" href="/atlas/automation/operational-memory-for-sap-ams/"><h2>Operational Memory for SAP AMS</h2><p>Runbooks, KEDB, decision logs, and structured context for recurring support issues.</p><span class="link-arrow">Read page</span></a>
   <a class="atlas-card" href="/atlas/automation/agent-assisted-development-workflows/"><h2>Agent-Assisted Development Workflows</h2><p>Practical boundaries for using agents in knowledge work, support tooling, and development.</p><span class="link-arrow">Read page</span></a>
   <a class="atlas-card" href="/atlas/automation/mini-apps-for-sap-operations/"><h2>Mini Apps and Prototypes for SAP Operations</h2><p>Small, outcome-focused tools that remove manual work without breaking the core.</p><span class="link-arrow">Read page</span></a>
+  <a class="atlas-card" href="/atlas/automation/sap-planning-exception-automation/"><h2>SAP Planning Exception Automation</h2><p>Use automation to assemble and classify planning evidence while people retain supply and commitment decisions.</p><span class="link-arrow">Read review candidate</span></a>
 </div></section>
 
 <section class="section">
@@ -40,6 +41,7 @@ related:
   <ul>
     <li><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational Memory for SAP AMS</a></li>
     <li><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-Based Automation vs AI</a></li>
+    <li><a href="/atlas/automation/sap-planning-exception-automation/">SAP Planning Exception Automation</a></li>
     <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a></li>
   </ul>
 </section>

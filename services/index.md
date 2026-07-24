@@ -3,7 +3,7 @@ layout: default
 title: "SAP Consulting Services — Dzmitryi Kharlanau | AMS, O2C, Integration"
 description: "SAP consulting path for diagnosing SAP transformation friction, stabilizing O2C and integration operations, structuring operational memory, and extending with side-by-side AI and automation."
 permalink: /services/
-last_modified_at: 2026-04-24
+last_modified_at: 2026-07-24
 ---
 
 <section class="section">
@@ -80,6 +80,16 @@ last_modified_at: 2026-04-24
         <span class="link-arrow">Explore the assessment</span>
       </div>
     </a>
+
+    <a class="service-card" href="/services/sap-planning-and-replenishment-assessment/">
+      <p class="eyebrow">Diagnostic path</p>
+      <h3 class="service-card__title">Planning and Replenishment Assessment</h3>
+      <p class="service-card__subtitle">Turn high-volume planning exceptions into evidence-backed decisions without automating supply or customer commitments.</p>
+      <p class="service-card__summary">Trace the path from a shortage, allocation, or replenishment signal to the owner, evidence, approval, and prevention work it needs.</p>
+      <div class="service-card__footer">
+        <span class="link-arrow">Explore the assessment</span>
+      </div>
+    </a>
   </div>
 </section>
 
@@ -128,6 +138,10 @@ last_modified_at: 2026-04-24
     <article class="faq-item">
       <h3>AI is proposed before the operating process is stable</h3>
       <p>Start with <a href="/services/sap-ai-ml-enablement/">side-by-side AI and automation</a> only after the decision boundary, evidence, and human review model are explicit.</p>
+    </article>
+    <article class="faq-item">
+      <h3>Shortages, expedites, or allocation disputes keep returning</h3>
+      <p>Start with the <a href="/services/sap-planning-and-replenishment-assessment/">planning and replenishment assessment</a> when a planning signal is visible but the evidence, ownership, and approval path to a safe commitment is unclear.</p>
     </article>
   </div>
 </section>
@@ -180,7 +194,8 @@ last_modified_at: 2026-04-24
     {"@type": "ListItem", "position": 3, "name": "Operational Memory and Handover Model", "url": "https://dkharlanau.github.io/ai/operational-continuity/"},
     {"@type": "ListItem", "position": 4, "name": "SAP AI and ML Enablement", "url": "https://dkharlanau.github.io/services/sap-ai-ml-enablement/"},
     {"@type": "ListItem", "position": 5, "name": "SAP Integration Reliability Assessment", "url": "https://dkharlanau.github.io/services/sap-integration-reliability-assessment/"},
-    {"@type": "ListItem", "position": 6, "name": "SAP Master Data Stability Assessment", "url": "https://dkharlanau.github.io/services/sap-master-data-stability-assessment/"}
+    {"@type": "ListItem", "position": 6, "name": "SAP Master Data Stability Assessment", "url": "https://dkharlanau.github.io/services/sap-master-data-stability-assessment/"},
+    {"@type": "ListItem", "position": 7, "name": "SAP Planning and Replenishment Assessment", "url": "https://dkharlanau.github.io/services/sap-planning-and-replenishment-assessment/"}
   ]
 }
 </script>
