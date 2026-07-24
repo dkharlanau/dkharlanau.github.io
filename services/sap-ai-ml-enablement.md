@@ -45,7 +45,7 @@ last_modified_at: 2026-04-19
       </ul>
 
       <h2>Related decision guides</h2>
-      <p><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-based automation versus AI</a> · <a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI agent for SAP support</a> · <a href="/atlas/sap/evaluation-guardrails/">Evaluation guardrails</a> · <a href="/scenarios/ai-ready-support-knowledge-layer-sap-ams/">AI-ready support knowledge scenario</a></p>
+      <p><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-based automation versus AI</a> · <a href="/atlas/automation/sap-planning-exception-automation/">SAP planning exception automation</a> · <a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI agent for SAP support</a> · <a href="/atlas/sap/evaluation-guardrails/">Evaluation guardrails</a> · <a href="/scenarios/ai-ready-support-knowledge-layer-sap-ams/">AI-ready support knowledge scenario</a></p>
 
       <h2>Related pages</h2>
       <p><a href="/about/">Profile</a> · <a href="/ai/practical-ai-for-sap-support/">AI routing page</a> · <a href="/legal/responsible-ai/">Responsible AI</a> · <a href="/notes/ai-ml/">AI and ML around SAP</a> · <a href="/services/sap-integration-architecture/">Integration architecture consulting</a> · <a href="/faq/">FAQ</a></p>

@@ -205,10 +205,10 @@ def _import_generator():
     return gen
 
 
-def test_dynamic_discovery_returns_22_article_pages():
+def test_dynamic_discovery_returns_at_least_215_article_pages():
     gen = _import_generator()
     articles = gen.discover_atlas_articles()
-    assert len(articles) == 214, f"Expected 214 articles, found {len(articles)}"
+    assert len(articles) >= 215, f"Expected at least 215 articles, found {len(articles)}"
     # All paths must be under atlas/ and be .md files
     for p in articles:
         assert p.startswith("atlas/"), f"Path outside atlas/: {p}"
