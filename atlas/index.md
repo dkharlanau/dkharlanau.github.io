@@ -4,7 +4,7 @@ layout: default
 title: "Knowledge Atlas — SAP, Operations, Data, Automation, and AI Support Concepts"
 description: "Curated Knowledge Atlas for business, SAP, operations, data, automation, and AI-assisted support concepts."
 permalink: /atlas/
-last_modified_at: 2026-07-10
+last_modified_at: 2026-07-24
 status: reviewed
 verified: true
 tags:
@@ -29,7 +29,7 @@ related:
 <section class="section atlas-hero">
   <p class="eyebrow">Knowledge Atlas</p>
   <h1>Business, SAP, operations, data, automation, and AI-assisted support concepts.</h1>
-  <p class="lead">A curated working atlas for concepts that matter during SAP support, process analysis, operational memory work, and side-by-side AI design. It is intentionally small: reviewed pages first, raw research notes kept private.</p>
+  <p class="lead">A curated working atlas for concepts that matter during SAP support, process analysis, operational memory work, side-by-side AI design, and management-level SAP decisions. It is intentionally small: reviewed pages first, raw research notes kept private.</p>
   <div class="atlas-hero__actions">
     <a class="button button--primary" href="/atlas/concepts/">Explore concepts</a>
     <a class="button" href="/atlas/diagnostics/">Open diagnostics</a>
@@ -159,6 +159,21 @@ related:
       <p>Investigate queue conflicts, dependency order, approval gaps, and parallel changes before re-importing.</p>
       <span class="link-arrow">Read page</span>
     </a>
+    <a class="atlas-card" href="/atlas/concepts/sap-ams-cost-reduction-framework/">
+      <h3>SAP AMS Cost Reduction Framework</h3>
+      <p>A management-level lens for separating visible ticket reduction from real operating simplification.</p>
+      <span class="link-arrow">Read page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/concepts/sap-extension-retain-rebuild-retire-framework/">
+      <h3>SAP Extension Retain, Rebuild, or Retire Framework</h3>
+      <p>Classify custom logic by business value, operating burden, and retirement potential.</p>
+      <span class="link-arrow">Read page</span>
+    </a>
+    <a class="atlas-card" href="/atlas/concepts/enterprise-ai-around-sap-decision-framework/">
+      <h3>Enterprise AI Around SAP Decision Framework</h3>
+      <p>Decide where AI should assist, where automation should stay deterministic, and where neither is the real issue.</p>
+      <span class="link-arrow">Read page</span>
+    </a>
   </div>
 </section>
 
@@ -187,6 +202,7 @@ related:
     <li><a href="/atlas/concepts/order-to-cash/">Order to Cash concept</a></li>
     <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI agent for SAP support</a></li>
     <li><a href="/atlas/data-quality/sap-master-data-quality/">SAP master data quality</a></li>
+    <li><a href="/atlas/concepts/sap-ams-cost-reduction-framework/">SAP AMS Cost Reduction Framework</a></li>
   </ul>
 </section>
 
