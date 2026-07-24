@@ -30,6 +30,23 @@ last_modified_at: 2026-04-19
         <li>Prioritised recommendations for reliability, cost control, and upgrade safety.</li>
       </ul>
 
+      <h2>Assessment questions</h2>
+      <ul>
+        <li>Which system owns the business fact, and which systems only consume a copy or an event?</li>
+        <li>Where is transformation logic documented, versioned, tested, and recoverable?</li>
+        <li>How does the team prove business completion after a technically successful handoff?</li>
+        <li>Which parts of the flow require deterministic control, and where is asynchronous processing acceptable?</li>
+      </ul>
+
+      <h2>What this avoids</h2>
+      <p>The goal is not to prescribe APIs or events as a universal replacement for files, IDocs, or middleware. A stable landscape may retain several patterns if their ownership, contracts, observability, and recovery rules are clear. The costly state is an accidental mix in which every new use case adds another unowned integration path.</p>
+
+      <h2>Where AI may help</h2>
+      <p>AI can assist with interface-inventory normalization, contract discovery, and incident summarization. It should not infer a missing business contract or make unreviewed changes to mapping, routing, or production recovery. Those need evidence and explicit ownership.</p>
+
+      <h2>Related diagnostics</h2>
+      <p><a href="/services/sap-integration-reliability-assessment/">Integration reliability assessment</a> · <a href="/atlas/diagnostics/sap-integration-diagnostics-hub/">SAP integration diagnostics hub</a> · <a href="/atlas/concepts/integration-ownership-model/">Integration ownership model</a> · <a href="/atlas/concepts/integration-pattern-decision-matrix/">Integration pattern decision matrix</a> · <a href="/scenarios/idoc-api-integration-failures-ownership/">Interface ownership scenario</a></p>
+
       <h2>Related pages</h2>
       <p><a href="/about/">Profile</a> · <a href="/ai/integration-reliability/">AI routing page</a> · <a href="/datasets/DAMA/">DAMA datasets</a> · <a href="/notes/composable-erp/">Composable ERP strategy</a> · <a href="/notes/system-architecture/">System architecture note</a> · <a href="/services/sap-ai-ml-enablement/">SAP AI and ML enablement</a></p>
     </div>

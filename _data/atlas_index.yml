@@ -8,7 +8,7 @@ meta:
   name: "Dzmitryi Kharlanau — Atlas Topic Index"
   description: "Topic-to-page routing index for public knowledge pages on SAP AMS, support, process reliability, integration, master data, AI-assisted support, and architecture."
   canonical: "https://dkharlanau.github.io/ai/discovery-map.json"
-  updated_at: "2026-05-26"
+  updated_at: "2026-07-24"
   version: "1.0"
 
 # Fallback routing rule: unknown topics route to watch/unclassified, not random page.
@@ -387,6 +387,34 @@ topic_clusters:
       Service detail page. Focus on architecture boundaries, contracts, portability.
       Must end with section-actions or section-shell--premium.
 
+  - id: sap-integration-reliability-assessment
+    title: "SAP Integration Reliability Assessment"
+    path: "/services/sap-integration-reliability-assessment/"
+    topic_cluster: "integration reliability"
+    keywords:
+      - "integration reliability assessment"
+      - "interface ownership"
+      - "safe retry"
+      - "business completion"
+      - "integration observability"
+      - "recovery runbook"
+    allowed_update_types:
+      - "service_copy_refinement"
+      - "related_link"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-07-24"
+    related_pages:
+      - "/ai/integration-reliability/"
+      - "/services/sap-integration-architecture/"
+      - "/atlas/diagnostics/sap-integration-diagnostics-hub/"
+      - "/atlas/diagnostics/sap-interface-monitoring-diagnostics/"
+      - "/scenarios/integration-monitoring-gaps-sap-middleware/"
+    agent_notes: |
+      Problem-led assessment page for recurring integration failures. Keep the focus on
+      evidence, ownership, safe recovery, and business completion. Do not turn it into
+      a generic middleware selection page.
+
   # --- MDG / Business Partner governance ---
   - id: mdg-bp-governance
     title: "MDG and Business Partner Governance"
@@ -443,6 +471,34 @@ topic_clusters:
     agent_notes: |
       Atlas page. Evergreen content on master data as root cause of support issues.
       Add new failure modes only with evidence from real support contexts.
+
+  - id: sap-master-data-stability-assessment
+    title: "SAP Master Data Stability Assessment"
+    path: "/services/sap-master-data-stability-assessment/"
+    topic_cluster: "MDG / Business Partner governance"
+    keywords:
+      - "master data stability assessment"
+      - "duplicate master data"
+      - "business partner replication"
+      - "data ownership"
+      - "master data controls"
+      - "data correction"
+    allowed_update_types:
+      - "service_copy_refinement"
+      - "related_link"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-07-24"
+    related_pages:
+      - "/ai/mdg-bp-governance/"
+      - "/atlas/data-quality/sap-master-data-quality/"
+      - "/atlas/diagnostics/sap-master-data-diagnostics-hub/"
+      - "/atlas/diagnostics/sap-mdg-to-s4-replication-diagnostics/"
+      - "/scenarios/duplicate-master-data-support-cost/"
+    agent_notes: |
+      Problem-led assessment page for repeat data corrections, ownership gaps, and
+      replication failures. Preserve the distinction between governance, data quality,
+      and integration; do not frame MDG as the default answer.
 
   - id: master-data-governance-failure-modes
     title: "Master Data Governance Failure Modes"

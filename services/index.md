@@ -60,6 +60,26 @@ last_modified_at: 2026-04-24
         <span class="link-arrow">Learn more</span>
       </div>
     </a>
+
+    <a class="service-card" href="/services/sap-integration-reliability-assessment/">
+      <p class="eyebrow">Diagnostic path</p>
+      <h3 class="service-card__title">Integration Reliability Assessment</h3>
+      <p class="service-card__subtitle">Find the ownership, observability, and recovery gaps hidden behind recurring interface failures.</p>
+      <p class="service-card__summary">Use a bounded assessment to separate source, mapping, transport, middleware, and target-system failures before committing to a platform redesign.</p>
+      <div class="service-card__footer">
+        <span class="link-arrow">Explore the assessment</span>
+      </div>
+    </a>
+
+    <a class="service-card" href="/services/sap-master-data-stability-assessment/">
+      <p class="eyebrow">Diagnostic path</p>
+      <h3 class="service-card__title">Master Data Stability Assessment</h3>
+      <p class="service-card__subtitle">Reduce duplicate records, failed replication, and manual correction without treating MDG as the only answer.</p>
+      <p class="service-card__summary">Map object ownership, change paths, keys, controls, and replication dependencies before adding workflow or another data platform.</p>
+      <div class="service-card__footer">
+        <span class="link-arrow">Explore the assessment</span>
+      </div>
+    </a>
   </div>
 </section>
 
@@ -82,6 +102,32 @@ last_modified_at: 2026-04-24
     <article class="faq-item">
       <h3>The programme needs quick wins before a larger transformation</h3>
       <p>Short-cycle audits, operational memory, mini apps, and targeted automation are the fastest way to prove value before committing to bigger delivery tracks.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Choose by problem</p>
+    <h2>Start from the operational constraint, not the product name</h2>
+    <p class="lead">The useful first question is rarely whether a team needs MDG, a new integration platform, or an AI copilot. It is where the process loses control and what evidence would change that decision.</p>
+  </header>
+  <div class="faq-items">
+    <article class="faq-item">
+      <h3>Repeated incidents despite acceptable SLA reporting</h3>
+      <p>Start with <a href="/services/sap-ams-consulting/">SAP AMS consulting</a> when the same support patterns return because root-cause work, ownership, and reusable knowledge are missing.</p>
+    </article>
+    <article class="faq-item">
+      <h3>Interfaces are green until a business process is blocked</h3>
+      <p>Start with the <a href="/services/sap-integration-reliability-assessment/">integration reliability assessment</a> when a dashboard has status data but no reliable route from failure to accountable recovery.</p>
+    </article>
+    <article class="faq-item">
+      <h3>Customers, suppliers, or business partners need repeated repair</h3>
+      <p>Start with the <a href="/services/sap-master-data-stability-assessment/">master data stability assessment</a> when the defect may sit in ownership, keys, replication, or process controls rather than in a missing workflow.</p>
+    </article>
+    <article class="faq-item">
+      <h3>AI is proposed before the operating process is stable</h3>
+      <p>Start with <a href="/services/sap-ai-ml-enablement/">side-by-side AI and automation</a> only after the decision boundary, evidence, and human review model are explicit.</p>
     </article>
   </div>
 </section>
@@ -118,6 +164,24 @@ last_modified_at: 2026-04-24
   "areaServed": "Global",
   "url": "https://dkharlanau.github.io/services/",
   "description": "Consulting path for SAP transformation friction audits, O2C and integration stabilization, operational memory and handover models, and side-by-side AI and automation around clean-core S/4HANA."
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "@id": "https://dkharlanau.github.io/services/#service-catalog",
+  "name": "SAP consulting service catalogue",
+  "description": "Problem-led SAP consulting entry points for operational reliability, master data, integration, process diagnostics, and practical AI adoption.",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "SAP Transformation Friction Audit", "url": "https://dkharlanau.github.io/services/sap-o2c-process-audit/"},
+    {"@type": "ListItem", "position": 2, "name": "SAP AMS Consulting", "url": "https://dkharlanau.github.io/services/sap-ams-consulting/"},
+    {"@type": "ListItem", "position": 3, "name": "Operational Memory and Handover Model", "url": "https://dkharlanau.github.io/ai/operational-continuity/"},
+    {"@type": "ListItem", "position": 4, "name": "SAP AI and ML Enablement", "url": "https://dkharlanau.github.io/services/sap-ai-ml-enablement/"},
+    {"@type": "ListItem", "position": 5, "name": "SAP Integration Reliability Assessment", "url": "https://dkharlanau.github.io/services/sap-integration-reliability-assessment/"},
+    {"@type": "ListItem", "position": 6, "name": "SAP Master Data Stability Assessment", "url": "https://dkharlanau.github.io/services/sap-master-data-stability-assessment/"}
+  ]
 }
 </script>
 
