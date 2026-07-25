@@ -8781,44 +8781,77 @@ body.page-context--knowledge {
   }
 }
 
+
 /* ==========================================================================
-   Martenweave adoption layer
-   Structural grammar: hairline ruled grids, monospace amber metadata,
-   tight oversized headlines, single offset "paper" shadow on dark blocks.
-   Loaded last (this file); tokens below intentionally redefine the earlier
-   radius/shadow tokens — var() resolves at computed-value time, so every
-   rule above that references them inherits the new values.
+   DESIGN SYSTEM — single unified layer
+   Neutral light page, white cards, violet signal, Inter display (serif for
+   quotes only), pill actions, one soft shadow. Everything above this line
+   is legacy base; this layer is the system. Organized:
+   1 tokens · 2 base · 3 homepage shells · 4 fold · 5 sections · 6 actions
+   7 chrome · 8 docs/datasets · 9 motion · 10 responsive
    ========================================================================== */
 
+/* --- 1. Tokens ------------------------------------------------------------- */
+
 :root {
-  --color-signal: #d98d12; /* amber: kickers, indices, focus outlines, small markers only */
-  --line: var(--color-border); /* #d9dee7 — standard hairline */
-  --line-strong: #b9c1cf; /* strong rule for section tops */
-  --radius: 3px;
-  --radius-lg: 4px;
-  --radius-md: 3px;
-  --radius-sm: 2px;
-  --shadow-soft: none;
-  --shadow-premium: none;
-  --shadow-hover: none;
-  --shadow-paper: 14px 14px 0 #dde3ec; /* the only allowed shadow: cool slate offset */
+  --ds-page: #eceef3;
+  --ds-card: #ffffff;
+  --ds-tint: #f4f5fa;
+  --ds-tint-strong: #e9ebf3;
+  --ds-ink: #0f1722;
+  --ds-ink-soft: #455163;
+  --ds-ink-muted: #6a7488;
+  --ds-line: #dfe3ec;
+  --ds-line-strong: #c6ccd9;
+  --ds-signal: #5b45d6;
+  --ds-signal-strong: #4a37b8;
+  --ds-signal-soft: #efecfc;
+  --ds-navy: #152033;
+  --ds-radius-s: 10px;
+  --ds-radius-m: 14px;
+  --ds-radius-l: 22px;
+  --ds-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 18px 44px -18px rgba(16, 24, 40, 0.1);
   --font-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  /* bridge: legacy tokens resolve to the system */
+  --color-page: var(--ds-page);
+  --surface-page: var(--ds-page);
+  --surface-raised: var(--ds-tint);
+  --surface-subtle: var(--ds-tint-strong);
+  --color-ink: var(--ds-ink);
+  --color-ink-strong: #0b1220;
+  --color-ink-soft: var(--ds-ink-soft);
+  --color-ink-muted: var(--ds-ink-muted);
+  --color-border: var(--ds-line);
+  --color-border-soft: #e8ebf2;
+  --line: var(--ds-line);
+  --line-strong: var(--ds-line-strong);
+  --color-accent: var(--ds-navy);
+  --color-accent-strong: #0e1626;
+  --color-accent-soft: var(--ds-tint);
+  --color-signal: var(--ds-signal);
+  --color-signal-strong: var(--ds-signal-strong);
+  --color-signal-soft: var(--ds-signal-soft);
+  --radius-lg: var(--ds-radius-l);
+  --radius-md: var(--ds-radius-m);
+  --radius-sm: var(--ds-radius-s);
+  --radius: var(--ds-radius-s);
+  --shadow-soft: var(--ds-shadow);
+  --shadow-premium: var(--ds-shadow);
+  --shadow-hover: var(--ds-shadow);
+  --shadow-paper: 14px 14px 0 #e3e6f0;
 }
 
-/* --- Monospace metadata layer ------------------------------------------- */
+/* --- 2. Base ---------------------------------------------------------------- */
 
-.eyebrow,
-.hero-kicker,
-.direction-card__category {
-  color: var(--color-signal);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+body {
+  background: var(--ds-page);
 }
 
-/* --- Focus: amber outline everywhere ------------------------------------ */
+::selection {
+  background: var(--ds-signal-soft);
+  color: var(--ds-ink);
+}
 
 a:focus-visible,
 button:focus-visible,
@@ -8826,1075 +8859,52 @@ input:focus-visible,
 select:focus-visible,
 summary:focus-visible,
 [tabindex]:focus-visible {
-  outline: 3px solid var(--color-signal);
+  outline: 3px solid var(--ds-signal);
   outline-offset: 3px;
 }
 
-/* --- Reduced motion: cover adoption-layer transitions ------------------- */
-
-@media (prefers-reduced-motion: reduce) {
-  .nav-link::after,
-  .footer-meta-links a::after,
-  .explore-site__card,
-  .use-case-list a,
-  .dataset-card {
-    transition: none !important;
-  }
-}
-
-/* --- Hero: atlas-hero structure ----------------------------------------- */
-
-.page-context--home .home-hero {
-  border-radius: var(--radius-lg);
-}
-
-.page-context--home .home-section {
-  border-radius: var(--radius-lg);
-  box-shadow: none;
-  backdrop-filter: none;
-}
-
-.page-context--home .home-section::before {
-  content: none;
-}
-
-.home-hero__title {
-  max-width: 14ch;
-  font-size: clamp(2.6rem, 4.5vw, 3.85rem);
-  letter-spacing: -0.045em;
-  line-height: 1.02;
-}
-
-.home-hero__subtitle {
-  padding: 0;
-  border-left: 0;
-  border-radius: 0;
-  background: transparent;
-  font-size: clamp(1.15rem, 1.6vw, 1.35rem);
-  font-weight: 560;
-}
-
-html[dir="rtl"] .home-hero__subtitle {
-  border-right: 0;
-}
-
-.home-hero__lead {
-  font-size: clamp(1rem, 1.3vw, 1.15rem);
-}
-
-.home-hero__badge {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: transparent;
-  box-shadow: none;
-  color: var(--color-ink-muted);
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-}
-
-.home-hero__badge-dot {
-  border-radius: var(--radius-sm);
-  background: var(--color-signal);
-}
-
-.home-hero__contact {
-  padding: 0.72rem 0.9rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-}
-
-.home-hero__avatar {
-  border-radius: var(--radius-md);
-  box-shadow: none;
-}
-
-.home-hero__person-meta {
-  max-width: none;
-  color: var(--color-ink-muted);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.home-hero__meta-sep {
-  color: var(--color-signal);
-  padding-inline: 0.15em;
-}
-
-/* Buttons: flat navy fill / 1px outline, radius 2px, no shadow, no lift */
-
-.home-hero__action {
-  min-height: 46px;
-  padding: 0.78rem 1.2rem;
-  border-radius: var(--radius-sm);
-  box-shadow: none;
-  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
-}
-
-.home-hero__action:hover,
-.home-hero__action:focus-visible {
-  transform: none;
-  box-shadow: none;
-}
-
-.home-hero__action--secondary:hover,
-.home-hero__action--secondary:focus-visible {
-  background: var(--color-accent-soft);
-}
-
-/* Visual panel: hairline ruled list, no blobs, no elevation */
-
-.home-hero__visual {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--color-page);
-  box-shadow: none;
-}
-
-.home-hero__visual::before,
-.home-hero__visual::after {
-  content: none;
-}
-
-.home-hero__visual-header span,
-.home-hero__signal span,
-.home-hero__loop span {
-  color: var(--color-signal);
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-}
-
-.home-hero__visual-header em {
-  border-radius: var(--radius-md);
-  background: transparent;
-  font-family: var(--font-mono);
-}
-
-.home-hero__loop {
-  gap: 0;
-  border-top: 1px solid var(--line-strong);
-}
-
-.home-hero__loop li,
-html[dir="rtl"] .home-hero__loop li:nth-child(2),
-html[dir="rtl"] .home-hero__loop li:nth-child(3) {
-  width: 100%;
-  margin-inline: 0;
-  padding: 0.85rem 0.2rem;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-.home-hero__loop li:nth-child(2),
-.home-hero__loop li:nth-child(3),
-.home-hero__loop li:nth-child(4) {
-  margin-left: 0;
-}
-
-.home-hero__signal {
-  border-top: 1px solid var(--line-strong);
-}
-
-/* ==========================================================================
-   Home sections: ruled-grid adoption
-   Extends the Martenweave layer to the remaining homepage sections:
-   shared 1px hairlines instead of cards, mono amber indices/metadata,
-   no elevation anywhere except the single paper shadow on the dark CTA.
-   ========================================================================== */
-
-/* --- Credibility: proof strip ------------------------------------------- */
-
-.cred-editorial .tech-stack-simple {
-  gap: 0;
-  border-top: 1px solid var(--line-strong);
-  border-bottom: 1px solid var(--line);
-}
-
-.tech-stack-simple__column {
-  min-height: 150px;
-  padding: 1.45rem 1.5rem 1.6rem;
-  border: 0;
-  border-inline-end: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-.tech-stack-simple__column:last-child {
-  border-inline-end: 0;
-}
-
-.cred-editorial__portrait {
-  border-radius: var(--radius-md);
-}
-
-.cred-editorial__portrait-note {
-  border-radius: var(--radius-md);
-  box-shadow: none;
-}
-
-@media (max-width: 960px) {
-  .cred-editorial .tech-stack-simple {
-    grid-template-columns: 1fr;
-  }
-
-  .tech-stack-simple__column {
-    min-height: 0;
-    border-inline-end: 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .tech-stack-simple__column:last-child {
-    border-bottom: 0;
-  }
-}
-
-/* --- Analysis problem: pillars grid with mono indices -------------------- */
-
-.analysis-problem__grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
-  padding-top: 0;
-  border-top: 1px solid var(--line-strong);
-  counter-reset: analysis-cell;
-}
-
-.analysis-problem__detail {
-  padding: 1.5rem 1.6rem 1.7rem;
-  border-inline-end: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-
-.analysis-problem__detail:nth-child(2n) {
-  border-inline-end: 0;
-}
-
-.analysis-problem__detail::before {
-  counter-increment: analysis-cell;
-  content: counter(analysis-cell, decimal-leading-zero);
-  display: block;
-  margin-bottom: 0.9rem;
-  color: var(--color-signal);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-}
-
-.analysis-problem__visual-surface,
-.analysis-problem__visual-main,
-.analysis-problem__visual-card {
-  border-radius: var(--radius-md);
-  box-shadow: none;
-}
-
-.analysis-problem__visual-card {
-  border: 1px solid var(--line);
-}
-
-.analysis-problem__cta {
-  border-top: 1px solid var(--line-strong);
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.analysis-problem__quote {
-  border-left: 0;
-  border-inline-start: 2px solid var(--color-signal);
-}
-
-@media (max-width: 640px) {
-  .analysis-problem__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .analysis-problem__detail {
-    border-inline-end: 0;
-  }
-}
-
-/* --- Explore site: docs grid --------------------------------------------- */
-
-.explore-site__grid {
-  gap: 0;
-  overflow: visible;
-  border: 0;
-  border-top: 1px solid var(--line-strong);
-  border-radius: 0;
-  background: transparent;
-}
-
-.explore-site__card {
-  border-inline-end: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-.explore-site__card:nth-child(2n) {
-  border-inline-end: 0;
-}
-
-.explore-site__number {
-  color: var(--color-signal);
-  font-family: var(--font-mono);
-}
-
-.explore-site__card:hover,
-.explore-site__card:focus-visible {
-  background: var(--color-accent-soft);
-  color: var(--color-ink);
-}
-
-.explore-site__card:hover .explore-site__number,
-.explore-site__card:focus-visible .explore-site__number {
-  color: var(--color-signal);
-}
-
-.explore-site__card:hover .explore-site__content p,
-.explore-site__card:focus-visible .explore-site__content p {
-  color: var(--color-ink-soft);
-}
-
-@media (max-width: 680px) {
-  .explore-site__card {
-    border-inline-end: 0;
-  }
-}
-
-/* --- FAQ: hairline list --------------------------------------------------- */
-
-.faq-editorial__list {
-  gap: 0;
-  border-top: 1px solid var(--line-strong);
-}
-
-/* .faq-editorial__item does not carry the .faq-item class, so the earlier
-   border-radius: .6rem !important rule never matches it; plain radius 0. */
-.faq-editorial__item {
-  padding: 1.6rem 0;
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-.faq-editorial__divider {
-  display: none;
-}
-
-.faq-editorial__badge {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--color-signal);
-  font-family: var(--font-mono);
-}
-
-.faq-editorial__callout {
-  border-left: 0;
-  border-inline-start: 2px solid var(--color-signal);
-  border-radius: 0;
-  box-shadow: none;
-}
-
-/* Neutralize the legacy RTL gray border so the amber start border flips. */
-html[dir="rtl"] .faq-editorial__callout {
-  border-right: 0;
-  border-inline-start: 2px solid var(--color-signal);
-}
-
-/* --- Contact CTA: conversion band with the single paper shadow ----------- */
-
-.home-cta__card {
-  border-radius: var(--radius-md);
-  background: var(--color-accent);
-  box-shadow: var(--shadow-paper);
-}
-
-/* Buttons inherit the hero restyle; drop the remaining lift/blur so the
-   paper shadow on the card stays the only elevation on the page. */
-.home-cta__actions .home-hero__action {
-  backdrop-filter: none;
-}
-
-.home-cta__card .home-hero__action--primary {
-  box-shadow: none;
-}
-
-/* --- Engagement framework: workflow rail ---------------------------------- */
-
-.engagement-framework__grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0;
-  overflow: visible;
-  border: 0;
-  border-top: 1px solid var(--line-strong);
-  border-radius: 0;
-  background: transparent;
-}
-
-.engagement-layer {
-  position: relative;
-  padding: clamp(1.4rem, 2.2vw, 2.2rem);
-  border-inline-end: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-.engagement-layer:last-child {
-  border-inline-end: 0;
-}
-
-.engagement-layer:hover {
-  background: var(--color-accent-soft);
-}
-
-.engagement-layer__step {
-  color: var(--color-signal);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-}
-
-/* Connecting hairline across the rail; z-index -1 keeps it behind text. */
-.engagement-layer::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 3.4rem;
-  inset-inline-start: 1.2rem;
-  inset-inline-end: -1.2rem;
-  height: 1px;
-  background: var(--line);
-  pointer-events: none;
-}
-
-.engagement-layer:last-child::before {
-  inset-inline-end: 1.2rem;
-}
-
-.engagement-layer__mini-card {
-  border-radius: var(--radius-md);
-  box-shadow: none;
-}
-
-.engagement-framework__visual {
-  border-radius: var(--radius-lg);
-  box-shadow: none;
-}
-
-@media (max-width: 960px) {
-  .engagement-framework__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .engagement-layer {
-    border-bottom: 1px solid var(--line);
-  }
-
-  .engagement-layer:nth-child(2n) {
-    border-inline-end: 0;
-  }
-
-  .engagement-layer::before {
-    content: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .engagement-framework__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .engagement-layer {
-    border-inline-end: 0;
-  }
-
-  .engagement-layer:last-child {
-    border-bottom: 0;
-  }
-}
-
-/* ==========================================================================
-   Chrome + inner pages: ruled-grid adoption
-   Nav underline, hairline header/footer chrome, atlas doc shells, dataset
-   hairline cells, and the site-wide pill/chip corner cleanup.
-   ========================================================================== */
-
-/* --- Nav + footer links: scaleX underline -------------------------------- */
-
-.nav-link,
-.footer-meta-links a {
-  position: relative;
-}
-
-.nav-link::after,
-.footer-meta-links a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -0.24rem;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 180ms ease;
-}
-
-.nav-link:hover::after,
-.nav-link:focus-visible::after,
-.footer-meta-links a:hover::after,
-.footer-meta-links a:focus-visible::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* Remove the pill hover background + radius; the underline is the signal. */
-.nav-link {
-  border-radius: 0;
-}
-
-.nav-link:hover,
-.nav-link:focus-visible {
-  background: transparent;
-}
-
-/* The search pill keeps its permanent tint; square it to the grid. */
-.nav-link--search {
-  border-radius: var(--radius-md);
-}
-
-.nav-link--search:hover,
-.nav-link--search:focus-visible {
-  background: var(--color-accent-soft);
-}
-
-.nav-link--search::after {
-  content: none;
-}
-
-/* --- Header scrolled state: hairline instead of drop shadow -------------- */
-
-.site-header--scrolled,
-.page-context--knowledge .site-header--scrolled {
-  box-shadow: none;
-  border-bottom: 1px solid var(--line);
-}
-
-/* --- Footer metadata: ruled top edge + monospace note -------------------- */
-
-.site-footer .footer-meta {
-  padding-top: 1.2rem;
-  border-top: 1px solid var(--line);
-}
-
-.footer-note {
-  color: var(--color-ink-muted);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-}
-
-/* --- Atlas/doc pages: hairline doc shells -------------------------------- */
-
-.note-body h2 {
-  padding-top: 1.1rem;
-  border-top: 1px solid var(--line);
-}
-
-.atlas-meta-panel,
-.atlas-author,
-.atlas-disclaimer {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  box-shadow: none;
-}
-
-.atlas-author,
-.atlas-disclaimer {
-  padding: 1rem;
-}
-
-/* Callouts: single amber start rule, no radius, no shadow. */
-.atlas-research-warning,
-.tech-stack-editorial__callout {
-  border: 0;
-  border-left: 0;
-  border-inline-start: 2px solid var(--color-signal);
-  border-radius: 0;
-  box-shadow: none;
-}
-
-html[dir="rtl"] .atlas-research-warning,
-html[dir="rtl"] .tech-stack-editorial__callout {
-  border-right: 0;
-  border-inline-start: 2px solid var(--color-signal);
-}
-
-/* Inline code reads as metadata; dark code blocks carry the paper shadow. */
-.note-body code {
-  padding: 0.1rem 0.3rem;
-  border-radius: var(--radius-md);
-  background: var(--color-accent-soft);
-}
-
-/* .note-body pre had no base styling; make it a dark block so the paper
-   shadow stays legal (shadow-paper is only allowed on dark blocks). */
-.note-body pre {
-  padding: 1rem;
-  background: var(--color-accent);
-  color: #e9edf3;
-}
-
-.note-body pre,
-.dataset-json pre {
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-paper);
-}
-
-.note-body pre code {
-  padding: 0;
-  background: transparent;
-}
-
-/* --- Datasets: hairline cells, tint-only hover ---------------------------- */
-
-.dataset-card,
-.dataset-kpi {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  box-shadow: none;
-}
-
-a.dataset-card:hover,
-.dataset-card:hover,
-.dataset-card:focus-visible {
-  transform: none;
-  border-color: var(--line-strong) !important;
-  background: var(--color-accent-soft);
-  box-shadow: none;
-}
-
-.service-card:focus-within {
-  transform: none;
-  border-color: var(--line-strong) !important;
-  box-shadow: none;
-}
-
-/* --- Chips/pills cleanup: square corners, no shadows ---------------------- */
-
-.pill,
-.signals-tags span,
-.profile-chip-links a,
-.topic-cloud a,
-.tech-stack-editorial__pill-row span,
-.analysis-problem__eyebrow,
-.tco-editorial__badge,
-.home-side-list,
-.home-work-entry,
-.home-work-entry__logo,
-.stack-item,
-.home-tech-tile,
-.problem-editorial__grid-card,
-.signal-card,
-.signals-panel,
-.signals-lab-card,
-.home-tech-editorial__quote,
-.tech-stack-editorial__card {
-  border-radius: var(--radius-md);
-}
-
-.problem-editorial__grid-card,
-.home-tech-editorial__quote,
-.home-tech-tile,
-.tech-stack-editorial__card {
-  box-shadow: none;
-}
-
-/* Hover lifts become accent-soft tints. */
-.home-work-entry:hover,
-.home-tech-tile:hover,
-.home-tech-tile:focus-within {
-  transform: none;
-  background: var(--color-accent-soft);
-  box-shadow: none;
-}
-
-/* --- Strategic context + AI costs: ruled-grid treatment ------------------ */
-
-.strategic-context__eyebrow {
-  border-radius: var(--radius-md);
-}
-
-.strategic-context__grid {
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-}
-
-.strategic-context__card {
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.strategic-context__card--primary {
-  background: var(--color-page);
-}
-
-.strategic-context__tags span {
-  border-radius: var(--radius-md);
-}
-
-.strategic-context__quote {
-  border-left: 2px solid var(--color-signal);
-  background: transparent;
-}
-
-html[dir="rtl"] .strategic-context__quote {
-  border-left: 0;
-  border-right: 2px solid var(--color-signal);
-}
-
-.ai-costs-outcomes__badge {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--color-signal);
-  font-family: var(--font-mono);
-  letter-spacing: 0.1em;
-}
-
-.ai-costs-outcomes__quote {
-  border-left: 2px solid var(--color-signal);
-}
-
-html[dir="rtl"] .ai-costs-outcomes__quote {
-  border-left: 0;
-  border-right: 2px solid var(--color-signal);
-}
-
-.ai-costs-outcomes__mandate {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: transparent;
-}
-
-.ai-costs-outcomes__stats {
-  gap: 0;
-  border-top: 1px solid var(--line-strong);
-}
-
-.ai-costs-outcomes__stat {
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-}
-
-.ai-costs-outcomes__stat--light {
-  background: transparent;
-  box-shadow: none;
-}
-
-/* --- Sweep: neutralize remaining drop shadows ---------------------------- */
-/* Only var(--shadow-paper) may survive; everything else goes flat. */
-
-.dataset-card:focus-visible,
-.page-context--home .contact-link-primary,
-.problem-editorial__header::before,
-.signals-lab-card--feature,
-.signals-lab-card--duo,
-.faq-item,
-.home-tech-editorial__location,
-.home-tech-editorial__chips li,
-.home-tech-editorial__link,
-.home-tech-editorial__link:focus-visible,
-.cred-editorial__link,
-.cred-editorial__link:focus-visible,
-.signals-editorial__card--feature,
-.signals-editorial__card--risk,
-.signals-editorial__card--mini,
-.signals-editorial__card--core,
-.signals-editorial__card--open,
-.tco-editorial__visual-surface {
-  box-shadow: none;
-}
-
-/* --- Sweep: square remaining radii to the 2-4px scale -------------------- */
-
-.ai-resource-item__mark,
-.chip-mark,
-.work-item__mark,
-.signals-editorial-lab__badge,
-.signals-lab-card__tags span,
-.signals-editorial__badge,
-.signals-editorial__tags span,
-.signals-editorial__core-eyebrow,
-.tech-stack-editorial__eyebrow,
-.home-work-entry__period,
-.home-tech-editorial__chips li,
-.home-tech-editorial__link,
-.cred-editorial__link span:last-child,
-.cred-editorial__vision-play,
-.tco-editorial__loop-node,
-.problem-editorial__editorial-avatar,
-.genai-transition__comparison,
-.genai-transition__visual,
-.genai-operating-model__comparison,
-.genai-operating-model__visual,
-.problem-editorial__diagram,
-.problem-editorial__issues-list,
-.signals-editorial__core-accent,
-.search-form,
-.faq-editorial__cta,
-.engagement-framework__grid,
-.contact-link-primary,
-.page-context--home .contact-link-primary,
-.hero-identity__avatar,
-.page-context--home .hero-identity__avatar {
-  border-radius: var(--radius-md);
-}
-
-.signals-scale__bar,
-.signals-lab-card__progress,
-.signals-editorial__scale-bar,
-.home-side-list li::before,
-.problem-editorial__issues-list li::before {
-  border-radius: var(--radius-sm);
-}
-
-.faq-item {
-  border-radius: var(--radius-md) !important;
-}
-
-/* Purely decorative circular ornaments: removed, not squared */
-.problem-editorial__feature-orbit,
-.problem-editorial__diagram::before,
-.tco-editorial__loop::after {
-  display: none;
-}
-
-/* --- Kicker consistency + legacy blue link ------------------------------- */
-
+.eyebrow,
+.hero-kicker,
+.direction-card__category,
 .cred-editorial__kicker,
 .analysis-problem__eyebrow,
-.strategic-context__eyebrow {
+.strategic-context__eyebrow,
+.ai-costs-outcomes__badge,
+.faq-editorial__badge {
   padding: 0;
+  border: 0;
   border-radius: 0;
   background: transparent;
-  color: var(--color-signal);
+  color: var(--ds-signal);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.cred-editorial__link {
-  border-radius: var(--radius-sm);
-  background: var(--color-accent);
+/* --- 3. Homepage shells: every section is one white card --------------------- */
+
+.page-context--home .page-content--home > .section:not(.home-hero) {
+  width: min(1180px, calc(100% - 2rem));
+  padding: clamp(1.8rem, 4.5vw, 3.2rem);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-radius-l);
+  background: var(--ds-card);
+  box-shadow: var(--ds-shadow);
 }
 
-.cred-editorial__link:hover,
-.cred-editorial__link:focus-visible {
-  background: var(--color-ink);
-}
-
-/* --- Hero: operations map (replaces the areas-of-work loop) -------------- */
-
-.home-hero__map {
-  position: relative;
-  margin: 0;
-  height: 100%;
-  min-height: clamp(24rem, 44vw, 30rem);
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: var(--color-page);
-}
-
-.home-hero__map svg {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.home-hero__map-label {
-  position: absolute;
-  z-index: 2;
-  top: 1rem;
-  inset-inline-start: 1.1rem;
-  color: var(--color-signal);
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  line-height: 1.7;
-  text-transform: uppercase;
-}
-
-.home-hero__map-dot {
-  fill: #ccd4df;
-}
-
-.home-hero__map-route {
-  fill: none;
-  stroke: var(--line-strong);
-  stroke-width: 1.5;
-}
-
-.home-hero__map-route--soft {
-  stroke: var(--line);
-  stroke-width: 1;
-}
-
-.home-hero__map-nodes rect {
-  fill: var(--color-accent);
-}
-
-.home-hero__map-marker-dot {
-  fill: var(--color-signal);
-}
-
-.home-hero__map-marker-ring {
-  fill: none;
-  stroke: var(--color-signal);
-  stroke-width: 1.5;
-  opacity: 0.55;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: hero-marker-pulse 2.8s ease-out infinite;
-}
-
-.home-hero__map-marker:nth-of-type(2) .home-hero__map-marker-ring {
-  animation-delay: 0.9s;
-}
-
-.home-hero__map-marker:nth-of-type(3) .home-hero__map-marker-ring {
-  animation-delay: 1.8s;
-}
-
-.home-hero__map-drift {
-  transform-origin: center;
-  animation: hero-map-drift 18s ease-in-out infinite alternate;
-}
-
-@keyframes hero-map-drift {
-  from { transform: scale(1.02) translate3d(0, 0, 0); }
-  to { transform: scale(1.07) translate3d(-1.2%, 0.8%, 0); }
-}
-
-@keyframes hero-marker-pulse {
-  0% { transform: scale(1); opacity: 0.55; }
-  100% { transform: scale(3.2); opacity: 0; }
-}
-
-@media (max-width: 960px) {
-  .home-hero__map {
-    min-height: 22rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .home-hero__map-drift,
-  .home-hero__map-marker-ring {
-    animation: none;
-  }
-}
-
-/* --- Hero contact strip: no frame, stacked layout ------------------------ */
-
-.home-hero__contact {
-  display: grid;
-  gap: 1.15rem;
-  width: 100%;
-  margin-top: 0.75rem;
-  padding: 1.35rem 0 0;
+.page-context--home .home-hero {
+  width: min(1180px, calc(100% - 2rem));
+  padding: 0;
   border: 0;
-  border-top: 1px solid var(--line);
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  backdrop-filter: none;
 }
 
-.home-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 0.75rem;
-}
+/* Section titles: one voice, moderate scale */
 
-.home-hero__actions .home-hero__action {
-  flex: 0 1 auto;
-  white-space: normal;
-  text-align: center;
-}
-
-@media (max-width: 640px) {
-  .home-hero__actions {
-    display: grid;
-  }
-
-  .home-hero__actions .home-hero__action {
-    width: 100%;
-  }
-}
-
-/* ==========================================================================
-   Warm paper editorial pass (homepage)
-   Warm Martenweave-style paper background, soft rounded shells, serif
-   display headings at a calmer scale, circle avatar, entrance motion.
-   ========================================================================== */
-
-:root {
-  --color-page: #f8f6ef;
-  --surface-page: #f8f6ef;
-  --surface-raised: #f3efe6;
-  --surface-subtle: #ece7da;
-  --color-border: #e2dccf;
-  --color-border-soft: #eae5d8;
-  --line: #e2dccf;
-  --line-strong: #c9c1b2;
-  --color-accent-soft: #f2ede2;
-  --shadow-paper: 14px 14px 0 #ece4d2;
-  --radius-lg: 16px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
-  --shadow-soft: 0 10px 28px rgba(31, 26, 18, 0.07);
-}
-
-/* --- Warm shells ---------------------------------------------------------- */
-
-.page-context--home .home-hero,
-.page-context--home .home-section {
-  background: #fffdf8;
-  border-color: var(--line);
-  border-radius: 20px;
-  box-shadow: var(--shadow-soft);
-}
-
-.home-hero__contact {
-  border-top-color: var(--line);
-}
-
-/* --- Typography: serif display, calmer scale ------------------------------ */
-
-.home-hero__title,
 .cred-editorial__title,
 .analysis-problem__title,
 .ai-costs-outcomes__title,
@@ -9902,45 +8912,11 @@ html[dir="rtl"] .ai-costs-outcomes__quote {
 .faq-editorial__title,
 .explore-site__header h2,
 .home-cta__header h2 {
-  font-family: var(--font-serif);
-  font-weight: 620;
-  letter-spacing: -0.015em;
-  line-height: 1.08;
-}
-
-html[dir="rtl"] .home-hero__title,
-html[dir="rtl"] .cred-editorial__title,
-html[dir="rtl"] .analysis-problem__title,
-html[dir="rtl"] .ai-costs-outcomes__title,
-html[dir="rtl"] .strategic-context__title,
-html[dir="rtl"] .faq-editorial__title,
-html[dir="rtl"] .explore-site__header h2,
-html[dir="rtl"] .home-cta__header h2,
-html[lang|="zh"] .home-hero__title,
-html[lang|="zh"] .cred-editorial__title,
-html[lang|="zh"] .analysis-problem__title,
-html[lang|="zh"] .ai-costs-outcomes__title,
-html[lang|="zh"] .strategic-context__title,
-html[lang|="zh"] .faq-editorial__title,
-html[lang|="zh"] .explore-site__header h2,
-html[lang|="zh"] .home-cta__header h2 {
   font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.home-hero__title {
-  max-width: 16ch;
-  font-size: clamp(2.3rem, 3.6vw, 3.15rem);
-}
-
-.cred-editorial__title,
-.analysis-problem__title,
-.ai-costs-outcomes__title,
-.strategic-context__title,
-.faq-editorial__title {
   font-size: clamp(1.9rem, 3.4vw, 2.7rem);
-  letter-spacing: -0.015em;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
 }
 
 .ai-costs-outcomes__statement,
@@ -9949,179 +8925,24 @@ html[lang|="zh"] .home-cta__header h2 {
   font-weight: 560;
 }
 
-/* --- Avatar: circle -------------------------------------------------------- */
-
-.home-hero__avatar {
-  width: 4.6rem;
-  height: 4.6rem;
-  border-radius: 50%;
+.analysis-problem__quote,
+.strategic-context__quote p {
+  font-family: var(--font-serif);
 }
 
-/* --- Rounded ruled grids --------------------------------------------------- */
-
-.explore-site__grid,
-.analysis-problem__grid,
-.strategic-context__grid,
-.tech-stack-simple,
-.ai-costs-outcomes__stats,
-.faq-editorial__list,
-.engagement-framework__grid {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: #fffdf8;
-}
-
-.explore-site__grid,
-.analysis-problem__grid,
-.strategic-context__grid {
-  gap: 1px;
-  background: var(--line);
-}
-
-.explore-site__card,
-.analysis-problem__detail,
-.strategic-context__card,
-.ai-costs-outcomes__stat,
-.faq-editorial__item,
-.engagement-layer {
-  background: #fffdf8;
-}
-
-.analysis-problem__detail,
-.explore-site__card {
-  border: 0;
-}
-
-.strategic-context__grid {
-  border: 1px solid var(--line);
-}
-
-.ai-costs-outcomes__stat--mid {
-  background: #f5f1e6;
-}
-
-.ai-costs-outcomes__stat--dark {
-  background: var(--color-accent);
-}
-
-.ai-costs-outcomes__stat:last-child {
-  border-bottom: 0;
-}
-
-.strategic-context__card--primary {
-  background: #fffdf8;
-}
-
-.strategic-context__card--ratio {
-  background: #f5f1e6;
-}
-
-.strategic-context__card--multiplier {
-  background: #faf7ee;
-}
-
-.strategic-context__quote {
-  border-radius: var(--radius-lg);
-  background: #f5f1e6;
-}
-
-.ai-costs-outcomes__mandate {
-  background: #faf7ee;
-}
-
-.ai-costs-outcomes__visual {
-  border-radius: var(--radius-lg);
-  filter: none;
-  background:
-    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 24%),
-    linear-gradient(135deg, rgba(120, 108, 84, 0.16), rgba(120, 108, 84, 0.05)),
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 14px, rgba(255, 255, 255, 0) 14px 42px),
-    linear-gradient(180deg, #eae4d4, #ded6c2);
-}
-
-.ai-costs-outcomes__visual::after {
-  background: linear-gradient(180deg, rgba(248, 246, 239, 0) 55%, rgba(248, 246, 239, 0.9));
-}
-
-/* --- Hover motion: soft lift on interactive cells -------------------------- */
-
-.explore-site__card,
-.dataset-card {
-  transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
-}
-
-.explore-site__card:hover,
-.explore-site__card:focus-visible {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-soft);
-}
-
-/* --- Entrance animation (gated) -------------------------------------------- */
-
-@media (prefers-reduced-motion: no-preference) {
-  .home-hero__copy > * {
-    animation: hero-intro-rise 0.65s both cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-
-  .home-hero__copy > *:nth-child(1) { animation-delay: 0.05s; }
-  .home-hero__copy > *:nth-child(2) { animation-delay: 0.12s; }
-  .home-hero__copy > *:nth-child(3) { animation-delay: 0.19s; }
-  .home-hero__copy > *:nth-child(4) { animation-delay: 0.26s; }
-  .home-hero__copy > *:nth-child(5) { animation-delay: 0.33s; }
-
-  .home-hero__map {
-    animation: hero-intro-rise 0.7s 0.2s both cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-}
-
-@keyframes hero-intro-rise {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ==========================================================================
-   Modern fold (mockup alignment)
-   Rounded card frame with graph-paper backdrop, top bar, violet signal,
-   pill actions, trust line, and the operating-value-loop card.
-   ========================================================================== */
-
-:root {
-  --color-signal: #5b45d6;
-  --color-signal-strong: #4c39b8;
-  --color-signal-soft: #efecfc;
-  --color-page: #f5f6f9;
-  --surface-page: #f5f6f9;
-}
-
-.page-context--home .home-hero {
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  width: min(1240px, calc(100% - 2rem));
-}
-
-.page-context--home .home-section {
-  background: #ffffff;
-}
-
-/* --- Frame: rounded card with graph-paper backdrop ------------------------ */
+/* --- 4. Fold ------------------------------------------------------------------ */
 
 .home-hero__frame {
   overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  background-color: #ffffff;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-radius-l);
+  background-color: var(--ds-card);
   background-image:
-    linear-gradient(to right, rgba(98, 70, 224, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(98, 70, 224, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(91, 69, 214, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(91, 69, 214, 0.045) 1px, transparent 1px);
   background-size: 88px 88px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--ds-shadow);
 }
-
-/* --- Top bar --------------------------------------------------------------- */
 
 .home-hero__topbar {
   display: flex;
@@ -10129,9 +8950,8 @@ html[lang|="zh"] .home-cta__header h2 {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
-  padding: 1.15rem clamp(1.2rem, 3vw, 1.8rem);
-  border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.72);
+  padding: 1.15rem clamp(1.4rem, 3vw, 2rem);
+  border-bottom: 1px solid var(--ds-line);
 }
 
 .home-hero__person {
@@ -10146,6 +8966,7 @@ html[lang|="zh"] .home-cta__header h2 {
   height: 2.75rem;
   border-radius: 50%;
   overflow: hidden;
+  box-shadow: none;
   flex: 0 0 auto;
 }
 
@@ -10164,7 +8985,7 @@ html[lang|="zh"] .home-cta__header h2 {
 
 .home-hero__person-name {
   margin: 0;
-  color: var(--color-ink);
+  color: var(--ds-ink);
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1.2;
@@ -10173,14 +8994,12 @@ html[lang|="zh"] .home-cta__header h2 {
 .home-hero__person-meta {
   margin: 0;
   max-width: none;
-  color: var(--color-ink-muted);
+  color: var(--ds-ink-muted);
   font-family: var(--font-mono);
   font-size: 0.66rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-
-/* --- Copy block ------------------------------------------------------------ */
 
 .home-hero__copy {
   display: grid;
@@ -10192,7 +9011,7 @@ html[lang|="zh"] .home-cta__header h2 {
 
 .home-hero__eyebrow {
   margin: 0;
-  color: var(--color-signal);
+  color: var(--ds-signal);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
@@ -10212,14 +9031,12 @@ html[lang|="zh"] .home-cta__header h2 {
 
 .home-hero__lead {
   max-width: 44rem;
-  color: var(--color-ink-soft);
+  color: var(--ds-ink-soft);
   font-size: clamp(1.02rem, 1.35vw, 1.18rem);
   font-weight: 460;
   line-height: 1.68;
   text-wrap: balance;
 }
-
-/* --- Pill actions ------------------------------------------------------------ */
 
 .home-hero__actions {
   display: flex;
@@ -10227,79 +9044,31 @@ html[lang|="zh"] .home-cta__header h2 {
   gap: 0.8rem;
 }
 
-.home-hero__action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  min-height: 50px;
-  padding: 0.85rem 1.6rem;
-  border: 1px solid var(--color-signal);
-  border-radius: 999px;
-  background: var(--color-signal);
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  box-shadow: none;
-  transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
-}
-
-.home-hero__action span {
-  color: inherit;
-}
-
-.home-hero__action:hover,
-.home-hero__action:focus-visible {
-  background: var(--color-signal-strong);
-  border-color: var(--color-signal-strong);
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: none;
-}
-
-.home-hero__action--secondary,
-.home-hero__action--secondary span {
-  background: #ffffff;
-  border-color: var(--line-strong);
-  color: var(--color-ink);
-}
-
-.home-hero__action--secondary:hover,
-.home-hero__action--secondary:focus-visible {
-  background: var(--color-signal-soft);
-  border-color: var(--color-signal);
-  color: var(--color-signal-strong);
-  box-shadow: none;
-}
-
-.home-hero__action--secondary:hover span,
-.home-hero__action--secondary:focus-visible span {
-  color: var(--color-signal-strong);
-}
-
-/* --- Trust line -------------------------------------------------------------- */
-
 .home-hero__trust {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 2rem;
+  gap: 0.5rem 0.9rem;
   margin: 0.4rem 0 0;
-  color: var(--color-ink-muted);
+  color: var(--ds-ink-muted);
   font-size: 0.85rem;
   font-weight: 560;
 }
 
-/* --- Operating value loop card ------------------------------------------------ */
+.home-hero__trust span + span::before {
+  content: "·";
+  margin-inline-end: 0.9rem;
+  color: var(--ds-signal);
+}
+
+/* Value loop card */
 
 .home-hero__loop-card {
   margin-top: 1.25rem;
   padding: clamp(1.8rem, 4.5vw, 3.2rem) clamp(1.4rem, 4vw, 3.4rem);
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  background: #ffffff;
-  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-radius-l);
+  background: var(--ds-card);
+  box-shadow: var(--ds-shadow);
 }
 
 .home-hero__loop-head {
@@ -10311,7 +9080,7 @@ html[lang|="zh"] .home-cta__header h2 {
 
 .home-hero__loop-eyebrow {
   margin: 0;
-  color: var(--color-signal);
+  color: var(--ds-signal);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 700;
@@ -10322,8 +9091,8 @@ html[lang|="zh"] .home-cta__header h2 {
 .home-hero__loop-badge {
   padding: 0.32rem 0.85rem;
   border-radius: 999px;
-  background: var(--color-signal-soft);
-  color: var(--color-signal-strong);
+  background: var(--ds-signal-soft);
+  color: var(--ds-signal-strong);
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
@@ -10363,7 +9132,7 @@ html[lang|="zh"] .home-cta__header h2 {
   top: -2.1rem;
   bottom: 1.6rem;
   width: 1px;
-  background: var(--line);
+  background: var(--ds-line);
 }
 
 .home-hero__loop-index {
@@ -10371,18 +9140,18 @@ html[lang|="zh"] .home-cta__header h2 {
   place-items: center;
   width: 2.9rem;
   height: 2.9rem;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--ds-line-strong);
   border-radius: 50%;
-  background: #ffffff;
-  color: var(--color-ink);
+  background: var(--ds-card);
+  color: var(--ds-ink);
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 700;
 }
 
 .home-hero__loop-steps li:first-child .home-hero__loop-index {
-  border-color: var(--color-signal);
-  background: var(--color-signal);
+  border-color: var(--ds-signal);
+  background: var(--ds-signal);
   color: #ffffff;
 }
 
@@ -10393,7 +9162,7 @@ html[lang|="zh"] .home-cta__header h2 {
 }
 
 .home-hero__loop-step-copy strong {
-  color: var(--color-ink);
+  color: var(--ds-ink);
   font-size: 1.08rem;
   font-weight: 750;
   letter-spacing: -0.01em;
@@ -10401,24 +9170,340 @@ html[lang|="zh"] .home-cta__header h2 {
 
 .home-hero__loop-step-copy p {
   margin: 0;
-  color: var(--color-ink-soft);
+  color: var(--ds-ink-soft);
   font-size: 0.95rem;
   line-height: 1.6;
 }
 
 .home-hero__loop-step-copy em {
-  color: var(--color-signal);
+  color: var(--ds-signal);
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 640;
 }
 
-/* --- Fold entrance motion ------------------------------------------------------ */
+/* --- 5. Homepage sections ------------------------------------------------------- */
+
+/* Ruled grids inside rounded shells */
+
+.explore-site__grid,
+.analysis-problem__grid,
+.strategic-context__grid,
+.tech-stack-simple,
+.ai-costs-outcomes__stats,
+.faq-editorial__list,
+.engagement-framework__grid {
+  overflow: hidden;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-radius-m);
+  background: var(--ds-card);
+}
+
+.explore-site__grid,
+.analysis-problem__grid,
+.strategic-context__grid {
+  gap: 1px;
+  background: var(--ds-line);
+}
+
+.explore-site__card,
+.analysis-problem__detail,
+.strategic-context__card,
+.ai-costs-outcomes__stat,
+.faq-editorial__item,
+.engagement-layer {
+  border: 0;
+  border-radius: 0;
+  background: var(--ds-card);
+  box-shadow: none;
+}
+
+.strategic-context__card--primary,
+.ai-costs-outcomes__stat--light {
+  background: var(--ds-card);
+}
+
+.strategic-context__card--ratio,
+.strategic-context__card--multiplier,
+.ai-costs-outcomes__stat--mid {
+  background: var(--ds-tint);
+}
+
+.strategic-context__card--visual,
+.ai-costs-outcomes__stat--dark {
+  background: var(--ds-navy);
+}
+
+.analysis-problem__detail::before,
+.explore-site__number {
+  color: var(--ds-signal);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.explore-site__card {
+  transition: background 160ms ease;
+}
+
+.explore-site__card:hover,
+.explore-site__card:focus-visible,
+.dataset-card:hover,
+.dataset-card:focus-visible,
+.engagement-layer:hover {
+  background: var(--ds-signal-soft);
+  box-shadow: none;
+  transform: none;
+}
+
+.faq-editorial__item {
+  border-bottom: 1px solid var(--ds-line);
+}
+
+.faq-editorial__item:last-child {
+  border-bottom: 0;
+}
+
+.faq-editorial__divider {
+  display: none;
+}
+
+.strategic-context__quote,
+.ai-costs-outcomes__mandate,
+.ai-costs-outcomes__quote {
+  border: 1px solid var(--ds-line);
+  border-left: 3px solid var(--ds-signal);
+  border-radius: var(--ds-radius-m);
+  background: var(--ds-tint);
+}
+
+html[dir="rtl"] .strategic-context__quote,
+html[dir="rtl"] .ai-costs-outcomes__mandate,
+html[dir="rtl"] .ai-costs-outcomes__quote {
+  border-left: 1px solid var(--ds-line);
+  border-right: 3px solid var(--ds-signal);
+}
+
+.ai-costs-outcomes__visual {
+  border-radius: var(--ds-radius-m);
+  filter: none;
+  background:
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 24%),
+    linear-gradient(135deg, rgba(91, 69, 214, 0.14), rgba(91, 69, 214, 0.04)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 14px, rgba(255, 255, 255, 0) 14px 42px),
+    linear-gradient(180deg, #e6e8f2, #d8dbe9);
+}
+
+.ai-costs-outcomes__visual::after {
+  background: linear-gradient(180deg, rgba(236, 238, 243, 0) 55%, rgba(236, 238, 243, 0.85));
+}
+
+/* Visual blocks inside analysis-problem keep hairline cards */
+
+.analysis-problem__visual-surface,
+.analysis-problem__visual-card,
+.analysis-problem__cta {
+  border-radius: var(--ds-radius-m);
+  box-shadow: none;
+}
+
+/* --- 6. Actions: pill system ----------------------------------------------------- */
+
+.home-hero__action,
+.button,
+.cred-editorial__link,
+.dataset-actions a,
+.faq-editorial__cta-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 50px;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid var(--ds-signal);
+  border-radius: 999px;
+  background: var(--ds-signal);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  box-shadow: none;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.home-hero__action span,
+.cred-editorial__link span {
+  color: inherit;
+}
+
+.home-hero__action:hover,
+.home-hero__action:focus-visible,
+.cred-editorial__link:hover,
+.cred-editorial__link:focus-visible {
+  background: var(--ds-signal-strong);
+  border-color: var(--ds-signal-strong);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: none;
+}
+
+.home-hero__action--secondary,
+.home-hero__action--secondary span {
+  background: var(--ds-card);
+  border-color: var(--ds-line-strong);
+  color: var(--ds-ink);
+}
+
+.home-hero__action--secondary:hover,
+.home-hero__action--secondary:focus-visible {
+  background: var(--ds-signal-soft);
+  border-color: var(--ds-signal);
+  color: var(--ds-signal-strong);
+  box-shadow: none;
+}
+
+.home-hero__action--secondary:hover span,
+.home-hero__action--secondary:focus-visible span {
+  color: var(--ds-signal-strong);
+}
+
+/* --- 7. Chrome ---------------------------------------------------------------------- */
+
+.site-header--scrolled,
+.page-context--knowledge .site-header--scrolled {
+  box-shadow: none;
+  border-bottom: 1px solid var(--ds-line);
+}
+
+.nav-link,
+.footer-meta-links a {
+  position: relative;
+}
+
+.nav-link::after,
+.footer-meta-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.24rem;
+  height: 1px;
+  background: var(--ds-signal);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 180ms ease;
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after,
+.footer-meta-links a:hover::after,
+.footer-meta-links a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.site-footer .footer-meta {
+  border-top: 1px solid var(--ds-line);
+  padding-top: 1.2rem;
+}
+
+.footer-note {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--ds-ink-muted);
+}
+
+/* --- 8. Docs, atlas, datasets -------------------------------------------------------- */
+
+.note-body h2 {
+  border-top: 1px solid var(--ds-line);
+  padding-top: 1.1rem;
+}
+
+.atlas-meta-panel,
+.atlas-author,
+.atlas-disclaimer,
+.dataset-card,
+.dataset-kpi,
+.service-card {
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-radius-m);
+  background: var(--ds-card);
+  box-shadow: none;
+}
+
+.atlas-research-warning,
+.tech-stack-editorial__callout,
+.faq-editorial__callout {
+  border: 0;
+  border-inline-start: 3px solid var(--ds-signal);
+  border-radius: var(--ds-radius-s);
+  background: var(--ds-tint);
+  box-shadow: none;
+}
+
+html[dir="rtl"] .faq-editorial__callout,
+html[dir="rtl"] .cred-editorial__quote {
+  border-left: 0;
+}
+
+.note-body code {
+  background: var(--ds-signal-soft);
+  border-radius: var(--ds-radius-s);
+  padding: 0.1rem 0.3rem;
+}
+
+.note-body pre,
+.dataset-json pre {
+  border-radius: var(--ds-radius-m);
+  background: var(--ds-navy);
+  box-shadow: var(--shadow-paper);
+}
+
+/* Neutralize legacy literal drop shadows that no token covers */
+
+.site-header--scrolled,
+.dataset-card:focus-visible,
+.contact-link-primary,
+.problem-editorial__header::before,
+.signals-lab-card--feature,
+.signals-lab-card--duo,
+.faq-item,
+.home-tech-editorial__location,
+.home-tech-editorial__chips li,
+.home-tech-editorial__link,
+.home-tech-editorial__link:focus-visible,
+.home-tech-tile,
+.home-tech-tile:focus-within,
+.home-work-entry,
+.home-work-entry:hover,
+.signals-editorial__card--feature,
+.signals-editorial__card--risk,
+.signals-editorial__card--mini,
+.signals-editorial__card--core,
+.signals-editorial__card--open,
+.tco-editorial__visual-surface,
+.cred-editorial__portrait-note,
+.analysis-problem__cta,
+.tech-stack-editorial__card,
+.problem-editorial__grid-card,
+.home-cta__card {
+  box-shadow: none;
+}
+
+.home-cta__card {
+  border-radius: var(--ds-radius-l);
+  background: var(--ds-navy);
+  box-shadow: var(--shadow-paper);
+}
+
+/* --- 9. Motion ------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: no-preference) {
   .home-hero__frame,
   .home-hero__loop-card {
-    animation: hero-intro-rise 0.7s both cubic-bezier(0.2, 0.7, 0.2, 1);
+    animation: ds-rise 0.7s both cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
   .home-hero__loop-card {
@@ -10426,7 +9511,7 @@ html[lang|="zh"] .home-cta__header h2 {
   }
 
   .home-hero__copy > * {
-    animation: hero-intro-rise 0.65s both cubic-bezier(0.2, 0.7, 0.2, 1);
+    animation: ds-rise 0.65s both cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
   .home-hero__copy > *:nth-child(1) { animation-delay: 0.1s; }
@@ -10436,9 +9521,38 @@ html[lang|="zh"] .home-cta__header h2 {
   .home-hero__copy > *:nth-child(5) { animation-delay: 0.38s; }
 }
 
-/* --- Fold responsive ------------------------------------------------------------- */
+@keyframes ds-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link::after,
+  .footer-meta-links a::after,
+  .explore-site__card,
+  .dataset-card,
+  .home-hero__action,
+  .cred-editorial__link {
+    transition: none !important;
+  }
+}
+
+/* --- 10. Responsive ----------------------------------------------------------------------- */
+
+@media (max-width: 960px) {
+  .explore-site__grid,
+  .analysis-problem__grid,
+  .strategic-context__grid,
+  .engagement-framework__grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 @media (max-width: 640px) {
+  .page-context--home .page-content--home > .section:not(.home-hero) {
+    width: min(1180px, calc(100% - 1rem));
+  }
+
   .home-hero__actions {
     display: grid;
     width: 100%;
@@ -10452,176 +9566,24 @@ html[lang|="zh"] .home-cta__header h2 {
     display: grid;
     gap: 0.4rem;
   }
+
+  .home-hero__trust span + span::before {
+    content: none;
+  }
 }
 
-/* ==========================================================================
-   Unified design system
-   One palette (neutral light + violet signal), one type voice (Inter
-   display, serif only for quotes), one surface language (white cards,
-   soft shadow, 18-24px radii, pill actions). This block supersedes the
-   earlier warm-paper and hairline-brutalist passes.
-   ========================================================================== */
+/* --- Unified system: remove between-section ornament, equalize widths ------ */
 
-:root {
-  --color-page: #f5f6f9;
-  --surface-page: #f5f6f9;
-  --surface-raised: #f0f1f6;
-  --surface-subtle: #e9ebf2;
-  --color-border: #e3e6ef;
-  --color-border-soft: #eceef4;
-  --line: #e3e6ef;
-  --line-strong: #c8cdd9;
-  --color-accent-soft: #f0f1f6;
-  --color-signal: #5b45d6;
-  --color-signal-strong: #4c39b8;
-  --color-signal-soft: #efecfc;
-  --radius-lg: 18px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
-  --shadow-soft: 0 12px 32px rgba(16, 24, 40, 0.07);
-  --shadow-paper: 14px 14px 0 #e4e6f0;
+.page-content--home > .section + .section::before {
+  content: none;
 }
 
-/* --- Typography: one display voice (serif only for quotes) ---------------- */
-
-.cred-editorial__title,
-.analysis-problem__title,
-.ai-costs-outcomes__title,
-.strategic-context__title,
-.faq-editorial__title,
-.explore-site__header h2,
-.home-cta__header h2 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.06;
-}
-
-.analysis-problem__quote,
-.strategic-context__quote p {
-  font-family: var(--font-serif);
-}
-
-/* --- Surfaces: neutral cards, no warm leftovers --------------------------- */
-
-.page-context--home .home-section {
-  border-radius: 24px;
-}
-
-.strategic-context__card--ratio {
-  background: #f4f5fa;
-}
-
-.strategic-context__card--multiplier {
-  background: #f7f8fb;
-}
-
-.strategic-context__quote {
-  background: #f4f5fa;
-}
-
-.ai-costs-outcomes__stat--mid {
-  background: #f4f5fa;
-}
-
-.ai-costs-outcomes__mandate {
-  background: #f7f8fb;
-}
-
-.ai-costs-outcomes__visual {
-  background:
-    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 24%),
-    linear-gradient(135deg, rgba(91, 69, 214, 0.14), rgba(91, 69, 214, 0.04)),
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 14px, rgba(255, 255, 255, 0) 14px 42px),
-    linear-gradient(180deg, #e6e8f2, #d8dbe9);
-}
-
-.ai-costs-outcomes__visual::after {
-  background: linear-gradient(180deg, rgba(245, 246, 249, 0) 55%, rgba(245, 246, 249, 0.9));
-}
-
-.explore-site__card,
-.analysis-problem__detail,
-.strategic-context__card,
-.ai-costs-outcomes__stat,
-.faq-editorial__item,
-.engagement-layer,
-.explore-site__grid,
-.analysis-problem__grid,
-.strategic-context__grid,
-.tech-stack-simple,
-.ai-costs-outcomes__stats,
-.faq-editorial__list,
-.engagement-framework__grid {
-  background-color: #ffffff;
-}
-
-.explore-site__grid,
-.analysis-problem__grid,
-.strategic-context__grid {
-  background: var(--line);
-}
-
-.strategic-context__card--primary {
-  background: #ffffff;
-}
-
-/* --- Actions: pill buttons everywhere ------------------------------------- */
-
-.button,
-.cred-editorial__link,
-.dataset-actions a,
-.faq-editorial__cta-link {
-  border-radius: 999px;
-}
-
-.cred-editorial__link {
-  background: var(--color-signal);
-}
-
-.cred-editorial__link:hover,
-.cred-editorial__link:focus-visible {
-  background: var(--color-signal-strong);
-}
-
-/* --- Hover tints adopt the signal identity -------------------------------- */
-
-.explore-site__card:hover,
-.explore-site__card:focus-visible,
-.dataset-card:hover,
-.dataset-card:focus-visible,
-.engagement-layer:hover,
-.home-work-entry:hover,
-.home-tech-tile:hover {
-  background: var(--color-signal-soft);
-}
-
-.explore-site__card:hover .explore-site__number,
-.explore-site__card:focus-visible .explore-site__number {
-  color: var(--color-signal);
-}
-
-/* --- Nav underline in signal color ---------------------------------------- */
-
-.nav-link::after,
-.footer-meta-links a::after {
-  background: var(--color-signal);
-}
-
-/* --- Unified system: restore intentional dark/tinted cells ---------------- */
-
-.ai-costs-outcomes__stat--light {
-  background: #ffffff;
-}
-
-.ai-costs-outcomes__stat--mid {
-  background: #f4f5fa;
-}
-
-.ai-costs-outcomes__stat--dark {
-  background: var(--color-accent);
-}
-
-.strategic-context__card--visual {
-  background: var(--color-accent);
+.strategic-context,
+.faq-editorial,
+.cred-editorial,
+.analysis-problem,
+.ai-costs-outcomes,
+.explore-site,
+.home-cta {
+  width: min(1180px, calc(100% - 2rem));
 }
