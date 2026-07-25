@@ -10079,3 +10079,377 @@ html[lang|="zh"] .home-cta__header h2 {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   Modern fold (mockup alignment)
+   Rounded card frame with graph-paper backdrop, top bar, violet signal,
+   pill actions, trust line, and the operating-value-loop card.
+   ========================================================================== */
+
+:root {
+  --color-signal: #5b45d6;
+  --color-signal-strong: #4c39b8;
+  --color-signal-soft: #efecfc;
+  --color-page: #f5f6f9;
+  --surface-page: #f5f6f9;
+}
+
+.page-context--home .home-hero {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  width: min(1240px, calc(100% - 2rem));
+}
+
+.page-context--home .home-section {
+  background: #ffffff;
+}
+
+/* --- Frame: rounded card with graph-paper backdrop ------------------------ */
+
+.home-hero__frame {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(to right, rgba(98, 70, 224, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(98, 70, 224, 0.05) 1px, transparent 1px);
+  background-size: 88px 88px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* --- Top bar --------------------------------------------------------------- */
+
+.home-hero__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.15rem clamp(1.2rem, 3vw, 1.8rem);
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.home-hero__person {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+}
+
+.home-hero__avatar {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.home-hero__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.home-hero__person-copy {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.home-hero__person-name {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.home-hero__person-meta {
+  margin: 0;
+  max-width: none;
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* --- Copy block ------------------------------------------------------------ */
+
+.home-hero__copy {
+  display: grid;
+  justify-items: start;
+  gap: clamp(1.1rem, 2vw, 1.5rem);
+  max-width: 64rem;
+  padding: clamp(2.4rem, 5.5vw, 4.25rem) clamp(1.4rem, 4vw, 3.4rem);
+}
+
+.home-hero__eyebrow {
+  margin: 0;
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.home-hero__title {
+  max-width: 19ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4.6vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.home-hero__lead {
+  max-width: 44rem;
+  color: var(--color-ink-soft);
+  font-size: clamp(1.02rem, 1.35vw, 1.18rem);
+  font-weight: 460;
+  line-height: 1.68;
+  text-wrap: balance;
+}
+
+/* --- Pill actions ------------------------------------------------------------ */
+
+.home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.home-hero__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 50px;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid var(--color-signal);
+  border-radius: 999px;
+  background: var(--color-signal);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  box-shadow: none;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.home-hero__action span {
+  color: inherit;
+}
+
+.home-hero__action:hover,
+.home-hero__action:focus-visible {
+  background: var(--color-signal-strong);
+  border-color: var(--color-signal-strong);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: none;
+}
+
+.home-hero__action--secondary,
+.home-hero__action--secondary span {
+  background: #ffffff;
+  border-color: var(--line-strong);
+  color: var(--color-ink);
+}
+
+.home-hero__action--secondary:hover,
+.home-hero__action--secondary:focus-visible {
+  background: var(--color-signal-soft);
+  border-color: var(--color-signal);
+  color: var(--color-signal-strong);
+  box-shadow: none;
+}
+
+.home-hero__action--secondary:hover span,
+.home-hero__action--secondary:focus-visible span {
+  color: var(--color-signal-strong);
+}
+
+/* --- Trust line -------------------------------------------------------------- */
+
+.home-hero__trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  margin: 0.4rem 0 0;
+  color: var(--color-ink-muted);
+  font-size: 0.85rem;
+  font-weight: 560;
+}
+
+/* --- Operating value loop card ------------------------------------------------ */
+
+.home-hero__loop-card {
+  margin-top: 1.25rem;
+  padding: clamp(1.8rem, 4.5vw, 3.2rem) clamp(1.4rem, 4vw, 3.4rem);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: var(--shadow-soft);
+}
+
+.home-hero__loop-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.home-hero__loop-eyebrow {
+  margin: 0;
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.home-hero__loop-badge {
+  padding: 0.32rem 0.85rem;
+  border-radius: 999px;
+  background: var(--color-signal-soft);
+  color: var(--color-signal-strong);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.home-hero__loop-title {
+  margin: 0.9rem 0 2.2rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.home-hero__loop-steps {
+  display: grid;
+  gap: 2.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-hero__loop-steps li {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.3rem;
+  align-items: start;
+}
+
+.home-hero__loop-steps li + li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 1.45rem;
+  top: -2.1rem;
+  bottom: 1.6rem;
+  width: 1px;
+  background: var(--line);
+}
+
+.home-hero__loop-index {
+  display: grid;
+  place-items: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.home-hero__loop-steps li:first-child .home-hero__loop-index {
+  border-color: var(--color-signal);
+  background: var(--color-signal);
+  color: #ffffff;
+}
+
+.home-hero__loop-step-copy {
+  display: grid;
+  gap: 0.4rem;
+  max-width: 44rem;
+}
+
+.home-hero__loop-step-copy strong {
+  color: var(--color-ink);
+  font-size: 1.08rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.home-hero__loop-step-copy p {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.home-hero__loop-step-copy em {
+  color: var(--color-signal);
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 640;
+}
+
+/* --- Fold entrance motion ------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-hero__frame,
+  .home-hero__loop-card {
+    animation: hero-intro-rise 0.7s both cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .home-hero__loop-card {
+    animation-delay: 0.15s;
+  }
+
+  .home-hero__copy > * {
+    animation: hero-intro-rise 0.65s both cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .home-hero__copy > *:nth-child(1) { animation-delay: 0.1s; }
+  .home-hero__copy > *:nth-child(2) { animation-delay: 0.17s; }
+  .home-hero__copy > *:nth-child(3) { animation-delay: 0.24s; }
+  .home-hero__copy > *:nth-child(4) { animation-delay: 0.31s; }
+  .home-hero__copy > *:nth-child(5) { animation-delay: 0.38s; }
+}
+
+/* --- Fold responsive ------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .home-hero__actions {
+    display: grid;
+    width: 100%;
+  }
+
+  .home-hero__actions .home-hero__action {
+    width: 100%;
+  }
+
+  .home-hero__trust {
+    display: grid;
+    gap: 0.4rem;
+  }
+}

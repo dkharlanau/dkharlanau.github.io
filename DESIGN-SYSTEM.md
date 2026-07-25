@@ -303,7 +303,7 @@ The end of `assets/site.css` contains the Martenweave adoption layer (appended b
 
 - Hairline ruled grids replace rounded shadow cards: shared 1px borders (`--line`, `--line-strong`), no gaps, no elevation. Hover is a background tint (`--color-accent-soft`), never a lift.
 - Corners are 2–4px (`--radius-lg/md/sm` = 4/3/2px). No drop shadows; the single allowed shadow is the offset paper shadow `--shadow-paper` on dark blocks (e.g. the contact CTA, dark `pre`).
-- `--color-signal` (amber `#d98d12`) is reserved for kickers/eyebrows, numeric indices, focus outlines, and small markers — never for body text or large fills.
+- `--color-signal` (violet `#5b45d6`) is reserved for kickers/eyebrows, numeric indices, focus outlines, small markers, and primary pill actions — never for body text or large fills. The fold uses a rounded card frame with a graph-paper backdrop and an operating-value-loop card.
 - Kickers, indices, trust lines, and the footer note use `--font-mono` as a metadata layer.
 - New components should reuse these tokens and append overrides to the same layer instead of introducing new radii, shadows, or accent colors.
 
