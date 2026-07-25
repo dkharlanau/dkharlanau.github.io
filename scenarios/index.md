@@ -3,7 +3,7 @@ layout: default
 title: "SAP Process & Integration Scenarios"
 description: "Scenario-based business pain library connecting SAP process failures to diagnostic workflows, cost drivers, and AI-ready support knowledge."
 permalink: /scenarios/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-07-24
 status: needs_verification
 verified: false
 author: Dzmitryi Kharlanau
@@ -97,6 +97,7 @@ sitemap: false
       <p>Why repeated incidents, knowledge loss, and unstructured support workflows inflate AMS cost.</p>
       <ul>
         <li><a href="/scenarios/repeated-sap-ams-incidents-knowledge-loss/">Repeated SAP AMS incidents and knowledge loss</a></li>
+        <li><a href="/scenarios/sap-support-costs-growing-without-ticket-growth/">Support costs growing without ticket growth</a></li>
       </ul>
     </div>
     <div class="atlas-card">
@@ -104,6 +105,14 @@ sitemap: false
       <p>Where AI-ready knowledge systems and structured support documentation can change AMS outcomes.</p>
       <ul>
         <li><a href="/scenarios/ai-ready-support-knowledge-layer-sap-ams/">AI-ready support knowledge layer for SAP AMS teams</a></li>
+        <li><a href="/scenarios/ai-pilots-for-sap-support-fail-before-value/">AI pilots for SAP support that fail before value appears</a></li>
+      </ul>
+    </div>
+    <div class="atlas-card">
+      <h2>Management & Architecture Decisions</h2>
+      <p>Programme-level pain where extension strategy, transition debt, and operating model choices start driving business cost.</p>
+      <ul>
+        <li><a href="/scenarios/custom-extensions-driving-sap-change-cost/">Custom extensions making change slower and more expensive</a></li>
       </ul>
     </div>
   </div>

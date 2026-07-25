@@ -2,9 +2,9 @@
 author: "Dzmitryi Kharlanau"
 layout: default
 title: "Atlas Concepts — Business and SAP Concepts"
-description: "Curated business and SAP concept explanations for operational analysis and support work."
+description: "Curated business and SAP concept explanations, decision frameworks, and operating models for operational analysis and support work."
 permalink: /atlas/concepts/
-last_modified_at: 2026-07-10
+last_modified_at: 2026-07-24
 status: reviewed
 verified: true
 tags:
@@ -34,7 +34,7 @@ related:
 <section class="section">
   <header class="section-heading">
     <p class="eyebrow">Pilot Concepts</p>
-    <h2>Reviewed pages</h2>
+    <h2>Reviewed pages and new decision frameworks</h2>
   </header>
   <div class="atlas-card-grid">
     <a class="atlas-card" href="/atlas/concepts/sap-atp-is-not-inventory/">
@@ -67,6 +67,26 @@ related:
       <p>Five principles for running SAP engagements with traceable decisions and observable outcomes.</p>
       <span class="link-arrow">Read concept</span>
     </a>
+    <a class="atlas-card" href="/atlas/concepts/sap-ams-cost-reduction-framework/">
+      <h2>SAP AMS Cost Reduction Framework</h2>
+      <p>Separate real operating cost reduction from lower ticket counts and hidden support work.</p>
+      <span class="link-arrow">Read framework</span>
+    </a>
+    <a class="atlas-card" href="/atlas/concepts/sap-extension-retain-rebuild-retire-framework/">
+      <h2>SAP Extension Retain, Rebuild, or Retire Framework</h2>
+      <p>Decide which custom logic still earns its place and which parts of the extension portfolio should go.</p>
+      <span class="link-arrow">Read framework</span>
+    </a>
+    <a class="atlas-card" href="/atlas/concepts/enterprise-ai-around-sap-decision-framework/">
+      <h2>Enterprise AI Around SAP Decision Framework</h2>
+      <p>Place AI where it reduces effort, and keep deterministic control where certainty matters.</p>
+      <span class="link-arrow">Read framework</span>
+    </a>
+    <a class="atlas-card" href="/atlas/concepts/sap-transformation-recovery-framework/">
+      <h2>SAP Transformation Recovery Framework</h2>
+      <p>Recover programmes that are adding transition complexity faster than they reduce operating friction.</p>
+      <span class="link-arrow">Read framework</span>
+    </a>
   </div>
 </section>
 
@@ -78,6 +98,8 @@ related:
   <ul>
     <li><a href="/atlas/concepts/order-to-cash/">Order to Cash</a></li>
     <li><a href="/atlas/concepts/sap-atp-is-not-inventory/">SAP ATP Is Not Inventory</a></li>
+    <li><a href="/atlas/concepts/sap-ams-cost-reduction-framework/">SAP AMS Cost Reduction Framework</a></li>
+    <li><a href="/atlas/concepts/enterprise-ai-around-sap-decision-framework/">Enterprise AI Around SAP Decision Framework</a></li>
     <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a></li>
   </ul>
 </section>
