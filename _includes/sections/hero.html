@@ -3,79 +3,90 @@
 {% assign hero = home.hero %}
 {% if hero %}
 <section class="section hero home-hero" id="hero">
-  <div class="home-hero__stack">
+  <div class="home-hero__frame">
+    <div class="home-hero__topbar">
+      {% if hero.profile.image and hero.name %}
+      <div class="home-hero__person">
+        <div class="home-hero__avatar">
+          <picture>
+            {% if hero.profile.image_avif %}<source srcset="{{ hero.profile.image_avif }}" type="image/avif">{% endif %}
+            {% if hero.profile.image_webp %}<source srcset="{{ hero.profile.image_webp }}" type="image/webp">{% endif %}
+            <img src="{{ hero.profile.image }}" alt="{{ hero.profile.alt | default: hero.name }}" loading="eager" />
+          </picture>
+        </div>
+        <div class="home-hero__person-copy">
+          <p class="home-hero__person-name">{{ hero.name }}</p>
+          <p class="home-hero__person-meta">{{ hero.person_meta | default: 'SAP AMS and support automation consulting' }}</p>
+        </div>
+      </div>
+      {% endif %}
+      {% assign primary_contact = hero.profile.contacts | first %}
+      {% if primary_contact %}
+      <a
+        href="{{ primary_contact.url }}"
+        class="home-hero__action home-hero__action--primary home-hero__topbar-action"
+        {% if primary_contact.external %}target="_blank" rel="noopener noreferrer"{% endif %}>
+        <span>{{ primary_contact.label }}</span>
+        {% if primary_contact.external %}<span aria-hidden="true">{{ site.data.icons.external | default: "↗" }}</span>{% endif %}
+      </a>
+      {% endif %}
+    </div>
+
     <div class="home-hero__copy">
-      {% if hero.availability %}
-      <p class="home-hero__badge">
-        <span class="home-hero__badge-dot" aria-hidden="true"></span>
-        <span>{{ hero.availability }}</span>
+      {% if hero.eyebrow %}<p class="home-hero__eyebrow">{{ hero.eyebrow }}</p>{% endif %}
+      <h1 class="home-hero__title">{{ hero.title }}</h1>
+      {% if hero.lead %}<p class="home-hero__lead">{{ hero.lead }}</p>{% endif %}
+
+      <div class="home-hero__actions">
+        {% if hero.primary_action %}
+        <a href="{{ hero.primary_action.url }}" class="home-hero__action home-hero__action--primary">
+          <span>{{ hero.primary_action.label }}</span>
+          <span aria-hidden="true">{{ site.data.icons.external | default: "↗" }}</span>
+        </a>
+        {% endif %}
+        {% assign secondary_contact = hero.profile.contacts | last %}
+        {% if secondary_contact %}
+        <a
+          href="{{ secondary_contact.url }}"
+          class="home-hero__action home-hero__action--secondary"
+          {% if secondary_contact.external %}target="_blank" rel="noopener noreferrer"{% endif %}>
+          <span>{{ secondary_contact.label }}</span>
+          {% if secondary_contact.external %}<span aria-hidden="true">{{ site.data.icons.external | default: "↗" }}</span>{% endif %}
+        </a>
+        {% endif %}
+      </div>
+
+      {% if hero.trust_line %}
+      {% assign trust_segments = hero.trust_line | split: "|" %}
+      <p class="home-hero__trust">
+        {% for segment in trust_segments %}
+        <span>{{ segment | strip }}</span>
+        {% endfor %}
       </p>
       {% endif %}
-      <h1 class="home-hero__title">{{ hero.title }}</h1>
-      {% if hero.subtitle %}<p class="home-hero__subtitle">{{ hero.subtitle }}</p>{% endif %}
-      {% if hero.lead %}<p class="home-hero__lead">{{ hero.lead }}</p>{% endif %}
-      {% if hero.current_role or hero.perspective %}
-      <div class="home-hero__intro">
-        {% if hero.current_role %}<p class="home-hero__current">{{ hero.current_role }}</p>{% endif %}
-        {% if hero.perspective %}<p class="home-hero__perspective">{{ hero.perspective }}</p>{% endif %}
-      </div>
-      {% endif %}
-
-      {% if hero.profile.image and hero.name or hero.profile.contacts %}
-      <div class="home-hero__contact">
-        {% if hero.profile.image and hero.name %}
-        <div class="home-hero__person">
-          <div class="home-hero__avatar">
-            <picture>
-              {% if hero.profile.image_avif %}<source srcset="{{ hero.profile.image_avif }}" type="image/avif">{% endif %}
-              {% if hero.profile.image_webp %}<source srcset="{{ hero.profile.image_webp }}" type="image/webp">{% endif %}
-              <img src="{{ hero.profile.image }}" alt="{{ hero.profile.alt | default: hero.name }}" loading="eager" />
-            </picture>
-          </div>
-          <div class="home-hero__person-copy">
-            <p class="home-hero__person-name">{{ hero.name }}</p>
-            <p class="home-hero__person-meta">{{ hero.person_meta | default: 'SAP AMS and support automation consulting' }}</p>
-          </div>
-        </div>
-        {% endif %}
-        {% if hero.profile.contacts %}
-        <div class="home-hero__actions">
-        {% for link in hero.profile.contacts %}
-        <a
-          href="{{ link.url }}"
-          class="home-hero__action{% if link.style == 'primary' %} home-hero__action--primary{% elsif link.style == 'secondary' %} home-hero__action--secondary{% endif %}"
-          {% if link.external %}target="_blank" rel="noopener noreferrer"{% endif %}>
-          <span>{{ link.label }}</span>
-          {% if link.external %}<span aria-hidden="true">{{ site.data.icons.external | default: "↗" }}</span>{% endif %}
-        </a>
-        {% endfor %}
-        </div>
-        {% endif %}
-      </div>
-      {% endif %}
-    </div>
-
-    <div class="home-hero__visual" aria-hidden="true">
-      <div class="home-hero__visual-header">
-        <span>{{ hero.visual.header_label | default: 'Lower TCO $ ↓<br>Less dependency<br>More innovation ↑' }}</span>
-        <strong>{{ hero.visual.title | default: 'Operating value loop' }}</strong>
-    
-      </div>
-      <ol class="home-hero__loop">
-        {% for item in hero.visual.items %}
-        <li>
-          <span>0{{ forloop.index }}</span>
-          <strong>{{ item.title }}</strong>
-          <b>{{ item.metric }}</b>
-          <em>{{ item.detail }}</em>
-        </li>
-        {% endfor %}
-      </ol>
-      <div class="home-hero__signal">
-        <span>{{ hero.visual.signal_label | default: 'Practical AI' }}</span>
-        <strong>{{ hero.visual.signal_detail | default: 'Built on reusable operational knowledge around a clean core.' }}</strong>
-      </div>
     </div>
   </div>
+
+  {% if hero.loop_card %}
+  <div class="home-hero__loop-card">
+    <div class="home-hero__loop-head">
+      {% if hero.loop_card.eyebrow %}<p class="home-hero__loop-eyebrow">{{ hero.loop_card.eyebrow }}</p>{% endif %}
+      {% if hero.loop_card.badge %}<span class="home-hero__loop-badge">{{ hero.loop_card.badge }}</span>{% endif %}
+    </div>
+    <h2 class="home-hero__loop-title">{{ hero.loop_card.title }}</h2>
+    <ol class="home-hero__loop-steps">
+      {% for item in hero.loop_card.items %}
+      <li>
+        <span class="home-hero__loop-index">0{{ forloop.index }}</span>
+        <div class="home-hero__loop-step-copy">
+          <strong>{{ item.title }}</strong>
+          <p>{{ item.detail }}</p>
+          {% if item.metric %}<em>{{ item.metric }}</em>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
 </section>
 {% endif %}

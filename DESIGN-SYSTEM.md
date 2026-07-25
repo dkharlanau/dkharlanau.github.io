@@ -297,6 +297,18 @@ Before considering a new page done, verify:
 - If new CSS is required, add it in the existing stylesheet layer that matches the page, and avoid token duplication.
 - If a new component becomes reusable, add it to this document after implementation.
 
+## Unified Design Layer (current system)
+
+The end of `assets/site.css` contains the design layer (appended blocks, last in cascade). The current unified system supersedes earlier hairline-brutalist and warm-paper experiments:
+
+- **Palette:** neutral light page (`#f5f6f9`), white card surfaces, cool grey hairlines (`--line`, `--line-strong`), one signal color: violet `--color-signal: #5b45d6` (kickers, indices, focus outlines, markers, primary actions). Never for body text or large fills.
+- **Surfaces:** white cards with 1px border, 18–24px radii, and a single soft shadow (`--shadow-soft`). Ruled interiors (hairline dividers) may live inside rounded card shells. Dark navy (`--color-accent: #152033`) is reserved for emphasis blocks (dark stat cards, the contact CTA, dark `pre` with `--shadow-paper`).
+- **Typography:** one display voice — Inter, tight tracking (-0.03…-0.04em), moderate clamp sizes. Source Serif 4 is reserved for quotes only. Kickers, indices, trust lines, and the footer note use `--font-mono` as a metadata layer.
+- **Actions:** pill buttons (999px) — primary violet fill, secondary 1px outline; hover is a tint (`--color-signal-soft`) or slight lift, never a heavy shadow.
+- **Fold:** rounded card frame with a graph-paper backdrop, top bar (circle avatar + identity + primary CTA), and the operating-value-loop card (numbered steps, connecting hairline, violet metric lines).
+- **Motion:** entrance rise and hover lifts are gated behind `prefers-reduced-motion: no-preference`; all animation stops under `reduce`.
+- New components should reuse these tokens and append overrides to the same layer instead of introducing new radii, shadows, or accent colors.
+
 ## Short System Summary
 
 If you need one sentence to guide future work, use this:
