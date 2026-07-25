@@ -297,6 +297,16 @@ Before considering a new page done, verify:
 - If new CSS is required, add it in the existing stylesheet layer that matches the page, and avoid token duplication.
 - If a new component becomes reusable, add it to this document after implementation.
 
+## Martenweave Adoption Layer
+
+The end of `assets/site.css` contains the Martenweave adoption layer (appended blocks, last in cascade). Its rules:
+
+- Hairline ruled grids replace rounded shadow cards: shared 1px borders (`--line`, `--line-strong`), no gaps, no elevation. Hover is a background tint (`--color-accent-soft`), never a lift.
+- Corners are 2–4px (`--radius-lg/md/sm` = 4/3/2px). No drop shadows; the single allowed shadow is the offset paper shadow `--shadow-paper` on dark blocks (e.g. the contact CTA, dark `pre`).
+- `--color-signal` (amber `#d98d12`) is reserved for kickers/eyebrows, numeric indices, focus outlines, and small markers — never for body text or large fills.
+- Kickers, indices, trust lines, and the footer note use `--font-mono` as a metadata layer.
+- New components should reuse these tokens and append overrides to the same layer instead of introducing new radii, shadows, or accent colors.
+
 ## Short System Summary
 
 If you need one sentence to guide future work, use this:
