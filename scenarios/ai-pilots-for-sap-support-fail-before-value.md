@@ -3,16 +3,17 @@ layout: default
 title: "Why AI pilots in SAP support fail before they create value"
 description: "Many SAP support AI pilots stall because the organisation lacks structured knowledge, clear review rules, and realistic boundaries between AI and deterministic control."
 permalink: /scenarios/ai-pilots-for-sap-support-fail-before-value/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-07-25
 scenario_cluster: Technology Shift Scenarios
 domain: AI-assisted support
 subdomain: AI pilot design
 concept_type: business scenario
 sap_area: "AI-assisted SAP support / operator workflows"
 business_process: Support and control workflows
-status: needs_verification
-verified: false
-last_reviewed: 2026-07-24
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-07-25
 author: Dzmitryi Kharlanau
 tags:
   - ai-operations
@@ -24,8 +25,8 @@ related:
   - /atlas/automation/rule-based-automation-vs-ai/
   - /atlas/ai-operations/ai-agent-for-sap-support/
   - /atlas/automation/operational-memory-for-sap-ams/
-robots: noindex,follow
-sitemap: false
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Support and control workflows</dd></div>
       <div><dt>SAP area</dt><dd>AI-assisted SAP support / operator workflows</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until scenario claims are verified against public SAP and AI governance evidence.</dd></div>
+      <div><dt>Indexing</dt><dd>Indexed after review against public SAP and AI governance evidence.</dd></div>
     </dl>
   </aside>
 

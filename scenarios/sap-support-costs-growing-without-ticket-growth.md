@@ -3,16 +3,17 @@ layout: default
 title: "Why SAP support costs grow even when ticket volume falls"
 description: "Ticket volume declines, but SAP support spend still rises because complexity, change, data correction, and hidden operating work remain untreated."
 permalink: /scenarios/sap-support-costs-growing-without-ticket-growth/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-07-25
 scenario_cluster: Support Cost & AMS Pain
 domain: SAP AMS
 subdomain: Cost and operating model
 concept_type: business scenario
 sap_area: "SAP AMS / support operations / operating cost"
 business_process: Support operations
-status: needs_verification
-verified: false
-last_reviewed: 2026-07-24
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-07-25
 author: Dzmitryi Kharlanau
 tags:
   - sap-ams
@@ -24,8 +25,8 @@ related:
   - /atlas/automation/sap-ams-operating-model/
   - /atlas/automation/operational-memory-for-sap-ams/
   - /scenarios/repeated-sap-ams-incidents-knowledge-loss/
-robots: noindex,follow
-sitemap: false
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Support operations</dd></div>
       <div><dt>SAP area</dt><dd>SAP AMS / support operations / operating cost</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until scenario claims are verified against public SAP and operating-model evidence.</dd></div>
+      <div><dt>Indexing</dt><dd>Indexed after review against public SAP and operating-model evidence.</dd></div>
     </dl>
   </aside>
 

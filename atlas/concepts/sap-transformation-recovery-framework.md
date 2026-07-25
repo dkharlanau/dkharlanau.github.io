@@ -9,9 +9,10 @@ subdomain: SAP transformation recovery
 concept_type: decision framework
 sap_area: Transformation architecture and operating model
 business_process: Cross-process operations
-status: needs_verification
-verified: false
-last_reviewed: 2026-07-24
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-07-25
 author: Dzmitryi Kharlanau
 tags:
   - concepts
@@ -20,11 +21,8 @@ tags:
   - integration
 related:
   - /atlas/concepts/sap-extension-retain-rebuild-retire-framework/
-  - /atlas/concepts/composable-erp-for-sap-operations/
-  - /atlas/concepts/sap-integration-architecture/
-  - /scenarios/custom-extensions-driving-sap-change-cost/
-robots: noindex,follow
-sitemap: false
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +46,7 @@ sitemap: false
     <dl>
       <div><dt>Domain</dt><dd>Business operations</dd></div>
       <div><dt>Type</dt><dd>decision framework</dd></div>
-      <div><dt>Reviewed</dt><dd>2026-07-24</dd></div>
+      <div><dt>Reviewed</dt><dd>2026-07-25</dd></div>
     </dl>
   </aside>
 
