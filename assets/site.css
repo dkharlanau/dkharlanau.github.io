@@ -9854,3 +9854,228 @@ html[dir="rtl"] .ai-costs-outcomes__quote {
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   Warm paper editorial pass (homepage)
+   Warm Martenweave-style paper background, soft rounded shells, serif
+   display headings at a calmer scale, circle avatar, entrance motion.
+   ========================================================================== */
+
+:root {
+  --color-page: #f8f6ef;
+  --surface-page: #f8f6ef;
+  --surface-raised: #f3efe6;
+  --surface-subtle: #ece7da;
+  --color-border: #e2dccf;
+  --color-border-soft: #eae5d8;
+  --line: #e2dccf;
+  --line-strong: #c9c1b2;
+  --color-accent-soft: #f2ede2;
+  --shadow-paper: 14px 14px 0 #ece4d2;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-soft: 0 10px 28px rgba(31, 26, 18, 0.07);
+}
+
+/* --- Warm shells ---------------------------------------------------------- */
+
+.page-context--home .home-hero,
+.page-context--home .home-section {
+  background: #fffdf8;
+  border-color: var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow-soft);
+}
+
+.home-hero__contact {
+  border-top-color: var(--line);
+}
+
+/* --- Typography: serif display, calmer scale ------------------------------ */
+
+.home-hero__title,
+.cred-editorial__title,
+.analysis-problem__title,
+.ai-costs-outcomes__title,
+.strategic-context__title,
+.faq-editorial__title,
+.explore-site__header h2,
+.home-cta__header h2 {
+  font-family: var(--font-serif);
+  font-weight: 620;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+}
+
+html[dir="rtl"] .home-hero__title,
+html[dir="rtl"] .cred-editorial__title,
+html[dir="rtl"] .analysis-problem__title,
+html[dir="rtl"] .ai-costs-outcomes__title,
+html[dir="rtl"] .strategic-context__title,
+html[dir="rtl"] .faq-editorial__title,
+html[dir="rtl"] .explore-site__header h2,
+html[dir="rtl"] .home-cta__header h2,
+html[lang|="zh"] .home-hero__title,
+html[lang|="zh"] .cred-editorial__title,
+html[lang|="zh"] .analysis-problem__title,
+html[lang|="zh"] .ai-costs-outcomes__title,
+html[lang|="zh"] .strategic-context__title,
+html[lang|="zh"] .faq-editorial__title,
+html[lang|="zh"] .explore-site__header h2,
+html[lang|="zh"] .home-cta__header h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.home-hero__title {
+  max-width: 16ch;
+  font-size: clamp(2.3rem, 3.6vw, 3.15rem);
+}
+
+.cred-editorial__title,
+.analysis-problem__title,
+.ai-costs-outcomes__title,
+.strategic-context__title,
+.faq-editorial__title {
+  font-size: clamp(1.9rem, 3.4vw, 2.7rem);
+  letter-spacing: -0.015em;
+}
+
+.ai-costs-outcomes__statement,
+.strategic-context__statement {
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  font-weight: 560;
+}
+
+/* --- Avatar: circle -------------------------------------------------------- */
+
+.home-hero__avatar {
+  width: 4.6rem;
+  height: 4.6rem;
+  border-radius: 50%;
+}
+
+/* --- Rounded ruled grids --------------------------------------------------- */
+
+.explore-site__grid,
+.analysis-problem__grid,
+.strategic-context__grid,
+.tech-stack-simple,
+.ai-costs-outcomes__stats,
+.faq-editorial__list,
+.engagement-framework__grid {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #fffdf8;
+}
+
+.explore-site__grid,
+.analysis-problem__grid,
+.strategic-context__grid {
+  gap: 1px;
+  background: var(--line);
+}
+
+.explore-site__card,
+.analysis-problem__detail,
+.strategic-context__card,
+.ai-costs-outcomes__stat,
+.faq-editorial__item,
+.engagement-layer {
+  background: #fffdf8;
+}
+
+.analysis-problem__detail,
+.explore-site__card {
+  border: 0;
+}
+
+.strategic-context__grid {
+  border: 1px solid var(--line);
+}
+
+.ai-costs-outcomes__stat--mid {
+  background: #f5f1e6;
+}
+
+.ai-costs-outcomes__stat--dark {
+  background: var(--color-accent);
+}
+
+.ai-costs-outcomes__stat:last-child {
+  border-bottom: 0;
+}
+
+.strategic-context__card--primary {
+  background: #fffdf8;
+}
+
+.strategic-context__card--ratio {
+  background: #f5f1e6;
+}
+
+.strategic-context__card--multiplier {
+  background: #faf7ee;
+}
+
+.strategic-context__quote {
+  border-radius: var(--radius-lg);
+  background: #f5f1e6;
+}
+
+.ai-costs-outcomes__mandate {
+  background: #faf7ee;
+}
+
+.ai-costs-outcomes__visual {
+  border-radius: var(--radius-lg);
+  filter: none;
+  background:
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 24%),
+    linear-gradient(135deg, rgba(120, 108, 84, 0.16), rgba(120, 108, 84, 0.05)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 14px, rgba(255, 255, 255, 0) 14px 42px),
+    linear-gradient(180deg, #eae4d4, #ded6c2);
+}
+
+.ai-costs-outcomes__visual::after {
+  background: linear-gradient(180deg, rgba(248, 246, 239, 0) 55%, rgba(248, 246, 239, 0.9));
+}
+
+/* --- Hover motion: soft lift on interactive cells -------------------------- */
+
+.explore-site__card,
+.dataset-card {
+  transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.explore-site__card:hover,
+.explore-site__card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* --- Entrance animation (gated) -------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-hero__copy > * {
+    animation: hero-intro-rise 0.65s both cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .home-hero__copy > *:nth-child(1) { animation-delay: 0.05s; }
+  .home-hero__copy > *:nth-child(2) { animation-delay: 0.12s; }
+  .home-hero__copy > *:nth-child(3) { animation-delay: 0.19s; }
+  .home-hero__copy > *:nth-child(4) { animation-delay: 0.26s; }
+  .home-hero__copy > *:nth-child(5) { animation-delay: 0.33s; }
+
+  .home-hero__map {
+    animation: hero-intro-rise 0.7s 0.2s both cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+}
+
+@keyframes hero-intro-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
