@@ -9327,3 +9327,209 @@ html[dir="rtl"] .faq-editorial__callout {
     border-bottom: 0;
   }
 }
+
+/* ==========================================================================
+   Chrome + inner pages: ruled-grid adoption
+   Nav underline, hairline header/footer chrome, atlas doc shells, dataset
+   hairline cells, and the site-wide pill/chip corner cleanup.
+   ========================================================================== */
+
+/* --- Nav + footer links: scaleX underline -------------------------------- */
+
+.nav-link,
+.footer-meta-links a {
+  position: relative;
+}
+
+.nav-link::after,
+.footer-meta-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.24rem;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 180ms ease;
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after,
+.footer-meta-links a:hover::after,
+.footer-meta-links a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Remove the pill hover background + radius; the underline is the signal. */
+.nav-link {
+  border-radius: 0;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  background: transparent;
+}
+
+/* The search pill keeps its permanent tint; square it to the grid. */
+.nav-link--search {
+  border-radius: var(--radius-md);
+}
+
+.nav-link--search:hover,
+.nav-link--search:focus-visible {
+  background: var(--color-accent-soft);
+}
+
+.nav-link--search::after {
+  content: none;
+}
+
+/* --- Header scrolled state: hairline instead of drop shadow -------------- */
+
+.site-header--scrolled,
+.page-context--knowledge .site-header--scrolled {
+  box-shadow: none;
+  border-bottom: 1px solid var(--line);
+}
+
+/* --- Footer metadata: ruled top edge + monospace note -------------------- */
+
+.site-footer .footer-meta {
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+
+.footer-note {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+/* --- Atlas/doc pages: hairline doc shells -------------------------------- */
+
+.note-body h2 {
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+}
+
+.atlas-meta-panel,
+.atlas-author,
+.atlas-disclaimer {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+.atlas-author,
+.atlas-disclaimer {
+  padding: 1rem;
+}
+
+/* Callouts: single amber start rule, no radius, no shadow. */
+.atlas-research-warning,
+.tech-stack-editorial__callout {
+  border: 0;
+  border-left: 0;
+  border-inline-start: 2px solid var(--color-signal);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html[dir="rtl"] .atlas-research-warning,
+html[dir="rtl"] .tech-stack-editorial__callout {
+  border-right: 0;
+  border-inline-start: 2px solid var(--color-signal);
+}
+
+/* Inline code reads as metadata; dark code blocks carry the paper shadow. */
+.note-body code {
+  padding: 0.1rem 0.3rem;
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+}
+
+/* .note-body pre had no base styling; make it a dark block so the paper
+   shadow stays legal (shadow-paper is only allowed on dark blocks). */
+.note-body pre {
+  padding: 1rem;
+  background: var(--color-accent);
+  color: #e9edf3;
+}
+
+.note-body pre,
+.dataset-json pre {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-paper);
+}
+
+.note-body pre code {
+  padding: 0;
+  background: transparent;
+}
+
+/* --- Datasets: hairline cells, tint-only hover ---------------------------- */
+
+.dataset-card,
+.dataset-kpi {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+a.dataset-card:hover,
+.dataset-card:hover,
+.dataset-card:focus-visible {
+  transform: none;
+  border-color: var(--line-strong) !important;
+  background: var(--color-accent-soft);
+  box-shadow: none;
+}
+
+.service-card:focus-within {
+  transform: none;
+  border-color: var(--line-strong) !important;
+  box-shadow: none;
+}
+
+/* --- Chips/pills cleanup: square corners, no shadows ---------------------- */
+
+.pill,
+.signals-tags span,
+.profile-chip-links a,
+.topic-cloud a,
+.tech-stack-editorial__pill-row span,
+.analysis-problem__eyebrow,
+.tco-editorial__badge,
+.home-side-list,
+.home-work-entry,
+.home-work-entry__logo,
+.stack-item,
+.home-tech-tile,
+.problem-editorial__grid-card,
+.signal-card,
+.signals-panel,
+.signals-lab-card,
+.home-tech-editorial__quote,
+.tech-stack-editorial__card {
+  border-radius: var(--radius-md);
+}
+
+.problem-editorial__grid-card,
+.home-tech-editorial__quote,
+.home-tech-tile,
+.tech-stack-editorial__card {
+  box-shadow: none;
+}
+
+/* Hover lifts become accent-soft tints. */
+.home-work-entry:hover,
+.home-tech-tile:hover,
+.home-tech-tile:focus-within {
+  transform: none;
+  background: var(--color-accent-soft);
+  box-shadow: none;
+}
