@@ -103,6 +103,14 @@ sitemap: true
       <li>Keep approval and accountability with named human owners.</li>
     </ul>
 
+    <h2>Pilot readiness check</h2>
+    <div class="decision-table"><table><thead><tr><th>Before building</th><th>Evidence of readiness</th><th>Reason to pause</th></tr></thead><tbody>
+      <tr><td>Decision boundary</td><td>The operator decision, permitted recommendation, and prohibited action are written down.</td><td>The pilot is described only as “an SAP copilot” or “agent”.</td></tr>
+      <tr><td>Knowledge sources</td><td>Sources are current enough, access-controlled, structured, and attributable to a reviewer.</td><td>The team plans to use uncurated tickets, chats, or documents as if they were reliable instructions.</td></tr>
+      <tr><td>Evaluation</td><td>Representative cases, review criteria, and a comparison with the current method are available.</td><td>A polished demo is being mistaken for operational evidence.</td></tr>
+      <tr><td>Operating ownership</td><td>Named owners cover source data, review, exception handling, change, and decommissioning.</td><td>No one can say who is accountable when an answer is wrong or stale.</td></tr>
+    </tbody></table></div>
+
     <h2>AI / automation opportunity</h2>
     <p>AI is often valuable in SAP support, but usually in narrower ways than pilots promise: retrieval, summarization, classification support, and recommendation drafting. Deterministic automation remains the better answer for repeatable checks, controlled retries, and low-ambiguity actions.</p>
 

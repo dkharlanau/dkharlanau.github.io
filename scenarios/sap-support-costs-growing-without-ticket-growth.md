@@ -104,6 +104,14 @@ sitemap: true
       <li>Treat release, integration, and master data reliability as cost drivers, not as side topics.</li>
     </ul>
 
+    <h2>Management decision frame</h2>
+    <div class="decision-table"><table><thead><tr><th>What the report says</th><th>Question worth asking next</th><th>Possible management response</th></tr></thead><tbody>
+      <tr><td>Ticket volume is flat or lower</td><td>Has work moved into coordination, monitoring, recovery, data correction, or release support?</td><td>Measure the operating work around tickets before reducing capacity.</td></tr>
+      <tr><td>Service levels are met</td><td>Do known failure patterns actually recur less, and are business processes restored predictably?</td><td>Fund a prevention loop for the most expensive repeat patterns.</td></tr>
+      <tr><td>Automation has been added</td><td>Did it remove a decision bottleneck or only move manual work to exception handling?</td><td>Keep deterministic controls where appropriate; use AI only where interpretation is the constraint.</td></tr>
+      <tr><td>Support cost remains high</td><td>Which extensions, interfaces, controls, or ownership gaps make normal change expensive?</td><td>Link AMS improvement to architecture, data, and extension decisions rather than treating it as a staffing issue alone.</td></tr>
+    </tbody></table></div>
+
     <h2>AI / automation opportunity</h2>
     <p>AI can help reduce retrieval and triage cost by surfacing similar incidents, missing evidence, and known runbooks. Deterministic automation is usually a better tool for repetitive checks, controlled retries, and validation steps. Neither will lower cost much if the main issue is architectural sprawl or weak ownership.</p>
 

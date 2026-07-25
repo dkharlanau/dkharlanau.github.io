@@ -114,6 +114,24 @@ sitemap: false
       <li>If an AI recommendation is wrong, who is accountable?</li>
     </ul>
 
+    <h2>A simple decision sequence</h2>
+    <div class="process-rail" aria-label="SAP consulting decision sequence">
+      <div class="process-rail__step"><strong>Outcome</strong><span>State the business result at risk before naming a product, team, or technology.</span></div>
+      <div class="process-rail__step"><strong>Evidence</strong><span>Collect the minimum process, data, configuration, and interface evidence needed to test the cause.</span></div>
+      <div class="process-rail__step"><strong>Boundary</strong><span>Separate a local recovery action from a durable process, data, architecture, or ownership decision.</span></div>
+      <div class="process-rail__step"><strong>Transfer</strong><span>Leave the owner, rationale, control, and next review visible to the people who will operate it.</span></div>
+    </div>
+
+    <h2>How to judge the quality of a recommendation</h2>
+    <div class="decision-table"><table><thead><tr><th>Weak recommendation</th><th>Stronger recommendation</th></tr></thead><tbody>
+      <tr><td>“Implement a tool to improve integration.”</td><td>“Resolve the missing ownership and completion evidence for this interface class; then decide whether the existing tooling can support the required control loop.”</td></tr>
+      <tr><td>“Use AI to reduce tickets.”</td><td>“Use AI to retrieve and summarize structured prior evidence for a reviewer; retain deterministic controls and approval for recovery or change.”</td></tr>
+      <tr><td>“Fix the master data issue.”</td><td>“Identify whether the defect arises at creation, approval, activation, mapping, replication, or consumption; place the control at the earliest safe point.”</td></tr>
+      <tr><td>“Move logic out for clean core.”</td><td>“Classify the capability by transactional truth, lifecycle owner, contract, operating burden, and retirement path before deciding to retain, rebuild, replace, or retire it.”</td></tr>
+    </tbody></table></div>
+
+    <p>Good consulting work also teaches. A manager should be able to explain the decision after the consultant leaves; an analyst should be able to collect the same evidence next time; a partner should be able to see the ownership boundary. If the insight cannot travel, the work remains dependent on the person who first found it.</p>
+
     <h2>Boundaries and non-goals</h2>
     <p>This page describes principles, not a methodology or a specific framework. It does not replace SAP's Activate methodology, ITIL, or any programme management standard. It does not guarantee programme success — it only raises the visibility of decisions that often go unmade.</p>
 

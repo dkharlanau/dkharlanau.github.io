@@ -93,6 +93,43 @@ last_modified_at: 2026-07-24
   </div>
 </section>
 
+<section class="section">
+  <div class="section-shell">
+    <header class="section-heading"><p class="eyebrow">Relevant experience</p><h2>Where the service work is grounded</h2></header>
+    <div class="evidence-grid">
+      <article class="evidence-card"><h3>SD, MM, O2C, and P2P</h3><p>Commercial and procurement processes are treated as connected flows: order, delivery, billing, stock, purchasing, goods receipt, invoice, and the controls that make them reliable.</p></article>
+      <article class="evidence-card"><h3>Master data and MDG</h3><p>Assess data ownership, keys, extensions, workflow, and replication before assuming a data issue needs another tool or a larger governance programme.</p></article>
+      <article class="evidence-card"><h3>Integration and architecture</h3><p>Work with IDoc, AIF, RFC, web services, APIs, OData, event patterns, and the operational questions of ownership, monitoring, recovery, and contracts.</p></article>
+      <article class="evidence-card"><h3>Automotive, Retail, and AMS</h3><p>Bring a support-minded view to environments where logistics timing, cross-process coordination, enhancement debt, and handovers shape business outcomes.</p></article>
+    </div>
+    <p>These offers draw on the public experience record described in the <a href="/about/">profile</a> and <a href="/cv/">CV</a>. They are problem-led consulting entry points, not claims of a pre-packaged solution for every landscape.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-shell">
+    <header class="section-heading"><p class="eyebrow">Ways of working</p><h2>Engagement formats that create a usable next decision</h2></header>
+    <div class="engagement-grid">
+      <article class="engagement-card"><h3>Focused diagnostic</h3><p>One failure pattern, a small safe evidence set, the right owners in the room, and a decision brief. Useful when the team needs clarity before committing to more delivery work.</p></article>
+      <article class="engagement-card"><h3>Stabilisation track</h3><p>A short operating-model improvement around repeat incidents, integration recovery, data corrections, or a blocked process. The emphasis is on prevention, handover, and control—not only ticket closure.</p></article>
+      <article class="engagement-card"><h3>Architecture or data decision</h3><p>A bounded decision on ownership, integration patterns, extension lifecycle, MDG scope, or side-by-side boundaries, supported by explicit assumptions and trade-offs.</p></article>
+      <article class="engagement-card"><h3>Capability building</h3><p>Teach a team to use a diagnostic pattern, evidence checklist, decision log, runbook, or AI review boundary so that the method survives the initial engagement.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-shell">
+    <header class="section-heading"><p class="eyebrow">Deliverable preview</p><h2>What the work is designed to leave behind</h2></header>
+    <div class="decision-table"><table><thead><tr><th>Artefact</th><th>What it contains</th><th>Why it helps</th></tr></thead><tbody>
+      <tr><td>Diagnostic brief</td><td>Business symptom, scope, evidence, dependencies, and uncertain points.</td><td>Stops teams from debating a vague problem statement.</td></tr>
+      <tr><td>Owner and recovery map</td><td>Business outcome, process owner, data owner, interface or technical owner, and first recovery action.</td><td>Makes cross-team escalation faster and more accountable.</td></tr>
+      <tr><td>Prioritised backlog</td><td>Immediate controls, data or process fixes, architectural decisions, and longer-term work.</td><td>Separates what can be done now from what needs sponsorship or design.</td></tr>
+      <tr><td>Runbook or KEDB pattern</td><td>Symptoms, evidence, safe checks, ownership, resolution boundary, and prevention action.</td><td>Turns one investigation into reusable operational memory.</td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+
 <hr class="divider" />
 
 <section class="section">

@@ -104,6 +104,14 @@ sitemap: true
       <li>Make support, testing, and release readiness part of extension approval.</li>
     </ul>
 
+    <h2>Retain, rebuild, replace, or retire?</h2>
+    <div class="decision-table"><table><thead><tr><th>Signal</th><th>Question</th><th>Likely decision direction</th></tr></thead><tbody>
+      <tr><td>Business rule is still differentiating and has a named owner</td><td>Can the capability be tested, supported, and upgraded with a clear contract?</td><td>Retain or rebuild with an explicit lifecycle model.</td></tr>
+      <tr><td>Standard capability now meets the need</td><td>Is the extension preserving a historical local preference rather than a live control?</td><td>Replace with standard and plan a safe transition.</td></tr>
+      <tr><td>Logic is unowned, undocumented, or duplicated</td><td>What business consequence would actually remain if it stopped?</td><td>Investigate retirement before investing in another platform.</td></tr>
+      <tr><td>Edge service is proposed for “clean core”</td><td>Who will operate the contract, data, recovery, security, and release path?</td><td>Rebuild only if the operating model is as clear as the technical design.</td></tr>
+    </tbody></table></div>
+
     <h2>AI / automation opportunity</h2>
     <p>AI can help inventory documentation, cluster similar custom patterns, and identify where descriptions are missing. It does not decide whether a rule is still justified. Deterministic inventory, traceability, and testing remain the foundation for any serious extension review.</p>
 

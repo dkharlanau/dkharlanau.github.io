@@ -245,6 +245,11 @@ Where this fits
 
 Operational memory is the layer between incident closure and real prevention. It captures what was learned so the next support case starts from evidence, not rediscovery.
 
+  CaptureRecord the symptom, business consequence, evidence, and actual decision—not only the final workaround.
+  ValidateCheck whether the pattern is repeatable, safe to reuse, and still correct for the landscape.
+  LinkConnect the entry to owners, related incidents, changes, process step, and prevention work.
+  ReviewRetire stale guidance and use recurrence to decide what deserves a permanent control.
+
 Common issues
 
 Tickets are closed with minimal resolution text and no reusable diagnostic pattern.
@@ -262,6 +267,32 @@ Does the KEDB describe symptoms, evidence, cause, fix, owner, and prevention?
 Can a new support person safely follow the runbook without hidden context?
 
 Operational memory decays quickly when tickets are closed without a decision log. The most valuable entries are the ones that explain why a fix was chosen, not just what was changed.
+
+What a usable entry contains
+
+FieldWhy it matters in the next incident
+Business symptom and affected process stepKeeps a technical error from being separated from the actual operational consequence.
+Evidence and landscape boundaryShows what was observed, what was inferred, and what must be checked again rather than copied as fact.
+Safe diagnostic sequenceLets a new analyst collect the right information before escalating or changing anything.
+Owner and decision rationaleExplains who accepted the action and why a workaround, correction, or structural fix was chosen.
+Prevention action and review dateConnects closure to a backlog item and prevents outdated runbooks becoming a new source of risk.
+
+How teams turn closure into learning
+
+A small closure discipline is usually more useful than a large knowledge programme. When an incident is notable because it recurred, required senior interpretation, affected a critical process, or exposed a control gap, the owner should decide whether it needs a reusable entry. The entry is then linked to the ticket or change, checked by someone who understands the boundary, and reviewed when the underlying process changes.
+
+This matters in SD, MM, master-data, and integration support because the same symptom can be caused by very different things. A blocked document may result from a valid business control, an incomplete record, a replication delay, an enhancement, or an interface state. A useful memory entry helps the next person separate those paths; it does not pretend there is one universal fix.
+
+What operational memory is not
+
+It is not a repository of copied error messages with no process or owner context.
+It is not a substitute for product documentation, change control, or a properly tested fix.
+It is not proof that an old workaround remains safe after a release or process change.
+It is not an AI knowledge base by default. Retrieval only becomes useful after the source material is structured, current, access-controlled, and reviewable.
+
+Teaching the practice
+
+The method is teachable. Review a small set of recent cases with the team, identify where the reasoning disappeared between diagnosis and closure, agree a minimum entry template, and use it for the next relevant incidents. The goal is not more documentation. It is faster, safer orientation for the next person who has to make a decision under pressure.
 
 Related pages
 

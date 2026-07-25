@@ -2270,6 +2270,78 @@ img {
   font-size: 0.95rem;
 }
 
+/* Evidence-led internal pages */
+.evidence-grid,
+.engagement-grid,
+.deliverable-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+
+.evidence-card,
+.engagement-card,
+.deliverable-card {
+  display: grid;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-card-alt);
+}
+
+.evidence-card h3,
+.engagement-card h3,
+.deliverable-card h3 {
+  font-size: 1.2rem;
+}
+
+.process-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.process-rail__step {
+  display: grid;
+  gap: var(--space-2xs);
+  padding: var(--space-md);
+  background: var(--color-card);
+  border-right: 1px solid var(--color-border);
+}
+
+.process-rail__step:last-child { border-right: 0; }
+
+.process-rail__step strong {
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.process-rail__step span { color: var(--color-ink-soft); font-size: 0.94rem; }
+
+.decision-table {
+  overflow-x: auto;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+}
+
+.decision-table table { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 0.95rem; }
+
+.decision-table th,
+.decision-table td {
+  padding: var(--space-sm);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.decision-table th { color: var(--color-ink); background: var(--color-card-alt); font-weight: 700; }
+.decision-table tr:last-child td { border-bottom: 0; }
+.decision-table td { color: var(--color-ink-soft); }
+
 @media (max-width: 960px) {
   .page-content {
     padding-top: var(--space-2xl);
@@ -2304,6 +2376,12 @@ img {
     -webkit-overflow-scrolling: touch;
     padding-bottom: var(--space-2xs);
   }
+}
+
+@media (max-width: 720px) {
+  .process-rail { grid-template-columns: 1fr; }
+  .process-rail__step { border-right: 0; border-bottom: 1px solid var(--color-border); }
+  .process-rail__step:last-child { border-bottom: 0; }
 }
 
 .result-snippets__grid {

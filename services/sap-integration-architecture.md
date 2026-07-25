@@ -3,7 +3,7 @@ layout: default
 title: "SAP Integration Architecture Consulting — APIs, Events, and Clean-Core Boundaries"
 description: "SAP integration architecture consulting for APIs, events, IDoc, OData, Integration Suite, and clean-core boundaries across S/4HANA landscapes."
 permalink: /services/sap-integration-architecture/
-last_modified_at: 2026-04-19
+last_modified_at: 2026-07-25
 ---
 
 <section class="section note-detail">
@@ -15,6 +15,16 @@ last_modified_at: 2026-04-19
     </header>
     <div class="note-body">
       <p>I help teams choose where integration logic should live, how APIs and events should be versioned, and how much platform lock-in is acceptable. The core principle is simple: keep legal and transactional truth in S/4HANA, and make edge services replaceable through explicit contracts.</p>
+
+      <h2>What problem this addresses</h2>
+      <p>Most landscapes do not need another argument about whether APIs are better than IDocs or events. They need a reliable answer to more practical questions: which system owns the business fact, where mapping logic is maintained, how a failure is detected and recovered, how duplicate or late messages are handled, and who can change the contract without surprising downstream teams.</p>
+
+      <div class="process-rail" aria-label="Integration architecture decision process">
+        <div class="process-rail__step"><strong>Inventory</strong><span>Make the business capability, systems, contracts, and operational dependencies visible.</span></div>
+        <div class="process-rail__step"><strong>Assign truth</strong><span>Identify the authoritative state and what each other system may consume or derive.</span></div>
+        <div class="process-rail__step"><strong>Design recovery</strong><span>Define observability, retries, reconciliation, and accountable recovery before adding scale.</span></div>
+        <div class="process-rail__step"><strong>Choose the pattern</strong><span>Select the narrowest pattern that satisfies timing, control, change, and lifecycle needs.</span></div>
+      </div>
 
       <h2>Typical architecture topics</h2>
       <ul>
@@ -30,6 +40,14 @@ last_modified_at: 2026-04-19
         <li>Prioritised recommendations for reliability, cost control, and upgrade safety.</li>
       </ul>
 
+      <h2>Decision framework</h2>
+      <div class="decision-table"><table><thead><tr><th>Question</th><th>Why it changes the design</th></tr></thead><tbody>
+        <tr><td>Is the consumer asking for a current fact, a historical event, or a controlled command?</td><td>It separates read access, event distribution, and transactional action instead of treating them as the same interface.</td></tr>
+        <tr><td>What happens when a message is late, duplicated, malformed, or accepted technically but rejected by business rules?</td><td>It makes replay, idempotency, reconciliation, and exception ownership part of the architecture.</td></tr>
+        <tr><td>Who owns the contract and can approve a breaking change?</td><td>It prevents a technically successful change from becoming a downstream operational failure.</td></tr>
+        <tr><td>What must remain close to SAP transactional truth?</td><td>It helps protect clean-core boundaries without pretending that every capability belongs outside S/4.</td></tr>
+      </tbody></table></div>
+
       <h2>Assessment questions</h2>
       <ul>
         <li>Which system owns the business fact, and which systems only consume a copy or an event?</li>
@@ -40,6 +58,9 @@ last_modified_at: 2026-04-19
 
       <h2>What this avoids</h2>
       <p>The goal is not to prescribe APIs or events as a universal replacement for files, IDocs, or middleware. A stable landscape may retain several patterns if their ownership, contracts, observability, and recovery rules are clear. The costly state is an accidental mix in which every new use case adds another unowned integration path.</p>
+
+      <h2>Public-safe example</h2>
+      <p><strong>Illustrative scenario:</strong> an outbound sales event reaches an external consumer, but the downstream business process is not complete. A transport-level success is not sufficient evidence of a business outcome. The design needs a visible contract, an agreed completion signal or reconciliation step, and an owner for cases that remain in an ambiguous state. This applies whether the transport uses an IDoc, API, file, or event.</p>
 
       <h2>Where AI may help</h2>
       <p>AI can assist with interface-inventory normalization, contract discovery, and incident summarization. It should not infer a missing business contract or make unreviewed changes to mapping, routing, or production recovery. Those need evidence and explicit ownership.</p>
