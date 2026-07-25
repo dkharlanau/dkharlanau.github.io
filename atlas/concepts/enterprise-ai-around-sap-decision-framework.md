@@ -9,9 +9,10 @@ subdomain: Enterprise AI around SAP
 concept_type: decision framework
 sap_area: AI-assisted support and operations
 business_process: Support and control workflows
-status: needs_verification
-verified: false
-last_reviewed: 2026-07-24
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-07-25
 author: Dzmitryi Kharlanau
 tags:
   - concepts
@@ -21,10 +22,9 @@ tags:
 related:
   - /atlas/automation/rule-based-automation-vs-ai/
   - /atlas/ai-operations/ai-agent-for-sap-support/
-  - /scenarios/ai-pilots-for-sap-support-fail-before-value/
   - /atlas/concepts/sap-ams-cost-reduction-framework/
-robots: noindex,follow
-sitemap: false
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +48,7 @@ sitemap: false
     <dl>
       <div><dt>Domain</dt><dd>Business operations</dd></div>
       <div><dt>Type</dt><dd>decision framework</dd></div>
-      <div><dt>Reviewed</dt><dd>2026-07-24</dd></div>
+      <div><dt>Reviewed</dt><dd>2026-07-25</dd></div>
     </dl>
   </aside>
 

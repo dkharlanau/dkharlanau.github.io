@@ -3,16 +3,17 @@ layout: default
 title: "When SAP custom extensions make change slower and more expensive"
 description: "A landscape full of inherited enhancements, sidecar apps, and local exceptions can make every SAP release slower, riskier, and more costly."
 permalink: /scenarios/custom-extensions-driving-sap-change-cost/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-07-25
 scenario_cluster: Management & Architecture Decisions
 domain: SAP architecture
 subdomain: Extension portfolio and clean core
 concept_type: business scenario
 sap_area: "SAP extensibility / clean core / custom development"
 business_process: Cross-process operations
-status: needs_verification
-verified: false
-last_reviewed: 2026-07-24
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-07-25
 author: Dzmitryi Kharlanau
 tags:
   - architecture
@@ -24,8 +25,8 @@ related:
   - /atlas/concepts/sap-transformation-recovery-framework/
   - /atlas/concepts/sap-clean-core-strategy/
   - /atlas/concepts/composable-erp-for-sap-operations/
-robots: noindex,follow
-sitemap: false
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +49,7 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Cross-process operations</dd></div>
       <div><dt>SAP area</dt><dd>SAP extensibility / clean core / custom development</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until scenario claims are verified against public SAP and architecture guidance.</dd></div>
+      <div><dt>Indexing</dt><dd>Indexed after review against public SAP and architecture guidance.</dd></div>
     </dl>
   </aside>
 

@@ -144,7 +144,7 @@ The repository uses a three-level content verification system:
 
 - Only Level 2+ pages appear in `llms-full.txt`.
 - Only Level 2+ pages appear in section sitemaps.
-- The `scenarios/index.md` and all scenario pages are currently **Level 1** (`needs_verification`, `noindex`).
+- The `scenarios/index.md` is currently **Level 1** (`needs_verification`, `noindex`). Scenario pages default to Level 1 and are promoted to Level 2 individually after human review (e.g., the executive decision-cluster scenarios are Level 2).
 - Do not mark any page verified without human review.
 - Do not add unverified pages to sitemap or `llms-full.txt`.
 

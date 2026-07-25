@@ -9,9 +9,10 @@ subdomain: SAP cost and complexity reduction
 concept_type: decision framework
 sap_area: SAP AMS
 business_process: Support operations
-status: needs_verification
-verified: false
-last_reviewed: 2026-07-24
+status: reviewed
+verified: true
+level: 2
+last_reviewed: 2026-07-25
 author: Dzmitryi Kharlanau
 tags:
   - concepts
@@ -19,12 +20,10 @@ tags:
   - cost-reduction
   - operating-model
 related:
-  - /atlas/automation/sap-ams-operating-model/
   - /atlas/automation/operational-memory-for-sap-ams/
-  - /scenarios/sap-support-costs-growing-without-ticket-growth/
   - /atlas/concepts/enterprise-ai-around-sap-decision-framework/
-robots: noindex,follow
-sitemap: false
+robots: index,follow
+sitemap: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -48,7 +47,7 @@ sitemap: false
     <dl>
       <div><dt>Domain</dt><dd>Business operations</dd></div>
       <div><dt>Type</dt><dd>decision framework</dd></div>
-      <div><dt>Reviewed</dt><dd>2026-07-24</dd></div>
+      <div><dt>Reviewed</dt><dd>2026-07-25</dd></div>
     </dl>
   </aside>
 
