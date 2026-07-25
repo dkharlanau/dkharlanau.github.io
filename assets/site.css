@@ -10453,3 +10453,175 @@ html[lang|="zh"] .home-cta__header h2 {
     gap: 0.4rem;
   }
 }
+
+/* ==========================================================================
+   Unified design system
+   One palette (neutral light + violet signal), one type voice (Inter
+   display, serif only for quotes), one surface language (white cards,
+   soft shadow, 18-24px radii, pill actions). This block supersedes the
+   earlier warm-paper and hairline-brutalist passes.
+   ========================================================================== */
+
+:root {
+  --color-page: #f5f6f9;
+  --surface-page: #f5f6f9;
+  --surface-raised: #f0f1f6;
+  --surface-subtle: #e9ebf2;
+  --color-border: #e3e6ef;
+  --color-border-soft: #eceef4;
+  --line: #e3e6ef;
+  --line-strong: #c8cdd9;
+  --color-accent-soft: #f0f1f6;
+  --color-signal: #5b45d6;
+  --color-signal-strong: #4c39b8;
+  --color-signal-soft: #efecfc;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-soft: 0 12px 32px rgba(16, 24, 40, 0.07);
+  --shadow-paper: 14px 14px 0 #e4e6f0;
+}
+
+/* --- Typography: one display voice (serif only for quotes) ---------------- */
+
+.cred-editorial__title,
+.analysis-problem__title,
+.ai-costs-outcomes__title,
+.strategic-context__title,
+.faq-editorial__title,
+.explore-site__header h2,
+.home-cta__header h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+}
+
+.analysis-problem__quote,
+.strategic-context__quote p {
+  font-family: var(--font-serif);
+}
+
+/* --- Surfaces: neutral cards, no warm leftovers --------------------------- */
+
+.page-context--home .home-section {
+  border-radius: 24px;
+}
+
+.strategic-context__card--ratio {
+  background: #f4f5fa;
+}
+
+.strategic-context__card--multiplier {
+  background: #f7f8fb;
+}
+
+.strategic-context__quote {
+  background: #f4f5fa;
+}
+
+.ai-costs-outcomes__stat--mid {
+  background: #f4f5fa;
+}
+
+.ai-costs-outcomes__mandate {
+  background: #f7f8fb;
+}
+
+.ai-costs-outcomes__visual {
+  background:
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 24%),
+    linear-gradient(135deg, rgba(91, 69, 214, 0.14), rgba(91, 69, 214, 0.04)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 14px, rgba(255, 255, 255, 0) 14px 42px),
+    linear-gradient(180deg, #e6e8f2, #d8dbe9);
+}
+
+.ai-costs-outcomes__visual::after {
+  background: linear-gradient(180deg, rgba(245, 246, 249, 0) 55%, rgba(245, 246, 249, 0.9));
+}
+
+.explore-site__card,
+.analysis-problem__detail,
+.strategic-context__card,
+.ai-costs-outcomes__stat,
+.faq-editorial__item,
+.engagement-layer,
+.explore-site__grid,
+.analysis-problem__grid,
+.strategic-context__grid,
+.tech-stack-simple,
+.ai-costs-outcomes__stats,
+.faq-editorial__list,
+.engagement-framework__grid {
+  background-color: #ffffff;
+}
+
+.explore-site__grid,
+.analysis-problem__grid,
+.strategic-context__grid {
+  background: var(--line);
+}
+
+.strategic-context__card--primary {
+  background: #ffffff;
+}
+
+/* --- Actions: pill buttons everywhere ------------------------------------- */
+
+.button,
+.cred-editorial__link,
+.dataset-actions a,
+.faq-editorial__cta-link {
+  border-radius: 999px;
+}
+
+.cred-editorial__link {
+  background: var(--color-signal);
+}
+
+.cred-editorial__link:hover,
+.cred-editorial__link:focus-visible {
+  background: var(--color-signal-strong);
+}
+
+/* --- Hover tints adopt the signal identity -------------------------------- */
+
+.explore-site__card:hover,
+.explore-site__card:focus-visible,
+.dataset-card:hover,
+.dataset-card:focus-visible,
+.engagement-layer:hover,
+.home-work-entry:hover,
+.home-tech-tile:hover {
+  background: var(--color-signal-soft);
+}
+
+.explore-site__card:hover .explore-site__number,
+.explore-site__card:focus-visible .explore-site__number {
+  color: var(--color-signal);
+}
+
+/* --- Nav underline in signal color ---------------------------------------- */
+
+.nav-link::after,
+.footer-meta-links a::after {
+  background: var(--color-signal);
+}
+
+/* --- Unified system: restore intentional dark/tinted cells ---------------- */
+
+.ai-costs-outcomes__stat--light {
+  background: #ffffff;
+}
+
+.ai-costs-outcomes__stat--mid {
+  background: #f4f5fa;
+}
+
+.ai-costs-outcomes__stat--dark {
+  background: var(--color-accent);
+}
+
+.strategic-context__card--visual {
+  background: var(--color-accent);
+}
