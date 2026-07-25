@@ -9711,3 +9711,107 @@ html[dir="rtl"] .ai-costs-outcomes__quote {
 .cred-editorial__link:focus-visible {
   background: var(--color-ink);
 }
+
+/* --- Hero: operations map (replaces the areas-of-work loop) -------------- */
+
+.home-hero__map {
+  position: relative;
+  margin: 0;
+  height: 100%;
+  min-height: clamp(24rem, 44vw, 30rem);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--color-page);
+}
+
+.home-hero__map svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.home-hero__map-label {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  inset-inline-start: 1.1rem;
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.7;
+  text-transform: uppercase;
+}
+
+.home-hero__map-dot {
+  fill: #ccd4df;
+}
+
+.home-hero__map-route {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.home-hero__map-route--soft {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.home-hero__map-nodes rect {
+  fill: var(--color-accent);
+}
+
+.home-hero__map-marker-dot {
+  fill: var(--color-signal);
+}
+
+.home-hero__map-marker-ring {
+  fill: none;
+  stroke: var(--color-signal);
+  stroke-width: 1.5;
+  opacity: 0.55;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hero-marker-pulse 2.8s ease-out infinite;
+}
+
+.home-hero__map-marker:nth-of-type(2) .home-hero__map-marker-ring {
+  animation-delay: 0.9s;
+}
+
+.home-hero__map-marker:nth-of-type(3) .home-hero__map-marker-ring {
+  animation-delay: 1.8s;
+}
+
+.home-hero__map-drift {
+  transform-origin: center;
+  animation: hero-map-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes hero-map-drift {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to { transform: scale(1.07) translate3d(-1.2%, 0.8%, 0); }
+}
+
+@keyframes hero-marker-pulse {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+
+@media (max-width: 960px) {
+  .home-hero__map {
+    min-height: 22rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero__map-drift,
+  .home-hero__map-marker-ring {
+    animation: none;
+  }
+}

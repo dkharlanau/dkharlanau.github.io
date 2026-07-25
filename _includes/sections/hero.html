@@ -56,25 +56,46 @@
     </div>
 
     <div class="home-hero__visual" aria-hidden="true">
-      <div class="home-hero__visual-header">
-        <span>{{ hero.visual.header_label | default: 'Lower TCO $ ↓<br>Less dependency<br>More innovation ↑' }}</span>
-        <strong>{{ hero.visual.title | default: 'Operating value loop' }}</strong>
-    
-      </div>
-      <ol class="home-hero__loop">
-        {% for item in hero.visual.items %}
-        <li>
-          <span>0{{ forloop.index }}</span>
-          <strong>{{ item.title }}</strong>
-          <b>{{ item.metric }}</b>
-          <em>{{ item.detail }}</em>
-        </li>
-        {% endfor %}
-      </ol>
-      <div class="home-hero__signal">
-        <span>{{ hero.visual.signal_label | default: 'Practical AI' }}</span>
-        <strong>{{ hero.visual.signal_detail | default: 'Built on reusable operational knowledge around a clean core.' }}</strong>
-      </div>
+      <figure class="home-hero__map">
+        <span class="home-hero__map-label">{{ hero.visual.header_label | default: 'Senior SAP consulting<br>Operations · transformation · AI readiness' }}</span>
+        <svg viewBox="0 0 400 560" preserveAspectRatio="xMidYMid slice" focusable="false">
+          <defs>
+            <pattern id="hero-map-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+              <circle cx="1.5" cy="1.5" r="1.5" class="home-hero__map-dot" />
+            </pattern>
+          </defs>
+          <rect width="400" height="560" fill="url(#hero-map-dots)" />
+          <g class="home-hero__map-drift">
+            <path class="home-hero__map-route" d="M36 474 L118 384 L202 414 L298 302 L372 324" />
+            <path class="home-hero__map-route" d="M58 178 L142 242 L232 192 L342 242" />
+            <path class="home-hero__map-route home-hero__map-route--soft" d="M88 92 L178 132 L262 92 L352 142" />
+            <path class="home-hero__map-route home-hero__map-route--soft" d="M118 384 L142 242" />
+            <path class="home-hero__map-route home-hero__map-route--soft" d="M232 192 L298 302" />
+            <path class="home-hero__map-route home-hero__map-route--soft" d="M202 414 L232 192" />
+            <g class="home-hero__map-nodes">
+              <rect x="114" y="380" width="8" height="8" />
+              <rect x="198" y="410" width="8" height="8" />
+              <rect x="294" y="298" width="8" height="8" />
+              <rect x="138" y="238" width="8" height="8" />
+              <rect x="228" y="188" width="8" height="8" />
+              <rect x="174" y="128" width="8" height="8" />
+              <rect x="258" y="88" width="8" height="8" />
+            </g>
+            <g class="home-hero__map-marker" transform="translate(202 414)">
+              <circle class="home-hero__map-marker-ring" r="6" />
+              <circle class="home-hero__map-marker-dot" r="5" />
+            </g>
+            <g class="home-hero__map-marker" transform="translate(142 242)">
+              <circle class="home-hero__map-marker-ring" r="6" />
+              <circle class="home-hero__map-marker-dot" r="5" />
+            </g>
+            <g class="home-hero__map-marker" transform="translate(342 242)">
+              <circle class="home-hero__map-marker-ring" r="6" />
+              <circle class="home-hero__map-marker-dot" r="5" />
+            </g>
+          </g>
+        </svg>
+      </figure>
     </div>
   </div>
 </section>
