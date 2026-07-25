@@ -9004,3 +9004,326 @@ html[dir="rtl"] .home-hero__loop li:nth-child(3) {
 .home-hero__signal {
   border-top: 1px solid var(--line-strong);
 }
+
+/* ==========================================================================
+   Home sections: ruled-grid adoption
+   Extends the Martenweave layer to the remaining homepage sections:
+   shared 1px hairlines instead of cards, mono amber indices/metadata,
+   no elevation anywhere except the single paper shadow on the dark CTA.
+   ========================================================================== */
+
+/* --- Credibility: proof strip ------------------------------------------- */
+
+.cred-editorial .tech-stack-simple {
+  gap: 0;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line);
+}
+
+.tech-stack-simple__column {
+  min-height: 150px;
+  padding: 1.45rem 1.5rem 1.6rem;
+  border: 0;
+  border-inline-end: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.tech-stack-simple__column:last-child {
+  border-inline-end: 0;
+}
+
+.cred-editorial__portrait {
+  border-radius: var(--radius-md);
+}
+
+.cred-editorial__portrait-note {
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+@media (max-width: 960px) {
+  .cred-editorial .tech-stack-simple {
+    grid-template-columns: 1fr;
+  }
+
+  .tech-stack-simple__column {
+    min-height: 0;
+    border-inline-end: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tech-stack-simple__column:last-child {
+    border-bottom: 0;
+  }
+}
+
+/* --- Analysis problem: pillars grid with mono indices -------------------- */
+
+.analysis-problem__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  padding-top: 0;
+  border-top: 1px solid var(--line-strong);
+  counter-reset: analysis-cell;
+}
+
+.analysis-problem__detail {
+  padding: 1.5rem 1.6rem 1.7rem;
+  border-inline-end: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.analysis-problem__detail:nth-child(2n) {
+  border-inline-end: 0;
+}
+
+.analysis-problem__detail::before {
+  counter-increment: analysis-cell;
+  content: counter(analysis-cell, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.9rem;
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.analysis-problem__visual-surface,
+.analysis-problem__visual-main,
+.analysis-problem__visual-card {
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+.analysis-problem__visual-card {
+  border: 1px solid var(--line);
+}
+
+.analysis-problem__cta {
+  border-top: 1px solid var(--line-strong);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.analysis-problem__quote {
+  border-left: 0;
+  border-inline-start: 2px solid var(--color-signal);
+}
+
+@media (max-width: 640px) {
+  .analysis-problem__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-problem__detail {
+    border-inline-end: 0;
+  }
+}
+
+/* --- Explore site: docs grid --------------------------------------------- */
+
+.explore-site__grid {
+  gap: 0;
+  overflow: visible;
+  border: 0;
+  border-top: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
+}
+
+.explore-site__card {
+  border-inline-end: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.explore-site__card:nth-child(2n) {
+  border-inline-end: 0;
+}
+
+.explore-site__number {
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+}
+
+.explore-site__card:hover,
+.explore-site__card:focus-visible {
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
+}
+
+.explore-site__card:hover .explore-site__number,
+.explore-site__card:focus-visible .explore-site__number {
+  color: var(--color-signal);
+}
+
+.explore-site__card:hover .explore-site__content p,
+.explore-site__card:focus-visible .explore-site__content p {
+  color: var(--color-ink-soft);
+}
+
+@media (max-width: 680px) {
+  .explore-site__card {
+    border-inline-end: 0;
+  }
+}
+
+/* --- FAQ: hairline list --------------------------------------------------- */
+
+.faq-editorial__list {
+  gap: 0;
+  border-top: 1px solid var(--line-strong);
+}
+
+/* .faq-editorial__item does not carry the .faq-item class, so the earlier
+   border-radius: .6rem !important rule never matches it; plain radius 0. */
+.faq-editorial__item {
+  padding: 1.6rem 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.faq-editorial__divider {
+  display: none;
+}
+
+.faq-editorial__badge {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+}
+
+.faq-editorial__callout {
+  border-left: 0;
+  border-inline-start: 2px solid var(--color-signal);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Neutralize the legacy RTL gray border so the amber start border flips. */
+html[dir="rtl"] .faq-editorial__callout {
+  border-right: 0;
+  border-inline-start: 2px solid var(--color-signal);
+}
+
+/* --- Contact CTA: conversion band with the single paper shadow ----------- */
+
+.home-cta__card {
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  box-shadow: var(--shadow-paper);
+}
+
+/* Buttons inherit the hero restyle; drop the remaining lift/blur so the
+   paper shadow on the card stays the only elevation on the page. */
+.home-cta__actions .home-hero__action {
+  backdrop-filter: none;
+}
+
+.home-cta__card .home-hero__action--primary {
+  box-shadow: none;
+}
+
+/* --- Engagement framework: workflow rail ---------------------------------- */
+
+.engagement-framework__grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  overflow: visible;
+  border: 0;
+  border-top: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
+}
+
+.engagement-layer {
+  position: relative;
+  padding: clamp(1.4rem, 2.2vw, 2.2rem);
+  border-inline-end: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.engagement-layer:last-child {
+  border-inline-end: 0;
+}
+
+.engagement-layer:hover {
+  background: var(--color-accent-soft);
+}
+
+.engagement-layer__step {
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+
+/* Connecting hairline across the rail; z-index -1 keeps it behind text. */
+.engagement-layer::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 3.4rem;
+  inset-inline-start: 1.2rem;
+  inset-inline-end: -1.2rem;
+  height: 1px;
+  background: var(--line);
+  pointer-events: none;
+}
+
+.engagement-layer:last-child::before {
+  inset-inline-end: 1.2rem;
+}
+
+.engagement-layer__mini-card {
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+.engagement-framework__visual {
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+
+@media (max-width: 960px) {
+  .engagement-framework__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .engagement-layer {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .engagement-layer:nth-child(2n) {
+    border-inline-end: 0;
+  }
+
+  .engagement-layer::before {
+    content: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .engagement-framework__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .engagement-layer {
+    border-inline-end: 0;
+  }
+
+  .engagement-layer:last-child {
+    border-bottom: 0;
+  }
+}
