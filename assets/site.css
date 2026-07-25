@@ -8780,3 +8780,64 @@ body.page-context--knowledge {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   Martenweave adoption layer
+   Structural grammar: hairline ruled grids, monospace amber metadata,
+   tight oversized headlines, single offset "paper" shadow on dark blocks.
+   Loaded last (this file); tokens below intentionally redefine the earlier
+   radius/shadow tokens — var() resolves at computed-value time, so every
+   rule above that references them inherits the new values.
+   ========================================================================== */
+
+:root {
+  --color-signal: #d98d12; /* amber: kickers, indices, focus outlines, small markers only */
+  --line: var(--color-border); /* #d9dee7 — standard hairline */
+  --line-strong: #b9c1cf; /* strong rule for section tops */
+  --radius: 3px;
+  --radius-lg: 4px;
+  --radius-md: 3px;
+  --radius-sm: 2px;
+  --shadow-soft: none;
+  --shadow-premium: none;
+  --shadow-hover: none;
+  --shadow-paper: 14px 14px 0 #dde3ec; /* the only allowed shadow: cool slate offset */
+  --font-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+/* --- Monospace metadata layer ------------------------------------------- */
+
+.eyebrow,
+.hero-kicker,
+.direction-card__category {
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* --- Focus: amber outline everywhere ------------------------------------ */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--color-signal);
+  outline-offset: 3px;
+}
+
+/* --- Reduced motion: cover adoption-layer transitions ------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link::after,
+  .footer-meta-links a::after,
+  .explore-site__card,
+  .use-case-list a,
+  .dataset-card {
+    transition: none !important;
+  }
+}
