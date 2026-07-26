@@ -129,3 +129,20 @@ def test_home_canvas_css_has_no_journey_styles():
     assert ".hc-canvas__controls" in css
     assert ".hc-journey__rail" not in css
     assert ".hc-photos" not in css
+
+
+def test_default_layout_honors_hide_global_header():
+    text = (REPO_ROOT / "_layouts/default.html").read_text(encoding="utf-8")
+    assert re.search(r"unless page\.hide_global_header.*?header\.html", text, re.DOTALL)
+
+
+def test_footer_is_editorial_grid():
+    text = (REPO_ROOT / "_includes/footer.html").read_text(encoding="utf-8")
+    assert "footer-grid" in text
+    assert "footer-brand" in text
+    assert 'href="/atlas/"' in text
+
+
+def test_head_loads_site_footer_globally():
+    text = (REPO_ROOT / "_includes/head.html").read_text(encoding="utf-8")
+    assert "/assets/site-footer.css" in text
