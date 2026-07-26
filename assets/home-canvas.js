@@ -40,4 +40,5 @@
   }
 
   form.addEventListener('change', update);
+  update();
 })();
