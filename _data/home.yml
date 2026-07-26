@@ -440,3 +440,159 @@ explore_site:
       detail: "Give an AI system a clear public entry point, discovery map, and the relevant operational material to work from."
       label: "Open AI hub"
       url: "/ai/"
+
+home_hero:
+  eyebrow: "Independent senior SAP consulting"
+  title: "SAP operations that are easier to run — and easier to improve."
+  lead: "Independent SAP perspective that turns operational friction into a clear, executable next step."
+  primary_action:
+    label: "Start SAP analysis"
+    url: "/services/ams-cost-center-catalyst/"
+  microcopy: "No pitch. Just clarity."
+
+home_journey:
+  label: "Five operating priorities"
+  nodes:
+    - id: "ams"
+      number: "01"
+      title: "AMS reliability"
+      statement: "Stabilize what runs your business. Reduce incidents, repeat work, and restore confidence in support."
+      bullets:
+        - "Incident reduction and trend control"
+        - "Runbook and knowledge health"
+        - "Service governance and ownership"
+      url: "/services/sap-ams-consulting/"
+    - id: "data"
+      number: "02"
+      title: "Master data"
+      statement: "Make master data dependable enough that processes and AI can trust it."
+      bullets:
+        - "BP / customer / vendor replication"
+        - "MDG governance and quality signals"
+        - "Exception handling without noise"
+      url: "/services/sap-master-data-stability-assessment/"
+    - id: "logistics"
+      number: "03"
+      title: "Logistics & planning"
+      statement: "Trace where O2C, delivery, and planning flows break — and why they keep breaking."
+      bullets:
+        - "O2C and delivery diagnostics"
+        - "ATP and availability issues"
+        - "Planning exception patterns"
+      url: "/services/sap-o2c-process-audit/"
+    - id: "integration"
+      number: "04"
+      title: "Integration & automation"
+      statement: "Make interface-heavy landscapes easier to monitor, recover, and govern."
+      bullets:
+        - "Interface monitoring and recovery"
+        - "Retry and idempotency patterns"
+        - "Targeted automation, not big-bang programs"
+      url: "/services/sap-integration-architecture/"
+    - id: "ai"
+      number: "05"
+      title: "Practical AI"
+      statement: "Use AI where it reduces real operational friction — with controls that hold in production."
+      bullets:
+        - "Triage and knowledge surfacing"
+        - "Assisted diagnostics"
+        - "Small tools with human review"
+      url: "/services/sap-ai-ml-enablement/"
+
+home_canvas:
+  eyebrow: "Constraint canvas"
+  title: "What needs attention first?"
+  intro: "A quick read. Not a report."
+  selects:
+    - id: "impact"
+      label: "Business impact"
+      options: ["Low", "Medium", "High"]
+      default: "Medium"
+    - id: "recurrence"
+      label: "Recurrence"
+      options: ["Rare", "Monthly", "Weekly", "Daily"]
+      default: "Weekly"
+    - id: "manual"
+      label: "Manual work"
+      options: ["Low", "Medium", "High"]
+      default: "High"
+    - id: "horizon"
+      label: "Change horizon"
+      options: ["0–3 months", "3–6 months", "6–12 months"]
+      default: "0–3 months"
+  result_label: "Recommended next action"
+  default_result:
+    text: "Stabilize incidents and reduce repeat work."
+    url: "/services/sap-ams-consulting/"
+  rules:
+    - when:
+        impact: "High"
+        recurrence: ["Weekly", "Daily"]
+      text: "Stabilize incidents and reduce repeat work."
+      url: "/services/sap-ams-consulting/"
+    - when:
+        manual: "High"
+        recurrence: ["Weekly", "Daily"]
+      text: "Automate the repeat analysis and exception handling."
+      url: "/services/sap-ai-ml-enablement/"
+    - when:
+        manual: "High"
+      text: "Remove manual effort from exception-heavy processes."
+      url: "/services/sap-master-data-stability-assessment/"
+    - when:
+        impact: "High"
+        horizon: ["3–6 months", "6–12 months"]
+      text: "Map the transformation sequence before committing budget."
+      url: "/services/ams-cost-center-catalyst/"
+    - when:
+        recurrence: ["Weekly", "Daily"]
+      text: "Trace the process breakpoints behind the repetition."
+      url: "/services/sap-o2c-process-audit/"
+    - when:
+        impact: "Medium"
+        horizon: ["3–6 months", "6–12 months"]
+      text: "Strengthen integration monitoring and recovery paths."
+      url: "/services/sap-integration-architecture/"
+
+home_steps:
+  title: "Clarity in 4 steps."
+  subtitle: "Momentum from day one."
+  steps:
+    - number: "01"
+      title: "Align"
+      detail: "Understand the situation and define what success looks like."
+    - number: "02"
+      title: "Focus"
+      detail: "Pick the constraint and target the first move."
+    - number: "03"
+      title: "Act"
+      detail: "Execute together: diagnostics, quick wins, decisions documented."
+    - number: "04"
+      title: "Sustain"
+      detail: "Runbooks, metrics, reviews — and keep it working."
+
+home_ai_principles:
+  eyebrow: "AI only with operating context"
+  title: "Practical AI. Safe by design."
+  lead: "AI can amplify outcomes — when it respects your systems, data, and people."
+  items:
+    - icon: "lock"
+      title: "Operate in your environment"
+      detail: "No data leaves your control."
+    - icon: "shield"
+      title: "Human in the loop"
+      detail: "Decisions stay with your team."
+    - icon: "format_list_bulleted"
+      title: "Purpose-built use cases"
+      detail: "Solves real work, not experiments."
+  footnote: "Guardrails: security · privacy · compliance · explainability"
+
+home_cta:
+  title: "Ready to map your constraint?"
+  note: "A focused session. Leave with a clear next step."
+  primary_action:
+    label: "Book strategy session"
+    url: "https://www.linkedin.com/in/dkharlanau"
+  secondary:
+    label: "Explore services"
+    url: "/services/"
