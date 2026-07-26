@@ -1,0 +1,21 @@
+{% assign principles = site.data.home.home_ai_principles %}
+<section class="section">
+  <div class="section-shell section-shell--flat">
+    <header class="section-heading">
+      <p class="eyebrow">{{ principles.eyebrow }}</p>
+      <h2>{{ principles.title }}</h2>
+      <p class="lead">{{ principles.lead }}</p>
+    </header>
+    <ul class="hc-principles">
+      {% for item in principles.items %}
+      <li>
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.detail }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="hc-note">{{ principles.footnote }}</p>
+  </div>
+</section>

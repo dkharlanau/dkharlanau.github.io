@@ -1,12 +1,14 @@
 {% assign cta = site.data.home.home_cta %}
-<section class="hc-cta" aria-labelledby="hc-cta-title">
-  <h2 id="hc-cta-title" class="hc-section-title">{{ cta.title }}</h2>
-  <p class="hc-cta__note">{{ cta.note }}</p>
-  <div class="hc-cta__actions">
-    <a class="hc-button" href="{{ cta.primary_action.url }}" target="_blank" rel="noopener noreferrer">
-      {{ cta.primary_action.label }}
-      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-    </a>
-    <a class="hc-text-link" href="{{ cta.secondary.url }}">{{ cta.secondary.label }}</a>
+<section class="section">
+  <div class="section-shell section-shell--flat">
+    <header class="section-heading">
+      <p class="eyebrow">Next step</p>
+      <h2>{{ cta.title }}</h2>
+      <p class="lead">{{ cta.note }}</p>
+    </header>
+    <div class="section-actions">
+      <a class="button button--primary" href="{{ cta.primary_action.url }}" target="_blank" rel="noopener noreferrer">{{ cta.primary_action.label }}</a>
+      <a class="button" href="{{ cta.secondary.url }}">{{ cta.secondary.label }}</a>
+    </div>
   </div>
 </section>

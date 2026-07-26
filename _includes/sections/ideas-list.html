@@ -1,0 +1,18 @@
+{% assign posts = site.blog | sort: 'date' | reverse %}
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Field notes</p>
+    <h2>Ideas from practice. Not theory.</h2>
+  </header>
+  <ul class="hc-ideas">
+    {% for post in posts limit: 3 %}
+    <li>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%b %d, %Y' }}</time>
+    </li>
+    {% endfor %}
+  </ul>
+  <div class="section-actions">
+    <a class="button" href="{{ '/blog/' | relative_url }}">View all writing</a>
+  </div>
+</section>

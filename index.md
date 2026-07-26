@@ -6,12 +6,15 @@ permalink: /
 locale: en
 home_locale: true
 hide_global_cta: true
+hide_global_header: true
 last_modified_at: 2026-07-15
 sections:
-  - hero-canvas
+  - hero-atlas
+  - priorities-grid
   - constraint-canvas-home
-  - photo-strip
-  - tri-columns
+  - steps-ruled
+  - ai-principles
+  - ideas-list
   - cta-bar
  
 ---

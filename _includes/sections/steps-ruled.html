@@ -1,0 +1,18 @@
+{% assign steps = site.data.home.home_steps %}
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Engagement rhythm</p>
+    <h2>{{ steps.title }} {{ steps.subtitle }}</h2>
+  </header>
+  <ol class="hc-steps">
+    {% for step in steps.steps %}
+    <li class="hc-steps__item">
+      <span class="hc-steps__number">{{ step.number }}</span>
+      <div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.detail }}</p>
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+</section>

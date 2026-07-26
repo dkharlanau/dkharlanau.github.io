@@ -1,0 +1,17 @@
+{% assign journey = site.data.home.home_journey %}
+<section class="section">
+  <header class="section-heading">
+    <p class="eyebrow">Where I help</p>
+    <h2>Five operating priorities</h2>
+    <p class="lead">Each engagement starts from one of these constraints — stabilize what runs, fix what repeats, prepare what comes next.</p>
+  </header>
+  <div class="atlas-card-grid">
+    {% for node in journey.nodes %}
+    <a class="atlas-card" href="{{ node.url }}">
+      <h3>{{ node.title }}</h3>
+      <p>{{ node.statement }}</p>
+      <span class="link-arrow">Open {{ node.title | downcase }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>

@@ -1,0 +1,20 @@
+{% assign hero = site.data.home.home_hero %}
+<section class="section atlas-hero">
+  <div class="hc-identity">
+    <p class="hc-identity__name">Dzmitryi Kharlanau <span>· {{ hero.eyebrow }}</span></p>
+    <nav class="hc-identity__langs" aria-label="Language">
+      {% for language in site.data.home_languages %}
+      <a href="{{ language.path }}"{% if page.locale == language.code %} aria-current="page"{% endif %}>{{ language.short }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+  <p class="eyebrow">{{ hero.kicker }}</p>
+  <h1>{{ hero.title }}</h1>
+  <p class="lead">{{ hero.lead }}</p>
+  <div class="atlas-hero__actions">
+    <a class="button button--primary" href="{{ hero.primary_action.url }}">{{ hero.primary_action.label }}</a>
+    {% for action in hero.secondary_actions %}
+    <a class="button" href="{{ action.url }}">{{ action.label }}</a>
+    {% endfor %}
+  </div>
+</section>
