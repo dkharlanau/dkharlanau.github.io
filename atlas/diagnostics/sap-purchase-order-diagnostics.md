@@ -30,7 +30,7 @@ redirect: true
   <main id="main">
     <h1>SAP Purchase Order Diagnostics — Redirect</h1>
     <p>This page has been merged into <a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a>.</p>
-    <p>If you are not redirected automatically, <a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">click here</a>.</p>
+    <p>If you are not redirected automatically, <a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">open the purchase order creation diagnostic</a>.</p>
   </main>
   <footer>
     <p>&copy; Dzmitryi Kharlanau</p>

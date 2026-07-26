@@ -6,23 +6,9 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FRONT_MATTER_RE = re.compile(r"^---\n(.*?)\n---\n", re.DOTALL)
 
-EXPECTED_SECTIONS = [
-    "hero-atlas",
-    "priorities-grid",
-    "value-loop",
-    "ai-principles",
-    "ideas-list",
-    "cta-bar",
-]
+EXPECTED_SECTIONS = ["home-product"]
 
-EXPECTED_PARTIALS = [
-    "_includes/sections/hero-atlas.html",
-    "_includes/sections/priorities-grid.html",
-    "_includes/sections/value-loop.html",
-    "_includes/sections/ai-principles.html",
-    "_includes/sections/ideas-list.html",
-    "_includes/sections/cta-bar.html",
-]
+EXPECTED_PARTIALS = ["_includes/sections/home-product.html"]
 
 REMOVED_PARTIALS = [
     "_includes/sections/hero-canvas.html",
@@ -43,14 +29,20 @@ def home_data() -> dict:
     return yaml.safe_load((REPO_ROOT / "_data/home.yml").read_text(encoding="utf-8"))
 
 
-def test_index_sections_are_onepager():
-    fm = parse_frontmatter(REPO_ROOT / "index.md")
-    assert fm.get("sections") == EXPECTED_SECTIONS
+def test_all_localized_homepages_use_the_shared_product_page():
+    home_paths = [
+        "index.md", "ar/index.md", "de/index.md", "es/index.md", "fr/index.md",
+        "it/index.md", "nl/index.md", "pl/index.md", "pt-br/index.md", "zh-cn/index.md",
+    ]
+    for home_path in home_paths:
+        fm = parse_frontmatter(REPO_ROOT / home_path)
+        assert fm.get("sections") == EXPECTED_SECTIONS, home_path
+        assert fm.get("home_locale") is True, home_path
 
 
-def test_index_hides_global_header():
+def test_index_uses_global_header():
     fm = parse_frontmatter(REPO_ROOT / "index.md")
-    assert fm.get("hide_global_header") is True
+    assert not fm.get("hide_global_header")
 
 
 def test_partials_exist():
@@ -71,75 +63,69 @@ def test_page_builder_registers_sections():
         assert f"when '{key}'" not in text, key
 
 
-def test_head_scopes_home_canvas_to_en():
+def test_head_loads_home_product_assets_for_every_home_locale():
     text = (REPO_ROOT / "_includes/head.html").read_text(encoding="utf-8")
-    block = re.search(
-        r"\{% if page\.home_locale and page\.locale == 'en' %\}.*?home-canvas",
-        text,
-        re.DOTALL,
-    )
-    assert block, "home-canvas assets must be scoped to the EN homepage"
+    assert re.search(r"\{% if page\.home_locale %\}.*?home-canvas\.css", text, re.DOTALL)
+    assert re.search(r"\{% if page\.home_locale %\}.*?home-canvas\.js", text, re.DOTALL)
 
 
-def test_hero_has_language_dropdown():
-    text = (REPO_ROOT / "_includes/sections/hero-atlas.html").read_text(encoding="utf-8")
-    assert 'class="hc-langs"' in text
-    assert "native_name" in text
-    assert "hc-identity__langs" not in text
+def test_product_home_has_operational_visual_calculator_and_profile():
+    text = (REPO_ROOT / "_includes/sections/home-product.html").read_text(encoding="utf-8")
+    assert "data-op-flow" in text
+    assert "data-incident-calculator" in text
+    assert 'id="profile-title"' in text
+    assert "site.data.home_i18n[product_locale]" in text
+    assert "metric" not in text, "unused percentage claims must not be rendered as proof"
 
 
 def test_home_hero_data():
-    hero = home_data()["home_hero"]
-    for key in ("eyebrow", "kicker", "title", "lead"):
+    hero = home_data()["hero"]
+    for key in ("title", "lead", "person_meta", "trust_line"):
         assert hero[key], key
     assert hero["primary_action"]["url"].startswith("/")
-    assert len(hero["secondary_actions"]) == 2
-    for action in hero["secondary_actions"]:
-        assert action["url"].startswith("/"), action
+    assert len(hero["loop_card"]["items"]) == 3
+    assert len(hero["visual"]["items"]) == 4
 
 
-def test_home_journey_data():
-    nodes = home_data()["home_journey"]["nodes"]
-    assert len(nodes) == 5
-    for node in nodes:
-        assert node["url"].startswith("/services/")
-        assert node["title"] and node["statement"]
+def test_home_product_copy_covers_every_locale():
+    locales = {"en", "de", "es", "fr", "it", "nl", "pl", "pt-BR", "zh-Hans", "ar"}
+    data = yaml.safe_load((REPO_ROOT / "_data/home_product.yml").read_text(encoding="utf-8"))
+    assert set(data) == locales
+    for locale, copy in data.items():
+        assert copy["calculator"]["disclaimer"], locale
+        assert len(copy["profile"]["principles"]) == 3, locale
+        assert copy["writing"]["all"], locale
 
 
-def test_home_value_data():
-    items = home_data()["home_value"]["items"]
-    assert len(items) == 3
-    for item in items:
-        for key in ("number", "title", "detail", "metric", "metric_label", "tag"):
-            assert item[key], (item.get("title"), key)
-
-
-def test_home_principles_and_cta_data():
-    data = home_data()
-    assert len(data["home_ai_principles"]["items"]) == 3
-    assert data["home_cta"]["primary_action"]["url"] == "https://www.linkedin.com/in/dkharlanau"
-
-
-def test_home_js_is_value_loop_only():
+def test_home_js_runs_operational_visual_and_calculator():
     js = (REPO_ROOT / "assets/home-canvas.js").read_text(encoding="utf-8")
-    assert "data-hc-value" in js
-    assert "data-hc-canvas" not in js
-    assert "data-hc-journey" not in js
+    assert "data-op-flow" in js
+    assert "data-incident-calculator" in js
+    assert "Intl.NumberFormat" in js
     assert "prefers-reduced-motion" in js
 
 
-def test_home_css_covers_value_and_langs():
+def test_home_css_covers_product_sections_and_responsive_states():
     css = (REPO_ROOT / "assets/home-canvas.css").read_text(encoding="utf-8")
-    assert ".hc-identity" in css
-    assert ".hc-langs" in css
-    assert ".hc-value__card" in css
-    assert ".hc-canvas__controls" not in css
-    assert ".hc-journey__rail" not in css
+    assert ".op-hero" in css
+    assert ".op-signal-map" in css
+    assert ".op-calculator" in css
+    assert ".op-profile" in css
+    assert "prefers-reduced-motion" in css
 
 
-def test_default_layout_honors_hide_global_header():
+def test_default_layout_always_uses_shared_header():
     text = (REPO_ROOT / "_layouts/default.html").read_text(encoding="utf-8")
-    assert re.search(r"unless page\.hide_global_header.*?header\.html", text, re.DOTALL)
+    assert "{% include header.html %}" in text
+    assert "unless page.hide_global_header" not in text
+
+
+def test_reader_tools_have_sharing_and_personal_local_reaction():
+    text = (REPO_ROOT / "assets/reader-tools.js").read_text(encoding="utf-8")
+    assert "navigator.share" in text
+    assert "linkedin.com/sharing/share-offsite" in text
+    assert "localStorage" in text
+    assert "No public count is shown" in text
 
 
 def test_footer_is_editorial_grid():

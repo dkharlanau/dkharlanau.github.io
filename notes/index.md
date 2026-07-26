@@ -24,7 +24,7 @@ permalink: /notes/
     {% for note in notes %}
     <article class="note-card">
       <header class="note-card-header">
-        <h3 class="note-card-title"><a href="{{ note.url }}">{{ note.title }}</a></h3>
+        <h2 class="note-card-title"><a href="{{ note.url }}">{{ note.title }}</a></h2>
         {% if note.subtitle %}<p class="note-card-subtitle">{{ note.subtitle }}</p>{% endif %}
       </header>
       <div class="note-card-meta">
@@ -48,4 +48,3 @@ permalink: /notes/
     {% endfor %}
   </div>
 </section>
-

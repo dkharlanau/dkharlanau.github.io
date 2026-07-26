@@ -2,10 +2,49 @@
   const normalise = (value) => value.replace(/\s+/g, " ").trim().toLowerCase();
   const sectionForPath = (path) => {
     if (path.startsWith("/services/")) return { label: "Services", href: "/services/" };
+    if (path.startsWith("/scenarios/")) return { label: "Scenarios", href: "/scenarios/" };
     if (path.startsWith("/atlas/")) return { label: "Knowledge Atlas", href: "/atlas/" };
     if (path.startsWith("/blog/")) return { label: "Journal", href: "/blog/" };
     if (path.startsWith("/notes/")) return { label: "Notes", href: "/notes/" };
+    if (path.startsWith("/research/")) return { label: "Research", href: "/research/" };
+    if (path.startsWith("/datasets/")) return { label: "Datasets", href: "/datasets/" };
+    if (path.startsWith("/skill-hub/")) return { label: "Skill Hub", href: "/skill-hub/" };
+    if (path.startsWith("/news/")) return { label: "Signals", href: "/news/" };
+    if (path.startsWith("/radar/")) return { label: "Radar", href: "/radar/" };
+    if (path === "/about/") return { label: "Profile", href: "/about/" };
     return null;
+  };
+
+  const addPageBreadcrumbs = () => {
+    const main = document.querySelector("#content");
+    const path = window.location.pathname;
+    if (!main || path === "/" || /^\/(?:ar|de|es|fr|it|nl|pl|pt-br|zh-cn)\/$/.test(path)) return;
+    if (main.querySelector(".breadcrumbs, .note-backlink, .reader-breadcrumbs, .ps-breadcrumbs")) return;
+
+    const section = sectionForPath(path);
+    const heading = main.querySelector("h1");
+    if (!section || !heading) return;
+
+    const nav = document.createElement("nav");
+    nav.className = "ps-breadcrumbs";
+    nav.setAttribute("aria-label", "Breadcrumb");
+    const list = document.createElement("ol");
+    [["Home", "/"], [section.label, section.href]].forEach(([label, href]) => {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = href;
+      link.textContent = label;
+      item.append(link);
+      list.append(item);
+    });
+    if (path !== section.href) {
+      const current = document.createElement("li");
+      current.setAttribute("aria-current", "page");
+      current.textContent = heading.textContent.trim();
+      list.append(current);
+    }
+    nav.append(list);
+    main.prepend(nav);
   };
 
   const addBreadcrumbs = (article) => {
@@ -101,10 +140,97 @@
     headings.forEach((heading) => observer.observe(heading));
   };
 
+  const addArticleTools = (article) => {
+    if (article.querySelector(":scope .reader-actions")) return;
+    const heading = article.querySelector("h1");
+    if (!heading) return;
+
+    const actions = document.createElement("div");
+    actions.className = "reader-actions";
+    actions.setAttribute("aria-label", "Article actions");
+
+    const label = document.createElement("span");
+    label.className = "reader-actions__label";
+    label.textContent = "Article tools";
+    actions.append(label);
+
+    const makeButton = (icon, text) => {
+      const button = document.createElement("button");
+      button.className = "reader-action";
+      button.type = "button";
+      button.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">${icon}</span><span>${text}</span>`;
+      return button;
+    };
+
+    const copy = makeButton("link", "Copy link");
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+      } catch (_) {
+        const field = document.createElement("textarea");
+        field.value = window.location.href;
+        field.setAttribute("readonly", "");
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+        document.body.append(field);
+        field.select();
+        document.execCommand("copy");
+        field.remove();
+      }
+      copy.querySelector("span:last-child").textContent = "Copied";
+      window.setTimeout(() => { copy.querySelector("span:last-child").textContent = "Copy link"; }, 1800);
+    });
+    actions.append(copy);
+
+    if (navigator.share) {
+      const share = makeButton("ios_share", "Share");
+      share.addEventListener("click", async () => {
+        try { await navigator.share({ title: document.title, url: window.location.href }); } catch (_) { /* user cancelled */ }
+      });
+      actions.append(share);
+    }
+
+    const linkedIn = document.createElement("a");
+    linkedIn.className = "reader-action";
+    linkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
+    linkedIn.target = "_blank";
+    linkedIn.rel = "noopener noreferrer";
+    linkedIn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">badge</span><span>LinkedIn</span>';
+    actions.append(linkedIn);
+
+    const reactionKey = `dkh-reader-useful:${window.location.pathname}`;
+    const reaction = makeButton("recommend", "Useful to me");
+    let reacted = false;
+    try { reacted = window.localStorage.getItem(reactionKey) === "true"; } catch (_) { /* storage unavailable */ }
+    reaction.setAttribute("aria-pressed", String(reacted));
+    if (reacted) reaction.querySelector("span:last-child").textContent = "Marked useful";
+    reaction.addEventListener("click", () => {
+      reacted = !reacted;
+      reaction.setAttribute("aria-pressed", String(reacted));
+      reaction.querySelector("span:last-child").textContent = reacted ? "Marked useful" : "Useful to me";
+      try {
+        if (reacted) window.localStorage.setItem(reactionKey, "true");
+        else window.localStorage.removeItem(reactionKey);
+      } catch (_) { /* personal reaction remains active for this page view */ }
+    });
+    actions.append(reaction);
+
+    const note = document.createElement("p");
+    note.className = "reader-reaction-note";
+    note.textContent = "Your reaction is stored only on this device. No public count is shown.";
+    actions.append(note);
+
+    const header = article.querySelector(":scope > .note-header");
+    if (header) header.append(actions);
+    else heading.insertAdjacentElement("afterend", actions);
+  };
+
   const enhanceReader = () => {
+    addPageBreadcrumbs();
     document.querySelectorAll(".note-article, .atlas-page").forEach((article) => {
       addBreadcrumbs(article);
       addToc(article);
+      addArticleTools(article);
     });
   };
 

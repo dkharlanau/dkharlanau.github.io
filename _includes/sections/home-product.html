@@ -1,0 +1,240 @@
+{% assign product_locale = page.locale | default: site.lang | default: 'en' %}
+{% assign product_locale_data = site.data.home_i18n[product_locale] %}
+{% assign home_content = site.data.home %}
+{% if product_locale_data.content %}{% assign home_content = product_locale_data.content %}{% endif %}
+{% assign product_ui = site.data.home_product[product_locale] | default: site.data.home_product.en %}
+{% assign mcp = product_ui.mcp | default: site.data.home_product.en.mcp %}
+{% assign hero = home_content.hero %}
+{% assign loop = hero.loop_card %}
+{% assign profile = home_content.credibility %}
+{% assign faq = home_content.faq %}
+{% assign trust_items = hero.trust_line | split: '|' %}
+{% assign service_routes = '/services/sap-ams-consulting/|/services/ams-cost-center-catalyst/|/services/sap-master-data-stability-assessment/|/services/sap-integration-architecture/' | split: '|' %}
+{% assign service_icons = 'monitor_heart|conversion_path|database|account_tree' | split: '|' %}
+
+<section class="op-hero section" aria-labelledby="home-title">
+  <div class="op-hero__copy" data-reveal>
+    <p class="op-kicker">{{ hero.person_meta }}</p>
+    <h1 id="home-title">{{ hero.title }}</h1>
+    <p class="op-hero__lead">{{ hero.lead }}</p>
+    <div class="op-actions">
+      <a class="ps-button ps-button--primary" href="{{ hero.primary_action.url }}">
+        <span>{{ hero.primary_action.label }}</span>
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+      </a>
+      {% assign secondary_action = hero.profile.contacts[1] %}
+      <a class="ps-button ps-button--secondary" href="{{ secondary_action.url }}">{{ secondary_action.label }}</a>
+    </div>
+    <ul class="op-proof" aria-label="{{ product_ui.proof_label }}">
+      {% for item in trust_items %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+  </div>
+
+  <aside class="op-signal-map" data-op-flow data-reveal aria-labelledby="flow-title">
+    <header class="op-panel-head">
+      <div>
+        <p class="op-kicker">{{ loop.eyebrow }}</p>
+        <h2 id="flow-title">{{ loop.title }}</h2>
+      </div>
+      <span class="op-status"><span aria-hidden="true"></span>{{ loop.badge }}</span>
+    </header>
+    <ol class="op-flow">
+      {% for item in loop.items %}
+      <li>
+        <button class="op-flow__step{% if forloop.first %} is-active{% endif %}" type="button" data-flow-step data-title="{{ item.title | escape }}" data-detail="{{ item.detail | escape }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+          <span class="op-flow__index">0{{ forloop.index }}</span>
+          <span class="op-flow__label">{{ item.title }}</span>
+          <span class="material-symbols-outlined" aria-hidden="true">{% if forloop.first %}troubleshoot{% elsif forloop.last %}cycle{% else %}hub{% endif %}</span>
+        </button>
+      </li>
+      {% endfor %}
+    </ol>
+    <div class="op-flow__output" aria-live="polite">
+      <span class="op-flow__signal" aria-hidden="true"></span>
+      <div>
+        <strong data-flow-title>{{ loop.items[0].title }}</strong>
+        <p data-flow-detail>{{ loop.items[0].detail }}</p>
+      </div>
+    </div>
+  </aside>
+</section>
+
+<section class="op-section section" aria-labelledby="priority-title" data-reveal>
+  <header class="op-section__head">
+    <div>
+      <p class="op-kicker">{{ product_ui.priorities_eyebrow }}</p>
+      <h2 id="priority-title">{{ hero.visual.title }}</h2>
+    </div>
+    <p>{{ hero.visual.signal_detail }}</p>
+  </header>
+  <div class="op-route-grid">
+    {% for item in hero.visual.items %}
+    {% assign route_url = service_routes[forloop.index0] %}
+    {% assign route_icon = service_icons[forloop.index0] %}
+    <a class="op-route" href="{{ route_url }}">
+      <span class="op-route__top">
+        <span class="material-symbols-outlined" aria-hidden="true">{{ route_icon }}</span>
+        <span>0{{ forloop.index }}</span>
+      </span>
+      <strong>{{ item.title }}</strong>
+      <p>{{ item.detail }}</p>
+      <span class="op-route__link">{{ product_ui.open_route }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="op-section op-calculator section" data-incident-calculator aria-labelledby="calculator-title" data-reveal>
+  <header class="op-section__head">
+    <div>
+      <p class="op-kicker">{{ product_ui.calculator.eyebrow }}</p>
+      <h2 id="calculator-title">{{ product_ui.calculator.title }}</h2>
+    </div>
+    <p>{{ product_ui.calculator.lead }}</p>
+  </header>
+  <div class="op-calculator__layout">
+    <fieldset class="op-calculator__inputs">
+      <legend>{{ product_ui.calculator.assumptions }}</legend>
+      <label><span>{{ product_ui.calculator.incidents }}</span><input type="number" min="0" max="1000" step="1" value="18" inputmode="numeric" data-calc="incidents" /></label>
+      <label><span>{{ product_ui.calculator.people }}</span><input type="number" min="0" max="10000" step="1" value="8" inputmode="numeric" data-calc="people" /></label>
+      <label><span>{{ product_ui.calculator.minutes }}</span><input type="number" min="0" max="1440" step="5" value="75" inputmode="numeric" data-calc="minutes" /></label>
+      <label><span>{{ product_ui.calculator.business_rate }}</span><input type="number" min="0" max="10000" step="5" value="55" inputmode="decimal" data-calc="businessRate" /></label>
+      <label><span>{{ product_ui.calculator.support_hours }}</span><input type="number" min="0" max="1000" step="0.5" value="3" inputmode="decimal" data-calc="supportHours" /></label>
+      <label><span>{{ product_ui.calculator.support_rate }}</span><input type="number" min="0" max="10000" step="5" value="95" inputmode="decimal" data-calc="supportRate" /></label>
+      <label><span>{{ product_ui.calculator.repeat_share }}</span><input type="number" min="0" max="100" step="1" value="45" inputmode="decimal" data-calc="repeatShare" /></label>
+      <label><span>{{ product_ui.calculator.improvement }}</span><input type="number" min="0" max="100" step="1" value="30" inputmode="decimal" data-calc="improvement" /></label>
+      <label class="op-calculator__currency"><span>{{ product_ui.calculator.currency }}</span><select data-calc="currency"><option value="EUR">EUR</option><option value="USD">USD</option><option value="GBP">GBP</option></select></label>
+    </fieldset>
+    <div class="op-calculator__results" aria-live="polite">
+      <p class="op-calculator__result-label">{{ product_ui.calculator.modelled_result }}</p>
+      <div class="op-calculator__primary-result">
+        <span>{{ product_ui.calculator.addressable_value }}</span>
+        <output data-result="addressableValue">€0</output>
+      </div>
+      <dl>
+        <div><dt>{{ product_ui.calculator.annual_incidents }}</dt><dd><output data-result="annualIncidents">0</output></dd></div>
+        <div><dt>{{ product_ui.calculator.repeat_exposure }}</dt><dd><output data-result="repeatExposure">€0</output></dd></div>
+        <div><dt>{{ product_ui.calculator.hours_recovered }}</dt><dd><output data-result="hoursRecovered">0</output></dd></div>
+      </dl>
+      <p class="op-calculator__note"><span class="material-symbols-outlined" aria-hidden="true">info</span>{{ product_ui.calculator.disclaimer }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="op-section op-profile section" aria-labelledby="profile-title" data-reveal>
+  <div class="op-profile__portrait">
+    <picture>
+      <source srcset="{{ hero.profile.image_avif }}" type="image/avif" />
+      <source srcset="{{ hero.profile.image_webp }}" type="image/webp" />
+      <img src="{{ hero.profile.image }}" alt="{{ profile.portrait_alt | default: hero.profile.alt }}" width="420" height="520" loading="lazy" />
+    </picture>
+    <span>{{ hero.person_meta }}</span>
+  </div>
+  <div class="op-profile__copy">
+    <p class="op-kicker">{{ profile.eyebrow }}</p>
+    <h2 id="profile-title">{{ profile.display_title | default: profile.title }}</h2>
+    <p class="op-profile__lead">{{ profile.narrative[0] }}</p>
+    <p>{{ product_ui.profile.note }}</p>
+    <dl class="op-profile__facts">
+      <div><dt>{{ product_ui.profile.experience }}</dt><dd>12+ years</dd></div>
+      <div><dt>{{ product_ui.profile.focus }}</dt><dd>SD · MM · MDG</dd></div>
+      <div><dt>{{ product_ui.profile.delivery }}</dt><dd>AMS · Integration</dd></div>
+      <div><dt>{{ product_ui.profile.principle }}</dt><dd>{{ product_ui.profile.principle_value }}</dd></div>
+    </dl>
+    <div class="op-principles" aria-labelledby="principles-title">
+      <h3 id="principles-title">{{ product_ui.profile.principles_title }}</h3>
+      <ul>{% for item in product_ui.profile.principles %}<li><span class="material-symbols-outlined" aria-hidden="true">check</span>{{ item }}</li>{% endfor %}</ul>
+    </div>
+    <a class="ps-button ps-button--secondary" href="{{ profile.link_url }}" target="_blank" rel="noopener noreferrer">{{ profile.link_label }}<span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
+  </div>
+</section>
+
+<section class="op-section op-home-end section" data-reveal>
+  <div class="op-writing" aria-labelledby="writing-title">
+    <header>
+      <p class="op-kicker">{{ product_ui.writing.eyebrow }}</p>
+      <h2 id="writing-title">{{ product_ui.writing.title }}</h2>
+      <p>{{ product_ui.writing.lead }}</p>
+    </header>
+    {% assign posts = site.blog | sort: 'date' | reverse %}
+    <ol class="op-writing__list">
+      {% for post in posts limit: 3 %}
+      <li><a href="{{ post.url | relative_url }}"><span>{{ post.title }}</span><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%d %b %Y' }}</time></a></li>
+      {% endfor %}
+    </ol>
+    <a class="op-text-link" href="/blog/">{{ product_ui.writing.all }} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </div>
+
+  <div class="op-faq" aria-labelledby="faq-title">
+    <header>
+      <p class="op-kicker">{{ faq.eyebrow }}</p>
+      <h2 id="faq-title">{{ faq.title }}</h2>
+      <p>{{ faq.lead }}</p>
+    </header>
+    <div class="op-faq__list">
+      {% for item in faq.items limit: 4 %}
+      <details><summary>{{ item.question }}<span class="material-symbols-outlined" aria-hidden="true">add</span></summary><p>{{ item.answer }}</p></details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="op-cta section" data-reveal aria-labelledby="home-cta-title">
+  <div>
+    <p class="op-kicker">{{ product_ui.cta_eyebrow }}</p>
+    <h2 id="home-cta-title">{{ home_content.analysis_problem.cta.title }}</h2>
+    <p>{{ home_content.analysis_problem.cta.detail }}</p>
+  </div>
+  <div class="op-actions">
+    <a class="ps-button ps-button--inverse" href="{{ home_content.analysis_problem.cta.url }}">{{ home_content.analysis_problem.cta.label }}<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <a class="ps-button ps-button--ghost" href="/services/">{{ product_ui.explore_services }}</a>
+  </div>
+</section>
+
+<section class="op-mcp section" data-reveal aria-labelledby="mcp-title">
+  <header class="op-section__head op-mcp__head">
+    <div>
+      <p class="op-kicker">{{ mcp.eyebrow }}</p>
+      <h2 id="mcp-title">{{ mcp.title }}</h2>
+    </div>
+    <p>{{ mcp.lead }}</p>
+  </header>
+
+  <div class="op-mcp__layout">
+    <div class="op-mcp__route" aria-label="{{ mcp.workflow_label }}">
+      {% for item in mcp.workflow %}
+      <div class="op-mcp__node">
+        <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+        <div><strong>{{ item.title }}</strong><p>{{ item.detail }}</p></div>
+      </div>
+      {% unless forloop.last %}<span class="op-mcp__arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>{% endunless %}
+      {% endfor %}
+    </div>
+
+    <div class="op-mcp__detail">
+      <div>
+        <p class="op-mcp__label">{{ mcp.includes_label }}</p>
+        <ul class="op-mcp__capabilities">
+          {% for item in mcp.capabilities %}
+          <li><span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span><span><strong>{{ item.title }}</strong>{{ item.detail }}</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <aside class="op-mcp__boundary">
+        <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+        <p><strong>{{ mcp.boundary_title }}</strong>{{ mcp.boundary }}</p>
+      </aside>
+    </div>
+  </div>
+
+  <div class="op-mcp__actions">
+    <div>
+      <p class="op-mcp__label">{{ mcp.use_label }}</p>
+      <p>{{ mcp.use_detail }}</p>
+    </div>
+    <div class="op-actions">
+      <a class="ps-button ps-button--primary" href="/agent-tools/sap-diagnostics-mcp/"><span>{{ mcp.guide_label }}</span><span class="material-symbols-outlined" aria-hidden="true">menu_book</span></a>
+      <a class="ps-button ps-button--secondary" href="https://github.com/dkharlanau/dkharlanau.github.io/tree/main/mcp/sap-diagnostics-mcp" target="_blank" rel="noopener noreferrer">{{ mcp.source_label }}<span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
+    </div>
+  </div>
+</section>

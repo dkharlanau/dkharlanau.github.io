@@ -1,16 +1,50 @@
 {% assign footer_ui = locale_data.ui.footer %}
-<div class="wrapper">
+{% assign nav_ui = locale_data.ui.navigation %}
+{% assign footer_content = site.data.home %}
+{% if locale_data.content %}{% assign footer_content = locale_data.content %}{% endif %}
+{% assign footer_cta = footer_content.analysis_problem.cta %}
+<div class="wrapper footer-shell">
+  <div class="footer-lead">
+    <div class="footer-lead__copy">
+      <p class="footer-kicker">{{ footer_content.hero.person_meta | default: 'SAP operations · transformation · AI readiness' }}</p>
+      <h2>{{ footer_cta.title | default: 'Make the next SAP decision easier to defend.' }}</h2>
+      <p>{{ footer_cta.detail | default: 'Independent diagnostic thinking for operating cost, process reliability, integration, master data, and practical AI.' }}</p>
+    </div>
+    <a class="footer-cta" href="{{ footer_cta.url | default: '/services/ams-cost-center-catalyst/' }}">
+      <span>{{ footer_cta.label | default: 'Start SAP analysis' }}</span>
+      <span class="material-symbols-outlined" aria-hidden="true">north_east</span>
+    </a>
+  </div>
+
   <div class="footer-grid">
     <div class="footer-brand">
-      <div class="footer-brand__row">
-        <img class="footer-brand__avatar" src="{{ '/assets/img/DzmitryiKharlanau.webp' | relative_url }}" alt="" width="36" height="36" loading="lazy" />
-        <div>
-          <p class="footer-brand__name">Dzmitryi Kharlanau</p>
-          <p class="footer-brand__note">SAP consulting — AMS, operations, integration, practical AI readiness.</p>
-        </div>
+      <a class="footer-brand__row" href="/about/">
+        <img class="footer-brand__avatar" src="{{ '/assets/img/DzmitryiKharlanau.webp' | relative_url }}" alt="" width="44" height="44" loading="lazy" />
+        <span>
+          <strong class="footer-brand__name">Dzmitryi Kharlanau</strong>
+          <span class="footer-brand__note">{{ footer_content.hero.subtitle | default: 'Senior SAP consultant · independent public knowledge' }}</span>
+        </span>
+      </a>
+      <div class="footer-social" aria-label="Professional and social profiles">
+        {% for item in site.data.social.links limit: 8 %}
+        {% assign social_icon = 'link' %}
+        {% case item.id %}
+          {% when 'linkedin' %}{% assign social_icon = 'badge' %}
+          {% when 'x' %}{% assign social_icon = 'forum' %}
+          {% when 'hashnode' %}{% assign social_icon = 'article' %}
+          {% when 'medium' %}{% assign social_icon = 'edit_note' %}
+          {% when 'huggingface' %}{% assign social_icon = 'neurology' %}
+          {% when 'devto' %}{% assign social_icon = 'terminal' %}
+          {% when 'substack' %}{% assign social_icon = 'mail' %}
+          {% when 'reddit' %}{% assign social_icon = 'groups' %}
+        {% endcase %}
+        <a href="{{ item.url }}" target="_blank" rel="me noopener noreferrer" aria-label="{{ item.label }} — {{ item.handle }}" title="{{ item.label }}">
+          <span class="material-symbols-outlined" aria-hidden="true">{{ social_icon }}</span>
+        </a>
+        {% endfor %}
       </div>
-      <p class="footer-note">&copy; {{ "now" | date: "%Y" }} Dzmitryi Kharlanau</p>
     </div>
+
     <nav class="footer-col" aria-label="{{ footer_ui.label | default: 'Footer' }}">
       <p class="footer-col__heading">{{ footer_ui.explore | default: 'Explore' }}</p>
       <a href="/about/">{{ footer_ui.about | default: 'About' }}</a>
@@ -20,17 +54,25 @@
     </nav>
     <nav class="footer-col" aria-label="Resources">
       <p class="footer-col__heading">{{ footer_ui.resources | default: 'Resources' }}</p>
-      <a href="/news/">{{ footer_ui.signals | default: 'Signals' }}</a>
+      <a href="/scenarios/">{{ nav_ui.scenarios | default: 'Scenarios' }}</a>
       <a href="/datasets/">{{ footer_ui.datasets | default: 'Datasets' }}</a>
       <a href="/ai/">{{ footer_ui.ai_sources | default: 'AI sources' }}</a>
       <a href="/search/">{{ footer_ui.search | default: 'Search' }}</a>
     </nav>
     <nav class="footer-col" aria-label="Legal">
       <p class="footer-col__heading">{{ footer_ui.legal | default: 'Legal' }}</p>
-      <a href="/legal/datasets/">{{ footer_ui.cite | default: 'Cite' }}</a>
       <a href="/legal/professional-disclosure/">{{ footer_ui.disclosure | default: 'Disclosure' }}</a>
       <a href="/legal/responsible-ai/">{{ footer_ui.ai_policy | default: 'AI policy' }}</a>
+      <a href="/legal/accessibility/">Accessibility</a>
       <a href="/legal/privacy/">{{ footer_ui.privacy | default: 'Privacy' }}</a>
     </nav>
+  </div>
+
+  <div class="footer-meta">
+    <p>&copy; {{ "now" | date: "%Y" }} Dzmitryi Kharlanau. Personal, independent views.</p>
+    <a href="https://github.com/dkharlanau/dkharlanau.github.io" target="_blank" rel="noopener noreferrer">
+      <span class="material-symbols-outlined" aria-hidden="true">code</span>
+      View site source
+    </a>
   </div>
 </div>

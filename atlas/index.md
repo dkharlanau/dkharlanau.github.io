@@ -37,6 +37,37 @@ related:
   </div>
 </section>
 
+<section class="section atlas-pathfinder" data-atlas-pathfinder aria-labelledby="pathfinder-title">
+  <header class="section-heading">
+    <p class="eyebrow">Interactive diagnostic map</p>
+    <h2 id="pathfinder-title">Start from the operating question.</h2>
+    <p class="lead">Choose the question that best describes the work in front of you. The map points to the Atlas area that helps structure the next check.</p>
+  </header>
+  <div class="atlas-pathfinder__layout">
+    <div class="atlas-pathfinder__steps" role="tablist" aria-label="Diagnostic starting points">
+      <button class="atlas-pathfinder__step is-active" id="atlas-path-blocked" type="button" role="tab" aria-selected="true" aria-controls="pathfinder-panel" data-path-icon="troubleshoot" data-path-title="A business process is blocked" data-path-detail="Start with the observable symptom, the affected business outcome, and the point where the expected process stops moving." data-path-link="/atlas/diagnostics/" data-path-link-label="Open diagnostic patterns">
+        <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span><span>Blocked outcome</span>
+      </button>
+      <button class="atlas-pathfinder__step" id="atlas-path-data" type="button" role="tab" aria-selected="false" aria-controls="pathfinder-panel" data-path-icon="database" data-path-title="The data cannot be trusted" data-path-detail="Trace the critical object, its owner, validation point, activation state, and downstream use before treating the issue as a local data fix." data-path-link="/atlas/data-quality/" data-path-link-label="Open data-quality patterns">
+        <span class="material-symbols-outlined" aria-hidden="true">database</span><span>Data signal</span>
+      </button>
+      <button class="atlas-pathfinder__step" id="atlas-path-handoff" type="button" role="tab" aria-selected="false" aria-controls="pathfinder-panel" data-path-icon="account_tree" data-path-title="A handoff fails between systems or teams" data-path-detail="Separate source, mapping, transport, target, recovery, and ownership evidence before assuming that an interface status explains the business result." data-path-link="/atlas/maps/" data-path-link-label="Open dependency maps">
+        <span class="material-symbols-outlined" aria-hidden="true">account_tree</span><span>Broken handoff</span>
+      </button>
+      <button class="atlas-pathfinder__step" id="atlas-path-action" type="button" role="tab" aria-selected="false" aria-controls="pathfinder-panel" data-path-icon="fact_check" data-path-title="The team needs a controlled next move" data-path-detail="Turn the investigation into a clear decision, owner, review point, and reusable operating artefact rather than a one-off recovery." data-path-link="/atlas/automation/" data-path-link-label="Open automation and operating-memory patterns">
+        <span class="material-symbols-outlined" aria-hidden="true">fact_check</span><span>Controlled action</span>
+      </button>
+    </div>
+    <article class="atlas-pathfinder__panel" id="pathfinder-panel" role="tabpanel" tabindex="0" aria-labelledby="atlas-path-blocked" aria-live="polite">
+      <span class="atlas-pathfinder__panel-icon material-symbols-outlined" aria-hidden="true" data-path-output-icon>troubleshoot</span>
+      <p class="eyebrow">Suggested starting point</p>
+      <h3 data-path-output-title>A business process is blocked</h3>
+      <p data-path-output-detail>Start with the observable symptom, the affected business outcome, and the point where the expected process stops moving.</p>
+      <a class="button button--primary" href="/atlas/diagnostics/" data-path-output-link>Open diagnostic patterns <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </article>
+  </div>
+</section>
+
 <section class="section">
   <header class="section-heading">
     <p class="eyebrow">Sections</p>
@@ -46,56 +77,67 @@ related:
 
   <div class="atlas-card-grid">
     <a class="atlas-card" href="/atlas/concepts/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">lightbulb</span>
       <h2>Concepts</h2>
       <p>Business and SAP concepts explained from the operational problem outward.</p>
       <span class="link-arrow">Open concepts</span>
     </a>
     <a class="atlas-card" href="/atlas/maps/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">account_tree</span>
       <h2>Maps</h2>
       <p>Process, document-flow, data dependency, and cross-domain navigation maps.</p>
       <span class="link-arrow">Open maps</span>
     </a>
     <a class="atlas-card" href="/atlas/sap/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">settings</span>
       <h2>SAP Notes</h2>
       <p>Curated SAP configuration and support explanations with conservative boundaries.</p>
       <span class="link-arrow">Open SAP section</span>
     </a>
     <a class="atlas-card" href="/atlas/diagnostics/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">troubleshoot</span>
       <h2>Diagnostics</h2>
       <p>Support-oriented diagnostic patterns for repeat incidents and process blockers.</p>
       <span class="link-arrow">Open diagnostics</span>
     </a>
     <a class="atlas-card" href="/scenarios/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">conversion_path</span>
       <h2>Scenarios</h2>
       <p>Business pain mapped to SAP process context, cost drivers, and diagnostic workflows.</p>
       <span class="link-arrow">Open scenarios</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-operations/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">psychology</span>
       <h2>AI Operations</h2>
       <p>AI-assisted support, operational memory, governance, and human review patterns.</p>
       <span class="link-arrow">Open AI operations</span>
     </a>
     <a class="atlas-card" href="/atlas/ai-tools/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">terminal</span>
       <h2>AI Tools</h2>
       <p>Repository context packaging, coding agents, MCP, AI code review, testing, and security.</p>
       <span class="link-arrow">Open AI tools</span>
     </a>
     <a class="atlas-card" href="/atlas/data-quality/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">database</span>
       <h2>Data Quality</h2>
       <p>Master data, quality signals, governance failure modes, and operational data problems.</p>
       <span class="link-arrow">Open data quality</span>
     </a>
     <a class="atlas-card" href="/atlas/automation/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">precision_manufacturing</span>
       <h2>Automation</h2>
       <p>Support automation, operational memory, agentic workflows, and developer automation patterns.</p>
       <span class="link-arrow">Open automation</span>
     </a>
     <a class="atlas-card" href="/atlas/research-notes/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">science</span>
       <h2>Research Notes</h2>
       <p>Noindex working area for material that is useful but not ready to be treated as polished expert content.</p>
       <span class="link-arrow">Open research notes</span>
     </a>
     <a class="atlas-card" href="/atlas/links/">
+      <span class="atlas-card__icon material-symbols-outlined" aria-hidden="true">link</span>
       <h2>Links</h2>
       <p>Reference routes to profile, services, datasets, and future curated sources.</p>
       <span class="link-arrow">Open links</span>

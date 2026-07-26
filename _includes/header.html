@@ -1,54 +1,32 @@
 {% assign nav_ui = locale_data.ui.navigation %}
 <header class="site-header" data-site-header>
-  <div class="wrapper">
+  <div class="wrapper site-header__inner">
+    <a class="site-brand" href="/" aria-label="{{ nav_ui.home | default: 'Home' }} — Dzmitryi Kharlanau">
+      <img class="site-brand__mark" src="{{ '/assets/img/logo-d.svg' | relative_url }}" alt="" width="30" height="30" />
+    </a>
+
+    <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-navigation">
+      <span class="site-nav__toggle-label">{{ nav_ui.menu | default: 'Menu' }}</span>
+      <span class="site-nav__toggle-mark" aria-hidden="true"></span>
+    </button>
+
     <nav class="site-nav" aria-label="{{ nav_ui.label | default: 'Primary navigation' }}">
-      <div class="site-header__branding">
-        <a href="/" aria-label="{{ nav_ui.home | default: 'Home' }} — Dzmitryi Kharlanau">Dzmitryi Kharlanau</a>
-        <span class="site-header__descriptor" aria-hidden="true">SAP AMS · AI readiness</span>
-      </div>
-      <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-navigation">
-        <span class="site-nav__toggle-label">{{ nav_ui.menu | default: 'Menu' }}</span>
-        <span class="site-nav__toggle-mark" aria-hidden="true"></span>
-      </button>
       <div class="nav-links" id="site-navigation">
         <a href="/services/" class="nav-link{% if page.url contains '/services/' %} is-active{% endif %}">{{ nav_ui.services | default: 'Services' }}</a>
         <a href="/scenarios/" class="nav-link{% if page.url contains '/scenarios/' %} is-active{% endif %}">{{ nav_ui.scenarios | default: 'Scenarios' }}</a>
         <a href="/atlas/" class="nav-link{% if page.url contains '/atlas/' %} is-active{% endif %}">{{ nav_ui.atlas | default: 'Atlas' }}</a>
         <a href="/blog/" class="nav-link{% if page.url contains '/blog/' %} is-active{% endif %}">{{ nav_ui.journal | default: 'Journal' }}</a>
         <a href="/about/" class="nav-link{% if page.url == '/about/' %} is-active{% endif %}">{{ nav_ui.about | default: 'Profile' }}</a>
-        <a href="/search/" class="nav-link nav-link--utility{% if page.url == '/search/' %} is-active{% endif %}">{{ nav_ui.search | default: 'Search' }}</a>
+        <a href="/search/" class="nav-link nav-link--utility{% if page.url == '/search/' %} is-active{% endif %}" aria-label="{{ nav_ui.search | default: 'Search' }}">
+          <span class="material-symbols-outlined" aria-hidden="true">search</span>
+          <span class="nav-link__search-label">{{ nav_ui.search | default: 'Search' }}</span>
+        </a>
         {% if page.home_locale %}{% include home-language-switcher.html %}{% endif %}
+        <a class="nav-link nav-link--contact" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">
+          <span>{{ locale_data.content.hero.profile.contacts[0].label | default: 'Discuss a constraint' }}</span>
+          <span class="material-symbols-outlined" aria-hidden="true">north_east</span>
+        </a>
       </div>
     </nav>
   </div>
 </header>
-
-<script>
-    (function () {
-        const header = document.querySelector('[data-site-header]');
-        const toggle = header && header.querySelector('.site-nav__toggle');
-        const links = header && header.querySelector('.nav-links');
-        if (!header) return;
-        const update = () => {
-            if (window.scrollY > 20) {
-                header.classList.add('site-header--scrolled');
-            } else {
-                header.classList.remove('site-header--scrolled');
-            }
-        };
-        window.addEventListener('scroll', update, { passive: true });
-        if (toggle && links) {
-          toggle.addEventListener('click', () => {
-            const isOpen = header.classList.toggle('site-header--menu-open');
-            toggle.setAttribute('aria-expanded', String(isOpen));
-          });
-          links.addEventListener('click', (event) => {
-            if (event.target.closest('a')) {
-              header.classList.remove('site-header--menu-open');
-              toggle.setAttribute('aria-expanded', 'false');
-            }
-          });
-        }
-        update();
-    })();
-</script>

@@ -6,15 +6,8 @@ permalink: /
 locale: en
 home_locale: true
 hide_global_cta: true
-hide_global_header: true
 last_modified_at: 2026-07-15
-sections:
-  - hero-atlas
-  - priorities-grid
-  - value-loop
-  - ai-principles
-  - ideas-list
-  - cta-bar
+sections: [home-product]
  
 ---
 
