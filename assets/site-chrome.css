@@ -1,0 +1,84 @@
+/* Global chrome overrides — loaded after evidence-atlas.css.
+   1. Header takes the page's own background (no separate bar color).
+   2. Navigation collapses to a menu button on ALL viewports (mobile pattern). */
+
+.page-context--knowledge .site-header,
+.page-context--home .site-header,
+.site-header {
+  background: transparent !important;
+  box-shadow: none;
+}
+
+.page-context--knowledge .site-header--scrolled,
+.page-context--knowledge .site-header--menu-open,
+.page-context--home .site-header--scrolled,
+.page-context--home .site-header--menu-open,
+.site-header--scrolled,
+.site-header--menu-open {
+  background: transparent !important;
+  box-shadow: none;
+}
+
+.site-nav__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  color: var(--ea-ink, #152033);
+  font-family: var(--ea-mono, ui-monospace, Menlo, Consolas, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.site-nav__toggle-mark,
+.site-nav__toggle-mark::before,
+.site-nav__toggle-mark::after {
+  display: block;
+  width: 1.05rem;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transition: transform 160ms ease;
+}
+
+.site-nav__toggle-mark { position: relative; }
+.site-nav__toggle-mark::before { position: absolute; top: -0.3rem; }
+.site-nav__toggle-mark::after { position: absolute; top: 0.3rem; }
+
+.site-header--menu-open .site-nav__toggle-mark { background: transparent; }
+.site-header--menu-open .site-nav__toggle-mark::before { top: 0; transform: rotate(45deg); }
+.site-header--menu-open .site-nav__toggle-mark::after { top: 0; transform: rotate(-45deg); }
+
+.nav-links {
+  position: absolute;
+  top: var(--ea-header, 4.5rem);
+  right: 0;
+  left: 0;
+  display: none;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  border-bottom: 1px solid var(--ea-line-strong, #c5cbd4);
+  background: var(--ea-paper, #fff);
+  padding: 0.6rem 1rem 1rem;
+}
+
+.site-header--menu-open .nav-links { display: flex; }
+
+.nav-link {
+  border-bottom: 1px solid var(--ea-line, #d8dce3);
+  padding: 0.85rem 0;
+  font-size: 0.9rem;
+}
+
+.nav-link::after { display: none; }
+
+.site-header .home-language-switcher {
+  align-self: flex-start;
+  margin-top: 0.4rem;
+}
