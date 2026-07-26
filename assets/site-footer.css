@@ -1,32 +1,51 @@
-/* Global editorial footer. Loaded after evidence-atlas.css. */
+/* Global editorial footer — modern compact rework.
+   Loaded after evidence-atlas.css. Legacy layers force a light background and
+   a near-white text color onto .site-footer (illegible together), so the base
+   colors below are pinned with !important. */
 
 .site-footer {
-  border-top: 1px solid var(--ea-line, #d8dce3);
+  background: var(--ea-paper, #ffffff) !important;
+  color: var(--ea-navy, #152033) !important;
+  border-top: 1px solid var(--ea-line, #d8dce3) !important;
   margin-top: 4rem;
-  padding: 3rem 0 2.5rem;
-  background: var(--ea-paper, #fff);
+  padding: 2.5rem 0 2rem;
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
-  gap: 2.5rem;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 2fr) minmax(0, 2fr) minmax(0, 2fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.footer-brand__row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.footer-brand__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--ea-line, #d8dce3);
 }
 
 .footer-brand__name {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   letter-spacing: -0.01em;
-  color: var(--ea-navy, #152033);
-  margin: 0 0 0.375rem;
+  color: var(--ea-navy, #152033) !important;
+  margin: 0;
 }
 
 .footer-brand__note {
-  font-size: 0.875rem;
-  line-height: 1.55;
-  color: var(--ea-ink-muted, #5a6472);
-  max-width: 26rem;
-  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ea-ink-muted, #5a6472) !important;
+  margin: 0.125rem 0 0;
 }
 
 .footer-note {
@@ -34,34 +53,40 @@
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ea-ink-muted, #5a6472);
+  color: var(--ea-ink-muted, #5a6472) !important;
   margin: 0;
 }
 
 .footer-col {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.375rem;
 }
 
 .footer-col__heading {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
+  font-size: 0.65rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ea-signal, #a85d09);
+  color: var(--ea-signal, #a85d09) !important;
   margin: 0 0 0.5rem;
 }
 
 .footer-col a {
-  font-size: 0.875rem;
-  color: var(--ea-navy, #152033);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ea-navy, #152033) !important;
   text-decoration: none;
   width: fit-content;
 }
 
-.footer-col a:hover { color: var(--ea-signal, #a85d09); }
+.footer-col a:hover { color: var(--ea-signal, #a85d09) !important; }
 
-@media (max-width: 720px) {
-  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+@media (max-width: 860px) {
+  .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 520px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
 }

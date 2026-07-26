@@ -2,8 +2,13 @@
 <div class="wrapper">
   <div class="footer-grid">
     <div class="footer-brand">
-      <p class="footer-brand__name">Dzmitryi Kharlanau</p>
-      <p class="footer-brand__note">SAP consulting — AMS, operations, integration, and practical AI readiness.</p>
+      <div class="footer-brand__row">
+        <img class="footer-brand__avatar" src="{{ '/assets/img/DzmitryiKharlanau.webp' | relative_url }}" alt="" width="36" height="36" loading="lazy" />
+        <div>
+          <p class="footer-brand__name">Dzmitryi Kharlanau</p>
+          <p class="footer-brand__note">SAP consulting — AMS, operations, integration, practical AI readiness.</p>
+        </div>
+      </div>
       <p class="footer-note">&copy; {{ "now" | date: "%Y" }} Dzmitryi Kharlanau</p>
     </div>
     <nav class="footer-col" aria-label="{{ footer_ui.label | default: 'Footer' }}">
@@ -11,9 +16,14 @@
       <a href="/about/">{{ footer_ui.about | default: 'About' }}</a>
       <a href="/services/">{{ footer_ui.services | default: 'Services' }}</a>
       <a href="/atlas/">{{ footer_ui.atlas | default: 'Atlas' }}</a>
+      <a href="/blog/">{{ footer_ui.journal | default: 'Journal' }}</a>
+    </nav>
+    <nav class="footer-col" aria-label="Resources">
+      <p class="footer-col__heading">{{ footer_ui.resources | default: 'Resources' }}</p>
       <a href="/news/">{{ footer_ui.signals | default: 'Signals' }}</a>
       <a href="/datasets/">{{ footer_ui.datasets | default: 'Datasets' }}</a>
       <a href="/ai/">{{ footer_ui.ai_sources | default: 'AI sources' }}</a>
+      <a href="/search/">{{ footer_ui.search | default: 'Search' }}</a>
     </nav>
     <nav class="footer-col" aria-label="Legal">
       <p class="footer-col__heading">{{ footer_ui.legal | default: 'Legal' }}</p>

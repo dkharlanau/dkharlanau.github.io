@@ -5,11 +5,17 @@
       <img class="hc-identity__avatar" src="{{ '/assets/img/DzmitryiKharlanau.webp' | relative_url }}" alt="Portrait of Dzmitryi Kharlanau" width="44" height="44" />
       <p class="hc-identity__name">Dzmitryi Kharlanau <span>· {{ hero.eyebrow }}</span></p>
     </div>
-    <nav class="hc-identity__langs" aria-label="Language">
-      {% for language in site.data.home_languages %}
-      <a href="{{ language.path }}"{% if page.locale == language.code %} aria-current="page"{% endif %}>{{ language.short }}</a>
-      {% endfor %}
-    </nav>
+    <details class="hc-langs">
+      <summary class="hc-langs__button">
+        <span class="material-symbols-outlined" aria-hidden="true">language</span>
+        {{ page.locale | upcase }}
+      </summary>
+      <div class="hc-langs__menu">
+        {% for language in site.data.home_languages %}
+        <a href="{{ language.path }}"{% if page.locale == language.code %} aria-current="page"{% endif %}>{{ language.native_name }}</a>
+        {% endfor %}
+      </div>
+    </details>
   </div>
   <p class="eyebrow">{{ hero.kicker }}</p>
   <h1>{{ hero.title }}</h1>

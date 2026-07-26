@@ -14,34 +14,29 @@ schema_type: CollectionPage
     <p><a class="link-arrow" href="/blog/topics/">Browse categories and tags</a></p>
   </header>
 
-  <div class="notes-grid">
-    {% assign posts = site.blog | sort: 'date' | reverse %}
-    {% if posts == empty %}
-    <p class="lead">Essays and deep-dives on systems thinking, SAP delivery, and automation patterns that keep enterprise platforms trustworthy.</p>
-    {% else %}
-    {% for post in posts %}
-    <article class="note-card neub-card">
-      <header>
-        <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-        {% if post.subtitle %}<p class="note-card-subtitle">{{ post.subtitle }}</p>{% endif %}
-      </header>
-      <div class="note-card-meta">
-        {% assign published_on = post.date | default: post.published %}
-        {% if published_on %}
-        <span>{{ published_on | date: "%d %b %Y" }}</span>
-        {% endif %}
-        {% if post.tags %}
-        <ul class="note-tags">
-          {% for tag in post.tags %}
-          <li>{{ tag }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
+  {% assign posts = site.blog | sort: 'date' | reverse %}
+  {% if posts == empty %}
+  <p class="lead">Essays and deep-dives on systems thinking, SAP delivery, and automation patterns that keep enterprise platforms trustworthy.</p>
+  {% else %}
+  {% assign featured = posts | first %}
+  <a class="atlas-card blog-featured" href="{{ featured.url }}">
+    <p class="eyebrow">Latest article</p>
+    <h2>{{ featured.title }}</h2>
+    <p>{{ featured.summary | default: featured.description | default: featured.excerpt | strip_html | truncate: 220 }}</p>
+    <span class="link-arrow">Read article</span>
+  </a>
+  <ul class="blog-list">
+    {% for post in posts offset: 1 %}
+    {% assign published_on = post.date | default: post.published %}
+    <li>
+      {% if published_on %}<time datetime="{{ published_on | date_to_xmlschema }}">{{ published_on | date: '%b %d, %Y' }}</time>{% endif %}
+      <div class="blog-list__main">
+        <a href="{{ post.url }}">{{ post.title }}</a>
+        <p>{{ post.summary | default: post.description | default: post.excerpt | strip_html | truncate: 140 }}</p>
       </div>
-      <p>{{ post.summary | default: post.description | default: post.excerpt }}</p>
-      <a class="link-arrow" href="{{ post.url }}">Read article</a>
-    </article>
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+    </li>
     {% endfor %}
-    {% endif %}
-  </div>
+  </ul>
+  {% endif %}
 </section>

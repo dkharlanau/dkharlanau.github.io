@@ -1,0 +1,36 @@
+{% assign value = site.data.home.home_value %}
+<section class="section" data-hc-value>
+  <header class="section-heading">
+    <p class="eyebrow">{{ value.eyebrow }}</p>
+    <h2>{{ value.title }}</h2>
+    <p class="lead">{{ value.lead }}</p>
+  </header>
+  <div class="hc-value" role="tablist" aria-label="{{ value.title }}">
+    {% for item in value.items %}
+    <button
+      class="hc-value__card{% if forloop.first %} is-active{% endif %}"
+      type="button"
+      role="tab"
+      aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+      data-value-tab="{{ forloop.index0 }}"
+    >
+      <span class="hc-value__top">
+        <span class="hc-value__number">{{ item.number }}</span>
+        <span class="hc-value__tag">{{ item.tag }}</span>
+      </span>
+      <span class="hc-value__title">{{ item.title }}</span>
+      <span class="hc-value__metric">{{ item.metric }} <small>{{ item.metric_label }}</small></span>
+      <span class="hc-value__bar" aria-hidden="true"><span class="hc-value__bar-fill"></span></span>
+    </button>
+    {% endfor %}
+  </div>
+  <div class="hc-value__panels" aria-live="polite">
+    {% for item in value.items %}
+    <p
+      class="hc-value__panel{% if forloop.first %} is-visible{% endif %}"
+      data-value-panel="{{ forloop.index0 }}"
+      {% unless forloop.first %}hidden{% endunless %}
+    >{{ item.detail }}</p>
+    {% endfor %}
+  </div>
+</section>

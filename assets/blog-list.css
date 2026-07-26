@@ -1,0 +1,68 @@
+/* Blog index — featured card + compact ruled list. Loaded on /blog/ only. */
+
+.blog-featured {
+  display: block;
+  max-width: 46rem;
+  margin-bottom: 2.5rem;
+  text-decoration: none;
+}
+
+.blog-featured .eyebrow { margin-bottom: 0.5rem; }
+
+.blog-featured h2 { margin-top: 0; }
+
+.blog-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--ea-line, #d8dce3);
+}
+
+.blog-list li {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) 1.25rem;
+  gap: 1.5rem;
+  align-items: baseline;
+  padding: 1.125rem 0;
+  border-top: 1px solid var(--ea-line, #d8dce3);
+}
+
+.blog-list time {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ea-ink-muted, #5a6472);
+  white-space: nowrap;
+}
+
+.blog-list__main a {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--ea-navy, #152033);
+  text-decoration: none;
+}
+
+.blog-list__main a:hover { color: var(--ea-signal, #a85d09); }
+
+.blog-list__main p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ea-ink-muted, #5a6472);
+  margin: 0.25rem 0 0;
+}
+
+.blog-list .material-symbols-outlined {
+  font-size: 1.125rem;
+  color: var(--ea-ink-muted, #5a6472);
+  justify-self: end;
+}
+
+.blog-list li:hover .material-symbols-outlined { color: var(--ea-signal, #a85d09); }
+
+@media (max-width: 640px) {
+  .blog-list li { grid-template-columns: minmax(0, 1fr) 1.25rem; }
+  .blog-list time { grid-column: 1 / -1; }
+}

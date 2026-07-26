@@ -11,8 +11,7 @@ last_modified_at: 2026-07-15
 sections:
   - hero-atlas
   - priorities-grid
-  - constraint-canvas-home
-  - steps-ruled
+  - value-loop
   - ai-principles
   - ideas-list
   - cta-bar
