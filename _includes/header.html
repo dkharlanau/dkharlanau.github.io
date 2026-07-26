@@ -1,24 +1,33 @@
-<header class="site-header">
-    <div class="wrapper">
-        <nav class="site-nav">
-            <div class="site-header__branding">
-                <a href="/">Dzmitryi Kharlanau</a>
-            </div>
-            <div class="nav-links">
-                {% unless page.url == '/atlas/' %}<a href="/atlas/" class="nav-link">Atlas</a>{% endunless %}
-                {% unless page.url == '/services/' %}<a href="/services/" class="nav-link">Services</a>{% endunless %}
-                {% unless page.url == '/scenarios/' %}<a href="/scenarios/" class="nav-link">Scenarios</a>{% endunless %}
-                {% unless page.url == '/ai/' %}<a href="/ai/" class="nav-link">AI tools</a>{% endunless %}
-                {% unless page.url contains '/blog/' %}<a href="/blog/" class="nav-link">Blog</a>{% endunless %}
-                <a href="/" class="nav-link nav-link--back">Back to main</a>
-            </div>
-        </nav>
-    </div>
+{% assign nav_ui = locale_data.ui.navigation %}
+<header class="site-header" data-site-header>
+  <div class="wrapper">
+    <nav class="site-nav" aria-label="{{ nav_ui.label | default: 'Primary navigation' }}">
+      <div class="site-header__branding">
+        <a href="/" aria-label="{{ nav_ui.home | default: 'Home' }} — Dzmitryi Kharlanau">Dzmitryi Kharlanau</a>
+        <span class="site-header__descriptor" aria-hidden="true">SAP AMS · AI readiness</span>
+      </div>
+      <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-navigation">
+        <span class="site-nav__toggle-label">{{ nav_ui.menu | default: 'Menu' }}</span>
+        <span class="site-nav__toggle-mark" aria-hidden="true"></span>
+      </button>
+      <div class="nav-links" id="site-navigation">
+        <a href="/services/" class="nav-link{% if page.url contains '/services/' %} is-active{% endif %}">{{ nav_ui.services | default: 'Services' }}</a>
+        <a href="/scenarios/" class="nav-link{% if page.url contains '/scenarios/' %} is-active{% endif %}">{{ nav_ui.scenarios | default: 'Scenarios' }}</a>
+        <a href="/atlas/" class="nav-link{% if page.url contains '/atlas/' %} is-active{% endif %}">{{ nav_ui.atlas | default: 'Atlas' }}</a>
+        <a href="/blog/" class="nav-link{% if page.url contains '/blog/' %} is-active{% endif %}">{{ nav_ui.journal | default: 'Journal' }}</a>
+        <a href="/about/" class="nav-link{% if page.url == '/about/' %} is-active{% endif %}">{{ nav_ui.about | default: 'Profile' }}</a>
+        <a href="/search/" class="nav-link nav-link--utility{% if page.url == '/search/' %} is-active{% endif %}">{{ nav_ui.search | default: 'Search' }}</a>
+        {% if page.home_locale %}{% include home-language-switcher.html %}{% endif %}
+      </div>
+    </nav>
+  </div>
 </header>
 
 <script>
     (function () {
-        const header = document.querySelector('.site-header');
+        const header = document.querySelector('[data-site-header]');
+        const toggle = header && header.querySelector('.site-nav__toggle');
+        const links = header && header.querySelector('.nav-links');
         if (!header) return;
         const update = () => {
             if (window.scrollY > 20) {
@@ -28,6 +37,18 @@
             }
         };
         window.addEventListener('scroll', update, { passive: true });
+        if (toggle && links) {
+          toggle.addEventListener('click', () => {
+            const isOpen = header.classList.toggle('site-header--menu-open');
+            toggle.setAttribute('aria-expanded', String(isOpen));
+          });
+          links.addEventListener('click', (event) => {
+            if (event.target.closest('a')) {
+              header.classList.remove('site-header--menu-open');
+              toggle.setAttribute('aria-expanded', 'false');
+            }
+          });
+        }
         update();
     })();
 </script>

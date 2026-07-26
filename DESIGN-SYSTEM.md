@@ -33,8 +33,9 @@ Current visual behavior is defined by these files, in this order:
 1. `assets/material3.css`
 2. `assets/main.css`
 3. `assets/site.css`
+4. `assets/evidence-atlas.css`
 
-`assets/site.css` is loaded last and currently establishes most of the homepage look. Reuse existing tokens and patterns before creating new ones.
+`assets/evidence-atlas.css` is loaded last and is the current production layer. It establishes the shared visual language while the earlier files remain in place for legacy component structure.
 
 ## Foundations
 
@@ -297,17 +298,18 @@ Before considering a new page done, verify:
 - If new CSS is required, add it in the existing stylesheet layer that matches the page, and avoid token duplication.
 - If a new component becomes reusable, add it to this document after implementation.
 
-## Unified Design Layer (current system)
+## Evidence Atlas Production Layer
 
-The end of `assets/site.css` contains the design layer (appended blocks, last in cascade). The current unified system supersedes earlier hairline-brutalist and warm-paper experiments:
+`assets/evidence-atlas.css` is the canonical styling layer for all templates and localisations. It deliberately turns the site into an evidence-led personal publication rather than a rounded-card SaaS interface:
 
-- **Palette:** neutral light page (`#f5f6f9`), white card surfaces, cool grey hairlines (`--line`, `--line-strong`), one signal color: violet `--color-signal: #5b45d6` (kickers, indices, focus outlines, markers, primary actions). Never for body text or large fills.
-- **Surfaces:** white cards with 1px border, 18–24px radii, and a single soft shadow (`--shadow-soft`). Ruled interiors (hairline dividers) may live inside rounded card shells. Dark navy (`--color-accent: #152033`) is reserved for emphasis blocks (dark stat cards, the contact CTA, dark `pre` with `--shadow-paper`).
-- **Typography:** one display voice — Inter, tight tracking (-0.03…-0.04em), moderate clamp sizes. Source Serif 4 is reserved for quotes only. Kickers, indices, trust lines, and the footer note use `--font-mono` as a metadata layer.
-- **Actions:** pill buttons (999px) — primary violet fill, secondary 1px outline; hover is a tint (`--color-signal-soft`) or slight lift, never a heavy shadow.
-- **Fold:** rounded card frame with a graph-paper backdrop, top bar (circle avatar + identity + primary CTA), and the operating-value-loop card (numbered steps, connecting hairline, violet metric lines).
-- **Motion:** entrance rise and hover lifts are gated behind `prefers-reduced-motion: no-preference`; all animation stops under `reduce`.
-- New components should reuse these tokens and append overrides to the same layer instead of introducing new radii, shadows, or accent colors.
+- **Palette:** quiet grey-white page (`--ea-page`), white paper surfaces, navy ink (`--ea-navy`), cool-grey hairlines, and one restrained amber signal (`--ea-signal`) for metadata, focus, and status. Amber is never used as a large decorative fill.
+- **Structure:** pages, cards, evidence grids, process rails, tables, and metadata use a shared 1px ruled system. Corners are 3px; elevation is removed except for an intentional offset-paper shadow on key dark or code surfaces.
+- **Typography:** Inter carries display and body hierarchy; Source Serif 4 is reserved for quotation and editorial pause; the system mono face distinguishes labels, chronology, status, and compact metadata.
+- **Actions:** rectangular, high-contrast controls with visible focus. Nav states use an underline rather than a decorative pill.
+- **Responsive and locale behaviour:** the header collapses to an accessible menu, grids stack without reordering content, long translations can wrap, and RTL changes directional spacing and header alignment.
+- **Motion:** short entrance and hover transitions only where they strengthen hierarchy. Every animation and smooth-scroll effect is neutralised for `prefers-reduced-motion`.
+
+New reusable components belong in `assets/evidence-atlas.css`, should consume the `--ea-*` tokens, and must be checked in both a long-form page and a mobile/RTL page before release.
 
 ## Short System Summary
 

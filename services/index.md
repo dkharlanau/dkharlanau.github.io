@@ -6,201 +6,152 @@ permalink: /services/
 last_modified_at: 2026-07-24
 ---
 
-<section class="section">
-  <div class="section-shell section-shell--flat">
-    <p class="eyebrow">Trust signals</p>
-    <p class="lead">Start with the <a href="/about/">canonical profile page</a> for background and public proofs, then use <a href="/ai/">AI sources</a> and <a href="/datasets/">datasets</a> as the evidence layer behind these service offers.</p>
-  </div>
-</section>
-
-<section class="section">
-  <header class="section-heading">
-    <p class="eyebrow">Services</p>
-    <h1>A practical path for SAP transformation work</h1>
-    <p class="lead">I help teams diagnose where change loses value, stabilize noisy operations, structure reusable operational memory, and extend SAP with side-by-side AI and automation without turning S/4HANA into a customization trap.</p>
-  </header>
-
-  <div class="services-grid">
-    <a class="service-card" href="/services/sap-o2c-process-audit/">
-      <p class="eyebrow">1. Diagnose</p>
-      <h3 class="service-card__title">SAP Transformation Friction Audit</h3>
-      <p class="service-card__subtitle">Find where change loses value across process, data, integration, handover, and support.</p>
-      <p class="service-card__summary">Trace incident patterns, backlog drivers, ownership gaps, custom code, and control breaks into a clear remediation map.</p>
-      <div class="service-card__footer">
-        <span class="link-arrow">Learn more</span>
+<div class="service-canvas" data-service-canvas>
+  <section class="service-canvas__hero" aria-labelledby="service-canvas-title">
+    <div class="service-canvas__hero-copy" data-reveal>
+      <p class="service-canvas__eyebrow">SAP operating improvement</p>
+      <h1 id="service-canvas-title">Modern SAP operations.<br />Lower TCO. AI-ready execution.</h1>
+      <p class="service-canvas__lede">For companies strengthening SAP AMS, reducing the cost of repeat work, building dependable data foundations, and introducing AI with controls that work in production.</p>
+      <div class="service-canvas__actions">
+        <a class="service-canvas__button service-canvas__button--primary" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">Discuss a constraint <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+        <a class="service-canvas__text-link" href="#constraint-canvas">Explore the operating priorities <span class="material-symbols-outlined" aria-hidden="true">south_east</span></a>
       </div>
-    </a>
-
-    <a class="service-card" href="/services/sap-ams-consulting/">
-      <p class="eyebrow">2. Stabilize</p>
-      <h3 class="service-card__title">O2C / Integration / AMS Improvement</h3>
-      <p class="service-card__subtitle">Reduce operational noise and make the process reliable enough for further change.</p>
-      <p class="service-card__summary">Shift support from ticket closure to prevention with KEDB, observability, ownership clarity, and productized fixes.</p>
-      <div class="service-card__footer">
-        <span class="link-arrow">Learn more</span>
-      </div>
-    </a>
-
-    <a class="service-card" href="/ai/operational-continuity/">
-      <p class="eyebrow">3. Structure</p>
-      <h3 class="service-card__title">Operational Memory and Handover Model</h3>
-      <p class="service-card__subtitle">Turn project and support knowledge into reusable runbooks, KEDB, decision logs, and ownership maps.</p>
-      <p class="service-card__summary">Capture what usually stays tribal, then make it usable during incidents, transitions, audits, and future delivery work.</p>
-      <div class="service-card__footer">
-        <span class="link-arrow">Learn more</span>
-      </div>
-    </a>
-
-    <a class="service-card" href="/services/sap-ai-ml-enablement/">
-      <p class="eyebrow">4. Extend</p>
-      <h3 class="service-card__title">Side-by-Side AI and Automation</h3>
-      <p class="service-card__subtitle">Build AI-assisted workflows, mini-apps, retrieval, diagnostics, and automation outside the SAP core.</p>
-      <p class="service-card__summary">Design sidecar AI patterns, small operator tools, integration rails, and governance around deterministic S/4HANA processes.</p>
-      <div class="service-card__footer">
-        <span class="link-arrow">Learn more</span>
-      </div>
-    </a>
-
-    <a class="service-card" href="/services/sap-integration-reliability-assessment/">
-      <p class="eyebrow">Diagnostic path</p>
-      <h3 class="service-card__title">Integration Reliability Assessment</h3>
-      <p class="service-card__subtitle">Find the ownership, observability, and recovery gaps hidden behind recurring interface failures.</p>
-      <p class="service-card__summary">Use a bounded assessment to separate source, mapping, transport, middleware, and target-system failures before committing to a platform redesign.</p>
-      <div class="service-card__footer">
-        <span class="link-arrow">Explore the assessment</span>
-      </div>
-    </a>
-
-    <a class="service-card" href="/services/sap-master-data-stability-assessment/">
-      <p class="eyebrow">Diagnostic path</p>
-      <h3 class="service-card__title">Master Data Stability Assessment</h3>
-      <p class="service-card__subtitle">Reduce duplicate records, failed replication, and manual correction without treating MDG as the only answer.</p>
-      <p class="service-card__summary">Map object ownership, change paths, keys, controls, and replication dependencies before adding workflow or another data platform.</p>
-      <div class="service-card__footer">
-        <span class="link-arrow">Explore the assessment</span>
-      </div>
-    </a>
-
-    <a class="service-card" href="/services/sap-planning-and-replenishment-assessment/">
-      <p class="eyebrow">Diagnostic path</p>
-      <h3 class="service-card__title">Planning and Replenishment Assessment</h3>
-      <p class="service-card__subtitle">Turn high-volume planning exceptions into evidence-backed decisions without automating supply or customer commitments.</p>
-      <p class="service-card__summary">Trace the path from a shortage, allocation, or replenishment signal to the owner, evidence, approval, and prevention work it needs.</p>
-      <div class="service-card__footer">
-        <span class="link-arrow">Explore the assessment</span>
-      </div>
-    </a>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-shell">
-    <header class="section-heading"><p class="eyebrow">Relevant experience</p><h2>Where the service work is grounded</h2></header>
-    <div class="evidence-grid">
-      <article class="evidence-card"><h3>SD, MM, O2C, and P2P</h3><p>Commercial and procurement processes are treated as connected flows: order, delivery, billing, stock, purchasing, goods receipt, invoice, and the controls that make them reliable.</p></article>
-      <article class="evidence-card"><h3>Master data and MDG</h3><p>Assess data ownership, keys, extensions, workflow, and replication before assuming a data issue needs another tool or a larger governance programme.</p></article>
-      <article class="evidence-card"><h3>Integration and architecture</h3><p>Work with IDoc, AIF, RFC, web services, APIs, OData, event patterns, and the operational questions of ownership, monitoring, recovery, and contracts.</p></article>
-      <article class="evidence-card"><h3>Automotive, Retail, and AMS</h3><p>Bring a support-minded view to environments where logistics timing, cross-process coordination, enhancement debt, and handovers shape business outcomes.</p></article>
+      <p class="service-canvas__microcopy"><span aria-hidden="true"></span> A practical improvement programme—not a generic maturity score.</p>
     </div>
-    <p>These offers draw on the public experience record described in the <a href="/about/">profile</a> and <a href="/cv/">CV</a>. They are problem-led consulting entry points, not claims of a pre-packaged solution for every landscape.</p>
-  </div>
-</section>
 
-<section class="section">
-  <div class="section-shell">
-    <header class="section-heading"><p class="eyebrow">Ways of working</p><h2>Engagement formats that create a usable next decision</h2></header>
-    <div class="engagement-grid">
-      <article class="engagement-card"><h3>Focused diagnostic</h3><p>One failure pattern, a small safe evidence set, the right owners in the room, and a decision brief. Useful when the team needs clarity before committing to more delivery work.</p></article>
-      <article class="engagement-card"><h3>Stabilisation track</h3><p>A short operating-model improvement around repeat incidents, integration recovery, data corrections, or a blocked process. The emphasis is on prevention, handover, and control—not only ticket closure.</p></article>
-      <article class="engagement-card"><h3>Architecture or data decision</h3><p>A bounded decision on ownership, integration patterns, extension lifecycle, MDG scope, or side-by-side boundaries, supported by explicit assumptions and trade-offs.</p></article>
-      <article class="engagement-card"><h3>Capability building</h3><p>Teach a team to use a diagnostic pattern, evidence checklist, decision log, runbook, or AI review boundary so that the method survives the initial engagement.</p></article>
+    <div class="service-signal-map" role="tablist" aria-label="Choose a service path" data-reveal>
+      <p class="service-signal-map__label">Choose an operating priority</p>
+      <div class="service-signal-map__track" aria-hidden="true"></div>
+      <button class="service-signal-map__node is-active" id="service-tab-ams" type="button" role="tab" aria-selected="true" aria-controls="service-panel" data-service="ams">
+        <span class="service-signal-map__number">01</span><span class="material-symbols-outlined" aria-hidden="true">health_and_safety</span><span>AMS &amp;<br />TCO</span>
+      </button>
+      <button class="service-signal-map__node" id="service-tab-data" type="button" role="tab" aria-selected="false" aria-controls="service-panel" data-service="data">
+        <span class="service-signal-map__number">02</span><span class="material-symbols-outlined" aria-hidden="true">database</span><span>Master<br />data</span>
+      </button>
+      <button class="service-signal-map__node" id="service-tab-logistics" type="button" role="tab" aria-selected="false" aria-controls="service-panel" data-service="logistics">
+        <span class="service-signal-map__number">03</span><span class="material-symbols-outlined" aria-hidden="true">local_shipping</span><span>Logistics &amp;<br />planning</span>
+      </button>
+      <button class="service-signal-map__node" id="service-tab-integration" type="button" role="tab" aria-selected="false" aria-controls="service-panel" data-service="integration">
+        <span class="service-signal-map__number">04</span><span class="material-symbols-outlined" aria-hidden="true">account_tree</span><span>Integration &amp;<br />automation</span>
+      </button>
+      <button class="service-signal-map__node" id="service-tab-ai" type="button" role="tab" aria-selected="false" aria-controls="service-panel" data-service="ai">
+        <span class="service-signal-map__number">05</span><span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span><span>Practical<br />AI</span>
+      </button>
+      <article class="service-signal-map__detail" id="service-panel" role="tabpanel" aria-labelledby="service-tab-ams" tabindex="0" data-service-detail>
+        <p class="service-signal-map__detail-label" data-service-kicker>AMS performance</p>
+        <h2 data-service-title>Reduce repeat work. Improve the operating model.</h2>
+        <p data-service-description>Start where recurring incidents, manual recovery, and fragmented ownership keep SAP operating cost high.</p>
+        <ul data-service-deliverables>
+          <li>Repeat-work and TCO baseline</li>
+          <li>Support ownership and service design</li>
+          <li>Prevention and automation backlog</li>
+        </ul>
+        <a class="service-canvas__text-link" data-service-link href="/services/sap-ams-consulting/">Explore AMS performance <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      </article>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section">
-  <div class="section-shell">
-    <header class="section-heading"><p class="eyebrow">Deliverable preview</p><h2>What the work is designed to leave behind</h2></header>
-    <div class="decision-table"><table><thead><tr><th>Artefact</th><th>What it contains</th><th>Why it helps</th></tr></thead><tbody>
-      <tr><td>Diagnostic brief</td><td>Business symptom, scope, evidence, dependencies, and uncertain points.</td><td>Stops teams from debating a vague problem statement.</td></tr>
-      <tr><td>Owner and recovery map</td><td>Business outcome, process owner, data owner, interface or technical owner, and first recovery action.</td><td>Makes cross-team escalation faster and more accountable.</td></tr>
-      <tr><td>Prioritised backlog</td><td>Immediate controls, data or process fixes, architectural decisions, and longer-term work.</td><td>Separates what can be done now from what needs sponsorship or design.</td></tr>
-      <tr><td>Runbook or KEDB pattern</td><td>Symptoms, evidence, safe checks, ownership, resolution boundary, and prevention action.</td><td>Turns one investigation into reusable operational memory.</td></tr>
-    </tbody></table></div>
-  </div>
-</section>
-
-<hr class="divider" />
-
-<section class="section">
-  <header class="section-heading">
-    <p class="eyebrow">Fit</p>
-    <h2>When this engagement model works best</h2>
-  </header>
-  <div class="faq-items">
-    <article class="faq-item">
-      <h3>Transformation work is moving, but value keeps leaking between teams</h3>
-      <p>This usually means the problem is not one module or one backlog. I map where process, data, integration, handover, and support friction turns change into operational noise.</p>
-    </article>
-    <article class="faq-item">
-      <h3>You need SAP changes but want to protect clean core S/4HANA</h3>
-      <p>I separate what must stay in-core from what should become an API, event, or edge service, so upgrades remain manageable.</p>
-    </article>
-    <article class="faq-item">
-      <h3>The programme needs quick wins before a larger transformation</h3>
-      <p>Short-cycle audits, operational memory, mini apps, and targeted automation are the fastest way to prove value before committing to bigger delivery tracks.</p>
-    </article>
-  </div>
-</section>
-
-<section class="section">
-  <header class="section-heading">
-    <p class="eyebrow">Choose by problem</p>
-    <h2>Start from the operational constraint, not the product name</h2>
-    <p class="lead">The useful first question is rarely whether a team needs MDG, a new integration platform, or an AI copilot. It is where the process loses control and what evidence would change that decision.</p>
-  </header>
-  <div class="faq-items">
-    <article class="faq-item">
-      <h3>Repeated incidents despite acceptable SLA reporting</h3>
-      <p>Start with <a href="/services/sap-ams-consulting/">SAP AMS consulting</a> when the same support patterns return because root-cause work, ownership, and reusable knowledge are missing.</p>
-    </article>
-    <article class="faq-item">
-      <h3>Interfaces are green until a business process is blocked</h3>
-      <p>Start with the <a href="/services/sap-integration-reliability-assessment/">integration reliability assessment</a> when a dashboard has status data but no reliable route from failure to accountable recovery.</p>
-    </article>
-    <article class="faq-item">
-      <h3>Customers, suppliers, or business partners need repeated repair</h3>
-      <p>Start with the <a href="/services/sap-master-data-stability-assessment/">master data stability assessment</a> when the defect may sit in ownership, keys, replication, or process controls rather than in a missing workflow.</p>
-    </article>
-    <article class="faq-item">
-      <h3>AI is proposed before the operating process is stable</h3>
-      <p>Start with <a href="/services/sap-ai-ml-enablement/">side-by-side AI and automation</a> only after the decision boundary, evidence, and human review model are explicit.</p>
-    </article>
-    <article class="faq-item">
-      <h3>Shortages, expedites, or allocation disputes keep returning</h3>
-      <p>Start with the <a href="/services/sap-planning-and-replenishment-assessment/">planning and replenishment assessment</a> when a planning signal is visible but the evidence, ownership, and approval path to a safe commitment is unclear.</p>
-    </article>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-shell section-shell--premium">
-    <header class="section-heading">
-      <p class="eyebrow">Next step</p>
-      <h2>Start with the narrowest problem worth fixing</h2>
+  <section class="constraint-canvas" id="constraint-canvas" aria-labelledby="constraint-canvas-title" data-reveal>
+    <header class="constraint-canvas__heading">
+      <p class="service-canvas__eyebrow">Constraint canvas</p>
+      <h2 id="constraint-canvas-title">Choose the operating priority.</h2>
+      <p>A short diagnostic to direct a first conversation around operating cost, resilience, and AI readiness.</p>
     </header>
-    <p class="lead">The strongest entry point is usually one visible friction pattern: a repeat incident class, a noisy interface, a handover gap, or a manual workflow that clearly wastes time or money. From there, the work can move through diagnose, stabilize, structure, and extend without jumping straight into a large programme.</p>
-    <div class="section-actions">
-      <a class="button button--primary" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">Contact on LinkedIn</a>
-      <a class="button" href="/about/">Open profile</a>
-      <a class="button" href="/ai/">AI sources</a>
-      <a class="button" href="/datasets/">Evidence datasets</a>
-      <a class="button" href="/faq/">Review the FAQ</a>
-      <a class="button" href="/cv/">Open the CV</a>
-    </div>
-  </div>
-</section>
+    <form class="constraint-canvas__form" data-constraint-form>
+      <label>Business impact
+        <select name="impact" data-constraint-input>
+          <option value="service">Cost and service pressure</option>
+          <option value="data">Data reliability risk</option>
+          <option value="delivery">Planning or fulfilment volatility</option>
+          <option value="connectivity">Integration recovery cost</option>
+          <option value="decision">AI capability and controls</option>
+        </select>
+      </label>
+      <label>Recurrence
+        <select name="recurrence" data-constraint-input>
+          <option value="occasional">Occasional</option>
+          <option value="repeated" selected>Repeated</option>
+          <option value="constant">Constant</option>
+        </select>
+      </label>
+      <label>Manual recovery
+        <select name="manual" data-constraint-input>
+          <option value="contained">Contained</option>
+          <option value="visible" selected>Visible</option>
+          <option value="high">High</option>
+        </select>
+      </label>
+      <label>Change horizon
+        <select name="horizon" data-constraint-input>
+          <option value="now">Now</option>
+          <option value="quarter" selected>Within a quarter</option>
+          <option value="planned">Planned change</option>
+        </select>
+      </label>
+    </form>
+    <aside class="constraint-canvas__result" aria-live="polite">
+      <p class="service-canvas__eyebrow">Recommended programme</p>
+      <h3 data-constraint-title>AMS performance</h3>
+      <p data-constraint-copy>Reduce the cost of repeat work before adding capacity, tools, or automation.</p>
+      <a class="service-canvas__text-link" data-constraint-link href="/services/sap-ams-consulting/">Open the programme <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    </aside>
+  </section>
 
+  <section class="service-canvas__photos" aria-label="Operations, data, and workshop moments" data-reveal>
+    <figure><img src="/assets/img/services/logistics-terminal.webp" alt="Logistics terminal with a forklift and delivery vehicles" loading="lazy" /><figcaption>Logistics in action</figcaption></figure>
+    <figure><img src="/assets/img/services/data-operations.webp" alt="Operations analyst reviewing a process flow" loading="lazy" /><figcaption>Data operations</figcaption></figure>
+    <figure><img src="/assets/img/services/collaborative-workshop.webp" alt="Team reviewing an operational process map together" loading="lazy" /><figcaption>Collaborative workshop</figcaption></figure>
+  </section>
+
+  <section class="service-paths" aria-labelledby="service-paths-title">
+    <header class="service-paths__header" data-reveal>
+      <p class="service-canvas__eyebrow">Service paths</p>
+      <h2 id="service-paths-title">Programmes for resilient, lower-cost SAP operations.</h2>
+      <p>Choose the operating priority. Each programme begins with enough evidence to set a credible baseline, make a decision, and create a practical route forward.</p>
+    </header>
+    <ol class="service-paths__list">
+      <li class="service-path" data-reveal><span class="service-path__number">01</span><div><p class="service-path__label">AMS performance</p><h3>Make AMS a lower-TCO capability.</h3></div><p><strong>When:</strong> repeat incidents, expensive manual recovery, fragmented vendors, or service reports that do not explain business impact.</p><p><strong>Start:</strong> baseline repeat work, map the operating workflow, and prioritise the changes that reduce avoidable demand.</p><a href="/services/sap-ams-consulting/">Explore AMS performance <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></li>
+      <li class="service-path" data-reveal><span class="service-path__number">02</span><div><p class="service-path__label">Data foundation</p><h3>Build data that holds under change.</h3></div><p><strong>When:</strong> duplicate records, replication defects, manual repair, or unclear ownership create downstream cost and risk.</p><p><strong>Start:</strong> trace one critical object from decision through activation, distribution, control, and business use.</p><a href="/services/sap-master-data-stability-assessment/">Explore the data foundation <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></li>
+      <li class="service-path" data-reveal><span class="service-path__number">03</span><div><p class="service-path__label">Logistics &amp; planning</p><h3>Protect service and working capital.</h3></div><p><strong>When:</strong> shortages, expedites, allocation disputes, or exception queues consume planning capacity and margin.</p><p><strong>Start:</strong> make the route from exception signal to evidence, owner, approval, and prevention visible.</p><a href="/services/sap-planning-and-replenishment-assessment/">Explore logistics and planning <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></li>
+      <li class="service-path" data-reveal><span class="service-path__number">04</span><div><p class="service-path__label">Integration &amp; automation</p><h3>Reduce handoff cost before automating it.</h3></div><p><strong>When:</strong> interfaces look healthy until a business flow blocks, or manual recovery becomes the unofficial process.</p><p><strong>Start:</strong> separate source, mapping, transport, target, and recovery ownership before selecting a platform or automation pattern.</p><a href="/services/sap-integration-reliability-assessment/">Explore integration reliability <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></li>
+      <li class="service-path" data-reveal><span class="service-path__number">05</span><div><p class="service-path__label">Enterprise AI around SAP</p><h3>Move AI from pilots to controlled use.</h3></div><p><strong>When:</strong> teams want useful AI around SAP but need evidence, boundaries, ownership, and review before scaling.</p><p><strong>Start:</strong> ground one narrow use case in operating context, deterministic checks, measurable value, and accountable human review.</p><a href="/services/sap-ai-ml-enablement/">Explore enterprise AI <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></li>
+    </ol>
+  </section>
+
+  <section class="service-rhythm" aria-labelledby="service-rhythm-title" data-reveal>
+    <header><p class="service-canvas__eyebrow">Programme rhythm</p><h2 id="service-rhythm-title">From operating baseline to a scalable programme.</h2></header>
+    <ol>
+      <li><span>01</span><h3>Baseline</h3><p>Frame the operating cost, service consequence, evidence boundary, and outcome the business needs.</p></li>
+      <li><span>02</span><h3>Diagnose</h3><p>Find the few process, data, integration, or ownership conditions driving avoidable demand.</p></li>
+      <li><span>03</span><h3>Design</h3><p>Shape the priority interventions, controls, owners, and measures for a credible programme.</p></li>
+      <li><span>04</span><h3>Enable</h3><p>Leave a delivery backlog, operating model, and measurable improvement route the team can use.</p></li>
+    </ol>
+  </section>
+
+  <section class="ai-boundaries" aria-labelledby="ai-boundaries-title" data-reveal>
+    <header><p class="service-canvas__eyebrow">AI with operating context</p><h2 id="ai-boundaries-title">Enterprise AI around SAP—controlled, useful, measurable.</h2><p>AI has value when the process is visible, the evidence is usable, and the decision boundary is explicit. It supports accountable business judgment; it does not replace it.</p></header>
+    <ul>
+      <li><span class="material-symbols-outlined" aria-hidden="true">lock</span><h3>Secure context</h3><p>Access, privacy, and data boundaries are named before an assistant sees operational material.</p></li>
+      <li><span class="material-symbols-outlined" aria-hidden="true">person_check</span><h3>Human review</h3><p>People stay in the loop for judgment, exceptions, commitments, and changes with business consequence.</p></li>
+      <li><span class="material-symbols-outlined" aria-hidden="true">rule</span><h3>Purposeful use cases</h3><p>Start with a narrow task, measurable review point, and a clear route to stop or improve it.</p></li>
+    </ul>
+    <a class="service-canvas__text-link" href="/ai/">Read the AI evidence layer <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="service-field-notes" aria-labelledby="service-field-notes-title" data-reveal>
+    <header><p class="service-canvas__eyebrow">Field notes</p><h2 id="service-field-notes-title">Ideas from practice. Not theory.</h2><a class="service-canvas__text-link" href="/blog/">View all writing <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></header>
+    <div>
+      <a href="/blog/why-traditional-sap-ams-slas-reward-the-wrong-behaviour/"><span>AMS</span>Why traditional SAP AMS SLAs reward the wrong behaviour <i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/blog/why-sap-teams-keep-solving-the-same-incidents/"><span>Operations</span>Why SAP teams keep solving the same incidents <i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/blog/your-atp-is-not-a-stock-check-how-sap-aatp-gatp-ibp-allocation-and/"><span>Logistics</span>Your ATP is not a stock check <i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="service-canvas__cta" data-reveal>
+    <div><p class="service-canvas__eyebrow">Next step</p><h2>Plan the next operating improvement.</h2><p>Bring one priority, programme, or operational pattern. Leave with a clearer route to impact.</p></div>
+    <a class="service-canvas__button service-canvas__button--primary" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">Discuss an operating priority <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+</div>
 
 <script type="application/ld+json">
 {
