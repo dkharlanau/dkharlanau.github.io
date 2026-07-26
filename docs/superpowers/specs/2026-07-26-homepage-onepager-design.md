@@ -117,3 +117,50 @@ widths), screenshots compared against the reference screenshot.
 - Header/footer changes — the uncommitted header rewrite stays as-is.
 - Changes to old section partials or old `home.yml` keys (still used by locales).
 - SEO copy/positioning changes beyond condensing existing approved content.
+
+---
+
+## V2 Revision (2026-07-26, user-directed)
+
+The user redirected the visual language after v1 implementation (Tasks 1–6):
+
+- **Design language:** the homepage adopts the `/atlas/` page's layout and styles
+  (Evidence Atlas layer: `atlas-hero`, `section-heading`, `eyebrow`, `lead`,
+  `atlas-card-grid` with CSS-counter "ROUTE / 01" indices, `section-shell--flat`,
+  `button` / `button--primary`).
+- **Minimalistic landing fold:** identity line + eyebrow + headline + lead +
+  actions. The journey-map rail and photo strip are removed.
+- **No menu header on the homepage:** `hide_global_header: true` frontmatter,
+  handled in `_layouts/default.html`; the hero carries a minimal identity line
+  with locale links instead.
+- **Better footer (global):** `_includes/footer.html` rewritten as a structured
+  editorial footer (brand block + Explore/Legal link columns), styled by a new
+  global stylesheet `assets/site-footer.css`.
+
+### V2 section structure (EN homepage)
+
+1. `hero-atlas` — identity line (name · descriptor · locale links) + `atlas-hero`
+   (eyebrow kicker, headline, lead, primary + two secondary buttons).
+2. `priorities-grid` — `section-heading` + `atlas-card-grid` with the 5 operating
+   priorities (reuses `home_journey` data; cards get automatic "ROUTE / 0N" indices).
+3. `constraint-canvas-home` — restyled into a `section-shell--flat`; keeps the
+   interactive selects + recommendation (the only remaining widget).
+4. `steps-ruled` — "Clarity in 4 steps" as a ruled mono-index list.
+5. `ai-principles` — `section-shell--flat` with the 3 practical-AI principles.
+6. `ideas-list` — ruled list of the 3 latest blog posts + "view all" button.
+7. `cta-bar` — `section-shell--flat` CTA with primary/secondary buttons.
+
+### V2 implementation notes
+
+- Deleted partials: `hero-canvas.html`, `journey-map.html`, `photo-strip.html`,
+  `tri-columns.html`. `constraint-canvas-home.html` and `cta-bar.html` are rewritten.
+- `assets/home-canvas.js` trimmed to the constraint-canvas widget only.
+- `assets/home-canvas.css` rewritten slim: identity line, canvas controls,
+  ruled lists (steps/principles/ideas) — everything else comes from the
+  Evidence Atlas layer.
+- Data: `home_hero` gains `kicker` and `secondary_actions`; all other v1 keys
+  are reused unchanged.
+- Footer strings reuse `locale_data.ui.footer` with English defaults; one new
+  "Atlas" link (default `'Atlas'`).
+- Verification unchanged (v1 Task 7 commands + browser QA against `/atlas/`
+  for visual consistency, no-header homepage, new footer on all pages).
