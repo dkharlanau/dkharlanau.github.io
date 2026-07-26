@@ -1,0 +1,52 @@
+{% assign steps = site.data.home.home_steps %}
+{% assign principles = site.data.home.home_ai_principles %}
+{% assign posts = site.blog | sort: 'date' | reverse %}
+<section class="hc-tri">
+  <div class="hc-tri__col">
+    <h2 class="hc-section-title">{{ steps.title }}<br />{{ steps.subtitle }}</h2>
+    <ol class="hc-steps">
+      {% for step in steps.steps %}
+      <li class="hc-steps__item">
+        <span class="hc-steps__number">{{ step.number }}</span>
+        <div>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.detail }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  <div class="hc-tri__col">
+    <p class="hc-eyebrow">{{ principles.eyebrow }}</p>
+    <h2 class="hc-section-title">{{ principles.title }}</h2>
+    <p class="hc-tri__lead">{{ principles.lead }}</p>
+    <ul class="hc-principles">
+      {% for item in principles.items %}
+      <li>
+        <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.detail }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="hc-microcopy">{{ principles.footnote }}</p>
+  </div>
+  <div class="hc-tri__col">
+    <p class="hc-eyebrow">Field notes</p>
+    <h2 class="hc-section-title">Ideas from practice.<br />Not theory.</h2>
+    <ul class="hc-ideas">
+      {% for post in posts limit: 3 %}
+      <li>
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%b %d, %Y' | upcase }}</time>
+      </li>
+      {% endfor %}
+    </ul>
+    <a class="hc-text-link" href="{{ '/blog/' | relative_url }}">
+      View all
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+    </a>
+  </div>
+</section>

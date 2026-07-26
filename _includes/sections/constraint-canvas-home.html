@@ -1,0 +1,28 @@
+{% assign canvas = site.data.home.home_canvas %}
+<section class="hc-canvas" aria-labelledby="hc-canvas-title" data-hc-canvas>
+  <div class="hc-canvas__intro">
+    <p class="hc-eyebrow">{{ canvas.eyebrow }}</p>
+    <h2 id="hc-canvas-title" class="hc-section-title">{{ canvas.title }}</h2>
+    <p class="hc-canvas__note">{{ canvas.intro }}</p>
+  </div>
+  <form class="hc-canvas__controls" data-hc-canvas-form>
+    {% for select in canvas.selects %}
+    <div class="hc-canvas__field">
+      <label for="hc-canvas-{{ select.id }}">{{ select.label }}</label>
+      <select id="hc-canvas-{{ select.id }}" name="{{ select.id }}">
+        {% for option in select.options %}
+        <option value="{{ option }}"{% if option == select.default %} selected{% endif %}>{{ option }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endfor %}
+  </form>
+  <div class="hc-canvas__result">
+    <p class="hc-eyebrow">{{ canvas.result_label }}</p>
+    <a class="hc-canvas__action" href="{{ canvas.default_result.url }}" data-hc-canvas-link aria-live="polite">
+      <span data-hc-canvas-text>{{ canvas.default_result.text }}</span>
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+    </a>
+  </div>
+  <script type="application/json" data-hc-canvas-rules>{{ canvas.rules | jsonify }}</script>
+</section>
