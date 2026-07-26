@@ -35,7 +35,7 @@ Current visual behavior is defined by these files, in this order:
 3. `assets/site.css`
 4. `assets/evidence-atlas.css`
 
-`assets/evidence-atlas.css` is loaded last and is the current production layer. It establishes the shared visual language while the earlier files remain in place for legacy component structure.
+`assets/evidence-atlas.css` is the current production layer, followed by two small global overrides: `assets/site-chrome.css` (header/menu chrome) and `assets/site-footer.css` (editorial footer). Together they establish the shared visual language while the earlier files remain in place for legacy component structure.
 
 ## Foundations
 
