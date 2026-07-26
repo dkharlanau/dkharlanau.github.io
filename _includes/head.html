@@ -122,7 +122,17 @@ normalize_whitespace %}
 <link rel="stylesheet" href="{{ '/assets/material3.css' | relative_url }}?v={{ asset_version }}" />
 <link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}?v={{ asset_version }}" />
 <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}?v={{ asset_version }}" />
+<link rel="stylesheet" href="{{ '/assets/evidence-atlas.css' | relative_url }}?v={{ asset_version }}" />
+{% if page.home_locale and page.locale == 'en' %}
+<link rel="stylesheet" href="{{ '/assets/home-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<script src="{{ '/assets/home-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
+{% endif %}
+{% if page.url == '/services/' %}
+<link rel="stylesheet" href="{{ '/assets/services-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<script src="{{ '/assets/services-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
+{% endif %}
 <script src="{{ '/assets/dataset-render.js' | relative_url }}?v={{ asset_version }}" defer></script>
+<script src="{{ '/assets/reader-tools.js' | relative_url }}?v={{ asset_version }}" defer></script>
 
 {% if page.home_locale and page.locale == 'en' %}
 <script type="application/ld+json">

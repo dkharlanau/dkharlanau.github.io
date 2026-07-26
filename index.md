@@ -8,14 +8,11 @@ home_locale: true
 hide_global_cta: true
 last_modified_at: 2026-07-15
 sections:
-  - hero
-  - analysis-problem
-  - ai-costs-outcomes
-  - strategic-context
-  - credibility
-  - faq
-  - explore-site
-  - contact
+  - hero-canvas
+  - constraint-canvas-home
+  - photo-strip
+  - tri-columns
+  - cta-bar
  
 ---
 
