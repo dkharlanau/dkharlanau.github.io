@@ -1,0 +1,39 @@
+{% assign journey = site.data.home.home_journey %}
+<div class="hc-journey" aria-label="{{ journey.label }}" data-hc-journey>
+  <div class="hc-journey__rail">
+    {% for node in journey.nodes %}
+    <button
+      class="hc-journey__node{% if forloop.first %} is-active{% endif %}"
+      type="button"
+      aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+      data-node="{{ node.id }}"
+    >
+      <span class="hc-journey__number">{{ node.number }}</span>
+      <span class="hc-journey__marker hc-journey__marker--{{ node.id }}" aria-hidden="true"></span>
+      <span class="hc-journey__name">{{ node.title }}</span>
+    </button>
+    {% endfor %}
+  </div>
+  <div class="hc-journey__cards" aria-live="polite">
+    {% for node in journey.nodes %}
+    <article
+      class="hc-journey__card{% if forloop.first %} is-visible{% endif %}"
+      data-card="{{ node.id }}"
+      {% unless forloop.first %}hidden{% endunless %}
+    >
+      <h2 class="hc-journey__card-title">{{ node.title }}</h2>
+      <p class="hc-journey__card-statement">{{ node.statement }}</p>
+      <p class="hc-journey__card-label">Typical work</p>
+      <ul class="hc-journey__card-list">
+        {% for bullet in node.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+      <a class="hc-journey__card-link" href="{{ node.url }}">
+        Explore {{ node.title | downcase }}
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+      </a>
+    </article>
+    {% endfor %}
+  </div>
+</div>

@@ -1,0 +1,16 @@
+{% assign hero = site.data.home.home_hero %}
+<section class="hc-hero" aria-labelledby="hc-hero-title">
+  <div class="hc-hero__copy">
+    <p class="hc-eyebrow">{{ hero.eyebrow }}</p>
+    <h1 id="hc-hero-title" class="hc-hero__title">{{ hero.title }}</h1>
+    <p class="hc-hero__lead">{{ hero.lead }}</p>
+    <div class="hc-hero__actions">
+      <a class="hc-button" href="{{ hero.primary_action.url }}">
+        {{ hero.primary_action.label }}
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+      </a>
+      <p class="hc-microcopy">{{ hero.microcopy }}</p>
+    </div>
+  </div>
+  {% include sections/journey-map.html %}
+</section>
