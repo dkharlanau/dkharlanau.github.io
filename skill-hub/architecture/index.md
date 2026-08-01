@@ -21,6 +21,9 @@ verified: true
   <p class="eyebrow">Skill Hub</p>
   <h1>Architecture skills</h1>
   <p class="lead">Practical working skills for solution architects, enterprise architects, and integration architects who need to map capabilities, review designs, record decisions, and define system boundaries with clarity.</p>
+  <div class="atlas-hero__actions">
+    <a class="button button--primary" href="/skill-hub/sap-architecture-course/">Start the SAP Architect Field Course</a>
+  </div>
 </section>
 
 <section class="section">

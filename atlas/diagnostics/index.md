@@ -17,6 +17,7 @@ related:
   - /atlas/ai-operations/ai-agent-for-sap-support/
 ---
 
+<div class="diagnostics-canvas">
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>
@@ -25,46 +26,37 @@ related:
   </ol>
 </nav>
 
-<section class="section atlas-hero">
-  <p class="eyebrow">Diagnostics</p>
-  <h1>Support patterns for repeat SAP incidents and process blockers.</h1>
-  <p class="lead">Diagnostics pages are written for the moment when a process is stuck and the team needs a clear first pass: which area is likely involved, what evidence to collect, and where uncertainty remains.</p>
-</section>
-
-<section class="section">
-  <header class="section-heading">
-    <p class="eyebrow">Diagnostic flow</p>
-    <h2>How to use this index</h2>
-  </header>
-  <p>Start with the symptom, not the module. Each process path below maps a business area to a hub page, and each hub page routes to deeper diagnostics. The hubs and most diagnostics pages are review candidates: useful for triage, but not yet promoted to verified status.</p>
-  <ol>
-    <li><strong>Classify the symptom</strong> — is it a blocked document, a missing master data record, an integration failure, or a mismatch between expected and posted data?</li>
-    <li><strong>Pick a process path</strong> — order-to-cash, procure-to-pay, integration, or master data.</li>
-    <li><strong>Use the hub matrix</strong> — match the symptom to the first SAP check and collect the listed evidence.</li>
-    <li><strong>Follow the diagnostic page</strong> — deeper pages provide transactions, tables, and boundaries.</li>
-    <li><strong>Escalate when needed</strong> — customizing changes, cross-module issues, and mass corrections need functional review.</li>
+<section class="diagnostic-desk__hero" aria-labelledby="diagnostic-title" data-reveal>
+  <div>
+    <p class="diagnostic-desk__eyebrow">Knowledge Atlas / Diagnostics</p>
+    <h1 id="diagnostic-title">Start with the symptom.</h1>
+    <p>Use a visible process failure to choose the first SAP check, collect evidence, and decide where the investigation belongs.</p>
+    <a class="diagnostic-desk__button" href="#diagnostic-hubs">Choose a diagnostic path <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+  </div>
+  <ol class="diagnostic-desk__trace" aria-label="First diagnostic sequence">
+    <li><span>01</span><strong>Classify</strong><small>What is blocked, missing, delayed, or posted incorrectly?</small></li>
+    <li><span>02</span><strong>Collect</strong><small>Capture the document, status, organisational data, and error evidence.</small></li>
+    <li><span>03</span><strong>Route</strong><small>Separate process, master data, integration, and configuration conditions.</small></li>
   </ol>
-
-  <h3>Evidence checklist for any diagnostic</h3>
-  <ul>
-    <li>Document number and item, or object key.</li>
-    <li>Current status and status history.</li>
-    <li>Organizational data (sales area, purchasing organization, plant, company code).</li>
-    <li>Master data keys (use synthetic or generalized identifiers only).</li>
-    <li>Error text, log reference, or IDoc/queue number.</li>
-    <li>Business impact and urgency.</li>
-  </ul>
-
-  <h3>Escalation boundaries</h3>
-  <p>Diagnostic pages help identify where the failure lives. They do not replace functional consultation, customizing change control, or official SAP documentation. Escalate when the fix requires configuration changes, affects financial reporting, crosses legal entities, or could create duplicate data.</p>
 </section>
 
-<section class="section">
+<section class="diagnostic-desk__start" data-reveal>
+  <header><p class="diagnostic-desk__eyebrow">First pass</p><h2>Classify before opening transactions.</h2><p>Use the process symptom to narrow the search. The hub pages and most linked diagnostics are review candidates: useful for triage, but not yet promoted to verified status.</p></header>
+  <ol>
+    <li><span>01</span><strong>Classify the symptom</strong><small>Blocked document, missing record, integration failure, or posted-data mismatch.</small></li>
+    <li><span>02</span><strong>Choose a process path</strong><small>Order-to-cash, procure-to-pay, integration, or master data.</small></li>
+    <li><span>03</span><strong>Use the hub</strong><small>Match the symptom to the first check and collect the listed evidence.</small></li>
+    <li><span>04</span><strong>Escalate with evidence</strong><small>Configuration, cross-module, or mass-data changes need functional review.</small></li>
+  </ol>
+  <details><summary>Evidence and escalation boundaries <span class="material-symbols-outlined" aria-hidden="true">add</span></summary><div><p><strong>Collect:</strong> document and item or object key; current status and history; organisational data; generalized master-data keys; error text, log reference, or IDoc/queue number; and business impact.</p><p>These pages help locate the failure condition. They do not replace functional consultation, change control, or official SAP documentation. Escalate when a fix changes configuration, affects financial reporting, crosses legal entities, or could create duplicate data.</p></div></details>
+</section>
+
+<section class="diagnostic-desk__hubs" id="diagnostic-hubs" data-reveal>
   <header class="section-heading">
-    <p class="eyebrow">Process paths</p>
-    <h2>Diagnostic hubs</h2>
+    <p class="diagnostic-desk__eyebrow">Process paths</p>
+    <h2>Choose the first diagnostic hub.</h2>
   </header>
-  <p>These hubs group related diagnostics by process area. They are marked as review candidates until human review is completed.</p>
+  <p>Each hub groups related pages by process area and names the evidence needed to start.</p>
   <div class="atlas-card-grid">
     <a class="atlas-card" href="/atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/">
       <h2>Order-to-Cash</h2>
@@ -556,3 +548,4 @@ related:
 
 {% include atlas/author-block.html %}
 {% include atlas/disclaimer.html %}
+</div>

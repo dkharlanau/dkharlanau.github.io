@@ -13,6 +13,18 @@ business_process: Cross-system integration
 status: reviewed
 verified: true
 level: 2
+expert_context:
+  enabled: true
+  domain: sap-integration
+  topics:
+    - IDoc diagnostics
+    - partner profiles
+    - integration incident resolution
+  service_url: /services/sap-integration-reliability-assessment/
+  evidence_urls:
+    - /atlas/diagnostics/sap-idoc-status-diagnostics/
+    - /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
+    - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 last_reviewed: '2026-06-13'
 author: Dzmitryi Kharlanau
 tags:
@@ -60,6 +72,8 @@ sitemap: true
   <div class="note-body">
     <h2>Core idea</h2>
     <p>IDocs fail at four points: creation, dispatch, receipt, and application posting. The status monitor shows the last failure, but the first error status in the history usually points to the real cause. The diagnostic job is to read the history from oldest to newest and trace the first error to partner profile, port, segment, or application validation.</p>
+
+    {% include atlas/expert-context.html %}
 
     <h2>Common symptoms</h2>
     <ul>
@@ -135,5 +149,6 @@ sitemap: true
   </div>
 </article>
 
+{% include atlas/expert-cta.html %}
 {% include atlas/author-block.html %}
 {% include atlas/disclaimer.html %}

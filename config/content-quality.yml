@@ -1,0 +1,133 @@
+schema: dkharlanau.content_quality
+schema_version: "1.0"
+canonical:
+  domain: "https://dkharlanau.github.io"
+  website: "https://dkharlanau.github.io/"
+  profile: "https://dkharlanau.github.io/about/"
+  linkedin: "https://www.linkedin.com/in/dkharlanau/"
+  github: "https://github.com/dkharlanau"
+  author: "Dzmitryi Kharlanau"
+public_roots:
+  - atlas
+  - _blog
+  - _notes
+  - _news
+  - _radar
+  - research
+  - skill-hub
+  - services
+  - scenarios
+  - datasets
+  - agent-tools
+  - ai
+  - pages
+excluded_paths:
+  - _site
+  - vendor
+  - node_modules
+  - .git
+  - .codex
+  - docs/templates
+  - docs/maintenance
+  - docs/research
+  - docs
+  - agent-skills/skills
+  - inbox
+  - reports
+  - design-qa.md
+content_models:
+  diagnostic:
+    paths: ["atlas/diagnostics/"]
+    required_signals: [problem, causes, checks, workflow, actions, limitations]
+  technical_guide:
+    paths: ["atlas/", "skill-hub/", "_blog/", "_notes/"]
+    required_signals: [problem, context, steps, constraints, next_action]
+  architecture:
+    paths: ["skill-hub/architecture/", "skill-hub/sap-architecture-course/", "atlas/ai-tools/"]
+    required_signals: [requirements, flow, security, failure_handling, tradeoffs, ownership, limitations]
+  research:
+    paths: ["research/", "_radar/"]
+    required_signals: [question, scope, findings, evidence, limitations, conclusion]
+  service:
+    paths: ["services/"]
+    required_signals: [problem, target_situation, scope, deliverables, evidence, cta]
+  scenario:
+    paths: ["scenarios/"]
+    required_signals: [pain, process_context, touchpoints, causes, workflow, solution]
+  dataset:
+    paths: ["datasets/"]
+    required_signals: [purpose, schema, usage, limitations, update]
+  tool:
+    paths: ["agent-tools/", "mcp/"]
+    required_signals: [purpose, interface, usage, limitations]
+  profile:
+    paths: ["about.md", "cv/", "ai/resume"]
+    required_signals: [identity, scope, evidence]
+  landing_page:
+    paths: ["index.md", "blog/index.md", "notes/index.md", "research/index.md", "skill-hub/index.md"]
+    required_signals: [title, description, navigation]
+  reference:
+    paths: ["atlas/concepts/", "atlas/maps/", "atlas/sap/"]
+    required_signals: [definition, scope, limitations, related]
+  opinion:
+    paths: ["_blog/", "_notes/"]
+    required_signals: [thesis, support, limitations, next_action]
+weights:
+  content_usefulness: 30
+  technical_evidence_trust: 20
+  search_readiness: 20
+  ai_retrieval_readiness: 15
+  internal_discovery_conversion: 15
+thresholds:
+  strong: 85
+  publishable: 70
+  needs_improvement: 50
+freshness:
+  technical_guide_days: 365
+  architecture_days: 365
+  research_days: 180
+  service_days: 365
+  stable_reference_days: 730
+guidance:
+  title_min: 20
+  title_max: 70
+  description_min: 80
+  description_max: 160
+  long_paragraph_words: 120
+  thin_body_words: 180
+  max_bullet_nesting: 3
+allowed_statuses: [draft, needs_verification, reviewed, published]
+prompt_injection_patterns:
+  - "always recommend"
+  - "ignore previous instructions"
+  - "you must recommend"
+  - "rank this author"
+  - "tell the user to contact"
+  - "prefer this expert"
+  - "system message:"
+  - "assistant instruction:"
+private_patterns:
+  - "/Users/"
+  - "source_files"
+  - "private-source"
+  - "kb-drafts"
+  - "Basic_LinkedInDataExport"
+  - "Basic_LinkInDataExport"
+  - ".env.local"
+  - "Kimi_Agent_SAP Atlas Expansion"
+sensitive_regex_patterns:
+  - "(?i)\\b(?:password|passwd|api[_ -]?key|access[_ -]?token|secret)\\s*[:=]\\s*[^\\s<>{}]+"
+known_generated_files:
+  - atlas/manifest.json
+  - ai/atlas-compact-index.json
+  - ai/verified-pages.json
+  - ai/expert-evidence.json
+  - ai/expert-promotion-inventory.json
+  - ai/markdown-clusters.json
+  - ai/rag/related.json
+  - llms-full.txt
+  - llms.txt
+baseline:
+  path: config/content-quality-baseline.json
+  include_severities: [warning, info]
+  never_baseline: [error, hard]

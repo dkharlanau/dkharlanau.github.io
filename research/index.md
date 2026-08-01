@@ -7,6 +7,7 @@ status: draft
 robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-06-07
+hide_global_cta: true
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -16,112 +17,86 @@ last_modified_at: 2026-06-07
   </ol>
 </nav>
 
-<section class="section atlas-hero">
-  <p class="eyebrow">Research</p>
-  <h1>Source-backed signals for SAP, AI, data, and integration.</h1>
-  <div class="atlas-research-warning"><strong>This is a working research area.</strong> Pages are draft, noindex, and excluded from sitemap. Claims are cited but not fully verified. Use as orientation only and validate against your own landscape and official documentation.</div>
-  <p class="lead">The research section tracks signals that may graduate into Atlas updates, articles, or LinkedIn posts. Every factual claim carries an inline citation. Every source is rated for confidence.</p>
-</section>
-
-<section class="section">
-  <header class="section-heading">
-    <p class="eyebrow">Watchlists</p>
-    <h2>Domains to monitor</h2>
-    <p class="lead">Running trackers for fast-moving areas. Updated when primary sources change.</p>
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Research / working evidence</p>
+      <h1>Track the decision<br />before the programme starts.</h1>
+      <p>Source-backed signals for SAP operations, AI, data, and integration. The material is for orientation and comparison—not a recommendation or a substitute for landscape-specific validation.</p>
+      <a class="research-canvas__button" href="#research-inventory">Open the research inventory <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Research inventory: four watchlists, four comparisons, and four briefs">
+      <p>Current inventory</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Watchlists</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>4</strong><small>Comparisons</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>4</strong><small>Briefs</small></div>
+      <em>All pages are draft and noindex.</em>
+    </div>
   </header>
-  <div class="atlas-card-grid">
-    <a class="atlas-card" href="/research/watchlists/sap-business-ai-joule/">
-      <h3>SAP Business AI and Joule</h3>
-      <p>SAP's AI copilot, Joule agents, embedded AI scenarios, and the Business AI stack on BTP.</p>
-      <span class="link-arrow">Open watchlist</span>
-    </a>
-    <a class="atlas-card" href="/research/watchlists/agentic-ams/">
-      <h3>Agentic AMS</h3>
-      <p>AI agents for IT operations, incident triage, and application management services.</p>
-      <span class="link-arrow">Open watchlist</span>
-    </a>
-    <a class="atlas-card" href="/research/watchlists/enterprise-integration-architecture/">
-      <h3>Enterprise Integration Architecture</h3>
-      <p>SAP Integration Suite, event mesh, API management, and cloud-to-on-premise connectivity.</p>
-      <span class="link-arrow">Open watchlist</span>
-    </a>
-    <a class="atlas-card" href="/research/watchlists/data-mesh-event-driven-architecture/">
-      <h3>Data Mesh and Event-Driven Architecture</h3>
-      <p>Data mesh principles, event-driven patterns, CloudEvents, AsyncAPI, and modern data architecture.</p>
-      <span class="link-arrow">Open watchlist</span>
-    </a>
-  </div>
-</section>
 
-<section class="section">
-  <header class="section-heading">
-    <p class="eyebrow">Comparisons</p>
-    <h2>Side-by-side evaluations</h2>
-    <p class="lead">Structured comparisons for architecture and tooling decisions.</p>
-  </header>
-  <div class="atlas-card-grid">
-    <a class="atlas-card" href="/research/comparisons/sap-integration-suite-vs-eda/">
-      <h3>SAP Integration Suite vs Event-Driven Architecture</h3>
-      <p>When to use SAP's managed iPaaS versus native event mesh, Kafka, or custom EDA.</p>
-      <span class="link-arrow">Open comparison</span>
-    </a>
-    <a class="atlas-card" href="/research/comparisons/sap-mdg-vs-custom-mdm-knowledge-graph/">
-      <h3>SAP MDG vs Custom MDM / Knowledge Graph Layer</h3>
-      <p>Central governance with MDG versus decentralized knowledge graphs and custom master data layers.</p>
-      <span class="link-arrow">Open comparison</span>
-    </a>
-    <a class="atlas-card" href="/research/comparisons/joule-sap-business-ai-vs-general-enterprise-agents/">
-      <h3>Joule / SAP Business AI vs General Enterprise Agents</h3>
-      <p>SAP's embedded AI approach compared to Microsoft Copilot, Salesforce Agentforce, and general agent platforms.</p>
-      <span class="link-arrow">Open comparison</span>
-    </a>
-    <a class="atlas-card" href="/research/comparisons/data-mesh-vs-lakehouse-vs-knowledge-graph/">
-      <h3>Data Mesh vs Lakehouse vs Knowledge Graph</h3>
-      <p>Three competing paradigms for enterprise data architecture: decentralization, centralization, and semantic linking.</p>
-      <span class="link-arrow">Open comparison</span>
-    </a>
-  </div>
-</section>
+  <section class="research-canvas__boundary" data-reveal aria-label="Research boundary">
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Working evidence layer.</strong> Claims are cited and sources are rated for confidence. Material moves to the Atlas only after verification and review.</p>
+    <a href="/atlas/">Open the Knowledge Atlas <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
 
-<section class="section">
-  <header class="section-heading">
-    <p class="eyebrow">Briefs</p>
-    <h2>Deep dives on single signals</h2>
-    <p class="lead">Focused research briefs on emerging patterns with cited evidence.</p>
-  </header>
-  <div class="atlas-card-grid">
-    <a class="atlas-card" href="/research/briefs/ai-agents-for-ams-incident-triage/">
-      <h3>AI Agents for AMS Incident Triage</h3>
-      <p>How agentic AI is being applied to SAP AMS incident classification, routing, and first-pass resolution.</p>
-      <span class="link-arrow">Open brief</span>
-    </a>
-    <a class="atlas-card" href="/research/briefs/mcp-and-enterprise-tool-use/">
-      <h3>MCP and Enterprise Tool Use</h3>
-      <p>Anthropic's Model Context Protocol as a standard for connecting AI agents to enterprise tools and data.</p>
-      <span class="link-arrow">Open brief</span>
-    </a>
-    <a class="atlas-card" href="/research/briefs/knowledge-graphs-for-support-memory/">
-      <h3>Knowledge Graphs for Support Memory</h3>
-      <p>Using graph databases and semantic layers to build persistent, queryable operational memory for support teams.</p>
-      <span class="link-arrow">Open brief</span>
-    </a>
-    <a class="atlas-card" href="/research/briefs/event-driven-integration-for-sap-landscapes/">
-      <h3>Event-Driven Integration for SAP Landscapes</h3>
-      <p>Business events, Event Mesh, and CloudEvents as integration patterns for S/4HANA and satellite systems.</p>
-      <span class="link-arrow">Open brief</span>
-    </a>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-shell section-shell--flat">
-    <header class="section-heading">
-      <p class="eyebrow">Policy</p>
-      <h2>How this section works</h2>
+  <section class="research-canvas__inventory" id="research-inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Research inventory</p>
+      <h2>Choose the type of decision support.</h2>
+      <p>Each route keeps a different question visible: what is changing, which option fits, or what needs a closer look.</p>
     </header>
-    <p class="lead">All pages are draft, noindex, and excluded from sitemap. Every claim is cited. Sources are rated for confidence. Material graduates to Atlas only after verification and review.</p>
-  </div>
-</section>
 
-{% include atlas/author-block.html %}
-{% include atlas/disclaimer.html %}
+    <div class="research-selector" role="tablist" aria-label="Research types">
+      <button type="button" role="tab" id="research-watchlists-tab" aria-controls="research-watchlists" aria-selected="true" data-research-target="research-watchlists"><span>01</span> Watchlists</button>
+      <button type="button" role="tab" id="research-comparisons-tab" aria-controls="research-comparisons" aria-selected="false" tabindex="-1" data-research-target="research-comparisons"><span>02</span> Comparisons</button>
+      <button type="button" role="tab" id="research-briefs-tab" aria-controls="research-briefs" aria-selected="false" tabindex="-1" data-research-target="research-briefs"><span>03</span> Briefs</button>
+    </div>
+
+    <div class="research-panels">
+      <section class="research-panel is-active" id="research-watchlists" role="tabpanel" aria-labelledby="research-watchlists-tab">
+        <header><p class="research-canvas__eyebrow">Watchlists</p><h3>What needs monitoring</h3><p>Running trackers for fast-moving domains. Updated when primary sources change.</p></header>
+        <div class="research-route-list">
+          <a href="/research/watchlists/sap-business-ai-joule/"><span>01</span><strong>SAP Business AI and Joule</strong><small>SAP's AI copilot, Joule agents, embedded AI scenarios, and the Business AI stack on BTP.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          <a href="/research/watchlists/agentic-ams/"><span>02</span><strong>Agentic AMS</strong><small>AI agents for IT operations, incident triage, and application management services.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          <a href="/research/watchlists/enterprise-integration-architecture/"><span>03</span><strong>Enterprise Integration Architecture</strong><small>SAP Integration Suite, event mesh, API management, and cloud-to-on-premise connectivity.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          <a href="/research/watchlists/data-mesh-event-driven-architecture/"><span>04</span><strong>Data Mesh and Event-Driven Architecture</strong><small>Data mesh principles, event-driven patterns, CloudEvents, AsyncAPI, and modern data architecture.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+        </div>
+      </section>
+
+      <section class="research-panel" id="research-comparisons" role="tabpanel" aria-labelledby="research-comparisons-tab" hidden>
+        <header><p class="research-canvas__eyebrow">Comparisons</p><h3>Where an option needs a boundary</h3><p>Structured comparisons for architecture and tooling decisions.</p></header>
+        <div class="research-route-list">
+          <a href="/research/comparisons/sap-integration-suite-vs-eda/"><span>01</span><strong>SAP Integration Suite vs Event-Driven Architecture</strong><small>When to use SAP's managed iPaaS versus native event mesh, Kafka, or custom EDA.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          <a href="/research/comparisons/sap-mdg-vs-custom-mdm-knowledge-graph/"><span>02</span><strong>SAP MDG vs Custom MDM / Knowledge Graph Layer</strong><small>Central governance with MDG versus decentralized knowledge graphs and custom master data layers.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          <a href="/research/comparisons/joule-sap-business-ai-vs-general-enterprise-agents/"><span>03</span><strong>Joule / SAP Business AI vs General Enterprise Agents</strong><small>SAP's embedded AI approach compared to Microsoft Copilot, Salesforce Agentforce, and general agent platforms.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          <a href="/research/comparisons/data-mesh-vs-lakehouse-vs-knowledge-graph/"><span>04</span><strong>Data Mesh vs Lakehouse vs Knowledge Graph</strong><small>Three approaches to enterprise data architecture: decentralization, centralization, and semantic linking.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+        </div>
+      </section>
+
+      <section class="research-panel" id="research-briefs" role="tabpanel" aria-labelledby="research-briefs-tab" hidden>
+        <header><p class="research-canvas__eyebrow">Briefs</p><h3>What needs a closer look</h3><p>Focused research briefs on emerging patterns with cited evidence.</p></header>
+        <div class="research-route-list">
+          <a href="/research/briefs/ai-agents-for-ams-incident-triage/"><span>01</span><strong>AI Agents for AMS Incident Triage</strong><small>How agentic AI is being applied to SAP AMS incident classification, routing, and first-pass resolution.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          <a href="/research/briefs/mcp-and-enterprise-tool-use/"><span>02</span><strong>MCP and Enterprise Tool Use</strong><small>Model Context Protocol as a standard for connecting AI agents to enterprise tools and data.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          <a href="/research/briefs/knowledge-graphs-for-support-memory/"><span>03</span><strong>Knowledge Graphs for Support Memory</strong><small>Using graph databases and semantic layers to build persistent, queryable operational memory for support teams.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          <a href="/research/briefs/event-driven-integration-for-sap-landscapes/"><span>04</span><strong>Event-Driven Integration for SAP Landscapes</strong><small>Business events, Event Mesh, and CloudEvents as integration patterns for S/4HANA and satellite systems.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section class="research-canvas__method" data-reveal>
+    <div><p class="research-canvas__eyebrow">Method</p><h2>What happens before a finding becomes public guidance.</h2></div>
+    <ol>
+      <li><span>01</span><strong>Track</strong><p>Record the signal and source quality.</p></li>
+      <li><span>02</span><strong>Compare</strong><p>Test its relevance against operating constraints.</p></li>
+      <li><span>03</span><strong>Verify</strong><p>Move durable findings into reviewed Atlas material.</p></li>
+    </ol>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>

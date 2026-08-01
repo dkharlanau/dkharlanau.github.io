@@ -14,7 +14,7 @@ last_modified_at: 2026-07-25
       <p class="note-subtitle">Design contracts and boundaries that let S/4HANA stay stable while the edge keeps evolving.</p>
     </header>
     <div class="note-body">
-      <p>I help teams choose where integration logic should live, how APIs and events should be versioned, and how much platform lock-in is acceptable. The core principle is simple: keep legal and transactional truth in S/4HANA, and make edge services replaceable through explicit contracts.</p>
+      <p>The service helps teams choose where integration logic should live, how APIs and events should be versioned, and how much platform lock-in is acceptable. The core principle is simple: keep legal and transactional truth in S/4HANA, and make edge services replaceable through explicit contracts.</p>
 
       <h2>What problem this addresses</h2>
       <p>Most landscapes do not need another argument about whether APIs are better than IDocs or events. They need a reliable answer to more practical questions: which system owns the business fact, where mapping logic is maintained, how a failure is detected and recovered, how duplicate or late messages are handled, and who can change the contract without surprising downstream teams.</p>

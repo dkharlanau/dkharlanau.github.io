@@ -560,7 +560,7 @@ Use governed key mapping rather than assuming one external field solves identity
 
 A key-mapping record connects:
 
-```text id="q4igc9"
+```text
 Central business partner BP-1000456
 → ECC vendor 300271
 → S/4HANA business partner 1000456
@@ -626,7 +626,7 @@ Master data should not be treated as simply existing or not existing.
 
 A useful lifecycle may include:
 
-```text id="s3hipd"
+```text
 REQUESTED
 → VALIDATING
 → MATCH_REVIEW
@@ -823,7 +823,7 @@ A modern architecture centralizes meaning, not necessarily transport.
 
 An event such as:
 
-```text id="sng0s2"
+```text
 BusinessPartner.Changed
 ```
 
@@ -922,7 +922,7 @@ If a target owns local attributes, keep them distinguishable from governed centr
 
 For example:
 
-```text id="b4i9al"
+```text
 Central supplier identity
 +
 Local purchasing extension
@@ -1101,7 +1101,7 @@ It should not treat a derived risk score as authority to block the supplier unle
 
 A useful response to an agent may contain:
 
-```text id="i7sot8"
+```text
 Customer legal name: Example Industries GmbH
 Authority: Central Business Partner Governance
 Object version: 27
@@ -1127,7 +1127,7 @@ These should not be merged.
 
 For example:
 
-```text id="6l70hj"
+```text
 Governed fact: Supplier is centrally approved.
 Operational fact: Purchasing extension for organization 2000 is missing.
 Inference: Delay may affect the planned purchase order.
@@ -1188,7 +1188,7 @@ For every important distribution process, compare:
 
 Example:
 
-```text id="k1u92y"
+```text
 1,000 suppliers approved
 1,000 distribution records created
 1,000 delivered to target
@@ -1290,7 +1290,7 @@ A generic “master data interface error” queue hides these distinctions.
 
 A practical target model can be represented as follows:
 
-```text id="jzgrg3"
+```text
 Change Sources
 Users | Portals | Applications | Partners | Agents
                          |
@@ -1318,14 +1318,14 @@ Completeness | Accuracy | Key mapping | Readiness | Exceptions
 
 Alongside the operational flow:
 
-```text id="7j5xio"
+```text
 Governed Data Products and Semantic Access
 Analytics | Applications | AI Agents
 ```
 
 Cross-cutting:
 
-```text id="kshqk2"
+```text
 Ownership
 Security
 Lineage
@@ -1362,7 +1362,7 @@ Suppose the central product system distributes materials to five applications.
 
 A weak model creates five direct contracts:
 
-```text id="d5db3c"
+```text
 Central product → S/4HANA structure
 Central product → Warehouse structure
 Central product → Commerce structure

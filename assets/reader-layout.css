@@ -1,0 +1,73 @@
+/* Final reader layer ------------------------------------------------------
+   Canvas pages are navigation and knowledge surfaces, not campaign splash
+   screens. This file intentionally loads after each canvas stylesheet so the
+   reading scale and section insets remain consistent across locales. */
+
+html body:is(.page-context--service, .page-context--knowledge, .page-context--dataset) :is(.service-canvas, .ai-canvas, .dataset-canvas, .research-canvas, .notes-canvas, .scenario-canvas, .diagnostics-canvas, .agent-tools-canvas, .search-canvas) h1 {
+  max-width: 18ch;
+  font-size: clamp(2.25rem, 3vw, 2.85rem) !important;
+  letter-spacing: -.055em !important;
+  line-height: 1.02 !important;
+}
+
+:is(.service-canvas__hero, .ai-canvas__hero, .dataset-canvas__hero, .research-canvas__hero, .notes-canvas__hero, .scenario-canvas__hero, .diagnostic-desk__hero, .agent-tools-canvas__hero, .search-canvas__hero) {
+  min-height: 0 !important;
+  padding-block: clamp(2.25rem, 4vw, 3.75rem) !important;
+}
+
+.service-canvas__hero {
+  align-items: start;
+}
+
+/* The home page keeps its process diagram, but the message and routes should
+   arrive before a full-screen visual takes over. */
+html body.page-context--home .focus-hero {
+  grid-template-rows: minmax(20rem, 1fr) auto;
+  min-height: 0 !important;
+  padding-block: clamp(2rem, 4vw, 3.25rem) 1rem !important;
+}
+
+html body.page-context--home .focus-hero__copy h1 {
+  max-width: 15ch;
+  font-size: clamp(2.35rem, 3vw, 2.85rem) !important;
+  line-height: 1.02 !important;
+}
+
+html body.page-context--home .focus-hero__visual {
+  width: min(100%, 30rem);
+}
+
+:is(.profile-canvas, .service-canvas, .ai-canvas, .dataset-canvas, .research-canvas, .notes-canvas, .scenario-canvas, .diagnostics-canvas, .agent-tools-canvas, .search-canvas) > section:not(:first-child) {
+  box-sizing: border-box;
+  padding-block: clamp(2.5rem, 4vw, 3.5rem) !important;
+  padding-inline: clamp(1rem, 2.2vw, 1.75rem);
+}
+
+:is(.service-canvas, .ai-canvas, .dataset-canvas, .research-canvas, .notes-canvas, .scenario-canvas, .diagnostics-canvas, .agent-tools-canvas, .search-canvas) :is(h2, h3) {
+  line-height: 1.12;
+}
+
+@media (max-width: 760px) {
+  html body:is(.page-context--service, .page-context--knowledge, .page-context--dataset) :is(.service-canvas, .ai-canvas, .dataset-canvas, .research-canvas, .notes-canvas, .scenario-canvas, .diagnostics-canvas, .agent-tools-canvas, .search-canvas) h1 {
+    max-width: 16ch;
+    font-size: clamp(2.15rem, 9vw, 2.65rem) !important;
+  }
+
+  :is(.service-canvas__hero, .ai-canvas__hero, .dataset-canvas__hero, .research-canvas__hero, .notes-canvas__hero, .scenario-canvas__hero, .diagnostic-desk__hero, .agent-tools-canvas__hero, .search-canvas__hero) {
+    padding-block: 2rem 2.5rem !important;
+  }
+
+  html body.page-context--home .focus-hero {
+    grid-template-rows: auto;
+    padding-top: 2rem !important;
+  }
+
+  html body.page-context--home .focus-hero__copy h1 {
+    font-size: clamp(2.15rem, 9vw, 2.65rem) !important;
+  }
+
+  :is(.profile-canvas, .service-canvas, .ai-canvas, .dataset-canvas, .research-canvas, .notes-canvas, .scenario-canvas, .diagnostics-canvas, .agent-tools-canvas, .search-canvas) > section:not(:first-child) {
+    padding-block: 2.25rem !important;
+    padding-inline: 1rem;
+  }
+}

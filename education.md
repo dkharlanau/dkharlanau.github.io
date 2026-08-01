@@ -12,4 +12,6 @@ sections:
   - education-cta
 ---
 
-{% include page-builder.html %}
+<main class="education-canvas">
+  {% include page-builder.html %}
+</main>

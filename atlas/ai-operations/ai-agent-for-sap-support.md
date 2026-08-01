@@ -13,6 +13,18 @@ business_process: Support operations
 status: reviewed
 verified: true
 level: 2
+expert_context:
+  enabled: true
+  domain: ai-sap-operations
+  topics:
+    - AI-assisted SAP support
+    - controlled workflows
+    - support knowledge systems
+  service_url: /services/sap-ai-ml-enablement/
+  evidence_urls:
+    - /atlas/ai-operations/authorization-aware-ai-for-sap/
+    - /atlas/ai-operations/ai-ready-process-documentation/
+    - /atlas/automation/operational-memory-for-sap-ams/
 last_reviewed: 2026-05-06
 author: Dzmitryi Kharlanau
 
@@ -62,6 +74,8 @@ sitemap: true
     <p>An AI agent for SAP support is most useful when it acts as a disciplined support layer: it retrieves relevant context, summarizes the issue, suggests diagnostic paths, prepares tickets, and routes uncertainty to humans.</p>
     <p>The goal is not autonomous configuration change. The goal is faster, more consistent first-pass support while preserving authorization boundaries, auditability, and human accountability.</p>
 
+    {% include atlas/expert-context.html %}
+
     <h2>Minimum safe architecture</h2>
     <ul>
       <li><strong>Knowledge retrieval:</strong> approved runbooks, process notes, KEDB entries, public documentation, and system-specific support material where access is allowed.</li>
@@ -87,6 +101,7 @@ sitemap: true
     </ul>
   </section>
 
+  {% include atlas/expert-cta.html %}
   {% include atlas/author-block.html %}
   {% include atlas/disclaimer.html %}
 </article>

@@ -170,7 +170,7 @@ ATP is therefore a commitment mechanism.
 
 It stands between planning and execution.
 
-```text id="a68wbr"
+```text
 Supply plan
 → ATP decision
 → customer confirmation
@@ -285,7 +285,7 @@ That does not prove the customer can receive it on Friday.
 
 The complete promise may depend on:
 
-```text id="n4jsmk"
+```text
 Material availability
 → picking and packing
 → loading
@@ -378,7 +378,7 @@ SAP APO gATP was introduced for more advanced and global confirmation processes 
 
 A typical historical architecture looked like:
 
-```text id="5s60k8"
+```text
 SAP ERP
 ↔ Core Interface
 ↔ SAP APO
@@ -443,7 +443,7 @@ It evaluates whether a requested product and quantity can be confirmed based on 
 
 A simplified picture is:
 
-```text id="ux9jf8"
+```text
 Relevant stock
 + relevant future receipts
 – existing relevant requirements
@@ -625,7 +625,7 @@ Instead of only limiting how much a demand segment may consume, it protects a qu
 
 Conceptually:
 
-```text id="xsf00s"
+```text
 Available supply
 – protected quantity for priority demand
 = supply available to non-protected demand
@@ -775,7 +775,7 @@ A poorly designed BOP process may repeatedly move supply between orders.
 
 The customer sees:
 
-```text id="mhm60r"
+```text
 Monday: confirmed
 Tuesday: unconfirmed
 Wednesday: confirmed later
@@ -828,7 +828,7 @@ Release-for-delivery capabilities can help prioritize and process orders approac
 
 The important distinction is:
 
-```text id="pa0k0z"
+```text
 ATP confirmation
 ≠ physical delivery readiness
 ```
@@ -954,7 +954,7 @@ SAP states that IBP Response & Supply can model across locations and multilevel 
 
 A practical architecture may use both.
 
-```text id="bjg9pj"
+```text
 SAP IBP
 Network planning, allocation and response decisions
                      |
@@ -1393,7 +1393,7 @@ The ATP project must force management to decide.
 
 A BOP filter such as:
 
-```text id="ohsn3q"
+```text
 Delivery priority = 01
 ```
 
@@ -1873,7 +1873,7 @@ SAP IBP extends the decision into multilevel, constrained and order-based respon
 
 The correct architecture should be layered:
 
-```text id="nnmb4j"
+```text
 IBP
 Plans network response and supply priorities
                     |

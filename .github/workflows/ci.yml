@@ -50,7 +50,29 @@ jobs:
         run: node scripts/generate_dama_pages.js
 
       - name: Build Jekyll site
-        run: bundle exec jekyll build
+        run: bundle exec jekyll build --trace
+
+      - name: Check content quality for changed content
+        if: github.event_name == 'pull_request'
+        run: python3 scripts/content_quality.py check --site-dir _site --changed-from origin/main
+
+      - name: Audit complete content quality on default branch
+        if: github.event_name != 'pull_request'
+        run: python3 scripts/content_quality.py audit --site-dir _site
+
+      - name: Upload content quality reports
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-quality-reports
+          path: |
+            reports/content-quality.md
+            reports/content-quality.json
+            reports/content-quality-summary.json
+            reports/content-link-graph.json
+            reports/content-review-queue.md
+            reports/content-quality-initial-rollout.md
+          if-no-files-found: ignore
 
       - name: Check local links
         run: python3 scripts/check_links.py _site

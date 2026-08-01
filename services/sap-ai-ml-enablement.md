@@ -14,7 +14,7 @@ last_modified_at: 2026-07-25
       <p class="note-subtitle">Use probabilistic services at the edge while the transactional core stays predictable and auditable.</p>
     </header>
     <div class="note-body">
-      <p>This service is for teams that want demand forecasts, risk scoring, retrieval workflows, or operator copilots around SAP, but do not want to push uncertain logic into the ERP core. I help design the sidecar pattern, data flows, controls, and implementation boundaries.</p>
+      <p>This service is for teams that want demand forecasts, risk scoring, retrieval workflows, or operator copilots around SAP, but do not want to push uncertain logic into the ERP core. The work defines the sidecar pattern, data flows, controls, and implementation boundaries.</p>
 
       <h2>Start with the decision, not the model</h2>
       <p>A workable AI use case begins with a decision that is currently slow, inconsistent, or dependent on scattered information. It then asks what evidence the reviewer needs, what a good recommendation looks like, what the tool must never do, and how a wrong output will be detected. This is a more useful starting point than selecting a model or building a polished demo.</p>

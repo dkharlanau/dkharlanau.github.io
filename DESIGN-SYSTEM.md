@@ -6,12 +6,12 @@ This is the canonical visual reference for new pages, sections, and components. 
 
 ## Design Intent
 
-The site uses a restrained editorial B2B style:
+The site uses a restrained technical-editorial system:
 
 - calm, premium, and analytical rather than flashy;
-- strong hierarchy with large headlines and generous whitespace;
-- light surfaces, dark ink, and very limited accent usage;
-- structured storytelling instead of dashboard UI clutter;
+- strong hierarchy with large headlines, deliberate empty space, and direct manager-facing language;
+- light surfaces, ink-blue type, hairline rules, and a single coral signal accent;
+- system maps, diagnostic routes, and impact models instead of dashboard UI clutter;
 - credibility first, decoration second.
 
 The homepage is the benchmark. New work should feel like the same publication, not a separate template pack.
@@ -34,17 +34,18 @@ Current visual behavior is defined by these files, in this order:
 2. `assets/main.css`
 3. `assets/site.css`
 4. `assets/evidence-atlas.css`
+5. `assets/product-system.css`
 
-`assets/evidence-atlas.css` is the current production layer, followed by two small global overrides: `assets/site-chrome.css` (header/menu chrome) and `assets/site-footer.css` (editorial footer). Together they establish the shared visual language while the earlier files remain in place for legacy component structure.
+`assets/product-system.css` is the shared token and reader layer. It follows the legacy stylesheets deliberately, normalising typography, spacing, focus states, navigation, long-form reading, and responsive behavior. `assets/site-chrome.css` and `assets/site-footer.css` provide the editorial chrome. Page-specific canvas files may compose these shared tokens but must not introduce a second visual language.
 
 ## Foundations
 
 ### Typography
 
 - Primary sans: `Inter`
-- Editorial serif: `Source Serif 4`
+- Editorial serif: `Source Serif 4` (optional, only for long-form editorial emphasis)
+- Technical labels: platform monospace stack.
 - Default body and headings are sans-based.
-- Serif is reserved for selective editorial emphasis, not full-page switching.
 
 Preferred hierarchy:
 
@@ -65,13 +66,13 @@ Rules:
 
 The live system is a cool light-neutral palette with dark ink:
 
-- page background: light grey-white, not pure white;
-- primary ink: near-black blue-grey;
+- page background: mineral white `#fafaf8`, not pure white;
+- primary ink: `#132238`;
 - soft ink: restrained slate for body text;
 - muted ink: quieter metadata tone;
-- accent: deep navy-charcoal;
-- accent-soft: pale grey-blue tint;
-- borders: low-contrast cool greys.
+- signal accent: coral `#ef5637`; it indicates an active path, a change, or an important action;
+- muted system accent: blue-grey `#759bb7`;
+- borders: hairline cool grey `#d8dde1`.
 
 Practical rules:
 
@@ -96,7 +97,7 @@ Rules:
 
 ### Shape And Surface
 
-- Rounded corners are soft, not playful.
+- Corners are square-to-subtle (3–8px), never pill-first or app-like.
 - Borders are light and structural.
 - Shadows are subtle or removed entirely.
 - Large surfaces should feel like paper panels, not floating app windows.
@@ -119,15 +120,85 @@ New pages should generally follow this order:
 
 This does not mean every page must copy the homepage sections. It means each page should move from claim -> context -> proof -> action.
 
+### Knowledge Product Canvas
+
+For high-level knowledge products—Diagnostics, Scenarios, Research, Agent Tools, Datasets, and Profile—use a narrow family of canvas patterns rather than generic card grids:
+
+- a short, direct hero that identifies the problem or access route;
+- a ruled inventory, route list, or operating map that makes the choice visible;
+- one clearly labelled system boundary (verification, noindex status, citation, or AI control);
+- a concrete next route into a diagnostic, dataset, scenario, or service;
+- source, citation, and related-content blocks kept quiet at the end.
+
+The visual device must communicate structure. For example, a Research inventory separates monitoring, comparison, and investigation; a Dataset library separates human browsing from machine endpoints; an Atlas reader separates content from navigation. Do not add diagrams simply to decorate whitespace.
+
+### Intent Brief
+
+Use an **intent brief** for an AI-routing page. It is a public routing record, not a product landing page:
+
+- state the route title, a short summary, review date, and public scope at the top;
+- show the practical starting condition, covered problems, and search signals before related links;
+- group next checks, datasets, notes, and services into a ruled route map; links must point to a useful record rather than repeat a generic CTA;
+- show fit, non-fit, citation, and evidence boundaries as a compact comparison near the end;
+- use only a short entrance reveal for section hierarchy and remove it completely when reduced motion is requested.
+
+The underlying content remains ordinary HTML so the page works for a person, a crawler, or an AI client without the enhancement.
+
+### Work-Library Map
+
+Use the **work-library map** for Skill Hub index and group pages. It makes a large knowledge library navigable without reducing it to a badge or card catalogue:
+
+- make the hero a concise statement of the work the library supports, with a narrow route list beside it;
+- use a ruled topic map for skill groups; each entry needs a direct work label and one factual description;
+- use an offset heading column for explanatory sections, comparison tables, and long learning paths;
+- render recommended paths as ordered, two-column lists on larger screens and one source-order list on smaller screens;
+- reserve hover movement for linked routes and honour reduced-motion preferences.
+
+Do not remove detailed paths, limitations, or agent instructions merely to make the library shorter. Reduce interface noise, not useful content.
+
+### Policy Record
+
+Use the **policy record** treatment for legal, privacy, disclosure, accessibility, and responsible-AI pages:
+
+- lead with the policy title and one short scope statement, without a sales CTA or decorative diagram;
+- use ruled section headings and a small policy label to help a reader locate obligations quickly;
+- retain clear lists and tables in ordinary document order;
+- use the same reading width, focus states, mobile hierarchy, and ink/coral token system as the rest of the site.
+
+Policy content should feel calm and direct. The visual treatment must clarify the record, not turn it into a branded campaign page.
+
+### Dataset Source Record
+
+Use the **dataset source record** for collection pages, search results, and generated item views:
+
+- state the collection or item clearly, then place human routes and machine endpoints in one narrow action list;
+- render filters as ordinary input controls with visible focus, never as a decorative control panel;
+- render collection entries as ruled records with title, concise description, type, identifier, and raw-data route;
+- use a square, low-contrast metadata treatment and reserve coral for the active type or link state;
+- render generated structures, option sets, and raw JSON as inspectable documents with no elevation or rounded card mosaic.
+
+The data structure, JSON routes, client-side filtering, and no-JavaScript fallback must remain unchanged.
+
 ### Hero Pattern
 
 Homepage hero sets the tone:
 
-- centered composition;
-- large title;
-- concise subtitle and lead;
-- compact personal/context cue;
-- limited action set.
+- asymmetric composition with a live dependency trace: several inputs converge on one diagnostic decision;
+- large, concrete title and one concise supporting line;
+- one primary action and one quiet secondary path;
+- only relevant proof cues; avoid dense self-description.
+
+### Global Navigation
+
+Navigation is a compact route selector, not a secondary homepage:
+
+- keep the persistent routes limited to services, scenarios, Atlas, journal, profile, and search; the contact action is the single contrasting action;
+- expose the current route with both a visible state and `aria-current="page"`;
+- on smaller screens, open one full-width ruled list from a labelled menu control rather than shrinking desktop links until they wrap;
+- move keyboard focus into the open list, support Escape, keep Tab travel within the toggle and its list, and close the list when the viewport returns to desktop width;
+- language selection remains a native disclosure and must retain its current-language state and keyboard baseline.
+
+The menu animation is limited to the menu mark and a short layout reveal. Route finding must remain immediate with reduced motion and without JavaScript.
 
 Use this pattern when the page represents a point of view, offer, capability, or summary page.
 
@@ -137,6 +208,7 @@ Rules:
 - One primary action, optionally one secondary.
 - Do not overload the hero with badges, metrics, and three paragraphs at once.
 - Keep imagery secondary to the statement.
+- When motion is used, animate a meaningful state change such as a signal moving along the trace. Keep the static diagram legible and disable the animation for reduced-motion preferences.
 
 ### Section Pattern
 
@@ -201,6 +273,80 @@ Avoid:
 - decorative empty cards;
 - nested cards inside cards unless the pattern already exists;
 - rainbow card sets or arbitrary per-card colors.
+
+### Route Lists And Inventories
+
+Use a ruled route list when the reader is choosing among entries that have equal informational weight:
+
+- number, title, a concise decision-oriented description, count or state, and directional affordance;
+- one link per row, with the entire row as the target;
+- a low-contrast hover state that confirms the row is interactive;
+- no duplicate “open” buttons or icon-only actions;
+- stack fields in source order on small screens.
+
+Use a tab selector only when it changes a genuinely different view of the same inventory. It must use semantic tabs, arrow-key navigation, `aria-selected`, and a readable no-JavaScript default.
+
+### Public Evidence Registers
+
+For publications, certifications, education records, and other proof surfaces, use the **public evidence register** pattern rather than a CV grid:
+
+- a short claim about what can be verified;
+- a compact numerical ledger, not badge tiles;
+- three restrained scope rows that explain what the record covers;
+- a ruled source register with date, authority or publisher, record, category, and one verification action;
+- category filters that only improve browsing: all records remain in the static HTML and usable without JavaScript.
+
+The relevant visual signals are provenance and scope. Do not use provider logos, completion-badge mosaics, motivational learning copy, or unsupported progression claims. Filters must use buttons with `aria-pressed`, announce the visible record count, preserve keyboard use, and respect reduced-motion preferences.
+
+### Professional Record
+
+The `/cv/` route is a complete professional record, not the site’s primary brand page. Its entry view should therefore answer four practical questions before chronology begins: what work is covered, whose public record this is, what company/profile context is available, and where the machine-readable source can be checked. Keep full role history, credentials, and education intact below the fold, but present them as ruled records with dates and evidence links—not as résumé tiles or capability claims.
+
+### Manager FAQ
+
+Use a manager FAQ as a decision guide, not an accordion full of sales copy:
+
+- begin with the decision that has to be made, in plain operational language;
+- make each question the summary line so it is useful before it is opened;
+- use native `details` / `summary` controls for keyboard access and a no-JavaScript baseline;
+- number questions only to make scanning and discussion easier; do not add badges, icons, or decorative illustrations;
+- retain a compact route table beneath the guide when the reader needs to turn a visible constraint into a sensible first route.
+
+### Service Brief
+
+Use the **service brief** pattern for a consulting detail page. It lets a manager establish scope before reading the implementation detail:
+
+- use a large, direct service title with one short statement of the operational condition it addresses;
+- put the subtitle beside the title on larger screens so the page starts with both the offer and its practical boundary;
+- provide a generated in-page outline when there are three or more sections; it is a native disclosure on small screens and highlights the current section during reading;
+- number primary sections and delivery steps only to support discussion and handover, not to imply a rigid method;
+- render delivery stages and decision tables as ruled documents, with no floating cards or decorative illustration;
+- retain all detailed diagnostic questions, boundaries, outputs, and related links below the scan layer.
+
+This pattern is intentionally content-led. Its only interactive details are the readable outline, copy/share tools, and current-section state; all content remains usable without JavaScript.
+
+### Diagnostic Record
+
+Use a **diagnostic record** for Atlas and Scenario detail pages. The page should make it easy to establish scope, then follow a structured investigation without reducing technical depth:
+
+- use a large title and one short statement of the condition under investigation;
+- place review state, process, SAP area, and indexing boundary in a narrow record rail rather than a colored badge stack;
+- number primary sections as a reading and handover aid; the numbers do not imply a fixed solution sequence;
+- keep the body as the dominant reading column, with a sticky in-page outline only on larger screens;
+- show copy, share, and useful actions as light text controls; retain their visible keyboard focus and no-JavaScript reading baseline;
+- leave original evidence, verification status, public sources, and related diagnostics untouched.
+
+This is intentionally a technical record, not a product page. Avoid capability cards, achievement claims, generic summaries, or decorative diagrams that do not help a reader diagnose an issue.
+
+### Signal Register
+
+Use a **signal register** for dated News and Radar collections. It makes the status of provisional material explicit without making it look like a content-marketing feed:
+
+- use a large, concise distinction in the hero: changes to track versus signals under review;
+- give the collection a compact ledger for item count, purpose, and indexing status;
+- render each item as a ruled chronological row with its date, source, confidence, scope labels, and one “Open” link;
+- keep News and Radar visually identical while their headers make the different evidence boundary clear;
+- do not use coloured cards, category chips, source logos, or a featured-item carousel for these collections.
 
 ### Quotes, Notes, And Callouts
 
@@ -291,12 +437,28 @@ Before considering a new page done, verify:
 - Is the CTA count disciplined?
 - Does the copy sound operational and credible?
 
+## Page Hierarchy and Navigation
+
+Landing, catalogue, and knowledge-product pages use the same decision order:
+
+1. State the operating subject in a small label.
+2. Give one concrete title.
+3. Explain the scope in one short paragraph.
+4. Offer one primary action and one secondary route.
+5. Put the available routes or evidence immediately beside or below that choice.
+
+Do not treat a catalogue page as a billboard. At desktop widths, its title should remain below `3rem`; on compact widths, it should remain below `2.85rem`. The first useful routes must be visible without a second hero-sized section.
+
+The header is intentionally responsive: direct primary navigation is visible from `1101px`; the menu control is reserved for narrower layouts. Do not hide the desktop routes to create a stylistic effect.
+
 ## Implementation Notes
 
 - Prefer editing data-driven content where possible.
 - Reuse existing section partials and structural classes before adding new ones.
 - If new CSS is required, add it in the existing stylesheet layer that matches the page, and avoid token duplication.
 - If a new component becomes reusable, add it to this document after implementation.
+- Page-specific canvas CSS belongs in `assets/<section>-canvas.css`; it must consume the shared `--ps-*` token values or matching local aliases, include a mobile layout, keyboard focus state, and `prefers-reduced-motion` behavior.
+- Canvas JavaScript may add reveal, tab, calculator, or filtering behavior only after the static page remains fully usable. JavaScript must not contain source-of-truth content or change a page's indexing boundary.
 
 ## Evidence Atlas Production Layer
 

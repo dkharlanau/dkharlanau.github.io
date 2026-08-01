@@ -12,6 +12,18 @@ business_process: Support operations
 status: reviewed
 verified: true
 level: 2
+expert_context:
+  enabled: true
+  domain: sap-ams
+  topics:
+    - SAP AMS cost reduction
+    - recurring incidents
+    - support operating model
+  service_url: /services/ams-cost-center-catalyst/
+  evidence_urls:
+    - /atlas/automation/operational-memory-for-sap-ams/
+    - /atlas/ai-operations/ai-agent-for-sap-support/
+    - /scenarios/sap-support-costs-growing-without-ticket-growth/
 last_reviewed: 2026-07-25
 author: Dzmitryi Kharlanau
 tags:
@@ -54,6 +66,8 @@ sitemap: true
   <div class="note-body">
     <h2>Core idea</h2>
     <p>AMS cost rarely rises because one queue received more tickets. It rises because the landscape needs more coordination, more rework, more manual control, more integration handling, and more rediscovery than management can see in the incident report. A cost programme should therefore start by separating visible ticket demand from hidden operating demand.</p>
+
+    {% include atlas/expert-context.html %}
 
     <h2>What management usually sees</h2>
     <ul>
@@ -127,6 +141,7 @@ sitemap: true
     </ul>
   </section>
 
+  {% include atlas/expert-cta.html %}
   {% include atlas/author-block.html %}
   {% include atlas/disclaimer.html %}
 </article>

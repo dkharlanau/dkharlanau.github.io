@@ -14,7 +14,7 @@ last_modified_at: 2026-07-25
       <p class="note-subtitle">Stabilise operations, harvest knowledge, and shift AMS from ticket closure to prevention.</p>
     </header>
     <div class="note-body">
-      <p>Many SAP AMS engagements look healthy in SLA reports while the same delivery blocks, IDoc failures, billing issues, and master-data defects keep returning. I work on the operating model behind that pattern: incident clustering, knowledge capture, root-cause loops, and guardrails that reduce rediscovery and make prevention work visible.</p>
+      <p>Many SAP AMS engagements look healthy in SLA reports while the same delivery blocks, IDoc failures, billing issues, and master-data defects keep returning. The work examines the operating model behind that pattern: incident clustering, knowledge capture, root-cause loops, and guardrails that reduce rediscovery and make prevention work visible.</p>
 
       <h2>What this is—and is not</h2>
       <p>This is not a promise to remove every incident or replace an existing support provider. It is a way to make a support model more explainable: which failure patterns recur, what evidence is repeatedly missing, where recovery ownership breaks, and which improvements are worth doing before teams add more automation or capacity.</p>
@@ -33,7 +33,7 @@ last_modified_at: 2026-07-25
         <li>Business users still experience blocked orders, billing backlog, or unstable interfaces despite green dashboards.</li>
       </ul>
 
-      <h2>What I deliver</h2>
+      <h2>Expected outputs</h2>
       <ul>
         <li>KEDB and runbook structure for the highest-frequency incident classes.</li>
         <li>Backlog and MTTR diagnostics tied to business process steps, not just ticket queues.</li>

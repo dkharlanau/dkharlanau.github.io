@@ -18,8 +18,8 @@ verified: true
 
 <section class="section atlas-hero">
   <p class="eyebrow">Skill Hub</p>
-  <h1>Practical working skills for enterprise delivery.</h1>
-  <p class="lead">A library of usable work skills for consultants, analysts, architects, and AI agents. Not a glossary. Not a framework encyclopedia. Real methods, decision rules, checklists, and artifact templates you can use tomorrow.</p>
+  <h1>Working methods for enterprise delivery.</h1>
+  <p class="lead">Methods, decision rules, checklists, and artifact templates for consultants, analysts, architects, and AI agents.</p>
   <div class="atlas-hero__actions">
     <a class="button button--primary" href="/skill-hub/dama-dmbok/">Data &amp; DAMA skills</a>
     <a class="button" href="/skill-hub/business-analysis/">Business analysis skills</a>
@@ -132,6 +132,10 @@ verified: true
     <div class="topic-card">
       <h3><a href="/skill-hub/architecture/">Architecture</a></h3>
       <p>Capability mapping, solution architecture review, architecture decision records, non-functional requirements, system context mapping.</p>
+    </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/sap-architecture-course/">SAP Architect Field Course</a></h3>
+      <p>A practical pathway through system boundaries, integration, data, extensions, operations, and architecture decisions.</p>
     </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/integration-architecture/">Integration Architecture</a></h3>

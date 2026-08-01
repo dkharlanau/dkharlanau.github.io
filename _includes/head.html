@@ -5,7 +5,7 @@
 {% assign locale_data = site.data.home_i18n[page.locale] %}
 {% assign locale_meta = locale_data.meta %}
 
-{% assign computed_title = page.title | default: site.title %}
+{% assign computed_title = page.seo_title | default: page.title | default: site.title %}
 {% if page.home_locale %}
 {% assign computed_title = locale_meta.title | default: 'SAP Transformation, AMS and AI Readiness Consultant | Dzmitryi Kharlanau' %}
 {% elsif page.url == '/' or page.permalink == '/' %}
@@ -13,7 +13,7 @@
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
 {% assign computed_title = 'Curriculum Vitae — Dzmitryi Kharlanau | SAP AMS, Integration & Process Optimization' %}
 {% elsif page.collection == 'notes' %}
-{% assign computed_title = page.title | append: ' — Dzmitryi Kharlanau | SAP AMS & Support Automation' %}
+{% assign computed_title = page.title %}
 {% endif %}
 
 {% assign default_description = 'Senior SAP consultant for AMS improvement, SAP transformation planning, SD/MM and logistics processes, master data, integrations, AI readiness, and practical automation.' %}
@@ -67,6 +67,7 @@ normalize_whitespace %}
 <link rel="describedby" type="application/json" href="{{ '/ai/catalog.json' | absolute_url }}" title="AI Catalog" />
 <link rel="describedby" type="application/json" href="{{ '/ai/discovery-map.json' | absolute_url }}" title="AI Discovery Map" />
 <link rel="describedby" type="application/json" href="{{ '/ai/verified-pages.json' | absolute_url }}" title="Verified Page Inventory" />
+<link rel="describedby" type="application/json" href="{{ '/ai/markdown-clusters.json' | absolute_url }}" title="Markdown Cluster Index" />
 <link rel="describedby" type="application/json" href="{{ '/datasets/manifest.json' | absolute_url }}" title="Datasets Manifest" />
 <link rel="alternate" type="text/plain" href="{{ '/llms.txt' | absolute_url }}" title="LLMs Manifest" />
 <link rel="alternate" type="text/plain" href="{{ '/llms-full.txt' | absolute_url }}" title="Verified Atlas Full Text" />
@@ -98,7 +99,7 @@ normalize_whitespace %}
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&display=swap" rel="stylesheet" />
 <link rel="preload" as="image" href="{{ '/assets/img/DzmitryiKharlanau.webp' | absolute_url }}"
   imagesrcset="{{ '/assets/img/DzmitryiKharlanau.avif' | absolute_url }} 1x" />
-<link rel="me" href="https://www.linkedin.com/in/dkharlanau" />
+<link rel="me" href="https://www.linkedin.com/in/dkharlanau/" />
 
 <meta property="og:type" content="{% if page.collection == 'notes' or page.layout == 'blog' or page.collection == 'blog' %}article{% else %}website{% endif %}" />
 <meta property="og:locale" content="{{ locale_meta.og_locale | default: 'en_US' }}" />
@@ -126,17 +127,60 @@ normalize_whitespace %}
 <link rel="stylesheet" href="{{ '/assets/site-chrome.css' | relative_url }}?v={{ asset_version }}" />
 <link rel="stylesheet" href="{{ '/assets/site-footer.css' | relative_url }}?v={{ asset_version }}" />
 <link rel="stylesheet" href="{{ '/assets/product-system.css' | relative_url }}?v={{ asset_version }}" />
+{% comment %} Shared canvas patterns remain in the product-system layer to keep route loading stable. {% endcomment %}
+{% if page.sap_architecture_course %}
+<link rel="stylesheet" href="{{ '/assets/sap-architect-course.css' | relative_url }}?v={{ asset_version }}" />
+{% endif %}
 {% if page.home_locale %}
 <link rel="stylesheet" href="{{ '/assets/home-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<link rel="stylesheet" href="{{ '/assets/operating-surface.css' | relative_url }}?v={{ asset_version }}" />
 <script src="{{ '/assets/home-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
+<script src="{{ '/assets/operating-surface.js' | relative_url }}?v={{ asset_version }}" defer></script>
 {% endif %}
 {% if page.url == '/blog/' %}
 <link rel="stylesheet" href="{{ '/assets/blog-list.css' | relative_url }}?v={{ asset_version }}" />
+<link rel="stylesheet" href="{{ '/assets/journal-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<script src="{{ '/assets/journal-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
+{% endif %}
+{% if page.url == '/notes/' %}
+<link rel="stylesheet" href="{{ '/assets/notes-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<script src="{{ '/assets/notes-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
 {% endif %}
 {% if page.url == '/services/' %}
 <link rel="stylesheet" href="{{ '/assets/services-canvas.css' | relative_url }}?v={{ asset_version }}" />
 <script src="{{ '/assets/services-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
 {% endif %}
+{% if page.url == '/scenarios/' %}
+<link rel="stylesheet" href="{{ '/assets/scenarios-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<script src="{{ '/assets/scenarios-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
+{% endif %}
+{% if page.url == '/atlas/diagnostics/' %}
+<link rel="stylesheet" href="{{ '/assets/diagnostics-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<script src="{{ '/assets/diagnostics-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
+{% endif %}
+{% if page.url == '/agent-tools/' %}
+<link rel="stylesheet" href="{{ '/assets/agent-tools-canvas.css' | relative_url }}?v={{ asset_version }}" />
+{% endif %}
+{% if page.url == '/about/' %}
+<link rel="stylesheet" href="{{ '/assets/about-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<script src="{{ '/assets/about-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
+{% endif %}
+{% if page.url == '/research/' %}
+<link rel="stylesheet" href="{{ '/assets/research-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<script src="{{ '/assets/research-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
+{% endif %}
+{% if page.url == '/datasets/' %}
+<link rel="stylesheet" href="{{ '/assets/dataset-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<script src="{{ '/assets/dataset-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
+{% endif %}
+{% if page.url == '/search/' %}
+<link rel="stylesheet" href="{{ '/assets/search-canvas.css' | relative_url }}?v={{ asset_version }}" />
+{% endif %}
+{% if page.url == '/ai/' %}
+<link rel="stylesheet" href="{{ '/assets/ai-canvas.css' | relative_url }}?v={{ asset_version }}" />
+<script src="{{ '/assets/ai-canvas.js' | relative_url }}?v={{ asset_version }}" defer></script>
+{% endif %}
+<link rel="stylesheet" href="{{ '/assets/reader-layout.css' | relative_url }}?v={{ asset_version }}" />
 <script src="{{ '/assets/dataset-render.js' | relative_url }}?v={{ asset_version }}" defer></script>
 <script src="{{ '/assets/reader-tools.js' | relative_url }}?v={{ asset_version }}" defer></script>
 <script src="{{ '/assets/product-system.js' | relative_url }}?v={{ asset_version }}" defer></script>

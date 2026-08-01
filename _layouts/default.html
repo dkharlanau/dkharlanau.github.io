@@ -17,6 +17,14 @@
   {% assign page_context = 'page-context--home' %}
 {% elsif page.url == '/cv/' or page.permalink == '/cv/' %}
   {% assign page_context = 'page-context--cv' %}
+{% elsif page.url contains '/services/' %}
+  {% assign page_context = 'page-context--service' %}
+{% elsif page.url contains '/skill-hub/' %}
+  {% assign page_context = 'page-context--skill-hub' %}
+{% elsif page.url contains '/legal/' %}
+  {% assign page_context = 'page-context--legal' %}
+{% elsif page.url contains '/datasets/' %}
+  {% assign page_context = 'page-context--dataset' %}
 {% endif %}
 
 <body class="site {{ page_context }}">
@@ -24,9 +32,17 @@
   {% include header.html %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
     {{ content }}
+    {% assign generated_expert = site.data.expert_context.entries[page.url] %}
+    {% if generated_expert and generated_expert.enabled == true and generated_expert.placement != 'source' %}
+    <section class="expert-promotion-generated" aria-label="Article expert context">
+      {% include expert/context.html expert=generated_expert %}
+      {% include expert/cta.html expert=generated_expert %}
+    </section>
+    {% endif %}
     {% unless page.hide_global_cta %}
     {% include cta-global.html %}
     {% endunless %}
+    {% include site-share-widget.html %}
   </main>
   <footer class="site-footer" id="site-footer">
     {% include footer.html %}

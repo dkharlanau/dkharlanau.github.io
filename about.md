@@ -11,52 +11,50 @@ hide_global_cta: true
 {% assign resume = site.data.resume %}
 {% assign social_links = site.data.social.links %}
 
-<section class="section" id="person">
-  <header class="section-heading">
-    <p class="eyebrow">Profile</p>
+<div class="profile-canvas">
+<section class="profile-canvas__hero" id="person" data-reveal>
+  <div class="profile-canvas__hero-copy">
+    <p class="profile-canvas__eyebrow">SAP consultant profile</p>
     <h1>Dzmitryi Kharlanau</h1>
-    <p class="lead">Senior SAP consultant with 12+ years across sales and logistics processes, master data, integrations, AMS delivery, Automotive and Retail environments, and practical AI work around SAP.</p>
-  </header>
-
-  <div class="section-shell section-shell--flat profile-hero">
-    <div class="profile-hero__meta">
-      <p><strong>Current context:</strong> {{ resume.headline }} at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>.</p>
-      <p><strong>Working scope:</strong> SD, MM, O2C, P2P, MDG-related work, master data, integration troubleshooting, AMS, and ABAP-backed analysis.</p>
-      <p><strong>Last reviewed:</strong> {{ page.last_modified_at | date: "%B %-d, %Y" }}</p>
-    </div>
-    <div class="section-actions">
-      <a class="button button--primary" href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener noreferrer">Contact on LinkedIn</a>
-      <a class="button button--secondary" href="/cv/">Open CV</a>
-      <a class="button button--secondary" href="/services/">Explore services</a>
+    <p>Senior SAP consultant working across sales and logistics processes, master data, integration, AMS delivery, Automotive and Retail environments, and AI-supported work with controlled sources and human review.</p>
+    <div class="profile-canvas__actions">
+      <a class="profile-canvas__button" href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener noreferrer">Discuss an SAP problem <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
+      <a class="profile-canvas__text-link" href="/services/">View services <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
   </div>
+  <div class="profile-canvas__portrait"><img src="/assets/img/DzmitryiKharlanau.webp" alt="Dzmitryi Kharlanau" width="720" height="720" fetchpriority="high" /><span aria-hidden="true"></span></div>
+  <dl class="profile-canvas__facts">
+    <div><dt>Current context</dt><dd>{{ resume.headline }} at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a></dd></div>
+    <div><dt>Working scope</dt><dd>SD, MM, O2C, P2P, MDG-related work, master data, integration troubleshooting, AMS, and ABAP-backed analysis.</dd></div>
+    <div><dt>Last reviewed</dt><dd>{{ page.last_modified_at | date: "%B %-d, %Y" }}</dd></div>
+  </dl>
 </section>
 
-<section class="section">
+<section class="section profile-canvas__scope" data-reveal>
   <div class="section-shell">
-    <header class="section-heading"><p class="eyebrow">What I work on</p><h2>Business problems that cross SAP boundaries</h2></header>
+    <header class="section-heading"><p class="eyebrow">Operating scope</p><h2>Business problems that cross SAP boundaries</h2></header>
     <div class="prose">
       <p>{{ resume.summary }}</p>
-      <p>My work sits where a business process crosses SAP configuration, master data, custom logic, interfaces, and the support model. That is why a blocked order, failed replication, or delayed invoice is rarely treated as a single-module problem. The useful question is which decision, dependency, or control broke—and what evidence separates a local workaround from a durable fix.</p>
-      <p>I am most useful when a team needs both functional process reasoning and enough technical depth to work credibly across application, ABAP, integration, data, and operations colleagues.</p>
+      <p>The work sits where a business process crosses SAP configuration, master data, custom logic, interfaces, and the support model. A blocked order, failed replication, or delayed invoice is rarely a single-module problem. The useful question is which decision, dependency, or control broke—and what evidence separates a local workaround from a durable fix.</p>
+      <p>It suits work where teams need a functional lead who can define the failure with application, ABAP, integration, data, and operations colleagues.</p>
     </div>
   </div>
 </section>
 
-<section class="section">
+<section class="section profile-canvas__approach" data-reveal>
   <div class="section-shell">
-    <header class="section-heading"><p class="eyebrow">Operating lens</p><h2>How I approach SAP problems</h2></header>
+    <header class="section-heading"><p class="eyebrow">Operating approach</p><h2>How SAP problems are approached</h2></header>
     <div class="process-rail" aria-label="Four-step diagnostic approach">
       <div class="process-rail__step"><strong>1. Make the failure concrete</strong><span>Start with a blocked business outcome, not a technology label.</span></div>
       <div class="process-rail__step"><strong>2. Trace dependencies</strong><span>Follow process, master data, configuration, enhancement, and interface boundaries.</span></div>
       <div class="process-rail__step"><strong>3. Separate evidence from assumption</strong><span>Distinguish confirmed facts, missing evidence, and landscape-specific decisions.</span></div>
       <div class="process-rail__step"><strong>4. Leave a reusable artefact</strong><span>Turn the result into an owner decision, runbook, backlog item, or control.</span></div>
     </div>
-    <div class="prose"><p>I am sceptical of fixes that only improve the appearance of control: green SLAs while the same incidents recur, dashboards without an accountable recovery path, AI pilots without a usable knowledge layer, or “clean core” work that simply moves unowned complexity elsewhere. The aim is a narrower, safer intervention that makes the next decision easier.</p></div>
+    <div class="prose"><p>Avoid fixes that only improve the appearance of control: green SLAs while the same incidents recur, dashboards without an accountable recovery path, AI pilots without a usable knowledge layer, or “clean core” work that moves unowned complexity elsewhere. The result should be a bounded change with an owner, evidence, and a recovery path.</p></div>
   </div>
 </section>
 
-<section class="section">
+<section class="section profile-canvas__domains" data-reveal>
   <div class="section-shell">
     <header class="section-heading"><p class="eyebrow">Where experience connects</p><h2>Domains that meet in real delivery work</h2></header>
     <div class="evidence-grid">
@@ -69,7 +67,7 @@ hide_global_cta: true
   </div>
 </section>
 
-<section class="section">
+<section class="section profile-canvas__outputs" data-reveal>
   <div class="section-shell">
     <header class="section-heading"><p class="eyebrow">What a manager can expect</p><h2>Useful outputs, not generic advice</h2></header>
     <div class="deliverable-grid">
@@ -81,7 +79,7 @@ hide_global_cta: true
   </div>
 </section>
 
-<section class="section">
+<section class="section profile-canvas__record" data-reveal>
   <div class="section-shell">
     <header class="section-heading"><p class="eyebrow">Career path</p><h2>Roles represented in the public dataset</h2></header>
     <div class="profile-list">
@@ -97,7 +95,7 @@ hide_global_cta: true
   </div>
 </section>
 
-<section class="section">
+<section class="section profile-canvas__evidence" data-reveal>
   <div class="section-shell">
     <header class="section-heading"><p class="eyebrow">Evidence routes</p><h2>How to examine the positioning</h2></header>
     <div class="decision-table"><table><thead><tr><th>Question</th><th>Public evidence</th></tr></thead><tbody>
@@ -109,7 +107,7 @@ hide_global_cta: true
   </div>
 </section>
 
-<section class="section">
+<section class="section profile-canvas__credentials" data-reveal>
   <div class="section-shell">
     <header class="section-heading"><p class="eyebrow">Selected credentials</p><h2>Publicly linkable credentials</h2></header>
     <div class="profile-list">
@@ -120,7 +118,7 @@ hide_global_cta: true
   </div>
 </section>
 
-<section class="section">
+<section class="section profile-canvas__writing" data-reveal>
   <div class="section-shell">
     <header class="section-heading"><p class="eyebrow">Public writing</p><h2>Selected published work</h2></header>
     <div class="profile-list">
@@ -131,7 +129,7 @@ hide_global_cta: true
   </div>
 </section>
 
-<section class="section">
+<section class="section profile-canvas__verification" data-reveal>
   <div class="section-shell">
     <header class="section-heading"><p class="eyebrow">Verification detail</p><h2>Machine-readable sources and profiles</h2></header>
     <div class="profile-grid">
@@ -143,9 +141,10 @@ hide_global_cta: true
   </div>
 </section>
 
-<section class="section">
+<section class="section profile-canvas__profiles" data-reveal>
   <div class="section-shell">
     <header class="section-heading"><p class="eyebrow">Profiles</p><h2>External identity links</h2></header>
     <div class="profile-chip-links">{% for link in social_links %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>{% endfor %}</div>
   </div>
 </section>
+</div>

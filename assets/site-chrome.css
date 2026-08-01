@@ -87,3 +87,14 @@
   align-self: flex-start;
   margin-top: 0.4rem;
 }
+
+/* Desktop restoration: the base chrome is menu-first; wide screens expose
+   the primary routes directly. This lives with the fallback layer so it is
+   reliable even while the optional product stylesheet is loading. */
+@media (min-width: 1101px) {
+  .site-header__branding { display: flex; }
+  .site-nav { display: flex; justify-content: flex-end; }
+  .site-nav__toggle { display: none; }
+  .site-header .nav-links { position: static; display: flex; flex-direction: row; align-items: center; gap: .15rem; width: auto; border: 0; background: transparent; padding: 0; }
+  .site-header .nav-link { display: inline-flex; align-items: center; min-height: 2.35rem; border: 0; padding: .5rem .62rem; }
+}

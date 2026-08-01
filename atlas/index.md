@@ -26,15 +26,20 @@ related:
   </ol>
 </nav>
 
-<section class="section atlas-hero">
+<section class="section atlas-hero atlas-hero--focus">
   <p class="eyebrow">Knowledge Atlas</p>
-  <h1>Business, SAP, operations, data, automation, and AI-assisted support concepts.</h1>
-  <p class="lead">A curated working atlas for concepts that matter during SAP support, process analysis, operational memory work, side-by-side AI design, and management-level SAP decisions. It is intentionally small: reviewed pages first, raw research notes kept private.</p>
+  <h1>Find the SAP context before choosing the fix.</h1>
+  <p class="lead">Reviewed public pages for SAP operations, process analysis, master data, integration, and controlled automation. Start with the observable problem, then follow the related process, data, and ownership checks.</p>
   <div class="atlas-hero__actions">
-    <a class="button button--primary" href="/atlas/concepts/">Explore concepts</a>
-    <a class="button" href="/atlas/diagnostics/">Open diagnostics</a>
-    <a class="button" href="/atlas/ai-operations/">AI operations</a>
+    <a class="button button--primary" href="/atlas/diagnostics/">Start with a diagnostic</a>
+    <a class="button" href="/atlas/concepts/">Browse concepts</a>
   </div>
+  <nav class="atlas-hero__route" aria-label="Atlas routes">
+    <a href="/atlas/diagnostics/">Diagnostics <span aria-hidden="true">→</span></a>
+    <a href="/atlas/maps/">Maps <span aria-hidden="true">→</span></a>
+    <a href="/atlas/data-quality/">Data quality <span aria-hidden="true">→</span></a>
+    <a href="/atlas/ai-operations/">AI operations <span aria-hidden="true">→</span></a>
+  </nav>
 </section>
 
 <section class="section atlas-pathfinder" data-atlas-pathfinder aria-labelledby="pathfinder-title">

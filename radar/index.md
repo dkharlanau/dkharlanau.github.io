@@ -7,54 +7,44 @@ robots: noindex,follow
 sitemap: false
 ---
 
-<section class="section notes-landing">
-  <header class="section-heading">
-    <p class="eyebrow">Professional Radar</p>
-    <h1>{{ page.title }}</h1>
-    <p class="lead">Professional Radar collects signals, observations, and review candidates. Durable knowledge belongs in the <a href="/atlas/">Knowledge Atlas</a> after review.</p>
-  </header>
+{% assign items = site.radar | sort: 'date' | reverse %}
+<main class="signal-log signal-log--radar">
+  <section class="signal-log__hero" aria-labelledby="radar-title">
+    <p class="signal-log__eyebrow">Professional radar</p>
+    <h1 id="radar-title">Signals under review.</h1>
+    <p>Observations and review candidates stay separate from the <a href="/atlas/">Knowledge Atlas</a> until they are ready to become durable guidance.</p>
+    <dl class="signal-log__ledger" aria-label="Radar scope">
+      <div><dt>Items</dt><dd>{{ items | size }}</dd></div>
+      <div><dt>Purpose</dt><dd>Review</dd></div>
+      <div><dt>Status</dt><dd>Noindex</dd></div>
+    </dl>
+  </section>
 
-  <div class="notes-grid">
-    {% assign items = site.radar | sort: 'date' | reverse %}
+  <section class="signal-log__register" aria-labelledby="radar-register-title">
+    <header class="signal-log__register-head">
+      <div><p class="signal-log__eyebrow">Review register</p><h2 id="radar-register-title">Current radar</h2></div>
+      <p>Entries are dated observations, not evergreen recommendations.</p>
+    </header>
     {% if items == empty %}
-    <p class="lead">No radar signals published yet. This section is being prepared.</p>
+    <p class="signal-log__empty">No radar signals published yet. This section is being prepared.</p>
     {% else %}
-    {% for item in items %}
-    <article class="note-card neub-card">
-      <header>
-        <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
-        {% if item.subtitle %}<p class="note-card-subtitle">{{ item.subtitle }}</p>{% endif %}
-      </header>
-      <div class="note-card-meta">
-        {% assign published_on = item.date | default: item.published %}
-        {% if published_on %}
-        <span>{{ published_on | date: "%d %b %Y" }}</span>
-        {% endif %}
-        {% if item.source %}
-        <span>Source: {{ item.source }}</span>
-        {% endif %}
-        {% if item.confidence %}
-        <span>Confidence: {{ item.confidence }}</span>
-        {% endif %}
-        {% if item.topics %}
-        <ul class="note-tags">
-          {% for topic in item.topics %}
-          <li>{{ topic }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-        {% if item.tags %}
-        <ul class="note-tags">
-          {% for tag in item.tags %}
-          <li>{{ tag }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </div>
-      <p>{{ item.summary | default: item.excerpt }}</p>
-      <a class="link-arrow" href="{{ item.url }}">Read signal</a>
-    </article>
-    {% endfor %}
+    <ol class="signal-log__list">
+      {% for item in items %}
+      {% assign published_on = item.date | default: item.published %}
+      <li>
+        <article class="signal-log__entry">
+          <time datetime="{{ published_on | date_to_xmlschema }}">{{ published_on | date: "%d %b %Y" }}</time>
+          <div class="signal-log__entry-copy">
+            <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
+            {% if item.subtitle %}<p class="signal-log__subtitle">{{ item.subtitle }}</p>{% endif %}
+            <p>{{ item.summary | default: item.excerpt }}</p>
+            <p class="signal-log__meta">{% if item.source %}<span>Source: {{ item.source }}</span>{% endif %}{% if item.confidence %}<span>Confidence: {{ item.confidence }}</span>{% endif %}{% if item.topics %}<span>{{ item.topics | join: ', ' }}</span>{% elsif item.tags %}<span>{{ item.tags | join: ', ' }}</span>{% endif %}</p>
+          </div>
+          <a class="signal-log__open" href="{{ item.url }}"><span>Open</span><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+        </article>
+      </li>
+      {% endfor %}
+    </ol>
     {% endif %}
-  </div>
-</section>
+  </section>
+</main>

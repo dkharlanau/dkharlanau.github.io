@@ -1,18 +1,16 @@
 {% assign focus = site.data.edu.focus_areas %}
 {% if focus %}
-<section class="section education-page" id="learning-focus">
-  <header class="section-heading">
-    {% if focus.eyebrow %}<p class="eyebrow">{{ focus.eyebrow }}</p>{% endif %}
-    {% if focus.title %}<h2>{{ focus.title }}</h2>{% endif %}
+<section class="section education-page education-canvas__section" id="learning-focus" aria-labelledby="learning-focus-title">
+  <header class="education-canvas__heading">
+    {% if focus.eyebrow %}<p class="education-canvas__eyebrow">{{ focus.eyebrow }}</p>{% endif %}
+    {% if focus.title %}<h2 id="learning-focus-title">What the learning mix points to</h2>{% endif %}
   </header>
   {% if focus.groups %}
   <div class="education-focus-grid">
     {% for group in focus.groups %}
-    <article class="education-focus-column">
-      <header class="education-focus-column__header">
-        <h3>{{ group.title }}</h3>
-        {% if group.note %}<p>{{ group.note }}</p>{% endif %}
-      </header>
+    <article>
+      <span>0{{ forloop.index }}</span>
+      <div><h3>{{ group.title }}</h3>{% if group.note %}<p>{{ group.note }}</p>{% endif %}</div>
       {% if group.items %}
       <ul class="education-focus-list">
         {% for item in group.items %}
