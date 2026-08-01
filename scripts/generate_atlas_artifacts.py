@@ -46,6 +46,27 @@ BASE_URL = "https://dkharlanau.github.io"
 CHECK_MODE_TIMESTAMP = "CHECK_MODE"
 _DETERMINISTIC_TIMESTAMP = None
 
+# Keep artifact generation deterministic between a developer's dirty checkout
+# and a clean GitHub Actions checkout. These paths are local-only or generated
+# working areas, not public site content.
+PUBLIC_DISCOVERY_EXCLUDED_DIRS = {
+    "_site",
+    ".git",
+    ".codex",
+    ".githooks",
+    ".playwright-mcp",
+    ".superpowers",
+    "vendor",
+    "node_modules",
+    "docs",
+    "inbox",
+    "reports",
+    "professional-radar",
+    "agent-skills",
+    "Kimi_Agent_SAP Atlas Expansion",
+}
+PUBLIC_DISCOVERY_EXCLUDED_FILES = {"design-qa.md"}
+
 
 def discover_atlas_articles():
     """Dynamically discover public Atlas article pages under atlas/.
@@ -253,15 +274,12 @@ def build_permalink_map():
     all_pages = {}
     for root, dirs, files in os.walk(REPO_DIR):
         # Skip generated and dependency dirs
-        dirs[:] = [d for d in dirs if d not in {
-            "_site", ".git", "vendor", "node_modules", 
-            "Kimi_Agent_SAP Atlas Expansion",
-        } and not d.startswith("Basic_LinkedInDataExport_") and not d.startswith("Basic_LinkInDataExport_")]
+        dirs[:] = [d for d in dirs if d not in PUBLIC_DISCOVERY_EXCLUDED_DIRS and not d.startswith("Basic_LinkedInDataExport_") and not d.startswith("Basic_LinkInDataExport_")]
         for f in files:
             if f.endswith(".md"):
                 abs_path = Path(root) / f
                 rel_path = abs_path.relative_to(REPO_DIR).as_posix()
-                if rel_path.startswith("docs/templates/"):
+                if rel_path.startswith("docs/templates/") or rel_path in PUBLIC_DISCOVERY_EXCLUDED_FILES:
                     continue
                 fm, _ = parse_frontmatter(abs_path)
                 permalink = fm.get("permalink", "")
@@ -283,7 +301,7 @@ def _discover_markdown_documents():
     deliberately deferred instead of disappearing from the audit.
     """
     documents = []
-    excluded_roots = {"_site", ".git", "vendor", "node_modules", "docs", "agent-skills"}
+    excluded_roots = PUBLIC_DISCOVERY_EXCLUDED_DIRS
     for root, dirs, files in os.walk(REPO_DIR):
         dirs[:] = [directory for directory in dirs if directory not in excluded_roots and not directory.startswith(".")]
         for filename in files:
@@ -291,7 +309,7 @@ def _discover_markdown_documents():
                 continue
             abs_path = Path(root) / filename
             rel_path = abs_path.relative_to(REPO_DIR).as_posix()
-            if rel_path.startswith("docs/templates/") or rel_path.startswith("reports/"):
+            if rel_path.startswith("docs/templates/") or rel_path in PUBLIC_DISCOVERY_EXCLUDED_FILES:
                 continue
             fm, body = parse_frontmatter(abs_path)
             if not fm:
