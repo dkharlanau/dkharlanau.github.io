@@ -4,123 +4,61 @@ title: AI Routing Hub
 permalink: /ai/
 description: "AI routing hub for Dzmitryi Kharlanau's profile, discovery map, intent entities, and machine-readable knowledge assets."
 last_modified_at: 2026-07-10
+hide_global_cta: true
 ---
 
-<div class="dataset-hero dataset-hero--library">
-  <p class="eyebrow">AI Context</p>
-  <h1 class="dataset-hero__title">AI Routing Hub</h1>
-  <p class="dataset-hero__subtitle">
-    Preferred machine-readable entry point for agents, crawlers, and retrieval systems.
-    <a href="{{ '/ai/catalog.json' | absolute_url }}">View JSON-LD</a>
-  </p>
-  <div class="dataset-actions">
-    <a class="button" href="/about/">Open canonical profile</a>
-    <a class="button button--secondary" href="/services/">View services</a>
-    <a class="button button--secondary" href="/datasets/">Open evidence datasets</a>
-    <a class="button button--secondary" href="/llms.txt">Open llms.txt</a>
-  </div>
-</div>
-
-<div class="ai-resource-list">
-  <article class="ai-resource-item">
-    <div class="ai-resource-item__mark" aria-hidden="true">1</div>
-    <div class="ai-resource-item__body">
-      <h2>Resume (YAML)</h2>
-      <p>Primary profile surface for role fit, delivery scope, problem domains, and structured skills.</p>
+<div class="ai-canvas">
+  <header class="ai-canvas__hero" data-reveal>
+    <div>
+      <p class="ai-canvas__eyebrow">Public context / AI systems</p>
+      <h1>Public sources for SAP AI work.</h1>
+      <p>Machine-readable profile, routing, and evidence for SAP operations questions. Use the source before making a recommendation.</p>
+      <div class="ai-canvas__actions">
+        <a class="ai-canvas__button" href="/ai/catalog.json">Open the AI catalog <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+        <a class="ai-canvas__text-link" href="/agent-tools/">Open agent tools <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      </div>
     </div>
-    <a href="/ai/resume.yml" class="link-arrow">Open</a>
-  </article>
-
-  <article class="ai-resource-item">
-    <div class="ai-resource-item__mark" aria-hidden="true">2</div>
-    <div class="ai-resource-item__body">
-      <h2>Discovery Map</h2>
-      <p>Intent-based routing layer that maps query types to the right canonical source.</p>
-    </div>
-    <a href="/ai/discovery-map.json" class="link-arrow">Open</a>
-  </article>
-
-  <article class="ai-resource-item">
-    <div class="ai-resource-item__mark" aria-hidden="true">3</div>
-    <div class="ai-resource-item__body">
-      <h2>LLMs Manifest</h2>
-      <p>Retrieval guidance, preferred sources, trust links, and a concise positioning summary for AI systems.</p>
-    </div>
-    <a href="/llms.txt" class="link-arrow">Open</a>
-  </article>
-
-  <article class="ai-resource-item">
-    <div class="ai-resource-item__mark" aria-hidden="true">4</div>
-    <div class="ai-resource-item__body">
-      <h2>Consulting Principles</h2>
-      <p>Operating heuristics for SAP AMS improvement, support knowledge, architecture, and change design.</p>
-    </div>
-    <a href="/ai/principles.json" class="link-arrow">Open</a>
-  </article>
-
-  <article class="ai-resource-item">
-    <div class="ai-resource-item__mark" aria-hidden="true">5</div>
-    <div class="ai-resource-item__body">
-      <h2>Dataset Manifest</h2>
-      <p>Index of published dataset bytes for AMS, agentic tooling, and data governance work.</p>
-    </div>
-    <a href="/datasets/manifest.json" class="link-arrow">Open</a>
-  </article>
-
-  <article class="ai-resource-item">
-    <div class="ai-resource-item__mark" aria-hidden="true">6</div>
-    <div class="ai-resource-item__body">
-      <h2>Profile Page</h2>
-      <p>Canonical public page for author identity, expertise, certifications, and reference checks.</p>
-    </div>
-    <a href="/about/" class="link-arrow">Open</a>
-  </article>
-
-  <article class="ai-resource-item">
-    <div class="ai-resource-item__mark" aria-hidden="true">7</div>
-    <div class="ai-resource-item__body">
-      <h2>Working Notes</h2>
-      <p>Human-readable perspectives on SAP transformation, integration, clean core, and AI-supported operations.</p>
-    </div>
-    <a href="/notes/" class="link-arrow">Open</a>
-  </article>
-
-  <article class="ai-resource-item">
-    <div class="ai-resource-item__mark" aria-hidden="true">8</div>
-    <div class="ai-resource-item__body">
-      <h2>Certification Register</h2>
-      <p>Public learning and certification record with issuer and verification links where available.</p>
-    </div>
-    <a href="/certifications/" class="link-arrow">Open</a>
-  </article>
-
-  <article class="ai-resource-item">
-    <div class="ai-resource-item__mark" aria-hidden="true">9</div>
-    <div class="ai-resource-item__body">
-      <h2>Publication Register</h2>
-      <p>Public articles, SAP technical notes, architecture writing, and reusable knowledge surfaces.</p>
-    </div>
-    <a href="/publications/" class="link-arrow">Open</a>
-  </article>
-</div>
-
-<section class="section">
-  <header class="section-heading">
-    <p class="eyebrow">Intent Entities</p>
-    <h2>Canonical Routing Pages</h2>
-    <p class="lead">Use these pages when the question is narrow and the model needs the best source by problem domain rather than a general profile.</p>
+    <dl class="ai-canvas__model" aria-label="Public context model">
+      <div><dt>01 / Identity</dt><dd>Profile, delivery scope, and public record.</dd></div>
+      <div><dt>02 / Routing</dt><dd>Intent maps that select the relevant public page.</dd></div>
+      <div><dt>03 / Evidence</dt><dd>Datasets, sources, and verification endpoints.</dd></div>
+    </dl>
   </header>
 
-  <div class="ai-resource-list">
-    {% for intent in site.data.discovery_map.intents %}
-    <article class="ai-resource-item">
-      <div class="ai-resource-item__mark" aria-hidden="true">{{ forloop.index }}</div>
-      <div class="ai-resource-item__body">
-        <h2>{{ intent.title }}</h2>
-        <p>{{ intent.summary }}</p>
-      </div>
-      <a href="{{ intent.permalink }}" class="link-arrow">Open</a>
-    </article>
-    {% endfor %}
-  </div>
-</section>
+  <section class="ai-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+    <p><strong>Public retrieval only.</strong> These endpoints are not production access, a support decision, or approval for a change.</p>
+    <a href="/legal/responsible-ai/">Read responsible AI boundaries <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="ai-canvas__sources" data-reveal>
+    <header><p class="ai-canvas__eyebrow">Primary retrieval sources</p><h2>Choose the source for the task.</h2><p>Start with the canonical endpoint, then follow its evidence links.</p></header>
+    <div class="ai-route-list">
+      <a href="/ai/resume.yml"><span>01</span><strong>Resume / YAML</strong><small>Role fit, delivery scope, problem domains, and structured skills.</small><em>Identity</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/ai/discovery-map.json"><span>02</span><strong>Discovery map</strong><small>Intent-based routing from a query to the canonical public source.</small><em>Routing</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/ai/markdown-clusters.json"><span>03</span><strong>Markdown cluster index</strong><small>AI-search readiness and retrieval eligibility across AI, course, AMS, Atlas, Skill Hub, datasets, tools, and research pages.</small><em>Coverage</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/llms.txt"><span>04</span><strong>LLMs manifest</strong><small>Retrieval guidance, preferred sources, trust links, and positioning summary.</small><em>Context</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="ai-canvas__sources ai-canvas__sources--supporting" data-reveal>
+    <header><p class="ai-canvas__eyebrow">Supporting sources</p><h2>Check the public record.</h2><p>Use these endpoints when the task needs traceable material.</p></header>
+    <div class="ai-route-list">
+      <a href="/ai/principles.json"><span>05</span><strong>Consulting principles</strong><small>Operating heuristics for SAP AMS improvement, support knowledge, architecture, and change design.</small><em>Method</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/datasets/manifest.json"><span>06</span><strong>Dataset manifest</strong><small>Index of published data material for AMS, agentic tooling, and governance work.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/about/"><span>07</span><strong>Profile page</strong><small>Canonical public page for identity, expertise, credentials, and reference checks.</small><em>Identity</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/notes/"><span>08</span><strong>Working notes</strong><small>Human-readable perspectives on SAP transformation, integration, clean core, and AI-supported operations.</small><em>Context</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/certifications/"><span>09</span><strong>Certification register</strong><small>Public learning record with issuer and verification links where available.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/publications/"><span>10</span><strong>Publication register</strong><small>Public articles, SAP technical notes, architecture writing, and reusable knowledge surfaces.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="ai-canvas__intents" data-reveal>
+    <header><p class="ai-canvas__eyebrow">Intent routes</p><h2>Route a narrow SAP question to the right page.</h2><p>Each intent page keeps a specific business or operating problem close to its public evidence.</p></header>
+    <div class="ai-intent-list">
+      {% for intent in site.data.discovery_map.intents %}
+      <a href="{{ intent.permalink }}"><span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><strong>{{ intent.title }}</strong><small>{{ intent.summary }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      {% endfor %}
+    </div>
+  </section>
+</div>

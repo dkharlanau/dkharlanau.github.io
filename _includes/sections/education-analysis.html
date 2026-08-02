@@ -1,16 +1,19 @@
 {% assign analysis = site.data.edu.analysis %}
 {% if analysis %}
-<section class="section education-page" id="education-analysis">
-  <header class="section-heading">
-    {% if analysis.eyebrow %}<p class="eyebrow">{{ analysis.eyebrow }}</p>{% endif %}
-    {% if analysis.title %}<h2>{{ analysis.title }}</h2>{% endif %}
+<section class="section education-page education-canvas__section" id="education-analysis" aria-labelledby="education-analysis-title">
+  <header class="education-canvas__heading">
+    {% if analysis.eyebrow %}<p class="education-canvas__eyebrow">{{ analysis.eyebrow }}</p>{% endif %}
+    {% if analysis.title %}<h2 id="education-analysis-title">What the record supports</h2>{% endif %}
   </header>
   {% if analysis.items %}
   <div class="education-analysis-grid">
     {% for item in analysis.items %}
-    <article class="education-analysis-card">
+    <article>
+      <span>0{{ forloop.index }}</span>
+      <div>
       <h3>{{ item.title }}</h3>
       <p>{{ item.body }}</p>
+      </div>
     </article>
     {% endfor %}
   </div>

@@ -15,6 +15,10 @@ Rules:
 {% assign canonical_url = page.url | absolute_url %}
 {% assign site_home = '/' | absolute_url %}
 {% assign author_id = site_home | append: '#dkharlanau' %}
+{% assign author_profile_url = 'https://dkharlanau.github.io/about/' %}
+{% assign author_website_url = 'https://dkharlanau.github.io/' %}
+{% assign author_linkedin_url = 'https://www.linkedin.com/in/dkharlanau/' %}
+{% assign author_github_url = 'https://github.com/dkharlanau' %}
 {% assign organization_id = resume.schema.worksFor.url | default: 'https://www.epam.com' | append: '#organization' %}
 {% assign og_image = page.og_image | default: '/assets/og/default.png' | absolute_url %}
 {% assign article_image = '' %}
@@ -252,13 +256,16 @@ Rules:
   "author": {
     "@type": "Person",
     "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }}
+    "name": {{ resume.name | jsonify }},
+    "url": "{{ author_profile_url }}",
+    "sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"]
   },
   "publisher": {
     "@type": "Person",
     "@id": "{{ author_id }}",
     "name": {{ resume.name | jsonify }},
-    "url": "{{ site_home }}"
+    "url": "{{ author_profile_url }}",
+    "sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"]
   },
   "inLanguage": "{{ structured_language }}",
   "isAccessibleForFree": true,
@@ -337,6 +344,7 @@ Rules:
   "@type": "Person",
   "@id": "{{ author_id }}",
   "name": {{ resume.name | jsonify }},
+  "sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"],
   "url": "{{ canonical_url }}",
   "mainEntityOfPage": "{{ canonical_url }}",
   "image": {{ resume.image | jsonify }},

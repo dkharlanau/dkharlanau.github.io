@@ -25,6 +25,18 @@ related:
 robots: index,follow
 sitemap: true
 level: 2
+expert_context:
+  enabled: true
+  domain: sap-integration
+  topics:
+    - interface monitoring
+    - IDoc and RFC diagnostics
+    - incident resolution
+  service_url: /services/sap-integration-reliability-assessment/
+  evidence_urls:
+    - /atlas/diagnostics/sap-idoc-diagnostics/
+    - /atlas/diagnostics/sap-idoc-status-diagnostics/
+    - /atlas/diagnostics/sap-qrfc-trfc-diagnostics/
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -55,6 +67,8 @@ level: 2
   <div class="note-body">
     <h2>Core idea</h2>
     <p>Interface monitoring is only useful if it alerts the right person before the business reports the failure. Most monitoring gaps are not tool failures; they are scope gaps, thresholds set too high, jobs that stopped running, or new interfaces that were never onboarded. The diagnostic job is to compare what the tool checks against what actually failed.</p>
+
+    {% include atlas/expert-context.html %}
 
     <h2>Common symptoms</h2>
     <ul>
@@ -127,6 +141,7 @@ level: 2
     </ul>
   </section>
 
+  {% include atlas/expert-cta.html %}
   {% include atlas/author-block.html %}
   {% include atlas/disclaimer.html %}
 </article>

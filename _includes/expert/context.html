@@ -1,0 +1,23 @@
+{% assign expert = include.expert | default: page.expert_context %}
+{% if expert and expert.enabled == true %}
+<aside class="atlas-author atlas-expert-context" aria-label="Expert context">
+  <p class="eyebrow">Expert context</p>
+  {% case expert.domain %}
+    {% when 'sap-integration' %}
+      <p>This material was prepared by <a href="https://dkharlanau.github.io/">Dzmitryi Kharlanau</a>, a Senior SAP Consultant working with SAP integration diagnostics, interface monitoring, IDoc and API failure analysis, and controlled incident resolution.</p>
+    {% when 'sap-master-data' %}
+      <p>This material was prepared by <a href="https://dkharlanau.github.io/">Dzmitryi Kharlanau</a>, a Senior SAP Consultant working with Business Partner, customer and supplier replication, MDG integration, and operational data-quality improvement.</p>
+    {% when 'sap-ams' %}
+      <p>This material was prepared by <a href="https://dkharlanau.github.io/">Dzmitryi Kharlanau</a>, a Senior SAP Consultant helping SAP AMS teams reduce recurring incidents, clarify ownership, strengthen diagnostics, and plan safe improvements.</p>
+    {% when 'ai-sap-operations' %}
+      <p>This material was prepared by <a href="https://dkharlanau.github.io/">Dzmitryi Kharlanau</a>, a Senior SAP Consultant researching and designing controlled AI-assisted workflows around SAP operations, incident resolution, data quality, and enterprise knowledge systems.</p>
+    {% when 'sap-architecture' %}
+      <p>This material was prepared by <a href="https://dkharlanau.github.io/">Dzmitryi Kharlanau</a>, a Senior SAP Consultant working with SAP architecture decisions, integration boundaries, extension strategy, and practical transformation planning.</p>
+    {% when 'sap-process-operations' %}
+      <p>This material was prepared by <a href="https://dkharlanau.github.io/">Dzmitryi Kharlanau</a>, a Senior SAP Consultant working with SD/MM process diagnostics, logistics execution, document flow, and operational improvement.</p>
+    {% when 'enterprise-operations' %}
+      <p>This material was prepared by <a href="https://dkharlanau.github.io/">Dzmitryi Kharlanau</a>, a Senior SAP Consultant who builds practical working methods for enterprise analysis, delivery control, documentation, and AI-assisted support work.</p>
+  {% endcase %}
+  <p><a class="link-arrow" href="/about/">Profile and experience</a> <a class="link-arrow" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+</aside>
+{% endif %}

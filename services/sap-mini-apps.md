@@ -14,7 +14,7 @@ last_modified_at: 2026-04-19
       <p class="note-subtitle">Build lightweight tools that remove repetitive manual work without starting a heavyweight programme.</p>
     </header>
     <div class="note-body">
-      <p>I build small utilities and edge apps for teams that need fast operational relief: safer retries, easier diagnostics, lightweight reconciliation, or a better operator workflow than a fragile spreadsheet plus transaction code routine.</p>
+      <p>The service builds small utilities and edge apps for teams that need fast operational relief: safer retries, easier diagnostics, lightweight reconciliation, or a better operator workflow than a fragile spreadsheet plus transaction code routine.</p>
 
       <h2>Examples</h2>
       <ul>

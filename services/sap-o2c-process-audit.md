@@ -14,7 +14,7 @@ last_modified_at: 2026-07-25
       <p class="note-subtitle">Trace where order-to-cash breaks, quantify impact, and prioritise the fixes that matter.</p>
     </header>
     <div class="note-body">
-      <p>This audit is for programmes where orders move too slowly, deliveries get blocked, billing piles up, or incident noise hides the actual process defect. I map the breakpoints across sales, credit, logistics, billing, master data, enhancements, and interfaces so teams can stop guessing and work from a ranked remediation backlog.</p>
+      <p>This audit is for programmes where orders move too slowly, deliveries get blocked, billing piles up, or incident noise hides the actual process defect. It maps the breakpoints across sales, credit, logistics, billing, master data, enhancements, and interfaces so teams can stop guessing and work from a ranked remediation backlog.</p>
 
       <h2>When to use it</h2>
       <p>Use this when the visible symptom is commercial or operational—an order cannot progress, delivery dates are unreliable, a billing queue grows, a credit or pricing control keeps returning, or the business is compensating with manual work—but the owning team cannot yet explain where the failure starts. It is not a generic SD review and it does not assume that configuration is the answer.</p>

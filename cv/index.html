@@ -10,65 +10,46 @@ permalink: /cv/
 {%- assign skills_primary = resume.skills | slice: 0, 24 -%}
 {%- assign primary_education = resume.education | first -%}
 
-<section class="section">
-  <header class="section-heading">
-    <p class="eyebrow">Curriculum Vitae</p>
-    <h1>{{ resume.name }}</h1>
-    <p class="lead">{{ resume.headline }}</p>
-    {% if primary_education %}
-    <p class="eyebrow">{{ primary_education.notes | default: primary_education.school }}</p>
-    {% endif %}
-    
-    <div class="resume-contact-editorial">
-      <div class="resume-links-grid">
-        {% if resume.contact.email %}
-        <div class="resume-link-item">
-          <span class="label">Email</span>
-          <a href="mailto:{{ resume.contact.email }}">{{ resume.contact.email }}</a>
-        </div>
-        {% endif %}
-        <div>
-          <span class="label">Company</span>
-          <a href="https://www.epam.com" target="_blank" rel="noopener">EPAM Systems</a>
-        </div>
-        {% if resume.contact.linkedin %}
-        <div class="resume-link-item">
-          <span class="label">LinkedIn</span>
-          <a href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener">Profile</a>
-        </div>
-        {% endif %}
-      </div>
-      <div class="section-actions">
-        <a class="button button--primary" href="{{ '/ai/resume.yml' | relative_url }}" download>Download YAML</a>
-        <a class="button" href="{{ '/ai/resume.json' | relative_url }}" download>Download JSON</a>
+<main class="cv-canvas">
+  <section class="section cv-canvas__hero" aria-labelledby="cv-title">
+    <div class="cv-canvas__copy">
+      <p class="cv-canvas__eyebrow">Professional record</p>
+      <h1 id="cv-title">SAP delivery record.</h1>
+      <p>Operations, logistics, master data, integration, and support work—with the source record kept visible.</p>
+      <div class="cv-canvas__actions">
+        <a href="#experience">Review experience <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+        <a href="/about/">Open profile <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
       </div>
     </div>
-  </header>
-</section>
-
-<hr class="divider" />
+    <dl class="cv-canvas__record" aria-label="Professional record summary">
+      <div><dt>Record owner</dt><dd>{{ resume.name }}</dd></div>
+      <div><dt>Current company</dt><dd><a href="https://www.epam.com" target="_blank" rel="noopener">EPAM Systems</a></dd></div>
+      <div><dt>Public profile</dt>{% if resume.contact.linkedin %}<dd><a href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener">LinkedIn <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a></dd>{% endif %}</div>
+      <div><dt>Source formats</dt><dd><a href="{{ '/ai/resume.yml' | relative_url }}" download>YAML</a><span aria-hidden="true"> · </span><a href="{{ '/ai/resume.json' | relative_url }}" download>JSON</a></dd></div>
+    </dl>
+  </section>
 
 {% if resume.summary %}
-<section class="section">
+<section class="section cv-canvas__section">
   <div class="section-shell">
     <header class="section-header">
       <div class="section-header__meta">
-        <p class="eyebrow">Overview</p>
-        <h2 class="section-header__title">Executive Summary</h2>
+        <p class="cv-canvas__eyebrow">Operating scope</p>
+        <h2 class="section-header__title">Where the work sits</h2>
       </div>
     </header>
     <div class="prose">
       <p>{{ resume.summary }}</p>
-      <p>This CV is deliberately specific about the public record and cautious about claims that cannot be shown here. The common thread is work at the difficult boundaries: commercial process and logistics, master data and replication, SAP application logic and integration, support recovery and durable improvement.</p>
+      <p>This public record stays specific about what can be shown. The recurring work sits at boundaries: process and logistics, master data and replication, SAP application logic and integration, support recovery and durable improvement.</p>
     </div>
   </div>
 </section>
 {% endif %}
 
-<section class="section">
+<section class="section cv-canvas__section">
   <div class="section-shell">
     <header class="section-header">
-      <div class="section-header__meta"><p class="eyebrow">Professional profile</p><h2 class="section-header__title">What seniority looks like in the work</h2></div>
+      <div class="section-header__meta"><p class="cv-canvas__eyebrow">Working approach</p><h2 class="section-header__title">How the work is approached</h2></div>
     </header>
     <div class="evidence-grid">
       <article class="evidence-card"><h3>Process-first diagnosis</h3><p>Trace an operational symptom through SD, MM, O2C, P2P, data, configuration, custom logic, and interfaces before assigning a root-cause label.</p></article>
@@ -79,9 +60,9 @@ permalink: /cv/
   </div>
 </section>
 
-<section class="section">
+<section class="section cv-canvas__section">
   <div class="section-shell">
-    <header class="section-header"><div class="section-header__meta"><p class="eyebrow">Experience map</p><h2 class="section-header__title">A career built around connected SAP problems</h2></div></header>
+    <header class="section-header"><div class="section-header__meta"><p class="cv-canvas__eyebrow">Delivery contexts</p><h2 class="section-header__title">Connected SAP problems across delivery work</h2></div></header>
     <div class="decision-table"><table><thead><tr><th>Period and context</th><th>Publicly evidenced focus</th><th>What that adds to delivery work</th></tr></thead><tbody>
       <tr><td>2013 onward · SAP SD/MM foundation</td><td>SD/MM process configuration, integration scenarios, ABAP enhancements, debugging, testing, and delivery documentation.</td><td>Comfort with the full path from a business requirement to system behaviour and validation.</td></tr>
       <tr><td>2016–2019 · Retail / AFS AMS</td><td>Pricing, delivery, stock handling, configuration, testing, and cross-process coordination.</td><td>Recognition that operational reliability depends on process flow, not isolated transactions.</td></tr>
@@ -93,10 +74,10 @@ permalink: /cv/
 </section>
 
 {% if resume.experience %}
-<section class="section">
+<section class="section cv-canvas__section" id="experience">
   <header class="section-heading">
-    <p class="eyebrow">Professional</p>
-    <h2 class="section-title">Experience</h2>
+    <p class="cv-canvas__eyebrow">Chronology</p>
+    <h2 class="section-title">Experience record</h2>
   </header>
   
   <div class="resume-list editorial-feed">
@@ -142,11 +123,11 @@ permalink: /cv/
 <hr class="divider" />
 
 {% if resume.education %}
-<section class="section">
+<section class="section cv-canvas__section">
   <div class="section-shell section-shell--flat">
     <header class="section-header">
       <div class="section-header__meta">
-        <p class="eyebrow">Academics</p>
+        <p class="cv-canvas__eyebrow">Academics</p>
         <h2 class="section-header__title">Education</h2>
       </div>
       <div class="section-header__actions">
@@ -167,10 +148,10 @@ permalink: /cv/
 {% endif %}
 
 {% if skills_primary %}
-<section class="section">
+<section class="section cv-canvas__section">
   <header class="section-heading">
-    <p class="eyebrow">Capabilities</p>
-    <h2 class="section-title">Core Skills</h2>
+    <p class="cv-canvas__eyebrow">Capabilities</p>
+    <h2 class="section-title">Working domains</h2>
   </header>
   <ul class="pill-cloud">
     {% for skill in skills_primary %}
@@ -181,12 +162,12 @@ permalink: /cv/
 {% endif %}
 
 {% if resume.certifications %}
-<section class="section">
+<section class="section cv-canvas__section">
   <div class="section-shell">
     <header class="section-header">
       <div class="section-header__meta">
-        <p class="eyebrow">Credentials</p>
-        <h2 class="section-header__title">Certifications</h2>
+        <p class="cv-canvas__eyebrow">Credentials</p>
+        <h2 class="section-header__title">Selected sources</h2>
       </div>
       <div class="section-header__actions">
         <a class="link-arrow" href="{{ '/education/' | relative_url }}">Browse all</a>
@@ -204,6 +185,8 @@ permalink: /cv/
   </div>
 </section>
 {% endif %}
+
+</main>
 
 
 {% assign same_as = resume_links | map: 'url' %}

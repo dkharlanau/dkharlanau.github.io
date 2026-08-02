@@ -118,12 +118,12 @@ def test_verified_pages_no_private_paths():
 
 
 def test_no_linkedin_export_names_in_artifacts():
-    for name in ["manifest.json", "llms-full.txt", "related.json", "atlas-compact-index.json", "verified-pages.json"]:
+    for name in ["manifest.json", "llms-full.txt", "related.json", "atlas-compact-index.json", "verified-pages.json", "markdown-clusters.json"]:
         if name == "manifest.json":
             path = REPO_ROOT / "atlas" / name
         elif name == "related.json":
             path = REPO_ROOT / "ai" / "rag" / name
-        elif name in ("atlas-compact-index.json", "verified-pages.json"):
+        elif name in ("atlas-compact-index.json", "verified-pages.json", "markdown-clusters.json"):
             path = REPO_ROOT / "ai" / name
         else:
             path = REPO_ROOT / name

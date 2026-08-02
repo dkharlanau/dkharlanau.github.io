@@ -1,135 +1,77 @@
 {% assign intent = site.data.discovery_map.intents | where: "id", page.intent_id | first %}
 {% if intent %}
 {% assign intent_reviewed = page.last_modified_at | default: site.data.discovery_map.meta.updated_at %}
-<section class="section">
-  <header class="dataset-hero dataset-hero--library">
-    <p class="eyebrow">AI Intent Entity</p>
-    <h1 class="dataset-hero__title">{{ intent.title }}</h1>
-    <p class="dataset-hero__subtitle">{{ intent.summary }}</p>
+<div class="intent-brief" data-intent-brief>
+  <header class="intent-brief__hero section" data-intent-reveal>
+    <div>
+      <p class="intent-brief__eyebrow">Public routing record</p>
+      <h1>{{ intent.title }}</h1>
+      <p>{{ intent.summary }}</p>
+    </div>
+    <dl class="intent-brief__ledger">
+      <div><dt>Purpose</dt><dd>Find the next useful record</dd></div>
+      <div><dt>Reviewed</dt><dd>{{ intent_reviewed | date: "%d %b %Y" }}</dd></div>
+      <div><dt>Scope</dt><dd>Public SAP knowledge</dd></div>
+    </dl>
   </header>
 
-  <div class="dataset-grid">
-    <article class="neub-card dataset-section">
-      <div class="note-body">
-        <p>{{ intent.use_when }}</p>
-
-        <h2>Problems This Covers</h2>
-        <ul>
+  <section class="intent-brief__section section" aria-labelledby="intent-start-title" data-intent-reveal>
+    <header class="intent-brief__heading">
+      <p class="intent-brief__eyebrow">Start here</p>
+      <div><h2 id="intent-start-title">Use this route when</h2><p>{{ intent.use_when }}</p></div>
+    </header>
+    <div class="intent-brief__split">
+      <section aria-labelledby="intent-problems-title">
+        <h3 id="intent-problems-title">Problems this covers</h3>
+        <ol class="intent-brief__list">
           {% for item in intent.target_problems %}
-          <li>{{ item }}</li>
+          <li><span>{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><p>{{ item }}</p></li>
           {% endfor %}
-        </ul>
-
-        <h2>Signals And Keywords</h2>
-        <ul class="problem-list">
+        </ol>
+      </section>
+      <section aria-labelledby="intent-signals-title">
+        <h3 id="intent-signals-title">Search signals</h3>
+        <ul class="intent-brief__signals">
           {% for item in intent.query_signals %}
           <li>{{ item }}</li>
           {% endfor %}
         </ul>
-      </div>
-    </article>
+      </section>
+    </div>
+  </section>
 
-    <aside class="dataset-panel">
-      <article class="neub-card dataset-section">
-        <h2>Where AI Should Look Next</h2>
-        <ul class="resource-list">
-          {% for step in intent.routing %}
-          <li>{{ step }}</li>
-          {% endfor %}
-        </ul>
-      </article>
+  <section class="intent-brief__section section" aria-labelledby="intent-routes-title" data-intent-reveal>
+    <header class="intent-brief__heading">
+      <p class="intent-brief__eyebrow">Evidence routes</p>
+      <div><h2 id="intent-routes-title">Open the right record</h2><p>Start with the route that narrows the problem, then use the supporting material only when it changes the next check or decision.</p></div>
+    </header>
+    <div class="intent-brief__routes">
+      <section><h3>Next checks</h3><ol>{% for step in intent.routing %}<li>{{ step }}</li>{% endfor %}</ol></section>
+      {% if intent.related.datasets.size > 0 %}<section><h3>Datasets</h3><ul>{% for item in intent.related.datasets %}<li><a href="{{ item.url }}">{{ item.label }} <span aria-hidden="true">↗</span></a></li>{% endfor %}</ul></section>{% endif %}
+      {% if intent.related.notes.size > 0 %}<section><h3>Notes</h3><ul>{% for item in intent.related.notes %}<li><a href="{{ item.url }}">{{ item.label }} <span aria-hidden="true">↗</span></a></li>{% endfor %}</ul></section>{% endif %}
+      {% if intent.related.services.size > 0 %}<section><h3>Services</h3><ul>{% for item in intent.related.services %}<li><a href="{{ item.url }}">{{ item.label }} <span aria-hidden="true">↗</span></a></li>{% endfor %}</ul></section>{% endif %}
+    </div>
+  </section>
 
-      <article class="neub-card dataset-section">
-        <h2>Related Datasets</h2>
-        <ul class="resource-list">
-          {% for item in intent.related.datasets %}
-          <li><a class="link-arrow" href="{{ item.url }}">{{ item.label }}</a></li>
-          {% endfor %}
-        </ul>
-      </article>
-
-      <article class="neub-card dataset-section">
-        <h2>Related Notes</h2>
-        <ul class="resource-list">
-          {% for item in intent.related.notes %}
-          <li><a class="link-arrow" href="{{ item.url }}">{{ item.label }}</a></li>
-          {% endfor %}
-        </ul>
-      </article>
-
-      <article class="neub-card dataset-section">
-        <h2>Related Services</h2>
-        <ul class="resource-list">
-          {% for item in intent.related.services %}
-          <li><a class="link-arrow" href="{{ item.url }}">{{ item.label }}</a></li>
-          {% endfor %}
-        </ul>
-      </article>
-    </aside>
-  </div>
-</section>
-
-{% if intent.answer or intent.best_fit or intent.not_fit or intent.evidence_points or intent.preferred_citation %}
-<section class="section">
-  <div class="dataset-grid">
-    <article class="neub-card dataset-section">
-      <div class="note-body">
-        <h2>Best One-Sentence Summary</h2>
-        {% if intent.answer %}<p>{{ intent.answer }}</p>{% endif %}
-        {% if intent_reviewed %}<p><strong>Last reviewed:</strong> {{ intent_reviewed | date: "%B %-d, %Y" }}</p>{% endif %}
-      </div>
-    </article>
-
-    <aside class="dataset-panel">
-      {% if intent.preferred_citation %}
-      <article class="neub-card dataset-section">
-        <h2>Preferred Citation</h2>
-        <p>{{ intent.preferred_citation }}</p>
-      </article>
-      {% endif %}
-
-      {% if intent.evidence_points %}
-      <article class="neub-card dataset-section">
-        <h2>Why This Page Is Citable</h2>
-        <ul class="resource-list">
-          {% for item in intent.evidence_points %}
-          <li>{{ item }}</li>
-          {% endfor %}
-        </ul>
-      </article>
-      {% endif %}
-    </aside>
-  </div>
-</section>
-
-{% if intent.best_fit or intent.not_fit %}
-<section class="section">
-  <div class="dataset-grid">
-    {% if intent.best_fit %}
-    <article class="neub-card dataset-section">
-      <h2>Best Fit</h2>
-      <ul class="resource-list">
-        {% for item in intent.best_fit %}
-        <li>{{ item }}</li>
-        {% endfor %}
-      </ul>
-    </article>
+  {% if intent.answer or intent.best_fit or intent.not_fit or intent.evidence_points or intent.preferred_citation %}
+  <section class="intent-brief__section section" aria-labelledby="intent-boundary-title" data-intent-reveal>
+    <header class="intent-brief__heading">
+      <p class="intent-brief__eyebrow">Scope and boundary</p>
+      <div><h2 id="intent-boundary-title">What this record supports</h2>{% if intent.answer %}<p>{{ intent.answer }}</p>{% endif %}</div>
+    </header>
+    <div class="intent-brief__evidence">
+      {% if intent.evidence_points %}<section><h3>Why it can be cited</h3><ul>{% for item in intent.evidence_points %}<li>{{ item }}</li>{% endfor %}</ul></section>{% endif %}
+      {% if intent.preferred_citation %}<section><h3>Preferred citation</h3><p>{{ intent.preferred_citation }}</p></section>{% endif %}
+    </div>
+    {% if intent.best_fit or intent.not_fit %}
+    <div class="intent-brief__fit">
+      {% if intent.best_fit %}<section><h3>Best fit</h3><ul>{% for item in intent.best_fit %}<li>{{ item }}</li>{% endfor %}</ul></section>{% endif %}
+      {% if intent.not_fit %}<section><h3>Not a fit</h3><ul>{% for item in intent.not_fit %}<li>{{ item }}</li>{% endfor %}</ul></section>{% endif %}
+    </div>
     {% endif %}
-
-    {% if intent.not_fit %}
-    <article class="neub-card dataset-section">
-      <h2>Not A Fit</h2>
-      <ul class="resource-list">
-        {% for item in intent.not_fit %}
-        <li>{{ item }}</li>
-        {% endfor %}
-      </ul>
-    </article>
-    {% endif %}
-  </div>
-</section>
-{% endif %}
-{% endif %}
+  </section>
+  {% endif %}
+</div>
 
 <script type="application/ld+json">
 {

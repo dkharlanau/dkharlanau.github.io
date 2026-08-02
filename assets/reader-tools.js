@@ -49,7 +49,8 @@
 
   const addBreadcrumbs = (article) => {
     const heading = article.querySelector("h1");
-    if (!heading || article.previousElementSibling?.matches(".breadcrumbs, .note-backlink")) return;
+    const pageBreadcrumb = document.querySelector("#content > .ps-breadcrumbs");
+    if (!heading || pageBreadcrumb || article.previousElementSibling?.matches(".breadcrumbs, .note-backlink")) return;
 
     const section = sectionForPath(window.location.pathname);
     if (!section) return;
@@ -124,7 +125,11 @@
       toc.append(disclosure);
     }
 
-    body.before(toc);
+    const diagnosticRail = article.matches(".atlas-page")
+      ? article.querySelector(":scope > .atlas-meta-panel")
+      : null;
+    if (diagnosticRail) diagnosticRail.append(toc);
+    else body.before(toc);
     article.classList.add("reader-ready");
 
     const links = [...toc.querySelectorAll("a[href^='#']")];
@@ -225,12 +230,61 @@
     else heading.insertAdjacentElement("afterend", actions);
   };
 
+  const addSiteShare = () => {
+    const widget = document.querySelector("[data-site-share]");
+    if (!widget) return;
+    const copy = widget.querySelector("[data-site-share-copy]");
+    const share = widget.querySelector("[data-site-share-native]");
+    const email = widget.querySelector("[data-site-share-email]");
+    const like = widget.querySelector("[data-site-share-like]");
+    const status = widget.querySelector("[data-site-share-status]");
+    const title = document.title;
+    const url = window.location.href;
+
+    if (email) email.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`;
+    if (share && !navigator.share) share.hidden = true;
+    share?.addEventListener("click", async () => {
+      try { await navigator.share({ title, url }); } catch (_) { /* user cancelled */ }
+    });
+    copy?.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(url); }
+      catch (_) {
+        const field = document.createElement("textarea");
+        field.value = url;
+        field.setAttribute("readonly", "");
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+        document.body.append(field);
+        field.select();
+        document.execCommand("copy");
+        field.remove();
+      }
+      copy.querySelector("span:last-child").textContent = "Copied";
+      if (status) status.textContent = "Link copied to the clipboard.";
+      window.setTimeout(() => { copy.querySelector("span:last-child").textContent = "Copy link"; }, 1800);
+    });
+    const storageKey = `dkh-page-helpful:${window.location.pathname}`;
+    let helpful = false;
+    try { helpful = window.localStorage.getItem(storageKey) === "true"; } catch (_) { /* storage unavailable */ }
+    const setHelpful = (value) => {
+      helpful = value;
+      like?.setAttribute("aria-pressed", String(helpful));
+      if (like) like.querySelector("span:last-child").textContent = helpful ? "Marked helpful" : "Helpful";
+      if (status) status.textContent = helpful ? "Marked helpful on this device." : "Helpful marks are stored only on this device.";
+    };
+    setHelpful(helpful);
+    like?.addEventListener("click", () => {
+      setHelpful(!helpful);
+      try { if (helpful) window.localStorage.setItem(storageKey, "true"); else window.localStorage.removeItem(storageKey); } catch (_) { /* keep page state */ }
+    });
+  };
+
   const enhanceReader = () => {
     addPageBreadcrumbs();
-    document.querySelectorAll(".note-article, .atlas-page").forEach((article) => {
+    addSiteShare();
+    document.querySelectorAll(".note-article, .atlas-page, article.note-detail").forEach((article) => {
       addBreadcrumbs(article);
       addToc(article);
-      addArticleTools(article);
     });
   };
 

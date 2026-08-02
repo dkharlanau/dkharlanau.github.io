@@ -1,16 +1,15 @@
 {% assign edu = site.data.edu %}
 {% if edu.hero %}
-<section class="section education-page education-page__hero" id="education-top">
-  <article class="education-poster">
+<section class="section education-page education-page__hero education-canvas__hero" id="education-top" aria-labelledby="education-title">
+  <div class="education-poster">
     <div class="education-poster__copy">
-      {% if edu.hero.eyebrow %}<p class="eyebrow">{{ edu.hero.eyebrow }}</p>{% endif %}
-      {% if edu.hero.title %}<h1>{{ edu.hero.title }}</h1>{% endif %}
-      {% if edu.hero.intro %}<p class="lead">{{ edu.hero.intro }}</p>{% endif %}
+      {% if edu.hero.eyebrow %}<p class="education-canvas__eyebrow">{{ edu.hero.eyebrow }}</p>{% endif %}
+      {% if edu.hero.title %}<h1 id="education-title">Learning history with source context.</h1>{% endif %}
+      {% if edu.hero.intro %}<p class="lead">Formal SAP learning, targeted coursework, and public credentials. Recent AI learning is presented as current development, not long-standing delivery tenure.</p>{% endif %}
       {% if edu.hero.anchors %}
       <div class="education-poster__actions">
-        {% for anchor in edu.hero.anchors %}
-        <a class="{% if forloop.first %}button button--primary{% else %}link link--pill{% endif %}" href="{{ anchor.href }}">{{ anchor.label }}</a>
-        {% endfor %}
+        <a href="#education-timeline">View the chronology <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+        <a href="/ai/profile-audit.json">Open source record <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
       </div>
       {% endif %}
     </div>
@@ -28,6 +27,6 @@
       {% endfor %}
     </dl>
     {% endif %}
-  </article>
+  </div>
 </section>
 {% endif %}

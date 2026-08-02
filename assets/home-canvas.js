@@ -38,13 +38,14 @@
 
   document.querySelectorAll("[data-incident-calculator]").forEach((root) => {
     const controls = [...root.querySelectorAll("[data-calc]")];
+    const result = root.querySelector(".impact-model__result");
     const output = (name) => root.querySelector(`[data-result="${name}"]`);
     const numberValue = (name) => {
       const control = root.querySelector(`[data-calc="${name}"]`);
       return Math.max(0, Number(control?.value) || 0);
     };
 
-    const update = () => {
+    const update = (announceChange = false) => {
       const incidents = numberValue("incidents");
       const people = numberValue("people");
       const minutes = numberValue("minutes");
@@ -68,10 +69,14 @@
       output("repeatExposure").textContent = money.format(repeatExposure);
       output("addressableValue").textContent = money.format(addressableValue);
       output("hoursRecovered").textContent = number.format(hoursRecovered);
+      if (announceChange && !reduceMotion && result) {
+        result.classList.remove("is-updated");
+        window.requestAnimationFrame(() => result.classList.add("is-updated"));
+      }
     };
 
-    controls.forEach((control) => control.addEventListener("input", update));
-    controls.forEach((control) => control.addEventListener("change", update));
+    controls.forEach((control) => control.addEventListener("input", () => update(true)));
+    controls.forEach((control) => control.addEventListener("change", () => update(true)));
     update();
   });
 

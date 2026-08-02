@@ -12,6 +12,18 @@ business_process: Master data governance
 status: reviewed
 verified: true
 level: 2
+expert_context:
+  enabled: true
+  domain: sap-master-data
+  topics:
+    - Business Partner replication
+    - master-data governance
+    - customer and supplier data
+  service_url: /services/sap-master-data-stability-assessment/
+  evidence_urls:
+    - /atlas/diagnostics/sap-customer-master-replication-diagnostics/
+    - /atlas/diagnostics/sap-vendor-master-replication-diagnostics/
+    - /atlas/data-quality/sap-master-data-quality/
 last_reviewed: 2026-06-13
 author: Dzmitryi Kharlanau
 
@@ -60,6 +72,8 @@ sitemap: true
     <h2>Core idea</h2>
     <p>Business partner replication moves BP master data from a source system to target systems. Most tickets resolve to one of three handoffs: the source did not select the BP, the target did not accept it, or the accepted BP was mapped to the wrong key. The diagnostic job is to find which handoff failed and why.</p>
     <p>The fastest way to narrow the issue is to prove the message left the source, then prove the target received it. Everything in between is noise until those two facts are established.</p>
+
+    {% include atlas/expert-context.html %}
 
     <h2>Common symptoms</h2>
     <ul>
@@ -143,6 +157,7 @@ sitemap: true
     </ul>
   </section>
 
+  {% include atlas/expert-cta.html %}
   {% include atlas/author-block.html %}
   {% include atlas/disclaimer.html %}
 </article>

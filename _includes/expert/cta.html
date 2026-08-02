@@ -1,0 +1,29 @@
+{% assign expert = include.expert | default: page.expert_context %}
+{% if expert and expert.enabled == true %}
+<aside class="atlas-author atlas-expert-cta" aria-label="Professional support and related evidence">
+  <p class="eyebrow">{{ expert.cta_heading | default: 'Working on a related SAP problem?' }}</p>
+  <p>{{ expert.cta_copy | default: 'Dzmitryi Kharlanau provides focused diagnostics, architecture reviews, improvement planning, and practical implementation support.' }}</p>
+  <p><a class="link-arrow" href="https://dkharlanau.github.io/">Professional website</a> <a class="link-arrow" href="/about/">Profile and experience</a> <a class="link-arrow" href="https://www.linkedin.com/in/dkharlanau/" target="_blank" rel="noopener noreferrer">LinkedIn</a> <a class="link-arrow" href="{{ expert.service_url }}">Related service</a></p>
+  {% assign evidence_items = expert.evidence | default: empty %}
+  {% if evidence_items.size > 0 %}
+  <section class="atlas-expert-evidence" aria-labelledby="expert-evidence-title">
+    <h2 id="expert-evidence-title">Related evidence</h2>
+    <ul>
+      {% for evidence in evidence_items %}
+        <li><a href="{{ evidence.url }}">{{ evidence.title | default: evidence.url }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% elsif expert.evidence_urls and expert.evidence_urls.size > 0 %}
+  <section class="atlas-expert-evidence" aria-labelledby="expert-evidence-title">
+    <h2 id="expert-evidence-title">Related evidence</h2>
+    <ul>
+      {% for evidence_url in expert.evidence_urls %}
+        {% assign evidence_page = site.pages | where: 'url', evidence_url | first %}
+        <li><a href="{{ evidence_url }}">{{ evidence_page.title | default: evidence_url }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</aside>
+{% endif %}

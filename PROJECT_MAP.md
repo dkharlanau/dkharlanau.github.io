@@ -77,7 +77,6 @@ Last updated: 2026-06-09
 | `scripts/content_maintenance_scan.py` | Content maintenance scan |
 | `scripts/propose_atlas_update.py` | Atlas update proposal |
 | `scripts/match_atlas_signal.py` | Signal-to-Atlas matching |
-| `scripts/build_site_index.py` | Site index generation |
 | `scripts/indexnow_submit.py` | IndexNow submission |
 
 ## Tests

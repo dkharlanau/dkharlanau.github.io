@@ -8,6 +8,7 @@ Regenerates the static Atlas discovery layer:
   - ai/rag/related.json        — related-content graph from frontmatter
   - ai/atlas-compact-index.json — compact signal-matching index
   - ai/verified-pages.json     — site-wide inventory of reviewed, verified, indexable pages
+  - ai/markdown-clusters.json  — cluster-aware readiness map for the complete Markdown corpus
 
 Usage:
     python3 scripts/generate_atlas_artifacts.py
@@ -23,6 +24,7 @@ Safety:
 """
 
 import argparse
+import copy
 import json
 import os
 import re
@@ -43,6 +45,27 @@ BASE_URL = "https://dkharlanau.github.io"
 
 CHECK_MODE_TIMESTAMP = "CHECK_MODE"
 _DETERMINISTIC_TIMESTAMP = None
+
+# Keep artifact generation deterministic between a developer's dirty checkout
+# and a clean GitHub Actions checkout. These paths are local-only or generated
+# working areas, not public site content.
+PUBLIC_DISCOVERY_EXCLUDED_DIRS = {
+    "_site",
+    ".git",
+    ".codex",
+    ".githooks",
+    ".playwright-mcp",
+    ".superpowers",
+    "vendor",
+    "node_modules",
+    "docs",
+    "inbox",
+    "reports",
+    "professional-radar",
+    "agent-skills",
+    "Kimi_Agent_SAP Atlas Expansion",
+}
+PUBLIC_DISCOVERY_EXCLUDED_FILES = {"design-qa.md"}
 
 
 def discover_atlas_articles():
@@ -251,15 +274,12 @@ def build_permalink_map():
     all_pages = {}
     for root, dirs, files in os.walk(REPO_DIR):
         # Skip generated and dependency dirs
-        dirs[:] = [d for d in dirs if d not in {
-            "_site", ".git", "vendor", "node_modules", 
-            "Kimi_Agent_SAP Atlas Expansion",
-        } and not d.startswith("Basic_LinkedInDataExport_") and not d.startswith("Basic_LinkInDataExport_")]
+        dirs[:] = [d for d in dirs if d not in PUBLIC_DISCOVERY_EXCLUDED_DIRS and not d.startswith("Basic_LinkedInDataExport_") and not d.startswith("Basic_LinkInDataExport_")]
         for f in files:
             if f.endswith(".md"):
                 abs_path = Path(root) / f
                 rel_path = abs_path.relative_to(REPO_DIR).as_posix()
-                if rel_path.startswith("docs/templates/"):
+                if rel_path.startswith("docs/templates/") or rel_path in PUBLIC_DISCOVERY_EXCLUDED_FILES:
                     continue
                 fm, _ = parse_frontmatter(abs_path)
                 permalink = fm.get("permalink", "")
@@ -272,7 +292,33 @@ def build_permalink_map():
     return all_pages
 
 
-def generate_compact_signal_index(atlas_files, check_mode=False):
+def _discover_markdown_documents():
+    """Discover site-facing Markdown, including drafts without a permalink.
+
+    The regular permalink map intentionally contains only routable pages. The
+    cluster index also needs to show research drafts and other source Markdown
+    that is not yet a public route, so those documents can be fixed or
+    deliberately deferred instead of disappearing from the audit.
+    """
+    documents = []
+    excluded_roots = PUBLIC_DISCOVERY_EXCLUDED_DIRS
+    for root, dirs, files in os.walk(REPO_DIR):
+        dirs[:] = [directory for directory in dirs if directory not in excluded_roots and not directory.startswith(".")]
+        for filename in files:
+            if not filename.endswith(".md"):
+                continue
+            abs_path = Path(root) / filename
+            rel_path = abs_path.relative_to(REPO_DIR).as_posix()
+            if rel_path.startswith("docs/templates/") or rel_path in PUBLIC_DISCOVERY_EXCLUDED_FILES:
+                continue
+            fm, body = parse_frontmatter(abs_path)
+            if not fm:
+                continue
+            documents.append({"file": rel_path, "fm": fm, "body": body})
+    return sorted(documents, key=lambda item: item["file"])
+
+
+def generate_compact_signal_index(atlas_files, check_mode=False, all_pages=None):
     """Generate the public, retrieval-eligible Atlas matching index."""
     entries = []
     for rel_path in atlas_files:
@@ -300,6 +346,10 @@ def generate_compact_signal_index(atlas_files, check_mode=False):
             "sap_domain_keywords": _sap_domain_keywords(fm),
             "matching_terms": _matching_terms(fm, headings),
         }
+        if all_pages is not None:
+            expert_context = build_expert_context(rel_path, fm, all_pages, body)
+            if expert_context:
+                entry["expert_context"] = _expert_public_metadata(expert_context)
         entries.append(entry)
 
     index = {
@@ -374,6 +424,223 @@ def _derive_section(rel_path, fm):
     return ""
 
 
+MARKDOWN_CLUSTER_LABELS = {
+    "ai": "AI routing and machine-readable pages",
+    "sap-architecture-course": "SAP Architect Field Course",
+    "sap-ams": "SAP AMS and operations",
+    "sap-integration": "SAP integration and interoperability",
+    "sap-master-data": "SAP master data and governance",
+    "sap-process-operations": "SAP process and logistics operations",
+    "ai-agents": "AI agents, MCP, and agent workflows",
+    "atlas": "Knowledge Atlas",
+    "skill-hub": "Skill Hub",
+    "datasets": "Datasets and reusable evidence",
+    "services": "Consulting services",
+    "scenarios": "Business scenarios",
+    "research": "Research and comparisons",
+    "blog": "Blog and Journal",
+    "notes": "Notes",
+    "news": "News and signals",
+    "radar": "Professional radar",
+    "agent-tools": "Agent tools and public registries",
+    "pages": "Public site pages",
+}
+
+
+def _markdown_cluster_ids(rel_path, fm):
+    """Return controlled cluster IDs for a Markdown page.
+
+    Cluster membership is deliberately additive: a course page can also be
+    part of the architecture and AI clusters, while a dataset byte can be
+    part of the AMS or agentic cluster. This keeps retrieval routing useful
+    without duplicating page content.
+    """
+    normalized = rel_path.lower()
+    signal_text = " ".join(
+        str(fm.get(key, "")) for key in (
+            "title", "description", "domain", "subdomain", "sap_area",
+            "business_process", "tags", "cluster", "clusters",
+        )
+    ).lower()
+    text = f"{normalized} {signal_text}"
+    clusters = []
+
+    def add(cluster):
+        if cluster not in clusters:
+            clusters.append(cluster)
+
+    if normalized.startswith("ai/") or fm.get("intent_id"):
+        add("ai")
+    if "sap-architecture-course" in normalized or fm.get("sap_architecture_course"):
+        add("sap-architecture-course")
+    if normalized.startswith("skill-hub/"):
+        add("skill-hub")
+    if normalized.startswith("atlas/"):
+        add("atlas")
+    if normalized.startswith("datasets/"):
+        add("datasets")
+    if normalized.startswith("services/"):
+        add("services")
+    if normalized.startswith("scenarios/"):
+        add("scenarios")
+    if normalized.startswith("research/"):
+        add("research")
+    if normalized.startswith("_blog/") or normalized.startswith("blog/"):
+        add("blog")
+    if normalized.startswith("_notes/") or normalized.startswith("notes/"):
+        add("notes")
+    if normalized.startswith("_news/") or normalized.startswith("news/"):
+        add("news")
+    if normalized.startswith("_radar/") or normalized.startswith("radar/"):
+        add("radar")
+    if normalized.startswith("agent-tools/") or "mcp" in text:
+        add("agent-tools")
+    if normalized.startswith("mcp/") or "mcp" in text or "agent" in text:
+        add("ai-agents")
+    if any(term in text for term in ("sap ams", "ams-", "ams/", "application management service", "support operations")):
+        add("sap-ams")
+    if any(term in text for term in ("integration", "interface", "idoc", "aif", "api", "middleware", "event mesh")):
+        add("sap-integration")
+    if any(term in text for term in ("master data", "master-data", "mdg", "business partner", "customer master", "supplier master", "vendor master")):
+        add("sap-master-data")
+    if any(term in text for term in ("sd/mm", "order to cash", "o2c", "procure to pay", "p2p", "logistics", "pricing", "mrp", "ewm", "retail")):
+        add("sap-process-operations")
+    if not clusters:
+        add("pages")
+    return clusters
+
+
+def _markdown_readiness(rel_path, fm, body):
+    """Describe Markdown structure without exposing page body text."""
+    title = str(fm.get("title", "")).strip()
+    description = str(fm.get("description", "")).strip()
+    permalink = str(fm.get("permalink", "")).strip()
+    clean_body = strip_jekyll_and_html(body)
+    headings = extract_headings(body, max_headings=16)
+    h1_present = bool(re.search(r"(?:^#\s+|<h1(?:\s|>))", body, flags=re.IGNORECASE | re.MULTILINE))
+    # Collection and intent pages render their H1 through a shared include or
+    # layout; do not mark those source Markdown files as structurally missing it.
+    if (
+        fm.get("intent_id")
+        or fm.get("home_locale")
+        or rel_path == "index.md"
+        or fm.get("layout") in {"note", "blog", "radar"}
+        or rel_path.startswith(("_notes/", "_blog/", "_news/", "_radar/"))
+    ):
+        h1_present = True
+    internal_links = len(re.findall(r"(?:href|\]\()\s*=?\s*[\"']?(/[^\"')\s]+)", body))
+    structural_ready = bool(title and description and permalink and h1_present)
+    substantive = len(clean_body) >= 600 or len(headings) >= 2 or bool(fm.get("intent_id"))
+    route_available = bool(permalink)
+    indexable = route_available and _is_indexable(fm)
+    reviewed = route_available and _is_retrieval_eligible(fm)
+    routing_eligible = bool(fm.get("intent_id")) and indexable
+    if not route_available:
+        decision = "deferred"
+        reason = "No canonical permalink is defined for this Markdown source, so it is not a public search route."
+    elif not indexable:
+        decision = "deferred"
+        reason = "Noindex or sitemap-disabled content is not exposed as a retrieval candidate."
+    elif not structural_ready:
+        decision = "needs_metadata"
+        reason = "Add a title, description, permalink, and semantic H1 before relying on this page for search routing."
+    elif not substantive:
+        decision = "needs_depth"
+        reason = "The page has basic metadata but needs more substantive, decision-useful Markdown content."
+    else:
+        decision = "ready"
+        reason = "Markdown has the minimum title, description, permalink, heading, and substantive-content signals."
+    return {
+        "title_present": bool(title),
+        "description_present": bool(description),
+        "permalink_present": bool(permalink),
+        "h1_present": h1_present,
+        "substantive": substantive,
+        "body_characters": len(clean_body),
+        "heading_count": len(headings),
+        "headings": headings,
+        "internal_link_count": internal_links,
+        "decision": decision,
+        "reason": reason,
+        "indexable": indexable,
+        "reviewed_retrieval_eligible": reviewed,
+        "routing_eligible": routing_eligible,
+    }
+
+
+def generate_markdown_clusters(all_pages, check_mode=False):
+    """Generate a cluster-aware index for the complete public Markdown corpus."""
+    entries = []
+    cluster_entries = {cluster: [] for cluster in MARKDOWN_CLUSTER_LABELS}
+    for document in _discover_markdown_documents():
+        rel_path = document["file"]
+        fm = document["fm"]
+        body = document["body"]
+        permalink = str(fm.get("permalink", "")).strip()
+        clusters = _markdown_cluster_ids(rel_path, fm)
+        readiness = _markdown_readiness(rel_path, fm, body)
+        entry = {
+            "source_file": rel_path,
+            "canonical_url": canonical_url(permalink) if permalink else "",
+            "title": fm.get("title", ""),
+            "description": fm.get("description", ""),
+            "content_type": _derive_page_type(rel_path),
+            "section": _derive_section(rel_path, fm),
+            "clusters": clusters,
+            "primary_cluster": clusters[0],
+            "tags": fm.get("tags", []) or [],
+            "related_urls": fm.get("related", []) or [],
+            "permalink": permalink,
+            "status": fm.get("status", ""),
+            "verified": bool(fm.get("verified") is True),
+            "sitemap": fm.get("sitemap", True),
+            "readiness": readiness,
+        }
+        entries.append(entry)
+        for cluster in clusters:
+            cluster_entries.setdefault(cluster, []).append(entry)
+
+    summary = {
+        "markdown_pages": len(entries),
+        "indexable_pages": sum(1 for entry in entries if entry["readiness"]["indexable"]),
+        "reviewed_retrieval_pages": sum(1 for entry in entries if entry["readiness"]["reviewed_retrieval_eligible"]),
+        "routing_pages": sum(1 for entry in entries if entry["readiness"]["routing_eligible"]),
+        "ready_pages": sum(1 for entry in entries if entry["readiness"]["decision"] == "ready"),
+        "needs_metadata": sum(1 for entry in entries if entry["readiness"]["decision"] == "needs_metadata"),
+        "needs_depth": sum(1 for entry in entries if entry["readiness"]["decision"] == "needs_depth"),
+        "deferred_pages": sum(1 for entry in entries if entry["readiness"]["decision"] == "deferred"),
+    }
+    clusters = []
+    for cluster, label in MARKDOWN_CLUSTER_LABELS.items():
+        cluster_items = cluster_entries.get(cluster, [])
+        if not cluster_items:
+            continue
+        clusters.append({
+            "id": cluster,
+            "label": label,
+            "page_count": len(cluster_items),
+            "indexable_count": sum(1 for entry in cluster_items if entry["readiness"]["indexable"]),
+            "retrieval_count": sum(1 for entry in cluster_items if entry["readiness"]["reviewed_retrieval_eligible"]),
+            "ready_count": sum(1 for entry in cluster_items if entry["readiness"]["decision"] == "ready"),
+            "urls": [entry["canonical_url"] for entry in cluster_items if entry["canonical_url"]],
+        })
+    artifact = {
+        "schema": "dkharlanau.markdown_clusters",
+        "schema_version": "1.0",
+        "generated_at": _now(check_mode),
+        "canonical_url": f"{BASE_URL}/ai/markdown-clusters.json",
+        "source": "scripts/generate_atlas_artifacts.py",
+        "description": "Cluster-aware Markdown inventory for AI search routing. Readiness is structural; retrieval eligibility still requires the repository's reviewed, verified, indexable policy.",
+        "summary": summary,
+        "clusters": clusters,
+        "entries": entries,
+    }
+    if not check_mode:
+        with (REPO_DIR / "ai" / "markdown-clusters.json").open("w", encoding="utf-8") as f:
+            json.dump(artifact, f, indent=2, ensure_ascii=False, cls=DateTimeEncoder)
+    return artifact
+
+
 def _is_indexable(fm):
     """Return True if frontmatter signals the page should be indexed."""
     robots = str(fm.get("robots", "")).lower()
@@ -391,6 +658,226 @@ def _is_retrieval_eligible(fm):
         and fm.get("status") == "reviewed"
         and _is_indexable(fm)
     )
+
+
+EXPERT_CONTEXT_COPY = {
+    "sap-integration": (
+        "a Senior SAP Consultant working with interface "
+        "monitoring, IDoc and API diagnostics, integration ownership, and incident "
+        "resolution. This guide uses a practitioner-oriented approach to isolating "
+        "failures before escalation or reprocessing."
+    ),
+    "sap-master-data": (
+        "a Senior SAP Consultant working with Business Partner, "
+        "customer and supplier data, replication diagnostics, and master-data governance. "
+        "This guide focuses on the evidence needed to separate data, mapping, and "
+        "ownership problems."
+    ),
+    "sap-ams": (
+        "a Senior SAP Consultant working with recurring incidents, "
+        "operational ownership, support improvement, and reusable support knowledge. "
+        "This guide frames AMS decisions around the operating conditions that create "
+        "repeated effort."
+    ),
+    "ai-sap-operations": (
+        "a Senior SAP Consultant working with controlled AI "
+        "workflows for SAP operations, support knowledge systems, authorization "
+        "boundaries, and human review. This guide treats AI as a governed support "
+        "capability rather than an autonomous decision-maker."
+    ),
+    "sap-architecture": (
+        "a Senior SAP Consultant working with SAP architecture decisions, integration "
+        "boundaries, extension strategy, and practical transformation planning."
+    ),
+    "sap-process-operations": (
+        "a Senior SAP Consultant working with SD/MM process diagnostics, logistics "
+        "execution, document flow, and operational improvement."
+    ),
+    "enterprise-operations": (
+        "a Senior SAP Consultant who builds practical working methods for enterprise "
+        "analysis, delivery control, documentation, and AI-assisted support work."
+    ),
+}
+
+
+EXPERT_DOMAIN_META = {
+    "sap-integration": {
+        "expertise": ["SAP integration diagnostics", "AIF and IDoc monitoring", "interface ownership"],
+        "problems": ["recurring interface failures", "unclear incident ownership", "insufficient operational visibility"],
+        "service_url": "/services/sap-integration-reliability-assessment/",
+        "cta_variant": "integration-monitoring",
+        "cta_heading": "Working on a related SAP integration problem?",
+        "cta_copy": "Dzmitryi Kharlanau provides focused architecture reviews, incident diagnostics, monitoring design, and improvement planning for SAP integration landscapes.",
+    },
+    "sap-master-data": {
+        "expertise": ["SAP master data", "Business Partner and MDG", "customer and supplier replication"],
+        "problems": ["replication failures", "data-quality drift", "unclear ownership of master-data defects"],
+        "service_url": "/services/sap-master-data-stability-assessment/",
+        "cta_variant": "master-data-replication",
+        "cta_heading": "Working on a related SAP master-data problem?",
+        "cta_copy": "Dzmitryi Kharlanau provides focused master-data replication analysis, governance reviews, and practical stabilization planning for SAP landscapes.",
+    },
+    "sap-ams": {
+        "expertise": ["SAP AMS operations", "incident diagnostics", "operational knowledge"],
+        "problems": ["recurring incidents", "weak support ownership", "knowledge loss during handover"],
+        "service_url": "/services/sap-ams-consulting/",
+        "cta_variant": "ams-improvement",
+        "cta_heading": "Working on a related SAP AMS problem?",
+        "cta_copy": "Dzmitryi Kharlanau helps SAP AMS teams reduce recurring incidents, clarify ownership, strengthen diagnostics, and plan safe operating-model improvements.",
+    },
+    "ai-sap-operations": {
+        "expertise": ["controlled AI-assisted SAP support", "operational knowledge systems", "human-review boundaries"],
+        "problems": ["unsafe AI pilots", "unstructured support knowledge", "unclear authorization and escalation boundaries"],
+        "service_url": "/services/sap-ai-ml-enablement/",
+        "cta_variant": "ai-readiness",
+        "cta_heading": "Working on a related SAP AI problem?",
+        "cta_copy": "Dzmitryi Kharlanau provides AI-readiness reviews for SAP operations, with attention to evidence, authorization boundaries, evaluation, and human review.",
+    },
+    "sap-architecture": {
+        "expertise": ["SAP architecture", "integration boundaries", "extension and transformation decisions"],
+        "problems": ["fragmented architecture ownership", "high change cost", "unclear modernization boundaries"],
+        "service_url": "/services/sap-integration-architecture/",
+        "cta_variant": "architecture-review",
+        "cta_heading": "Working on a related SAP architecture problem?",
+        "cta_copy": "Dzmitryi Kharlanau provides focused architecture reviews, boundary decisions, and practical transformation planning for SAP landscapes.",
+    },
+    "sap-process-operations": {
+        "expertise": ["SAP SD/MM process diagnostics", "logistics operations", "document-flow analysis"],
+        "problems": ["process blocks", "master-data and configuration ambiguity", "cross-team diagnostic delays"],
+        "service_url": "/services/sap-o2c-process-audit/",
+        "cta_variant": "diagnostic-review",
+        "cta_heading": "Working on a related SAP process problem?",
+        "cta_copy": "Dzmitryi Kharlanau provides focused process diagnostics, document-flow reviews, and improvement planning for SAP SD/MM and logistics operations.",
+    },
+    "enterprise-operations": {
+        "expertise": ["enterprise analysis", "delivery control", "AI-assisted work documentation"],
+        "problems": ["unclear requirements", "weak handovers", "unreviewed delivery decisions"],
+        "service_url": "/services/sap-ams-consulting/",
+        "cta_variant": "focused-implementation",
+        "cta_heading": "Working on a related delivery problem?",
+        "cta_copy": "Dzmitryi Kharlanau provides practical analysis, documentation, review, and implementation support for enterprise delivery work around SAP.",
+    },
+}
+
+
+def _expert_domain(rel_path, fm):
+    """Infer a controlled expert domain from public taxonomy and topic signals."""
+    explicit = (fm.get("expert_context") or {}).get("domain")
+    if explicit in EXPERT_DOMAIN_META:
+        return explicit
+    text = " ".join(str(fm.get(k, "")) for k in ("title", "description", "domain", "subdomain", "sap_area", "business_process", "tags"))
+    lower = f"{rel_path} {text}".lower()
+    if any(term in lower for term in ("aif", "idoc", "integration", "interface", "middleware", "rfc", "api", "ale", "odata", "soap", "event-driven")):
+        return "sap-integration"
+    if any(term in lower for term in ("master data", "master-data", "mdg", "business partner", "customer master", "vendor master", "supplier")):
+        return "sap-master-data"
+    if any(term in lower for term in ("ai-operations", "ai-assisted", "ai agent", "ai agents", "ai/", "artificial intelligence", "automation", "operational memory", "mcp")):
+        return "ai-sap-operations"
+    if any(term in lower for term in ("architecture", "transformation", "extension", "clean core", "landscape", "capability mapping")):
+        return "sap-architecture"
+    if any(term in lower for term in ("sd", "mm", "o2c", "order to cash", "procure to pay", "logistics", "retail", "ewm", "mrp", "inventory", "pricing", "goods receipt", "purchase")):
+        return "sap-process-operations"
+    if any(term in lower for term in ("sap-ams", "ams", "incident", "support", "diagnostic", "runbook", "handover")):
+        return "sap-ams"
+    return "enterprise-operations" if rel_path.startswith("skill-hub/") else "sap-ams"
+
+
+def _expert_candidate(rel_path, fm):
+    """Return whether a reviewed page is substantial enough for contextual promotion."""
+    if not _is_retrieval_eligible(fm):
+        return False
+    if rel_path.startswith("atlas/"):
+        return not rel_path.endswith("/index.md")
+    if rel_path.startswith("skill-hub/"):
+        excluded = ("/index.md", "skill-page-template.md", "artifact-templates.md", "framework-map.md", "quality-rules.md", "agent-usage-guide.md")
+        return not any(rel_path.endswith(suffix) for suffix in excluded)
+    if rel_path.startswith("scenarios/"):
+        return not rel_path.endswith("/index.md")
+    if rel_path.startswith(("research/", "_blog/", "_notes/")):
+        return True
+    return bool((fm.get("expert_context") or {}).get("enabled"))
+
+
+def _eligible_evidence(all_pages, expert, current_url, domain):
+    """Resolve two to five reviewed evidence links, preferring explicit links."""
+    urls = list(expert.get("evidence_urls") or [])
+    related = expert.get("related") or []
+    for candidate in related:
+        if candidate not in urls:
+            urls.append(candidate)
+    same_domain = []
+    for url, info in sorted(all_pages.items()):
+        if url == current_url or not _is_retrieval_eligible(info["fm"]):
+            continue
+        if _expert_domain(info["file"], info["fm"]) == domain:
+            same_domain.append(url)
+    for candidate in same_domain:
+        if candidate not in urls:
+            urls.append(candidate)
+    result = []
+    for url in urls:
+        target = all_pages.get(url)
+        if not target or not _expert_candidate(target["file"], target["fm"]):
+            continue
+        result.append({"url": url, "title": target.get("title") or target["fm"].get("title", "")})
+        if len(result) >= 5:
+            break
+    return result
+
+
+def build_expert_context(rel_path, fm, all_pages, body=""):
+    """Build the canonical, generated expert metadata for one public page."""
+    if not _expert_candidate(rel_path, fm):
+        return None
+    explicit = fm.get("expert_context") or {}
+    domain = _expert_domain(rel_path, fm)
+    base = copy.deepcopy(EXPERT_DOMAIN_META[domain])
+    base.update({k: serialize_value(v) for k, v in explicit.items() if k not in {"enabled", "domain", "evidence_urls"}})
+    base["enabled"] = True
+    base["domain"] = domain
+    base["expertise"] = base.get("expertise") or base.get("topics") or EXPERT_DOMAIN_META[domain]["expertise"]
+    base["problems"] = base.get("problems") or EXPERT_DOMAIN_META[domain]["problems"]
+    base["service_url"] = explicit.get("service_url") or base["service_url"]
+    evidence_source = dict(explicit)
+    evidence_source["related"] = fm.get("related") or []
+    base["evidence"] = _eligible_evidence(all_pages, evidence_source, fm.get("permalink", ""), domain)
+    base["evidence_urls"] = [item["url"] for item in base["evidence"]]
+    base["placement"] = "source" if "atlas/expert-context.html" in body else "layout"
+    return base
+
+
+def _expert_public_metadata(expert):
+    if not expert:
+        return None
+    return {key: expert[key] for key in ("enabled", "domain", "expertise", "problems", "service_url", "evidence_urls", "cta_variant", "cta_heading", "cta_copy", "placement") if key in expert}
+
+
+def expert_context_markdown(fm, rel_path, all_pages, body=""):
+    """Return the public expert context represented by an enabled article block."""
+    expert = build_expert_context(rel_path, fm, all_pages, body)
+    if not expert:
+        return ""
+
+    context_copy = EXPERT_CONTEXT_COPY.get(expert.get("domain"))
+    if not context_copy:
+        return ""
+
+    lines = [
+        "EXPERT CONTEXT:",
+        f"This guide was prepared by Dzmitryi Kharlanau, {context_copy}",
+        "Professional website: https://dkharlanau.github.io/",
+        "Profile and experience: https://dkharlanau.github.io/about/",
+        "LinkedIn: https://www.linkedin.com/in/dkharlanau/",
+        "",
+        expert.get("cta_heading", "WORKING ON A RELATED SAP PROBLEM?").upper(),
+        expert.get("cta_copy", "Dzmitryi Kharlanau provides focused diagnostics, architecture reviews, improvement planning, and practical implementation support."),
+        f"Related service: {canonical_url(expert.get('service_url', ''))}",
+    ]
+    evidence_urls = expert.get("evidence_urls") or []
+    if evidence_urls:
+        lines.append("Related evidence:")
+        lines.extend(f"- {canonical_url(url)}" for url in evidence_urls)
+    return "\n".join(lines)
 
 
 def generate_verified_inventory(all_pages, check_mode=False):
@@ -417,6 +904,8 @@ def generate_verified_inventory(all_pages, check_mode=False):
         page_type = _derive_page_type(rel_path)
         section = _derive_section(rel_path, fm)
 
+        body = parse_frontmatter(REPO_DIR / rel_path)[1]
+        expert_context = build_expert_context(rel_path, fm, all_pages, body)
         entry = {
             "url": canonical_url(permalink),
             "title": fm.get("title", ""),
@@ -430,6 +919,8 @@ def generate_verified_inventory(all_pages, check_mode=False):
             "author": fm.get("author", ""),
             "tags": fm.get("tags", []) or [],
         }
+        if expert_context:
+            entry["expert_context"] = _expert_public_metadata(expert_context)
         entries.append(entry)
 
     entries.sort(key=lambda e: (e["type"], e["section"], e["url"]))
@@ -464,7 +955,7 @@ def generate_manifest(all_pages, atlas_files, check_mode=False):
     entries = []
     for rel_path in atlas_files:
         abs_path = REPO_DIR / rel_path
-        fm, _ = parse_frontmatter(abs_path)
+        fm, body = parse_frontmatter(abs_path)
 
         if not _is_retrieval_eligible(fm):
             continue
@@ -476,6 +967,7 @@ def generate_manifest(all_pages, atlas_files, check_mode=False):
                 related.append(canonical_url(related_url))
         tags = fm.get("tags", []) or []
 
+        expert_context = build_expert_context(rel_path, fm, all_pages, body)
         entry = {
             "title": fm.get("title", ""),
             "description": fm.get("description", ""),
@@ -493,6 +985,8 @@ def generate_manifest(all_pages, atlas_files, check_mode=False):
             "tags": tags,
             "related": serialize_value(related),
         }
+        if expert_context:
+            entry["expert_context"] = _expert_public_metadata(expert_context)
         entries.append(entry)
 
     manifest = {
@@ -562,6 +1056,10 @@ def generate_llms_full(all_pages, atlas_files, check_mode=False):
 
         clean_body = strip_jekyll_and_html(body)
         lines.append("\n".join(line.rstrip() for line in clean_body.splitlines()))
+        expert_block = expert_context_markdown(fm, rel_path, all_pages, body)
+        if expert_block:
+            lines.append("")
+            lines.append(expert_block)
         lines.append("")
         lines.append("=" * 50)
         lines.append("")
@@ -576,6 +1074,101 @@ def generate_llms_full(all_pages, atlas_files, check_mode=False):
             f.write(text)
 
     return text
+
+
+def generate_expert_artifacts(all_pages, check_mode=False):
+    """Generate the sitewide expert metadata, evidence index, and decision inventory."""
+    promotion = {}
+    evidence_by_domain = {domain: [] for domain in EXPERT_DOMAIN_META}
+    inventory_entries = []
+
+    for permalink, info in sorted(all_pages.items()):
+        rel_path = info["file"]
+        fm = info["fm"]
+        body = parse_frontmatter(REPO_DIR / rel_path)[1]
+        eligible = _is_retrieval_eligible(fm)
+        candidate = _expert_candidate(rel_path, fm)
+        expert = build_expert_context(rel_path, fm, all_pages, body) if candidate else None
+        if expert:
+            public_context = _expert_public_metadata(expert)
+            promotion[permalink] = public_context
+            domain = expert["domain"]
+            domain_entry = {
+                "title": fm.get("title", ""),
+                "canonical_url": canonical_url(permalink),
+                "content_type": _derive_page_type(rel_path),
+                "verification_status": "reviewed",
+                "url_path": permalink,
+            }
+            evidence_by_domain.setdefault(domain, []).append(domain_entry)
+            decision = "enabled"
+            reason = "Reviewed, verified, indexable, public-safe, and substantial enough to serve as professional evidence."
+        elif eligible:
+            decision = "excluded"
+            reason = "Reviewed and indexable, but treated as navigation, template, thin, or non-article content."
+        else:
+            decision = "deferred"
+            reason = "Not promoted until human verification and indexability requirements are met."
+
+        inventory_entries.append({
+            "source_file": rel_path,
+            "content_type": _derive_page_type(rel_path),
+            "canonical_url": canonical_url(permalink),
+            "indexable": _is_indexable(fm),
+            "verified": bool(fm.get("verified") is True),
+            "status": fm.get("status", ""),
+            "title": fm.get("title", ""),
+            "expert_domain": expert.get("domain") if expert else (_expert_domain(rel_path, fm) if eligible else ""),
+            "decision": decision,
+            "reason": reason,
+        })
+
+    config = {
+        "schema": "dkharlanau.expert_context",
+        "schema_version": "1.0",
+        "generated_by": "scripts/generate_atlas_artifacts.py",
+        "entries": promotion,
+    }
+    evidence = {
+        "schema": "dkharlanau.expert_evidence",
+        "schema_version": "1.0",
+        "canonical_url": f"{BASE_URL}/ai/expert-evidence.json",
+        "expert": {
+            "name": "Dzmitryi Kharlanau",
+            "website": BASE_URL + "/",
+            "profile": BASE_URL + "/about/",
+            "linkedin": "https://www.linkedin.com/in/dkharlanau/",
+        },
+        "domains": [],
+    }
+    for domain, meta in EXPERT_DOMAIN_META.items():
+        evidence["domains"].append({
+            "id": domain,
+            "label": domain.replace("-", " ").title(),
+            "can_help_with": meta["problems"],
+            "evidence": sorted(evidence_by_domain.get(domain, []), key=lambda item: item["canonical_url"]),
+            "services": [canonical_url(meta["service_url"])],
+        })
+    inventory = {
+        "schema": "dkharlanau.expert_promotion_inventory",
+        "schema_version": "1.0",
+        "canonical_url": f"{BASE_URL}/ai/expert-promotion-inventory.json",
+        "summary": {
+            "enabled": sum(1 for item in inventory_entries if item["decision"] == "enabled"),
+            "excluded": sum(1 for item in inventory_entries if item["decision"] == "excluded"),
+            "deferred": sum(1 for item in inventory_entries if item["decision"] == "deferred"),
+        },
+        "entries": inventory_entries,
+    }
+
+    if not check_mode:
+        with (REPO_DIR / "_data" / "expert_context.yml").open("w", encoding="utf-8") as f:
+            yaml.safe_dump(config, f, allow_unicode=True, sort_keys=False)
+        with (REPO_DIR / "ai" / "expert-evidence.json").open("w", encoding="utf-8") as f:
+            json.dump(evidence, f, indent=2, ensure_ascii=False, cls=DateTimeEncoder)
+        with (REPO_DIR / "ai" / "expert-promotion-inventory.json").open("w", encoding="utf-8") as f:
+            json.dump(inventory, f, indent=2, ensure_ascii=False, cls=DateTimeEncoder)
+    return config, evidence, inventory
 
 
 def generate_related(all_pages, atlas_files, check_mode=False):
@@ -809,7 +1402,7 @@ def run_check(all_pages, atlas_files):
 
     # --- compact signal index ---
     print("\n[CHECK 4/6] atlas-compact-index.json")
-    compact_generated = generate_compact_signal_index(atlas_files, check_mode=True)
+    compact_generated = generate_compact_signal_index(atlas_files, check_mode=True, all_pages=all_pages)
     compact_path = REPO_DIR / "ai" / "atlas-compact-index.json"
     compact_committed = {}
     compact_committed_text = ""
@@ -822,13 +1415,13 @@ def run_check(all_pages, atlas_files):
         except json.JSONDecodeError as e:
             issues.append(f"atlas-compact-index.json: invalid JSON — {e}")
 
-        if compact_committed:
-            gen_norm = json.loads(_normalize_timestamp_in_json(json.dumps(compact_generated, indent=2, ensure_ascii=False, cls=DateTimeEncoder)))
-            com_norm = json.loads(_normalize_timestamp_in_json(compact_committed_text))
-            if gen_norm != com_norm:
-                issues.append("atlas-compact-index.json: stale — committed file differs from source")
-            else:
-                print("  ✓ atlas-compact-index.json is up to date")
+    if compact_committed:
+        gen_norm = json.loads(_normalize_timestamp_in_json(json.dumps(compact_generated, indent=2, ensure_ascii=False, cls=DateTimeEncoder)))
+        com_norm = json.loads(_normalize_timestamp_in_json(compact_committed_text))
+        if gen_norm != com_norm:
+            issues.append("atlas-compact-index.json: stale — committed file differs from source")
+        else:
+            print("  ✓ atlas-compact-index.json is up to date")
 
         expected_compact_count = len(compact_generated.get("entries", []))
         if compact_committed.get("count") != expected_compact_count:
@@ -846,8 +1439,36 @@ def run_check(all_pages, atlas_files):
             if pattern in compact_committed_text:
                 issues.append(f"atlas-compact-index.json: private leak — contains '{pattern}'")
 
+    # --- expert promotion artifacts ---
+    print("\n[CHECK 5/9] expert promotion artifacts")
+    expert_config, expert_evidence, expert_inventory = generate_expert_artifacts(all_pages, check_mode=True)
+    expert_config_path = REPO_DIR / "_data" / "expert_context.yml"
+    expert_evidence_path = REPO_DIR / "ai" / "expert-evidence.json"
+    expert_inventory_path = REPO_DIR / "ai" / "expert-promotion-inventory.json"
+    if not expert_config_path.exists():
+        issues.append("_data/expert_context.yml: file missing")
+    else:
+        committed = yaml.safe_load(expert_config_path.read_text(encoding="utf-8")) or {}
+        if committed != expert_config:
+            issues.append("_data/expert_context.yml: stale — committed file differs from source")
+        else:
+            print("  ✓ _data/expert_context.yml is up to date")
+    for path, expected in ((expert_evidence_path, expert_evidence), (expert_inventory_path, expert_inventory)):
+        if not path.exists():
+            issues.append(f"{path.relative_to(REPO_DIR)}: file missing")
+            continue
+        try:
+            committed = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            issues.append(f"{path.relative_to(REPO_DIR)}: invalid JSON — {exc}")
+            continue
+        if committed != expected:
+            issues.append(f"{path.relative_to(REPO_DIR)}: stale — committed file differs from source")
+        else:
+            print(f"  ✓ {path.relative_to(REPO_DIR)} is up to date")
+
     # --- verified-pages.json ---
-    print("\n[CHECK 5/7] verified-pages.json")
+    print("\n[CHECK 6/9] verified-pages.json")
     inventory_generated = generate_verified_inventory(all_pages, check_mode=True)
     inventory_path = REPO_DIR / "ai" / "verified-pages.json"
     inventory_committed = {}
@@ -885,8 +1506,37 @@ def run_check(all_pages, atlas_files):
             if pattern in inventory_committed_text:
                 issues.append(f"verified-pages.json: private leak — contains '{pattern}'")
 
+    # --- Markdown cluster index ---
+    print("\n[CHECK 7/9] markdown-clusters.json")
+    markdown_clusters_generated = generate_markdown_clusters(all_pages, check_mode=True)
+    markdown_clusters_path = REPO_DIR / "ai" / "markdown-clusters.json"
+    if not markdown_clusters_path.exists():
+        issues.append("markdown-clusters.json: file missing")
+    else:
+        markdown_clusters_text = _load_json_file(markdown_clusters_path)
+        try:
+            markdown_clusters_committed = json.loads(markdown_clusters_text)
+        except json.JSONDecodeError as e:
+            issues.append(f"markdown-clusters.json: invalid JSON — {e}")
+            markdown_clusters_committed = {}
+        if markdown_clusters_committed:
+            gen_norm = json.loads(_normalize_timestamp_in_json(json.dumps(markdown_clusters_generated, indent=2, ensure_ascii=False, cls=DateTimeEncoder)))
+            com_norm = json.loads(_normalize_timestamp_in_json(markdown_clusters_text))
+            if gen_norm != com_norm:
+                issues.append("markdown-clusters.json: stale — committed file differs from source")
+            else:
+                print("  ✓ markdown-clusters.json is up to date")
+            expected_markdown_pages = len(markdown_clusters_generated.get("entries", []))
+            if markdown_clusters_committed.get("summary", {}).get("markdown_pages") != expected_markdown_pages:
+                issues.append("markdown-clusters.json: page count does not match Markdown source discovery")
+            for entry in markdown_clusters_committed.get("entries", []):
+                if entry.get("canonical_url") and not entry.get("canonical_url", "").startswith(f"{BASE_URL}/"):
+                    issues.append(f"markdown-clusters.json: invalid URL {entry.get('canonical_url')}")
+                if not entry.get("clusters"):
+                    issues.append(f"markdown-clusters.json: missing clusters for {entry.get('source_file')}")
+
     # --- Cross-validate manifest vs related ---
-    print("\n[CHECK 6/7] Cross-validation")
+    print("\n[CHECK 8/9] Cross-validation")
     if manifest_committed and related_committed:
         manifest_urls = {e["url"] for e in manifest_committed.get("entries", [])}
         related_sources = {e["source_url"] for e in related_committed.get("edges", [])}
@@ -899,7 +1549,7 @@ def run_check(all_pages, atlas_files):
             print("  ✓ All related sources present in manifest")
 
     # --- Frontmatter tag consistency ---
-    print("\n[CHECK 7/7] Frontmatter tag consistency")
+    print("\n[CHECK 9/9] Frontmatter tag consistency")
     tag_issues = []
     for rel_path in atlas_files:
         abs_path = REPO_DIR / rel_path
@@ -977,7 +1627,7 @@ def main():
 
     # Generate compact signal index
     print("\n[4/5] Generating ai/atlas-compact-index.json ...")
-    compact_index = generate_compact_signal_index(atlas_files)
+    compact_index = generate_compact_signal_index(atlas_files, all_pages=all_pages)
     print(f"  Entries: {compact_index['count']}")
 
     # Generate verified page inventory
@@ -985,6 +1635,17 @@ def main():
     inventory = generate_verified_inventory(all_pages)
     print(f"  Verified pages: {inventory['count']}")
     print(f"  Collections: {', '.join(inventory['collections'])}")
+
+    print("\n[6/9] Generating expert promotion artifacts ...")
+    _, expert_evidence, expert_inventory = generate_expert_artifacts(all_pages)
+    print(f"  Enabled pages: {expert_inventory['summary']['enabled']}")
+    print(f"  Deferred pages: {expert_inventory['summary']['deferred']}")
+
+    print("\n[7/9] Generating Markdown cluster index ...")
+    markdown_clusters = generate_markdown_clusters(all_pages)
+    print(f"  Markdown pages: {markdown_clusters['summary']['markdown_pages']}")
+    print(f"  Structurally ready: {markdown_clusters['summary']['ready_pages']}")
+    print(f"  Retrieval-eligible: {markdown_clusters['summary']['reviewed_retrieval_pages']}")
 
     print("\n" + "=" * 40)
     print("All artifacts generated successfully.")

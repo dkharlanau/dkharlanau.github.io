@@ -7,22 +7,29 @@ sitemap: false
 robots: "noindex,follow"
 ---
 
-<section class="section search">
-  <header class="section-heading">
-    <p class="eyebrow">Search</p>
-    <h1>Search the site</h1>
-    <p class="lead">Find content across the blog, notes, CV, and structured datasets.</p>
+<section class="search-canvas">
+  <header class="search-canvas__hero">
+    <p class="search-canvas__eyebrow">Search / site knowledge</p>
+    <h1>Find the SAP problem, route, or proof.</h1>
+    <p>Search across services, diagnostics, scenarios, technical writing, profile evidence, and public datasets.</p>
   </header>
 
-  <form class="search-form" role="search" method="get" action="/search/">
-    <label for="search-query">Query</label>
-    <input type="search" id="search-query" name="q" placeholder="e.g., clean core, integration, SAP" />
-    <button type="submit">Search</button>
+  <form class="search-canvas__form" role="search" method="get" action="/search/">
+    <label for="search-query">Search the public knowledge base</label>
+    <div><input type="search" id="search-query" name="q" placeholder="Try delivery block, IDoc, duplicate business partner" autocomplete="off" /><button type="submit">Search <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button></div>
   </form>
 
-  <div id="search-status" class="lead" role="status" aria-live="polite" aria-atomic="true"></div>
-  <ul id="search-results" class="notes-grid"></ul>
-  <p id="search-help" class="note-subtitle">Search looks at page titles and descriptions. Try specific keywords for better matches.</p>
+  <nav class="search-canvas__routes" aria-label="Start routes">
+    <a href="/atlas/diagnostics/"><span>Diagnostics</span><small>Trace a SAP symptom</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    <a href="/scenarios/"><span>Scenarios</span><small>Start from business impact</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    <a href="/services/"><span>Services</span><small>Choose an improvement route</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+  </nav>
+
+  <div class="search-canvas__result-area">
+    <div id="search-status" class="search-canvas__status" role="status" aria-live="polite" aria-atomic="true"></div>
+    <ul id="search-results" class="search-result-list"></ul>
+    <p id="search-help" class="search-canvas__help">Search reads public titles and descriptions. Use the business symptom, SAP object, or decision area rather than broad terms.</p>
+  </div>
 </section>
 
 <script>
@@ -89,20 +96,23 @@ robots: "noindex,follow"
     statusEl.textContent = `Found ${items.length} result${items.length === 1 ? '' : 's'} for “${query}”:`;
     items.slice(0, 30).forEach(item => {
       const li = document.createElement('li');
-      li.className = 'note-card neub-card';
-      const title = document.createElement('h2');
+      li.className = 'search-result';
       const link = document.createElement('a');
       link.href = item.url;
-      link.textContent = item.title;
-      title.appendChild(link);
       const meta = document.createElement('p');
-      meta.className = 'note-subtitle';
+      meta.className = 'search-result__meta';
       meta.textContent = item.type ? item.type.toUpperCase() : 'PAGE';
+      const title = document.createElement('strong');
+      title.textContent = item.title;
       const desc = document.createElement('p');
+      desc.className = 'search-result__description';
       desc.textContent = item.description || '';
-      li.appendChild(title);
-      li.appendChild(meta);
-      li.appendChild(desc);
+      const arrow = document.createElement('span');
+      arrow.className = 'material-symbols-outlined';
+      arrow.setAttribute('aria-hidden', 'true');
+      arrow.textContent = 'arrow_forward';
+      link.append(meta, title, desc, arrow);
+      li.appendChild(link);
       resultsList.appendChild(li);
     });
   }
