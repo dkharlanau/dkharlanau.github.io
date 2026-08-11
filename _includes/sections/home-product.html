@@ -18,11 +18,15 @@
     <p class="signal-kicker"><span aria-hidden="true"></span>{{ hero.person_meta }}</p>
     <h1 id="home-title">{% if product_locale == 'en' %}Reduce repeated<br />SAP work.{% else %}{{ hero.title }}{% endif %}</h1>
     <p>{% if product_locale == 'en' %}Transformation assessment, AMS improvement, TCO reduction, and AI readiness for SAP operations.{% else %}{{ hero.lead }}{% endif %}</p>
-    <p class="focus-hero__employment">{{ home_surface.employment_prefix }}<a href="https://www.epam.com/" target="_blank" rel="noopener noreferrer">EPAM Systems</a>{{ home_surface.employment_suffix }}</p>
     <a class="focus-hero__action" href="/atlas/diagnostics/">{{ home_surface.start_diagnostic }}<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </div>
   <div class="focus-hero__visual" data-op-flow data-reveal>
     <svg class="focus-hero__map" viewBox="0 0 640 640" fill="none" aria-hidden="true" focusable="false">
+      <g class="focus-hero__field">
+        <circle class="focus-hero__field-ring" cx="320" cy="320" r="276" />
+        <circle class="focus-hero__field-ring focus-hero__field-ring--dash" cx="320" cy="320" r="196" />
+        <path class="focus-hero__field-grid" d="M54 320H586M320 54V586M132 132L508 508M508 132L132 508" />
+      </g>
       <circle class="focus-hero__ring" cx="320" cy="320" r="236" />
       <path class="focus-hero__line" d="M107 178H212C236 178 250 194 250 218V278C250 302 266 318 290 318H472" />
       <path class="focus-hero__line" d="M107 320H290" />
@@ -31,12 +35,17 @@
       <path class="focus-hero__trace focus-hero__trace--one" d="M107 178H212C236 178 250 194 250 218V278C250 302 266 318 290 318H472" />
       <path class="focus-hero__trace focus-hero__trace--two" d="M107 320H290" />
       <path class="focus-hero__trace focus-hero__trace--three" d="M107 462H212C236 462 250 446 250 422V362C250 338 266 322 290 322H472" />
+      <path class="focus-hero__handoff focus-hero__handoff--one" d="M290 320H472C505 320 519 298 519 272V205" />
+      <path class="focus-hero__handoff focus-hero__handoff--two" d="M290 320H472C505 320 519 342 519 368V435" />
+      <path class="focus-hero__cost-loop" d="M290 320C290 245 390 222 430 274C470 326 413 390 352 372C313 361 300 341 290 320" />
       <circle class="focus-hero__node" cx="107" cy="178" r="6" />
       <circle class="focus-hero__node" cx="107" cy="320" r="6" />
       <circle class="focus-hero__node" cx="107" cy="462" r="6" />
       <circle class="focus-hero__node" cx="290" cy="320" r="8" />
       <circle class="focus-hero__node focus-hero__node--signal" cx="472" cy="320" r="8" />
       <circle class="focus-hero__target" cx="472" cy="320" r="20" />
+      <circle class="focus-hero__outcome" cx="519" cy="205" r="6" />
+      <circle class="focus-hero__outcome focus-hero__outcome--delayed" cx="519" cy="435" r="6" />
       <g class="focus-hero__operator" transform="translate(290 320)">
         <circle class="focus-hero__operator-halo" r="34" />
         <circle class="focus-hero__operator-core" r="14" />
@@ -138,7 +147,7 @@
 <section class="proof-and-notes section" data-reveal>
   <article class="proof-card" aria-labelledby="profile-title">
     <picture><source srcset="{{ hero.profile.image_avif }}" type="image/avif" /><source srcset="{{ hero.profile.image_webp }}" type="image/webp" /><img src="{{ hero.profile.image }}" alt="{{ profile.portrait_alt | default: hero.profile.alt }}" width="180" height="180" loading="lazy" /></picture>
-    <div><p class="signal-kicker"><span aria-hidden="true"></span>{{ hero.person_meta }}</p><h2 id="profile-title">{{ profile.display_title | default: profile.title }}</h2><p>{{ product_ui.profile.note }}</p><a class="signal-inline-link" href="/about/">{% if product_locale == 'en' %}View profile{% else %}{{ locale_data.ui.navigation.about | default: 'Profile' }}{% endif %} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></div>
+    <div><p class="signal-kicker"><span aria-hidden="true"></span>{{ hero.person_meta }}</p><h2 id="profile-title">Dzmitryi Kharlanau</h2><p class="proof-card__role">SAP Consultant · <a href="https://www.epam.com/" target="_blank" rel="noopener noreferrer">EPAM Systems</a> · ex‑abat</p><p class="proof-card__employment">{{ home_surface.employment_prefix }}<a href="https://www.epam.com/" target="_blank" rel="noopener noreferrer">EPAM Systems</a>{{ home_surface.employment_suffix }}</p><p>{{ product_ui.profile.note }}</p><a class="signal-inline-link" href="/about/">{% if product_locale == 'en' %}View profile{% else %}{{ locale_data.ui.navigation.about | default: 'Profile' }}{% endif %} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></div>
   </article>
   <article class="notes-card" aria-labelledby="writing-title">
     <p class="signal-kicker"><span aria-hidden="true"></span>{{ product_ui.writing.eyebrow }}</p><h2 id="writing-title">{{ product_ui.writing.title }}</h2>

@@ -12,6 +12,9 @@
 
     <nav class="site-nav" aria-label="{{ nav_ui.label | default: 'Primary navigation' }}">
       <div class="nav-links" id="site-navigation">
+        {% if page.home_locale %}
+        {% include home-language-switcher.html %}
+        {% else %}
         <a href="/services/" class="nav-link{% if page.url contains '/services/' %} is-active{% endif %}"{% if page.url contains '/services/' %} aria-current="page"{% endif %}>{{ nav_ui.services | default: 'Services' }}</a>
         <a href="/scenarios/" class="nav-link{% if page.url contains '/scenarios/' %} is-active{% endif %}"{% if page.url contains '/scenarios/' %} aria-current="page"{% endif %}>{{ nav_ui.scenarios | default: 'Scenarios' }}</a>
         <a href="/atlas/" class="nav-link{% if page.url contains '/atlas/' %} is-active{% endif %}"{% if page.url contains '/atlas/' %} aria-current="page"{% endif %}>{{ nav_ui.atlas | default: 'Atlas' }}</a>
@@ -20,7 +23,7 @@
           <span class="material-symbols-outlined" aria-hidden="true">search</span>
           <span class="nav-link__search-label">{{ nav_ui.search | default: 'Search' }}</span>
         </a>
-        {% if page.home_locale %}{% include home-language-switcher.html %}{% endif %}
+        {% endif %}
       </div>
     </nav>
   </div>

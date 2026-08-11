@@ -1,6 +1,6 @@
 Atlas Full-Text Manifest
 ==================================================
-Generated: 2026-07-31T00:00:00Z
+Generated: 2026-08-11T00:00:00Z
 Canonical: https://dkharlanau.github.io/llms-full.txt
 Source: https://dkharlanau.github.io/atlas/manifest.json
 
@@ -1140,7 +1140,7 @@ Related evidence:
 - https://dkharlanau.github.io/atlas/concepts/order-to-cash/
 - https://dkharlanau.github.io/atlas/concepts/sap-atp-is-not-inventory/
 - https://dkharlanau.github.io/atlas/diagnostics/sap-ale-distribution-model-diagnostics/
-- https://dkharlanau.github.io/atlas/diagnostics/sap-cvi-synchronization-diagnostics/
+- https://dkharlanau.github.io/atlas/diagnostics/sap-idoc-diagnostics/
 
 ==================================================
 
@@ -1702,7 +1702,15 @@ BUSINESS PROCESS: Master data governance
 TAGS: master-data, sap-mdg, diagnostics, replication
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
+**Sources:** [SAP Data Replication Framework](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/d9750bd3d7834e068edee1153e444f4c.html), [SAP Business Partner replication guidance](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/97d8ed5024226766e10000000a445394.html?version=2023.latest), and [SAP guidance for BP replication using ALE](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/6fe343fea9b943f4875eb4425f19ed43.html).
+**Date checked:** 2026-08-11
+**Confidence:** high for the DRF diagnostic sequence; medium for channel-specific logs and payload behavior that vary by product and release.
+**Related page/topic:** /atlas/diagnostics/sap-key-mapping-diagnostics/
+**Practical implication:** Prove selection, channel delivery, receiver processing, confirmation, and key mapping as separate checkpoints before changing master data or resending.
+**Tags:** master-data, sap-mdg, diagnostics, replication, drf, business-partner
+
+
+    Home
     Knowledge Atlas
     Diagnostics
     SAP Business Partner Replication Diagnostics
@@ -1711,7 +1719,7 @@ Home
 
     Atlas Diagnostic
     SAP business partner replication diagnostics
-    A first-pass structure for finding why a business partner was not replicated, arrived incomplete, or created duplicates in a target system.
+    A checkpoint-led workflow for missing, incomplete, or duplicate Business Partner records across SAP systems.
 
 
 
@@ -1725,8 +1733,21 @@ Home
 
 
     Core idea
-    Business partner replication moves BP master data from a source system to target systems. Most tickets resolve to one of three handoffs: the source did not select the BP, the target did not accept it, or the accepted BP was mapped to the wrong key. The diagnostic job is to find which handoff failed and why.
-    The fastest way to narrow the issue is to prove the message left the source, then prove the target received it. Everything in between is noise until those two facts are established.
+    Business Partner replication is a chain of independently testable checkpoints: the source object is eligible, the Data Replication Framework (DRF) selects it for the intended target, the configured channel sends a message, the receiver processes it, a confirmation returns where applicable, and key mapping links the source and target identities. A source-side success alone does not prove that the target record was created or updated correctly.
+
+    Replication checkpoints
+
+
+        CheckpointEvidenceIf it fails
+
+
+        Object eligibilityBP status, approval state where relevant, replication model filters, target system, and change context.Correct the source object or DRF model selection; do not troubleshoot transport yet.
+        Outbound replicationDRF replication status or log with object, target, run, and communication channel.Use the log message to separate filter, configuration, payload, and technical failures.
+        Channel deliverySOAP message monitor, middleware correlation, or ALE/IDoc status according to the configured channel.Follow the channel-specific technical evidence rather than assuming all BP replication uses IDoc.
+        Receiver processingInbound processing result, application log, target BP, roles, and referenced error.Resolve target validation, mapping, grouping, number assignment, or role-specific data.
+        Confirmation and key mappingConfirmation status where supported and source-to-target object identifiers.Correct the mapping or confirmation failure before resending, or a duplicate can be created.
+
+
 
 
 
@@ -1741,52 +1762,62 @@ Home
 
     Likely causes
 
-      Replication model filter: the BP type, role, or organizational unit is excluded from the replication model.
-      Key mapping missing: the source BP GUID or number is not mapped to the target system key, causing a new BP to be created.
+      Replication model selection: the object, target, or filter values are outside the active DRF model and outbound implementation.
+      Key mapping missing or stale: the source and target identifiers are not linked consistently, increasing the risk of duplicate creation or failed updates.
       Data quality block: the BP data fails validation in the target system (missing required field, invalid format, duplicate tax number).
-      Role-specific filter: the replication model sends the BP header but filters out specific roles or relationships.
+      Channel or payload coverage: the configured replication channel or outbound implementation does not carry the expected role, relationship, or attribute for that scenario.
       Target system configuration: the target system has different BP grouping, number ranges, or role assignment rules that conflict with the replicated data.
 
 
     Where to check in SAP
 
-      MDG Data Replication log (if MDG is the source) — check replication status and error messages.
-      BDCP / BDCPS — change pointers for the BP object.
-      WE02 — IDoc status if ALE is used for replication.
-      Key mapping tables (if custom mapping is used) — check source-to-target key mapping.
-      Target system BP display (FLBP1 / FLBP2) — verify roles, addresses, and assignments.
+      DRF replication status and log — filter by BP, target business system, run, and channel where available.
+      SOAP or middleware monitor — use the message or correlation ID when service-based replication is configured.
+      WE02 / WE05 — inspect IDoc status only when ALE is the configured replication channel.
+      Key Mapping Framework or scenario-specific mapping — verify source and target object identifiers.
+      Transaction BP or the release-appropriate Business Partner app in the target — verify general data, roles, organizational segments, relationships, and identifiers.
 
 
-    Key tables / transactions / objects
+    Key objects and identifiers
 
-      BUT000 / BUT001 — BP header and general data.
-      BUT100 / BUT100 — BP roles.
-      BUT020 / ADRC — BP addresses.
-      BKDF / BNKA — BP bank details.
-      BDCP / BDCPS — change pointers.
+      Business Partner number and UUID/GUID: keep both when the integration exposes them; a displayed number alone may not be the cross-system identity.
+      Replication model, outbound implementation, and target business system: together define which object is selected and where it is sent.
+      Message or correlation ID: connects source replication evidence to middleware and receiver processing.
+      Confirmation and key-mapping record: connects a successfully created target object back to the source identity.
 
 
     Diagnostic workflow
 
-      Identify the BP number, source system, target system, and the expected versus actual result.
-      Check the replication log or change pointer status to confirm the BP was selected for replication.
-      Check WE02 or the replication middleware for IDoc or message status.
-      Verify key mapping: does the target system recognize the source BP key or create a new one?
-      Check the target BP in FLBP1/FLBP2 for missing roles, addresses, or data.
-      Compare the source BP data with the target BP data to identify which fields were filtered or failed validation.
+      Identify the BP number and UUID/GUID where available, source, intended target, replication model, expected roles or segments, and expected timing.
+      Use the DRF replication status or log to confirm whether the object was selected for that target and which communication channel handled it.
+      Trace the outbound message through the configured channel: SOAP or middleware evidence for service-based replication, or WE02/WE05 for ALE.
+      Confirm receiver-side processing and open the target Business Partner. Compare roles, organizational segments, relationships, addresses, and identifiers—not only header data.
+      Verify confirmation and key mapping where the scenario supports them. Determine whether the target recognized an existing object or chose create processing.
+      Compare source and target data at the first missing segment, then use the relevant payload, application log, or validation message to explain the gap.
 
 
     Typical fixes or next actions
 
-      Update the replication model to include the missing BP type, role, or organizational unit.
+      Correct DRF model selection, target assignment, or outbound implementation only after the failed checkpoint is demonstrated.
       Create or correct key mapping between source and target systems.
       Fix data quality issues in the source BP before replicating.
-      Adjust target system BP grouping or role assignment rules if they conflict with replicated data.
+      Adjust target grouping, number assignment, role, or validation rules only with master-data governance and integration owners.
       If duplicates exist, evaluate merge or deactivation options with master data governance.
 
 
     What to capture first
-    Before routing the issue, capture: BP number, source and target systems, expected versus actual result, replication model name, and any error from the replication log or IDoc status. A vague "BP missing" report wastes a round of basic questions; these six items let a support engineer start the real diagnosis.
+    Capture the BP number and technical identifier where available, source and target systems, replication model, communication channel, run and message identifiers, timestamp, expected roles or segments, source replication status, receiver status, confirmation result, and key-mapping evidence. Do not include real personal, bank, tax, or client-sensitive values in public incident notes.
+
+    Channel choice matters
+    SAP's S/4HANA guidance recommends service-oriented architecture for Business Partner replication because ALE does not cover every BP attribute. That does not make an existing ALE scenario invalid, but it means a missing field can be a channel-coverage question rather than a transient delivery failure. Confirm the approved architecture and release-specific scope before adding retries or custom mappings.
+
+    Official references
+
+      SAP: Data Replication Framework
+      SAP: replicating a Business Partner
+      SAP: display of object replication status
+      SAP: Business Partner replication using ALE
+
 
     Escalation signals
 
@@ -1971,7 +2002,15 @@ BUSINESS PROCESS: Master data governance
 TAGS: master-data, sap-mdg, diagnostics, cvi
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
+**Sources:** [SAP Business Partner Approach for Customer/Supplier Integration](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/74b0b157c81944ffaac6ebc07245b9dc/25b46c8241fd4852bf7876d87bed8fd0.html?locale=en-US), [SAP synchronization processing scenarios](https://help.sap.com/docs/SAP_ERP/6db8ae6e26e64854bc6f369d2dfd395f/36f8c5536a51204be10000000a174cb4.html), and [SAP customer and supplier synchronization guidance](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/d1a0c753b1081d4be10000000a174cb4-824.html).
+**Date checked:** 2026-08-11
+**Confidence:** high for the object-pair and role diagnostic sequence; medium for cockpit, postprocessing, and table details that vary by release.
+**Related page/topic:** /atlas/diagnostics/sap-business-partner-replication-diagnostics/
+**Practical implication:** Establish the intended object pair, active synchronization direction, role scope, grouping/account-group mapping, and existing link before creating or resynchronizing anything.
+**Tags:** master-data, sap-mdg, diagnostics, cvi, business-partner, customer, supplier
+
+
+    Home
     Knowledge Atlas
     Diagnostics
     SAP CVI Synchronization Diagnostics
@@ -1980,7 +2019,7 @@ Home
 
     Atlas Diagnostic
     SAP CVI synchronization diagnostics
-    A first-pass structure for finding why a business partner, customer, or vendor is not synchronized correctly through CVI.
+    A link-first workflow for missing, incomplete, or duplicate Business Partner, customer, and supplier object pairs.
 
 
 
@@ -1994,7 +2033,21 @@ Home
 
 
     Core idea
-    Customer-Vendor Integration (CVI) in S/4HANA keeps business partners aligned with customer and vendor master data. Most CVI incidents are not data corruption; they are configuration or timing mismatches. Before treating a missing customer or vendor as a master-data defect, confirm whether CVI is expected to create the object, which direction is configured, and whether the required BP role exists.
+    Customer/Vendor Integration (CVI), also described in current SAP documentation as Customer/Supplier Integration, synchronizes linked Business Partner and customer or supplier objects. In SAP S/4HANA the Business Partner is the leading object for creating customer and supplier master data. Diagnose the intended object pair, active synchronization direction, existing link, grouping-to-account-group mapping, number assignment, and required role-specific data before treating the symptom as damaged master data.
+
+    Role and object scope
+
+
+        Business requirementTypical BP role categoryData scope to verify
+
+
+        Customer accountingFLCU00Customer and company-code data.
+        Customer sales processingFLCU01Customer and sales-area data.
+        Supplier accountingFLVN00Supplier and company-code data.
+        Supplier purchasingFLVN01Supplier and purchasing-organization data.
+
+
+    A general customer or supplier link can exist while the organizational segment needed by the business process is absent. Select the expected role from the process requirement; do not add every role as a generic synchronization fix.
 
     Common symptoms
 
@@ -2007,52 +2060,60 @@ Home
 
     Likely causes
 
-      CVI not active for the BP grouping: the BP grouping used for the new BP is not configured for CVI synchronization.
-      Direction mismatch: the synchronization direction is set to BP-to-customer but the customer was created first, or vice versa.
-      Number range conflict: the BP number range overlaps with customer or vendor number ranges, causing collisions.
-      Missing BP role: the BP was created without the FLCU00 (customer) or FLVN00 (vendor) role required for CVI.
+      Synchronization option or mapping gap: the required BP-to-customer/supplier or customer/supplier-to-BP option, grouping-to-account-group assignment, or direction-specific number assignment is not configured as intended.
+      Existing-object mismatch: one side already exists but is not assigned to the intended counterpart, so create processing can conflict with an existing master record.
+      Number assignment conflict: internal/external number settings or same-number expectations do not match the assigned grouping and account group.
+      Role or organizational data missing: the BP lacks the accounting, sales, or purchasing role and segment required by the business process.
       CVI mapping error: the field mapping between BP and customer/vendor is misconfigured or missing for a specific field.
 
 
     Where to check in SAP
 
-      FLBP1 / FLBP2 — business partner display to check roles and CVI link.
-      XD03 / XK03 — customer/vendor display to check BP assignment.
-      CVI_LINK — link table between BP and customer/vendor.
-      CVI synchronization log — check for errors during synchronization.
-      BP grouping configuration — check if CVI is active for the grouping.
+      Transaction BP or the release-appropriate Business Partner app — check the object, customer/supplier roles, and organizational segments.
+      Customer or supplier master display available in the release — verify the corresponding object and required company-code, sales-area, or purchasing-organization data.
+      Synchronization cockpit and CVI postprocessing environment — check unsynchronized records and exact postprocessing messages. Transaction names and availability are release-dependent.
+      CVI Customizing — check active synchronization options, grouping-to-account-group assignments, direction-specific number assignment, field mapping, and queue settings.
 
 
-    Key tables / transactions / objects
+    Key objects and configuration evidence
 
-      BUT000 / BUT001 — BP header and general data.
-      CVI_LINK — CVI link table.
-      KNA1 / KNB1 — customer master data.
-      LFA1 / LFB1 — vendor master data.
-      TBZ9A — BP role definitions.
+      Object pair: BP number plus customer or supplier number and the system-recognized assignment between them.
+      Role and segment: FLCU00/FLCU01 or FLVN00/FLVN01 plus the required company code, sales area, or purchasing organization.
+      Grouping and account group: the configured mapping for the relevant processing direction.
+      Number assignment: internal/external ranges and whether same-number processing is configured.
+      Postprocessing message: exact error, source object, target object, direction, timestamp, and processing status.
 
 
     Diagnostic workflow
 
-      Identify the BP number, customer number, or vendor number and the expected synchronization result.
-      Check FLBP1 for the BP roles (FLCU00 for customer, FLVN00 for vendor).
-      Check CVI_LINK for the relationship between BP and customer/vendor.
-      Check XD03/XK03 for the customer/vendor and verify the BP assignment.
-      Check the CVI synchronization log for errors during the last synchronization run.
-      Verify the BP grouping is configured for CVI and the synchronization direction is correct.
+      Identify the known BP, customer, or supplier number; the expected counterpart; the business process; and the expected accounting, sales, or purchasing segment.
+      Open the BP and check the roles and organizational data. A role name without the required segment is not a complete business result.
+      Verify whether the system recognizes the intended BP-to-customer or BP-to-supplier object pair before creating anything manually.
+      Review the synchronization cockpit or postprocessing evidence for the exact failing object, direction, field, and message.
+      Check the active synchronization option, grouping/account-group mapping, and number assignment for that direction.
+      Compare source values with target validation and field mapping. Resolve the first failing field or rule before reprocessing.
+      After correction, use the approved synchronization or postprocessing action and confirm both the link and the required organizational data.
 
 
     Typical fixes or next actions
 
-      Activate CVI for the BP grouping if it was not configured.
-      Add the missing BP role (FLCU00 or FLVN00) to enable synchronization.
-      Correct the synchronization direction if BP and customer/vendor were created in the wrong order.
-      Fix number range conflicts to prevent duplicate creation.
-      Re-run CVI synchronization after correcting configuration or data issues.
+      Correct the relevant synchronization option and grouping-to-account-group mapping through controlled Customizing.
+      Add only the customer or supplier role and organizational segment required by the approved business process.
+      Correct direction-specific number assignment or same-number settings with the master-data design owner.
+      Assign existing objects using the supported process when both sides already exist; do not create a second counterpart to bypass a broken link.
+      Reprocess the failed synchronization only after the configuration or data error is corrected and duplicate risk is assessed.
 
 
     What to capture first
-    Before routing the issue, capture: BP number, customer or vendor number, BP grouping, expected roles, actual result, CVI_LINK status, and any synchronization log error. If the BP was created manually, note the creation order; direction mismatches are common when a customer or vendor already exists before the BP.
+    Capture the BP and customer or supplier numbers, object-creation sequence, BP grouping, account group, expected role and organizational segment, processing direction, number-assignment expectation, link result, exact postprocessing message, and last synchronization time. Keep personal, banking, tax, and client-specific values out of public notes.
+
+    Official references
+
+      SAP: Business Partner Approach (Customer/Supplier Integration)
+      SAP: synchronization directions with processing scenarios
+      SAP: synchronization of customer and supplier master data
+      SAP: customer and supplier Business Partner role categories
+
 
     Boundaries and non-goals
     This page is a diagnostic frame, not a CVI configuration guide. It does not cover CVI setup, BP grouping design, or field mapping configuration. It does not replace SAP's CVI documentation.
@@ -2069,21 +2130,21 @@ Home
 
 
     Customer-vendor integration boundary
-    CVI is a bridge, not a cleanup tool. It will not repair a customer that was created before the BP, nor will it guess the right grouping if the BP was created without the FLCU00 or FLVN00 role. Fix the configuration and timing first; manual object creation usually creates more link breaks than it solves.
+    CVI is a synchronization and assignment mechanism, not a generic cleanup tool. SAP documents supported scenarios for creating or assigning the counterpart when one or both objects already exist. Use the supported scenario for the actual object state; manual duplicate creation can make the link and number-assignment problem harder to recover.
 
     Practical checklist
 
 - [ ] Collect BP number, customer/vendor number, BP grouping, and expected roles. **Synthetic example:** BP 1234567890, customer 1000000001, grouping TEST_CUST_GRP.
 
-- [ ] Check FLBP1/FLBP2 for BP roles FLCU00/FLVN00 and the CVI link.
+- [ ] Check transaction BP or the applicable BP app for the required FLCU00/FLCU01 or FLVN00/FLVN01 role and organizational segment.
 
-- [ ] Verify CVI_LINK relationship between BP and customer/vendor.
+- [ ] Verify that the system recognizes the intended BP-to-customer or BP-to-supplier assignment.
 
-- [ ] Check XD03/XK03 for customer/vendor and confirm BP assignment.
+- [ ] Display the customer or supplier using the release-appropriate app or transaction and confirm the required organizational data.
 
 - [ ] Review CVI synchronization log for field-level or direction errors.
 
-- [ ] Confirm the BP grouping is configured for CVI and the synchronization direction matches the creation order.
+- [ ] Confirm active synchronization, grouping/account-group mapping, and number assignment for the intended direction.
 
 - [ ] Safety limit: do not manually create a customer/vendor for a BP that should be synchronized; fix CVI config first.
 
@@ -2100,20 +2161,20 @@ Home
       SAP Supplier Master Diagnostics
 
 EXPERT CONTEXT:
-This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
+This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with Business Partner, customer and supplier data, replication diagnostics, and master-data governance. This guide focuses on the evidence needed to separate data, mapping, and ownership problems.
 Professional website: https://dkharlanau.github.io/
 Profile and experience: https://dkharlanau.github.io/about/
 LinkedIn: https://www.linkedin.com/in/dkharlanau/
 
-WORKING ON A RELATED SAP INTEGRATION PROBLEM?
-Dzmitryi Kharlanau provides focused architecture reviews, incident diagnostics, monitoring design, and improvement planning for SAP integration landscapes.
-Related service: https://dkharlanau.github.io/services/sap-integration-reliability-assessment/
+WORKING ON A RELATED SAP MASTER-DATA PROBLEM?
+Dzmitryi Kharlanau provides focused master-data replication analysis, governance reviews, and practical stabilization planning for SAP landscapes.
+Related service: https://dkharlanau.github.io/services/sap-master-data-stability-assessment/
 Related evidence:
 - https://dkharlanau.github.io/atlas/diagnostics/sap-business-partner-replication-diagnostics/
 - https://dkharlanau.github.io/atlas/diagnostics/sap-vendor-master-replication-diagnostics/
 - https://dkharlanau.github.io/atlas/diagnostics/sap-customer-master-replication-diagnostics/
-- https://dkharlanau.github.io/atlas/concepts/order-to-cash/
-- https://dkharlanau.github.io/atlas/concepts/sap-atp-is-not-inventory/
+- https://dkharlanau.github.io/atlas/data-quality/master-data-governance-failure-modes/
+- https://dkharlanau.github.io/atlas/data-quality/sap-master-data-quality/
 
 ==================================================
 
@@ -2406,7 +2467,15 @@ BUSINESS PROCESS: Integration
 TAGS: integration, sap-ale, diagnostics, idoc
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
+**Sources:** [SAP inbound IDoc status records](https://help.sap.com/docs/SUPPORT_CONTENT/abapconn/3354079745.html), [SAP IDoc Channel monitoring guidance](https://support.sap.com/en/alm/solution-manager/expert-portal/monitoring-of-integration-scenarios/idoc-channel.html), and the [SAP ALE troubleshooting guide](https://help.sap.com/docs/SUPPORT_CONTENT/techtsg/3362710617.html).
+**Date checked:** 2026-08-11
+**Confidence:** high for standard status meanings; medium for landscape-specific routing and custom status handling.
+**Related page/topic:** /atlas/diagnostics/idoc-aif-integration-diagnostics/
+**Practical implication:** Treat the latest status as a processing checkpoint, then confirm the direction, full status history, and business outcome before retrying the IDoc.
+**Tags:** integration, sap-ale, diagnostics, idoc
+
+
+    Home
     Knowledge Atlas
     Diagnostics
     SAP IDoc Status Diagnostics
@@ -2415,7 +2484,7 @@ Home
 
     Atlas Diagnostic
     SAP IDoc status diagnostics
-    A first-pass structure for interpreting IDoc status codes and deciding the next action based on status.
+    A status-led workflow for locating an IDoc failure without confusing transport success with application success.
 
 
 
@@ -2429,24 +2498,40 @@ Home
 
 
     Core idea
-    IDoc status codes map a failure to a layer: application (51), processing function (56), ready for dispatch (64), control record (75), or port transmission (02). The diagnostic job is to use the status to choose the right layer, collect the evidence, and avoid reprocessing until the cause is fixed.
+    An IDoc status is a checkpoint in either the inbound or outbound flow. It does not, by itself, prove that the intended business document exists in the receiving application. Start with direction and full status history, use the current status to select the next monitor, and reprocess only after the underlying cause is understood.
+
+    What the common IDoc statuses mean
+
+
+        StatusDirection and meaningFirst evidence to check
+
+
+        51Inbound: application document was not posted.Read the detailed status text and application log; correct the data, configuration, or business-rule failure before using BD87.
+        53Inbound: application document was posted.Open the referenced business object and review status history if the expected result still appears missing.
+        56Inbound: IDoc was added with errors, often during partner or profile checks.Read the exact status message, then check the partner profile and control-record values.
+        64Inbound: IDoc is ready to be passed to the application.Check the WE20 processing mode and, for background processing, the RBDAPP01 job, variant, and authorization in SM37.
+        75Inbound: IDoc is in an inbound qRFC queue.Inspect the related inbound queue in SMQ2 before treating it as an IDoc control-record problem.
+        02Outbound: error while passing data to the port.Check the port, RFC destination, connection, and status message.
+        03Outbound: data was passed to the port successfully.If the receiver has no message, use the TID and SM58 or the relevant downstream monitor; status 03 is not receiver-side posting confirmation.
+
+
 
     Common symptoms
 
       IDoc stuck in status 64 and not processed.
       IDoc in status 51 with application error text that is not immediately clear.
-      IDoc in status 56 with 'IDoc added' but no further processing.
+      IDoc in status 56 after a partner or profile check fails.
       Inbound IDoc in status 53 but the business document was not created.
       Outbound IDoc in status 03 but the partner reports it never arrived.
 
 
     Likely causes
 
-      Status 51 — application error: the IDoc passed syntax and partner checks but failed during application posting. Often master data or business rule issue.
-      Status 56 — IDoc missing: the IDoc was added to the system but the processing function could not be found or is not assigned.
-      Status 64 — not processed: the IDoc is waiting for a background job or manual trigger to process.
-      Status 75 — control record error: the control record contains invalid partner, message type, or port information.
-      Status 02 — error passing data to port: the port or RFC destination is misconfigured or unreachable.
+      Application or data failure: status 51 points to inbound application posting, so the detailed status message is more useful than the numeric code alone.
+      Partner or profile mismatch: status 56 can result when the inbound partner, message type, or process code cannot be resolved as configured.
+      Processing backlog: status 64 can remain when background collection is configured but RBDAPP01 is missing, delayed, incorrectly filtered, or unauthorized.
+      Queued inbound processing: status 75 means the IDoc is waiting in an inbound qRFC path; the blocking evidence is normally in SMQ2.
+      Outbound transport failure: status 02 points to the port or its underlying technical connection. Status 03 means the port handoff succeeded, not that the receiver posted the business object.
 
 
     Where to check in SAP
@@ -2463,30 +2548,43 @@ Home
       EDIDC — IDoc control record.
       EDIDS — IDoc status records.
       EDID4 / EDID3 — IDoc data records (version-dependent).
-      TBD41 / TBD42 — status code definitions.
 
 
     Diagnostic workflow
 
       Identify the IDoc number and the current status from WE02 or WE05.
       Read the status text and any error messages in the status history.
-      Map the status to the layer: syntax (status 60+), partner/profile (status 56, 75), application (status 51), or transmission (status 02, 03).
-      For status 51, check the application log (SLG1) and the specific error text for master data or business rule issues.
-      For status 64, check if the background job (RBDAPP01) is scheduled and running.
-      For status 02 or 03, check the port, RFC destination, and partner profile.
+      Confirm whether the IDoc is inbound or outbound; the same diagnostic language cannot be applied safely across both directions.
+      Map the current status to one layer: inbound partner/profile, inbound application, background or qRFC backlog, or outbound port and transport.
+      For status 51, use the detailed status message and the relevant application log to identify the data, configuration, or business-rule failure.
+      For status 64, compare the WE20 processing mode with the RBDAPP01 schedule, selection variant, job log, and authorization.
+      For status 75, inspect the inbound qRFC queue in SMQ2 and identify the first blocking entry.
+      For status 02, check the port and underlying destination. For status 03 with a missing receiver message, trace the TID through SM58 or the applicable middleware and receiver monitor.
+      Confirm the business result before closing the incident: document number, application log, receiver acknowledgement, or another system-specific proof.
 
 
     Typical fixes or next actions
 
       Reprocess the IDoc with BD87 after correcting the underlying master data or configuration issue.
-      Trigger the background job (RBDAPP01) if IDocs are stuck in status 64.
+      Correct the RBDAPP01 schedule, variant, or authorization when background processing is configured and status 64 accumulates.
       Correct the partner profile or port configuration if the IDoc fails at the profile layer.
-      Fix the control record data if status 75 indicates invalid partner or message type.
+      Resolve the first failed qRFC unit before retrying an IDoc that remains in status 75.
       If the IDoc is corrupted and cannot be reprocessed, request a resend from the partner system.
 
 
     What to capture first
-    Before routing the issue, capture: IDoc number, direction, message type, partner, current status, status history, and error text. Note whether the failure is isolated or affects multiple IDocs. Status is the primary signal, but the error text and history turn the status into an actionable next step.
+    Before routing the issue, capture the IDoc number, direction, message type, sender and receiver partner, timestamps, current status, full status history, and exact error text. Record whether the failure is isolated or part of a backlog. For status 03, include the transaction ID when available; for status 53, include the referenced application document.
+
+    Safe reprocessing boundary
+    Do not use BD87, restart an RFC entry, or request a resend merely to see whether the error clears. First establish whether the original message already produced a business object, whether sequencing matters, and which team owns the failing layer. This avoids duplicate documents and hides fewer intermittent failures.
+
+    Official references
+
+      SAP: inbound data flow in ALE and inbound IDoc status records
+      SAP: IDoc Channel monitoring guidance
+      SAP: ALE troubleshooting guide
+      SAP: IDocs that remain in status 64
+
 
     Boundaries and non-goals
     This page is a diagnostic frame, not an IDoc configuration guide. It does not cover partner profile setup, port configuration, or AIF mapping. It does not replace SAP's IDoc documentation.
@@ -2765,7 +2863,15 @@ BUSINESS PROCESS: Integration
 TAGS: integration, sap-ale, diagnostics, monitoring
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
+**Sources:** [SAP IDoc Channel monitoring guidance](https://support.sap.com/en/alm/solution-manager/expert-portal/monitoring-of-integration-scenarios/idoc-channel.html), [SAP end-to-end integration monitoring guidance](https://help.sap.com/docs/sap-btp-guidance-framework/integration-architecture-guide/end-to-end-integration-monitoring), and [SAP Cloud ALM message monitoring](https://help.sap.com/docs/cloud-alm/applicationhelp/monitoring-messages).
+**Date checked:** 2026-08-11
+**Confidence:** high for monitoring-design principles; medium for tool-specific coverage, which depends on product, release, and landscape configuration.
+**Related page/topic:** /atlas/diagnostics/sap-idoc-status-diagnostics/
+**Practical implication:** Monitor both explicit failures and aged intermediate states, then correlate each alert to a business flow and a recovery owner.
+**Tags:** integration, sap-ale, diagnostics, monitoring, idoc, rfc
+
+
+    Home
     Knowledge Atlas
     Diagnostics
     SAP Interface Monitoring Diagnostics
@@ -2774,7 +2880,7 @@ Home
 
     Atlas Diagnostic
     SAP interface monitoring diagnostics
-    A first-pass structure for finding why interface monitoring misses failures, generates false alerts, or does not cover critical paths.
+    A coverage-first workflow for missed failures, growing backlogs, false alerts, and unmonitored business paths.
 
 
 
@@ -2788,7 +2894,21 @@ Home
 
 
     Core idea
-    Interface monitoring is only useful if it alerts the right person before the business reports the failure. Most monitoring gaps are not tool failures; they are scope gaps, thresholds set too high, jobs that stopped running, or new interfaces that were never onboarded. The diagnostic job is to compare what the tool checks against what actually failed.
+    Interface monitoring must detect more than explicit error states. Messages can remain in technically valid intermediate statuses, queues can grow without a hard failure, and one healthy component can hide a broken end-to-end business path. The diagnostic task is to compare the failed flow with the monitor's actual scope, status selection, age and volume thresholds, collection health, business context, and alert ownership.
+
+
+
+    Error monitoring versus backlog monitoring
+
+
+        ControlWhat it should detectEvidence to retain
+
+
+        Error-state monitoringApplication and technical failures such as failed IDoc, RFC, queue, or middleware processing.Status, exact error, interface path, business key, and first-failure time.
+        Backlog monitoringMessages that remain in an intermediate or ready state beyond a meaningful age, even when no error status exists.Oldest message age, queue depth, throughput baseline, and trend.
+        End-to-end correlationA sender-side success with no corresponding receiver-side processing or business result.Message or correlation ID, sender and receiver timestamps, and application outcome.
+        Monitor healthStopped collectors, failed jobs, stale dashboards, and delayed data collection.Last successful collection, job log, collection delay, and configuration change.
+        Alert ownershipWhether a detected condition reaches a team that can act within the required business time.Owner, severity rule, runbook, acknowledgement, and escalation time.
 
 
 
@@ -2804,9 +2924,9 @@ Home
     Likely causes
 
       Monitoring scope gap: the monitoring job or tool only checks specific message types, partners, or status codes, missing others.
-      Threshold too high: the alert threshold is set to a count or age that does not trigger for small but critical failures.
+      Threshold mismatch: a count-only rule misses one critical message, while a status-only rule misses aged intermediate messages and slow-growing backlogs.
       Job failure or delay: the monitoring background job failed, was not scheduled, or runs infrequently.
-      Wrong monitoring object: the tool monitors queue depth but not IDoc status, or monitors RFC but not application errors.
+      Wrong monitoring object: the tool watches one component or queue depth but not the corresponding application status and receiver-side result.
       New interface not onboarded: the interface was deployed without updating the monitoring configuration.
 
 
@@ -2828,28 +2948,38 @@ Home
 
     Diagnostic workflow
 
-      Identify the interface path, message type, and partner that was not monitored.
-      Check the monitoring job log (SM37) for failures, delays, or scope limitations.
-      Compare the monitoring configuration with the actual IDoc or queue status in WE02 / SMQ1.
-      Verify the alert thresholds: count, age, or status codes that trigger alerts.
-      Check if the new interface was added to the monitoring scope during deployment.
-      Review the escalation path: who receives alerts and whether they are actionable.
+      Describe the failed business flow from sender through transport and middleware to receiver application. Capture message type, partner or endpoint, business key, and expected timing.
+      Find the actual message or queue evidence in WE02/WE05, SM58, SMQ1/SMQ2, the middleware monitor, and the receiver application as applicable.
+      Compare that evidence with the monitor's configured systems, interfaces, partners, status selection, time frame, and collection filters.
+      Test both explicit error rules and backlog rules based on age, count, throughput, and business criticality.
+      Verify monitor health: last collection time, SM37 or collector log, stale-data indicators, and recent configuration changes.
+      Confirm that new or changed interfaces are included in scope and that end-to-end correlation reaches the receiver-side outcome.
+      Review alert routing, severity, owner, runbook, acknowledgement, and escalation time with the team that operates the flow.
 
 
     Typical fixes or next actions
 
-      Expand the monitoring scope to cover all critical message types and partners.
-      Lower the alert threshold or add secondary alerts for high-priority interfaces.
+      Expand scope according to a maintained critical-interface inventory, including sender, receiver, channel, message type, and owner.
+      Add age-based backlog detection alongside explicit error-state monitoring; tune thresholds by business impact and expected volume.
       Fix or reschedule the monitoring background job.
       Add new interfaces to monitoring as part of the deployment checklist.
-      Tune the monitoring tool to reduce false positives while maintaining sensitivity for real failures.
+      Correlate transport success with receiver processing and the intended business outcome where the platform supports it.
+      Reduce false positives by improving filters, context, and ownership rather than suppressing broad categories of failures.
 
 
     What to capture first
-    Before routing the issue, capture: interface path, message type, partner, expected versus actual monitoring behavior, monitoring job name, and any recent change to the interface or monitoring setup. If the tool reports green while IDocs are stuck in error, the scope or threshold is usually wrong.
+    Capture the end-to-end interface path, message or correlation ID, message type, partner or endpoint, business key, first-failure time, oldest backlog age, queue depth, expected versus actual alert, last successful monitor collection, and recent deployment or configuration changes. A green dashboard alongside failed messages is evidence to test scope, collection freshness, thresholds, and end-to-end coverage—not proof of one cause.
+
+    Official references
+
+      SAP: IDoc Channel monitoring guidance
+      SAP: end-to-end integration monitoring
+      SAP Cloud ALM: monitoring messages
+      SAP Cloud ALM: configuring integration monitoring
+
 
     Boundaries and non-goals
-    This page is a diagnostic frame, not an interface monitoring configuration guide. It does not cover specific monitoring tools (SolMan, SAP Cloud ALM, third-party) or alert routing design. It does not replace SAP's operations documentation.
+    This page is a diagnostic frame, not a product-specific configuration guide. Exact data collectors, status mappings, correlation capabilities, and alert routes vary across SAP Solution Manager, SAP Focused Run, SAP Cloud ALM, middleware products, releases, and third-party tools. Confirm the available monitor and release-specific behavior in the relevant product documentation.
 
     This is not official SAP documentation and not a replacement for system-specific analysis.
 
@@ -3855,7 +3985,15 @@ BUSINESS PROCESS: Integration
 TAGS: integration, sap-ale, diagnostics, rfc
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
+**Sources:** [SAP guidance for SMQ1 and SMQ2](https://help.sap.com/saphelp_snc70/helpdata/EN/76/e12041c877f623e10000000a155106/content.htm?no_cache=true), [SAP qRFC queue status guidance](https://help.sap.com/docs/SAP_NETWEAVER_700/109c9fd96c53101484f0ceb38844e91e/48c1642f425831ebe10000000a42189b.html), and the [SAP ALE troubleshooting guide](https://help.sap.com/docs/SUPPORT_CONTENT/techtsg/3362710617.html).
+**Date checked:** 2026-08-11
+**Confidence:** high for monitor purpose and recovery boundaries; medium for status handling that depends on the application and release.
+**Related page/topic:** /atlas/diagnostics/sap-rfc-destination-diagnostics/
+**Practical implication:** Identify direction and the first blocking unit before restarting anything; a healthy destination does not rule out an application or serialization failure.
+**Tags:** integration, sap-ale, diagnostics, rfc, qrfc, trfc
+
+
+    Home
     Knowledge Atlas
     Diagnostics
     SAP qRFC and tRFC Diagnostics
@@ -3864,7 +4002,7 @@ Home
 
     Atlas Diagnostic
     SAP qRFC and tRFC diagnostics
-    A first-pass structure for finding why RFC calls are stuck, failing, or executing out of order.
+    A direction-first workflow for blocked transactional and queued RFC calls in SM58, SMQ1, and SMQ2.
 
 
 
@@ -3878,13 +4016,27 @@ Home
 
 
     Core idea
-    Transactional RFC (tRFC) and queued RFC (qRFC) are the transport layers for many SAP integrations including ALE, IDoc, and custom interfaces. When RFC calls are stuck in a queue, fail with connection errors, or execute in the wrong order, the support goal is to identify whether the issue is in the RFC destination, the queue configuration, the executing function module, or the target system availability.
-    Always test the RFC destination in SM59 before reprocessing entries in SM58 or SMQ1/SMQ2. Reprocessing a queue against a broken destination just creates the same failure again.
+    Transactional RFC (tRFC) and queued RFC (qRFC) carry many ALE, IDoc, and custom integration calls. qRFC adds queue-based serialization, so an earlier failed unit can hold later work in the same queue. The diagnostic task is to identify the direction, the first blocking unit, and whether the failure belongs to connectivity, authorization, scheduling, serialization, or the target application.
+    Use SM59 when an outbound destination or connection is involved, but do not treat a successful destination test as proof that the queued function will execute successfully. Application data, authorization, locks, and queue state can still block the call.
+
+    Choose the monitor by processing path
+
+
+        Evidence locationWhat it tells youFirst diagnostic question
+
+
+        SM58Transactional RFC units waiting or in error.What does the exact error text say, and is the destination currently reachable?
+        SMQ1Outbound qRFC queues in the sending system.Which first unit is blocking the queue, and which destination owns the next step?
+        SMQ2Inbound qRFC queues in the receiving system.Did the called application fail, or is processing deliberately stopped or waiting?
+        SM59RFC destination definition and technical tests.Does connection and logon work with the configured destination and user?
+        Queue schedulerWhether eligible queues are registered and processed automatically.Is the queue registered, active, and within the intended scheduling scope?
+
+
 
     Common symptoms
 
       SM58 shows multiple tRFC entries in error status.
-      SMQ1 or SMQ2 shows queues with status SYSFAIL or MANUAL.
+      SMQ1 or SMQ2 shows a persistent error, waiting, or manually stopped state.
       IDoc status 03 but partner reports the document never arrived.
       RFC destination test (SM59) fails with connection or authorization error.
       Queue scheduler is not running or queues are not being processed.
@@ -3894,7 +4046,7 @@ Home
 
       RFC destination unreachable: the target system is down, network path is broken, or the gateway is not responding.
       Authorization failure: the RFC user lacks the required authorization in the target system.
-      Queue blocked: a previous failed entry is blocking the entire queue (serialization).
+      Queue blocked: an earlier failed unit is holding later calls in the same serialized queue.
       Function module error: the called function module fails in the target system due to data or application errors.
       Queue scheduler not running: the qRFC scheduler (QOUT scheduler or QIN scheduler) is not active.
 
@@ -3917,25 +4069,37 @@ Home
 
     Diagnostic workflow
 
-      Identify the RFC destination, function module, and the error symptom (stuck, failed, out of order).
-      Test the RFC destination in SM59 to confirm basic connectivity.
-      Check SM58 for tRFC errors and read the error text for each failed entry.
-      Check SMQ1 / SMQ2 for queue status. Look for the first failed entry that may be blocking the queue.
+      Identify whether the evidence belongs to tRFC, outbound qRFC, or inbound qRFC. Capture the destination, function module, queue name, timestamps, and business key.
+      For an outbound path, test the RFC destination in SM59 to separate basic connection and logon problems from queue or application failures.
+      Check SM58 for tRFC errors and read the exact message on the oldest relevant failed entry.
+      Check SMQ1 or SMQ2 according to direction. Inspect the first failed unit in the queue rather than a later symptom.
       Verify the RFC user authorization in the target system if the error is authorization-related.
       Check if the queue scheduler is running and if the queue is registered for scheduling.
+      Confirm whether the target application already committed a business result before repeating the call.
 
 
     Typical fixes or next actions
 
-      Restart or correct the failed RFC entry in SM58 after fixing the underlying issue.
-      Unblock the queue in SMQ1 / SMQ2 by deleting or moving the failed entry if it is blocking subsequent calls.
+      Repeat the failed tRFC unit only after connectivity, authorization, or application data has been corrected and duplicate-processing risk is understood.
+      For qRFC, fix the first failed unit and use the release-appropriate repeat or activation action with the application owner.
+      Do not delete or move a queue entry as a routine unblock step. That can break sequence, lose the only recoverable unit, or make later business state inconsistent.
       Fix the RFC destination configuration if SM59 test fails.
       Update the RFC user authorization in the target system.
       Restart the queue scheduler if it is not running.
 
 
     What to capture first
-    qRFC and tRFC issues are usually connectivity, authorization, or queue blocking problems. Capture: RFC destination, function module, queue name (if qRFC), error text, SM58 or SMQ1/SMQ2 status, and whether the issue is isolated or affecting multiple interfaces.
+    Capture the RFC destination, sending and receiving systems, function module, queue name, first failing unit, exact error text, timestamps, business key, and whether other queues or interfaces are affected. For serialized flows, note the oldest blocked unit and queue depth; for authorization errors, record the target-side evidence without exposing credentials.
+
+    Safe recovery boundary
+    A restart is justified only when the failure cause is corrected, the original execution outcome is known, and the relevant application owner agrees with the replay path. Deletion requires an explicit recovery and reconciliation decision; it is not a diagnostic shortcut.
+
+    Official references
+
+      SAP: SMQ1 and SMQ2
+      SAP: queue status in SMQ1
+      SAP: ALE troubleshooting guide
+
 
     Boundaries and non-goals
     This page is a diagnostic frame, not an RFC configuration guide. It does not cover RFC destination setup, SNC configuration, or load balancing. It does not replace SAP's RFC documentation.
@@ -3957,13 +4121,13 @@ Home
 
 - [ ] Check SM58 for failed tRFC entries and read the error text before restarting.
 
-- [ ] Check SMQ1/SMQ2 for SYSFAIL or MANUAL status and identify the first blocking entry.
+- [ ] Check SMQ1/SMQ2 for a persistent error, waiting, or manually stopped state and identify the first blocking unit.
 
 - [ ] Verify the RFC user authorization in the target system if authorization is suspected.
 
 - [ ] Confirm the queue scheduler is running and the queue is registered for scheduling.
 
-- [ ] Safety limit: do not delete or move a failed queue entry until the underlying cause is documented.
+- [ ] Safety limit: do not repeat, delete, or move a failed unit until the underlying cause, original outcome, and recovery owner are documented.
 
 
 

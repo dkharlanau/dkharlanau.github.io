@@ -16,7 +16,7 @@ hide_global_cta: true
   <div class="profile-canvas__hero-copy">
     <p class="profile-canvas__eyebrow">SAP consultant profile</p>
     <h1>Dzmitryi Kharlanau</h1>
-    <p>Senior SAP consultant working across sales and logistics processes, master data, integration, AMS delivery, Automotive and Retail environments, and AI-supported work with controlled sources and human review.</p>
+    <p>SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. The work connects SAP operations, transformation, and AI readiness through process evidence, technical diagnosis, ownership, and a delivery sequence that remains useful after handover.</p>
     <div class="profile-canvas__actions">
       <a class="profile-canvas__button" href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener noreferrer">Discuss an SAP problem <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
       <a class="profile-canvas__text-link" href="/services/">View services <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
@@ -24,7 +24,7 @@ hide_global_cta: true
   </div>
   <div class="profile-canvas__portrait"><img src="/assets/img/DzmitryiKharlanau.webp" alt="Dzmitryi Kharlanau" width="720" height="720" fetchpriority="high" /><span aria-hidden="true"></span></div>
   <dl class="profile-canvas__facts">
-    <div><dt>Current context</dt><dd>{{ resume.headline }} at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a></dd></div>
+    <div><dt>Current context</dt><dd>SAP Consultant · <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a> · ex‑abat</dd></div>
     <div><dt>Working scope</dt><dd>SD, MM, O2C, P2P, MDG-related work, master data, integration troubleshooting, AMS, and ABAP-backed analysis.</dd></div>
     <div><dt>Last reviewed</dt><dd>{{ page.last_modified_at | date: "%B %-d, %Y" }}</dd></div>
   </dl>

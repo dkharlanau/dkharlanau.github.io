@@ -1,7 +1,7 @@
 {
   "schema": "dkharlanau.site.verified_pages",
   "schema_version": "2.0",
-  "generated_at": "2026-07-31T00:00:00Z",
+  "generated_at": "2026-08-11T00:00:00Z",
   "canonical_url": "https://dkharlanau.github.io/ai/verified-pages.json",
   "description": "Machine-readable inventory of all reviewed and verified indexable pages across the public site. Intended for AI agents and search crawlers that need to know which pages are trustworthy and retrieval-ready.",
   "source": "scripts/generate_atlas_artifacts.py",
@@ -635,7 +635,7 @@
           "/atlas/concepts/order-to-cash/",
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -943,13 +943,13 @@
     {
       "url": "https://dkharlanau.github.io/atlas/diagnostics/sap-business-partner-replication-diagnostics/",
       "title": "SAP Business Partner Replication Diagnostics",
-      "description": "A conservative diagnostic frame for business partner replication issues in SAP S/4HANA.",
+      "description": "A source-backed SAP Business Partner replication guide for DRF selection, SOAP or ALE delivery, confirmations, key mapping, and duplicates.",
       "type": "atlas",
       "section": "diagnostics",
       "status": "reviewed",
       "verified": true,
       "last_reviewed": "2026-06-13",
-      "last_modified_at": "",
+      "last_modified_at": "2026-08-11",
       "author": "Dzmitryi Kharlanau",
       "tags": [
         "master-data",
@@ -1031,13 +1031,13 @@
     {
       "url": "https://dkharlanau.github.io/atlas/diagnostics/sap-cvi-synchronization-diagnostics/",
       "title": "SAP CVI Synchronization Diagnostics",
-      "description": "A conservative diagnostic frame for Customer-Vendor Integration synchronization issues in SAP S/4HANA.",
+      "description": "A source-backed SAP CVI guide for missing Business Partner, customer, or supplier links, roles, number assignment, and postprocessing errors.",
       "type": "atlas",
       "section": "diagnostics",
       "status": "reviewed",
       "verified": true,
       "last_reviewed": "2026-06-13",
-      "last_modified_at": "",
+      "last_modified_at": "2026-08-11",
       "author": "Dzmitryi Kharlanau",
       "tags": [
         "master-data",
@@ -1047,28 +1047,28 @@
       ],
       "expert_context": {
         "enabled": true,
-        "domain": "sap-integration",
+        "domain": "sap-master-data",
         "expertise": [
-          "SAP integration diagnostics",
-          "AIF and IDoc monitoring",
-          "interface ownership"
+          "SAP master data",
+          "Business Partner and MDG",
+          "customer and supplier replication"
         ],
         "problems": [
-          "recurring interface failures",
-          "unclear incident ownership",
-          "insufficient operational visibility"
+          "replication failures",
+          "data-quality drift",
+          "unclear ownership of master-data defects"
         ],
-        "service_url": "/services/sap-integration-reliability-assessment/",
+        "service_url": "/services/sap-master-data-stability-assessment/",
         "evidence_urls": [
           "/atlas/diagnostics/sap-business-partner-replication-diagnostics/",
           "/atlas/diagnostics/sap-vendor-master-replication-diagnostics/",
           "/atlas/diagnostics/sap-customer-master-replication-diagnostics/",
-          "/atlas/concepts/order-to-cash/",
-          "/atlas/concepts/sap-atp-is-not-inventory/"
+          "/atlas/data-quality/master-data-governance-failure-modes/",
+          "/atlas/data-quality/sap-master-data-quality/"
         ],
-        "cta_variant": "integration-monitoring",
-        "cta_heading": "Working on a related SAP integration problem?",
-        "cta_copy": "Dzmitryi Kharlanau provides focused architecture reviews, incident diagnostics, monitoring design, and improvement planning for SAP integration landscapes.",
+        "cta_variant": "master-data-replication",
+        "cta_heading": "Working on a related SAP master-data problem?",
+        "cta_copy": "Dzmitryi Kharlanau provides focused master-data replication analysis, governance reviews, and practical stabilization planning for SAP landscapes.",
         "placement": "layout"
       }
     },
@@ -1165,13 +1165,13 @@
     {
       "url": "https://dkharlanau.github.io/atlas/diagnostics/sap-idoc-status-diagnostics/",
       "title": "SAP IDoc Status Diagnostics",
-      "description": "A conservative diagnostic frame for IDoc status code issues and status-driven troubleshooting in SAP.",
+      "description": "A source-backed SAP IDoc guide for statuses 51, 53, 56, 64, 75, 02, and 03, with safe checks before reprocessing.",
       "type": "atlas",
       "section": "diagnostics",
       "status": "reviewed",
       "verified": true,
       "last_reviewed": "2026-06-13",
-      "last_modified_at": "",
+      "last_modified_at": "2026-08-11",
       "author": "Dzmitryi Kharlanau",
       "tags": [
         "integration",
@@ -1298,13 +1298,13 @@
     {
       "url": "https://dkharlanau.github.io/atlas/diagnostics/sap-interface-monitoring-diagnostics/",
       "title": "SAP Interface Monitoring Diagnostics",
-      "description": "A conservative diagnostic frame for SAP interface monitoring and alert issues, covering IDoc, ALE, RFC, and gateway health checks.",
+      "description": "A source-backed SAP interface monitoring guide for IDoc and RFC errors, backlog thresholds, blind spots, alert quality, and safe triage.",
       "type": "atlas",
       "section": "diagnostics",
       "status": "reviewed",
       "verified": true,
       "last_reviewed": "2026-06-13",
-      "last_modified_at": "",
+      "last_modified_at": "2026-08-11",
       "author": "Dzmitryi Kharlanau",
       "tags": [
         "integration",
@@ -1650,13 +1650,13 @@
     {
       "url": "https://dkharlanau.github.io/atlas/diagnostics/sap-qrfc-trfc-diagnostics/",
       "title": "SAP qRFC and tRFC Diagnostics",
-      "description": "A conservative diagnostic frame for queued and transactional RFC issues in SAP integration.",
+      "description": "A source-backed SAP qRFC and tRFC guide for blocked SMQ1, SMQ2, and SM58 entries, with safe recovery boundaries.",
       "type": "atlas",
       "section": "diagnostics",
       "status": "reviewed",
       "verified": true,
       "last_reviewed": "2026-06-13",
-      "last_modified_at": "",
+      "last_modified_at": "2026-08-11",
       "author": "Dzmitryi Kharlanau",
       "tags": [
         "integration",
@@ -3113,7 +3113,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -3620,7 +3620,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -3737,7 +3737,7 @@
           "/atlas/data-quality/sap-master-data-quality/",
           "/atlas/diagnostics/sap-business-partner-replication-diagnostics/",
           "/atlas/diagnostics/sap-customer-master-replication-diagnostics/",
-          "/atlas/diagnostics/sap-purchase-order-creation-diagnostics/"
+          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
         ],
         "cta_variant": "master-data-replication",
         "cta_heading": "Working on a related SAP master-data problem?",
@@ -3776,7 +3776,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -4179,7 +4179,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -4218,7 +4218,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -4257,7 +4257,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -4296,7 +4296,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -4335,7 +4335,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -4374,7 +4374,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -4764,7 +4764,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",
@@ -4985,7 +4985,7 @@
           "/atlas/concepts/sap-atp-is-not-inventory/",
           "/atlas/concepts/sap-transformation-recovery-framework/",
           "/atlas/diagnostics/sap-ale-distribution-model-diagnostics/",
-          "/atlas/diagnostics/sap-cvi-synchronization-diagnostics/"
+          "/atlas/diagnostics/sap-idoc-diagnostics/"
         ],
         "cta_variant": "integration-monitoring",
         "cta_heading": "Working on a related SAP integration problem?",

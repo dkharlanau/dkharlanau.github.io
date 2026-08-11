@@ -1,8 +1,9 @@
 ---
 layout: default
 title: "SAP Business Partner Replication Diagnostics"
-description: "A conservative diagnostic frame for business partner replication issues in SAP S/4HANA."
+description: "A source-backed SAP Business Partner replication guide for DRF selection, SOAP or ALE delivery, confirmations, key mapping, and duplicates."
 permalink: /atlas/diagnostics/sap-business-partner-replication-diagnostics/
+last_modified_at: 2026-08-11
 atlas_section: diagnostics
 domain: SAP AMS
 subdomain: Master data and MDG
@@ -43,6 +44,13 @@ robots: index,follow
 sitemap: true
 ---
 
+**Sources:** [SAP Data Replication Framework](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/d9750bd3d7834e068edee1153e444f4c.html), [SAP Business Partner replication guidance](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/97d8ed5024226766e10000000a445394.html?version=2023.latest), and [SAP guidance for BP replication using ALE](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/6fe343fea9b943f4875eb4425f19ed43.html).
+**Date checked:** 2026-08-11
+**Confidence:** high for the DRF diagnostic sequence; medium for channel-specific logs and payload behavior that vary by product and release.
+**Related page/topic:** /atlas/diagnostics/sap-key-mapping-diagnostics/
+**Practical implication:** Prove selection, channel delivery, receiver processing, confirmation, and key mapping as separate checkpoints before changing master data or resending.
+**Tags:** master-data, sap-mdg, diagnostics, replication, drf, business-partner
+
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>
@@ -56,7 +64,7 @@ sitemap: true
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP business partner replication diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for finding why a business partner was not replicated, arrived incomplete, or created duplicates in a target system.</p>
+    <p class="note-subtitle">A checkpoint-led workflow for missing, incomplete, or duplicate Business Partner records across SAP systems.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -70,8 +78,21 @@ sitemap: true
 
   <div class="note-body">
     <h2>Core idea</h2>
-    <p>Business partner replication moves BP master data from a source system to target systems. Most tickets resolve to one of three handoffs: the source did not select the BP, the target did not accept it, or the accepted BP was mapped to the wrong key. The diagnostic job is to find which handoff failed and why.</p>
-    <p>The fastest way to narrow the issue is to prove the message left the source, then prove the target received it. Everything in between is noise until those two facts are established.</p>
+    <p>Business Partner replication is a chain of independently testable checkpoints: the source object is eligible, the Data Replication Framework (DRF) selects it for the intended target, the configured channel sends a message, the receiver processes it, a confirmation returns where applicable, and key mapping links the source and target identities. A source-side success alone does not prove that the target record was created or updated correctly.</p>
+
+    <h2>Replication checkpoints</h2>
+    <table>
+      <thead>
+        <tr><th>Checkpoint</th><th>Evidence</th><th>If it fails</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Object eligibility</td><td>BP status, approval state where relevant, replication model filters, target system, and change context.</td><td>Correct the source object or DRF model selection; do not troubleshoot transport yet.</td></tr>
+        <tr><td>Outbound replication</td><td>DRF replication status or log with object, target, run, and communication channel.</td><td>Use the log message to separate filter, configuration, payload, and technical failures.</td></tr>
+        <tr><td>Channel delivery</td><td>SOAP message monitor, middleware correlation, or ALE/IDoc status according to the configured channel.</td><td>Follow the channel-specific technical evidence rather than assuming all BP replication uses IDoc.</td></tr>
+        <tr><td>Receiver processing</td><td>Inbound processing result, application log, target BP, roles, and referenced error.</td><td>Resolve target validation, mapping, grouping, number assignment, or role-specific data.</td></tr>
+        <tr><td>Confirmation and key mapping</td><td>Confirmation status where supported and source-to-target object identifiers.</td><td>Correct the mapping or confirmation failure before resending, or a duplicate can be created.</td></tr>
+      </tbody>
+    </table>
 
     {% include atlas/expert-context.html %}
 
@@ -86,52 +107,62 @@ sitemap: true
 
     <h2>Likely causes</h2>
     <ul>
-      <li><strong>Replication model filter:</strong> the BP type, role, or organizational unit is excluded from the replication model.</li>
-      <li><strong>Key mapping missing:</strong> the source BP GUID or number is not mapped to the target system key, causing a new BP to be created.</li>
+      <li><strong>Replication model selection:</strong> the object, target, or filter values are outside the active DRF model and outbound implementation.</li>
+      <li><strong>Key mapping missing or stale:</strong> the source and target identifiers are not linked consistently, increasing the risk of duplicate creation or failed updates.</li>
       <li><strong>Data quality block:</strong> the BP data fails validation in the target system (missing required field, invalid format, duplicate tax number).</li>
-      <li><strong>Role-specific filter:</strong> the replication model sends the BP header but filters out specific roles or relationships.</li>
+      <li><strong>Channel or payload coverage:</strong> the configured replication channel or outbound implementation does not carry the expected role, relationship, or attribute for that scenario.</li>
       <li><strong>Target system configuration:</strong> the target system has different BP grouping, number ranges, or role assignment rules that conflict with the replicated data.</li>
     </ul>
 
     <h2>Where to check in SAP</h2>
     <ul>
-      <li>MDG Data Replication log (if MDG is the source) — check replication status and error messages.</li>
-      <li>BDCP / BDCPS — change pointers for the BP object.</li>
-      <li>WE02 — IDoc status if ALE is used for replication.</li>
-      <li>Key mapping tables (if custom mapping is used) — check source-to-target key mapping.</li>
-      <li>Target system BP display (FLBP1 / FLBP2) — verify roles, addresses, and assignments.</li>
+      <li>DRF replication status and log — filter by BP, target business system, run, and channel where available.</li>
+      <li>SOAP or middleware monitor — use the message or correlation ID when service-based replication is configured.</li>
+      <li>WE02 / WE05 — inspect IDoc status only when ALE is the configured replication channel.</li>
+      <li>Key Mapping Framework or scenario-specific mapping — verify source and target object identifiers.</li>
+      <li>Transaction BP or the release-appropriate Business Partner app in the target — verify general data, roles, organizational segments, relationships, and identifiers.</li>
     </ul>
 
-    <h2>Key tables / transactions / objects</h2>
+    <h2>Key objects and identifiers</h2>
     <ul>
-      <li><strong>BUT000 / BUT001</strong> — BP header and general data.</li>
-      <li><strong>BUT100 / BUT100</strong> — BP roles.</li>
-      <li><strong>BUT020 / ADRC</strong> — BP addresses.</li>
-      <li><strong>BKDF / BNKA</strong> — BP bank details.</li>
-      <li><strong>BDCP / BDCPS</strong> — change pointers.</li>
+      <li><strong>Business Partner number and UUID/GUID:</strong> keep both when the integration exposes them; a displayed number alone may not be the cross-system identity.</li>
+      <li><strong>Replication model, outbound implementation, and target business system:</strong> together define which object is selected and where it is sent.</li>
+      <li><strong>Message or correlation ID:</strong> connects source replication evidence to middleware and receiver processing.</li>
+      <li><strong>Confirmation and key-mapping record:</strong> connects a successfully created target object back to the source identity.</li>
     </ul>
 
     <h2>Diagnostic workflow</h2>
     <ol>
-      <li>Identify the BP number, source system, target system, and the expected versus actual result.</li>
-      <li>Check the replication log or change pointer status to confirm the BP was selected for replication.</li>
-      <li>Check WE02 or the replication middleware for IDoc or message status.</li>
-      <li>Verify key mapping: does the target system recognize the source BP key or create a new one?</li>
-      <li>Check the target BP in FLBP1/FLBP2 for missing roles, addresses, or data.</li>
-      <li>Compare the source BP data with the target BP data to identify which fields were filtered or failed validation.</li>
+      <li>Identify the BP number and UUID/GUID where available, source, intended target, replication model, expected roles or segments, and expected timing.</li>
+      <li>Use the DRF replication status or log to confirm whether the object was selected for that target and which communication channel handled it.</li>
+      <li>Trace the outbound message through the configured channel: SOAP or middleware evidence for service-based replication, or WE02/WE05 for ALE.</li>
+      <li>Confirm receiver-side processing and open the target Business Partner. Compare roles, organizational segments, relationships, addresses, and identifiers—not only header data.</li>
+      <li>Verify confirmation and key mapping where the scenario supports them. Determine whether the target recognized an existing object or chose create processing.</li>
+      <li>Compare source and target data at the first missing segment, then use the relevant payload, application log, or validation message to explain the gap.</li>
     </ol>
 
     <h2>Typical fixes or next actions</h2>
     <ul>
-      <li>Update the replication model to include the missing BP type, role, or organizational unit.</li>
+      <li>Correct DRF model selection, target assignment, or outbound implementation only after the failed checkpoint is demonstrated.</li>
       <li>Create or correct key mapping between source and target systems.</li>
       <li>Fix data quality issues in the source BP before replicating.</li>
-      <li>Adjust target system BP grouping or role assignment rules if they conflict with replicated data.</li>
+      <li>Adjust target grouping, number assignment, role, or validation rules only with master-data governance and integration owners.</li>
       <li>If duplicates exist, evaluate merge or deactivation options with master data governance.</li>
     </ul>
 
     <h2>What to capture first</h2>
-    <p>Before routing the issue, capture: BP number, source and target systems, expected versus actual result, replication model name, and any error from the replication log or IDoc status. A vague "BP missing" report wastes a round of basic questions; these six items let a support engineer start the real diagnosis.</p>
+    <p>Capture the BP number and technical identifier where available, source and target systems, replication model, communication channel, run and message identifiers, timestamp, expected roles or segments, source replication status, receiver status, confirmation result, and key-mapping evidence. Do not include real personal, bank, tax, or client-sensitive values in public incident notes.</p>
+
+    <h2>Channel choice matters</h2>
+    <p>SAP's S/4HANA guidance recommends service-oriented architecture for Business Partner replication because ALE does not cover every BP attribute. That does not make an existing ALE scenario invalid, but it means a missing field can be a channel-coverage question rather than a transient delivery failure. Confirm the approved architecture and release-specific scope before adding retries or custom mappings.</p>
+
+    <h2>Official references</h2>
+    <ul>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/d9750bd3d7834e068edee1153e444f4c.html">SAP: Data Replication Framework</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/97d8ed5024226766e10000000a445394.html?version=2023.latest">SAP: replicating a Business Partner</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/543df06bbf584228ad293552d4ece873.html">SAP: display of object replication status</a></li>
+      <li><a href="https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/6fe343fea9b943f4875eb4425f19ed43.html">SAP: Business Partner replication using ALE</a></li>
+    </ul>
 
     <h2>Escalation signals</h2>
     <ul>
