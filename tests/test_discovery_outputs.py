@@ -199,6 +199,50 @@ def test_fixture_fake_schema_has_forbidden_fields():
 import scripts.audit_discovery_outputs as audit_mod
 
 
+def test_jsonld_fake_field_audit_ignores_words_in_values(tmp_path):
+    """Editorial words in JSON-LD text are not schema property names."""
+    site_root = tmp_path / "site"
+    page_dir = site_root / "example"
+    page_dir.mkdir(parents=True)
+    (page_dir / "index.html").write_text(
+        """<!doctype html>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","description":"Human review required before publication.","keywords":["review","price"]}
+</script>
+""",
+        encoding="utf-8",
+    )
+    violations = []
+    warnings = []
+
+    blocks_checked = audit_mod.audit_json_ld(site_root, violations, warnings)
+
+    assert blocks_checked == 1
+    assert violations == []
+
+
+def test_jsonld_fake_field_audit_detects_nested_keys(tmp_path):
+    """Unsupported schema properties remain detectable at any nesting level."""
+    site_root = tmp_path / "site"
+    page_dir = site_root / "example"
+    page_dir.mkdir(parents=True)
+    (page_dir / "index.html").write_text(
+        """<!doctype html>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"Product","offers":{"price":"99"}}]}
+</script>
+""",
+        encoding="utf-8",
+    )
+    violations = []
+    warnings = []
+
+    audit_mod.audit_json_ld(site_root, violations, warnings)
+
+    assert any("unsupported fake field 'offers'" in item for item in violations)
+    assert any("unsupported fake field 'price'" in item for item in violations)
+
+
 def test_baseline_file_is_valid_json():
     """The baseline JSON must be a valid list of entries with required fields."""
     baseline_path = REPO_ROOT / "data" / "seo" / "discovery-audit-baseline.json"

@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "Why AI pilots in SAP support fail before they create value"
-description: "Many SAP support AI pilots stall because the organisation lacks structured knowledge, clear review rules, and realistic boundaries between AI and deterministic control."
+description: "Why SAP support AI pilots stall without structured knowledge, measurable value, clear review rules, and boundaries between AI and deterministic control."
 permalink: /scenarios/ai-pilots-for-sap-support-fail-before-value/
-last_modified_at: 2026-07-25
+last_modified_at: 2026-08-11
 scenario_cluster: Technology Shift Scenarios
 domain: AI-assisted support
 subdomain: AI pilot design
@@ -20,7 +20,9 @@ tags:
   - sap-ams
   - automation
   - operating-model
+  - ai-in-business
 related:
+  - /atlas/ai-operations/
   - /atlas/concepts/enterprise-ai-around-sap-decision-framework/
   - /atlas/automation/rule-based-automation-vs-ai/
   - /atlas/ai-operations/ai-agent-for-sap-support/
@@ -116,8 +118,11 @@ sitemap: true
 
     <h2>Related Atlas pages</h2>
     <ul>
-      <li><a href="/atlas/concepts/enterprise-ai-around-sap-decision-framework/">Enterprise AI Around SAP Decision Framework</a> - Where AI belongs, where deterministic automation is better, and where AI should not act.</li>
+      <li><a href="/atlas/ai-operations/">AI in Business for SAP Operations</a> - The complete value, control, evidence, governance, and delivery cluster.</li>
+      <li><a href="/atlas/concepts/enterprise-ai-around-sap-decision-framework/">AI in Business Decision Framework</a> - Where AI belongs, where deterministic automation is better, and where AI should not act.</li>
       <li><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-Based Automation vs AI</a> - A practical distinction between explicit rules and probabilistic assistance.</li>
+      <li><a href="/atlas/ai-operations/ai-ready-process-documentation/">AI-Ready Process Documentation</a> - The minimum source structure and retrieval tests needed before a pilot.</li>
+      <li><a href="/atlas/ai-operations/authorization-aware-ai-for-sap/">Authorization-Aware AI for SAP</a> - The identity, retrieval, generation, action, and evidence boundary.</li>
       <li><a href="/atlas/ai-operations/ai-agent-for-sap-support/">AI Agent for SAP Support</a> - A conservative operating pattern for retrieval, diagnosis support, and human approval.</li>
       <li><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational Memory for SAP AMS</a> - Why the knowledge layer must improve before AI can be trusted much further.</li>
     </ul>

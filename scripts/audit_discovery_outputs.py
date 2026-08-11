@@ -89,6 +89,17 @@ def match_baseline(violation: str, baseline: list[dict]) -> dict | None:
     return None
 
 
+def iter_json_keys(value):
+    """Yield JSON object keys recursively without inspecting string values."""
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            yield str(key)
+            yield from iter_json_keys(nested)
+    elif isinstance(value, list):
+        for nested in value:
+            yield from iter_json_keys(nested)
+
+
 def _known(msg: str) -> None:
     print(f"  [KNOWN] {msg}")
 
@@ -391,10 +402,12 @@ def audit_json_ld(site_root: Path, violations: list, warnings: list) -> int:
                 )
                 continue
 
-            # Check for unsupported fake schema fields
-            json_str = json_text.lower()
+            # Check object keys, not free text. Words such as "review" are
+            # legitimate in visible descriptions and must not be treated as
+            # fabricated Review schema unless they are actual JSON-LD fields.
+            json_keys = {key.casefold() for key in iter_json_keys(data)}
             for field in FAKE_SCHEMA_FIELDS:
-                if field.lower() in json_str:
+                if field.casefold() in json_keys:
                     violations.append(
                         f"unsupported fake field '{field}' in JSON-LD at {file_path.relative_to(site_root)}"
                     )

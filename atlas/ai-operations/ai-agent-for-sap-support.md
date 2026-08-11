@@ -26,13 +26,17 @@ expert_context:
     - /atlas/ai-operations/ai-ready-process-documentation/
     - /atlas/automation/operational-memory-for-sap-ams/
 last_reviewed: 2026-05-06
+last_modified_at: 2026-08-11
 author: Dzmitryi Kharlanau
 
 tags:
   - ai-operations
   - sap-ams
   - operational-memory
+  - ai-in-business
 related:
+  - /atlas/concepts/enterprise-ai-around-sap-decision-framework/
+  - /atlas/automation/rule-based-automation-vs-ai/
   - /atlas/diagnostics/sap-sales-order-block-diagnosis/
   - /ai/practical-ai-for-sap-support/
   - /services/sap-ai-ml-enablement/
@@ -95,6 +99,9 @@ sitemap: true
   <section class="atlas-related">
     <h2>Related Pages</h2>
     <ul>
+      <li><a href="/atlas/ai-operations/">AI in Business for SAP Operations cluster</a></li>
+      <li><a href="/atlas/concepts/enterprise-ai-around-sap-decision-framework/">AI in Business Decision Framework</a></li>
+      <li><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-Based Automation vs AI</a></li>
       <li><a href="/atlas/ai-operations/ai-ready-process-documentation/">AI-Ready Process Documentation</a></li>
       <li><a href="/atlas/ai-operations/authorization-aware-ai-for-sap/">Authorization-Aware AI for SAP</a></li>
       <li><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational Memory for SAP AMS</a></li>

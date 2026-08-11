@@ -17,7 +17,7 @@ DOMAIN: AI-assisted operations
 TYPE: operating pattern
 SAP AREA: SAP support / BTP-adjacent architecture
 BUSINESS PROCESS: Support operations
-TAGS: ai-operations, sap-ams, operational-memory
+TAGS: ai-operations, sap-ams, operational-memory, ai-in-business
 REVIEWED: 2026-05-06
 ----------------------------------------
 Home
@@ -67,6 +67,9 @@ Home
 
     Related Pages
 
+      AI in Business for SAP Operations cluster
+      AI in Business Decision Framework
+      Rule-Based Automation vs AI
       AI-Ready Process Documentation
       Authorization-Aware AI for SAP
       Operational Memory for SAP AMS
@@ -84,7 +87,7 @@ Related evidence:
 - https://dkharlanau.github.io/atlas/ai-operations/authorization-aware-ai-for-sap/
 - https://dkharlanau.github.io/atlas/ai-operations/ai-ready-process-documentation/
 - https://dkharlanau.github.io/atlas/automation/operational-memory-for-sap-ams/
-- https://dkharlanau.github.io/atlas/automation/agent-assisted-development-workflows/
+- https://dkharlanau.github.io/atlas/concepts/enterprise-ai-around-sap-decision-framework/
 - https://dkharlanau.github.io/atlas/automation/rule-based-automation-vs-ai/
 
 ==================================================
@@ -96,7 +99,7 @@ DOMAIN: AI-assisted operations
 TYPE: AI operations
 SAP AREA: Support knowledge management
 BUSINESS PROCESS: Support operations
-TAGS: ai-operations, sap-ams, operational-memory
+TAGS: ai-operations, sap-ams, operational-memory, ai-in-business, knowledge-readiness
 REVIEWED: 2026-06-13
 ----------------------------------------
 HomeKnowledge AtlasAi OperationsAI-Ready Process Documentation
@@ -107,32 +110,82 @@ AI-ready process documentation
 
 AI-assisted support improves when process knowledge is structured, current, scoped, and tied to evidence instead of scattered across chats and old handovers.
 
-DomainAI-assisted operationsTypeAI operationsReviewed2026-06-13
+DomainAI-assisted operationsTypeAI operationsReviewed2026-06-13Updated2026-08-11
+
+Primary sources: NIST AI Risk Management Framework Core; OECD AI Principles.
+Date checked: 2026-08-11
+Confidence: high for the documentation and retrieval-readiness pattern; medium for retrieval performance because it depends on the corpus, query set, access design, and implementation.
+Practical implication: Treat every retrieved instruction as a governed knowledge object with scope, authority, review status, evidence, and an owner—not as an anonymous text fragment.
 
 Where this fits
 
-This page connects operational memory, runbooks, knowledge-base design, and AI retrieval. It is useful before building a support copilot or ticket assistant.
+This page connects operational memory, runbooks, knowledge-base design, and AI retrieval. Use it before building a support copilot, ticket assistant, process adviser, or agent. The purpose is not to rewrite every document for a model. It is to make the knowledge dependable for both operators and retrieval systems.
 
-Common issues
+The minimum knowledge object
 
-Documentation describes ideal process flow but not exceptions, ownership, diagnostic evidence, or escalation boundaries.
+Each operational page or runbook should make the following fields explicit. They may live in frontmatter, a controlled template, or another structured registry, but they should not depend on inference from the prose.
 
-Runbooks are stale, unversioned, and not linked to system context or common symptoms.
+  FieldQuestion it answersWhy it matters
 
-AI retrieval finds the wrong content because documents lack clear scope and metadata.
+    Title and intentWhat problem does this object address?Improves routing and reduces false matches.
+    System and process scopeWhere does it apply?Prevents one landscape or process variant from being treated as universal.
+    Status and authorityDraft, candidate, approved, or retired?Separates useful context from executable instruction.
+    Owner and reviewerWho can confirm or correct it?Preserves accountability and escalation.
+    Reviewed and valid datesHow current is it?Supports freshness checks and retirement.
+    Symptoms and triggersWhen should it be retrieved?Connects business language to diagnostic intent.
+    Required evidenceWhat must be collected first?Discourages conclusions from incomplete context.
+    Steps and stop conditionsWhat is allowed, and when must work stop?Creates an operational boundary.
+    Expected resultHow is success verified?Links guidance to a business outcome.
+    Authorization classWho may discover or read it?Supports access-aware retrieval.
 
-Diagnostic questions
 
-Does each process note say where it applies, who owns it, and when it was last reviewed?
+Document the real process, including exceptions
 
-Are exceptions and support symptoms documented with evidence requirements?
+Ideal process diagrams are rarely enough for support. Add the transitions where work actually fails: missing master-data extensions, incomplete approvals, message queues, pricing or availability mismatches, manual corrections, external-system handoffs, and ownership changes. For each exception, say what evidence distinguishes it from a similar symptom.
 
-Can a reader or retrieval system distinguish official process from draft notes?
+A useful diagnostic note does not jump from symptom to fix. It records the business impact, process checkpoint, system context, observed evidence, likely cause classes, safe checks, escalation owner, and the condition that confirms recovery.
 
-Good process documentation is rarely complete on the first pass. The useful version is the one that is reviewed, scoped, and honest about what is still draft.
+Separate knowledge by authority
+
+  Approved operating instruction: reviewed, scoped, owned, and eligible to support a recommendation.
+  Reference evidence: official documentation, known configuration description, or validated process record.
+  Case history: a past resolution that may be similar but is not automatically reusable.
+  Working note: incomplete material that has not passed review and should not be presented as approved guidance.
+  Retired content: retained for traceability but excluded from normal retrieval.
+
+This separation supports the governance and traceability expectations described by NIST and the OECD. It also gives a reviewer a clear reason to trust, challenge, or reject a retrieved source.
+
+Test retrieval before testing generation
+
+Build a small query set from real task language: common symptoms, process terms, abbreviations, misspellings, and confusing near-neighbours. For each query, record which sources should appear, which must not appear, and which access context applies.
+
+  Test whether the correct authoritative source appears in the top results.
+  Test whether a similar but out-of-scope source is excluded or clearly qualified.
+  Test stale, draft, retired, and unauthorized documents.
+  Test a question with insufficient evidence; the system should ask for context or abstain.
+  Only then test whether the generated answer represents the retrieved sources accurately.
+
+Evidence to retain
+
+  Corpus inventory, source owner, status, scope, access class, and review date.
+  Chunking and metadata rules used by the retrieval layer.
+  Evaluation queries, expected sources, actual sources, and reviewer judgment.
+  Cases where the answer cited an outdated, ambiguous, or unauthorized source.
+  Correction, retirement, and re-indexing history.
+
+Exit criteria for knowledge readiness
+
+A pilot is knowledge-ready when its high-value query set retrieves the intended sources consistently, access tests pass, every approved source has an owner and review status, and the workflow has a safe response for missing or conflicting evidence. The threshold is local and should reflect the consequence of a wrong recommendation.
+
+Boundaries
+
+Structured metadata improves control but does not prove that content is correct. Human review remains necessary, especially after process, release, authorization, or organizational changes. Do not expose client records, private ticket content, credentials, or proprietary system details to create a richer corpus. The authorization-aware AI pattern covers the retrieval boundary; the AI in Business Decision Framework covers value and pilot approval.
 
 Related pages
 
+AI in Business for SAP Operations cluster
+AI in Business Decision Framework
+Rule-Based Automation vs AI
 AI Agent for SAP Support
 Operational Memory for SAP AMS
 Authorization-Aware AI for SAP
@@ -147,11 +200,11 @@ WORKING ON A RELATED SAP AI PROBLEM?
 Dzmitryi Kharlanau provides AI-readiness reviews for SAP operations, with attention to evidence, authorization boundaries, evaluation, and human review.
 Related service: https://dkharlanau.github.io/services/sap-ai-ml-enablement/
 Related evidence:
+- https://dkharlanau.github.io/atlas/concepts/enterprise-ai-around-sap-decision-framework/
 - https://dkharlanau.github.io/atlas/ai-operations/ai-agent-for-sap-support/
 - https://dkharlanau.github.io/atlas/automation/operational-memory-for-sap-ams/
 - https://dkharlanau.github.io/atlas/ai-operations/authorization-aware-ai-for-sap/
 - https://dkharlanau.github.io/atlas/automation/agent-assisted-development-workflows/
-- https://dkharlanau.github.io/atlas/automation/rule-based-automation-vs-ai/
 
 ==================================================
 
@@ -162,7 +215,7 @@ DOMAIN: AI-assisted operations
 TYPE: AI operations
 SAP AREA: Security / authorization-aware retrieval
 BUSINESS PROCESS: Support operations
-TAGS: ai-operations, sap-ams, data-quality
+TAGS: ai-operations, sap-ams, data-quality, ai-in-business, ai-governance
 REVIEWED: 2026-06-13
 ----------------------------------------
 HomeKnowledge AtlasAi OperationsAuthorization-Aware AI
@@ -173,32 +226,85 @@ Authorization-aware AI for SAP
 
 An AI support layer must respect the same access boundaries that protect SAP data from human misuse.
 
-DomainAI-assisted operationsTypeAI operationsReviewed2026-06-13
+DomainAI-assisted operationsTypeAI operationsReviewed2026-06-13Updated2026-08-11
+
+Primary sources: NIST SP 800-207, Zero Trust Architecture; NIST AI Risk Management Framework Core; OECD AI Principles.
+Date checked: 2026-08-11
+Confidence: high for the identity, resource, lifecycle, and traceability principles; medium for implementation details because SAP products, identity systems, retrieval stacks, and local roles vary.
+Practical implication: An AI layer must not turn broad service-account access into broader access for the requester. Enforce policy before retrieval and before action, then test what the response can reveal indirectly.
+
+Problem this pattern addresses
+
+An AI assistant can combine data from more systems and documents than a user normally sees in one application. If the integration retrieves with a broad technical account and applies access checks only after generation, it can disclose restricted facts through answers, citations, counts, or suggested actions. Authorization therefore has to follow the request across the full AI workflow.
 
 Where this fits
 
-Authorization-aware AI belongs in any SAP support assistant, retrieval workflow, ticket summarizer, or agent that reads operational data.
+Authorization-aware AI belongs in any SAP support assistant, retrieval workflow, ticket summarizer, analytics interface, or agent that reads operational data. NIST's zero-trust architecture focuses protection on users, assets, and resources rather than assuming trust from network location. For AI, the relevant resource includes source documents, business records, retrieved fragments, generated answers, tool calls, and logs.
 
-Common issues
+The boundary has six stages
 
-The AI has broader data access than the user asking the question.
+  StageRequired control questionFailure example
 
-Retrieved context leaks company-code, plant, customer, supplier, finance, or personnel information across boundaries.
+    IdentityWhich person or workload is making the request?A shared assistant session loses the real requester identity.
+    Intent and scopeWhich business purpose, system, organization, and time range are allowed?A support question silently expands across company codes.
+    RetrievalMay this identity discover and read every returned source?Search metadata reveals a restricted customer or personnel record.
+    GenerationCan the answer expose, combine, or infer restricted information?An aggregate or summary reveals data not visible in the source UI.
+    ActionIs this identity allowed to perform this exact operation now?A broad technical user bypasses the requester's SAP authorization.
+    EvidenceWho may inspect prompts, sources, outputs, approvals, and logs?An audit log becomes a second uncontrolled data store.
 
-The model suggests an action the user could not perform in the source system.
 
-Diagnostic questions
+Preserve the requester context
 
-Whose authorization context is used for retrieval?
+Do not authorize a response only because the integration can reach the data. Carry a verified requester or workload identity through the retrieval and tool boundary. Map it to the business scope required for the use case, such as system, client, company code, sales organization, purchasing organization, plant, data domain, or support assignment.
 
-Can the answer reveal data indirectly through summaries or aggregates?
+Use separate technical credentials where the platform requires them, but apply policy using the requester, resource, action, and context. Re-evaluate authorization for each sensitive retrieval or action instead of treating the first chat login as permanent permission.
 
-Is every action recommendation routed through human approval and system authorization?
+Filter before generation
 
-Authorization-aware AI is not a one-time setup. Access rules, user roles, and data boundaries change, so the retrieval layer needs to be retested whenever the underlying authorization model changes.
+Access checks should occur before restricted material enters the model context. Filtering only the final answer is weaker because the system has already processed data outside the intended boundary and may reveal it indirectly.
+
+  Apply document- and record-level policy before retrieval results are assembled.
+  Treat titles, snippets, embeddings, metadata, counts, and citations as potentially sensitive.
+  Keep approved operating instructions separate from private tickets and case evidence.
+  When sources have mixed authorization, exclude or redact the restricted fragment before generation.
+  Return a clear “insufficient authorized evidence” result instead of silently widening access.
+
+Separate recommendation from execution
+
+A model may be permitted to explain an approved procedure without being permitted to execute it. Treat read, recommend, prepare, approve, execute, and verify as separate capabilities. The person who can view a sales-order status may not be allowed to change the order; the person who can diagnose master data may not be allowed to create or approve it.
+
+For any change-capable tool, validate structured inputs, re-check authorization at execution time, show the reviewer the exact proposed action and affected objects, record approval, and verify the postcondition. High-impact actions should remain unavailable when the assistant cannot establish scope or when the request depends on inferred permission.
+
+Test for direct and indirect disclosure
+
+  Create identities with deliberately different organizational and document access.
+  Test exact identifiers, broad questions, summaries, comparisons, counts, and follow-up questions.
+  Test whether citations, autocomplete, errors, and “no result” behavior reveal restricted existence.
+  Test retrieved documents that contain both public operating guidance and restricted case evidence.
+  Test role removal, temporary access expiry, user transfer, and source reclassification.
+  Repeat the action test independently from the retrieval test.
+
+Evidence to retain
+
+  Identity and authorization policy version used for the request.
+  Resource identifiers and classifications considered by retrieval.
+  Allowed and rejected sources without copying sensitive values into broad logs.
+  Model and retrieval configuration, response, reviewer, approval, tool call, and result.
+  Access-test cases, failures, remediation, and retest date.
+
+Operational ownership
+
+Security or identity teams can define controls, but the process owner must still decide the legitimate business purpose and data scope. Knowledge owners classify sources; SAP role owners define source-system access; the AI service owner implements and monitors enforcement; reviewers remain accountable for decisions. NIST's AI RMF treats governance as cross-cutting, which is a better fit than assigning all AI risk to one technical component.
+
+Boundaries
+
+This pattern is architectural guidance, not a completed authorization design. It does not map specific SAP roles or certify compliance. Use current product and identity-platform documentation, local security policy, privacy requirements, and legal review. Retest whenever roles, source classifications, retrieval configuration, model providers, tools, or logging change. The AI-ready documentation pattern covers source status and classification; the AI in Business Decision Framework covers business approval and pilot gates.
 
 Related pages
 
+AI in Business for SAP Operations cluster
+AI in Business Decision Framework
+Rule-Based Automation vs AI
 AI Agent for SAP Support
 SAP Master Data Quality
 AI-Ready Process Documentation
@@ -213,11 +319,11 @@ WORKING ON A RELATED SAP AI PROBLEM?
 Dzmitryi Kharlanau provides AI-readiness reviews for SAP operations, with attention to evidence, authorization boundaries, evaluation, and human review.
 Related service: https://dkharlanau.github.io/services/sap-ai-ml-enablement/
 Related evidence:
+- https://dkharlanau.github.io/atlas/concepts/enterprise-ai-around-sap-decision-framework/
 - https://dkharlanau.github.io/atlas/ai-operations/ai-agent-for-sap-support/
 - https://dkharlanau.github.io/atlas/data-quality/sap-master-data-quality/
 - https://dkharlanau.github.io/atlas/ai-operations/ai-ready-process-documentation/
 - https://dkharlanau.github.io/atlas/automation/agent-assisted-development-workflows/
-- https://dkharlanau.github.io/atlas/automation/operational-memory-for-sap-ams/
 
 ==================================================
 
@@ -391,7 +497,7 @@ DOMAIN: Automation
 TYPE: automation pattern
 SAP AREA: Support automation
 BUSINESS PROCESS: Support operations
-TAGS: automation, sap-ams, ai-operations
+TAGS: automation, sap-ams, ai-operations, ai-in-business, decision-framework
 REVIEWED: 2026-06-13
 ----------------------------------------
 HomeKnowledge AtlasAutomationRule-Based Automation vs AI
@@ -402,35 +508,83 @@ Rule-based automation vs AI
 
 Not every support workflow needs a model. Some need better deterministic rules, ownership, and audit trail.
 
-DomainAutomationTypeautomation patternReviewed2026-06-13
+DomainAutomationTypeautomation patternReviewed2026-06-13Updated2026-08-11
+
+Primary sources: NIST AI Risk Management Framework Core; NIST AI RMF Playbook; NBER, Generative AI at Work.
+Date checked: 2026-08-11
+Confidence: high for the control-selection method; medium for the performance of any AI-assisted task until it is tested against local examples and users.
+Practical implication: Split a workflow into decisions and actions, then choose the least variable control that can satisfy the requirement.
+
+Problem this decision prevents
+
+Teams can add model uncertainty to a task that already has an explicit rule, or force brittle rules onto work that depends on interpretation. Both choices create avoidable operating cost. The aim is to match each task to the control that makes its inputs, decision, exceptions, and accountability easiest to verify.
 
 Where this fits
 
-This page helps decide whether a SAP support task should be handled by a deterministic rule, workflow automation, AI assistance, or human review.
+This page helps a business or SAP operations team decide whether one task should be handled by a deterministic rule, conventional workflow automation, AI assistance, a human decision, or no automation. It is a task-level decision. A single end-to-end process may use all four control types.
 
-Common issues
+The decision table
 
-Teams use AI for problems that are better solved with validation rules, workflow, monitoring, or clear ownership.
+  QuestionIf yesIf no
 
-Rule-based automation becomes brittle when the process has ambiguous inputs and exceptions.
+    Can valid inputs, the decision rule, and the required output be specified?Prefer a rule or workflow.Test whether interpretation or similarity is genuinely needed.
+    Can a reviewer verify the output from accessible evidence?AI assistance may be testable.Keep the decision human or improve the evidence first.
+    Is a wrong result reversible and quickly detectable?A bounded pilot may be reasonable.Keep execution deterministic and require approval.
+    Does the task occur often enough to measure?Define a comparison set and pilot gates.Manual handling may be cheaper and safer.
 
-AI suggestions become risky when they trigger actions without approval or traceability.
 
-Diagnostic questions
+Use deterministic automation when certainty is the requirement
 
-Is the decision rule stable, explicit, and auditable?
+Rules are appropriate when the organization can define preconditions, action, expected result, exception route, and audit record. Typical examples include completeness controls, scheduled monitoring, duplicate checks, status-based routing, reconciliations, regression execution, and approved message-reprocessing sequences.
 
-Does the task require interpretation, summarization, similarity matching, or uncertainty handling?
+A deterministic design is not automatically safe. It still needs valid input, segregation of duties, idempotency where retries are possible, exception handling, and evidence that the intended business result occurred. But its behavior can normally be specified and tested before release.
 
-What is the consequence of a wrong action, and where should human approval sit?
+Use AI assistance when interpretation is the bottleneck
 
-A good rule is not a defeat. Rules are often the right choice when the cost of a wrong action is high and the input can be validated before execution.
+AI becomes a candidate when the costly task involves unstructured text, semantic retrieval, summarization, classification with fuzzy boundaries, or comparison across many imperfect examples. Support uses may include drafting a ticket summary, retrieving relevant runbooks, clustering incident descriptions, extracting an evidence checklist, or preparing likely diagnostic paths.
+
+The NBER customer-support study found different productivity effects across worker groups. That is a useful warning against applying one assumed benefit to every role. Measure by task, user group, case type, and quality outcome—not only by the number of generated answers.
+
+Keep a human decision where accountability is material
+
+Human review is not a generic safety label. Name the reviewer role, the evidence they receive, the time available, the reject and escalation options, and the decision that remains theirs. A reviewer who sees only a confident summary cannot provide meaningful control.
+
+Require explicit approval for production changes, financial or legal effects, master-data creation or correction, customer or supplier commitments, security-sensitive access, and cases where the organization cannot quickly detect a bad result.
+
+Prefer a hybrid pattern for many support workflows
+
+  A deterministic control validates identity, scope, required fields, and authorization.
+  AI retrieves or summarizes evidence inside that approved boundary.
+  A human accepts, corrects, or rejects the recommendation.
+  A deterministic workflow executes only the approved action.
+  A postcondition check records whether the business result occurred.
+
+This structure limits the probabilistic component to the part of the workflow that benefits from it. It also produces clearer failure evidence than an agent that retrieves, decides, and acts through one opaque step.
+
+Evidence to retain
+
+  Use-case owner, baseline, volume, and target business measure.
+  Representative cases, including exceptions and known high-impact errors.
+  Rule, prompt, model, retrieval configuration, and source versions used in the test.
+  Expected answer, generated answer, reviewer decision, correction, and downstream result.
+  Latency, review effort, error class, fallback use, and operating cost.
+
+Stop conditions
+
+Do not proceed when there is no authoritative evidence set, when success cannot be observed, when access boundaries cannot be enforced, or when review consumes more effort than the task being assisted. Return to process ownership, documentation, or a simpler rule. The broader AI in Business Decision Framework shows how this control choice fits the business case.
+
+Boundaries
+
+This framework does not certify a model, set an acceptable error rate, or replace security and process approval. Those thresholds depend on local impact and policy. NIST's AI RMF provides voluntary risk-management structure; record the framework version and the local controls used.
 
 Related pages
 
+AI in Business for SAP Operations cluster
+AI in Business Decision Framework
+AI-Ready Process Documentation
 AI Agent for SAP Support
 Authorization-Aware AI for SAP
-Agent-Assisted Development Workflows
+Why AI pilots in SAP support fail before they create value
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with controlled AI workflows for SAP operations, support knowledge systems, authorization boundaries, and human review. This guide treats AI as a governed support capability rather than an autonomous decision-maker.
@@ -442,34 +596,34 @@ WORKING ON A RELATED SAP AI PROBLEM?
 Dzmitryi Kharlanau provides AI-readiness reviews for SAP operations, with attention to evidence, authorization boundaries, evaluation, and human review.
 Related service: https://dkharlanau.github.io/services/sap-ai-ml-enablement/
 Related evidence:
+- https://dkharlanau.github.io/atlas/concepts/enterprise-ai-around-sap-decision-framework/
 - https://dkharlanau.github.io/atlas/ai-operations/ai-agent-for-sap-support/
 - https://dkharlanau.github.io/atlas/ai-operations/authorization-aware-ai-for-sap/
-- https://dkharlanau.github.io/atlas/automation/agent-assisted-development-workflows/
 - https://dkharlanau.github.io/atlas/ai-operations/ai-ready-process-documentation/
-- https://dkharlanau.github.io/atlas/automation/operational-memory-for-sap-ams/
+- https://dkharlanau.github.io/atlas/automation/agent-assisted-development-workflows/
 
 ==================================================
 
-PAGE: Enterprise AI Around SAP Decision Framework
+PAGE: AI in Business Decision Framework for SAP Operations
 URL: https://dkharlanau.github.io/atlas/concepts/enterprise-ai-around-sap-decision-framework/
 SECTION: concepts
 DOMAIN: Business operations
 TYPE: decision framework
 SAP AREA: AI-assisted support and operations
 BUSINESS PROCESS: Support and control workflows
-TAGS: concepts, ai-operations, sap-ams, automation
+TAGS: concepts, ai-operations, sap-ams, automation, ai-in-business, ai-governance
 REVIEWED: 2026-07-25
 ----------------------------------------
 Home
     Knowledge Atlas
     Concepts
-    Enterprise AI Around SAP Decision Framework
+    AI in Business Decision Framework
 
 
 
     Knowledge Atlas
-    Enterprise AI around SAP decision framework
-    Use AI where judgment is needed. Use deterministic automation where certainty is required.
+    AI in business decision framework for SAP operations
+    Start with a measurable business outcome, choose the right control for each task, and expand only when evidence supports the next step.
 
 
 
@@ -478,83 +632,86 @@ Home
       DomainBusiness operations
       Typedecision framework
       Reviewed2026-07-25
+      Updated2026-08-11
 
 
 
+
+    Primary sources: NIST AI Risk Management Framework Core; NIST AI RMF Playbook; OECD AI Principles; NBER, Generative AI at Work.
+    Date checked: 2026-08-11
+    Confidence: high for the decision and governance structure; medium for any expected benefit because results depend on the workflow, baseline, users, and landscape.
+    Practical implication: Approve an AI initiative only when the team can name the workflow, current cost or service baseline, allowed action boundary, accountable owner, and evidence required to continue.
 
     Core idea
-    AI is most useful around SAP when the expensive part of the work is finding context, preparing a recommendation, or comparing patterns across noisy evidence. It is least useful when the action must be predictable, reversible, and defensible with no ambiguity. Many programmes fail because they try to automate decision authority before they have structured knowledge.
-
-    Management symptoms that usually trigger the wrong AI conversation
-
-      Support work feels too manual, so management assumes "AI agent" is the answer.
-      Vendors demonstrate ticket summaries and chat interfaces, but nobody can explain how production control will work.
-      Teams want to skip documentation, taxonomy, and evidence quality because the model appears capable.
-      Return-on-investment claims focus on output speed, not on whether safer decisions or lower run cost will follow.
+    “AI in business” becomes useful when it is translated from a technology theme into a controlled change to a specific workflow. In SAP operations, the expensive step may be finding context, comparing evidence, drafting a recommendation, or completing a repeatable action. Those are different tasks and should not share one blanket solution.
+    Use AI where language, similarity, incomplete evidence, or judgment make a deterministic rule impractical. Use rules and workflow automation where inputs and outcomes can be specified. Keep a human decision where consequences are material, evidence is weak, or responsibility cannot be delegated.
 
 
-    Where AI usually creates measurable value
+      AI-in-business decision flow: each stage must produce evidence for the next.
 
-      Retrieval across runbooks, prior incidents, KBAs, notes, and operating documentation.
-      Drafting first-pass triage summaries and evidence checklists.
-      Clustering repeated failure patterns across tickets, logs, and process exceptions.
-      Preparing operator-facing suggestions that a human can verify before action.
-
-
-    Where deterministic automation is usually better
-
-      Message reprocessing rules with clear preconditions.
-      Validation checks, reconciliations, and completeness controls.
-      Scheduled monitoring, alert routing, and regression test execution.
-      Known correction steps where the rule is explicit and the output must be repeatable.
+        OutcomeBusiness result and baselineName the measure, owner, comparison window, and present performance.
+        WorkflowTask and exceptionLocate the decision, action, handoff, and failure that creates operating cost.
+        EvidenceKnowledge and data readinessTest scope, authority, freshness, access, and exception coverage.
+        ControlRule, AI, or human decisionChoose the least variable control that can satisfy the requirement.
+        ScaleMeasured pilot gatesExpand only when value, quality, access, and review evidence support it.
 
 
-    Where AI should be treated with caution
 
-      Changes that can create duplicates, legal errors, financial misstatements, or irreversible business side effects.
-      Cases where the current landscape context is incomplete, stale, or fragmented across teams.
-      Approval flows where responsibility is unclear and AI would become a substitute for ownership.
-      Use cases where the organisation cannot tell whether the model's answer was right or wrong after the fact.
+    1. Define the business outcome before the AI use case
+    Start with an operational measure that already matters: mean time to diagnose, ticket rework, backlog age, manual evidence-collection time, first-contact resolution, exception leakage, or avoidable escalation. Record the present baseline, measurement window, process owner, and known seasonal effects. “Faster answers” is not a business outcome unless it improves a downstream service or cost measure.
+    A specific customer-support study reported a 14% average productivity increase from a generative-AI assistant, with much larger gains among less-experienced workers. That result is useful evidence that task context and user group matter; it is not a universal ROI forecast. A local pilot still needs its own baseline and comparison design.
 
+    2. Decompose the workflow into tasks
+    Do not assess “support” or “order management” as one use case. Separate retrieval, classification, recommendation, approval, execution, verification, and exception handling. Then choose a control task by task.
 
-    What should be assessed before approval
+      Task conditionPreferred controlExample
 
-      Knowledge readiness: are runbooks, classifications, and evidence sources structured enough to support retrieval?
-      Decision impact: what happens if the recommendation is wrong?
-      Action reversibility: can the result be safely undone?
-      Detectability: would the organisation notice a bad action quickly?
-      Review design: who checks the answer, using what evidence, before it matters?
-
-
-    Practical implementation models
-
-      Information assistant: read-only retrieval and summarization around SAP support knowledge.
-      Recommendation assistant: proposed next steps, evidence lists, or likely root causes with human approval.
-      Controlled execution helper: automation for low-risk tasks only, with explicit preconditions, audit trails, and fallback paths.
+        Stable rule, validated input, repeatable resultDeterministic automationCompleteness check, routing rule, reconciliation
+        Noisy text or evidence; answer can be checkedAI assistance with human reviewTicket summary, evidence retrieval, pattern shortlist
+        Material consequence or ambiguous responsibilityHuman decision with decision supportProduction change, financial correction, master-data approval
+        No reliable evidence or success measureDo not automate yetUndocumented exception with unclear ownership
 
 
-    Architecture and organisational implications
-    AI around SAP is an operating-model question before it is a model-selection question. The organisation needs clear data boundaries, approval rules, auditability, and a stable knowledge layer. Without those, the pilot may look productive while making accountability weaker.
+    The detailed comparison is in Rule-Based Automation vs AI.
 
-    Expected decision outputs
+    3. Test evidence and operating readiness
+    An AI assistant cannot repair missing ownership or turn stale runbooks into reliable operating truth. Before a pilot, sample the knowledge sources that would support the answer. Check scope, owner, review date, system and process context, exception coverage, source authority, and whether draft material is clearly separated from approved instructions. Use the AI-ready documentation checklist to create the minimum evidence layer.
 
-      A shortlist of AI use cases ranked by business value and control risk.
-      A separate shortlist of tasks that should stay deterministic.
-      A knowledge-readiness backlog for taxonomy, runbooks, and evidence capture.
-      A review and approval model for any action that leaves read-only mode.
-      A clearer statement of where AI is unnecessary.
+    4. Design governance as part of the workflow
+    NIST structures AI risk work around Govern, Map, Measure, and Manage. The practical lesson is that governance is not a form completed after a model has been selected. Roles, context, tests, monitoring, escalation, and risk response belong in the workflow design. The OECD principles likewise emphasize human oversight, transparency, robustness, accountability, and traceability across the AI lifecycle.
+    For SAP operations, define what the assistant may retrieve, what it may infer, what it may recommend, and what—if anything—it may execute. Apply the requester's access context and retain evidence of sources, model or configuration version, response, reviewer, decision, and downstream result. See Authorization-Aware AI for SAP.
+
+    5. Pilot with continuation and stop gates
+    Begin with a read-only or recommendation-only workflow that has frequent examples and a measurable result. Establish a comparison set, error taxonomy, review sample, and rollback or fallback path before launch.
+
+      Continue: the business measure improves, critical-error rate stays inside the agreed boundary, reviewers can explain decisions, and operating cost remains acceptable.
+      Correct: benefit exists but retrieval quality, user adoption, latency, or review effort prevents dependable use.
+      Stop: the team cannot reproduce outputs, material errors escape review, access boundaries fail, or the pilot shifts cost without improving the target outcome.
+
+    The companion scenario, Why AI pilots in SAP support fail before they create value, converts these gates into a readiness review.
+
+    Decision outputs
+
+      A ranked task list with baseline, expected mechanism of value, and accountable owner.
+      A documented choice between deterministic automation, AI assistance, human decision, or no automation.
+      A knowledge and data backlog with owners and review dates.
+      An access, approval, logging, and fallback design.
+      Pilot continuation, correction, and stop thresholds.
 
 
-    Most SAP teams do not need more ambitious AI. They need better operating knowledge and more disciplined boundaries. Once that exists, AI becomes easier to place and easier to govern.
+    Boundaries
+    This framework does not estimate ROI without local data, approve a particular model or vendor, or replace security, legal, privacy, works-council, or business-process review. The NIST AI RMF is voluntary and is being revised; record the version used in a decision. SAP product capabilities and licensing also change, so validate them against current official documentation before architecture approval.
 
 
 
     Related pages
 
+      AI in Business for SAP Operations cluster
       Rule-Based Automation vs AI
+      AI-Ready Process Documentation
+      Authorization-Aware AI for SAP
       AI Agent for SAP Support
-      Why AI pilots in SAP support fail before they create value
-      SAP AMS Cost Reduction Framework
+      AI Business Signals dataset
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with controlled AI workflows for SAP operations, support knowledge systems, authorization boundaries, and human review. This guide treats AI as a governed support capability rather than an autonomous decision-maker.
@@ -567,14 +724,14 @@ Dzmitryi Kharlanau provides AI-readiness reviews for SAP operations, with attent
 Related service: https://dkharlanau.github.io/services/sap-ai-ml-enablement/
 Related evidence:
 - https://dkharlanau.github.io/atlas/automation/rule-based-automation-vs-ai/
-- https://dkharlanau.github.io/atlas/ai-operations/ai-agent-for-sap-support/
-- https://dkharlanau.github.io/atlas/concepts/sap-ams-cost-reduction-framework/
 - https://dkharlanau.github.io/atlas/ai-operations/ai-ready-process-documentation/
 - https://dkharlanau.github.io/atlas/ai-operations/authorization-aware-ai-for-sap/
+- https://dkharlanau.github.io/atlas/ai-operations/ai-agent-for-sap-support/
+- https://dkharlanau.github.io/atlas/automation/agent-assisted-development-workflows/
 
 ==================================================
 
-PAGE: Order to Cash
+PAGE: SAP Order-to-Cash Process
 URL: https://dkharlanau.github.io/atlas/concepts/order-to-cash/
 SECTION: concepts
 DOMAIN: Business operations
@@ -584,16 +741,24 @@ BUSINESS PROCESS: Order to cash
 TAGS: order-to-cash, sap-sd
 REVIEWED: 2026-05-06
 ----------------------------------------
-Home
+**Sources:** [SAP sales document flow](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/6aa7c6535e601e4be10000000a174cb4.html), [SAP outbound delivery creation](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/c81fbf53f106b44ce10000000a174cb4.html), and [SAP sales billing](https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/4c74c957b7018809e10000000a4450e5.html).
+**Date checked:** 2026-08-11
+**Confidence:** high for the standard document chain; medium for variations introduced by industry processes, extensions, and external systems.
+**Related page/topic:** /atlas/maps/order-to-cash-map/
+**Practical implication:** Diagnose an O2C delay as a failed transition between business documents and controls, not as a generic module or team problem.
+**Tags:** order-to-cash, sap-sd, fulfillment, billing, receivables
+
+
+    Home
     Knowledge Atlas
     Concepts
-    Order to Cash
+    SAP Order-to-Cash Process
 
 
 
     Atlas Concept
-    Order to cash
-    The operating chain that turns customer demand into delivery, billing, accounting, and cash collection.
+    SAP order-to-cash process
+    The document and control chain that turns customer demand into a fulfilment promise, delivery, billing, accounting, and settlement.
 
 
 
@@ -607,22 +772,49 @@ Home
 
 
     Core idea
-    Order to cash is the end-to-end flow from customer demand to financial settlement. In a SAP-heavy environment it usually spans sales order capture, availability, delivery, goods issue, billing, accounting, receivables, and dispute handling.
+    Order to cash is the end-to-end operating chain from customer demand to financial settlement. In a standard sell-from-stock path, the evidence normally progresses through a sales order, availability confirmation, outbound delivery, goods issue, billing document, accounting entry, receivable, and clearing result.
+    The document chain is not merely technical history. Each transition represents a business control: what can be promised, what can be shipped, what can be invoiced, what can be posted, and what can be considered settled.
 
     Why it matters
-    O2C is where customer promise, inventory reality, logistics execution, pricing, tax, credit, and revenue recognition meet. Weakness in one area often appears as a support ticket somewhere else: an order block, a failed delivery, a billing split, a pricing dispute, or a delayed cash collection.
+    O2C is where customer promise, inventory reality, logistics execution, pricing, tax, credit, accounting, and receivables meet. A failure in one control often appears in another team's queue: an availability problem looks like an order issue, a warehouse status looks like a billing delay, or a payment reference problem looks like an open-credit problem.
 
-    Useful operating view
+    Operating decisions and evidence
 
-      Demand: customer, product, quantity, requested date, and commercial terms.
-      Commitment: availability, credit/risk controls, pricing, and order validation.
-      Execution: delivery creation, picking, packing, goods issue, and shipment handoff.
-      Billing: invoice creation, account determination, tax, and customer communication.
-      Cash: receivables, payment, clearing, disputes, and credit feedback.
+      StageDecisionEvidenceFrequent blind spot
 
+        DemandIs the requested transaction commercially and operationally complete?Sales order header/item data, partners, material, quantity, dates, price, tax, and incompletion status.The order exists, but an item-level control prevents the next document.
+        CommitmentWhat quantity and date can be promised under the applicable rules?Confirmed schedule lines, availability result, credit/risk status, and active blocks.Visible stock is treated as automatically promisable.
+        ExecutionCan the confirmed demand be physically fulfilled?Delivery, picking/packing or warehouse status, goods issue, and logistics handoff.A delivery exists, but its status does not permit goods issue or billing.
+        BillingWhich reference is billable, and can it post correctly?Billing due status, invoice, split analysis, tax/account determination, and accounting transfer.Invoice creation is checked without confirming the billable reference and its status.
+        SettlementHas the receivable been resolved according to the business outcome?Customer open item, payment, clearing, deduction, dispute, or dunning status.Technical payment receipt is confused with correct allocation and clearing.
+
+
+
+    How to diagnose across teams
+
+      Start with the customer's expected outcome and the exact sales-document item.
+      Use document flow and item statuses to find the last correct evidence and the first missing or blocked transition.
+      Separate the cause into master data, configuration, application status, integration, timing, or approval ownership.
+      Route the incident with the evidence needed by the owning team, not only the symptom reported by the user.
+      Close the incident only after the expected downstream document or settlement evidence exists.
+
+
+    Useful measures
+    Process health is clearer when teams measure transitions rather than raw ticket counts. Useful signals include order-to-confirmation time, order-to-delivery time, goods-issue-to-billing time, billing-to-accounting failures, aged open deliveries, billing blocks, disputed receivables, and cash-application delay. SAP's order-to-cash performance guidance similarly treats blocks and lead times between process events as operational evidence.
 
     Support takeaway
-    O2C diagnostics should follow the document flow and the business event sequence. Ask where the process stopped, which document exists, which document is missing, and which team owns the failed control. This prevents “SAP issue” from becoming a vague label for a cross-functional operating problem.
+    Follow the document flow and business-event sequence. Ask which document exists, which result should follow, which control owns that transition, and what proof will show recovery. This prevents “SAP issue” from becoming a vague label for a cross-functional operating problem.
+
+    Boundaries and process variants
+    Third-party, intercompany, make-to-order, returns, services, billing plans, subscriptions, external commerce, EWM, and transportation scenarios add or replace documents. Do not force them into a sell-from-stock sequence. Use the SAP order-to-cash process map as a tracing method, then adapt the checkpoints to the approved process design.
+
+    Official references
+
+      SAP: displaying a sales document flow
+      SAP: outbound delivery creation
+      SAP: sales billing
+      SAP: order-to-cash performance
+
 
 
 
@@ -631,6 +823,8 @@ Home
       SAP ATP Is Not Inventory
       Order to Cash Map
       SAP Stock Exists but Is Not Promisable
+      SAP Sales Order Block Diagnosis
+      SAP Delivery Processing Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
@@ -785,7 +979,15 @@ BUSINESS PROCESS: Order to cash
 TAGS: order-to-cash, sap-sd, diagnostics
 REVIEWED: 2026-05-06
 ----------------------------------------
-Home
+**Sources:** [SAP scope of availability check](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html), [SAP ATP checking rules](https://help.sap.com/docs/SAP_S4HANA_CLOUD/32da8359c8ee4e8b8e8c5e15cacba5aa/10e9ab50bc27406296b0b78eff3f9fba.html), and [SAP supply protection integration](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/e541e617043545a0bb60e5067d037046.html).
+**Date checked:** 2026-08-11
+**Confidence:** high for the checking-group/rule/scope relationship; medium for the result of any customer-specific ATP design.
+**Related page/topic:** /atlas/concepts/sap-stock-exists-not-promisable/
+**Practical implication:** Compare the ATP result with its included supply, demand, date, location, and prioritization rules—not with a standalone stock total.
+**Tags:** order-to-cash, sap-sd, atp, availability-check, inventory, diagnostics
+
+
+    Home
     Knowledge Atlas
     Concepts
     SAP ATP Is Not Inventory
@@ -809,23 +1011,54 @@ Home
 
     Core idea
     Available-to-promise answers a commitment question: what quantity can the business responsibly promise to a customer, and when? It is not the same as asking what quantity exists physically in a plant or warehouse.
-    Inventory can exist and still be unavailable for a new promise. It may already be committed to another order, blocked for quality, reserved for production, held in the wrong location, or not considered by the relevant availability check configuration.
+    Conceptually, an ATP result is shaped by eligible stock and receipts minus relevant requirements, evaluated for a date and document context. The actual categories are not universal: SAP uses the checking group and checking rule to determine the scope of availability check, including which stocks, receipts, issue elements, and requirements are considered.
+
+    Inventory question versus ATP question
+
+      Inventory asksATP asks
+
+        What quantity is recorded in this stock category and location?What quantity can this demand confirm, on which date, under this checking scope?
+        What is physically or financially present now?Which current and future supply/requirements are eligible for the calculation?
+        Where is the stock and what status does it have?Can this document, customer, channel, or priority consume it?
+        Has inventory changed?Has supply, demand, allocation, protection, or the requested date changed?
+
+
 
     Why the distinction matters
-    Many support issues start with a simple mismatch: a user sees stock in one report, but the sales order confirms less than expected. The first reaction is often “ATP is wrong.” A better first question is: which supply and demand elements is the check allowed to consider for this material, plant, date, and document context?
-    The answer depends on master data, configuration, document type, timing, existing commitments, and sometimes product allocation or supply protection rules. The exact behavior is landscape-specific.
+    Many support issues start with a user seeing stock in one report while the sales order confirms less than expected. The first useful question is not whether ATP is wrong. It is which supply and demand elements the check is allowed to consider for this material, location, requested date, and document context.
+    Classic availability checking and advanced ATP do not have identical capabilities. Where advanced ATP functions are active, product allocation, supply protection, backorder processing, and alternative confirmation can further shape or reassign confirmations. Treat those as explicit controls, not invisible adjustments.
 
-    Practical diagnostic questions
+    Diagnostic sequence
 
-      Is the stock physically available, unrestricted, and relevant for the plant or storage location being checked?
-      Are existing sales orders, reservations, or dependent requirements already consuming the supply?
-      Are purchase orders, production orders, or planned receipts included in the check scope?
-      Is the requested delivery date before the next reliable receipt?
-      Is a product allocation, supply protection, or special stock rule changing the result?
+      Capture the sales document/item, material, plant and storage location if applicable, requested quantity/date, and confirmed quantity/date.
+      Identify the material checking group and the checking rule used by the business process. Confirm the resulting scope of check rather than relying on a remembered default.
+      Review the eligible stock and receipt elements by date. Record which supply is included, excluded, delayed, or outside the check horizon.
+      Review requirements and existing commitments that consume the available quantity. Use the same segment, location, and time context as the original check.
+      If aATP is active, inspect product allocation, supply protection, backorder processing, or alternative confirmation evidence relevant to the item.
+      Repeat or simulate the check only after the original context is reproducible, then compare the new confirmation with the documented cause.
+
+
+    Evidence for a useful ATP incident
+
+      Material, plant, storage location or stock segment, document/item, sales area, and requirement class where relevant.
+      Requested and confirmed quantities/dates before and after the issue.
+      Checking group, checking rule, scope of check, and availability result.
+      Relevant supply and demand elements with dates, plus any active allocation or protection object.
+      The inventory report and selection criteria used for comparison.
 
 
     Support takeaway
-    Do not diagnose ATP from stock quantity alone. Diagnose it as a time-based promise calculation shaped by business commitments, supply reliability, and configuration. A useful ATP support note should include the material, plant, requested date, confirmed date, confirmed quantity, visible stock, open requirements, open receipts, and the document context that triggered the check.
+    Do not diagnose ATP from stock quantity alone. Diagnose the promise result from its time, location, document, supply, demand, and prioritization context. Changing the scope may improve one confirmation while weakening other commitments, so configuration changes require process ownership and regression evidence.
+
+    Boundaries and non-goals
+    This page explains the diagnostic distinction; it is not a configuration recipe. Release level, classic versus advanced ATP, fulfilment sourcing, external order management, industry functions, and custom enhancements can change the applicable monitor and calculation. Confirm the active architecture before using transaction-level advice.
+
+    Official references
+
+      SAP: scope of availability check
+      SAP: checking rules for the product availability check
+      SAP: supply protection integration with product availability check
+
 
 
 
@@ -834,6 +1067,7 @@ Home
       Order to Cash
       SAP Stock Exists but Is Not Promisable
       Order to Cash Map
+      SAP Sales Order Block Diagnosis
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
@@ -975,6 +1209,13 @@ BUSINESS PROCESS: Order to cash
 TAGS: order-to-cash, sap-sd, diagnostics, retail
 REVIEWED: 2026-06-13
 ----------------------------------------
+**Sources:** [SAP scope of availability check](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/d0960a564b52fb37e10000000a44147b.html), [SAP availability-check levels](https://help.sap.com/docs/SAP_S4HANA_CLOUD/32da8359c8ee4e8b8e8c5e15cacba5aa/199d86d0f85e4ea982a529c6e0409660.html?locale=en-us), and [SAP stock protection with product allocation](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9905622a5c1f49ba84e9076fc83a9c2c/e7582f68181d476ab37550c6ebe6d25e.html).
+**Date checked:** 2026-08-11
+**Confidence:** high for the availability-scope distinction; medium for the exact result in a configured customer landscape.
+**Related page/topic:** /atlas/concepts/sap-atp-is-not-inventory/
+**Practical implication:** Reproduce the promise check in the same material, location, date, and document context before comparing its result with an inventory report.
+**Tags:** order-to-cash, sap-sd, atp, inventory, allocation, diagnostics
+
 HomeKnowledge AtlasConceptsStock Exists but Is Not Promisable
 
 Knowledge Atlas
@@ -987,31 +1228,68 @@ DomainSAP operationsTypebusiness conceptReviewed2026-06-13
 
 Where this fits
 
-This page sits between inventory reporting and customer commitment. It is useful when business users say stock is visible in one place, but an order, store channel, or online promise still cannot use it.
+This page sits between inventory reporting and customer commitment. Use it when stock appears in a report or physical location but a sales order, store, or digital channel cannot confirm the expected quantity or date.
+
+Why the two figures differ
+
+  QuestionInventory viewPromise view
+
+    What is measured?Quantity recorded in one or more stock categories and locations.Quantity and date available after the configured check considers eligible stocks, receipts, issues, and requirements.
+    Which location matters?The plant, storage location, batch, or stock segment selected in the report.The location and level used by the document's availability check.
+    Which time matters?Usually the report's current stock position.The requested date, receipt dates, existing demand, and applicable horizon or time-bucket rules.
+    Which business controls matter?Stock type and inventory status.Checking group/rule, scope of check, document context, product allocation, supply protection, and other configured confirmation rules.
+
 
 Common issues
 
-Stock is in the wrong plant, storage location, channel, or stock type for the process being checked.
+The inventory figure and the promise check use different plants, storage locations, batches, stock segments, or stock categories.
 
-Stock is physically present but already committed, reserved, blocked, or not included in the relevant availability logic.
+Stock is physically present but existing requirements, stock status, or the configured scope prevents it from supporting the new demand.
 
-Retail, e-commerce, and distribution channels may apply allocation or promise rules that differ from simple unrestricted stock visibility.
+Product allocation or supply protection reserves capacity for customers, regions, channels, or prioritized demand, so a lower-priority request cannot consume all visible stock.
 
-Diagnostic questions
+A receipt exists but falls after the requested date, is excluded by the scope, or is not treated as reliable supply for that check.
 
-Which stock figure is the user looking at, and which process is trying to consume or promise it?
+Diagnostic sequence
 
-Is the stock unrestricted, relevant to the checked location, and available on the requested date?
+Capture the material, plant, storage location if relevant, batch or stock segment, document/item, requested date, requested quantity, confirmed date, and confirmed quantity.
 
-Is another document, allocation rule, or protection rule already consuming the quantity?
+Identify the inventory report and exact stock category behind the user's number. Do not compare an aggregate plant figure with a storage-location or segment-specific check.
 
-Stock visibility and promisable stock are two different figures. The gap between them is usually a business rule, not a system error.
+Confirm the material's checking group, the process checking rule, and the resulting scope of check. SAP documentation defines the scope as the stocks, receipts, issue elements, and requirements included in the availability check.
+
+Review relevant supply and demand by date. Determine whether another requirement consumes the quantity or whether a future receipt falls outside the requested date or configured horizon.
+
+Check product allocation, supply protection, and other aATP controls only when they are active for the scenario. Record the protection or allocation object that changes the result.
+
+Repeat the check in the same document context and confirm the resulting schedule-line quantity and date. A different simulation context may legitimately produce a different answer.
+
+Evidence to retain
+
+  Inventory report name, selection criteria, timestamp, and stock category—not only a screenshot of the total.
+  Sales document/item, requested and confirmed quantities/dates, plant and storage location, checking group/rule, and check result.
+  Relevant requirements and receipts with dates, plus any allocation or protection restriction.
+  Whether the mismatch is isolated to one document context or affects a wider material/location population.
+
+Limitations and boundaries
+
+This guide does not prescribe one ATP configuration or assume every landscape uses advanced ATP. Classic availability checking, aATP, external order management, allocation services, EWM, retail stock segments, and custom fulfilment sourcing can produce different evidence paths. Confirm the active architecture before changing scope or protection rules.
+
+Official references
+
+  SAP: scope of availability check
+  SAP: availability-check scope and levels
+  SAP: stock protection using product allocation
+
+Stock visibility and promisable stock answer different questions. The gap is diagnostic evidence: locate the scope, date, demand, location, or prioritization rule that explains it before changing inventory or ATP settings.
 
 Related pages
 
 SAP ATP Is Not Inventory
 Order to Cash
 Store Receiving in SAP Retail
+SAP Order-to-Cash Process Map
+SAP Sales Order Block Diagnosis
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with SD/MM process diagnostics, logistics execution, document flow, and operational improvement.
@@ -5111,7 +5389,7 @@ Related evidence:
 
 ==================================================
 
-PAGE: Order to Cash Map
+PAGE: SAP Order-to-Cash Process Map
 URL: https://dkharlanau.github.io/atlas/maps/order-to-cash-map/
 SECTION: maps
 DOMAIN: Business operations
@@ -5121,11 +5399,18 @@ BUSINESS PROCESS: Order to cash
 TAGS: order-to-cash, sap-sd, sap-mm
 REVIEWED: 2026-05-06
 ----------------------------------------
+**Sources:** [SAP sales document flow](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/6aa7c6535e601e4be10000000a174cb4.html), [SAP outbound delivery creation](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/c81fbf53f106b44ce10000000a174cb4.html), and [SAP sales billing](https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/4c74c957b7018809e10000000a4450e5.html).
+**Date checked:** 2026-08-11
+**Confidence:** high for the standard document-chain checkpoints; medium for landscape-specific controls, interfaces, and ownership.
+**Related page/topic:** /atlas/concepts/order-to-cash/
+**Practical implication:** Start with the last correct business document and its item-level status, then investigate the control responsible for the missing transition.
+**Tags:** order-to-cash, sap-sd, document-flow, fulfillment, billing
+
 HomeKnowledge AtlasMapsOrder to Cash Map
 
 Knowledge Atlas
 
-Order to cash map
+SAP order-to-cash process map
 
 A map for tracing where an O2C process stopped and which evidence should exist at each stage.
 
@@ -5133,33 +5418,63 @@ DomainBusiness operationsTypeprocess mapReviewed2026-05-06
 
 Where this fits
 
-This map is the companion to the Order to Cash concept page. It focuses on process tracing rather than general explanation.
+Use this map when a customer demand exists but the expected delivery, goods issue, invoice, accounting entry, or clearing result does not. The fastest starting point is the last correct business document—not the team that first received the ticket.
 
-Core checkpoints
+Process and evidence flow
 
-Demand captured: customer, material, quantity, date, price context, and partner roles.
+  Standard order-to-cash checkpoints. Each step names the business outcome and the evidence that should exist before the process moves forward.
 
-Commitment made: availability, credit, pricing, and document validation.
+    DemandSales orderCustomer, material, quantity, requested date, partners, and commercial terms are valid.
+    CommitConfirmed scheduleAvailability, credit, pricing, incompletion, and delivery controls permit execution.
+    FulfilDelivery and goods issuePicking and shipping evidence exists, and goods issue records the inventory event.
+    BillBilling and accountingThe billable reference produces the intended invoice and financial posting.
+    SettleReceivable and clearingPayment, deduction, dispute, or clearing evidence resolves the open customer item.
 
-Fulfillment executed: delivery, picking, packing, goods issue, and logistics handoff.
 
-Billing posted: invoice, account determination, tax, output, and receivables impact.
+Checkpoint-to-evidence map
 
-Cash resolved: payment, clearing, deductions, disputes, and credit feedback.
+  TransitionEvidence that should existTypical reason it stopsNext route
 
-Diagnostic questions
+    Demand → commitmentComplete sales order item, confirmed quantity/date, pricing and credit status.Incompletion, master data, pricing, credit, availability, or manual block.Sales order block diagnosis
+    Commitment → fulfilmentDelivery-due schedule line and outbound delivery with executable status.Delivery block, shipping-point or route data, due-date selection, stock, warehouse, or interface issue.Delivery processing diagnostics
+    Fulfilment → billingGoods issue or another valid billable reference, billing status, and complete billing data.Billing block, copy control, split criteria, incomplete reference, or posting error.Billing block analysis
+    Billing → accountingBilling document plus the expected accounting transfer and customer open item.Account determination, tax, posting period, partner, or interface failure.Invoice split analysis
+    Receivable → settlementPayment, clearing document, deduction, dispute, or dunning status.Reference mismatch, underpayment, bank allocation, dispute, or payment-processing issue.Payment and dunning diagnostics
 
-What is the last document that exists?
 
-What is the expected next document or posting?
+How to trace a stopped O2C process
 
-Which master data, configuration, interface, or approval controls that transition?
+  Capture the customer, sales document and item, material, requested date, expected outcome, and business impact.
+  Open the sales document flow and inspect item-level status. SAP document flow lists existing preceding and subsequent documents; absence of a document is different from an existing document in error.
+  Name the failed transition: order-to-delivery, delivery-to-goods-issue, reference-to-billing, billing-to-accounting, or receivable-to-clearing.
+  Check the control that owns that transition. Separate master data, configuration, application status, integration, timing, and approval before proposing a fix.
+  Confirm the next business proof after correction. A green technical status is not enough if the delivery, invoice, accounting entry, or clearing result is still absent.
+
+Evidence to capture before routing
+
+  Sales document and item, document type, customer, material, plant, requested and confirmed dates.
+  Current header and item statuses, active block or incompletion reason, and document-flow screenshot or export.
+  Last successful document, missing next document, exact error text, and time of the last processing attempt.
+  Expected business outcome and owning team for the failed control.
+
+Boundaries and non-goals
+
+This is a standard diagnostic map, not a claim that every SAP sales process follows one document chain. Returns, third-party processing, intercompany sales, services, billing plans, EWM, transportation, tax engines, and external commerce platforms introduce additional documents and controls. Preserve the same method: identify the last correct evidence and the missing transition.
+
+Official references
+
+  SAP: displaying a sales document flow
+  SAP: outbound delivery creation
+  SAP: sales billing
+  SAP: order-to-cash performance checkpoints
 
 Related pages
 
 Order to Cash
 SAP ATP Is Not Inventory
 SAP Stock Exists but Is Not Promisable
+SAP Delivery Processing Diagnostics
+SAP Invoice Split Analysis
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
@@ -5179,7 +5494,7 @@ Related evidence:
 
 ==================================================
 
-PAGE: Procure to Pay Map
+PAGE: SAP Procure-to-Pay Process Map
 URL: https://dkharlanau.github.io/atlas/maps/procure-to-pay-map/
 SECTION: maps
 DOMAIN: Business operations
@@ -5189,11 +5504,18 @@ BUSINESS PROCESS: Procure to pay
 TAGS: procure-to-pay, sap-mm, procurement
 REVIEWED: 2026-05-06
 ----------------------------------------
+**Sources:** [SAP goods receipts for purchase orders](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/240fcdcc71c640ea9aa9691500b34889/a363bd534f22b44ce10000000a174cb4.html), [SAP invoice processing](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/ab6fb6531de6b64ce10000000a174cb4.html), and [SAP invoices for purchase orders](https://help.sap.com/docs/SAP_S4HANA_ON-PREMI-SE/af9ef57f504840d2b81be8667206d485/be5eb6531de6b64ce10000000a174cb4.html).
+**Date checked:** 2026-08-11
+**Confidence:** high for the standard purchasing, receipt, and invoice checkpoints; medium for landscape-specific approvals and payment controls.
+**Related page/topic:** /atlas/sap/gr-ir-clearing-explained/
+**Practical implication:** Reconcile the purchasing document, receipt evidence, invoice evidence, and accounting result before treating a blocked payment as a finance-only issue.
+**Tags:** procure-to-pay, sap-mm, procurement, invoice-verification, gr-ir
+
 HomeKnowledge AtlasMapsProcure to Pay Map
 
 Knowledge Atlas
 
-Procure to pay map
+SAP procure-to-pay process map
 
 A practical map for connecting procurement demand, purchasing documents, goods receipt, invoice verification, and financial clearing.
 
@@ -5201,31 +5523,64 @@ DomainBusiness operationsTypeprocess mapReviewed2026-05-06
 
 Where this fits
 
-Procure to pay connects business demand with supplier commitment, physical receipt, invoice verification, and payment readiness.
+Use this map when a procurement need exists but the expected purchase order, receipt, invoice, liability, or payment result does not. Procure-to-pay incidents are easiest to resolve when the physical, commercial, and accounting evidence is compared at the same purchase-order item.
 
-Core flow
+Process and evidence flow
 
-Demand is captured as a purchase requisition, MRP proposal, service request, or manual procurement need.
+  Standard procure-to-pay checkpoints. Each step identifies the business outcome and the evidence needed by the next control.
 
-The purchasing process turns that demand into a purchase order or another purchasing document.
+    NeedRequisition or demandQuantity, date, account assignment, specification, and approval need are explicit.
+    OrderPurchase orderSupplier, price, quantity, delivery terms, account assignment, and release status are valid.
+    ReceiveGoods receipt or service acceptancePhysical or service evidence is posted against the intended PO item.
+    VerifySupplier invoicePrice, quantity, tax, reference, and receipt evidence pass the required checks.
+    SettleLiability and paymentThe invoice is released, due, paid, and cleared with the expected accounting result.
 
-Goods receipt or service acceptance confirms that the supplier delivered what the business can recognize.
 
-Invoice verification compares commercial, receipt, and invoice evidence before finance clears or blocks payment.
+Checkpoint-to-evidence map
 
-Diagnostic questions
+  TransitionEvidence that should existTypical reason it stopsNext route
 
-Where did the chain stop: requisition, order, receipt, invoice, clearing, or payment?
+    Need → purchase orderApproved requisition or other valid demand, source decision, and complete account assignment.Missing source, release, budget, master data, contract, or purchasing responsibility.PO creation diagnostics
+    Purchase order → receiptReleased PO item with open quantity and delivery or service evidence.Closed/deleted item, wrong reference, quantity/UoM mismatch, material, batch, quality, or service-entry issue.Goods receipt diagnostics
+    Receipt → invoicePO history showing the applicable goods receipt or accepted service and its quantity/value.Missing receipt, wrong PO item, partial delivery, return, or GR-based invoice-verification mismatch.Invoice verification diagnostics
+    Invoice → liabilityPosted invoice document, variance status, tax result, and supplier open item.Price, quantity, tax, duplicate, tolerance, account, period, or approval issue.Three-way match diagnostics
+    Liability → settlementDue and released supplier item, payment proposal/run, bank result, and clearing document.Payment block, terms, bank data, payment method, approval, exception, or clearing mismatch.Payment-run diagnostics
 
-Is the issue caused by document status, master data, tolerance, approval, or finance integration?
 
-Which team owns the failed control?
+How to trace a stopped P2P process
+
+  Capture the purchase order and item, supplier, material or service, expected quantity/value, company code, plant, and expected business result.
+  Use purchase-order history to align the order, goods or service receipt, invoice, returns, reversals, and credit memos at item level.
+  Name the failed transition: demand-to-order, order-to-receipt, receipt-to-invoice, invoice-to-liability, or liability-to-payment.
+  Separate a real commercial variance from missing or late evidence. Do not raise tolerance, release an invoice, or clear GR/IR merely to remove a technical symptom.
+  After correction, confirm the downstream result: usable stock or accepted service, correctly posted invoice, expected GR/IR position, and cleared supplier liability.
+
+Evidence to capture before routing
+
+  PO and item, supplier, material/service, quantity and value, account assignment, plant, company code, and document currency.
+  Release status, open quantity, delivery-completed/final-invoice indicators, PO history, and exact variance or block.
+  Receipt, reversal, return, invoice, credit memo, payment, and clearing document references where they exist.
+  Expected business outcome, last correct evidence, and the owner authorized to approve any commercial exception.
+
+Boundaries and non-goals
+
+This map does not assume every procurement path requires a material goods receipt. Services, limits, evaluated receipt settlement, consignment, subcontracting, intercompany, central procurement, and external networks use different evidence. The diagnostic rule remains the same: identify what the next control expects and prove whether that evidence exists.
+
+Official references
+
+  SAP: goods receipts for purchase orders
+  SAP: invoice processing
+  SAP: invoices for purchase orders and GR/IR
+  SAP: goods-receipt-based invoice verification
 
 Related pages
 
 SAP Master Data Quality
 Master Data Governance Failure Modes
 Operational Memory for SAP AMS
+SAP Purchase Order Creation Diagnostics
+SAP Goods Receipt Diagnostics
+SAP Invoice Verification Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.

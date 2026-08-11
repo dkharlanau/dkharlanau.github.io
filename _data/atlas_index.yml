@@ -2,13 +2,13 @@
 # Purpose: structured topic index for public knowledge pages so Professional Radar
 # and agent-assisted updates can route content to the correct page without guessing.
 # Created for: issue #2
-# Last updated: 2026-05-26
+# Last updated: 2026-08-11
 
 meta:
   name: "Dzmitryi Kharlanau — Atlas Topic Index"
-  description: "Topic-to-page routing index for public knowledge pages on SAP AMS, support, process reliability, integration, master data, AI-assisted support, and architecture."
+  description: "Topic-to-page routing index for public knowledge pages on SAP AMS, support, process reliability, integration, master data, AI in business, and architecture."
   canonical: "https://dkharlanau.github.io/ai/discovery-map.json"
-  updated_at: "2026-07-24"
+  updated_at: "2026-08-11"
   version: "1.0"
 
 # Fallback routing rule: unknown topics route to watch/unclassified, not random page.
@@ -336,7 +336,7 @@ topic_clusters:
   - id: ai-ready-process-documentation
     title: "AI-Ready Process Documentation"
     path: "/atlas/ai-operations/ai-ready-process-documentation/"
-    topic_cluster: "operational continuity"
+    topic_cluster: "AI in Business and SAP Operations"
     keywords:
       - "AI-ready documentation"
       - "process documentation"
@@ -344,6 +344,9 @@ topic_clusters:
       - "support agents"
       - "structured knowledge"
       - "operational memory"
+      - "AI in business"
+      - "knowledge readiness"
+      - "retrieval evaluation"
     allowed_update_types:
       - "factual_update"
       - "practical_pattern"
@@ -351,7 +354,10 @@ topic_clusters:
     source_policy: "requires_source"
     last_reviewed: "2026-05-06"
     related_pages:
+      - "/atlas/ai-operations/"
+      - "/atlas/concepts/enterprise-ai-around-sap-decision-framework/"
       - "/atlas/automation/operational-memory-for-sap-ams/"
+      - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
       - "/ai/practical-ai-for-sap-support/"
     agent_notes: |
       Atlas page. Documentation structuring for retrieval and AI agents.
@@ -534,12 +540,20 @@ topic_clusters:
       ownership, master-data quality. Cross-link to data-quality Atlas pages.
 
   - id: enterprise-ai-around-sap-decision-framework
-    title: "Enterprise AI Around SAP Decision Framework"
+    title: "AI in Business Decision Framework for SAP Operations"
     path: "/atlas/concepts/enterprise-ai-around-sap-decision-framework/"
-    topic_cluster: "Enterprise AI around SAP"
+    topic_cluster: "AI in Business and SAP Operations"
     keywords:
+      - "AI in business"
+      - "business AI strategy"
       - "AI around SAP"
       - "AI for SAP support"
+      - "enterprise AI"
+      - "AI ROI"
+      - "AI operating model"
+      - "AI use-case selection"
+      - "workflow redesign"
+      - "value measurement"
       - "deterministic automation"
       - "human review"
       - "AI pilot"
@@ -554,14 +568,19 @@ topic_clusters:
     source_policy: "requires_source"
     last_reviewed: "2026-07-25"
     related_pages:
+      - "/atlas/ai-operations/"
       - "/ai/practical-ai-for-sap-support/"
       - "/atlas/automation/rule-based-automation-vs-ai/"
+      - "/atlas/ai-operations/ai-ready-process-documentation/"
+      - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
       - "/atlas/ai-operations/ai-agent-for-sap-support/"
       - "/scenarios/ai-pilots-for-sap-support-fail-before-value/"
+      - "/datasets/ai-business-signals/"
     agent_notes: |
-      Atlas decision framework for practical AI around SAP. Use for management
-      questions about where AI can reduce effort and where deterministic automation
-      is the safer choice.
+      Canonical pillar for AI-in-business decisions around SAP operations. Route
+      strategy, value, use-case selection, governance, pilot-gate, and operating-model
+      questions here. Use the cluster hub for broader navigation and the task pages
+      for implementation detail.
 
   - id: sap-master-data-quality
     title: "SAP Master Data Quality"
@@ -892,6 +911,73 @@ topic_clusters:
     agent_notes: |
       Atlas concept page. Handoff from logistics to sellable inventory.
 
+  # --- AI in Business and SAP Operations ---
+  - id: ai-in-business-sap-operations
+    title: "AI in Business for SAP Operations"
+    path: "/atlas/ai-operations/"
+    topic_cluster: "AI in Business and SAP Operations"
+    keywords:
+      - "AI in business"
+      - "enterprise AI"
+      - "business AI strategy"
+      - "SAP AI operations"
+      - "AI governance"
+      - "workflow redesign"
+      - "AI value measurement"
+      - "knowledge readiness"
+      - "authorization-aware AI"
+      - "AI pilot"
+    allowed_update_types:
+      - "factual_update"
+      - "source_addition"
+      - "related_link"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-07-10"
+    related_pages:
+      - "/atlas/concepts/enterprise-ai-around-sap-decision-framework/"
+      - "/atlas/automation/rule-based-automation-vs-ai/"
+      - "/atlas/ai-operations/ai-ready-process-documentation/"
+      - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
+      - "/atlas/ai-operations/ai-agent-for-sap-support/"
+      - "/scenarios/ai-pilots-for-sap-support-fail-before-value/"
+      - "/datasets/ai-business-signals/"
+    agent_notes: |
+      Canonical topic-cluster router for AI in business around SAP operations.
+      Use the decision framework for value and approval questions, then route to
+      the task-specific control, knowledge, authorization, delivery, or pilot page.
+
+  - id: ai-pilots-for-sap-support-fail-before-value
+    title: "Why AI Pilots in SAP Support Fail Before They Create Value"
+    path: "/scenarios/ai-pilots-for-sap-support-fail-before-value/"
+    topic_cluster: "AI in Business and SAP Operations"
+    keywords:
+      - "AI pilot failure"
+      - "AI pilot readiness"
+      - "AI business value"
+      - "pilot gates"
+      - "human review"
+      - "knowledge quality"
+      - "SAP support AI"
+      - "AI operating model"
+    allowed_update_types:
+      - "factual_update"
+      - "source_addition"
+      - "practical_pattern"
+      - "clarification"
+    source_policy: "requires_source"
+    last_reviewed: "2026-07-25"
+    related_pages:
+      - "/atlas/ai-operations/"
+      - "/atlas/concepts/enterprise-ai-around-sap-decision-framework/"
+      - "/atlas/automation/rule-based-automation-vs-ai/"
+      - "/atlas/ai-operations/ai-ready-process-documentation/"
+      - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
+    agent_notes: |
+      Verified business scenario for readiness, failure modes, and pilot gates.
+      Use after the decision framework when the question is why a pilot has stalled
+      or what must be true before it can move beyond a demo.
+
   # --- Practical AI for SAP support ---
   - id: practical-ai-for-sap-support
     title: "Practical AI for SAP Support"
@@ -926,9 +1012,10 @@ topic_clusters:
   - id: ai-agent-for-sap-support
     title: "AI Agent for SAP Support"
     path: "/atlas/ai-operations/ai-agent-for-sap-support/"
-    topic_cluster: "practical AI for SAP support"
+    topic_cluster: "AI in Business and SAP Operations"
     keywords:
       - "AI agent"
+      - "AI in business"
       - "support agent"
       - "retrieval"
       - "diagnosis"
@@ -944,7 +1031,12 @@ topic_clusters:
     source_policy: "requires_source"
     last_reviewed: "2026-05-06"
     related_pages:
+      - "/atlas/ai-operations/"
+      - "/atlas/concepts/enterprise-ai-around-sap-decision-framework/"
+      - "/atlas/automation/rule-based-automation-vs-ai/"
       - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
+      - "/atlas/ai-operations/ai-ready-process-documentation/"
+      - "/scenarios/ai-pilots-for-sap-support-fail-before-value/"
       - "/ai/practical-ai-for-sap-support/"
       - "/services/sap-ai-ml-enablement/"
     agent_notes: |
@@ -954,14 +1046,17 @@ topic_clusters:
   - id: authorization-aware-ai-for-sap
     title: "Authorization-Aware AI for SAP"
     path: "/atlas/ai-operations/authorization-aware-ai-for-sap/"
-    topic_cluster: "practical AI for SAP support"
+    topic_cluster: "AI in Business and SAP Operations"
     keywords:
       - "authorization-aware AI"
+      - "AI in business"
       - "data boundaries"
       - "user context"
       - "access control"
       - "SAP security"
       - "AI governance"
+      - "zero trust AI"
+      - "access-aware retrieval"
     allowed_update_types:
       - "factual_update"
       - "practical_pattern"
@@ -969,7 +1064,11 @@ topic_clusters:
     source_policy: "requires_source"
     last_reviewed: "2026-05-06"
     related_pages:
+      - "/atlas/ai-operations/"
+      - "/atlas/concepts/enterprise-ai-around-sap-decision-framework/"
+      - "/atlas/automation/rule-based-automation-vs-ai/"
       - "/atlas/ai-operations/ai-agent-for-sap-support/"
+      - "/atlas/ai-operations/ai-ready-process-documentation/"
       - "/legal/responsible-ai/"
     agent_notes: |
       Atlas page. AI must respect user-specific access and data boundaries.
@@ -1265,15 +1364,19 @@ topic_clusters:
   - id: rule-based-automation-vs-ai
     title: "Rule-Based Automation vs AI"
     path: "/atlas/automation/rule-based-automation-vs-ai/"
-    topic_cluster: "clean-core and side-by-side automation"
+    topic_cluster: "AI in Business and SAP Operations"
     keywords:
       - "rule-based automation"
+      - "AI in business"
+      - "AI use-case selection"
       - "AI-assisted"
       - "deterministic"
       - "probabilistic"
       - "decision boundary"
       - "automation"
       - "clean core"
+      - "human decision"
+      - "hybrid workflow"
     allowed_update_types:
       - "factual_update"
       - "practical_pattern"
@@ -1281,6 +1384,11 @@ topic_clusters:
     source_policy: "requires_source"
     last_reviewed: "2026-05-06"
     related_pages:
+      - "/atlas/ai-operations/"
+      - "/atlas/concepts/enterprise-ai-around-sap-decision-framework/"
+      - "/atlas/ai-operations/ai-ready-process-documentation/"
+      - "/atlas/ai-operations/authorization-aware-ai-for-sap/"
+      - "/scenarios/ai-pilots-for-sap-support-fail-before-value/"
       - "/atlas/automation/agent-assisted-development-workflows/"
       - "/services/sap-ai-ml-enablement/"
     agent_notes: |

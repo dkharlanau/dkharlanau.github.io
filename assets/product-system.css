@@ -1508,7 +1508,7 @@ body.page-context--knowledge .atlas-page .reader-action:hover, body.page-context
 body.page-context--knowledge .atlas-page { box-sizing: border-box; grid-template-areas: "header header" "body meta" "body related" "trust author" "disclaimer author"; padding-inline: clamp(1rem, 2.2vw, 1.75rem) !important; }
 body.page-context--knowledge .atlas-page > * { min-width: 0; }
 body.page-context--knowledge .atlas-page > .note-header { grid-area: header; }
-body.page-context--knowledge .atlas-page > .note-body { grid-area: body; }
+body.page-context--knowledge .atlas-page > .note-body { grid-area: body; grid-template-columns: minmax(0, 1fr); }
 body.page-context--knowledge .atlas-page > .atlas-meta-panel { grid-area: meta; }
 body.page-context--knowledge .atlas-page > .atlas-related { grid-area: related; min-width: 0; padding: 1rem; }
 body.page-context--knowledge .atlas-page > .atlas-author.atlas-trust { grid-area: trust; padding-inline: 1rem; }
@@ -1542,6 +1542,104 @@ body.page-context--knowledge .note-detail:not(.atlas-page) .note-body h3 { margi
 body.page-context--knowledge .note-detail:not(.atlas-page) .note-body :is(p, li) { font-size: 1rem; line-height: 1.7; }
 body.page-context--knowledge .note-detail:not(.atlas-page) .reader-actions { display: none; }
 @media (max-width: 760px) { body.page-context--knowledge .note-detail:not(.atlas-page) { width: min(calc(100% - 2rem), 44rem); } body.page-context--knowledge .note-detail:not(.atlas-page) .note-header h1 { font-size: clamp(2.25rem, 10vw, 3.25rem) !important; } body.page-context--knowledge .note-detail:not(.atlas-page) .note-body { padding-top: 1.4rem; } }
+
+/* Atlas process maps -----------------------------------------------------
+   Semantic ordered lists carry the same evidence as the visual flow. The
+   layout stays linear on wide screens and becomes a vertical trace on small
+   screens without hiding content or relying on JavaScript. */
+.atlas-process-map {
+  margin: 1.75rem 0 2.25rem;
+  border: 1px solid var(--ps-line);
+  background: var(--ps-surface);
+  padding: clamp(1rem, 2vw, 1.35rem);
+}
+
+.atlas-process-map figcaption {
+  max-width: 68ch;
+  margin-bottom: 1rem;
+  color: var(--ps-muted);
+  font: 650 .68rem/1.55 var(--ps-mono);
+  letter-spacing: .035em;
+}
+
+.atlas-process-map__steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .55rem;
+  margin: 0;
+  padding: 0 !important;
+  counter-reset: atlas-process-step;
+  list-style: none;
+}
+
+.atlas-process-map__steps > li {
+  position: relative;
+  min-width: 0;
+  border-top: 3px solid var(--ps-signal);
+  background: var(--ps-surface-muted);
+  padding: .85rem .75rem .9rem;
+  counter-increment: atlas-process-step;
+}
+
+.atlas-process-map__steps > li::before {
+  display: block;
+  margin-bottom: .55rem;
+  color: var(--ps-signal);
+  content: counter(atlas-process-step, decimal-leading-zero);
+  font: 750 .62rem/1 var(--ps-mono);
+  letter-spacing: .08em;
+}
+
+.atlas-process-map__steps > li:not(:last-child)::after {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: -.54rem;
+  width: .55rem;
+  background: var(--ps-surface);
+  color: var(--ps-signal);
+  content: "→";
+  font: 750 .8rem/1 var(--ps-mono);
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+.atlas-process-map__steps strong,
+.atlas-process-map__steps span,
+.atlas-process-map__steps small { display: block; }
+
+.atlas-process-map__steps strong {
+  color: var(--ps-ink);
+  font-size: .85rem;
+  line-height: 1.25;
+}
+
+.atlas-process-map__steps span {
+  margin-top: .32rem;
+  color: var(--ps-ink-soft);
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.atlas-process-map__steps small {
+  margin-top: .55rem;
+  color: var(--ps-muted);
+  font-size: .68rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .atlas-process-map__steps { grid-template-columns: 1fr; }
+  .atlas-process-map__steps > li:not(:last-child)::after {
+    top: auto;
+    right: 50%;
+    bottom: -.6rem;
+    width: 1.2rem;
+    content: "↓";
+    transform: translateX(50%);
+  }
+}
 
 /* Compact editorial reading system -------------------------------------------------
    Long-form SAP material is a working document, not a campaign poster. */
@@ -1941,8 +2039,40 @@ body.page-context--knowledge .atlas-card-grid .atlas-card:focus-visible {
   transform: none;
 }
 
+/* AI-in-business router: preserve the five-step reading order and give long
+   decision labels enough measure instead of allowing a four-column squeeze. */
+body.page-context--knowledge .atlas-card-grid--ai-business {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body.page-context--knowledge .atlas-card-grid--ai-business .atlas-card {
+  min-width: 0;
+}
+
+body.page-context--knowledge .atlas-card-grid--ai-business .atlas-card :is(h2, h3) {
+  max-width: 100%;
+  font-size: clamp(1.55rem, 2.2vw, 2rem) !important;
+  line-height: 1.03;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  body.page-context--knowledge .atlas-card-grid--ai-business {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.page-context--knowledge .atlas-card-grid--ai-business .atlas-card:nth-child(3n) {
+    border-inline-end-width: 1px !important;
+  }
+
+  body.page-context--knowledge .atlas-card-grid--ai-business .atlas-card:nth-child(2n) {
+    border-inline-end-width: 0 !important;
+  }
+}
+
 @media (max-width: 760px) {
   body.page-context--knowledge .atlas-card-grid .atlas-card { min-height: 0; border-inline-end-width: 0 !important; }
+  body.page-context--knowledge .atlas-card-grid--ai-business { grid-template-columns: 1fr; }
 }
 
 /* Section inset ----------------------------------------------------------
