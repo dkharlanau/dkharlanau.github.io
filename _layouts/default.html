@@ -16,7 +16,18 @@
   <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/catalog.json' | absolute_url }}" title="Enterprise Context Lab machine-readable catalog" />
   {% endif %}
   {% if page.enterprise_context_graph %}
-  <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/sales-order-graph.json' | absolute_url }}" title="Sales Order Decision Map" />
+    {% assign graph_endpoint = nil %}
+    {% assign graph_title = page.title %}
+    {% case page.url %}
+      {% when '/labs/enterprise-context/sales-order/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/sales-order-graph.json' %}
+      {% when '/labs/enterprise-context/pricing/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/pricing-graph.json' %}
+      {% when '/labs/enterprise-context/atp/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/atp-graph.json' %}
+      {% when '/labs/enterprise-context/credit/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/credit-graph.json' %}
+      {% when '/labs/enterprise-context/shipping/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/shipping-graph.json' %}
+    {% endcase %}
+    {% if graph_endpoint %}
+  <link rel="describedby" type="application/json" href="{{ graph_endpoint | absolute_url }}" title="{{ graph_title | escape }} machine-readable graph" />
+    {% endif %}
   {% endif %}
 </head>
 
@@ -44,6 +55,25 @@
   {% include header.html %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
     {{ content }}
+    {% if page.url == '/labs/enterprise-context/' %}
+      {% assign lab_manifest = site.data.labs.enterprise_context.manifest %}
+      {% if lab_manifest.deep_dives %}
+    <section class="research-canvas context-graph" aria-label="Active Enterprise Context deep dives">
+      <section class="research-canvas__inventory" data-reveal>
+        <header>
+          <p class="research-canvas__eyebrow">Active deep dives</p>
+          <h2>Follow the decision engines.</h2>
+          <p>Draft, source-tracked maps for the current Order-to-Cash vertical. Each view explains inputs, decisions, failure modes, extensions, and Lead-level diagnostics.</p>
+        </header>
+        <div class="research-route-list">
+          {% for deep_dive in lab_manifest.deep_dives %}
+          <a href="{{ deep_dive.page_url | relative_url }}"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ deep_dive.title }}</strong><small>{% if deep_dive.emphasis and deep_dive.emphasis.size > 0 %}{{ deep_dive.emphasis | first }}{% else %}decision map{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          {% endfor %}
+        </div>
+      </section>
+    </section>
+      {% endif %}
+    {% endif %}
     {% assign generated_expert = site.data.expert_context.entries[page.url] %}
     {% if generated_expert and generated_expert.enabled == true and generated_expert.placement != 'source' %}
     <section class="expert-promotion-generated" aria-label="Article expert context">
