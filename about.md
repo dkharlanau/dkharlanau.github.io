@@ -3,7 +3,7 @@ layout: default
 title: "About Dzmitryi Kharlanau — Senior SAP Consultant"
 description: "Public profile of Dzmitryi Kharlanau: 12+ years across SAP SD, MM, logistics, MDG, integration, AMS, Automotive, Retail, and practical AI around SAP."
 permalink: /about/
-last_modified_at: 2026-07-25
+last_modified_at: 2026-08-14
 profile_page: true
 hide_global_cta: true
 ---

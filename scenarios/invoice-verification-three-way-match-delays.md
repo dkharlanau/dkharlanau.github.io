@@ -40,7 +40,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Scenario — Process Execution Pain</p>
     <h1>Why invoice verification delays increase procurement support cost</h1>
-    <p class="note-subtitle">Price, quantity, and tax mismatches between PO, GR, and invoice create blocked invoices in MIRO, driving manual reconciliation, late payment penalties, and month-end close delays.</p>
+    <p class="note-subtitle">Trace delayed or blocked supplier invoices through the purchasing document, receipt history, variance, tolerance logic, and decision ownership before changing configuration.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -99,10 +99,10 @@ sitemap: false
     <h2>Root cause patterns</h2>
     <ul>
       <li><strong>Tolerance misalignment</strong> — tolerance limits do not reflect actual supplier behavior or material price volatility.</li>
-      <li><strong>GR timing gaps</strong> — invoice arrives before GR is posted, especially in drop-ship or third-party scenarios.</li>
+      <li><strong>Receipt timing or reference gaps</strong> — the invoice and the expected receipt context are not aligned for the process variant in scope.</li>
       <li><strong>Price changes after GR</strong> — retroactive price adjustments or contract renegotiations create invoice-PO mismatches.</li>
       <li><strong>Unit of measure conversion errors</strong> — ordering in cases, receiving in pallets, invoicing in kilograms.</li>
-      <li><strong>Tax configuration drift</strong> — tax code changes in the vendor master or country-specific rules not reflected in PO.</li>
+      <li><strong>Tax or compliance differences</strong> — the purchasing document, supplier invoice, and applicable country-specific treatment do not align.</li>
       <li><strong>Interface mapping errors</strong> — EDI or IDoc fields mapped incorrectly, especially for quantity, price, and tax.</li>
     </ul>
 
