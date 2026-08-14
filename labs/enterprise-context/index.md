@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Enterprise Context Lab — Process, Data, Rules and AI Reasoning"
-description: "A working lab for a source-tracked enterprise context graph connecting processes, business objects, attributes, rules, integrations, failures, KPIs, tests, and expert reasoning."
+description: "A source-tracked enterprise context graph connecting SAP processes, data, rules, integrations, failures, KPIs, tests, and architecture reasoning."
 permalink: /labs/enterprise-context/
 status: draft
 verified: false
@@ -9,13 +9,18 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
+tags:
+  - sap
+  - enterprise-architecture
+  - logistics
+  - integration
+  - business-ai
 ---
 
 {% assign lab = site.data.labs.enterprise_context.manifest %}
 {% assign schema = site.data.labs.enterprise_context.schema %}
 {% assign sales_landscape = site.data.labs.enterprise_context.topics.sales_application_landscape %}
 {% assign supply_chain_landscape = site.data.labs.enterprise_context.topics.supply_chain_logistics_landscape %}
-{% assign sales_order_graph = site.data.labs.enterprise_context.graphs.sales_order %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Enterprise Context</li></ol>
@@ -40,33 +45,23 @@ hide_global_cta: true
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
-    <p><strong>Pages are projections, structured data is the contract.</strong> The lab separates documented facts, expert judgment, inference, and synthetic assumptions so a later AI system can inspect both the relationship and its evidence state.</p>
-    <a href="/labs/enterprise-context/model/">Open the authoring contract <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <p><strong>Problem:</strong> SAP knowledge is usually scattered across processes, data, products, integrations, and operational evidence.</p>
+    <p><strong>Pages are projections, structured data is the contract.</strong> The lab separates business domains, industries, deployment models, applications, AI components, facts, judgment, and evidence.</p>
+    <a href="/labs/enterprise-context/deployment-models/">Compare Public, Private, and On-Premise <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="lab-model" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Context model</p>
       <h2>Connect the business question to the evidence path.</h2>
-      <p>The target is not a catalogue of SAP terms. The target is a typed path from business capability and process to data, decisions, integrations, operational failure, business impact, and tests.</p>
+      <p>The target is not a catalogue of SAP terms. The target is a typed path from business capability and process to data, rules, integrations, operational failure, business impact, and tests.</p>
     </header>
 
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/model/"><span>01</span><strong>Capability → Process → Step</strong><small>Where the activity sits in the business flow and which process variant is in scope.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/model/"><span>02</span><strong>Object → Attribute → Determination → Rule</strong><small>Which business objects and data concepts participate, how a value is determined, and which rule or configuration supports that decision.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/model/"><span>03</span><strong>Integration → Failure → KPI → Test</strong><small>How a dependency crosses systems, how it can fail, what outcome it affects, and how the relationship is tested.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">First deep vertical</p>
-      <h2>{{ sales_order_graph.title }}</h2>
-      <p>A sales-order item looks like a row. The graph treats it as a dependency engine: one determination writes a value that becomes an input to the next decision.</p>
-    </header>
-    <div class="research-route-list">
-      <a href="/labs/enterprise-context/sales-order/"><span>DET</span><strong>Open the Sales Order Determination Graph</strong><small>{{ sales_order_graph.determinations | size }} determinations · {{ sales_order_graph.causal_edges | size }} causal edges · plant, shipping point, route, scheduling, availability, pricing, partners, batches, and more.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/data/sales-order-graph.json"><span>JSON</span><strong>Open the machine projection</strong><small>The same determinations, edges, impact traces, and source references without a second copy of the facts.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/enterprise-context/domains/"><span>01</span><strong>Business Domain → Industry → Deployment</strong><small>Who owns the outcome, what industry changes, and which S/4HANA operating model constrains the design.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/model/"><span>02</span><strong>Capability → Process → Step</strong><small>Where the activity sits in the business flow and which process variant is in scope.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/model/"><span>03</span><strong>Object → Attribute → Rule</strong><small>Which business objects and data concepts participate, and which determination or validation logic uses them.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/model/"><span>04</span><strong>Integration → Failure → KPI → Test</strong><small>How a dependency crosses systems, how it can fail, what outcome it affects, and how the relationship is tested.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
   </section>
 
@@ -224,47 +219,12 @@ hide_global_cta: true
     <header>
       <p class="research-canvas__eyebrow">Supply chain reference patterns</p>
       <h2>Typical end-to-end combinations.</h2>
-      <p>These are reference paths to explain ownership and integration. They are not mandatory SAP blueprints and should be validated against process complexity, edition, deployment, and commercial scope.</p>
+      <p>These are reference paths to explain ownership and integration. They are not mandatory SAP blueprints and should be validated against process complexity, edition, deployment, licensing, integration, and operational constraints.</p>
     </header>
     <div class="research-route-list">
       {% for pattern in supply_chain_landscape.architecture_patterns %}
       <a href="/labs/enterprise-context/data/topics.json"><span>PATH</span><strong>{{ pattern.name }}</strong><small>{{ pattern.path }} · {{ pattern.fit }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__method" id="topic-lifecycle" data-reveal>
-    <div><p class="research-canvas__eyebrow">Seven maturity gates</p><h2>Every topic follows the same completion contract.</h2></div>
-    <ol>
-      {% for gate in lab.maturity_gates %}
-      <li><span>0{{ gate.order }}</span><strong>{{ gate.label }}</strong><p>{{ gate.done_definition }}</p></li>
-      {% endfor %}
-    </ol>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Reference enterprise</p>
-      <h2>{{ lab.reference_enterprise.title }}</h2>
-      <p>{{ lab.reference_enterprise.description }}</p>
-    </header>
-    <div class="research-route-list">
-      <a href="/labs/enterprise-context/model/"><span>GT</span><strong>Synthetic enterprise, not client data</strong><small>The reference company will provide organization, master data, processes, transactions, interfaces, injected failures, and benchmark scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">For tools and AI</p>
-      <h2>Machine-readable endpoints</h2>
-      <p>The same project metadata exposed on this page is also available as generated JSON.</p>
-    </header>
-    <div class="research-route-list">
-      <a href="{{ lab.machine_endpoints.catalog }}"><span>01</span><strong>Catalog JSON</strong><small>Project manifest plus pointers to schema, topics, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="{{ lab.machine_endpoints.schema }}"><span>02</span><strong>Schema JSON</strong><small>Node types, edge types, evidence states, stable-ID rules, and date fields.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-      <a href="{{ lab.machine_endpoints.topics }}"><span>03</span><strong>Topics JSON</strong><small>Current research topics, scope, maturity gates, and planned evaluation targets.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="{{ lab.machine_endpoints.sources }}"><span>04</span><strong>Sources JSON</strong><small>Source registry and provenance policy without bulk copying source material.</small><i class="material-symbols-outlined" aria-hidden="true">source</i></a>
-      <a href="/labs/enterprise-context/data/sales-order-graph.json"><span>05</span><strong>Sales Order Graph JSON</strong><small>Determinations, causal edges, impact traces, and source references for the first deep vertical.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
     </div>
   </section>
 

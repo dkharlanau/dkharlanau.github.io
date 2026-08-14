@@ -1,10 +1,10 @@
-id: GRAPH-SD-SALES-ORDER-DETERMINATIONS
+id: GRAPH-SD-SALES-ORDER-DECISIONS
 type: knowledge_graph
-title: "Sales Order — Determination & Dependency Graph"
+title: "Sales Order — Decision & Dependency Map"
 summary: >-
-  A source-tracked model of the decisions hidden inside sales-order creation:
-  what the system reads, how a value is determined, where it is written, and what
-  that value changes downstream.
+  A source-tracked learning model of the decisions hidden inside sales-order creation.
+  It shows what SAP reads, how a value is derived, where the result is used next,
+  and how a consultant can investigate an unexpected result.
 domain: "SAP S/4HANA Sales"
 process_family: "Order-to-Cash"
 process_step: "Create Sales Order"
@@ -14,33 +14,146 @@ updated_at: "2026-08-14"
 verified_at: null
 
 thesis: >-
-  A sales order item looks like a row. In practice it is a dependency engine:
-  one determination writes a value that becomes an input to the next decision.
+  A sales order is not only a document. It is a chain of business decisions.
+  One result often becomes an input for the next decision, so a wrong value should
+  first be traced to its origin before configuration is changed.
 
 model_boundary:
   release_scope:
     - "SAP S/4HANA 2025 FPS01 where cited"
-    - "SAP S/4HANA Cloud Public Edition 2608 where cited"
+    - "SAP S/4HANA best-practice configuration where cited"
   note: >-
-    This graph is a learning and reasoning model, not a claim that every edition,
-    scope item, enhancement, or customer design executes the same path.
+    This is a learning and reasoning model. The exact runtime path depends on edition,
+    activated scope, configuration, master data, enhancements, and customer design.
   evidence_policy: >-
-    Documented SAP behavior is separated from expert interpretation and synthetic
-    scenarios. Client-specific logic is deliberately excluded.
+    Documented SAP behavior, expert heuristics, and synthetic examples are stored as
+    different evidence types. Client-specific data and custom logic are excluded.
 
-views:
-  - id: process
-    title: "Process view"
-    question: "Where are we in Order-to-Cash?"
-    projection: "Quotation → Sales Order → Delivery → Goods Issue → Billing"
-  - id: object
-    title: "Object view"
-    question: "What lives inside the sales order?"
-    projection: "Header → Item → Schedule Line"
-  - id: why
-    title: "Why view"
-    question: "Why did this value appear, and what depends on it next?"
-    projection: "Input → Determination → Output → Downstream effect"
+memory_model:
+  title: "Eight questions to remember"
+  summary: >-
+    Instead of memorizing configuration tables, ask eight business questions.
+    They form a practical mental model for reading a sales order from left to right.
+  questions:
+    - key: "WHO"
+      question: "Who is involved?"
+      answer: "Sold-to, ship-to, bill-to, payer, and other partners."
+      nodes:
+        - DET-SD-PARTNER
+    - key: "WHAT"
+      question: "What kind of document and item is this?"
+      answer: "Sales document type, item category, and schedule line category define behavior."
+      nodes:
+        - DET-SD-ITEM-CATEGORY
+        - DET-SD-SCHEDULE-LINE-CATEGORY
+    - key: "WHERE"
+      question: "Where will the product come from and leave from?"
+      answer: "Delivering plant, shipping point, and route build the logistics path."
+      nodes:
+        - DET-SD-PLANT
+        - DET-SD-SHIPPING-POINT
+        - DET-SD-ROUTE
+    - key: "WHEN"
+      question: "When must logistics activities happen?"
+      answer: "Scheduling works backward and forward around the requested delivery date."
+      nodes:
+        - DET-SD-SCHEDULING
+    - key: "PRICE"
+      question: "How is the commercial value calculated?"
+      answer: "Pricing procedure and condition technique find and calculate price elements."
+      nodes:
+        - DET-SD-PRICING
+    - key: "PROMISE"
+      question: "What quantity and date can we promise?"
+      answer: "Availability logic creates confirmations, not a simple stock lookup."
+      nodes:
+        - DET-SD-AVAILABILITY
+    - key: "RISK"
+      question: "Are we allowed to continue with this customer exposure?"
+      answer: "Credit management can check risk and block further processing."
+      nodes:
+        - DET-SD-CREDIT
+    - key: "FULFILL"
+      question: "Which physical stock can finally satisfy the requirement?"
+      answer: "Batch search and later delivery execution can add a more detailed fulfillment decision."
+      nodes:
+        - DET-SD-BATCH
+
+control_stack:
+  title: "Three document-control levels"
+  summary: >-
+    Many sales-order questions become easier when the consultant first identifies
+    whether the behavior is controlled at header, item, or schedule-line level.
+  levels:
+    - id: CTRL-SD-DOCUMENT-TYPE
+      level: header
+      title: "Sales Document Type"
+      question: "What kind of sales document is this?"
+      controls:
+        - "overall document behavior"
+        - "document-level checks and defaults"
+        - "input to item-category determination"
+      remember: "Header context"
+      source_refs:
+        - SRC-SAP-SD-DOCUMENT-CONTROL
+    - id: CTRL-SD-ITEM-CATEGORY
+      level: item
+      title: "Item Category"
+      question: "How should this line behave?"
+      controls:
+        - "item-level business behavior"
+        - "delivery and billing relevance depending on configuration"
+        - "input to schedule-line-category determination"
+      remember: "Item behavior"
+      source_refs:
+        - SRC-SAP-SD-DOCUMENT-CONTROL
+        - SRC-SAP-SD-ITEM-CATEGORY-DETERMINATION
+    - id: CTRL-SD-SCHEDULE-LINE
+      level: schedule_line
+      title: "Schedule Line Category"
+      question: "How should quantity, planning, availability, and delivery behave?"
+      controls:
+        - "requirements transfer"
+        - "availability-check relevance"
+        - "delivery relevance"
+      remember: "Quantity and date behavior"
+      source_refs:
+        - SRC-SAP-SD-DOCUMENT-CONTROL
+        - SRC-SAP-SD-SCHEDULE-LINE-CATEGORY
+
+input_domains:
+  - id: INPUT-SD-BUSINESS-PARTNER
+    title: "Business Partner / Customer"
+    purpose: >-
+      Provides sales-area and partner context such as ship-to information, shipping
+      condition, pricing-related fields, payment terms, Incoterms, and other defaults.
+    source_refs:
+      - SRC-SAP-SD-MASTER-DATA
+  - id: INPUT-SD-PRODUCT
+    title: "Product / Material"
+    purpose: >-
+      Provides item, logistics, planning, pricing, loading, and transportation attributes
+      that participate in later decisions.
+    source_refs:
+      - SRC-SAP-SD-MASTER-DATA
+  - id: INPUT-SD-CUSTOMER-MATERIAL
+    title: "Customer-Material Information"
+    purpose: >-
+      Can provide customer/product-specific sales data and can participate in the
+      delivering-plant proposal before more general master data is used.
+    source_refs:
+      - SRC-SAP-SD-MASTER-DATA
+      - SRC-SAP-SD-DELIVERING-PLANT
+  - id: INPUT-SD-ORGANIZATION
+    title: "Sales and Logistics Organization"
+    purpose: >-
+      Sales area, plant, shipping point, and related organizational assignments form
+      the structural context in which several determinations run.
+  - id: INPUT-SD-CONFIGURATION
+    title: "Configuration and Rule Data"
+    purpose: >-
+      Procedures, mappings, condition records, checks, and search strategies convert
+      document and master-data context into runtime decisions.
 
 objects:
   - id: OBJ-SD-SALES-ORDER
@@ -68,54 +181,95 @@ objects:
       - ATTR-SD-CONFIRMED-DATE
       - ATTR-SD-CONFIRMED-QUANTITY
 
+views:
+  - id: process
+    title: "Process view"
+    question: "Where are we in Order-to-Cash?"
+    projection: "Quotation → Sales Order → Delivery → Goods Issue → Billing"
+  - id: object
+    title: "Object view"
+    question: "What lives inside the sales order?"
+    projection: "Header → Item → Schedule Line"
+  - id: why
+    title: "Decision view"
+    question: "Why did this value appear, and what uses it next?"
+    projection: "Input → Rule → Output → Downstream effect"
+
 determinations:
   - id: DET-SD-PARTNER
     title: "Partner Determination"
+    memory_key: "WHO"
     level: header_and_item
-    question: "Which business partners must or may participate in this document?"
+    question: "Which business partners take part in this document?"
     mechanism: procedure
     inputs:
       - "partner determination procedure"
       - "sales document type"
       - "item category where item-level partner determination applies"
-      - "partner source/master-data context"
+      - "business partner / customer master context"
     output:
       - "partner functions and partner assignments"
     downstream_effects:
       - "ship-to context"
       - "pricing and shipping data context"
+      - "billing and payment context"
       - "document completeness"
+    common_failures:
+      - "required partner function is missing"
+      - "wrong ship-to changes later logistics inputs"
+      - "partner master data is incomplete or inconsistent"
+    check_first:
+      - "Compare the expected partner functions with the partners in the order."
+      - "Check whether the issue is header-level or item-level."
+      - "Trace the partner back to the relevant master-data relationship or procedure."
+    remember: "Partners are inputs to later decisions, not just names on the header."
     lead_lens: >-
-      Partner data is not decoration. A different ship-to can change the data
-      consumed later by route, plant, tax, pricing, and delivery logic.
+      A different ship-to can change geography, shipping data, tax context, pricing
+      context, and delivery logic. Trace the consequence before correcting one field.
     source_refs:
       - SRC-SAP-SD-PARTNER-DETERMINATION
+      - SRC-SAP-SD-MASTER-DATA
 
   - id: DET-SD-ITEM-CATEGORY
     title: "Item Category Determination"
+    memory_key: "WHAT"
     level: item
     question: "How should this item behave inside this sales document?"
     mechanism: lookup
     inputs:
       - "sales document type"
-      - "item category group"
+      - "item category group from product/material master"
       - "item usage"
-      - "higher-level item category"
+      - "higher-level item category where relevant"
     output:
       - ATTR-SD-ITEM-CATEGORY
     downstream_effects:
       - DET-SD-SCHEDULE-LINE-CATEGORY
-      - "delivery, billing, pricing, and control behavior governed by the item category"
+      - "item delivery behavior"
+      - "item billing behavior"
+      - "pricing and other item controls"
+    common_failures:
+      - "no valid item category is found"
+      - "unexpected material item category group"
+      - "wrong sales document type changes the lookup context"
+      - "higher-level item structure changes the result"
+    check_first:
+      - "Read the sales document type and material item category group."
+      - "Check usage and higher-level item only if they are relevant to the case."
+      - "Compare the determined category with the business behavior that is required."
+    remember: "Document type + item category group + context → item behavior."
     lead_lens: >-
-      Treat an item-category change as a behavior change, not a cosmetic code
-      substitution. It can move several downstream controls at once.
+      An item-category change is a behavior change. Do not replace the code before
+      checking what delivery, billing, pricing, and schedule-line controls move with it.
     source_refs:
       - SRC-SAP-SD-ITEM-CATEGORY-DETERMINATION
+      - SRC-SAP-SD-DOCUMENT-CONTROL
 
   - id: DET-SD-SCHEDULE-LINE-CATEGORY
     title: "Schedule Line Category Determination"
+    memory_key: "WHAT"
     level: schedule_line
-    question: "How should quantity, requirement, availability, and delivery behave?"
+    question: "How should quantity, requirements, availability, and delivery behave?"
     mechanism: lookup
     inputs:
       - ATTR-SD-ITEM-CATEGORY
@@ -126,89 +280,141 @@ determinations:
       - "requirements transfer"
       - "availability-check relevance"
       - "delivery relevance"
+    common_failures:
+      - "unexpected MRP type changes the category"
+      - "item category is already wrong upstream"
+      - "the category exists but does not allow the expected planning or delivery behavior"
+    check_first:
+      - "Check the item category first because it is an upstream input."
+      - "Read the material MRP type."
+      - "Then inspect the controls of the determined schedule line category."
+    remember: "Item category + MRP type → quantity and date behavior."
     lead_lens: >-
-      When a sales item refuses to behave like stock, do not stop at the item
-      category. The schedule line is where planning and delivery behavior often becomes explicit.
+      If an item does not transfer requirements, check availability, or become delivery
+      relevant as expected, the schedule line is often the better starting point than the header.
     source_refs:
       - SRC-SAP-SD-SCHEDULE-LINE-CATEGORY
+      - SRC-SAP-SD-DOCUMENT-CONTROL
 
   - id: DET-SD-PLANT
     title: "Delivering Plant Proposal"
+    memory_key: "WHERE"
     level: item
-    question: "From where should this item be delivered?"
-    mechanism: default_with_manual_override
+    question: "From which plant should this item normally be delivered?"
+    mechanism: prioritized_default_with_override
     inputs:
-      - "customer / ship-to sales-area master data"
+      - "customer-material information record, where maintained"
+      - "ship-to customer master data"
       - "product/material master data"
-      - "manual item entry"
+      - "manual or integration-provided item value"
+    priority:
+      - "customer-material information record"
+      - "ship-to customer master"
+      - "material master"
     output:
       - ATTR-SD-PLANT
     downstream_effects:
       - DET-SD-SHIPPING-POINT
       - DET-SD-AVAILABILITY
-      - "possible advanced aATP plant substitution"
+      - "sourcing and fulfillment location context"
+      - "possible aATP alternative confirmation"
+    common_failures:
+      - "a more specific master-data source overrides the expected general default"
+      - "wrong ship-to leads to a different plant proposal"
+      - "plant is not valid for the intended sales/logistics design"
+      - "inbound integration sends a plant and bypasses the expected default"
+    check_first:
+      - "Check whether the plant was entered or sent explicitly."
+      - "Then inspect the plant proposal sources in priority order."
+      - "If the value is correct at creation but later changes, inspect advanced sourcing or substitution separately."
+    remember: "Specific customer/product data can win before customer or material defaults."
     lead_lens: >-
-      Plant is a hinge in the graph. Changing it can redirect availability,
-      shipping-point determination, sourcing, and the dates that follow.
+      Plant is a hinge in the graph. A plant change can redirect availability,
+      shipping-point determination, logistics execution, and dates.
     source_refs:
-      - SRC-SAP-SD-SHIPPING-POINTS
+      - SRC-SAP-SD-DELIVERING-PLANT
+      - SRC-SAP-SD-MASTER-DATA
       - SRC-SAP-AATP-ALTERNATIVE-CONFIRMATION
 
   - id: DET-SD-SHIPPING-POINT
     title: "Shipping Point Determination"
+    memory_key: "WHERE"
     level: item
-    question: "Which shipping unit should execute the delivery?"
+    question: "Which shipping unit should execute delivery processing?"
     mechanism: customizing_lookup
     inputs:
       - ATTR-SD-PLANT
       - "shipping condition"
-      - "loading group"
+      - "loading group from product/material master"
     output:
       - ATTR-SD-SHIPPING-POINT
     downstream_effects:
       - DET-SD-ROUTE
       - DET-SD-SCHEDULING
       - "delivery execution"
+    common_failures:
+      - "plant is wrong upstream"
+      - "shipping condition is missing or unexpected"
+      - "loading group is missing or unexpected"
+      - "the input combination has no valid assignment"
+    check_first:
+      - "Read plant, shipping condition, and loading group from the actual order context."
+      - "Trace each input to its source before changing the assignment."
+      - "Check whether the exact combination is configured."
+    remember: "Plant + shipping condition + loading group → shipping point."
     lead_lens: >-
-      A missing shipping point is often the symptom. The useful question is which
-      upstream input failed to exist or mapped to no valid combination.
+      A missing shipping point is usually a symptom. First find which upstream input
+      is missing, wrong, or mapped to no valid combination.
     source_refs:
       - SRC-SAP-SD-SHIPPING-POINTS
 
   - id: DET-SD-ROUTE
     title: "Route Determination"
+    memory_key: "WHERE"
     level: item
-    question: "Which route should be proposed for this item?"
+    question: "Which transportation route should be proposed?"
     mechanism: customizing_lookup
     inputs:
-      - "departure country/region and zone of shipping point"
-      - "destination country/region and transportation zone of ship-to"
+      - "departure country/region and zone from shipping point context"
+      - "destination country/region and transportation zone from ship-to context"
       - "shipping condition"
-      - "transportation group from material master"
+      - "transportation group from product/material master"
     output:
       - ATTR-SD-ROUTE
     downstream_effects:
       - DET-SD-SCHEDULING
       - "transportation timing"
+    common_failures:
+      - "wrong ship-to or transportation zone"
+      - "wrong shipping point changes departure context"
+      - "transportation group is missing or incorrect"
+      - "shipping condition is not the expected one"
+      - "no matching route rule exists"
+    check_first:
+      - "Validate departure and destination geography first."
+      - "Then check shipping condition and transportation group."
+      - "Only after the inputs are correct, inspect the route mapping."
+    remember: "Departure + destination + shipping policy + material transport group → route."
     lead_lens: >-
-      Route is where organizational data, customer geography, material logistics,
-      and shipping policy finally meet. That is why route problems rarely belong
-      to one table in isolation.
+      Route joins customer geography, logistics organization, material attributes,
+      and shipping policy. That is why route defects rarely belong to one table only.
     source_refs:
       - SRC-SAP-SD-ROUTE-DETERMINATION
 
   - id: DET-SD-SCHEDULING
     title: "Delivery & Transportation Scheduling"
+    memory_key: "WHEN"
     level: schedule_line
-    question: "When must shipping activities start to meet the requested date?"
+    question: "When must logistics activities happen to support the requested delivery date?"
     mechanism: calculation
     inputs:
       - ATTR-SD-REQUESTED-DELIVERY-DATE
       - ATTR-SD-ROUTE
       - ATTR-SD-SHIPPING-POINT
-      - "material/product"
-      - "ship-to party"
+      - "product/material context"
+      - "ship-to context"
       - "transit, loading, pick/pack, and transportation lead times"
+      - "relevant calendars"
     output:
       - "material availability date"
       - "loading date"
@@ -216,68 +422,152 @@ determinations:
       - "transportation planning date"
     downstream_effects:
       - DET-SD-AVAILABILITY
-      - "confirmed delivery timing"
+      - "delivery timing"
+      - "confirmation timing"
+    common_failures:
+      - "unexpected route or shipping point changes lead times"
+      - "calendar differences move dates"
+      - "requested date is physically too early"
+      - "lead-time configuration is inconsistent with the logistics design"
+    check_first:
+      - "Start from the requested delivery date and compare all calculated dates."
+      - "Trace route and shipping point upstream if lead times look wrong."
+      - "Check calendars before assuming the arithmetic is wrong."
+    remember: "Requested date is a target; calculated logistics dates make it executable."
     lead_lens: >-
-      Scheduling explains why a requested date is not the same thing as an
-      executable date. The calendar is doing work even when the screen looks quiet.
+      Scheduling explains why requested delivery date and material availability date
+      are different concepts. Dates are outputs of logistics assumptions and calendars.
     source_refs:
       - SRC-SAP-SD-SCHEDULING
 
+  - id: DET-SD-PRICING
+    title: "Pricing"
+    memory_key: "PRICE"
+    level: header_and_item
+    question: "Which price elements apply, in which procedure, and from which records?"
+    mechanism: condition_technique
+    inputs:
+      - "sales area"
+      - "document pricing procedure"
+      - "customer pricing procedure"
+      - "pricing procedure"
+      - "condition types and access sequences"
+      - "condition tables and condition records"
+      - "customer, product, quantity, date, and other pricing fields"
+    procedure_context:
+      - "sales organization"
+      - "distribution channel"
+      - "division"
+      - "document pricing procedure"
+      - "customer pricing procedure"
+    output:
+      - "price conditions"
+      - "discounts and surcharges"
+      - "tax-related pricing elements where applicable"
+      - "subtotals"
+      - "net value"
+    downstream_effects:
+      - "commercial value of the order"
+      - "billing values where relevant"
+      - "credit exposure context"
+    common_failures:
+      - "wrong pricing procedure is determined"
+      - "expected condition type is missing from the procedure"
+      - "access sequence does not find a valid record"
+      - "condition record is missing, expired, or has the wrong key"
+      - "requirement, exclusion, scale, formula, or manual condition changes the result"
+    check_first:
+      - "First verify which pricing procedure was determined."
+      - "Then use the pricing analysis/trace to find the first missing or unexpected condition."
+      - "Follow the access sequence and condition-record key instead of staring at net value."
+    remember: "Procedure chooses the calculation path; access sequence searches for condition data."
+    lead_lens: >-
+      Pricing is a search and calculation pipeline. The trace is usually more useful
+      than the final amount because it shows where the expected path stopped.
+    source_refs:
+      - SRC-SAP-SD-PRICING-PROCEDURE
+      - SRC-SAP-SD-CONDITION-TECHNIQUE
+
   - id: DET-SD-AVAILABILITY
     title: "Availability Check / Confirmation"
+    memory_key: "PROMISE"
     level: schedule_line
-    question: "Can the requested quantity be confirmed for the relevant date and location?"
+    question: "What quantity and date can the system confirm?"
     mechanism: availability_check
     inputs:
       - ATTR-SD-PLANT
-      - "material/product"
+      - "product/material"
       - "requested quantity"
       - "material availability date"
-      - "checking configuration and supply situation"
+      - "checking configuration and scope"
+      - "current and future supply/demand situation"
     output:
       - ATTR-SD-CONFIRMED-QUANTITY
       - ATTR-SD-CONFIRMED-DATE
     downstream_effects:
-      - "order confirmation"
+      - "customer order confirmation"
       - "delivery feasibility"
-      - "optional aATP substitution strategies"
+      - "backorder processing or other aATP capabilities where used"
+      - "alternative confirmation strategies where used"
+    common_failures:
+      - "stock exists but is not relevant or available for this check"
+      - "material availability date differs from the date the user is looking at"
+      - "wrong plant changes the supply situation"
+      - "scope/check configuration excludes or includes unexpected elements"
+      - "other requirements consume the available quantity"
+    check_first:
+      - "Use the exact plant, requested quantity, and material availability date from the order."
+      - "Check the confirmation result, not only unrestricted stock."
+      - "Inspect the scope and supply/demand elements before changing ATP configuration."
+    remember: "Inventory is a balance. ATP is a promise for quantity, date, and location."
     lead_lens: >-
-      Inventory is not the same thing as confirmation. The useful debugging unit
-      is the requirement plus date, location, scope, and check logic.
+      Do not debug ATP with a stock screenshot. The useful unit is requirement + date
+      + location + scope + supply/demand situation.
     source_refs:
       - SRC-SAP-AATP-PRODUCT-AVAILABILITY-CHECK
       - SRC-SAP-AATP-ALTERNATIVE-CONFIRMATION
       - SRC-SAP-SD-SCHEDULING
 
-  - id: DET-SD-PRICING
-    title: "Pricing"
-    level: header_and_item
-    question: "Which price elements apply, in what order, and from which condition records?"
-    mechanism: condition_technique
+  - id: DET-SD-CREDIT
+    title: "Credit Check"
+    memory_key: "RISK"
+    level: document_processing
+    question: "Can the order continue under the current customer credit situation?"
+    mechanism: credit_check
     inputs:
-      - "pricing procedure determination context"
-      - "condition types"
-      - "access sequences"
-      - "condition tables and condition records"
-      - "customer, product, quantity, date, and other pricing fields"
+      - "business partner credit data"
+      - "credit segment and credit limit context"
+      - "risk class / check rule context"
+      - "order value and credit exposure"
+      - "configured automatic credit checks"
     output:
-      - "price conditions"
-      - "subtotals"
-      - "net value"
+      - "credit result"
+      - "possible credit block"
     downstream_effects:
-      - "commercial value of the order"
-      - "billing and accounting-relevant values where configured"
-      - "credit exposure context"
+      - "ability to continue processing"
+      - "credit-release workflow or review"
+      - "delivery processing depending on the design"
+    common_failures:
+      - "credit master data is incomplete or assigned to the wrong segment"
+      - "credit limit or exposure is not what the business expects"
+      - "check configuration differs by risk/check context"
+      - "sales document is blocked although logistics data is correct"
+    check_first:
+      - "Separate a credit block from logistics or pricing errors."
+      - "Read the credit result and the business-partner credit context."
+      - "Inspect exposure and the configured check before changing the limit."
+    remember: "A technically valid order can still be commercially blocked."
     lead_lens: >-
-      Pricing is not one formula. It is a search and calculation pipeline whose
-      trace is usually more valuable than staring at the final net value.
+      Credit is a cross-domain decision. Sales creates the commercial exposure,
+      while SAP Credit Management evaluates whether processing should continue.
     source_refs:
-      - SRC-SAP-SD-CONDITION-TECHNIQUE
+      - SRC-SAP-SD-CREDIT-CHECK
 
   - id: DET-SD-BATCH
-    title: "Batch Determination"
+    title: "Batch Determination Touchpoint"
+    memory_key: "FULFILL"
     level: item_or_delivery
-    question: "Which eligible batch should satisfy this business transaction?"
+    question: "Which eligible batch can satisfy the business requirement?"
     mechanism: search_strategy
     inputs:
       - "business transaction"
@@ -285,18 +575,35 @@ determinations:
       - "strategy type"
       - "selection criteria"
       - "sort rule"
+      - "available batch stock when execution reaches this point"
     output:
       - "selected batch or ranked batch candidates"
     downstream_effects:
       - "batch-specific fulfillment"
       - "delivery execution"
+    common_failures:
+      - "no batch meets selection criteria"
+      - "classification data is missing or inconsistent"
+      - "sort rule returns a technically valid but unexpected batch"
+      - "search strategy is not found for the transaction context"
+    check_first:
+      - "Confirm where batch determination is expected to run in the process."
+      - "Check strategy, selection criteria, and batch characteristics separately."
+      - "Do not mix a batch-search problem with the earlier ATP confirmation problem."
+    remember: "ATP answers whether we can promise; batch search can later answer which stock will fulfill."
     lead_lens: >-
-      Batch determination belongs in the same graph even when execution happens
-      later. It is another example of business context turning into a search strategy.
+      Batch determination is kept as a touchpoint because it is a later fulfillment
+      search, not the same decision as sales-order availability confirmation.
     source_refs:
       - SRC-SAP-BATCH-SEARCH-STRATEGY
 
 causal_edges:
+  - from: DET-SD-PARTNER
+    predicate: provides_context_to
+    to: DET-SD-PLANT
+  - from: DET-SD-PARTNER
+    predicate: provides_context_to
+    to: DET-SD-ROUTE
   - from: DET-SD-ITEM-CATEGORY
     predicate: writes
     to: ATTR-SD-ITEM-CATEGORY
@@ -307,11 +614,11 @@ causal_edges:
     predicate: writes
     to: ATTR-SD-PLANT
   - from: ATTR-SD-PLANT
-    predicate: constrains
-    to: DET-SD-AVAILABILITY
-  - from: ATTR-SD-PLANT
     predicate: read_by
     to: DET-SD-SHIPPING-POINT
+  - from: ATTR-SD-PLANT
+    predicate: constrains
+    to: DET-SD-AVAILABILITY
   - from: DET-SD-SHIPPING-POINT
     predicate: writes
     to: ATTR-SD-SHIPPING-POINT
@@ -336,11 +643,17 @@ causal_edges:
   - from: DET-SD-AVAILABILITY
     predicate: writes
     to: ATTR-SD-CONFIRMED-QUANTITY
+  - from: DET-SD-PRICING
+    predicate: produces
+    to: "order commercial value"
+  - from: "order commercial value"
+    predicate: provides_context_to
+    to: DET-SD-CREDIT
 
 impact_traces:
   - id: TRACE-SD-PLANT-CHANGE
-    title: "What changes if the plant changes?"
-    start: ATTR-SD-PLANT
+    title: "What can change if the plant changes?"
+    direction: forward
     path:
       - "Plant"
       - "Shipping Point Determination"
@@ -351,52 +664,217 @@ impact_traces:
       - "Material Availability Date"
       - "Availability Check"
       - "Confirmation"
+    lesson: "A plant change is not local. It can redirect both logistics and the promise to the customer."
     caveat: >-
       The exact path depends on configuration and enabled capabilities. This is a
-      reasoning trace, not an execution trace from a customer system.
+      reasoning trace, not a runtime trace from a customer system.
 
   - id: TRACE-SD-WHY-SHIPPING-POINT
-    title: "Where did the shipping point come from?"
-    start: ATTR-SD-SHIPPING-POINT
+    title: "Why did this shipping point appear?"
+    direction: backward
     path:
       - "Shipping Point"
       - "Shipping Point Determination"
-      - "Delivering Plant"
+      - "Plant"
       - "Shipping Condition"
       - "Loading Group"
-      - "Customizing assignment"
-    caveat: >-
-      Shipping point can be configured from plant alone or from the plant plus
-      shipping condition and loading group.
+      - "Customizing Assignment"
+    lesson: "Start with actual inputs. A configuration change is the last step, not the first."
+    caveat: "Manual changes or custom logic must be checked separately where they exist."
 
-experience_patterns:
-  - id: EXP-SD-SYMPTOM-UPSTREAM
-    type: troubleshooting
-    title: "Treat the wrong value as a symptom first"
-    statement: >-
-      Before changing Customizing, trace the output backwards to its inputs and
-      identify whether the anomaly is data, configuration, integration, or an override.
-  - id: EXP-SD-FIELD-AS-INPUT
-    type: lead_insight
-    title: "A field is boring until it becomes somebody else's input"
-    statement: >-
-      The useful architecture question is not only where a value is stored, but
-      which decisions consume it next.
-  - id: EXP-SD-SCOPE-BEFORE-FIX
-    type: troubleshooting
-    title: "Scope before solution"
-    statement: >-
-      Establish whether the behavior is customer-, material-, plant-, sales-area-,
-      item-, or date-specific before proposing a configuration change.
+  - id: TRACE-SD-WRONG-ITEM-BEHAVIOR
+    title: "Why does the item behave incorrectly?"
+    direction: backward_then_forward
+    path:
+      - "Observed Item Behavior"
+      - "Item Category"
+      - "Sales Document Type + Item Category Group + Context"
+      - "Schedule Line Category"
+      - "MRP Type"
+      - "Requirements / ATP / Delivery Controls"
+    lesson: "Find the first wrong control level before changing the later symptom."
+    caveat: "Not every behavior is controlled by item or schedule line category; scope the symptom first."
+
+  - id: TRACE-SD-WRONG-PRICE
+    title: "Why is the price missing or wrong?"
+    direction: backward
+    path:
+      - "Unexpected Net Value"
+      - "Pricing Analysis"
+      - "Pricing Procedure"
+      - "Condition Type"
+      - "Access Sequence"
+      - "Condition Record / Requirement / Formula"
+    lesson: "Pricing is easier to diagnose as a trace than as a final number."
+    caveat: "Manual conditions, exclusions, formulas, and custom logic can change the standard path."
+
+  - id: TRACE-SD-NO-CONFIRMATION
+    title: "Why is the requested quantity not confirmed?"
+    direction: backward
+    path:
+      - "Missing / Partial Confirmation"
+      - "Availability Check"
+      - "Material Availability Date"
+      - "Plant"
+      - "Scope of Check"
+      - "Supply and Demand Elements"
+    lesson: "Stock on hand is only one part of an availability answer."
+    caveat: "Advanced ATP functions can add substitution, allocation, or backorder logic."
+
+  - id: TRACE-SD-CREDIT-BLOCK
+    title: "Why is a valid order blocked?"
+    direction: backward
+    path:
+      - "Credit Block"
+      - "Credit Check Result"
+      - "Order Value / Exposure"
+      - "Credit Segment / Limit"
+      - "Risk and Check Context"
+    lesson: "Separate commercial risk control from logistics correctness."
+    caveat: "The exact check set depends on credit-management configuration."
+
+expert_heuristics:
+  - id: HEUR-SD-FIRST-WRONG-DECISION
+    context: "Troubleshooting a wrong sales-order result"
+    statement: "Find the first wrong decision in the dependency chain, not the last visible symptom."
+    confidence: high
+    questions:
+      - "What is the first value that differs from the expected case?"
+      - "Was that value determined, copied, entered manually, or sent by an interface?"
+    checks:
+      - "Compare a working and non-working order with the same scope."
+      - "Trace the suspicious value backward to its inputs."
+    anti_patterns:
+      - "Changing Customizing before checking master data and explicit overrides."
+
+  - id: HEUR-SD-SCOPE-SYMPTOM
+    context: "Before proposing a configuration change"
+    statement: "Scope the symptom by customer, product, sales area, plant, item, date, channel, and entry method."
+    confidence: high
+    questions:
+      - "Does the same issue happen for another customer or material?"
+      - "Does manual entry behave differently from an inbound order?"
+    checks:
+      - "Create a small comparison matrix before changing shared configuration."
+    anti_patterns:
+      - "Treating one order as proof of a global configuration defect."
+
+  - id: HEUR-SD-FOUR-CAUSE-BUCKETS
+    context: "Sales-order diagnosis"
+    statement: "Classify the cause as data, configuration, integration/override, or runtime supply/control before designing the fix."
+    confidence: high
+    questions:
+      - "Is the input itself wrong?"
+      - "Is the rule wrong?"
+      - "Did another system or user override the normal result?"
+      - "Is the result correct but the runtime situation changed?"
+    anti_patterns:
+      - "Using one configuration fix for several unrelated cause types."
+
+  - id: HEUR-SD-ATP-NOT-STOCK
+    context: "Availability investigation"
+    statement: "Inventory and confirmation answer different questions."
+    confidence: high
+    questions:
+      - "For which plant and material availability date is the order asking?"
+      - "Which supply and demand elements are relevant to the check?"
+    anti_patterns:
+      - "Using unrestricted stock alone as proof that ATP is wrong."
+
+  - id: HEUR-SD-MANUAL-VS-INBOUND
+    context: "Orders created through integration"
+    statement: "Compare manual and inbound creation because an interface can provide values that standard determination would otherwise derive."
+    confidence: high
+    questions:
+      - "Which fields are supplied explicitly by the message or API?"
+      - "Which fields are left for S/4HANA to determine?"
+    anti_patterns:
+      - "Debugging standard determination without checking the inbound payload or mapping."
+
+synthetic_case:
+  id: SCN-SD-ORDER-100
+  evidence_type: synthetic_example
+  title: "Synthetic case: the order looks simple"
+  description: >-
+    A fictional customer orders 100 units for delivery next Friday. The sales order
+    is created successfully, but only 60 units are confirmed and the route is not the one
+    the consultant expected. The exercise is to explain the result without changing configuration first.
+  facts:
+    - "Ship-to customer has a different transportation zone from the sold-to customer."
+    - "Customer-material information contains Plant B."
+    - "Material master contains Plant A as a more general sales default."
+    - "The shipping point is valid for Plant B and the material loading group."
+    - "Available-to-promise can confirm 60 units for the material availability date at Plant B."
+  reasoning_path:
+    - "Partner context: use the ship-to for destination and shipping data."
+    - "Plant: customer-material information explains why Plant B is proposed before the general material default."
+    - "Shipping point: recalculate from Plant B + shipping condition + loading group."
+    - "Route: recalculate from departure/destination context + shipping condition + transportation group."
+    - "Scheduling: route and shipping point influence the material availability date."
+    - "ATP: evaluate Plant B, the calculated date, quantity 100, and relevant supply/demand."
+  lesson: >-
+    The route and confirmation are not two isolated defects. They can share an upstream
+    cause: the location and partner context selected earlier in the order.
+
+assessment_drills:
+  - id: DRILL-SD-01
+    title: "Wrong shipping point"
+    prompt: "The sales order has the wrong shipping point. What do you check before Customizing?"
+    expected_reasoning:
+      - "plant"
+      - "shipping condition"
+      - "loading group"
+      - "source of each input"
+      - "exact configuration combination"
+  - id: DRILL-SD-02
+    title: "Stock exists, no confirmation"
+    prompt: "The warehouse shows stock, but the order is not fully confirmed. How do you structure the investigation?"
+    expected_reasoning:
+      - "plant"
+      - "material availability date"
+      - "requested quantity"
+      - "scope/check context"
+      - "supply and demand elements"
+      - "advanced ATP logic if activated"
+  - id: DRILL-SD-03
+    title: "Unexpected item behavior"
+    prompt: "A line is not delivery relevant as expected. Where do you start?"
+    expected_reasoning:
+      - "item category"
+      - "item-category determination inputs"
+      - "schedule line category"
+      - "schedule-line controls"
+  - id: DRILL-SD-04
+    title: "Wrong price"
+    prompt: "The net value is wrong. What is the shortest useful diagnostic path?"
+    expected_reasoning:
+      - "pricing procedure"
+      - "pricing analysis"
+      - "condition type"
+      - "access sequence"
+      - "condition record / requirement / formula"
+  - id: DRILL-SD-05
+    title: "Manual order works, API order fails"
+    prompt: "The same customer and product work in manual entry but fail through an API. What changes in your hypothesis?"
+    expected_reasoning:
+      - "compare payload with manual order"
+      - "find explicitly supplied fields"
+      - "check mapping/default suppression"
+      - "separate integration values from S/4 determination"
 
 source_refs:
+  - SRC-SAP-SD-DOCUMENT-CONTROL
+  - SRC-SAP-SD-MASTER-DATA
   - SRC-SAP-SD-PARTNER-DETERMINATION
   - SRC-SAP-SD-ITEM-CATEGORY-DETERMINATION
   - SRC-SAP-SD-SCHEDULE-LINE-CATEGORY
+  - SRC-SAP-SD-DELIVERING-PLANT
   - SRC-SAP-SD-SHIPPING-POINTS
   - SRC-SAP-SD-ROUTE-DETERMINATION
   - SRC-SAP-SD-SCHEDULING
+  - SRC-SAP-SD-PRICING-PROCEDURE
   - SRC-SAP-SD-CONDITION-TECHNIQUE
-  - SRC-SAP-BATCH-SEARCH-STRATEGY
   - SRC-SAP-AATP-PRODUCT-AVAILABILITY-CHECK
   - SRC-SAP-AATP-ALTERNATIVE-CONFIRMATION
+  - SRC-SAP-SD-CREDIT-CHECK
+  - SRC-SAP-BATCH-SEARCH-STRATEGY

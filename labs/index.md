@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Labs — Structured Experiments in Enterprise Context and AI"
-description: "Working labs for structured enterprise knowledge, synthetic data, process relationships, diagnostics, and AI reasoning."
+title: "Labs — Enterprise Context and AI"
+description: "Practical maps for SAP domains, deployment models, industries, processes, applications, integrations, data, and AI."
 permalink: /labs/
 status: draft
 verified: false
@@ -9,6 +9,11 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
+tags:
+  - sap
+  - enterprise-architecture
+  - research
+  - business-ai
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -18,47 +23,54 @@ hide_global_cta: true
 <div class="research-canvas">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Labs / structured experiments</p>
-      <h1>Turn enterprise knowledge<br />into something machines can inspect.</h1>
-      <p>Working experiments that connect business processes, enterprise data, system dependencies, expert reasoning, synthetic examples, and AI evaluation. Draft by design: structure first, claims second.</p>
-      <a class="research-canvas__button" href="#labs-inventory">Open the lab inventory <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p class="research-canvas__eyebrow">Labs / practical architecture maps</p>
+      <h1>Understand the business.<br />Then map the SAP landscape.</h1>
+      <p>Simple, source-tracked maps of business domains, deployment models, industries, processes, SAP applications, integrations, data, and AI.</p>
+      <a class="research-canvas__button" href="#labs-inventory">Open the lab <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>1</strong><small>Active lab</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>1</strong><small>Deep vertical</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>6</strong><small>Machine endpoints</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>6</strong><small>Architecture views</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>4</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal aria-label="Lab boundary">
     <span class="material-symbols-outlined" aria-hidden="true">science</span>
-    <p><strong>Research boundary.</strong> Synthetic examples are kept separate from externally verifiable facts. Documented facts, expert heuristics, and inferences carry different evidence states.</p>
+    <p><strong>Problem:</strong> product-first learning makes it hard to connect business ownership, process, architecture, and evidence.</p>
+    <p><strong>Working rule.</strong> Facts, expert judgment, and synthetic examples stay separate.</p>
     <a href="/research/">Open Research <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
+  <p><strong>Publication rule.</strong> Vendor sources verify facts; explanations stay independently written. See the <a href="/legal/research-attribution/">Research and Attribution Policy</a>.</p>
+
   <section class="research-canvas__inventory" id="labs-inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Active lab</p>
-      <h2>Enterprise Context Lab</h2>
-      <p>Build a source-tracked, machine-readable model connecting process, data, determinations, integrations, failures, KPIs, tests, and expert reasoning.</p>
+      <p class="research-canvas__eyebrow">Enterprise Context Lab</p>
+      <h2>Business first, system second.</h2>
+      <p>Move from business ownership and industry context to deployment model, process, SAP component, integration, and AI responsibility.</p>
     </header>
 
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/"><span>01</span><strong>Enterprise Context Graph</strong><small>The parent model: processes, applications, data, evidence states, and reusable relationships across enterprise domains.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/sales-order/"><span>02</span><strong>Sales Order Determination Graph</strong><small>First deep vertical: item category, plant, shipping point, route, scheduling, availability, pricing, partners, batches, and their causal dependencies.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/model/"><span>03</span><strong>Model & authoring contract</strong><small>The stable IDs, node types, relationships, evidence states, dates, and maturity gates used when adding a topic.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/data/catalog.json"><span>04</span><strong>Machine-readable catalog</strong><small>JSON projection of the lab manifest, schema, topics, and source registry for tools and AI experiments.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/enterprise-context/"><span>01</span><strong>Enterprise Context Graph</strong><small>Sales, Supply Chain, processes, applications, boundaries, licensing, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/domains/"><span>02</span><strong>Enterprise Business Domains</strong><small>What the business owns, separate from processes and SAP products.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/deployment-models/"><span>03</span><strong>SAP S/4HANA Deployment Models</strong><small>Public Cloud, Private Cloud, and On-Premise.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
+      <a href="/labs/enterprise-context/industries/"><span>04</span><strong>SAP Industry Solutions</strong><small>Automotive, retail, fashion, industrial manufacturing, and mill products.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
+      <a href="/labs/enterprise-context/business-ai/"><span>05</span><strong>SAP Business AI</strong><small>Joule, agents, build tools, runtime, model access, grounding, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/enterprise-context/integrations/"><span>06</span><strong>SAP Integration Architecture</strong><small>APIs, IDocs, RFC, events, Kafka, queues, files, B2B, middleware, logistics, and master-data distribution.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/enterprise-context/model/"><span>07</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/data/catalog.json"><span>08</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
   <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Working rule</p><h2>A topic is not “done” because it was read.</h2></div>
+    <div><p class="research-canvas__eyebrow">Method</p><h2>Model, connect, exercise.</h2></div>
     <ol>
-      <li><span>01</span><strong>Model</strong><p>Capture the process, objects, attributes, decisions, rules, and terminology.</p></li>
-      <li><span>02</span><strong>Connect</strong><p>Add evidence-backed dependencies, failures, KPIs, controls, and tests.</p></li>
-      <li><span>03</span><strong>Exercise</strong><p>Instantiate a synthetic case and test whether a person or AI can reason over it.</p></li>
+      <li><span>01</span><strong>Model</strong><p>Define the domain, industry, deployment model, process, objects, rules, and systems.</p></li>
+      <li><span>02</span><strong>Connect</strong><p>Link integrations, failures, controls, tests, and evidence.</p></li>
+      <li><span>03</span><strong>Exercise</strong><p>Use a synthetic case and test the reasoning.</p></li>
     </ol>
   </section>
 

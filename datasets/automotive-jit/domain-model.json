@@ -1,0 +1,256 @@
+{
+  "id": "automotive-jit-domain-model",
+  "title": "SAP Automotive JIT / JIS Domain Model",
+  "tags": ["sap", "automotive", "jit", "jis", "s4hana", "logistics", "assessment", "architecture"],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.0",
+    "dataset": "automotive-jit",
+    "source_project": "Assessment Lab",
+    "source_path": "datasets/automotive-jit/domain-model.json",
+    "canonical_url": "https://dkharlanau.github.io/datasets/automotive-jit/domain-model.json",
+    "created_at_utc": "2026-08-14T17:30:00Z",
+    "updated_at_utc": "2026-08-14T17:30:00Z",
+    "entity_type": "domain_model",
+    "entity_subtype": "sap_automotive_jit",
+    "summary": "Architecture-level model of classic SAP Automotive JIT and Next Generation JIT, with business objects, lifecycle controls, integration boundaries, and design rules.",
+    "verification": "review_candidate",
+    "creator": {
+      "name": "Dzmitryi Kharlanau",
+      "role": "SAP Consultant",
+      "website": "https://dkharlanau.github.io"
+    },
+    "attribution": {
+      "attribution_required": true,
+      "preferred_citation": "Dzmitryi Kharlanau, SAP Automotive JIT / JIS Domain Model, Assessment Lab."
+    },
+    "provenance": {
+      "method": "Structured from SAP Help documentation and practitioner-oriented architecture synthesis.",
+      "client_data": false,
+      "fictional_examples_only": true
+    }
+  },
+  "purpose": {
+    "human": "Prepare for SAP Lead assessment and solution-design discussions without memorizing isolated transactions.",
+    "agent": "Give an AI agent a stable ontology for requirements analysis, specification review, integration design, diagnostics, and architecture recommendations.",
+    "core_question": "What demand signal is received, what object represents it, what controls its lifecycle, what must happen next, and which system owns each decision?"
+  },
+  "terminology": [
+    {
+      "term": "JIT",
+      "meaning": "Just-In-Time. Material is requested for a short delivery horizon and should arrive close to the point of use."
+    },
+    {
+      "term": "JIS",
+      "meaning": "Just-In-Sequence. A sequenced JIT call where the supplier must deliver in the production sequence requested by the customer."
+    },
+    {
+      "term": "seqJC",
+      "meaning": "Classic SAP term for sequenced JIT call. It normally carries vehicle or order reference and sequence information."
+    },
+    {
+      "term": "sumJC",
+      "meaning": "Classic SAP term for summarized JIT call. Demand is mainly date/quantity based and is not sequence-specific."
+    },
+    {
+      "term": "DON",
+      "meaning": "Delivery Order Number. In summarized JIT processing, the reference number can control downstream processing such as delivery."
+    },
+    {
+      "term": "JIC",
+      "meaning": "Not treated here as a canonical SAP Automotive JIT term. If a project uses JIC, the specification must define the local meaning before an agent maps it to SAP objects.",
+      "agent_rule": "Never silently replace JIC with JIS. Ask or infer only from an explicit project glossary."
+    }
+  ],
+  "architecture_views": {
+    "classic_jit": {
+      "positioning": "Established SAP Automotive JIT model used in SAP ERP and available in SAP S/4HANA on-premise documentation. The main mental model is Inbound JIT + Call Control + optional Outbound JIT.",
+      "inbound": {
+        "business_role": "Supplier receives JIT calls from an OEM or customer and supplies them.",
+        "call_types": [
+          {
+            "type": "sequenced",
+            "sap_term": "seqJC",
+            "use_when": "The customer needs configured assemblies or materials for a particular vehicle/order in a defined sequence.",
+            "complexity": "high",
+            "typical_control": "Detailed status/action lifecycle."
+          },
+          {
+            "type": "summarized",
+            "sap_term": "sumJC",
+            "use_when": "The customer sends date/quantity requirements without finished-product reference and without sequence delivery.",
+            "complexity": "medium",
+            "typical_control": "Shorter lifecycle; often quickly delivery-relevant."
+          }
+        ],
+        "structure": ["call_header", "component_group", "call_component"],
+        "key_dependencies": [
+          "JIT customer / partner mapping",
+          "destinations such as unloading point or assembly location",
+          "component groups",
+          "production information",
+          "customer external status mapping",
+          "sales scheduling agreement context where used",
+          "EDI / IDoc partner configuration"
+        ]
+      },
+      "call_control": {
+        "definition": "A configurable state/action engine for processing component groups.",
+        "logic": "An action is allowed or triggered for a processing status. After the action succeeds, the component group receives the next processing status.",
+        "design_rule": "Model business progression first, then map statuses and actions. Do not start from transaction codes.",
+        "why_it_matters": "It separates business state from technical message receipt and allows different component groups to follow different control logic.",
+        "lead_questions": [
+          "Which status comes from the customer and which status is internal?",
+          "Which transitions are automatic, manual, or exceptional?",
+          "Is an action idempotent if the same EDI message is received twice?",
+          "What is the recovery action after partial success?",
+          "Which status makes a call delivery-relevant?"
+        ]
+      },
+      "outbound": {
+        "business_role": "A system supplier forwards or creates JIT demand for its own suppliers.",
+        "patterns": [
+          {
+            "pattern": "forwarded_sequenced_call",
+            "description": "Relevant information from the inbound sequenced call is transformed into an outbound sequenced call for Tier-2 or sub-suppliers."
+          },
+          {
+            "pattern": "summarized_outbound_call",
+            "description": "Summarized supplier demand can be created from supply-to-production logic or manually, depending on the process."
+          }
+        ],
+        "classic_integration": "EDI using IDoc; additional MM, PP, LE and master-data functions participate depending on the scenario."
+      }
+    },
+    "next_generation_jit": {
+      "positioning": "Newer S/4HANA JIT model with Supply to Customer (S2C) and Supply to Production (S2P) capabilities, Fiori applications, modern integration, and tighter E2E integration with logistics execution.",
+      "s2c": {
+        "perspective": "Supplier serving a customer/OEM.",
+        "demand_types": ["delivery_order_or_delivery_instruction", "order_based_jit_call", "sequenced_jit_or_jis_call"],
+        "commercial_anchor": "Sales scheduling agreement or other outline agreement provides the long-term commercial/planning relationship.",
+        "e2e_scope": ["customer_jit_call", "packing", "delivery", "handling_unit", "transportation", "warehouse_execution", "goods_issue", "billing"],
+        "2025_fps01_highlights": [
+          "End-to-end JIS integration with EWM and TM",
+          "Tier-2 supplier integration through JIS call forwarding",
+          "JIS call split rules",
+          "Flexible customer supply area determination",
+          "Extensibility for delivery-confirmation quantity distribution"
+        ]
+      },
+      "s2p": {
+        "perspective": "Manufacturer replenishing production from a warehouse or external supplier.",
+        "trigger": "Demand from production, for example planned/production orders or consumption-driven replenishment.",
+        "object_context": "A JIT call contains quantity, date/time, destination production supply area, destination storage location, material, partner and scheduling-agreement information.",
+        "jis_context": "A sequenced call can be connected to a vehicle planned order and production sequence.",
+        "e2e_scope": ["production_demand", "jit_control_cycle", "jit_or_jis_call", "supplier_or_warehouse", "transportation", "ewm", "production_supply_area"]
+      },
+      "integration": {
+        "inbound_service_example": "SOAP service JITCallRequest_In for electronic receipt of customer JIT calls; SAP documents mapping through SAP Cloud Integration for S/4HANA Cloud.",
+        "warehouse_and_transport": "Next Generation JIT can integrate with LE-SHP, Handling Unit Management, EWM and TM for end-to-end JIS execution.",
+        "architecture_rule": "Select the JIT generation that matches the target S/4HANA release and scope. Do not copy classic IDoc-era design decisions into Next Generation JIT without checking supported APIs and process objects."
+      }
+    }
+  },
+  "business_objects": [
+    {
+      "object": "jit_call",
+      "role": "Demand instruction at short horizon.",
+      "identity_concerns": ["external_call_number", "customer_or_supplier", "call_type", "reference_or_vehicle", "version_or_change_context"],
+      "agent_checks": ["duplicate_detection", "change_vs_new_call", "cancellation_semantics", "external_reference_mapping"]
+    },
+    {
+      "object": "component_group",
+      "role": "Primary operational control unit in classic JIT; groups materials/assembly information and carries processing control.",
+      "agent_checks": ["determination_rule", "status", "action_control", "destination", "delivery_relevance"]
+    },
+    {
+      "object": "call_component",
+      "role": "Material/component requested in the call.",
+      "agent_checks": ["material_mapping", "quantity_uom", "supplier_material_number", "bom_or_simple_component"]
+    },
+    {
+      "object": "jit_control_cycle",
+      "role": "Control master data used to connect material replenishment and source/destination logic; especially important for outbound and S2P scenarios.",
+      "agent_checks": ["material", "source", "destination_psa", "supplier", "scheduling_agreement", "communication_context"]
+    },
+    {
+      "object": "scheduling_agreement",
+      "role": "Long-term commercial/planning anchor. Forecast and JIT/JIS signals refine the near-term execution requirement.",
+      "agent_checks": ["sales_vs_purchase_side", "partner", "material", "validity", "release_or_schedule_context"]
+    },
+    {
+      "object": "delivery_sequence_group",
+      "role": "Next Generation JIS master/control object used to manage delivery sequence behavior and related checks.",
+      "agent_checks": ["customer", "plant", "customer_supply_area", "number_settings", "packing_group_specification"]
+    },
+    {
+      "object": "packing_group",
+      "role": "Represents planned packing of component groups for sequenced customer JIT calls; can support sequence-controlled handling-unit execution.",
+      "agent_checks": ["slots", "component_group_assignment", "sequence", "handling_unit_creation", "scan_confirmation"]
+    }
+  ],
+  "decision_model": [
+    {
+      "question": "Is delivery order-specific and sequence-specific?",
+      "yes": "Use sequenced JIT / JIS mental model.",
+      "no": "Continue with quantity/time-based JIT assessment."
+    },
+    {
+      "question": "Are we supplier-to-OEM, manufacturer-to-production, or Tier-1-to-Tier-2?",
+      "why": "The same word JIT can mean different ownership, contracts, and message directions."
+    },
+    {
+      "question": "Is the target solution classic JIT or Next Generation JIT?",
+      "why": "Objects, applications, integration technology and extensibility differ."
+    },
+    {
+      "question": "What is the source of truth for sequence and requested time?",
+      "why": "A technically valid message is useless if sequence authority is unclear."
+    },
+    {
+      "question": "What happens if a sequence changes after production or packing has started?",
+      "why": "Resequencing is a business exception with physical consequences, not just a database update."
+    }
+  ],
+  "design_principles": [
+    "Separate forecast/planning signals from execution calls.",
+    "Treat external status as input, not as the complete internal process state.",
+    "Keep message mapping separate from business lifecycle logic.",
+    "Make duplicate, change, cancel and resequence behavior explicit in the interface contract.",
+    "Model the physical flow together with the SAP document flow: sequence, packing, handling unit, loading, transport and line-side consumption are linked.",
+    "Prefer released APIs, BAdIs and key-user/developer extensibility over modifications; verify the exact target release before naming an extension point in a design.",
+    "Design monitoring and recovery before go-live. In JIT, a six-minute interface delay can be more important than a six-hour batch failure elsewhere."
+  ],
+  "classic_reference_transactions": {
+    "note": "Useful for orientation in classic JIT only. They are not an architecture.",
+    "inbound": ["JIT1", "JIT2", "JIT3", "JIT4", "JITM", "JITG", "JITE", "JITLOG", "EMJIT", "OJITI"],
+    "outbound": ["JITO1", "JITO3", "JITOM", "JITOG", "JITOE", "JITOAL", "OJITO"]
+  },
+  "sources": [
+    {
+      "title": "SAP S/4HANA 2025 FPS01 - JIT Inbound: Call Control",
+      "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f340785101c548c9beeda9284efd18a0/2be2c353b677b44ce10000000a174cb4.html",
+      "scope": "Classic call-control model"
+    },
+    {
+      "title": "SAP S/4HANA 2025 FPS01 - JIT Outbound",
+      "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f3419342409c4a7cb0b2d27f801d38b1/56e1c353b677b44ce10000000a174cb4.html",
+      "scope": "Classic outbound JIT"
+    },
+    {
+      "title": "SAP S/4HANA 2025 FPS01 - Next Generation JIT Supply to Customer",
+      "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/21aead0c98bd4755abdacd91c99e3393/bb8cc89be15e44d3abbe35a399904b3c.html",
+      "scope": "Next Generation S2C"
+    },
+    {
+      "title": "SAP S/4HANA 2025 FPS01 - Next Generation JIT Supply to Production",
+      "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/21aead0c98bd4755abdacd91c99e3393/2e7f076b73554959a185b8adba16cb3e.html",
+      "scope": "Next Generation S2P"
+    },
+    {
+      "title": "SAP S/4HANA Cloud - Manage Just-In-Time Calls API",
+      "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/d35113ee62644d3abee1aaec148291d9/2963c5246b334cca8787cc1aa4cd587c.html",
+      "scope": "SOAP inbound service JITCallRequest_In"
+    }
+  ]
+}

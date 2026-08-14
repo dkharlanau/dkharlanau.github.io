@@ -1,0 +1,51 @@
+{
+  "id":"SD-RETURN-CLAIMS-ARCH-NOTES",
+  "updated_at":"2026-08-14",
+  "purpose":"Lead-level semantic, governance, deployment and integration notes that sit above the detailed Returns and Claims control plane.",
+  "semantic_keys":[
+    {"name":"Returns order reason","meaning":"Why the return business transaction exists at header/commercial level.","do_not_confuse_with":"item return reason or inspection result"},
+    {"name":"Return reason","meaning":"Why the customer returns this item, for example damage or defect. Useful for customer-facing root-cause analytics.","do_not_confuse_with":"what the warehouse actually finds"},
+    {"name":"Inspection code","meaning":"What was physically found during inspection. It is evidence for disposition and refund, not merely another complaint reason.","do_not_confuse_with":"return reason"},
+    {"name":"Logistical follow-up activity","meaning":"What physically happens next to the returned quantity.","do_not_confuse_with":"customer compensation"},
+    {"name":"Refund type","meaning":"What the customer receives: money by credit memo or a replacement product.","do_not_confuse_with":"when the refund is executed"},
+    {"name":"Refund control","meaning":"When/how the selected compensation is executed: defer, start approved flow, immediate, or no refund.","do_not_confuse_with":"refund percentage"},
+    {"name":"Refund code","meaning":"Commercial extent of the credit, typically a percentage used in refund determination.","do_not_confuse_with":"inspection severity"}
+  ],
+  "architecture_traps":[
+    {"id":"TRAP-RET-OWNERSHIP","title":"Goods receipt is not ownership","problem":"A warehouse user sees stock and assumes the company owns it.","design_rule":"Model physical custody and valuation/ownership separately. Deferred returns can first enter non-valuated returns stock."},
+    {"id":"TRAP-RET-REFUND-VALUATION","title":"Refund can trigger valuation","problem":"Customer service refunds early and inventory value changes before the intended final disposition.","design_rule":"Decide whether valuation should happen at refund or only after final logistical follow-up; use valuation suspension only with an explicit policy."},
+    {"id":"TRAP-CLM-WF-BLOCK","title":"Approval workflow vs billing block","problem":"Teams configure a billing block on credit/debit memo request type and also expect sales-document approval workflow to start.","design_rule":"Choose the governance model deliberately. SAP documents that credit/debit memo request approval workflow requires no billing block on the relevant document type for the workflow to start."},
+    {"id":"TRAP-RET-REASON-COLLAPSE","title":"One generic reason field destroys analytics","problem":"Customer reason, physical finding, disposition and refund are stored as if they were one classification.","design_rule":"Keep return reason, inspection code, follow-up activity and refund decision as separate dimensions."},
+    {"id":"TRAP-RET-API-VERSION","title":"API version is an architecture choice","problem":"An integration design says 'Customer Return API' without checking required features.","design_rule":"Check V2/V4/A2A capability by use case. Current V4 focuses on standard CBAR and adds capabilities such as AVC and automatic inspection; V2 supports CBAR/CBRE and approval release/reject. Do not assume feature parity."},
+    {"id":"TRAP-RET-REPAIR-UI","title":"Repair capability is not the same as app availability","problem":"A process is declared unsupported because one UI cannot select the repair follow-up in one release/context.","design_rule":"Separate business capability, follow-up activity, app support and release restriction. Verify the chosen UI and deployment."},
+    {"id":"TRAP-RET-VC","title":"Configurable returns have follow-up restrictions","problem":"A generic ARM design is copied to configurable products.","design_rule":"Treat 7KW / configurable-material returns as a distinct edge. SAP documents restrictions for free-stock transfers and Service repair follow-ups because configuration data must remain consistent."}
+  ],
+  "valuation_design":[
+    {"choice":"Standard material valuation","when":"Normal returns valuation policy is acceptable.","question":"Is material-master valuation the correct economic basis for the returned product?"},
+    {"choice":"Valuation with reference to sales","when":"The business wants the return valuation tied to the preceding sales transaction where supported/configured.","question":"Do we need the historical sales context to value the returned product rather than only current material valuation?"},
+    {"choice":"Suspend valuation until final follow-up","when":"Refund timing should not automatically decide ownership/valuation.","question":"Which event is the legal/economic ownership trigger: refund, inspection decision, or final disposition?"}
+  ],
+  "ewm_inspection_modes":[
+    {"mode":"S/4-led inspection before EWM follow-on","sequence":"Returns order → inspection/decision in S/4HANA → follow-on document → EWM execution","best_when":"ARM owns the decision centrally and EWM mainly executes warehouse steps."},
+    {"mode":"Inspection during goods receipt in decentralized EWM/QIE","sequence":"Returns order → EWM receipt/inspection → simple local follow-up or transfer complex decision back to S/4HANA","best_when":"Warehouse inspection belongs operationally in EWM and high-volume execution benefits from local decisions."}
+  ],
+  "api_choice": [
+    {"interface":"Customer Return A2X OData V4","good_for":"New standard-return integrations, CBAR, AVC-related needs, automatic inspection flags, synchronous/asynchronous processing","watch":"Current feature set does not equal V2; approval release/reject is not supported in the same way."},
+    {"interface":"Customer Return A2X OData V2","good_for":"Existing integrations, CBAR/CBRE and scenarios requiring release/reject of returns orders in approval","watch":"SAP recommends V4 for new projects and new capabilities are added there."},
+    {"interface":"Customer Return A2A","good_for":"Asynchronous application-to-application integration and controlled external number/message processing","watch":"Different reference and object-processing limits from A2X."},
+    {"interface":"Returns Inspection A2X OData V4","good_for":"External inspection applications, inspection documents and inspection split items","watch":"It owns inspection data, not the whole returns orchestration."},
+    {"interface":"Credit Memo Request A2X OData V4","good_for":"External creation/update of commercial credit claims","watch":"Reference/copying and approval status remain business controls, not API transport details."}
+  ],
+  "deployment_specific_edges":[
+    {"topic":"Refund control A","note":"On-premise/private documentation includes refund control A (after receipt of credit memo) for selected forwarding scenarios such as another company code or supplier. Public-cloud standard descriptions focus mainly on R/P/I/N. Treat A as deployment/process-specific, not a universal mnemonic."},
+    {"topic":"Legacy / alternative repair follow-ups","note":"Older or deployment-specific ARM documentation can expose repair activities such as 0016/0017 in addition to newer Service integration 0026. Verify release, active business functions and target Service architecture before teaching a code as universal."},
+    {"topic":"Configurable materials","note":"Follow-up activities 0002/0011 can lose access to variant configuration data for inventory management, and Service repair follow-ups have documented restrictions. Keep configurable returns as a separate design check."}
+  ],
+  "evidence":[
+    {"title":"Manage Sales Document Workflows","url":"https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/82db0a77a4ee48cda01f873d5a416bd2.html","supports":"billing block and approval workflow interaction for credit/debit memo requests"},
+    {"title":"Feature Comparison for Customer Return APIs","url":"https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/e236d0343feb422daa7a5730e2a25437.html","supports":"V2/V4/A2A feature differences"},
+    {"title":"Advanced Returns Management - EWM Integration","url":"https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/70e9a188e3834dc782bfeeb8f88d5ea8.html","supports":"S/4-led versus EWM/QIE-led inspection variants"},
+    {"title":"Logistical Follow-Up Activities","url":"https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/aad8417242c84d70a64b2742fe818c90.html","supports":"follow-up codes and configurable-material restrictions"},
+    {"title":"Customer Compensation","url":"https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/436368e8646443988837608bb121e92d.html","supports":"refund controls including deployment-specific A and ownership/valuation behavior"}
+  ]
+}

@@ -1,19 +1,20 @@
 id: lab-enterprise-context
 title: "Enterprise Context Lab"
 model_name: "Enterprise Context Graph"
-version: "0.2.0"
+version: "1.1.0"
 status: active_research
 started_at: "2026-08-14"
 updated_at: "2026-08-14"
 last_reviewed_together_at: "2026-08-14"
-review_note: "Last reviewed together against official SAP sources."
+review_note: "Last reviewed together against current primary SAP sources."
 owner: "Dzmitryi Kharlanau"
 
 purpose: >-
-  Build a source-tracked, machine-readable model that connects enterprise business
-  processes, data, systems, determinations, integrations, failures, KPIs, tests,
-  and expert reasoning so the same knowledge can support learning, impact analysis,
-  diagnostics, synthetic data, and AI evaluation.
+  Build a source-tracked, machine-readable model that connects business domains,
+  platform areas, solution domains, industries, deployment models, processes,
+  master-data objects, systems, rules, integrations, interface contracts,
+  extensions, failures, KPIs, tests, AI components, and expert reasoning for
+  learning, architecture, diagnostics, presales, and AI evaluation.
 
 principles:
   - id: source_tracked
@@ -27,18 +28,48 @@ principles:
     description: "Examples and enterprise records are fictional unless explicitly documented otherwise."
   - id: fact_vs_judgment
     label: "Facts and judgment stay separate"
-    description: "Documented facts, expert heuristics, and inferences carry different evidence types."
+    description: "Documented facts, professional observations, expert heuristics, and inferences carry different evidence types."
   - id: deep_verticals
     label: "Depth before breadth"
     description: "A topic is expanded through relationships, failures, tests, and reasoning before another catalogue is created."
-  - id: causal_reasoning
-    label: "Model the why"
-    description: "Determinations are first-class nodes so inputs, outputs, rules, overrides, and downstream effects remain traversable."
+  - id: domain_separation
+    label: "Keep architecture dimensions separate"
+    description: "Business domains, platform areas, solution domains, industries, deployment models, processes, applications, master-data objects, platforms, and AI assets are different entity types."
+  - id: independent_synthesis
+    label: "Independent synthesis"
+    description: "Vendor sources verify facts; public explanations, comparisons, models, and examples are written independently for this site."
+  - id: author_reasoning
+    label: "Teach the reasoning"
+    description: "Public content should show how I frame the problem, what I check, where I draw boundaries, and why I prefer one decision over another."
+
+content_integrity:
+  policy_url: "/legal/research-attribution/"
+  default_source_usage: reference_and_verification_only
+  publication_rules:
+    - "Write public explanations in original language rather than reproducing vendor prose."
+    - "Link to primary sources instead of mirroring or republishing vendor documentation."
+    - "Do not copy vendor tables, diagrams, training material, or screenshots by default."
+    - "Use product names only to identify the products and services being discussed; do not imply affiliation or endorsement."
+    - "Do not publish restricted, licensed, partner-only, customer-only, employer-confidential, or client-confidential material."
+    - "Avoid direct quotations by default; prefer a short independent summary plus the source link."
+    - "Do not bulk scrape or build a local copy of vendor web content."
+  author_voice_rules:
+    - "Use first person for genuine professional methods, preferences, and reasoning, not for invented project history."
+    - "Do not fabricate clients, incidents, outcomes, project details, metrics, savings, or personal experience."
+    - "Prefer a reasoning path over a product catalogue: problem, evidence, boundary, trade-off, decision, and next check."
+    - "Surface failure modes and operational consequences where they materially change the architecture decision."
+    - "Mark fictional cases as synthetic; do not disguise a synthetic example as a real delivery story."
+    - "Avoid generic consultant language when a concrete diagnostic question or decision rule can teach more."
+  origin_labels:
+    documented_fact: "Checked against a public primary source."
+    professional_experience: "Practical observation from delivery, support, or architecture work."
+    reasoned_interpretation: "Independent conclusion based on facts, constraints, and experience."
+    synthetic_example: "Fictional scenario created for learning or evaluation."
 
 reference_enterprise:
   id: enterprise-global-transformation-industries
   title: "Global Transformation Industries"
-  status: planned
+  status: active_synthetic_model
   synthetic: true
   description: >-
     A fictional multinational enterprise used to instantiate processes, master data,
@@ -49,8 +80,75 @@ first_vertical:
   id: TOPIC-O2C-SALES-ORDER-CREATION
   title: "Order-to-Cash — Sales Order Creation"
   status: researching
-  gates_complete: 4
+  gates_complete: 6
   gates_total: 7
+  page_url: "/labs/enterprise-context/sales-order/"
+  graph_ref: "GRAPH-SD-SALES-ORDER-DECISIONS"
+
+second_vertical:
+  id: TOPIC-P2P-PROCUREMENT
+  title: "Procure-to-Pay — Procurement"
+  status: researching
+  gates_complete: 6
+  gates_total: 7
+  page_url: "/labs/enterprise-context/procurement/"
+  graph_ref: "GRAPH-MM-PROCUREMENT-DECISIONS"
+
+deep_dives:
+  - id: DEEP-SD-SALES-ORDER
+    title: "Sales Order Decision Map"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/sales-order/"
+    graph_ref: "GRAPH-SD-SALES-ORDER-DECISIONS"
+  - id: DEEP-SD-PRICING
+    title: "Sales Pricing Engine"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/pricing/"
+    graph_ref: "GRAPH-SD-PRICING-ENGINE"
+    emphasis: ["condition technique", "diagnostic sequence", "classic pricing enhancements", "clean-core extensibility", "sales-to-billing pricing comparison"]
+  - id: DEEP-SD-ATP-AATP
+    title: "ATP / aATP Promise Engine"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/atp/"
+    graph_ref: "GRAPH-SD-ATP-AATP"
+    emphasis: ["checking group/rule and scope", "PAC and confirmation dates", "PAL and supply protection", "BOP prioritization", "ABC substitution", "released aATP extensibility"]
+  - id: DEEP-SD-CREDIT
+    title: "SAP Credit Management"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/credit/"
+    graph_ref: "GRAPH-SD-CREDIT-MANAGEMENT"
+    emphasis: ["SD automatic credit-control trigger", "BP credit profile and credit segment", "check rules and standard check steps", "credit exposure lifecycle", "documented credit decisions and recheck", "BADI_SD_CM, UKM_FILL, and custom check steps"]
+  - id: DEEP-SD-SHIPPING-SCHEDULING
+    title: "Shipping & Delivery Scheduling"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/shipping/"
+    graph_ref: "GRAPH-SD-SHIPPING-SCHEDULING"
+    emphasis: ["shipping point determination", "order and delivery route determination", "delivery and transportation scheduling", "backward and forward date calculation", "delivery due and split diagnostics", "EWM/TM execution boundaries and extensibility"]
+  - id: DEEP-SD-MASTER-DATA
+    title: "Sales Master Data Architecture"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/master-data/"
+    graph_ref: "GRAPH-SD-MASTER-DATA-ARCHITECTURE"
+    emphasis: ["Business Partner and customer organizational views", "product sales, plant, MRP, and shipping data", "customer-material and partner relationship precedence", "pricing and credit master data", "replication, custom fields, and governance", "runtime impact and diagnostic tracing"]
+  - id: DEEP-MM-PROCUREMENT
+    title: "Procurement Decision Map"
+    parent_topic: TOPIC-P2P-PROCUREMENT
+    status: researching
+    page_url: "/labs/enterprise-context/procurement/"
+    graph_ref: "GRAPH-MM-PROCUREMENT-DECISIONS"
+    emphasis:
+      - "demand-to-settlement runtime path"
+      - "item category and account assignment"
+      - "source determination"
+      - "purchasing conditions"
+      - "approval and supplier output"
+      - "goods receipt, invoice verification, and GR/IR"
 
 maturity_gates:
   - id: scope
@@ -64,7 +162,7 @@ maturity_gates:
   - id: model
     order: 3
     label: "Model"
-    done_definition: "Processes, objects, attributes, determinations, rules, and terminology are represented as structured entities."
+    done_definition: "Domains, platform areas, solution domains, industries, deployment models, processes, objects, determinations, rules, applications, interface contracts, platforms, AI assets, and terms are represented as structured entities."
   - id: relationships
     order: 4
     label: "Relationships"
@@ -72,20 +170,65 @@ maturity_gates:
   - id: expert_reasoning
     order: 5
     label: "Expert reasoning"
-    done_definition: "Questions, heuristics, decision drivers, risks, and anti-patterns are captured separately from facts."
+    done_definition: "Questions, heuristics, decision drivers, risks, anti-patterns, and diagnostic paths are captured separately from facts."
   - id: synthetic_example
     order: 6
     label: "Synthetic example"
-    done_definition: "The topic is instantiated in Global Transformation Industries with safe sample data or a scenario."
+    done_definition: "The topic is instantiated with safe fictional data or a scenario."
   - id: ai_evaluation
     order: 7
     label: "AI / evaluation"
     done_definition: "At least one grounded question, impact trace, diagnostic case, or benchmark task can be evaluated against the model."
+
+human_views:
+  enterprise_context: "/labs/enterprise-context/"
+  business_domains: "/labs/enterprise-context/domains/"
+  data_governance: "/labs/enterprise-context/data-governance/"
+  deployment_models: "/labs/enterprise-context/deployment-models/"
+  industries: "/labs/enterprise-context/industries/"
+  business_ai: "/labs/enterprise-context/business-ai/"
+  integrations: "/labs/enterprise-context/integrations/"
+  development: "/labs/enterprise-context/development/"
+  development_toolbox: "/labs/enterprise-context/development/toolbox/"
+  master_data_governance: "/labs/enterprise-context/mdg/"
+  mdg_deployments: "/labs/enterprise-context/mdg/deployments/"
+  mdg_processes: "/labs/enterprise-context/mdg/processes/"
+  mdg_logistics: "/labs/enterprise-context/mdg/logistics/"
+  mdg_architecture: "/labs/enterprise-context/mdg/architecture/"
+  mdg_interfaces: "/labs/enterprise-context/mdg/interfaces/"
+  mdg_extensions: "/labs/enterprise-context/mdg/extensions/"
+  mdg_scenario: "/labs/enterprise-context/mdg/scenario/"
+  mdg_implementation: "/labs/enterprise-context/mdg/implementation/"
+  sales_order_decision_map: "/labs/enterprise-context/sales-order/"
+  pricing_engine: "/labs/enterprise-context/pricing/"
+  atp_aatp_engine: "/labs/enterprise-context/atp/"
+  credit_management: "/labs/enterprise-context/credit/"
+  shipping_scheduling: "/labs/enterprise-context/shipping/"
+  master_data_architecture: "/labs/enterprise-context/master-data/"
+  procurement_decision_map: "/labs/enterprise-context/procurement/"
+  sales_master_data: "/labs/enterprise-context/sales-processes/master-data/"
+  model_contract: "/labs/enterprise-context/model/"
+  research_attribution_policy: "/legal/research-attribution/"
 
 machine_endpoints:
   catalog: "/labs/enterprise-context/data/catalog.json"
   schema: "/labs/enterprise-context/data/schema.json"
   topics: "/labs/enterprise-context/data/topics.json"
   sources: "/labs/enterprise-context/data/sources.json"
+  development: "/labs/enterprise-context/data/development.json"
+  development_toolbox: "/labs/enterprise-context/data/development-toolbox.json"
   sales_order_graph: "/labs/enterprise-context/data/sales-order-graph.json"
   sales_order_sources: "/labs/enterprise-context/data/sales-order-sources.json"
+  pricing_graph: "/labs/enterprise-context/data/pricing-graph.json"
+  pricing_sources: "/labs/enterprise-context/data/pricing-sources.json"
+  atp_graph: "/labs/enterprise-context/data/atp-graph.json"
+  atp_sources: "/labs/enterprise-context/data/atp-sources.json"
+  credit_graph: "/labs/enterprise-context/data/credit-graph.json"
+  credit_sources: "/labs/enterprise-context/data/credit-sources.json"
+  shipping_graph: "/labs/enterprise-context/data/shipping-graph.json"
+  shipping_sources: "/labs/enterprise-context/data/shipping-sources.json"
+  master_data_graph: "/labs/enterprise-context/data/master-data-graph.json"
+  master_data_sources: "/labs/enterprise-context/data/master-data-sources.json"
+  procurement_graph: "/labs/enterprise-context/data/procurement-graph.json"
+  procurement_sources: "/labs/enterprise-context/data/procurement-sources.json"
+  sales_master_data: "/labs/enterprise-context/data/sales-master-data.json"

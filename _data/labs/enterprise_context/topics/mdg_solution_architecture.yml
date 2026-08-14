@@ -1,0 +1,396 @@
+id: TOPIC-MDG-SOLUTION-ARCHITECTURE
+type: research_topic
+title: "SAP MDG Solution Architecture"
+summary: "A build map for SAP MDG: application layers, interfaces, extensibility, security, monitoring, and the design choices that connect governance to a working solution."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/architecture/"
+source_reviewed_at: "2026-08-14"
+
+business_question: "How is an SAP MDG solution assembled, integrated, extended, secured, operated, and changed without turning governance into fragile custom code?"
+
+maturity:
+  gates_complete: 4
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: in_progress
+    synthetic_example: planned
+    ai_evaluation: planned
+
+memory_model:
+  phrase: "Experience → Business Object → Governance Logic → Integration → Extension → Operations"
+  principle: >-
+    Do not start an MDG design with a screen or interface. Start with the authoritative object,
+    ownership boundary, governance process, and consumers. The technical layers should support that model.
+
+architecture_layers:
+  - id: CAP-MDG-UX-LAYER
+    type: capability
+    title: "User Experience and Service Exposure"
+    question: "How do requesters, stewards, approvers, and consuming applications interact with the governed object?"
+    components:
+      - "SAP Fiori applications"
+      - "OData services used by selected Fiori applications"
+      - "Published services and APIs where supported"
+    warning: "An OData service used by a Fiori application is not automatically the right enterprise integration contract."
+
+  - id: CAP-MDG-BO-LAYER
+    type: capability
+    title: "Business Object and Data Model"
+    question: "Which fields, relationships, keys, and application views belong to the governed object?"
+    classic_mode:
+      - "MDG data model"
+      - "Staging area for governed changes"
+      - "Reuse or flex active-data model depending on the domain"
+    cloud_ready_mode:
+      - "Core Data Services (CDS)"
+      - "RAP business objects"
+      - "ABAP Cloud development model"
+    design_rule: "Separate enterprise core identity from application-specific attributes before deciding where a field is owned."
+
+  - id: CAP-MDG-GOVERNANCE-LOGIC
+    type: capability
+    title: "Governance Logic"
+    question: "What decides whether a change is complete, valid, approved, and ready for activation?"
+    classic_mode:
+      - "Change request types"
+      - "Validation and derivation rules"
+      - "Rule-based workflow"
+      - "BRFplus decision tables for next step, status, and agents"
+      - "Activation into active master data"
+    cloud_ready_mode:
+      - "Unified process framework for supported scenarios"
+      - "RAP behavior and released extension points"
+      - "Optional SAP Build Process Automation integration"
+    design_rule: "Workflow implements accountability. It must not be used to compensate for unclear ownership."
+
+  - id: CAP-MDG-INTEGRATION-LAYER
+    type: capability
+    title: "Integration and Distribution"
+    question: "How does governed data enter MDG, leave MDG, and remain identifiable across systems?"
+    concerns:
+      - "Inbound replication"
+      - "Outbound replication"
+      - "Initial load and consolidation input"
+      - "Key mapping"
+      - "Value mapping"
+      - "Filtering and target-system selection"
+      - "Retries and error handling"
+      - "Consumer readiness"
+    design_rule: "Replication is part of the governance design, not a post-go-live interface task."
+
+  - id: CAP-MDG-EXTENSION-LAYER
+    type: capability
+    title: "Extensibility"
+    question: "What can be changed safely and at which layer?"
+    extension_types:
+      - "Key-user field and UI adaptation where supported"
+      - "Data-model extensions"
+      - "Validation and determination extensions"
+      - "Behavior extensions"
+      - "Node extensions where the RAP business object explicitly allows them"
+      - "Custom services based on released interfaces"
+    design_rule: "Prefer released APIs and explicit extension points. A technical possibility is not automatically an upgrade-safe extension."
+
+  - id: CAP-MDG-SECURITY-LAYER
+    type: capability
+    title: "Identity, Roles and Authorization"
+    question: "Who can request, enrich, approve, activate, replicate, or only display master data?"
+    personas:
+      - "Requester"
+      - "Data Steward"
+      - "Specialist"
+      - "Approver"
+      - "Administrator"
+      - "Auditor / display user"
+    concerns:
+      - "Business roles"
+      - "Authorization objects"
+      - "Workflow agent determination"
+      - "Segregation of duties"
+      - "Technical communication users"
+    design_rule: "Process roles and system roles should be designed together."
+
+  - id: CAP-MDG-OPERATIONS-LAYER
+    type: capability
+    title: "Operations and Monitoring"
+    question: "How do we know that governance and replication still work after go-live?"
+    signals:
+      - "Governance process backlog and cycle time"
+      - "Validation and duplicate failures"
+      - "Replication errors and delays"
+      - "Interface exceptions"
+      - "Failed mappings"
+      - "Consumer-side rejects"
+      - "Cloud integration and exception monitoring where available"
+    design_rule: "A successful activation is not enough; the consumer must receive and accept the record."
+
+application_build_patterns:
+  - id: VAR-MDG-CLASSIC-BUILD
+    type: variant
+    title: "Classic MDG build pattern"
+    applies_to: "SAP MDG on SAP S/4HANA, classic mode"
+    sequence:
+      - "Select and scope the master-data domain."
+      - "Define the MDG data model and active-data relationship."
+      - "Define change request types and process variants."
+      - "Configure UI and Fiori entry points required by each persona."
+      - "Implement validations, derivations, duplicate checks, and workflow decisions."
+      - "Configure roles and authorizations."
+      - "Design DRF target systems, filters, services, mappings, and error handling."
+      - "Test request-to-consumer scenarios, not only activation."
+    strength: "Broad multi-domain and application-specific governance on the S/4HANA data model."
+    caution: "Classic flexibility can invite deep custom logic. Keep a clean boundary around custom code and interfaces."
+
+  - id: VAR-MDG-CLOUD-READY-BUILD
+    type: variant
+    title: "Cloud-ready MDG build pattern"
+    applies_to: "Cloud-ready mode in SAP MDG on SAP S/4HANA"
+    sequence:
+      - "Confirm that the supported Business Partner scope matches the requirement."
+      - "Model data with released CDS and RAP concepts."
+      - "Use SAP Fiori and the unified governance framework."
+      - "Extend only through enabled RAP or key-user extension points."
+      - "Use released APIs and services for integration."
+      - "Integrate optional cloud services only where they improve the process."
+      - "Keep custom logic compatible with the ABAP Cloud development model."
+    technology:
+      - "ABAP Cloud"
+      - "CDS"
+      - "RAP"
+      - "SAP Fiori"
+    strength: "Lifecycle-stable extension model and a cleaner technical boundary."
+    caution: "Current functional scope is narrower than classic multi-domain MDG."
+
+  - id: VAR-MDG-CLOUD-EDITION-BUILD
+    type: variant
+    title: "SAP MDG, cloud edition build pattern"
+    applies_to: "SAP Master Data Governance, cloud edition"
+    sequence:
+      - "Define the core Business Partner attributes owned by MDG cloud edition."
+      - "Keep application-specific customer or supplier attributes with the correct application owner."
+      - "Configure governance, consolidation, and data-quality processes for the supported scope."
+      - "Define replication through SOAP or SAP Master Data Integration according to the target landscape."
+      - "Add supported custom fields only where they belong to the core model."
+      - "Configure communication arrangements and technical identities."
+      - "Connect operational monitoring where required."
+    strength: "Public-cloud core Business Partner governance in a federated architecture."
+    caution: "Do not stretch core BP governance into material, financial, or broad S/4 application-data ownership."
+
+interface_catalog:
+  - id: INT-MDG-DRF
+    type: integration
+    title: "Data Replication Framework"
+    direction: "Primarily orchestration of outbound master-data distribution from S/4HANA MDG"
+    used_for: "Target-system selection, filtering, replication models, and distribution of supported master data."
+    typical_transport: "Domain-specific services, including SOA/SOAP services where defined."
+    applies_to:
+      - APP-SAP-MDG-S4
+    source_refs:
+      - SRC-SAP-MDG-DRF
+
+  - id: INT-MDG-SOAP
+    type: integration
+    title: "SOAP master-data replication services"
+    direction: "Inbound and outbound where the product/domain supports the service"
+    used_for: "Business Partner and related master-data replication between MDG and connected systems."
+    architecture_note: "Service contracts, receiver capability, time dependency, retries, and error handling must be checked before treating SOAP as only a connectivity detail."
+    applies_to:
+      - APP-SAP-MDG-S4
+      - APP-SAP-MDG-CLOUD
+      - APP-S4-PUBLIC-MDG
+    source_refs:
+      - SRC-SAP-MDG-DRF
+      - SRC-SAP-MDG-CE-REPLICATION
+      - SRC-SAP-MDG-S4-PUBLIC-SOAP
+
+  - id: INT-MDG-MDI
+    type: integration
+    title: "SAP Master Data Integration"
+    direction: "Publish and consume supported master-data objects"
+    used_for: "Supported replication scenarios in SAP MDG, cloud edition and federated SAP landscapes."
+    applies_to:
+      - APP-SAP-MDG-CLOUD
+    boundary: "Current supported object and attribute scope must be checked for the target release."
+    source_refs:
+      - SRC-SAP-MDG-CE-REPLICATION
+
+  - id: INT-MDG-CONSOLIDATION-LOAD
+    type: integration
+    title: "Consolidation load interfaces"
+    direction: "Inbound"
+    used_for: "Bring source records into consolidation for standardization, matching, merging, and best-record calculation."
+    patterns:
+      - "File-based loads where supported"
+      - "API-based input where supported"
+    source_refs:
+      - SRC-SAP-MDG-CE-FEATURES
+
+  - id: INT-MDG-KEY-MAPPING
+    type: integration
+    title: "Key Mapping"
+    direction: "Cross-system identity mapping"
+    used_for: "Map the same business object when source and target systems use different object IDs."
+    design_rule: "Decide whether the central key, local key, or both must be persisted and monitored."
+    source_refs:
+      - SRC-SAP-MDG-KEY-MAPPING
+
+extensibility_model:
+  decision_order:
+    - question: "Can configuration solve the requirement?"
+      choice: "Prefer configuration before custom development."
+    - question: "Is it a supported custom field or UI adaptation?"
+      choice: "Use key-user extensibility where the product supports it."
+    - question: "Does business logic need a released extension point?"
+      choice: "Use the supported developer extension model."
+    - question: "Is the design using cloud-ready/RAP objects?"
+      choice: "Check explicit RAP extensibility enablement before designing fields, behavior, or nodes."
+    - question: "Does the extension create a new application responsibility?"
+      choice: "Consider a side-by-side service instead of forcing the responsibility into MDG."
+
+  classic_examples:
+    - "Extend supported master-data fields."
+    - "Add validation or derivation logic."
+    - "Adapt workflow rules."
+    - "Extend mappings and replication logic when required."
+  cloud_ready_examples:
+    - "Extend a CDS/RAP data model only at released extension points."
+    - "Add supported RAP validations or determinations when behavior extensibility is enabled."
+    - "Build a custom service from a released RAP BO interface where permitted."
+  source_refs:
+    - SRC-SAP-MDG-FIELD-EXTENSIBILITY
+    - SRC-SAP-ABAP-CLOUD-RAP-EXTENSIBILITY
+
+integration_design_questions:
+  - "Who is the authoritative owner of the object and of each important attribute?"
+  - "Is replication synchronous, asynchronous, or batch-oriented for the business need?"
+  - "Does the consumer create its own key, and how is key mapping returned or stored?"
+  - "Which code lists require value mapping?"
+  - "Which targets receive every record and which require filters?"
+  - "What happens when the consumer rejects an already approved record?"
+  - "How is reprocessing performed without creating duplicates?"
+  - "How do we reconcile records that were activated but never accepted downstream?"
+  - "Does the interface transport core identity only or application-specific attributes as well?"
+  - "Which team owns interface monitoring after go-live?"
+
+extension_design_questions:
+  - "Is the requirement a new field, a new rule, a new process step, a new object node, or a separate application capability?"
+  - "Is the extension point released and supported for the target deployment and release?"
+  - "Can the extension survive upgrades without modification of SAP objects?"
+  - "Does the extension need to appear in workflow, validation, replication, search, duplicate check, and reporting?"
+  - "Who owns the new field and its data-quality rule?"
+  - "Does the extension belong to enterprise core data or only to one consuming application?"
+
+operational_model:
+  monitor:
+    - "Open and aging governance processes"
+    - "Workflow errors"
+    - "Validation and duplicate-check failures"
+    - "DRF / replication errors"
+    - "SOAP or MDI integration exceptions"
+    - "Key/value mapping errors"
+    - "Consumer-side rejection"
+    - "Data-quality trend"
+  cloud_observability:
+    note: "SAP Cloud ALM supports integration and exception monitoring for SAP MDG, cloud edition."
+    source_refs:
+      - SRC-SAP-MDG-CE-CLOUD-ALM
+  operating_roles:
+    - "Data Owner"
+    - "Data Steward"
+    - "MDG Functional Owner"
+    - "Integration Owner"
+    - "Application Owner"
+    - "Security Owner"
+    - "Operations / Support"
+
+lead_assessment_answer:
+  short: >-
+    I design MDG as a governed business-object platform, not as a form. I start with ownership and the data model,
+    then define the change process and quality rules, choose the right replication contract, and only then select
+    extension points and UI. I also design roles, monitoring, mappings, and consumer error handling before go-live.
+  architecture_path: "Owner → Object → Process → Rules → Activation → Interface → Consumer → Monitoring"
+  red_flags:
+    - "Direct table updates around governance"
+    - "Custom fields without ownership or downstream mapping"
+    - "One giant workflow for every risk level"
+    - "Replication designed after governance configuration"
+    - "Using internal UI services as enterprise APIs without checking the contract"
+    - "Custom code that depends on unreleased objects in a cloud-ready design"
+    - "No owner for consumer-side rejects"
+
+relations:
+  - subject: TOPIC-MDG-SOLUTION-ARCHITECTURE
+    predicate: contains
+    object: CAP-MDG-INTEGRATION-LAYER
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-SOLUTION-ARCHITECTURE
+    predicate: contains
+    object: CAP-MDG-EXTENSION-LAYER
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: APP-SAP-MDG-S4
+    predicate: integrated_via
+    object: INT-MDG-DRF
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-DRF]
+  - subject: APP-SAP-MDG-CLOUD
+    predicate: integrated_via
+    object: INT-MDG-MDI
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CE-REPLICATION]
+  - subject: APP-SAP-MDG-CLOUD
+    predicate: integrated_via
+    object: INT-MDG-SOAP
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CE-REPLICATION]
+  - subject: VAR-MDG-CLOUD-READY-BUILD
+    predicate: runs_on
+    object: "ABAP Cloud / CDS / RAP"
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-S4-OVERVIEW, SRC-SAP-ABAP-CLOUD-RAP-EXTENSIBILITY]
+  - subject: CAP-MDG-EXTENSION-LAYER
+    predicate: controlled_by
+    object: "Released extension points"
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-ABAP-CLOUD-RAP-EXTENSIBILITY]
+
+source_refs:
+  - SRC-SAP-MDG-S4-OVERVIEW
+  - SRC-SAP-MDG-DRF
+  - SRC-SAP-MDG-BRFPLUS-WORKFLOW
+  - SRC-SAP-MDG-CE-FEATURES
+  - SRC-SAP-MDG-CE-REPLICATION
+  - SRC-SAP-MDG-S4-PUBLIC-SOAP
+  - SRC-SAP-MDG-KEY-MAPPING
+  - SRC-SAP-MDG-FIELD-EXTENSIBILITY
+  - SRC-SAP-ABAP-CLOUD-RAP-EXTENSIBILITY
+  - SRC-SAP-MDG-CE-CLOUD-ALM
+
+tags:
+  - sap
+  - mdg
+  - architecture
+  - integration
+  - interfaces
+  - extensibility
+  - rap
+  - abap-cloud
+  - drf
+  - soap
+  - mdi
+  - monitoring

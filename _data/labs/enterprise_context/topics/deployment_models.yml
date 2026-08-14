@@ -1,0 +1,134 @@
+id: TOPIC-SAP-S4-DEPLOYMENT-MODELS
+type: research_topic
+title: "SAP S/4HANA Deployment Models"
+summary: "Public = standardize. Private = flexible cloud. On-Premise = full control."
+domain: "SAP S/4HANA Architecture"
+process_family: "Cross-enterprise / deployment and operations"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: "2026-08-14"
+reviewed_together_at: "2026-08-14"
+review_note: "Reviewed together against current official SAP offering-comparison and Help Portal sources."
+
+business_question: "Which S/4HANA deployment model fits the required scope, flexibility, upgrades, operations, and industry needs?"
+
+maturity:
+  gates_complete: 2
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: in_progress
+    relationships: in_progress
+    expert_reasoning: planned
+    synthetic_example: planned
+    ai_evaluation: planned
+
+modeling_rules:
+  - "Deployment model is separate from business domain, process, industry, and application."
+  - "The same business process can exist in all three models, but scope and extension options can differ."
+  - "Always verify feature availability for the exact edition and release."
+  - "Public Cloud and Private Cloud are different operating models."
+
+deployment_models:
+  - id: DEP-S4-PUBLIC
+    type: deployment_model
+    title: "SAP S/4HANA Cloud Public Edition"
+    short_title: "Public Cloud"
+    remember: "Standardize and stay current."
+    what_it_is: "SAP-managed SaaS ERP with standardized processes and frequent SAP-managed innovation."
+    best_when: "A new implementation can adopt fit-to-standard processes and keep custom code limited."
+    scope: "Standardized scope with selected line-of-business and industry scenarios."
+    extensibility: "Controlled in-app, embedded, and SAP BTP side-by-side extensibility."
+    upgrades: "SAP manages regular upgrades."
+    operations: "SAP manages technical operations."
+    implementation: "New implementation and fit-to-standard transformation."
+    industry_support: "Selected industry scope; verify the exact feature and release."
+    commercial_signal: "Cloud subscription."
+    watch_out: "Do not assume an on-premise transaction, enhancement, add-on, or industry feature exists unchanged in Public Edition."
+    source_refs: [SRC-SAP-S4-OFFERING-COMPARISON, SRC-SAP-S4-PUBLIC-EDITION]
+    status: source_verified
+
+  - id: DEP-S4-PRIVATE
+    type: deployment_model
+    title: "SAP S/4HANA Cloud Private Edition"
+    short_title: "Private Cloud"
+    remember: "Broad S/4HANA scope with cloud operations."
+    what_it_is: "Private-cloud S/4HANA with scope comparable to on-premise and SAP-managed technical operations."
+    best_when: "The customer needs broad scope, industry capabilities, full Customizing, or a conversion path while moving operations to the cloud."
+    scope: "Broad S/4HANA line-of-business and industry scope."
+    extensibility: "Full Customizing and broad S/4HANA extensibility options."
+    upgrades: "SAP installs upgrades at the customer's request within the maintenance lifecycle."
+    operations: "SAP manages technical operations."
+    implementation: "New implementation, system conversion, lift and shift, or selective data transition."
+    industry_support: "Broad industry support; verify the exact feature and add-on scope."
+    commercial_signal: "Cloud subscription and service model; contract-specific."
+    watch_out: "Private Cloud is not Public Cloud with more flexibility. It has a different scope, lifecycle, and migration model."
+    source_refs: [SRC-SAP-S4-OFFERING-COMPARISON, SRC-SAP-S4-PRIVATE-EDITION, SRC-SAP-S4-PRIVATE-BENEFITS]
+    status: source_verified
+
+  - id: DEP-S4-ONPREM
+    type: deployment_model
+    title: "SAP S/4HANA On-Premise"
+    short_title: "On-Premise"
+    remember: "Maximum control and maximum responsibility."
+    what_it_is: "Customer-operated S/4HANA on customer-controlled infrastructure or hosting."
+    best_when: "The customer needs maximum technical control, special infrastructure or regulatory constraints, broad add-on freedom, or requirements not covered by cloud offerings."
+    scope: "Broad S/4HANA line-of-business and industry scope."
+    extensibility: "Full Customizing and broad customer control over extensions and add-ons."
+    upgrades: "The customer manages upgrades."
+    operations: "The customer or chosen provider manages infrastructure and technical operations."
+    implementation: "New implementation or customer-managed conversion path."
+    industry_support: "Broad industry scope; verify release and add-on compatibility."
+    commercial_signal: "Traditional software and infrastructure model; contract-specific."
+    watch_out: "More flexibility also means more responsibility for operations, upgrades, custom code, security, and lifecycle management."
+    source_refs: [SRC-SAP-S4-OFFERING-COMPARISON, SRC-SAP-S4-ONPREM-PRIVATE-DOC]
+    status: source_verified
+
+memory_compare:
+  - dimension: "Process approach"
+    public: "Fit to standard"
+    private: "Standard plus broad configuration and conversion flexibility"
+    onprem: "Maximum customer control"
+  - dimension: "Functional scope"
+    public: "Selected and standardized"
+    private: "Broad S/4HANA scope"
+    onprem: "Broad S/4HANA scope"
+  - dimension: "Extensions"
+    public: "Controlled cloud extensibility"
+    private: "Full Customizing and broad extensibility"
+    onprem: "Full Customizing and broadest customer control"
+  - dimension: "Upgrades"
+    public: "SAP-managed and frequent"
+    private: "SAP-installed on customer schedule"
+    onprem: "Customer-managed"
+  - dimension: "Operations"
+    public: "SAP"
+    private: "SAP"
+    onprem: "Customer or chosen provider"
+  - dimension: "Typical transformation"
+    public: "New implementation"
+    private: "New, conversion, lift and shift, selective transition"
+    onprem: "Customer-managed new or conversion path"
+
+decision_guide:
+  - need: "Fast fit-to-standard cloud ERP with low operational responsibility"
+    primary_choice: DEP-S4-PUBLIC
+    why: "Public Edition favors standard processes and an SAP-managed lifecycle."
+  - need: "Cloud ERP with broad S/4HANA scope, industry content, and conversion flexibility"
+    primary_choice: DEP-S4-PRIVATE
+    why: "Private Edition combines cloud operations with scope and extensibility close to on-premise."
+  - need: "Maximum customer control over infrastructure, lifecycle, add-ons, and special requirements"
+    primary_choice: DEP-S4-ONPREM
+    why: "On-premise keeps the largest share of technical and lifecycle responsibility with the customer."
+
+lead_answer: "Start with business requirements, then check scope, clean-core fit, extensibility, industry needs, integration, upgrade tolerance, operations, and migration path."
+
+tags:
+  - sap-s4hana
+  - public-cloud
+  - private-cloud
+  - on-premise
+  - deployment
+  - architecture

@@ -3,7 +3,7 @@ layout: default
 title: "About Dzmitryi Kharlanau — Senior SAP Consultant"
 description: "Public profile of Dzmitryi Kharlanau: 12+ years across SAP SD, MM, logistics, MDG, integration, AMS, Automotive, Retail, and practical AI around SAP."
 permalink: /about/
-last_modified_at: 2026-07-25
+last_modified_at: 2026-08-14
 profile_page: true
 hide_global_cta: true
 ---
@@ -16,7 +16,7 @@ hide_global_cta: true
   <div class="profile-canvas__hero-copy">
     <p class="profile-canvas__eyebrow">SAP consultant profile</p>
     <h1>Dzmitryi Kharlanau</h1>
-    <p>SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. The work connects SAP operations, transformation, and AI readiness through process evidence, technical diagnosis, ownership, and a delivery sequence that remains useful after handover.</p>
+    <p>SAP consultant at <a href="https://www.epam.com" target="_blank" rel="noopener noreferrer">EPAM Systems</a>, previously at abat. I work where SAP operations, transformation, and AI readiness meet: process evidence, technical diagnosis, ownership, and delivery decisions that still make sense after handover.</p>
     <div class="profile-canvas__actions">
       <a class="profile-canvas__button" href="{{ resume.contact.linkedin }}" target="_blank" rel="noopener noreferrer">Discuss an SAP problem <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
       <a class="profile-canvas__text-link" href="/services/">View services <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
@@ -35,22 +35,22 @@ hide_global_cta: true
     <header class="section-heading"><p class="eyebrow">Operating scope</p><h2>Business problems that cross SAP boundaries</h2></header>
     <div class="prose">
       <p>{{ resume.summary }}</p>
-      <p>The work sits where a business process crosses SAP configuration, master data, custom logic, interfaces, and the support model. A blocked order, failed replication, or delayed invoice is rarely a single-module problem. The useful question is which decision, dependency, or control broke—and what evidence separates a local workaround from a durable fix.</p>
-      <p>It suits work where teams need a functional lead who can define the failure with application, ABAP, integration, data, and operations colleagues.</p>
+      <p>My work usually sits where a business process crosses SAP configuration, master data, custom logic, interfaces, and the support model. A blocked order, failed replication, or delayed invoice is rarely a useful "single-module" problem. I start by asking which decision, dependency, or control failed, then look for the evidence that separates a local workaround from a durable fix.</p>
+      <p>This is the kind of work where I can frame the functional problem and keep the same evidence chain understandable to application, ABAP, integration, data, and operations colleagues.</p>
     </div>
   </div>
 </section>
 
 <section class="section profile-canvas__approach" data-reveal>
   <div class="section-shell">
-    <header class="section-heading"><p class="eyebrow">Operating approach</p><h2>How SAP problems are approached</h2></header>
+    <header class="section-heading"><p class="eyebrow">Operating approach</p><h2>How I approach SAP problems</h2></header>
     <div class="process-rail" aria-label="Four-step diagnostic approach">
       <div class="process-rail__step"><strong>1. Make the failure concrete</strong><span>Start with a blocked business outcome, not a technology label.</span></div>
       <div class="process-rail__step"><strong>2. Trace dependencies</strong><span>Follow process, master data, configuration, enhancement, and interface boundaries.</span></div>
       <div class="process-rail__step"><strong>3. Separate evidence from assumption</strong><span>Distinguish confirmed facts, missing evidence, and landscape-specific decisions.</span></div>
       <div class="process-rail__step"><strong>4. Leave a reusable artefact</strong><span>Turn the result into an owner decision, runbook, backlog item, or control.</span></div>
     </div>
-    <div class="prose"><p>Avoid fixes that only improve the appearance of control: green SLAs while the same incidents recur, dashboards without an accountable recovery path, AI pilots without a usable knowledge layer, or “clean core” work that moves unowned complexity elsewhere. The result should be a bounded change with an owner, evidence, and a recovery path.</p></div>
+    <div class="prose"><p>I avoid fixes that only improve the appearance of control: green SLAs while the same incidents recur, dashboards without an accountable recovery path, AI pilots without a usable knowledge layer, or clean-core work that merely moves unowned complexity elsewhere. I want the result to be a bounded change with an owner, evidence, and a recovery path.</p></div>
   </div>
 </section>
 

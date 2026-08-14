@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Enterprise Context Lab — Model and Authoring Contract"
-description: "The authoring contract for enterprise process, data, determination, integration, failure, source, and expert-reasoning knowledge in the Enterprise Context Lab."
+description: "Authoring rules for the Enterprise Context Graph: node types, relationships, evidence, source handling, dates, and maturity gates."
 permalink: /labs/enterprise-context/model/
 status: draft
 verified: false
@@ -9,6 +9,12 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
+tags:
+  - sap
+  - enterprise-context
+  - knowledge-graph
+  - architecture
+  - research
 ---
 
 {% assign lab = site.data.labs.enterprise_context.manifest %}
@@ -23,7 +29,7 @@ hide_global_cta: true
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Model / authoring contract</p>
       <h1>One topic in.<br />Reusable context out.</h1>
-      <p>This contract defines how a research topic becomes structured enterprise knowledge with stable identifiers, dates, evidence states, typed relationships, system decisions, expert reasoning, synthetic examples, and AI-evaluation targets.</p>
+      <p>This contract defines how a research topic becomes structured enterprise knowledge with stable identifiers, dates, evidence states, typed relationships, expert reasoning, synthetic examples, and AI-evaluation targets.</p>
       <a class="research-canvas__button" href="#topic-lifecycle">Open the topic lifecycle <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Model inventory">
@@ -37,6 +43,7 @@ hide_global_cta: true
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Problem:</strong> a knowledge graph becomes unreliable when entity types, evidence, and authoring rules are implicit.</p>
     <p><strong>Author once, project many times.</strong> Structured files are the working contract. Human pages, JSON endpoints, progress views, graph projections, and later AI tools should derive from the same facts instead of maintaining parallel copies.</p>
     <a href="/labs/enterprise-context/data/schema.json">Open schema JSON <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
@@ -58,7 +65,7 @@ hide_global_cta: true
     <header>
       <p class="research-canvas__eyebrow">Core entity families</p>
       <h2>Model the context, not just the document.</h2>
-      <p>Stable node types make it possible to ask the same dependency and impact questions across processes, data, decisions, integration, operations, and AI evaluation.</p>
+      <p>Stable node types make it possible to ask the same dependency and impact questions across processes, data, integration, operations, and AI evaluation.</p>
     </header>
     <div class="research-route-list">
       {% for node in schema.node_types %}
@@ -69,38 +76,9 @@ hide_global_cta: true
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Determination contract</p>
-      <h2>A system decision deserves its own node.</h2>
-      <p>“Plant determination” is not useful as a paragraph buried under configuration. A determination records the question, inputs, mechanism, output, evidence, and the decisions that consume the result next.</p>
-    </header>
-    <pre><code>id: DET-SD-SHIPPING-POINT
-type: determination
-title: Shipping Point Determination
-level: item
-question: Which shipping unit should execute the delivery?
-mechanism: customizing_lookup
-
-inputs:
-  - ATTR-SD-PLANT
-  - shipping condition
-  - loading group
-
-output:
-  - ATTR-SD-SHIPPING-POINT
-
-downstream_effects:
-  - DET-SD-ROUTE
-  - DET-SD-SCHEDULING
-
-source_refs:
-  - SRC-SAP-SD-SHIPPING-POINTS</code></pre>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
       <p class="research-canvas__eyebrow">Relationship vocabulary</p>
       <h2>Every edge should answer a real question.</h2>
-      <p>Edges are typed so a person or AI tool can distinguish containment from provenance, determination from impact, and a simple reference from a dependency that can change downstream behavior.</p>
+      <p>Edges are typed so an AI tool can distinguish containment, dependency, determination, impact, validation, integration, evidence, and test relationships.</p>
     </header>
     <div class="research-route-list">
       {% for edge in schema.edge_types %}
@@ -126,7 +104,7 @@ source_refs:
     <header>
       <p class="research-canvas__eyebrow">Adding a study topic</p>
       <h2>The minimum topic record.</h2>
-      <p>Create one topic record first. Expand stable concepts into reusable graph entities only when the research actually supports them. Otherwise the ontology becomes a very elegant collection of guesses.</p>
+      <p>Create one topic record first. Expand stable concepts into reusable graph entities only when the research actually supports them.</p>
     </header>
     <pre><code>id: TOPIC-O2C-SALES-ORDER-CREATION
 type: research_topic
@@ -138,20 +116,22 @@ updated_at: 2026-08-14
 verified_at: null
 
 business_question: &gt;-
-  Why does the system derive particular values,
-  and what changes downstream when one of them changes?
+  What dependencies are required to create a valid sales order,
+  and what should be inspected before recommending a change?
 
 maturity:
-  gates_complete: 4
+  gates_complete: 1
   gates_total: 7
   gates:
     scope: done
-    sources: done
-    model: done
-    relationships: done
-    expert_reasoning: in_progress
+    sources: in_progress
+    model: planned
+    relationships: planned
+    expert_reasoning: planned
     synthetic_example: planned
-    ai_evaluation: in_progress</code></pre>
+    ai_evaluation: planned
+
+source_refs: []</code></pre>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -160,42 +140,44 @@ maturity:
       <h2>Separate the relationship from its evidence.</h2>
       <p>The same subject-predicate-object pattern can carry different evidence states without pretending expert judgment is vendor documentation.</p>
     </header>
-    <pre><code>subject: ATTR-SD-PLANT
-predicate: read_by
-object: DET-SD-SHIPPING-POINT
+    <pre><code>subject: OBJ-SD-SALES-ORDER
+predicate: references
+object: MD-BP-CUSTOMER
 
 evidence_type: documented_fact
 source_refs:
-  - SRC-SAP-SD-SHIPPING-POINTS
+  - SRC-...
 confidence: high
 verified_at: 2026-08-14
 scope:
   product: S4HANA
-  release: 2025-FPS01</code></pre>
+  release: to-be-verified</code></pre>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Experience layer</p>
+      <p class="research-canvas__eyebrow">Expert knowledge</p>
       <h2>Capture how a consultant investigates, not only what the system contains.</h2>
-      <p>Project lessons and heuristics live separately from factual relationships so they can be tested, refined, challenged, and later used as benchmark expectations without being mistaken for SAP documentation.</p>
+      <p>Heuristics live separately from factual relationships so they can be tested, refined, challenged, and later used as benchmark expectations.</p>
     </header>
-    <pre><code>id: EXP-SD-SYMPTOM-UPSTREAM
-type: troubleshooting
-title: Treat the wrong value as a symptom first
+    <pre><code>id: HEUR-O2C-SCOPE-BEFORE-CONFIG
+context: sales-order creation failure
 statement: &gt;-
-  Trace the output backwards to its inputs before changing Customizing.
-context: sales-order determination issue
-related_nodes:
-  - DET-SD-SHIPPING-POINT
-  - ATTR-SD-PLANT</code></pre>
+  Establish whether the failure is customer-, material-, plant-,
+  channel-, or time-specific before assuming a configuration defect.
+confidence: medium
+questions:
+  - What changed immediately before the failures started?
+  - Do successful and failed orders share a master-data pattern?
+anti_patterns:
+  - jump directly to configuration</code></pre>
   </section>
 
   <section class="research-canvas__method" data-reveal>
     <div><p class="research-canvas__eyebrow">Storage rule</p><h2>Keep the model maintainable as it grows.</h2></div>
     <ol>
       <li><span>01</span><strong>Topic file</strong><p>One study topic per structured file under the lab data tree.</p></li>
-      <li><span>02</span><strong>Reusable entities</strong><p>Promote recurring processes, objects, determinations, rules, and failures to stable IDs instead of duplicating them.</p></li>
+      <li><span>02</span><strong>Reusable entities</strong><p>Promote recurring processes, objects, terms, rules, and failures to stable IDs instead of duplicating them.</p></li>
       <li><span>03</span><strong>Source registry</strong><p>Register evidence once, then reference the source ID from assertions and topics.</p></li>
       <li><span>04</span><strong>Generated views</strong><p>Human pages and machine JSON should be projections of the same structured model.</p></li>
     </ol>

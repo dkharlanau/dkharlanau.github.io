@@ -1,0 +1,454 @@
+id: TOPIC-MDG-OBJECT-CONTRACTS
+type: research_topic
+title: "SAP MDG Object Contracts and Extension Decisions"
+summary: "Object-level interface contracts for Business Partner, Customer, Supplier, and Material, plus an extension matrix and a synthetic end-to-end logistics scenario."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/interfaces/"
+source_reviewed_at: "2026-08-14"
+
+business_question: "For each governed object, what is the ownership boundary, integration contract, mapping responsibility, failure model, extension path, and downstream proof that the data works?"
+
+maturity:
+  gates_complete: 5
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: planned
+
+memory_model:
+  phrase: "Object → Owner → Contract → Mapping → Consumer → Error → Reconcile"
+  extension_phrase: "Configure → Extend Field → Extend Logic → Extend Node → Side-by-Side"
+  core_rule: "Do not design an interface only from the sender. The contract is complete only when the target can identify, accept, use, monitor, and reconcile the object."
+
+object_contracts:
+  - id: INT-MDG-CONTRACT-BP
+    type: integration
+    title: "Business Partner core contract"
+    governed_object: MD-BP-BUSINESS-PARTNER
+    purpose: "Distribute trusted partner identity, names, addresses, tax identifiers, bank data, roles, and supported relationships to consumers."
+    ownership:
+      core_owner: "Enterprise Business Partner data owner"
+      local_owner: "Consuming applications may own application-specific attributes outside the central scope."
+    variants:
+      - deployment: "SAP MDG on SAP S/4HANA"
+        orchestration: "DRF for supported outbound replication scenarios"
+        contract_family: "BusinessPartnerSUITEBulkReplicateRequest and related relationship/confirmation services"
+        transport: "Asynchronous SOAP / SOA for supported scenarios"
+      - deployment: "SAP MDG, cloud edition"
+        orchestration: "Cloud replication configuration"
+        contract_family: "SOAP Business Partner services or SAP Master Data Integration"
+        transport: "SOAP or MDI"
+        recommendation: "SAP recommends SOAP for Business Partner and Business Partner relationship replication in the documented 2605 scope."
+    identity:
+      central_key: "Business Partner ID or UUID according to the selected architecture"
+      cross_system: "Use key mapping when connected systems use different object IDs."
+    mappings:
+      - "Country and region codes"
+      - "Business Partner roles"
+      - "Tax categories"
+      - "Address and communication semantics"
+      - "Local object IDs"
+    failure_modes:
+      - "Consumer cannot map the central key to its local key."
+      - "Unsupported or incompatible code value is rejected."
+      - "Relationship time dependency is not supported by the target."
+      - "A record is activated centrally but not accepted downstream."
+      - "Retry creates a duplicate because idempotency and key mapping are unclear."
+    monitoring:
+      - "DRF and message status where applicable"
+      - "SOAP / integration exception monitoring"
+      - "Key-mapping reconciliation"
+      - "Consumer-side application errors"
+    proof_of_use:
+      - "Create a sales order with the replicated customer role."
+      - "Create a purchase order with the replicated supplier role."
+      - "Use the replicated address in delivery, sourcing, or transport processing."
+    source_refs:
+      - SRC-SAP-MDG-BP-REPLICATE-CLIENT-2025
+      - SRC-SAP-MDG-CE-DATA-REPLICATION-2605
+      - SRC-SAP-MDG-KEY-MAPPING-92
+
+  - id: INT-MDG-CONTRACT-CUSTOMER
+    type: integration
+    title: "Customer application-data contract"
+    governed_object: MD-BP-CUSTOMER
+    purpose: "Connect a trusted Business Partner identity with customer-specific data required by sales and finance processes."
+    architecture_boundary: "Customer is not only an identity. Sales-area and company-code data are application-specific responsibilities and must have an explicit owner."
+    contract_family:
+      - "BusinessPartnerSUITEBulkReplicateRequest family where the selected target and service version support Customer nodes."
+      - "Application-local enrichment or follow-on governance when attributes are outside the central core-data contract."
+    important_attribute_groups:
+      - "Customer account group / customer classification"
+      - "Sales-area data"
+      - "Company-code data"
+      - "Partner and shipping-relevant data"
+      - "Tax and payment-related data"
+    mappings:
+      - "Sales organization / distribution channel / division"
+      - "Company code"
+      - "Customer account group"
+      - "Partner roles and code lists"
+    failure_modes:
+      - "BP exists, but the Customer role or sales-area data is missing."
+      - "Customer is replicated but cannot be used in the required sales organization."
+      - "Company-code data is incomplete and billing or posting fails."
+      - "Core BP is owned centrally while a team incorrectly assumes all customer attributes are central."
+    proof_of_use:
+      - "Create and save a sales order in the intended sales area."
+      - "Create delivery and billing documents."
+      - "Verify accounting-relevant customer data where the scenario requires it."
+    source_refs:
+      - SRC-SAP-MDI-BP-SOAP-MAPPING
+      - SRC-SAP-MDG-BP-REPLICATE-CLIENT-2025
+
+  - id: INT-MDG-CONTRACT-SUPPLIER
+    type: integration
+    title: "Supplier application-data contract"
+    governed_object: MD-BP-SUPPLIER
+    purpose: "Connect trusted partner identity with supplier-specific purchasing and finance data."
+    architecture_boundary: "A supplier needs both partner identity and application data. Core BP governance does not automatically own every purchasing or company-code field."
+    s4_pattern:
+      orchestration: "DRF can use Business Partner / relationship service replication with filters for supplier-relevant roles and account groups."
+      example_outbound_implementation: "986_3 Outbound Implementation for BP/REL via Services"
+      filter_examples:
+        - "Supplier roles such as FLVN00 / FLVN01 where appropriate"
+        - "Vendor account group"
+        - "Target-system-specific business filters"
+    mappings:
+      - "Purchasing organization"
+      - "Company code"
+      - "Supplier account group"
+      - "Payment and tax codes"
+      - "Local supplier ID"
+    failure_modes:
+      - "BP identity is available, but purchasing organization data is missing."
+      - "Supplier is blocked or rejected because mapped control fields are wrong."
+      - "Wrong filter sends a supplier to an unintended target or omits a required target."
+      - "Local supplier ID is created but confirmation/key mapping is not reconciled."
+    proof_of_use:
+      - "Create a purchase order in the intended purchasing organization."
+      - "Post goods receipt where the scenario requires it."
+      - "Process supplier invoice and payment-relevant checks."
+    source_refs:
+      - SRC-SAP-MDG-SUPPLIER-DRF-PATTERN
+      - SRC-SAP-MDI-BP-SOAP-MAPPING
+      - SRC-SAP-MDG-KEY-MAPPING-92
+
+  - id: INT-MDG-CONTRACT-MATERIAL
+    type: integration
+    title: "Material / Product contract"
+    governed_object: MD-MAT-MATERIAL
+    purpose: "Distribute a usable material master across planning, purchasing, sales, warehouse, production, quality, and finance consumers."
+    deployment_boundary: "Broad material governance and the classic replication patterns belong to SAP MDG on SAP S/4HANA, not the current core-BP scope of SAP MDG, cloud edition."
+    s4_replication_options:
+      - "ALE"
+      - "ALE with DRF"
+      - "SOA with DRF"
+    message_families:
+      - id: MSG-MDG-MATMAS
+        title: "MATMAS"
+        role: "Primary ALE material master message for supported material data."
+      - id: MSG-MDG-CLFMAS
+        title: "CLFMAS"
+        role: "Classification data when classification is part of the distribution scope."
+      - id: MSG-MDG-DOLMAS
+        title: "DOLMAS"
+        role: "Document-related distribution where required by the material scenario."
+      - id: MSG-MDG-ECMREV
+        title: "ECMREV"
+        role: "Engineering change / revision-level distribution where required."
+      - id: MSG-MDG-MATQM
+        title: "MATQM"
+        role: "Quality-related material distribution in supported scenarios."
+    architecture_rule: "Do not assume one MATMAS message equals the full business object. The required contract depends on which material views and dependent data the consumer must use."
+    mappings:
+      - "Material number / external key"
+      - "Material type"
+      - "Unit of measure"
+      - "Plant and storage-relevant codes"
+      - "Classification values"
+      - "Sales and purchasing organizational data"
+    failure_modes:
+      - "MATMAS succeeds but classification or other dependent data is missing."
+      - "Unit-of-measure mapping creates warehouse or transport errors."
+      - "Material reaches the consumer without the required plant/MRP view."
+      - "Filter configuration prevents a previously required target from receiving updates."
+      - "Change-pointer and DRF design are inconsistent."
+    proof_of_use:
+      - "Run MRP for the intended plant."
+      - "Create a purchase order or production order where relevant."
+      - "Create a sales order and delivery if the material is sold."
+      - "Create warehouse activity if EWM or warehouse execution consumes the material."
+    source_refs:
+      - SRC-SAP-MDG-MATERIAL-REPLICATION-2025
+
+contract_design_checklist:
+  - "Authoritative owner: who owns the object and each critical attribute?"
+  - "Trigger: creation, change, activation, scheduled bulk run, or consumer request?"
+  - "Direction: inbound, outbound, or bidirectional?"
+  - "Contract: SOAP service, IDoc/ALE message, MDI object, file, or application API?"
+  - "Scope: which nodes and attributes are really transported?"
+  - "Identity: central key, local key, UUID, and key mapping?"
+  - "Code semantics: which values require mapping?"
+  - "Routing: which target systems and filters apply?"
+  - "Reliability: retry, duplicate protection, confirmation, and reconciliation?"
+  - "Operations: who owns the error when the consumer rejects approved data?"
+  - "Business proof: which transaction proves the object is usable?"
+
+extension_matrix:
+  - id: DEC-MDG-EXT-NEW-FIELD
+    type: decision
+    requirement: "Add a new field"
+    classic_s4:
+      preferred: "Use supported MDG / application data-model extension patterns; extend UI and replication only where the field must travel."
+      check: "Does the field already exist in the active application model or require a customer field/entity?"
+    cloud_ready:
+      preferred: "Use released CDS/RAP data-model extensibility only when the business object is explicitly enabled."
+      check: "Is the target RAP BO and field layer released and extensibility-enabled?"
+    cloud_edition:
+      preferred: "Use supported custom-field extensibility for the documented Business Partner scope."
+      check: "Does the field belong to core BP or to an application-specific customer/supplier owner?"
+    cross_cutting_rule: "A new field also needs ownership, quality, UI, replication, search, reporting, and lifecycle decisions."
+
+  - id: DEC-MDG-EXT-VALIDATION
+    type: decision
+    requirement: "Add validation or derivation"
+    classic_s4:
+      preferred: "Use standard validation/derivation configuration and released enhancement mechanisms before custom logic."
+      check: "Can the rule be expressed as configuration, BRFplus, or a supported enhancement?"
+    cloud_ready:
+      preferred: "Use RAP validation/determination extension only where behavior extensibility is enabled."
+      check: "Is the behavior extension point explicitly available?"
+    cloud_edition:
+      preferred: "Use supported product rules and services; do not assume arbitrary custom ABAP logic is available."
+      check: "Is the rule supported in the current cloud-edition capability set or should it live in an external service?"
+    cross_cutting_rule: "Tie the rule to a business failure, not to personal preference about how a field should look."
+
+  - id: DEC-MDG-EXT-WORKFLOW
+    type: decision
+    requirement: "Add or change a workflow step"
+    classic_s4:
+      preferred: "Use change-request workflow and rule-based workflow / BRFplus decisions."
+      check: "Does the step represent real accountability or only an organization-chart layer?"
+    cloud_ready:
+      preferred: "Use the supported unified process model and released process extension options."
+      check: "Would SAP Build Process Automation add value without duplicating governance state?"
+    cloud_edition:
+      preferred: "Configure supported governance workflow behavior in the cloud product boundary."
+      check: "Is the required approval model supported without creating a second source of process truth?"
+    cross_cutting_rule: "Avoid one workflow for every risk level."
+
+  - id: DEC-MDG-EXT-NODE
+    type: decision
+    requirement: "Add a child entity / node"
+    classic_s4:
+      preferred: "Extend the MDG data model only when the new entity belongs to the governed master-data object."
+      check: "Should it be reuse data, flex data, or a separate application object?"
+    cloud_ready:
+      preferred: "Use RAP node extensibility only when compositions, behavior, and service exposure are explicitly enabled."
+      check: "Is node extensibility enabled across data model, behavior, and service definition?"
+    cloud_edition:
+      preferred: "Stay inside supported extension scope; otherwise model the new responsibility outside the product."
+      check: "Is this still core Business Partner data?"
+    cross_cutting_rule: "A technically attachable node may still be the wrong domain boundary."
+
+  - id: DEC-MDG-EXT-UI
+    type: decision
+    requirement: "Change the UI"
+    classic_s4:
+      preferred: "Use supported Fiori/UI adaptation before custom screens."
+      check: "Does the UI change also require data-model or process changes?"
+    cloud_ready:
+      preferred: "Use Fiori and released UI/service extension points."
+      check: "Do not treat an internal UI service as a public integration API."
+    cloud_edition:
+      preferred: "Use supported key-user adaptation and custom fields within product scope."
+      check: "Can the requirement be solved without a parallel custom maintenance application?"
+    cross_cutting_rule: "A screen is a projection of ownership and process, not the architecture itself."
+
+  - id: DEC-MDG-EXT-SEPARATE-APP
+    type: decision
+    requirement: "Build a separate application capability"
+    classic_s4:
+      preferred: "Use side-by-side when the responsibility is not part of master-data governance or would create deep coupling to SAP internals."
+      check: "Can the external app consume released APIs/events and keep MDG as the owner of governed data?"
+    cloud_ready:
+      preferred: "Prefer released APIs / RAP BO interfaces and side-by-side services for responsibilities outside the MDG BO."
+      check: "Does the extension remain clean-core and lifecycle-stable?"
+    cloud_edition:
+      preferred: "Keep application-specific capabilities in the owning application or BTP service and integrate with the governed core BP."
+      check: "Who owns state and what is the source of truth?"
+    cross_cutting_rule: "Do not make MDG the home of every process that happens to need master data."
+
+synthetic_scenario:
+  id: SCN-MDG-GTI-NEW-MATERIAL
+  type: scenario
+  title: "Global Transformation Industries: launch a new sellable and purchasable material"
+  synthetic: true
+  enterprise: "Global Transformation Industries"
+  business_goal: "Launch a new component that is purchased from a supplier, planned in Plant DE01, stored in a warehouse, sold to customers, and visible to finance."
+  governed_object: MD-MAT-MATERIAL
+  product_choice: APP-SAP-MDG-S4
+  reason: "The scenario needs broad Material/Product governance and S/4HANA application-specific attributes."
+  actors:
+    - "Product Data Owner"
+    - "Plant Data Steward"
+    - "Purchasing Steward"
+    - "Sales Steward"
+    - "Finance Steward"
+    - "Integration Owner"
+  requested_data:
+    core:
+      - "Material identity and description"
+      - "Material type"
+      - "Base unit of measure"
+    plant_and_planning:
+      - "Plant DE01"
+      - "MRP type"
+      - "Planner / controller"
+      - "Lot-sizing and planning parameters"
+    procurement:
+      - "Purchasing-relevant data"
+      - "Order unit where needed"
+    sales:
+      - "Sales organization / distribution data"
+      - "Delivering-plant relevance"
+    logistics:
+      - "Weight, dimensions, units, and warehouse-relevant attributes"
+    finance:
+      - "Valuation class and valuation-relevant data"
+  flow:
+    - id: STEP-MDG-GTI-REQUEST
+      title: "Request"
+      detail: "Product Data Owner requests a new material with business purpose and core identity."
+    - id: STEP-MDG-GTI-ENRICH
+      title: "Cross-functional enrichment"
+      detail: "Plant, purchasing, sales, warehouse, and finance stewards add the attributes they own."
+    - id: STEP-MDG-GTI-CHECK
+      title: "Validate"
+      detail: "Rules check required views, units, plant data, valuation, and duplicate risks before approval."
+    - id: STEP-MDG-GTI-APPROVE
+      title: "Approve and activate"
+      detail: "The governed record is approved and activated in S/4HANA."
+    - id: STEP-MDG-GTI-DISTRIBUTE
+      title: "Distribute"
+      detail: "DRF/ALE or the selected supported replication pattern sends the required material data to consumers. MATMAS is not assumed to cover dependent classification or other message families by itself."
+    - id: STEP-MDG-GTI-RECONCILE
+      title: "Reconcile"
+      detail: "Integration operations verify that every required target accepted the material and dependent data."
+    - id: STEP-MDG-GTI-PROVE
+      title: "Prove business use"
+      detail: "Run MRP, create a purchase order, create a sales order and delivery, execute warehouse activity, and verify valuation/posting behavior."
+  integration_contract:
+    primary: "MATMAS through ALE / DRF where selected"
+    dependent_contracts:
+      - "CLFMAS if classification is required in the target"
+      - "Other supported material messages when the target scope requires them"
+    target_examples:
+      - "S/4HANA consuming client or system"
+      - "Warehouse execution consumer"
+      - "Planning or manufacturing consumer"
+  injected_failure:
+    title: "Warehouse target receives MATMAS but misses required classification"
+    symptom: "Material exists in the target, but warehouse determination cannot use the expected product classification."
+    diagnosis_path:
+      - "Check whether classification is part of the required business contract."
+      - "Check whether CLFMAS or another supported classification replication path is configured."
+      - "Check DRF target and filter configuration."
+      - "Check message status and target-side processing."
+      - "Reconcile object state after reprocessing."
+    architecture_lesson: "Transport success is not business success. The interface contract must include every dependent object required by the consuming process."
+
+lead_assessment_patterns:
+  - question: "How would you design an MDG interface?"
+    answer: "I start with object ownership and the consumer transaction. Then I choose the supported contract, define identity and mappings, routing, retry and confirmation behavior, and monitoring. I prove the design with a downstream business transaction."
+  - question: "When would you extend MDG?"
+    answer: "I first ask whether the requirement belongs to the governed object. I prefer configuration, then released field or logic extensions. For cloud-ready RAP I use only enabled extension points. If the requirement is a separate business capability, I keep it side-by-side instead of forcing it into MDG."
+  - question: "What is the main Material replication risk?"
+    answer: "Treating the material as one message. A consumer may need classification, quality, revision, plant, unit, or other dependent data. I define the business contract first and then map it to the required technical messages."
+
+relations:
+  - subject: INT-MDG-CONTRACT-BP
+    predicate: applies_to
+    object: MD-BP-BUSINESS-PARTNER
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: INT-MDG-CONTRACT-BP
+    predicate: integrated_via
+    object: INT-MDG-SOAP
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-BP-REPLICATE-CLIENT-2025, SRC-SAP-MDG-CE-DATA-REPLICATION-2605]
+  - subject: INT-MDG-CONTRACT-BP
+    predicate: supported_by
+    object: INT-MDG-KEY-MAPPING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-KEY-MAPPING-92]
+  - subject: INT-MDG-CONTRACT-CUSTOMER
+    predicate: applies_to
+    object: MD-BP-CUSTOMER
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: INT-MDG-CONTRACT-SUPPLIER
+    predicate: applies_to
+    object: MD-BP-SUPPLIER
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: INT-MDG-CONTRACT-MATERIAL
+    predicate: applies_to
+    object: MD-MAT-MATERIAL
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-MATERIAL-REPLICATION-2025]
+  - subject: INT-MDG-CONTRACT-MATERIAL
+    predicate: integrated_via
+    object: MSG-MDG-MATMAS
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-MATERIAL-REPLICATION-2025]
+  - subject: SCN-MDG-GTI-NEW-MATERIAL
+    predicate: requires
+    object: INT-MDG-CONTRACT-MATERIAL
+    evidence_type: synthetic_example
+    confidence: high
+  - subject: SCN-MDG-GTI-NEW-MATERIAL
+    predicate: impacts
+    object: "Procurement / Planning / Sales / Warehouse / Finance"
+    evidence_type: synthetic_example
+    confidence: high
+
+source_refs:
+  - SRC-SAP-MDG-MATERIAL-REPLICATION-2025
+  - SRC-SAP-MDG-BP-REPLICATE-CLIENT-2025
+  - SRC-SAP-MDI-BP-SOAP-MAPPING
+  - SRC-SAP-MDG-CE-DATA-REPLICATION-2605
+  - SRC-SAP-MDG-KEY-MAPPING-92
+  - SRC-SAP-MDG-SUPPLIER-DRF-PATTERN
+  - SRC-SAP-RAP-EXTENSIBILITY
+  - SRC-SAP-MDG-MATERIAL-DATA-MODEL-EXTENSION
+
+tags:
+  - sap
+  - mdg
+  - interface-contract
+  - replication
+  - drf
+  - soap
+  - idoc
+  - mdi
+  - rap
+  - extensibility
+  - material
+  - business-partner
+  - logistics

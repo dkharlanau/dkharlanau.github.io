@@ -1,10 +1,11 @@
 ---
 layout: blog
 title: "Centralized or Federated SAP Integration Architecture: How to Divide Ownership Without Creating Chaos"
-description: "reduce duplicate tools; - standardize security; - improve monitoring; - reuse integration patterns; - control interfaces across countries and."
+description: "A practical operating model for deciding which SAP integration responsibilities belong centrally and which should stay with business domains."
 slug: centralized-or-federated-sap-integration-architecture-how-to-divide
 permalink: /blog/centralized-or-federated-sap-integration-architecture-how-to-divide/
 date: 2026-07-17
+last_modified_at: 2026-08-14
 author: "Dzmitryi Kharlanau"
 language: en
 category: "SAP integration architecture"
@@ -138,6 +139,12 @@ related_articles:
 - [Federated SAP integration architecture checklist](#federated-sap-integration-architecture-checklist)
 - [Sources and further reading](#sources-and-further-reading)
 
+### My starting position
+
+I do not treat centralized and federated integration as opposite architecture styles. My default is to centralize the control plane and federate the business meaning. Security baselines, runtime standards, observability, deployment controls, and reusable technical patterns benefit from central ownership. The meaning of a customer event, a pricing rule, a procurement exception, or a reconciliation outcome belongs with the domain that can defend that meaning.
+
+That distinction matters because a central platform team can own excellent tooling and still become a bottleneck if it is also expected to own every business decision. The reverse is equally dangerous: domain autonomy without common controls produces local speed and enterprise-level archaeology.
+
 A global company introduces one central integration platform.
 
 The objective is reasonable:
@@ -198,7 +205,7 @@ It centralizes the platform, security, standards and visibility.
 
 It distributes ownership of business semantics, APIs, events and domain decisions.
 
-SAP currently presents Integration Suite as a unified platform for connecting applications, processes, data, APIs, events, partners and AI agents across SAP and third-party environments. The platform includes centralized governance, monitoring and security while supporting cloud, on-premises and hybrid landscapes.
+A capable integration platform can centralize runtime controls, monitoring, security, and reusable technical patterns. I still keep a separate question on the table: who owns the business meaning of the contract and who can decide that a technically successful exchange is also a completed business outcome?
 
 Centralized platform capability does not require centralized ownership of every business decision.
 

@@ -1,0 +1,473 @@
+id: TOPIC-ENTERPRISE-DATA-GOVERNANCE
+type: research_topic
+title: "Data, Master Data and Governance"
+summary: "A cross-enterprise map from the Data and Analytics area to master-data domains, governance capabilities, SAP MDG applications, governed objects, and the business processes that depend on them."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Data Management"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+human_view: "/labs/enterprise-context/data-governance/"
+source_reviewed_at: "2026-08-14"
+
+business_question: "Where does Master Data Governance sit in Enterprise Context, which domains and objects does it cover, and which business processes depend on those objects?"
+
+maturity:
+  gates_complete: 4
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: in_progress
+    synthetic_example: planned
+    ai_evaluation: planned
+
+architecture_rule:
+  statement: "Do not model SAP MDG as the business domain."
+  explanation: >-
+    Data and Analytics is the cross-cutting enterprise area. Master Data Management,
+    Data Governance, and Data Quality are solution domains inside that area. SAP MDG is
+    an application that implements capabilities in those domains. Business Partner,
+    Customer, Supplier, Material / Product, Financial Master Data, and Custom Objects
+    are governed master-data objects.
+
+hierarchy:
+  area:
+    id: BDOM-DATA-ANALYTICS
+    type: business_domain
+    title: "Data and Analytics"
+    remember: "Trusted data, shared meaning, and decisions."
+    role: "Cross-cutting enterprise area for data ownership, semantics, quality, integration, analytics, planning, and reusable context."
+  domains:
+    - id: DOM-MASTER-DATA-MANAGEMENT
+      type: application_domain
+      title: "Master Data Management"
+      remember: "Manage shared business entities across systems."
+      purpose: "Define authoritative master-data objects, ownership, lifecycle, identity, consolidation, and distribution."
+      key_questions:
+        - "Which object is shared across applications?"
+        - "Which system owns the object or attribute?"
+        - "How are duplicates and identities resolved?"
+        - "How is approved data distributed?"
+    - id: DOM-DATA-GOVERNANCE
+      type: application_domain
+      title: "Data Governance"
+      remember: "Decide who may create, change, approve, and own data."
+      purpose: "Define accountabilities, policies, controls, workflow, decision rights, and auditability for enterprise data."
+      key_questions:
+        - "Who owns the data decision?"
+        - "Which changes need approval?"
+        - "Which controls are preventive or detective?"
+        - "What evidence is required for audit?"
+    - id: DOM-DATA-QUALITY
+      type: application_domain
+      title: "Data Quality"
+      remember: "Make data fit for the process that consumes it."
+      purpose: "Define quality rules, validation, derivation, duplicate detection, monitoring, and remediation."
+      key_questions:
+        - "Which defect breaks the business process?"
+        - "Where should the rule run?"
+        - "How is quality measured?"
+        - "Who repairs failed data?"
+    - id: DOM-METADATA-SEMANTICS
+      type: application_domain
+      title: "Metadata and Semantics"
+      remember: "Keep the meaning of data explicit."
+      purpose: "Define names, definitions, classifications, lineage, semantics, and reusable business meaning."
+      key_questions:
+        - "What does the field or object mean?"
+        - "Is the definition consistent across systems?"
+        - "Which data product or application uses the concept?"
+    - id: DOM-DATA-INTEGRATION
+      type: application_domain
+      title: "Data Integration and Distribution"
+      remember: "Move trusted data with clear ownership and contracts."
+      purpose: "Replicate, synchronize, map, and monitor master data across applications and platforms."
+      key_questions:
+        - "What is the source and target?"
+        - "Is replication event-driven, API-based, message-based, or batch?"
+        - "How are keys and values mapped?"
+        - "How are failures monitored and recovered?"
+    - id: DOM-ANALYTICS-PLANNING
+      type: application_domain
+      title: "Analytics and Planning"
+      remember: "Use governed data for decisions."
+      purpose: "Consume consistent master data, dimensions, hierarchies, and semantics for reporting, planning, and AI grounding."
+      key_questions:
+        - "Which dimensions must be harmonized?"
+        - "Which hierarchy is authoritative?"
+        - "How does master-data change affect reports and planning?"
+
+mdg_position:
+  application_family: "SAP Master Data Governance"
+  primary_topic: TOPIC-SAP-MASTER-DATA-GOVERNANCE
+  primary_domains:
+    - DOM-MASTER-DATA-MANAGEMENT
+    - DOM-DATA-GOVERNANCE
+    - DOM-DATA-QUALITY
+    - DOM-DATA-INTEGRATION
+  variants:
+    - APP-SAP-MDG-S4
+    - APP-SAP-MDG-CLOUD
+    - APP-S4-PUBLIC-MDG
+  capability_path:
+    - CAP-MDG-CENTRAL-GOVERNANCE
+    - CAP-MDG-CONSOLIDATION
+    - CAP-MDG-MASS-PROCESSING
+    - CAP-MDG-DATA-QUALITY
+  remember: "Area → domain → application → capability → object → process impact."
+
+object_families:
+  - id: DATA-FAMILY-PARTY
+    type: dataset
+    title: "Party and Partner Master Data"
+    purpose: "Identity and role data for organizations and people that buy, sell, supply, receive, pay, or provide services."
+    objects:
+      - MD-BP-BUSINESS-PARTNER
+      - MD-BP-CUSTOMER
+      - MD-BP-SUPPLIER
+  - id: DATA-FAMILY-PRODUCT
+    type: dataset
+    title: "Product and Material Master Data"
+    purpose: "Shared product identity plus logistics, commercial, planning, warehouse, and accounting attributes."
+    objects:
+      - MD-MAT-MATERIAL
+  - id: DATA-FAMILY-FINANCE
+    type: dataset
+    title: "Financial Master Data"
+    purpose: "Shared financial structures and entities used for consistent accounting, controlling, and reporting."
+    objects:
+      - MD-FIN-FINANCIAL
+  - id: DATA-FAMILY-CUSTOM
+    type: dataset
+    title: "Custom Master Data"
+    purpose: "Enterprise-specific governed entities when standard domains do not cover the business concept."
+    objects:
+      - MD-CUSTOM-OBJECT
+
+master_data_objects:
+  - id: MD-BP-BUSINESS-PARTNER
+    type: master_data_object
+    title: "Business Partner"
+    family: DATA-FAMILY-PARTY
+    core_identity: true
+    business_role: "Shared identity for organizations and people participating in enterprise processes."
+    typical_attributes:
+      - "Name and legal identity"
+      - "Address and communication"
+      - "Identifiers"
+      - "Relationships and hierarchies"
+      - "General status and lifecycle"
+    used_by_domains:
+      - BDOM-CUSTOMER-REVENUE
+      - BDOM-SPEND-PROCUREMENT
+      - BDOM-ASSET-SERVICE-OPERATIONS
+    primary_mdg_scope:
+      - APP-SAP-MDG-S4
+      - APP-SAP-MDG-CLOUD
+      - APP-S4-PUBLIC-MDG
+  - id: MD-BP-CUSTOMER
+    type: master_data_object
+    title: "Customer"
+    family: DATA-FAMILY-PARTY
+    core_identity: false
+    business_role: "Customer-specific role and application data for selling, shipping, billing, finance, tax, and credit processes."
+    typical_attributes:
+      - "Sales-area data"
+      - "Partner functions"
+      - "Shipping conditions"
+      - "Billing and tax data"
+      - "Company-code data"
+    used_by_domains:
+      - BDOM-CUSTOMER-REVENUE
+      - BDOM-FINANCE-PERFORMANCE
+    primary_processes:
+      - "Order-to-Cash"
+      - "Delivery and Shipping"
+      - "Billing"
+  - id: MD-BP-SUPPLIER
+    type: master_data_object
+    title: "Supplier"
+    family: DATA-FAMILY-PARTY
+    core_identity: false
+    business_role: "Supplier-specific role and application data for sourcing, purchasing, receiving, invoicing, and payment."
+    typical_attributes:
+      - "Purchasing-organization data"
+      - "Ordering and partner data"
+      - "Company-code data"
+      - "Payment data"
+      - "Tax and withholding data"
+    used_by_domains:
+      - BDOM-SPEND-PROCUREMENT
+      - BDOM-SUPPLY-CHAIN-OPERATIONS
+      - BDOM-FINANCE-PERFORMANCE
+    primary_processes:
+      - "Source-to-Pay"
+      - "Procure-to-Pay"
+      - "Goods Receipt"
+      - "Invoice and Payment"
+  - id: MD-MAT-MATERIAL
+    type: master_data_object
+    title: "Material / Product"
+    family: DATA-FAMILY-PRODUCT
+    core_identity: true
+    business_role: "Shared product identity with process-specific views for sales, procurement, planning, manufacturing, warehouse, transport, quality, and finance."
+    typical_attributes:
+      - "Basic data and units of measure"
+      - "Plant and MRP data"
+      - "Purchasing data"
+      - "Sales data"
+      - "Warehouse and storage data"
+      - "Quality data"
+      - "Accounting and valuation data"
+    used_by_domains:
+      - BDOM-SUPPLY-CHAIN-OPERATIONS
+      - BDOM-CUSTOMER-REVENUE
+      - BDOM-SPEND-PROCUREMENT
+      - BDOM-FINANCE-PERFORMANCE
+    primary_processes:
+      - "Order-to-Cash"
+      - "Procure-to-Pay"
+      - "Plan-to-Produce"
+      - "Warehouse Execution"
+      - "Transportation"
+  - id: MD-FIN-FINANCIAL
+    type: master_data_object
+    title: "Financial Master Data"
+    family: DATA-FAMILY-FINANCE
+    core_identity: true
+    business_role: "Financial structures and entities used for accounting, controlling, consolidation, and reporting."
+    typical_attributes:
+      - "Financial identifiers"
+      - "Hierarchy assignments"
+      - "Account and reporting attributes"
+      - "Lifecycle and validity"
+    used_by_domains:
+      - BDOM-FINANCE-PERFORMANCE
+  - id: MD-CUSTOM-OBJECT
+    type: master_data_object
+    title: "Custom Master Data Object"
+    family: DATA-FAMILY-CUSTOM
+    core_identity: false
+    business_role: "Enterprise-specific shared object that needs governed lifecycle and distribution."
+    typical_attributes:
+      - "Customer-defined key"
+      - "Business ownership"
+      - "Validity and status"
+      - "Domain-specific attributes"
+    used_by_domains:
+      - "Cross-enterprise"
+
+governance_capabilities:
+  - id: CAP-MDG-CENTRAL-GOVERNANCE
+    title: "Central Governance"
+    domain: DOM-DATA-GOVERNANCE
+    role: "Control creation and change through ownership, validation, approval, activation, and replication."
+  - id: CAP-MDG-CONSOLIDATION
+    title: "Consolidation"
+    domain: DOM-MASTER-DATA-MANAGEMENT
+    role: "Standardize, match, merge, and calculate a best record from multiple sources."
+  - id: CAP-MDG-MASS-PROCESSING
+    title: "Mass Processing"
+    domain: DOM-DATA-GOVERNANCE
+    role: "Apply controlled changes to many records with validation and auditability."
+  - id: CAP-MDG-DATA-QUALITY
+    title: "Data Quality Management"
+    domain: DOM-DATA-QUALITY
+    role: "Prevent, detect, measure, and repair data defects."
+
+business_domain_links:
+  - business_domain: BDOM-CUSTOMER-REVENUE
+    depends_on:
+      - MD-BP-BUSINESS-PARTNER
+      - MD-BP-CUSTOMER
+      - MD-MAT-MATERIAL
+    process_examples:
+      - "Lead-to-Cash"
+      - "Order-to-Cash"
+      - "Delivery"
+      - "Billing"
+    failure_examples:
+      - "Order blocks"
+      - "Wrong partner or address"
+      - "Missing product sales data"
+      - "Shipping or billing exceptions"
+  - business_domain: BDOM-SPEND-PROCUREMENT
+    depends_on:
+      - MD-BP-BUSINESS-PARTNER
+      - MD-BP-SUPPLIER
+      - MD-MAT-MATERIAL
+    process_examples:
+      - "Source-to-Pay"
+      - "Procure-to-Pay"
+      - "Supplier Onboarding"
+    failure_examples:
+      - "PO creation failure"
+      - "Wrong supplier or purchasing data"
+      - "Receiving exception"
+      - "Invoice mismatch"
+  - business_domain: BDOM-SUPPLY-CHAIN-OPERATIONS
+    depends_on:
+      - MD-MAT-MATERIAL
+      - MD-BP-BUSINESS-PARTNER
+      - MD-BP-SUPPLIER
+    process_examples:
+      - "Planning"
+      - "Manufacturing"
+      - "Warehouse Execution"
+      - "Transportation"
+    failure_examples:
+      - "Planning noise"
+      - "Wrong unit conversion"
+      - "Warehouse or packing issue"
+      - "Freight planning error"
+  - business_domain: BDOM-FINANCE-PERFORMANCE
+    depends_on:
+      - MD-BP-CUSTOMER
+      - MD-BP-SUPPLIER
+      - MD-MAT-MATERIAL
+      - MD-FIN-FINANCIAL
+    process_examples:
+      - "Record-to-Report"
+      - "Accounts Receivable"
+      - "Accounts Payable"
+      - "Product Cost and Valuation"
+    failure_examples:
+      - "Posting failure"
+      - "Wrong account assignment"
+      - "Payment exception"
+      - "Inconsistent reporting hierarchy"
+
+decision_path:
+  - question: "What is the business area?"
+    answer: "Start with Data and Analytics as the cross-cutting area."
+  - question: "What problem domain is in scope?"
+    answer: "Separate Master Data Management, Data Governance, Data Quality, Metadata, Integration, and Analytics."
+  - question: "Which application implements the governance?"
+    answer: "Evaluate SAP MDG variants only after the domain and object scope are clear."
+  - question: "Which master-data objects are governed?"
+    answer: "List Business Partner, Customer, Supplier, Material / Product, Financial, and Custom Objects explicitly."
+  - question: "Which attributes are central versus application-specific?"
+    answer: "Assign ownership at attribute level; do not assume one system must own every field."
+  - question: "Which business processes consume the data?"
+    answer: "Trace each object to sales, procurement, planning, warehouse, transport, finance, or service."
+  - question: "How does approved data become usable?"
+    answer: "Model activation, replication, mapping, monitoring, and downstream readiness."
+
+assessment_talking_points:
+  - "MDG is a governance application, not the complete Data and Analytics domain."
+  - "Master Data Management answers what shared objects exist and where authority sits."
+  - "Data Governance answers who owns decisions and which controls apply."
+  - "Data Quality answers whether the data is fit for the consuming process."
+  - "The same master-data object crosses several business domains, so ownership must be explicit."
+  - "For logistics, Material / Product and Business Partner are dependency hubs rather than isolated master records."
+  - "The architecture decision should start with object and attribute scope, not with an MDG edition name."
+
+relations:
+  - subject: BDOM-DATA-ANALYTICS
+    predicate: contains
+    object: DOM-MASTER-DATA-MANAGEMENT
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: BDOM-DATA-ANALYTICS
+    predicate: contains
+    object: DOM-DATA-GOVERNANCE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: BDOM-DATA-ANALYTICS
+    predicate: contains
+    object: DOM-DATA-QUALITY
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: BDOM-DATA-ANALYTICS
+    predicate: contains
+    object: DOM-METADATA-SEMANTICS
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: BDOM-DATA-ANALYTICS
+    predicate: contains
+    object: DOM-DATA-INTEGRATION
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: DOM-MASTER-DATA-MANAGEMENT
+    predicate: contains
+    object: MD-BP-BUSINESS-PARTNER
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: DOM-MASTER-DATA-MANAGEMENT
+    predicate: contains
+    object: MD-MAT-MATERIAL
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: DOM-MASTER-DATA-MANAGEMENT
+    predicate: contains
+    object: MD-FIN-FINANCIAL
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: APP-SAP-MDG-S4
+    predicate: supports_domain
+    object: DOM-MASTER-DATA-MANAGEMENT
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CLASSIC]
+  - subject: APP-SAP-MDG-S4
+    predicate: supports_domain
+    object: DOM-DATA-GOVERNANCE
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CLASSIC]
+  - subject: APP-SAP-MDG-CLOUD
+    predicate: supports_domain
+    object: DOM-DATA-GOVERNANCE
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CE-FEATURES]
+  - subject: APP-SAP-MDG-CLOUD
+    predicate: governs
+    object: MD-BP-BUSINESS-PARTNER
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CE-FEATURES]
+  - subject: MD-BP-CUSTOMER
+    predicate: impacts
+    object: BDOM-CUSTOMER-REVENUE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-BP-SUPPLIER
+    predicate: impacts
+    object: BDOM-SPEND-PROCUREMENT
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-MAT-MATERIAL
+    predicate: impacts
+    object: BDOM-SUPPLY-CHAIN-OPERATIONS
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-FIN-FINANCIAL
+    predicate: impacts
+    object: BDOM-FINANCE-PERFORMANCE
+    evidence_type: reasoned_interpretation
+    confidence: high
+
+source_refs:
+  - SRC-SAP-MDG-S4-OVERVIEW
+  - SRC-SAP-MDG-CLASSIC
+  - SRC-SAP-MDG-CE-FEATURES
+  - SRC-SAP-MDG-PORTFOLIO-COMPARISON
+  - SRC-SAP-MDG-DATA-MODEL
+
+tags:
+  - sap
+  - enterprise-context
+  - data-management
+  - master-data
+  - mdm
+  - data-governance
+  - mdg
+  - data-quality
+  - logistics
+  - business-partner
+  - material
