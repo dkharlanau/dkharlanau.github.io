@@ -15,6 +15,7 @@ hide_global_cta: true
 {% assign schema = site.data.labs.enterprise_context.schema %}
 {% assign sales_landscape = site.data.labs.enterprise_context.topics.sales_application_landscape %}
 {% assign supply_chain_landscape = site.data.labs.enterprise_context.topics.supply_chain_logistics_landscape %}
+{% assign sales_order_graph = site.data.labs.enterprise_context.graphs.sales_order %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Enterprise Context</li></ol>
@@ -47,13 +48,25 @@ hide_global_cta: true
     <header>
       <p class="research-canvas__eyebrow">Context model</p>
       <h2>Connect the business question to the evidence path.</h2>
-      <p>The target is not a catalogue of SAP terms. The target is a typed path from business capability and process to data, rules, integrations, operational failure, business impact, and tests.</p>
+      <p>The target is not a catalogue of SAP terms. The target is a typed path from business capability and process to data, decisions, integrations, operational failure, business impact, and tests.</p>
     </header>
 
     <div class="research-route-list">
       <a href="/labs/enterprise-context/model/"><span>01</span><strong>Capability → Process → Step</strong><small>Where the activity sits in the business flow and which process variant is in scope.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/model/"><span>02</span><strong>Object → Attribute → Rule</strong><small>Which business objects and data concepts participate, and which determination or validation logic uses them.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/model/"><span>02</span><strong>Object → Attribute → Determination → Rule</strong><small>Which business objects and data concepts participate, how a value is determined, and which rule or configuration supports that decision.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/model/"><span>03</span><strong>Integration → Failure → KPI → Test</strong><small>How a dependency crosses systems, how it can fail, what outcome it affects, and how the relationship is tested.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">First deep vertical</p>
+      <h2>{{ sales_order_graph.title }}</h2>
+      <p>A sales-order item looks like a row. The graph treats it as a dependency engine: one determination writes a value that becomes an input to the next decision.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/sales-order/"><span>DET</span><strong>Open the Sales Order Determination Graph</strong><small>{{ sales_order_graph.determinations | size }} determinations · {{ sales_order_graph.causal_edges | size }} causal edges · plant, shipping point, route, scheduling, availability, pricing, partners, batches, and more.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/data/sales-order-graph.json"><span>JSON</span><strong>Open the machine projection</strong><small>The same determinations, edges, impact traces, and source references without a second copy of the facts.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
@@ -251,6 +264,7 @@ hide_global_cta: true
       <a href="{{ lab.machine_endpoints.schema }}"><span>02</span><strong>Schema JSON</strong><small>Node types, edge types, evidence states, stable-ID rules, and date fields.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="{{ lab.machine_endpoints.topics }}"><span>03</span><strong>Topics JSON</strong><small>Current research topics, scope, maturity gates, and planned evaluation targets.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="{{ lab.machine_endpoints.sources }}"><span>04</span><strong>Sources JSON</strong><small>Source registry and provenance policy without bulk copying source material.</small><i class="material-symbols-outlined" aria-hidden="true">source</i></a>
+      <a href="/labs/enterprise-context/data/sales-order-graph.json"><span>05</span><strong>Sales Order Graph JSON</strong><small>Determinations, causal edges, impact traces, and source references for the first deep vertical.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
     </div>
   </section>
 
