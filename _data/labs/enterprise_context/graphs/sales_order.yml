@@ -1,0 +1,400 @@
+id: GRAPH-SD-SALES-ORDER-DETERMINATIONS
+type: knowledge_graph
+title: "Sales Order — Determination & Dependency Graph"
+summary: >-
+  A source-tracked model of the decisions hidden inside sales-order creation:
+  what the system reads, how a value is determined, where it is written, and what
+  that value changes downstream.
+domain: "SAP S/4HANA Sales"
+process_family: "Order-to-Cash"
+process_step: "Create Sales Order"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+
+thesis: >-
+  A sales order item looks like a row. In practice it is a dependency engine:
+  one determination writes a value that becomes an input to the next decision.
+
+model_boundary:
+  release_scope:
+    - "SAP S/4HANA 2025 FPS01 where cited"
+    - "SAP S/4HANA Cloud Public Edition 2608 where cited"
+  note: >-
+    This graph is a learning and reasoning model, not a claim that every edition,
+    scope item, enhancement, or customer design executes the same path.
+  evidence_policy: >-
+    Documented SAP behavior is separated from expert interpretation and synthetic
+    scenarios. Client-specific logic is deliberately excluded.
+
+views:
+  - id: process
+    title: "Process view"
+    question: "Where are we in Order-to-Cash?"
+    projection: "Quotation → Sales Order → Delivery → Goods Issue → Billing"
+  - id: object
+    title: "Object view"
+    question: "What lives inside the sales order?"
+    projection: "Header → Item → Schedule Line"
+  - id: why
+    title: "Why view"
+    question: "Why did this value appear, and what depends on it next?"
+    projection: "Input → Determination → Output → Downstream effect"
+
+objects:
+  - id: OBJ-SD-SALES-ORDER
+    title: "Sales Order"
+    level: header
+    contains:
+      - OBJ-SD-SALES-ORDER-ITEM
+  - id: OBJ-SD-SALES-ORDER-ITEM
+    title: "Sales Order Item"
+    level: item
+    contains:
+      - OBJ-SD-SCHEDULE-LINE
+    attributes:
+      - ATTR-SD-MATERIAL
+      - ATTR-SD-ITEM-CATEGORY
+      - ATTR-SD-PLANT
+      - ATTR-SD-SHIPPING-POINT
+      - ATTR-SD-ROUTE
+  - id: OBJ-SD-SCHEDULE-LINE
+    title: "Schedule Line"
+    level: schedule_line
+    attributes:
+      - ATTR-SD-SCHEDULE-LINE-CATEGORY
+      - ATTR-SD-REQUESTED-DELIVERY-DATE
+      - ATTR-SD-CONFIRMED-DATE
+      - ATTR-SD-CONFIRMED-QUANTITY
+
+determinations:
+  - id: DET-SD-PARTNER
+    title: "Partner Determination"
+    level: header_and_item
+    question: "Which business partners must or may participate in this document?"
+    mechanism: procedure
+    inputs:
+      - "partner determination procedure"
+      - "sales document type"
+      - "item category where item-level partner determination applies"
+      - "partner source/master-data context"
+    output:
+      - "partner functions and partner assignments"
+    downstream_effects:
+      - "ship-to context"
+      - "pricing and shipping data context"
+      - "document completeness"
+    lead_lens: >-
+      Partner data is not decoration. A different ship-to can change the data
+      consumed later by route, plant, tax, pricing, and delivery logic.
+    source_refs:
+      - SRC-SAP-SD-PARTNER-DETERMINATION
+
+  - id: DET-SD-ITEM-CATEGORY
+    title: "Item Category Determination"
+    level: item
+    question: "How should this item behave inside this sales document?"
+    mechanism: lookup
+    inputs:
+      - "sales document type"
+      - "item category group"
+      - "item usage"
+      - "higher-level item category"
+    output:
+      - ATTR-SD-ITEM-CATEGORY
+    downstream_effects:
+      - DET-SD-SCHEDULE-LINE-CATEGORY
+      - "delivery, billing, pricing, and control behavior governed by the item category"
+    lead_lens: >-
+      Treat an item-category change as a behavior change, not a cosmetic code
+      substitution. It can move several downstream controls at once.
+    source_refs:
+      - SRC-SAP-SD-ITEM-CATEGORY-DETERMINATION
+
+  - id: DET-SD-SCHEDULE-LINE-CATEGORY
+    title: "Schedule Line Category Determination"
+    level: schedule_line
+    question: "How should quantity, requirement, availability, and delivery behave?"
+    mechanism: lookup
+    inputs:
+      - ATTR-SD-ITEM-CATEGORY
+      - "MRP type from product/material master"
+    output:
+      - ATTR-SD-SCHEDULE-LINE-CATEGORY
+    downstream_effects:
+      - "requirements transfer"
+      - "availability-check relevance"
+      - "delivery relevance"
+    lead_lens: >-
+      When a sales item refuses to behave like stock, do not stop at the item
+      category. The schedule line is where planning and delivery behavior often becomes explicit.
+    source_refs:
+      - SRC-SAP-SD-SCHEDULE-LINE-CATEGORY
+
+  - id: DET-SD-PLANT
+    title: "Delivering Plant Proposal"
+    level: item
+    question: "From where should this item be delivered?"
+    mechanism: default_with_manual_override
+    inputs:
+      - "customer / ship-to sales-area master data"
+      - "product/material master data"
+      - "manual item entry"
+    output:
+      - ATTR-SD-PLANT
+    downstream_effects:
+      - DET-SD-SHIPPING-POINT
+      - DET-SD-AVAILABILITY
+      - "possible advanced aATP plant substitution"
+    lead_lens: >-
+      Plant is a hinge in the graph. Changing it can redirect availability,
+      shipping-point determination, sourcing, and the dates that follow.
+    source_refs:
+      - SRC-SAP-SD-SHIPPING-POINTS
+      - SRC-SAP-AATP-ALTERNATIVE-CONFIRMATION
+
+  - id: DET-SD-SHIPPING-POINT
+    title: "Shipping Point Determination"
+    level: item
+    question: "Which shipping unit should execute the delivery?"
+    mechanism: customizing_lookup
+    inputs:
+      - ATTR-SD-PLANT
+      - "shipping condition"
+      - "loading group"
+    output:
+      - ATTR-SD-SHIPPING-POINT
+    downstream_effects:
+      - DET-SD-ROUTE
+      - DET-SD-SCHEDULING
+      - "delivery execution"
+    lead_lens: >-
+      A missing shipping point is often the symptom. The useful question is which
+      upstream input failed to exist or mapped to no valid combination.
+    source_refs:
+      - SRC-SAP-SD-SHIPPING-POINTS
+
+  - id: DET-SD-ROUTE
+    title: "Route Determination"
+    level: item
+    question: "Which route should be proposed for this item?"
+    mechanism: customizing_lookup
+    inputs:
+      - "departure country/region and zone of shipping point"
+      - "destination country/region and transportation zone of ship-to"
+      - "shipping condition"
+      - "transportation group from material master"
+    output:
+      - ATTR-SD-ROUTE
+    downstream_effects:
+      - DET-SD-SCHEDULING
+      - "transportation timing"
+    lead_lens: >-
+      Route is where organizational data, customer geography, material logistics,
+      and shipping policy finally meet. That is why route problems rarely belong
+      to one table in isolation.
+    source_refs:
+      - SRC-SAP-SD-ROUTE-DETERMINATION
+
+  - id: DET-SD-SCHEDULING
+    title: "Delivery & Transportation Scheduling"
+    level: schedule_line
+    question: "When must shipping activities start to meet the requested date?"
+    mechanism: calculation
+    inputs:
+      - ATTR-SD-REQUESTED-DELIVERY-DATE
+      - ATTR-SD-ROUTE
+      - ATTR-SD-SHIPPING-POINT
+      - "material/product"
+      - "ship-to party"
+      - "transit, loading, pick/pack, and transportation lead times"
+    output:
+      - "material availability date"
+      - "loading date"
+      - "goods issue date"
+      - "transportation planning date"
+    downstream_effects:
+      - DET-SD-AVAILABILITY
+      - "confirmed delivery timing"
+    lead_lens: >-
+      Scheduling explains why a requested date is not the same thing as an
+      executable date. The calendar is doing work even when the screen looks quiet.
+    source_refs:
+      - SRC-SAP-SD-SCHEDULING
+
+  - id: DET-SD-AVAILABILITY
+    title: "Availability Check / Confirmation"
+    level: schedule_line
+    question: "Can the requested quantity be confirmed for the relevant date and location?"
+    mechanism: availability_check
+    inputs:
+      - ATTR-SD-PLANT
+      - "material/product"
+      - "requested quantity"
+      - "material availability date"
+      - "checking configuration and supply situation"
+    output:
+      - ATTR-SD-CONFIRMED-QUANTITY
+      - ATTR-SD-CONFIRMED-DATE
+    downstream_effects:
+      - "order confirmation"
+      - "delivery feasibility"
+      - "optional aATP substitution strategies"
+    lead_lens: >-
+      Inventory is not the same thing as confirmation. The useful debugging unit
+      is the requirement plus date, location, scope, and check logic.
+    source_refs:
+      - SRC-SAP-AATP-ALTERNATIVE-CONFIRMATION
+      - SRC-SAP-SD-SCHEDULING
+
+  - id: DET-SD-PRICING
+    title: "Pricing"
+    level: header_and_item
+    question: "Which price elements apply, in what order, and from which condition records?"
+    mechanism: condition_technique
+    inputs:
+      - "pricing procedure determination context"
+      - "condition types"
+      - "access sequences"
+      - "condition tables and condition records"
+      - "customer, product, quantity, date, and other pricing fields"
+    output:
+      - "price conditions"
+      - "subtotals"
+      - "net value"
+    downstream_effects:
+      - "commercial value of the order"
+      - "billing and accounting-relevant values where configured"
+      - "credit exposure context"
+    lead_lens: >-
+      Pricing is not one formula. It is a search and calculation pipeline whose
+      trace is usually more valuable than staring at the final net value.
+    source_refs:
+      - SRC-SAP-SD-CONDITION-TECHNIQUE
+
+  - id: DET-SD-BATCH
+    title: "Batch Determination"
+    level: item_or_delivery
+    question: "Which eligible batch should satisfy this business transaction?"
+    mechanism: search_strategy
+    inputs:
+      - "business transaction"
+      - "search procedure"
+      - "strategy type"
+      - "selection criteria"
+      - "sort rule"
+    output:
+      - "selected batch or ranked batch candidates"
+    downstream_effects:
+      - "batch-specific fulfillment"
+      - "delivery execution"
+    lead_lens: >-
+      Batch determination belongs in the same graph even when execution happens
+      later. It is another example of business context turning into a search strategy.
+    source_refs:
+      - SRC-SAP-BATCH-SEARCH-STRATEGY
+
+causal_edges:
+  - from: DET-SD-ITEM-CATEGORY
+    predicate: writes
+    to: ATTR-SD-ITEM-CATEGORY
+  - from: ATTR-SD-ITEM-CATEGORY
+    predicate: read_by
+    to: DET-SD-SCHEDULE-LINE-CATEGORY
+  - from: DET-SD-PLANT
+    predicate: writes
+    to: ATTR-SD-PLANT
+  - from: ATTR-SD-PLANT
+    predicate: constrains
+    to: DET-SD-AVAILABILITY
+  - from: ATTR-SD-PLANT
+    predicate: read_by
+    to: DET-SD-SHIPPING-POINT
+  - from: DET-SD-SHIPPING-POINT
+    predicate: writes
+    to: ATTR-SD-SHIPPING-POINT
+  - from: ATTR-SD-SHIPPING-POINT
+    predicate: provides_context_to
+    to: DET-SD-ROUTE
+  - from: DET-SD-ROUTE
+    predicate: writes
+    to: ATTR-SD-ROUTE
+  - from: ATTR-SD-ROUTE
+    predicate: influences
+    to: DET-SD-SCHEDULING
+  - from: DET-SD-SCHEDULING
+    predicate: produces
+    to: "material availability date"
+  - from: "material availability date"
+    predicate: read_by
+    to: DET-SD-AVAILABILITY
+  - from: DET-SD-AVAILABILITY
+    predicate: writes
+    to: ATTR-SD-CONFIRMED-DATE
+  - from: DET-SD-AVAILABILITY
+    predicate: writes
+    to: ATTR-SD-CONFIRMED-QUANTITY
+
+impact_traces:
+  - id: TRACE-SD-PLANT-CHANGE
+    title: "What changes if the plant changes?"
+    start: ATTR-SD-PLANT
+    path:
+      - "Plant"
+      - "Shipping Point Determination"
+      - "Shipping Point"
+      - "Route Determination"
+      - "Route"
+      - "Scheduling"
+      - "Material Availability Date"
+      - "Availability Check"
+      - "Confirmation"
+    caveat: >-
+      The exact path depends on configuration and enabled capabilities. This is a
+      reasoning trace, not an execution trace from a customer system.
+
+  - id: TRACE-SD-WHY-SHIPPING-POINT
+    title: "Where did the shipping point come from?"
+    start: ATTR-SD-SHIPPING-POINT
+    path:
+      - "Shipping Point"
+      - "Shipping Point Determination"
+      - "Delivering Plant"
+      - "Shipping Condition"
+      - "Loading Group"
+      - "Customizing assignment"
+    caveat: >-
+      Shipping point can be configured from plant alone or from the plant plus
+      shipping condition and loading group.
+
+experience_patterns:
+  - id: EXP-SD-SYMPTOM-UPSTREAM
+    type: troubleshooting
+    title: "Treat the wrong value as a symptom first"
+    statement: >-
+      Before changing Customizing, trace the output backwards to its inputs and
+      identify whether the anomaly is data, configuration, integration, or an override.
+  - id: EXP-SD-FIELD-AS-INPUT
+    type: lead_insight
+    title: "A field is boring until it becomes somebody else's input"
+    statement: >-
+      The useful architecture question is not only where a value is stored, but
+      which decisions consume it next.
+  - id: EXP-SD-SCOPE-BEFORE-FIX
+    type: troubleshooting
+    title: "Scope before solution"
+    statement: >-
+      Establish whether the behavior is customer-, material-, plant-, sales-area-,
+      item-, or date-specific before proposing a configuration change.
+
+source_refs:
+  - SRC-SAP-SD-PARTNER-DETERMINATION
+  - SRC-SAP-SD-ITEM-CATEGORY-DETERMINATION
+  - SRC-SAP-SD-SCHEDULE-LINE-CATEGORY
+  - SRC-SAP-SD-SHIPPING-POINTS
+  - SRC-SAP-SD-ROUTE-DETERMINATION
+  - SRC-SAP-SD-SCHEDULING
+  - SRC-SAP-SD-CONDITION-TECHNIQUE
+  - SRC-SAP-BATCH-SEARCH-STRATEGY
+  - SRC-SAP-AATP-ALTERNATIVE-CONFIRMATION
