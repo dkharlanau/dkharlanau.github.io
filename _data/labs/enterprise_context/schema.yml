@@ -1,4 +1,4 @@
-version: "0.1.0"
+version: "0.1.1"
 updated_at: "2026-08-14"
 
 common_fields:
@@ -57,6 +57,9 @@ node_types:
   - id: organization_unit
     label: "Organization Unit"
     prefix: "ORG"
+  - id: application_component
+    label: "Application / Solution Component"
+    prefix: "APP"
   - id: term
     label: "Business / SAP Term"
     prefix: "TERM"
@@ -102,6 +105,7 @@ node_types:
 
 edge_types:
   - contains
+  - contains_component
   - precedes
   - triggers
   - creates
@@ -114,7 +118,10 @@ edge_types:
   - derives_from
   - validated_by
   - integrated_via
+  - integrates_with
   - exposed_by
+  - orchestrates
+  - provides_capability
   - can_fail_as
   - can_cause
   - impacts
@@ -182,5 +189,6 @@ id_rules:
     - "PROC-O2C-ORDER-TO-CASH"
     - "STEP-O2C-CREATE-SALES-ORDER"
     - "OBJ-SD-SALES-ORDER"
+    - "APP-S4HANA-SALES"
     - "HEUR-O2C-SCOPE-BEFORE-CONFIG"
   guidance: "IDs are stable identifiers. Titles may change; IDs should not unless the underlying concept changes."
