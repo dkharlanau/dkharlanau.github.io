@@ -1,0 +1,172 @@
+---
+layout: default
+title: "SAP Sales Control Plane — Determination, Stock, Billing and Integration"
+description: "Deep process traces for SAP S/4HANA Sales: item category, schedule line, supply, stock, goods movement, billing, pricing, integration, failures, and tests."
+permalink: /labs/enterprise-context/sales-processes/control-plane/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+sales_control_plane: true
+tags:
+  - sap
+  - s4hana
+  - sales
+  - sd
+  - determination
+  - integration
+---
+
+{% assign plane = site.data.labs.enterprise_context.processes.control_planes %}
+{% assign backbone = site.data.labs.enterprise_context.processes.determination_backbone %}
+{% assign registry = site.data.labs.enterprise_context.sources.sales_control_plane_registry %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Control Plane</li></ol>
+</nav>
+
+<div class="research-canvas sales-control-plane">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Sales process atlas / control plane</p>
+      <h1>Trace the control.<br />Then explain the consequence.</h1>
+      <p class="scp-hero-note">A Lead answer should not stop at “the item category is TAS” or “this is make-to-order”. The useful answer is the chain: what determined the control, what the control changed, which document or stock segment appeared next, and how I would prove it with one test.</p>
+      <a class="research-canvas__button" href="#process-traces">Open process traces <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Control-plane inventory">
+      <p>Deep vertical</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ plane.core.records | size }}</strong><small>Deep process traces</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ backbone.rules | size }}</strong><small>Determination rules</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ registry.sources | size }}</strong><small>Primary SAP references</small></div>
+      <em>Keys are examples only when the reviewed SAP source makes the key explicit.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Working rule.</strong> Header sets the commercial frame. Item category defines what the item may do. Schedule line defines how quantity and supply behave. Stock, logistics, pricing, billing, and accounting then consume those controls.</p>
+    <a href="/labs/enterprise-context/data/sales-control-plane.json">Open machine-readable model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Determination backbone</p>
+      <h2>Debug from the decision upstream, not from the broken document downstream.</h2>
+      <p>Each rule below is written as input → control → consequence. That is the structure I want to remember in an assessment and use in a real incident.</p>
+    </header>
+    <div class="scp-backbone">
+      {% for rule in backbone.rules %}
+      <article class="scp-rule">
+        <span>{{ rule.id }}</span>
+        <h3>{{ rule.title }}</h3>
+        <div class="scp-io">
+          <div><strong>Inputs</strong><br />{{ rule.inputs | join: " · " }}</div>
+          <i aria-hidden="true">→</i>
+          <div><strong>Output</strong><br />{{ rule.output }}</div>
+        </div>
+        <p><strong>Then affects:</strong> {{ rule.downstream | join: " · " }}</p>
+        <p><em>{{ rule.assessment_hook }}</em></p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="process-traces" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Deep traces</p>
+      <h2>Seven processes. Same diagnostic grammar.</h2>
+      <p>Read the blue line from left to right. Then open the deeper data hinges, failure traces, and tests. The point is not to collect codes. The point is to know what a code controls.</p>
+    </header>
+
+    <div class="scp-process-list">
+      {% for process in plane.core.records %}
+      <article class="scp-process" id="{{ process.code | downcase | replace: '.', '-' }}">
+        <div class="scp-process__head">
+          <div>
+            <span class="scp-process__code">{{ process.code }}</span>
+            <h3>{{ process.title }}</h3>
+            <p><strong>{{ process.memory_hook }}</strong></p>
+          </div>
+          <p>{{ process.lead_summary }}</p>
+        </div>
+
+        <div class="scp-trace" aria-label="{{ process.title }} control trace">
+          {% for step in process.trace %}
+          <section class="scp-step">
+            <small>{{ step.stage }}</small>
+            <strong>{{ step.control }}</strong>
+            <p>{{ step.effect }}</p>
+          </section>
+          {% endfor %}
+        </div>
+
+        <details>
+          <summary>Data hinges, failure traces and tests <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="scp-deep">
+            <section>
+              <h4>Data hinges</h4>
+              <ul>{% for hinge in process.data_hinges %}<li><b>{{ hinge.data }}</b>{{ hinge.if_wrong }}</li>{% endfor %}</ul>
+            </section>
+            <section>
+              <h4>Failure traces</h4>
+              <ul>{% for failure in process.failures %}<li><b>{{ failure.symptom }}</b>{{ failure.trace }}</li>{% endfor %}</ul>
+            </section>
+            <section>
+              <h4>Proof tests</h4>
+              <ol>{% for test in process.tests %}<li><b>{{ test.id }}</b>{{ test.setup }}<br /><small>Assert: {{ test.assert | join: " · " }}</small></li>{% endfor %}</ol>
+            </section>
+          </div>
+          <div class="scp-badge-row"><span>Extension surfaces:</span>{% for ext in process.extensions %}<code>{{ ext }}</code>{% endfor %}</div>
+        </details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment mode</p>
+      <h2>A 60-second answer has a shape.</h2>
+      <p>This is the structure I use when a question sounds deceptively simple: “Explain third-party processing” or “How does MTO work?”</p>
+    </header>
+    <div class="scp-answer-grid">
+      <article class="scp-answer"><span>01</span><h3>Name the business change</h3><p>Start with what differs from normal sell-from-stock: external supplier, order-specific stock, another company code, or delayed ownership transfer.</p></article>
+      <article class="scp-answer"><span>02</span><h3>Name the control chain</h3><p>Document type → item category → schedule line / requirements type. State the important standard key only when it helps explain behavior.</p></article>
+      <article class="scp-answer"><span>03</span><h3>Follow the physical and financial flow</h3><p>Where does the material go, whose stock is it, which movement or transfer-of-control event occurs, and what makes billing possible?</p></article>
+      <article class="scp-answer"><span>04</span><h3>Finish with one failure and one test</h3><p>Show that you can operate the design: “If no PR is created, I trace TAS → CS → PR control; my test asserts the generated requisition and document flow.”</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">High-value contrasts</p>
+      <h2>Similar names hide different ownership models.</h2>
+    </header>
+    <div class="scp-compare-grid">
+      <article class="scp-compare"><span>SD.TPO ↔ SD.PTO</span><h3>Where does the supplier ship?</h3><p><strong>TPO:</strong> supplier → customer; your warehouse is skipped. <strong>PTO:</strong> supplier → your sales-order stock → customer; your inventory and delivery remain in the chain.</p></article>
+      <article class="scp-compare"><span>SD.ICO ↔ SD.AIC</span><h3>Internal billing vs explicit orchestration</h3><p><strong>ICO:</strong> another company delivers and internal billing bridges the legal entities. <strong>AIC:</strong> generated intercompany PO/SO, VSiT and value-chain monitoring make the internal leg explicit.</p></article>
+      <article class="scp-compare"><span>SD.SFS ↔ SD.MTO</span><h3>Same-looking SD item, different supply logic</h3><p>TAN/CP can appear in both documented examples. MTO emerges from requirements type and planning strategy, proving why memorizing only item categories is insufficient.</p></article>
+      <article class="scp-compare"><span>SD.CON.FILL ↔ SD.CON.ISSUE</span><h3>Location vs ownership</h3><p><strong>Fill-up:</strong> stock moves to customer special stock but remains yours. <strong>Issue:</strong> customer consumption reduces that stock and becomes a billing event.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Primary sources behind the control keys.</h2>
+      <p>The sources verify control behavior and explicit standard examples. The wording, memory models, failure traces, and tests are authored for this lab.</p>
+    </header>
+    <ul class="scp-source-list">
+      {% for source in registry.sources %}
+      <li><a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.title }}</a><br /><small>{{ source.product_scope }} · {{ source.release_scope }}</small></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
