@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Enterprise Business Domains — Enterprise Context Lab"
-description: "A simple map of business ownership, processes, SAP solution domains, and cross-cutting platform capabilities."
+description: "A simple enterprise map that separates business ownership from processes, SAP products, and platform capabilities."
 permalink: /labs/enterprise-context/domains/
 status: draft
 verified: false
@@ -20,10 +20,10 @@ hide_global_cta: true
 <div class="research-canvas">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Enterprise Context Lab / Domains</p>
+      <p class="research-canvas__eyebrow">Enterprise Context Lab / Business domains</p>
       <h1>{{ topic.title }}</h1>
       <p>{{ topic.summary }}</p>
-      <a class="research-canvas__button" href="#business-domains">See the domain map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#business-domains">Open the domain map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Domain model status">
       <p>Research status</p>
@@ -36,15 +36,15 @@ hide_global_cta: true
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
-    <p><strong>Remember the order.</strong> Business domain = ownership. Process = work. Solution domain = function. Application = technology.</p>
-    <a href="/labs/enterprise-context/business-ai/">Open Business AI <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <p><strong>Remember:</strong> business domain = ownership. Process = work. Solution domain = function. Application = technology.</p>
+    <a href="/labs/enterprise-context/deployment-models/">Compare S/4HANA deployment models <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="business-domains" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Business domains</p>
-      <h2>What the business owns.</h2>
-      <p>These areas stay meaningful even when SAP products change.</p>
+      <h2>What does the business own?</h2>
+      <p>The domain stays stable even when the SAP landscape changes.</p>
     </header>
     <div class="research-route-list">
       {% for domain in topic.business_domains %}
@@ -56,8 +56,8 @@ hide_global_cta: true
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Platform domains</p>
-      <h2>What supports many business domains.</h2>
-      <p>Data, integration, AI, security, and architecture work across the enterprise.</p>
+      <h2>Capabilities used across the business.</h2>
+      <p>Data, integration, AI, security, and transformation support many domains.</p>
     </header>
     <div class="research-route-list">
       {% for domain in topic.platform_domains %}
@@ -68,25 +68,13 @@ hide_global_cta: true
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">How to use it</p>
-      <h2>Business first, system second.</h2>
-      <p>This four-step sequence is the useful part to remember.</p>
+      <p class="research-canvas__eyebrow">How to answer</p>
+      <h2>Ownership → process → system.</h2>
+      <p>Keep these three levels separate in an architecture discussion.</p>
     </header>
     <div class="research-route-list">
       {% for item in topic.decision_guide %}
       <a href="/labs/enterprise-context/model/"><span>→</span><strong>{{ item.question }}</strong><small>{{ item.guidance }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Modeling rules</p>
-      <h2>Keep the labels clean.</h2>
-    </header>
-    <div class="research-route-list">
-      {% for rule in topic.modeling_rules %}
-      <a href="/labs/enterprise-context/model/"><span>RULE</span><strong>{{ rule }}</strong><small>Use this rule when adding a new domain, process, or SAP component.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       {% endfor %}
     </div>
   </section>
