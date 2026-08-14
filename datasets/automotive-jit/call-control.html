@@ -1,0 +1,191 @@
+---
+layout: default
+title: "SAP Automotive JIT Call Control · Operations"
+description: "Actions, cancellation, monitoring, scanner flows, handling units, programs, and logistics dependencies for SAP Automotive JIT/JIS."
+permalink: /datasets/automotive-jit/call-control/
+verified: false
+status: needs_verification
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14T18:05:00+00:00
+data_catalog_page: true
+hide_global_cta: true
+---
+
+<div class="dataset-canvas">
+  <header class="dataset-canvas__hero" data-reveal>
+    <div>
+      <p class="dataset-canvas__eyebrow">Assessment Lab · SAP Automotive · Operations</p>
+      <h1>Call Control is easy until<br />something must go backwards.</h1>
+      <p>This page is about the part that becomes important in real operations: actions, cancellation chains, emergency correction, scanner events, handling units, logs, deliveries, and the programs around them.</p>
+      <div class="dataset-canvas__actions">
+        <a class="dataset-canvas__button" href="/datasets/automotive-jit/call-control-operations.json">Open operations dataset <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+        <a class="dataset-canvas__text-link" href="/datasets/automotive-jit/call-control-graph.json">Open graph extension <span class="material-symbols-outlined" aria-hidden="true">hub</span></a>
+      </div>
+    </div>
+    <dl class="dataset-canvas__inventory" aria-label="Call control operations inventory">
+      <div><dt>30+</dt><dd>Classic actions</dd><small>Production, HU, delivery, recovery</small></div>
+      <div><dt>3</dt><dd>Control layers</dd><small>Business, logistics, technical status</small></div>
+      <div><dt>1</dt><dd>Golden rule</dd><small>Never confuse status with physical truth</small></div>
+    </dl>
+  </header>
+
+  <section class="dataset-canvas__access" data-reveal aria-label="Call Control mental model">
+    <div>
+      <p class="dataset-canvas__eyebrow">The model</p>
+      <h2>Action first. Status second.</h2>
+      <p>A useful design asks what the action does, what document or physical object it changes, and which status is the result. Starting from statuses alone creates pretty diagrams and ugly incidents.</p>
+    </div>
+    <nav aria-label="Call control operations chain">
+      <a href="#actions"><span>01</span><strong>Actions</strong><small>Standard, interlinked, project-specific</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="#cancel"><span>02</span><strong>Cancel</strong><small>Unwind side effects in reverse order</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="#observe"><span>03</span><strong>Observe</strong><small>JIT log, IDoc, linked documents</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="#scan"><span>04</span><strong>Scan</strong><small>Physical event → allowed action</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </nav>
+  </section>
+
+  <section id="actions" class="dataset-canvas__collections" data-reveal>
+    <header>
+      <p class="dataset-canvas__eyebrow">01 · Classic Call Control</p>
+      <h2>The action network is the process.</h2>
+      <p>Classic Automotive JIT already gives many useful building blocks. Interlinked actions are especially important because one operator event can execute two or more business steps together.</p>
+    </header>
+    <div class="dataset-route-list">
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>A</span><strong>PIN → PCOM → PINP</strong><small>Release to production, print component list, or do both as an interlinked action.</small><em>Production</em><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>B</span><strong>POUT → PICK → POUP</strong><small>Production completion, pick-list print, or both together. POUT itself does not post goods movement.</small><em>Progress</em><i class="material-symbols-outlined" aria-hidden="true">task_alt</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>C</span><strong>CRHU · HUPP · DEHU</strong><small>Create HU before buffer storage, generate a deliverable HU in production, or unpack/delete an HU.</small><em>HU</em><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>D</span><strong>DELI · BFDL · GOIS · GOCC</strong><small>Create delivery, combine backflush + delivery, post goods issue, or reverse goods issue.</small><em>Shipping</em><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>E</span><strong>SCRA · NIO · REPR</strong><small>Scrap/reproduction, park a missing-part case, or reprint production paperwork.</small><em>Exception</em><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
+    </div>
+  </section>
+
+  <section id="cancel" class="dataset-canvas__citation" data-reveal>
+    <div>
+      <p class="dataset-canvas__eyebrow">02 · Cancellation</p>
+      <h2>Cancellation is not one status.</h2>
+    </div>
+    <div class="dataset-canvas__citation-copy">
+      <p><strong>Business cancellation:</strong> the demand is no longer required. <strong>Logistics reversal:</strong> existing delivery, HU, goods movement, warehouse task, freight or supplier demand must be undone or reconciled. <strong>Status correction:</strong> SAP state is technically wrong and must be repaired.</p>
+      <p>These three things can happen together, but they are not the same operation. Classic action <code>CANC</code> cancels a component group. Emergency transaction <code>JITE</code> can jump external/internal status without Call Control and without executing business actions.</p>
+      <p>A safe cancellation therefore walks backwards: billing → goods issue → warehouse/loading → HU → delivery → forwarded Tier-2 demand → production/backflush → JIT cancellation. The exact chain depends on what already exists.</p>
+    </div>
+  </section>
+
+  <section class="dataset-canvas__collections" data-reveal>
+    <header>
+      <p class="dataset-canvas__eyebrow">Cancellation utility</p>
+      <h2>The useful custom program is an orchestrator.</h2>
+      <p>On many complex landscapes a project-specific mass cancellation/recovery tool is more useful than teaching users eight separate transactions. It should execute supported business reversals, not update JIT tables directly.</p>
+    </header>
+    <div class="dataset-route-list">
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>01</span><strong>Simulate first</strong><small>Show planned reversal steps and all linked objects before update mode.</small><em>Safety</em><i class="material-symbols-outlined" aria-hidden="true">preview</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>02</span><strong>Restart safely</strong><small>After partial failure, continue from the first incomplete step without duplicating completed actions.</small><em>Idempotency</em><i class="material-symbols-outlined" aria-hidden="true">restart_alt</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>03</span><strong>Prove the result</strong><small>Log before/after status plus delivery, HU, material document and external call references.</small><em>Audit</em><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+    <p><strong>Next Generation example:</strong> <code>S2_IN_CANC</code> is already an interlinked cancellation pattern. It coordinates JIT-call cancellation with warehouse request/tasks, outbound proxy and freight-unit cancellation.</p>
+  </section>
+
+  <section id="observe" class="dataset-canvas__collections" data-reveal>
+    <header>
+      <p class="dataset-canvas__eyebrow">03 · Monitoring & logs</p>
+      <h2>Start with the business object, then descend into technology.</h2>
+      <p>The fastest incident path is usually JIT status → action history → inbound message → linked logistics documents. Starting in middleware and staring at green boxes is a popular but less productive ritual.</p>
+    </header>
+    <div class="dataset-route-list">
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>1</span><strong>JITM / JITMX</strong><small>Current calls, component groups, allowed actions and problem selections.</small><em>Monitor</em><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>2</span><strong>JITLOG</strong><small>Successful and failed actions, user, time, previous status and technical messages.</small><em>History</em><i class="material-symbols-outlined" aria-hidden="true">history</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>3</span><strong>EMJIT</strong><small>IDoc status, technical/business processing, dialog/background reprocessing and status history.</small><em>EDI</em><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>4</span><strong>JITQ</strong><small>Read the configured action network before deciding which recovery action is legal.</small><em>Control</em><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>5</span><strong>JITE</strong><small>Emergency correction only after delivery, HU, goods movement and physical state have been reconciled.</small><em>Emergency</em><i class="material-symbols-outlined" aria-hidden="true">emergency</i></a>
+    </div>
+  </section>
+
+  <section id="scan" class="dataset-canvas__citation" data-reveal>
+    <div>
+      <p class="dataset-canvas__eyebrow">04 · Scanner / shop floor</p>
+      <h2>A scan is a physical event, not a database update.</h2>
+    </div>
+    <div class="dataset-canvas__citation-copy">
+      <p>Classic JIT supports barcode entry with <code>JIT6</code> and <code>JIT7</code>; outbound has <code>JITO6</code>. The barcode can identify a call, component group or grouping information through a barcode qualifier.</p>
+      <p>An entry unit can represent rack capacity. Operators scan several objects and the system can execute the selected action when the rack is complete. Transaction variants with <code>SHD0</code> can remove fields that operators should never touch.</p>
+      <p>For a custom MES/scanner terminal, the cleaner classic integration is to resolve the scan to a JIT object, validate the current action, then call <code>JITCallInbound.PerformAction</code>, <code>PerformActionFullCall</code> or RFC <code>JIT04_SET_ACTION_EXTERN</code>.</p>
+    </div>
+  </section>
+
+  <section class="dataset-canvas__citation" data-reveal>
+    <div>
+      <p class="dataset-canvas__eyebrow">Handling Units</p>
+      <h2>The HU carries physical truth.</h2>
+    </div>
+    <div class="dataset-canvas__citation-copy">
+      <p>An HU is a unique, scannable package. In JIS it can represent the real rack or package that carries sequence to the customer line. That makes HU state part of cancellation and resequencing logic.</p>
+      <p>Classic JIT can create HUs through <code>CRHU</code> or <code>HUPP</code>, delete/unpack with <code>DEHU</code>, create HUs automatically during <code>DELI</code>, and assign existing HUs to summarized JIT flows with <code>VL10HU</code>.</p>
+      <p>In EWM RF packing, a worker can scan pick HUs at a packing work center and repack into a destination HU. In modern JIT designs EWM events such as picking started, completed, denied or cancelled can become part of the JIT lifecycle.</p>
+    </div>
+  </section>
+
+  <section class="dataset-canvas__collections" data-reveal>
+    <header>
+      <p class="dataset-canvas__eyebrow">Programs & interfaces</p>
+      <h2>Know what is standard, and what is usually custom.</h2>
+      <p>SAP documents standard programmatic interfaces for actions and standard reports for archiving. I did not find one classic standard report that safely unwinds any arbitrary JIT chain. That broad cancellation tool should be treated as project-specific unless the target system proves otherwise.</p>
+    </header>
+    <div class="dataset-route-list">
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>BAPI</span><strong>JITCallInbound.PerformAction</strong><small>Execute an action for selected component groups from a subsystem.</small><em>Classic</em><i class="material-symbols-outlined" aria-hidden="true">api</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>RFC</span><strong>JIT04_SET_ACTION_EXTERN</strong><small>Classic external action interface with broader transfer parameters.</small><em>Classic</em><i class="material-symbols-outlined" aria-hidden="true">cable</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>REP</span><strong>RJITARCH01 / RJITARCH02</strong><small>Archive and delete archived JIT Inbound data.</small><em>Archive</em><i class="material-symbols-outlined" aria-hidden="true">archive</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>REP</span><strong>RJITOUTARCH01 / 02</strong><small>Archive and delete archived JIT Outbound data.</small><em>Archive</em><i class="material-symbols-outlined" aria-hidden="true">archive</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>REP</span><strong>RJITARCHNO</strong><small>Reset inbound archiving so the call can be processed again; consistency still belongs to Call Control.</small><em>Recovery</em><i class="material-symbols-outlined" aria-hidden="true">undo</i></a>
+    </div>
+  </section>
+
+  <section class="dataset-canvas__citation" data-reveal>
+    <div>
+      <p class="dataset-canvas__eyebrow">Logistics dependency graph</p>
+      <h2>Scheduling agreement → call → rack → delivery.</h2>
+    </div>
+    <div class="dataset-canvas__citation-copy">
+      <p><strong>Customer side:</strong> Sales Scheduling Agreement → JIT/JIS Call → Component Group → Production/Staging → Packing Group/Rack → HU → Outbound Delivery → Goods Issue → Delivery Confirmation → Billing.</p>
+      <p><strong>Supplier side:</strong> Purchase Scheduling Agreement + JIT Control Cycle → supplier/warehouse JIT call → inbound delivery / stock transfer → EWM/IM execution → production supply area.</p>
+      <p><strong>Tier-2:</strong> an inbound OEM requirement can create a forwarded JIS requirement. From that moment, cancellation and change are distributed-process problems, not only local SAP problems.</p>
+    </div>
+  </section>
+
+  <section class="dataset-canvas__collections" data-reveal>
+    <header>
+      <p class="dataset-canvas__eyebrow">Project actions</p>
+      <h2>Custom actions should express business intent.</h2>
+      <p>Names below are examples, not SAP standard. They are useful because they make the action network readable and reduce dangerous free-form corrections.</p>
+    </header>
+    <div class="dataset-route-list">
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>Z</span><strong>Z_HOLD / Z_RELEASE_HOLD</strong><small>Park a call during investigation and release it again without calling the situation “cancelled”.</small><em>Control</em><i class="material-symbols-outlined" aria-hidden="true">pause_circle</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>Z</span><strong>Z_REPACK_REQUIRED</strong><small>Electronic sequence changed, but physical HU/rack needs intervention before shipping.</small><em>Physical</em><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>Z</span><strong>Z_CANCEL_CHAIN</strong><small>Start a governed cancellation utility with simulation, linked-document checks and restartability.</small><em>Recovery</em><i class="material-symbols-outlined" aria-hidden="true">undo</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>Z</span><strong>Z_RETRY_SAFE</strong><small>Retry one failed action after proving the previous attempt did not already create the side effect.</small><em>Idempotency</em><i class="material-symbols-outlined" aria-hidden="true">restart_alt</i></a>
+      <a href="/datasets/automotive-jit/call-control-operations.json"><span>Z</span><strong>Z_NOTIFY_MES / 3PL</strong><small>Publish committed lifecycle changes to the shop floor or external logistics provider.</small><em>Integration</em><i class="material-symbols-outlined" aria-hidden="true">notifications_active</i></a>
+    </div>
+  </section>
+
+  <section class="dataset-canvas__citation" data-reveal>
+    <div>
+      <p class="dataset-canvas__eyebrow">Assessment lens</p>
+      <h2>The useful Lead question is: what must be undone?</h2>
+    </div>
+    <div class="dataset-canvas__citation-copy">
+      <p>If someone asks how to cancel a JIT call, do not answer only <code>CANC</code> or <code>JITE</code>. First ask which side effects already exist: production, backflush, HU, delivery, EWM task, goods issue, freight, Tier-2 call, confirmation or billing.</p>
+      <p>Then explain the unwind order, logging, restart behavior and physical cut-off. That answer shows process ownership. Transaction memorization merely proves the menu once existed.</p>
+    </div>
+  </section>
+
+  <section class="dataset-canvas__citation" data-reveal>
+    <div>
+      <p class="dataset-canvas__eyebrow">Source boundary</p>
+      <h2>Standard facts + project-oriented synthesis.</h2>
+    </div>
+    <div class="dataset-canvas__citation-copy">
+      <p>Standard action names, transactions, classic BAPIs/RFC, HU functions, status-correction behavior and Next Generation interlinked actions are grounded in SAP Help documentation.</p>
+      <p>The cancellation utility design, example Z-actions, unwind order and scanner UX rules are architecture patterns for assessment and specification work. They are not presented as SAP standard code.</p>
+      <p><strong>Status:</strong> review candidate. Verify the exact product release and customer enhancements before using the details in a real implementation.</p>
+    </div>
+  </section>
+</div>
