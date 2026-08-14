@@ -1,0 +1,529 @@
+id: TOPIC-SAP-MASTER-DATA-GOVERNANCE
+type: research_topic
+title: "SAP Master Data Governance"
+summary: "A practical architecture map of SAP MDG: what it governs, how the main deployment options differ, how governance processes work, and how trusted master data reaches logistics processes."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/"
+source_reviewed_at: "2026-08-14"
+
+business_question: "When should SAP MDG be used, which MDG option fits the landscape, and how should governance, data models, workflows, quality rules, and replication be designed for logistics?"
+
+maturity:
+  gates_complete: 4
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: in_progress
+    synthetic_example: planned
+    ai_evaluation: planned
+
+memory_model:
+  phrase: "Request → Check → Approve → Activate → Replicate → Monitor"
+  data_book: >-
+    In this Lab, MDG is treated as a Data Book: a governed map of which master data exists,
+    who owns it, which rules it must pass, which process can change it, and where the approved
+    version is distributed. "Data Book" is a Lab learning concept, not an official SAP product term.
+  core_idea: >-
+    MDG is not only a maintenance screen. It is a control layer around master data decisions:
+    ownership, workflow, quality, lifecycle, mass change, consolidation, and distribution.
+
+variants:
+  - id: APP-SAP-MDG-S4
+    type: application_component
+    title: "SAP Master Data Governance on SAP S/4HANA"
+    deployment: "SAP S/4HANA Private Cloud Edition or on premises"
+    architecture_role: "Full enterprise-wide, multi-domain MDG"
+    remember: "Broad domains and broad S/4HANA attributes."
+    domains:
+      - "Business Partner, Customer and Supplier"
+      - "Material / Product"
+      - "Financial master data"
+      - "Custom Objects"
+    data_model: "SAP S/4HANA data model with broad application-specific attribute coverage."
+    replication: "Data Replication Framework (DRF) and domain-specific outbound services."
+    modes:
+      - id: VAR-MDG-CLASSIC
+        title: "Classic mode"
+        scope: "Broadest MDG scope, including multi-domain central governance, consolidation, mass processing, and data quality capabilities."
+        technology: "Established S/4HANA MDG framework with Fiori applications, staging, workflow, BRFplus, and DRF."
+      - id: VAR-MDG-CLOUD-READY
+        title: "Cloud-ready mode"
+        scope: "Current scope is Business Partner."
+        technology: "ABAP Cloud, CDS, RAP, cloud-optimized ABAP, Fiori, and integration with selected cloud services."
+        boundary: "It is an alternative mode inside S/4HANA MDG, not the same product as SAP MDG, cloud edition."
+    best_fit: >-
+      Use when the target requires material, financial, custom, or broad customer/supplier application attributes,
+      or when S/4HANA is the natural central governance hub.
+    source_refs:
+      - SRC-SAP-MDG-S4-OVERVIEW
+      - SRC-SAP-MDG-CLASSIC
+      - SRC-SAP-MDG-CLOUD-READY
+      - SRC-SAP-MDG-PORTFOLIO-COMPARISON
+
+  - id: APP-SAP-MDG-CLOUD
+    type: application_component
+    title: "SAP Master Data Governance, cloud edition"
+    deployment: "Public cloud on SAP Business Technology Platform"
+    architecture_role: "Core Business Partner governance and quality in a federated landscape"
+    remember: "Core BP first, public cloud, lower entry barrier."
+    domains:
+      - "Core Business Partner"
+      - "Business Partner Relationships"
+      - "Business Partner Hierarchies"
+    data_model: "One Domain Model for core Business Partner attributes."
+    capabilities:
+      - "Central Governance"
+      - "Consolidation"
+      - "Data Quality Management"
+      - "Replication"
+    replication: "SAP Master Data Integration (MDI) and SOAP."
+    extensibility: "Custom fields can extend Business Partner general data within the supported cloud extensibility boundary."
+    best_fit: >-
+      Use when a public-cloud core data owner for Business Partner fits the target architecture,
+      especially in a federated model where application-specific attributes remain in application owners.
+    not_for: >-
+      Do not position the current cloud edition as a drop-in replacement for S/4HANA MDG when material,
+      financial, custom-object, or broad application-specific governance is required.
+    source_refs:
+      - SRC-SAP-MDG-CE-FEATURES
+      - SRC-SAP-MDG-CE-INTRO
+      - SRC-SAP-MDG-PORTFOLIO-COMPARISON
+
+  - id: APP-S4-PUBLIC-MDG
+    type: application_component
+    title: "Master Data Governance capabilities in SAP S/4HANA Cloud Public Edition"
+    deployment: "SAP S/4HANA Cloud Public Edition"
+    architecture_role: "MDG capabilities embedded in the Public Edition boundary"
+    remember: "Public Edition MDG is a third option, not the cloud edition by another name."
+    domains:
+      - "Business Partner"
+      - "Product"
+    boundary: "Feature scope and roadmap differ from both S/4HANA Private/on-premise MDG and SAP MDG, cloud edition."
+    source_refs:
+      - SRC-SAP-MDG-PORTFOLIO-COMPARISON
+
+capabilities:
+  - id: CAP-MDG-CENTRAL-GOVERNANCE
+    type: capability
+    title: "Central Governance"
+    remember: "Control how master data is created and changed."
+    purpose: "Route master data changes through defined ownership, checks, approvals, activation, and distribution."
+    typical_flow:
+      - "Request"
+      - "Enrich"
+      - "Validate"
+      - "Approve"
+      - "Activate"
+      - "Replicate"
+    source_refs:
+      - SRC-SAP-MDG-CLASSIC
+      - SRC-SAP-MDG-CE-CENTRAL-GOVERNANCE
+
+  - id: CAP-MDG-CONSOLIDATION
+    type: capability
+    title: "Consolidation"
+    remember: "Find duplicates and build the best record."
+    purpose: "Load master data from sources, standardize it, match records, merge duplicates, and calculate a best record."
+    source_refs:
+      - SRC-SAP-MDG-CLASSIC
+      - SRC-SAP-MDG-CE-FEATURES
+
+  - id: CAP-MDG-MASS-PROCESSING
+    type: capability
+    title: "Mass Processing"
+    remember: "Change many governed records without turning Excel into the system of record."
+    purpose: "Apply controlled bulk changes, validation, and activation to many master data records."
+    source_refs:
+      - SRC-SAP-MDG-MASS-PROCESSING
+
+  - id: CAP-MDG-DATA-QUALITY
+    type: capability
+    title: "Data Quality Management"
+    remember: "Measure and enforce data rules."
+    purpose: "Use validation, derivation, quality evaluation, and optional enrichment services to prevent or detect poor master data."
+    source_refs:
+      - SRC-SAP-MDG-CLASSIC
+      - SRC-SAP-MDG-CE-FEATURES
+      - SRC-SAP-MDG-CE-DQM-MICROSERVICES
+
+domains:
+  - id: MD-BP-BUSINESS-PARTNER
+    type: master_data_object
+    title: "Business Partner"
+    business_use: "Shared identity for customers, suppliers, contact persons, relationships, and other partner roles."
+    logistics_relevance: "The same trusted identity can participate in sales, procurement, service, transport, and partner collaboration."
+  - id: MD-BP-CUSTOMER
+    type: master_data_object
+    title: "Customer"
+    business_use: "Customer-specific master data used by sales, delivery, billing, finance, and credit-related processes."
+    logistics_relevance: "Poor customer data can block sales orders, deliveries, tax processing, billing, and shipping."
+  - id: MD-BP-SUPPLIER
+    type: master_data_object
+    title: "Supplier"
+    business_use: "Supplier-specific master data used by sourcing, purchasing, receiving, invoice, and payment processes."
+    logistics_relevance: "Poor supplier data can create purchasing blocks, wrong ordering data, receiving issues, and invoice exceptions."
+  - id: MD-MAT-MATERIAL
+    type: master_data_object
+    title: "Material / Product"
+    business_use: "Shared product and material identity with logistics, planning, sales, purchasing, warehouse, and accounting attributes."
+    logistics_relevance: "It is one of the most cross-functional master data objects in SAP logistics."
+    boundary: "Broad material/product governance is a strength of S/4HANA MDG classic mode, not the current MDG cloud edition scope."
+  - id: MD-FIN-FINANCIAL
+    type: master_data_object
+    title: "Financial Master Data"
+    business_use: "Financial structures and entities required for consistent accounting and reporting."
+    boundary: "Available in S/4HANA MDG classic mode; not part of the current MDG cloud edition Business Partner scope."
+  - id: MD-CUSTOM-OBJECT
+    type: master_data_object
+    title: "Custom Master Data Object"
+    business_use: "Customer-defined master data governed with the MDG framework when standard domains are not sufficient."
+    boundary: "Custom-object governance is part of the S/4HANA MDG classic-mode architecture, not the current cloud edition domain scope."
+
+process_model:
+  central_governance:
+    id: PROC-MDG-CENTRAL-GOVERNANCE
+    title: "Govern a master data change"
+    steps:
+      - id: STEP-MDG-REQUEST
+        title: "Request"
+        detail: "Create a change request or governance process with business context and required data."
+      - id: STEP-MDG-ENRICH
+        title: "Enrich"
+        detail: "Complete the attributes owned by the responsible business or data roles."
+      - id: STEP-MDG-CHECK
+        title: "Validate and derive"
+        detail: "Run rules, derivations, duplicate checks, and required-field checks."
+      - id: STEP-MDG-APPROVE
+        title: "Approve"
+        detail: "Route the process to accountable roles according to workflow and decision rules."
+      - id: STEP-MDG-ACTIVATE
+        title: "Activate"
+        detail: "Move approved data from the governed/staging state into the active master data state."
+      - id: STEP-MDG-REPLICATE
+        title: "Replicate"
+        detail: "Distribute approved data to consuming systems using the chosen replication architecture."
+      - id: STEP-MDG-MONITOR
+        title: "Monitor"
+        detail: "Track process status, data quality, replication errors, and downstream exceptions."
+
+tools:
+  - id: TERM-MDG-CHANGE-REQUEST
+    type: term
+    title: "Change Request"
+    role: "Core process container in classic central governance. It carries data changes, workflow status, and approval context."
+  - id: PLT-SAP-BUSINESS-WORKFLOW
+    type: platform_component
+    title: "SAP Business Workflow"
+    role: "Workflow runtime used by classic MDG governance scenarios."
+  - id: PLT-SAP-BRFPLUS
+    type: platform_component
+    title: "BRFplus"
+    role: "Rule-based workflow decisions such as next step, status, and responsible agents."
+    source_refs:
+      - SRC-SAP-MDG-BRFPLUS-WORKFLOW
+  - id: PLT-SAP-FIORI
+    type: platform_component
+    title: "SAP Fiori"
+    role: "Primary user experience for modern MDG applications and process work."
+  - id: PLT-SAP-DRF
+    type: platform_component
+    title: "Data Replication Framework (DRF)"
+    role: "Replication framework used by S/4HANA MDG to distribute governed master data."
+    source_refs:
+      - SRC-SAP-MDG-DRF
+  - id: PLT-SAP-MDI
+    type: platform_component
+    title: "SAP Master Data Integration (MDI)"
+    role: "Cloud service used by SAP MDG, cloud edition for supported Business Partner replication."
+    source_refs:
+      - SRC-SAP-MDG-CE-FEATURES
+  - id: PLT-SAP-BUILD-PROCESS-AUTOMATION
+    type: platform_component
+    title: "SAP Build Process Automation"
+    role: "Can be integrated with cloud-ready MDG and cloud scenarios for workflow definition or visualization."
+    source_refs:
+      - SRC-SAP-MDG-S4-OVERVIEW
+  - id: PLT-SAP-DQM-MICROSERVICES
+    type: platform_component
+    title: "SAP Data Quality Management, microservices for location data"
+    role: "Optional cloud service for address validation, standardization, correction, and enrichment."
+    commercial_boundary: "Optional and separately licensed."
+    source_refs:
+      - SRC-SAP-MDG-CE-DQM-MICROSERVICES
+
+data_architecture:
+  principle: "Separate core identity from application-specific attributes and assign an authoritative owner to each."
+  classic_mode:
+    staging: "Unapproved changes are held in MDG staging before activation."
+    active_data: "Depending on the domain, active data can reuse S/4HANA application tables or use generated tables."
+    governance_scope: "Define which attributes are governed and which remain read-only or externally owned."
+    source_refs:
+      - SRC-SAP-MDG-DATA-MODEL
+  cloud_edition:
+    core_model: "One Domain Model core Business Partner attributes."
+    federation: "The cloud edition can act as a core data owner while connected applications own richer application attributes."
+    source_refs:
+      - SRC-SAP-MDG-PORTFOLIO-COMPARISON
+      - SRC-SAP-MDG-CE-FEATURES
+
+logistics_use_cases:
+  - id: SCN-MDG-MATERIAL-CREATION
+    type: scenario
+    title: "Govern a new material for procurement, planning, sales, and warehouse use"
+    primary_variant: APP-SAP-MDG-S4
+    path: "Basic identity → logistics attributes → plant/MRP → purchasing → sales → valuation → approval → activation → replication"
+    value: "One controlled creation process reduces missing views, inconsistent units, and late downstream corrections."
+    failure_signals:
+      - "Material exists but cannot be planned in the required plant."
+      - "Purchasing or sales views are missing."
+      - "Unit-of-measure inconsistency creates warehouse or transport conversion errors."
+      - "Valuation data is incomplete and postings fail."
+  - id: SCN-MDG-SUPPLIER-ONBOARDING
+    type: scenario
+    title: "Govern supplier identity and supplier-specific enrichment"
+    path: "Core BP identity → duplicate/address checks → supplier role → purchasing/company data → approval → activation → replication"
+    value: "Separates reliable partner identity from the application data needed by Procure-to-Pay."
+    cloud_boundary: "MDG cloud edition governs core BP; application-specific supplier attributes remain with the appropriate application owner unless supported by the chosen architecture."
+  - id: SCN-MDG-CUSTOMER-ONBOARDING
+    type: scenario
+    title: "Govern customer identity and customer-specific enrichment"
+    path: "Core BP identity → duplicate/address checks → customer role → sales/company data → approval → activation → replication"
+    value: "Reduces downstream order, shipping, billing, tax, and finance exceptions caused by weak customer master data."
+    cloud_boundary: "MDG cloud edition focuses on core BP. Broad S/4HANA customer application attributes require an S/4HANA ownership decision."
+  - id: SCN-MDG-BULK-LOGISTICS-CHANGE
+    type: scenario
+    title: "Controlled mass change after a logistics redesign"
+    path: "Select scope → define field changes → simulate/check → validate → approve if required → activate → monitor"
+    value: "Useful for controlled changes such as plant, purchasing, classification, or partner-data updates when the supported domain and field scope allow it."
+    warning: "Mass processing is governance at scale, not a bypass around ownership and validation."
+
+logistics_dependencies:
+  - process: "Order-to-Cash"
+    depends_on:
+      - "Customer / Business Partner"
+      - "Material / Product"
+      - "Sales organization attributes"
+      - "Shipping-relevant attributes"
+    typical_impact: "Order blocks, wrong partners, shipping issues, pricing/tax inconsistencies, billing exceptions."
+  - process: "Procure-to-Pay"
+    depends_on:
+      - "Supplier / Business Partner"
+      - "Material / Product"
+      - "Purchasing organization attributes"
+      - "Units and ordering data"
+    typical_impact: "PO creation issues, wrong supplier data, receiving exceptions, invoice mismatches."
+  - process: "Plan-to-Produce"
+    depends_on:
+      - "Material / Product"
+      - "Plant/MRP attributes"
+      - "Units"
+      - "Planning parameters"
+    typical_impact: "Planning noise, missing supply proposals, wrong lot sizing, execution delays."
+  - process: "Warehouse and Transportation"
+    depends_on:
+      - "Material / Product"
+      - "Dimensions, weights, units, packaging-related attributes"
+      - "Business Partner addresses and locations"
+    typical_impact: "Warehouse task issues, packing problems, freight planning errors, wrong delivery destinations."
+
+implementation_principles:
+  - id: HEUR-MDG-OWNERSHIP-BEFORE-WORKFLOW
+    type: expert_heuristic
+    statement: "Define the data owner and attribute owner before drawing the approval workflow."
+    why: "A workflow cannot repair unclear accountability; it only automates the confusion."
+  - id: HEUR-MDG-CORE-VS-APPLICATION
+    type: expert_heuristic
+    statement: "Separate core identity from application-specific attributes before selecting the MDG deployment."
+    why: "This is the main boundary between federated core-data governance and a full multi-domain S/4HANA hub."
+  - id: HEUR-MDG-CONSOLIDATE-BEFORE-CENTRALIZE
+    type: expert_heuristic
+    statement: "If the source landscape already contains duplicates, consolidate and define survivorship before declaring a golden record."
+    why: "Central governance controls future change; it does not magically resolve historical duplicates."
+  - id: HEUR-MDG-REPLICATION-AS-DESIGN
+    type: expert_heuristic
+    statement: "Treat replication, key mapping, value mapping, error handling, and monitoring as part of the MDG design."
+    why: "Approved data has no business value if consuming systems receive it late, partially, or with incompatible codes."
+  - id: HEUR-MDG-MINIMUM-GOVERNANCE
+    type: expert_heuristic
+    statement: "Govern only attributes that need central control."
+    why: "Over-centralization creates slow workflows, unnecessary ownership conflicts, and expensive maintenance."
+
+presales_decision_guide:
+  - question: "Do you need Material, Financials, Custom Objects, or broad S/4HANA customer/supplier attributes?"
+    guidance: "Start with MDG on S/4HANA. Current MDG cloud edition is centered on core Business Partner."
+  - question: "Do you mainly need a public-cloud core Business Partner owner in a federated landscape?"
+    guidance: "Evaluate SAP MDG, cloud edition and define which application owns the richer local attributes."
+  - question: "Is the pain duplicate data from many sources?"
+    guidance: "Lead with consolidation, matching, survivorship, and data quality. Do not start with approval workflow."
+  - question: "Is the pain uncontrolled creation and change?"
+    guidance: "Lead with central governance, ownership, change process, validation, and replication."
+  - question: "Is the pain large controlled corrections?"
+    guidance: "Evaluate mass processing with governance and volume behavior."
+  - question: "Does the customer already run S/4HANA MDG?"
+    guidance: "Check classic versus cloud-ready mode before proposing a new architecture. Mode switching has process and application restrictions."
+
+presales_questions:
+  - "Which master data domain creates measurable business pain?"
+  - "Is the main problem creation, change, duplicates, data quality, mass update, distribution, or ownership?"
+  - "Which attributes are core enterprise identity, and which are application-specific?"
+  - "Which system is authoritative today, and which one should be authoritative tomorrow?"
+  - "How many source and consuming systems exist?"
+  - "What are the daily change volumes and peak mass-change volumes?"
+  - "Which approval roles, segregation-of-duties rules, and service levels are required?"
+  - "Which replication technologies and code mappings already exist?"
+  - "Which errors currently block sales orders, purchase orders, planning, warehouse execution, or billing?"
+  - "Is a federated operating model acceptable, or does the customer need a central enterprise-wide hub?"
+
+success_metrics:
+  - id: KPI-MDG-FIRST-TIME-RIGHT
+    title: "First-time-right master data"
+    description: "Share of master data requests completed without rework or downstream correction."
+  - id: KPI-MDG-CYCLE-TIME
+    title: "Governance cycle time"
+    description: "Time from request to approved and usable master data."
+  - id: KPI-MDG-DUPLICATE-RATE
+    title: "Duplicate rate"
+    description: "Rate of duplicate or suspected duplicate records in the governed domain."
+  - id: KPI-MDG-REPLICATION-FAILURE
+    title: "Replication failure rate"
+    description: "Failed or delayed distribution of approved master data to consumers."
+  - id: KPI-MDG-DOWNSTREAM-EXCEPTIONS
+    title: "Master-data-driven process exceptions"
+    description: "Sales, procurement, planning, warehouse, or finance exceptions caused by incorrect or incomplete master data."
+
+failure_modes:
+  - id: FAIL-MDG-FORM-ONLY
+    title: "MDG becomes an expensive form"
+    cause: "The project configures screens and approvals but does not define ownership, data quality, and downstream responsibility."
+  - id: FAIL-MDG-APPROVAL-MAZE
+    title: "Approval maze"
+    cause: "Organization structure is copied into workflow without considering business risk or required turnaround time."
+  - id: FAIL-MDG-GOLDEN-RECORD-BY-SLOGAN
+    title: "Golden record without survivorship"
+    cause: "Teams declare one system authoritative without resolving duplicates, source precedence, and attribute-level ownership."
+  - id: FAIL-MDG-REPLICATION-AFTERTHOUGHT
+    title: "Approved but unusable"
+    cause: "Replication, key/value mapping, monitoring, and consumer readiness are designed after governance."
+  - id: FAIL-MDG-CLOUD-SCOPE-MISMATCH
+    title: "Cloud scope mismatch"
+    cause: "Cloud edition is selected for a requirement that needs material, financial, custom, or broad application-specific attributes."
+  - id: FAIL-MDG-MASS-BYPASS
+    title: "Mass change bypasses governance"
+    cause: "Bulk update is treated as a technical shortcut instead of a governed process with validation, ownership, and auditability."
+
+relations:
+  - subject: APP-SAP-MDG-S4
+    predicate: provides_capability
+    object: CAP-MDG-CENTRAL-GOVERNANCE
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CLASSIC]
+  - subject: APP-SAP-MDG-S4
+    predicate: governs
+    object: MD-MAT-MATERIAL
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CLASSIC, SRC-SAP-MDG-PORTFOLIO-COMPARISON]
+  - subject: APP-SAP-MDG-S4
+    predicate: governs
+    object: MD-BP-BUSINESS-PARTNER
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CLASSIC]
+  - subject: APP-SAP-MDG-CLOUD
+    predicate: governs
+    object: MD-BP-BUSINESS-PARTNER
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CE-FEATURES]
+  - subject: APP-SAP-MDG-CLOUD
+    predicate: integrated_via
+    object: PLT-SAP-MDI
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CE-FEATURES]
+  - subject: APP-SAP-MDG-S4
+    predicate: integrated_via
+    object: PLT-SAP-DRF
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-PORTFOLIO-COMPARISON, SRC-SAP-MDG-DRF]
+  - subject: CAP-MDG-CENTRAL-GOVERNANCE
+    predicate: contains
+    object: PROC-MDG-CENTRAL-GOVERNANCE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: PROC-MDG-CENTRAL-GOVERNANCE
+    predicate: contains
+    object: STEP-MDG-REQUEST
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: STEP-MDG-REQUEST
+    predicate: precedes
+    object: STEP-MDG-CHECK
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: STEP-MDG-CHECK
+    predicate: precedes
+    object: STEP-MDG-APPROVE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: STEP-MDG-APPROVE
+    predicate: precedes
+    object: STEP-MDG-ACTIVATE
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-CLASSIC]
+  - subject: STEP-MDG-ACTIVATE
+    predicate: precedes
+    object: STEP-MDG-REPLICATE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-MAT-MATERIAL
+    predicate: impacts
+    object: "Order-to-Cash / Procure-to-Pay / Plan-to-Produce / Warehouse execution"
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-BP-SUPPLIER
+    predicate: impacts
+    object: "Procure-to-Pay"
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-BP-CUSTOMER
+    predicate: impacts
+    object: "Order-to-Cash"
+    evidence_type: reasoned_interpretation
+    confidence: high
+
+source_refs:
+  - SRC-SAP-MDG-S4-OVERVIEW
+  - SRC-SAP-MDG-CLASSIC
+  - SRC-SAP-MDG-CLOUD-READY
+  - SRC-SAP-MDG-CE-FEATURES
+  - SRC-SAP-MDG-CE-INTRO
+  - SRC-SAP-MDG-PORTFOLIO-COMPARISON
+  - SRC-SAP-MDG-MASS-PROCESSING
+  - SRC-SAP-MDG-DRF
+  - SRC-SAP-MDG-DATA-MODEL
+  - SRC-SAP-MDG-BRFPLUS-WORKFLOW
+  - SRC-SAP-MDG-CE-DQM-MICROSERVICES
+
+tags:
+  - sap
+  - mdg
+  - master-data
+  - data-governance
+  - data-quality
+  - logistics
+  - business-partner
+  - material
+  - integration
+  - presales
