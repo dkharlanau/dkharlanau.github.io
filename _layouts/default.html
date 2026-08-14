@@ -9,8 +9,14 @@
   {% if page.url contains '/labs/' %}
   <link rel="stylesheet" href="{{ '/assets/research-canvas.css' | relative_url }}" />
   {% endif %}
+  {% if page.enterprise_context_graph %}
+  <link rel="stylesheet" href="{{ '/assets/enterprise-context-graph.css' | relative_url }}" />
+  {% endif %}
   {% if page.url contains '/labs/enterprise-context/' %}
   <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/catalog.json' | absolute_url }}" title="Enterprise Context Lab machine-readable catalog" />
+  {% endif %}
+  {% if page.enterprise_context_graph %}
+  <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/sales-order-graph.json' | absolute_url }}" title="Sales Order Determination Graph" />
   {% endif %}
 </head>
 
