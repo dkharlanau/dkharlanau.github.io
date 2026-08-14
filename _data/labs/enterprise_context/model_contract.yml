@@ -128,14 +128,15 @@ modeling_sequence:
 quality_gates:
   hard_errors:
     - "invalid YAML"
-    - "duplicate source ID"
+    - "duplicate source ID with conflicting metadata"
     - "unknown source reference"
     - "unknown relation type"
     - "missing relation endpoint"
     - "unresolved relation endpoint"
     - "duplicate relation triple within one topic"
-  warnings:
     - "entity ID reused with a conflicting type"
+  warnings:
+    - "identical source record repeated across registries"
     - "entity ID prefix does not match its schema type"
     - "documented relation without source_refs"
     - "self-relation without rationale"
