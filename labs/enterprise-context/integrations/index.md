@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
-description: "A practical decision map for SAP logistics integrations: APIs, IDocs, RFC, events, Kafka, queues, files, B2B, Event Mesh, TIBCO, terminology, and master-data distribution."
+description: "A practical decision map for SAP logistics integration: APIs, IDocs, events, queues, Kafka, files, B2B, Event Mesh, TIBCO, and data distribution."
 permalink: /labs/enterprise-context/integrations/
 status: draft
 verified: false
