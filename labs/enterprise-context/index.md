@@ -71,15 +71,69 @@ hide_global_cta: true
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="sales-application-landscape" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Application landscape</p>
       <h2>{{ sales_landscape.title }}</h2>
-      <p>Application components are modeled as separate graph nodes rather than being flattened into “SD”. Relationships are working architecture candidates until they are source-verified.</p>
+      <p>The components below are not eight competing versions of SD. Each owns a different architectural responsibility across CRM, quoting, commerce, ERP execution, orchestration, sourcing, and service.</p>
     </header>
     <div class="research-route-list">
       {% for app in sales_landscape.applications %}
-      <a href="/labs/enterprise-context/data/topics.json"><span>APP</span><strong>{{ app.title }}</strong><small>{{ app.role }}</small><i class="material-symbols-outlined" aria-hidden="true">apps</i></a>
+      <a href="{{ app.official_docs_url }}" target="_blank" rel="noopener"><span>APP</span><strong>{{ app.title }}</strong><small><b>{{ app.architecture_role }}</b> · {{ app.description }} Best fit: {{ app.best_fit }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Decision guide</p>
+      <h2>Choose by responsibility, not by product-name similarity.</h2>
+      <p>Start with the business responsibility that needs an owner. Then decide whether the component is a system of engagement, system of record, commerce channel, quote engine, orchestration layer, or sourcing service.</p>
+    </header>
+    <div class="research-route-list">
+      {% for decision in sales_landscape.decision_guide %}
+      {% assign selected = nil %}
+      {% for app in sales_landscape.applications %}{% if app.id == decision.primary_choice %}{% assign selected = app %}{% endif %}{% endfor %}
+      <a href="{% if selected %}{{ selected.official_docs_url }}{% else %}/labs/enterprise-context/data/topics.json{% endif %}" target="_blank" rel="noopener"><span>→</span><strong>{{ decision.need }}</strong><small>{% if selected %}Primary: {{ selected.title }} · {% endif %}{{ decision.why }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Licensing signals</p>
+      <h2>Architecture has a commercial boundary too.</h2>
+      <p>These are public licensing signals, not a substitute for the customer contract. SAP product use rights, editions, packages, add-ons, digital access, region, and commercial agreements can change the exact entitlement.</p>
+    </header>
+    <div class="research-route-list">
+      {% for app in sales_landscape.applications %}
+      <a href="{{ app.official_commercial_url }}" target="_blank" rel="noopener"><span>LIC</span><strong>{{ app.title }}</strong><small>{{ app.licensing.commercial_model }}{% if app.licensing.metric %} · Metric: {{ app.licensing.metric }}{% endif %}{% if app.licensing.purchase_unit %} · {{ app.licensing.purchase_unit }}{% endif %}{% if app.licensing.minimum_quantity %} · Minimum: {{ app.licensing.minimum_quantity }}{% endif %}{% if app.licensing.note %} · {{ app.licensing.note }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">contract</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Key boundaries</p>
+      <h2>What each component should not silently become.</h2>
+      <p>Most architecture mistakes happen when a product is technically capable of doing something and is therefore promoted to owning the entire process. The graph keeps the principal boundary explicit.</p>
+    </header>
+    <div class="research-route-list">
+      {% for app in sales_landscape.applications %}
+      <a href="{{ app.official_docs_url }}" target="_blank" rel="noopener"><span>!</span><strong>{{ app.title }}</strong><small>{{ app.not_for }}{% if app.limitations and app.limitations.size > 0 %} Key limitation: {{ app.limitations[0] }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Reference patterns</p>
+      <h2>Typical combinations, not mandatory blueprints.</h2>
+      <p>The same products can be combined differently. These paths exist to make the architectural separation memorable before deeper integration modeling starts.</p>
+    </header>
+    <div class="research-route-list">
+      {% for pattern in sales_landscape.architecture_patterns %}
+      <a href="/labs/enterprise-context/data/topics.json"><span>PATH</span><strong>{{ pattern.name }}</strong><small>{{ pattern.path }} · {{ pattern.fit }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       {% endfor %}
     </div>
   </section>
