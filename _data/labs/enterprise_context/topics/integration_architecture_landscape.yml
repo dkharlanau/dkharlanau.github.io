@@ -1,0 +1,715 @@
+id: TOPIC-INTEGRATION-ARCHITECTURE-LANDSCAPE
+type: research_topic
+title: "Integration Architecture for SAP Logistics and Data"
+summary: "A decision map for APIs, IDocs, RFC, events, Kafka, queues, files, B2B, and master-data distribution."
+domain: "Enterprise Integration"
+process_family: "Cross-enterprise logistics and data distribution"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: "2026-08-14"
+reviewed_together_at: "2026-08-14"
+review_note: "Reviewed against current primary documentation from SAP, Apache Kafka, TIBCO, IBM, and Boomi. Architecture preferences are independent synthesis."
+
+business_question: "How should SAP logistics and master-data integrations be designed, and when should APIs, IDocs, RFC, events, Kafka, queues, files, or B2B patterns be used?"
+
+scope:
+  includes:
+    - "SAP S/4HANA logistics integrations across sales, procurement, warehouse, transportation, and adjacent applications."
+    - "Synchronous APIs and remote calls."
+    - "Asynchronous documents, queues, events, and event streams."
+    - "B2B partner integration."
+    - "Master-data governance, replication, synchronization, and distribution."
+    - "SAP and non-SAP middleware commonly found in enterprise landscapes."
+    - "Reliability, observability, security, and data-contract concerns."
+  excludes:
+    - "A complete adapter catalogue."
+    - "Product-specific configuration steps."
+    - "Contract-specific licensing advice."
+    - "A claim that one integration platform is best for every landscape."
+
+maturity:
+  gates_complete: 5
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: planned
+    ai_evaluation: planned
+
+architecture_principles:
+  - "Integration is not a protocol choice. It is a coupling choice."
+  - "Use an API when the caller needs an answer now."
+  - "Use an event when something already happened and several consumers may care."
+  - "Use a business document when reliable delivery of the document is the contract."
+  - "Use a stream when retention, replay, scale, and independent consumers are part of the requirement."
+  - "Use files when the business constraint really is batch. Do not pretend a file is real time."
+  - "Master-data governance and master-data transport are different responsibilities."
+  - "Design retries, duplicates, ordering, reconciliation, and monitoring before choosing middleware."
+  - "Keep transformation at a clear boundary. Do not create a new canonical model for every interface."
+  - "Old does not mean wrong. IDoc is still useful when its semantics fit the problem."
+
+interface_types:
+  - id: INT-HTTP-API
+    title: "HTTP API: REST / OData"
+    interaction: synchronous
+    message_meaning: "Command or query"
+    best_for: "Create, change, read, or validate something when the caller needs an immediate response."
+    logistics_examples:
+      - "Create or change a sales order from a digital channel."
+      - "Read stock or product data for a user-facing application."
+      - "Call a carrier or external service for a rate, label, or booking response."
+    strengths:
+      - "Clear request and response contract."
+      - "Good for interactive processes and controlled service access."
+      - "Works well with API gateways, authentication, throttling, and versioning."
+    weaknesses:
+      - "Creates runtime dependency on the receiver."
+      - "Long synchronous chains become fragile."
+      - "Polling APIs for changes creates load and delay."
+    lead_rule: "Choose it for commands and queries, not as the default answer to every integration."
+    common_platforms: ["SAP Integration Suite API Management", "SAP Cloud Integration", "IBM App Connect Enterprise", "Boomi"]
+    source_refs: [SRC-SAP-INTEGRATION-SUITE, SRC-IBM-APP-CONNECT, SRC-BOOMI-SAP]
+
+  - id: INT-SOAP
+    title: "SOAP Web Service"
+    interaction: synchronous_or_asynchronous
+    message_meaning: "Contract-first service message"
+    best_for: "Existing enterprise-service contracts, SAP master-data services, or landscapes where WS-* style contracts are already established."
+    logistics_examples:
+      - "Business Partner or master-data replication through existing enterprise services."
+      - "Legacy service integration where the WSDL is the stable contract."
+    strengths:
+      - "Explicit schema and service contract."
+      - "Mature tooling in SAP and enterprise middleware."
+    weaknesses:
+      - "Heavier contract and XML payloads."
+      - "Less convenient for lightweight web and mobile consumers."
+    lead_rule: "Do not replace a stable SOAP service only because REST looks newer. Replace it when the business or operating model benefits."
+    common_platforms: ["SAP Integration Suite", "TIBCO BusinessWorks", "IBM App Connect Enterprise"]
+    source_refs: [SRC-SAP-INTEGRATION-SUITE, SRC-SAP-MDI-SYNC, SRC-IBM-APP-CONNECT]
+
+  - id: INT-IDOC
+    title: "IDoc / ALE"
+    interaction: asynchronous
+    message_meaning: "SAP business document"
+    best_for: "Reliable SAP-centric document exchange where an IDoc already represents the business message well."
+    logistics_examples:
+      - "Sales, purchasing, delivery, shipment, invoice, or master-data documents in brownfield SAP landscapes."
+      - "Partner or middleware flows where SAP IDoc remains the stable ERP boundary."
+    strengths:
+      - "Mature asynchronous SAP business-document model."
+      - "Operational monitoring and reprocessing are familiar in many SAP estates."
+      - "Good fit for decoupling sender processing from receiver availability."
+    weaknesses:
+      - "SAP-specific structure can leak into external systems."
+      - "Extensions and mappings can become hard to govern."
+      - "Not a natural interface for modern frontend consumers."
+    lead_rule: "Keep IDoc when it is a good business document. Mediate it at the boundary instead of forcing every external consumer to understand SAP."
+    common_platforms: ["SAP S/4HANA", "SAP Integration Suite", "TIBCO BusinessWorks", "IBM App Connect Enterprise"]
+    source_refs: [SRC-SAP-IDOC-ADAPTER, SRC-TIBCO-BW-SAP, SRC-SAP-MDG-REPLICATION]
+
+  - id: INT-RFC-BAPI
+    title: "RFC / BAPI"
+    interaction: synchronous
+    message_meaning: "Remote function call"
+    best_for: "Trusted SAP and brownfield integrations where an established remote business function must be called."
+    logistics_examples:
+      - "Existing real-time BAPI-based updates or queries."
+      - "Internal SAP integration behind an integration layer."
+    strengths:
+      - "Direct access to established SAP business functions."
+      - "Large installed base and mature SAP tooling."
+    weaknesses:
+      - "Tighter technical coupling to SAP runtime and function signatures."
+      - "Harder external security boundary than an API façade."
+      - "Poor default for broad cloud or partner exposure."
+    lead_rule: "Use it deliberately inside the SAP integration zone. For new external contracts, prefer a released API when one fits."
+    common_platforms: ["SAP Integration Suite", "TIBCO BusinessWorks", "IBM App Connect Enterprise"]
+    source_refs: [SRC-SAP-INTEGRATION-CONNECTIVITY, SRC-TIBCO-BW-SAP, SRC-IBM-S4HANA]
+
+  - id: INT-BUSINESS-EVENT
+    title: "Business Event"
+    interaction: asynchronous
+    message_meaning: "A fact that already happened"
+    best_for: "Notify independent consumers about a business state change without making the producer know each consumer."
+    logistics_examples:
+      - "Order changed."
+      - "Delivery completed."
+      - "Goods movement posted."
+      - "Master-data object changed and downstream projections should react."
+    strengths:
+      - "Loose runtime coupling."
+      - "One producer can feed many consumers."
+      - "Supports reactive extensions and event-driven processes."
+    weaknesses:
+      - "Eventual consistency must be accepted and designed."
+      - "Consumers must handle duplicates, late delivery, and missing context."
+      - "Events become useless if names and payload contracts are vague."
+    lead_rule: "An event says what happened. Do not disguise a command as an event just to call the architecture event-driven."
+    common_platforms: ["SAP Event Mesh", "SAP Integration Suite, Advanced Event Mesh", "TIBCO EMS"]
+    source_refs: [SRC-SAP-EVENT-MESH, SRC-SAP-ADVANCED-EVENT-MESH, SRC-TIBCO-EMS]
+
+  - id: INT-KAFKA-STREAM
+    title: "Kafka Event Stream"
+    interaction: asynchronous
+    message_meaning: "Retained stream record"
+    best_for: "High-volume event streams where consumers need independent offsets, retention, replay, and partitioned scale."
+    logistics_examples:
+      - "Large telemetry or tracking streams."
+      - "Operational events feeding several data products or analytics consumers."
+      - "Event backbone shared by non-SAP services."
+    strengths:
+      - "Records can be retained and consumed again."
+      - "Partitions support scale and ordering within a partition."
+      - "Consumer groups support independent processing."
+    weaknesses:
+      - "It does not provide business mapping and orchestration by itself."
+      - "Partition key and schema design are architecture decisions, not plumbing details."
+      - "Operational platform ownership is significant."
+    lead_rule: "Kafka is a durable stream, not an ESB. Add mediation only where mediation is needed."
+    common_platforms: ["Apache Kafka", "SAP Integration Suite Kafka Adapter"]
+    source_refs: [SRC-APACHE-KAFKA, SRC-SAP-KAFKA-ADAPTER]
+
+  - id: INT-QUEUE
+    title: "Queue: JMS / AMQP"
+    interaction: asynchronous
+    message_meaning: "Work or message waiting for a consumer"
+    best_for: "Reliable asynchronous handoff when the receiver can be temporarily unavailable or processing must be buffered."
+    logistics_examples:
+      - "Queue outbound work to an external execution system."
+      - "Buffer warehouse or partner messages during a receiver outage."
+      - "Decouple slow downstream processing from an SAP transaction."
+    strengths:
+      - "Back-pressure and buffering."
+      - "Point-to-point delivery is simple to reason about."
+      - "Can support persistence, acknowledgement, retry, and dead-letter patterns."
+    weaknesses:
+      - "Queue backlog can hide business delay."
+      - "Ordering and retry rules need explicit design."
+      - "A broker does not solve data mapping or business ownership."
+    lead_rule: "A queue protects the process from temporary receiver failure. It does not remove the need for reconciliation."
+    common_platforms: ["SAP Event Mesh", "SAP Integration Suite", "TIBCO EMS", "IBM MQ"]
+    source_refs: [SRC-SAP-INTEGRATION-CONNECTIVITY, SRC-TIBCO-EMS, SRC-IBM-APP-CONNECT]
+
+  - id: INT-FILE
+    title: "File / SFTP"
+    interaction: batch
+    message_meaning: "Batch data set"
+    best_for: "Bulk, scheduled, or partner-constrained exchange where minutes or hours are acceptable."
+    logistics_examples:
+      - "Daily inventory or planning extract."
+      - "Carrier or supplier file where no better online interface exists."
+      - "Initial data load or controlled bulk migration."
+    strengths:
+      - "Simple interoperability."
+      - "Good for large batch payloads and low-frequency exchange."
+      - "Useful when partner technology is limited."
+    weaknesses:
+      - "Weak real-time behavior."
+      - "Partial files, duplicates, naming, archive, and restart rules become application logic."
+      - "File folders easily become an ungoverned integration landscape."
+    lead_rule: "Files are acceptable when batch is a real requirement. Add schema, checksum, archive, idempotency, and reconciliation."
+    common_platforms: ["SAP Integration Suite", "TIBCO BusinessWorks", "IBM App Connect Enterprise"]
+    source_refs: [SRC-SAP-INTEGRATION-CONNECTIVITY, SRC-IBM-APP-CONNECT]
+
+  - id: INT-B2B
+    title: "B2B / EDI"
+    interaction: asynchronous_or_mixed
+    message_meaning: "Trading-partner business document"
+    best_for: "Supplier, customer, carrier, and logistics-provider integration where partner agreements, acknowledgements, and document standards matter."
+    logistics_examples:
+      - "Purchase order and confirmation."
+      - "Advance shipping notice."
+      - "Invoice and status exchange."
+    strengths:
+      - "Explicit partner and document agreements."
+      - "Supports external standards and partner-specific communication."
+      - "Separates business-partner governance from internal application logic."
+    weaknesses:
+      - "Partner variants create mapping and onboarding cost."
+      - "Security certificates and acknowledgements need lifecycle management."
+      - "A shared standard still needs semantic agreement."
+    lead_rule: "Treat B2B as partner lifecycle plus message exchange, not just another adapter."
+    common_platforms: ["SAP Integration Suite Trading Partner Management", "TIBCO BusinessWorks", "IBM App Connect Enterprise"]
+    source_refs: [SRC-SAP-TPM, SRC-IBM-APP-CONNECT]
+
+platforms:
+  - id: PLT-SAP-INTEGRATION-SUITE
+    title: "SAP Integration Suite"
+    platform_type: "iPaaS / mediation / API / B2B"
+    architecture_role: "Connect, transform, route, orchestrate, expose, and govern integrations across SAP and non-SAP systems."
+    best_fit:
+      - "SAP-heavy hybrid landscapes."
+      - "Protocol mediation and message transformation."
+      - "API lifecycle and security policies."
+      - "B2B partner integration."
+      - "Connecting ERP interfaces to event brokers or Kafka."
+    strengths:
+      - "Broad SAP and non-SAP connectivity."
+      - "Cloud Integration, API capabilities, B2B capabilities, and event capabilities share one SAP integration portfolio."
+      - "Current connectivity includes HTTPS, SFTP, RFC, JMS, AMQP, Kafka, Event Mesh, RabbitMQ, and many application connectors."
+    trade_offs:
+      - "A central integration layer can become a bottleneck if every business rule is moved into it."
+      - "Complex mappings and orchestration create middleware ownership and testing cost."
+      - "It should not become the system of record."
+    not_for: "Do not use it as a database, master-data governance system, or excuse to centralize every business decision."
+    remember: "Integration Suite = mediation and integration lifecycle."
+    source_refs: [SRC-SAP-INTEGRATION-SUITE, SRC-SAP-CLOUD-INTEGRATION-CONCEPTS, SRC-SAP-INTEGRATION-CONNECTIVITY, SRC-SAP-TPM]
+
+  - id: PLT-SAP-EVENT-MESH
+    title: "SAP Event Mesh"
+    platform_type: "Event broker"
+    architecture_role: "Publish and consume business events with asynchronous, decoupled communication."
+    best_fit:
+      - "SAP business events and extension scenarios."
+      - "Low to moderate event volumes within the current Integration Suite Event Mesh capability."
+      - "Queue and topic based decoupling."
+    strengths:
+      - "Natural SAP event integration."
+      - "Producer and consumer do not need a direct runtime dependency."
+      - "Good entry point for event-driven SAP extensions."
+    trade_offs:
+      - "It is not a mapping and orchestration engine."
+      - "Eventual consistency and consumer recovery are still application responsibilities."
+      - "Current SAP guidance separates its scale model from Advanced Event Mesh."
+    not_for: "Do not use it to hide synchronous commands or to perform heavy transformation."
+    remember: "Event Mesh = decouple SAP business events."
+    source_refs: [SRC-SAP-EVENT-MESH, SRC-SAP-INTEGRATION-SUITE-EVENT-MESH, SRC-SAP-EVENT-MESH-BRIDGE]
+
+  - id: PLT-SAP-ADVANCED-EVENT-MESH
+    title: "SAP Integration Suite, Advanced Event Mesh"
+    platform_type: "Distributed event-streaming and event-management platform"
+    architecture_role: "Operate a distributed event mesh with brokers, event management, monitoring, and higher event scale."
+    best_fit:
+      - "Enterprise-wide event-driven architecture."
+      - "High event volumes and broader landscape coverage."
+      - "Multiple broker nodes and distributed routing."
+      - "Event governance and discovery at larger scale."
+    strengths:
+      - "Distributed event-mesh architecture."
+      - "Event streaming, event management, and monitoring on one platform."
+      - "Can bridge with the Event Mesh capability for growth paths."
+    trade_offs:
+      - "More platform and topology decisions than a small single-broker use case."
+      - "Still not a substitute for integration-flow transformation or business orchestration."
+    not_for: "Do not select it only because it is the larger product. Select it when distribution, scale, topology, and event governance require it."
+    remember: "Advanced Event Mesh = distributed enterprise event backbone."
+    source_refs: [SRC-SAP-ADVANCED-EVENT-MESH, SRC-SAP-EVENT-MESH-BRIDGE]
+
+  - id: PLT-APACHE-KAFKA
+    title: "Apache Kafka"
+    platform_type: "Distributed event streaming platform"
+    architecture_role: "Store and distribute retained streams through partitioned topics for independent consumers."
+    best_fit:
+      - "High-throughput event and data streams."
+      - "Replayable history."
+      - "Several independent consumer groups."
+      - "Data platform and microservice ecosystems already standardized on Kafka."
+    strengths:
+      - "Retention and replay are first-class concepts."
+      - "Partitioning supports parallel scale."
+      - "Ordering is defined within a partition."
+    trade_offs:
+      - "No native SAP business semantics."
+      - "Schema, partition key, retention, security, and operations need platform governance."
+      - "Transformation and process orchestration normally belong elsewhere."
+    not_for: "Do not use Kafka as a universal replacement for APIs, IDocs, ESB flows, or a master-data hub."
+    remember: "Kafka = retained stream and replay."
+    source_refs: [SRC-APACHE-KAFKA, SRC-SAP-KAFKA-ADAPTER]
+
+  - id: PLT-TIBCO-BW
+    title: "TIBCO ActiveMatrix BusinessWorks"
+    platform_type: "Enterprise integration / ESB-style runtime"
+    architecture_role: "Route, transform, and orchestrate integrations, including SAP through IDoc and RFC/BAPI adapters."
+    best_fit:
+      - "Brownfield enterprises where TIBCO already owns integration flows."
+      - "Hybrid SAP and non-SAP mediation."
+      - "Existing TIBCO operational skills and governance."
+    strengths:
+      - "Mature enterprise integration model."
+      - "SAP plug-in supports IDoc and RFC/BAPI patterns."
+      - "Can bridge several protocols and application types."
+    trade_offs:
+      - "Extending a large central ESB can increase shared coupling."
+      - "New event and API products should not automatically be forced through legacy flow patterns."
+      - "Licensing, runtime, and skills are separate platform commitments."
+    not_for: "Do not migrate a stable TIBCO flow only for fashion, but do not make the existing ESB the automatic owner of every new event or API."
+    remember: "BusinessWorks = mediation and orchestration in many brownfield estates."
+    source_refs: [SRC-TIBCO-BW-SAP]
+
+  - id: PLT-TIBCO-EMS
+    title: "TIBCO Enterprise Message Service"
+    platform_type: "Enterprise message broker"
+    architecture_role: "Provide point-to-point queues and publish-subscribe topics using the JMS/Jakarta Messaging model."
+    best_fit:
+      - "Reliable queued messaging in an existing TIBCO estate."
+      - "Buffering and decoupling BusinessWorks and other JMS consumers."
+      - "Established enterprise messaging standards."
+    strengths:
+      - "Queue and topic semantics are simple and mature."
+      - "Fits existing JMS-based applications."
+    trade_offs:
+      - "It is messaging infrastructure, not transformation logic."
+      - "Platform ownership remains even if message producers are simple."
+    not_for: "Do not confuse EMS with BusinessWorks. One moves messages; the other can transform and orchestrate them."
+    remember: "EMS = JMS queues and topics."
+    source_refs: [SRC-TIBCO-EMS]
+
+  - id: PLT-IBM-APP-CONNECT
+    title: "IBM App Connect Enterprise + IBM MQ"
+    platform_type: "Enterprise integration plus messaging"
+    architecture_role: "Use App Connect for routing and transformation and MQ for reliable enterprise messaging where IBM is already a strategic platform."
+    best_fit:
+      - "Large brownfield estates with IBM MQ."
+      - "SAP plus mainframe, legacy, file, SOAP, REST, and JMS integration."
+      - "Organizations with established IBM integration operations."
+    strengths:
+      - "Broad protocol and data-format support."
+      - "SAP connectivity exists alongside MQ, JMS, REST, SOAP, and file patterns."
+    trade_offs:
+      - "Two platform responsibilities must stay clear: integration flows and message transport."
+      - "Central middleware can accumulate transformation debt."
+    not_for: "Do not introduce it only to copy an existing SAP-native pattern when the organization has no IBM platform reason."
+    remember: "App Connect = flows; MQ = reliable messages."
+    source_refs: [SRC-IBM-APP-CONNECT, SRC-IBM-S4HANA]
+
+  - id: PLT-BOOMI
+    title: "Boomi Enterprise Platform"
+    platform_type: "iPaaS / connector-driven integration"
+    architecture_role: "Connect SAP with cloud and enterprise applications through managed integration flows and connectors."
+    best_fit:
+      - "Enterprises already standardized on Boomi."
+      - "SaaS-heavy integration portfolios."
+      - "Connector-driven integration with SAP as one important system among many."
+    strengths:
+      - "Cloud integration operating model and packaged connectivity."
+      - "SAP-specific connector options are available."
+    trade_offs:
+      - "SAP-specific semantics still need SAP knowledge."
+      - "Platform standardization can become vendor lock-in if every interface is shaped around one tool."
+    not_for: "Do not choose an iPaaS only by connector count. Check operating model, SAP semantics, observability, security, and lifecycle ownership."
+    remember: "Boomi = iPaaS option when the enterprise platform standard is broader than SAP."
+    source_refs: [SRC-BOOMI-SAP]
+
+decision_guide:
+  - need: "A user or channel must create or change an SAP object and needs the result now."
+    primary_pattern: "HTTP API"
+    preferred_stack: "Released SAP API -> API Management / Integration Suite when mediation or governance is needed"
+    why: "The interaction is a command with an immediate result."
+    avoid: "Do not publish an event and wait for someone to guess whether the command succeeded."
+
+  - need: "SAP must send a reliable business document and the receiver can process later."
+    primary_pattern: "IDoc or queued business document"
+    preferred_stack: "S/4HANA -> IDoc -> Integration Suite / existing middleware -> receiver"
+    why: "The document is the unit of work and temporary receiver downtime should not block the SAP transaction."
+    avoid: "Do not replace a stable asynchronous document with a long synchronous API chain."
+
+  - need: "Several consumers need to react when a logistics state changes."
+    primary_pattern: "Business event"
+    preferred_stack: "S/4HANA event -> Event Mesh or Advanced Event Mesh -> independent consumers"
+    why: "The producer should publish the fact once without knowing every consumer."
+    avoid: "Do not make the producer call each consumer point to point."
+
+  - need: "Consumers need replay, retained history, partitioned throughput, and independent offsets."
+    primary_pattern: "Kafka stream"
+    preferred_stack: "Producer -> Kafka -> consumer groups; Integration Suite only where protocol or semantic mediation is needed"
+    why: "Retention and replay are part of the requirement, not an implementation detail."
+    avoid: "Do not turn Kafka into a central orchestration engine."
+
+  - need: "A supplier, customer, or carrier has partner-specific protocols and document agreements."
+    primary_pattern: "B2B / EDI"
+    preferred_stack: "Trading Partner Management + Cloud Integration, or the established enterprise B2B platform"
+    why: "The problem includes partner onboarding, agreements, standards, security, and acknowledgements."
+    avoid: "Do not hard-code every partner variant in ERP."
+
+  - need: "A low-frequency partner or batch process can only exchange files."
+    primary_pattern: "File / SFTP"
+    preferred_stack: "SFTP -> integration layer -> controlled import/export"
+    why: "Batch is acceptable and interoperability is more important than immediacy."
+    avoid: "Do not call a polling folder near-real-time architecture."
+
+  - need: "Master data must be governed in one SAP hub and distributed to selected receivers."
+    primary_pattern: "MDG + DRF"
+    preferred_stack: "Governed change -> DRF replication model and filters -> target interface"
+    why: "Governance, receiver selection, key mapping, and replication status are first-class requirements."
+    avoid: "Do not broadcast every field of every master record to every system."
+
+  - need: "Several SAP cloud products need a consistent shared master-data view."
+    primary_pattern: "SAP Master Data Integration"
+    preferred_stack: "Applications -> MDI / One Domain Model -> distribution models -> consumers"
+    why: "MDI is a central synchronization hub with initial and delta synchronization."
+    avoid: "Do not mistake MDI for master-data governance or data-quality workflow."
+
+  - need: "A trusted brownfield SAP integration already depends on an RFC/BAPI."
+    primary_pattern: "RFC / BAPI"
+    preferred_stack: "Keep behind an integration boundary; expose a modern external API only when needed"
+    why: "The existing function may be stable and operationally understood."
+    avoid: "Do not expose raw RFC as the default public enterprise interface."
+
+logistics_patterns:
+  - id: PATTERN-O2C
+    title: "Order-to-Cash"
+    path: "Channel / customer -> command or B2B document -> S/4HANA -> business events -> fulfillment and downstream consumers"
+    typical_interfaces:
+      - "API for interactive order create/change and status query."
+      - "IDoc or B2B document for asynchronous customer or partner orders."
+      - "Events for order, delivery, goods issue, or billing state changes when several consumers need the fact."
+    lead_focus:
+      - "Who owns the order?"
+      - "Does the caller require an immediate committed response?"
+      - "Which status is authoritative?"
+      - "How are duplicate orders prevented?"
+      - "How is an asynchronous failure visible to sales operations?"
+
+  - id: PATTERN-P2P
+    title: "Procure-to-Pay"
+    path: "S/4HANA purchasing -> supplier channel / network -> confirmations and logistics documents -> receipt and invoice processes"
+    typical_interfaces:
+      - "B2B or network integration for purchase orders, confirmations, shipping notices, and invoices."
+      - "API for interactive supplier or service calls."
+      - "IDoc for established SAP-centric partner flows."
+      - "Events for internal consumers that need procurement or receipt state changes."
+    lead_focus:
+      - "Partner agreement and acknowledgement semantics."
+      - "Which message means accepted versus technically received?"
+      - "How are supplier retries and duplicate documents handled?"
+      - "Where is partner-specific mapping owned?"
+
+  - id: PATTERN-WAREHOUSE
+    title: "Warehouse Execution"
+    path: "ERP / EWM -> execution tasks -> scanner or automation -> confirmations -> inventory and delivery state"
+    typical_interfaces:
+      - "APIs for interactive device or automation commands where immediate response is required."
+      - "Queues for reliable buffering when execution systems must survive short outages."
+      - "Events for state propagation and downstream visibility."
+    lead_focus:
+      - "Latency and offline tolerance."
+      - "Sequence requirements for the same warehouse object."
+      - "What happens when confirmation is duplicated?"
+      - "How is physical execution reconciled with ERP state?"
+
+  - id: PATTERN-TRANSPORT
+    title: "Transportation and Tracking"
+    path: "S/4HANA / TM -> carrier or logistics network -> booking and execution -> tracking events -> customer and planning consumers"
+    typical_interfaces:
+      - "API for rates, booking, labels, or other request-response interactions."
+      - "B2B for carriers with standardized document exchange."
+      - "Event stream for high-volume tracking signals."
+      - "Files only where the carrier integration constraint is really batch."
+    lead_focus:
+      - "Request-response versus status event."
+      - "External correlation IDs."
+      - "Out-of-order tracking events."
+      - "Replay and retention when several consumers need history."
+
+data_distribution:
+  title: "Master Data Distribution"
+  principle: "First define who owns the master record. Then choose how it is distributed."
+  responsibilities:
+    - id: DATA-GOVERNANCE
+      title: "Governance"
+      owner_options: ["SAP Master Data Governance", "Application-owned governance"]
+      job: "Approve, validate, steward, and control the authoritative record."
+      rule: "Governance decides what is correct. Transport does not."
+      source_refs: [SRC-SAP-MDG-REPLICATION]
+
+    - id: DATA-SAP-DISTRIBUTION
+      title: "SAP replication"
+      owner_options: ["Data Replication Framework"]
+      job: "Select target systems, filter records, execute replication, monitor status, and support key/value mapping."
+      rule: "Use DRF when SAP-native controlled distribution is the requirement."
+      source_refs: [SRC-SAP-DRF, SRC-SAP-MDG-REPLICATION]
+
+    - id: DATA-CROSS-PRODUCT-SYNC
+      title: "Cross-product synchronization"
+      owner_options: ["SAP Master Data Integration"]
+      job: "Synchronize supported master-data models through a central hub using One Domain Model integration models."
+      rule: "Use MDI when participating applications support the model and the requirement is synchronization, not governance."
+      source_refs: [SRC-SAP-MDI-SYNC, SRC-SAP-MDI-MODELS, SRC-SAP-MDI-GUIDANCE]
+
+    - id: DATA-PROTOCOL-MEDIATION
+      title: "Protocol and semantic mediation"
+      owner_options: ["SAP Integration Suite", "Enterprise integration platform"]
+      job: "Transform, route, secure, and connect master-data messages where sender and receiver interfaces do not match."
+      rule: "Add mediation where a boundary needs it. Do not insert middleware only to draw another box."
+      source_refs: [SRC-SAP-MDI-GUIDANCE, SRC-SAP-INTEGRATION-SUITE]
+
+  distribution_rules:
+    - "Identify the authoritative source for each object and attribute."
+    - "Separate initial load from delta/change processing."
+    - "Send only the data a consumer needs."
+    - "Define key mapping and value mapping explicitly."
+    - "Make receivers idempotent where duplicate delivery is possible."
+    - "Track source timestamp, message ID, object key, and correlation ID."
+    - "Reconcile counts and business keys, not only technical message status."
+    - "Version contracts and plan for additive and breaking schema changes."
+    - "Define what happens when a target is offline for hours or days."
+    - "Protect personal and sensitive master data by distribution purpose."
+
+  reference_patterns:
+    - name: "Governed SAP hub"
+      path: "MDG change request -> approved master record -> DRF -> filtered target systems"
+      best_fit: "Central SAP governance with controlled replication."
+      risk: "Treating successful outbound processing as proof that every receiver applied the record correctly."
+
+    - name: "SAP cloud synchronization"
+      path: "Source application -> SAP Master Data Integration -> distribution model -> supported consumers"
+      best_fit: "Cross-product synchronization around SAP One Domain Model."
+      risk: "Assuming every application-specific attribute exists in the shared integration model."
+
+    - name: "Heterogeneous consumer"
+      path: "Authoritative source -> Integration Suite / enterprise middleware -> consumer-specific API, service, IDoc, event, or file"
+      best_fit: "Non-SAP or custom receivers that need mediation."
+      risk: "Building a giant canonical object that becomes harder to change than the source systems."
+
+    - name: "Reactive read model"
+      path: "Governed change -> replication succeeds -> event -> consumer updates local projection"
+      best_fit: "Fast local reads where a consumer owns a derived projection."
+      risk: "Using the event payload as the only master record without recovery or reconciliation."
+
+reliability_controls:
+  - id: REL-IDEMPOTENCY
+    title: "Idempotency"
+    question: "If the same message arrives twice, will the business result still be correct?"
+    design_hint: "Use stable business keys or message IDs and store processing state where needed."
+
+  - id: REL-RETRY
+    title: "Retry and backoff"
+    question: "Which failures are temporary, and how long should the sender retry?"
+    design_hint: "Retry transport failures. Do not endlessly retry a business validation error."
+
+  - id: REL-DLQ
+    title: "Dead-letter / error queue"
+    question: "Where does a message go after automatic retry is exhausted?"
+    design_hint: "Keep enough context to diagnose, correct, and safely reprocess it."
+
+  - id: REL-ORDERING
+    title: "Ordering"
+    question: "Which business key really needs order: all messages, one order, one delivery, or one material?"
+    design_hint: "Prefer ordering by business key. Global ordering destroys parallelism."
+
+  - id: REL-DELIVERY
+    title: "Delivery semantics"
+    question: "What does success mean: accepted by broker, delivered to consumer, or committed in the target business object?"
+    design_hint: "Do not sell middleware acknowledgement as business completion."
+
+  - id: REL-RECONCILIATION
+    title: "Reconciliation"
+    question: "How do we prove the source and target are still consistent tomorrow?"
+    design_hint: "Use business-key reconciliation, counts, status comparison, and controlled replay."
+
+  - id: REL-SCHEMA
+    title: "Schema evolution"
+    question: "Can an old consumer survive a new optional field or a changed enum?"
+    design_hint: "Version breaking changes and prefer backward-compatible additions."
+
+  - id: REL-OBSERVABILITY
+    title: "Observability"
+    question: "Can support trace one business document across ERP, middleware, broker, and target?"
+    design_hint: "Use correlation IDs, business keys, timestamps, technical status, and searchable error context."
+
+  - id: REL-SECURITY
+    title: "Security"
+    question: "Who can call, publish, subscribe, read payloads, and replay messages?"
+    design_hint: "Apply least privilege, strong identities, secret and certificate lifecycle, encryption, and payload minimization."
+
+  - id: REL-TIMEOUT
+    title: "Timeout and circuit protection"
+    question: "What happens to the business process when a synchronous dependency is slow?"
+    design_hint: "Keep timeouts explicit and move work asynchronous when immediate completion is not required."
+
+anti_patterns:
+  - title: "The synchronous chain"
+    symptom: "A user request calls five systems before it can commit."
+    why_it_hurts: "Availability and latency multiply across the chain."
+    better_move: "Keep only the steps required for the immediate decision synchronous. Move notifications and downstream work to asynchronous processing."
+
+  - title: "Event-driven by renaming"
+    symptom: "A producer publishes an 'event' that actually tells one consumer to perform a command."
+    why_it_hurts: "The architecture is still coupled, but the contract is less clear."
+    better_move: "Name facts as events and commands as commands."
+
+  - title: "Kafka as ESB"
+    symptom: "Every mapping, routing rule, business decision, and workflow is pushed into the streaming platform."
+    why_it_hurts: "Stream transport and process orchestration become one hard-to-own platform."
+    better_move: "Use Kafka for retained streams. Put business ownership in services and mediation where it belongs."
+
+  - title: "Event Mesh as transformation engine"
+    symptom: "Large payload transformations and orchestration are designed inside the event backbone."
+    why_it_hurts: "Broker responsibility becomes blurred."
+    better_move: "Keep broker contracts small and stable. Transform at producer, consumer, or integration boundary."
+
+  - title: "Integration Suite as system of record"
+    symptom: "Middleware stores business state because no application wants to own it."
+    why_it_hurts: "Recovery, governance, and ownership become unclear."
+    better_move: "Put durable business state in the owning application or purpose-built data service."
+
+  - title: "Full master-data broadcast"
+    symptom: "Every material or business-partner field goes to every target."
+    why_it_hurts: "Coupling, privacy exposure, and change impact grow without business value."
+    better_move: "Use distribution filters and consumer-specific contracts."
+
+  - title: "The file zoo"
+    symptom: "Folders, naming conventions, manual restarts, and duplicate files become the integration platform."
+    why_it_hurts: "Operations depend on tribal knowledge."
+    better_move: "Keep files only where batch fits, then add schema, control totals, archive, retry, and reconciliation."
+
+  - title: "Technical green means business green"
+    symptom: "Middleware says delivered, so the business assumes the target is correct."
+    why_it_hurts: "A target can accept transport and still reject or misapply business data."
+    better_move: "Monitor both technical delivery and business application status."
+
+assessment_cards:
+  - question: "API or event?"
+    answer: "API when a caller asks for something and needs the result. Event when a fact already happened and consumers can react independently. Many good designs use both."
+
+  - question: "Event Mesh or Kafka?"
+    answer: "Use Event Mesh for SAP-oriented event distribution and decoupled application events. Use Kafka when retained replayable streams, partitions, consumer offsets, and high throughput are central. Do not force one technology to copy the other's operating model."
+
+  - question: "Event Mesh or Advanced Event Mesh?"
+    answer: "Current SAP guidance positions the Integration Suite Event Mesh capability for a single broker and low to moderate volumes, while Advanced Event Mesh provides a distributed mesh for higher volumes and broader enterprise coverage."
+
+  - question: "Is IDoc obsolete?"
+    answer: "No. IDoc is still useful for asynchronous SAP business documents. The question is whether the business document and operational model fit the new interface. A modern external consumer should not be forced to learn SAP IDoc structure."
+
+  - question: "RFC/BAPI or API?"
+    answer: "Keep RFC/BAPI where a trusted brownfield integration is stable. For a new external contract, prefer a released API when it covers the business requirement and gives a cleaner security and lifecycle boundary."
+
+  - question: "Where does TIBCO fit?"
+    answer: "BusinessWorks is an integration and orchestration runtime; EMS is a message broker. In an existing TIBCO estate they can remain a strong brownfield integration layer. Do not extend the old central ESB model automatically to every new API or event."
+
+  - question: "How should master data be distributed?"
+    answer: "Start with ownership and governance. Use MDG and DRF for governed SAP replication, MDI for supported cross-product synchronization, and Integration Suite or another middleware when protocol or semantic mediation is required. Always design initial load, delta, filtering, mapping, idempotency, and reconciliation."
+
+  - question: "Are files still acceptable?"
+    answer: "Yes, when batch is the real business constraint or the partner cannot support a better interface. A controlled file interface needs schema, naming, checksum or control totals, archive, duplicate handling, restart, and reconciliation."
+
+  - question: "What is the first Lead-level integration question?"
+    answer: "What business dependency are we trying to create or remove? Protocol comes later."
+
+source_refs:
+  - SRC-SAP-INTEGRATION-SUITE
+  - SRC-SAP-INTEGRATION-CONNECTIVITY
+  - SRC-SAP-CLOUD-INTEGRATION-CONCEPTS
+  - SRC-SAP-TPM
+  - SRC-SAP-IDOC-ADAPTER
+  - SRC-SAP-KAFKA-ADAPTER
+  - SRC-SAP-EVENT-MESH
+  - SRC-SAP-INTEGRATION-SUITE-EVENT-MESH
+  - SRC-SAP-ADVANCED-EVENT-MESH
+  - SRC-SAP-EVENT-MESH-BRIDGE
+  - SRC-SAP-MDI-SYNC
+  - SRC-SAP-MDI-MODELS
+  - SRC-SAP-MDI-GUIDANCE
+  - SRC-SAP-DRF
+  - SRC-SAP-MDG-REPLICATION
+  - SRC-APACHE-KAFKA
+  - SRC-TIBCO-BW-SAP
+  - SRC-TIBCO-EMS
+  - SRC-IBM-APP-CONNECT
+  - SRC-IBM-S4HANA
+  - SRC-BOOMI-SAP
