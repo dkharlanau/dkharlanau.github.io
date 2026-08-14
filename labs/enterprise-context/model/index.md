@@ -49,7 +49,7 @@ hide_global_cta: true
     </header>
     <div class="research-route-list">
       {% for gate in lab.maturity_gates %}
-      <a href="#gate-{{ gate.id }}"><span>0{{ gate.order }}</span><strong>{{ gate.label }}</strong><small>{{ gate.done_definition }}</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="/labs/enterprise-context/data/catalog.json"><span>0{{ gate.order }}</span><strong>{{ gate.label }}</strong><small>{{ gate.done_definition }}</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
       {% endfor %}
     </div>
   </section>
@@ -99,9 +99,7 @@ hide_global_cta: true
       <h2>The minimum topic record.</h2>
       <p>Create one topic record first. Expand stable concepts into reusable graph entities only when the research actually supports them.</p>
     </header>
-
-```yaml
-id: TOPIC-O2C-SALES-ORDER-CREATION
+    <pre><code>id: TOPIC-O2C-SALES-ORDER-CREATION
 type: research_topic
 title: Order-to-Cash — Sales Order Creation
 domain: SAP S/4HANA Logistics
@@ -110,7 +108,7 @@ created_at: 2026-08-14
 updated_at: 2026-08-14
 verified_at: null
 
-business_question: >-
+business_question: &gt;-
   What dependencies are required to create a valid sales order,
   and what should be inspected before recommending a change?
 
@@ -126,8 +124,7 @@ maturity:
     synthetic_example: planned
     ai_evaluation: planned
 
-source_refs: []
-```
+source_refs: []</code></pre>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -136,9 +133,7 @@ source_refs: []
       <h2>Separate the relationship from its evidence.</h2>
       <p>The same subject-predicate-object pattern can carry different evidence states without pretending expert judgment is vendor documentation.</p>
     </header>
-
-```yaml
-subject: OBJ-SD-SALES-ORDER
+    <pre><code>subject: OBJ-SD-SALES-ORDER
 predicate: references
 object: MD-BP-CUSTOMER
 
@@ -149,8 +144,7 @@ confidence: high
 verified_at: 2026-08-14
 scope:
   product: S4HANA
-  release: to-be-verified
-```
+  release: to-be-verified</code></pre>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -159,11 +153,9 @@ scope:
       <h2>Capture how a consultant investigates, not only what the system contains.</h2>
       <p>Heuristics live separately from factual relationships so they can be tested, refined, challenged, and later used as benchmark expectations.</p>
     </header>
-
-```yaml
-id: HEUR-O2C-SCOPE-BEFORE-CONFIG
+    <pre><code>id: HEUR-O2C-SCOPE-BEFORE-CONFIG
 context: sales-order creation failure
-statement: >-
+statement: &gt;-
   Establish whether the failure is customer-, material-, plant-,
   channel-, or time-specific before assuming a configuration defect.
 confidence: medium
@@ -171,8 +163,7 @@ questions:
   - What changed immediately before the failures started?
   - Do successful and failed orders share a master-data pattern?
 anti_patterns:
-  - jump directly to configuration
-```
+  - jump directly to configuration</code></pre>
   </section>
 
   <section class="research-canvas__method" data-reveal>
