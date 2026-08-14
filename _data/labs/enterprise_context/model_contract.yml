@@ -1,0 +1,152 @@
+version: "1.0.0"
+updated_at: "2026-08-14"
+
+purpose: >-
+  Keep the Enterprise Context Lab consistent as it grows from topic notes into a
+  reusable knowledge graph for architecture reasoning, assessment preparation,
+  diagnostics, and machine-readable retrieval.
+
+layers:
+  - id: ontology
+    role: "Canonical concepts and stable identities"
+    owns:
+      - "entity id"
+      - "entity type"
+      - "canonical title"
+      - "stable semantic identity"
+    rule: >-
+      A concept should have one stable ID even when it appears in many topics.
+      Titles and explanatory text may evolve without changing that identity.
+
+  - id: topic_graph
+    role: "A bounded SAP or enterprise scenario expressed as typed relationships"
+    owns:
+      - "topic scope"
+      - "topic-local entities"
+      - "typed directed relations"
+      - "evidence and confidence"
+      - "failure, decision, test, and diagnostic context"
+    rule: >-
+      Topic files explain a bounded problem. They may introduce entities, but they
+      should reuse existing canonical IDs when the same concept already exists.
+
+  - id: presentation
+    role: "Human-readable views over structured data"
+    owns:
+      - "page narrative"
+      - "grouping and ordering"
+      - "visual emphasis"
+      - "graph filtering"
+    rule: >-
+      Presentation may hide or regroup data, but it must not invent a second semantic
+      model that disagrees with the structured graph.
+
+file_roles:
+  schema: "schema.yml defines the vocabulary: node types, edge types, evidence types, statuses, and ID rules."
+  manifest: "manifest.yml defines the Lab purpose, maturity model, public views, and machine endpoints."
+  contract: "model_contract.yml defines authoring and integrity rules across all topics."
+  topics: "topics/*.yml contain bounded research topics, entities, reasoning structures, and relations."
+  sources: "sources/*.yml register source metadata and verification state; source text is not mirrored here."
+
+identity_rules:
+  - "IDs are semantic keys, not labels. Rename a title before renaming an ID."
+  - "Use the prefix defined by schema.yml for canonical node types."
+  - "Use uppercase stable IDs with hyphen-separated semantic segments."
+  - "Do not create a second ID only because another topic needs a different display label."
+  - "If two records might represent the same concept, resolve identity before adding edges."
+
+relation_rules:
+  direction: "Relations are directed: from -> type -> to."
+  required_fields:
+    - from
+    - type
+    - to
+    - evidence_type
+    - confidence
+  optional_fields:
+    - source_refs
+    - rationale
+    - scope
+    - status
+    - verified_at
+  rules:
+    - "Both endpoints must resolve to known entity IDs in the Lab graph."
+    - "The relation type must exist in schema.yml edge_types."
+    - "Do not add the same from/type/to triple twice in one topic."
+    - "Self-relations require an explicit rationale and should be exceptional."
+    - "A documented_fact relation should normally carry at least one source_refs entry."
+    - "Use rationale for non-obvious architecture, diagnostic, or causal relationships."
+
+confidence_levels:
+  high: "Directly supported, stable, and clear within the stated scope."
+  medium: "Supported but conditional, product/release dependent, or requiring interpretation."
+  low: "Plausible working hypothesis that must not be presented as established fact."
+
+claim_classes:
+  documented_fact: "Externally verifiable statement checked against a registered source."
+  professional_experience: "Practical observation that is not presented as vendor documentation."
+  expert_heuristic: "Reusable diagnostic or design rule based on expert judgment."
+  reasoned_inference: "Conclusion derived from facts and stated assumptions."
+  reasoned_interpretation: "Interpretation of documented behavior, boundaries, or architecture implications."
+  synthetic_assumption: "Assumption used to construct a fictional scenario."
+  synthetic_example: "Fictional example created for learning or evaluation."
+  observed_example: "Observed example that is safe to publish and does not expose restricted context."
+
+source_rules:
+  - "Register a source before referencing its ID from a topic."
+  - "Prefer primary product documentation for product behavior, scope, prerequisites, and release-sensitive facts."
+  - "Keep access and verification dates for release-sensitive claims."
+  - "Separate source-backed facts from judgment, heuristics, and synthetic examples."
+  - "Never store client-confidential, employer-confidential, partner-only, licensed training, or credential material."
+
+modeling_sequence:
+  - order: 1
+    step: frame
+    output: "Business question, scope, exclusions, and decision boundary."
+  - order: 2
+    step: inspect
+    output: "Existing IDs, adjacent topics, source registry, and schema vocabulary."
+  - order: 3
+    step: model
+    output: "Minimal canonical entities needed to explain the topic."
+  - order: 4
+    step: connect
+    output: "Typed relations that expose dependencies, sequence, causality, integration, ownership, or validation."
+  - order: 5
+    step: reason
+    output: "Trade-offs, failure modes, diagnostic questions, tests, and decision heuristics separated from facts."
+  - order: 6
+    step: source
+    output: "Registered evidence for externally verifiable claims."
+  - order: 7
+    step: validate
+    output: "Passing graph integrity checks before presentation work."
+  - order: 8
+    step: render
+    output: "Compact human view derived from the structured model."
+
+quality_gates:
+  hard_errors:
+    - "invalid YAML"
+    - "duplicate source ID"
+    - "unknown source reference"
+    - "unknown relation type"
+    - "missing relation endpoint"
+    - "unresolved relation endpoint"
+    - "duplicate relation triple within one topic"
+  warnings:
+    - "entity ID reused with a conflicting type"
+    - "entity ID prefix does not match its schema type"
+    - "documented relation without source_refs"
+    - "self-relation without rationale"
+    - "topic without tags"
+
+change_policy:
+  model_first: true
+  validate_before_render: true
+  prefer_additive_schema_changes: true
+  require_migration_note_for_breaking_schema_change: true
+  public_workflow_disclosure: false
+  public_content_rule: >-
+    Public pages describe the knowledge model, evidence, and professional reasoning.
+    They do not describe private authoring tools, assistant collaboration, or internal prompting workflows.
