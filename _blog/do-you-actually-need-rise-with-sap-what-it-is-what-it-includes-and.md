@@ -1,7 +1,7 @@
 ---
 layout: blog
 title: "Do You Actually Need RISE with SAP? What It Is, What It Includes, and Where Companies Get Trapped"
-description: "A practical decision framework for evaluating RISE with SAP: transformation intent, operating model, architecture, commercial boundaries, and exit considerations."
+description: "A practical framework for evaluating RISE with SAP across transformation intent, operating model, architecture, commercial boundaries, and exit."
 slug: do-you-actually-need-rise-with-sap-what-it-is-what-it-includes-and
 permalink: /blog/do-you-actually-need-rise-with-sap-what-it-is-what-it-includes-and/
 date: 2026-07-17
