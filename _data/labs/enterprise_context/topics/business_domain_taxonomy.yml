@@ -7,19 +7,19 @@ process_family: "Cross-enterprise"
 status: researching
 created_at: "2026-08-14"
 updated_at: "2026-08-14"
-verified_at: "2026-08-14"
-reviewed_together_at: "2026-08-14"
-review_note: "Reviewed together as a practical domain map for learning and architecture discussions."
+verified_at: null
+reviewed_together_at: null
+review_note: "The base domain map existed before this change. The data-governance expansion is a review candidate and is not marked as human-verified."
 
-business_question: "What does the business own, and which processes, deployment models, and SAP solutions support each area?"
+business_question: "What does the business own, and which processes, deployment models, data objects, and SAP solutions support each area?"
 
 maturity:
-  gates_complete: 2
+  gates_complete: 3
   gates_total: 7
   gates:
     scope: done
     sources: done
-    model: in_progress
+    model: done
     relationships: in_progress
     expert_reasoning: planned
     synthetic_example: planned
@@ -29,8 +29,9 @@ modeling_rules:
   - "Business domain = a stable area of business responsibility."
   - "Process = work that can cross several domains."
   - "Deployment model = how the SAP solution is operated and constrained."
-  - "Solution domain = a functional area such as warehousing or transportation."
-  - "Application = a product or component such as S/4HANA, EWM, Ariba, or Joule."
+  - "Solution domain = a functional area such as warehousing, master data management, or transportation."
+  - "Application = a product or component such as S/4HANA, EWM, SAP MDG, Ariba, or Joule."
+  - "Master-data object = a shared business entity such as Business Partner, Customer, Supplier, or Material / Product."
   - "Platform domains such as data, integration, and AI support many business domains."
 
 business_domains:
@@ -51,6 +52,10 @@ business_domains:
       - "SAP Sales"
       - "SAP Customer Experience"
       - "Order-to-Cash"
+    master_data_dependencies:
+      - MD-BP-BUSINESS-PARTNER
+      - MD-BP-CUSTOMER
+      - MD-MAT-MATERIAL
 
   - id: BDOM-SPEND-PROCUREMENT
     type: business_domain
@@ -68,6 +73,10 @@ business_domains:
     related_solution_domains:
       - DOM-PROCUREMENT
       - DOM-COLLABORATION
+    master_data_dependencies:
+      - MD-BP-BUSINESS-PARTNER
+      - MD-BP-SUPPLIER
+      - MD-MAT-MATERIAL
 
   - id: BDOM-SUPPLY-CHAIN-OPERATIONS
     type: business_domain
@@ -95,6 +104,10 @@ business_domains:
         title: "Global Trade and Compliance"
       - id: DOM-COLLABORATION
         title: "Supply Network Collaboration"
+    master_data_dependencies:
+      - MD-MAT-MATERIAL
+      - MD-BP-BUSINESS-PARTNER
+      - MD-BP-SUPPLIER
 
   - id: BDOM-FINANCE-PERFORMANCE
     type: business_domain
@@ -109,6 +122,11 @@ business_domains:
       - "Group Reporting and Consolidation"
       - "Enterprise Planning"
       - "Financial Risk and Controls"
+    master_data_dependencies:
+      - MD-BP-CUSTOMER
+      - MD-BP-SUPPLIER
+      - MD-MAT-MATERIAL
+      - MD-FIN-FINANCIAL
 
   - id: BDOM-PEOPLE-WORKFORCE
     type: business_domain
@@ -135,6 +153,9 @@ business_domains:
       - "Field Service"
       - "Repair and Service Execution"
       - "Service Parts"
+    master_data_dependencies:
+      - MD-BP-BUSINESS-PARTNER
+      - MD-MAT-MATERIAL
 
   - id: BDOM-SUSTAINABILITY-COMPLIANCE
     type: business_domain
@@ -154,7 +175,33 @@ platform_domains:
     title: "Data and Analytics"
     classification: cross_cutting_platform_domain
     remember: "Trusted data, shared meaning, and decisions."
-    purpose: "Provide governed data, semantics, analytics, planning data, and reusable context for applications and AI."
+    purpose: "Provide governed data, master-data ownership, semantics, quality, integration, analytics, planning data, and reusable context for applications and AI."
+    human_view: "/labs/enterprise-context/data-governance/"
+    featured_topic: TOPIC-ENTERPRISE-DATA-GOVERNANCE
+    solution_domains:
+      - id: DOM-MASTER-DATA-MANAGEMENT
+        title: "Master Data Management"
+      - id: DOM-DATA-GOVERNANCE
+        title: "Data Governance"
+      - id: DOM-DATA-QUALITY
+        title: "Data Quality"
+      - id: DOM-METADATA-SEMANTICS
+        title: "Metadata and Semantics"
+      - id: DOM-DATA-INTEGRATION
+        title: "Data Integration and Distribution"
+      - id: DOM-ANALYTICS-PLANNING
+        title: "Analytics and Planning"
+    key_master_data_objects:
+      - MD-BP-BUSINESS-PARTNER
+      - MD-BP-CUSTOMER
+      - MD-BP-SUPPLIER
+      - MD-MAT-MATERIAL
+      - MD-FIN-FINANCIAL
+      - MD-CUSTOM-OBJECT
+    key_applications:
+      - APP-SAP-MDG-S4
+      - APP-SAP-MDG-CLOUD
+      - APP-S4-PUBLIC-MDG
 
   - id: BDOM-INTEGRATION-EXTENSIBILITY
     type: business_domain
@@ -185,15 +232,95 @@ platform_domains:
     remember: "Understand change, choose architecture, and govern transformation."
     purpose: "Model capabilities and processes, govern architecture, and connect business change to technology decisions."
 
+data_context_path:
+  area: BDOM-DATA-ANALYTICS
+  domains:
+    - DOM-MASTER-DATA-MANAGEMENT
+    - DOM-DATA-GOVERNANCE
+    - DOM-DATA-QUALITY
+  applications:
+    - APP-SAP-MDG-S4
+    - APP-SAP-MDG-CLOUD
+    - APP-S4-PUBLIC-MDG
+  objects:
+    - MD-BP-BUSINESS-PARTNER
+    - MD-BP-CUSTOMER
+    - MD-BP-SUPPLIER
+    - MD-MAT-MATERIAL
+    - MD-FIN-FINANCIAL
+    - MD-CUSTOM-OBJECT
+  explanation: "The graph keeps the enterprise area, problem domain, SAP application, governed object, and consuming business domain as separate levels."
+
 decision_guide:
   - question: "Who owns the business outcome?"
     guidance: "Start with the business domain."
+  - question: "Is this a cross-cutting platform concern?"
+    guidance: "Use Data, Integration, AI, Security, or Transformation as an enterprise area, then decompose it into solution domains."
   - question: "Which process delivers it?"
     guidance: "Map the end-to-end process separately."
+  - question: "Which data objects does the process depend on?"
+    guidance: "Name the master-data objects and attribute ownership explicitly before selecting the governance application."
   - question: "Which deployment model constrains the solution?"
     guidance: "Check Public Cloud, Private Cloud, or On-Premise before assuming scope or extensibility."
   - question: "Which SAP component owns the function?"
-    guidance: "Map the application or platform component without renaming the business domain."
+    guidance: "Map the application or platform component without renaming the business or data domain."
+
+relations:
+  - subject: BDOM-DATA-ANALYTICS
+    predicate: contains
+    object: DOM-MASTER-DATA-MANAGEMENT
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: BDOM-DATA-ANALYTICS
+    predicate: contains
+    object: DOM-DATA-GOVERNANCE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: BDOM-DATA-ANALYTICS
+    predicate: contains
+    object: DOM-DATA-QUALITY
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: DOM-MASTER-DATA-MANAGEMENT
+    predicate: contains
+    object: MD-BP-BUSINESS-PARTNER
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: DOM-MASTER-DATA-MANAGEMENT
+    predicate: contains
+    object: MD-MAT-MATERIAL
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: APP-SAP-MDG-S4
+    predicate: supports_domain
+    object: DOM-MASTER-DATA-MANAGEMENT
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: APP-SAP-MDG-CLOUD
+    predicate: supports_domain
+    object: DOM-DATA-GOVERNANCE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-BP-CUSTOMER
+    predicate: impacts
+    object: BDOM-CUSTOMER-REVENUE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-BP-SUPPLIER
+    predicate: impacts
+    object: BDOM-SPEND-PROCUREMENT
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-MAT-MATERIAL
+    predicate: impacts
+    object: BDOM-SUPPLY-CHAIN-OPERATIONS
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-FIN-FINANCIAL
+    predicate: impacts
+    object: BDOM-FINANCE-PERFORMANCE
+    evidence_type: reasoned_interpretation
+    confidence: high
 
 tags:
   - enterprise-architecture
@@ -203,3 +330,6 @@ tags:
   - deployment
   - supply-chain
   - business-ai
+  - data-management
+  - master-data
+  - mdg
