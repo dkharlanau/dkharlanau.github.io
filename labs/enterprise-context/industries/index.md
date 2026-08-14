@@ -37,7 +37,7 @@ hide_global_cta: true
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">factory</span>
-    <p><strong>Remember:</strong> industry is an overlay. Keep the standard process, then add the industry-specific data, documents, planning rules, execution patterns, and deployment constraints.</p>
+    <p><strong>Remember:</strong> industry is an overlay. Keep the standard process, then add industry differences and deployment constraints.</p>
     <a href="/labs/enterprise-context/deployment-models/">Compare Public, Private, and On-Premise <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
@@ -45,7 +45,7 @@ hide_global_cta: true
     <header>
       <p class="research-canvas__eyebrow">Industry map</p>
       <h2>Learn the difference that changes the process.</h2>
-      <p>Start with the memory line. Then connect it to the standard SAP process and integration landscape.</p>
+      <p>Start with the memory line, then connect it to the standard SAP process.</p>
     </header>
     <div class="research-route-list">
       {% for industry in topic.industries %}
@@ -58,7 +58,7 @@ hide_global_cta: true
     <header>
       <p class="research-canvas__eyebrow">Deployment lens</p>
       <h2>Same industry, different design freedom.</h2>
-      <p>Check the edition before assuming an industry feature, add-on, extension, or configuration path is available.</p>
+      <p>Check the edition before assuming a feature, add-on, or extension is available.</p>
     </header>
     <div class="research-route-list">
       {% for model in deployments.deployment_models %}
@@ -71,7 +71,7 @@ hide_global_cta: true
     <header>
       <p class="research-canvas__eyebrow">Lead focus</p>
       <h2>Know the standard process and the industry delta.</h2>
-      <p>For assessment answers, explain what changes in data, documents, planning, logistics, integration, and deployment constraints.</p>
+      <p>Explain what changes in data, documents, planning, logistics, integration, and deployment.</p>
     </header>
     <div class="research-route-list">
       {% for industry in topic.industries %}
@@ -84,7 +84,7 @@ hide_global_cta: true
     <header>
       <p class="research-canvas__eyebrow">Term check</p>
       <h2>SMD is not modeled as an industry.</h2>
-      <p>Official SAP sources use SMD for Solution Manager Diagnostics and, in older documentation, Shared Master Data. The abbreviation stays outside the industry map until a different meaning is confirmed.</p>
+      <p>Official SAP sources use SMD for Solution Manager Diagnostics and, in older documentation, Shared Master Data.</p>
     </header>
     <div class="research-route-list">
       {% for item in topic.term_checks %}
