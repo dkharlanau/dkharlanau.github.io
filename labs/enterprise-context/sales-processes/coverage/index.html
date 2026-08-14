@@ -23,8 +23,9 @@ tags:
 {% assign atlas_groups = site.data.labs.enterprise_context.processes.sales_process_atlas %}
 {% assign atlas = atlas_groups.index %}
 {% assign audit = atlas_groups.coverage_audit %}
-{% assign group_keys = "01_baseline,02_fulfillment,03_intercompany,04_commercial,05_execution,06_overlays,07_after_sales,08_commercial_extensions,09_industry_variants" | split: "," %}
+{% assign group_keys = "01_baseline,02_fulfillment,03_intercompany,04_commercial,05_execution,06_overlays,07_after_sales,08_commercial_extensions,09_industry_variants,10_billing_lifecycle" | split: "," %}
 {% assign coverage_registry = site.data.labs.enterprise_context.sources.sales_process_coverage_registry %}
+{% assign billing_registry = site.data.labs.enterprise_context.sources.sales_billing_coverage_registry %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Coverage Map</li></ol>
@@ -63,7 +64,8 @@ tags:
       <article><span>Goods come back?</span><h3>Simple physical return</h3><p><code>SD.RET.LEAN</code> when receipt back to valuated stock and credit are enough. No inspection-driven disposition is required.</p></article>
       <article><span>Goods come back?</span><h3>Inspect and decide</h3><p><code>SD.RET.ARM</code> when inspection, follow-up activity, refund logic, supplier/plant routing, scrap, repair or replacement must be controlled.</p></article>
       <article><span>Goods stay with customer?</span><h3>Reduce the receivable</h3><p><code>SD.CLM.CMR</code> for a commercial credit without reverse logistics. Think forgotten discount, price concession or accepted claim.</p></article>
-      <article><span>Goods stay with customer?</span><h3>Increase the receivable</h3><p><code>SD.CLM.DMR</code> when the original commercial result was too low and an additional charge is required.</p></article>
+      <article><span>Goods stay with customer?</span><h3>Increase the receivable</h3><p><code>SD.CLM.DMR</code> when an additional customer charge is required without changing the physical flow.</p></article>
+      <article><span>Existing invoice too low?</span><h3>Increase that invoice</h3><p><code>SD.CLM.INC</code> when an existing invoice is the explicit reference and the system should calculate the delta to a corrected price or quantity.</p></article>
       <article><span>Invoice itself is wrong?</span><h3>Correct the billed value</h3><p><code>SD.CLM.ICR</code> when the dispute is fundamentally about an existing invoice and copied versus corrected values matter.</p></article>
       <article><span>Customer needs goods, not money?</span><h3>Replace free of charge</h3><p><code>SD.CLM.FOS</code> when shortage or damage is resolved by a subsequent free delivery rather than a financial credit.</p></article>
       <article><span>Kit came back?</span><h3>Return components safely</h3><p><code>SD.RET.KIT</code> when the original commercial product was a kit but returned logistics can happen at component level.</p></article>
@@ -79,7 +81,8 @@ tags:
     </header>
     <div class="spa-code-grid">
       <article><span>SD.RET.</span><strong>Reverse logistics</strong><p><code>LEAN</code> · <code>ARM</code> · <code>KIT</code> · <code>REPAIR</code></p></article>
-      <article><span>SD.CLM.</span><strong>Customer claim</strong><p><code>CMR</code> credit · <code>DMR</code> debit · <code>ICR</code> invoice correction · <code>FOS</code> replacement</p></article>
+      <article><span>SD.CLM.</span><strong>Customer claim</strong><p><code>CMR</code> credit · <code>DMR</code> debit · <code>ICR</code> correction · <code>INC</code> increase · <code>FOS</code> replacement</p></article>
+      <article><span>SD.BILL.</span><strong>Billing lifecycle</strong><p><code>COLL</code> consolidation · <code>PRELIM</code> negotiation · <code>RETRO</code> repricing · <code>CANCEL</code> reversal</p></article>
       <article><span>SD.*.*</span><strong>Meaningful child variant</strong><p><code>TPO.SN</code> · <code>TPO.NSN</code> · <code>TPO.VC</code> · <code>MTO.VC</code> · <code>SA.CON</code></p></article>
     </div>
   </section>
@@ -151,10 +154,13 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Primary evidence for the expansion</p>
       <h2>New cards came from current SAP process boundaries, not from creative taxonomy fever.</h2>
-      <p>The source registry below covers the added returns, claims, billing, settlement, configurable-product, third-party and JIT branches.</p>
+      <p>The source registries below cover returns, claims, billing lifecycle, settlement, configurable-product, third-party and JIT branches.</p>
     </header>
     <div class="research-route-list">
       {% for source in coverage_registry.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+      {% for source in billing_registry.sources %}
       <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
