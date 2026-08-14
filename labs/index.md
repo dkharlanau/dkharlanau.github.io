@@ -27,7 +27,7 @@ hide_global_cta: true
       <p>Current inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>1</strong><small>Active lab</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>1</strong><small>Deep vertical</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>5</strong><small>Machine endpoints</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>6</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
   </header>
