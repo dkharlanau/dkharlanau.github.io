@@ -1,0 +1,34 @@
+name: Temporary Atlas artifact regeneration
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/regenerate-atlas-temp.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install generator dependencies
+        run: python3 -m pip install pyyaml
+      - name: Regenerate Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git commit -m "Regenerate Atlas artifacts"
+          git push
