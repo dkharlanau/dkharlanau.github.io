@@ -1,0 +1,186 @@
+---
+layout: default
+title: "SAP Sales Process Coverage Map — Claims, Production, Projects and Integrations"
+description: "High-coverage SAP S/4HANA Sales map with claims, returns, billing, production, project execution, subscription delivery and cross-application order patterns."
+permalink: /labs/enterprise-context/sales-processes/coverage/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+sales_process_atlas: true
+tags:
+  - sap
+  - s4hana
+  - sales
+  - returns
+  - claims
+  - billing
+  - production
+  - projects
+  - integration
+---
+
+{% assign atlas_groups = site.data.labs.enterprise_context.processes.sales_process_atlas %}
+{% assign atlas = atlas_groups.index %}
+{% assign audit = atlas_groups.coverage_audit %}
+{% assign group_keys = "01_baseline,02_fulfillment,03_intercompany,04_commercial,05_execution,06_overlays,07_after_sales,08_commercial_extensions,09_industry_variants,10_billing_lifecycle,11_cross_application_execution" | split: "," %}
+{% assign coverage_registry = site.data.labs.enterprise_context.sources.sales_process_coverage_registry %}
+{% assign billing_registry = site.data.labs.enterprise_context.sources.sales_billing_coverage_registry %}
+{% assign cross_registry = site.data.labs.enterprise_context.sources.sales_cross_application_registry %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Coverage Map</li></ol>
+</nav>
+
+<div class="research-canvas sales-process-atlas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Sales process atlas / coverage map</p>
+      <h1>Cover the business choices.<br />Not every SAP menu entry.</h1>
+      <p>High coverage does not mean one card per scope item. A useful map separates the branches that change ownership, supply, inspection, billing, production, project cost object, settlement, or application ownership. Everything else can remain an alias, mechanism, origin, or handoff.</p>
+      <a class="research-canvas__button" href="#coverage-cards">Open all process cards <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Coverage inventory">
+      <p>Coverage inventory</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ audit.summary.atlas_records }}</strong><small>Process cards / overlays</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ audit.summary.order_origin_patterns }}</strong><small>Order origins</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ audit.summary.execution_handoff_patterns }}</strong><small>Application handoffs</small></div>
+      <em>Process, mechanism, origin, handoff and application are deliberately different ontology classes.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Coverage rule.</strong> Create a new process code only when the business contract changes. If only the source system or downstream application changes, model that as an origin or handoff instead of inventing another fake process.</p>
+    <a href="/labs/enterprise-context/data/sales-process-atlas.json">Open full JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <p><strong>Cross-application view.</strong> A sales order can start in Commerce, CPQ, Sales Cloud, a buyer EDI message, a Solution Order, a subscription plan, or an API. It can then hand execution to PP, Project/EPPM, MM, EWM, TM, GTS, Credit, Finance, or Service.</p>
+    <a href="/labs/enterprise-context/sales-processes/integrations/">Open Sales Order Integration Map <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="complaint-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Complaint decision map</p>
+      <h2>Start with what the customer actually needs.</h2>
+      <p>“Complaint” is not a process. First decide whether goods move, money changes, or the customer needs replacement. That decision determines the document family and the downstream systems.</p>
+    </header>
+    <div class="spa-compare-grid">
+      <article><span>Goods come back?</span><h3>Simple physical return</h3><p><code>SD.RET.LEAN</code> when receipt back to valuated stock and credit are enough. No inspection-driven disposition is required.</p></article>
+      <article><span>Goods come back?</span><h3>Inspect and decide</h3><p><code>SD.RET.ARM</code> when inspection, follow-up activity, refund logic, supplier/plant routing, scrap, repair or replacement must be controlled.</p></article>
+      <article><span>Goods stay with customer?</span><h3>Reduce the receivable</h3><p><code>SD.CLM.CMR</code> for a commercial credit without reverse logistics.</p></article>
+      <article><span>Goods stay with customer?</span><h3>Increase the receivable</h3><p><code>SD.CLM.DMR</code> when an additional customer charge is required without changing the physical flow.</p></article>
+      <article><span>Existing invoice too low?</span><h3>Increase that invoice</h3><p><code>SD.CLM.INC</code> when an existing invoice is the explicit reference and the system calculates the delta.</p></article>
+      <article><span>Invoice itself is wrong?</span><h3>Correct the billed value</h3><p><code>SD.CLM.ICR</code> when copied versus corrected invoice values matter.</p></article>
+      <article><span>Customer needs goods, not money?</span><h3>Replace free of charge</h3><p><code>SD.CLM.FOS</code> when shortage or damage is resolved by a subsequent free delivery.</p></article>
+      <article><span>Kit came back?</span><h3>Return components safely</h3><p><code>SD.RET.KIT</code> when commercial structure and reverse logistics live at different levels.</p></article>
+      <article><span>Repair instead of refund?</span><h3>Hand off to Service</h3><p><code>SD.RET.REPAIR</code> makes the boundary to in-house repair explicit.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">keyboard_return</span>
+    <p><strong>Deep dive.</strong> The Coverage Map tells you which branch exists. The Returns & Claims Control Plane explains receipt versus ownership, inspection splits, logistical follow-up, refund control, valuation, supplier return, repair and claim governance.</p>
+    <a href="/labs/enterprise-context/sales-processes/control-plane/returns-claims/">Open Returns & Claims Control Plane <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">New production and project edge</p>
+      <h2>Not every customer-specific order is the same kind of MTO.</h2>
+      <p>Ordinary MTO, direct assembly processing, Engineer-to-Order and project-based services use different execution and cost objects. The customer sees an order; internally the responsibility may move to a production order, project stock, WBS, customer project, or subscription contract.</p>
+    </header>
+    <div class="spa-code-grid">
+      <article><span>SD.MTO.</span><strong>Customer-specific production</strong><p><code>MTO</code> normal individual demand · <code>MTO.VC</code> configured demand · <code>MTO.ATO</code> immediate assembly object.</p></article>
+      <article><span>SD.ETO</span><strong>Project manufacturing</strong><p>WBS, project stock, engineering and project profitability become part of the supply model.</p></article>
+      <article><span>SD.PROJ.PBS</span><strong>Project-based services</strong><p>Customer project execution creates billing evidence instead of a normal stock-delivery chain.</p></article>
+      <article><span>SD.SUB.RECUR</span><strong>Recurring physical delivery</strong><p>A subscription-style contract owns the lifecycle; generated sales orders execute each delivery cycle.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="coverage-cards" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">High-coverage card map</p>
+      <h2>{{ audit.summary.atlas_records }} process cards and overlays, grouped by business change.</h2>
+      <p>Read the hook and flow first. Expand only when you need controls, data hinges, limits and Lead questions. Memory is allowed to have an interface; apparently we do not have to suffer for knowledge to count.</p>
+    </header>
+
+    <div class="spa-card-grid">
+      {% for group_key in group_keys %}
+      {% assign group = atlas_groups[group_key] %}
+      {% for process in group.processes %}
+      <article class="spa-card" id="coverage-{{ process.code | downcase | replace: '.', '-' | replace: '+', '-plus-' }}">
+        <header class="spa-card__head">
+          <div><span class="spa-code">{{ process.code }}</span><span class="spa-kind">{{ process.kind | replace: "_", " " }}</span></div>
+          {% if process.sap_scope_items and process.sap_scope_items.size > 0 %}<p class="spa-scope">{% for scope in process.sap_scope_items %}<span>{{ scope.id }}</span>{% endfor %}</p>{% endif %}
+        </header>
+        <h3>{{ process.title }}</h3>
+        <p class="spa-hook">{{ process.memory_hook }}</p>
+        <p class="spa-intent">{{ process.business_intent }}</p>
+        <div class="spa-flow" aria-label="{{ process.title }} flow">{% for step in process.flow %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
+        {% if process.deployment_scope %}<p><small><strong>Deployment:</strong> {{ process.deployment_scope }}</small></p>{% endif %}
+        <details>
+          <summary>Controls, data and boundaries <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="spa-detail-grid">
+            <section><h4>Control plane</h4><ul>{% for item in process.control_plane %}<li><strong>{{ item.control }}</strong><span>{{ item.why }}</span></li>{% endfor %}</ul></section>
+            <section><h4>Data hinges</h4><ul>{% for item in process.data_hinges %}<li><strong>{{ item.data }}</strong><span>{{ item.changes }}</span></li>{% endfor %}</ul></section>
+            <section><h4>What changes</h4><ul>{% for item in process.impact_summary %}<li>{{ item }}</li>{% endfor %}</ul></section>
+            <section><h4>Constraints</h4><ul>{% for item in process.constraints %}<li>{{ item }}</li>{% endfor %}</ul></section>
+          </div>
+          <div class="spa-lead"><p>Lead questions</p><ol>{% for q in process.lead_questions %}<li>{{ q }}</li>{% endfor %}</ol></div>
+          <div class="spa-extension-row"><span>Extensions</span>{% for ext in process.extension_points %}<code>{{ ext }}</code>{% endfor %}</div>
+        </details>
+      </article>
+      {% endfor %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Scope-item normalization</p>
+      <h2>SAP scope IDs are references. Our codes hold the concept.</h2>
+      <p>Several SAP Best Practice scope items map to the same stable process family. This keeps the graph useful across releases and stops a learning site from becoming a release-note database with aspirations.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in audit.scope_aliases %}
+      <div><span>{{ item.sap_scope }}</span><strong>{{ item.maps_to }}</strong><small>{{ item.reason }}</small></div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Adjacent, not forgotten</p>
+      <h2>Some capabilities belong beside the process, not inside its name.</h2>
+      <p>aATP, credit, EWM, TM, GTS, Commerce, Sales Cloud, Solution Order and Event Mesh can radically change order capture or execution. They remain explicit without creating names that read like somebody pasted the architecture diagram into one process code.</p>
+    </header>
+    <div class="spa-compare-grid">
+      {% for item in audit.adjacent_capabilities %}
+      <article><span>{% if item.sap_scope %}{{ item.sap_scope }}{% else %}Capability{% endif %}</span><h3>{{ item.name }}</h3><p><b>Maps to:</b> {{ item.maps_to }}. {{ item.why_not_process }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary evidence for the expansion</p>
+      <h2>New cards came from current SAP process boundaries, not from creative taxonomy fever.</h2>
+      <p>The source registries cover returns, claims, billing, industry variants, production/project fulfillment and cross-application order integration.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in coverage_registry.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>{% endfor %}
+      {% for source in billing_registry.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>{% endfor %}
+      {% for source in cross_registry.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>{% endfor %}
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
