@@ -1,0 +1,75 @@
+name: Polish Lab Layout
+
+on:
+  push:
+    branches:
+      - agent/refine-domains-add-business-ai
+    paths:
+      - .github/workflows/polish-lab-layout.yml
+
+permissions:
+  contents: write
+
+jobs:
+  polish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/refine-domains-add-business-ai
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml
+
+      - name: Polish problem and policy placement
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          files = [
+              'labs/index.md',
+              'labs/enterprise-context/index.md',
+              'labs/enterprise-context/domains/index.md',
+              'labs/enterprise-context/deployment-models/index.md',
+              'labs/enterprise-context/industries/index.md',
+              'labs/enterprise-context/business-ai/index.md',
+              'labs/enterprise-context/model/index.md',
+          ]
+
+          for filename in files:
+              path = Path(filename)
+              text = path.read_text(encoding='utf-8')
+              match = re.search(r'\n<p><strong>Problem:</strong> (.*?)</p>\n\n<nav', text, flags=re.S)
+              if match:
+                  problem = match.group(1).strip()
+                  text = text[:match.start()] + '\n<nav' + text[match.end():]
+                  boundary = re.search(r'(<section class="research-canvas__boundary"[^>]*>\n\s*<span[^>]*>.*?</span>\n)', text, flags=re.S)
+                  if boundary:
+                      insert = f'    <p><strong>Problem:</strong> {problem}</p>\n'
+                      text = text[:boundary.end()] + insert + text[boundary.end():]
+
+              if filename == 'labs/index.md':
+                  old = '  **Publication rule:** Vendor sources verify facts; explanations stay independently written. See the [Research and Attribution Policy](/legal/research-attribution/).'
+                  new = '  <p><strong>Publication rule.</strong> Vendor sources verify facts; explanations stay independently written. See the <a href="/legal/research-attribution/">Research and Attribution Policy</a>.</p>'
+                  text = text.replace(old, new)
+
+              path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Refresh generated discovery artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Commit polish
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add labs ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          git commit -m "Polish Lab problem and attribution placement"
+          git push origin HEAD:agent/refine-domains-add-business-ai
