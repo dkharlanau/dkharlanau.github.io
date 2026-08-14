@@ -13,6 +13,7 @@ hide_global_cta: true
 
 {% assign lab = site.data.labs.enterprise_context.manifest %}
 {% assign schema = site.data.labs.enterprise_context.schema %}
+{% assign sales_landscape = site.data.labs.enterprise_context.topics.sales_application_landscape %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Enterprise Context</li></ol>
@@ -57,15 +58,28 @@ hide_global_cta: true
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">First deep vertical</p>
-      <h2>{{ lab.first_vertical.title }}</h2>
-      <p>Depth comes before coverage. Each topic passes the same seven gates so research status is explicit rather than represented by a decorative percentage.</p>
+      <p class="research-canvas__eyebrow">Research topics</p>
+      <h2>Depth comes before coverage.</h2>
+      <p>Each topic passes the same seven gates so research status is explicit rather than represented by a decorative percentage.</p>
     </header>
 
     <div class="research-route-list">
       {% for topic_entry in site.data.labs.enterprise_context.topics %}
       {% assign topic = topic_entry[1] %}
       <a href="/labs/enterprise-context/model/#topic-lifecycle"><span>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</span><strong>{{ topic.title }}</strong><small>{{ topic.business_question }}</small><i class="material-symbols-outlined" aria-hidden="true">query_stats</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Application landscape</p>
+      <h2>{{ sales_landscape.title }}</h2>
+      <p>Application components are modeled as separate graph nodes rather than being flattened into “SD”. Relationships are working architecture candidates until they are source-verified.</p>
+    </header>
+    <div class="research-route-list">
+      {% for app in sales_landscape.applications %}
+      <a href="/labs/enterprise-context/data/topics.json"><span>APP</span><strong>{{ app.title }}</strong><small>{{ app.role }}</small><i class="material-symbols-outlined" aria-hidden="true">apps</i></a>
       {% endfor %}
     </div>
   </section>
