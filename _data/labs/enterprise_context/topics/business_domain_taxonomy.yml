@@ -1,7 +1,7 @@
 id: TOPIC-ENTERPRISE-BUSINESS-DOMAINS
 type: research_topic
 title: "Enterprise Business Domains"
-summary: "A simple map of what the business owns, separate from processes, SAP products, and technology."
+summary: "A simple map of what the business owns, separate from processes, deployment models, SAP products, and technology."
 domain: "Enterprise Architecture"
 process_family: "Cross-enterprise"
 status: researching
@@ -11,7 +11,7 @@ verified_at: "2026-08-14"
 reviewed_together_at: "2026-08-14"
 review_note: "Reviewed together as a practical domain map for learning and architecture discussions."
 
-business_question: "What does the business own, and which processes and SAP solutions support each area?"
+business_question: "What does the business own, and which processes, deployment models, and SAP solutions support each area?"
 
 maturity:
   gates_complete: 2
@@ -28,6 +28,7 @@ maturity:
 modeling_rules:
   - "Business domain = a stable area of business responsibility."
   - "Process = work that can cross several domains."
+  - "Deployment model = how the SAP solution is operated and constrained."
   - "Solution domain = a functional area such as warehousing or transportation."
   - "Application = a product or component such as S/4HANA, EWM, Ariba, or Joule."
   - "Platform domains such as data, integration, and AI support many business domains."
@@ -112,8 +113,8 @@ business_domains:
   - id: BDOM-PEOPLE-WORKFORCE
     type: business_domain
     title: "People and Workforce"
-    remember: "Hire, develop, reward, and support people."
-    purpose: "Manage employees and external workforce from hiring through development, time, pay, and workforce planning."
+    remember: "Hire, develop, reward, schedule, and retain people."
+    purpose: "Manage employees and external workforce from hiring through development, pay, time, and workforce planning."
     subdomains:
       - "Core HR"
       - "Talent Acquisition"
@@ -126,8 +127,8 @@ business_domains:
   - id: BDOM-ASSET-SERVICE-OPERATIONS
     type: business_domain
     title: "Assets, Maintenance and Service"
-    remember: "Keep assets running and deliver service."
-    purpose: "Manage assets, maintenance, reliability, field work, repair, and service execution."
+    remember: "Maintain assets, deliver service, repair, and improve reliability."
+    purpose: "Manage enterprise assets, maintenance, field work, repair, service parts, and service execution."
     subdomains:
       - "Enterprise Asset Management"
       - "Maintenance and Reliability"
@@ -138,8 +139,8 @@ business_domains:
   - id: BDOM-SUSTAINABILITY-COMPLIANCE
     type: business_domain
     title: "Sustainability, Safety and Compliance"
-    remember: "Operate responsibly and stay compliant."
-    purpose: "Manage sustainability, safety, environmental, product, and regulatory obligations."
+    remember: "Measure impact, protect people, and meet obligations."
+    purpose: "Manage sustainability, environment, safety, product compliance, and regulatory obligations."
     subdomains:
       - "Sustainability Management"
       - "Environment, Health and Safety"
@@ -152,52 +153,53 @@ platform_domains:
     type: business_domain
     title: "Data and Analytics"
     classification: cross_cutting_platform_domain
-    remember: "Give the enterprise trusted data and meaning."
-    purpose: "Provide governed data, semantics, analytics, and reusable context for applications and AI."
+    remember: "Trusted data, shared meaning, and decisions."
+    purpose: "Provide governed data, semantics, analytics, planning data, and reusable context for applications and AI."
 
   - id: BDOM-INTEGRATION-EXTENSIBILITY
     type: business_domain
     title: "Integration, Automation and Extensibility"
     classification: cross_cutting_platform_domain
     remember: "Connect, automate, and extend."
-    purpose: "Connect systems and partners, expose APIs and events, automate work, and build clean-core extensions."
+    purpose: "Connect applications and partners, expose APIs and events, automate work, and build clean-core extensions."
 
   - id: BDOM-BUSINESS-AI
     type: business_domain
     title: "Business AI"
     classification: cross_cutting_platform_domain
-    remember: "Use AI with business context and control."
-    purpose: "Use, build, run, ground, and govern AI assistants, agents, models, and AI-enabled processes."
+    remember: "Use AI, build AI, run AI, ground AI, and govern AI."
+    purpose: "Embed, build, run, ground, and govern AI for business processes."
     primary_topic: TOPIC-SAP-BUSINESS-AI-PLATFORM
 
   - id: BDOM-SECURITY-IDENTITY-GOVERNANCE
     type: business_domain
-    title: "Security, Identity and Governance"
+    title: "Security, Identity and Technology Governance"
     classification: cross_cutting_platform_domain
-    remember: "Control who can do what, and prove it."
-    purpose: "Manage identity, authorization, security, standards, auditability, and technology governance."
+    remember: "Control access, risk, and technology standards."
+    purpose: "Manage identity, authorization, security, technology standards, lifecycle governance, and auditability."
 
   - id: BDOM-BUSINESS-TRANSFORMATION
     type: business_domain
-    title: "Transformation and Enterprise Architecture"
+    title: "Business Transformation and Enterprise Architecture"
     classification: cross_cutting_platform_domain
-    remember: "Connect business change to technology decisions."
-    purpose: "Model capabilities and processes, govern architecture, and manage transformation decisions."
+    remember: "Understand change, choose architecture, and govern transformation."
+    purpose: "Model capabilities and processes, govern architecture, and connect business change to technology decisions."
 
 decision_guide:
-  - question: "What business outcome are we discussing?"
+  - question: "Who owns the business outcome?"
     guidance: "Start with the business domain."
-  - question: "What work must happen?"
-    guidance: "Map the process and solution domain."
-  - question: "Which system should own it?"
-    guidance: "Map the application or platform component."
-  - question: "What crosses domains?"
-    guidance: "Model the end-to-end process separately."
+  - question: "Which process delivers it?"
+    guidance: "Map the end-to-end process separately."
+  - question: "Which deployment model constrains the solution?"
+    guidance: "Check Public Cloud, Private Cloud, or On-Premise before assuming scope or extensibility."
+  - question: "Which SAP component owns the function?"
+    guidance: "Map the application or platform component without renaming the business domain."
 
 tags:
   - enterprise-architecture
   - business-domain
   - sap
   - operating-model
+  - deployment
   - supply-chain
   - business-ai
