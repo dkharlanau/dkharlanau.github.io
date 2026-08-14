@@ -1,0 +1,196 @@
+id: TOPIC-ENTERPRISE-BUSINESS-DOMAINS
+type: research_topic
+title: "Enterprise Business Domain Taxonomy"
+summary: >-
+  A stable top-level taxonomy that separates business ownership domains from SAP solution domains,
+  products, modules, process families, and cross-cutting platform capabilities.
+domain: "Enterprise Architecture"
+process_family: "Cross-enterprise"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: "2026-08-14"
+reviewed_together_at: "2026-08-14"
+review_note: "Reviewed together as a pragmatic enterprise architecture taxonomy for the lab."
+
+business_question: >-
+  What are the stable business domains of the enterprise, how do they decompose into operational
+  subdomains, and how should SAP products and platform capabilities map to them without confusing
+  product names with business ownership?
+
+maturity:
+  gates_complete: 2
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: in_progress
+    relationships: in_progress
+    expert_reasoning: planned
+    synthetic_example: planned
+    ai_evaluation: planned
+
+modeling_rules:
+  - "A business domain expresses enduring business responsibility, not a software product."
+  - "A solution domain groups application capabilities and may map to more than one business domain."
+  - "A process family such as Order-to-Cash or Source-to-Pay crosses domain boundaries and is not itself the top-level domain."
+  - "A product such as SAP S/4HANA, SAP Ariba, SAP EWM, or Joule is mapped to domains; it does not define the domain taxonomy."
+  - "Cross-cutting platform domains support several business domains and are modeled separately from operational ownership domains."
+
+business_domains:
+  - id: BDOM-CUSTOMER-REVENUE
+    type: business_domain
+    title: "Customer, Sales & Revenue"
+    purpose: "Acquire, serve, sell to, contract with, fulfill for, bill, and retain customers while managing commercial revenue processes."
+    subdomains:
+      - "Marketing & Demand Generation"
+      - "Sales & Opportunity Management"
+      - "Configure, Price & Quote"
+      - "Digital Commerce"
+      - "Order Management"
+      - "Customer Service"
+      - "Pricing, Rebates & Commercial Programs"
+    related_solution_domains:
+      - "SAP Sales"
+      - "SAP Customer Experience"
+      - "Order-to-Cash"
+
+  - id: BDOM-SPEND-PROCUREMENT
+    type: business_domain
+    title: "Spend, Procurement & Supplier Management"
+    purpose: "Plan and control external spend, source suppliers, procure goods and services, collaborate with suppliers, receive value, and settle supplier obligations."
+    subdomains:
+      - "Category & Spend Management"
+      - "Strategic Sourcing"
+      - "Operational Procurement"
+      - "Supplier Management"
+      - "Services Procurement"
+      - "Procure-to-Pay"
+      - "Supplier Collaboration"
+    related_solution_domains:
+      - DOM-PROCUREMENT
+      - DOM-COLLABORATION
+
+  - id: BDOM-SUPPLY-CHAIN-OPERATIONS
+    type: business_domain
+    title: "Supply Chain & Operations"
+    purpose: "Plan supply, transform materials, control inventory, execute logistics, assure quality, and move goods across internal and external networks."
+    subdomains:
+      - id: DOM-SUPPLY-PLANNING
+        title: "Supply & Production Planning"
+      - id: DOM-MANUFACTURING
+        title: "Manufacturing & Shop-Floor Execution"
+      - id: DOM-MATERIALS-INVENTORY
+        title: "Materials & Inventory Management"
+      - id: DOM-QUALITY
+        title: "Quality Management"
+      - id: DOM-WAREHOUSING
+        title: "Warehousing & Fulfillment"
+      - id: DOM-TRANSPORTATION
+        title: "Transportation & Freight"
+      - id: DOM-VISIBILITY
+        title: "Logistics Visibility"
+      - id: DOM-YARD
+        title: "Yard Logistics"
+      - id: DOM-GLOBAL-TRADE
+        title: "Global Trade & Compliance"
+      - id: DOM-COLLABORATION
+        title: "Supply Network Collaboration"
+
+  - id: BDOM-FINANCE-PERFORMANCE
+    type: business_domain
+    title: "Finance, Risk & Enterprise Performance"
+    purpose: "Record, control, plan, consolidate, report, finance, and govern the economic performance and financial obligations of the enterprise."
+    subdomains:
+      - "Record-to-Report"
+      - "Management Accounting"
+      - "Treasury & Working Capital"
+      - "Tax"
+      - "Group Reporting & Consolidation"
+      - "Planning & Enterprise Performance Management"
+      - "Financial Risk & Controls"
+
+  - id: BDOM-PEOPLE-WORKFORCE
+    type: business_domain
+    title: "People & Workforce"
+    purpose: "Attract, hire, develop, reward, schedule, support, and retain employees and external workforce."
+    subdomains:
+      - "Core HR"
+      - "Talent Acquisition"
+      - "Learning & Development"
+      - "Performance & Compensation"
+      - "Time & Payroll"
+      - "Workforce Planning"
+      - "External Workforce"
+
+  - id: BDOM-ASSET-SERVICE-OPERATIONS
+    type: business_domain
+    title: "Asset, Maintenance & Service Operations"
+    purpose: "Manage enterprise assets and service obligations across maintenance, field work, repair, reliability, and service execution."
+    subdomains:
+      - "Enterprise Asset Management"
+      - "Maintenance & Reliability"
+      - "Field Service"
+      - "Repair & Service Execution"
+      - "Service Parts"
+
+  - id: BDOM-SUSTAINABILITY-COMPLIANCE
+    type: business_domain
+    title: "Sustainability, Safety & Compliance"
+    purpose: "Measure and govern sustainability, environmental, safety, regulatory, and responsible-business obligations across enterprise operations."
+    subdomains:
+      - "Sustainability Management"
+      - "Environment, Health & Safety"
+      - "Product Compliance"
+      - "Corporate Compliance"
+      - "Responsible Supply Chain"
+
+platform_domains:
+  - id: BDOM-DATA-ANALYTICS
+    type: business_domain
+    title: "Data, Analytics & Enterprise Semantics"
+    classification: cross_cutting_platform_domain
+    purpose: "Provide governed enterprise data, semantic models, analytics, planning data products, and reusable context for applications and AI."
+
+  - id: BDOM-INTEGRATION-EXTENSIBILITY
+    type: business_domain
+    title: "Integration, Automation & Extensibility"
+    classification: cross_cutting_platform_domain
+    purpose: "Connect applications and partners, expose APIs and events, automate workflows, and build clean-core extensions."
+
+  - id: BDOM-BUSINESS-AI
+    type: business_domain
+    title: "Business AI"
+    classification: cross_cutting_platform_domain
+    purpose: "Embed, build, run, ground, govern, and extend AI assistants, agents, models, skills, and AI-enabled business processes."
+    primary_topic: TOPIC-SAP-BUSINESS-AI-PLATFORM
+
+  - id: BDOM-SECURITY-IDENTITY-GOVERNANCE
+    type: business_domain
+    title: "Security, Identity & Technology Governance"
+    classification: cross_cutting_platform_domain
+    purpose: "Control identity, authorization, security posture, technology standards, lifecycle governance, and auditability across the landscape."
+
+  - id: BDOM-BUSINESS-TRANSFORMATION
+    type: business_domain
+    title: "Business Transformation & Enterprise Architecture"
+    classification: cross_cutting_platform_domain
+    purpose: "Model business capabilities and processes, govern architecture, manage transformation portfolios, and connect business change to technology decisions."
+
+decision_guide:
+  - question: "Who owns the business outcome?"
+    guidance: "Start with a BDOM business domain."
+  - question: "Which functional responsibility is required?"
+    guidance: "Decompose into a stable operational or solution domain."
+  - question: "Which SAP component should implement it?"
+    guidance: "Map one or more application or platform components to the domain; do not rename the domain after the product."
+  - question: "Which end-to-end process crosses it?"
+    guidance: "Model the process separately and connect its steps to the domains and applications that own execution."
+
+tags:
+  - enterprise-architecture
+  - business-domain
+  - sap
+  - operating-model
+  - supply-chain
+  - business-ai
