@@ -1,0 +1,711 @@
+id: GRAPH-SD-ATP-AATP
+$type: knowledge_graph
+title: "ATP / aATP — Promise, Allocation & Reconfirmation Map"
+summary: >-
+  A practical model of SAP S/4HANA availability confirmation: what triggers the check,
+  how scope and dates are built, how supply and demand are read, how a confirmation is
+  created, and how aATP methods can protect, redistribute, or substitute that promise.
+domain: "SAP S/4HANA Sales"
+process_family: "Order-to-Cash"
+process_step: "Confirm Sales Order Requirement"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+
+thesis: >-
+  ATP is not a stock lookup. It is a promise engine. A confirmation is the result of a
+  requirement, product, plant, material-availability date, scope of check, visible supply
+  and demand, and optional allocation/protection/substitution rules. I debug the promise
+  from those inputs instead of trying to prove it with one inventory number.
+
+boundary:
+  included:
+    - "sales-order availability relevance and transfer of requirements"
+    - "checking group, checking rule, and scope of availability check"
+    - "material availability date and scheduling dependency"
+    - "product availability check (PAC) and delivery proposals"
+    - "future receipts and competing requirements according to scope"
+    - "product allocation (PAL)"
+    - "supply protection (SUP)"
+    - "backorder processing (BOP) and confirmation strategies"
+    - "interactive confirmation adjustment as an operational concept"
+    - "alternative-based confirmation (ABC) for plant, storage location, or product substitution"
+    - "released aATP extensibility examples for ABC and BOP"
+    - "Advanced ATP Check API as an integration/simulation boundary"
+  excluded:
+    - "SAP APO Global ATP historical configuration in depth"
+    - "PP component availability checks in depth"
+    - "fashion supply assignment in depth"
+    - "capacity allocation in depth"
+    - "supply creation internals"
+    - "client-specific checking groups, strategies, exits, or custom code"
+  release_scope:
+    - "SAP S/4HANA 2025 FPS01 where cited"
+  note: >-
+    Not every aATP capability is active in every landscape. The effective behavior depends
+    on edition, activated scope, material/check configuration, document type, and business design.
+
+memory_model:
+  title: "Nine questions I use for availability"
+  questions:
+    - key: "TRIGGER"
+      question: "Should this requirement be checked at all?"
+      answer: "Start with schedule-line and requirements control before investigating supply."
+    - key: "WHERE"
+      question: "Which product and plant are being promised?"
+      answer: "A different plant means a different availability situation."
+    - key: "WHEN"
+      question: "Which material availability date is the check using?"
+      answer: "The requested delivery date is not automatically the date used for the supply check."
+    - key: "SCOPE"
+      question: "Which stocks, receipts, and requirements are visible?"
+      answer: "Checking group plus checking rule define the scope of availability check."
+    - key: "NET"
+      question: "What supply remains after relevant demand is considered?"
+      answer: "PAC works with the configured supply/demand picture, not with one stock figure."
+    - key: "PROMISE"
+      question: "Which quantity and date are actually confirmed?"
+      answer: "Read confirmation schedule lines and delivery proposals, not only requested quantity."
+    - key: "PROTECT"
+      question: "Is available supply restricted by business policy?"
+      answer: "PAL can cap consumption while SUP can protect minimum quantities for selected groups."
+    - key: "REBALANCE"
+      question: "Can existing confirmations be redistributed?"
+      answer: "BOP can improve, retain, worsen, or remove confirmations according to strategy and priority."
+    - key: "ALTERNATIVE"
+      question: "Can another product or location fulfill the requirement?"
+      answer: "ABC can evaluate alternative plants, storage locations, or products when configured."
+
+classic_control_foundation:
+  title: "The control chain underneath both ATP and aATP"
+  summary: >-
+    I separate activation/control questions from supply questions. If the document is not
+    ATP-relevant, there is no reason to investigate purchase orders or stock first.
+  controls:
+    - id: ATP-CTRL-SCHEDULE-LINE
+      title: "Schedule line category"
+      role: "Controls whether availability check and transfer of requirements are relevant in the sales document."
+      check_first: "Read the actual schedule line category and its availability/requirements behavior."
+      source_refs:
+        - SRC-SAP-ATP-CONTROL
+    - id: ATP-CTRL-REQUIREMENTS
+      title: "Requirements control"
+      role: "Connects sales demand to requirements behavior used by planning and availability logic."
+      check_first: "Confirm the requirement is transferred and represented as expected before blaming PAC."
+      source_refs:
+        - SRC-SAP-ATP-CONTROL
+    - id: ATP-CTRL-CHECKING-GROUP
+      title: "Checking group"
+      role: "Material-level availability-check control that combines with the transaction checking rule."
+      check_first: "Read the checking group from the exact material/plant context."
+      source_refs:
+        - SRC-SAP-ATP-CONTROL
+        - SRC-SAP-AATP-SCOPE
+    - id: ATP-CTRL-CHECKING-RULE
+      title: "Checking rule"
+      role: "Business-operation control used with the checking group to determine scope."
+      check_first: "Identify the rule for this transaction instead of assuming the order and delivery use the same scope."
+      source_refs:
+        - SRC-SAP-ATP-CONTROL
+        - SRC-SAP-AATP-SCOPE
+    - id: ATP-CTRL-SCOPE
+      title: "Scope of availability check"
+      role: "Defines which stock, receipt, issue, and requirement elements are considered."
+      check_first: "Compare the expected supply element with the configured scope before asking why it was ignored."
+      source_refs:
+        - SRC-SAP-AATP-SCOPE
+
+runtime_pipeline:
+  - id: ATP-STAGE-ELIGIBILITY
+    order: 1
+    title: "Establish ATP relevance"
+    question: "Does this sales requirement enter availability logic?"
+    inputs:
+      - "sales document item and schedule line"
+      - "schedule line category"
+      - "requirements class/type context"
+      - "material checking configuration"
+    output:
+      - "ATP-relevant requirement or no availability check"
+    failure_signal: "No meaningful confirmation behavior because the requirement is not configured for the expected check."
+    source_refs:
+      - SRC-SAP-ATP-CONTROL
+
+  - id: ATP-STAGE-CONTEXT
+    order: 2
+    title: "Build requirement context"
+    question: "Which material, plant, quantity, and requested date are we promising?"
+    inputs:
+      - "product/material"
+      - "delivering plant"
+      - "requested quantity"
+      - "requested delivery date"
+      - "sales document and partner context"
+    output:
+      - "requirement context for scheduling and availability"
+    failure_signal: "The consultant is checking the right material but the wrong plant, quantity, or document context."
+
+  - id: ATP-STAGE-SCHEDULING
+    order: 3
+    title: "Calculate logistics dates"
+    question: "On which date must the material actually be available?"
+    inputs:
+      - "requested delivery date"
+      - "route and transportation time"
+      - "shipping point and loading/pick-pack time"
+      - "factory calendars"
+    output:
+      - "material availability date"
+      - "goods issue/loading/transportation dates where relevant"
+    failure_signal: "The user compares stock against the requested delivery date while PAC checks a different material availability date."
+    source_refs:
+      - SRC-SAP-AATP-SCHEDULING
+
+  - id: ATP-STAGE-SCOPE
+    order: 4
+    title: "Determine scope of check"
+    question: "Which supply and demand elements are allowed into the calculation?"
+    inputs:
+      - "checking group"
+      - "checking rule"
+      - "scope configuration"
+      - "replenishment/check-horizon settings where relevant"
+    output:
+      - "effective availability-check scope"
+    failure_signal: "A purchase order, production order, stock type, or requirement exists but is intentionally outside the scope."
+    source_refs:
+      - SRC-SAP-AATP-SCOPE
+      - SRC-SAP-AATP-CHECK-HORIZON
+
+  - id: ATP-STAGE-PAC
+    order: 5
+    title: "Run Product Availability Check"
+    question: "What quantity can be confirmed on which date?"
+    inputs:
+      - "material and plant"
+      - "material availability date"
+      - "requested quantity"
+      - "effective scope"
+      - "relevant stocks and receipts"
+      - "relevant issues and requirements"
+    output:
+      - "confirmed quantity"
+      - "confirmed date"
+      - "availability result"
+    failure_signal: "Stock is visible in inventory, but net available quantity for this requirement is lower or zero."
+    source_refs:
+      - SRC-SAP-AATP-PAC
+      - SRC-SAP-AATP-SCOPE
+
+  - id: ATP-STAGE-DELIVERY-OPTION
+    order: 6
+    title: "Create confirmation / delivery proposal"
+    question: "Should the customer receive a partial, later, or complete proposal?"
+    inputs:
+      - "PAC result"
+      - "requested quantity/date"
+      - "delivery-option/default settings by sales area"
+    output:
+      - "confirmation schedule lines and delivery proposal"
+    failure_signal: "PAC found future quantity, but the selected delivery option does not present it in the way the user expected."
+    source_refs:
+      - SRC-SAP-AATP-DELIVERY-OPTIONS
+
+  - id: ATP-STAGE-POLICY
+    order: 7
+    title: "Apply allocation and protection policy"
+    question: "Is technically available supply commercially available to this demand?"
+    inputs:
+      - "product allocation objects and time buckets where active"
+      - "supply protection objects and time buckets where active"
+      - "customer/region/channel and other matching characteristics"
+      - "scope/check configuration"
+    output:
+      - "restricted or protected confirmation quantity"
+    failure_signal: "Physical supply exists, but PAL or SUP intentionally prevents this demand from consuming all of it."
+    source_refs:
+      - SRC-SAP-AATP-PAL
+      - SRC-SAP-AATP-SUP
+      - SRC-SAP-AATP-SUP-PAL
+
+  - id: ATP-STAGE-ABC
+    order: 8
+    title: "Evaluate alternatives"
+    question: "Can another product, plant, or storage location produce a better confirmation?"
+    inputs:
+      - "substitution strategy"
+      - "alternative control"
+      - "substitution master data or available locations"
+      - "alternative determination"
+      - "availability results for substitutes"
+    output:
+      - "selected alternative confirmation"
+      - "possible substituted plant/storage location/product"
+      - "possible subitems depending on substitution design"
+    failure_signal: "The order changes location or product because ABC found an alternative that ranks higher than the original shortage result."
+    source_refs:
+      - SRC-SAP-AATP-ABC
+      - SRC-SAP-AATP-ABC-PRODUCT
+
+  - id: ATP-STAGE-BOP
+    order: 9
+    title: "Reconfirm through Backorder Processing"
+    question: "When supply changes, which existing requirements should win or lose confirmation?"
+    inputs:
+      - "BOP variant"
+      - "segments and filters"
+      - "confirmation strategy"
+      - "requirement priority/sorting"
+      - "current supply and confirmation situation"
+    output:
+      - "updated confirmations for selected requirements"
+    failure_signal: "A previously confirmed sales order becomes worse because a BOP run intentionally reallocates supply."
+    source_refs:
+      - SRC-SAP-AATP-BOP-STRATEGIES
+      - SRC-SAP-AATP-BOP-CONFIG
+
+advanced_capabilities:
+  - id: AATP-CAP-PAC
+    title: "PAC"
+    full_name: "Product Availability Check"
+    business_question: "Can this requirement be fulfilled at this product/location/date?"
+    remember: "Core promise calculation."
+  - id: AATP-CAP-PAL
+    title: "PAL"
+    full_name: "Product Allocation"
+    business_question: "How much may this group consume from constrained supply?"
+    remember: "Upper limit / allocation policy."
+    source_refs:
+      - SRC-SAP-AATP-PAL
+  - id: AATP-CAP-SUP
+    title: "SUP"
+    full_name: "Supply Protection"
+    business_question: "Which minimum supply should remain protected for selected groups?"
+    remember: "Protection against other demand."
+    source_refs:
+      - SRC-SAP-AATP-SUP
+  - id: AATP-CAP-BOP
+    title: "BOP"
+    full_name: "Backorder Processing"
+    business_question: "How should scarce supply be redistributed across existing requirements?"
+    remember: "Re-prioritize confirmations after the situation changes."
+    source_refs:
+      - SRC-SAP-AATP-BOP-STRATEGIES
+  - id: AATP-CAP-ABC
+    title: "ABC"
+    full_name: "Alternative-Based Confirmation"
+    business_question: "Can another product or location provide a better promise?"
+    remember: "Search alternatives, then confirm."
+    source_refs:
+      - SRC-SAP-AATP-ABC
+
+bop_strategies:
+  - code: "WIN"
+    meaning: "Try to fully confirm on the requested date; inability to do so can raise an exception."
+    lead_question: "Which requirements are important enough that failure to retain the target should stop or isolate processing?"
+  - code: "GAIN"
+    meaning: "Retain at least the current confirmation and improve where possible; inability to retain can raise an exception."
+    lead_question: "Which customers must not become worse during redistribution?"
+  - code: "IMPROVE"
+    meaning: "Try to retain or improve, but allow a worse result without the same exception behavior as Gain."
+    lead_question: "Is improvement preferred but not guaranteed?"
+  - code: "REDISTRIBUTE"
+    meaning: "Allow better, equal, or worse confirmation according to priority and current availability."
+    lead_question: "Is this the pool from which supply may be rebalanced?"
+  - code: "FILL"
+    meaning: "Do not improve beyond the previous confirmation; quantity may be released for higher priorities."
+    lead_question: "Which requirements may give up supply but should not gain more?"
+  - code: "LOSE"
+    meaning: "Remove current confirmation and release the quantity."
+    lead_question: "Which requirements should intentionally lose their promise?"
+  - code: "SKIP"
+    meaning: "Keep current confirmation and do not include the requirement in the availability check."
+    lead_question: "Which requirements should be protected from this BOP recheck?"
+  source_refs:
+    - SRC-SAP-AATP-BOP-STRATEGIES
+
+extension_layers:
+  - id: AATP-EXT-ABC
+    title: "ABC alternative determination BAdI"
+    principle: >-
+      Use custom alternative determination when standard rating/constraint logic cannot express
+      how available substitutes should be prioritized or consumed.
+    technical_shape:
+      - "BAdI BADI_ATP_ABC_ALTV_DETMNR"
+      - "input contains the requirement, valid substitutes, and available confirmations"
+      - "implementation chooses confirmations from available alternatives"
+    diagnostic_checks:
+      - "First prove which substitutes standard logic produced."
+      - "Then check the custom determiner and its ranking/selection rules."
+      - "Compare the chosen alternative with the business KPI or constraint the implementation is meant to optimize."
+    trap: >-
+      A custom determiner can make the final result look like a PAC problem even when PAC correctly
+      calculated all alternatives and custom logic selected a different one.
+    source_refs:
+      - SRC-SAP-AATP-ABC-BADI
+
+  - id: AATP-EXT-BOP
+    title: "BOP requirement-list BAdIs"
+    principle: >-
+      Keep standard segments, filters, sorting, and confirmation strategies visible. Extend the
+      requirement list only when the business priority cannot be expressed with standard BOP design.
+    technical_shape:
+      - "ATP_BOP_INSERT_REQUIREMENTS"
+      - "ATP_BOP_REORDER_REQUIREMENTS"
+      - "ATP_BOP_REMOVE_REQUIREMENTS"
+    diagnostic_checks:
+      - "Compare the requirements selected by standard segment logic with the list after BAdI processing."
+      - "Check whether a custom reorder moved the requirement to another position, segment, or strategy."
+      - "Treat custom priority as business policy that needs regression tests, not as a harmless technical sort."
+    trap: >-
+      A correct BOP variant can still produce an unexpected sequence if custom logic modifies the
+      selected requirements after standard selection.
+    source_refs:
+      - SRC-SAP-AATP-BOP-EXT
+      - SRC-SAP-AATP-BOP-REORDER
+
+integration_boundary:
+  - id: ATP-INT-SALES
+    title: "Sales document"
+    direction: "requirement_in / confirmation_out"
+    details:
+      - "schedule lines provide requirement quantity/date context"
+      - "confirmation updates quantity/date commitment"
+      - "plant and shipping/scheduling decisions influence the check context"
+  - id: ATP-INT-MM-PP
+    title: "Inventory, procurement, and production"
+    direction: "supply_and_demand_context"
+    details:
+      - "stock and future receipts can be relevant depending on scope"
+      - "purchase and production elements may change future availability"
+      - "planning demand competes for the same material/location timeline where relevant"
+  - id: ATP-INT-DELIVERY
+    title: "Delivery execution"
+    direction: "promise_to_execution"
+    details:
+      - "confirmed schedule lines define delivery feasibility"
+      - "availability can be checked again in later process steps according to configuration"
+  - id: ATP-INT-API
+    title: "External order promising / simulation"
+    direction: "simulation"
+    details:
+      - "Advanced ATP Check API can simulate an availability check without creating an order or persistent reservation"
+      - "supported aATP methods depend on service/release scope"
+      - "application logging can support technical analysis of API checks"
+    source_refs:
+      - SRC-SAP-AATP-API
+
+practitioner_heuristics:
+  - id: HEUR-ATP-NO-STOCK-SCREENSHOT
+    context: "Sales order is unconfirmed although stock exists"
+    statement: "I never use one stock screenshot as proof that ATP is wrong."
+    confidence: high
+    checks:
+      - "exact plant"
+      - "material availability date"
+      - "checking group and rule"
+      - "scope of check"
+      - "competing requirements"
+      - "PAL/SUP restrictions"
+    anti_patterns:
+      - "compare unrestricted stock with order quantity and stop"
+      - "change scope before reading the current confirmation"
+
+  - id: HEUR-ATP-FIRST-WRONG-INPUT
+    context: "Unexpected confirmation date or quantity"
+    statement: "I trace backward until I find the first wrong input to the promise."
+    confidence: high
+    checks:
+      - "plant"
+      - "requested delivery date"
+      - "material availability date"
+      - "checking configuration"
+      - "supply/demand element"
+      - "policy restriction"
+
+  - id: HEUR-ATP-FUTURE-RECEIPT
+    context: "Purchase or production receipt exists but confirmation ignores it"
+    statement: "I prove that the receipt is relevant to this exact scope and date before I call PAC wrong."
+    confidence: high
+    questions:
+      - "Is the receipt included in scope?"
+      - "Is its date useful for this requirement?"
+      - "Is another demand consuming it first?"
+      - "Does the check horizon or replenishment logic change the result?"
+
+  - id: HEUR-ATP-BOP-IS-POLICY
+    context: "Previously confirmed order becomes worse after a BOP run"
+    statement: "I treat BOP as business prioritization, not as a background technical job."
+    confidence: high
+    checks:
+      - "variant"
+      - "segment membership"
+      - "confirmation strategy"
+      - "sorting priority"
+      - "custom BOP BAdIs"
+    anti_patterns:
+      - "restore quantity manually without explaining why the order lost priority"
+
+  - id: HEUR-ATP-PAL-SUP
+    context: "Supply exists but a customer cannot consume it"
+    statement: "I separate allocation limits from protected quantities before changing either one."
+    confidence: high
+    questions:
+      - "Is PAL limiting this group?"
+      - "Is SUP protecting supply for another group?"
+      - "Do PAL and SUP use compatible characteristics and time buckets?"
+    source_refs:
+      - SRC-SAP-AATP-SUP-PAL
+
+  - id: HEUR-ATP-ABC-COST
+    context: "ABC finds an alternative location or product"
+    statement: "A better confirmation is not automatically a better business decision."
+    confidence: medium
+    questions:
+      - "What happens to freight, tax, route, lead time, margin, and warehouse execution?"
+      - "Is the alternative acceptable for the customer and downstream process?"
+      - "Which ranking criterion selected it?"
+    anti_patterns:
+      - "optimize confirmation date while ignoring downstream cost or process constraints"
+
+failure_modes:
+  - id: FAIL-ATP-STOCK-NO-CONFIRM
+    symptom: "Stock exists, but confirmed quantity is zero or lower than expected."
+    likely_causes:
+      - "wrong plant"
+      - "stock type not included or not available to this check"
+      - "competing demand consumed ATP quantity"
+      - "PAL/SUP restriction"
+      - "material availability date differs from the date being inspected"
+    first_checks:
+      - "order plant and material availability date"
+      - "scope of check"
+      - "supply/demand picture"
+
+  - id: FAIL-ATP-RECEIPT-IGNORED
+    symptom: "A future purchase or production receipt exists, but confirmation does not use it."
+    likely_causes:
+      - "receipt category excluded from scope"
+      - "receipt is later than useful date"
+      - "earlier requirements consume the quantity"
+      - "check-horizon/replenishment behavior differs from expectation"
+    first_checks:
+      - "receipt date"
+      - "scope"
+      - "requirement sequence"
+
+  - id: FAIL-ATP-DATE-LATE
+    symptom: "Confirmed delivery date is later than the business expected."
+    likely_causes:
+      - "scheduling moved material availability date"
+      - "first usable receipt is later"
+      - "delivery proposal requires full delivery or another configured behavior"
+    first_checks:
+      - "requested delivery date versus material availability date"
+      - "scheduling dates"
+      - "delivery option"
+
+  - id: FAIL-ATP-PAL
+    symptom: "Stock is available, but one region/customer/channel cannot confirm the full quantity."
+    likely_causes:
+      - "product allocation limit reached"
+      - "wrong characteristic match"
+      - "wrong time bucket/date basis"
+    first_checks:
+      - "matched allocation object/sequence"
+      - "consumption and remaining allocation"
+
+  - id: FAIL-ATP-SUP
+    symptom: "Supply remains unused for this order although physical quantity is present."
+    likely_causes:
+      - "quantity is protected for another group"
+      - "protection object/time bucket matches this material-plant"
+      - "scope activates supply protection"
+    first_checks:
+      - "protection object"
+      - "matching characteristics"
+      - "remaining protected quantity"
+
+  - id: FAIL-ATP-BOP-WORSE
+    symptom: "An order was confirmed yesterday but became partially or later confirmed after BOP."
+    likely_causes:
+      - "requirement belongs to Redistribute, Fill, or Lose logic"
+      - "higher-priority requirements consumed available quantity"
+      - "custom reorder/removal logic changed processing order"
+    first_checks:
+      - "BOP run result"
+      - "segment and strategy"
+      - "sorting/custom BAdI"
+
+  - id: FAIL-ATP-ABC-UNEXPECTED
+    symptom: "Sales order uses an unexpected alternative plant, storage location, or product."
+    likely_causes:
+      - "substitution strategy is active"
+      - "alternative determination ranked another substitute higher"
+      - "custom BAdI changed alternative selection"
+    first_checks:
+      - "original requirement"
+      - "substitution strategy/control"
+      - "available alternatives and ranking"
+
+impact_traces:
+  - id: TRACE-ATP-WRONG-PLANT
+    title: "Wrong plant changes the promise"
+    path:
+      - "Plant determination"
+      - "material/plant availability context"
+      - "PAC supply and demand"
+      - "confirmed quantity/date"
+      - "delivery feasibility"
+    explanation: "The availability engine can be correct and still produce a wrong business result if the plant was wrong upstream."
+
+  - id: TRACE-ATP-SCHEDULING
+    title: "Date disagreement is often upstream"
+    path:
+      - "Requested delivery date"
+      - "route/shipping lead times"
+      - "material availability date"
+      - "PAC"
+      - "confirmed delivery date"
+    explanation: "A late confirmation can begin with scheduling rather than supply shortage."
+
+  - id: TRACE-ATP-PAL-SUP
+    title: "Physical availability is not commercial availability"
+    path:
+      - "physical/future supply"
+      - "PAC"
+      - "PAL/SUP policy"
+      - "restricted confirmation"
+      - "customer promise"
+    explanation: "Business policy can intentionally reserve or cap supply even when inventory exists."
+
+  - id: TRACE-ATP-BOP
+    title: "Priority can rewrite yesterday's promise"
+    path:
+      - "changed supply/demand"
+      - "BOP variant"
+      - "segment + strategy + sort"
+      - "reprocessed requirements"
+      - "new confirmations"
+    explanation: "A BOP result must be explained as a prioritization decision, not only as an ATP recalculation."
+
+  - id: TRACE-ATP-ABC
+    title: "Better confirmation changes downstream logistics"
+    path:
+      - "shortage at requested product/location"
+      - "ABC alternatives"
+      - "alternative determination"
+      - "substituted product/location"
+      - "new shipping/tax/cost/execution context"
+    explanation: "Alternative confirmation can solve availability and create new downstream design consequences."
+
+synthetic_cases:
+  - id: SCN-ATP-FUTURE-SUPPLY
+    title: "100 requested, supply arrives in waves"
+    synthetic: true
+    context:
+      - "Customer requests 100 EA for Plant A."
+      - "Current usable stock is 30 EA."
+      - "Production receipt of 50 EA is expected next week."
+      - "Purchase receipt of 40 EA is expected in two weeks."
+    task: >-
+      Do not guess the confirmation from these four numbers. Determine material availability date,
+      checking group/rule, scope, other demand, delivery option, and any PAL/SUP restriction first.
+    lead_answer_shape:
+      - "State which facts are still missing."
+      - "Explain which receipt categories must be in scope."
+      - "Explain how dates and competing requirements affect confirmation."
+      - "Only then describe possible partial/full confirmation outcomes."
+
+  - id: SCN-ATP-SHORTAGE-PRIORITY
+    title: "One shortage, three customer priorities"
+    synthetic: true
+    context:
+      - "Three customers already hold confirmations for the same constrained material/plant."
+      - "A strategic customer now needs quantity earlier."
+      - "A BOP run is planned."
+    task: >-
+      Design a transparent prioritization using standard BOP segments and confirmation strategies
+      before considering custom BAdIs. Explain which requirements may improve, retain, or lose supply.
+
+  - id: SCN-ATP-ALTERNATIVE-PLANT
+    title: "Plant A is short; Plant B can confirm"
+    synthetic: true
+    context:
+      - "Requested plant cannot confirm on time."
+      - "Another plant can provide earlier confirmation."
+      - "Freight and route differ between plants."
+    task: >-
+      Explain how ABC can solve the promise and which downstream sales/logistics impacts must be checked
+      before treating the alternative as automatically better.
+
+assessment_drills:
+  - id: DRILL-ATP-01
+    question: "The material has 500 EA unrestricted stock, but the sales order confirms zero. What do you check first and why?"
+    expected_dimensions:
+      - "plant and material availability date"
+      - "ATP relevance"
+      - "checking group/rule/scope"
+      - "competing demand"
+      - "PAL/SUP restrictions"
+
+  - id: DRILL-ATP-02
+    question: "A purchase order exists for tomorrow, but ATP ignores it. Give a diagnostic sequence."
+    expected_dimensions:
+      - "receipt date"
+      - "scope inclusion"
+      - "material availability date"
+      - "other requirements"
+      - "check horizon/replenishment behavior"
+
+  - id: DRILL-ATP-03
+    question: "Explain the difference between PAL and SUP without using configuration terminology first."
+    expected_dimensions:
+      - "PAL as maximum allocation/consumption limit"
+      - "SUP as protected minimum quantity"
+      - "matching groups/time buckets"
+      - "risk of conflicting models"
+
+  - id: DRILL-ATP-04
+    question: "A previously confirmed order becomes worse after BOP. Is that a defect?"
+    expected_dimensions:
+      - "variant/segment/strategy"
+      - "priority and changed supply/demand"
+      - "Win/Gain/Redistribute/Fill/Lose semantics"
+      - "custom BOP extensibility"
+
+  - id: DRILL-ATP-05
+    question: "When would you use ABC instead of simply adding another delivering plant rule upstream?"
+    expected_dimensions:
+      - "initial plant determination versus availability-based substitution"
+      - "multiple alternatives and ranking"
+      - "product/storage-location alternatives"
+      - "downstream logistics consequences"
+
+  - id: DRILL-ATP-06
+    question: "The business wants a custom BOP priority based on an attribute not expressible in standard segments. How do you approach it?"
+    expected_dimensions:
+      - "prove standard segment/sort limitations first"
+      - "define business priority and deterministic tests"
+      - "consider ATP_BOP_REORDER_REQUIREMENTS or related released BAdIs"
+      - "regression impact across other segments and strategies"
+
+source_refs:
+  - SRC-SAP-ATP-CONTROL
+  - SRC-SAP-AATP-PAC
+  - SRC-SAP-AATP-SCOPE
+  - SRC-SAP-AATP-SCHEDULING
+  - SRC-SAP-AATP-DELIVERY-OPTIONS
+  - SRC-SAP-AATP-CHECK-HORIZON
+  - SRC-SAP-AATP-PAL
+  - SRC-SAP-AATP-SUP
+  - SRC-SAP-AATP-SUP-PAL
+  - SRC-SAP-AATP-BOP-STRATEGIES
+  - SRC-SAP-AATP-BOP-CONFIG
+  - SRC-SAP-AATP-BOP-EXT
+  - SRC-SAP-AATP-BOP-REORDER
+  - SRC-SAP-AATP-ABC
+  - SRC-SAP-AATP-ABC-PRODUCT
+  - SRC-SAP-AATP-ABC-BADI
+  - SRC-SAP-AATP-API
