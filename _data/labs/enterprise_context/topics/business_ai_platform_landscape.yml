@@ -1,0 +1,451 @@
+id: TOPIC-SAP-BUSINESS-AI-PLATFORM
+type: research_topic
+title: "SAP Business AI & AI Platform Landscape"
+summary: >-
+  Decision-oriented map of SAP Business AI from user-facing Joule experiences and ready-to-use
+  agents through custom agent development, AI runtime and model access, enterprise grounding,
+  document intelligence, and cross-platform AI governance.
+domain: "SAP Business AI"
+process_family: "Cross-enterprise / AI-enabled business processes"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: "2026-08-14"
+reviewed_together_at: "2026-08-14"
+review_note: "Reviewed together against current official SAP product, pricing, and Help Portal sources."
+
+business_question: >-
+  Which SAP Business AI component should own the user experience, agent or skill development,
+  AI runtime, model access, business grounding, document processing, or governance responsibility,
+  and which commercial or architectural boundary changes the decision?
+
+maturity:
+  gates_complete: 2
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: in_progress
+    relationships: in_progress
+    expert_reasoning: planned
+    synthetic_example: planned
+    ai_evaluation: planned
+
+architecture_principles:
+  - "SAP Business AI is an umbrella portfolio; it is not one runtime or one product."
+  - "Joule is the user-facing AI experience; SAP AI Core is a runtime and lifecycle service, not the end-user assistant."
+  - "Generative AI hub extends SAP AI Core and SAP AI Launchpad with governed foundation-model access and orchestration; it does not replace AI Core."
+  - "Joule skills are deterministic task capabilities; Joule agents are intended for adaptive, multi-step, non-deterministic work."
+  - "Grounding and business semantics are separate architectural responsibilities from model inference."
+  - "Agent governance is a separate lifecycle concern from agent building and runtime execution."
+
+layers:
+  - id: AI-LAYER-EXPERIENCE
+    title: "Experience & Intent"
+    purpose: "Give users a unified conversational and agentic work experience across SAP and connected systems."
+    components: [PLT-JOULE, PLT-JOULE-WORK]
+
+  - id: AI-LAYER-BUSINESS-AGENTS
+    title: "Ready-to-Use Business AI"
+    purpose: "Deliver SAP-provided assistants, agents, skills, and embedded AI scenarios with business-process context."
+    components: [AI-JOULE-ASSISTANTS, AI-JOULE-AGENTS]
+
+  - id: AI-LAYER-BUILD-EXTEND
+    title: "Build & Extend"
+    purpose: "Create custom Joule skills, agents, AI applications, and workflows connected to enterprise APIs and context."
+    components: [PLT-JOULE-STUDIO]
+
+  - id: AI-LAYER-RUNTIME-MODELS
+    title: "AI Runtime, Operations & Model Access"
+    purpose: "Run AI workloads, manage lifecycle and deployments, access foundation models, orchestrate prompts, and operate AI scenarios."
+    components: [PLT-AI-FOUNDATION, PLT-SAP-AI-CORE, PLT-SAP-AI-LAUNCHPAD, PLT-GENERATIVE-AI-HUB, PLT-SAP-DOCUMENT-AI]
+
+  - id: AI-LAYER-GROUNDING
+    title: "Business Context, Data & Grounding"
+    purpose: "Ground AI in governed enterprise data, business semantics, relationships, and SAP-specific domain knowledge."
+    components: [PLT-SAP-BUSINESS-DATA-CLOUD, PLT-SAP-KNOWLEDGE-GRAPH, AI-SAP-DOMAIN-MODELS, PLT-SAP-HANA-CLOUD]
+
+  - id: AI-LAYER-GOVERNANCE
+    title: "AI Governance & Portfolio Control"
+    purpose: "Discover, inventory, assess, govern, and observe agents, models, and MCP servers across SAP and third-party platforms."
+    components: [PLT-SAP-AI-AGENT-HUB]
+
+components:
+  - id: PLT-SAP-BUSINESS-AI-PLATFORM
+    type: platform_component
+    title: "SAP Business AI Platform"
+    architecture_role: "Enterprise AI platform umbrella"
+    layer: architecture_umbrella
+    description: >-
+      SAP's enterprise AI foundation that combines business process context, trusted data,
+      AI development, connectivity, runtime capabilities, and governance so organizations can
+      build, integrate, scale, and operate AI grounded in how the business actually works.
+    best_fit: "Architecture-level framing for the SAP AI technology stack and its integration with SAP business applications, data, and process context."
+    not_for: "It is not a single deployable runtime, model endpoint, or end-user application. Architecture decisions must identify the concrete services underneath it."
+    licensing:
+      commercial_model: "Portfolio / umbrella; no single standalone metric represents the whole platform"
+      note: "Commercial rights are determined by the concrete services, SAP cloud subscriptions, SAP Build entitlements, BTP consumption, AI Units, and product-specific contracts used underneath."
+    official_docs_url: "https://www.sap.com/products/ai-platform.html"
+    official_commercial_url: "https://www.sap.com/products/artificial-intelligence/pricing.html"
+    source_refs: [SRC-SAP-BUSINESS-AI-PLATFORM, SRC-SAP-BUSINESS-AI-PRICING]
+    status: source_verified
+
+  - id: PLT-JOULE
+    type: platform_component
+    title: "Joule"
+    architecture_role: "Unified AI assistant and conversational experience"
+    layer: AI-LAYER-EXPERIENCE
+    description: >-
+      SAP's AI assistant experience embedded across SAP solutions and connected environments.
+      Joule presents contextual information, guides users, invokes capabilities, and provides
+      a common interaction layer for assistants, agents, skills, and business actions.
+    best_fit: "Role-aware conversational access to SAP business context, insights, navigation, and actions in the flow of work."
+    not_for: "It is not the low-level model runtime and it should not be used as a synonym for SAP AI Core, generative AI hub, or every embedded AI feature."
+    licensing:
+      commercial_model: "Joule Base plus optional Premium AI"
+      metric: "Base AI included with supported SAP cloud subscriptions; Premium AI may use AI Units or feature-specific user/consumption models"
+      note: "Activation, supported products, regional availability, premium scenarios, and user entitlement must be validated for the customer's landscape."
+    official_docs_url: "https://help.sap.com/docs/joule/serviceguide/what-is-joule"
+    official_commercial_url: "https://www.sap.com/products/artificial-intelligence/pricing.html"
+    source_refs: [SRC-SAP-JOULE-HELP, SRC-SAP-BUSINESS-AI-PRICING]
+    status: source_verified
+
+  - id: PLT-JOULE-WORK
+    type: platform_component
+    title: "Joule Work"
+    architecture_role: "Unified adaptive workspace for AI-assisted work"
+    layer: AI-LAYER-EXPERIENCE
+    description: >-
+      User-facing workspace positioned by SAP to bring relevant insights, agents, models,
+      and actions together across SAP and non-SAP systems around the user's intent.
+    best_fit: "Cross-application AI work experience where the goal is to reduce context switching and coordinate AI-enabled work around user intent."
+    not_for: "It is not an AI model platform, custom agent development environment, or ERP transaction system of record."
+    licensing:
+      commercial_model: "Commercial packaging depends on Joule and SAP Business AI entitlements"
+      note: "Validate availability and packaging for the target SAP cloud portfolio; public product positioning evolves faster than contractual terms."
+    official_docs_url: "https://www.sap.com/products/artificial-intelligence.html"
+    official_commercial_url: "https://www.sap.com/products/artificial-intelligence/pricing.html"
+    source_refs: [SRC-SAP-BUSINESS-AI, SRC-SAP-BUSINESS-AI-PRICING]
+    status: source_verified
+
+  - id: AI-JOULE-ASSISTANTS
+    type: ai_asset
+    title: "Joule Assistants"
+    architecture_role: "Role- and process-aware coordination layer"
+    layer: AI-LAYER-BUSINESS-AGENTS
+    description: >-
+      Context-aware assistants that translate user intent into business action and coordinate
+      relevant Joule agents and capabilities across workflows and business functions.
+    best_fit: "Role-centered experiences that need to coordinate several business tasks or agents while keeping a coherent user interaction."
+    not_for: "An assistant is not automatically the component that performs every underlying transaction; execution is delegated to agents, skills, APIs, and business applications."
+    licensing:
+      commercial_model: "Base and Premium AI packaging depending on assistant and capability"
+      note: "Check the specific assistant and the products it invokes; premium capabilities can require AI Units or a Joule Premium package."
+    official_docs_url: "https://www.sap.com/products/artificial-intelligence/ai-agents.html"
+    official_commercial_url: "https://www.sap.com/products/artificial-intelligence/pricing.html"
+    source_refs: [SRC-SAP-JOULE-AGENTS, SRC-SAP-BUSINESS-AI-PRICING]
+    status: source_verified
+
+  - id: AI-JOULE-AGENTS
+    type: ai_asset
+    title: "Joule Agents"
+    architecture_role: "Adaptive multi-step business agents"
+    layer: AI-LAYER-BUSINESS-AGENTS
+    description: >-
+      Ready-to-use or custom agents designed for non-deterministic business work. Agents can
+      plan, select tools, call skills or other agents, act on systems, reflect on results,
+      and make recommendations using business and process context.
+    best_fit: "Complex or ambiguous workflows that require multi-step reasoning, tool selection, cross-system actions, and adaptation to intermediate results."
+    not_for: "Do not use an agent where a deterministic API call, workflow, rule, or Joule skill is sufficient; agentic execution adds cost, variability, governance needs, and testing complexity."
+    licensing:
+      commercial_model: "Premium AI / AI Units and product-specific Joule packaging for many advanced scenarios"
+      note: "Exact metering depends on the agent and services it consumes; distinguish agent entitlement from downstream application and API rights."
+    limitations:
+      - "Outputs and execution paths are probabilistic and require stronger evaluation, authorization, observability, and human-control patterns than deterministic automation."
+    official_docs_url: "https://www.sap.com/products/artificial-intelligence/ai-agents.html"
+    official_commercial_url: "https://www.sap.com/products/artificial-intelligence/pricing.html"
+    source_refs: [SRC-SAP-JOULE-AGENTS, SRC-SAP-BUSINESS-AI-PRICING]
+    status: source_verified
+
+  - id: PLT-JOULE-STUDIO
+    type: platform_component
+    title: "Joule Studio"
+    architecture_role: "Custom Joule skill and agent development environment"
+    layer: AI-LAYER-BUILD-EXTEND
+    description: >-
+      SAP Build capability for creating, managing, versioning, and deploying custom Joule
+      skills and agents. Skills suit deterministic tasks with defined inputs and outputs;
+      agents suit adaptive multi-step tasks that dynamically choose tools.
+    best_fit: "Extending Joule with organization-specific actions, APIs, deterministic skills, and custom agentic workflows."
+    not_for: "It does not replace AI Core for general AI runtime workloads or Integration Suite for enterprise-wide integration architecture."
+    licensing:
+      commercial_model: "SAP Build entitlement with active developer licensing for creation and deployment"
+      note: "The reviewed SAP Help prerequisites require SAP Build subscription/entitlement and an active user developer license; exact commercial model can be subscription or BTP consumption agreement based."
+    official_docs_url: "https://help.sap.com/docs/Joule_Studio/45f9d2b8914b4f0ba731570ff9a85313/7d6dc3e0d59d43e48f4d7ece55e4c2a3.html"
+    official_commercial_url: "https://www.sap.com/products/technology-platform/build.html"
+    source_refs: [SRC-SAP-JOULE-STUDIO, SRC-SAP-JOULE-STUDIO-LICENSING]
+    status: source_verified
+
+  - id: PLT-AI-FOUNDATION
+    type: platform_component
+    title: "AI Foundation"
+    architecture_role: "AI lifecycle and platform foundation"
+    layer: AI-LAYER-RUNTIME-MODELS
+    description: >-
+      SAP's AI foundation layer that brings together developer and operations capabilities for
+      building, extending, running, and integrating custom AI solutions and agents, including
+      model exploration, orchestration, Joule extension, and AI operations.
+    best_fit: "Platform-level AI engineering and operations when teams need a governed SAP foundation rather than a single business AI feature."
+    not_for: "It is an architectural/platform umbrella over concrete services; implementation designs still need to identify AI Core, generative AI hub, Joule Studio, Document AI, or other concrete capabilities."
+    licensing:
+      commercial_model: "Underlying BTP services and Business AI entitlements"
+      note: "No single public metric should be applied to every AI Foundation capability; license the concrete services used."
+    official_docs_url: "https://www.sap.com/products/artificial-intelligence/ai-foundation-os.html"
+    official_commercial_url: "https://www.sap.com/products/artificial-intelligence/pricing.html"
+    source_refs: [SRC-SAP-AI-FOUNDATION]
+    status: source_verified
+
+  - id: PLT-SAP-AI-CORE
+    type: platform_component
+    title: "SAP AI Core"
+    architecture_role: "AI runtime, model serving, training and lifecycle execution"
+    layer: AI-LAYER-RUNTIME-MODELS
+    description: >-
+      SAP BTP AI runtime for executing AI workflows, training or serving models, managing
+      deployments and resource groups, and providing the runtime foundation used by the
+      generative AI hub for governed foundation-model access.
+    best_fit: "Production AI workloads that need scalable runtime, lifecycle management, model serving, workload isolation, and integration into SAP BTP."
+    not_for: "It is not the business-user assistant and the Standard plan does not include generative AI hub access."
+    licensing:
+      commercial_model: "BTP service plan and consumption"
+      plans: ["Standard", "Extended"]
+      metric: "Runtime resource/baseline consumption for predictive AI; model/token consumption for generative AI"
+      note: "Generative AI hub requires the Extended service plan."
+    official_docs_url: "https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/sap-ai-core-overview"
+    official_commercial_url: "https://help.sap.com/docs/ai-core/ai-core/service-plans"
+    source_refs: [SRC-SAP-AI-CORE, SRC-SAP-AI-CORE-PLANS, SRC-SAP-AI-CORE-PRICING]
+    status: source_verified
+
+  - id: PLT-SAP-AI-LAUNCHPAD
+    type: platform_component
+    title: "SAP AI Launchpad"
+    architecture_role: "Central AI operations and lifecycle management application"
+    layer: AI-LAYER-RUNTIME-MODELS
+    description: >-
+      Multitenant SaaS application on SAP BTP for managing AI use cases across one or more AI
+      runtimes, working with SAP AI Core resources, monitoring scenarios, and managing prompt
+      lifecycle and generative AI hub activities through a central UI.
+    best_fit: "Central operational management and visibility across AI scenarios and AI Core runtimes."
+    not_for: "AI runtimes are not included in the AI Launchpad subscription; Launchpad manages runtimes rather than replacing them."
+    licensing:
+      commercial_model: "Separate SaaS service plan"
+      metric: "Tenant"
+      note: "SAP documents a fixed monthly charge per subscribed subaccount/tenant; runtime consumption remains separate."
+    official_docs_url: "https://help.sap.com/docs/ai-launchpad/sap-ai-launchpad/what-is-sap-ai-launchpad"
+    official_commercial_url: "https://help.sap.com/docs/ai-launchpad/sap-ai-launchpad/metering-and-pricing"
+    source_refs: [SRC-SAP-AI-LAUNCHPAD, SRC-SAP-AI-LAUNCHPAD-PRICING]
+    status: source_verified
+
+  - id: PLT-GENERATIVE-AI-HUB
+    type: platform_component
+    title: "Generative AI Hub"
+    architecture_role: "Governed foundation-model access and orchestration"
+    layer: AI-LAYER-RUNTIME-MODELS
+    description: >-
+      Capability of SAP AI Core and SAP AI Launchpad that provides governed access to supported
+      foundation models, prompt interaction and lifecycle tooling, and orchestration services
+      within the SAP AI Core runtime and governance boundary.
+    best_fit: "Custom generative AI applications that need a governed multi-model access layer, harmonized APIs, orchestration, and SAP BTP operational controls."
+    not_for: "It does not replace SAP AI Core; runtime, deployment, resource management, and operational control remain in AI Core."
+    licensing:
+      commercial_model: "SAP AI Core Extended service plan plus model consumption"
+      metric: "Input/output tokens converted into capacity or billing units according to model and usage"
+      note: "Model availability, rate limits, conversion rates, and deprecation dates are model- and release-sensitive."
+    official_docs_url: "https://help.sap.com/docs/sap-ai-core/generative-ai/generative-ai-hub"
+    official_commercial_url: "https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/metering-and-pricing-for-generative-ai"
+    source_refs: [SRC-SAP-GENAI-HUB, SRC-SAP-AI-CORE-PLANS, SRC-SAP-AI-CORE-PRICING]
+    status: source_verified
+
+  - id: PLT-SAP-DOCUMENT-AI
+    type: platform_component
+    title: "SAP Document AI"
+    architecture_role: "Document extraction and document-processing AI service"
+    layer: AI-LAYER-RUNTIME-MODELS
+    description: >-
+      AI service for extracting and processing business information from documents and reducing
+      manual document-handling work through APIs and application integration.
+    best_fit: "Structured extraction and automation for business documents where a specialized document AI service is more appropriate than a general-purpose LLM prompt."
+    not_for: "It is not a general conversational assistant, agent runtime, or enterprise integration platform."
+    licensing:
+      commercial_model: "Service-plan-specific metering"
+      metric: "Document blocks, compute hours, requests/users, or AI Units depending on edition"
+      note: "Base, premium, and embedded editions use different metrics."
+    official_docs_url: "https://help.sap.com/docs/document-information-extraction"
+    official_commercial_url: "https://help.sap.com/docs/document-information-extraction/document-information-extraction/metering-and-pricing"
+    source_refs: [SRC-SAP-DOCUMENT-AI-PRICING]
+    status: source_verified
+
+  - id: PLT-SAP-BUSINESS-DATA-CLOUD
+    type: platform_component
+    title: "SAP Business Data Cloud"
+    architecture_role: "Governed enterprise data and semantic grounding foundation"
+    layer: AI-LAYER-GROUNDING
+    description: >-
+      Data foundation that brings governed SAP and third-party data, business semantics,
+      data products, and analytical context together so applications and AI agents can reason
+      over enterprise information without discarding its business meaning.
+    best_fit: "Enterprise AI grounding, reusable business data products, semantic consistency, and cross-domain data context."
+    not_for: "It is not itself the LLM runtime or agent-building environment; it supplies trusted context and data to those layers."
+    licensing:
+      commercial_model: "Separate SAP Business Data Cloud commercial model"
+      note: "Treat BDC entitlement as separate from Joule, AI Core, and model consumption; exact package depends on the customer's data landscape and contract."
+    official_docs_url: "https://www.sap.com/products/data-cloud/business-data-fabric.html"
+    official_commercial_url: "https://www.sap.com/products/data-cloud.html"
+    source_refs: [SRC-SAP-BDC-DATA-FABRIC]
+    status: source_verified
+
+  - id: PLT-SAP-KNOWLEDGE-GRAPH
+    type: platform_component
+    title: "SAP Knowledge Graph"
+    architecture_role: "Business relationship and semantic grounding"
+    layer: AI-LAYER-GROUNDING
+    description: >-
+      SAP capability used to ground AI in relationships between business data, processes,
+      policies, and semantic context so Joule and agents can reason with enterprise meaning
+      rather than isolated records or generic model knowledge.
+    best_fit: "Contextual reasoning where entity relationships, process semantics, and SAP business meaning materially improve AI accuracy."
+    not_for: "It is not a replacement for the operational source systems or a generic data lake; it provides semantic and relational grounding."
+    licensing:
+      commercial_model: "Platform capability; no standalone public price used in this model"
+      note: "Validate availability through the SAP Business AI / Business Data Cloud products that consume or expose the capability."
+    official_docs_url: "https://www.sap.com/products/artificial-intelligence.html"
+    official_commercial_url: "https://www.sap.com/products/artificial-intelligence/pricing.html"
+    source_refs: [SRC-SAP-BUSINESS-AI, SRC-SAP-BDC-DATA-FABRIC]
+    status: source_verified
+
+  - id: AI-SAP-DOMAIN-MODELS
+    type: ai_asset
+    title: "SAP Domain Models"
+    architecture_role: "SAP-native foundation models for SAP-specific code, data and process knowledge"
+    layer: AI-LAYER-GROUNDING
+    description: >-
+      SAP-native foundation models trained on SAP code, data models, metadata, business-process
+      semantics, and documented practices to provide domain-specific expertise to Joule,
+      Joule Studio, agents, and SAP applications.
+    best_fit: "SAP-specific reasoning and code or process assistance where generic foundation-model knowledge is insufficiently precise."
+    not_for: "They are not a universal replacement for third-party foundation models; model choice should follow task, evaluation, availability, cost, and governance requirements."
+    licensing:
+      commercial_model: "Consumed through SAP Business AI / platform capabilities"
+      note: "No independent public license metric is assigned here; validate the consuming Joule or AI platform scenario."
+    official_docs_url: "https://www.sap.com/products/artificial-intelligence/ai-models/domain-models.html"
+    official_commercial_url: "https://www.sap.com/products/artificial-intelligence/pricing.html"
+    source_refs: [SRC-SAP-DOMAIN-MODELS]
+    status: source_verified
+
+  - id: PLT-SAP-HANA-CLOUD
+    type: platform_component
+    title: "SAP HANA Cloud"
+    architecture_role: "Multi-model data engine for AI applications and grounding"
+    layer: AI-LAYER-GROUNDING
+    description: >-
+      Multi-model database foundation supporting relational, graph, vector, spatial, and JSON
+      workloads, positioned by SAP as the AI database within SAP Business Data Cloud and usable
+      by AI applications and agents that need governed enterprise data close to computation.
+    best_fit: "AI applications that need vector, graph, relational, and business-data processing in one governed database engine."
+    not_for: "It is not a conversational assistant, foundation-model catalog, or agent orchestration product."
+    licensing:
+      commercial_model: "SAP HANA Cloud / SAP Business Data Cloud commercial entitlement"
+      note: "Database capacity and BDC packaging are separate from AI model and Joule consumption."
+    official_docs_url: "https://www.sap.com/products/data-cloud/hana/features/intelligent-data-apps.html"
+    official_commercial_url: "https://www.sap.com/products/data-cloud/hana.html"
+    source_refs: [SRC-SAP-HANA-CLOUD-AI]
+    status: source_verified
+
+  - id: PLT-SAP-AI-AGENT-HUB
+    type: platform_component
+    title: "SAP AI Agent Hub"
+    architecture_role: "Cross-platform AI asset discovery, governance and observability"
+    layer: AI-LAYER-GOVERNANCE
+    description: >-
+      Vendor-agnostic command center for discovering, inventorying, evaluating, and governing
+      AI agents, LLMs, and MCP servers across the enterprise landscape, connecting AI assets to
+      architecture, business capabilities, risk, ownership, and performance context.
+    best_fit: "Organizations scaling beyond isolated agents and needing a governed inventory across SAP and third-party agent/model platforms."
+    not_for: "It is not the primary agent builder or model runtime; it governs and observes AI assets built and executed elsewhere."
+    licensing:
+      commercial_model: "Standalone access or capability within SAP LeanIX, depending on offering and availability"
+      note: "SAP Help states that AI Agent Hub is available within SAP LeanIX Application Portfolio Management workspaces; standalone availability has program-specific conditions. Verify current contractual availability before solution commitment."
+    limitations:
+      - "Standalone availability and rollout conditions are time-sensitive; validate current general availability and region before architecture commitment."
+    official_docs_url: "https://www.sap.com/products/artificial-intelligence/ai-agent-hub.html"
+    official_commercial_url: "https://help.sap.com/docs/leanix/ea/access-ai-agent-hub"
+    source_refs: [SRC-SAP-AI-AGENT-HUB, SRC-SAP-AI-AGENT-HUB-ACCESS]
+    status: source_verified
+
+decision_guide:
+  - need: "Give business users a common AI interaction layer in the flow of SAP work"
+    primary_choice: PLT-JOULE
+    why: "Joule owns the conversational user experience and exposes relevant business capabilities."
+  - need: "Coordinate several agents around a role or business outcome"
+    primary_choice: AI-JOULE-ASSISTANTS
+    why: "Assistants translate intent and coordinate agents and capabilities."
+  - need: "Automate an adaptive, multi-step and ambiguous business task"
+    primary_choice: AI-JOULE-AGENTS
+    why: "Agents can reason, choose tools, adapt to results, and execute non-deterministic workflows."
+  - need: "Expose one deterministic business action through Joule"
+    primary_choice: PLT-JOULE-STUDIO
+    why: "Use a Joule skill rather than an agent when the operation has defined inputs, outputs, and execution logic."
+  - need: "Build custom Joule agents or organization-specific Joule capabilities"
+    primary_choice: PLT-JOULE-STUDIO
+    why: "Joule Studio is the SAP Build environment for custom skills and agents."
+  - need: "Run custom predictive AI models or managed AI workloads on SAP BTP"
+    primary_choice: PLT-SAP-AI-CORE
+    why: "AI Core provides runtime, training/serving, deployment and lifecycle execution."
+  - need: "Access and orchestrate supported foundation models through a governed SAP interface"
+    primary_choice: PLT-GENERATIVE-AI-HUB
+    why: "Generative AI hub provides model access and orchestration on top of AI Core."
+  - need: "Operate and manage AI scenarios across AI Core runtimes through a central UI"
+    primary_choice: PLT-SAP-AI-LAUNCHPAD
+    why: "AI Launchpad is the management application, while the runtime remains separate."
+  - need: "Extract structured information from business documents"
+    primary_choice: PLT-SAP-DOCUMENT-AI
+    why: "A specialized document service is usually preferable to inventing a general-purpose prompt pipeline for standard extraction."
+  - need: "Ground AI in governed enterprise data and business semantics"
+    primary_choice: PLT-SAP-BUSINESS-DATA-CLOUD
+    why: "Business Data Cloud supplies governed data and semantic context; Knowledge Graph and HANA Cloud strengthen relational and multi-model grounding."
+  - need: "Govern agents and models across several SAP and non-SAP AI platforms"
+    primary_choice: PLT-SAP-AI-AGENT-HUB
+    why: "AI Agent Hub is designed for cross-platform discovery, inventory, governance, assessment, and observability."
+
+reference_patterns:
+  - name: "Embedded business AI"
+    path: "SAP business application → Joule → SAP-provided assistant/agent/skill → business action"
+    fit: "Use when the business need is already supported by embedded SAP Business AI."
+  - name: "Custom deterministic Joule extension"
+    path: "Joule → custom Joule skill in Joule Studio → SAP Build Action / API → SAP or third-party application"
+    fit: "Use for repeatable actions with known inputs and outputs."
+  - name: "Custom agentic workflow"
+    path: "Joule / Assistant → custom Joule Agent → tools, skills, APIs and subagents → business applications"
+    fit: "Use when the task requires adaptive multi-step reasoning rather than fixed workflow logic."
+  - name: "Custom generative AI application"
+    path: "Custom application → AI Core Extended → generative AI hub → foundation model → grounded enterprise context"
+    fit: "Use for custom GenAI applications needing governed model access outside the standard Joule experience."
+  - name: "Grounded enterprise agent"
+    path: "Joule Agent → Business Data Cloud / Knowledge Graph / HANA Cloud → governed business data → action through enterprise APIs"
+    fit: "Use when business semantics and live enterprise context are material to reliable reasoning."
+  - name: "AI governance at scale"
+    path: "SAP and third-party agents/models/MCP servers → SAP AI Agent Hub → architecture, risk, ownership, verification and observability"
+    fit: "Use when the AI portfolio has become an enterprise-governance problem rather than a single-project problem."
+
+tags:
+  - sap-business-ai
+  - joule
+  - ai-agents
+  - joule-studio
+  - ai-foundation
+  - ai-core
+  - ai-launchpad
+  - generative-ai-hub
+  - business-data-cloud
+  - knowledge-graph
+  - ai-governance
