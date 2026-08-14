@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Sales Order Decision Map — Enterprise Context Lab"
-description: "A practical, source-tracked map of SAP S/4HANA sales-order decisions: document control, partners, plant, shipping, route, pricing, ATP, credit, failures, and diagnostic reasoning."
+description: "A practical map of SAP sales-order decisions, dependencies, failure patterns, and diagnostic paths for S/4HANA Sales."
 permalink: /labs/enterprise-context/sales-order/
 status: draft
 verified: false
@@ -10,6 +10,15 @@ sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
 enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - sales-order
+  - order-to-cash
+  - pricing
+  - atp
+  - logistics
+  - troubleshooting
 ---
 
 {% assign graph = site.data.labs.enterprise_context.graphs.sales_order %}
