@@ -1,0 +1,57 @@
+name: Temporary Sales Order metadata fix
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.event.pull_request.head.ref == 'agent/sales-order-decision-map'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install generator dependencies
+        run: python3 -m pip install pyyaml
+      - name: Fix page metadata
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('labs/enterprise-context/sales-order/index.md')
+          text = path.read_text(encoding='utf-8')
+          old = 'description: "A practical, source-tracked map of SAP S/4HANA sales-order decisions: document control, partners, plant, shipping, route, pricing, ATP, credit, failures, and diagnostic reasoning."'
+          new = 'description: "A practical map of SAP sales-order decisions, dependencies, failure patterns, and diagnostic paths for S/4HANA Sales."'
+          if old in text:
+              text = text.replace(old, new, 1)
+          elif new not in text:
+              raise SystemExit('Expected description was not found')
+          marker = 'enterprise_context_graph: true\n'
+          tags = '''tags:\n  - sap-s4hana\n  - sap-sd\n  - sales-order\n  - order-to-cash\n  - pricing\n  - atp\n  - logistics\n  - troubleshooting\n'''
+          if tags not in text:
+              if marker not in text:
+                  raise SystemExit('Frontmatter insertion marker was not found')
+              text = text.replace(marker, marker + tags, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Regenerate Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Commit fixes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add labs/enterprise-context/sales-order/index.md ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          if git diff --cached --quiet; then
+            echo "Metadata and generated artifacts are already current."
+          else
+            git commit -m "Fix Sales Order Lab metadata"
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
