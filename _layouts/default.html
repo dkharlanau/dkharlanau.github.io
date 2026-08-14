@@ -9,6 +9,9 @@
   {% if page.url contains '/labs/' %}
   <link rel="stylesheet" href="{{ '/assets/research-canvas.css' | relative_url }}" />
   {% endif %}
+  {% if page.enterprise_context_graph %}
+  <link rel="stylesheet" href="{{ '/assets/enterprise-context-graph.css' | relative_url }}" />
+  {% endif %}
   {% if page.sales_process_atlas %}
   <link rel="stylesheet" href="{{ '/assets/sales-process-atlas.css' | relative_url }}" />
   {% endif %}
@@ -24,6 +27,22 @@
   {% endif %}
   {% if page.url contains '/labs/enterprise-context/' %}
   <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/catalog.json' | absolute_url }}" title="Enterprise Context Lab machine-readable catalog" />
+  {% endif %}
+  {% if page.enterprise_context_graph %}
+    {% assign graph_endpoint = nil %}
+    {% assign graph_title = page.title %}
+    {% case page.url %}
+      {% when '/labs/enterprise-context/sales-order/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/sales-order-graph.json' %}
+      {% when '/labs/enterprise-context/pricing/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/pricing-graph.json' %}
+      {% when '/labs/enterprise-context/atp/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/atp-graph.json' %}
+      {% when '/labs/enterprise-context/credit/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/credit-graph.json' %}
+      {% when '/labs/enterprise-context/shipping/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/shipping-graph.json' %}
+      {% when '/labs/enterprise-context/master-data/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/master-data-graph.json' %}
+      {% when '/labs/enterprise-context/procurement/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/procurement-graph.json' %}
+    {% endcase %}
+    {% if graph_endpoint %}
+  <link rel="describedby" type="application/json" href="{{ graph_endpoint | absolute_url }}" title="{{ graph_title | escape }} machine-readable graph" />
+    {% endif %}
   {% endif %}
   {% if page.sales_process_atlas %}
   <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/sales-process-atlas.json' | absolute_url }}" title="SAP Sales Process Atlas" />
@@ -74,6 +93,25 @@
     {% endif %}
     {% if page.sales_mechanism_library %}
     {% include labs/sales-master-data-cta.html %}
+    {% endif %}
+    {% if page.url == '/labs/enterprise-context/' %}
+      {% assign lab_manifest = site.data.labs.enterprise_context.manifest %}
+      {% if lab_manifest.deep_dives %}
+    <section class="research-canvas context-graph" aria-label="Active Enterprise Context deep dives">
+      <section class="research-canvas__inventory" data-reveal>
+        <header>
+          <p class="research-canvas__eyebrow">Active deep dives</p>
+          <h2>Follow the decision engines.</h2>
+          <p>Draft, source-tracked maps across the current logistics verticals. Each view explains inputs, decisions, failure modes, integrations, and Lead-level diagnostics.</p>
+        </header>
+        <div class="research-route-list">
+          {% for deep_dive in lab_manifest.deep_dives %}
+          <a href="{{ deep_dive.page_url | relative_url }}"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ deep_dive.title }}</strong><small>{% if deep_dive.emphasis and deep_dive.emphasis.size > 0 %}{{ deep_dive.emphasis | first }}{% else %}decision map{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+          {% endfor %}
+        </div>
+      </section>
+    </section>
+      {% endif %}
     {% endif %}
     {% assign generated_expert = site.data.expert_context.entries[page.url] %}
     {% if generated_expert and generated_expert.enabled == true and generated_expert.placement != 'source' %}

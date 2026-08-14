@@ -1,0 +1,356 @@
+---
+layout: default
+title: "SAP Credit Management — Enterprise Context Lab"
+description: "A practical SAP Credit Management map for risk, exposure, blocks, release, FSCM integration, extensions, and diagnostics."
+permalink: /labs/enterprise-context/credit/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - sap-fscm
+  - credit-management
+  - order-to-cash
+  - business-partner
+  - integration
+  - troubleshooting
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.credit %}
+{% assign evidence = site.data.labs.enterprise_context.sources.credit %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-order/">Sales Order</a></li><li aria-current="page">Credit Management</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Credit Management</p>
+      <h1>A credit block is a decision chain,<br />not one limit number.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#credit-memory">Start with nine questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Credit Management deep-dive inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.standard_check_steps | size }}</strong><small>Standard check steps</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Draft research · practical reasoning · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">credit_score</span>
+    <p><strong>My working rule:</strong> I read the failed check step before I discuss the credit limit. A free limit does not prove that the document should pass.</p>
+    <a href="/labs/enterprise-context/data/credit-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="credit-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>Nine questions before changing anything.</h2>
+      <p>I use this sequence to separate SD control, FSCM credit policy, exposure, and release. It is much faster than opening every credit transaction and hoping one number looks suspicious.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article class="ecg-memory-card">
+        <span>0{{ forloop.index }}</span>
+        <strong>{{ item.key }}</strong>
+        <h3>{{ item.question }}</h3>
+        <p>{{ item.answer }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>TRIGGER → ACCOUNT → SEGMENT → PROFILE → RULE → EXPOSURE → LIMIT → DECISION → RELEASE.</strong> If I cannot explain this path for the actual document, I am not ready to change the credit policy.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime path</p>
+      <h2>Follow the credit check in the order it can fail.</h2>
+      <p>The sales document starts the process, but the decision spans Sales, Business Partner, SAP Credit Management, exposure updates, and Accounts Receivable.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for stage in graph.runtime_pipeline %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>credit stage</small></div>
+          <h3>{{ stage.title }}</h3>
+          <p class="ecg-question">{{ stage.question }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Inputs / controls</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Two control layers</p>
+      <h2>SD decides when to ask. FSCM decides what risk rules to execute.</h2>
+      <p>This boundary matters in troubleshooting. A wrong SD trigger is not the same problem as a wrong check rule, and changing a BP limit will not fix a missing order-level credit check.</p>
+    </header>
+    <div class="ecg-control-stack">
+      {% for control in graph.sales_side_controls %}
+      <article>
+        <span>SD CONTROL</span>
+        <h3>{{ control.title }}</h3>
+        <p>{{ control.purpose }}</p>
+        <ul>{% for value in control.technical_notes %}<li>{{ value }}</li>{% endfor %}</ul>
+        <p class="ecg-question">{{ control.diagnostic_question }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="ecg-rail" aria-label="Credit control dependency chain">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Order / Delivery / PGI</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Credit Group</span><span class="ecg-arrow" aria-hidden="true">+</span>
+        <span class="ecg-node ecg-node--input">Risk Class</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">OVA8 Context</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">FSCM Check Rule</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Credit Status</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business Partner</p>
+      <h2>Credit profile and credit segment answer different questions.</h2>
+      <p>I separate global BP credit policy from segment-level limit and exposure. This avoids the common mistake of treating every field in UKM000 as if it had the same organizational scope.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.credit_master_data %}
+      <article class="ecg-determination-detail">
+        <header><div><span>BP</span><small>{{ item.scope }}</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.remember }}</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Important data</h4><ul>{% for value in item.fields %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Diagnostic lens</h4><p>Read the value on the account that is actually checked, not on the customer record you expected to be relevant.</p></div>
+          <div><h4>Lead lens</h4><p>Master-data governance is part of the credit architecture because risk class, check rule, limit, and validity directly control order execution.</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Check rules</p>
+      <h2>Free limit is only one possible answer.</h2>
+      <p>Standard SAP Credit Management can check much more than total limit utilization. I first identify the exact failed step and the values it used.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for step in graph.standard_check_steps %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{{ step.code }}</span><small>standard check</small></div>
+          <h3>{{ step.title }}</h3>
+          <p class="ecg-question">{{ step.business_question }}</p>
+        </header>
+        <div class="ecg-remember"><strong>Check first</strong><p>{{ step.first_check }}</p></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Credit exposure</p>
+      <h2>Exposure moves through the document flow.</h2>
+      <p>I do not reconcile one total first. I follow the commitment from order to delivery, billing, FI open item, and clearing. That usually shows where an amount became duplicated, stale, or missing.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Credit exposure lifecycle">
+      <div class="ecg-rail__branch">
+        {% for item in graph.exposure_lifecycle.path %}
+        <span class="ecg-node {% if forloop.first %}ecg-node--input{% elsif forloop.last %}ecg-node--output{% else %}ecg-node--decision{% endif %}">{{ item.stage }} · {{ item.category }}</span>
+        {% unless forloop.last %}<span class="ecg-arrow" aria-hidden="true">→</span>{% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="ecg-determination-list">
+      {% for item in graph.exposure_lifecycle.path %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{{ item.category | slice: 0, 3 }}</span><small>exposure</small></div><h3>{{ item.stage }}</h3><p class="ecg-question">{{ item.category }}</p></header>
+        <p>{{ item.practical_note }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-lead-lens"><strong>My rule:</strong> {{ graph.exposure_lifecycle.design_rule }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Blocks and release</p>
+      <h2>A release is a risk decision, not a technical repair.</h2>
+      <p>When a negative result creates a credit block, the next step belongs to the credit-control process. The analyst should understand the failed checks and then release, reject, or keep the block according to policy.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Credit decision and release path">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Negative Check</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Credit Block</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Documented Credit Decision</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Release / Reject / Keep</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Delivery / PGI Continues or Stops</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Extensions</p>
+      <h2>Credit extensions change controls, not just code.</h2>
+      <p>I treat these extension points as risk architecture. A small enhancement can change who is checked, what exposure exists, or why a document is allowed to continue.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for ext in graph.extension_layers %}
+      <article class="ecg-determination-detail">
+        <header><div><span>EXT</span><small>credit</small></div><h3>{{ ext.title }}</h3><p class="ecg-question">{{ ext.principle }}</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Technical shape</h4><ul>{% for value in ext.technical_shape %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Check first</h4><ul>{% for value in ext.diagnostic_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Typical trap</h4><p>{{ ext.trap }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-anatomy" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Technical failure</p>
+      <h2>{{ graph.technical_failure_mode.title }}</h2>
+      <p>{{ graph.technical_failure_mode.lead_lens }}</p>
+    </div>
+    <div class="ecg-anatomy__questions">
+      <article><span>DEFAULT</span><h3>{{ graph.technical_failure_mode.default_behavior }}</h3></article>
+      {% for value in graph.technical_failure_mode.controlled_fallback %}
+      <article><span>FALLBACK</span><h3>{{ value }}</h3></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead reasoning</p>
+      <h2>Six habits that keep credit fixes explainable.</h2>
+      <p>These are practitioner heuristics. They are deliberately separate from SAP-documented behavior.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for heuristic in graph.practitioner_heuristics %}
+      <article>
+        <span>HEURISTIC {{ forloop.index }}</span>
+        <h3>{{ heuristic.statement }}</h3>
+        <p>{{ heuristic.context }}</p>
+        {% if heuristic.checks %}<h4>Check</h4><ul>{% for value in heuristic.checks %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+        {% if heuristic.questions %}<h4>Ask</h4><ul>{% for value in heuristic.questions %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+        {% if heuristic.anti_patterns %}<h4>Avoid</h4><ul>{% for value in heuristic.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure patterns</p>
+      <h2>Start from the symptom, then find the first wrong control.</h2>
+      <p>The goal is not to memorize every transaction. The goal is to classify the failure before touching master data, configuration, or exposure.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for failure in graph.failure_modes %}
+      <article class="ecg-determination-detail">
+        <header><div><span>SYMPTOM</span><small>triage</small></div><h3>{{ failure.symptom }}</h3><p class="ecg-question">{{ failure.likely_classes | join: " · " }}</p></header>
+        <div class="ecg-diagnostic"><div><h4>Check first</h4><ol>{% for value in failure.first_checks %}<li>{{ value }}</li>{% endfor %}</ol></div><div><h4>Do not start with</h4><p>Increasing the limit or releasing the order before the failed step is understood.</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Impact traces</p>
+      <h2>Credit changes propagate into execution.</h2>
+      <p>Forward tracing helps explain what a master-data, exposure, or policy change can affect. Backward tracing explains why the order stopped.</p>
+    </header>
+    <div class="ecg-traces">
+      {% for trace in graph.impact_traces %}
+      <article class="ecg-trace">
+        <div class="ecg-trace__head"><span>{{ trace.direction }}</span><h3>{{ trace.title }}</h3></div>
+        <div class="ecg-trace__path">{% for step in trace.path %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
+        <p><strong>Lesson:</strong> {{ trace.lesson }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% for scenario in graph.synthetic_cases %}
+  <section class="ecg-case" data-reveal>
+    <div class="ecg-case__intro">
+      <p class="research-canvas__eyebrow">Synthetic exercise {{ forloop.index }}</p>
+      <h2>{{ scenario.title }}</h2>
+      <p>{{ scenario.description }}</p>
+      <strong>Synthetic example · no customer data</strong>
+    </div>
+    <div class="ecg-case__body">
+      <h3>Facts</h3><ul>{% for value in scenario.facts %}<li>{{ value }}</li>{% endfor %}</ul>
+      <h3>Reasoning path</h3><ol>{% for value in scenario.reasoning_path %}<li>{{ value }}</li>{% endfor %}</ol>
+      <p><strong>Lesson:</strong> {{ scenario.lesson }}</p>
+    </div>
+  </section>
+  {% endfor %}
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Answer with control, evidence, and risk ownership.</h2>
+      <p>A Lead answer should explain which account is checked, which rule failed, what exposure is used, and whether the correct action is release, recheck, master-data repair, configuration, or an extension.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for drill in graph.assessment_drills %}
+      <details>
+        <summary><span>0{{ forloop.index }}</span><strong>{{ drill.title }}</strong><small>{{ drill.prompt }}</small></summary>
+        <div><p>Expected reasoning path</p><ol>{% for value in drill.expected_reasoning %}<li>{{ value }}</li>{% endfor %}</ol></div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Risk behavior and extension points stay source-tracked.</h2>
+      <p>Primary SAP documentation is used to verify credit-check control, BP credit data, check steps, exposure categories, document-flow updates, release/recheck, and documented enhancement boundaries. The diagnostic method remains independently written.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">For tools and AI</p>
+      <h2>The credit decision path is machine-readable too.</h2>
+      <p>Runtime stages, check steps, exposure lifecycle, extensions, failures, traces, heuristics, and assessment drills are available as JSON.</p>
+    </div>
+    <div class="ecg-machine__actions">
+      <a class="research-canvas__button" href="/labs/enterprise-context/data/credit-graph.json">Credit graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+      <a href="/labs/enterprise-context/data/credit-sources.json">Credit sources JSON</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>

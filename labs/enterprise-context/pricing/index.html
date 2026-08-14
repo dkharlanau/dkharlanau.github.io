@@ -1,0 +1,344 @@
+---
+layout: default
+title: "SAP Sales Pricing Engine — Enterprise Context Lab"
+description: "A practical SAP Sales pricing map: procedure, conditions, accesses, records, calculations, extensions, billing differences, and diagnostics."
+permalink: /labs/enterprise-context/pricing/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - pricing
+  - condition-technique
+  - sales-order
+  - billing
+  - extensibility
+  - troubleshooting
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.pricing %}
+{% assign evidence = site.data.labs.enterprise_context.sources.pricing %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-order/">Sales Order</a></li><li aria-current="page">Pricing</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Sales Pricing</p>
+      <h1>Pricing is a search path,<br />not a number.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#pricing-memory">Start with seven questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Pricing deep-dive inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.pricing_pipeline | size }}</strong><small>Runtime stages</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.extension_layers | size }}</strong><small>Extension models</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Draft research · practical reasoning · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">troubleshoot</span>
+    <p><strong>My working rule:</strong> when pricing is wrong, I do not start with the condition record. I find the first place where the actual path differs from the expected path.</p>
+    <a href="/labs/enterprise-context/data/pricing-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="pricing-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>Seven questions are enough to start.</h2>
+      <p>I use the same sequence in workshops and diagnostics. It is simple enough to remember and deep enough to stop random configuration changes.</p>
+    </header>
+
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article class="ecg-memory-card">
+        <span>0{{ forloop.index }}</span>
+        <strong>{{ item.key }}</strong>
+        <h3>{{ item.question }}</h3>
+        <p>{{ item.answer }}</p>
+      </article>
+      {% endfor %}
+    </div>
+
+    <p class="ecg-caption"><strong>CONTEXT → PROCEDURE → CONDITION → ACCESS → RECORD → CALC → EXTEND.</strong> If I can explain these seven points from the actual document, most pricing discussions become much shorter.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime path</p>
+      <h2>Follow the engine in the same order it can fail.</h2>
+      <p>The final net value hides too much. I prefer to separate context, procedure selection, condition eligibility, search, record match, calculation, condition interaction, and final result.</p>
+    </header>
+
+    <div class="ecg-determination-list">
+      {% for stage in graph.pricing_pipeline %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>0{{ stage.order }}</span><small>pricing stage</small></div>
+          <h3>{{ stage.title }}</h3>
+          <p class="ecg-question">{{ stage.question }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Inputs / controls</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Output</h4>{% if stage.output.first %}<ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul>{% else %}<p>{{ stage.output }}</p>{% endif %}</div>
+          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Condition controls</p>
+      <h2>A found condition is not automatically an active value.</h2>
+      <p>This is where many "but the record exists" investigations go wrong. A requirement, scale, exclusion, subtotal, or alternative calculation can change what happens after the search.</p>
+    </header>
+
+    <div class="ecg-control-stack">
+      {% for control in graph.condition_controls %}
+      <article>
+        <span>{{ control.title }}</span>
+        <h3>{{ control.purpose }}</h3>
+        <p class="ecg-question">{{ control.diagnostic_question }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-anatomy" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">How I read pricing analysis</p>
+      <h2>I look for the first divergence.</h2>
+      <p>Pricing analysis is more useful than the final amount because it tells me what the engine tried, what it found, and what it did not use.</p>
+    </div>
+    <ol>
+      <li><span>01</span><strong>Procedure</strong><p>Was the expected pricing procedure determined?</p></li>
+      <li><span>02</span><strong>Step</strong><p>Is the expected condition type in the procedure and eligible?</p></li>
+      <li><span>03</span><strong>Access</strong><p>Which condition tables were checked, and in which order?</p></li>
+      <li><span>04</span><strong>Key</strong><p>Which runtime field values formed the access key?</p></li>
+      <li><span>05</span><strong>Result</strong><p>Was the condition missing, found, inactive, excluded, or manually changed?</p></li>
+      <li><span>06</span><strong>Math</strong><p>What rate, base, scale, formula, and subtotal produced the value?</p></li>
+    </ol>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classic extension path</p>
+      <h2>When standard pricing communication is not enough.</h2>
+      <p>I keep the classic SD path explicit because many productive S/4HANA landscapes still contain it. The important part is not memorizing exit names. It is understanding where custom data enters pricing and whether sales and billing use the same logic.</p>
+    </header>
+
+    {% assign classic = graph.extension_layers | where: "id", "PRC-EXT-CLASSIC" | first %}
+    <p class="ecg-caption"><strong>Design principle.</strong> {{ classic.principle }}</p>
+    <div class="ecg-determination-list">
+      {% for ext in classic.patterns %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>CLASSIC</span><small>extension</small></div>
+          <h3>{{ ext.title }}</h3>
+          <p class="ecg-question">{{ ext.when }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Technical shape</h4><ul>{% for value in ext.technical_shape %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Check first</h4><ul>{% for value in ext.diagnostic_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Typical trap</h4><p>{{ ext.trap }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Clean-core extension path</p>
+      <h2>Prefer released extension mechanisms when they fit.</h2>
+      <p>The modern path is cleaner when the requirement is really data or a small explicit rule: expose the field to pricing communication, connect it to condition technique, and use released pricing BAdIs for requirement or calculation logic.</p>
+    </header>
+
+    {% assign clean = graph.extension_layers | where: "id", "PRC-EXT-CLEAN-CORE" | first %}
+    <p class="ecg-caption"><strong>Design principle.</strong> {{ clean.principle }}</p>
+    <div class="ecg-determination-list">
+      {% for ext in clean.patterns %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>CLEAN CORE</span><small>extension</small></div>
+          <h3>{{ ext.title }}</h3>
+          <p class="ecg-question">{{ ext.when }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Technical shape</h4><ul>{% for value in ext.technical_shape %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Check first</h4><ul>{% for value in ext.diagnostic_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Why it matters</h4><p>Make the extension visible in configuration and pricing analysis instead of hiding business behavior in document-specific code.</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">A classic custom-field chain</p>
+      <h2>The field is only the beginning.</h2>
+      <p>A frequent design mistake is to celebrate when a custom field exists on the order. Pricing does not care about the celebration. The value must reach pricing communication and then be consumed by the condition technique.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Custom pricing field dependency chain">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Business Attribute</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Pricing Communication</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Field Catalog</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Condition Table</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Access Sequence</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Condition Type</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Condition Record</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Order vs billing</p>
+      <h2>Correct order pricing does not prove correct billing pricing.</h2>
+      <p>When custom pricing fields or routines are involved, I compare both documents as separate runtime contexts. The useful question is not "why did billing change the price?" but "where is the first difference between the two pricing paths?"</p>
+    </header>
+
+    <div class="ecg-rail" aria-label="Order and billing pricing comparison">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Sales Order</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Pricing Analysis</span><span class="ecg-arrow" aria-hidden="true">↔</span>
+        <span class="ecg-node ecg-node--decision">Compare Context & Custom Fields</span><span class="ecg-arrow" aria-hidden="true">↔</span>
+        <span class="ecg-node ecg-node--decision">Billing Pricing Analysis</span><span class="ecg-arrow" aria-hidden="true">←</span>
+        <span class="ecg-node ecg-node--input">Billing Document</span>
+      </div>
+    </div>
+    <p class="ecg-caption">Classic implementations often need equivalent pricing-communication population on the billing side. The diagnostic goal is parity of required inputs, not blind duplication of code.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead reasoning</p>
+      <h2>Five habits that prevent expensive pricing fixes.</h2>
+      <p>These are reasoning heuristics, not SAP configuration rules. They are here because the fastest technical fix is often the slowest architecture decision.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for heuristic in graph.practitioner_heuristics %}
+      <article>
+        <span>HEURISTIC {{ forloop.index }}</span>
+        <h3>{{ heuristic.statement }}</h3>
+        <p>{{ heuristic.context }}</p>
+        {% if heuristic.checks %}<h4>Check</h4><ul>{% for value in heuristic.checks %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+        {% if heuristic.questions %}<h4>Ask</h4><ul>{% for value in heuristic.questions %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+        {% if heuristic.anti_patterns %}<h4>Avoid</h4><ul>{% for value in heuristic.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure patterns</p>
+      <h2>Symptoms are shortcuts to the first checks.</h2>
+      <p>I do not treat these as root causes. They are triage routes that help decide where to look before opening Customizing or code.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for failure in graph.failure_modes %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>SYMPTOM</span><small>triage</small></div>
+          <h3>{{ failure.symptom }}</h3>
+          <p class="ecg-question">Find the first check that does not match the expected design.</p>
+        </header>
+        <div class="ecg-diagnostic"><div><h4>Check first</h4><ol>{% for value in failure.first_checks %}<li>{{ value }}</li>{% endfor %}</ol></div><div><h4>Do not start with</h4><p>Creating another condition record or changing the procedure before the trace explains the failure.</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Impact traces</p>
+      <h2>Change one pricing input and trace both directions.</h2>
+      <p>Forward tracing shows what the change can affect. Backward tracing explains why a result appeared.</p>
+    </header>
+    <div class="ecg-traces">
+      {% for trace in graph.impact_traces %}
+      <article class="ecg-trace">
+        <div class="ecg-trace__head"><span>{{ trace.direction }}</span><h3>{{ trace.title }}</h3></div>
+        <div class="ecg-trace__path">{% for step in trace.path %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
+        <p><strong>Lesson:</strong> {{ trace.lesson }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% for scenario in graph.synthetic_cases %}
+  <section class="ecg-case" data-reveal>
+    <div class="ecg-case__intro">
+      <p class="research-canvas__eyebrow">Synthetic exercise {{ forloop.index }}</p>
+      <h2>{{ scenario.title }}</h2>
+      <p>{{ scenario.description }}</p>
+      <strong>Synthetic example · no customer data</strong>
+    </div>
+    <div class="ecg-case__body">
+      <h3>Facts</h3><ul>{% for value in scenario.facts %}<li>{{ value }}</li>{% endfor %}</ul>
+      <h3>Reasoning path</h3><ol>{% for value in scenario.reasoning_path %}<li>{{ value }}</li>{% endfor %}</ol>
+      <p><strong>Lesson:</strong> {{ scenario.lesson }}</p>
+    </div>
+  </section>
+  {% endfor %}
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Answer with a diagnostic path, not a definition.</h2>
+      <p>A Lead answer should show sequence, boundaries, extension choice, and downstream consequences before proposing a configuration change.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for drill in graph.assessment_drills %}
+      <details>
+        <summary><span>0{{ forloop.index }}</span><strong>{{ drill.title }}</strong><small>{{ drill.prompt }}</small></summary>
+        <div><p>Expected reasoning path</p><ol>{% for value in drill.expected_reasoning %}<li>{{ value }}</li>{% endfor %}</ol></div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Standard behavior and extension points stay source-tracked.</h2>
+      <p>Primary SAP documentation is used to verify condition technique, pricing procedures, analysis, exclusion, custom fields, custom logic, and classic pricing enhancement patterns. The diagnostic method remains independently written.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">For tools and AI</p>
+      <h2>The diagnostic path is machine-readable too.</h2>
+      <p>The pricing pipeline, extension layers, failure modes, traces, heuristics, and assessment drills are exposed as JSON for later graph views and grounded evaluation.</p>
+    </div>
+    <div class="ecg-machine__actions">
+      <a class="research-canvas__button" href="/labs/enterprise-context/data/pricing-graph.json">Pricing graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+      <a href="/labs/enterprise-context/data/pricing-sources.json">Pricing sources JSON</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>

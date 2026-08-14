@@ -1,12 +1,12 @@
 id: lab-enterprise-context
 title: "Enterprise Context Lab"
 model_name: "Enterprise Context Graph"
-version: "0.6.0"
+version: "0.13.0"
 status: active_research
 started_at: "2026-08-14"
 updated_at: "2026-08-14"
 last_reviewed_together_at: "2026-08-14"
-review_note: "Last reviewed together against current primary sources."
+review_note: "Last reviewed together against current primary SAP sources."
 owner: "Dzmitryi Kharlanau"
 
 purpose: >-
@@ -79,8 +79,75 @@ first_vertical:
   id: TOPIC-O2C-SALES-ORDER-CREATION
   title: "Order-to-Cash — Sales Order Creation"
   status: researching
-  gates_complete: 1
+  gates_complete: 6
   gates_total: 7
+  page_url: "/labs/enterprise-context/sales-order/"
+  graph_ref: "GRAPH-SD-SALES-ORDER-DECISIONS"
+
+second_vertical:
+  id: TOPIC-P2P-PROCUREMENT
+  title: "Procure-to-Pay — Procurement"
+  status: researching
+  gates_complete: 6
+  gates_total: 7
+  page_url: "/labs/enterprise-context/procurement/"
+  graph_ref: "GRAPH-MM-PROCUREMENT-DECISIONS"
+
+deep_dives:
+  - id: DEEP-SD-SALES-ORDER
+    title: "Sales Order Decision Map"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/sales-order/"
+    graph_ref: "GRAPH-SD-SALES-ORDER-DECISIONS"
+  - id: DEEP-SD-PRICING
+    title: "Sales Pricing Engine"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/pricing/"
+    graph_ref: "GRAPH-SD-PRICING-ENGINE"
+    emphasis: ["condition technique", "diagnostic sequence", "classic pricing enhancements", "clean-core extensibility", "sales-to-billing pricing comparison"]
+  - id: DEEP-SD-ATP-AATP
+    title: "ATP / aATP Promise Engine"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/atp/"
+    graph_ref: "GRAPH-SD-ATP-AATP"
+    emphasis: ["checking group/rule and scope", "PAC and confirmation dates", "PAL and supply protection", "BOP prioritization", "ABC substitution", "released aATP extensibility"]
+  - id: DEEP-SD-CREDIT
+    title: "SAP Credit Management"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/credit/"
+    graph_ref: "GRAPH-SD-CREDIT-MANAGEMENT"
+    emphasis: ["SD automatic credit-control trigger", "BP credit profile and credit segment", "check rules and standard check steps", "credit exposure lifecycle", "documented credit decisions and recheck", "BADI_SD_CM, UKM_FILL, and custom check steps"]
+  - id: DEEP-SD-SHIPPING-SCHEDULING
+    title: "Shipping & Delivery Scheduling"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/shipping/"
+    graph_ref: "GRAPH-SD-SHIPPING-SCHEDULING"
+    emphasis: ["shipping point determination", "order and delivery route determination", "delivery and transportation scheduling", "backward and forward date calculation", "delivery due and split diagnostics", "EWM/TM execution boundaries and extensibility"]
+  - id: DEEP-SD-MASTER-DATA
+    title: "Sales Master Data Architecture"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/master-data/"
+    graph_ref: "GRAPH-SD-MASTER-DATA-ARCHITECTURE"
+    emphasis: ["Business Partner and customer organizational views", "product sales, plant, MRP, and shipping data", "customer-material and partner relationship precedence", "pricing and credit master data", "replication, custom fields, and governance", "runtime impact and diagnostic tracing"]
+  - id: DEEP-MM-PROCUREMENT
+    title: "Procurement Decision Map"
+    parent_topic: TOPIC-P2P-PROCUREMENT
+    status: researching
+    page_url: "/labs/enterprise-context/procurement/"
+    graph_ref: "GRAPH-MM-PROCUREMENT-DECISIONS"
+    emphasis:
+      - "demand-to-settlement runtime path"
+      - "item category and account assignment"
+      - "source determination"
+      - "purchasing conditions"
+      - "approval and supplier output"
+      - "goods receipt, invoice verification, and GR/IR"
 
 maturity_gates:
   - id: scope
@@ -94,7 +161,7 @@ maturity_gates:
   - id: model
     order: 3
     label: "Model"
-    done_definition: "Domains, industries, deployment models, processes, objects, rules, applications, platforms, AI assets, and terms are represented as structured entities."
+    done_definition: "Domains, industries, deployment models, processes, objects, determinations, rules, applications, platforms, AI assets, and terms are represented as structured entities."
   - id: relationships
     order: 4
     label: "Relationships"
@@ -102,11 +169,11 @@ maturity_gates:
   - id: expert_reasoning
     order: 5
     label: "Expert reasoning"
-    done_definition: "Questions, heuristics, decision drivers, risks, and anti-patterns are captured separately from facts."
+    done_definition: "Questions, heuristics, decision drivers, risks, anti-patterns, and diagnostic paths are captured separately from facts."
   - id: synthetic_example
     order: 6
     label: "Synthetic example"
-    done_definition: "The topic is instantiated in Global Transformation Industries with safe sample data or a scenario."
+    done_definition: "The topic is instantiated with safe fictional data or a scenario."
   - id: ai_evaluation
     order: 7
     label: "AI / evaluation"
@@ -119,6 +186,13 @@ human_views:
   industries: "/labs/enterprise-context/industries/"
   business_ai: "/labs/enterprise-context/business-ai/"
   integrations: "/labs/enterprise-context/integrations/"
+  sales_order_decision_map: "/labs/enterprise-context/sales-order/"
+  pricing_engine: "/labs/enterprise-context/pricing/"
+  atp_aatp_engine: "/labs/enterprise-context/atp/"
+  credit_management: "/labs/enterprise-context/credit/"
+  shipping_scheduling: "/labs/enterprise-context/shipping/"
+  master_data_architecture: "/labs/enterprise-context/master-data/"
+  procurement_decision_map: "/labs/enterprise-context/procurement/"
   sales_master_data: "/labs/enterprise-context/sales-processes/master-data/"
   model_contract: "/labs/enterprise-context/model/"
   research_attribution_policy: "/legal/research-attribution/"
@@ -128,4 +202,18 @@ machine_endpoints:
   schema: "/labs/enterprise-context/data/schema.json"
   topics: "/labs/enterprise-context/data/topics.json"
   sources: "/labs/enterprise-context/data/sources.json"
+  sales_order_graph: "/labs/enterprise-context/data/sales-order-graph.json"
+  sales_order_sources: "/labs/enterprise-context/data/sales-order-sources.json"
+  pricing_graph: "/labs/enterprise-context/data/pricing-graph.json"
+  pricing_sources: "/labs/enterprise-context/data/pricing-sources.json"
+  atp_graph: "/labs/enterprise-context/data/atp-graph.json"
+  atp_sources: "/labs/enterprise-context/data/atp-sources.json"
+  credit_graph: "/labs/enterprise-context/data/credit-graph.json"
+  credit_sources: "/labs/enterprise-context/data/credit-sources.json"
+  shipping_graph: "/labs/enterprise-context/data/shipping-graph.json"
+  shipping_sources: "/labs/enterprise-context/data/shipping-sources.json"
+  master_data_graph: "/labs/enterprise-context/data/master-data-graph.json"
+  master_data_sources: "/labs/enterprise-context/data/master-data-sources.json"
+  procurement_graph: "/labs/enterprise-context/data/procurement-graph.json"
+  procurement_sources: "/labs/enterprise-context/data/procurement-sources.json"
   sales_master_data: "/labs/enterprise-context/data/sales-master-data.json"
