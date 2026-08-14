@@ -3,7 +3,7 @@ layout: default
 title: "SAP Integration Architecture Consulting — APIs, Events, and Clean-Core Boundaries"
 description: "SAP integration architecture consulting for APIs, events, IDoc, OData, Integration Suite, and clean-core boundaries across S/4HANA landscapes."
 permalink: /services/sap-integration-architecture/
-last_modified_at: 2026-07-25
+last_modified_at: 2026-08-14
 ---
 
 <section class="section note-detail">
