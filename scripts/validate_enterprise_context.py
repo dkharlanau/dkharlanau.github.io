@@ -15,7 +15,8 @@ import yaml
 DEFAULT_ROOT = Path("_data/labs/enterprise_context")
 TOPIC_REQUIRED = {"id", "type", "title", "summary", "domain", "status", "created_at", "updated_at"}
 SOURCE_REQUIRED = {"id", "publisher", "source_type", "title", "accessed_at", "status"}
-RELATION_REQUIRED = {"from", "type", "to", "evidence_type", "confidence"}
+LEGACY_RELATION_REQUIRED = {"from", "type", "to", "evidence_type", "confidence"}
+ASSERTION_REQUIRED = {"subject", "predicate", "object", "evidence_type", "confidence"}
 CONFIDENCE_LEVELS = {"low", "medium", "high"}
 
 
@@ -99,6 +100,37 @@ def schema_vocab(schema: dict[str, Any]) -> tuple[dict[str, str], set[str], set[
     return node_prefixes, edge_types, evidence_types, statuses
 
 
+def relation_shape(relation: dict[str, Any]) -> tuple[set[str], str, Any, Any, Any]:
+    """Return required fields, shape name, source, edge type and target.
+
+    The Lab historically used ``from/type/to`` while the current schema assertion
+    contract uses ``subject/predicate/object``. Both are accepted so older deep
+    verticals remain valid while new graph records use the schema vocabulary.
+    """
+    assertion_keys = {"subject", "predicate", "object"}
+    if assertion_keys & set(relation):
+        return (
+            ASSERTION_REQUIRED,
+            "assertion",
+            relation.get("subject"),
+            relation.get("predicate"),
+            relation.get("object"),
+        )
+    return (
+        LEGACY_RELATION_REQUIRED,
+        "legacy",
+        relation.get("from"),
+        relation.get("type"),
+        relation.get("to"),
+    )
+
+
+def looks_like_graph_entity(value: Any, prefixes: set[str]) -> bool:
+    if not isinstance(value, str):
+        return False
+    return any(value.startswith(f"{prefix}-") for prefix in prefixes)
+
+
 def validate(root: Path = DEFAULT_ROOT) -> Report:
     report = Report()
     schema_path = root / "schema.yml"
@@ -115,6 +147,7 @@ def validate(root: Path = DEFAULT_ROOT) -> Report:
         schema = {}
 
     node_prefixes, edge_types, evidence_types, statuses = schema_vocab(schema)
+    graph_prefixes = set(node_prefixes.values())
 
     topic_docs: list[tuple[Path, dict[str, Any]]] = []
     for path in sorted((root / "topics").glob("*.yml")):
@@ -161,10 +194,19 @@ def validate(root: Path = DEFAULT_ROOT) -> Report:
             report.source_count += 1
             if source_id in sources_by_id:
                 first_path, first_source = sources_by_id[source_id]
-                if first_source != source:
-                    report.add("error", "duplicate_source_id", f"{source_id} also appears in {first_path} with different metadata.", path)
-                else:
+                first_url = first_source.get("url")
+                current_url = source.get("url")
+                if first_source == source:
                     report.add("warning", "repeated_source_id", f"{source_id} duplicates an identical record from {first_path}.", path)
+                elif first_url and current_url and first_url == current_url:
+                    report.add(
+                        "warning",
+                        "repeated_source_id_same_url",
+                        f"{source_id} appears in {first_path} and {path} with the same canonical URL but registry-specific metadata.",
+                        path,
+                    )
+                else:
+                    report.add("error", "duplicate_source_id", f"{source_id} also appears in {first_path} with different metadata.", path)
             else:
                 sources_by_id[source_id] = (path, source)
 
@@ -198,23 +240,31 @@ def validate(root: Path = DEFAULT_ROOT) -> Report:
         seen_triples: set[tuple[str, str, str]] = set()
         for relation in iter_relations(data):
             report.relation_count += 1
-            missing = sorted(RELATION_REQUIRED - set(relation))
+            required, shape, source, edge_type, target = relation_shape(relation)
+            missing = sorted(required - set(relation))
             if missing:
                 report.add("error", "missing_relation_fields", f"Missing: {', '.join(missing)}", path)
                 continue
 
-            source = relation.get("from")
-            edge_type = relation.get("type")
-            target = relation.get("to")
             evidence_type = relation.get("evidence_type")
             confidence = relation.get("confidence")
 
             if edge_types and edge_type not in edge_types:
                 report.add("error", "unknown_edge_type", f"Unknown relation type {edge_type!r}.", path)
-            if source not in known_entities:
-                report.add("error", "unresolved_relation_endpoint", f"Unknown from endpoint {source!r}.", path)
-            if target not in known_entities:
-                report.add("error", "unresolved_relation_endpoint", f"Unknown to endpoint {target!r}.", path)
+
+            if shape == "legacy":
+                if source not in known_entities:
+                    report.add("error", "unresolved_relation_endpoint", f"Unknown from endpoint {source!r}.", path)
+                if target not in known_entities:
+                    report.add("error", "unresolved_relation_endpoint", f"Unknown to endpoint {target!r}.", path)
+            else:
+                # Assertion objects can be graph entities or literal values. Validate IDs
+                # that use a registered entity prefix; literals remain valid assertions.
+                if looks_like_graph_entity(source, graph_prefixes) and source not in known_entities:
+                    report.add("error", "unresolved_relation_endpoint", f"Unknown subject endpoint {source!r}.", path)
+                if looks_like_graph_entity(target, graph_prefixes) and target not in known_entities:
+                    report.add("error", "unresolved_relation_endpoint", f"Unknown object endpoint {target!r}.", path)
+
             if evidence_types and evidence_type not in evidence_types:
                 report.add("error", "unknown_evidence_type", f"Unknown evidence type {evidence_type!r}.", path)
             if confidence not in CONFIDENCE_LEVELS:
