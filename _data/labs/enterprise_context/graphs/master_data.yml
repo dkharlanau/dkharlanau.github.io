@@ -1,0 +1,722 @@
+id: GRAPH-SD-MASTER-DATA-ARCHITECTURE
+type: knowledge_graph
+title: "Sales Master Data Architecture — Ownership, Precedence & Runtime Impact"
+summary: >-
+  A practical map of the master data that feeds SAP S/4HANA Sales decisions:
+  business partner and customer views, product and plant data, customer-material
+  relationships, partner functions, pricing conditions, credit data, custom fields,
+  replication, and governance. The model connects each data family to the runtime
+  decisions it can change and to the failure signals it can create.
+domain: "SAP S/4HANA Sales / Cross-Application Master Data"
+process_family: "Order-to-Cash"
+process_step: "Prepare and Govern Sales Master Data"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+
+thesis: >-
+  Master data is executable business policy. A field becomes important when it changes
+  a pricing path, a promise, a credit decision, a shipping plan, a partner, or an accounting
+  result. I therefore debug master data from the document result backwards: which runtime
+  value is wrong, which object supplied it, at which organizational level, under which
+  precedence rule, and whether the same value reached every connected system.
+
+boundary:
+  included:
+    - "business partner identity and customer roles"
+    - "general, company-code, and sales-area customer data"
+    - "partner functions and partner relationships"
+    - "product basic, sales, plant, and MRP-relevant data"
+    - "customer-material information records"
+    - "pricing condition records as commercial master data"
+    - "SAP Credit Management profile and credit-segment data"
+    - "sales-relevant custom fields and extension contexts"
+    - "business partner and product replication patterns"
+    - "MDG / DRF governance boundary"
+    - "runtime precedence and diagnostic traces"
+  excluded:
+    - "full MDG implementation design"
+    - "full material ledger and valuation design"
+    - "full tax-engine design"
+    - "full classification and variant-configuration design"
+    - "full EWM/TM master-data models"
+    - "client-specific data ownership matrices"
+  release_scope:
+    - "SAP S/4HANA 2025 FPS01 where cited"
+  note: >-
+    Ownership assignments on this page are architecture heuristics, not SAP-prescribed
+    organization charts. A company can assign different business owners while keeping the
+    same technical data model.
+
+memory_model:
+  title: "Ten questions I use before changing master data"
+  questions:
+    - key: "WHO"
+      question: "Which business partner or customer identity is the document using?"
+      answer: "Start with the actual sold-to, ship-to, bill-to, and payer instead of assuming one customer record drives everything."
+    - key: "ROLE"
+      question: "Does the business partner have the role needed for this process?"
+      answer: "Customer sales, FI customer, and Credit Management are different business contexts with different data."
+    - key: "WHERE"
+      question: "At which organizational level is the value valid?"
+      answer: "General, company code, sales area, sales organization/distribution channel, plant, and credit segment are not interchangeable levels."
+    - key: "WHAT"
+      question: "Which product and product view supplies the item behavior?"
+      answer: "Sales, plant, MRP, loading, transportation, tax, and pricing attributes can drive different engines."
+    - key: "RELATE"
+      question: "Is there customer-specific or partner-specific relationship data?"
+      answer: "Customer-material information and partner functions can be more specific than generic customer or product defaults."
+    - key: "COMMERCIAL"
+      question: "Which master data shapes price, tax, payment, or billing?"
+      answer: "Customer/product attributes build the pricing key, while condition records hold the commercial values found by condition technique."
+    - key: "FULFILL"
+      question: "Which master data shapes plant, ATP, route, and delivery?"
+      answer: "Ship-to data, product/plant data, checking group, loading group, and transportation group can change the logistics path."
+    - key: "RISK"
+      question: "Which credit account and segment govern the payer?"
+      answer: "Credit profile, risk class, check rule, credit segment, and limit belong to the credit policy layer, not normal sales-area data."
+    - key: "DISTRIBUTE"
+      question: "Did the right version reach every consuming system?"
+      answer: "A correct source record does not prove that an external channel, TM, data hub, or replica received the same attributes and keys."
+    - key: "GOVERN"
+      question: "Who may create, approve, change, and retire this value?"
+      answer: "The strongest design separates business ownership, technical stewardship, approval, distribution, and emergency override."
+
+data_families:
+  - id: MD-BP-GENERAL
+    title: "Business Partner — General Data"
+    level: "client / business-partner identity"
+    examples:
+      - "name and legal identity"
+      - "addresses and communication data"
+      - "language and general identification"
+    consumers:
+      - "partner determination"
+      - "ship-to destination and communication"
+      - "billing/output context"
+    typical_owner: "enterprise customer / business-partner stewardship"
+    diagnostic_signal: "Wrong identity, address, language, or duplicate partner appears across several processes."
+    source_refs:
+      - SRC-SAP-MD-BP-STRUCTURE
+
+  - id: MD-CUSTOMER-COMPANY
+    title: "Customer — Company Code Data"
+    level: "business partner + company code"
+    examples:
+      - "FI customer/accounting view"
+      - "account management and payment/accounting data"
+    consumers:
+      - "billing and FI-AR"
+      - "payer accounting integration"
+    typical_owner: "finance / accounts receivable"
+    diagnostic_signal: "Sales order can exist, but billing or accounting fails because the payer is not ready for the company code."
+    source_refs:
+      - SRC-SAP-MD-BP-ROLES
+      - SRC-SAP-MD-BP-STRUCTURE
+
+  - id: MD-CUSTOMER-SALES
+    title: "Customer — Sales Area Data"
+    level: "business partner + sales organization + distribution channel + division"
+    examples:
+      - "customer pricing procedure"
+      - "price list / price group"
+      - "shipping condition"
+      - "delivery agreements and priorities"
+      - "billing and tax-related sales data"
+      - "partner functions"
+    consumers:
+      - "sales-order defaults"
+      - "pricing"
+      - "shipping"
+      - "partner determination"
+      - "billing"
+    typical_owner: "sales operations / commercial master-data stewardship"
+    diagnostic_signal: "The same customer behaves differently across sales areas or cannot be processed in one sales area."
+    source_refs:
+      - SRC-SAP-MD-BP-STRUCTURE
+      - SRC-SAP-MD-PRICING-PREREQ
+      - SRC-SAP-MD-PARTNERS
+
+  - id: MD-PRODUCT-BASIC
+    title: "Product — Basic / Cross-Distribution Data"
+    level: "product"
+    examples:
+      - "description and base unit"
+      - "gross/net weight and dimensions"
+      - "transportation group"
+      - "cross-distribution-chain sales status"
+      - "pricing reference product where used"
+    consumers:
+      - "sales item"
+      - "route determination"
+      - "delivery execution"
+      - "pricing key/calculation context"
+    typical_owner: "product master-data stewardship"
+    diagnostic_signal: "The issue follows the product across customers and sales areas."
+    source_refs:
+      - SRC-SAP-MD-PRODUCT
+      - SRC-SAP-MD-PRODUCT-BASIC-SALES
+
+  - id: MD-PRODUCT-SALES
+    title: "Product — Sales Data"
+    level: "product + sales organization + distribution channel"
+    examples:
+      - "supplying / delivering plant default"
+      - "minimum order quantity"
+      - "product pricing group"
+      - "account assignment group"
+      - "sales status"
+    consumers:
+      - "sales item creation"
+      - "plant proposal"
+      - "pricing"
+      - "account determination"
+    typical_owner: "commercial product / sales master-data stewardship"
+    diagnostic_signal: "A product works in one distribution chain but not another."
+    source_refs:
+      - SRC-SAP-MD-PRODUCT-SALES
+
+  - id: MD-PRODUCT-PLANT
+    title: "Product — Plant / MRP / Shipping Data"
+    level: "product + plant"
+    examples:
+      - "availability checking group"
+      - "MRP and planning attributes"
+      - "loading group"
+      - "plant-specific logistics controls"
+    consumers:
+      - "ATP"
+      - "transfer of requirements / planning"
+      - "shipping-point determination"
+      - "warehouse and production integration"
+    typical_owner: "plant planning / supply-chain master-data stewardship"
+    diagnostic_signal: "The issue appears only for one product-plant combination."
+    source_refs:
+      - SRC-SAP-MD-ATP-CONTROL
+      - SRC-SAP-MD-LOADING-GROUP
+
+  - id: MD-CMIR
+    title: "Customer-Material Information"
+    level: "customer + sales organization + distribution channel + product relationship"
+    examples:
+      - "customer material number and description"
+      - "customer-specific delivery data"
+      - "delivery tolerances"
+      - "customer-material text"
+      - "customer-specific shipping values where maintained"
+    consumers:
+      - "material identification"
+      - "sales-item defaults"
+      - "delivering-plant determination"
+      - "delivery agreements"
+    typical_owner: "customer operations / sales master-data stewardship"
+    diagnostic_signal: "One customer-product combination behaves differently while both generic customer and product records look correct."
+    source_refs:
+      - SRC-SAP-MD-CMIR
+      - SRC-SAP-MD-DOCUMENT-SOURCES
+      - SRC-SAP-MD-PLANT-DETERMINATION
+
+  - id: MD-PARTNER
+    title: "Partner Functions & Relationships"
+    level: "customer sales area and document context"
+    examples:
+      - "sold-to"
+      - "ship-to"
+      - "bill-to"
+      - "payer"
+      - "contact / forwarding or other configured partners"
+    consumers:
+      - "sales document partner determination"
+      - "shipping address and shipping data"
+      - "billing and payment responsibility"
+      - "credit-account selection"
+    typical_owner: "customer master-data stewardship with sales-process governance"
+    diagnostic_signal: "The document uses the wrong legal, delivery, invoice, or payment partner even though the sold-to is correct."
+    source_refs:
+      - SRC-SAP-MD-PARTNERS
+      - SRC-SAP-MD-PARTNER-PROCEDURE
+      - SRC-SAP-MD-PARTNER-API
+
+  - id: MD-PRICING-CONDITION
+    title: "Pricing Condition Records"
+    level: "condition-table key + validity period"
+    examples:
+      - "list price"
+      - "customer/product discount"
+      - "freight surcharge"
+      - "sales tax condition where relevant"
+      - "scales and validity"
+    consumers:
+      - "pricing"
+      - "billing repricing where configured"
+    typical_owner: "pricing / commercial governance"
+    diagnostic_signal: "Pricing procedure and key are correct, but the expected commercial value is missing, invalid, or obsolete."
+    source_refs:
+      - SRC-SAP-MD-CONDITION-TECHNIQUE
+      - SRC-SAP-MD-CONDITION-API
+
+  - id: MD-CREDIT
+    title: "SAP Credit Management Master Data"
+    level: "business partner profile + credit segment"
+    examples:
+      - "risk class"
+      - "check rule"
+      - "credit limit"
+      - "credit-limit validity"
+      - "special attention / block reason"
+    consumers:
+      - "sales-order credit check"
+      - "delivery / goods-issue credit checks"
+      - "documented credit decisions"
+    typical_owner: "credit / risk management"
+    diagnostic_signal: "The payer is not checked, is checked against the wrong segment, or is blocked for a policy reason that sales data cannot explain."
+    source_refs:
+      - SRC-SAP-MD-CREDIT-MASTER
+      - SRC-SAP-MD-CREDIT-API
+
+  - id: MD-EXTENSION
+    title: "Custom Fields & Extension Context"
+    level: "released business context + consuming applications/interfaces"
+    examples:
+      - "customer general custom field"
+      - "customer company-code custom field"
+      - "customer sales-area custom field"
+      - "business-partner core custom field"
+    consumers:
+      - "UI"
+      - "pricing / custom logic where enabled"
+      - "APIs and integration when explicitly published"
+    typical_owner: "business data owner + solution architecture"
+    diagnostic_signal: "The field exists in one UI but is blank in pricing, billing, an API, or a replica."
+    source_refs:
+      - SRC-SAP-MD-BP-EXTENSIBILITY
+
+precedence_examples:
+  - id: MD-PREC-PLANT
+    decision: "Delivering plant"
+    path:
+      - "customer-material information record"
+      - "ship-to customer master"
+      - "product/material master"
+    note: "Manual document values and specialized scenarios can change the runtime result; verify the actual document."
+    source_refs:
+      - SRC-SAP-MD-PLANT-DETERMINATION
+
+  - id: MD-PREC-CMIR
+    decision: "Customer-specific item data"
+    path:
+      - "customer-material information record when present"
+      - "customer and/or product defaults for the same data domain"
+    note: "SAP documents customer-material data as taking priority for the data it defines."
+    source_refs:
+      - SRC-SAP-MD-DOCUMENT-SOURCES
+
+  - id: MD-PREC-SHIPCOND
+    decision: "Shipping condition"
+    path:
+      - "sales document type value when configured"
+      - "ship-to customer master value otherwise"
+    note: "This is a good example of configuration overriding master-data default."
+    source_refs:
+      - SRC-SAP-MD-SHIPPING-POINT
+
+  - id: MD-PREC-PARTNER
+    decision: "Document partners"
+    path:
+      - "partner determination procedure defines allowed/required functions and source control"
+      - "customer master / business-partner relationship supplies proposed partners"
+      - "manual change only when procedure permits"
+    note: "Do not debug the sold-to record alone when ship-to, payer, or bill-to is wrong."
+    source_refs:
+      - SRC-SAP-MD-PARTNER-PROCEDURE
+      - SRC-SAP-MD-PARTNERS
+
+  - id: MD-PREC-PRICING
+    decision: "Pricing value"
+    path:
+      - "pricing procedure and condition type"
+      - "access sequence"
+      - "condition-table key"
+      - "valid condition record"
+    note: "Pricing uses condition technique; there is no universal customer-over-product precedence."
+    source_refs:
+      - SRC-SAP-MD-CONDITION-TECHNIQUE
+
+engine_dependency_matrix:
+  - engine: "Sales Order Decision Map"
+    master_data_inputs:
+      - "sold-to / ship-to / payer / bill-to"
+      - "sales-area customer data"
+      - "product sales data"
+      - "customer-material information"
+      - "partner functions"
+    lead_question: "Which upstream master value caused the first wrong determination?"
+
+  - engine: "Pricing"
+    master_data_inputs:
+      - "customer pricing procedure / price list / price group / tax classification"
+      - "product pricing group / tax classification / pricing reference"
+      - "condition records"
+      - "customer or product custom fields used in pricing keys"
+    lead_question: "Is the problem the pricing key, the commercial record, or the pricing logic?"
+
+  - engine: "ATP / aATP"
+    master_data_inputs:
+      - "product and plant"
+      - "availability checking group"
+      - "planning / MRP context"
+      - "product-location data used by advanced methods"
+    lead_question: "Does the promise engine see the intended product-location and availability policy?"
+
+  - engine: "SAP Credit Management"
+    master_data_inputs:
+      - "payer / credit account"
+      - "credit-management business-partner context"
+      - "risk class and check rule"
+      - "credit segment and credit limit"
+    lead_question: "Is this a sales execution problem or a deliberate risk-policy result?"
+
+  - engine: "Shipping & Scheduling"
+    master_data_inputs:
+      - "ship-to shipping data and address"
+      - "delivering plant"
+      - "loading group"
+      - "transportation group"
+      - "weights and dimensions"
+    lead_question: "Which master-data input moved shipping point, route, or calculated dates?"
+
+  - engine: "Billing / FI Integration"
+    master_data_inputs:
+      - "payer and bill-to"
+      - "company-code customer data"
+      - "payment terms"
+      - "tax and account-determination attributes"
+    lead_question: "Did a sales-valid customer become accounting-invalid at billing time?"
+
+replication_architecture:
+  principle: >-
+    Replication is part of the master-data design. I define system of record, object key,
+    scope, filter, interface, custom-field contract, error ownership, and reconciliation.
+    "The record exists in S/4" is not a useful integration acceptance criterion.
+  patterns:
+    - id: MD-REP-BP
+      title: "Business Partner / Customer integration"
+      mechanisms:
+        - "Business Partner APIs"
+        - "OData"
+        - "SOAP"
+        - "IDoc where supported"
+        - "Data Replication Framework"
+      controls:
+        - "key mapping / identifiers"
+        - "role and organizational-view completeness"
+        - "partner relationships"
+        - "custom-field publication"
+      source_refs:
+        - SRC-SAP-MD-BP-API
+        - SRC-SAP-MD-BP-DRF
+
+    - id: MD-REP-PRODUCT
+      title: "Product integration"
+      mechanisms:
+        - "Product Master APIs"
+        - "OData / SOAP integration"
+        - "SAP Master Data Integration for supported scenarios"
+        - "DRF for connected SAP scenarios such as TM"
+      controls:
+        - "product key consistency"
+        - "organizational-level scope"
+        - "units of measure"
+        - "sales and plant extensions"
+      source_refs:
+        - SRC-SAP-MD-PRODUCT-MDI
+        - SRC-SAP-MD-PRODUCT-REPLICATION
+
+    - id: MD-REP-PRICE
+      title: "Pricing condition integration"
+      mechanisms:
+        - "Condition Record for Pricing in Sales API"
+        - "mass maintenance / Manage Prices - Sales"
+      controls:
+        - "condition key"
+        - "validity"
+        - "scales"
+        - "approval / ownership"
+      source_refs:
+        - SRC-SAP-MD-CONDITION-API
+        - SRC-SAP-MD-MANAGE-PRICES
+
+governance_model:
+  title: "Five responsibilities I keep separate"
+  responsibilities:
+    - role: "Business Owner"
+      question: "Who decides what the value means and when it should change?"
+      examples: ["pricing policy", "credit limit policy", "shipping agreement"]
+    - role: "Data Steward"
+      question: "Who creates, validates, enriches, and retires the record?"
+      examples: ["customer sales-area extension", "product sales view", "partner relationship"]
+    - role: "Approver"
+      question: "Which changes require four-eyes control or workflow?"
+      examples: ["credit limit", "commercial price", "sensitive business-partner data"]
+    - role: "Integration Owner"
+      question: "Who guarantees that approved data reaches each consumer and can be reconciled?"
+      examples: ["DRF model", "API contract", "error queue", "key mapping"]
+    - role: "Process Owner"
+      question: "Who accepts the downstream behavior produced by this data?"
+      examples: ["O2C", "pricing", "credit", "delivery"]
+  mdg_boundary:
+    statement: >-
+      SAP Master Data Governance can centralize governance and replicate approved master data.
+      I treat MDG as a governance and distribution capability, not as a reason to move every
+      operational field into one approval workflow.
+    source_refs:
+      - SRC-SAP-MD-MDG-BP
+      - SRC-SAP-MD-MDG-DRF
+
+diagnostic_method:
+  title: "Trace value → source → level → precedence → distribution"
+  steps:
+    - order: 1
+      name: "Name the wrong runtime value"
+      example: "Shipping point is wrong, not 'customer master is wrong'."
+    - order: 2
+      name: "Identify the consuming engine"
+      example: "Shipping-point determination, pricing access, ATP, credit, or billing."
+    - order: 3
+      name: "Read the exact document context"
+      example: "Partners, sales area, product, plant, dates, and manual overrides."
+    - order: 4
+      name: "Find the source object and organizational level"
+      example: "Ship-to sales area, product-plant, customer-material record, credit segment."
+    - order: 5
+      name: "Check the decision-specific precedence"
+      example: "CMIR before ship-to before product for standard plant proposal."
+    - order: 6
+      name: "Compare source and replica"
+      example: "The S/4 record is correct, but the channel sent an old ship-to or missing custom field."
+    - order: 7
+      name: "Fix ownership, not only the value"
+      example: "Prevent recurrence with validation, approval, replication monitoring, or clearer stewardship."
+
+failure_modes:
+  - id: MD-FAIL-SALES-AREA
+    title: "Customer works in one sales area and fails in another"
+    signal: "Order cannot be created, pricing differs, shipping defaults differ, or partner data is missing."
+    trace:
+      - "compare exact sales area"
+      - "check FLCU01/customer sales-area extension"
+      - "compare pricing/shipping/billing attributes"
+      - "check partner functions at the relevant level"
+    lead_lens: "Do not copy all fields blindly. Decide which differences are intentional by market/channel."
+
+  - id: MD-FAIL-BILLING
+    title: "Order and delivery work, billing/accounting fails"
+    signal: "Payer is valid for Sales but not ready for FI processing."
+    trace:
+      - "identify payer, not only sold-to"
+      - "check company-code customer data / FI role"
+      - "check payment and accounting attributes"
+      - "separate billing master-data issue from SD document configuration"
+    lead_lens: "A customer can be commercially sellable before being accounting-complete."
+
+  - id: MD-FAIL-PLANT
+    title: "Delivering plant is unexpected"
+    signal: "ATP, shipping point, route, and dates all look wrong after one upstream plant proposal."
+    trace:
+      - "check customer-material information"
+      - "check ship-to plant"
+      - "check product sales plant"
+      - "check manual value / redetermination"
+    lead_lens: "Fix the first wrong source. Do not compensate in ATP or shipping configuration."
+
+  - id: MD-FAIL-PRICE
+    title: "Condition record exists but price is still wrong"
+    signal: "Business points to the condition record as proof that pricing should work."
+    trace:
+      - "check customer/product pricing attributes"
+      - "read pricing analysis and runtime key"
+      - "verify access sequence and validity"
+      - "verify custom pricing fields are populated"
+    lead_lens: "A commercial record is only useful if the pricing engine searches with the same key."
+
+  - id: MD-FAIL-ATP
+    title: "One product-plant never confirms"
+    signal: "Similar products confirm in the same order, but this combination does not."
+    trace:
+      - "confirm product and plant"
+      - "check availability checking group and relevant planning data"
+      - "compare the product-plant with a working peer"
+      - "then inspect ATP scope and supply/demand"
+    lead_lens: "Master data and ATP configuration form one control system."
+
+  - id: MD-FAIL-SHIPPING
+    title: "Shipping point or route differs for one material/customer"
+    signal: "Delivery grouping or dates differ even though order type is the same."
+    trace:
+      - "check ship-to shipping condition"
+      - "check product loading group"
+      - "check product transportation group and address/zone context"
+      - "check customer-material overrides"
+    lead_lens: "Same order type does not mean same logistics master data."
+
+  - id: MD-FAIL-CREDIT
+    title: "Credit result cannot be explained from normal customer sales data"
+    signal: "Order is not checked or is blocked despite apparently normal sales-area settings."
+    trace:
+      - "identify payer / credit account"
+      - "check Credit Management role/context"
+      - "check profile risk class and check rule"
+      - "check credit segment and limit"
+    lead_lens: "Credit master data belongs to risk governance. Sales-area maintenance is not the authority."
+
+  - id: MD-FAIL-REPLICATION
+    title: "Manual S/4 order works, interface order behaves differently"
+    signal: "Source master record is correct, but external order has another partner, product, plant, or pricing key."
+    trace:
+      - "compare incoming document payload"
+      - "compare identifiers / key mapping"
+      - "compare replicated organizational views"
+      - "check custom-field exposure in the API"
+      - "check replication status and last successful change"
+    lead_lens: "Treat replication completeness as a functional requirement, not only an integration transport."
+
+  - id: MD-FAIL-UI-ONLY
+    title: "Custom field exists in UI but disappears downstream"
+    signal: "Users see a value in BP maintenance, but pricing, billing, API, or replica sees blank."
+    trace:
+      - "identify business context of the custom field"
+      - "confirm it is enabled for the consuming UI/API"
+      - "confirm mapping and population timing"
+      - "test create/change/replicate lifecycle"
+    lead_lens: "A field is not enterprise master data until its consumers and lifecycle are designed."
+
+impact_traces:
+  - title: "Customer sales area → Pricing"
+    path: "BP/customer sales area → customer pricing procedure / price group / tax → pricing procedure/access key → condition record → net value"
+  - title: "Customer + Product → Plant"
+    path: "CMIR → ship-to customer → product sales data → delivering plant → ATP → shipping point → route → scheduling"
+  - title: "Product plant → Promise"
+    path: "product + plant → checking group / planning context → ATP scope → confirmation → customer promise"
+  - title: "Ship-to + Product → Shipping"
+    path: "ship-to shipping condition + plant + loading group → shipping point → route inputs + transportation group → route → dates"
+  - title: "Payer → Credit"
+    path: "document payer → credit account/profile → credit segment → limit + exposure + check rule → credit decision"
+  - title: "Approved master change → External execution"
+    path: "governed change → active master data → DRF/API/MDI → target key mapping → consumer document → runtime decision"
+
+synthetic_cases:
+  - id: MD-CASE-CHANNEL
+    title: "Same customer, two sales areas"
+    setup:
+      - "Customer sells through DE direct sales and EU distributor channel."
+      - "Direct sales should use express shipping and a negotiated price list."
+      - "Distributor channel should use standard shipping and another pricing policy."
+    task: "Explain which differences belong in sales-area master data and which should remain shared general data."
+    lead_answer:
+      - "Keep identity/address that is truly shared in general BP data."
+      - "Keep channel-specific pricing, shipping, and sales controls at sales-area level."
+      - "Do not clone the BP only to represent a sales-area policy difference."
+      - "Define stewardship and testing for each intended variation."
+
+  - id: MD-CASE-CMIR
+    title: "The mysterious plant override"
+    setup:
+      - "Product master proposes plant DE01."
+      - "Ship-to also proposes DE01."
+      - "One customer-product order uses PL01."
+      - "A customer-material information record exists."
+    task: "Diagnose before changing plant determination."
+    lead_answer:
+      - "Inspect the customer-material record first."
+      - "Confirm the document plant was not manually overridden."
+      - "Explain the decision-specific precedence."
+      - "Then decide whether the customer-specific plant is valid business policy or stale data."
+
+  - id: MD-CASE-REPLICA
+    title: "Web order and manual order disagree"
+    setup:
+      - "The S/4 BP contains a new sales-area custom field used in pricing."
+      - "Manual order pricing is correct."
+      - "Web orders still use the old discount."
+    task: "Separate master-data, pricing, and integration responsibility."
+    lead_answer:
+      - "Prove the field is populated in S/4 pricing communication for the manual order."
+      - "Inspect the web/API payload and replicated customer view."
+      - "Confirm the custom field is published and mapped through the integration contract."
+      - "Fix replication/contract ownership instead of adding another pricing condition record."
+
+assessment_drills:
+  - question: "A customer can create orders in sales area A but not B. What do you check?"
+    expected:
+      - "exact BP/customer sales-area extension"
+      - "sales-area-specific controls and partner functions"
+      - "whether the difference is intentional"
+      - "do not solve by duplicating the customer without a business reason"
+
+  - question: "Order works, billing fails because of customer master. Explain the architecture."
+    expected:
+      - "identify payer"
+      - "separate sales-area data from company-code/FI customer data"
+      - "check company-code readiness and accounting attributes"
+
+  - question: "Product master says plant DE01, but order proposes PL01. Why?"
+    expected:
+      - "check customer-material information first"
+      - "then ship-to customer plant"
+      - "then product/material plant"
+      - "check manual override/redetermination"
+
+  - question: "What is the difference between customer master data and pricing condition master data?"
+    expected:
+      - "customer/product attributes help build pricing context and keys"
+      - "condition records hold commercial values and validity"
+      - "condition technique controls search sequence"
+
+  - question: "Why can stock exist while ATP still fails because of master data?"
+    expected:
+      - "product/plant and checking-group context"
+      - "planning/availability control"
+      - "then scope and supply/demand"
+
+  - question: "How do you govern a new customer field needed by pricing and an external channel?"
+    expected:
+      - "define semantic owner and organizational level"
+      - "use released custom-field business context"
+      - "enable required UI/API usage"
+      - "map replication"
+      - "test create/change/reprocess lifecycle"
+
+  - question: "When would you use MDG rather than direct maintenance in S/4?"
+    expected:
+      - "when governance, approval, data quality, central ownership, or multi-system distribution justify it"
+      - "not every operational field needs the same workflow"
+      - "define source of truth and replication first"
+
+  - question: "What makes master-data replication a functional design topic?"
+    expected:
+      - "business decisions depend on values and keys in the consuming system"
+      - "organizational views, relationships, and custom fields must be complete"
+      - "reconciliation and error ownership affect process reliability"
+
+practitioner_heuristics:
+  - "Name the wrong runtime value before opening master-data maintenance."
+  - "Always include organizational level in a master-data question."
+  - "Do not assume sold-to is the source for ship-to, payer, or bill-to behavior."
+  - "Do not invent one universal precedence hierarchy; trace the rule for the field."
+  - "Treat customer-material data as a relationship object, not a small extension of customer or product."
+  - "Treat pricing conditions and credit data as governed policy data, not casual attributes."
+  - "Compare a failing record with a working peer at the same organizational level."
+  - "A successful replication message is not proof of semantic completeness."
+  - "Custom fields need a lifecycle: create, change, expose, replicate, consume, reconcile, retire."
+  - "Fix ownership and validation after fixing the bad value, or the incident will simply return."
+
+anti_patterns:
+  - "Duplicate a customer because one sales area needs different shipping or pricing."
+  - "Copy every field from one sales area to another without deciding which differences are intentional."
+  - "Change ATP or shipping configuration to compensate for a wrong plant master value."
+  - "Maintain another pricing condition record before checking the runtime pricing key."
+  - "Give Sales unrestricted ownership of credit limits because credit blocks slow orders down."
+  - "Create custom fields in UI without designing APIs, replication, and downstream use."
+  - "Declare replication successful because the interface is green while target organizational views are incomplete."
+  - "Put every master-data change through one heavyweight governance workflow regardless of risk."
