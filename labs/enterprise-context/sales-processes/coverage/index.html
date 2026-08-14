@@ -1,0 +1,167 @@
+---
+layout: default
+title: "SAP Sales Process Coverage Map — Claims, Returns, Billing and Industry Variants"
+description: "High-coverage SAP S/4HANA Sales map with claims, customer returns, Advanced Returns Management, billing corrections, settlement, third-party variants, configurable products and JIT supply."
+permalink: /labs/enterprise-context/sales-processes/coverage/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+sales_process_atlas: true
+tags:
+  - sap
+  - s4hana
+  - sales
+  - returns
+  - claims
+  - billing
+  - advanced-returns-management
+---
+
+{% assign atlas_groups = site.data.labs.enterprise_context.processes.sales_process_atlas %}
+{% assign atlas = atlas_groups.index %}
+{% assign audit = atlas_groups.coverage_audit %}
+{% assign group_keys = "01_baseline,02_fulfillment,03_intercompany,04_commercial,05_execution,06_overlays,07_after_sales,08_commercial_extensions,09_industry_variants" | split: "," %}
+{% assign coverage_registry = site.data.labs.enterprise_context.sources.sales_process_coverage_registry %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Coverage Map</li></ol>
+</nav>
+
+<div class="research-canvas sales-process-atlas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Sales process atlas / coverage map</p>
+      <h1>Cover the business choices.<br />Not every SAP menu entry.</h1>
+      <p>High coverage does not mean one card per scope item. A useful map separates the branches that change ownership, supply, inspection, billing, settlement, configuration, or integration. Everything else can remain an alias or capability.</p>
+      <a class="research-canvas__button" href="#complaint-map">Start with claims & returns <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Coverage inventory">
+      <p>Coverage inventory</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ audit.summary.atlas_records }}</strong><small>Process cards / overlays</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ audit.summary.mechanisms }}</strong><small>Reusable mechanisms</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ audit.scope_aliases | size }}</strong><small>Scope mappings</small></div>
+      <em>Core process, child variant, mechanism and adjacent component are deliberately different ontology classes.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Coverage rule.</strong> Create a new process code only when the business contract changes. A physical return, an invoice correction and a free replacement are three different answers to the same complaint, so they must not hide under one generic “returns” card.</p>
+    <a href="/labs/enterprise-context/data/sales-process-atlas.json">Open full JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="complaint-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Complaint decision map</p>
+      <h2>Start with what the customer actually needs.</h2>
+      <p>“Complaint” is not a process. First decide whether goods move, money changes, or the customer needs replacement. That decision determines the document family and the downstream systems.</p>
+    </header>
+    <div class="spa-compare-grid">
+      <article><span>Goods come back?</span><h3>Simple physical return</h3><p><code>SD.RET.LEAN</code> when receipt back to valuated stock and credit are enough. No inspection-driven disposition is required.</p></article>
+      <article><span>Goods come back?</span><h3>Inspect and decide</h3><p><code>SD.RET.ARM</code> when inspection, follow-up activity, refund logic, supplier/plant routing, scrap, repair or replacement must be controlled.</p></article>
+      <article><span>Goods stay with customer?</span><h3>Reduce the receivable</h3><p><code>SD.CLM.CMR</code> for a commercial credit without reverse logistics. Think forgotten discount, price concession or accepted claim.</p></article>
+      <article><span>Goods stay with customer?</span><h3>Increase the receivable</h3><p><code>SD.CLM.DMR</code> when the original commercial result was too low and an additional charge is required.</p></article>
+      <article><span>Invoice itself is wrong?</span><h3>Correct the billed value</h3><p><code>SD.CLM.ICR</code> when the dispute is fundamentally about an existing invoice and copied versus corrected values matter.</p></article>
+      <article><span>Customer needs goods, not money?</span><h3>Replace free of charge</h3><p><code>SD.CLM.FOS</code> when shortage or damage is resolved by a subsequent free delivery rather than a financial credit.</p></article>
+      <article><span>Kit came back?</span><h3>Return components safely</h3><p><code>SD.RET.KIT</code> when the original commercial product was a kit but returned logistics can happen at component level.</p></article>
+      <article><span>Repair instead of refund?</span><h3>Hand off to Service</h3><p><code>SD.RET.REPAIR</code> keeps the return trace in Sales and makes the boundary to in-house repair explicit.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">What was missing</p>
+      <h2>Returns were one card. They are now a family.</h2>
+      <p>The parent code <code>SD.RET</code> stays useful as a concept. Child codes hold the decisions that change stock quality, refund timing, component handling, or the handoff to Service. Claims use <code>SD.CLM.*</code> because they do not automatically imply a physical return.</p>
+    </header>
+    <div class="spa-code-grid">
+      <article><span>SD.RET.</span><strong>Reverse logistics</strong><p><code>LEAN</code> · <code>ARM</code> · <code>KIT</code> · <code>REPAIR</code></p></article>
+      <article><span>SD.CLM.</span><strong>Customer claim</strong><p><code>CMR</code> credit · <code>DMR</code> debit · <code>ICR</code> invoice correction · <code>FOS</code> replacement</p></article>
+      <article><span>SD.*.*</span><strong>Meaningful child variant</strong><p><code>TPO.SN</code> · <code>TPO.NSN</code> · <code>TPO.VC</code> · <code>MTO.VC</code> · <code>SA.CON</code></p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="coverage-cards" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">High-coverage card map</p>
+      <h2>{{ audit.summary.atlas_records }} process cards and overlays, grouped by business change.</h2>
+      <p>Read the hook and flow first. Expand only when you need controls, data hinges, limits and Lead questions. Memory is allowed to have an interface; apparently we do not have to suffer for knowledge to count.</p>
+    </header>
+
+    <div class="spa-card-grid">
+      {% for group_key in group_keys %}
+      {% assign group = atlas_groups[group_key] %}
+      {% for process in group.processes %}
+      <article class="spa-card" id="coverage-{{ process.code | downcase | replace: '.', '-' | replace: '+', '-plus-' }}">
+        <header class="spa-card__head">
+          <div><span class="spa-code">{{ process.code }}</span><span class="spa-kind">{{ process.kind | replace: "_", " " }}</span></div>
+          {% if process.sap_scope_items and process.sap_scope_items.size > 0 %}<p class="spa-scope">{% for scope in process.sap_scope_items %}<span>{{ scope.id }}</span>{% endfor %}</p>{% endif %}
+        </header>
+        <h3>{{ process.title }}</h3>
+        <p class="spa-hook">{{ process.memory_hook }}</p>
+        <p class="spa-intent">{{ process.business_intent }}</p>
+        <div class="spa-flow" aria-label="{{ process.title }} flow">{% for step in process.flow %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
+        <details>
+          <summary>Controls, data and boundaries <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="spa-detail-grid">
+            <section><h4>Control plane</h4><ul>{% for item in process.control_plane %}<li><strong>{{ item.control }}</strong><span>{{ item.why }}</span></li>{% endfor %}</ul></section>
+            <section><h4>Data hinges</h4><ul>{% for item in process.data_hinges %}<li><strong>{{ item.data }}</strong><span>{{ item.changes }}</span></li>{% endfor %}</ul></section>
+            <section><h4>What changes</h4><ul>{% for item in process.impact_summary %}<li>{{ item }}</li>{% endfor %}</ul></section>
+            <section><h4>Constraints</h4><ul>{% for item in process.constraints %}<li>{{ item }}</li>{% endfor %}</ul></section>
+          </div>
+          <div class="spa-lead"><p>Lead questions</p><ol>{% for q in process.lead_questions %}<li>{{ q }}</li>{% endfor %}</ol></div>
+          <div class="spa-extension-row"><span>Extensions</span>{% for ext in process.extension_points %}<code>{{ ext }}</code>{% endfor %}</div>
+        </details>
+      </article>
+      {% endfor %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Scope-item normalization</p>
+      <h2>SAP scope IDs are references. Our codes hold the concept.</h2>
+      <p>Several SAP Best Practice scope items map to the same stable process family. This keeps the graph useful across releases and stops a learning site from becoming a release-note database with aspirations.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in audit.scope_aliases %}
+      <div><span>{{ item.sap_scope }}</span><strong>{{ item.maps_to }}</strong><small>{{ item.reason }}</small></div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Adjacent, not forgotten</p>
+      <h2>Some capabilities belong beside the process, not inside its name.</h2>
+      <p>aATP, credit, EWM, TM, GTS, output and Service can radically change execution. They remain explicit in the model without creating nonsense codes such as “Sell-from-stock-with-ATP-and-TM-and-output-and-a-small-cloud-nearby”.</p>
+    </header>
+    <div class="spa-compare-grid">
+      {% for item in audit.adjacent_capabilities %}
+      <article><span>{% if item.sap_scope %}{{ item.sap_scope }}{% else %}Capability{% endif %}</span><h3>{{ item.name }}</h3><p><b>Maps to:</b> {{ item.maps_to }}. {{ item.why_not_process }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary evidence for the expansion</p>
+      <h2>New cards came from current SAP process boundaries, not from creative taxonomy fever.</h2>
+      <p>The source registry below covers the added returns, claims, billing, settlement, configurable-product, third-party and JIT branches.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in coverage_registry.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
