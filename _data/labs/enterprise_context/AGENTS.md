@@ -65,7 +65,7 @@ Depth is more valuable than catalog breadth. A useful topic should expose depend
 
 ## Public-content boundary
 
-Public content may explain the model, sources, trade-offs, and professional reasoning. Do not describe private authoring tools, assistant collaboration, prompt history, or internal drafting workflow on public Lab pages.
+Public content may explain the model, sources, trade-offs, and professional reasoning. Keep private tooling and internal authoring workflow out of public Lab pages.
 
 ## Validation
 
