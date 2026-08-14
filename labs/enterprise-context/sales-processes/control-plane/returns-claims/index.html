@@ -21,6 +21,7 @@ tags:
 ---
 
 {% assign rc = site.data.labs.enterprise_context.processes.return_claims_control_plane %}
+{% assign notes = site.data.labs.enterprise_context.processes.return_claims_architecture_notes %}
 {% assign registry = site.data.labs.enterprise_context.sources.sales_return_claims_control_plane_registry %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -39,7 +40,7 @@ tags:
       <p>Deep vertical</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ rc.records | size }}</strong><small>Deep process traces</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ rc.follow_up_map | size }}</strong><small>Follow-up branches</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ rc.refund_controls | size }}</strong><small>Refund controls</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ notes.architecture_traps | size }}</strong><small>Architecture traps</small></div>
       <em>One complaint can create logistics, billing, purchasing and service documents. The control plane tells us why.</em>
     </div>
   </header>
@@ -59,6 +60,24 @@ tags:
     <div class="spa-compare-grid">
       {% for axis in rc.decision_axes %}
       <article><span>{{ axis.axis | replace: "_", " " }}</span><h3>{{ axis.question }}</h3><p>{% if axis.rule %}{{ axis.rule }}{% elsif axis.options %}{{ axis.options | join: " · " }}{% else %}<b>Yes:</b> {{ axis.yes }} <b>No:</b> {{ axis.no }}{% endif %}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Semantic control</p>
+      <h2>Seven similar words. Seven different decisions.</h2>
+      <p>Return reason, inspection result, follow-up activity and refund are not synonyms. Keep them separate or the process can work technically while the data model becomes useless for policy, analytics and root-cause analysis.</p>
+    </header>
+    <div class="spa-card-grid">
+      {% for item in notes.semantic_keys %}
+      <article class="spa-card">
+        <header class="spa-card__head"><div><span class="spa-kind">semantic key</span></div></header>
+        <h3>{{ item.name }}</h3>
+        <p class="spa-intent">{{ item.meaning }}</p>
+        <p><strong>Do not confuse with:</strong> {{ item.do_not_confuse_with }}</p>
+      </article>
       {% endfor %}
     </div>
   </section>
@@ -142,6 +161,19 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Architecture traps</p>
+      <h2>Most expensive mistakes happen between correct features.</h2>
+      <p>A Lead design checks how controls interact. Approval, billing blocks, valuation, APIs, configurable products and repair can each be correct alone and still create a broken end-to-end design when combined carelessly.</p>
+    </header>
+    <div class="scp-compare-grid">
+      {% for item in notes.architecture_traps %}
+      <article class="scp-compare"><span>{{ item.id }}</span><h3>{{ item.title }}</h3><p><strong>Problem:</strong> {{ item.problem }}</p><p><strong>Design rule:</strong> {{ item.design_rule }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Integration ownership</p>
       <h2>Sales orchestrates the complaint. It does not own every downstream execution.</h2>
       <p>A Lead design should name the handoff. Otherwise every connected system becomes “part of SD”, which is convenient only until someone has to support it.</p>
@@ -149,6 +181,45 @@ tags:
     <div class="spa-compare-grid">
       {% for item in rc.integration_boundaries %}
       <article><span>{{ item.domain }}</span><h3>{{ item.ownership }}</h3><p>{{ item.handoff }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">EWM inspection choice</p>
+      <h2>Decide where the inspection decision belongs.</h2>
+      <p>Do not draw EWM as a decorative box after Sales. Decide whether S/4HANA makes the return decision first or whether warehouse inspection happens during goods receipt and sends the result back for orchestration.</p>
+    </header>
+    <div class="spa-compare-grid">
+      {% for item in notes.ewm_inspection_modes %}
+      <article><span>{{ item.mode }}</span><h3>{{ item.sequence }}</h3><p>{{ item.best_when }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">API choice</p>
+      <h2>“There is an API” is not an integration design.</h2>
+      <p>Customer Return interfaces have different feature boundaries. Choose the interface from the required business capabilities, then design idempotency, reference handling and monitoring around it.</p>
+    </header>
+    <div class="spa-card-grid">
+      {% for item in notes.api_choice %}
+      <article class="spa-card"><header class="spa-card__head"><div><span class="spa-kind">integration</span></div></header><h3>{{ item.interface }}</h3><p class="spa-intent"><strong>Good for:</strong> {{ item.good_for }}</p><p><strong>Watch:</strong> {{ item.watch }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Release edges</p>
+      <h2>Keep stable concepts separate from release-specific codes.</h2>
+      <p>Some ARM options differ by deployment, app and release. The model keeps those edges visible without teaching every documented code as universal truth.</p>
+    </header>
+    <div class="spa-compare-grid">
+      {% for item in notes.deployment_specific_edges %}
+      <article><span>release edge</span><h3>{{ item.topic }}</h3><p>{{ item.note }}</p></article>
       {% endfor %}
     </div>
   </section>
