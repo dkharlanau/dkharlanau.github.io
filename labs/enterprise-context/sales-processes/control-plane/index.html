@@ -37,9 +37,9 @@ tags:
     </div>
     <div class="research-canvas__signal" aria-label="Control-plane inventory">
       <p>Deep vertical</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ plane.core.records | size }}</strong><small>Deep process traces</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ backbone.rules | size }}</strong><small>Determination rules</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ registry.sources | size }}</strong><small>Primary SAP references</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ plane.core.records | size }}</strong><small>Forward-flow traces</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ plane.index.specialized_planes | size }}</strong><small>Specialized planes</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ backbone.rules | size }}</strong><small>Determination rules</small></div>
       <em>Keys are examples only when the reviewed SAP source makes the key explicit.</em>
     </div>
   </header>
@@ -49,6 +49,21 @@ tags:
     <p><strong>Working rule.</strong> Header sets the commercial frame. Item category defines what the item may do. Schedule line defines how quantity and supply behave. Stock, logistics, pricing, billing, and accounting then consume those controls.</p>
     <a href="/labs/enterprise-context/data/sales-control-plane.json">Open machine-readable model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
+
+  {% if plane.index.specialized_planes %}
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Specialized control planes</p>
+      <h2>Not every process follows the forward-sales grammar.</h2>
+      <p>Reverse logistics needs a different chain. In Customer Returns, receipt, ownership, inspection, disposition and compensation are separate decisions, so forcing them into item-category → schedule-line language would hide the important part.</p>
+    </header>
+    <div class="scp-compare-grid">
+      {% for special in plane.index.specialized_planes %}
+      <article class="scp-compare"><span>{{ special.id | replace: "_", " " }}</span><h3>{{ special.title }}</h3><p>{{ special.purpose }}</p><p><a href="{{ special.path }}">Open specialized plane →</a> · <a href="{{ special.machine_endpoint }}">JSON</a></p></article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
@@ -76,7 +91,7 @@ tags:
   <section class="research-canvas__inventory" id="process-traces" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Deep traces</p>
-      <h2>Seven processes. Same diagnostic grammar.</h2>
+      <h2>Seven forward-flow processes. Same diagnostic grammar.</h2>
       <p>Read the blue line from left to right. Then open the deeper data hinges, failure traces, and tests. The point is not to collect codes. The point is to know what a code controls.</p>
     </header>
 
