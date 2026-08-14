@@ -1,0 +1,751 @@
+id: GRAPH-SD-CREDIT-MANAGEMENT
+type: knowledge_graph
+title: "SAP Credit Management — Risk, Exposure & Release Map"
+summary: >-
+  A practical model of SAP S/4HANA credit management for sales: how a sales document
+  enters the credit check, how business-partner credit data and exposure are evaluated,
+  how a block is created, and how release or recheck returns the document to execution.
+domain: "SAP S/4HANA Sales / Financial Supply Chain Management"
+process_family: "Order-to-Cash"
+process_step: "Evaluate Credit Risk"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+
+thesis: >-
+  A credit block is not just a credit-limit problem. It is the result of a chain:
+  document relevance, payer/credit account, credit control area and segment, business
+  partner credit profile, check rule, check steps, simulated exposure, current exposure,
+  thresholds, and the configured reaction. I debug the first wrong input or decision
+  instead of changing the limit until the order saves.
+
+boundary:
+  included:
+    - "SAP Credit Management (FIN-FSCM-CR) integrated with Sales and Distribution"
+    - "business partner role UKM000 and credit master data"
+    - "credit segment, risk class, check rule, and credit limit"
+    - "SD-side automatic credit-control trigger and credit groups"
+    - "static and dynamic credit checks and standard check steps"
+    - "credit exposure lifecycle from order through delivery, billing, and FI open items"
+    - "credit blocks, documented credit decisions, release, rejection, and recheck"
+    - "BADI_SD_CM integration boundary"
+    - "UKM_FILL exposure-update enhancement boundary"
+    - "custom check-step extensibility"
+    - "technical-failure handling and delayed recheck"
+  excluded:
+    - "legacy FI-AR Credit Management as the target design"
+    - "full scoring-model implementation"
+    - "external credit-agency integration in depth"
+    - "collateral management and credit insurance in depth"
+    - "collections and dispute management in depth"
+    - "client-specific credit policies, limits, or custom code"
+  release_scope:
+    - "SAP S/4HANA 2025 FPS01 where cited"
+  note: >-
+    Credit policy is a business-risk design. The same SAP mechanism can be configured
+    conservatively or permissively; the system behavior is only correct relative to
+    the approved policy and document-flow design.
+
+memory_model:
+  title: "Nine questions I use for a credit block"
+  questions:
+    - key: "TRIGGER"
+      question: "Should this document be credit checked at this process step?"
+      answer: "Start with sales-document and credit-group control before looking at the customer limit."
+    - key: "ACCOUNT"
+      question: "Which payer / credit account is the document checking?"
+      answer: "The sales customer you see on screen is not always the credit account used by the check."
+    - key: "SEGMENT"
+      question: "Which credit segment and credit-control context apply?"
+      answer: "The limit and exposure are evaluated in the relevant segment context."
+    - key: "PROFILE"
+      question: "Which risk class and check rule does the business partner carry?"
+      answer: "These are credit-profile inputs, not values inferred from one sales order."
+    - key: "RULE"
+      question: "Which check steps are actually executed?"
+      answer: "A check rule can combine limit, document value, horizon, dunning, overdue-item, and other controls."
+    - key: "EXPOSURE"
+      question: "What current and simulated exposure does the check see?"
+      answer: "Open orders, deliveries, billing values, receivables, and special exposure can contribute."
+    - key: "LIMIT"
+      question: "Which credit or effective credit limit is compared with exposure?"
+      answer: "Read the segment-level limit and validity instead of assuming the account has one global number."
+    - key: "DECISION"
+      question: "Which check step failed, and what reaction did SD apply?"
+      answer: "Read the credit-management log and document status before changing configuration."
+    - key: "RELEASE"
+      question: "How will the block be released, rejected, or rechecked?"
+      answer: "A manual release and an automatic recheck are different operational controls."
+
+runtime_pipeline:
+  - id: CRD-STAGE-TRIGGER
+    order: 1
+    title: "Trigger the credit check from SD"
+    question: "Does this order, delivery, or goods-issue event call Credit Management?"
+    inputs:
+      - "sales document type / delivery control"
+      - "credit check type Automatic (D) where applicable"
+      - "credit group such as order, delivery, or goods issue"
+      - "automatic credit-control activation"
+    output:
+      - "credit check requested"
+      - "or no credit check for this event"
+    failure_signal: "The business expects a credit check, but the document is never checked or blocked."
+    source_refs:
+      - SRC-SAP-CREDIT-SETTINGS
+      - SRC-SAP-CREDIT-EVENTS
+
+  - id: CRD-STAGE-ACCOUNT
+    order: 2
+    title: "Determine credit account and organizational context"
+    question: "Which account and control area are passed into the check?"
+    inputs:
+      - "payer / credit account"
+      - "credit control area"
+      - "sales-area and organizational mapping"
+      - "customer-to-business-partner mapping"
+    output:
+      - "credit account"
+      - "credit-control context"
+    failure_signal: "The check runs against the wrong payer, wrong business partner, or no account at all."
+    source_refs:
+      - SRC-SAP-CREDIT-SETTINGS
+      - SRC-SAP-CREDIT-BP
+
+  - id: CRD-STAGE-PROFILE
+    order: 3
+    title: "Load SAP Credit Management master data"
+    question: "Which credit profile and segment data belong to the business partner?"
+    inputs:
+      - "business partner role UKM000"
+      - "risk class"
+      - "check rule"
+      - "credit segment"
+      - "credit limit and validity"
+      - "optional score, analyst, special-attention, collateral, or insurance data"
+    output:
+      - "credit master-data context"
+    failure_signal: "The account has incomplete, stale, or unexpected credit master data."
+    source_refs:
+      - SRC-SAP-CREDIT-BP
+      - SRC-SAP-CREDIT-LIMIT
+
+  - id: CRD-STAGE-CONTROL
+    order: 4
+    title: "Resolve SD automatic credit-control context"
+    question: "Which SD reaction context is used for this risk class and credit group?"
+    inputs:
+      - "risk class from credit account"
+      - "credit group from order/delivery/PGI event"
+      - "automatic credit control (OVA8)"
+      - "reaction and block behavior"
+    output:
+      - "active SAP Credit Management check"
+      - "warning/error/block reaction"
+    failure_signal: "The same business partner behaves differently in order and delivery because the credit group or control entry differs."
+    source_refs:
+      - SRC-SAP-CREDIT-SETTINGS
+
+  - id: CRD-STAGE-SIMULATION
+    order: 5
+    title: "Simulate the current document commitment"
+    question: "What would exposure look like if this document continued?"
+    inputs:
+      - "current document credit value"
+      - "existing commitments"
+      - "credit-exposure update logic"
+    output:
+      - "simulated exposure used by the check"
+    failure_signal: "The document is blocked because the simulated new commitment pushes the account over a threshold."
+    source_refs:
+      - SRC-SAP-CREDIT-EVENTS
+
+  - id: CRD-STAGE-EXPOSURE
+    order: 6
+    title: "Read credit exposure"
+    question: "Which open commitments and receivables contribute to risk?"
+    inputs:
+      - "100 Open Orders"
+      - "400 Delivery Value"
+      - "500 Billing Document Value"
+      - "200 Open Invoices / receivables"
+      - "300 Special Credit Exposure where relevant"
+      - "liability-category and update-group design"
+    output:
+      - "total exposure"
+      - "exposure by category for analysis"
+    failure_signal: "The total looks wrong because a document is duplicated, missing, stale, or posted to an unexpected category."
+    source_refs:
+      - SRC-SAP-CREDIT-LIABILITY-CATEGORIES
+      - SRC-SAP-CREDIT-EXPOSURE-SD
+      - SRC-SAP-CREDIT-EXPOSURE-EVENTS
+
+  - id: CRD-STAGE-RULE
+    order: 7
+    title: "Execute the check rule"
+    question: "Which risk checks must pass?"
+    inputs:
+      - "check rule from business partner"
+      - "assigned check steps"
+      - "segment-specific thresholds"
+      - "credit limit / effective credit limit"
+      - "credit horizon where dynamic check is used"
+      - "dunning, overdue, DSO, and validity data where configured"
+    output:
+      - "result per check step"
+      - "overall credit decision"
+    failure_signal: "The user says 'limit is free' but another check step fails."
+    source_refs:
+      - SRC-SAP-CREDIT-CHECK-RULE
+      - SRC-SAP-CREDIT-CHECK-STEPS
+
+  - id: CRD-STAGE-BLOCK
+    order: 8
+    title: "Apply SD credit status and block"
+    question: "What should the sales process do with a negative result?"
+    inputs:
+      - "credit result"
+      - "configured SD reaction"
+      - "document/event type"
+    output:
+      - "credit status"
+      - "possible order/delivery/PGI block"
+      - "documented credit decision where configured"
+    failure_signal: "A technically valid order cannot proceed to delivery or goods issue because credit status blocks it."
+    source_refs:
+      - SRC-SAP-CREDIT-PROCESS
+      - SRC-SAP-CREDIT-BLOCK-RELEASE
+
+  - id: CRD-STAGE-DECISION
+    order: 9
+    title: "Review the documented credit decision"
+    question: "Should the business release, reject, or keep the block?"
+    inputs:
+      - "failed check steps"
+      - "customer credit data"
+      - "business context"
+      - "analyst authorization"
+    output:
+      - "release"
+      - "rejection"
+      - "continued block"
+    failure_signal: "Operations treat release as a technical fix instead of an auditable risk decision."
+    source_refs:
+      - SRC-SAP-CREDIT-BLOCK-RELEASE
+
+  - id: CRD-STAGE-RECHECK
+    order: 10
+    title: "Recheck after the risk situation changes"
+    question: "Can the document be released automatically after payment, limit change, or horizon movement?"
+    inputs:
+      - "updated exposure or master data"
+      - "blocked document"
+      - "recheck report/job"
+    output:
+      - "new credit result"
+      - "possible removal of existing block"
+    failure_signal: "A payment was posted but the sales document remains blocked because no recheck occurred."
+    source_refs:
+      - SRC-SAP-CREDIT-RECHECK
+
+sales_side_controls:
+  - id: CRD-SD-DOC-CHECK
+    title: "Sales document / delivery credit relevance"
+    purpose: "Determines whether the SD process step invokes automatic credit management."
+    technical_notes:
+      - "OVAK supports Automatic credit check type D for sales documents"
+      - "credit groups commonly distinguish order (01), delivery (02), and goods issue (03)"
+      - "a valid credit control area and credit account are prerequisites for the integrated check"
+    diagnostic_question: "Did SD actually trigger the integrated FSCM check at this event?"
+    source_refs:
+      - SRC-SAP-CREDIT-SETTINGS
+
+  - id: CRD-SD-AUTO-CONTROL
+    title: "Automatic Credit Control"
+    purpose: "Combines SD event context with risk class to define reaction and blocking behavior."
+    technical_notes:
+      - "OVA8 is the key SD control point"
+      - "risk class comes from the credit account"
+      - "credit group comes from the document/process event"
+      - "SAP Credit Management check must be activated in the control entry"
+    diagnostic_question: "Is the unexpected behavior caused by a different risk-class / credit-group combination?"
+    source_refs:
+      - SRC-SAP-CREDIT-SETTINGS
+
+credit_master_data:
+  - id: CRD-MD-PROFILE
+    title: "Credit Profile"
+    scope: "business partner"
+    fields:
+      - "Risk Class"
+      - "Check Rule"
+      - "Score / scoring rule where used"
+      - "Analyst / analyst group where used"
+      - "Special attention / negative events where used"
+    remember: "Risk class and check rule are maintained on the BP credit profile, not per credit segment."
+    source_refs:
+      - SRC-SAP-CREDIT-BP
+      - SRC-SAP-CREDIT-CHECK-RULE
+
+  - id: CRD-MD-SEGMENT
+    title: "Credit Segment Data"
+    scope: "business partner + credit segment"
+    fields:
+      - "Credit Limit"
+      - "Credit Limit Validity"
+      - "Exposure"
+      - "segment-level parameters"
+    remember: "The same BP can have different limits and exposure by segment."
+    source_refs:
+      - SRC-SAP-CREDIT-LIMIT
+      - SRC-SAP-CREDIT-BP
+
+standard_check_steps:
+  - code: "010"
+    title: "Static Check of Credit Exposure"
+    business_question: "Does total relevant exposure exceed the established credit limit?"
+    first_check: "Compare limit with exposure categories and the simulated current document."
+  - code: "020"
+    title: "Maximum Document Value"
+    business_question: "Is this single order or delivery above an allowed threshold?"
+    first_check: "Do not confuse a per-document threshold with free credit limit."
+  - code: "030"
+    title: "Dynamic Limit Check with Credit Horizon"
+    business_question: "Does exposure inside the configured horizon exceed the limit?"
+    first_check: "Check horizon and shipping dates before comparing against all open orders."
+  - code: "100"
+    title: "Maximum Dunning Level"
+    business_question: "Has the partner reached a dunning level above policy?"
+    first_check: "Read dunning data, not only limit utilization."
+  - code: "110"
+    title: "Age of Oldest Open Item"
+    business_question: "Is the oldest overdue receivable too old?"
+    first_check: "Inspect the actual oldest overdue debit item and configured days."
+  - code: "120"
+    title: "Payment Behavior Index"
+    business_question: "Does payment behavior / DSO exceed the allowed threshold?"
+    first_check: "Check the payment-behavior data feeding the step."
+  - code: "130"
+    title: "Overdue Open Items"
+    business_question: "Are overdue receivables present when policy does not allow them?"
+    first_check: "Identify which open item triggers the check."
+  - code: "140"
+    title: "Validity Date of Credit Limit"
+    business_question: "Is the credit limit still valid?"
+    first_check: "A large limit can still fail if its validity date expired."
+
+exposure_lifecycle:
+  title: "Exposure moves with the document flow"
+  path:
+    - stage: "Sales Order"
+      category: "100 Open Orders"
+      practical_note: "Open order value contributes while the order remains credit relevant and undelivered."
+    - stage: "Outbound Delivery"
+      category: "400 Delivery Value"
+      practical_note: "Order commitment is reduced while delivery commitment is created."
+    - stage: "Billing Document"
+      category: "500 Billing Document Value"
+      practical_note: "Billing exposure bridges the process until the accounting receivable is updated."
+    - stage: "FI-AR Open Item"
+      category: "200 Open Invoices"
+      practical_note: "The receivable remains exposure until it is cleared."
+  design_rule: >-
+    I troubleshoot exposure as a lifecycle, not as one total. A duplicate or missing amount is
+    easier to explain when I know which document should reduce one category and increase the next.
+  source_refs:
+    - SRC-SAP-CREDIT-EXPOSURE-EVENTS
+    - SRC-SAP-CREDIT-LIABILITY-CATEGORIES
+
+extension_layers:
+  - id: CRD-EXT-SD-CM
+    title: "BADI_SD_CM — SD integration boundary"
+    principle: >-
+      This is the integration seam between SD/Shipping and SAP Credit Management. I treat changes
+      here as architecture changes because they can affect when checks run, what data is sent, and
+      how sales-document processing reacts.
+    technical_shape:
+      - "BAdI BADI_SD_CM"
+      - "SAP example implementation UKM_SD_FSCM_INTEGR1 is documented for the integration"
+      - "credit check is synchronous from the SD processing perspective"
+    diagnostic_checks:
+      - "Prove that standard SD settings and BP credit data are correct before blaming the BAdI."
+      - "Compare order, delivery, and goods-issue events because each can call the check differently."
+      - "Trace the request/response boundary if a technical integration error appears."
+    trap: "A custom integration change can make a credit symptom look like master-data or OVA8 configuration."
+    source_refs:
+      - SRC-SAP-CREDIT-EVENTS
+      - SRC-SAP-CREDIT-TECHNICAL
+
+  - id: CRD-EXT-EXPOSURE
+    title: "UKM_FILL — credit exposure update"
+    principle: >-
+      Changing exposure logic is high-risk because every downstream credit decision depends on the
+      resulting commitments. I prefer standard liability categories and update logic unless a real
+      integration or accounting requirement cannot be represented.
+    technical_shape:
+      - "BAdI UKM_FILL"
+      - "method FILL_FIELDS can influence exposure-update fields"
+      - "values can be withheld or directed to custom liability categories"
+    diagnostic_checks:
+      - "Compare source SD/FI documents with UKM_COMMITMENTS / exposure detail."
+      - "Identify whether the issue is missing, duplicated, stale, or misclassified exposure."
+      - "Rebuild only after the update logic and source documents are understood."
+    trap: "Fixing a credit block by filtering exposure can hide a financial-control defect."
+    source_refs:
+      - SRC-SAP-CREDIT-LIABILITY-CATEGORIES
+
+  - id: CRD-EXT-CHECK-STEP
+    title: "Custom Credit Check Step"
+    principle: >-
+      Use a custom check step only when the business risk cannot be expressed by the standard
+      credit-limit, document-value, horizon, dunning, overdue-item, DSO, and validity checks.
+    technical_shape:
+      - "custom check step via BAdI implementation"
+      - "assigned to a Credit Check Rule"
+      - "result becomes part of the overall credit decision"
+    diagnostic_checks:
+      - "Read the result of every standard and custom step in the Credit Management log."
+      - "Verify the fields and thresholds the custom step reads."
+      - "Regression-test release, recheck, and multiple document events."
+    trap: "A custom rule that only says pass/fail without explainable evidence becomes operational debt."
+    source_refs:
+      - SRC-SAP-CREDIT-CHECK-STEPS
+      - SRC-SAP-CREDIT-SETTINGS
+
+technical_failure_mode:
+  title: "Credit check cannot be executed for technical reasons"
+  default_behavior: "Document processing can terminate with UKM_PI 008."
+  controlled_fallback:
+    - "message handling can be configured so the document is saved with a technical credit block"
+    - "after the technical problem is fixed, blocked documents can be rechecked"
+    - "program UKM_RVKRED09_XI is documented for this delayed recheck scenario"
+  lead_lens: >-
+    This is not the same as a negative business credit decision. I separate technical inability
+    to check from a real risk failure in monitoring, incident handling, and user communication.
+  source_refs:
+    - SRC-SAP-CREDIT-TECHNICAL
+
+practitioner_heuristics:
+  - id: HEUR-CRD-LOG-FIRST
+    context: "Order is credit blocked"
+    statement: "I read the failed check step before discussing the credit limit."
+    confidence: high
+    checks:
+      - "document credit status"
+      - "Credit Management log"
+      - "failed check-step code"
+      - "values used by that step"
+    anti_patterns:
+      - "increase the limit until the order saves"
+      - "assume every credit block is static limit utilization"
+
+  - id: HEUR-CRD-ACCOUNT
+    context: "Customer says the wrong account is blocked"
+    statement: "I verify payer and credit account before looking at BP credit data."
+    confidence: high
+    checks:
+      - "payer partner"
+      - "credit account"
+      - "customer-to-BP mapping"
+      - "credit control area / segment context"
+
+  - id: HEUR-CRD-EXPOSURE
+    context: "Exposure looks too high or too low"
+    statement: "I reconcile exposure by lifecycle category, not by one total."
+    confidence: high
+    checks:
+      - "100 order"
+      - "400 delivery"
+      - "500 billing"
+      - "200 receivable"
+      - "300 special exposure"
+      - "document reversals and clearing"
+
+  - id: HEUR-CRD-RELEASE
+    context: "Business wants to release a blocked order"
+    statement: "A manual release is a risk decision, not a configuration fix."
+    confidence: high
+    questions:
+      - "Which check failed?"
+      - "What changed since the check?"
+      - "Who owns the exception?"
+      - "Should this be one-time release, master-data change, or policy change?"
+
+  - id: HEUR-CRD-TECHNICAL
+    context: "Credit service/integration problem"
+    statement: "I separate technical block from negative credit decision."
+    confidence: high
+    checks:
+      - "UKM_PI technical error"
+      - "BADI_SD_CM integration path"
+      - "document technical block indicator"
+      - "recheck after recovery"
+
+  - id: HEUR-CRD-CUSTOM
+    context: "New business credit policy"
+    statement: "I exhaust standard check steps before adding custom credit logic."
+    confidence: medium
+    questions:
+      - "Can a standard check step and threshold express the rule?"
+      - "Is the rule explainable to a credit analyst?"
+      - "Will the same rule work for order, delivery, and recheck?"
+      - "Can we show why it failed in the Credit Management log?"
+
+failure_modes:
+  - id: FAIL-CRD-FREE-LIMIT-BLOCKED
+    symptom: "Credit limit has free capacity, but the order is blocked."
+    first_checks:
+      - "Read the failed check step."
+      - "Check maximum document value, dynamic horizon, dunning, overdue-item, DSO, and limit-validity controls."
+      - "Verify the actual risk class and check rule."
+    likely_classes:
+      - "policy/check-step issue"
+      - "master data"
+      - "misread symptom"
+
+  - id: FAIL-CRD-WRONG-PAYER
+    symptom: "A financially healthy sold-to is blocked unexpectedly."
+    first_checks:
+      - "Verify payer and credit account."
+      - "Verify business-partner mapping."
+      - "Read the credit profile of the actual checked account."
+    likely_classes:
+      - "partner determination"
+      - "master data"
+      - "mapping"
+
+  - id: FAIL-CRD-EXPOSURE-HIGH
+    symptom: "Credit exposure is higher than business expects."
+    first_checks:
+      - "Drill into exposure categories."
+      - "Look for duplicate order/delivery/billing/open-item commitments."
+      - "Check reversals, interfaces, and UKM_FILL logic."
+    likely_classes:
+      - "exposure update"
+      - "integration"
+      - "custom enhancement"
+
+  - id: FAIL-CRD-PAYMENT-NOT-RELEASED
+    symptom: "Customer paid, but the sales order is still blocked."
+    first_checks:
+      - "Confirm FI open item is cleared and exposure is updated."
+      - "Check whether the sales document was rechecked."
+      - "Use the appropriate blocked-document recheck process/report."
+    likely_classes:
+      - "timing"
+      - "exposure update"
+      - "missing recheck"
+
+  - id: FAIL-CRD-ORDER-OK-DELIVERY-BLOCKED
+    symptom: "Order was accepted, but delivery or PGI is blocked."
+    first_checks:
+      - "Compare credit groups and automatic credit-control entries for order, delivery, and PGI."
+      - "Check whether exposure changed since order creation."
+      - "Read the new check result instead of assuming the order release remains valid."
+    likely_classes:
+      - "process-step control"
+      - "changed exposure"
+      - "policy"
+
+  - id: FAIL-CRD-TECHNICAL
+    symptom: "Sales document cannot complete credit check because of a technical error."
+    first_checks:
+      - "Separate technical failure from business credit failure."
+      - "Trace BADI_SD_CM integration and UKM_PI error."
+      - "Use controlled delayed recheck only if the business accepts that fallback design."
+    likely_classes:
+      - "integration"
+      - "availability"
+      - "technical configuration"
+
+impact_traces:
+  - id: TRACE-CRD-ORDER-TO-EXPOSURE
+    title: "Order value becomes exposure and follows the document flow"
+    direction: forward
+    path:
+      - "Sales Order"
+      - "100 Open Orders"
+      - "Delivery"
+      - "400 Delivery Value"
+      - "Billing"
+      - "500 Billing Value"
+      - "FI Open Item"
+      - "200 Receivable"
+      - "Clearing"
+    lesson: "Credit exposure is a moving lifecycle, not a static balance."
+
+  - id: TRACE-CRD-RISK-TO-BLOCK
+    title: "Risk profile drives check behavior"
+    direction: forward
+    path:
+      - "BP Credit Profile"
+      - "Risk Class"
+      - "Check Rule"
+      - "Check Steps"
+      - "Exposure / Threshold"
+      - "Credit Result"
+      - "SD Reaction"
+      - "Block or Continue"
+    lesson: "Changing risk class can change more than a label; it can change which SD control and risk policy apply."
+
+  - id: TRACE-CRD-PAYMENT-TO-RELEASE
+    title: "Incoming payment does not directly release the order"
+    direction: forward
+    path:
+      - "Payment / Clearing"
+      - "Exposure Update"
+      - "Recheck"
+      - "New Credit Result"
+      - "Block Removed"
+      - "Delivery Continues"
+    lesson: "Operational design must include recheck timing, not only payment posting."
+
+integration_boundary:
+  - id: CRD-INT-SD
+    title: "Sales and Shipping"
+    direction: "synchronous_check / asynchronous_commitment_update"
+    details:
+      - "order, delivery, and goods issue can trigger credit checks according to configuration"
+      - "document processing waits for the check result"
+      - "commitment updates follow document posting"
+    source_refs:
+      - SRC-SAP-CREDIT-EVENTS
+
+  - id: CRD-INT-FI
+    title: "Accounts Receivable"
+    direction: "open_items_and_clearing_to_exposure"
+    details:
+      - "open receivables contribute to credit exposure"
+      - "clearing reduces the receivable exposure"
+      - "the order-to-delivery-to-billing transition is designed to avoid temporary understatement of exposure"
+    source_refs:
+      - SRC-SAP-CREDIT-EXPOSURE-EVENTS
+      - SRC-SAP-CREDIT-LIABILITY-CATEGORIES
+
+  - id: CRD-INT-BP
+    title: "Business Partner"
+    direction: "master_data_to_check"
+    details:
+      - "UKM000 role carries SAP Credit Management master data"
+      - "credit profile holds risk class and check rule"
+      - "credit segment data holds segment-specific limit/exposure context"
+    source_refs:
+      - SRC-SAP-CREDIT-BP
+
+synthetic_cases:
+  - id: CASE-CRD-FREE-LIMIT
+    title: "Free limit, blocked order"
+    description: "A synthetic case where the analyst sees unused credit limit, but the sales order is still blocked."
+    facts:
+      - "credit limit = EUR 500,000"
+      - "reported exposure = EUR 320,000"
+      - "new order = EUR 40,000"
+      - "credit status = blocked"
+    reasoning_path:
+      - "Do not increase the limit."
+      - "Read the credit-management log and failed check step."
+      - "Verify risk class and check rule."
+      - "Check non-limit controls such as overdue open items or limit validity."
+      - "Only then decide whether master data, exposure, or policy is wrong."
+    lesson: "Free limit does not prove that the credit check should pass."
+
+  - id: CASE-CRD-PAID-BUT-BLOCKED
+    title: "Payment posted, order still blocked"
+    description: "A synthetic case where Accounts Receivable shows payment, but Sales cannot create the delivery."
+    facts:
+      - "customer payment was cleared today"
+      - "the order was blocked yesterday"
+      - "credit analyst expects automatic release"
+    reasoning_path:
+      - "Verify the open item was actually cleared."
+      - "Verify exposure category 200 changed."
+      - "Check whether the blocked order has been rechecked."
+      - "Run or schedule the approved recheck process."
+      - "Confirm the new credit status before touching master data."
+    lesson: "Payment changes exposure; recheck changes the document decision."
+
+  - id: CASE-CRD-DELIVERY-BLOCK
+    title: "Order released, delivery blocked"
+    description: "A synthetic case where the sales order passed credit check but outbound delivery is blocked one day later."
+    facts:
+      - "order check passed"
+      - "another large invoice became overdue"
+      - "delivery uses a separate credit-group event"
+    reasoning_path:
+      - "Treat delivery as a new credit-check event."
+      - "Compare exposure and overdue-item state with the order creation time."
+      - "Compare order and delivery automatic credit-control entries."
+      - "Read the delivery credit log."
+      - "Release only if the new risk result is accepted."
+    lesson: "A prior order release does not guarantee every later execution step should pass."
+
+assessment_drills:
+  - id: DRILL-CRD-1
+    title: "Free credit limit but blocked"
+    prompt: "The BP has EUR 180k free limit, but the order is blocked. What do you check?"
+    expected_reasoning:
+      - "Read failed check step and exact values."
+      - "Verify payer/credit account, risk class, check rule, and segment."
+      - "Check non-limit steps before changing credit limit."
+      - "Explain the difference between limit utilization and overall credit policy."
+
+  - id: DRILL-CRD-2
+    title: "Exposure looks duplicated"
+    prompt: "Credit exposure is much higher than open AR plus open orders. How do you diagnose it?"
+    expected_reasoning:
+      - "Reconcile categories 100, 400, 500, 200, and 300."
+      - "Trace order/delivery/billing transitions and reversals."
+      - "Check custom UKM_FILL or external commitment updates."
+      - "Repair the update cause before rebuilding exposure."
+
+  - id: DRILL-CRD-3
+    title: "Order okay, delivery blocked"
+    prompt: "Why can delivery fail credit when the sales order passed?"
+    expected_reasoning:
+      - "Different process event and credit group can trigger another check."
+      - "Exposure and payment behavior can change after order creation."
+      - "Compare OVA8/control context and the new failed check step."
+      - "Do not assume manual order release grants permanent credit."
+
+  - id: DRILL-CRD-4
+    title: "When to use a custom check step"
+    prompt: "Business wants a new credit policy rule. Would you build custom logic?"
+    expected_reasoning:
+      - "Map the rule against standard check steps first."
+      - "Prefer explainable thresholds/configuration if standard can express it."
+      - "Use custom check-step BAdI only for a real gap."
+      - "Require log visibility and regression tests for order, delivery, release, and recheck."
+
+  - id: DRILL-CRD-5
+    title: "Credit service is unavailable"
+    prompt: "A technical problem prevents credit checks during order entry. What is the design decision?"
+    expected_reasoning:
+      - "Separate service failure from negative business credit decision."
+      - "Decide whether fail-closed or controlled save-with-technical-block is allowed."
+      - "Use documented delayed recheck only with clear operational ownership."
+      - "Do not silently bypass credit control."
+
+  - id: DRILL-CRD-6
+    title: "Payer versus sold-to"
+    prompt: "The sold-to looks healthy, but the order is blocked by credit. Why?"
+    expected_reasoning:
+      - "Determine which payer/credit account is actually checked."
+      - "Verify BP mapping and UKM000 credit profile."
+      - "Check segment, risk class, rule, exposure, and result for that account."
+      - "Treat partner determination as an upstream credit input."
+
+source_refs:
+  - SRC-SAP-CREDIT-PROCESS
+  - SRC-SAP-CREDIT-SETTINGS
+  - SRC-SAP-CREDIT-BP
+  - SRC-SAP-CREDIT-CHECK-RULE
+  - SRC-SAP-CREDIT-CHECK-STEPS
+  - SRC-SAP-CREDIT-LIMIT
+  - SRC-SAP-CREDIT-EXPOSURE-SD
+  - SRC-SAP-CREDIT-LIABILITY-CATEGORIES
+  - SRC-SAP-CREDIT-EXPOSURE-EVENTS
+  - SRC-SAP-CREDIT-BLOCK-RELEASE
+  - SRC-SAP-CREDIT-RECHECK
+  - SRC-SAP-CREDIT-EVENTS
+  - SRC-SAP-CREDIT-TECHNICAL

@@ -1,4 +1,4 @@
-version: "0.5.0"
+version: "0.6.0"
 updated_at: "2026-08-14"
 
 common_fields:
@@ -104,9 +104,21 @@ node_types:
   - id: term
     label: "Business / SAP Term"
     prefix: "TERM"
+  - id: determination
+    label: "Determination / System Decision"
+    prefix: "DET"
+  - id: determination_mechanism
+    label: "Determination Mechanism"
+    prefix: "MECH"
+  - id: rule_set
+    label: "Rule Set / Search Procedure"
+    prefix: "RSET"
   - id: rule
     label: "Rule / Determination Logic"
     prefix: "RULE"
+  - id: configuration_object
+    label: "Configuration Object / Mapping"
+    prefix: "CFG"
   - id: configuration_decision
     label: "Configuration / Design Decision"
     prefix: "DEC"
@@ -158,13 +170,32 @@ edge_types:
   - triggers
   - creates
   - reads
+  - read_by
   - writes
   - updates
   - references
   - requires
   - determines
+  - derives
   - derives_from
+  - defaults
+  - overrides
+  - constrains
+  - validates
   - validated_by
+  - copies_from
+  - configured_by
+  - provided_by
+  - calls
+  - influences
+  - blocks
+  - produces
+  - provides_context_to
+  - has_input
+  - has_output
+  - uses_mechanism
+  - uses_rule_set
+  - evaluated_by
   - integrated_via
   - integrates_with
   - extends
@@ -185,6 +216,24 @@ edge_types:
   - owned_by
   - applies_to
   - synonym_of
+
+determination_mechanisms:
+  - derivation
+  - lookup
+  - customizing_lookup
+  - condition_technique
+  - procedure
+  - decision_table
+  - calculation
+  - copy
+  - default
+  - default_with_manual_override
+  - prioritized_default_with_override
+  - substitution
+  - availability_check
+  - credit_check
+  - search_strategy
+  - custom_logic
 
 source_contract:
   required:
@@ -216,6 +265,29 @@ assertion_contract:
     - rationale
     - scope
     - verified_at
+
+determination_contract:
+  required:
+    - id
+    - title
+    - level
+    - question
+    - mechanism
+    - inputs
+    - output
+  optional:
+    - memory_key
+    - rule_set
+    - priority
+    - procedure_context
+    - fallback_behavior
+    - downstream_effects
+    - common_failures
+    - check_first
+    - remember
+    - lead_lens
+    - source_refs
+    - release_scope
 
 expert_heuristic_contract:
   required:
@@ -249,6 +321,7 @@ id_rules:
     - "PROC-O2C-ORDER-TO-CASH"
     - "STEP-O2C-CREATE-SALES-ORDER"
     - "OBJ-SD-SALES-ORDER"
+    - "DET-SD-SHIPPING-POINT"
     - "APP-S4HANA-SALES"
     - "PLT-SAP-AI-CORE"
     - "AI-JOULE-AGENTS"

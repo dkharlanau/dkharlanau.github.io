@@ -1,0 +1,279 @@
+{
+  "id": "automotive-jit-scenarios",
+  "title": "SAP Automotive JIT / JIS Fictional End-to-End Scenarios",
+  "tags": ["sap", "automotive", "jit", "jis", "scenario", "assessment", "specification", "diagnostics"],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.0",
+    "dataset": "automotive-jit",
+    "source_project": "Assessment Lab",
+    "source_path": "datasets/automotive-jit/scenarios.json",
+    "canonical_url": "https://dkharlanau.github.io/datasets/automotive-jit/scenarios.json",
+    "created_at_utc": "2026-08-14T17:30:00Z",
+    "updated_at_utc": "2026-08-14T17:30:00Z",
+    "entity_type": "scenario_pack",
+    "entity_subtype": "sap_automotive_jit",
+    "summary": "Fictional German automotive supply-chain scenarios for explaining, designing, and diagnosing JIT/JIS processes without exposing client data.",
+    "verification": "review_candidate",
+    "creator": {"name": "Dzmitryi Kharlanau", "role": "SAP Consultant", "website": "https://dkharlanau.github.io"},
+    "attribution": {"attribution_required": true, "preferred_citation": "Dzmitryi Kharlanau, SAP Automotive JIT / JIS Fictional Scenarios, Assessment Lab."},
+    "provenance": {"client_data": false, "fictional_examples_only": true}
+  },
+  "fictional_landscape": {
+    "disclaimer": "All companies, plants, identifiers, materials and message examples below are fictional and exist only for assessment training.",
+    "oem": {
+      "name": "FalkenWerk Automotive AG",
+      "role": "OEM",
+      "plant": "FW10",
+      "assembly_line": "A1",
+      "customer_supply_area": "DOOR-LH-A1",
+      "unloading_point": "Gate 7 / Line A1",
+      "production_pattern": "mixed-model vehicle assembly with lot size 1"
+    },
+    "tier1": {
+      "name": "MainLink Modules GmbH",
+      "role": "Tier-1 system supplier",
+      "sap_system": "SAP S/4HANA Automotive",
+      "plant": "ML20",
+      "products": ["left door module", "right door module"],
+      "responsibility": "Receive OEM JIS calls, assemble configured door modules, pack in sequence, ship to line, and forward selected component demand to Tier-2."
+    },
+    "tier2": {
+      "name": "ElbeTrim Components GmbH",
+      "role": "Tier-2 supplier",
+      "plant": "ET30",
+      "products": ["door trim", "speaker module", "ambient-light strip"],
+      "responsibility": "Supply sequence-sensitive components to MainLink Modules."
+    },
+    "example_materials": [
+      {"material":"ML-DOOR-LH","description":"Configured left door module","owner":"tier1"},
+      {"material":"ET-TRIM-BLK","description":"Black door trim","owner":"tier2"},
+      {"material":"ET-TRIM-BEI","description":"Beige door trim","owner":"tier2"},
+      {"material":"ET-SPK-PREM","description":"Premium speaker module","owner":"tier2"}
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "SCN-JIS-001",
+      "name": "Inbound JIS Call for a Configured Door Module",
+      "business_problem": "The OEM needs each door module at the assembly line in the same order as the vehicle sequence.",
+      "pattern": "supplier_to_oem_sequenced",
+      "call_type": "sequenced_jit_jis",
+      "story": "Vehicle V000471 will reach the door-installation station after the current production signal. The OEM sends a sequenced call containing vehicle reference, sequence number, destination and component/configuration information. MainLink must build the correct module and preserve sequence through packing and shipping.",
+      "example_input": {
+        "external_call_number": "FW-A1-20260814-0471",
+        "vehicle_reference": "V000471",
+        "sequence_number": "0471",
+        "customer": "FalkenWerk Automotive AG",
+        "ship_to": "FW10",
+        "destination": "DOOR-LH-A1",
+        "requested_component_group": "LEFT_DOOR_MODULE",
+        "requested_time": "derived_or_transmitted_by_process_design",
+        "external_status": "ASSEMBLY_RELEASED",
+        "configuration": ["TRIM=BEIGE", "SPEAKER=PREMIUM", "AMBIENT_LIGHT=YES"]
+      },
+      "logical_flow": [
+        {"step":1,"activity":"Receive electronic JIS call","owner":"integration","result":"Message is technically accepted or rejected."},
+        {"step":2,"activity":"Identify customer, destination, call type and external call identity","owner":"JIT application","result":"Correct business context is found."},
+        {"step":3,"activity":"Determine component group and components","owner":"JIT application/master data","result":"LEFT_DOOR_MODULE and required component materials are determined."},
+        {"step":4,"activity":"Map external production status and execute call-control action","owner":"JIT application","result":"Component group moves to internal execution status."},
+        {"step":5,"activity":"Calculate or confirm required line-arrival time","owner":"scheduling","result":"Operational deadline is known."},
+        {"step":6,"activity":"Produce or stage module","owner":"production","result":"Physical module exists and is traceable to the call."},
+        {"step":7,"activity":"Pack according to customer delivery sequence","owner":"packing/warehouse","result":"HU/packing state preserves sequence."},
+        {"step":8,"activity":"Create delivery and execute warehouse/transport steps","owner":"LE/EWM/TM depending on solution","result":"Shipment is released and leaves the Tier-1 plant."},
+        {"step":9,"activity":"Receive or reconcile delivery confirmation","owner":"JIT/sales execution","result":"Call and delivery state are aligned."},
+        {"step":10,"activity":"Bill according to commercial process","owner":"SD/finance","result":"Commercial process completes."}
+      ],
+      "lead_design_questions": [
+        "Is requested time transmitted directly or calculated from a production-status signal?",
+        "Which identifier is the immutable business key: external call number, vehicle reference, sequence number, or a composite key?",
+        "How are change and cancellation messages distinguished from duplicates?",
+        "What is the last point where a sequence change can be accepted automatically?",
+        "What happens if the physical module is already packed when a new configuration arrives?",
+        "Is the customer supply area taken from master data or from EDI, and which source wins on conflict?"
+      ],
+      "specification_acceptance_examples": [
+        "Receiving the same message twice must not create a second demand object.",
+        "A change after the configured physical cut-off must create an exception instead of silently changing the packed object.",
+        "Every failed determination must expose the external call identity, partner, destination and failed rule in monitoring.",
+        "Sequence state in SAP must be reconcilable with handling-unit and warehouse state."
+      ]
+    },
+    {
+      "id": "SCN-JIT-002",
+      "name": "Summarized JIT Call for Repetitive Material Demand",
+      "business_problem": "The OEM requests a short-horizon quantity without requiring vehicle-specific sequence.",
+      "pattern": "supplier_to_oem_summarized",
+      "call_type": "summarized_jit",
+      "story": "FalkenWerk requests 120 standard fastening kits for Gate 7 at 14:30. The request has a delivery-order reference but no vehicle sequence. The control should stay simpler than the JIS scenario because pretending every process needs twenty statuses is how configuration museums are born.",
+      "example_input": {
+        "delivery_order_number": "DON-FW10-88312",
+        "material": "ML-FAST-KIT",
+        "quantity": 120,
+        "uom": "EA",
+        "required_date": "2026-08-14",
+        "required_time": "14:30:00",
+        "destination": "Gate 7"
+      },
+      "logical_flow": [
+        "Receive and validate call",
+        "Identify DON/reference and destination",
+        "Create or update summarized JIT demand",
+        "Run short call-control path",
+        "Create delivery when stock and process status permit",
+        "Ship and confirm",
+        "Reconcile open quantity and reference"
+      ],
+      "lead_design_questions": [
+        "What exactly makes this call different from a scheduling-agreement schedule line in the project design?",
+        "Which reference controls downstream delivery grouping?",
+        "How are partial deliveries handled?",
+        "Can a later message replace the quantity, add to it, or cancel the remaining quantity?"
+      ],
+      "anti_pattern": "Reusing the full JIS status network for a simple summarized call without a business reason."
+    },
+    {
+      "id": "SCN-JIS-003",
+      "name": "Forward a Customer JIS Requirement to Tier-2",
+      "business_problem": "Tier-1 cannot complete the configured assembly unless a sequence-sensitive Tier-2 component arrives in time.",
+      "pattern": "tier1_to_tier2_forwarding",
+      "call_type": "forwarded_jis",
+      "story": "The inbound FalkenWerk call for vehicle V000471 requires beige trim and a premium speaker. MainLink determines that these components come from ElbeTrim and creates/forwards the relevant supplier demand while preserving the business reference needed for traceability.",
+      "mapping_example": [
+        {"inbound_attribute":"vehicle_reference","outbound_use":"Traceability / forwarded call identity","rule":"Preserve unless supplier contract defines another business key."},
+        {"inbound_attribute":"sequence_number","outbound_use":"Supplier delivery sequence","rule":"Transform only according to agreed Tier-2 sequence model."},
+        {"inbound_attribute":"customer_component_group","outbound_use":"Supplier components","rule":"Resolve through JIT control cycle / component determination."},
+        {"inbound_attribute":"customer_required_time","outbound_use":"Tier-2 requested time","rule":"Subtract internal production, handling and transport lead time; never copy blindly if Tier-1 must perform assembly."}
+      ],
+      "logical_flow": [
+        "Inbound JIS call is validated at Tier-1",
+        "Relevant Tier-2 components are determined",
+        "Source/supplier and JIT control-cycle context are found",
+        "Tier-2 requested time is calculated from the Tier-1 deadline",
+        "Outbound/forwarded JIS demand is created",
+        "Electronic message is sent to Tier-2",
+        "Tier-2 confirmation and delivery are monitored",
+        "Tier-1 production and packing remain linked to the original OEM call"
+      ],
+      "lead_design_questions": [
+        "Which inbound data is legally/operationally allowed to be forwarded to Tier-2?",
+        "How is the Tier-2 sequence related to the OEM sequence when one Tier-2 supplier serves several Tier-1 lines?",
+        "How are lead times calculated and where is the source of truth?",
+        "What happens when the OEM resequences after the Tier-2 call was already sent?",
+        "Can one inbound component group generate calls to several suppliers?",
+        "How is end-to-end traceability kept without creating a brittle one-to-one technical dependency?"
+      ],
+      "next_generation_note": "SAP S/4HANA 2025 FPS01 documents Tier-2 supplier integration through JIS call forwarding in Next Generation JIT Supply to Customer."
+    },
+    {
+      "id": "SCN-EXC-004",
+      "name": "Late Resequence After Packing Started",
+      "business_problem": "The OEM changes vehicle order while physical execution is already in progress.",
+      "pattern": "exception_resequence",
+      "story": "Vehicles V000471 and V000472 exchange positions after MainLink has already packed the module for V000471. The new electronic sequence is valid from the OEM perspective, but the physical state cannot be ignored.",
+      "risk": "A pure data update can make SAP look correct while the wrong module reaches the line.",
+      "decision_tree": [
+        {"condition":"production_not_started","action":"Accept resequence automatically if configuration and capacity checks pass."},
+        {"condition":"produced_not_packed","action":"Accept with production/sequence reconciliation and operator visibility."},
+        {"condition":"packed_not_loaded","action":"Use controlled repacking/relabeling workflow; update HU and sequence together."},
+        {"condition":"loaded_or_shipped","action":"Do not silently resequence. Raise logistics exception and coordinate OEM/Tier-1 recovery."},
+        {"condition":"unknown_physical_state","action":"Block automatic change and require reconciliation."}
+      ],
+      "required_controls": ["physical_cutoff_policy", "sequence_change_audit", "handling_unit_traceability", "operator_confirmation", "exception_monitoring"],
+      "assessment_message": "A Lead answer should connect the SAP status network with real physical irreversibility. The database is not the factory."
+    },
+    {
+      "id": "SCN-INT-005",
+      "name": "Duplicate EDI Message During Network Retry",
+      "business_problem": "Middleware retries a message after timeout, but the first message may already have been processed.",
+      "pattern": "integration_idempotency",
+      "story": "The sender receives no technical acknowledgement and transmits FW-A1-20260814-0471 again. Creating a second call would create double demand.",
+      "diagnostic_path": [
+        "Check whether both technical messages have the same business identity.",
+        "Check middleware retry/guaranteed-delivery behavior.",
+        "Check JIT application duplicate/change logic.",
+        "Check whether first processing committed all actions or only part of them.",
+        "Compare call, delivery and physical execution state before reprocessing."
+      ],
+      "design_rule": "Exactly-once business effect is more important than exactly-once transport. Build idempotency around stable business keys and action semantics.",
+      "anti_patterns": [
+        "Using message timestamp as the only duplicate key.",
+        "Blindly deleting the second IDoc without checking whether it is a valid change.",
+        "Blindly reprocessing after a timeout without checking committed downstream actions."
+      ]
+    },
+    {
+      "id": "SCN-MD-006",
+      "name": "Customer Supply Area Cannot Be Determined",
+      "business_problem": "The JIT call is technically valid but SAP cannot map the OEM destination to an internal/customer supply area.",
+      "pattern": "master_data_determination_failure",
+      "likely_causes": [
+        "Partner description or ship-to mapping is missing",
+        "Destination code changed at the OEM but master data was not synchronized",
+        "Call uses an unexpected sales-area context",
+        "Project-specific determination rule conflicts with EDI-provided destination",
+        "Validity dates or master-data activation are wrong"
+      ],
+      "diagnostic_sequence": [
+        "Capture external customer, ship-to, destination and call identity.",
+        "Check whether the failure is technical mapping or business determination.",
+        "Trace the determination rule and its input values.",
+        "Compare a successful call from the same partner.",
+        "Correct master data/configuration before forcing status where possible.",
+        "Reprocess through the normal action so the audit trail stays intact."
+      ],
+      "lead_design_question": "Who owns destination-code changes and how are they transported from partner onboarding into productive master data?"
+    }
+  ],
+  "cross_scenario_controls": [
+    {
+      "control":"business_identity",
+      "question":"What fields uniquely identify a call and its version/change?",
+      "failure_if_missing":"Duplicate demand, accidental overwrite or impossible audit trail."
+    },
+    {
+      "control":"status_ownership",
+      "question":"Which statuses are external facts and which are internal process states?",
+      "failure_if_missing":"Customer progress and supplier execution are mixed into one ambiguous status model."
+    },
+    {
+      "control":"physical_cutoff",
+      "question":"When is an automatic change no longer physically safe?",
+      "failure_if_missing":"System sequence can diverge from packed/loaded/shipped reality."
+    },
+    {
+      "control":"reprocessing",
+      "question":"Can every technical/business failure be retried without duplicate side effects?",
+      "failure_if_missing":"Recovery becomes manual database surgery."
+    },
+    {
+      "control":"traceability",
+      "question":"Can OEM call → component group → component → Tier-2 call → HU → delivery → confirmation be traced?",
+      "failure_if_missing":"Root-cause analysis becomes message archaeology under line-stop pressure."
+    }
+  ],
+  "assessment_drills": [
+    {
+      "question":"Explain the difference between summarized JIT and JIS without using transaction codes.",
+      "strong_answer_signals":["date/quantity vs order/vehicle/sequence", "different control complexity", "physical sequence consequence", "short-horizon execution context"]
+    },
+    {
+      "question":"Why is Call Control an architectural topic?",
+      "strong_answer_signals":["state/action engine", "external vs internal status", "automated transitions", "recovery", "component-group-specific process"]
+    },
+    {
+      "question":"How would you design Tier-2 forwarding?",
+      "strong_answer_signals":["source determination", "lead-time transformation", "traceability", "resequence/cancel propagation", "idempotency", "partner-specific interface contract"]
+    },
+    {
+      "question":"When would you use classic JIT versus Next Generation JIT?",
+      "strong_answer_signals":["target release and existing footprint", "migration cost", "modern S2C/S2P capabilities", "EWM/TM integration", "API/extensibility model", "no greenfield answer based only on habit"]
+    }
+  ],
+  "sources": [
+    {"title":"JIT Inbound (SeqJC, SumJC) - SAP Help","url":"https://help.sap.com/docs/SAP_ERP/31f292bd089742cf9020d70777ae0ff1"},
+    {"title":"JIT Outbound - SAP S/4HANA 2025 FPS01","url":"https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f3419342409c4a7cb0b2d27f801d38b1/56e1c353b677b44ce10000000a174cb4.html"},
+    {"title":"Next Generation JIT Supply to Customer - SAP S/4HANA 2025 FPS01","url":"https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/21aead0c98bd4755abdacd91c99e3393/bb8cc89be15e44d3abbe35a399904b3c.html"},
+    {"title":"End-to-End Integration of JIS Calls - SAP S/4HANA 2025 FPS01","url":"https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/21aead0c98bd4755abdacd91c99e3393/e070982477b542cd8521eb5216f01c86.html"}
+  ]
+}

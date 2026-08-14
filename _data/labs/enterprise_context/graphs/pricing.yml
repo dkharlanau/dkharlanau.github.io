@@ -1,0 +1,602 @@
+id: GRAPH-SD-PRICING-ENGINE
+type: knowledge_graph
+title: "Sales Pricing — Search, Calculation & Extension Map"
+summary: >-
+  A practical model of SAP S/4HANA Sales pricing: how the procedure is selected,
+  how conditions search for data, how values are calculated, where custom logic enters,
+  and how to diagnose a wrong result without jumping directly to condition records.
+domain: "SAP S/4HANA Sales"
+process_family: "Order-to-Cash"
+process_step: "Price Sales Document"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+
+thesis: >-
+  Pricing is not a number. It is a search and calculation pipeline. When the final value
+  is wrong, I first find the first point where the actual pricing path differs from the
+  expected path: procedure, condition, requirement, access, record, calculation, or extension.
+
+boundary:
+  included:
+    - "sales-document pricing procedure determination"
+    - "condition technique"
+    - "condition types, access sequences, condition tables, and records"
+    - "requirements, scales, exclusion, subtotals, and alternative calculations"
+    - "pricing analysis and diagnostic sequence"
+    - "classic on-premise enhancement patterns"
+    - "clean-core and key-user extensibility patterns"
+    - "order versus billing divergence as a diagnostic scenario"
+  excluded:
+    - "country-specific tax engines in depth"
+    - "settlement management"
+    - "rebate processing history"
+    - "SAP CPQ pricing in depth"
+    - "Variant Configuration and Pricing service internals"
+    - "client-specific code or condition names"
+  release_scope:
+    - "SAP S/4HANA 2025 FPS01 where cited"
+    - "SAP S/4HANA Cloud 2602/2608 where cited for key-user extensibility"
+    - "classic SD enhancement patterns where SAP documents them"
+
+memory_model:
+  title: "Seven questions I use in pricing"
+  questions:
+    - key: "CONTEXT"
+      question: "Which document and customer context entered pricing?"
+      answer: "Sales area, document pricing procedure, customer pricing procedure, date, partners, product, quantity, and relevant custom fields."
+    - key: "PROCEDURE"
+      question: "Which pricing procedure was actually determined?"
+      answer: "The procedure defines the calculation path and the sequence of price elements."
+    - key: "CONDITION"
+      question: "Which condition type should create the value?"
+      answer: "Find the expected step before investigating records."
+    - key: "ACCESS"
+      question: "How does that condition search?"
+      answer: "Follow the access sequence and its condition tables in order."
+    - key: "RECORD"
+      question: "Which key and validity should match?"
+      answer: "Check the exact document values used in the access, not the values you expected to be there."
+    - key: "CALC"
+      question: "How is the found rate converted into a condition value?"
+      answer: "Base value, calculation type, scales, subtotals, requirements, formulas, and exclusions can change the result."
+    - key: "EXTEND"
+      question: "Did custom logic change the pricing communication or calculation?"
+      answer: "Classic user exits/VOFM or clean-core custom fields/BAdIs can change the path before the final value appears."
+
+pricing_pipeline:
+  - id: PRC-STAGE-CONTEXT
+    order: 1
+    title: "Build pricing context"
+    question: "What values are available to pricing?"
+    inputs:
+      - "sales document header and item"
+      - "business partner/customer data"
+      - "product/material data"
+      - "pricing date and quantities"
+      - "custom pricing communication fields where used"
+    failure_signal: "Expected key field is blank or different before the search starts."
+    source_refs:
+      - SRC-SAP-PRICING-CUSTOM-FIELDS-SALES-DOCUMENT
+
+  - id: PRC-STAGE-PROCEDURE
+    order: 2
+    title: "Determine pricing procedure"
+    question: "Which procedure controls this document?"
+    inputs:
+      - "sales organization"
+      - "distribution channel"
+      - "division"
+      - "document pricing procedure"
+      - "customer pricing procedure"
+    output: "pricing procedure"
+    failure_signal: "Every later condition looks plausible, but the document is running the wrong procedure."
+    source_refs:
+      - SRC-SAP-PRICING-PROCEDURE-DETERMINATION
+      - SRC-SAP-PRICING-PROCEDURES
+
+  - id: PRC-STAGE-CONDITION
+    order: 3
+    title: "Read condition step"
+    question: "Should this condition participate?"
+    inputs:
+      - "condition type"
+      - "procedure step and counter"
+      - "requirement"
+      - "manual/mandatory/statistical settings"
+      - "subtotals and calculation controls"
+    failure_signal: "The condition never becomes eligible, or is present but inactive."
+    source_refs:
+      - SRC-SAP-PRICING-PROCEDURES
+
+  - id: PRC-STAGE-ACCESS
+    order: 4
+    title: "Run access sequence"
+    question: "Where should the condition search for data?"
+    inputs:
+      - "access sequence"
+      - "ordered accesses"
+      - "condition tables"
+      - "access requirements"
+    output: "search path"
+    failure_signal: "The expected table is never reached or an earlier access wins."
+    source_refs:
+      - SRC-SAP-PRICING-CONDITION-TECHNIQUE
+
+  - id: PRC-STAGE-RECORD
+    order: 5
+    title: "Match condition record"
+    question: "Does a valid record exist for the exact runtime key?"
+    inputs:
+      - "condition-table key"
+      - "pricing date"
+      - "validity interval"
+      - "scales where used"
+    output: "condition rate and metadata"
+    failure_signal: "A record exists in master data, but not for the exact key/date used by the document."
+    source_refs:
+      - SRC-SAP-PRICING-CONDITION-TECHNIQUE
+      - SRC-SAP-PRICING-ANALYSIS
+
+  - id: PRC-STAGE-CALCULATION
+    order: 6
+    title: "Calculate condition value"
+    question: "How does the rate become a value?"
+    inputs:
+      - "condition rate"
+      - "condition base value"
+      - "calculation type"
+      - "scales"
+      - "alternative base/amount calculation"
+      - "rounding and currency context"
+    output: "condition value"
+    failure_signal: "The correct rate is found but the amount is still wrong."
+    source_refs:
+      - SRC-SAP-PRICING-PROCEDURES
+      - SRC-SAP-PRICING-CUSTOM-LOGIC-BASE
+      - SRC-SAP-PRICING-CUSTOM-LOGIC-AMOUNT
+
+  - id: PRC-STAGE-COMPETE
+    order: 7
+    title: "Apply exclusions and interactions"
+    question: "Which valid conditions remain active together?"
+    inputs:
+      - "condition exclusion"
+      - "condition groups"
+      - "manual conditions"
+      - "condition dependencies"
+    output: "active and inactive pricing elements"
+    failure_signal: "The expected discount is found but correctly deactivated by another rule."
+    source_refs:
+      - SRC-SAP-PRICING-CONDITION-EXCLUSION
+
+  - id: PRC-STAGE-RESULT
+    order: 8
+    title: "Build subtotals and net value"
+    question: "What commercial result leaves pricing?"
+    inputs:
+      - "active condition values"
+      - "subtotals"
+      - "statistical flags"
+      - "accounting relevance where configured"
+    output:
+      - "subtotals"
+      - "net value"
+      - "pricing status"
+    failure_signal: "Individual conditions look correct, but the subtotal or net-value path is not what the design expects."
+    source_refs:
+      - SRC-SAP-PRICING-PROCEDURES
+
+condition_controls:
+  - id: PRC-CTRL-REQUIREMENT
+    title: "Requirement"
+    purpose: "Stops a condition step or access when the business rule is not satisfied."
+    diagnostic_question: "Was the condition not found, or was it never allowed to run?"
+    source_refs:
+      - SRC-SAP-PRICING-PROCEDURES
+      - SRC-SAP-PRICING-CUSTOM-LOGIC-REQUIREMENT
+  - id: PRC-CTRL-SCALE
+    title: "Scale"
+    purpose: "Changes the rate according to a scale basis such as quantity or value."
+    diagnostic_question: "Is the scale basis the value I think it is?"
+  - id: PRC-CTRL-EXCLUSION
+    title: "Condition Exclusion"
+    purpose: "Deactivates competing conditions according to configured exclusion logic."
+    diagnostic_question: "Was the condition missing, or found and then excluded?"
+    source_refs:
+      - SRC-SAP-PRICING-CONDITION-EXCLUSION
+  - id: PRC-CTRL-SUBTOTAL
+    title: "Subtotal"
+    purpose: "Stores intermediate results that later conditions or downstream logic can use."
+    diagnostic_question: "Which earlier values feed this base or subtotal?"
+    source_refs:
+      - SRC-SAP-PRICING-PROCEDURES
+  - id: PRC-CTRL-ALT-BASE
+    title: "Alternative Condition Base Value"
+    purpose: "Overrides the standard base used to calculate a condition."
+    diagnostic_question: "Is the rate correct but applied to the wrong base?"
+    source_refs:
+      - SRC-SAP-PRICING-CUSTOM-LOGIC-BASE
+  - id: PRC-CTRL-ALT-AMOUNT
+    title: "Alternative Condition Amount"
+    purpose: "Overrides the standard condition-amount calculation."
+    diagnostic_question: "Is custom calculation replacing the standard amount?"
+    source_refs:
+      - SRC-SAP-PRICING-CUSTOM-LOGIC-AMOUNT
+
+extension_layers:
+  - id: PRC-EXT-CLASSIC
+    title: "Classic SD / on-premise extension path"
+    principle: >-
+      Extend the pricing communication structures or pricing routines when standard
+      fields and standard calculation logic are not enough. Keep the extension narrow,
+      visible in the pricing trace, and consistent between sales and billing.
+    patterns:
+      - id: PRC-EXT-COMM-FIELD
+        title: "Add a custom pricing key field"
+        when: "A business attribute must participate in a condition-table key but is not available in standard pricing communication."
+        technical_shape:
+          - "append/include a customer field in KOMK/KOMP communication structures using the customer enhancement includes"
+          - "populate the value in sales-order pricing preparation such as MV45AFZZ USEREXIT_PRICING_PREPARE_TKOMK/TKOMP"
+          - "populate the equivalent billing pricing context in RV60AFZZ when billing must use the same key"
+          - "add the field to the pricing field catalog and condition-table design"
+        diagnostic_checks:
+          - "Inspect the runtime communication value before checking the condition record."
+          - "Compare sales-order and billing population logic."
+          - "Check whether the field is filled before pricing is called, not only later in document processing."
+        trap: >-
+          The condition record can be perfectly maintained and still never match if the
+          custom communication field is blank or populated differently in billing.
+        source_refs:
+          - SRC-SAP-PRICING-CLASSIC-USER-EXITS
+          - SRC-SAP-PRICING-BILLING-TROUBLESHOOTING
+
+      - id: PRC-EXT-VOFM-REQUIREMENT
+        title: "VOFM requirement"
+        when: "A condition or access should only run when a rule is true."
+        technical_shape:
+          - "pricing requirement routine"
+          - "routine assigned at pricing-procedure step or access depending on the design"
+        diagnostic_checks:
+          - "Read the requirement before assuming the access sequence failed."
+          - "Check every field the routine reads and whether it is populated at that point in runtime."
+        trap: "A false requirement looks like a missing price if the analysis stops at condition records."
+        source_refs:
+          - SRC-SAP-PRICING-VOFM
+
+      - id: PRC-EXT-VOFM-FORMULA
+        title: "VOFM alternative calculation"
+        when: "The standard condition base or amount calculation does not represent the business rule."
+        technical_shape:
+          - "alternative condition base formula"
+          - "alternative condition amount formula"
+        diagnostic_checks:
+          - "Separate rate, base, and final condition value."
+          - "Check the formula inputs before comparing only the final amount."
+        trap: "A correct condition rate can produce a wrong-looking value because custom logic changed the base."
+        source_refs:
+          - SRC-SAP-PRICING-VOFM
+
+      - id: PRC-EXT-BILLING-PARITY
+        title: "Sales-to-billing pricing parity"
+        when: "The pricing logic depends on custom fields or custom routines and billing must reproduce or redetermine the result."
+        technical_shape:
+          - "sales pricing communication population"
+          - "billing pricing communication population"
+          - "copy/repricing design considered separately"
+        diagnostic_checks:
+          - "Compare the same custom field in order and billing pricing communication."
+          - "Check whether billing copies, redetermines, or partially recalculates pricing according to the process design."
+          - "Reproduce the issue with pricing analysis in both documents."
+        trap: "Order pricing can be correct while billing fails because the extension was implemented only for order context."
+        source_refs:
+          - SRC-SAP-PRICING-BILLING-TROUBLESHOOTING
+
+  - id: PRC-EXT-CLEAN-CORE
+    title: "Clean-core / key-user extension path"
+    principle: >-
+      Prefer released extension mechanisms when the deployment model supports them.
+      Add business fields to pricing communication through Custom Fields, then connect
+      them to field catalog, condition tables, accesses, condition types, and procedures.
+      Use pricing Custom Logic BAdIs for explicit requirement or calculation logic.
+    patterns:
+      - id: PRC-EXT-CF-COMM
+        title: "Custom Fields for pricing communication"
+        when: "A custom business attribute must be available to sales pricing without classic communication-structure code."
+        technical_shape:
+          - "Sales: Pricing Communication Head"
+          - "Sales: Pricing Communication Item"
+          - "Sales Document to Pricing Communication business scenarios where applicable"
+          - "publish and enable required usages"
+        diagnostic_checks:
+          - "Check that the field is published and enabled for the required pricing usage."
+          - "Check that the runtime document value is transferred to pricing communication."
+        source_refs:
+          - SRC-SAP-PRICING-CUSTOM-FIELDS-MANAGE-PRICES
+          - SRC-SAP-PRICING-CUSTOM-FIELDS-SALES-DOCUMENT
+
+      - id: PRC-EXT-CF-KEY
+        title: "Custom field in condition key"
+        when: "The new field must drive condition-record selection."
+        technical_shape:
+          - "add field to pricing field catalog"
+          - "create or extend condition table"
+          - "use table in access sequence"
+          - "assign access sequence to condition type"
+          - "place condition type in pricing procedure"
+        diagnostic_checks:
+          - "Trace the whole chain from custom field to condition record."
+          - "Do not stop after the Custom Fields app says the field is published."
+        source_refs:
+          - SRC-SAP-PRICING-CUSTOM-FIELDS-MANAGE-PRICES
+          - SRC-SAP-PRICING-CUSTOM-FIELDS-SALES-DOCUMENT
+
+      - id: PRC-EXT-BADI-REQ
+        title: "Custom Logic BAdI for requirement"
+        when: "A pricing step or access needs a custom eligibility rule."
+        technical_shape:
+          - "Define Requirement in Pricing for Document"
+          - "Define Requirement in Pricing for Document Item"
+          - "filter value mapped to a routine/enhancement identifier"
+        diagnostic_checks:
+          - "Confirm which implementation/filter is mapped to the configured routine."
+          - "Check document versus item scope."
+        source_refs:
+          - SRC-SAP-PRICING-CUSTOM-LOGIC-REQUIREMENT
+
+      - id: PRC-EXT-BADI-CALC
+        title: "Custom Logic BAdI for base or amount"
+        when: "Standard condition-base or condition-amount calculation is not enough."
+        technical_shape:
+          - "Define Alternative Calculation of Condition Base Value in Document Item"
+          - "custom logic for Condition Amount"
+          - "filter value mapped to a configured routine number"
+        diagnostic_checks:
+          - "Identify whether base or amount is being overridden."
+          - "Compare the BAdI inputs with the pricing trace values."
+        source_refs:
+          - SRC-SAP-PRICING-CUSTOM-LOGIC-BASE
+          - SRC-SAP-PRICING-CUSTOM-LOGIC-AMOUNT
+
+practitioner_heuristics:
+  - id: HEUR-PRC-FIRST-WRONG-STEP
+    context: "Wrong or missing sales price"
+    statement: "I look for the first wrong step, not the final wrong net value."
+    confidence: high
+    checks:
+      - "procedure"
+      - "condition eligibility"
+      - "access sequence"
+      - "runtime key"
+      - "record validity"
+      - "base/amount calculation"
+      - "extension"
+    anti_patterns:
+      - "open condition maintenance first"
+      - "create a new record before reading pricing analysis"
+      - "change the pricing procedure because one customer has a data problem"
+
+  - id: HEUR-PRC-RATE-BASE-VALUE
+    context: "Condition exists but value is wrong"
+    statement: "I separate rate, base, and condition value before debugging formulas."
+    confidence: high
+    questions:
+      - "Was the expected rate found?"
+      - "What base value did pricing use?"
+      - "Did a scale, formula, rounding rule, or alternative calculation change the result?"
+
+  - id: HEUR-PRC-ORDER-BILLING
+    context: "Order correct, invoice wrong"
+    statement: "I treat order and billing as two pricing contexts until I prove they are equivalent."
+    confidence: high
+    checks:
+      - "pricing/copy behavior in the business process"
+      - "pricing date and document context"
+      - "custom KOMK/KOMP field population or released custom-field transfer"
+      - "pricing analysis in both documents"
+    anti_patterns:
+      - "assume billing simply copies every order condition unchanged"
+      - "debug only the order because its price looks correct"
+
+  - id: HEUR-PRC-CUSTOM-FIELD
+    context: "Custom field drives pricing"
+    statement: "The first breakpoint is conceptually before the condition record: is the field really in pricing communication?"
+    confidence: high
+    checks:
+      - "source document field"
+      - "pricing communication field"
+      - "field catalog"
+      - "condition table"
+      - "access"
+      - "record"
+
+  - id: HEUR-PRC-EXTENSION-DEBT
+    context: "New pricing requirement"
+    statement: "I prefer configuration and explicit condition design before adding another routine."
+    confidence: medium
+    questions:
+      - "Can a standard field express the key?"
+      - "Can a custom pricing field plus condition technique express it?"
+      - "Is the requirement deterministic and testable?"
+      - "Will the same logic be needed in billing, returns, quotations, or APIs?"
+    anti_patterns:
+      - "one routine per exception"
+      - "hidden business rules in exits with no pricing trace explanation"
+      - "duplicated sales and billing logic that drifts over time"
+
+impact_traces:
+  - id: TRACE-PRC-WRONG-PROCEDURE
+    direction: backward_then_forward
+    title: "Wrong pricing procedure"
+    path:
+      - "Unexpected price"
+      - "Pricing analysis"
+      - "Wrong procedure"
+      - "Sales area / document PP / customer PP"
+      - "Procedure determination"
+      - "Condition sequence changes"
+    lesson: "Do not repair downstream condition records when the document entered the wrong pricing procedure."
+
+  - id: TRACE-PRC-CUSTOM-KEY
+    direction: forward
+    title: "New custom pricing key"
+    path:
+      - "Business attribute"
+      - "Pricing communication"
+      - "Field catalog"
+      - "Condition table"
+      - "Access sequence"
+      - "Condition type"
+      - "Pricing procedure"
+      - "Condition record"
+    lesson: "A custom pricing field is not complete when the field exists; the whole condition-technique chain must consume it."
+
+  - id: TRACE-PRC-ORDER-BILLING
+    direction: compare
+    title: "Order price is correct, billing price is wrong"
+    path:
+      - "Order pricing analysis"
+      - "Billing pricing analysis"
+      - "Compare pricing context"
+      - "Compare custom fields"
+      - "Compare pricing/copy behavior"
+      - "Find first divergence"
+    lesson: "Treat the two documents as separate runtime contexts and compare them at the first divergence."
+
+failure_modes:
+  - symptom: "Base price is missing"
+    first_checks:
+      - "pricing procedure"
+      - "condition type present and eligible"
+      - "access sequence"
+      - "exact access key"
+      - "record validity"
+  - symptom: "Discount record exists but discount is absent"
+    first_checks:
+      - "requirement"
+      - "access analysis"
+      - "exclusion/inactive reason"
+      - "manual or competing condition"
+  - symptom: "Correct rate, wrong amount"
+    first_checks:
+      - "condition base"
+      - "calculation type"
+      - "scale basis"
+      - "alternative base/amount logic"
+      - "rounding/currency context"
+  - symptom: "Price differs only for one interface-created order"
+    first_checks:
+      - "document field population"
+      - "partner/product fields used in pricing"
+      - "custom pricing communication fields"
+      - "pricing date and quantities"
+  - symptom: "Order correct, billing wrong"
+    first_checks:
+      - "billing pricing analysis"
+      - "pricing/copy behavior"
+      - "billing pricing date/context"
+      - "billing custom-field population"
+      - "billing-side classic exit where used"
+  - symptom: "Condition found but inactive"
+    first_checks:
+      - "exclusion"
+      - "requirement"
+      - "condition-control settings"
+      - "competing conditions"
+  - symptom: "New custom field does not influence price"
+    first_checks:
+      - "field publication/activation"
+      - "pricing communication transfer"
+      - "field catalog"
+      - "condition table and access"
+      - "record key"
+
+synthetic_cases:
+  - id: SCN-PRC-CUSTOM-CHANNEL
+    title: "Synthetic case: contract channel discount"
+    description: >-
+      A fictional company needs a discount based on a custom commercial channel field.
+      The field exists on the sales-order item, but the discount is never found.
+    facts:
+      - "The custom field is visible in the sales document."
+      - "A condition record exists for channel CH-A."
+      - "Pricing analysis shows the access but the runtime key is blank."
+    reasoning_path:
+      - "Do not create another condition record."
+      - "Check whether the custom field is transferred to pricing communication."
+      - "Then check field catalog, condition table, access, and condition record."
+      - "If billing uses the same condition, test the billing pricing context separately."
+    lesson: "A visible document field is not automatically a pricing field."
+
+  - id: SCN-PRC-BASE-FORMULA
+    title: "Synthetic case: correct rate, wrong surcharge"
+    description: >-
+      A surcharge rate is correct, but the calculated amount is too high.
+    facts:
+      - "Condition record rate is correct."
+      - "Pricing analysis finds the expected record."
+      - "The pricing procedure uses an alternative condition base."
+    reasoning_path:
+      - "Freeze the rate as a known-good result."
+      - "Inspect the condition base used at runtime."
+      - "Read the alternative base routine/custom logic and its inputs."
+      - "Test boundary quantities and values, not only one happy-path order."
+    lesson: "Rate, base, and value are three different diagnostic objects."
+
+assessment_drills:
+  - title: "Missing discount"
+    prompt: "The business says the discount record exists. What do you check?"
+    expected_reasoning:
+      - "Confirm pricing procedure and condition step."
+      - "Check whether the requirement allowed the condition to run."
+      - "Use pricing analysis to follow the access sequence."
+      - "Compare runtime key and date with the record."
+      - "Check whether the found condition was excluded or deactivated."
+
+  - title: "Custom key field"
+    prompt: "A new sales-order field must drive pricing. Design the extension."
+    expected_reasoning:
+      - "Choose released custom-field pricing communication when the deployment model supports it."
+      - "Connect the field to field catalog, condition table, access sequence, condition type, and procedure."
+      - "For classic on-premise design, extend/populate KOMK/KOMP only when needed."
+      - "Plan billing and API behavior before implementation."
+
+  - title: "Correct rate, wrong value"
+    prompt: "The condition rate is right but the condition amount is wrong."
+    expected_reasoning:
+      - "Check base value and calculation type."
+      - "Check scales and units/currency context."
+      - "Check alternative base or amount calculation."
+      - "Only then debug custom formula code."
+
+  - title: "Order vs billing"
+    prompt: "Sales order is priced correctly; invoice is not."
+    expected_reasoning:
+      - "Run pricing analysis in both documents."
+      - "Compare procedure, pricing context, date, and active conditions."
+      - "Compare custom pricing fields at runtime."
+      - "Check billing-side enhancement and pricing/copy design."
+
+  - title: "Lead design question"
+    prompt: "Business asks for another special pricing rule. Do you add a routine?"
+    expected_reasoning:
+      - "Try condition technique and explicit key design first."
+      - "Use custom fields when the missing concept is data, not algorithm."
+      - "Use requirement/base/amount custom logic only for logic that cannot be modeled cleanly in configuration."
+      - "Assess reuse across order, billing, returns, APIs, and future clean-core constraints."
+
+source_refs:
+  - SRC-SAP-PRICING-CONDITION-TECHNIQUE
+  - SRC-SAP-PRICING-PROCEDURES
+  - SRC-SAP-PRICING-PROCEDURE-DETERMINATION
+  - SRC-SAP-PRICING-ANALYSIS
+  - SRC-SAP-PRICING-CONDITION-EXCLUSION
+  - SRC-SAP-PRICING-CUSTOM-FIELDS-MANAGE-PRICES
+  - SRC-SAP-PRICING-CUSTOM-FIELDS-SALES-DOCUMENT
+  - SRC-SAP-PRICING-CUSTOM-LOGIC-REQUIREMENT
+  - SRC-SAP-PRICING-CUSTOM-LOGIC-BASE
+  - SRC-SAP-PRICING-CUSTOM-LOGIC-AMOUNT
+  - SRC-SAP-PRICING-CLASSIC-USER-EXITS
+  - SRC-SAP-PRICING-VOFM
+  - SRC-SAP-PRICING-BILLING-TROUBLESHOOTING

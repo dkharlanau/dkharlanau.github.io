@@ -1,0 +1,376 @@
+id: TOPIC-SAP-DEVELOPMENT-TOOLBOX
+type: research_topic
+title: "SAP Development Toolbox: Frameworks, Accelerators and Delivery Tools"
+summary: "A practical toolchain for ABAP, RAP, CAP, Fiori and BTP delivery. Use tools to remove repetitive work, not to create another platform to maintain."
+domain: "SAP Technical Architecture"
+process_family: "Application development, quality, delivery and operations"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+reviewed_together_at: "2026-08-14"
+
+architect_thesis:
+  - "A framework should remove boilerplate or enforce a useful contract. If it only adds ceremony, it is not an accelerator."
+  - "Prefer boring, scriptable tools in CI. A button in a cloud IDE is useful for a developer; a repeatable command is useful for a team."
+  - "Use SAP-specific tooling where it understands SAP semantics: ADT, ATC, Fiori tools, CAP CLI, Cloud SDK. Use normal engineering tools for Git, tests, containers and pipelines where possible."
+  - "Do not make an IDE an architecture dependency. CAP can be developed in BAS, Build Code or local VS Code; the runtime does not care which editor was used."
+  - "Treat community tools as accelerators with their own support model. They can be excellent without becoming SAP-supported products."
+  - "Automate quality before automating deployment. Fast delivery of bad code is still bad delivery, only with better telemetry."
+
+selection_questions:
+  - "Does the tool remove repeated manual work?"
+  - "Can it run non-interactively in CI/CD?"
+  - "Does it understand the SAP object or protocol better than a generic tool?"
+  - "Who supports it: SAP, open-source maintainers, or our own team?"
+  - "What happens when the tool is unavailable or deprecated?"
+  - "Does it create a proprietary project format or can we still work with normal source files and Git?"
+
+categories:
+  - id: TOOLCAT-IDE
+    title: "Development environments"
+    purpose: "Create, navigate, debug and test code with the right SAP context."
+    tools:
+      - id: TOOL-ADT-ECLIPSE
+        name: "ABAP Development Tools for Eclipse"
+        type: "SAP-supported IDE tooling"
+        use_for: "Serious ABAP development, CDS, RAP, debugging, ABAP Unit, ATC and transport work."
+        architect_view: "Still my safest default for a full-time ABAP developer because feature depth matters more than editor fashion."
+        avoid_when: "The team is not writing ABAP."
+        dependencies: ["Eclipse", "reachable ABAP backend", "developer authorizations"]
+        automation_value: "medium"
+        source_refs: [SRC-TBX-ADT]
+
+      - id: TOOL-ADT-VSCODE
+        name: "ABAP Development Tools for Visual Studio Code"
+        type: "SAP-supported IDE tooling"
+        use_for: "ABAP Cloud, CDS and RAP work in a VS Code-centered workspace."
+        architect_view: "Useful when one workspace contains ABAP plus CAP, UI or infrastructure code. Check backend and feature coverage before standardizing the whole team on it."
+        avoid_when: "A required ABAP feature is only mature in Eclipse ADT."
+        dependencies: ["Visual Studio Code", "supported ABAP backend"]
+        automation_value: "medium"
+        source_refs: [SRC-TBX-ADT-VSCODE]
+
+      - id: TOOL-VSCODE-CAP
+        name: "Local Visual Studio Code"
+        type: "generic IDE"
+        use_for: "CAP Node.js/TypeScript or Java, UI5, Git, tests and BTP CLI work."
+        architect_view: "Often the fastest CAP setup for an experienced developer. Local control is useful; it is not technically inferior because SAP sells a browser IDE."
+        avoid_when: "Corporate desktop restrictions make local runtimes and extensions painful."
+        dependencies: ["Node.js or JDK", "Git", "CAP tooling"]
+        automation_value: "high"
+
+      - id: TOOL-BAS
+        name: "SAP Business Application Studio"
+        type: "SAP-managed cloud IDE"
+        use_for: "CAP, Fiori, MTA and BTP development with preconfigured dev spaces and SAP extensions."
+        architect_view: "Good for onboarding and controlled environments. It saves workstation setup. I would not make BAS availability a runtime requirement for the application."
+        avoid_when: "A local IDE is faster and the managed environment adds no governance value."
+        dependencies: ["SAP BTP subscription", "dev space", "browser access"]
+        automation_value: "medium-high"
+        source_refs: [SRC-TBX-BAS]
+
+      - id: TOOL-BUILD-CODE
+        name: "SAP Build Code"
+        type: "SAP-managed pro-code environment"
+        use_for: "Curated CAP, Fiori and BTP development with BAS, SAP services and Joule integration."
+        architect_view: "A productivity bundle, not a new application architecture. Useful when its integrated setup and AI features save real team time."
+        avoid_when: "The team already has a productive local/BAS toolchain and the extra subscription buys mostly another portal."
+        dependencies: ["SAP BTP", "Build Code entitlement"]
+        automation_value: "medium-high"
+        source_refs: [SRC-TBX-BUILD-CODE]
+
+  - id: TOOLCAT-FRAMEWORKS
+    title: "Application frameworks and code accelerators"
+    purpose: "Generate standard structure and remove plumbing so custom code focuses on business behavior."
+    tools:
+      - id: TOOL-FIORI-ELEMENTS
+        name: "SAP Fiori elements"
+        type: "metadata-driven UI framework"
+        use_for: "List, object, analytical and form-oriented enterprise applications driven by OData metadata and annotations."
+        architect_view: "My default UI for ordinary business object applications. It reduces custom JavaScript and keeps behavior aligned with the service model."
+        avoid_when: "The interaction model is genuinely unique and standard floorplans become harder to bend than a small freestyle UI."
+        dependencies: ["OData service", "annotations", "SAPUI5 runtime"]
+        automation_value: "very high"
+        source_refs: [SRC-TBX-FIORI-TOOLS]
+
+      - id: TOOL-FIORI-TOOLS
+        name: "SAP Fiori tools"
+        type: "IDE extensions and generators"
+        use_for: "Generate Fiori elements or freestyle apps, model pages and navigation, preview data, edit annotations and guide common tasks."
+        architect_view: "Use it instead of hand-writing project scaffolding and manifest boilerplate. Generated structure is not a substitute for understanding OData and annotations."
+        avoid_when: "The app is not SAPUI5/Fiori."
+        dependencies: ["BAS or VS Code"]
+        automation_value: "very high"
+        source_refs: [SRC-TBX-FIORI-TOOLS]
+
+      - id: TOOL-CAP-CLI
+        name: "CAP cds CLI / @sap/cds-dk"
+        type: "framework CLI"
+        use_for: "Create projects, add facets, run local services, mock dependencies, inspect models, build and upgrade CAP applications."
+        shortcuts: ["cds init", "cds add", "cds watch", "cds build", "cds deploy", "cds upgrade"]
+        architect_view: "This is the CAP productivity engine. Prefer its conventions before inventing custom project structure."
+        avoid_when: "A custom script duplicates a stable cds command without adding domain value."
+        dependencies: ["Node.js for CLI", "CAP project"]
+        automation_value: "very high"
+        source_refs: [SRC-TBX-CAP-CLI, SRC-TBX-CAP-RELEASE]
+
+      - id: TOOL-CLOUD-SDK
+        name: "SAP Cloud SDK"
+        type: "Java and JavaScript/TypeScript libraries"
+        use_for: "Consume SAP and external APIs with destination, authentication, connectivity, resilience and typed OData/OpenAPI clients."
+        architect_view: "Very useful at remote-system boundaries. It removes authentication and client boilerplate that teams otherwise reimplement badly. CAP already uses parts of it internally, so do not wrap the wrapper without a reason."
+        avoid_when: "The service has no remote API integration or a tiny direct HTTP client is genuinely sufficient."
+        dependencies: ["Java or Node.js application", "BTP connectivity services where required"]
+        automation_value: "high"
+        checked_baseline:
+          checked_at: "2026-08-14"
+          javascript_release_seen: "4.8.0"
+          java_release_seen: "5.32.0"
+        source_refs: [SRC-TBX-CLOUD-SDK, SRC-TBX-CLOUD-SDK-JS, SRC-TBX-CLOUD-SDK-JAVA]
+
+      - id: TOOL-JOULE-ABAP
+        name: "SAP Joule for Developers - ABAP AI capabilities"
+        type: "AI development accelerator"
+        use_for: "ABAP code completion, explanations, ABAP Unit/CDS test generation and selected RAP development tasks inside ADT."
+        architect_view: "Useful for drafts, tests and navigation through unfamiliar code. Keep ATC, tests and code review as the authority; generated code is not a released API contract."
+        avoid_when: "Licensing, backend support or data-governance constraints make the productivity gain marginal."
+        dependencies: ["supported ABAP landscape", "ADT", "required license/activation"]
+        automation_value: "medium-high"
+        source_refs: [SRC-TBX-JOULE-ABAP]
+
+  - id: TOOLCAT-TEST-QUALITY
+    title: "Testing, quality and diagnostics"
+    purpose: "Catch defects and expensive performance mistakes before transport or deployment."
+    tools:
+      - id: TOOL-ABAP-UNIT
+        name: "ABAP Unit"
+        type: "SAP test framework"
+        use_for: "Fast executable tests for ABAP domain logic and regression protection."
+        architect_view: "Use heavily around deterministic business logic and adapters. Tests are cheaper than debugging a pricing or determination defect after integration testing."
+        automation_value: "very high"
+        source_refs: [SRC-TBX-ABAP-QUALITY]
+
+      - id: TOOL-ATC
+        name: "ABAP Test Cockpit (ATC)"
+        type: "SAP quality gate"
+        use_for: "Static checks for syntax, quality, security, performance risks, standards and cloud readiness."
+        architect_view: "Make ATC a gate, not an optional developer ritual. Central ATC is especially valuable in mixed legacy landscapes."
+        automation_value: "very high"
+        source_refs: [SRC-TBX-ABAP-QUALITY]
+
+      - id: TOOL-CAP-TEST
+        name: "CAP cds.test / @cap-js/cds-test"
+        type: "CAP test utility"
+        use_for: "Start test servers, call services and test CAP Node.js behavior with Node test runner, Vitest, Jest or Mocha."
+        architect_view: "Prefer tests against real CAP behavior over large mock frameworks. CAP documentation itself warns that excessive mocking can make tests less useful."
+        automation_value: "very high"
+        source_refs: [SRC-TBX-CAP-TEST]
+
+      - id: TOOL-ABAP-PERF
+        name: "SAT, ST05 and SQL performance tools"
+        type: "ABAP runtime diagnostics"
+        use_for: "Measure ABAP runtime and SQL behavior when a problem is real rather than guessing from code style."
+        architect_view: "Performance opinions lose to traces. Use SAT for runtime and ST05 for SQL/RFC/enqueue/buffer traces; add SQL Monitor/related tooling for broader workload evidence where available."
+        automation_value: "medium"
+        source_refs: [SRC-TBX-ABAP-PERFORMANCE]
+
+      - id: TOOL-ABAP-CLEANER
+        name: "ABAP cleaner"
+        type: "SAP open-source formatter/refactoring tool"
+        support_model: "open source, not a substitute for SAP product support"
+        use_for: "Automate many Clean ABAP-style formatting and safe cleanup rules in ADT, VS Code or standalone workflows."
+        architect_view: "Excellent for removing formatting debates from reviews. Do not run mass cosmetic rewrites through stable legacy packages just to make Git history prettier."
+        automation_value: "high"
+        checked_baseline:
+          checked_at: "2026-08-14"
+          release_seen: "1.29.0"
+        source_refs: [SRC-TBX-ABAP-CLEANER]
+
+      - id: TOOL-ABAPLINT
+        name: "abaplint"
+        type: "community open-source static analyzer"
+        support_model: "community / optional commercial support"
+        use_for: "Static analysis of ABAP serialized to Git, especially useful in Git-based CI before code reaches an ABAP system."
+        architect_view: "Good extra shift-left signal for abapGit repositories. It complements ATC; it does not replace backend-aware ATC checks. Pin the version because the project does not promise semantic versioning."
+        automation_value: "high"
+        source_refs: [SRC-TBX-ABAPLINT]
+
+  - id: TOOLCAT-SOURCE-DELIVERY
+    title: "Source control, transport and CI/CD"
+    purpose: "Make changes reviewable, reproducible and deployable without relying on one person's workstation."
+    tools:
+      - id: TOOL-GIT
+        name: "Git"
+        type: "source control"
+        use_for: "CAP, UI, infrastructure, pipeline definitions and any file-based project."
+        architect_view: "For cloud development, Git is the boring default. Keep generated secrets and environment-specific credentials out of repositories."
+        automation_value: "very high"
+
+      - id: TOOL-ABAPGIT
+        name: "abapGit"
+        type: "community open-source Git client for ABAP"
+        support_model: "community"
+        use_for: "Serialize ABAP repository objects to Git, collaborate on open-source or custom code, and enable external CI tooling."
+        architect_view: "A remarkably useful bridge between ABAP and normal Git workflows. I use it where its object support and governance fit; I do not pretend it is SAP's transport system."
+        automation_value: "high"
+        checked_baseline:
+          checked_at: "2026-08-14"
+          release_seen: "1.134.0"
+        source_refs: [SRC-TBX-ABAPGIT]
+
+      - id: TOOL-GCTS
+        name: "Git-enabled Change and Transport System (gCTS)"
+        type: "SAP software logistics"
+        use_for: "Store and version ABAP development in Git while integrating Git concepts with SAP transport/deployment mechanics and CI pipelines."
+        architect_view: "Use when Git-centered ABAP delivery is a deliberate landscape strategy. It has more platform setup than abapGit, but it is an SAP software-logistics capability rather than a developer-side utility."
+        avoid_when: "Classic CTS already works and the organization has no real Git/CI process to gain from the additional operating model."
+        automation_value: "high"
+        source_refs: [SRC-TBX-GCTS]
+
+      - id: TOOL-SAP-CICD
+        name: "SAP Continuous Integration and Delivery"
+        type: "SAP-managed CI/CD service"
+        use_for: "Ready-made pipelines for common SAP BTP Cloud Foundry/Kyma and Fiori delivery scenarios."
+        architect_view: "Good when the team wants SAP-supported pipelines without owning Jenkins. Less flexible than building everything yourself, which is often a feature."
+        avoid_when: "A mature enterprise CI platform already covers the scenario better."
+        automation_value: "very high"
+        source_refs: [SRC-TBX-CICD]
+
+      - id: TOOL-PIPER
+        name: "Project Piper"
+        type: "SAP open-source CI/CD toolkit"
+        support_model: "open source / SAP Community, not direct SAP product support"
+        use_for: "Reusable SAP-aware pipeline steps and predefined pipelines, historically strong with Jenkins and also offering a CLI/GitHub Action path."
+        architect_view: "Useful when standard SAP pipeline steps save engineering effort but the company wants its own CI infrastructure and deeper control. Avoid building a Jenkins kingdom just to run one CAP application."
+        automation_value: "very high"
+        source_refs: [SRC-TBX-PIPER, SRC-TBX-CICD]
+
+  - id: TOOLCAT-PLATFORM
+    title: "Build, deploy and platform automation"
+    purpose: "Turn application and BTP setup into repeatable commands and infrastructure definitions."
+    tools:
+      - id: TOOL-MTA-MBT
+        name: "MTA descriptor and Cloud MTA Build Tool (mbt)"
+        type: "SAP BTP build/deployment tooling"
+        use_for: "Package multi-module Cloud Foundry applications and service dependencies into a deployable archive."
+        architect_view: "Still practical for conventional CAP/Fiori Cloud Foundry applications. Keep mta.yaml readable; a 600-line deployment descriptor is just infrastructure code asking for refactoring."
+        dependencies: ["mta.yaml", "mbt", "Cloud Foundry deploy plugin"]
+        automation_value: "high"
+        source_refs: [SRC-TBX-BAS-FULLSTACK]
+
+      - id: TOOL-BTP-CLI
+        name: "btp CLI"
+        type: "SAP BTP administration CLI"
+        use_for: "Automate global account, directory, subaccount, entitlement, environment, subscription and authorization administration."
+        architect_view: "Prefer this over repeated cockpit clicking for operational scripts. Use JSON output in automation."
+        automation_value: "very high"
+        source_refs: [SRC-TBX-BTP-CLI]
+
+      - id: TOOL-CF-CLI
+        name: "Cloud Foundry cf CLI"
+        type: "runtime CLI"
+        use_for: "Target spaces, inspect apps, logs and services, push or deploy Cloud Foundry workloads."
+        architect_view: "Essential operational literacy for Cloud Foundry. Even when pipelines deploy automatically, a Lead should understand what the pipeline is doing."
+        automation_value: "very high"
+        source_refs: [SRC-TBX-BTP-TOOLS]
+
+      - id: TOOL-TERRAFORM-BTP
+        name: "Terraform Provider for SAP BTP"
+        type: "infrastructure as code"
+        support_model: "SAP-built open source; SAP Help states no official SAP support for the provider"
+        use_for: "Provision BTP directories, subaccounts, entitlements, environment instances, subscriptions, services, role collections and selected trust configuration as code."
+        architect_view: "One of the highest-value tools for repeatable BTP landscapes. Use it when you manage more than a toy subaccount. Pin provider versions and review state/security like any other IaC platform."
+        automation_value: "very high"
+        source_refs: [SRC-TBX-TERRAFORM-BTP]
+
+      - id: TOOL-KYMA-CLI
+        name: "kubectl and Helm"
+        type: "Kubernetes tooling"
+        use_for: "Operate and package Kyma/Kubernetes workloads."
+        architect_view: "Required skills if Kyma is selected. Their presence is also a useful reminder that Kyma has a larger operations surface than Cloud Foundry."
+        avoid_when: "The application does not need Kubernetes."
+        automation_value: "high"
+        source_refs: [SRC-TBX-BTP-TOOLS]
+
+default_stacks:
+  - scenario: "New S/4HANA transactional extension"
+    stack: ["ADT", "ABAP Cloud", "RAP", "ABAP CDS", "Fiori elements", "ABAP Unit", "ATC"]
+    optional: ["Joule for Developers", "ABAP cleaner"]
+    rule: "Keep the business transaction on-stack when that is where its state and ownership live."
+
+  - scenario: "CAP side-by-side application on Cloud Foundry"
+    stack: ["VS Code or BAS/Build Code", "CAP cds CLI", "CAP cds.test", "Fiori tools/Fiori elements when UI is needed", "SAP Cloud SDK for remote APIs", "MTA/mbt", "Git", "CI/CD"]
+    optional: ["Terraform Provider for SAP BTP", "btp CLI"]
+    rule: "Automate project creation, tests, remote API clients and deployment before writing custom infrastructure code."
+
+  - scenario: "ABAP codebase with Git-centered engineering"
+    stack: ["ADT", "ABAP Unit", "ATC", "Git strategy"]
+    optional: ["gCTS for SAP-managed software logistics", "abapGit for developer-centric Git serialization", "abaplint as extra CI analysis", "ABAP cleaner"]
+    rule: "Choose one clear source/transport authority. Git plus CTS without ownership rules becomes two competing histories."
+
+  - scenario: "Kyma workload"
+    stack: ["Git", "container build", "kubectl", "Helm", "CI/CD", "observability"]
+    optional: ["CAP", "SAP Cloud SDK", "Terraform where applicable"]
+    rule: "If the team cannot operate Kubernetes confidently, that is an architecture constraint, not a training footnote."
+
+quick_recommendations:
+  must_know_as_lead:
+    - "ADT + ABAP Unit + ATC"
+    - "Fiori elements + Fiori tools"
+    - "CAP cds CLI + cds.test"
+    - "SAP Cloud SDK"
+    - "Git and one CI/CD platform"
+    - "MTA/mbt and cf CLI for Cloud Foundry"
+    - "btp CLI + Terraform basics for repeatable BTP setup"
+  useful_but_contextual:
+    - "SAP Build Code and Joule"
+    - "Project Piper"
+    - "gCTS"
+    - "abapGit"
+    - "ABAP cleaner"
+    - "abaplint"
+    - "kubectl/Helm"
+  avoid_as_default:
+    - "Custom scaffolding where RAP/CAP/Fiori generators already solve it"
+    - "Hand-configured BTP landscapes with no reproducible definition"
+    - "A bespoke Jenkins platform for one small application"
+    - "Kubernetes for a normal CRUD/service workload"
+    - "AI-generated code accepted without tests and ATC/static analysis"
+
+lead_assessment_answers:
+  - question: "Which tools would you standardize for ABAP development?"
+    answer: "ADT, ABAP Unit and ATC are the core. I add ABAP cleaner for mechanical cleanup where the team accepts it. For Git-centric scenarios I evaluate gCTS or abapGit depending on whether I need SAP software logistics or developer-side serialization."
+  - question: "Which tools make CAP development faster?"
+    answer: "The cds CLI first: init, add, watch, build, test and upgrade. Fiori tools reduce UI scaffolding, Cloud SDK reduces remote API boilerplate, and MTA/mbt plus CI/CD make deployment repeatable."
+  - question: "BAS, Build Code or local VS Code?"
+    answer: "All can be valid. BAS reduces workstation setup, Build Code bundles more SAP services and AI, while local VS Code gives maximum control and is often fastest for experienced teams. The choice is developer productivity and governance, not runtime architecture."
+  - question: "How would you automate BTP setup?"
+    answer: "For repeatable landscapes I prefer Infrastructure as Code with the Terraform Provider for SAP BTP, plus btp/cf CLI for operations and gaps. I avoid making the cockpit the only source of truth."
+  - question: "SAP CI/CD or Project Piper?"
+    answer: "SAP CI/CD when ready-made supported pipelines are enough and I do not want to own pipeline infrastructure. Piper when I need SAP-aware reusable steps inside a more flexible enterprise CI setup."
+
+source_refs:
+  - SRC-TBX-ADT
+  - SRC-TBX-ADT-VSCODE
+  - SRC-TBX-BAS
+  - SRC-TBX-BUILD-CODE
+  - SRC-TBX-FIORI-TOOLS
+  - SRC-TBX-CAP-CLI
+  - SRC-TBX-CAP-TEST
+  - SRC-TBX-CAP-RELEASE
+  - SRC-TBX-CLOUD-SDK
+  - SRC-TBX-CLOUD-SDK-JS
+  - SRC-TBX-CLOUD-SDK-JAVA
+  - SRC-TBX-JOULE-ABAP
+  - SRC-TBX-ABAP-QUALITY
+  - SRC-TBX-ABAP-PERFORMANCE
+  - SRC-TBX-ABAP-CLEANER
+  - SRC-TBX-ABAPLINT
+  - SRC-TBX-ABAPGIT
+  - SRC-TBX-GCTS
+  - SRC-TBX-CICD
+  - SRC-TBX-PIPER
+  - SRC-TBX-BAS-FULLSTACK
+  - SRC-TBX-BTP-CLI
+  - SRC-TBX-BTP-TOOLS
+  - SRC-TBX-TERRAFORM-BTP
