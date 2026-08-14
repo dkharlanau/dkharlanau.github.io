@@ -1,4 +1,4 @@
-version: "0.1.2"
+version: "0.2.0"
 updated_at: "2026-08-14"
 
 common_fields:
@@ -36,6 +36,9 @@ node_types:
   - id: capability
     label: "Business Capability"
     prefix: "CAP"
+  - id: business_domain
+    label: "Enterprise Business Domain"
+    prefix: "BDOM"
   - id: process
     label: "Business Process"
     prefix: "PROC"
@@ -63,6 +66,12 @@ node_types:
   - id: application_component
     label: "Application / Solution Component"
     prefix: "APP"
+  - id: platform_component
+    label: "Platform / Technology Component"
+    prefix: "PLT"
+  - id: ai_asset
+    label: "AI Asset / Agent / Assistant / Model"
+    prefix: "AI"
   - id: term
     label: "Business / SAP Term"
     prefix: "TERM"
@@ -110,6 +119,8 @@ edge_types:
   - contains
   - contains_component
   - belongs_to_domain
+  - decomposes_to
+  - supports_domain
   - precedes
   - triggers
   - creates
@@ -123,8 +134,13 @@ edge_types:
   - validated_by
   - integrated_via
   - integrates_with
+  - extends
   - exposed_by
   - orchestrates
+  - runs_on
+  - consumed_via
+  - grounds
+  - governs
   - provides_capability
   - can_fail_as
   - can_cause
@@ -190,10 +206,13 @@ freshness_fields:
 id_rules:
   pattern: "<PREFIX>-<DOMAIN>-<SHORT-STABLE-NAME>"
   examples:
+    - "BDOM-SUPPLY-CHAIN-OPERATIONS"
     - "DOM-WAREHOUSING"
     - "PROC-O2C-ORDER-TO-CASH"
     - "STEP-O2C-CREATE-SALES-ORDER"
     - "OBJ-SD-SALES-ORDER"
     - "APP-S4HANA-SALES"
+    - "PLT-SAP-AI-CORE"
+    - "AI-JOULE-AGENTS"
     - "HEUR-O2C-SCOPE-BEFORE-CONFIG"
   guidance: "IDs are stable identifiers. Titles may change; IDs should not unless the underlying concept changes."
