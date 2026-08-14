@@ -1,0 +1,162 @@
+id: TOPIC-SALES-APPLICATION-LANDSCAPE
+type: research_topic
+title: "SAP Sales Application Landscape"
+summary: >-
+  Working application-landscape model for SAP sales and order-management capabilities.
+  It separates the S/4HANA digital core from adjacent cloud applications so product,
+  process, integration, and architecture discussions can refer to stable application IDs.
+domain: "SAP Sales / Customer Experience"
+process_family: "Lead-to-Cash / Order-to-Cash"
+status: draft
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+
+business_question: >-
+  Which SAP applications can participate in the sales and order-management landscape,
+  what role does each application play, and which relationships should be verified when
+  designing an end-to-end solution?
+
+scope:
+  include:
+    - "S/4HANA sales and service application context"
+    - "sales engagement and quoting applications"
+    - "digital commerce"
+    - "order-management foundation"
+    - "sourcing and availability"
+    - "cross-application relationship candidates"
+  exclude_for_now:
+    - "licensing and commercial packaging"
+    - "release-specific feature matrices"
+    - "detailed integration protocols and API mappings"
+    - "customer-specific extensions"
+
+maturity:
+  gates_complete: 1
+  gates_total: 7
+  gates:
+    scope: done
+    sources: planned
+    model: in_progress
+    relationships: in_progress
+    expert_reasoning: planned
+    synthetic_example: planned
+    ai_evaluation: planned
+
+applications:
+  - id: APP-S4HANA-CORE
+    type: application_component
+    title: "SAP S/4HANA"
+    layer: core_erp
+    role: "Digital core and transactional system of record for enterprise processes."
+    status: draft
+
+  - id: APP-S4HANA-SALES
+    type: application_component
+    title: "SAP S/4HANA Sales"
+    layer: core_sales
+    role: "Core sales processing context within SAP S/4HANA."
+    status: draft
+
+  - id: APP-S4HANA-SERVICE
+    type: application_component
+    title: "SAP S/4HANA Service"
+    layer: core_service
+    role: "Service-management context within SAP S/4HANA."
+    status: draft
+
+  - id: APP-SALES-CLOUD
+    type: application_component
+    title: "SAP Sales Cloud"
+    layer: sales_engagement
+    role: "Cloud application context for sales engagement and customer-facing sales work."
+    status: draft
+
+  - id: APP-SAP-CPQ
+    type: application_component
+    title: "SAP CPQ"
+    layer: configure_price_quote
+    role: "Configure, price, and quote application context."
+    status: draft
+
+  - id: APP-COMMERCE-CLOUD
+    type: application_component
+    title: "SAP Commerce Cloud"
+    layer: digital_commerce
+    role: "Digital commerce and customer-ordering application context."
+    status: draft
+
+  - id: APP-ORDER-MANAGEMENT-FOUNDATION
+    type: application_component
+    title: "SAP Order Management foundation (OMF)"
+    layer: order_management
+    role: "Order-management foundation context for distributed order scenarios."
+    status: needs_review
+
+  - id: APP-OMSA
+    type: application_component
+    title: "SAP Order Management for Sourcing and Availability (OMSA)"
+    layer: sourcing_availability
+    role: "Sourcing and availability application context for order-management scenarios."
+    status: needs_review
+
+relations:
+  - from: APP-S4HANA-CORE
+    type: contains_component
+    to: APP-S4HANA-SALES
+    evidence_type: reasoned_inference
+    confidence: medium
+    status: needs_review
+
+  - from: APP-S4HANA-CORE
+    type: contains_component
+    to: APP-S4HANA-SERVICE
+    evidence_type: reasoned_inference
+    confidence: medium
+    status: needs_review
+
+  - from: APP-SALES-CLOUD
+    type: integrates_with
+    to: APP-S4HANA-SALES
+    evidence_type: reasoned_inference
+    confidence: medium
+    status: needs_review
+
+  - from: APP-SAP-CPQ
+    type: integrates_with
+    to: APP-SALES-CLOUD
+    evidence_type: reasoned_inference
+    confidence: medium
+    status: needs_review
+
+  - from: APP-COMMERCE-CLOUD
+    type: integrates_with
+    to: APP-S4HANA-SALES
+    evidence_type: reasoned_inference
+    confidence: medium
+    status: needs_review
+
+  - from: APP-ORDER-MANAGEMENT-FOUNDATION
+    type: orchestrates
+    to: APP-S4HANA-SALES
+    evidence_type: reasoned_inference
+    confidence: low
+    status: needs_review
+
+  - from: APP-OMSA
+    type: provides_capability
+    to: APP-ORDER-MANAGEMENT-FOUNDATION
+    evidence_type: reasoned_inference
+    confidence: low
+    status: needs_review
+
+source_refs: []
+tags:
+  - sap-sales
+  - application-landscape
+  - s4hana
+  - sales-cloud
+  - cpq
+  - commerce-cloud
+  - order-management
+  - integration
