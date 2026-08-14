@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Labs — Enterprise Context and AI"
-description: "Practical maps for SAP domains, processes, applications, integrations, data, and AI."
+description: "Practical maps for SAP domains, industries, processes, applications, integrations, data, and AI."
 permalink: /labs/
 status: draft
 verified: false
@@ -20,13 +20,13 @@ hide_global_cta: true
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Labs / practical architecture maps</p>
       <h1>Understand the business.<br />Then map the SAP landscape.</h1>
-      <p>Simple, source-tracked maps of business domains, processes, SAP applications, integrations, data, and AI.</p>
+      <p>Simple, source-tracked maps of business domains, industries, processes, SAP applications, integrations, data, and AI.</p>
       <a class="research-canvas__button" href="#labs-inventory">Open the lab <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>1</strong><small>Active lab</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>3</strong><small>Architecture views</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>4</strong><small>Architecture views</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>4</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
@@ -42,22 +42,23 @@ hide_global_cta: true
     <header>
       <p class="research-canvas__eyebrow">Enterprise Context Lab</p>
       <h2>Business first, system second.</h2>
-      <p>Use the views below to move from business ownership to process, SAP component, integration, and AI responsibility.</p>
+      <p>Move from business ownership and industry context to process, SAP component, integration, and AI responsibility.</p>
     </header>
 
     <div class="research-route-list">
       <a href="/labs/enterprise-context/"><span>01</span><strong>Enterprise Context Graph</strong><small>Sales, Supply Chain, processes, applications, boundaries, licensing, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/domains/"><span>02</span><strong>Enterprise Business Domains</strong><small>What the business owns, separate from processes and SAP products.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/enterprise-context/business-ai/"><span>03</span><strong>SAP Business AI</strong><small>Joule, agents, build tools, runtime, model access, grounding, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      <a href="/labs/enterprise-context/model/"><span>04</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/data/catalog.json"><span>05</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/enterprise-context/industries/"><span>04</span><strong>SAP Industry Solutions</strong><small>Automotive, retail, fashion, industrial manufacturing, and mill products.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
+      <a href="/labs/enterprise-context/model/"><span>05</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/data/catalog.json"><span>06</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
   <section class="research-canvas__method" data-reveal>
     <div><p class="research-canvas__eyebrow">Method</p><h2>Model, connect, exercise.</h2></div>
     <ol>
-      <li><span>01</span><strong>Model</strong><p>Define the domain, process, objects, rules, and systems.</p></li>
+      <li><span>01</span><strong>Model</strong><p>Define the domain, industry, process, objects, rules, and systems.</p></li>
       <li><span>02</span><strong>Connect</strong><p>Link integrations, failures, controls, tests, and evidence.</p></li>
       <li><span>03</span><strong>Exercise</strong><p>Use a synthetic case and test the reasoning.</p></li>
     </ol>
