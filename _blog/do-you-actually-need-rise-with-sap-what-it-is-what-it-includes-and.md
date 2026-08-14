@@ -1,10 +1,11 @@
 ---
 layout: blog
 title: "Do You Actually Need RISE with SAP? What It Is, What It Includes, and Where Companies Get Trapped"
-description: "Its data centre is expensive. The SAP landscape contains years of custom code. Experienced Basis specialists are becoming difficult to replace."
+description: "A practical decision framework for evaluating RISE with SAP: transformation intent, operating model, architecture, commercial boundaries, and exit considerations."
 slug: do-you-actually-need-rise-with-sap-what-it-is-what-it-includes-and
 permalink: /blog/do-you-actually-need-rise-with-sap-what-it-is-what-it-includes-and/
 date: 2026-07-17
+last_modified_at: 2026-08-14
 author: "Dzmitryi Kharlanau"
 language: en
 category: "SAP solution architecture"
@@ -70,6 +71,12 @@ related_articles:
 - [Questions to answer before signing](#questions-to-answer-before-signing)
 - [Build the TCO correctly](#build-the-tco-correctly)
 - [A realistic management conclusion](#a-realistic-management-conclusion)
+
+### My decision test
+
+I would not start a RISE with SAP discussion with a hosting comparison. I would start with the operating problem the company is trying to solve: lifecycle risk, infrastructure ownership, transformation capacity, clean-core discipline, access to cloud innovation, or some combination of these. If the problem is not explicit, the commercial package becomes the architecture by accident.
+
+For me, the useful question is not whether RISE is strategically "good" or "bad". It is whether the target operating model, application architecture, responsibilities, economics, and exit path make sense together for this landscape.
 
 A company is still running SAP ECC.
 
