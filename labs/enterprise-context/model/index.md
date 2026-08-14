@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Enterprise Context Lab — Model and Authoring Contract"
-description: "The authoring contract for adding enterprise process, data, rule, integration, failure, KPI, test, source, and expert-reasoning knowledge to the Enterprise Context Lab."
+description: "Authoring rules for the Enterprise Context Graph: node types, relationships, evidence, source handling, dates, and maturity gates."
 permalink: /labs/enterprise-context/model/
 status: draft
 verified: false
@@ -9,6 +9,12 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
+tags:
+  - sap
+  - enterprise-context
+  - knowledge-graph
+  - architecture
+  - research
 ---
 
 {% assign lab = site.data.labs.enterprise_context.manifest %}
@@ -37,6 +43,7 @@ hide_global_cta: true
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Problem:</strong> a knowledge graph becomes unreliable when entity types, evidence, and authoring rules are implicit.</p>
     <p><strong>Author once, project many times.</strong> Structured files are the working contract. Human pages, JSON endpoints, progress views, graph projections, and later AI tools should derive from the same facts instead of maintaining parallel copies.</p>
     <a href="/labs/enterprise-context/data/schema.json">Open schema JSON <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>

@@ -1,0 +1,139 @@
+id: TOPIC-SAP-INDUSTRY-SOLUTIONS
+type: research_topic
+title: "SAP Industry Solution Landscape"
+summary: "A compact map of industry-specific SAP patterns on top of business domains, deployment models, and applications."
+domain: "SAP Industry Solutions"
+process_family: "Cross-enterprise / industry-specific processes"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: "2026-08-14"
+reviewed_together_at: "2026-08-14"
+review_note: "Reviewed together against current official SAP industry and Help Portal sources."
+
+business_question: "Which industry changes the standard SAP process, data, planning, logistics, or deployment constraints?"
+
+maturity:
+  gates_complete: 2
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: in_progress
+    relationships: in_progress
+    expert_reasoning: planned
+    synthetic_example: planned
+    ai_evaluation: planned
+
+modeling_rules:
+  - "Industry = an overlay on business domains, processes, deployment models, and applications."
+  - "Keep the standard process and add only the industry-specific differences."
+  - "Check the deployment model before assuming an industry feature or extension is available."
+  - "Remember the industry by its distinctive data and execution patterns."
+
+deployment_models: [DEP-S4-PUBLIC, DEP-S4-PRIVATE, DEP-S4-ONPREM]
+deployment_note: "Public Edition has selected standardized industry scope. Private Edition and On-Premise have broader S/4HANA industry scope. Verify the exact feature and release."
+
+industries:
+  - id: IND-AUTOMOTIVE
+    type: industry
+    title: "Automotive"
+    remember: "Schedule, sequence, and deliver JIT/JIS."
+    what_changes: "High-volume scheduling agreements, EDI delivery schedules, JIT and JIS calls, sequence-sensitive production supply, handling units, and tightly synchronized outbound logistics."
+    lead_focus: "Understand scheduling agreements, forecast and JIT schedules, EDI/IDoc flows, JIT/JIS execution, production supply, delivery, EWM, and TM integration."
+    core_domains: [BDOM-CUSTOMER-REVENUE, BDOM-SPEND-PROCUREMENT, BDOM-SUPPLY-CHAIN-OPERATIONS]
+    solution_examples:
+      - "SAP S/4HANA Automotive capabilities"
+      - "Next Generation JIT Supply to Production"
+      - "JIT Supply to Customer and JIS processing"
+      - "EWM and TM integration"
+    source_refs: [SRC-SAP-AUTOMOTIVE, SRC-SAP-AUTOMOTIVE-SUPPLIER, SRC-SAP-AUTOMOTIVE-JIS]
+    status: source_verified
+
+  - id: IND-RETAIL
+    type: industry
+    title: "Retail"
+    remember: "Merchandise, price, replenish, sell, and fulfill."
+    what_changes: "The model centers on articles, sites and stores, assortments, listing, retail pricing, promotions, replenishment, POS data, and omnichannel fulfillment."
+    lead_focus: "Know the difference between material and retail article concepts, store/site processes, assortment and listing, pricing and promotions, replenishment, and POS integration."
+    core_domains: [BDOM-CUSTOMER-REVENUE, BDOM-SPEND-PROCUREMENT, BDOM-SUPPLY-CHAIN-OPERATIONS]
+    solution_examples:
+      - "SAP S/4HANA Retail for merchandise management"
+      - "SAP Customer Activity Repository applications"
+      - "Omnichannel sales transfer and audit"
+      - "Retail pricing and promotion capabilities"
+    source_refs: [SRC-SAP-RETAIL, SRC-SAP-S4-RETAIL]
+    status: source_verified
+
+  - id: IND-FASHION
+    type: industry
+    title: "Fashion and Vertical Business"
+    remember: "Style, color, size, season, allocate, and fulfill."
+    what_changes: "Products have variants and fashion attributes, and planning and fulfillment must consider seasons, collections, themes, segmentation, and supply assignment."
+    lead_focus: "Understand generic articles and variants, season and collection data, segmentation, allocation or supply assignment, and the link between wholesale, retail, and manufacturing."
+    core_domains: [BDOM-CUSTOMER-REVENUE, BDOM-SPEND-PROCUREMENT, BDOM-SUPPLY-CHAIN-OPERATIONS]
+    solution_examples:
+      - "SAP S/4HANA for fashion and vertical business"
+      - "Retail, fashion, and vertical business in SAP S/4HANA Cloud Public Edition"
+      - "Supply Assignment (ARun)"
+      - "Fashion-specific sales and manufacturing data"
+    source_refs: [SRC-SAP-FASHION-VERTICAL, SRC-SAP-FASHION-ONPREM]
+    status: source_verified
+
+  - id: IND-INDUSTRIAL-MANUFACTURING
+    type: industry
+    title: "Industrial Manufacturing"
+    remember: "Engineer, configure, plan, make, and service."
+    what_changes: "Complex products often combine engineer-to-order or configure-to-order sales, product engineering, variant configuration, constrained planning, manufacturing, installation, and after-sales service."
+    lead_focus: "Connect sales configuration and project requirements to BOMs, routings, production, procurement, quality, warehouse, delivery, asset, and service processes."
+    core_domains: [BDOM-CUSTOMER-REVENUE, BDOM-SUPPLY-CHAIN-OPERATIONS, BDOM-ASSET-SERVICE-OPERATIONS]
+    solution_examples:
+      - "SAP S/4HANA manufacturing capabilities"
+      - "SAP Integrated Product Development"
+      - "Variant Configuration and Pricing"
+      - "SAP Digital Manufacturing"
+      - "Asset and service management"
+    source_refs: [SRC-SAP-INDUSTRIAL-MANUFACTURING, SRC-SAP-S4-MANUFACTURING]
+    status: source_verified
+
+  - id: IND-MILL-PRODUCTS
+    type: industry
+    title: "Mill Products"
+    remember: "Characteristics, dimensions, planning, production, and delivery."
+    what_changes: "Products such as metal, paper, wood, textiles, construction materials, and cable can be highly characteristic-rich and length- or area-based. These attributes affect the full supply chain."
+    lead_focus: "Understand variant-rich materials, dimensions and characteristics, product configuration, planning, capacity, production, inventory, quality, costing, and delivery."
+    core_domains: [BDOM-CUSTOMER-REVENUE, BDOM-SPEND-PROCUREMENT, BDOM-SUPPLY-CHAIN-OPERATIONS]
+    solution_examples:
+      - "SAP Mill Products"
+      - "Production Order Combination"
+      - "Single-Unit Batch"
+      - "Characteristic-driven sales and production"
+    source_refs: [SRC-SAP-MILL-PRODUCTS]
+    status: source_verified
+
+term_checks:
+  - term: "SMD"
+    status: needs_clarification
+    note: "Official SAP sources use SMD for Solution Manager Diagnostics and, in legacy documentation, Shared Master Data. Neither is an industry solution, so SMD is not modeled as an industry here."
+    source_refs: [SRC-SAP-SMD-DIAGNOSTICS, SRC-SAP-SMD-SHARED-MASTER-DATA]
+
+decision_guide:
+  - question: "What stays standard?"
+    guidance: "Keep the core O2C, P2P, planning, manufacturing, warehouse, and transport model."
+  - question: "What changes by industry?"
+    guidance: "Add the distinctive master data, documents, planning rules, and execution patterns."
+  - question: "What changes by deployment?"
+    guidance: "Check edition-specific scope, extensions, add-ons, upgrades, and operations."
+  - question: "What should a Lead explain?"
+    guidance: "Explain the standard process first, then the industry delta, deployment constraints, and integration impact."
+
+tags:
+  - sap-industry
+  - automotive
+  - retail
+  - fashion
+  - industrial-manufacturing
+  - mill-products
+  - public-cloud
+  - private-cloud
+  - on-premise

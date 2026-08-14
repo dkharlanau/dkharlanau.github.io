@@ -1,0 +1,205 @@
+id: TOPIC-ENTERPRISE-BUSINESS-DOMAINS
+type: research_topic
+title: "Enterprise Business Domains"
+summary: "A simple map of what the business owns, separate from processes, deployment models, SAP products, and technology."
+domain: "Enterprise Architecture"
+process_family: "Cross-enterprise"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: "2026-08-14"
+reviewed_together_at: "2026-08-14"
+review_note: "Reviewed together as a practical domain map for learning and architecture discussions."
+
+business_question: "What does the business own, and which processes, deployment models, and SAP solutions support each area?"
+
+maturity:
+  gates_complete: 2
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: in_progress
+    relationships: in_progress
+    expert_reasoning: planned
+    synthetic_example: planned
+    ai_evaluation: planned
+
+modeling_rules:
+  - "Business domain = a stable area of business responsibility."
+  - "Process = work that can cross several domains."
+  - "Deployment model = how the SAP solution is operated and constrained."
+  - "Solution domain = a functional area such as warehousing or transportation."
+  - "Application = a product or component such as S/4HANA, EWM, Ariba, or Joule."
+  - "Platform domains such as data, integration, and AI support many business domains."
+
+business_domains:
+  - id: BDOM-CUSTOMER-REVENUE
+    type: business_domain
+    title: "Customer, Sales and Revenue"
+    remember: "Win customers, sell, fulfill, bill, and retain."
+    purpose: "Manage customers and revenue from demand and sales through order, service, billing, and retention."
+    subdomains:
+      - "Marketing and Demand"
+      - "Sales and Opportunities"
+      - "Configure, Price and Quote"
+      - "Digital Commerce"
+      - "Order Management"
+      - "Customer Service"
+      - "Pricing and Rebates"
+    related_solution_domains:
+      - "SAP Sales"
+      - "SAP Customer Experience"
+      - "Order-to-Cash"
+
+  - id: BDOM-SPEND-PROCUREMENT
+    type: business_domain
+    title: "Spend, Procurement and Suppliers"
+    remember: "Source suppliers, buy, receive, and pay."
+    purpose: "Manage external spend, suppliers, sourcing, purchasing, receiving, and supplier settlement."
+    subdomains:
+      - "Spend and Categories"
+      - "Strategic Sourcing"
+      - "Operational Procurement"
+      - "Supplier Management"
+      - "Services Procurement"
+      - "Procure-to-Pay"
+      - "Supplier Collaboration"
+    related_solution_domains:
+      - DOM-PROCUREMENT
+      - DOM-COLLABORATION
+
+  - id: BDOM-SUPPLY-CHAIN-OPERATIONS
+    type: business_domain
+    title: "Supply Chain and Operations"
+    remember: "Plan, make, store, move, and deliver."
+    purpose: "Plan supply, make products, manage inventory, assure quality, and execute logistics."
+    subdomains:
+      - id: DOM-SUPPLY-PLANNING
+        title: "Supply and Production Planning"
+      - id: DOM-MANUFACTURING
+        title: "Manufacturing and Shop-Floor Execution"
+      - id: DOM-MATERIALS-INVENTORY
+        title: "Materials and Inventory Management"
+      - id: DOM-QUALITY
+        title: "Quality Management"
+      - id: DOM-WAREHOUSING
+        title: "Warehousing and Fulfillment"
+      - id: DOM-TRANSPORTATION
+        title: "Transportation and Freight"
+      - id: DOM-VISIBILITY
+        title: "Logistics Visibility"
+      - id: DOM-YARD
+        title: "Yard Logistics"
+      - id: DOM-GLOBAL-TRADE
+        title: "Global Trade and Compliance"
+      - id: DOM-COLLABORATION
+        title: "Supply Network Collaboration"
+
+  - id: BDOM-FINANCE-PERFORMANCE
+    type: business_domain
+    title: "Finance, Risk and Performance"
+    remember: "Record, control, plan, and report money."
+    purpose: "Manage accounting, controlling, treasury, tax, consolidation, planning, risk, and financial reporting."
+    subdomains:
+      - "Record-to-Report"
+      - "Management Accounting"
+      - "Treasury and Working Capital"
+      - "Tax"
+      - "Group Reporting and Consolidation"
+      - "Enterprise Planning"
+      - "Financial Risk and Controls"
+
+  - id: BDOM-PEOPLE-WORKFORCE
+    type: business_domain
+    title: "People and Workforce"
+    remember: "Hire, develop, reward, schedule, and retain people."
+    purpose: "Manage employees and external workforce from hiring through development, pay, time, and workforce planning."
+    subdomains:
+      - "Core HR"
+      - "Talent Acquisition"
+      - "Learning and Development"
+      - "Performance and Compensation"
+      - "Time and Payroll"
+      - "Workforce Planning"
+      - "External Workforce"
+
+  - id: BDOM-ASSET-SERVICE-OPERATIONS
+    type: business_domain
+    title: "Assets, Maintenance and Service"
+    remember: "Maintain assets, deliver service, repair, and improve reliability."
+    purpose: "Manage enterprise assets, maintenance, field work, repair, service parts, and service execution."
+    subdomains:
+      - "Enterprise Asset Management"
+      - "Maintenance and Reliability"
+      - "Field Service"
+      - "Repair and Service Execution"
+      - "Service Parts"
+
+  - id: BDOM-SUSTAINABILITY-COMPLIANCE
+    type: business_domain
+    title: "Sustainability, Safety and Compliance"
+    remember: "Measure impact, protect people, and meet obligations."
+    purpose: "Manage sustainability, environment, safety, product compliance, and regulatory obligations."
+    subdomains:
+      - "Sustainability Management"
+      - "Environment, Health and Safety"
+      - "Product Compliance"
+      - "Corporate Compliance"
+      - "Responsible Supply Chain"
+
+platform_domains:
+  - id: BDOM-DATA-ANALYTICS
+    type: business_domain
+    title: "Data and Analytics"
+    classification: cross_cutting_platform_domain
+    remember: "Trusted data, shared meaning, and decisions."
+    purpose: "Provide governed data, semantics, analytics, planning data, and reusable context for applications and AI."
+
+  - id: BDOM-INTEGRATION-EXTENSIBILITY
+    type: business_domain
+    title: "Integration, Automation and Extensibility"
+    classification: cross_cutting_platform_domain
+    remember: "Connect, automate, and extend."
+    purpose: "Connect applications and partners, expose APIs and events, automate work, and build clean-core extensions."
+
+  - id: BDOM-BUSINESS-AI
+    type: business_domain
+    title: "Business AI"
+    classification: cross_cutting_platform_domain
+    remember: "Use AI, build AI, run AI, ground AI, and govern AI."
+    purpose: "Embed, build, run, ground, and govern AI for business processes."
+    primary_topic: TOPIC-SAP-BUSINESS-AI-PLATFORM
+
+  - id: BDOM-SECURITY-IDENTITY-GOVERNANCE
+    type: business_domain
+    title: "Security, Identity and Technology Governance"
+    classification: cross_cutting_platform_domain
+    remember: "Control access, risk, and technology standards."
+    purpose: "Manage identity, authorization, security, technology standards, lifecycle governance, and auditability."
+
+  - id: BDOM-BUSINESS-TRANSFORMATION
+    type: business_domain
+    title: "Business Transformation and Enterprise Architecture"
+    classification: cross_cutting_platform_domain
+    remember: "Understand change, choose architecture, and govern transformation."
+    purpose: "Model capabilities and processes, govern architecture, and connect business change to technology decisions."
+
+decision_guide:
+  - question: "Who owns the business outcome?"
+    guidance: "Start with the business domain."
+  - question: "Which process delivers it?"
+    guidance: "Map the end-to-end process separately."
+  - question: "Which deployment model constrains the solution?"
+    guidance: "Check Public Cloud, Private Cloud, or On-Premise before assuming scope or extensibility."
+  - question: "Which SAP component owns the function?"
+    guidance: "Map the application or platform component without renaming the business domain."
+
+tags:
+  - enterprise-architecture
+  - business-domain
+  - sap
+  - operating-model
+  - deployment
+  - supply-chain
+  - business-ai

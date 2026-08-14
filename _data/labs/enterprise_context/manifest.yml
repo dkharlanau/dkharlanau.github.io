@@ -1,7 +1,7 @@
 id: lab-enterprise-context
 title: "Enterprise Context Lab"
 model_name: "Enterprise Context Graph"
-version: "0.1.0"
+version: "0.5.0"
 status: active_research
 started_at: "2026-08-14"
 updated_at: "2026-08-14"
@@ -10,10 +10,10 @@ review_note: "Last reviewed together against official SAP sources."
 owner: "Dzmitryi Kharlanau"
 
 purpose: >-
-  Build a source-tracked, machine-readable model that connects enterprise business
-  processes, data, systems, rules, integrations, failures, KPIs, tests, and expert
-  reasoning so the same knowledge can support learning, impact analysis, diagnostics,
-  synthetic data, and AI evaluation.
+  Build a source-tracked, machine-readable model that connects business domains,
+  industries, deployment models, processes, data, systems, rules, integrations,
+  failures, KPIs, tests, AI components, and expert reasoning for learning,
+  architecture, diagnostics, and AI evaluation.
 
 principles:
   - id: source_tracked
@@ -27,10 +27,43 @@ principles:
     description: "Examples and enterprise records are fictional unless explicitly documented otherwise."
   - id: fact_vs_judgment
     label: "Facts and judgment stay separate"
-    description: "Documented facts, expert heuristics, and inferences carry different evidence types."
+    description: "Documented facts, professional observations, expert heuristics, and inferences carry different evidence types."
   - id: deep_verticals
     label: "Depth before breadth"
     description: "A topic is expanded through relationships, failures, tests, and reasoning before another catalogue is created."
+  - id: domain_separation
+    label: "Keep architecture dimensions separate"
+    description: "Business domains, industries, deployment models, processes, solution domains, applications, platforms, and AI assets are different entity types."
+  - id: independent_synthesis
+    label: "Independent synthesis"
+    description: "Vendor sources verify facts; public explanations, comparisons, models, and examples are written independently for this site."
+  - id: author_reasoning
+    label: "Teach the reasoning"
+    description: "Public content should show how I frame the problem, what I check, where I draw boundaries, and why I prefer one decision over another."
+
+content_integrity:
+  policy_url: "/legal/research-attribution/"
+  default_source_usage: reference_and_verification_only
+  publication_rules:
+    - "Write public explanations in original language rather than reproducing vendor prose."
+    - "Link to primary sources instead of mirroring or republishing vendor documentation."
+    - "Do not copy vendor tables, diagrams, training material, or screenshots by default."
+    - "Use product names only to identify the products and services being discussed; do not imply affiliation or endorsement."
+    - "Do not publish restricted, licensed, partner-only, customer-only, employer-confidential, or client-confidential material."
+    - "Avoid direct quotations by default; prefer a short independent summary plus the source link."
+    - "Do not bulk scrape or build a local copy of vendor web content."
+  author_voice_rules:
+    - "Use first person for genuine professional methods, preferences, and reasoning, not for invented project history."
+    - "Do not fabricate clients, incidents, outcomes, project details, metrics, savings, or personal experience."
+    - "Prefer a reasoning path over a product catalogue: problem, evidence, boundary, trade-off, decision, and next check."
+    - "Surface failure modes and operational consequences where they materially change the architecture decision."
+    - "Mark fictional cases as synthetic; do not disguise a synthetic example as a real delivery story."
+    - "Avoid generic consultant language when a concrete diagnostic question or decision rule can teach more."
+  origin_labels:
+    documented_fact: "Checked against a public primary source."
+    professional_experience: "Practical observation from delivery, support, or architecture work."
+    reasoned_interpretation: "Independent conclusion based on facts, constraints, and experience."
+    synthetic_example: "Fictional scenario created for learning or evaluation."
 
 reference_enterprise:
   id: enterprise-global-transformation-industries
@@ -61,7 +94,7 @@ maturity_gates:
   - id: model
     order: 3
     label: "Model"
-    done_definition: "Processes, objects, attributes, rules, and terminology are represented as structured entities."
+    done_definition: "Domains, industries, deployment models, processes, objects, rules, applications, platforms, AI assets, and terms are represented as structured entities."
   - id: relationships
     order: 4
     label: "Relationships"
@@ -78,6 +111,15 @@ maturity_gates:
     order: 7
     label: "AI / evaluation"
     done_definition: "At least one grounded question, impact trace, diagnostic case, or benchmark task can be evaluated against the model."
+
+human_views:
+  enterprise_context: "/labs/enterprise-context/"
+  business_domains: "/labs/enterprise-context/domains/"
+  deployment_models: "/labs/enterprise-context/deployment-models/"
+  industries: "/labs/enterprise-context/industries/"
+  business_ai: "/labs/enterprise-context/business-ai/"
+  model_contract: "/labs/enterprise-context/model/"
+  research_attribution_policy: "/legal/research-attribution/"
 
 machine_endpoints:
   catalog: "/labs/enterprise-context/data/catalog.json"

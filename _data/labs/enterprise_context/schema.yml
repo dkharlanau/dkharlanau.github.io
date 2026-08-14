@@ -1,4 +1,4 @@
-version: "0.1.2"
+version: "0.5.0"
 updated_at: "2026-08-14"
 
 common_fields:
@@ -27,15 +27,47 @@ statuses:
 
 evidence_types:
   - documented_fact
+  - professional_experience
   - expert_heuristic
   - reasoned_inference
+  - reasoned_interpretation
   - synthetic_assumption
+  - synthetic_example
   - observed_example
+
+source_usage_modes:
+  - reference_and_verification_only
+  - permitted_excerpt
+  - author_owned
+  - synthetic
+
+publication_contract:
+  default_vendor_source_usage: reference_and_verification_only
+  rules:
+    - "Public text should be independently written and should not reproduce vendor prose."
+    - "Prefer source links and source IDs over copied passages."
+    - "Do not reuse vendor diagrams, tables, screenshots, or training material unless the specific use is deliberately reviewed and permitted."
+    - "Keep documented facts separate from professional experience, interpretation, and synthetic examples."
+    - "Do not publish restricted or confidential client, employer, partner, customer, or licensed material."
+    - "Do not imply vendor sponsorship, affiliation, certification, approval, or endorsement."
+    - "Do not bulk scrape or mirror vendor websites."
+    - "Use first person only for supportable professional methods and judgments; never invent projects, clients, outcomes, or metrics."
+    - "Prefer reasoning that exposes evidence checks, trade-offs, failure modes, and the next decision over catalogue-style prose."
+    - "Synthetic examples must remain visibly synthetic and must not be presented as personal delivery history."
 
 node_types:
   - id: capability
     label: "Business Capability"
     prefix: "CAP"
+  - id: business_domain
+    label: "Enterprise Business Domain"
+    prefix: "BDOM"
+  - id: industry
+    label: "Industry / Industry Overlay"
+    prefix: "IND"
+  - id: deployment_model
+    label: "Deployment / Operating Model"
+    prefix: "DEP"
   - id: process
     label: "Business Process"
     prefix: "PROC"
@@ -63,6 +95,12 @@ node_types:
   - id: application_component
     label: "Application / Solution Component"
     prefix: "APP"
+  - id: platform_component
+    label: "Platform / Technology Component"
+    prefix: "PLT"
+  - id: ai_asset
+    label: "AI Asset / Agent / Assistant / Model"
+    prefix: "AI"
   - id: term
     label: "Business / SAP Term"
     prefix: "TERM"
@@ -110,6 +148,12 @@ edge_types:
   - contains
   - contains_component
   - belongs_to_domain
+  - decomposes_to
+  - supports_domain
+  - specializes
+  - available_in
+  - deployed_as
+  - deployment_option_for
   - precedes
   - triggers
   - creates
@@ -123,8 +167,13 @@ edge_types:
   - validated_by
   - integrated_via
   - integrates_with
+  - extends
   - exposed_by
   - orchestrates
+  - runs_on
+  - consumed_via
+  - grounds
+  - governs
   - provides_capability
   - can_fail_as
   - can_cause
@@ -150,7 +199,10 @@ source_contract:
     - release_scope
     - product_scope
     - country_scope
+    - usage_mode
+    - rights_note
     - notes
+  default_usage_mode: reference_and_verification_only
 
 assertion_contract:
   required:
@@ -190,10 +242,15 @@ freshness_fields:
 id_rules:
   pattern: "<PREFIX>-<DOMAIN>-<SHORT-STABLE-NAME>"
   examples:
+    - "BDOM-SUPPLY-CHAIN-OPERATIONS"
+    - "IND-AUTOMOTIVE"
+    - "DEP-S4-PUBLIC"
     - "DOM-WAREHOUSING"
     - "PROC-O2C-ORDER-TO-CASH"
     - "STEP-O2C-CREATE-SALES-ORDER"
     - "OBJ-SD-SALES-ORDER"
     - "APP-S4HANA-SALES"
+    - "PLT-SAP-AI-CORE"
+    - "AI-JOULE-AGENTS"
     - "HEUR-O2C-SCOPE-BEFORE-CONFIG"
   guidance: "IDs are stable identifiers. Titles may change; IDs should not unless the underlying concept changes."
