@@ -1,0 +1,122 @@
+name: Fix Lab Content Quality
+
+on:
+  push:
+    branches:
+      - agent/refine-domains-add-business-ai
+    paths:
+      - .github/workflows/fix-lab-content-quality.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/refine-domains-add-business-ai
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml
+
+      - name: Apply compact content-quality fixes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          patches = {
+              'labs/enterprise-context/business-ai/index.md': {
+                  'tags': ['sap', 'business-ai', 'joule', 'btp', 'architecture'],
+                  'problem': 'Problem: SAP Business AI names overlap, so architecture responsibilities are easy to mix up.'
+              },
+              'labs/enterprise-context/deployment-models/index.md': {
+                  'tags': ['sap', 's4hana', 'deployment', 'public-cloud', 'private-cloud'],
+                  'problem': 'Problem: the three S/4HANA deployment models share a product family but differ in scope, extensibility, upgrades, and operations.'
+              },
+              'labs/enterprise-context/domains/index.md': {
+                  'tags': ['sap', 'enterprise-architecture', 'business-domains', 'operating-model'],
+                  'problem': 'Problem: business domains, processes, SAP modules, and products are often mixed into one map.'
+              },
+              'labs/enterprise-context/index.md': {
+                  'tags': ['sap', 'enterprise-architecture', 'logistics', 'integration', 'business-ai'],
+                  'problem': 'Problem: SAP knowledge is usually scattered across processes, data, products, integrations, and operational evidence.',
+                  'description': 'A source-tracked enterprise context graph connecting SAP processes, data, rules, integrations, failures, KPIs, tests, and architecture reasoning.'
+              },
+              'labs/enterprise-context/industries/index.md': {
+                  'tags': ['sap', 'industry-solutions', 'automotive', 'retail', 'manufacturing'],
+                  'problem': 'Problem: industry labels are not useful unless they explain what changes in the standard process.'
+              },
+              'labs/enterprise-context/model/index.md': {
+                  'tags': ['sap', 'enterprise-context', 'knowledge-graph', 'architecture', 'research'],
+                  'problem': 'Problem: a knowledge graph becomes unreliable when entity types, evidence, and authoring rules are implicit.',
+                  'description': 'Authoring rules for the Enterprise Context Graph: node types, relationships, evidence, source handling, dates, and maturity gates.'
+              },
+              'labs/index.md': {
+                  'tags': ['sap', 'enterprise-architecture', 'research', 'business-ai'],
+                  'problem': 'Problem: product-first learning makes it hard to connect business ownership, process, architecture, and evidence.',
+                  'policy_link': True
+              },
+              'legal/research-attribution.md': {
+                  'tags': ['research', 'attribution', 'copyright', 'trademarks', 'sap'],
+                  'context': '## Context\n\nThis site discusses SAP products using public sources, professional experience, and independent analysis. Sources support verification; the public explanation remains independently written.\n'
+              },
+          }
+
+          def add_tags(text, tags):
+              if '\ntags:\n' in text.split('---', 2)[1]:
+                  return text
+              marker = 'hide_global_cta: true\n'
+              if marker not in text:
+                  marker = 'last_modified_at: 2026-08-14\n'
+              block = 'tags:\n' + ''.join(f'  - {tag}\n' for tag in tags)
+              return text.replace(marker, marker + block, 1)
+
+          for filename, spec in patches.items():
+              path = Path(filename)
+              text = path.read_text(encoding='utf-8')
+
+              if spec.get('description'):
+                  lines = text.splitlines()
+                  for i, line in enumerate(lines):
+                      if line.startswith('description: '):
+                          lines[i] = f'description: "{spec["description"]}"'
+                          break
+                  text = '\n'.join(lines) + ('\n' if text.endswith('\n') else '')
+
+              text = add_tags(text, spec['tags'])
+
+              if spec.get('problem') and spec['problem'] not in text:
+                  insert = f'\n<p><strong>Problem:</strong> {spec["problem"].removeprefix("Problem: ")}</p>\n'
+                  nav = '\n<nav class="breadcrumbs"'
+                  text = text.replace(nav, insert + nav, 1)
+
+              if spec.get('context') and '## Context\n' not in text:
+                  h1 = '# Research and Attribution Policy\n'
+                  text = text.replace(h1, h1 + '\n' + spec['context'], 1)
+
+              if spec.get('policy_link') and '[Research and Attribution Policy](/legal/research-attribution/)' not in text:
+                  marker = '<section class="research-canvas__inventory" id="labs-inventory"'
+                  note = '**Publication rule:** Vendor sources verify facts; explanations stay independently written. See the [Research and Attribution Policy](/legal/research-attribution/).\n\n  '
+                  text = text.replace(marker, note + marker, 1)
+
+              path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Refresh generated discovery artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Commit fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add labs/enterprise-context labs/index.md legal/research-attribution.md ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          git commit -m "Polish Lab publication signals and attribution context"
+          git push origin HEAD:agent/refine-domains-add-business-ai
