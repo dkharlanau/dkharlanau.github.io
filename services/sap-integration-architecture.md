@@ -14,7 +14,7 @@ last_modified_at: 2026-07-25
       <p class="note-subtitle">Design contracts and boundaries that let S/4HANA stay stable while the edge keeps evolving.</p>
     </header>
     <div class="note-body">
-      <p>The service helps teams choose where integration logic should live, how APIs and events should be versioned, and how much platform lock-in is acceptable. The core principle is simple: keep legal and transactional truth in S/4HANA, and make edge services replaceable through explicit contracts.</p>
+      <p>I start integration design with ownership, not protocol. I want to know which system owns the business fact, which systems are allowed to derive or copy it, where transformation logic is maintained, and how the process proves completion after a handoff. Only then do I choose the API, event, IDoc, file, or middleware pattern. My bias is to keep authoritative transactional decisions close to the system that owns them and make edge services replaceable through explicit contracts.</p>
 
       <h2>What problem this addresses</h2>
       <p>Most landscapes do not need another argument about whether APIs are better than IDocs or events. They need a reliable answer to more practical questions: which system owns the business fact, where mapping logic is maintained, how a failure is detected and recovered, how duplicate or late messages are handled, and who can change the contract without surprising downstream teams.</p>
@@ -57,7 +57,7 @@ last_modified_at: 2026-07-25
       </ul>
 
       <h2>What this avoids</h2>
-      <p>The goal is not to prescribe APIs or events as a universal replacement for files, IDocs, or middleware. A stable landscape may retain several patterns if their ownership, contracts, observability, and recovery rules are clear. The costly state is an accidental mix in which every new use case adds another unowned integration path.</p>
+      <p>I do not treat APIs or events as a maturity badge. A stable landscape can legitimately keep several integration patterns when ownership, contracts, observability, and recovery are explicit. The expensive state is not "old technology" by itself; it is an accidental mix where nobody can explain who owns the contract, how failure is reconciled, or what a safe change looks like.</p>
 
       <h2>Public-safe example</h2>
       <p><strong>Illustrative scenario:</strong> an outbound sales event reaches an external consumer, but the downstream business process is not complete. A transport-level success is not sufficient evidence of a business outcome. The design needs a visible contract, an agreed completion signal or reconciliation step, and an owner for cases that remain in an ambiguous state. This applies whether the transport uses an IDoc, API, file, or event.</p>

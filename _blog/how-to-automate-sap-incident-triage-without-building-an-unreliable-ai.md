@@ -5,6 +5,7 @@ description: "An AI agent reads the ticket, searches previous incidents and deci
 slug: how-to-automate-sap-incident-triage-without-building-an-unreliable-ai
 permalink: /blog/how-to-automate-sap-incident-triage-without-building-an-unreliable-ai/
 date: 2026-07-17
+last_modified_at: 2026-08-14
 author: "Dzmitryi Kharlanau"
 language: en
 category: "SAP automation"
@@ -110,6 +111,10 @@ related_articles:
 - [The right result is not an autonomous triage agent](#the-right-result-is-not-an-autonomous-triage-agent)
 - [SAP incident-triage automation checklist](#sap-incident-triage-automation-checklist)
 - [Sources and further reading](#sources-and-further-reading)
+
+### My default boundary
+
+I automate evidence collection aggressively and automate irreversible action conservatively. For incident triage, that means letting automation enrich the ticket, correlate signals, retrieve verified knowledge, and propose ownership while keeping uncertainty visible. I do not give an AI component recovery authority merely because it can produce a plausible diagnosis.
 
 A user reports that delivery processing has stopped.
 

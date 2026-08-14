@@ -56,6 +56,14 @@ Where practical, the knowledge model separates different kinds of statements:
 
 This separation is intentional. A vendor statement and an architect's judgment are not the same thing.
 
+## Voice and authenticity
+
+I write in the first person when I am describing a professional method, a diagnostic habit, an architecture preference, or a lesson that can be explained without exposing confidential work. The purpose is to teach the reasoning, not to make the page sound more personal for its own sake.
+
+I do not invent client stories, project outcomes, savings figures, incident details, or experience that is not mine. When an example is fictional, it is marked as synthetic or illustrative. When I say that I would check something first, that is a working heuristic and not a claim that every SAP landscape behaves the same way.
+
+A useful page should normally reveal more than the conclusion. It should show the business problem, the evidence I would ask for, the boundary or trade-off I care about, the failure mode I am trying to avoid, and the next decision. That is the part of professional knowledge worth preserving.
+
 ## SAP names and trademarks
 
 SAP product and service names are used only to identify the products, services, and technologies being discussed. SAP and the SAP product names referenced on this site may be trademarks or registered trademarks of SAP SE or its affiliates. All rights in those names and marks remain with their respective owners.
