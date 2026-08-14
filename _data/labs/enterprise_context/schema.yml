@@ -1,4 +1,4 @@
-version: "0.2.0"
+version: "0.3.0"
 updated_at: "2026-08-14"
 
 common_fields:
@@ -39,6 +39,9 @@ node_types:
   - id: business_domain
     label: "Enterprise Business Domain"
     prefix: "BDOM"
+  - id: industry
+    label: "Industry / Industry Overlay"
+    prefix: "IND"
   - id: process
     label: "Business Process"
     prefix: "PROC"
@@ -121,6 +124,7 @@ edge_types:
   - belongs_to_domain
   - decomposes_to
   - supports_domain
+  - specializes
   - precedes
   - triggers
   - creates
@@ -207,6 +211,7 @@ id_rules:
   pattern: "<PREFIX>-<DOMAIN>-<SHORT-STABLE-NAME>"
   examples:
     - "BDOM-SUPPLY-CHAIN-OPERATIONS"
+    - "IND-AUTOMOTIVE"
     - "DOM-WAREHOUSING"
     - "PROC-O2C-ORDER-TO-CASH"
     - "STEP-O2C-CREATE-SALES-ORDER"
