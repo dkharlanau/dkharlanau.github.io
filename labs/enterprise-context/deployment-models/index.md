@@ -9,9 +9,17 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
+tags:
+  - sap
+  - s4hana
+  - deployment
+  - public-cloud
+  - private-cloud
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.deployment_models %}
+
+<p><strong>Problem:</strong> the three S/4HANA deployment models share a product family but differ in scope, extensibility, upgrades, and operations.</p>
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Deployment Models</li></ol>

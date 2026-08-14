@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Enterprise Context Lab — Process, Data, Rules and AI Reasoning"
-description: "A working lab for a source-tracked enterprise context graph connecting processes, business objects, attributes, rules, integrations, failures, KPIs, tests, and expert reasoning."
+description: "A source-tracked enterprise context graph connecting SAP processes, data, rules, integrations, failures, KPIs, tests, and architecture reasoning."
 permalink: /labs/enterprise-context/
 status: draft
 verified: false
@@ -9,12 +9,20 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
+tags:
+  - sap
+  - enterprise-architecture
+  - logistics
+  - integration
+  - business-ai
 ---
 
 {% assign lab = site.data.labs.enterprise_context.manifest %}
 {% assign schema = site.data.labs.enterprise_context.schema %}
 {% assign sales_landscape = site.data.labs.enterprise_context.topics.sales_application_landscape %}
 {% assign supply_chain_landscape = site.data.labs.enterprise_context.topics.supply_chain_logistics_landscape %}
+
+<p><strong>Problem:</strong> SAP knowledge is usually scattered across processes, data, products, integrations, and operational evidence.</p>
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Enterprise Context</li></ol>

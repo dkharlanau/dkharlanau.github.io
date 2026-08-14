@@ -9,10 +9,18 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
+tags:
+  - sap
+  - industry-solutions
+  - automotive
+  - retail
+  - manufacturing
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.industry_solution_landscape %}
 {% assign deployments = site.data.labs.enterprise_context.topics.deployment_models %}
+
+<p><strong>Problem:</strong> industry labels are not useful unless they explain what changes in the standard process.</p>
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Industries</li></ol>

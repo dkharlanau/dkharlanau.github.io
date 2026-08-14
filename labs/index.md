@@ -9,7 +9,14 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
+tags:
+  - sap
+  - enterprise-architecture
+  - research
+  - business-ai
 ---
+
+<p><strong>Problem:</strong> product-first learning makes it hard to connect business ownership, process, architecture, and evidence.</p>
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li aria-current="page">Labs</li></ol>
@@ -37,6 +44,8 @@ hide_global_cta: true
     <p><strong>Working rule.</strong> Facts, expert judgment, and synthetic examples stay separate.</p>
     <a href="/research/">Open Research <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
+
+  **Publication rule:** Vendor sources verify facts; explanations stay independently written. See the [Research and Attribution Policy](/legal/research-attribution/).
 
   <section class="research-canvas__inventory" id="labs-inventory" data-reveal>
     <header>

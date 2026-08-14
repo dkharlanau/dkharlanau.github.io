@@ -4,9 +4,19 @@ title: "Research and Attribution Policy"
 description: "How this independent SAP knowledge site uses public sources, professional experience, original analysis, trademarks, and synthetic examples."
 permalink: /legal/research-attribution/
 last_modified_at: 2026-08-14
+tags:
+  - research
+  - attribution
+  - copyright
+  - trademarks
+  - sap
 ---
 
 # Research and Attribution Policy
+
+## Context
+
+This site discusses SAP products using public sources, professional experience, and independent analysis. Sources support verification; the public explanation remains independently written.
 
 This website is an independent personal knowledge project. It is not official SAP documentation, SAP training material, or an SAP publication. It is not sponsored, approved, certified, or endorsed by SAP SE or its affiliates.
 

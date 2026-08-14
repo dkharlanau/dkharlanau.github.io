@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Enterprise Context Lab — Model and Authoring Contract"
-description: "The authoring contract for adding enterprise process, data, rule, integration, failure, KPI, test, source, and expert-reasoning knowledge to the Enterprise Context Lab."
+description: "Authoring rules for the Enterprise Context Graph: node types, relationships, evidence, source handling, dates, and maturity gates."
 permalink: /labs/enterprise-context/model/
 status: draft
 verified: false
@@ -9,10 +9,18 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
+tags:
+  - sap
+  - enterprise-context
+  - knowledge-graph
+  - architecture
+  - research
 ---
 
 {% assign lab = site.data.labs.enterprise_context.manifest %}
 {% assign schema = site.data.labs.enterprise_context.schema %}
+
+<p><strong>Problem:</strong> a knowledge graph becomes unreliable when entity types, evidence, and authoring rules are implicit.</p>
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Model</li></ol>

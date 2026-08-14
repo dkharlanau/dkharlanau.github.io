@@ -9,9 +9,17 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-14
 hide_global_cta: true
+tags:
+  - sap
+  - business-ai
+  - joule
+  - btp
+  - architecture
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.business_ai_platform_landscape %}
+
+<p><strong>Problem:</strong> SAP Business AI names overlap, so architecture responsibilities are easy to mix up.</p>
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Business AI</li></ol>
