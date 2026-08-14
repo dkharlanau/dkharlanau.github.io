@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "SAP Business AI & AI Platform Landscape — Enterprise Context Lab"
-description: "A decision-oriented map of SAP Business AI, Joule, agents, Joule Studio, AI Foundation, AI Core, AI Launchpad, generative AI hub, business grounding, and AI governance."
+title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
+description: "A simple map of Joule, agents, Joule Studio, AI Core, Generative AI Hub, business grounding, and AI governance."
 permalink: /labs/enterprise-context/business-ai/
 status: draft
 verified: false
@@ -23,28 +23,28 @@ hide_global_cta: true
       <p class="research-canvas__eyebrow">Enterprise Context Lab / Business AI</p>
       <h1>{{ topic.title }}</h1>
       <p>{{ topic.summary }}</p>
-      <a class="research-canvas__button" href="#ai-layers">Explore the architecture <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#ai-layers">See the AI map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Review status">
       <p>Research status</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</strong><small>Maturity gates</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ topic.layers | size }}</strong><small>Architecture layers</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ topic.components | size }}</strong><small>Modeled components</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ topic.layers | size }}</strong><small>AI layers</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ topic.components | size }}</strong><small>Components</small></div>
       <em>Last reviewed together {{ topic.reviewed_together_at }}</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
-    <p><strong>Architecture boundary.</strong> SAP Business AI is a portfolio and platform landscape, not one product. User experience, agents, development, runtime, model access, grounding, and governance are modeled as separate responsibilities.</p>
-    <a href="/labs/enterprise-context/domains/">Open enterprise domain taxonomy <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <p><strong>Remember the split.</strong> Joule is the experience. Joule Studio builds. AI Core runs. Generative AI Hub connects to models. Business Data Cloud grounds. AI Agent Hub governs.</p>
+    <a href="/labs/enterprise-context/domains/">Open enterprise domains <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="ai-layers" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Architecture layers</p>
-      <h2>Separate the responsibility before choosing the component.</h2>
-      <p>Most poor AI architecture starts by treating every SAP AI name as interchangeable. The layer model keeps user experience, business agents, build tools, runtime, grounding, and governance distinct.</p>
+      <p class="research-canvas__eyebrow">AI layers</p>
+      <h2>Use, build, run, ground, and govern.</h2>
+      <p>Start with the responsibility. Then choose the component.</p>
     </header>
     <div class="research-route-list">
       {% for layer in topic.layers %}
@@ -55,13 +55,13 @@ hide_global_cta: true
 
   <section class="research-canvas__inventory" id="components" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">SAP Business AI components</p>
-      <h2>Choose by architecture role, not by brand proximity.</h2>
-      <p>Each component below has a different responsibility. The official SAP source is linked directly from the component card.</p>
+      <p class="research-canvas__eyebrow">Components</p>
+      <h2>One component, one job.</h2>
+      <p>Use the memory line first. Open the SAP source when you need the detail.</p>
     </header>
     <div class="research-route-list">
       {% for component in topic.components %}
-      <a href="{{ component.official_docs_url }}" target="_blank" rel="noopener"><span>{% if component.type == 'ai_asset' %}AI{% else %}PLT{% endif %}</span><strong>{{ component.title }}</strong><small><b>{{ component.architecture_role }}</b> · {{ component.description }} Best fit: {{ component.best_fit }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="{{ component.official_docs_url }}" target="_blank" rel="noopener"><span>{% if component.type == 'ai_asset' %}AI{% else %}PLT{% endif %}</span><strong>{{ component.title }}</strong><small><b>{{ component.remember }}</b> {{ component.description }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
   </section>
@@ -69,40 +69,40 @@ hide_global_cta: true
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Decision guide</p>
-      <h2>Start with the responsibility that needs an owner.</h2>
-      <p>The same business scenario can use several AI components. This guide identifies the primary component for the responsibility, not the only technology in the end-to-end solution.</p>
+      <h2>Choose by the job to be done.</h2>
+      <p>This is the short version to remember for design discussions and assessment answers.</p>
     </header>
     <div class="research-route-list">
       {% for decision in topic.decision_guide %}
       {% assign selected = nil %}
       {% for component in topic.components %}{% if component.id == decision.primary_choice %}{% assign selected = component %}{% endif %}{% endfor %}
-      <a href="{% if selected %}{{ selected.official_docs_url }}{% else %}/labs/enterprise-context/data/topics.json{% endif %}" target="_blank" rel="noopener"><span>→</span><strong>{{ decision.need }}</strong><small>{% if selected %}Primary: {{ selected.title }} · {% endif %}{{ decision.why }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="{% if selected %}{{ selected.official_docs_url }}{% else %}/labs/enterprise-context/data/topics.json{% endif %}" target="_blank" rel="noopener"><span>→</span><strong>{{ decision.need }}</strong><small>{% if selected %}{{ selected.title }}. {% endif %}{{ decision.why }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
       {% endfor %}
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Licensing signals</p>
-      <h2>AI architecture has a consumption model.</h2>
-      <p>These are public commercial signals, not contract advice. Base AI, Premium AI, AI Units, SAP Build entitlements, BTP service plans, model tokens, data-platform subscriptions, and downstream application rights can all participate in one solution.</p>
+      <p class="research-canvas__eyebrow">Boundaries</p>
+      <h2>Know what each component is not.</h2>
+      <p>This prevents the common mistake of turning one AI component into the whole architecture.</p>
     </header>
     <div class="research-route-list">
       {% for component in topic.components %}
-      <a href="{{ component.official_commercial_url }}" target="_blank" rel="noopener"><span>LIC</span><strong>{{ component.title }}</strong><small>{{ component.licensing.commercial_model }}{% if component.licensing.metric %} · Metric: {{ component.licensing.metric }}{% endif %}{% if component.licensing.note %} · {{ component.licensing.note }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">contract</i></a>
+      <a href="{{ component.official_docs_url }}" target="_blank" rel="noopener"><span>!</span><strong>{{ component.title }}</strong><small>{{ component.not_for }}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
       {% endfor %}
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Key boundaries</p>
-      <h2>Do not promote one component into the whole AI stack.</h2>
-      <p>The boundary is as important as the capability. A conversational experience is not a runtime; a runtime is not a grounding layer; an agent builder is not an enterprise integration platform.</p>
+      <p class="research-canvas__eyebrow">Licensing</p>
+      <h2>Know the commercial boundary.</h2>
+      <p>Use these as signals only. The customer contract remains the source of truth.</p>
     </header>
     <div class="research-route-list">
       {% for component in topic.components %}
-      <a href="{{ component.official_docs_url }}" target="_blank" rel="noopener"><span>!</span><strong>{{ component.title }}</strong><small>{{ component.not_for }}{% if component.limitations and component.limitations.size > 0 %} Key limitation: {{ component.limitations[0] }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
+      <a href="{{ component.official_commercial_url }}" target="_blank" rel="noopener"><span>LIC</span><strong>{{ component.title }}</strong><small>{{ component.licensing.commercial_model }}{% if component.licensing.metric %} · {{ component.licensing.metric }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">contract</i></a>
       {% endfor %}
     </div>
   </section>
@@ -110,8 +110,8 @@ hide_global_cta: true
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Reference patterns</p>
-      <h2>Typical combinations, not mandatory blueprints.</h2>
-      <p>Patterns make ownership visible before deeper API, authorization, grounding, observability, and evaluation design begins.</p>
+      <h2>Typical combinations.</h2>
+      <p>Use these to remember how the layers connect.</p>
     </header>
     <div class="research-route-list">
       {% for pattern in topic.reference_patterns %}
