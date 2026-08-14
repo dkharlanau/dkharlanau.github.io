@@ -1,0 +1,138 @@
+name: Temporary Shipping deep-dive sync
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.event.pull_request.head.ref == 'agent/sales-order-decision-map'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml
+      - name: Register Shipping deep dive
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          manifest_path = Path('_data/labs/enterprise_context/manifest.yml')
+          text = manifest_path.read_text(encoding='utf-8')
+          text = text.replace('version: "0.9.0"', 'version: "0.10.0"', 1)
+
+          if 'DEEP-SD-SHIPPING-SCHEDULING' not in text:
+              marker = '      - "BADI_SD_CM, UKM_FILL, and custom check steps"\n\nmaturity_gates:'
+              insert = '''      - "BADI_SD_CM, UKM_FILL, and custom check steps"
+  - id: DEEP-SD-SHIPPING-SCHEDULING
+    title: "Shipping & Delivery Scheduling"
+    parent_topic: TOPIC-O2C-SALES-ORDER-CREATION
+    status: researching
+    page_url: "/labs/enterprise-context/shipping/"
+    graph_ref: "GRAPH-SD-SHIPPING-SCHEDULING"
+    emphasis:
+      - "shipping point determination"
+      - "order and delivery route determination"
+      - "delivery and transportation scheduling"
+      - "backward and forward date calculation"
+      - "delivery due and split diagnostics"
+      - "EWM/TM execution boundaries and extensibility"
+
+maturity_gates:'''
+              if marker not in text:
+                  raise SystemExit('Manifest deep-dive insertion marker not found')
+              text = text.replace(marker, insert, 1)
+
+          if 'shipping_scheduling:' not in text:
+              marker = '  credit_management: "/labs/enterprise-context/credit/"\n'
+              if marker not in text:
+                  raise SystemExit('Manifest human-view marker not found')
+              text = text.replace(marker, marker + '  shipping_scheduling: "/labs/enterprise-context/shipping/"\n', 1)
+
+          if 'shipping_graph:' not in text:
+              marker = '  credit_sources: "/labs/enterprise-context/data/credit-sources.json"'
+              if marker not in text:
+                  raise SystemExit('Manifest machine-endpoint marker not found')
+              text = text.replace(marker, marker + '\n  shipping_graph: "/labs/enterprise-context/data/shipping-graph.json"\n  shipping_sources: "/labs/enterprise-context/data/shipping-sources.json"', 1)
+
+          manifest_path.write_text(text, encoding='utf-8')
+
+          labs_path = Path('labs/index.md')
+          labs = labs_path.read_text(encoding='utf-8')
+          labs = labs.replace('<strong>10</strong><small>Architecture views</small>', '<strong>11</strong><small>Architecture views</small>', 1)
+          labs = labs.replace('<strong>12</strong><small>Machine endpoints</small>', '<strong>14</strong><small>Machine endpoints</small>', 1)
+
+          if '/labs/enterprise-context/shipping/' not in labs:
+              start = labs.index('<div class="research-route-list">')
+              end = labs.index('</div>', start)
+              block = labs[start:end]
+
+              def bump(match):
+                  n = int(match.group(1))
+                  return f'<span>{n + 1:02d}</span>' if n >= 6 else match.group(0)
+
+              block = re.sub(r'<span>(\d{2})</span>', bump, block)
+              credit = '      <a href="/labs/enterprise-context/credit/"><span>05</span><strong>SAP Credit Management</strong><small>BP credit data, check rules, exposure lifecycle, blocks, release, recheck, FSCM integration, and credit extensions.</small><i class="material-symbols-outlined" aria-hidden="true">credit_score</i></a>\n'
+              shipping = '      <a href="/labs/enterprise-context/shipping/"><span>06</span><strong>Shipping & Delivery Scheduling</strong><small>Shipping point, route, activity times, calendars, backward/forward scheduling, delivery due processing, EWM/TM boundaries, and split diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>\n'
+              if credit not in block:
+                  raise SystemExit('Labs shipping insertion marker not found')
+              block = block.replace(credit, credit + shipping, 1)
+              labs = labs[:start] + block + labs[end:]
+
+          labs_path.write_text(labs, encoding='utf-8')
+          PY
+      - name: Validate Shipping data
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          graph = yaml.safe_load(Path('_data/labs/enterprise_context/graphs/shipping.yml').read_text(encoding='utf-8'))
+          sources = yaml.safe_load(Path('_data/labs/enterprise_context/sources/shipping.yml').read_text(encoding='utf-8'))
+          manifest = yaml.safe_load(Path('_data/labs/enterprise_context/manifest.yml').read_text(encoding='utf-8'))
+          assert graph['id'] == 'GRAPH-SD-SHIPPING-SCHEDULING'
+          assert manifest['version'] == '0.10.0'
+          source_ids = {item['id'] for item in sources['sources']}
+
+          refs = set()
+          def walk(value):
+              if isinstance(value, dict):
+                  for key, item in value.items():
+                      if key == 'source_refs' and isinstance(item, list):
+                          refs.update(item)
+                      else:
+                          walk(item)
+              elif isinstance(value, list):
+                  for item in value:
+                      walk(item)
+          walk(graph)
+          missing = refs - source_ids
+          if missing:
+              raise SystemExit(f'Missing Shipping source ids: {sorted(missing)}')
+          print(f'validated shipping graph with {len(source_ids)} sources and {len(refs)} referenced source ids')
+          PY
+      - name: Regenerate Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Commit generated artifacts
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Artifacts already current."
+          else
+            git commit -m "Sync Shipping deep-dive artifacts"
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
