@@ -51,7 +51,7 @@ tags:
   <section class="research-canvas__inventory" id="integration-rules" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Memory hooks</p>
-      <h2>Nine rules before middleware.</h2>
+      <h2>Ten rules before middleware.</h2>
       <p>I use these rules to keep the discussion on coupling, reliability, and business ownership instead of adapter names.</p>
     </header>
     <div class="research-route-list">
