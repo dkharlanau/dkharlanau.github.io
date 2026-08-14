@@ -1,0 +1,56 @@
+name: Regenerate Atlas Artifacts Once
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/regenerate-atlas-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install generator dependency
+        run: python3 -m pip install pyyaml
+
+      - name: Regenerate deterministic Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Upload generated outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: regenerated-atlas-artifacts
+          path: |
+            atlas/manifest.json
+            llms-full.txt
+            ai
+            _data/expert_context.yml
+
+      - name: Commit generated outputs
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add atlas/manifest.json llms-full.txt ai _data/expert_context.yml
+          if git diff --cached --quiet; then
+            echo "No generated changes."
+            exit 0
+          fi
+          git commit -m "Regenerate Atlas artifacts after branch consolidation"
+          git push origin HEAD:main
