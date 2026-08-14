@@ -1,0 +1,207 @@
+{
+  "id": "ATLAS-SD-RETURN-CLAIMS-CONTROL-PLANE",
+  "version": "0.1.0",
+  "updated_at": "2026-08-14",
+  "title": "SAP Returns and Claims Control Plane",
+  "purpose": "Explain customer returns and complaints as control chains: physical receipt, ownership, inspection, disposition and compensation are separate decisions that create different documents and postings.",
+  "memory_rule": "Goods received is not the same as goods owned, and goods owned is not the same as customer refunded.",
+  "chain": ["customer_need","reference_and_reason","release_and_approval","physical_receipt","ownership_and_stock","inspection_and_split","logistical_follow_up","refund_control","valuation_and_accounting","follow_on_documents","integration","failure_and_test"],
+  "decision_axes": [
+    {"axis":"physical_return","question":"Do goods physically return?","yes":"Use the returns family.","no":"Use a commercial claim unless a replacement shipment is required."},
+    {"axis":"inspection","question":"Do we need condition-based disposition?","yes":"Use full Customer Returns / ARM.","no":"Lean Returns may be sufficient for a simple receipt-to-stock and credit flow."},
+    {"axis":"ownership","question":"When do we take ownership of the returned product?","rule":"Receipt can first post to non-valuated returns stock. Refund or a follow-up activity that signals ownership can trigger valuation."},
+    {"axis":"compensation","question":"What does the customer receive?","options":["credit memo","replacement product","no refund"]},
+    {"axis":"destination","question":"What happens to the physical product?","options":["free available stock","scrap","other plant","supplier","customer","specified stock","repair","remain at customer"]}
+  ],
+  "ownership_states": [
+    {"state":"customer_owned_not_received","meaning":"The customer still has the product or it is in transit back. No company stock exists yet."},
+    {"state":"received_non_valuated_returns_stock","meaning":"The product is physically in the company but ownership has not necessarily transferred. Typical when follow-up is Receive into Plant and refund is Decide Later.","sap_note":"Non-valuated returns stock is managed as special stock E for the returns order."},
+    {"state":"valuated_returns_stock","meaning":"Ownership has transferred to the company, but the product can still wait for final disposition."},
+    {"state":"final_valuated_destination","meaning":"The product is moved to unrestricted, scrap, specified stock, another plant or another owned destination."},
+    {"state":"forwarded_without_company_final_use","meaning":"The product is sent to supplier, customer or repair flow according to the selected follow-up activity."}
+  ],
+  "follow_up_map": [
+    {"code":"0001","title":"Receive into Plant","group":"inspect_later","business_effect":"Receive first, then inspect and decide. This is the typical branch for deferred disposition.","ownership_signal":false,"follow_on":"Returns delivery and goods receipt; later inspection decides the next step."},
+    {"code":"0002","title":"Immediately Move to Free Available Stock","group":"close_in_plant","business_effect":"Accept the return directly into unrestricted-use stock.","ownership_signal":true,"follow_on":"Inspection document, returns delivery and goods receipt into unrestricted-use stock."},
+    {"code":"0003","title":"Immediately Move to Scrap","group":"close_in_plant","business_effect":"Receive and scrap the product instead of reusing it.","ownership_signal":true,"follow_on":"Goods receipt to returns stock followed by scrap movement."},
+    {"code":"0004","title":"Ship to Other Plant","group":"forward_internal","business_effect":"Receive/inspect and forward the product to another plant.","ownership_signal":"depends_on_company_code_and_stock_state","follow_on":"Returns stock transport order; valuation can be required across company-code boundary."},
+    {"code":"0005","title":"Ship to Supplier","group":"forward_supplier","business_effect":"Receive the product first, then return it to a supplier.","ownership_signal":"depends_on_refund_and_stock_state","follow_on":"Returns purchase order and supplier-return logistics."},
+    {"code":"0007","title":"Direct Shipment to Supplier","group":"forward_supplier","business_effect":"Customer sends the product directly to the supplier; your warehouse is skipped.","ownership_signal":"commercial_decision_separate","follow_on":"Returns purchase order; no company outbound delivery is needed for the customer-to-supplier leg."},
+    {"code":"0008","title":"Inspection at Customer Site","group":"intermediate","business_effect":"Inspect before deciding whether the product should return or remain with the customer.","ownership_signal":false,"follow_on":"No final logistics action; another follow-up activity must be selected after inspection."},
+    {"code":"0011","title":"Transfer to Free Available Stock","group":"after_receipt","business_effect":"Move inspected returns stock to unrestricted-use stock.","ownership_signal":true,"follow_on":"Material posting to free available stock."},
+    {"code":"0012","title":"Transfer to Scrap","group":"after_receipt","business_effect":"Move inspected returns stock to scrap.","ownership_signal":true,"follow_on":"Material posting to scrap."},
+    {"code":"0015","title":"Transfer to Specified Stock","group":"after_receipt","business_effect":"Move the returned product to a defined target stock such as second-hand stock.","ownership_signal":true,"follow_on":"Material posting to configured storage location / stock type."},
+    {"code":"0021","title":"Send Back to Customer","group":"customer_keeps_or_gets_back","business_effect":"Reject or finish the return by sending the product back to the customer.","ownership_signal":false,"follow_on":"Outbound delivery to the customer."},
+    {"code":"0023","title":"Goods Receipt Quantity Correction","group":"quantity_correction","business_effect":"Correct a goods receipt when the quantity physically found during inspection is lower than the posted return quantity.","ownership_signal":"correction","follow_on":"Outbound delivery without order reference and goods issue for the missing quantity."},
+    {"code":"0026","title":"In-House Repair (Service)","group":"service_handoff","business_effect":"Hand the returned object from Sales returns into SAP Service repair.","ownership_signal":false,"follow_on":"In-house repair and optional goods movement to repair storage location; refund control must be No Refund for the direct repair branch."}
+  ],
+  "refund_controls": [
+    {"code":"R","title":"Decide Later","applies_to":["credit memo","replacement"],"effect":"Do not start customer compensation yet. Inspection and disposition can happen first."},
+    {"code":"P","title":"Start Approved Refund","applies_to":["credit memo","replacement"],"effect":"For credit, create a credit memo request. For replacement, create a subsequent delivery free of charge."},
+    {"code":"I","title":"Immediate Refund / Delivery","applies_to":["credit memo","replacement"],"effect":"Create the credit memo immediately, or create the replacement order, outbound delivery and goods issue immediately. Immediate credit requires the product to be marked received."},
+    {"code":"N","title":"No Refund","applies_to":["no compensation"],"effect":"No customer compensation is created. Important for branches such as send-back-to-customer or in-house repair."}
+  ],
+  "records": [
+    {
+      "code":"SD.RET.ARM",
+      "title":"Customer Returns / Advanced Returns Management",
+      "memory_hook":"Receive, inspect, decide logistics, decide compensation. Those are separate controls.",
+      "lead_summary":"The Lead-level point is the separation of physical receipt, ownership, inspection/disposition and customer compensation. A product can be physically received into non-valuated returns stock while the company still defers ownership and refund. Inspection splits can send subquantities to different logistical destinations and can also support separate refund decisions.",
+      "trace":[
+        {"stage":"Customer need","control":"Physical return with condition-based decision","determined_by":["complaint type","return policy","need for inspection/disposition"],"effect":"Select full Customer Returns rather than a pure credit/debit claim or Lean Return."},
+        {"stage":"Reference & reason","control":"Returns order with reference where available","determined_by":["preceding sales order or billing document","returns order reason","item return reason"],"effect":"Carries commercial history, quantities, pricing context, product and partner data into the return."},
+        {"stage":"Release & approval","control":"Save versus release; optional approval workflow","determined_by":["document completeness","approval relevance","approval reason/workflow"],"effect":"Saving stores the return. Releasing starts subsequent processing; approval can hold follow-on documents until the return is approved."},
+        {"stage":"Physical receipt","control":"Returns delivery and goods receipt","determined_by":["follow-up activity","product received indicator","shipping/receiving data"],"effect":"Brings the returned quantity into company logistics. Physical receipt alone does not prove ownership."},
+        {"stage":"Ownership & stock","control":"Non-valuated or valuated returns stock","determined_by":["refund timing","valuation suspension","follow-up activity ownership signal"],"effect":"Allows inspection before taking ownership, or valuates the product when the refund/final disposition transfers ownership."},
+        {"stage":"Inspection & split","control":"Inspection result with optional quantity splits","determined_by":["physical condition","inspection code","inspected quantity","serial/batch context"],"effect":"One returned item can be split into subquantities with different findings, logistical follow-ups and refund decisions."},
+        {"stage":"Logistical follow-up","control":"Destination of each returned quantity","determined_by":["inspection result","return policy","supplier/plant/service context"],"effect":"Creates goods movements, stock transfer, supplier return, send-back, scrap, unrestricted stock or Service repair documents."},
+        {"stage":"Refund control","control":"Credit, replacement, defer or no refund","determined_by":["refund type","refund code/percentage","refund control","inspection evidence"],"effect":"Creates a credit memo request, immediate credit, subsequent free-of-charge delivery, immediate replacement delivery, or no compensation."},
+        {"stage":"Valuation & accounting","control":"Ownership transfer and commercial refund","determined_by":["refund decision","valuation suspension","final follow-up activity"],"effect":"Stock valuation can occur when ownership transfers; billing/FI then records the customer credit while logistics records the physical disposition."},
+        {"stage":"Integration","control":"Sales orchestrates, specialist domains execute","determined_by":["selected branch"],"effect":"EWM can inspect and execute simple follow-ups; MM/Purchasing owns supplier returns; Service owns repair; APIs expose returns and inspection to external systems."}
+      ],
+      "data_hinges":[
+        {"data":"reference document/item","if_wrong":"Wrong quantity, price, tax history or customer context can be copied into the return."},
+        {"data":"return reason","if_wrong":"Analytics and policy routing become useless even when the physical return succeeds."},
+        {"data":"follow-up activity","if_wrong":"The system creates the wrong logistical branch or requires missing supplier/plant/service data."},
+        {"data":"refund type + refund control","if_wrong":"Customer compensation happens too early, too late, in the wrong form, or not at all."},
+        {"data":"product received indicator","if_wrong":"Immediate refund and logistics prerequisites can behave differently from the actual physical state."},
+        {"data":"inspection split quantity","if_wrong":"The sum of disposition/refund quantities no longer represents what was actually received."},
+        {"data":"valuation suspension","if_wrong":"Ownership and inventory value can transfer earlier than the business intends."},
+        {"data":"serial number / batch","if_wrong":"Individual returned objects or regulated/batch stock can lose traceability across delivery, inspection and repair."}
+      ],
+      "failures":[
+        {"id":"FAIL-RET-ARM-PREMATURE-OWNERSHIP","symptom":"Returned goods become company-valuated before inspection or commercial acceptance.","trace":"Check refund control → product valuation suspension → selected follow-up activity → goods movement/stock state."},
+        {"id":"FAIL-RET-ARM-WRONG-DISPOSITION","symptom":"Inspection is complete but the wrong follow-on document is created.","trace":"Check inspection split → confirmed follow-up activity → required supplier/plant/storage data → generated follow-up document."},
+        {"id":"FAIL-RET-ARM-REFUND-MISMATCH","symptom":"Customer refund does not match inspected quantity or condition.","trace":"Check inspection split quantities → refund determination level → refund code/percentage → credit/replacement quantity."},
+        {"id":"FAIL-RET-ARM-STOCK-VISIBLE","symptom":"Questionable returned stock becomes available to ATP/MRP too early.","trace":"Check receiving stock type → valuation state → unrestricted transfer follow-up → storage-location design."},
+        {"id":"FAIL-RET-ARM-SUPPLIER","symptom":"Return should go to supplier but purchasing document is missing or wrong.","trace":"Check follow-up 0005/0007 → supplier and RMA/return-to address → returns PO creation → MM ownership."},
+        {"id":"FAIL-RET-ARM-REPAIR","symptom":"Repair object is not created or cannot be traced.","trace":"Check follow-up 0026 → refund control N → serial/equipment prerequisites → Service integration/customizing → repair object."}
+      ],
+      "tests":[
+        {"id":"TEST-RET-ARM-SPLIT","setup":"Return quantity 10: inspect 6 as reusable and 4 as scrap.","assert":["two inspection splits total 10","6 moves to free available stock","4 moves to scrap","refund decision can be traced to the inspected quantities","document flow shows both branches"]},
+        {"id":"TEST-RET-ARM-DEFERRED-OWNERSHIP","setup":"Receive a product with Receive into Plant and Decide Later.","assert":["goods are physically received","stock is non-valuated returns stock before ownership decision","refund is not complete","final follow-up/refund creates the expected valuation transition"]},
+        {"id":"TEST-RET-ARM-SUPPLIER","setup":"Use Ship to Supplier after inspection.","assert":["supplier is mandatory","returns purchase order is created","return-to address is correct","Sales return remains traceable to MM supplier return"]},
+        {"id":"TEST-RET-ARM-REPLACEMENT","setup":"Refund by replacement with a different replacement product and supplying plant.","assert":["replacement quantity/product/plant are explicit","subsequent delivery free of charge is created","outbound execution is traceable","return disposition remains independent"]}
+      ],
+      "extensions":["Customer Return A2X OData V4","Returns Inspection A2X OData V4","approval workflow","BAdI checks","EWM integration","Service integration"],
+      "source_refs":["SRC-SAP-RET-CP-E2E","SRC-SAP-RET-CP-ORDER","SRC-SAP-RET-CP-FOLLOWUP","SRC-SAP-RET-CP-COMP","SRC-SAP-RET-CP-STOCK","SRC-SAP-RET-CP-INSPECT-API","SRC-SAP-RET-CP-EWM","SRC-SAP-RET-CP-REPAIR"]
+    },
+    {
+      "code":"SD.RET.LEAN",
+      "title":"Lean Customer Returns",
+      "memory_hook":"Receive it, return it to valuated stock, credit it. No disposition engine in the middle.",
+      "lead_summary":"Lean Returns is deliberately smaller. It fits a controlled scenario where goods can go back to valuated stock without inspection-driven logistical follow-up, refund control or supplier/repair orchestration.",
+      "trace":[
+        {"stage":"Customer need","control":"Simple physical return","determined_by":["return policy","trusted product condition","no advanced disposition need"],"effect":"Select Lean rather than full Customer Returns."},
+        {"stage":"Reference & reason","control":"Lean returns order","determined_by":["reference document","return reason","receiving plant"],"effect":"Anchors the commercial return."},
+        {"stage":"Physical receipt","control":"Returns delivery and goods receipt","determined_by":["returns order","receiving logistics"],"effect":"Returned product goes to valuated company stock."},
+        {"stage":"Compensation","control":"Credit memo flow","determined_by":["returns/billing status","commercial reference"],"effect":"Credits the customer without ARM-style inspection/refund-control branching."}
+      ],
+      "data_hinges":[{"data":"product quality assumption","if_wrong":"Bad stock can re-enter usable inventory because the lean process deliberately skips disposition logic."},{"data":"receiving storage location","if_wrong":"Returned stock can become available to fulfillment sooner than intended."}],
+      "failures":[{"id":"FAIL-RET-LEAN-WRONG-SCOPE","symptom":"Business asks for inspection, supplier return or repair after the lean flow is already chosen.","trace":"Re-evaluate process scope; these are signals for SD.RET.ARM, not more custom logic inside Lean Returns."}],
+      "tests":[{"id":"TEST-RET-LEAN-HAPPY","setup":"Return a known-good unopened product.","assert":["returns delivery and goods receipt","valuated stock restored","credit created","no inspection/disposition document required"]}],
+      "extensions":["Customer Return APIs where supported"],
+      "source_refs":["SRC-SAP-RET-CP-COMPARE","SRC-SAP-RET-CP-E2E"]
+    },
+    {
+      "code":"SD.CLM.CMR",
+      "title":"Credit Memo Request",
+      "memory_hook":"Goods stay put; reduce the customer's commercial charge through a controlled request.",
+      "lead_summary":"A credit memo request is a financial complaint path, not reverse logistics. The main controls are reference/copying, requested value, billing block or approval, pricing context and release into billing.",
+      "trace":[
+        {"stage":"Customer need","control":"Financial credit without product return","determined_by":["price complaint","forgotten discount","service/commercial concession"],"effect":"Use a credit memo request instead of a returns order."},
+        {"stage":"Reference & reason","control":"Independent or referenced credit memo request","determined_by":["invoice/sales document reference","order reason","customer reference"],"effect":"Copies the relevant commercial context and creates document-flow evidence."},
+        {"stage":"Commercial value","control":"Requested credit and pricing","determined_by":["quantity","price/conditions","pricing date","copy/redetermination rules"],"effect":"Defines how much revenue/receivable is proposed to be reduced."},
+        {"stage":"Governance","control":"Billing block and/or approval workflow","determined_by":["document type configuration","approval rules","approval reason"],"effect":"Prevents the request from becoming a credit memo before the claim is accepted."},
+        {"stage":"Billing","control":"Credit memo creation","determined_by":["released billing status","copy control","billing due processing"],"effect":"Creates the financial correction in billing and FI without inventory movement."}
+      ],
+      "data_hinges":[{"data":"reference invoice","if_wrong":"Tax, pricing and customer context can be wrong even if the credit amount looks plausible."},{"data":"billing block / approval status","if_wrong":"The request can be financially executed before evidence is reviewed, or remain stuck forever."},{"data":"pricing copy/redetermination","if_wrong":"A historical claim can accidentally use today's commercial conditions."}],
+      "failures":[{"id":"FAIL-CLM-CMR-NO-BILL","symptom":"Approved credit request never appears for billing.","trace":"Check approval status → billing block → rejection status → billing relevance/copy control → billing due list."},{"id":"FAIL-CLM-CMR-WRONG-VALUE","symptom":"Credit amount differs from expected claim.","trace":"Check reference → copied pricing elements → pricing date/redetermination → quantity → manual conditions."}],
+      "tests":[{"id":"TEST-CLM-CMR-APPROVAL","setup":"Create a referenced credit memo request above an approval threshold.","assert":["reference copied","approval/block prevents billing","release changes billing eligibility","credit memo and FI posting reflect approved amount"]}],
+      "extensions":["Credit Memo Request A2X OData V4","internal/external approval workflow","custom fields","copy-control logic"],
+      "source_refs":["SRC-SAP-CLM-CP-CMR","SRC-SAP-CLM-CP-WF","SRC-SAP-CLM-CP-CMR-API"]
+    },
+    {
+      "code":"SD.CLM.DMR",
+      "title":"Debit Memo Request",
+      "memory_hook":"Goods do not move; increase what the customer owes through a governed request.",
+      "lead_summary":"Debit memo processing mirrors the governance shape of a credit request but the financial direction is opposite. It is for undercharge or another justified additional charge, not for correcting a physical delivery problem.",
+      "trace":[
+        {"stage":"Customer need","control":"Additional charge","determined_by":["undercharge","missing surcharge","commercial correction"],"effect":"Use debit memo processing."},
+        {"stage":"Reference & reason","control":"Independent or referenced debit memo request","determined_by":["sales/billing reference","reason"],"effect":"Preserves the original commercial context where required."},
+        {"stage":"Commercial value","control":"Debit pricing and quantity","determined_by":["copied values","new conditions","manual correction"],"effect":"Defines the receivable increase."},
+        {"stage":"Governance","control":"Billing block / approval","determined_by":["document type","workflow"],"effect":"Requires review before billing."},
+        {"stage":"Billing","control":"Debit memo","determined_by":["released request","billing processing"],"effect":"Posts the additional receivable/revenue/tax effect without goods movement."}
+      ],
+      "data_hinges":[{"data":"reference and reason","if_wrong":"The customer sees an extra charge with weak traceability."},{"data":"pricing date / tax context","if_wrong":"A correction of old business can use an incorrect financial basis."}],
+      "failures":[{"id":"FAIL-CLM-DMR-NO-BILL","symptom":"Debit request is accepted but no debit memo is produced.","trace":"Check approval → billing block → rejection → billing status/due list."}],
+      "tests":[{"id":"TEST-CLM-DMR-HAPPY","setup":"Create a referenced undercharge correction.","assert":["original context retained","approval evidence present","debit memo increases receivable by the approved delta","no inventory document exists"]}],
+      "extensions":["Debit Memo Request A2X API","approval workflow","custom fields"],
+      "source_refs":["SRC-SAP-CLM-CP-DMR","SRC-SAP-CLM-CP-WF"]
+    },
+    {
+      "code":"SD.CLM.ICR",
+      "title":"Invoice Correction Request",
+      "memory_hook":"Represent original and corrected invoice values together, then bill the difference.",
+      "lead_summary":"Invoice correction is useful when the invoice itself is the object being corrected. SAP creates paired credit/debit items for each copied invoice item; the user changes the debit side and the system derives the delta.",
+      "trace":[
+        {"stage":"Customer need","control":"Correct invoice price or quantity","determined_by":["invoice dispute","wrong billed quantity/price"],"effect":"Use an invoice correction request rather than a physical return."},
+        {"stage":"Reference","control":"Invoice reference is mandatory to the correction concept","determined_by":["original billing document/item"],"effect":"Creates item pairs containing the original and corrected commercial values."},
+        {"stage":"Correction model","control":"Credit item + debit item pair","determined_by":["copied invoice item"],"effect":"Original value is credited and corrected value is represented on the debit item; the difference becomes the correction."},
+        {"stage":"Governance","control":"Billing block / review","determined_by":["sales document type configuration"],"effect":"Holds the correction until accepted."},
+        {"stage":"Billing","control":"Credit/debit financial difference","determined_by":["corrected item value","release"],"effect":"Corrects FI/revenue/tax without inventory movement."}
+      ],
+      "data_hinges":[{"data":"original invoice item","if_wrong":"The wrong transaction is corrected."},{"data":"debit-item corrected value","if_wrong":"The calculated delta has the wrong sign or amount."}],
+      "failures":[{"id":"FAIL-CLM-ICR-SIGN","symptom":"Correction moves value in the unexpected direction.","trace":"Compare original credit item and modified debit item; prove the resulting difference before billing."}],
+      "tests":[{"id":"TEST-CLM-ICR-PRICE","setup":"Copy an invoice item with value 100 and correct it to 90.","assert":["paired items exist","original value remains traceable","corrected debit value is 90","resulting customer correction is the 10 delta"]}],
+      "extensions":["copy control","pricing logic","custom fields"],
+      "source_refs":["SRC-SAP-CLM-CP-ICR"]
+    },
+    {
+      "code":"SD.CLM.INC",
+      "title":"Invoice Increase Request",
+      "memory_hook":"The old invoice is explicitly too low; create the extra debit as a delta.",
+      "lead_summary":"Invoice Increase Request is narrower than a general debit memo request: it is explicitly based on an existing invoice whose quantity or price must be increased, and the follow-on is a debit memo for the calculated difference.",
+      "trace":[
+        {"stage":"Customer need","control":"Increase an existing billed value","determined_by":["invoice underbilling"],"effect":"Use invoice increase rather than an unrelated debit request."},
+        {"stage":"Reference","control":"Existing invoice","determined_by":["billing document/item"],"effect":"Provides original quantity/price baseline."},
+        {"stage":"Correction","control":"Higher corrected quantity or price","determined_by":["approved business correction"],"effect":"System calculates the increase delta."},
+        {"stage":"Governance & billing","control":"Billing block then debit memo","determined_by":["document type configuration","block removal"],"effect":"Creates the additional debit only after review."}
+      ],
+      "data_hinges":[{"data":"invoice reference","if_wrong":"The increase loses its baseline."},{"data":"corrected price/quantity","if_wrong":"Wrong debit delta is produced."}],
+      "failures":[{"id":"FAIL-CLM-INC-BASE","symptom":"Increase request cannot explain the extra amount.","trace":"Prove original invoice value → corrected value → calculated delta."}],
+      "tests":[{"id":"TEST-CLM-INC-HAPPY","setup":"Increase an invoiced item from 100 to 115.","assert":["invoice reference retained","billing block/review behaves as designed","debit memo represents 15 delta"]}],
+      "extensions":["pricing logic","copy control"],
+      "source_refs":["SRC-SAP-CLM-CP-INC"]
+    },
+    {
+      "code":"SD.CLM.FOS",
+      "title":"Free-of-Charge Subsequent Delivery",
+      "memory_hook":"The complaint is resolved with goods, not money.",
+      "lead_summary":"This claim branch creates another outbound logistics flow. It is appropriate for shortage or damaged shipment when the customer needs replacement/additional goods. It should be referenced to the original transaction and normally governed by a delivery block or rejection reason until the claim is accepted.",
+      "trace":[
+        {"stage":"Customer need","control":"Replacement / missing quantity","determined_by":["short shipment","damage","service policy"],"effect":"Choose a free-of-charge subsequent delivery instead of a pure credit."},
+        {"stage":"Reference","control":"Original sales order / complaint context","determined_by":["preceding order"],"effect":"Keeps the replacement traceable to the failed original fulfillment."},
+        {"stage":"Governance","control":"Delivery block or rejection reason","determined_by":["document type configuration","claim review"],"effect":"Prevents inventory from leaving before the replacement is approved."},
+        {"stage":"Execution","control":"Delivery and PGI without normal customer charge","determined_by":["approved free-of-charge subsequent delivery"],"effect":"Moves stock and cost while resolving the complaint without normal sale revenue."}
+      ],
+      "data_hinges":[{"data":"reference order","if_wrong":"Replacement can look like an unexplained giveaway."},{"data":"replacement quantity","if_wrong":"Inventory cost exceeds the accepted claim."},{"data":"delivery block / rejection","if_wrong":"Goods can ship before commercial approval."}],
+      "failures":[{"id":"FAIL-CLM-FOS-FREE-GIVEAWAY","symptom":"Replacement ships with no clear claim evidence.","trace":"Check reference → complaint reason → delivery block/approval → replacement quantity → document flow."}],
+      "tests":[{"id":"TEST-CLM-FOS-HAPPY","setup":"Customer received 8 of 10; approve replacement of 2.","assert":["original order reference","replacement quantity 2","block removed only after approval","delivery/PGI created","no normal customer invoice for replacement"]}],
+      "extensions":["copy control","delivery block logic","approval/custom checks"],
+      "source_refs":["SRC-SAP-CLM-CP-FOS"]
+    }
+  ],
+  "integration_boundaries": [
+    {"domain":"EWM","ownership":"Warehouse execution and optionally inspection / simple follow-up activities","handoff":"Returns order/delivery comes from Sales; complex follow-up documents can return to S/4HANA Sales/MM/Service for orchestration."},
+    {"domain":"MM / Purchasing","ownership":"Supplier return purchase order and supplier-return logistics","handoff":"ARM follow-up 0005/0007 selects supplier branch; Purchasing owns the downstream supplier return."},
+    {"domain":"Service","ownership":"In-house repair execution","handoff":"Sales return decides repair as resolution and transfers traceable repair objects; Service owns precheck and repair execution."},
+    {"domain":"FI / Billing","ownership":"Credit/debit/replacement commercial settlement","handoff":"Refund control or claim release creates billing documents and financial postings."},
+    {"domain":"Integration / BTP","ownership":"External capture, inspection and orchestration","handoff":"Customer Return A2X V4 handles standard CBAR returns; Returns Inspection A2X V4 handles inspection data and split items. API feature coverage differs between V2/V4/A2A."}
+  ],
+  "lead_answer_frames": [
+    {"question":"Explain Advanced Returns Management.","answer_shape":["Start with physical return and business reason.","Separate receipt from ownership.","Explain inspection and inspection splits.","Explain logistical follow-up as the physical disposition decision.","Explain refund control as a separate compensation decision.","Finish with generated documents, integration boundary, one failure and one test."]},
+    {"question":"Credit memo request or customer return?","answer_shape":["If no goods move, start with a commercial claim.","If goods return, use reverse logistics.","If physical return needs inspection/disposition/refund flexibility, use full Customer Returns/ARM.","If it is a simple receive-to-stock + credit flow, Lean Returns may be enough."]},
+    {"question":"When does ownership transfer in ARM?","answer_shape":["Do not equate goods receipt with ownership.","Typical deferred returns can first sit in non-valuated returns stock.","Refund or a final follow-up activity that signals ownership triggers valuation unless valuation is deliberately suspended."]}
+  ]
+}

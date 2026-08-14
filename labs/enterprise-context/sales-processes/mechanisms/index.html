@@ -1,0 +1,241 @@
+---
+layout: default
+title: "SAP Sales Mechanism Library — Determination, Fulfillment, Billing and Output"
+description: "A reusable mechanism map for SAP S/4HANA Sales: determination inputs, outputs, blast radius, failure traces, tests, extensions, and stable mechanism codes."
+permalink: /labs/enterprise-context/sales-processes/mechanisms/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+sales_mechanism_library: true
+tags:
+  - sap
+  - s4hana
+  - sales
+  - sd
+  - determination
+  - pricing
+  - atp
+  - billing
+---
+
+{% assign library = site.data.labs.enterprise_context.mechanisms.sales_mechanisms %}
+{% assign group_keys = "01_commercial,02_fulfillment,03_financial,04_communication" | split: "," %}
+{% assign registry = site.data.labs.enterprise_context.sources.sales_mechanism_registry %}
+{% assign mechanism_count = library.index.mechanism_codes | size %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Mechanism Library</li></ol>
+</nav>
+
+<div class="research-canvas sales-mechanisms">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Sales process atlas / reusable mechanisms</p>
+      <h1>Processes are compositions.<br />Mechanisms are reusable.</h1>
+      <p>A process tells you which branch is running. A mechanism tells you why SAP chose this item category, plant, route, confirmation, price, partner, invoice, or output. Learn the mechanism once; reuse it across every sales variant.</p>
+      <div class="sm-hero-actions">
+        <a class="research-canvas__button" href="#mechanism-cards">Open mechanism cards <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+        <a class="sm-text-link" href="/labs/enterprise-context/sales-processes/control-plane/">Back to Control Plane</a>
+      </div>
+    </div>
+    <div class="research-canvas__signal" aria-label="Mechanism inventory">
+      <p>Reusable control layer</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ mechanism_count }}</strong><small>Mechanisms</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ library.relations.edges | size }}</strong><small>Typed dependencies</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ registry.sources | size }}</strong><small>Primary references</small></div>
+      <em><code>SD.*</code> = process. <code>MEC.SD.*</code> = reusable decision/control mechanism.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <p><strong>Debugging rule.</strong> Start with the wrong result, find the mechanism that owns it, then walk upstream through its inputs. Do not begin with the last document that happened to fail.</p>
+    <a href="/labs/enterprise-context/data/sales-mechanisms.json">Open JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="sm-code-contract" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Code contract</p>
+      <h2>Separate the business branch from the system brain.</h2>
+    </div>
+    <div class="sm-code-contract__grid">
+      <article><code>SD.TPO</code><strong>Process</strong><p>Which business branch is running?</p></article>
+      <article><code>MEC.SD.ICAT</code><strong>Mechanism</strong><p>Which control decided the item behavior?</p></article>
+      <article><code>EXT-LOGIC</code><strong>Extension surface</strong><p>Where may standard behavior be extended?</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Decision lanes</p>
+      <h2>{{ mechanism_count }} mechanisms, four mental lanes.</h2>
+      <p>This is deliberately not one fake linear process. Pricing and partner determination can run beside fulfillment logic; output belongs after a business object exists; copy control can change pricing again in the next document. The lanes preserve that distinction.</p>
+    </header>
+    <div class="sm-lanes">
+      {% for lane in library.index.lanes %}
+      <article>
+        <span>{{ forloop.index | prepend: "0" }}</span>
+        <h3>{{ lane.title }}</h3>
+        <div>{% for code in lane.codes %}<code>{{ code }}</code>{% endfor %}</div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Dependency map</p>
+      <h2>One field becomes another mechanism’s input.</h2>
+      <p>The graph matters because impact analysis is usually more valuable than a definition. Change the plant and you may change shipping point, route, scheduling, ATP context, legal entity, and therefore the rest of the process.</p>
+    </header>
+    <div class="sm-dependency-map">
+      {% for edge in library.relations.edges %}
+      <article>
+        <code>{{ edge.from }}</code>
+        <span>{{ edge.relation | upcase }}</span>
+        <code>{{ edge.to }}</code>
+        <p>{{ edge.why }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="sm-impact-traces" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Impact thinking</p>
+      <h2>Four traces worth memorizing.</h2>
+    </div>
+    <div class="sm-trace-grid">
+      <article><span>Plant changed</span><p><code>PLANT</code> → <code>SHIPPT</code> → <code>ROUTE</code> → <code>SCHED</code> → <code>ATP</code>. Then ask whether company-code/intercompany context changed too.</p></article>
+      <article><span>Invoice price wrong</span><p><code>COPY</code> → pricing type → <code>PRICE</code> → pricing procedure → access sequence → condition record.</p></article>
+      <article><span>Customer gets nothing</span><p><code>BILL</code> / sales object exists → <code>OUTPUT</code> → output item → rule result → recipient → channel → dispatch/rendering status.</p></article>
+      <article><span>Wrong batch</span><p><code>BATCH</code> → search procedure → strategy type → strategy key → selection class → availability → sort rule. Manual correction comes last, not first.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="mechanism-cards" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mechanism cards</p>
+      <h2>Question → inputs → result → blast radius.</h2>
+      <p>The first view is intentionally compact. Expand the card only when you need configuration surfaces, failure traces, tests, and extension points.</p>
+    </header>
+
+    {% for group_key in group_keys %}
+    {% assign group = library[group_key] %}
+    <section class="sm-group" aria-labelledby="sm-group-{{ group_key }}">
+      <div class="sm-group__head">
+        <span>{{ forloop.index | prepend: "0" }}</span>
+        <h3 id="sm-group-{{ group_key }}">{{ group.title }}</h3>
+      </div>
+      <div class="sm-card-grid">
+        {% for mechanism in group.mechanisms %}
+        <article class="sm-card" id="{{ mechanism.code | downcase | replace: '.', '-' }}">
+          <header>
+            <code>{{ mechanism.code }}</code>
+            <h4>{{ mechanism.title }}</h4>
+            <p class="sm-hook">{{ mechanism.memory_hook }}</p>
+          </header>
+
+          <p class="sm-question">{{ mechanism.question }}</p>
+
+          <div class="sm-io">
+            <div>
+              <span>Inputs</span>
+              {% for input in mechanism.inputs %}<small>{{ input.name }}</small>{% endfor %}
+            </div>
+            <i aria-hidden="true">→</i>
+            <div>
+              <span>Writes</span>
+              {% for output in mechanism.outputs %}<strong>{{ output }}</strong>{% endfor %}
+            </div>
+          </div>
+
+          <p class="sm-determination">{{ mechanism.determination }}</p>
+
+          <div class="sm-blast">
+            <span>Blast radius</span>
+            {% for item in mechanism.controls %}<small>{{ item }}</small>{% endfor %}
+          </div>
+
+          {% if mechanism.downstream and mechanism.downstream.size > 0 %}
+          <div class="sm-downstream"><span>Feeds</span>{% for item in mechanism.downstream %}<code>{{ item }}</code>{% endfor %}</div>
+          {% endif %}
+
+          <details>
+            <summary>Debug, test, configure <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+            <div class="sm-detail-grid">
+              <section>
+                <h5>Configuration surfaces</h5>
+                <ul>{% for item in mechanism.configuration_surfaces %}<li>{{ item }}</li>{% endfor %}</ul>
+                {% if mechanism.classic_transactions %}<p class="sm-classic"><span>Classic/on-prem refs</span>{% for tx in mechanism.classic_transactions %}<code>{{ tx }}</code>{% endfor %}</p>{% endif %}
+              </section>
+              <section>
+                <h5>Failure traces</h5>
+                <ul>{% for failure in mechanism.failure_modes %}<li><strong>{{ failure.symptom }}</strong><span>{{ failure.prove }}</span></li>{% endfor %}</ul>
+              </section>
+              <section>
+                <h5>Proof tests</h5>
+                <ul>{% for test in mechanism.tests %}<li><strong>{{ test.id }}</strong><span>{{ test.setup }} <b>Prove:</b> {{ test.assert }}</span></li>{% endfor %}</ul>
+              </section>
+              <section>
+                <h5>Extensions</h5>
+                <p class="sm-extension-list">{% for ext in mechanism.extension_points %}<code>{{ ext }}</code>{% endfor %}</p>
+              </section>
+            </div>
+          </details>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Process composition</p>
+      <h2>The same mechanisms reappear across different business branches.</h2>
+      <p>This is the reason for separating them. Third-party sales still needs pricing, partner, billing, copy and output. Make-to-order still needs item/schedule-line logic, scheduling, ATP and often batch context. The process changes; the mechanisms remain reusable.</p>
+    </header>
+    <div class="sm-process-map">
+      {% for link in library.process_map.links %}
+      <article>
+        <strong>{{ link.process }}</strong>
+        <div>{% for code in link.mechanisms %}<code>{{ code }}</code>{% endfor %}</div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="sm-assessment" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Lead answer pattern</p>
+      <h2>Answer mechanisms in six moves.</h2>
+    </div>
+    <ol>
+      {% for q in library.index.learning_model.questions %}
+      <li><span>0{{ forloop.index }}</span><p>{{ q }}</p></li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence boundary</p>
+      <h2>Facts have sources. Memory hooks have an author.</h2>
+      <p>Primary SAP documentation verifies the control logic and current product framing. The diagnostics, mnemonics, impact traces, and tests are independently written so the site remains useful rather than becoming a lightly reformatted vendor manual.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in registry.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>

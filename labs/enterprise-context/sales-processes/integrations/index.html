@@ -1,0 +1,172 @@
+---
+layout: default
+title: "SAP Sales Order Integration Map — Origins, Handoffs and Events"
+description: "A memory-first SAP S/4HANA Sales map showing where sales orders come from, which application owns the next execution step, and when to use APIs, B2B messages or business events."
+permalink: /labs/enterprise-context/sales-processes/integrations/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+sales_process_atlas: true
+tags:
+  - sap
+  - s4hana
+  - sales
+  - integration
+  - sales-order
+  - commerce
+  - manufacturing
+  - projects
+---
+
+{% assign map = site.data.labs.enterprise_context.processes.sales_order_integration_map %}
+{% assign cross = site.data.labs.enterprise_context.processes.sales_process_atlas.11_cross_application_execution %}
+{% assign registry = site.data.labs.enterprise_context.sources.sales_cross_application_registry %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Integration Map</li></ol>
+</nav>
+
+<div class="research-canvas sales-process-atlas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Sales order / cross-application map</p>
+      <h1>One order.<br />Several owners.</h1>
+      <p>A sales order can be created by an API, a web shop, a buyer message, CPQ, Sales Cloud, a project, or a solution contract. After creation, the next serious decision may belong to Manufacturing, Procurement, Warehouse, Transportation, Trade Compliance, Credit, Finance, or Service. The useful architecture question is not “which system is connected?” It is “who owns the next decision?”</p>
+      <a class="research-canvas__button" href="#origin-core-handoff">Open the map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Integration inventory">
+      <p>Integration inventory</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ map.origins | size }}</strong><small>Order origins</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ map.handoffs | size }}</strong><small>Execution handoffs</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ cross.processes | size }}</strong><small>Cross-app process cards</small></div>
+      <em>Origin is not process. Integration is not ownership. A connected box is not automatically a new business branch.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">schema</span>
+    <p><strong>Memory rule.</strong> Ask three separate questions: who created the order, what business process is running, and which application owns the next irreversible decision.</p>
+    <a href="/labs/enterprise-context/data/sales-order-integration-map.json">Open machine-readable map <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="origin-core-handoff" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Origin → core → handoff</p>
+      <h2>Do not encode the architecture diagram into the process name.</h2>
+      <p>The same <code>SD.SFS</code> can arrive from a web shop or an API and still be the same sell-from-stock process. The origin changes integration ownership. The process changes only when the business contract changes.</p>
+    </header>
+
+    <div class="spa-compare-grid">
+      <article><span>ORC.SD.*</span><h3>Who created or orchestrated it?</h3><p>Commerce, CPQ, Sales Cloud, an external buyer, Solution Order, subscription, customer project, or a generic API client.</p></article>
+      <article><span>{{ map.center.code }}</span><h3>{{ map.center.object }}</h3><p>{{ map.center.rule }}</p></article>
+      <article><span>INT.SD.*</span><h3>Who owns the next execution decision?</h3><p>PP, Project/EPPM, Procurement, EWM, TM, GTS, Credit, Finance, or Service.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Order origins</p>
+      <h2>Different entrance. Same need for a clean ERP contract.</h2>
+      <p>Each origin card tells us what creates the order, what must remain correlated, and where people are tempted to duplicate pricing, ATP or status logic outside S/4HANA.</p>
+    </header>
+    <div class="spa-card-grid">
+      {% for item in map.origins %}
+      <article class="spa-card">
+        <header class="spa-card__head"><div><span class="spa-code">{{ item.code }}</span><span class="spa-kind">{{ item.type | replace: '_', ' ' }}</span></div></header>
+        <h3>{{ item.title }}</h3>
+        <p class="spa-hook">{{ item.memory_hook }}</p>
+        <div class="spa-flow" aria-label="{{ item.title }} flow">{% for step in item.flow %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
+        <details>
+          <summary>Controls and boundaries <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="spa-detail-grid">
+            <section><h4>Control</h4><ul>{% for x in item.controls %}<li>{{ x }}</li>{% endfor %}</ul></section>
+            <section><h4>Data hinges</h4><ul>{% for x in item.data_hinges %}<li>{{ x }}</li>{% endfor %}</ul></section>
+            <section><h4>Constraints</h4><ul>{% for x in item.constraints %}<li>{{ x }}</li>{% endfor %}</ul></section>
+          </div>
+        </details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Execution handoffs</p>
+      <h2>The order stays visible. Responsibility moves.</h2>
+      <p>A strong support trace follows the first missing owned object. If the sales item is correct but no production order, freight demand, purchasing document, warehouse task or compliance release exists, debugging must cross the application boundary.</p>
+    </header>
+    <div class="spa-card-grid">
+      {% for item in map.handoffs %}
+      <article class="spa-card">
+        <header class="spa-card__head"><div><span class="spa-code">{{ item.code }}</span><span class="spa-kind">handoff</span></div></header>
+        <h3>{{ item.title }}</h3>
+        <p class="spa-hook">{{ item.trigger }}</p>
+        <p><strong>Via:</strong> {{ item.via }}</p>
+        <p><strong>Next owner:</strong> {{ item.owns_next }}</p>
+        <p><strong>Failure signal:</strong> {{ item.failure_signal }}</p>
+        <div class="spa-extension-row"><span>Used by</span>{% for process in item.from_processes %}<code>{{ process }}</code>{% endfor %}</div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Production and project contrasts</p>
+      <h2>“Made for the customer” is not one process.</h2>
+      <p>The important distinction is which execution and cost object the customer demand creates. That is more useful than calling everything MTO and hoping nobody asks a second question.</p>
+    </header>
+    <div class="spa-compare-grid">
+      <article><span>SD.MTO</span><h3>Ordinary Make-to-Order</h3><p>Sales demand creates individual planning and customer-specific supply. MRP remains a central planning step.</p></article>
+      <article><span>SD.MTO.ATO</span><h3>Assembly Processing</h3><p>The sales order can create the assembly object directly. Component availability and production scheduling feed the customer promise early.</p></article>
+      <article><span>SD.ETO</span><h3>Engineer-to-Order</h3><p>The WBS/project becomes the engineering, stock, cost and execution backbone. Sales is the contract; project manufacturing owns the complex build.</p></article>
+      <article><span>SD.PROJ.PBS</span><h3>Project-Based Services</h3><p>The customer project records work, costs and billing evidence. Stock movement may not matter at all.</p></article>
+      <article><span>SD.SUB.RECUR</span><h3>Recurring Physical Delivery</h3><p>The long-lived subscription-style contract owns lifecycle. Generated sales orders execute individual delivery cycles.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Events</p>
+      <h2>Use an event when the consumer does not need to hold the order transaction open.</h2>
+      <p>{{ map.eventing.pattern }}</p>
+    </header>
+    <div class="scp-compare-grid">
+      <article class="scp-compare"><span>{{ map.eventing.code }}</span><h3>{{ map.eventing.title }}</h3><p><strong>Events:</strong> {{ map.eventing.events | join: " · " }}</p><p><strong>Good for:</strong> {{ map.eventing.good_for | join: " · " }}</p></article>
+      <article class="scp-compare"><span>SYNC ↔ ASYNC</span><h3>The customer waiting is an architecture signal.</h3><p>Pricing, ATP or credit may need a synchronous answer before the promise is shown. Notifications, indexing and side-by-side reactions usually do not. Making everything synchronous is a strangely expensive way to discover network latency.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead checklist</p>
+      <h2>Five questions before drawing another integration arrow.</h2>
+    </header>
+    <div class="scp-answer-grid">
+      {% for question in map.lead_checks %}
+      <article class="scp-answer"><span>0{{ forloop.index }}</span><p>{{ question }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence boundary</p>
+      <h2>Interfaces and process boundaries are verified. The map is ours.</h2>
+      <p>The SAP references below verify current APIs, communication scenarios, production/project patterns and integration capabilities. The code system, memory model and architecture comparisons are independently written for this lab.</p>
+    </header>
+    <ul class="scp-source-list">
+      {% for source in registry.sources %}
+      <li><a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.title }}</a><br /><small>{{ source.product_scope }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %}</small></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
