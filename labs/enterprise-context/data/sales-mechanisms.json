@@ -3,13 +3,14 @@ layout: null
 permalink: /labs/enterprise-context/data/sales-mechanisms.json
 sitemap: false
 ---
+{% assign mechanisms = site.data.labs.enterprise_context.mechanisms.sales_mechanisms %}
 {
   "contract": {{ site.data.labs.enterprise_context.mechanisms.sales_mechanism_contract | jsonify }},
-  "index": {{ site.data.labs.enterprise_context.mechanisms.sales_mechanisms.index | jsonify }},
-  "commercial": {{ site.data.labs.enterprise_context.mechanisms.sales_mechanisms.01_commercial | jsonify }},
-  "fulfillment": {{ site.data.labs.enterprise_context.mechanisms.sales_mechanisms.02_fulfillment | jsonify }},
-  "financial": {{ site.data.labs.enterprise_context.mechanisms.sales_mechanisms.03_financial | jsonify }},
-  "communication": {{ site.data.labs.enterprise_context.mechanisms.sales_mechanisms.04_communication | jsonify }},
-  "relations": {{ site.data.labs.enterprise_context.mechanisms.sales_mechanisms.relations | jsonify }},
-  "process_map": {{ site.data.labs.enterprise_context.mechanisms.sales_mechanisms.process_map | jsonify }}
+  "index": {{ mechanisms.index | jsonify }},
+  "commercial": {{ mechanisms["01_commercial"] | jsonify }},
+  "fulfillment": {{ mechanisms["02_fulfillment"] | jsonify }},
+  "financial": {{ mechanisms["03_financial"] | jsonify }},
+  "communication": {{ mechanisms["04_communication"] | jsonify }},
+  "relations": {{ mechanisms.relations | jsonify }},
+  "process_map": {{ mechanisms.process_map | jsonify }}
 }
