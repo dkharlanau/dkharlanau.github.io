@@ -10,7 +10,7 @@
     "source_path": "datasets/automotive-jit/manifest.json",
     "canonical_url": "https://dkharlanau.github.io/datasets/automotive-jit/manifest.json",
     "created_at_utc": "2026-08-14T17:30:00Z",
-    "updated_at_utc": "2026-08-14T17:30:00Z",
+    "updated_at_utc": "2026-08-14T18:05:00Z",
     "entity_type": "collection_manifest",
     "entity_subtype": "sap_automotive_jit",
     "summary": "Local manifest for the Automotive JIT/JIS Assessment Lab collection.",
@@ -49,25 +49,49 @@
         "path": "/datasets/automotive-jit/agent-rules.json",
         "type": "agent_policy",
         "use_for": ["agent system prompt context", "spec review", "architecture recommendation", "anti-hallucination controls"]
+      },
+      {
+        "id": "automotive-jit-call-control-operations",
+        "path": "/datasets/automotive-jit/call-control-operations.json",
+        "type": "operations_playbook",
+        "use_for": ["call control action design", "cancellation and reversal", "transaction orientation", "monitoring and logs", "scanner/MES design", "handling unit recovery"]
+      },
+      {
+        "id": "automotive-jit-call-control-graph",
+        "path": "/datasets/automotive-jit/call-control-graph.json",
+        "type": "knowledge_graph_extension",
+        "extends": "/datasets/automotive-jit/knowledge-graph.json",
+        "use_for": ["cancellation impact traversal", "status-versus-physical-state reasoning", "scanner and HU dependencies", "operations root-cause analysis"]
       }
     ]
   },
+  "human_pages": [
+    {"path":"/datasets/automotive-jit/","use_for":"domain overview"},
+    {"path":"/datasets/automotive-jit/call-control/","use_for":"actions, cancellation, scanner, HU, monitoring and transactions"}
+  ],
   "retrieval_hints": {
-    "primary_entities": ["jit_call", "sequenced_jit_call", "summarized_jit_call", "component_group", "call_component", "call_control", "jit_control_cycle", "scheduling_agreement", "packing_group", "delivery_sequence_group", "handling_unit"],
-    "primary_relations": ["TRIGGERS", "CONTROLS", "CHANGES_STATUS", "DETERMINES", "FORWARDS_TO", "FAILS_IF", "EXTENDS", "INTEGRATES_WITH"],
+    "primary_entities": ["jit_call", "sequenced_jit_call", "summarized_jit_call", "component_group", "call_component", "call_control", "jit_control_cycle", "scheduling_agreement", "packing_group", "delivery_sequence_group", "handling_unit", "outbound_delivery", "goods_issue", "action_log", "scanner_event"],
+    "primary_relations": ["TRIGGERS", "CONTROLS", "CHANGES_STATUS", "DETERMINES", "FORWARDS_TO", "FAILS_IF", "EXTENDS", "INTEGRATES_WITH", "REVERSES", "CANCELS", "RECONCILES"],
     "query_examples": [
       "What happens after a sequenced JIT call is received?",
       "How should duplicate JIS calls be handled?",
       "What is the difference between classic JIT and Next Generation JIT?",
       "Where can component group determination be extended?",
       "How should Tier-2 JIS forwarding handle lead time and resequencing?",
-      "Which checks are missing from this JIT interface specification?"
+      "Which checks are missing from this JIT interface specification?",
+      "How do I cancel a JIT call after delivery or goods issue?",
+      "What is the difference between CANC, JITE and an interlinked cancellation action?",
+      "Which transactions and logs are useful for JIT incident analysis?",
+      "How can a scanner or MES trigger JIT progress actions safely?",
+      "How are handling units connected to JIS sequence and cancellation?"
     ]
   },
   "review_gate": [
     "Confirm terminology against the target SAP release used for assessment.",
     "Confirm whether local project term JIC has a specific meaning before adding it as an alias.",
     "Review extension-point availability for target deployment model.",
+    "Review transaction and action availability against the exact classic or Next Generation JIT scope.",
+    "Validate customer-specific cancellation utilities and Z-actions separately from SAP standard behavior.",
     "Promote to verified/indexable only after human review according to repository policy."
   ]
 }
