@@ -1,0 +1,303 @@
+{
+  "id": "automotive-jit-call-control-operations",
+  "title": "SAP Automotive JIT Call Control Operations Playbook",
+  "tags": ["sap", "automotive", "jit", "jis", "call-control", "cancellation", "scanner", "handling-unit", "monitoring", "transactions"],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.0",
+    "dataset": "automotive-jit",
+    "source_project": "Assessment Lab",
+    "source_path": "datasets/automotive-jit/call-control-operations.json",
+    "canonical_url": "https://dkharlanau.github.io/datasets/automotive-jit/call-control-operations.json",
+    "created_at_utc": "2026-08-14T18:05:00Z",
+    "updated_at_utc": "2026-08-14T18:05:00Z",
+    "entity_type": "operations_playbook",
+    "entity_subtype": "sap_automotive_jit_call_control",
+    "summary": "Operational design guide for classic and Next Generation SAP Automotive JIT call control: actions, cancellation, monitoring, scanner use, handling units, transactions, programmatic interfaces, and recovery.",
+    "verification": "review_candidate",
+    "provenance": {
+      "client_data": false,
+      "fictional_examples_only": true,
+      "method": "Grounded in SAP Help and converted into project-oriented design patterns. Project patterns are separated from standard SAP behavior."
+    }
+  },
+  "mental_model": [
+    "Call Control is a state/action engine. A status tells where the call is. An action changes business state and may create or reverse logistics side effects.",
+    "A status jump is not a business reversal. Emergency status correction can change status without undoing delivery, HU, goods movement, warehouse, transport, supplier-call, or billing objects.",
+    "Cancellation is an unwind process. Start from the latest irreversible or externally visible side effect and move backwards.",
+    "For JIS, the physical object matters as much as the SAP document. A packed rack, scanned HU, loaded truck, or forwarded Tier-2 call can make an electronic cancellation too late for automatic processing."
+  ],
+  "classic_action_catalog": {
+    "create_and_change": [
+      {"action":"CREA","meaning":"Create JIT call and call structure.","design_note":"Usually first inbound transmission."},
+      {"action":"MODI","meaning":"Change total JIT call.","design_note":"Broad update; more expensive than narrow updates."},
+      {"action":"MODH","meaning":"Change call header and component groups.","design_note":"Useful when sequence/header data changes."},
+      {"action":"MODG","meaning":"Change component groups only.","design_note":"Useful when external status changes without full call change."},
+      {"action":"JIT2","meaning":"Internal action when a call is changed manually in transaction JIT2."},
+      {"action":"MODC","meaning":"Change one call component."},
+      {"action":"INSC","meaning":"Add a call component."},
+      {"action":"DELC","meaning":"Delete a call component."},
+      {"action":"DLET","meaning":"Delete a component group that is no longer transmitted.","design_note":"Important for repeated sequenced calls so removed scope does not remain active."}
+    ],
+    "production_and_progress": [
+      {"action":"PIN","meaning":"Transfer component group to production.","trigger_example":"OEM production-release signal."},
+      {"action":"PCOM","meaning":"Print component list."},
+      {"action":"PINP","meaning":"Interlinked PIN + PCOM.","pattern":"One operator event performs release and print."},
+      {"action":"CGRP","meaning":"Generate and assign grouping information/index.","pattern":"Often used for rack or sequence grouping."},
+      {"action":"POUT","meaning":"Production completion message.","warning":"Status progression only; goods movement is separate."},
+      {"action":"PICK","meaning":"Print pick list."},
+      {"action":"POUP","meaning":"Interlinked POUT + PICK."},
+      {"action":"SCRA","meaning":"Report scrap and reprint component list with high priority."},
+      {"action":"NIO","meaning":"Missing-part / park-status signal."},
+      {"action":"REPR","meaning":"Reprint component list."}
+    ],
+    "buffer_and_hu": [
+      {"action":"WIN","meaning":"Move component group into buffer storage."},
+      {"action":"SWCG","meaning":"Exchange component groups of two calls.","pattern":"Useful when a buffer object can satisfy another sequence position."},
+      {"action":"PSWC","meaning":"Print component-group exchange list."},
+      {"action":"WOUT","meaning":"Remove component group from buffer storage."},
+      {"action":"CRHU","meaning":"Create HU from a component group before buffer storage."},
+      {"action":"DEHU","meaning":"Unpack component group and delete HU."},
+      {"action":"HUPP","meaning":"Generate an HU in production."}
+    ],
+    "delivery_and_goods_movement": [
+      {"action":"DELI","meaning":"Create delivery for JIT call/component groups.","note":"Can also generate HUs during delivery creation when configured."},
+      {"action":"BFDL","meaning":"Create backflush and delivery."},
+      {"action":"VL10","meaning":"Create summarized-JIT delivery using delivery list.","note":"Uses sub-action DELS."},
+      {"action":"DELS","meaning":"Sub-action used for summarized-JIT delivery creation."},
+      {"action":"GOIS","meaning":"Post goods issue for a JIT delivery."},
+      {"action":"GOCC","meaning":"Reverse goods issue for a JIT delivery."}
+    ],
+    "confirmation_and_close": [
+      {"action":"MTCH","meaning":"Set delivery confirmation to matched."},
+      {"action":"UDMT","meaning":"Reset delivery-confirmation match."},
+      {"action":"FINI","meaning":"Close component group."},
+      {"action":"ARCH","meaning":"Release JIT call/component group for archiving."},
+      {"action":"REOR","meaning":"Reorganize/delete JIT data from database when allowed by Call Control."}
+    ],
+    "special": [
+      {"action":"CANC","meaning":"Cancel component group by setting the configured cancelled internal processing status.","warning":"This does not automatically prove every downstream logistics object was reversed."},
+      {"action":"WFLW","meaning":"Trigger workflow event."}
+    ]
+  },
+  "next_generation_action_patterns": {
+    "supply_to_customer_examples": [
+      {"action":"S1_JC_CREA","meaning":"Create JIT call."},
+      {"action":"S1_JC_MODI","meaning":"Modify JIT call."},
+      {"action":"S1_JC_CANC","meaning":"Cancel JIT call."},
+      {"action":"S1_JC_R2P","meaning":"Release summarized JIT component group to production."},
+      {"action":"S1_JC_UR2P","meaning":"Revoke release to production."},
+      {"action":"S1_JC_BKFL","meaning":"Execute backflush at component-material level."},
+      {"action":"S1_BL_POST","meaning":"Billing posted; lifecycle can be completed."},
+      {"action":"S1_BL_CANC","meaning":"Billing cancelled; lifecycle becomes active again."},
+      {"action":"S1_CG_EMGY","meaning":"Emergency status correction.","warning":"Bypasses normal business dependencies."}
+    ],
+    "supply_to_production_and_forwarded_jis_examples": [
+      {"action":"S2_IN_CANC","meaning":"Interlinked cancellation of JIT call.","sub_actions":["cancel JIT call","cancel warehouse request/tasks","cancel outbound proxy call","cancel freight unit"],"assessment_point":"This is a clear standard example of cancellation as orchestration, not one status update."},
+      {"action":"S2_IN_MODF","meaning":"Interlinked modification.","sub_actions":["modify JIT call","modify proxy call","modify warehouse request/tasks","tolerance notification","update freight unit"]},
+      {"action":"S2_IN_IDLV","meaning":"Create/update inbound delivery and update JIT statuses."},
+      {"action":"S2_IN_IDRV","meaning":"Reverse inbound delivery."},
+      {"action":"S2_IN_GRRV","meaning":"Reverse goods receipt for JIT-based integration."},
+      {"action":"S2_IN_ASRV","meaning":"Reverse advanced shipping notification."},
+      {"action":"S2_JC_OPEN","meaning":"Reopen JIT call when inbound delivery is deleted."},
+      {"action":"S2_JC_PKST","meaning":"Picking started, triggered from EWM."},
+      {"action":"S2_JC_PKCM","meaning":"Picking completed, triggered from EWM."},
+      {"action":"S2_JC_PKDN","meaning":"Cancel JIT call from EWM pick denial."},
+      {"action":"S2_WH_CANC","meaning":"Cancel warehouse request."},
+      {"action":"S2_IN_CNCG","meaning":"Cancel forwarded JIS call at component-group level; freight unit can also be cancelled when all groups are cancelled."},
+      {"action":"S2_IN_CNFW","meaning":"Cancel complete forwarded JIS call at header level."}
+    ],
+    "interlinked_action_rule": "SAP supports interlinked actions that execute two or more actions together. In Next Generation JIT, interlinked actions cannot be nested."
+  },
+  "cancellation_design": {
+    "three_meanings_to_separate": [
+      {"type":"business_cancellation","question":"Does the OEM or planner no longer need the call?","result":"Demand should no longer be active."},
+      {"type":"logistics_reversal","question":"Which physical/logistics objects already exist?","result":"Reverse or reconcile delivery, HU, warehouse task, goods movement, freight, confirmation, billing, or supplier call."},
+      {"type":"technical_status_correction","question":"Is SAP status wrong because processing failed?","result":"Use controlled correction only after checking real side effects."}
+    ],
+    "recommended_unwind_order": [
+      "Freeze automatic follow-on processing for the affected call/component group.",
+      "Read action log and linked documents before changing anything.",
+      "If billing exists, reverse billing first when the business process requires it.",
+      "If goods issue exists, reverse goods issue before cancelling or changing the delivery.",
+      "If warehouse tasks or EWM execution exist, cancel or reverse them according to warehouse state.",
+      "If an HU is packed or loaded, reconcile packing/HU assignment. Do not only change JIT status.",
+      "If delivery exists, cancel/delete/reject it using the supported logistics process for that release.",
+      "If a Tier-2 or outbound proxy call was created, send or execute the corresponding cancellation/change.",
+      "If production/backflush was posted, reverse or compensate it using the manufacturing/inventory process.",
+      "Only then move the JIT call/component group to the intended cancelled or reopened state.",
+      "Re-read linked documents and action logs to prove that logical and physical state are consistent."
+    ],
+    "classic_project_pattern": {
+      "name": "Mass cancellation / unwind report",
+      "status": "project_pattern_not_a_documented_single_standard_report",
+      "why_projects_build_it": "One call can already have several side effects and users need a safe mass process instead of manually opening many transactions.",
+      "minimum_features": [
+        "selection by external call number, customer, plant, component group, sequence range and current status",
+        "simulation mode that shows every planned reversal step",
+        "dependency checks for delivery, HU, goods issue, material document, forwarded call and billing",
+        "step-by-step action execution with commit boundaries",
+        "idempotent restart after partial failure",
+        "authority check and four-eyes approval for dangerous ranges",
+        "application log with before/after state and document references",
+        "no direct status-table update as the normal path"
+      ],
+      "implementation_hint": "Prefer standard JIT actions, BAPIs/RFCs and logistics APIs. Use status correction only as an emergency tool, not as the engine of the cancellation program."
+    },
+    "status_jump_warning": {
+      "classic": "Transaction JITE can change external/internal statuses without Call Control and without executing actions.",
+      "next_generation": "Emergency status correction can also change processing/status indicators without normal business dependencies.",
+      "lead_rule": "A jump is safe only when all skipped business effects are either not relevant, already reversed, or explicitly reconciled."
+    }
+  },
+  "programmatic_interfaces_and_reports": {
+    "classic_jit_inbound_bapi_rfc": [
+      {"interface":"JITCallInbound.GetComponentGroupDetails","use":"Read component-group details for a subsystem or custom tool."},
+      {"interface":"JITCallInbound.GetComponentGroups","use":"Select component groups for a subsystem or custom tool."},
+      {"interface":"JITCallInbound.GetDetails","use":"Read JIT-call details."},
+      {"interface":"JITCallInbound.PerformAction","use":"Execute an action for component groups from a subsystem."},
+      {"interface":"JITCallInbound.PerformActionFullCall","use":"Execute an action for full JIT calls from a subsystem."},
+      {"interface":"JIT04_SET_ACTION_EXTERN","type":"RFC function module","use":"Execute JIT actions from an external/subsystem integration with extensive parameters."}
+    ],
+    "standard_reports_found": [
+      {"program":"RJITARCH01","use":"Archive JIT Inbound calls."},
+      {"program":"RJITARCH02","use":"Delete archived JIT Inbound transaction data."},
+      {"program":"RJITOUTARCH01","use":"Archive JIT Outbound calls."},
+      {"program":"RJITOUTARCH02","use":"Delete archived JIT Outbound transaction data."},
+      {"program":"RJITARCHNO","use":"Reset JIT Inbound archiving so calls can be processed again; Call Control must still ensure consistency."}
+    ],
+    "finding": "SAP Help documents many transactions and action interfaces, but not one classic standard report that safely reverses an arbitrary multi-step JIT process. Treat a project-specific multi-step cancellation utility as custom orchestration unless the target system proves otherwise."
+  },
+  "transaction_catalog": {
+    "classic_inbound_core": [
+      ["JIT1","Create JIT call"],["JIT2","Change JIT call"],["JIT3","Display JIT call"],["JIT4","Simulate JIT call"],
+      ["JITM / JITMX","Inbound JIT monitoring"],["JITF / JITFX","Progress confirmation in list"],["JITG","Inbound JIT cockpit"],
+      ["JITJ","Signal monitor"],["EMJIT","IDoc monitor for incoming JIT calls"],["JITLOG","Action log"],["JITE","Status correction"],
+      ["JIT6","Barcode entry"],["JIT7","Barcode entry with standard value"],["JITA","Component requirements list"],["JITH","Requirements match"],
+      ["DLCN","Match/reprocess delivery confirmations manually"],["DLC2","Compare JIT calls with delivery confirmations"],
+      ["JIT5","Fast change / emergency"],["JITB","Reprocess goods movements"],["JITK","Deliver operations due for shipping"],
+      ["JITQ","Display action network"],["OJITI","JIT Inbound Customizing"]
+    ],
+    "classic_outbound_core": [
+      ["JITO1","Create outbound JIT calls manually"],["JITO3","Display outbound JIT calls"],["JITOM","Outbound JIT monitoring"],
+      ["JITOG","Outbound JIT cockpit"],["JITOE","Outbound status correction"],["JITOAL","Outbound alerting"],["JITO6","Outbound barcode entry"],
+      ["ODLC","Outbound delivery confirmation"],["PKMC","Control cycle maintenance"],["OJITO","JIT Outbound Customizing"]
+    ],
+    "linked_logistics_and_master_data": [
+      ["VL32N / VL33N","Change/display inbound delivery in classic outbound-JIT context"],
+      ["LT0F / LT21","Create/display transfer order in classic WM context"],
+      ["ME31L","Create MM scheduling agreement"],["MM02 / MM03","Material master"],["CS01","Create BOM"],
+      ["ME01","Source list"],["WE20","Partner profiles"],["SHD0","Transaction variants; useful to simplify scanner/operator screens"]
+    ],
+    "operations_rule": "Transaction lists are release and architecture dependent. Use them as orientation for classic SAP GUI processes, not as a promise that the target system uses the same UI."
+  },
+  "monitoring_and_logs": {
+    "classic_triage_path": [
+      {"step":1,"tool":"JITM / JITMX","question":"What is the current call/component-group status and which actions are allowed?"},
+      {"step":2,"tool":"JITLOG","question":"Which actions succeeded or failed, who triggered them, and what was the previous status?","prerequisite":"Logging Active must be enabled in Call Control."},
+      {"step":3,"tool":"EMJIT","question":"Did the inbound IDoc fail technically or during JIT business processing?","capabilities":["display IDoc","show status history","process in dialog/background","logical deletion"]},
+      {"step":4,"tool":"JIT3 or monitor navigation","question":"Which JIT header/component-group/component values were determined?"},
+      {"step":5,"tool":"linked logistics documents","question":"Does delivery, HU, material document, warehouse task, confirmation or billing state match JIT state?"},
+      {"step":6,"tool":"JITQ","question":"What does the configured action network allow from the current state?"},
+      {"step":7,"tool":"JITE only if required","question":"After reconciliation, is emergency status correction still needed?"}
+    ],
+    "next_generation": [
+      "Monitor Customer JIT Calls apps expose action logs and application logs.",
+      "Action Log records action ID, before/after status, action status/source and user.",
+      "Monitor JIT Calls at component-material level can show plant, PSA, requirement date/time, internal status, control cycle and logs.",
+      "Emergency correction also exposes packing, production, delivery, HU and goods-issue status indicators. Use them for reconciliation before manual correction."
+    ],
+    "log_retention_note": "Classic JIT action logs can be deleted with transaction JITLOGDEL. Before JIT archiving, SAP documents saving logs through application-log archiving using object JIT and subobject Action."
+  },
+  "scanner_and_shop_floor": {
+    "classic_barcode_pattern": {
+      "transactions": ["JIT6","JIT7","JITO6"],
+      "identity": "Barcode qualifier + identifier. The qualifier defines which business attribute identifies the scanned object.",
+      "possible_identifiers": ["internal component-group number","internal call number","grouping information"],
+      "entry_unit": "The operator can scan several objects and execute one action. Entry unit can match rack capacity so the action fires automatically when the rack is full.",
+      "screen_simplification": "Use SHD0 transaction variants to hide fields and reduce operator choices.",
+      "good_actions_for_scanning": ["PIN/PINP at release point","POUT/POUP at end of production","rack grouping / progress confirmation","project-specific validated actions"],
+      "design_rule": "The scanner should identify the physical object and request a business action. It should not write a status directly."
+    },
+    "subsystem_pattern": {
+      "use_case": "MES, line terminal or custom scanner app reports a physical event.",
+      "recommended_flow": [
+        "scan HU/rack/component-group identity",
+        "resolve it to JIT call/component group",
+        "check current internal status and allowed action",
+        "execute the JIT action through supported interface",
+        "return clear success/error to operator",
+        "write action/application log",
+        "print or update label only after committed success"
+      ],
+      "classic_interfaces": ["JITCallInbound.PerformAction","JITCallInbound.PerformActionFullCall","JIT04_SET_ACTION_EXTERN"]
+    },
+    "ewm_rf_pattern": {
+      "use": "RF devices can support packing and HU processing in EWM.",
+      "operational_model": "Operator logs on to a packing work center, scans pick HUs, and the system can propose or create destination HUs depending on packing setup.",
+      "jit_link": "In Next Generation JIT, picking-started/completed and warehouse cancellation can update JIT Action Control. The warehouse becomes a source of physical truth, not only a downstream black box."
+    }
+  },
+  "handling_unit_playbook": {
+    "definition": "A Handling Unit is a uniquely identified physical package made of packaging material plus packed products. HUs can be nested and have scannable IDs.",
+    "why_jis_cares": "Sequence is physically carried by racks/HUs. A correct call status with the wrong HU sequence is still a line-side failure.",
+    "classic_patterns": [
+      {"pattern":"HU before buffer storage","action":"CRHU","follow_up":"WIN"},
+      {"pattern":"Unpack/delete HU after removal","action":"DEHU"},
+      {"pattern":"Generate deliverable HU in production","action":"HUPP"},
+      {"pattern":"Create HU automatically with sequenced JIT delivery","action":"DELI","configuration":"Delivery control profile can enable HU generation."},
+      {"pattern":"Create delivery for summarized call with HU","transaction":"JITK"},
+      {"pattern":"Assign an already built HU to summarized JIT call","transaction":"VL10HU"}
+    ],
+    "reconciliation_checks": [
+      "HU exists and is not already consumed/deleted.",
+      "HU contains the expected material/configuration and quantity.",
+      "HU sequence/rack position matches current JIS sequence.",
+      "HU is assigned to the expected delivery/warehouse process.",
+      "Loading or goods issue has not made repacking impossible.",
+      "A cancellation/change has a physical instruction for the operator, not only a SAP status change."
+    ]
+  },
+  "logistics_dependency_map": [
+    {"from":"Sales Scheduling Agreement","to":"Customer JIT/JIS Call","relation":"commercial/planning anchor refined by short-horizon execution demand"},
+    {"from":"Customer JIT/JIS Call","to":"Component Group","relation":"call structure and operational control unit"},
+    {"from":"Component Group","to":"Production / Staging","relation":"Call Control releases and confirms work"},
+    {"from":"Component Group","to":"Packing Group / Rack","relation":"sequence grouping and operator handling"},
+    {"from":"Packing Group / Rack","to":"Handling Unit","relation":"physical package and scannable traceability"},
+    {"from":"JIT Call / Component Group","to":"Outbound Delivery","relation":"delivery creation according to action/status and grouping rules"},
+    {"from":"Outbound Delivery","to":"Goods Issue","relation":"shipping execution and stock ownership change"},
+    {"from":"Outbound Delivery","to":"Delivery Confirmation","relation":"customer confirmation can be matched back to JIT quantities"},
+    {"from":"Outbound Delivery","to":"Billing","relation":"commercial completion in supply-to-customer flow"},
+    {"from":"Purchase Scheduling Agreement","to":"JIT Control Cycle","relation":"supplier/source and replenishment context for supply-to-production/outbound JIT"},
+    {"from":"JIT Control Cycle","to":"Supplier / Warehouse JIT Call","relation":"source, destination, PSA, timing and action-control determination"},
+    {"from":"Forwarded JIS Call","to":"Tier-2 Supplier","relation":"derived short-horizon demand with traceability to OEM requirement"},
+    {"from":"JIT Call","to":"EWM / Warehouse Tasks","relation":"picking and physical execution can update JIT statuses"},
+    {"from":"JIT Call","to":"TM / Freight Unit","relation":"modern forwarded-JIS process can create/modify/cancel freight units"}
+  ],
+  "project_actions_worth_considering": [
+    {"name":"Z_HOLD","purpose":"Park call/component group during investigation without pretending it is cancelled.","guardrail":"No delivery/warehouse side effect."},
+    {"name":"Z_RELEASE_HOLD","purpose":"Return a held object to controlled processing after checks."},
+    {"name":"Z_QA_BLOCK","purpose":"Stop progression for quality issue and make operator reason visible."},
+    {"name":"Z_REPACK_REQUIRED","purpose":"Mark that logical resequence needs physical HU/rack correction before shipping."},
+    {"name":"Z_CANCEL_CHAIN","purpose":"Start governed multi-step cancellation orchestration.","guardrail":"Simulation, idempotency and linked-document checks required."},
+    {"name":"Z_RETRY_SAFE","purpose":"Retry one failed action only after verifying previous side effects."},
+    {"name":"Z_NOTIFY_MES","purpose":"Publish state transition to shop-floor system after commit."},
+    {"name":"Z_NOTIFY_3PL","purpose":"Notify external warehouse/service provider when call state requires physical action."},
+    {"name":"Z_PRINT_EXCEPTION","purpose":"Print a clear exception/rack label for physical segregation."}
+  ],
+  "lead_assessment_prompts": [
+    "What is the difference between CANC, a multi-step cancellation procedure, and emergency status correction?",
+    "How do you cancel a call that already has delivery, HU and goods issue?",
+    "Why is an interlinked action safer than a direct status jump?",
+    "How would you design a scanner flow so that one scan cannot move the wrong rack?",
+    "Which logs do you check before reprocessing a failed action?",
+    "How do scheduling agreement, JIT call, component group, HU and delivery relate?",
+    "What changes when EWM or TM owns part of the physical execution?",
+    "How would you make a mass-cancellation report restartable after partial failure?"
+  ],
+  "source_boundary": {
+    "standard_sap_facts": "Action names, transaction codes, documented BAPIs/RFC, standard reports, status-correction behavior, HU/JIT patterns and Next Generation interlinked cancellation are based on SAP Help.",
+    "project_synthesis": "Cancellation unwind order, custom utility requirements, Z-action examples, scanner UX rules and assessment framing are practitioner-oriented design synthesis, not claims about one SAP standard implementation.",
+    "review_rule": "Verify target S/4HANA release, deployment model, enabled JIT generation, EWM/TM architecture and customer-specific enhancements before using these details in a real specification."
+  }
+}
