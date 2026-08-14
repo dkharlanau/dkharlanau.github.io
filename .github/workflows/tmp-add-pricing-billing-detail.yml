@@ -1,19 +1,20 @@
 name: Temporary Pricing billing detail
 
 on:
-  pull_request:
+  push:
+    branches:
+      - agent/sales-order-decision-map
 
 permissions:
   contents: write
 
 jobs:
   patch:
-    if: github.event.pull_request.head.ref == 'agent/sales-order-decision-map'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -80,10 +81,6 @@ billing_repricing:
               if marker not in text:
                   raise SystemExit('graph insertion marker not found')
               text = text.replace(marker, '\n' + block + 'practitioner_heuristics:\n', 1)
-          for ref in ['SRC-SAP-PRICING-BILLING-PRICING-TYPES', 'SRC-SAP-PRICING-COPYING-CONTROL']:
-              line = f'  - {ref}\n'
-              if line not in text.split('source_refs:\n', 1)[-1]:
-                  text += line
           graph.write_text(text, encoding='utf-8')
           yaml.safe_load(text)
 
@@ -130,5 +127,5 @@ billing_repricing:
             echo "No changes."
           else
             git commit -m "Add billing repricing detail"
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+            git push origin HEAD:${{ github.ref_name }}
           fi
