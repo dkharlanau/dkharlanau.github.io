@@ -1,0 +1,199 @@
+version: "0.1.2"
+updated_at: "2026-08-14"
+
+common_fields:
+  - id
+  - type
+  - title
+  - summary
+  - domain
+  - status
+  - created_at
+  - updated_at
+  - verified_at
+  - source_refs
+  - tags
+  - relations
+
+statuses:
+  - planned
+  - researching
+  - draft
+  - modeled
+  - source_verified
+  - published
+  - needs_review
+  - retired
+
+evidence_types:
+  - documented_fact
+  - expert_heuristic
+  - reasoned_inference
+  - synthetic_assumption
+  - observed_example
+
+node_types:
+  - id: capability
+    label: "Business Capability"
+    prefix: "CAP"
+  - id: process
+    label: "Business Process"
+    prefix: "PROC"
+  - id: process_variant
+    label: "Process Variant"
+    prefix: "VAR"
+  - id: process_step
+    label: "Process Step"
+    prefix: "STEP"
+  - id: business_object
+    label: "Business Object"
+    prefix: "OBJ"
+  - id: attribute
+    label: "Object Attribute / Field Concept"
+    prefix: "ATTR"
+  - id: master_data_object
+    label: "Master Data Object"
+    prefix: "MD"
+  - id: organization_unit
+    label: "Organization Unit"
+    prefix: "ORG"
+  - id: application_domain
+    label: "Application / Solution Domain"
+    prefix: "DOM"
+  - id: application_component
+    label: "Application / Solution Component"
+    prefix: "APP"
+  - id: term
+    label: "Business / SAP Term"
+    prefix: "TERM"
+  - id: rule
+    label: "Rule / Determination Logic"
+    prefix: "RULE"
+  - id: configuration_decision
+    label: "Configuration / Design Decision"
+    prefix: "DEC"
+  - id: integration
+    label: "Integration / Interface"
+    prefix: "INT"
+  - id: message
+    label: "Message / API / Event"
+    prefix: "MSG"
+  - id: failure_mode
+    label: "Failure Mode"
+    prefix: "FAIL"
+  - id: root_cause
+    label: "Root Cause"
+    prefix: "CAUSE"
+  - id: kpi
+    label: "KPI / Business Measure"
+    prefix: "KPI"
+  - id: control
+    label: "Control"
+    prefix: "CTRL"
+  - id: test_case
+    label: "Test Case"
+    prefix: "TEST"
+  - id: expert_heuristic
+    label: "Expert Heuristic"
+    prefix: "HEUR"
+  - id: scenario
+    label: "Scenario"
+    prefix: "SCN"
+  - id: dataset
+    label: "Dataset"
+    prefix: "DATA"
+  - id: source
+    label: "Source"
+    prefix: "SRC"
+
+edge_types:
+  - contains
+  - contains_component
+  - belongs_to_domain
+  - precedes
+  - triggers
+  - creates
+  - reads
+  - writes
+  - updates
+  - references
+  - requires
+  - determines
+  - derives_from
+  - validated_by
+  - integrated_via
+  - integrates_with
+  - exposed_by
+  - orchestrates
+  - provides_capability
+  - can_fail_as
+  - can_cause
+  - impacts
+  - measured_by
+  - controlled_by
+  - tested_by
+  - supported_by
+  - owned_by
+  - applies_to
+  - synonym_of
+
+source_contract:
+  required:
+    - id
+    - publisher
+    - source_type
+    - title
+    - accessed_at
+    - status
+  optional:
+    - url
+    - release_scope
+    - product_scope
+    - country_scope
+    - notes
+
+assertion_contract:
+  required:
+    - subject
+    - predicate
+    - object
+    - evidence_type
+    - confidence
+  optional:
+    - source_refs
+    - rationale
+    - scope
+    - verified_at
+
+expert_heuristic_contract:
+  required:
+    - id
+    - context
+    - statement
+    - confidence
+  optional:
+    - symptom
+    - questions
+    - checks
+    - anti_patterns
+    - escalation_conditions
+    - related_nodes
+    - evidence_refs
+
+freshness_fields:
+  created_at: "When the object first entered the model."
+  updated_at: "When its structured content last changed."
+  verified_at: "When externally verifiable facts were last checked."
+  source_accessed_at: "When a source was reviewed."
+  release_scope: "Product or release boundary for time-sensitive facts."
+
+id_rules:
+  pattern: "<PREFIX>-<DOMAIN>-<SHORT-STABLE-NAME>"
+  examples:
+    - "DOM-WAREHOUSING"
+    - "PROC-O2C-ORDER-TO-CASH"
+    - "STEP-O2C-CREATE-SALES-ORDER"
+    - "OBJ-SD-SALES-ORDER"
+    - "APP-S4HANA-SALES"
+    - "HEUR-O2C-SCOPE-BEFORE-CONFIG"
+  guidance: "IDs are stable identifiers. Titles may change; IDs should not unless the underlying concept changes."

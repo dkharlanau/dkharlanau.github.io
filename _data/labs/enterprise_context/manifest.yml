@@ -1,0 +1,86 @@
+id: lab-enterprise-context
+title: "Enterprise Context Lab"
+model_name: "Enterprise Context Graph"
+version: "0.1.0"
+status: active_research
+started_at: "2026-08-14"
+updated_at: "2026-08-14"
+last_reviewed_together_at: "2026-08-14"
+review_note: "Last reviewed together against official SAP sources."
+owner: "Dzmitryi Kharlanau"
+
+purpose: >-
+  Build a source-tracked, machine-readable model that connects enterprise business
+  processes, data, systems, rules, integrations, failures, KPIs, tests, and expert
+  reasoning so the same knowledge can support learning, impact analysis, diagnostics,
+  synthetic data, and AI evaluation.
+
+principles:
+  - id: source_tracked
+    label: "Source-tracked"
+    description: "Every externally verifiable assertion should point to evidence and a verification date."
+  - id: machine_readable
+    label: "Machine-readable"
+    description: "Human pages are views over structured data rather than the only source of truth."
+  - id: synthetic_safe
+    label: "Synthetic by default"
+    description: "Examples and enterprise records are fictional unless explicitly documented otherwise."
+  - id: fact_vs_judgment
+    label: "Facts and judgment stay separate"
+    description: "Documented facts, expert heuristics, and inferences carry different evidence types."
+  - id: deep_verticals
+    label: "Depth before breadth"
+    description: "A topic is expanded through relationships, failures, tests, and reasoning before another catalogue is created."
+
+reference_enterprise:
+  id: enterprise-global-transformation-industries
+  title: "Global Transformation Industries"
+  status: planned
+  synthetic: true
+  description: >-
+    A fictional multinational enterprise used to instantiate processes, master data,
+    integrations, transactions, failures, and transformation scenarios without exposing
+    client or employer information.
+
+first_vertical:
+  id: TOPIC-O2C-SALES-ORDER-CREATION
+  title: "Order-to-Cash — Sales Order Creation"
+  status: researching
+  gates_complete: 1
+  gates_total: 7
+
+maturity_gates:
+  - id: scope
+    order: 1
+    label: "Scope"
+    done_definition: "Boundary, business question, domain, and exclusions are explicit."
+  - id: sources
+    order: 2
+    label: "Sources"
+    done_definition: "Primary evidence is registered with access and verification dates."
+  - id: model
+    order: 3
+    label: "Model"
+    done_definition: "Processes, objects, attributes, rules, and terminology are represented as structured entities."
+  - id: relationships
+    order: 4
+    label: "Relationships"
+    done_definition: "Material dependencies are linked with typed, reviewable edges."
+  - id: expert_reasoning
+    order: 5
+    label: "Expert reasoning"
+    done_definition: "Questions, heuristics, decision drivers, risks, and anti-patterns are captured separately from facts."
+  - id: synthetic_example
+    order: 6
+    label: "Synthetic example"
+    done_definition: "The topic is instantiated in Global Transformation Industries with safe sample data or a scenario."
+  - id: ai_evaluation
+    order: 7
+    label: "AI / evaluation"
+    done_definition: "At least one grounded question, impact trace, diagnostic case, or benchmark task can be evaluated against the model."
+
+machine_endpoints:
+  catalog: "/labs/enterprise-context/data/catalog.json"
+  schema: "/labs/enterprise-context/data/schema.json"
+  topics: "/labs/enterprise-context/data/topics.json"
+  sources: "/labs/enterprise-context/data/sources.json"
