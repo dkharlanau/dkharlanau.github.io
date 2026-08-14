@@ -28,7 +28,13 @@ jobs:
           import yaml
 
           graph = Path('_data/labs/enterprise_context/graphs/atp.yml')
-          text = graph.read_text(encoding='utf-8').replace('$type: knowledge_graph', 'type: knowledge_graph', 1)
+          text = graph.read_text(encoding='utf-8')
+          text = text.replace('$type: knowledge_graph', 'type: knowledge_graph', 1)
+          text = text.replace(
+              '  source_refs:\n    - SRC-SAP-AATP-BOP-STRATEGIES\n\nextension_layers:',
+              'bop_source_refs:\n  - SRC-SAP-AATP-BOP-STRATEGIES\n\nextension_layers:',
+              1,
+          )
           graph.write_text(text, encoding='utf-8')
 
           for name in [
