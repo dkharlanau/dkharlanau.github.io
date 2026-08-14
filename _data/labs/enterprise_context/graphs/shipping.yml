@@ -1,0 +1,742 @@
+id: GRAPH-SD-SHIPPING-SCHEDULING
+type: knowledge_graph
+title: "Shipping & Delivery Scheduling — Determination, Dates & Execution Map"
+summary: >-
+  A practical model of how SAP S/4HANA Sales turns a sales-order item into an executable
+  shipping plan: delivering plant, shipping condition, loading group, shipping point,
+  route, activity durations, calendars, backward or forward scheduling, delivery due
+  status, and the handoff to delivery, warehouse, and transportation execution.
+domain: "SAP S/4HANA Sales / Delivery Management"
+process_family: "Order-to-Cash"
+process_step: "Plan and Execute Shipping"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: null
+
+thesis: >-
+  A wrong delivery date is usually not one scheduling parameter. Shipping is a dependency
+  chain. Plant influences shipping point. Shipping point plus customer and material data
+  influence the route. Route, shipping point, loading group, weight, working times, and
+  calendars determine durations and dates. Those dates then influence ATP, delivery due
+  processing, warehouse execution, and transportation. I trace the first wrong input or
+  calculated date instead of changing lead time until the final date looks acceptable.
+
+boundary:
+  included:
+    - "delivering plant as the upstream shipping input"
+    - "shipping condition and loading group"
+    - "shipping point determination and allowed alternatives"
+    - "route determination in sales order and delivery"
+    - "transportation group, transportation zones, and delivery weight group"
+    - "pick/pack, loading, transit, and transportation planning lead times"
+    - "working times and factory-calendar effects"
+    - "backward and forward delivery/transportation scheduling"
+    - "material availability, loading, goods issue, transportation planning, and requested delivery dates"
+    - "delivery due prerequisites and delivery blocks"
+    - "delivery split consequences of shipping-point and route differences"
+    - "EWM and TM integration boundaries"
+    - "classic route exit and released TM/EWM extension boundaries"
+  excluded:
+    - "full warehouse task design and wave management"
+    - "full Transportation Management planning and freight-order design"
+    - "carrier tendering and freight settlement"
+    - "batch determination in depth"
+    - "dangerous-goods compliance in depth"
+    - "client-specific route algorithms or custom code"
+  release_scope:
+    - "SAP S/4HANA 2025 FPS01 where cited"
+  note: >-
+    Classic LE-SHP scheduling and TM/BPS-based sales-document scheduling are separate
+    architecture options. They should not be presented as one interchangeable mechanism.
+
+memory_model:
+  title: "Nine questions I use when shipping or dates are wrong"
+  questions:
+    - key: "PLANT"
+      question: "From which delivering plant is this item shipping?"
+      answer: "A wrong plant moves every later shipping decision, so I verify it before shipping point or route."
+    - key: "CONDITION"
+      question: "Which shipping condition entered the order?"
+      answer: "Check whether the value came from the business partner or was proposed by the sales document type."
+    - key: "POINT"
+      question: "Which shipping point was determined?"
+      answer: "Plant, shipping condition, and loading group form the classic determination context."
+    - key: "ROUTE"
+      question: "Which route was proposed, and can it be redetermined later?"
+      answer: "Read departure and destination zones, shipping condition, transportation group, and delivery weight context."
+    - key: "TIMES"
+      question: "Which activity durations are used?"
+      answer: "Separate pick/pack, loading, transportation lead, and transit time instead of calling all of them lead time."
+    - key: "CALENDAR"
+      question: "Which working times and calendars move the dates?"
+      answer: "A correct duration on a closed day still produces a later date."
+    - key: "SCHEDULE"
+      question: "Did the system schedule backward or forward?"
+      answer: "Backward scheduling protects the requested date; forward scheduling finds the earliest feasible date when earlier dates fall in the past."
+    - key: "DUE"
+      question: "Is the sales-order schedule line actually due and eligible for delivery?"
+      answer: "A correct shipping date does not bypass delivery blocks, relevance, or due-list selection."
+    - key: "EXECUTE"
+      question: "What happens when the plan reaches Delivery, EWM, or TM?"
+      answer: "Route, shipping point, split, warehouse, and transportation decisions can still change execution."
+
+runtime_pipeline:
+  - id: SHP-STAGE-PLANT
+    order: 1
+    title: "Establish delivering plant and delivery relevance"
+    question: "Which logistical source and schedule line enter shipping?"
+    inputs:
+      - "sales-order item"
+      - "delivering plant from upstream determination or manual value"
+      - "schedule-line delivery relevance"
+      - "ship-to party"
+    output:
+      - "plant"
+      - "delivery-relevant item/schedule line context"
+    failure_signal: "Shipping is investigated while the item is already using the wrong plant or is not delivery relevant."
+    source_refs:
+      - SRC-SAP-SHP-POINTS
+      - SRC-SAP-SHP-DELIVERY-PREREQ
+
+  - id: SHP-STAGE-CONDITION
+    order: 2
+    title: "Resolve shipping condition"
+    question: "Which service level or shipping policy reaches determination?"
+    inputs:
+      - "ship-to business-partner shipping data"
+      - "sales document type shipping condition where configured"
+      - "document value after proposal/manual processing"
+    output:
+      - "shipping condition"
+    failure_signal: "Express or standard shipping is selected unexpectedly because the document-type proposal differs from customer data."
+    source_refs:
+      - SRC-SAP-SHP-POINTS
+
+  - id: SHP-STAGE-POINT
+    order: 3
+    title: "Determine shipping point"
+    question: "Which organizational shipping unit should process this item?"
+    inputs:
+      - "delivering plant"
+      - "shipping condition"
+      - "loading group from material"
+      - "shipping-point assignment Customizing"
+    output:
+      - "proposed shipping point"
+      - "allowed alternative shipping points where configured"
+    failure_signal: "Shipping point is blank, wrong, or different between order items, which can prevent grouping into one delivery."
+    source_refs:
+      - SRC-SAP-SHP-POINTS
+      - SRC-SAP-SHP-LOADING-GROUP
+
+  - id: SHP-STAGE-ROUTE
+    order: 4
+    title: "Determine route"
+    question: "Which transportation path and service assumptions should be used?"
+    inputs:
+      - "departure country/region and transportation zone from shipping point"
+      - "destination country/region and receiving zone from ship-to"
+      - "shipping condition"
+      - "transportation group from material"
+      - "weight group in delivery redetermination where relevant"
+    output:
+      - "proposed route in sales order"
+      - "actual/redetermined route in delivery where configured"
+    failure_signal: "Route is missing, unexpected, or changes in delivery because the runtime determination context changed."
+    source_refs:
+      - SRC-SAP-SHP-ROUTE
+      - SRC-SAP-ROUTE-CUSTOMIZING-EXIT
+
+  - id: SHP-STAGE-TIMES
+    order: 5
+    title: "Determine shipping and transportation durations"
+    question: "How much time does each logistical activity require?"
+    inputs:
+      - "shipping point"
+      - "route"
+      - "loading group"
+      - "weight group"
+      - "configured pick/pack and loading-time determination"
+      - "route transit time and transportation planning lead time"
+    output:
+      - "pick/pack duration"
+      - "loading duration"
+      - "transportation planning lead time"
+      - "transit time"
+    failure_signal: "Users compare one total lead time while the wrong component is actually loading, picking, transit, or planning."
+    source_refs:
+      - SRC-SAP-SHP-SCHEDULING
+
+  - id: SHP-STAGE-CALENDAR
+    order: 6
+    title: "Apply working times and calendars"
+    question: "On which days and times can the activities actually happen?"
+    inputs:
+      - "shipping-point working times / factory calendar"
+      - "route calendar / work time where configured"
+      - "activity durations"
+      - "date/time granularity"
+    output:
+      - "calendar-adjusted activity dates"
+    failure_signal: "The duration looks correct, but a weekend, holiday, or closed working interval moves the date."
+    source_refs:
+      - SRC-SAP-SHP-SCHEDULING
+
+  - id: SHP-STAGE-BACKWARD
+    order: 7
+    title: "Schedule backward from requested delivery date"
+    question: "When must shipping activities start to meet the customer date?"
+    inputs:
+      - "requested delivery date"
+      - "transit time"
+      - "loading time"
+      - "pick/pack time"
+      - "transportation planning lead time"
+      - "calendars"
+    output:
+      - "goods issue date"
+      - "loading date"
+      - "material availability date"
+      - "transportation planning date"
+    failure_signal: "The calculated start date is earlier than expected or lands in the past."
+    source_refs:
+      - SRC-SAP-SHP-SCHEDULING
+
+  - id: SHP-STAGE-FORWARD
+    order: 8
+    title: "Schedule forward when the backward plan is no longer feasible"
+    question: "What is the earliest feasible logistics plan from now?"
+    inputs:
+      - "current date/time"
+      - "dates calculated by backward scheduling"
+      - "activity durations"
+      - "working calendars"
+      - "ATP confirmation context where relevant"
+    output:
+      - "earliest feasible material availability and shipping dates"
+      - "later confirmed/requested-delivery outcome where applicable"
+    failure_signal: "A requested date suddenly moves later because backward scheduling required an activity in the past."
+    source_refs:
+      - SRC-SAP-SHP-SCHEDULING
+
+  - id: SHP-STAGE-DUE
+    order: 9
+    title: "Evaluate delivery due and blocking prerequisites"
+    question: "Can the sales-order item now enter delivery creation?"
+    inputs:
+      - "delivery due date"
+      - "shipping point"
+      - "route and goods issue date for due-list selection where used"
+      - "header/item/schedule-line delivery relevance"
+      - "delivery block and credit status"
+    output:
+      - "item available for delivery processing"
+      - "or excluded / blocked"
+    failure_signal: "The dates look correct, but the order does not appear in the expected delivery due processing."
+    source_refs:
+      - SRC-SAP-SHP-DELIVERY-PREREQ
+      - SRC-SAP-SHP-DUE-LIST
+
+  - id: SHP-STAGE-EXECUTE
+    order: 10
+    title: "Create delivery and hand off to execution"
+    question: "Can the planned items stay together, and which execution system consumes the result?"
+    inputs:
+      - "shipping point and header grouping criteria"
+      - "route / route redetermination"
+      - "delivery quantity and split requirements"
+      - "warehouse relevance"
+      - "transportation planning relevance"
+    output:
+      - "outbound delivery"
+      - "possible delivery split"
+      - "EWM warehouse request / outbound delivery order where integrated"
+      - "TM freight-unit / transportation planning impact where integrated"
+    failure_signal: "One sales order becomes several deliveries or execution dates diverge after EWM/TM planning."
+    source_refs:
+      - SRC-SAP-EWM-ROUTE
+      - SRC-SAP-TM-DELIVERY-SPLIT
+      - SRC-SAP-LE-SPLIT-APP
+
+shipping_point_model:
+  title: "Shipping point is an organizational determination, not a free text field"
+  inputs:
+    - id: SHP-POINT-PLANT
+      label: "Delivering Plant"
+      role: "Defines the logistical source and is mandatory to shipping-point determination."
+    - id: SHP-POINT-CONDITION
+      label: "Shipping Condition"
+      role: "Represents shipping policy/service level; may come from BP or sales document type."
+    - id: SHP-POINT-LOADING
+      label: "Loading Group"
+      role: "Material attribute describing how goods are handled during loading."
+  output: "Proposed shipping point plus optional manually allowed alternatives"
+  consequences:
+    - "delivery processing belongs to one shipping point"
+    - "different shipping points across order items can force separate deliveries"
+    - "shipping point influences pick/pack and loading-time determination"
+  source_refs:
+    - SRC-SAP-SHP-POINTS
+    - SRC-SAP-SHP-LOADING-GROUP
+
+route_model:
+  title: "Route is both a determination result and a scheduling input"
+  sales_order_inputs:
+    - "departure country/region and zone"
+    - "destination country/region and receiving zone"
+    - "shipping condition"
+    - "transportation group"
+  delivery_additional_input:
+    - "weight group"
+  route_data_that_matters_next:
+    - "transit time"
+    - "transportation planning lead time"
+    - "factory calendar / work time where configured"
+    - "shipping type / means-of-transport context"
+  diagnostic_rule: >-
+    I compare the exact order determination key with the delivery determination key before
+    I call route redetermination a defect. Delivery can legitimately have more information,
+    including the weight group.
+  source_refs:
+    - SRC-SAP-SHP-ROUTE
+    - SRC-SAP-ROUTE-CUSTOMIZING-EXIT
+
+scheduling_times:
+  - id: SHP-TIME-PICKPACK
+    title: "Pick / Pack Time"
+    purpose: "Time required to allocate, pick, and pack goods before loading."
+    common_inputs:
+      - "shipping point"
+      - "route where configured"
+      - "weight group"
+    drives: "material availability date from loading date"
+  - id: SHP-TIME-LOADING
+    title: "Loading Time"
+    purpose: "Time required to load the delivery item."
+    common_inputs:
+      - "shipping point"
+      - "route where configured"
+      - "loading group"
+    drives: "loading date from goods issue date"
+  - id: SHP-TIME-TRANSIT
+    title: "Transit Time"
+    purpose: "Time required for goods to travel from shipping point to customer location."
+    common_inputs:
+      - "route"
+    drives: "goods issue date from requested delivery date"
+  - id: SHP-TIME-PLANNING
+    title: "Transportation Planning Lead Time"
+    purpose: "Time required to organize transportation before loading or departure."
+    common_inputs:
+      - "route"
+    drives: "transportation planning date"
+  source_refs:
+    - SRC-SAP-SHP-SCHEDULING
+
+scheduling_dates:
+  - id: SHP-DATE-REQUEST
+    title: "Requested Delivery Date"
+    business_meaning: "When the customer expects the goods to arrive."
+  - id: SHP-DATE-GI
+    title: "Goods Issue Date"
+    business_meaning: "When the transport must start / goods leave the shipping location."
+  - id: SHP-DATE-LOAD
+    title: "Loading Date"
+    business_meaning: "When goods must be ready for loading."
+  - id: SHP-DATE-MAD
+    title: "Material Availability Date"
+    business_meaning: "When material must be available so picking and packing can start."
+  - id: SHP-DATE-TP
+    title: "Transportation Planning Date"
+    business_meaning: "When transportation preparation must start."
+  source_refs:
+    - SRC-SAP-SHP-SCHEDULING
+
+architecture_modes:
+  - id: SHP-ARCH-CLASSIC
+    title: "Classic LE-SHP scheduling"
+    when_it_fits: >-
+      Use the standard Sales/Delivery Management scheduling model when route, shipping point,
+      standard durations, and calendars provide sufficient planning fidelity.
+    strengths:
+      - "direct integration with sales-order scheduling"
+      - "simple and well-known determination model"
+      - "clear link between route/shipping point and calculated dates"
+    watchouts:
+      - "limited fit for complex transportation-network routing"
+      - "custom route logic can become hard to govern"
+    source_refs:
+      - SRC-SAP-SHP-SCHEDULING
+      - SRC-SAP-SHP-ROUTE
+  - id: SHP-ARCH-TM-BPS
+    title: "TM / BPS based sales-document scheduling"
+    when_it_fits: >-
+      Use Transportation Requirement Routing and Scheduling when sales-document dates need
+      richer transportation-duration or network-routing logic from Transportation Management.
+    strengths:
+      - "TM routing and determination methods can feed sales-document scheduling"
+      - "multiple routing methods can be ordered in a profile"
+      - "better architecture boundary when transportation logic belongs to TM"
+    watchouts:
+      - "adds a broader configuration and integration boundary"
+      - "must be designed as a deliberate architecture choice, not mixed casually with classic assumptions"
+    source_refs:
+      - SRC-SAP-TM-SALES-SCHEDULING
+      - SRC-SAP-TM-TRS-METHODS
+
+execution_boundaries:
+  - id: SHP-BOUNDARY-EWM
+    title: "S/4HANA Delivery → EWM"
+    principle: >-
+      The S/4HANA route can be transferred to EWM as grouping/planning information and can
+      influence warehouse-internal planning. EWM can also perform its own route-related processing.
+    lead_question: "Which system owns the route and execution date at this stage: S/4HANA Delivery or EWM?"
+    source_refs:
+      - SRC-SAP-EWM-ROUTE
+  - id: SHP-BOUNDARY-TM
+    title: "Delivery → TM / Advanced Shipping and Receiving"
+    principle: >-
+      Transportation planning can change grouping and can trigger delivery splits. A split is
+      not only a Sales document event; it can be a transportation or warehouse execution decision.
+    lead_question: "Did the split originate in Sales delivery creation, TM planning, EWM execution, or loading?"
+    source_refs:
+      - SRC-SAP-TM-DELIVERY-SPLIT
+      - SRC-SAP-LE-SPLIT-APP
+
+extension_layers:
+  - id: SHP-EXT-ROUTE-EXIT
+    title: "Classic Route Determination Exit 0VRF001"
+    principle: >-
+      Use only when the standard route key cannot express the business rule and the deployment
+      model permits classic enhancement. Keep the custom input and fallback behavior explicit.
+    technical_shape:
+      - "customer exit 0VRF001 is documented for individual route determination / modification"
+      - "custom logic sits inside a determination that already depends on zones, shipping condition, and transportation group"
+    diagnostic_checks:
+      - "reconstruct the standard route key first"
+      - "prove that standard Customizing has no valid representation"
+      - "compare order and delivery route contexts"
+      - "document what happens when custom data is blank or invalid"
+    trap: "Turning route determination into hidden business logic that nobody can explain from configuration."
+    source_refs:
+      - SRC-SAP-ROUTE-CUSTOMIZING-EXIT
+
+  - id: SHP-EXT-TM-TRS
+    title: "TM TRS Method Adjustment BAdI"
+    principle: >-
+      In a TM/BPS architecture, extend the transportation-routing layer instead of recreating
+      network logic in Sales when routing belongs to Transportation Management.
+    technical_shape:
+      - "TRS profiles can execute routing and determination methods in sequence"
+      - "SAP documents a BAdI to adjust TRS method process settings and results"
+    diagnostic_checks:
+      - "simulate standard routing/determination methods first"
+      - "identify which method produced the accepted result"
+      - "separate duration determination from route/network-path determination"
+    trap: "Using a BAdI to compensate for a badly designed routing profile."
+    source_refs:
+      - SRC-SAP-TM-TRS-METHODS
+
+  - id: SHP-EXT-EWM-SPLIT
+    title: "EWM Route / Delivery Split Extension Boundary"
+    principle: >-
+      When warehouse execution owns the split decision, keep the logic in the EWM execution
+      boundary rather than forcing Sales to predict every physical loading exception.
+    technical_shape:
+      - "EWM provides BAdIs for outbound-delivery split control and route determination/check"
+      - "route-related differences can create separate outbound delivery orders"
+    diagnostic_checks:
+      - "identify the exact stage where the split occurred"
+      - "compare S/4HANA delivery grouping with EWM route/grouping data"
+      - "check whether the split was planning-driven, warehouse-driven, or loading-driven"
+    trap: "Treating every EWM-created split as an SD delivery-split configuration defect."
+    source_refs:
+      - SRC-SAP-EWM-SPLIT-BADI
+
+practitioner_heuristics:
+  - id: SHP-H-01
+    statement: "I debug dates from the first wrong date, not from the customer date backward by guesswork."
+    context: >-
+      If material availability date is already wrong, later goods-issue and delivery dates are symptoms.
+      If it is correct but goods issue is wrong, I move to loading/transit/route logic.
+    checks:
+      - "requested delivery date"
+      - "goods issue date"
+      - "loading date"
+      - "material availability date"
+      - "transportation planning date"
+
+  - id: SHP-H-02
+    statement: "I separate duration from calendar."
+    context: >-
+      Two days of transit and a two-day date shift are not the same fact. A weekend, holiday,
+      or working-time restriction can change the final date without changing the duration.
+
+  - id: SHP-H-03
+    statement: "I verify plant before shipping point, and shipping point before route."
+    context: >-
+      Shipping is downstream of plant determination. Fixing route Customizing while the wrong
+      plant is feeding the chain only makes the wrong design more complicated.
+
+  - id: SHP-H-04
+    statement: "I compare order route and delivery route as two runtime contexts."
+    context: >-
+      Delivery route determination can include weight-group information and execution can add
+      more data. A later route change is not automatically a defect.
+
+  - id: SHP-H-05
+    statement: "I treat a delivery split as evidence, not as a diagnosis."
+    context: >-
+      First identify the field or execution decision that prevents items from staying together:
+      shipping point, route, warehouse, transportation assignment, quantity, or another header-level constraint.
+
+  - id: SHP-H-06
+    statement: "I put transportation intelligence where transportation owns it."
+    context: >-
+      If the rule needs network paths, means of transport, schedules, and transportation durations,
+      TM/TRS is usually a cleaner architecture boundary than another opaque Sales exit.
+
+anti_patterns:
+  - "Change transit time until the customer date looks right without finding the wrong date component."
+  - "Debug shipping point before confirming the delivering plant."
+  - "Assume shipping condition always comes from customer master data."
+  - "Assume the order route must remain unchanged in delivery."
+  - "Call every multiple-delivery result a delivery split customizing issue."
+  - "Hide transportation network logic inside a classic Sales exit when TM is the system that owns transportation planning."
+
+failure_modes:
+  - id: SHP-FAIL-POINT-BLANK
+    symptom: "Shipping point is blank."
+    likely_causes:
+      - "delivering plant missing"
+      - "loading group missing"
+      - "shipping condition unexpected"
+      - "no matching shipping-point assignment"
+    first_checks:
+      - "plant"
+      - "shipping condition and its source"
+      - "material loading group"
+      - "exact assignment combination"
+
+  - id: SHP-FAIL-WRONG-ROUTE
+    symptom: "Route is wrong or unexpectedly blank."
+    likely_causes:
+      - "wrong departure zone from shipping point"
+      - "wrong destination zone from ship-to"
+      - "unexpected shipping condition"
+      - "wrong transportation group"
+      - "delivery weight group changes the determination context"
+      - "custom route logic"
+    first_checks:
+      - "reconstruct order key"
+      - "reconstruct delivery key"
+      - "compare proposed and actual route"
+
+  - id: SHP-FAIL-DATE-LATE
+    symptom: "Confirmed or delivery date is later than requested."
+    likely_causes:
+      - "backward scheduling produced a date in the past"
+      - "forward scheduling started"
+      - "route transit or planning lead time"
+      - "pick/pack or loading time"
+      - "calendar / working-time shift"
+      - "ATP confirmation after material availability date"
+    first_checks:
+      - "requested delivery date"
+      - "material availability date"
+      - "which scheduling direction ran"
+      - "each duration separately"
+      - "calendar effects"
+
+  - id: SHP-FAIL-NOT-DUE
+    symptom: "Order is not visible in expected delivery due processing."
+    likely_causes:
+      - "delivery block"
+      - "credit block"
+      - "schedule line not due"
+      - "wrong shipping point or due-list selection"
+      - "goods issue / delivery creation date outside selection"
+    first_checks:
+      - "delivery relevance and due date"
+      - "header/item blocks"
+      - "credit status"
+      - "shipping-point selection"
+      - "due-list selection criteria"
+
+  - id: SHP-FAIL-SPLIT
+    symptom: "One sales order creates multiple outbound deliveries."
+    likely_causes:
+      - "different shipping points"
+      - "route or other delivery-header grouping differences"
+      - "quantity/load planning"
+      - "EWM/TM split during execution"
+    first_checks:
+      - "identify whether split occurred during S/4 delivery creation, TM planning, EWM processing, or loading"
+      - "compare header-relevant grouping data"
+      - "compare route and shipping point"
+
+  - id: SHP-FAIL-EWM-TM-DIVERGENCE
+    symptom: "Sales-order dates look right, but warehouse or transport execution uses a different plan."
+    likely_causes:
+      - "route redetermination"
+      - "TM/BPS scheduling profile"
+      - "EWM route/grouping logic"
+      - "delivery split or freight-unit reassignment"
+    first_checks:
+      - "system of record for the current planning stage"
+      - "route and date transferred from S/4"
+      - "TM/EWM redetermination or split event"
+
+impact_traces:
+  - id: SHP-TRACE-POINT
+    title: "Wrong shipping point"
+    path:
+      - "Delivering Plant"
+      - "Shipping Condition"
+      - "Loading Group"
+      - "Shipping Point Assignment"
+      - "Shipping Point"
+      - "Pick/Pack + Loading Time"
+      - "Delivery Grouping"
+
+  - id: SHP-TRACE-ROUTE
+    title: "Wrong route"
+    path:
+      - "Shipping Point / Departure Zone"
+      - "Ship-To / Destination Zone"
+      - "Shipping Condition"
+      - "Transportation Group"
+      - "Weight Group in Delivery"
+      - "Route"
+      - "Transit / Planning Lead Time"
+
+  - id: SHP-TRACE-DATE
+    title: "Requested date becomes later"
+    path:
+      - "Requested Delivery Date"
+      - "Route Transit Time"
+      - "Goods Issue Date"
+      - "Loading Time"
+      - "Loading Date"
+      - "Pick/Pack Time"
+      - "Material Availability Date"
+      - "Past-Date Check"
+      - "Forward Scheduling"
+
+  - id: SHP-TRACE-DUE
+    title: "Order missing from delivery due list"
+    path:
+      - "Schedule Line Delivery Relevance"
+      - "Due Date"
+      - "Shipping Point"
+      - "Delivery / Credit Block"
+      - "Selection Criteria"
+      - "Delivery Creation"
+
+  - id: SHP-TRACE-EXECUTION
+    title: "Plan changes in execution"
+    path:
+      - "Sales Order Route/Dates"
+      - "Outbound Delivery"
+      - "Route Redetermination"
+      - "EWM / TM Handoff"
+      - "Planning or Warehouse Split"
+      - "Final Execution Plan"
+
+synthetic_cases:
+  - id: SHP-CASE-CALENDAR
+    synthetic: true
+    title: "Two-day route, four-calendar-day shift"
+    situation: >-
+      A customer requests Monday delivery. The route transit duration looks short enough,
+      but the shipping location is closed on the weekend and the calculated material
+      availability date falls before the working window.
+    investigation:
+      - "read every calculated date, not only requested and confirmed delivery dates"
+      - "separate transit duration from calendar movement"
+      - "check shipping-point working time and route calendar"
+      - "identify whether forward scheduling was triggered"
+    lesson: "Duration explains how long an activity takes; calendars decide when that duration can be consumed."
+
+  - id: SHP-CASE-SPLIT
+    synthetic: true
+    title: "One order, two shipping points, two deliveries"
+    situation: >-
+      Two materials are ordered together from the same plant. One material has a special
+      loading group and is assigned to a different shipping point. The customer expects one delivery.
+    investigation:
+      - "compare loading groups"
+      - "reconstruct shipping-point determination for both items"
+      - "confirm whether the business really requires one physical shipping point"
+      - "evaluate master data / assignment design before forcing grouping"
+    lesson: "Complete-delivery expectations must be compatible with the organizational shipping design."
+
+  - id: SHP-CASE-ROUTE-DELIVERY
+    synthetic: true
+    title: "Route changes after delivery creation"
+    situation: >-
+      Sales order proposes route R1. When the outbound delivery is created, route R2 is determined.
+      Users report an inconsistent route algorithm.
+    investigation:
+      - "compare order and delivery route keys"
+      - "include delivery weight group"
+      - "check allowed actual routes / redetermination settings"
+      - "check classic custom route exit only after standard key is understood"
+    lesson: "Order route and delivery route can be different runtime decisions."
+
+assessment_drills:
+  - id: SHP-DRILL-01
+    question: "Shipping point is blank. What do you check first?"
+    expected_answer: >-
+      Start upstream with delivering plant, then shipping condition and its source, material
+      loading group, and the exact shipping-point assignment. Do not begin by manually entering
+      a shipping point because that hides which input is missing.
+
+  - id: SHP-DRILL-02
+    question: "Customer requested Friday, but SAP confirms Monday. How do you diagnose it?"
+    expected_answer: >-
+      Read the calculated date chain: requested delivery, goods issue, loading, material availability,
+      and transportation planning. Separate transit, loading, pick/pack, and transportation lead times,
+      then check calendars and whether backward scheduling fell into the past and triggered forward scheduling.
+
+  - id: SHP-DRILL-03
+    question: "Which fields determine the shipping point?"
+    expected_answer: >-
+      Delivering plant, shipping condition, and loading group in the classic standard model. Also explain
+      that the shipping condition can be proposed by sales document type and that alternative shipping points
+      can be configured for manual selection.
+
+  - id: SHP-DRILL-04
+    question: "Why can route differ between sales order and delivery?"
+    expected_answer: >-
+      Sales-order route uses departure/destination zones, shipping condition, and transportation group.
+      Delivery determination can add weight group and can redetermine an actual route depending on configuration.
+
+  - id: SHP-DRILL-05
+    question: "One sales order creates two deliveries. Is that a delivery-split defect?"
+    expected_answer: >-
+      Not necessarily. First identify where the split happened and compare shipping point, route, grouping data,
+      quantity/load constraints, and whether TM or EWM created a later execution split.
+
+  - id: SHP-DRILL-06
+    question: "When would you prefer TM/BPS scheduling over classic LE scheduling?"
+    expected_answer: >-
+      When transportation-duration or routing logic needs richer TM-owned capabilities such as network paths,
+      routing methods, means-of-transport logic, or transportation profiles. Keep the ownership boundary explicit.
+
+  - id: SHP-DRILL-07
+    question: "Business wants a custom route rule. Do you use 0VRF001 immediately?"
+    expected_answer: >-
+      No. Reconstruct the standard route key and prove the standard zone, shipping-condition, transportation-group,
+      and delivery weight model cannot express the requirement. Then choose the extension boundary that matches the
+      architecture: classic route exit for classic design, or TM/TRS extension if transportation owns the rule.
+
+lead_takeaways:
+  - "Shipping dates are outputs of a dependency chain, not independent promises."
+  - "Plant is upstream of shipping point; shipping point and ship-to context are upstream of route."
+  - "Separate time durations from calculated dates and calendar effects."
+  - "Backward scheduling explains the plan required to meet the request; forward scheduling explains the earliest feasible plan."
+  - "Order route and delivery route are separate runtime contexts."
+  - "Delivery splits can originate in Sales, TM, EWM, or physical loading execution."
+  - "Put transportation intelligence in TM when transportation owns the problem."
