@@ -20,8 +20,6 @@ tags:
 {% assign topic = site.data.labs.enterprise_context.topics.industry_solution_landscape %}
 {% assign deployments = site.data.labs.enterprise_context.topics.deployment_models %}
 
-<p><strong>Problem:</strong> industry labels are not useful unless they explain what changes in the standard process.</p>
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Industries</li></ol>
 </nav>
@@ -45,6 +43,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">factory</span>
+    <p><strong>Problem:</strong> industry labels are not useful unless they explain what changes in the standard process.</p>
     <p><strong>Remember:</strong> industry is an overlay. Keep the standard process, then add industry differences and deployment constraints.</p>
     <a href="/labs/enterprise-context/deployment-models/">Compare Public, Private, and On-Premise <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>

@@ -22,8 +22,6 @@ tags:
 {% assign sales_landscape = site.data.labs.enterprise_context.topics.sales_application_landscape %}
 {% assign supply_chain_landscape = site.data.labs.enterprise_context.topics.supply_chain_logistics_landscape %}
 
-<p><strong>Problem:</strong> SAP knowledge is usually scattered across processes, data, products, integrations, and operational evidence.</p>
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Enterprise Context</li></ol>
 </nav>
@@ -47,6 +45,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Problem:</strong> SAP knowledge is usually scattered across processes, data, products, integrations, and operational evidence.</p>
     <p><strong>Pages are projections, structured data is the contract.</strong> The lab separates business domains, industries, deployment models, applications, AI components, facts, judgment, and evidence.</p>
     <a href="/labs/enterprise-context/deployment-models/">Compare Public, Private, and On-Premise <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>

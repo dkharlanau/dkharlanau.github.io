@@ -19,8 +19,6 @@ tags:
 
 {% assign topic = site.data.labs.enterprise_context.topics.business_ai_platform_landscape %}
 
-<p><strong>Problem:</strong> SAP Business AI names overlap, so architecture responsibilities are easy to mix up.</p>
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Business AI</li></ol>
 </nav>
@@ -44,6 +42,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+    <p><strong>Problem:</strong> SAP Business AI names overlap, so architecture responsibilities are easy to mix up.</p>
     <p><strong>Remember:</strong> use AI, build AI, run AI, ground AI, and govern AI. Keep these responsibilities separate.</p>
     <a href="/labs/enterprise-context/deployment-models/">Compare S/4HANA deployment models <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>

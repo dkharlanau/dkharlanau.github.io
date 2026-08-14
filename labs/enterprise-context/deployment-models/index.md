@@ -19,8 +19,6 @@ tags:
 
 {% assign topic = site.data.labs.enterprise_context.topics.deployment_models %}
 
-<p><strong>Problem:</strong> the three S/4HANA deployment models share a product family but differ in scope, extensibility, upgrades, and operations.</p>
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Deployment Models</li></ol>
 </nav>
@@ -44,6 +42,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">cloud</span>
+    <p><strong>Problem:</strong> the three S/4HANA deployment models share a product family but differ in scope, extensibility, upgrades, and operations.</p>
     <p><strong>Remember:</strong> deployment changes scope, extensions, upgrades, and operations. It does not replace the business process.</p>
     <a href="/labs/enterprise-context/industries/">Open industry solutions <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>

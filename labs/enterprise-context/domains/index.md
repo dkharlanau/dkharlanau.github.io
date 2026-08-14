@@ -18,8 +18,6 @@ tags:
 
 {% assign topic = site.data.labs.enterprise_context.topics.business_domain_taxonomy %}
 
-<p><strong>Problem:</strong> business domains, processes, SAP modules, and products are often mixed into one map.</p>
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Domains</li></ol>
 </nav>
@@ -43,6 +41,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Problem:</strong> business domains, processes, SAP modules, and products are often mixed into one map.</p>
     <p><strong>Remember:</strong> business domain = ownership. Process = work. Solution domain = function. Application = technology.</p>
     <a href="/labs/enterprise-context/deployment-models/">Compare S/4HANA deployment models <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>

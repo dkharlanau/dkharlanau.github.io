@@ -20,8 +20,6 @@ tags:
 {% assign lab = site.data.labs.enterprise_context.manifest %}
 {% assign schema = site.data.labs.enterprise_context.schema %}
 
-<p><strong>Problem:</strong> a knowledge graph becomes unreliable when entity types, evidence, and authoring rules are implicit.</p>
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Model</li></ol>
 </nav>
@@ -45,6 +43,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Problem:</strong> a knowledge graph becomes unreliable when entity types, evidence, and authoring rules are implicit.</p>
     <p><strong>Author once, project many times.</strong> Structured files are the working contract. Human pages, JSON endpoints, progress views, graph projections, and later AI tools should derive from the same facts instead of maintaining parallel copies.</p>
     <a href="/labs/enterprise-context/data/schema.json">Open schema JSON <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>

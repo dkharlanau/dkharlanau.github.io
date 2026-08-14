@@ -16,8 +16,6 @@ tags:
   - business-ai
 ---
 
-<p><strong>Problem:</strong> product-first learning makes it hard to connect business ownership, process, architecture, and evidence.</p>
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li aria-current="page">Labs</li></ol>
 </nav>
@@ -41,11 +39,12 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal aria-label="Lab boundary">
     <span class="material-symbols-outlined" aria-hidden="true">science</span>
+    <p><strong>Problem:</strong> product-first learning makes it hard to connect business ownership, process, architecture, and evidence.</p>
     <p><strong>Working rule.</strong> Facts, expert judgment, and synthetic examples stay separate.</p>
     <a href="/research/">Open Research <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
-  **Publication rule:** Vendor sources verify facts; explanations stay independently written. See the [Research and Attribution Policy](/legal/research-attribution/).
+  <p><strong>Publication rule.</strong> Vendor sources verify facts; explanations stay independently written. See the <a href="/legal/research-attribution/">Research and Attribution Policy</a>.</p>
 
   <section class="research-canvas__inventory" id="labs-inventory" data-reveal>
     <header>
