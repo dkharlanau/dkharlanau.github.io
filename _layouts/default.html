@@ -25,6 +25,7 @@
       {% when '/labs/enterprise-context/credit/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/credit-graph.json' %}
       {% when '/labs/enterprise-context/shipping/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/shipping-graph.json' %}
       {% when '/labs/enterprise-context/master-data/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/master-data-graph.json' %}
+      {% when '/labs/enterprise-context/procurement/' %}{% assign graph_endpoint = '/labs/enterprise-context/data/procurement-graph.json' %}
     {% endcase %}
     {% if graph_endpoint %}
   <link rel="describedby" type="application/json" href="{{ graph_endpoint | absolute_url }}" title="{{ graph_title | escape }} machine-readable graph" />
@@ -64,7 +65,7 @@
         <header>
           <p class="research-canvas__eyebrow">Active deep dives</p>
           <h2>Follow the decision engines.</h2>
-          <p>Draft, source-tracked maps for the current Order-to-Cash vertical. Each view explains inputs, decisions, failure modes, extensions, and Lead-level diagnostics.</p>
+          <p>Draft, source-tracked maps across the current logistics verticals. Each view explains inputs, decisions, failure modes, integrations, and Lead-level diagnostics.</p>
         </header>
         <div class="research-route-list">
           {% for deep_dive in lab_manifest.deep_dives %}
