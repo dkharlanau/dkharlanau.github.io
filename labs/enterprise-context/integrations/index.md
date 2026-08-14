@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
-description: "A practical decision map for SAP logistics integrations: APIs, IDocs, RFC, events, Kafka, queues, files, B2B, Event Mesh, TIBCO, and master-data distribution."
+description: "A practical decision map for SAP logistics integrations: APIs, IDocs, RFC, events, Kafka, queues, files, B2B, Event Mesh, TIBCO, terminology, and master-data distribution."
 permalink: /labs/enterprise-context/integrations/
 status: draft
 verified: false
@@ -18,6 +18,7 @@ tags:
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.integration_architecture_landscape %}
+{% assign language = site.data.labs.enterprise_context.topics.integration_architecture_language %}
 {% assign registry = site.data.labs.enterprise_context.sources.integration_registry %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -30,22 +31,88 @@ tags:
       <p class="research-canvas__eyebrow">Enterprise Context Lab / Integration Architecture</p>
       <h1>{{ topic.title }}</h1>
       <p>{{ topic.summary }}</p>
-      <a class="research-canvas__button" href="#integration-rules">Open the decision map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#architecture-stack">Start with the architecture language <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Research status">
       <p>Research status</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ topic.interface_types | size }}</strong><small>Interface patterns</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ topic.platforms | size }}</strong><small>Platform views</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</strong><small>Maturity gates</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ language.terms | size }}</strong><small>Architecture terms</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</strong><small>Maturity gates</small></div>
       <em>Primary sources reviewed together {{ topic.reviewed_together_at }}</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">hub</span>
-    <p><strong>Problem:</strong> integration discussions often start with product names. That is backwards.</p>
-    <p><strong>Working rule.</strong> First decide whether the dependency is a command, query, business document, event, stream, queue, or batch. Then choose the platform.</p>
+    <p><strong>Problem:</strong> integration discussions often mix business meaning, protocols, brokers, middleware, and products in one sentence.</p>
+    <p><strong>Working rule.</strong> First define the business meaning and interaction. Then define the contract, transport, mediation, broker or stream, application owner, and recovery model.</p>
     <a href="/labs/enterprise-context/data/topics.json">Open machine-readable topic data <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="architecture-stack" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architecture language</p>
+      <h2>Eight layers. Do not mix them.</h2>
+      <p>This is the mental model I use before choosing a product. If the first answer is “Kafka”, “CPI”, or “TIBCO”, the discussion started too low in the stack.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in language.architecture_stack %}
+      <a href="#terminology"><span>{{ item.order }}</span><strong>{{ item.layer }}</strong><small>{{ item.question }} <b>Examples:</b> {{ item.examples | join: ", " }}. <b>Lead rule:</b> {{ item.lead_rule }}</small><i class="material-symbols-outlined" aria-hidden="true">layers</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="selection-questions" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Design sequence</p>
+      <h2>Twelve questions before middleware.</h2>
+      <p>These questions expose coupling, ownership, reliability, and semantics before anyone starts comparing adapters.</p>
+    </header>
+    <div class="research-route-list">
+      {% for question in language.selection_questions %}
+      <a href="#integration-rules"><span>?</span><strong>{{ question }}</strong><small>Answer this with a business object and a failure scenario, not only a technology name.</small><i class="material-symbols-outlined" aria-hidden="true">help</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="terminology" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Terminology</p>
+      <h2>One language for integration architecture.</h2>
+      <p>A message is not automatically an event. A broker is not an integration runtime. A topic does not mean exactly the same thing in JMS and Kafka. Naming things correctly removes a surprising amount of architecture fog.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in language.terms %}
+      <a href="#not-the-same"><span>TERM</span><strong>{{ item.term }}</strong><small><b>{{ item.category }}</b> · {{ item.definition }} <b>Architect view:</b> {{ item.architect_view }} <b>Example:</b> {{ item.example }}</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="not-the-same" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Do not confuse</p>
+      <h2>Similar words, different architecture decisions.</h2>
+      <p>Most terminology errors are harmless until someone uses them to select a platform. Then they become invoices.</p>
+    </header>
+    <div class="research-route-list">
+      {% for pair in language.not_the_same %}
+      <a href="#walkthroughs"><span>≠</span><strong>{{ pair.left }} ≠ {{ pair.right }}</strong><small>{{ pair.distinction }}</small><i class="material-symbols-outlined" aria-hidden="true">difference</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="walkthroughs" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Read the stack end to end</p>
+      <h2>Four examples using the same language.</h2>
+      <p>The point is not memorizing diagrams. The point is being able to explain every layer of a design consistently.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in language.walkthroughs %}
+      <a href="#interface-patterns"><span>FLOW</span><strong>{{ item.title }}</strong><small>{{ item.business_need }} <b>Path:</b> {{ item.flow }} <b>Meaning:</b> {{ item.language.business_meaning }} · <b>Interaction:</b> {{ item.language.interaction }} · <b>Contract:</b> {{ item.language.contract }} · <b>Transport:</b> {{ item.language.transport }} · <b>Reliability:</b> {{ item.language.reliability }} <b>Architect take:</b> {{ item.architect_take }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      {% endfor %}
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="integration-rules" data-reveal>
@@ -178,11 +245,24 @@ tags:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="memory-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architect memory model</p>
+      <h2>Eight sentences to keep the landscape in your head.</h2>
+      <p>If these eight questions stay clear, individual products become much easier to place.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in language.memory_model %}
+      <a href="#sources"><span>{{ forloop.index }}</span><strong>{{ item }}</strong><small>Use this sentence to explain one layer before moving to the next.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="sources" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Primary sources</p>
       <h2>Facts checked, explanations written independently.</h2>
-      <p>Product capabilities and protocol support are linked to current primary documentation. The decision rules and trade-offs are my synthesis for architecture learning.</p>
+      <p>Product capabilities and protocol support are linked to current primary documentation. The decision rules, terminology model, and trade-offs are independent architecture synthesis for learning.</p>
     </header>
     <div class="research-route-list">
       {% for source in registry.sources %}
