@@ -12,6 +12,7 @@ hide_global_cta: true
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.industry_solution_landscape %}
+{% assign deployments = site.data.labs.enterprise_context.topics.deployment_models %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Industries</li></ol>
@@ -28,16 +29,16 @@ hide_global_cta: true
     <div class="research-canvas__signal" aria-label="Industry map status">
       <p>Research status</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ topic.industries | size }}</strong><small>Industry patterns</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</strong><small>Maturity gates</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Term check</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>3</strong><small>S/4 deployment models</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</strong><small>Maturity gates</small></div>
       <em>Last reviewed together {{ topic.reviewed_together_at }}</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">factory</span>
-    <p><strong>Remember:</strong> industry is an overlay. Keep the standard process, then add the industry-specific data, documents, planning rules, and execution patterns.</p>
-    <a href="/labs/enterprise-context/domains/">Open business domains <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <p><strong>Remember:</strong> industry is an overlay. Keep the standard process, then add the industry-specific data, documents, planning rules, execution patterns, and deployment constraints.</p>
+    <a href="/labs/enterprise-context/deployment-models/">Compare Public, Private, and On-Premise <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="industry-map" data-reveal>
@@ -55,9 +56,22 @@ hide_global_cta: true
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Deployment lens</p>
+      <h2>Same industry, different design freedom.</h2>
+      <p>Check the edition before assuming an industry feature, add-on, extension, or configuration path is available.</p>
+    </header>
+    <div class="research-route-list">
+      {% for model in deployments.deployment_models %}
+      <a href="/labs/enterprise-context/deployment-models/"><span>DEP</span><strong>{{ model.short_title }}</strong><small><b>{{ model.remember }}</b> {{ model.industry_support }}</small><i class="material-symbols-outlined" aria-hidden="true">cloud_queue</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Lead focus</p>
       <h2>Know the standard process and the industry delta.</h2>
-      <p>For assessment answers, explain what changes in data, documents, planning, logistics, and integration.</p>
+      <p>For assessment answers, explain what changes in data, documents, planning, logistics, integration, and deployment constraints.</p>
     </header>
     <div class="research-route-list">
       {% for industry in topic.industries %}
