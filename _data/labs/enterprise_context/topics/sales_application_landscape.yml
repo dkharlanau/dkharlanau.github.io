@@ -2,41 +2,44 @@ id: TOPIC-SALES-APPLICATION-LANDSCAPE
 type: research_topic
 title: "SAP Sales Application Landscape"
 summary: >-
-  Working application-landscape model for SAP sales and order-management capabilities.
-  It separates the S/4HANA digital core from adjacent cloud applications so product,
-  process, integration, and architecture discussions can refer to stable application IDs.
+  Decision-oriented application landscape for SAP sales, commerce, service, quoting,
+  order orchestration, sourcing, and ERP execution. It separates overlapping product
+  names into clear architectural roles and records official sources, licensing signals,
+  best-fit scenarios, and known boundaries.
 domain: "SAP Sales / Customer Experience"
 process_family: "Lead-to-Cash / Order-to-Cash"
-status: draft
+status: researching
 created_at: "2026-08-14"
 updated_at: "2026-08-14"
-verified_at: null
+verified_at: "2026-08-14"
 
 business_question: >-
-  Which SAP applications can participate in the sales and order-management landscape,
-  what role does each application play, and which relationships should be verified when
-  designing an end-to-end solution?
+  Which SAP application should own each part of the sales and order-management journey,
+  what is each component best suited for, what is it not intended to replace, and what
+  licensing or integration constraints affect the architecture decision?
 
 scope:
   include:
     - "S/4HANA sales and service application context"
-    - "sales engagement and quoting applications"
+    - "sales engagement and CRM"
+    - "configure-price-quote"
     - "digital commerce"
-    - "order-management foundation"
+    - "distributed order orchestration"
     - "sourcing and availability"
-    - "cross-application relationship candidates"
+    - "public licensing metrics and prerequisites"
+    - "official SAP product and Help Portal evidence"
   exclude_for_now:
-    - "licensing and commercial packaging"
-    - "release-specific feature matrices"
-    - "detailed integration protocols and API mappings"
-    - "customer-specific extensions"
+    - "customer-specific contract interpretation"
+    - "country-specific commercial pricing"
+    - "full SKU / material-number licensing catalogue"
+    - "detailed API and integration-flow field mappings"
 
 maturity:
-  gates_complete: 1
+  gates_complete: 2
   gates_total: 7
   gates:
     scope: done
-    sources: planned
+    sources: done
     model: in_progress
     relationships: in_progress
     expert_reasoning: planned
@@ -48,109 +51,421 @@ applications:
     type: application_component
     title: "SAP S/4HANA"
     layer: core_erp
-    role: "Digital core and transactional system of record for enterprise processes."
-    status: draft
+    architecture_role: "ERP digital core / transactional system of record"
+    description: >-
+      The enterprise execution core. In the sales landscape it provides the transactional
+      backbone that connects sales with finance, inventory, procurement, manufacturing,
+      logistics, and other enterprise processes. SAP currently positions SAP S/4HANA
+      Cloud Public Edition as a foundational application of SAP Cloud ERP.
+    best_fit: >-
+      Use when the process must post, fulfill, account, bill, or otherwise execute against
+      the enterprise system of record.
+    not_for: >-
+      It is not a dedicated seller CRM, rich digital storefront, or distributed-order
+      orchestration hub across heterogeneous fulfillment systems.
+    licensing:
+      commercial_model: "Edition- and contract-specific SAP S/4HANA / SAP Cloud ERP entitlement"
+      public_edition_dimensions:
+        - "Direct User Access"
+        - "Digital Access"
+        - "Infrastructure"
+        - "Solution Addons"
+      note: >-
+        SAP S/4HANA Cloud Public Edition licensing is measured across these dimensions.
+        Functional scope is selected through solution packages and scope items; some scope
+        items can be optional and pricing-relevant. Exact rights depend on the customer contract.
+    limitations:
+      - "Do not infer entitlement from functional documentation alone; verify the contracted edition, package, scope, and use rights."
+      - "Public Edition follows a scoped fit-to-standard model; availability of features is release- and scope-dependent."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD"
+    official_commercial_url: "https://www.sap.com/products/erp/s4hana.on-premise-edition.html"
+    source_refs:
+      - SRC-SAP-S4-CLOUD-AREAS
+      - SRC-SAP-S4-LICENSE-COMPLIANCE
+    status: source_verified
 
   - id: APP-S4HANA-SALES
     type: application_component
     title: "SAP S/4HANA Sales"
+    aliases:
+      - "SAP SD"
+      - "Sales and Distribution"
     layer: core_sales
-    role: "Core sales processing context within SAP S/4HANA."
-    status: draft
+    architecture_role: "Core order-to-cash execution"
+    description: >-
+      The core S/4HANA sales capability for order and contract management. It covers sales
+      master data, pricing, quotations, contracts, sales orders, billing, returns and refunds,
+      sales rebates, analytics, output, special sales processes, and integration APIs.
+    best_fit: >-
+      Use as the authoritative ERP execution layer when a customer order must drive pricing,
+      availability, delivery, billing, financial postings, and cross-functional logistics.
+    not_for: >-
+      It is not intended to replace opportunity/pipeline CRM, a full e-commerce storefront,
+      CPQ for complex guided configuration, or a multi-backend distributed OMS.
+    licensing:
+      commercial_model: "Part of the SAP S/4HANA functional scope; not a standalone 'SAP SD' cloud subscription"
+      note: >-
+        Access is governed by the parent SAP S/4HANA / SAP Cloud ERP entitlement, user or
+        digital-access model, package, and activated scope. Some scope items may be pricing-relevant.
+    limitations:
+      - "Feature availability differs by S/4HANA edition, release, country scope, and activated scope items."
+      - "External channels and third-party applications may introduce Digital Access or separate cloud-service licensing considerations."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/9d794cbd48c648bc8a176e422772de7e/313e9756c5708251e10000000a4450e5.html"
+    official_commercial_url: "https://www.sap.com/products/erp/s4hana.on-premise-edition.html"
+    source_refs:
+      - SRC-SAP-S4-CLOUD-AREAS
+      - SRC-SAP-S4-LICENSE-COMPLIANCE
+    status: source_verified
 
   - id: APP-S4HANA-SERVICE
     type: application_component
     title: "SAP S/4HANA Service"
     layer: core_service
-    role: "Service-management context within SAP S/4HANA."
-    status: draft
+    architecture_role: "Service lifecycle execution"
+    description: >-
+      S/4HANA capability for the service lifecycle, including service contracts, service
+      quotations, service orders, confirmations, in-house repair, analytics, pricing,
+      billing, procurement integration, and integration with field-service processes.
+    best_fit: >-
+      Use when the commercial process is centered on service contracts, service execution,
+      repair, service confirmations, parts, expenses, and downstream billing.
+    not_for: >-
+      It is not a general opportunity-management CRM and does not by itself replace specialized
+      field dispatch/technician optimization or the standard product-sales order-to-cash engine.
+    licensing:
+      commercial_model: "Part of SAP S/4HANA scope; entitlement is edition/package/scope dependent"
+      note: >-
+        Treat Service as functional scope under the S/4HANA commercial agreement rather than
+        assuming a standalone service license. Validate pricing-relevant scope items and add-ons.
+    limitations:
+      - "Field-service optimization can require integration with SAP Field Service Management rather than being fully owned by S/4HANA Service."
+      - "Exact scope and available scenarios vary by S/4HANA edition and release."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/9d794cbd48c648bc8a176e422772de7e/e237c247cc454f1b8307e52d0624d0f4.html"
+    official_commercial_url: "https://www.sap.com/products/erp/s4hana.on-premise-edition.html"
+    source_refs:
+      - SRC-SAP-S4-CLOUD-AREAS
+      - SRC-SAP-S4-LICENSE-COMPLIANCE
+    status: source_verified
 
   - id: APP-SALES-CLOUD
     type: application_component
     title: "SAP Sales Cloud"
     layer: sales_engagement
-    role: "Cloud application context for sales engagement and customer-facing sales work."
-    status: draft
+    architecture_role: "CRM / seller workspace"
+    description: >-
+      Cloud CRM for sales automation and customer acquisition. It focuses on accounts,
+      opportunities, guided selling, seller activities, pipeline, forecasting, analytics,
+      mobile selling, and AI-assisted sales engagement.
+    best_fit: >-
+      Use when sales teams need a front-office CRM to manage relationships, opportunities,
+      activities, pipeline, forecasts, and guided selling before or alongside ERP execution.
+    not_for: >-
+      It is not the system of record for inventory fulfillment, goods movement, billing,
+      financial posting, or complex distributed order orchestration.
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      metric: "Authorized user"
+      purchase_unit: "Blocks of 1 user"
+      contract_term: "3 to 36 months on the public pricing page"
+      note: "Additional field-sales and service capabilities can be licensed as add-ons."
+    limitations:
+      - >-
+        Integration behavior is scenario-specific. SAP Sales Cloud Version 2 direct sales-order
+        simulation and transfer supports SAP S/4HANA and S/4HANA Cloud Private Edition, but the
+        documented direct scenario does not support SAP S/4HANA Cloud Public Edition.
+      - "Do not treat Sales Cloud pricing or order simulation as a replacement for ERP pricing and fulfillment without an explicit integration design."
+    official_docs_url: "https://help.sap.com/docs/CX_NG_SALES"
+    official_commercial_url: "https://www.sap.com/products/crm/sales-cloud/pricing.html"
+    source_refs:
+      - SRC-SAP-SALES-CLOUD-OVERVIEW
+      - SRC-SAP-SALES-CLOUD-PRICING
+      - SRC-SAP-SALES-CLOUD-S4-INTEGRATION
+    status: source_verified
 
   - id: APP-SAP-CPQ
     type: application_component
     title: "SAP CPQ"
     layer: configure_price_quote
-    role: "Configure, price, and quote application context."
-    status: draft
+    architecture_role: "Complex configure-price-quote engine"
+    description: >-
+      Cloud CPQ solution for configuring complex offerings, applying pricing and discount
+      logic, managing approvals, and producing sales quotations. It can reuse ERP product,
+      variant-configuration, and pricing context and connect quoting to CRM, commerce, and ERP.
+    best_fit: >-
+      Use when quote complexity, product configuration, bundles, pricing guardrails, approvals,
+      proposal generation, or partner/dealer quoting exceed the practical scope of a simple CRM quote.
+    not_for: >-
+      It is not an ERP fulfillment engine, warehouse system, distributed OMS, or general-purpose CRM.
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      base_plan: "SAP CPQ, standard edition"
+      metric: "Authorized user"
+      minimum_quantity: "50 users on the current public pricing page"
+      included: "One production tenant and one test tenant in the standard edition"
+      note: "Additional Commerce-access, external-user, storage, and tenant offerings have separate metrics/conditions."
+    limitations:
+      - "Integration constraints depend on quote engine and target scenario; Quote 2.0 is required for current S/4HANA Cloud sales-order integration."
+      - "The documented S/4HANA Cloud sales-order integration supports simple products and single-level configurable products."
+      - "SAP publishes a separate current limitations and known-issues document; architecture should not assume every CPQ feature maps one-to-one into S/4HANA."
+    official_docs_url: "https://help.sap.com/docs/SAP_CPQ"
+    official_commercial_url: "https://www.sap.com/products/crm/sales/cpq.html"
+    source_refs:
+      - SRC-SAP-CPQ-OVERVIEW
+      - SRC-SAP-CPQ-S4-CLOUD-INTEGRATION
+      - SRC-SAP-CPQ-LIMITATIONS
+    status: source_verified
 
   - id: APP-COMMERCE-CLOUD
     type: application_component
     title: "SAP Commerce Cloud"
     layer: digital_commerce
-    role: "Digital commerce and customer-ordering application context."
-    status: draft
+    architecture_role: "Digital commerce channel and storefront platform"
+    description: >-
+      Enterprise digital-commerce platform for B2B, B2B2C, B2C, and D2C experiences,
+      including product/catalog experiences, cart and checkout, promotions, customer self-service,
+      and commerce order capture. It can run headless using SAP Commerce Cloud, composable storefront.
+    best_fit: >-
+      Use when customers or business buyers need a scalable digital storefront, catalog,
+      self-service ordering, checkout, promotions, and commerce-specific experience capabilities.
+    not_for: >-
+      It should not be confused with the ERP system of record or with a dedicated distributed
+      order-orchestration and sourcing layer when fulfillment spans many back ends and nodes.
+    licensing:
+      commercial_model: "Separate cloud subscription; metric depends on edition"
+      editions:
+        - name: "SAP Commerce Cloud, composable edition"
+          metric: "Annual orders or Gross Merchandise Value; public page shows blocks of 50,000 orders/year"
+        - name: "SAP Commerce Cloud, premier edition"
+          metric: "Annual orders or Gross Merchandise Value; public page shows blocks of 50,000 orders/year"
+        - name: "SAP Commerce Cloud, cloud ERP edition"
+          metric: "Public page shows blocks of 10,000 orders/year"
+          prerequisites: "Specified SAP Cloud ERP finance/supply-chain base entitlements are required"
+      note: "Commercial details are price-on-request and contract/region dependent."
+    related_components:
+      - name: "SAP Commerce Cloud, composable storefront"
+        role: "Angular-based headless storefront libraries that consume Commerce REST APIs"
+    limitations:
+      - "Composable storefront relies on SAP Commerce Cloud APIs and CMS content for out-of-the-box operation and requires supported Commerce Cloud versions."
+      - "SAP documents that composable storefront does not have complete feature parity with every legacy Accelerator scenario."
+      - "Commerce order capture does not automatically make Commerce the authoritative enterprise fulfillment or financial system."
+    official_docs_url: "https://help.sap.com/docs/r/product/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD/LATEST/en-US"
+    official_commercial_url: "https://www.sap.com/products/crm/commerce-cloud/pricing.html"
+    source_refs:
+      - SRC-SAP-COMMERCE-PRICING
+      - SRC-SAP-COMMERCE-COMPOSABLE-FAQ
+    status: source_verified
 
   - id: APP-ORDER-MANAGEMENT-FOUNDATION
     type: application_component
     title: "SAP Order Management foundation (OMF)"
     layer: order_management
-    role: "Order-management foundation context for distributed order scenarios."
-    status: needs_review
+    architecture_role: "Distributed order orchestration hub"
+    description: >-
+      Cloud-native order-management foundation that centralizes orders, fulfillment, and
+      returns across channels. It receives orders from multiple order-capture systems,
+      provides a central order view, and routes fulfillment requests to integrated systems.
+    best_fit: >-
+      Use when the enterprise needs one orchestration layer across multiple sales channels,
+      ERPs, warehouses, fulfillment systems, or markets instead of embedding all routing logic
+      in a single storefront or ERP.
+    not_for: >-
+      It is not itself a rich storefront, CPQ engine, ERP financial system, or the specialized
+      sourcing/availability optimizer provided by OMSA.
+    licensing:
+      commercial_model: "Separate cloud-service license"
+      metric: "Transactions per year"
+      purchase_unit: "Blocks of 10,000 transactions/year"
+      transaction_definition: "A job consisting of one or more process steps executed via the cloud service"
+      contract_term: "3 to 36 months on the current public pricing page"
+      technical_entitlements: >-
+        Initial setup requires SAP BTP entitlements including OMF service/application and
+        related master-data services such as SAP Master Data Integration.
+    limitations:
+      - "For physical-product integration, configurable products cannot currently be replicated to OMF."
+      - "The documented business-partner support is limited to the person category."
+      - "OMF depends on integrated master-data, order-capture, sourcing, and fulfillment systems; it does not replace all of them."
+    official_docs_url: "https://help.sap.com/docs/SAP_Order_Management_Foundation/d91676a7fa624c31b7b1c526d7787e2f/subsection-DT"
+    official_commercial_url: "https://www.sap.com/products/crm/order-management-system.html"
+    source_refs:
+      - SRC-SAP-OMF-OVERVIEW
+      - SRC-SAP-OMF-HELP
+      - SRC-SAP-OMF-SETUP
+    status: source_verified
 
   - id: APP-OMSA
     type: application_component
     title: "SAP Order Management for Sourcing and Availability (OMSA)"
     layer: sourcing_availability
-    role: "Sourcing and availability application context for order-management scenarios."
-    status: needs_review
+    architecture_role: "Omnichannel availability, reservation, and sourcing optimizer"
+    description: >-
+      Cloud solution that consolidates inventory availability from multiple sources and sites,
+      manages reservations, and calculates sourcing results using business goals such as delivery
+      time, capacity, shipping cost, pick/pack cost, and number of shipments.
+    best_fit: >-
+      Use when the sales promise depends on real-time availability across many stores, plants,
+      warehouses, or distribution centers and the business needs dynamic best-source decisions.
+    not_for: >-
+      It does not replace order capture, the full order lifecycle, warehouse execution,
+      transportation execution, billing, or financial posting.
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      metric: "Sales orders processed by the service"
+      purchase_unit: "Blocks of 12,000 transactions/year"
+      contract_term: "12 to 60 months on the current public pricing page"
+      note: "The yearly entitlement depletes with processed sales orders."
+    limitations:
+      - "It requires trusted availability and site data from integrated source systems; sourcing quality is bounded by that data and the configured strategy."
+      - "Fulfillment execution remains in connected systems; OMSA determines availability/sourcing rather than executing the entire order."
+    official_docs_url: "https://help.sap.com/docs/SAP_Order_Management_for_Sourcing_and_Availability/f77f20b0efc043a584873b133f6e252e/9d229e02929c4d29b3b848715c42e595.html"
+    official_commercial_url: "https://www.sap.com/products/crm/sourcing-and-availability.html"
+    source_refs:
+      - SRC-SAP-OMSA-OVERVIEW
+      - SRC-SAP-OMSA-HELP
+    status: source_verified
+
+comparison_dimensions:
+  - id: seller_crm
+    label: "Seller CRM / opportunities"
+  - id: complex_quote
+    label: "Complex configure-price-quote"
+  - id: digital_storefront
+    label: "Digital storefront / self-service"
+  - id: erp_order_execution
+    label: "ERP order-to-cash execution"
+  - id: service_execution
+    label: "Service lifecycle execution"
+  - id: distributed_orchestration
+    label: "Distributed order orchestration"
+  - id: network_sourcing
+    label: "Cross-node sourcing / availability"
+
+decision_guide:
+  - need: "Execute the legally and financially relevant order-to-cash process in ERP"
+    primary_choice: APP-S4HANA-SALES
+    why: "Own sales-order execution, pricing, delivery/billing integration, and enterprise postings."
+  - need: "Manage sellers, accounts, opportunities, pipeline, forecasts, and guided selling"
+    primary_choice: APP-SALES-CLOUD
+    why: "Front-office CRM and seller workspace rather than logistics execution."
+  - need: "Build and approve complex configurable offers before order creation"
+    primary_choice: APP-SAP-CPQ
+    why: "Purpose-built configuration, pricing, quote, proposal, and approval capability."
+  - need: "Provide B2B/B2C digital catalog, cart, checkout, and customer self-service"
+    primary_choice: APP-COMMERCE-CLOUD
+    why: "Digital commerce channel and experience platform."
+  - need: "Coordinate orders across multiple channels and heterogeneous fulfillment back ends"
+    primary_choice: APP-ORDER-MANAGEMENT-FOUNDATION
+    why: "Central orchestration layer decouples order capture from distributed fulfillment."
+  - need: "Choose the best fulfillment node using real-time inventory, reservations, and business goals"
+    primary_choice: APP-OMSA
+    why: "Specialized sourcing and availability optimization."
+  - need: "Run service contracts, service orders, confirmations, repairs, parts, and service billing"
+    primary_choice: APP-S4HANA-SERVICE
+    why: "Service lifecycle execution in the S/4HANA core."
+
+architecture_patterns:
+  - name: "ERP-centric B2B sales"
+    path: "SAP Sales Cloud → SAP S/4HANA Sales"
+    fit: "CRM engagement with ERP-owned quote/order execution where product and fulfillment complexity is moderate."
+  - name: "Complex configure-to-order sales"
+    path: "SAP Sales Cloud → SAP CPQ → SAP S/4HANA Sales"
+    fit: "Seller CRM plus complex configuration/quotation before ERP order execution."
+  - name: "Digital commerce with ERP fulfillment"
+    path: "SAP Commerce Cloud → SAP S/4HANA Sales"
+    fit: "Digital order capture with a relatively centralized ERP fulfillment model."
+  - name: "Distributed omnichannel order management"
+    path: "Sales channels → SAP Order Management foundation → SAP OMSA → fulfillment systems"
+    fit: "Many channels and fulfillment nodes where orchestration and sourcing need to be decoupled from a single ERP or storefront."
 
 relations:
   - from: APP-S4HANA-CORE
     type: contains_component
     to: APP-S4HANA-SALES
-    evidence_type: reasoned_inference
-    confidence: medium
-    status: needs_review
+    evidence_type: documented_fact
+    confidence: high
+    source_refs:
+      - SRC-SAP-S4-CLOUD-AREAS
+    status: source_verified
 
   - from: APP-S4HANA-CORE
     type: contains_component
     to: APP-S4HANA-SERVICE
-    evidence_type: reasoned_inference
-    confidence: medium
-    status: needs_review
+    evidence_type: documented_fact
+    confidence: high
+    source_refs:
+      - SRC-SAP-S4-CLOUD-AREAS
+    status: source_verified
 
   - from: APP-SALES-CLOUD
     type: integrates_with
     to: APP-S4HANA-SALES
-    evidence_type: reasoned_inference
-    confidence: medium
-    status: needs_review
+    evidence_type: documented_fact
+    confidence: high
+    source_refs:
+      - SRC-SAP-SALES-CLOUD-S4-INTEGRATION
+    status: source_verified
+
+  - from: APP-SAP-CPQ
+    type: integrates_with
+    to: APP-S4HANA-SALES
+    evidence_type: documented_fact
+    confidence: high
+    source_refs:
+      - SRC-SAP-CPQ-S4-CLOUD-INTEGRATION
+    status: source_verified
 
   - from: APP-SAP-CPQ
     type: integrates_with
     to: APP-SALES-CLOUD
-    evidence_type: reasoned_inference
-    confidence: medium
-    status: needs_review
+    evidence_type: documented_fact
+    confidence: high
+    source_refs:
+      - SRC-SAP-CPQ-OVERVIEW
+    status: source_verified
 
   - from: APP-COMMERCE-CLOUD
     type: integrates_with
-    to: APP-S4HANA-SALES
-    evidence_type: reasoned_inference
+    to: APP-ORDER-MANAGEMENT-FOUNDATION
+    evidence_type: documented_fact
     confidence: medium
-    status: needs_review
+    source_refs:
+      - SRC-SAP-OMF-OVERVIEW
+    status: source_verified
 
   - from: APP-ORDER-MANAGEMENT-FOUNDATION
     type: orchestrates
     to: APP-S4HANA-SALES
-    evidence_type: reasoned_inference
-    confidence: low
-    status: needs_review
+    evidence_type: documented_fact
+    confidence: medium
+    source_refs:
+      - SRC-SAP-OMF-HELP
+    status: source_verified
 
   - from: APP-OMSA
     type: provides_capability
     to: APP-ORDER-MANAGEMENT-FOUNDATION
-    evidence_type: reasoned_inference
-    confidence: low
-    status: needs_review
+    evidence_type: documented_fact
+    confidence: high
+    source_refs:
+      - SRC-SAP-OMSA-OVERVIEW
+    status: source_verified
 
-source_refs: []
+source_refs:
+  - SRC-SAP-S4-CLOUD-AREAS
+  - SRC-SAP-S4-LICENSE-COMPLIANCE
+  - SRC-SAP-SALES-CLOUD-OVERVIEW
+  - SRC-SAP-SALES-CLOUD-PRICING
+  - SRC-SAP-SALES-CLOUD-S4-INTEGRATION
+  - SRC-SAP-CPQ-OVERVIEW
+  - SRC-SAP-CPQ-S4-CLOUD-INTEGRATION
+  - SRC-SAP-CPQ-LIMITATIONS
+  - SRC-SAP-COMMERCE-PRICING
+  - SRC-SAP-COMMERCE-COMPOSABLE-FAQ
+  - SRC-SAP-OMF-OVERVIEW
+  - SRC-SAP-OMF-HELP
+  - SRC-SAP-OMF-SETUP
+  - SRC-SAP-OMSA-OVERVIEW
+  - SRC-SAP-OMSA-HELP
+
 tags:
   - sap-sales
   - application-landscape
@@ -159,4 +474,7 @@ tags:
   - cpq
   - commerce-cloud
   - order-management
+  - sourcing
+  - licensing
   - integration
+  - architecture
