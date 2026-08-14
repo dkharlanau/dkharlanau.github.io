@@ -1,4 +1,4 @@
-version: "0.1.1"
+version: "0.1.2"
 updated_at: "2026-08-14"
 
 common_fields:
@@ -57,6 +57,9 @@ node_types:
   - id: organization_unit
     label: "Organization Unit"
     prefix: "ORG"
+  - id: application_domain
+    label: "Application / Solution Domain"
+    prefix: "DOM"
   - id: application_component
     label: "Application / Solution Component"
     prefix: "APP"
@@ -106,6 +109,7 @@ node_types:
 edge_types:
   - contains
   - contains_component
+  - belongs_to_domain
   - precedes
   - triggers
   - creates
@@ -186,6 +190,7 @@ freshness_fields:
 id_rules:
   pattern: "<PREFIX>-<DOMAIN>-<SHORT-STABLE-NAME>"
   examples:
+    - "DOM-WAREHOUSING"
     - "PROC-O2C-ORDER-TO-CASH"
     - "STEP-O2C-CREATE-SALES-ORDER"
     - "OBJ-SD-SALES-ORDER"
