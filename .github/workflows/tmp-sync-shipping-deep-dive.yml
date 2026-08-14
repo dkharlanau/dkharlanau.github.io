@@ -1,19 +1,20 @@
 name: Temporary Shipping deep-dive sync
 
 on:
-  pull_request:
+  push:
+    branches:
+      - agent/sales-order-decision-map
 
 permissions:
   contents: write
 
 jobs:
   sync:
-    if: github.event.pull_request.head.ref == 'agent/sales-order-decision-map'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: agent/sales-order-decision-map
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -134,6 +135,5 @@ maturity_gates:'''
             echo "Artifacts already current."
           else
             git commit -m "Sync Shipping deep-dive artifacts"
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+            git push origin HEAD:agent/sales-order-decision-map
           fi
-# trigger after workflow registration
