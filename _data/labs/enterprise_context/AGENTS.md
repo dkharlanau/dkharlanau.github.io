@@ -6,10 +6,11 @@ The Lab is a structured knowledge graph first and a collection of pages second. 
 
 ## Read before editing
 
-1. `schema.yml` — vocabulary and stable ID prefixes.
-2. `model_contract.yml` — graph layers, integrity rules, and authoring sequence.
-3. `manifest.yml` — Lab purpose, maturity gates, public views, and machine endpoints.
-4. The nearest existing topic and relevant source registry files.
+1. `WORKING_STATE.md` — current engineering baseline and completed Lab infrastructure. Do not rebuild existing foundations by accident.
+2. `schema.yml` — vocabulary and stable ID prefixes.
+3. `model_contract.yml` — graph layers, integrity rules, and authoring sequence.
+4. `manifest.yml` — Lab purpose, maturity gates, public views, and machine endpoints.
+5. The nearest existing topic and relevant source registry files.
 
 ## Working model
 
