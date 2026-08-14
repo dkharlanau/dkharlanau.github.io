@@ -15,6 +15,9 @@
   {% if page.sales_control_plane %}
   <link rel="stylesheet" href="{{ '/assets/sales-control-plane.css' | relative_url }}" />
   {% endif %}
+  {% if page.sales_mechanism_library %}
+  <link rel="stylesheet" href="{{ '/assets/sales-mechanisms.css' | relative_url }}" />
+  {% endif %}
   {% if page.url contains '/labs/enterprise-context/' %}
   <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/catalog.json' | absolute_url }}" title="Enterprise Context Lab machine-readable catalog" />
   {% endif %}
@@ -23,6 +26,9 @@
   {% endif %}
   {% if page.sales_control_plane %}
   <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/sales-control-plane.json' | absolute_url }}" title="SAP Sales Control Plane" />
+  {% endif %}
+  {% if page.sales_mechanism_library %}
+  <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/sales-mechanisms.json' | absolute_url }}" title="SAP Sales Mechanism Library" />
   {% endif %}
 </head>
 
@@ -52,6 +58,9 @@
     {{ content }}
     {% if page.sales_process_atlas %}
     {% include labs/sales-control-plane-cta.html %}
+    {% endif %}
+    {% if page.sales_control_plane %}
+    {% include labs/sales-mechanism-cta.html %}
     {% endif %}
     {% assign generated_expert = site.data.expert_context.entries[page.url] %}
     {% if generated_expert and generated_expert.enabled == true and generated_expert.placement != 'source' %}
