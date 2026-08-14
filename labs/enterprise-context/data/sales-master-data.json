@@ -1,0 +1,18 @@
+---
+layout: null
+permalink: /labs/enterprise-context/data/sales-master-data.json
+sitemap: false
+---
+{% assign md = site.data.labs.enterprise_context.master_data.sales_master_data %}
+{
+  "contract": {{ site.data.labs.enterprise_context.master_data.sales_master_data_contract | jsonify }},
+  "index": {{ md.index | jsonify }},
+  "core": {{ md["01_core"] | jsonify }},
+  "hierarchies_and_content": {{ md["02_hierarchies_and_content"] | jsonify }},
+  "condition_and_relationship_records": {{ md["03_condition_and_relationship_records"] | jsonify }},
+  "adjacent_sales_consumed_master": {{ md["04_adjacent_sales_consumed_master"] | jsonify }},
+  "document_consumption": {{ md["05_document_consumption"] | jsonify }},
+  "relations": {{ md.relations | jsonify }},
+  "sources": {{ site.data.labs.enterprise_context.sources.sales_master_data_registry | jsonify }},
+  "document_sources": {{ site.data.labs.enterprise_context.sources.sales_document_consumption_registry | jsonify }}
+}
