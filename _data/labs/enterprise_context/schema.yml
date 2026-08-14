@@ -1,4 +1,4 @@
-version: "0.4.0"
+version: "0.5.0"
 updated_at: "2026-08-14"
 
 common_fields:
@@ -27,10 +27,30 @@ statuses:
 
 evidence_types:
   - documented_fact
+  - professional_experience
   - expert_heuristic
   - reasoned_inference
+  - reasoned_interpretation
   - synthetic_assumption
+  - synthetic_example
   - observed_example
+
+source_usage_modes:
+  - reference_and_verification_only
+  - permitted_excerpt
+  - author_owned
+  - synthetic
+
+publication_contract:
+  default_vendor_source_usage: reference_and_verification_only
+  rules:
+    - "Public text should be independently written and should not reproduce vendor prose."
+    - "Prefer source links and source IDs over copied passages."
+    - "Do not reuse vendor diagrams, tables, screenshots, or training material unless the specific use is deliberately reviewed and permitted."
+    - "Keep documented facts separate from professional experience, interpretation, and synthetic examples."
+    - "Do not publish restricted or confidential client, employer, partner, customer, or licensed material."
+    - "Do not imply vendor sponsorship, affiliation, certification, approval, or endorsement."
+    - "Do not bulk scrape or mirror vendor websites."
 
 node_types:
   - id: capability
@@ -176,7 +196,10 @@ source_contract:
     - release_scope
     - product_scope
     - country_scope
+    - usage_mode
+    - rights_note
     - notes
+  default_usage_mode: reference_and_verification_only
 
 assertion_contract:
   required:
