@@ -1,7 +1,7 @@
 id: lab-enterprise-context
 title: "Enterprise Context Lab"
 model_name: "Enterprise Context Graph"
-version: "0.4.0"
+version: "0.5.0"
 status: active_research
 started_at: "2026-08-14"
 updated_at: "2026-08-14"
@@ -27,13 +27,33 @@ principles:
     description: "Examples and enterprise records are fictional unless explicitly documented otherwise."
   - id: fact_vs_judgment
     label: "Facts and judgment stay separate"
-    description: "Documented facts, expert heuristics, and inferences carry different evidence types."
+    description: "Documented facts, professional observations, expert heuristics, and inferences carry different evidence types."
   - id: deep_verticals
     label: "Depth before breadth"
     description: "A topic is expanded through relationships, failures, tests, and reasoning before another catalogue is created."
   - id: domain_separation
     label: "Keep architecture dimensions separate"
     description: "Business domains, industries, deployment models, processes, solution domains, applications, platforms, and AI assets are different entity types."
+  - id: independent_synthesis
+    label: "Independent synthesis"
+    description: "Vendor sources verify facts; public explanations, comparisons, models, and examples are written independently for this site."
+
+content_integrity:
+  policy_url: "/legal/research-attribution/"
+  default_source_usage: reference_and_verification_only
+  publication_rules:
+    - "Write public explanations in original language rather than reproducing vendor prose."
+    - "Link to primary sources instead of mirroring or republishing vendor documentation."
+    - "Do not copy vendor tables, diagrams, training material, or screenshots by default."
+    - "Use product names only to identify the products and services being discussed; do not imply affiliation or endorsement."
+    - "Do not publish restricted, licensed, partner-only, customer-only, employer-confidential, or client-confidential material."
+    - "Avoid direct quotations by default; prefer a short independent summary plus the source link."
+    - "Do not bulk scrape or build a local copy of vendor web content."
+  origin_labels:
+    documented_fact: "Checked against a public primary source."
+    professional_experience: "Practical observation from delivery, support, or architecture work."
+    reasoned_interpretation: "Independent conclusion based on facts, constraints, and experience."
+    synthetic_example: "Fictional scenario created for learning or evaluation."
 
 reference_enterprise:
   id: enterprise-global-transformation-industries
@@ -89,6 +109,7 @@ human_views:
   industries: "/labs/enterprise-context/industries/"
   business_ai: "/labs/enterprise-context/business-ai/"
   model_contract: "/labs/enterprise-context/model/"
+  research_attribution_policy: "/legal/research-attribution/"
 
 machine_endpoints:
   catalog: "/labs/enterprise-context/data/catalog.json"
