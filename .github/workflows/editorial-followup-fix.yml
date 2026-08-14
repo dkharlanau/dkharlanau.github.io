@@ -1,0 +1,61 @@
+name: Editorial Follow-up Fix
+
+on:
+  push:
+    branches:
+      - agent/refine-domains-add-business-ai
+    paths:
+      - .github/workflows/editorial-followup-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/refine-domains-add-business-ai
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 -m pip install pyyaml
+      - name: Apply follow-up edits
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('about.md')
+          t = p.read_text(encoding='utf-8')
+          t = t.replace('last_modified_at: 2026-07-25', 'last_modified_at: 2026-08-14', 1)
+          p.write_text(t, encoding='utf-8')
+
+          p = Path('scenarios/invoice-verification-three-way-match-delays.md')
+          t = p.read_text(encoding='utf-8')
+          t = t.replace(
+              '<p class="note-subtitle">Price, quantity, and tax mismatches between PO, GR, and invoice create blocked invoices in MIRO, driving manual reconciliation, late payment penalties, and month-end close delays.</p>',
+              '<p class="note-subtitle">Trace delayed or blocked supplier invoices through the purchasing document, receipt history, variance, tolerance logic, and decision ownership before changing configuration.</p>',
+              1,
+          )
+          t = t.replace(
+              '<li><strong>GR timing gaps</strong> — invoice arrives before GR is posted, especially in drop-ship or third-party scenarios.</li>',
+              '<li><strong>Receipt timing or reference gaps</strong> — the invoice and the expected receipt context are not aligned for the process variant in scope.</li>',
+              1,
+          )
+          t = t.replace(
+              '<li><strong>Tax configuration drift</strong> — tax code changes in the vendor master or country-specific rules not reflected in PO.</li>',
+              '<li><strong>Tax or compliance differences</strong> — the purchasing document, supplier invoice, and applicable country-specific treatment do not align.</li>',
+              1,
+          )
+          p.write_text(t, encoding='utf-8')
+          PY
+      - name: Refresh derived artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add about.md scenarios/invoice-verification-three-way-match-delays.md ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          git commit -m "Polish sampled profile and P2P scenario"
+          git push origin HEAD:agent/refine-domains-add-business-ai
