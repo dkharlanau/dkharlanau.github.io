@@ -31,8 +31,8 @@ tags:
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>1</strong><small>Active lab</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>11</strong><small>Architecture views</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>14</strong><small>Machine endpoints</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>10</strong><small>Architecture views</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>12</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
   </header>
@@ -59,13 +59,12 @@ tags:
       <a href="/labs/enterprise-context/pricing/"><span>03</span><strong>Sales Pricing Engine</strong><small>Procedure, conditions, accesses, records, calculations, classic extensions, clean-core extensions, billing differences, and troubleshooting.</small><i class="material-symbols-outlined" aria-hidden="true">price_check</i></a>
       <a href="/labs/enterprise-context/atp/"><span>04</span><strong>ATP / aATP Promise Engine</strong><small>Checking scope, PAC, PAL, supply protection, BOP, ABC, released extensions, integrations, and confirmation troubleshooting.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
       <a href="/labs/enterprise-context/credit/"><span>05</span><strong>SAP Credit Management</strong><small>BP credit data, check rules, exposure lifecycle, blocks, release, recheck, FSCM integration, and credit extensions.</small><i class="material-symbols-outlined" aria-hidden="true">credit_score</i></a>
-      <a href="/labs/enterprise-context/shipping/"><span>06</span><strong>Shipping & Delivery Scheduling</strong><small>Shipping point, route, activity times, calendars, backward/forward scheduling, delivery due processing, EWM/TM boundaries, and split diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
-      <a href="/labs/enterprise-context/domains/"><span>07</span><strong>Enterprise Business Domains</strong><small>What the business owns, separate from processes and SAP products.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/deployment-models/"><span>08</span><strong>SAP S/4HANA Deployment Models</strong><small>Public Cloud, Private Cloud, and On-Premise.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
-      <a href="/labs/enterprise-context/industries/"><span>09</span><strong>SAP Industry Solutions</strong><small>Automotive, retail, fashion, industrial manufacturing, and mill products.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
-      <a href="/labs/enterprise-context/business-ai/"><span>10</span><strong>SAP Business AI</strong><small>Joule, agents, build tools, runtime, model access, grounding, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      <a href="/labs/enterprise-context/model/"><span>11</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/data/catalog.json"><span>12</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/enterprise-context/domains/"><span>06</span><strong>Enterprise Business Domains</strong><small>What the business owns, separate from processes and SAP products.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/deployment-models/"><span>07</span><strong>SAP S/4HANA Deployment Models</strong><small>Public Cloud, Private Cloud, and On-Premise.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
+      <a href="/labs/enterprise-context/industries/"><span>08</span><strong>SAP Industry Solutions</strong><small>Automotive, retail, fashion, industrial manufacturing, and mill products.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
+      <a href="/labs/enterprise-context/business-ai/"><span>09</span><strong>SAP Business AI</strong><small>Joule, agents, build tools, runtime, model access, grounding, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/enterprise-context/model/"><span>10</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/data/catalog.json"><span>11</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
