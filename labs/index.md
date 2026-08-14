@@ -31,8 +31,8 @@ tags:
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>1</strong><small>Active lab</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>5</strong><small>Architecture views</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>4</strong><small>Machine endpoints</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>6</strong><small>Architecture views</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>6</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
   </header>
@@ -55,12 +55,13 @@ tags:
 
     <div class="research-route-list">
       <a href="/labs/enterprise-context/"><span>01</span><strong>Enterprise Context Graph</strong><small>Sales, Supply Chain, processes, applications, boundaries, licensing, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/domains/"><span>02</span><strong>Enterprise Business Domains</strong><small>What the business owns, separate from processes and SAP products.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/deployment-models/"><span>03</span><strong>SAP S/4HANA Deployment Models</strong><small>Public Cloud, Private Cloud, and On-Premise.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
-      <a href="/labs/enterprise-context/industries/"><span>04</span><strong>SAP Industry Solutions</strong><small>Automotive, retail, fashion, industrial manufacturing, and mill products.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
-      <a href="/labs/enterprise-context/business-ai/"><span>05</span><strong>SAP Business AI</strong><small>Joule, agents, build tools, runtime, model access, grounding, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      <a href="/labs/enterprise-context/model/"><span>06</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/data/catalog.json"><span>07</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/enterprise-context/sales-processes/"><span>02</span><strong>SAP Sales Process Atlas</strong><small>Memory cards for standard and special sales: flow, controls, data hinges, constraints, comparisons, and extension points.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/enterprise-context/domains/"><span>03</span><strong>Enterprise Business Domains</strong><small>What the business owns, separate from processes and SAP products.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/deployment-models/"><span>04</span><strong>SAP S/4HANA Deployment Models</strong><small>Public Cloud, Private Cloud, and On-Premise.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
+      <a href="/labs/enterprise-context/industries/"><span>05</span><strong>SAP Industry Solutions</strong><small>Automotive, retail, fashion, industrial manufacturing, and mill products.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
+      <a href="/labs/enterprise-context/business-ai/"><span>06</span><strong>SAP Business AI</strong><small>Joule, agents, build tools, runtime, model access, grounding, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/enterprise-context/model/"><span>07</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/data/catalog.json"><span>08</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
