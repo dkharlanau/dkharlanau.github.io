@@ -50,6 +50,9 @@
   {% include header.html %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
     {{ content }}
+    {% if page.sales_process_atlas %}
+    {% include labs/sales-control-plane-cta.html %}
+    {% endif %}
     {% assign generated_expert = site.data.expert_context.entries[page.url] %}
     {% if generated_expert and generated_expert.enabled == true and generated_expert.placement != 'source' %}
     <section class="expert-promotion-generated" aria-label="Article expert context">
