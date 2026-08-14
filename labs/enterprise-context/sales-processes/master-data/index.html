@@ -1,0 +1,324 @@
+---
+layout: default
+title: "SAP S/4HANA Sales Master Data Graph — BP, Product, Conditions and Relationships"
+description: "A data-first map of SAP S/4HANA Sales master data: Business Partner, product, customer-material, hierarchies, texts, condition records, cross-selling, listing/exclusion, credit and adjacent logistics data."
+permalink: /labs/enterprise-context/sales-processes/master-data/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+sales_master_data_graph: true
+tags:
+  - sap
+  - s4hana
+  - sales
+  - master-data
+  - business-partner
+  - product
+  - pricing
+---
+
+{% assign md = site.data.labs.enterprise_context.master_data.sales_master_data %}
+{% assign contract = site.data.labs.enterprise_context.master_data.sales_master_data_contract %}
+{% assign registry = site.data.labs.enterprise_context.sources.sales_master_data_registry %}
+{% assign group_keys = "01_core,02_hierarchies_and_content,03_condition_and_relationship_records,04_adjacent_sales_consumed_master" | split: "," %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">Enterprise Context</a></li>
+    <li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li>
+    <li aria-current="page">Sales Master Data Graph</li>
+  </ol>
+</nav>
+
+<div class="research-canvas sales-master-data">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Sales / data layer / {{ md.index.version }}</p>
+      <h1>Master data is the memory.<br />Mechanisms are the decisions.</h1>
+      <p>A sales order is mostly a consumer. It reads party, product, relationships, validity-based records and organizational context, then the Sales mechanisms turn those inputs into partners, item behavior, price, promise, delivery and billing.</p>
+      <div class="smd-hero-actions">
+        <a class="research-canvas__button" href="#entity-cards">Open entity cards <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+        <a class="smd-text-link" href="/labs/enterprise-context/sales-processes/mechanisms/">Mechanism Library</a>
+      </div>
+    </div>
+    <div class="research-canvas__signal" aria-label="Master data graph inventory">
+      <p>Structured data layer</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ md.index.summary.entity_count }}</strong><small>Entity records</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ md.relations.edges | size }}</strong><small>Typed edges</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ registry.sources | size }}</strong><small>Primary references</small></div>
+      <em><code>MD.SD.*</code> = maintained data. <code>MEC.SD.*</code> = mechanism that consumes it.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
+    <p><strong>Boundary rule.</strong> Do not call everything master data. A customer is business master data. A price record is condition master data. A customer-material record is a relationship. Sales Organization is organizational context. A pricing procedure is configuration. A Sales Order is runtime data.</p>
+    <a href="/labs/enterprise-context/data/sales-master-data.json">Open JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="smd-learning" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Read every object through six questions.</h2>
+      <p>Field lists are cheap. The useful part is understanding scope, precedence and blast radius.</p>
+    </div>
+    <ol>
+      {% for question in md.index.learning_model.six_questions %}
+      <li><span>0{{ forloop.index }}</span><p>{{ question }}</p></li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Data classes</p>
+      <h2>Same screen does not mean same kind of thing.</h2>
+      <p>The class matters because lifecycle, ownership, validity and debugging are different. That distinction becomes useful the moment a “master-data problem” survives the first five minutes of investigation.</p>
+    </header>
+    <div class="smd-class-grid">
+      {% for class in contract.entity_classes %}
+      <article data-class="{{ class.id }}">
+        <code>{{ class.id }}</code>
+        <p>{{ class.meaning }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="smd-impact" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Impact traces</p>
+      <h2>Memorize chains, not transactions.</h2>
+      <p>These paths are deliberately short. In an assessment, start with one chain and then open the layers only when the interviewer pushes deeper.</p>
+    </div>
+    <div class="smd-trace-grid">
+      {% for trace in md.relations.impact_traces %}
+      <article>
+        <span>{{ trace.title }}</span>
+        <div class="smd-path">
+          {% for node in trace.path %}
+          <code>{{ node }}</code>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}
+          {% endfor %}
+        </div>
+        <p>{{ trace.memory }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostic shortcuts</p>
+      <h2>Start from the symptom, then walk upstream.</h2>
+      <p>A Lead answer is stronger when it names the likely data objects and the mechanism that consumes them instead of opening SE16N and hoping the database confesses.</p>
+    </header>
+    <div class="smd-fast-paths">
+      {% for path in md.index.fast_paths %}
+      <article>
+        <strong>{{ path.question }}</strong>
+        <div class="smd-path">
+          {% for node in path.path %}
+          <code>{{ node }}</code>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}
+          {% endfor %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="entity-cards" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Entity cards</p>
+      <h2>Scope → leverage fields → consumers → evidence.</h2>
+      <p>The first screen answers “what matters?”. Expand only when you need maintenance, tables/CDS/APIs, precedence, failure signals and Lead-level questions.</p>
+    </header>
+
+    {% for group_key in group_keys %}
+    {% assign group = md[group_key] %}
+    <section class="smd-group" aria-labelledby="smd-group-{{ group_key }}">
+      <div class="smd-group__head">
+        <span>{{ forloop.index | prepend: "0" }}</span>
+        <div>
+          <h3 id="smd-group-{{ group_key }}">{{ group.title }}</h3>
+          <p>{{ group.summary }}</p>
+        </div>
+      </div>
+
+      <div class="smd-card-grid">
+        {% for entity in group.entities %}
+        <article class="smd-card" data-class="{{ entity.entity_class }}" id="{{ entity.code | downcase | replace: '.', '-' }}">
+          <header>
+            <div class="smd-card__meta">
+              <code>{{ entity.code }}</code>
+              <span>{{ entity.entity_class | replace: "_", " " }}</span>
+            </div>
+            <h4>{{ entity.title }}</h4>
+            <p class="smd-hook">{{ entity.memory_hook }}</p>
+          </header>
+
+          <p class="smd-question">{{ entity.business_question }}</p>
+          <p class="smd-scope">{{ entity.scope }}</p>
+
+          <div class="smd-key-list">
+            <span>Scope / keys</span>
+            <div>{% for key in entity.key_dimensions %}<small>{{ key }}</small>{% endfor %}</div>
+          </div>
+
+          <div class="smd-fields">
+            <span>High-leverage attributes</span>
+            {% for field in entity.high_value_attributes %}
+            <div class="smd-field">
+              <strong>{{ field.name }}</strong>
+              <p>{{ field.why }}</p>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="smd-two-col">
+            <section>
+              <span>Consumed by</span>
+              <div class="smd-pills">{% for item in entity.consumed_by %}<small>{{ item }}</small>{% endfor %}</div>
+            </section>
+            <section>
+              <span>Influences</span>
+              <div class="smd-pills">{% for item in entity.writes_or_influences %}<small>{{ item }}</small>{% endfor %}</div>
+            </section>
+          </div>
+
+          {% if entity.relations and entity.relations.size > 0 %}
+          <div class="smd-relations">
+            <span>Graph links</span>
+            {% for rel in entity.relations %}
+            <div><code>{{ entity.code }}</code><b>{{ rel.type }}</b><code>{{ rel.target }}</code><p>{{ rel.why }}</p></div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <details>
+            <summary>Maintenance, technical refs, precedence, failures <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+            <div class="smd-detail-grid">
+              <section>
+                <h5>Precedence / interpretation</h5>
+                <ul>{% for item in entity.precedence %}<li>{{ item }}</li>{% endfor %}</ul>
+              </section>
+              <section>
+                <h5>Maintenance</h5>
+                {% if entity.maintenance.modern and entity.maintenance.modern.size > 0 %}
+                <p class="smd-tech"><span>Modern</span>{% for item in entity.maintenance.modern %}<code>{{ item }}</code>{% endfor %}</p>
+                {% endif %}
+                {% if entity.maintenance.classic and entity.maintenance.classic.size > 0 %}
+                <p class="smd-tech"><span>Classic refs</span>{% for item in entity.maintenance.classic %}<code>{{ item }}</code>{% endfor %}</p>
+                {% endif %}
+                <p>{{ entity.maintenance.note }}</p>
+              </section>
+              <section>
+                <h5>Technical orientation</h5>
+                {% if entity.technical_refs.tables and entity.technical_refs.tables.size > 0 %}
+                <p class="smd-tech"><span>Tables</span>{% for item in entity.technical_refs.tables %}<code>{{ item }}</code>{% endfor %}</p>
+                {% endif %}
+                {% if entity.technical_refs.released_cds and entity.technical_refs.released_cds.size > 0 %}
+                <p class="smd-tech"><span>Released CDS</span>{% for item in entity.technical_refs.released_cds %}<code>{{ item }}</code>{% endfor %}</p>
+                {% endif %}
+                {% if entity.technical_refs.apis and entity.technical_refs.apis.size > 0 %}
+                <p class="smd-tech"><span>API</span>{% for item in entity.technical_refs.apis %}<code>{{ item }}</code>{% endfor %}</p>
+                {% endif %}
+                {% if entity.technical_refs.business_objects and entity.technical_refs.business_objects.size > 0 %}
+                <p class="smd-tech"><span>Business objects</span>{% for item in entity.technical_refs.business_objects %}<code>{{ item }}</code>{% endfor %}</p>
+                {% endif %}
+                {% if entity.technical_refs.related and entity.technical_refs.related.size > 0 %}
+                <p class="smd-tech"><span>Related</span>{% for item in entity.technical_refs.related %}<code>{{ item }}</code>{% endfor %}</p>
+                {% endif %}
+                {% if entity.technical_refs.notes and entity.technical_refs.notes.size > 0 %}
+                {% for note in entity.technical_refs.notes %}<p>{{ note }}</p>{% endfor %}
+                {% endif %}
+              </section>
+              <section>
+                <h5>Failure signals</h5>
+                <ul>{% for item in entity.failure_signals %}<li>{{ item }}</li>{% endfor %}</ul>
+              </section>
+              <section>
+                <h5>Lead questions</h5>
+                <ol>{% for item in entity.lead_questions %}<li>{{ item }}</li>{% endfor %}</ol>
+              </section>
+              <section>
+                <h5>Evidence keys</h5>
+                <p class="smd-tech">{% for item in entity.source_refs %}<code>{{ item }}</code>{% endfor %}</p>
+              </section>
+            </div>
+          </details>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Typed graph</p>
+      <h2>The data layer plugs into the mechanism layer.</h2>
+      <p>Edges are deliberately explicit. The graph can later answer impact questions such as “what mechanisms consume customer shipping condition?” or “which maintained records can block an item before pricing?”.</p>
+    </header>
+    <div class="smd-edge-grid">
+      {% for edge in md.relations.edges %}
+      <article>
+        <code>{{ edge.from }}</code>
+        <span>{{ edge.relation | replace: "_", " " }}</span>
+        <code>{{ edge.to }}</code>
+        <p>{{ edge.why }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="smd-assessment" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Lead answer pattern</p>
+      <h2>Do not describe the master record. Explain the behavior.</h2>
+    </div>
+    <div class="smd-answer-grid">
+      <article><span>01</span><p><strong>Scope.</strong> “This data is global / sales-area / customer-product / validity specific.”</p></article>
+      <article><span>02</span><p><strong>Consumer.</strong> “The value matters because pricing / partner / fulfillment reads it.”</p></article>
+      <article><span>03</span><p><strong>Precedence.</strong> “A more specific relationship or condition may refine the generic default.”</p></article>
+      <article><span>04</span><p><strong>Failure.</strong> “I reproduce the wrong result and trace upstream to the exact maintained source.”</p></article>
+      <article><span>05</span><p><strong>Boundary.</strong> “I separate the record itself from the configuration that decides how it is read.”</p></article>
+      <article><span>06</span><p><strong>Proof.</strong> “I change one controlled input and prove the downstream effect.”</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Known boundaries</p>
+      <h2>Not every adjacent object belongs in this graph.</h2>
+      <p>The first release keeps the Sales lens strong rather than pretending one page can swallow the whole S/4HANA data model.</p>
+    </header>
+    <div class="research-route-list">
+      {% for gap in md.index.known_gaps %}
+      <a href="/labs/enterprise-context/model/"><span>NEXT</span><strong>Boundary / next layer</strong><small>{{ gap }}</small><i class="material-symbols-outlined" aria-hidden="true">north_east</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence boundary</p>
+      <h2>Facts have sources. The learning model is independently written.</h2>
+      <p>SAP documentation is used to verify product behavior, master-data scope and released interfaces. The entity split, memory hooks, dependency traces, diagnostic shortcuts and Lead questions are authored for this Lab.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in registry.sources %}
+      <a href="{{ source.url }}" {% unless source.url contains '/labs/' %}target="_blank" rel="noopener"{% endunless %}><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">{% if source.url contains '/labs/' %}arrow_forward{% else %}open_in_new{% endif %}</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
