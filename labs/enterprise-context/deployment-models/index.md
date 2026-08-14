@@ -45,6 +45,7 @@ tags:
     <p><strong>Problem:</strong> the three S/4HANA deployment models share a product family but differ in scope, extensibility, upgrades, and operations.</p>
     <p><strong>Remember:</strong> deployment changes scope, extensions, upgrades, and operations. It does not replace the business process.</p>
     <a href="/labs/enterprise-context/industries/">Open industry solutions <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <a href="/labs/enterprise-context/development/">Choose the development architecture <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="deployment-models" data-reveal>

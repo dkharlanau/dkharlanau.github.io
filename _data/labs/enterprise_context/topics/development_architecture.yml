@@ -1,0 +1,446 @@
+id: TOPIC-SAP-DEVELOPMENT-ARCHITECTURE
+type: research_topic
+title: "SAP Development Architecture: On-Stack, Side-by-Side, RAP, CAP and Clean Core"
+summary: "Choose the development model by coupling, data gravity, transaction boundary, lifecycle and operational cost — not by SAP product fashion."
+domain: "SAP Technical Architecture"
+process_family: "Cross-enterprise / application development and extensibility"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+reviewed_together_at: "2026-08-14"
+review_note: "Reviewed against current SAP Help, CAP documentation and SAP-owned Clean ABAP guidance. Architecture recommendations are deliberately more skeptical than product positioning."
+
+business_question: "If I need new SAP-related functionality, where should I build it, with which programming model, runtime, language and deployment model?"
+
+maturity:
+  gates_complete: 3
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: in_progress
+    expert_reasoning: in_progress
+    synthetic_example: planned
+    ai_evaluation: planned
+
+architecture_thesis:
+  - "Do not compare RAP, CAP, CDS and ABAP Objects as if they were competing products. They sit at different layers."
+  - "Start from coupling and transaction boundaries. A tightly coupled ERP rule usually belongs close to ERP. A loosely coupled cross-system capability may belong outside it."
+  - "For new in-stack S/4HANA code, prefer ABAP Cloud + CDS + RAP when the required released APIs exist, even in Private Edition or on-premise."
+  - "Classic ABAP is still a valid tactical choice in Private Edition and on-premise when released APIs are missing, legacy reuse matters, or the logic must stay inside the SAP LUW. Isolate it instead of pretending it does not exist."
+  - "CAP is a strong default for side-by-side domain services and applications on BTP. It is not a universal replacement for ABAP."
+  - "BTP is valuable when independence buys something real: separate lifecycle, multi-system access, external users, different scaling, SaaS, event-driven processing, or non-SAP technology."
+  - "Do not create a remote BTP service just to move ten lines of deterministic logic away from S/4HANA. Distributed systems have a cost."
+  - "Clean code and clean core are different problems. Clean code improves maintainability; clean core limits unstable dependencies on SAP internals."
+
+concept_layers:
+  - id: DEV-LAYER-LANGUAGE
+    title: "Language and implementation style"
+    examples: ["ABAP Objects", "Java", "JavaScript", "TypeScript"]
+    architect_note: "A language does not decide the deployment architecture. ABAP can run on-stack or in BTP ABAP Environment; JavaScript/TypeScript and Java are common CAP runtimes."
+
+  - id: DEV-LAYER-DATA-MODEL
+    title: "Data and semantic model"
+    examples: ["ABAP CDS", "CAP CDS"]
+    architect_note: "ABAP CDS belongs to the ABAP stack. CAP CDS belongs to CAP. The similar name does not make the artifacts interchangeable."
+
+  - id: DEV-LAYER-PROGRAMMING-MODEL
+    title: "Application programming model"
+    examples: ["RAP", "CAP"]
+    architect_note: "RAP is the modern ABAP business object and service model. CAP is a cloud application framework for Node.js/TypeScript and Java services."
+
+  - id: DEV-LAYER-UI
+    title: "User interface"
+    examples: ["SAP Fiori elements", "freestyle SAPUI5", "other web UI"]
+    architect_note: "Use metadata-driven UI when standard floorplans fit. Use freestyle UI only when interaction design really needs it."
+
+  - id: DEV-LAYER-RUNTIME
+    title: "Runtime"
+    examples: ["S/4HANA ABAP stack", "SAP BTP ABAP Environment", "BTP Cloud Foundry", "BTP Kyma/Kubernetes"]
+    architect_note: "Runtime determines lifecycle, networking, scaling, operations and failure modes. This is an architecture decision, not an IDE preference."
+
+  - id: DEV-LAYER-TOOLING
+    title: "Development tooling"
+    examples: ["ABAP Development Tools for Eclipse", "ABAP Development Tools for VS Code", "VS Code", "SAP Business Application Studio", "SAP Build Code"]
+    architect_note: "Tooling can improve productivity, but it should not be confused with the application runtime. BAS is convenient for CAP and Fiori, but local VS Code remains a valid development setup."
+
+building_blocks:
+  - id: TECH-ABAP-OBJECTS
+    title: "ABAP Objects"
+    kind: language_model
+    runs_on: ["S/4HANA", "S/4HANA Cloud Private Edition", "S/4HANA Cloud Public Edition with ABAP Cloud restrictions", "SAP BTP ABAP Environment"]
+    role: "Object-oriented business logic, services, adapters, tests and reusable domain code in ABAP."
+    best_fit: "Business logic that belongs in an ABAP runtime and benefits from classes, interfaces, dependency boundaries and ABAP-native APIs."
+    not_for: "It is not an extensibility strategy by itself and does not tell you whether code is clean-core compliant."
+    architect_view: "For new code, classes and interfaces should be the default structure. Function modules and procedural wrappers may remain at integration or legacy boundaries, not as the center of a new design."
+    languages: ["ABAP"]
+    source_refs: [SRC-SAP-ABAP-CLOUD-LANGUAGE, SRC-SAP-ADT-ECLIPSE-2608]
+
+  - id: TECH-ABAP-CDS
+    title: "ABAP CDS"
+    kind: data_model
+    runs_on: ["ABAP stack"]
+    role: "Semantic, authorization-aware and HANA-optimized data modeling for ABAP applications, analytics and RAP."
+    best_fit: "Stable reusable read models, analytical semantics, value help, associations, authorization-relevant views and RAP data models."
+    not_for: "Do not hide heavy procedural business logic inside increasingly clever views. CDS should model data well, not become a puzzle language."
+    architect_view: "Prefer clear layered views with explicit semantics. Push data-intensive work to HANA when it reduces transfer and is understandable. Do not push down everything merely because HANA exists."
+    languages: ["ABAP CDS DDL", "DCL where required"]
+    source_refs: [SRC-SAP-ABAP-CDS]
+
+  - id: TECH-RAP
+    title: "ABAP RESTful Application Programming Model (RAP)"
+    kind: programming_model
+    runs_on: ["Modern ABAP platform", "S/4HANA developer extensibility", "SAP BTP ABAP Environment"]
+    role: "Transactional business objects, business logic, OData services, Web APIs and Fiori applications in ABAP."
+    best_fit: "New transactional applications close to S/4HANA data and business rules, or an API/service facade around ABAP-domain behavior."
+    not_for: "Do not rebuild an entire stable legacy application only to obtain a fashionable RAP label. Use unmanaged patterns when reuse is safer."
+    managed_vs_unmanaged:
+      managed: "Best for greenfield persistence where the framework can own standard CRUD, transactional buffer, locking and save flow."
+      unmanaged: "Best when existing BAPIs, legacy logic or non-standard persistence must remain the implementation engine. You implement the essential transactional contract."
+      hybrid_note: "Managed with additional or unmanaged save is useful when the interaction model fits RAP but persistence needs special handling."
+    architect_view: "Managed RAP is the default for greenfield ABAP transactional apps. Unmanaged RAP is a migration and facade tool, not a failure."
+    languages: ["ABAP", "ABAP CDS"]
+    source_refs: [SRC-SAP-RAP-IMPLEMENTATION-TYPES]
+
+  - id: TECH-CAP
+    title: "SAP Cloud Application Programming Model (CAP)"
+    kind: programming_model
+    runs_on: ["BTP Cloud Foundry", "BTP Kyma/Kubernetes", "local development"]
+    role: "Model-driven cloud services and applications with Node.js/TypeScript or Java runtimes."
+    best_fit: "Side-by-side services, cross-system applications, external-facing APIs, SaaS, independent lifecycle, non-ABAP libraries and cloud-native integrations."
+    not_for: "It is not automatically better than ABAP for logic that is tightly bound to one S/4HANA transaction and constantly needs local ERP state."
+    architect_view: "CAP removes a lot of repetitive service plumbing. Use that productivity. But keep the service boundary meaningful; a CAP microservice with no independent business responsibility is still distributed monolith debris."
+    languages: ["CDS", "JavaScript", "TypeScript", "Java"]
+    current_baseline:
+      checked_at: "2026-08-14"
+      cap_major: "cds 10 / @sap/cds 10.x"
+      node_minimum: "22"
+      node_recommended: "24"
+      cap_java_major: "5.x"
+      jdk_minimum: "21"
+      jdk_recommended: "25"
+    source_refs: [SRC-SAP-CAP-RELEASE-2026-06, SRC-SAP-CAP-DEPLOY]
+
+  - id: TECH-BTP-ABAP-ENV
+    title: "SAP BTP ABAP Environment"
+    kind: runtime
+    runs_on: ["SAP BTP"]
+    role: "Side-by-side ABAP Cloud runtime with RAP, CDS and a dedicated managed HANA database."
+    best_fit: "A side-by-side extension needs ABAP skills, ABAP semantics, RAP, reuse of adaptable ABAP code, or an ABAP-centric team wants an independent lifecycle."
+    not_for: "Do not choose it only because the team knows ABAP if the use case is primarily polyglot integration, high-volume event processing, or a web platform with a large non-SAP ecosystem."
+    architect_view: "This is useful when the development model should stay ABAP while the lifecycle should leave S/4HANA. It competes with CAP at the side-by-side runtime layer, not with RAP as a concept."
+    languages: ["ABAP", "ABAP CDS"]
+    source_refs: [SRC-SAP-BTP-ABAP-ENV]
+
+extension_models:
+  - id: EXT-KEY-USER
+    title: "Key-user extensibility"
+    coupling: "very high / in-stack"
+    choose_when: "A small supported extension exists: custom field, UI adaptation, simple custom logic, form or analytical extension."
+    avoid_when: "The requirement is a real application with complex lifecycle, testing, integration and engineering needs."
+    lead_rule: "Use the smallest supported mechanism that solves the requirement."
+
+  - id: EXT-DEVELOPER-ABAP-CLOUD
+    title: "Developer extensibility with ABAP Cloud"
+    coupling: "high / in-stack"
+    choose_when: "The capability belongs inside the S/4HANA process, needs local transactional access, and released APIs or extension points are sufficient."
+    avoid_when: "The extension needs an independent lifecycle, non-ABAP stack, cross-system ownership or external scaling."
+    lead_rule: "Default for new tightly coupled S/4HANA code where technically possible."
+    source_refs: [SRC-SAP-ABAP-CLOUD-EXTENSIBILITY]
+
+  - id: EXT-CLASSIC-ABAP
+    title: "Classic ABAP extensibility"
+    coupling: "very high / in-stack"
+    choose_when: "Private Edition or on-premise has a real API gap, legacy reuse requirement, deep transaction coupling or supported classic enhancement point that cannot yet be replaced reasonably."
+    avoid_when: "A released ABAP Cloud contract already solves the need with similar effort."
+    lead_rule: "Treat classic ABAP as controlled technical debt, not forbidden magic. Keep unreleased dependencies behind explicit wrappers and test them."
+    source_refs: [SRC-SAP-ABAP-CLOUD-CLEAN-CORE, SRC-SAP-ABAP-CLOUD-LANGUAGE]
+
+  - id: EXT-SIDE-BY-SIDE
+    title: "Side-by-side extension"
+    coupling: "low to medium / remote"
+    choose_when: "The capability has independent business responsibility, lifecycle or scaling; spans systems; serves external users; combines SAP and non-SAP data; or needs another technology stack."
+    avoid_when: "The extension is just a remote proxy for local S/4HANA logic and gains no meaningful independence."
+    lead_rule: "Decouple for a reason, not for a diagram."
+    source_refs: [SRC-SAP-SIDE-BY-SIDE]
+
+runtime_decisions:
+  - id: RT-S4-ONSTACK
+    title: "S/4HANA on-stack ABAP"
+    default_stack: "ABAP Cloud + CDS + RAP for new development; classic ABAP only where justified"
+    strengths:
+      - "Local data and transaction access"
+      - "No network hop for local ERP logic"
+      - "Native authorizations, transports and debugging"
+      - "Lower distributed-systems overhead"
+    costs:
+      - "Shares ERP lifecycle and capacity"
+      - "Poorly governed classic code can create upgrade coupling"
+      - "Technology choice is mainly ABAP"
+    best_for: "Tightly coupled ERP business logic and transactional extensions."
+
+  - id: RT-BTP-CF
+    title: "SAP BTP Cloud Foundry"
+    default_stack: "CAP Node.js/TypeScript or Java for many conventional side-by-side services"
+    strengths:
+      - "Simpler application platform than Kubernetes for standard web/service workloads"
+      - "Managed routing and service binding model"
+      - "Good fit for CAP MTA-based deployment"
+    costs:
+      - "Remote integration, identity and observability must be designed"
+      - "Separate runtime and BTP service costs"
+    best_for: "Most ordinary CAP side-by-side applications that do not require Kubernetes-specific control."
+    source_refs: [SRC-SAP-CAP-CF]
+
+  - id: RT-BTP-KYMA
+    title: "SAP BTP Kyma / Kubernetes"
+    default_stack: "Containerized CAP or custom workloads"
+    strengths:
+      - "Container and Kubernetes control"
+      - "Portable cloud-native patterns"
+      - "Useful for advanced platform, scaling or workload requirements"
+    costs:
+      - "Container registry, Helm, kubectl, cluster concepts and more operational surface"
+      - "More moving parts than a normal Cloud Foundry application"
+    best_for: "Choose when Kubernetes capabilities are a requirement, not because Kubernetes sounds more architectural."
+    source_refs: [SRC-SAP-CAP-KYMA]
+
+  - id: RT-BTP-ABAP
+    title: "SAP BTP ABAP Environment"
+    default_stack: "ABAP Cloud + RAP + CDS"
+    strengths:
+      - "ABAP skills and programming model with side-by-side lifecycle"
+      - "Dedicated managed HANA database"
+      - "Good migration path for adaptable ABAP code"
+    costs:
+      - "Another ABAP runtime and persistence layer to operate commercially"
+      - "Still remote from S/4HANA transactional state"
+    best_for: "ABAP-centric side-by-side services and applications."
+    source_refs: [SRC-SAP-BTP-ABAP-ENV]
+
+toolchain:
+  abap:
+    primary:
+      - tool: "ABAP Development Tools for Eclipse"
+        use: "Mature full ABAP development environment for classic and ABAP Cloud development."
+      - tool: "ABAP Development Tools for Visual Studio Code"
+        use: "Modern VS Code option for ABAP, CDS, RAP and ABAP Cloud; feature availability can depend on backend release."
+    quality:
+      - "ABAP Unit for executable tests"
+      - "ATC for static, security and quality checks"
+      - "ADT debugger and analysis tools"
+    source_refs: [SRC-SAP-ADT-ECLIPSE-2608, SRC-SAP-ADT-VSCODE, SRC-SAP-ABAP-QUALITY]
+
+  cap:
+    primary:
+      - tool: "VS Code"
+        use: "Fast local development with normal Git, Node/Java tooling and CAP extensions."
+      - tool: "SAP Business Application Studio"
+        use: "Managed browser development environment with preconfigured CAP/Fiori/BTP tooling."
+      - tool: "SAP Build Code"
+        use: "SAP-managed pro-code experience around CAP and BTP development; useful, but not an architectural dependency for CAP itself."
+    source_refs: [SRC-SAP-BAS-DEV-SPACES]
+
+language_map:
+  - language: "ABAP"
+    learn_for: "S/4HANA extensions, RAP, BTP ABAP Environment, ABAP domain logic"
+    priority_for_sap_lead: "high"
+  - language: "ABAP CDS / DCL"
+    learn_for: "Semantic models, RAP, authorization-aware data models, analytics"
+    priority_for_sap_lead: "high"
+  - language: "JavaScript / TypeScript"
+    learn_for: "CAP Node.js, UI5/web, scripting and BTP services"
+    priority_for_sap_lead: "medium-high"
+  - language: "Java"
+    learn_for: "CAP Java and enterprise Java services where the team already has a Java platform"
+    priority_for_sap_lead: "medium"
+  - language: "SQL / HANA concepts"
+    learn_for: "Performance reasoning, CDS behavior, data-intensive design and diagnostics"
+    priority_for_sap_lead: "medium-high"
+  - language: "YAML / JSON / shell / CI configuration"
+    learn_for: "Deployment, pipelines, service configuration and cloud operations"
+    priority_for_sap_lead: "medium"
+
+decision_matrix:
+  - need: "Add validation or determination inside an S/4HANA business transaction"
+    preferred: "On-stack ABAP Cloud extension / RAP or released BAdI"
+    fallback: "Controlled classic BAdI/enhancement in Private/On-Prem when no released option exists"
+    avoid: "Remote CAP service called synchronously for trivial local logic"
+    why: "Transaction coupling and local state dominate the decision."
+
+  - need: "Build a new transactional app on custom S/4HANA-owned data"
+    preferred: "Managed RAP + ABAP CDS + Fiori elements"
+    fallback: "Unmanaged RAP when persistence or existing APIs require it"
+    avoid: "Freestyle CRUD framework written from scratch"
+    why: "RAP gives transaction, service and metadata conventions close to the ABAP domain."
+
+  - need: "Expose existing complex legacy logic as a modern service"
+    preferred: "Unmanaged RAP facade around stable existing logic"
+    fallback: "Purpose-built API wrapper with explicit contract"
+    avoid: "Rewrite first, expose later"
+    why: "Modernize the contract before replacing a proven engine."
+
+  - need: "Cross-system approval or application combining S/4HANA, CRM and external data"
+    preferred: "CAP side-by-side on Cloud Foundry"
+    fallback: "BTP ABAP Environment when ABAP is strategically preferred"
+    avoid: "Store cross-system orchestration deep inside one ERP core"
+    why: "The capability has an independent boundary and multiple systems of record."
+
+  - need: "High-volume asynchronous event processing with container-specific requirements"
+    preferred: "Kyma/Kubernetes or another fit-for-purpose event platform plus event broker"
+    fallback: "Cloud Foundry worker/service for simpler operational needs"
+    avoid: "Choose Kyma solely because it is Kubernetes"
+    why: "Operational requirements should justify the extra platform surface."
+
+  - need: "Message mapping, routing, protocol mediation or API governance"
+    preferred: "SAP Integration Suite capability appropriate to the integration problem"
+    fallback: "Custom code only when integration behavior is genuinely domain-specific"
+    avoid: "Build a CAP app whose only job is generic middleware"
+    why: "Application code and integration middleware solve different problems."
+    source_refs: [SRC-SAP-INTEGRATION-SUITE]
+
+  - need: "Simple field, form, UI or supported small business logic extension"
+    preferred: "Key-user extensibility"
+    fallback: "Developer extensibility when pro-code lifecycle is justified"
+    avoid: "Create a full custom application for one field"
+    why: "The lightest supported extension usually has the lowest lifecycle cost."
+
+clean_core_reality:
+  definition: "Clean core is mainly about lifecycle-stable extension contracts and reducing direct dependency on SAP internals. It does not mean zero custom code and it does not mean every extension belongs on BTP."
+  practical_rules:
+    - "Prefer released APIs and extension points for new code."
+    - "Use ABAP Cloud where released coverage is sufficient."
+    - "Do not modify SAP standard unless there is an exceptional, governed reason."
+    - "When classic access is unavoidable, isolate unreleased dependencies behind small adapters so the blast radius is visible."
+    - "Run ATC and tests continuously; upgrade risk should be measured, not discussed as theology."
+    - "Review whether the custom requirement should exist at all before choosing its technology."
+  sap_reality_check: "SAP itself documents that Private Edition and on-premise customers may not be able to move completely to pure ABAP Cloud immediately because existing classic code and released-API gaps remain."
+  source_refs: [SRC-SAP-ABAP-CLOUD-CLEAN-CORE]
+
+clean_code_reality:
+  definition: "Clean code is about understandable, maintainable, testable implementation. It is separate from clean core."
+  practices:
+    - "Small cohesive classes and explicit interfaces"
+    - "Dependency injection where it improves testability"
+    - "ABAP Unit for business logic"
+    - "ATC as an automated quality gate"
+    - "Meaningful names and low surprise"
+    - "Keep database access, external calls and domain decisions separable when practical"
+    - "Prefer boring code that the next consultant can debug at 02:00 over clever abstractions"
+  caution: "SAP's Clean ABAP guide is explicitly optional. Use it as guidance, not as a reason to perform cosmetic refactoring that adds no business value."
+  source_refs: [SRC-SAP-CLEAN-ABAP, SRC-SAP-ABAP-QUALITY]
+
+side_by_side_cost_model:
+  benefits:
+    - "Independent deployment and lifecycle"
+    - "Independent scaling"
+    - "Polyglot libraries and cloud services"
+    - "Cross-system ownership"
+    - "External-user and SaaS scenarios"
+    - "Failure isolation when designed well"
+  hidden_costs:
+    - "Network latency and partial failure"
+    - "Authentication, token propagation and destination management"
+    - "Retries, idempotency and duplicate processing"
+    - "Distributed tracing and monitoring"
+    - "Data replication and eventual consistency"
+    - "Additional persistence and backup responsibilities"
+    - "Separate CI/CD and runtime operations"
+    - "BTP entitlements and commercial cost"
+    - "More skills across development and platform teams"
+  architect_rule: "Use side-by-side when its independence is worth these costs."
+  source_refs: [SRC-SAP-SIDE-BY-SIDE]
+
+on_premise_and_private_reality:
+  advantages:
+    - "Maximum access to the local ABAP stack and mature legacy assets"
+    - "Fast local calls and direct transaction participation"
+    - "Broad classic extensibility when required"
+    - "More control over upgrade timing in customer-managed landscapes"
+  risks:
+    - "Easy access makes it easy to couple custom code to unreleased SAP internals"
+    - "Technical freedom can become upgrade debt"
+    - "Legacy patterns can survive long after better APIs exist"
+  architect_rule: "Use the control, but add boundaries. Freedom without governance is not architecture."
+
+public_cloud_reality:
+  advantages:
+    - "Forces released contracts and cloud-ready ABAP development"
+    - "Reduces the number of possible custom-code shortcuts"
+    - "SAP-managed lifecycle pushes teams toward upgrade-safe design"
+  constraints:
+    - "ABAP language subset and released-object access"
+    - "Developer extensibility requires the supported system landscape"
+    - "A missing released API can become a hard design constraint rather than a suggestion"
+  architect_rule: "Public Cloud gives less technical freedom. Sometimes that is exactly why the landscape stays cleaner. It can also make a niche requirement slower or impossible until a released contract exists."
+  source_refs: [SRC-SAP-S4-PUBLIC-DEVELOPER-2608]
+
+anti_patterns:
+  - name: "BTP by slogan"
+    smell: "Move logic out of S/4HANA only because clean core was mentioned in a slide."
+    correction: "Check coupling, APIs, transaction needs and lifecycle first."
+  - name: "Classic ABAP by habit"
+    smell: "Use direct table/internal object access because it is faster for the developer today."
+    correction: "Check released APIs and ABAP Cloud first; make the exception explicit."
+  - name: "CAP as middleware"
+    smell: "Custom CAP service only transforms and forwards messages."
+    correction: "Use Integration Suite unless the service owns domain state or business behavior."
+  - name: "Kubernetes tourism"
+    smell: "Deploy to Kyma because containers look modern."
+    correction: "Use Cloud Foundry unless Kubernetes capabilities are required."
+  - name: "RAP rewrite fever"
+    smell: "Rewrite stable legacy business logic before creating a modern contract."
+    correction: "Use unmanaged RAP or an adapter first, then replace internals only with a business case."
+  - name: "CDS labyrinth"
+    smell: "Many stacked views with hidden semantics and no clear ownership."
+    correction: "Keep layers intentional and test performance with real data."
+  - name: "Fiori freestyle reflex"
+    smell: "Build a custom UI5 application for ordinary object/list/report behavior."
+    correction: "Start with Fiori elements and leave freestyle for real UX differentiation."
+
+lead_assessment_answers:
+  - question: "RAP or CAP?"
+    answer: "RAP when the business object and transaction belong in the ABAP/S/4HANA domain. CAP when the application needs a separate cloud lifecycle, spans systems, serves external users, or benefits from Java/Node.js and cloud services. They solve different boundaries."
+  - question: "Cloud or on-premise development?"
+    answer: "First decide whether the capability is on-stack or side-by-side. On-premise and Private Edition give more freedom, but I still prefer ABAP Cloud contracts for new code where possible. I use classic ABAP only when the requirement or API gap justifies the coupling."
+  - question: "Is BTP always better for clean core?"
+    answer: "No. Side-by-side is cleanly decoupled, but it adds network, security, consistency and operations. New on-stack ABAP Cloud development can also be clean-core aligned and is often better for tightly coupled ERP logic."
+  - question: "Managed or unmanaged RAP?"
+    answer: "Managed for greenfield transactional persistence. Unmanaged when existing logic, BAPIs or non-standard persistence must remain in control. I would not rewrite stable logic just to use managed RAP."
+  - question: "Cloud Foundry or Kyma?"
+    answer: "Cloud Foundry for a normal CAP business application. Kyma when I actually need Kubernetes capabilities, containers, custom platform control or workload characteristics that justify the extra operations."
+  - question: "What does clean core mean in practice?"
+    answer: "Keep custom code, but make dependencies stable: released APIs first, no casual modifications, isolate unavoidable classic access, use ATC and tests, and measure upgrade impact."
+
+source_refs:
+  - SRC-SAP-ABAP-CLOUD-CLEAN-CORE
+  - SRC-SAP-ABAP-CLOUD-LANGUAGE
+  - SRC-SAP-ABAP-CLOUD-EXTENSIBILITY
+  - SRC-SAP-S4-PUBLIC-DEVELOPER-2608
+  - SRC-SAP-RAP-IMPLEMENTATION-TYPES
+  - SRC-SAP-ABAP-CDS
+  - SRC-SAP-ADT-ECLIPSE-2608
+  - SRC-SAP-ADT-VSCODE
+  - SRC-SAP-ABAP-QUALITY
+  - SRC-SAP-CLEAN-ABAP
+  - SRC-SAP-CAP-RELEASE-2026-06
+  - SRC-SAP-CAP-DEPLOY
+  - SRC-SAP-CAP-CF
+  - SRC-SAP-CAP-KYMA
+  - SRC-SAP-BTP-ABAP-ENV
+  - SRC-SAP-SIDE-BY-SIDE
+  - SRC-SAP-INTEGRATION-SUITE
+  - SRC-SAP-BAS-DEV-SPACES
+
+tags:
+  - sap
+  - abap
+  - abap-cloud
+  - rap
+  - cap
+  - cds
+  - clean-core
+  - btp
+  - extensibility
+  - architecture
