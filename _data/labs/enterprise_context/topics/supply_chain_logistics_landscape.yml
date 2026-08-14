@@ -1,0 +1,672 @@
+id: TOPIC-SUPPLY-CHAIN-LOGISTICS-LANDSCAPE
+type: research_topic
+title: "SAP Supply Chain & Logistics Application Landscape"
+summary: >-
+  Decision-oriented map of the main SAP domains and application components across procurement,
+  materials and inventory management, supply planning, manufacturing, quality, warehousing,
+  transportation, logistics collaboration, yard execution, visibility, and global trade.
+domain: "SAP Supply Chain / Logistics"
+process_family: "Source-to-Pay / Plan-to-Produce / Warehouse-to-Ship / Transport-to-Settle"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: "2026-08-14"
+reviewed_together_at: "2026-08-14"
+review_note: "Reviewed with the author against current official SAP product, pricing, and Help Portal sources."
+
+business_question: >-
+  Which SAP product or S/4HANA capability should own each major supply-chain responsibility,
+  what is it best suited for, what should it not replace, and what licensing or deployment
+  boundary materially affects the architecture decision?
+
+maturity:
+  gates_complete: 2
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: in_progress
+    relationships: in_progress
+    expert_reasoning: planned
+    synthetic_example: planned
+    ai_evaluation: planned
+
+domains:
+  - id: DOM-PROCUREMENT
+    title: "Procurement & Source-to-Pay"
+    purpose: "Source suppliers, create purchasing documents, buy goods and services, receive and invoice them, and govern procurement across one or many ERP systems."
+    primary_components:
+      - APP-S4HANA-SOURCING-PROCUREMENT
+      - APP-ARIBA-SOURCING
+      - APP-ARIBA-BUYING-INVOICING
+      - APP-BUSINESS-NETWORK-PROCUREMENT
+
+  - id: DOM-MATERIALS-INVENTORY
+    title: "Materials & Inventory Management"
+    purpose: "Manage product/material master context, stock quantities and values, goods movements, special stocks, transfers, reservations, and physical inventory."
+    primary_components:
+      - APP-S4HANA-INVENTORY-MANAGEMENT
+
+  - id: DOM-SUPPLY-PLANNING
+    title: "Supply & Production Planning"
+    purpose: "Translate demand into supply, balance inventory and capacity, and create feasible short-, medium-, and detailed production or procurement plans."
+    primary_components:
+      - APP-S4HANA-MRP
+      - APP-S4HANA-PPDS
+      - APP-SAP-IBP
+
+  - id: DOM-MANUFACTURING
+    title: "Manufacturing & Shop-Floor Execution"
+    purpose: "Engineer, plan, release, execute, confirm, monitor, and analyze production from ERP production orders down to manufacturing operations."
+    primary_components:
+      - APP-S4HANA-MANUFACTURING
+      - APP-SAP-DIGITAL-MANUFACTURING
+
+  - id: DOM-QUALITY
+    title: "Quality Management"
+    purpose: "Plan and execute inspections, manage nonconformance, and embed quality controls into procurement, production, inventory, and sales processes."
+    primary_components:
+      - APP-S4HANA-QM
+
+  - id: DOM-WAREHOUSING
+    title: "Warehousing & Fulfillment"
+    purpose: "Execute inbound, storage, replenishment, picking, packing, staging, production supply, and outbound warehouse processes with location-level control."
+    primary_components:
+      - APP-S4HANA-EWM
+      - APP-SAP-LOGISTICS-MANAGEMENT
+
+  - id: DOM-TRANSPORTATION
+    title: "Transportation & Freight"
+    purpose: "Plan, tender, execute, settle, and optimize inbound and outbound transportation across modes, carriers, locations, and business documents."
+    primary_components:
+      - APP-S4HANA-TM
+      - APP-BUSINESS-NETWORK-FREIGHT
+      - APP-SAP-LOGISTICS-MANAGEMENT
+
+  - id: DOM-COLLABORATION
+    title: "Supplier & Logistics Collaboration"
+    purpose: "Extend ERP processes across company boundaries for supplier confirmations, forecasts, inventory, quality, shipment collaboration, and carrier execution."
+    primary_components:
+      - APP-BUSINESS-NETWORK-SUPPLY-CHAIN
+      - APP-BUSINESS-NETWORK-PROCUREMENT
+      - APP-BUSINESS-NETWORK-FREIGHT
+
+  - id: DOM-VISIBILITY
+    title: "Logistics Visibility"
+    purpose: "Track orders and shipments end to end, consume external movement events, detect exceptions, and provide estimated arrival and execution transparency."
+    primary_components:
+      - APP-BUSINESS-NETWORK-GTT
+
+  - id: DOM-YARD
+    title: "Yard Logistics"
+    purpose: "Plan appointments and execute gate, yard, dock, vehicle, container, and rail movements between transportation and warehouse processes."
+    primary_components:
+      - APP-SAP-YARD-LOGISTICS
+
+  - id: DOM-GLOBAL-TRADE
+    title: "Global Trade & Compliance"
+    purpose: "Control customs, classification, preference, import/export, and trade-compliance processes for cross-border supply chains."
+    primary_components:
+      - APP-SAP-GTS
+
+applications:
+  - id: APP-S4HANA-SOURCING-PROCUREMENT
+    type: application_component
+    title: "SAP S/4HANA Sourcing and Procurement"
+    aliases: ["SAP MM Purchasing", "Purchasing"]
+    domains: [DOM-PROCUREMENT]
+    architecture_role: "ERP procurement execution / purchasing system of record"
+    description: >-
+      Core S/4HANA procurement capability covering requirements, source determination,
+      purchase requisitions, requests for quotation, purchase orders, outline agreements,
+      service procurement, receiving and invoice-related integration. It is the natural ERP
+      owner when procurement must create executable commitments and postings in S/4HANA.
+    best_fit: "Operational procurement tightly coupled to materials, inventory, finance, production, projects, and enterprise master data."
+    not_for: "It is not a full external supplier network or a dedicated enterprise-wide strategic sourcing suite for complex sourcing events across heterogeneous ERPs."
+    licensing:
+      commercial_model: "Parent SAP S/4HANA / SAP Cloud ERP entitlement"
+      note: "Core procurement is part of the S/4HANA functional scope; some advanced capabilities, including certain product-sourcing features, can require additional licensing."
+    limitations:
+      - "Exact scope differs by S/4HANA edition, release, country, package, and activated scope items."
+      - "Multi-ERP central procurement and Ariba scenarios introduce additional integration and entitlement boundaries."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/af9ef57f504840d2b81be8667206d485/287eb65334e6b54ce10000000a174cb4.html"
+    official_commercial_url: "https://www.sap.com/products/erp.html"
+    source_refs: [SRC-SAP-S4-PROCUREMENT, SRC-SAP-S4-PRODUCT-SOURCING]
+    status: source_verified
+
+  - id: APP-S4HANA-INVENTORY-MANAGEMENT
+    type: application_component
+    title: "SAP S/4HANA Inventory Management and Physical Inventory"
+    aliases: ["MM-IM", "Inventory Management"]
+    domains: [DOM-MATERIALS-INVENTORY]
+    architecture_role: "ERP stock ledger and goods-movement execution"
+    description: >-
+      S/4HANA capability for managing material stocks on quantity and value basis, posting
+      goods receipts, goods issues, transfers and other movements, handling special stocks,
+      and performing physical inventory. It connects purchasing, MRP, production, sales,
+      accounting, and warehouse execution around the enterprise stock position.
+    best_fit: "Plant/storage-location inventory accounting and enterprise goods movements where bin-level warehouse orchestration is not the primary requirement."
+    not_for: "It is not a detailed warehouse-management system for storage bins, waves, labor, slotting, task orchestration, or complex automated warehouse execution."
+    licensing:
+      commercial_model: "Parent SAP S/4HANA / SAP Cloud ERP entitlement"
+      note: "Treat MM-IM as core ERP functional scope; exact user, digital-access, package, and edition rights remain contract-specific."
+    limitations:
+      - "MM-IM manages stock primarily at plant and storage-location level; detailed warehouse topology belongs in EWM or another WMS."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/565eeafed3d5453f8e1a2319d6be2e3f.html"
+    official_commercial_url: "https://www.sap.com/products/erp.html"
+    source_refs: [SRC-SAP-S4-MMIM]
+    status: source_verified
+
+  - id: APP-S4HANA-MRP
+    type: application_component
+    title: "SAP S/4HANA Material Requirements Planning"
+    aliases: ["MRP", "MRP Live"]
+    domains: [DOM-SUPPLY-PLANNING, DOM-MANUFACTURING, DOM-PROCUREMENT]
+    architecture_role: "ERP material requirements planning"
+    description: >-
+      Core planning logic that converts demand, stock and supply parameters into procurement
+      proposals for in-house production or external procurement. It is the baseline planning
+      engine close to ERP master and transaction data.
+    best_fit: "Operational material planning where the main question is what and when to procure or produce against demand and stock."
+    not_for: "It is not a cross-enterprise S&OP platform and it is not the same as finite, constraint-based detailed scheduling."
+    licensing:
+      commercial_model: "Parent SAP S/4HANA / SAP Cloud ERP entitlement for core MRP scope"
+      note: "Advanced planning products such as PP/DS and IBP have separate scope and commercial models."
+    limitations:
+      - "Classic MRP logic does not by itself provide the same finite-resource optimization and detailed scheduling depth as PP/DS."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/21aead0c98bd4755abdacd91c99e3393/1705206eb55b4980a8cafa3d4b310166-1580.html"
+    official_commercial_url: "https://www.sap.com/products/erp.html"
+    source_refs: [SRC-SAP-S4-PRODUCTION-PLANNING-CONTROL]
+    status: source_verified
+
+  - id: APP-S4HANA-MANUFACTURING
+    type: application_component
+    title: "SAP S/4HANA Manufacturing / Production Planning and Control"
+    aliases: ["SAP PP", "PP", "PP-PI"]
+    domains: [DOM-MANUFACTURING]
+    architecture_role: "ERP manufacturing planning and production execution"
+    description: >-
+      S/4HANA manufacturing scope for production engineering, production planning, and
+      production operations. It manages BOM/routing or recipe context, planned and production
+      orders, execution-relevant master data, confirmations, goods movements, and integration
+      to costing, quality, warehouse, procurement, and sales scenarios.
+    best_fit: "ERP-centered discrete, repetitive, or process manufacturing where production execution must remain tightly connected to material and financial postings."
+    not_for: "It is not a plant-floor MES replacement for rich machine/operator orchestration, and core PP is not a substitute for advanced constrained scheduling or enterprise S&OP."
+    licensing:
+      commercial_model: "Parent SAP S/4HANA entitlement for core manufacturing scope"
+      note: "Advanced S/4HANA Manufacturing planning/scheduling and production-engineering offerings can have separate commercial entitlements."
+    limitations:
+      - "Advanced scheduling, detailed finite optimization, and shop-floor MOM/MES scenarios may require PP/DS or SAP Digital Manufacturing."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/feded183701e4ba0b42bc4fc31ad7a12/c83e38ea-2670-4c51-ab16-0d2e662dbb62.html"
+    official_commercial_url: "https://www.sap.com/products/scm/s4hana-manufacturing-solutions.html"
+    source_refs: [SRC-SAP-S4-MANUFACTURING]
+    status: source_verified
+
+  - id: APP-S4HANA-PPDS
+    type: application_component
+    title: "SAP S/4HANA Manufacturing for Planning and Scheduling / PP/DS"
+    aliases: ["PP/DS", "Production Planning and Detailed Scheduling"]
+    domains: [DOM-SUPPLY-PLANNING, DOM-MANUFACTURING]
+    architecture_role: "Advanced constrained production planning and detailed scheduling"
+    description: >-
+      Advanced planning and scheduling capability for creating procurement proposals,
+      considering material and resource availability, planning bottlenecks, and optimizing
+      detailed order dates, sequences, and resource schedules beyond classic MRP.
+    best_fit: "Critical products, bottleneck resources, finite capacity, detailed sequencing, and short- to medium-term executable production plans."
+    not_for: "It is not the enterprise S&OP/demand-planning layer and it is not the shop-floor MES that executes operator and machine activities."
+    licensing:
+      commercial_model: "Advanced manufacturing entitlement"
+      metric: "Cost of Goods per year for current SAP S/4HANA Cloud Private Edition planning-and-scheduling offer"
+      purchase_unit: "Blocks of 100,000,000 Cost of Goods on the reviewed pricing page"
+      note: "Commercial packaging differs by deployment; verify whether the scenario is embedded or extra-stack and what the contract includes."
+    limitations:
+      - "Master data and integration design are critical; planning relevance does not automatically make every material or resource appropriate for PP/DS."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f899ce30af9044299d573ea30b533f1c/e934c95360267614e10000000a174cb4-1487.html"
+    official_commercial_url: "https://www.sap.com/products/scm/manufacturing-for-planning-and-scheduling.html"
+    source_refs: [SRC-SAP-PPDS, SRC-SAP-S4-MFG-PLANNING-PRICING]
+    status: source_verified
+
+  - id: APP-SAP-IBP
+    type: application_component
+    title: "SAP Integrated Business Planning for Supply Chain"
+    aliases: ["SAP IBP"]
+    domains: [DOM-SUPPLY-PLANNING]
+    architecture_role: "Cross-enterprise supply-chain planning and S&OP"
+    description: >-
+      Cloud planning platform for demand, inventory, response and supply, sales and operations
+      planning, demand-driven replenishment, and supply-chain control-tower capabilities.
+      It operates above execution systems to align plans, scenarios, constraints, and business targets.
+    best_fit: "Enterprise planning across demand, supply, inventory and S&OP when planners need scenarios, cross-functional alignment, and a planning horizon broader than ERP execution."
+    not_for: "It does not post goods movements, execute purchase orders, run warehouse tasks, or replace detailed manufacturing execution."
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      base_plan: "SAP Integrated Business Planning foundation"
+      metric: "Revenue per year"
+      purchase_unit: "Blocks of EUR 500,000,000 revenue/year on the reviewed pricing page"
+      note: "Foundation is the base license for new customers; planning capabilities and add-ons have additional packaging."
+    limitations:
+      - "The starter edition is non-productive and has explicit limits on users, planning areas, memory and planning points."
+      - "Execution still belongs in ERP, manufacturing, warehouse, or transportation systems."
+    official_docs_url: "https://help.sap.com/docs/SAP_INTEGRATED_BUSINESS_PLANNING"
+    official_commercial_url: "https://www.sap.com/products/scm/integrated-business-planning/pricing.html"
+    source_refs: [SRC-SAP-IBP-PRICING]
+    status: source_verified
+
+  - id: APP-S4HANA-QM
+    type: application_component
+    title: "SAP S/4HANA Quality Management"
+    aliases: ["SAP QM", "QM"]
+    domains: [DOM-QUALITY, DOM-PROCUREMENT, DOM-MANUFACTURING, DOM-WAREHOUSING]
+    architecture_role: "Embedded enterprise quality control"
+    description: >-
+      S/4HANA quality capability for quality planning, inspections, results, usage decisions,
+      defect and nonconformance handling, and quality processes embedded into procurement,
+      production, sales, inventory, and warehouse scenarios.
+    best_fit: "Quality controls that must be transactionally integrated with material, supplier, production, stock, and customer processes in S/4HANA."
+    not_for: "It is not by itself a full standalone laboratory informatics platform for every specialized LIMS requirement."
+    licensing:
+      commercial_model: "Parent SAP S/4HANA entitlement for core QM scope"
+      note: "Exact scope, industry features, and external quality services should be checked against the contracted edition and package."
+    limitations:
+      - "Quality integration behaves differently across MM-IM, embedded/decentral EWM, procurement, production and sales scenarios; inspection ownership must be designed explicitly."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/2bc3ee8d1c83404e8cf62418640004f2/347e7b24-41d4-4e07-a47a-2ddf52716efd.html"
+    official_commercial_url: "https://www.sap.com/products/erp.html"
+    source_refs: [SRC-SAP-S4-QM]
+    status: source_verified
+
+  - id: APP-S4HANA-EWM
+    type: application_component
+    title: "SAP Extended Warehouse Management"
+    aliases: ["SAP EWM", "EWM"]
+    domains: [DOM-WAREHOUSING]
+    architecture_role: "Advanced warehouse execution and optimization"
+    description: >-
+      Warehouse-management system for detailed warehouse topology and stock positioning,
+      inbound and outbound processing, warehouse tasks, replenishment, cross-docking,
+      production warehousing, labor and automation-oriented processes, and complex fulfillment.
+    best_fit: "High-volume or complex warehouses that need storage-bin control, optimized execution, advanced inbound/outbound processes, production supply, and automation integration."
+    not_for: "It should not replace ERP stock valuation and enterprise goods-movement ownership in MM-IM, and it is not the transportation-planning engine."
+    licensing:
+      commercial_model: "Separate advanced EWM entitlement for the reviewed productive cloud offer"
+      metric: "Documents per year"
+      purchase_unit: "Blocks of 600,000 documents/year"
+      counted_documents: "Goods receipts, goods issues, and staging of components for production"
+      note: "The current SAP pricing page lists prerequisites; embedded/basic rights and advanced use must be validated against the exact S/4HANA contract."
+    limitations:
+      - "EWM adds operational depth and implementation complexity; use MM-IM when bin-level warehouse orchestration is unnecessary."
+      - "Embedded and decentralized deployment models have different integration and lifecycle implications."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/571ea10a171042588dee67b4fe74efc2.html"
+    official_commercial_url: "https://www.sap.com/products/scm/extended-warehouse-management/pricing.html"
+    source_refs: [SRC-SAP-EWM-HELP, SRC-SAP-EWM-PRICING]
+    status: source_verified
+
+  - id: APP-S4HANA-TM
+    type: application_component
+    title: "SAP Transportation Management"
+    aliases: ["SAP TM", "TM"]
+    domains: [DOM-TRANSPORTATION]
+    architecture_role: "Transportation planning, execution and freight settlement"
+    description: >-
+      Transportation-management capability for freight demand, planning and optimization,
+      tendering, carrier selection, freight orders, execution monitoring, charge calculation,
+      and settlement across inbound, outbound and transfer scenarios.
+    best_fit: "Complex transportation networks where freight cost, routing, capacity, tendering, execution, multimodal planning, and settlement need dedicated ownership."
+    not_for: "It is not the warehouse task engine and does not replace external carrier collaboration or shipment-visibility networks when partners and tracking data sit outside the enterprise."
+    licensing:
+      commercial_model: "Basic TM and Advanced TM have different entitlement boundaries"
+      basic_tm: "SAP states Basic TM is part of the SAP S/4HANA Enterprise Management license."
+      advanced_tm: "SAP states Advanced TM belongs to additional SAP S/4HANA Enhanced LoB Functions licensing."
+      cloud_metric: "Freight spend per year for the reviewed SAP S/4HANA Cloud Private Edition TM offer"
+      purchase_unit: "Blocks of 2,500,000 freight spend/year"
+    limitations:
+      - "Do not assume a function belongs to Basic TM; SAP provides usage reporting to distinguish Basic from Advanced TM functions."
+      - "Carrier network collaboration and real-time external visibility are separate responsibilities."
+    official_docs_url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/65c4edc97c5c45048192fb079cfd87f0.html"
+    official_commercial_url: "https://www.sap.com/products/scm/transportation-logistics/pricing.html"
+    source_refs: [SRC-SAP-TM-PRODUCT, SRC-SAP-TM-PRICING, SRC-SAP-TM-LICENSE-BOUNDARY]
+    status: source_verified
+
+  - id: APP-ARIBA-SOURCING
+    type: application_component
+    title: "SAP Ariba Sourcing"
+    domains: [DOM-PROCUREMENT]
+    architecture_role: "Strategic sourcing and competitive sourcing events"
+    description: >-
+      Cloud sourcing application for RFI/RFP/RFQ-style sourcing events, supplier competition,
+      bid evaluation and award processes. It complements ERP operational procurement rather
+      than replacing the downstream purchasing and receipt/invoice execution system.
+    best_fit: "Strategic sourcing, competitive events, supplier negotiations, and sourcing governance across organizations or multiple ERP back ends."
+    not_for: "It is not the primary ERP purchase-order, goods-receipt, inventory, or accounting engine."
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      metric: "User per year"
+      purchase_unit: "Blocks of 1 user"
+      included: "One productive and one test tenant of SAP Ariba Sourcing plus SAP Business Network tenants in the reviewed standard edition"
+    limitations:
+      - "Direct-material sourcing and other advanced scenarios can require add-ons or additional integration scope."
+    official_docs_url: "https://help.sap.com/docs/SAP_ARIBA_SOURCING"
+    official_commercial_url: "https://www.sap.com/products/spend-management/ariba-sourcing/pricing.html"
+    source_refs: [SRC-SAP-ARIBA-SOURCING-PRICING]
+    status: source_verified
+
+  - id: APP-ARIBA-BUYING-INVOICING
+    type: application_component
+    title: "SAP Ariba Buying and Invoicing"
+    domains: [DOM-PROCUREMENT]
+    architecture_role: "Guided buying and multi-ERP procure-to-pay front end"
+    description: >-
+      Cloud procure-to-pay suite covering requisitioning, approvals, ordering, receiving,
+      catalog-driven buying, invoice management, and multi-ERP procurement experiences.
+      It is typically used when enterprise buying experience and policy control span more than one ERP.
+    best_fit: "Guided buying, indirect procurement, catalogs, approvals, policy compliance, multi-ERP requisition-to-invoice processes, and a standardized buyer experience."
+    not_for: "It is not the warehouse, production, transportation, or ERP inventory valuation system."
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      metric: "Total spend expenditures processed by the cloud service"
+      purchase_unit: "Spend-based yearly entitlement"
+      note: "Public pricing is price-on-request and the entitlement depletes with usage."
+    limitations:
+      - "Integration with ERP master data, accounting, receiving, and invoice posting must be designed explicitly."
+    official_docs_url: "https://help.sap.com/docs/buying-invoicing"
+    official_commercial_url: "https://www.sap.com/products/spend-management/procure-to-pay/pricing.html"
+    source_refs: [SRC-SAP-ARIBA-BUYING-PRICING]
+    status: source_verified
+
+  - id: APP-BUSINESS-NETWORK-PROCUREMENT
+    type: application_component
+    title: "SAP Business Network for Procurement"
+    domains: [DOM-PROCUREMENT, DOM-COLLABORATION]
+    architecture_role: "Buyer-supplier transaction and procurement collaboration network"
+    description: >-
+      Business network for supplier discovery and onboarding, catalogs, purchase-order and
+      invoice collaboration, document exchange, compliance support, supplier self-service,
+      and working-capital processes across trading partners.
+    best_fit: "Cross-company procurement collaboration where suppliers need a shared network for orders, confirmations, invoices, catalogs, status, and onboarding."
+    not_for: "It is not the internal ERP purchasing engine, strategic sourcing engine, or inventory ledger."
+    licensing:
+      commercial_model: "Separate network solution; exact buyer commercial metric is contract-specific in the reviewed public sources"
+      supplier_side: "Supplier Standard account is free; Enterprise supplier accounts use tiered subscription and transaction-volume models."
+    limitations:
+      - "Buyer and supplier commercial models differ; do not apply supplier fee rules to the buyer entitlement."
+      - "Network collaboration still requires integration and governance with the buyer's ERP or spend-management applications."
+    official_docs_url: "https://help.sap.com/docs/business-network"
+    official_commercial_url: "https://www.sap.com/products/business-network/procurement.html"
+    source_refs: [SRC-SAP-BN-PROCUREMENT, SRC-SAP-BN-SUPPLIER-PRICING]
+    status: source_verified
+
+  - id: APP-BUSINESS-NETWORK-SUPPLY-CHAIN
+    type: application_component
+    title: "SAP Business Network Supply Chain Collaboration"
+    domains: [DOM-COLLABORATION, DOM-PROCUREMENT, DOM-MANUFACTURING]
+    architecture_role: "Direct-material and multi-tier supplier collaboration"
+    description: >-
+      Network collaboration for direct-material supply chains, including order confirmations,
+      forecasts and commitments, subcontracting, component inventory visibility, ship notices,
+      quality collaboration, and supply-chain monitoring with trading partners.
+    best_fit: "Manufacturing and direct-material supply networks that need forecast, inventory, subcontracting, quality, and order collaboration beyond simple PO/invoice exchange."
+    not_for: "It is not a replacement for internal MRP, production planning, ERP purchasing, or warehouse execution."
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      metric: "Spend per year"
+      purchase_unit: "Blocks of 1 Spend/year on the reviewed pricing page"
+      note: "Inventory and quality capabilities are available as separately priced add-ons."
+    limitations:
+      - "Trading-partner enablement and document-routing rules are part of the solution design."
+    official_docs_url: "https://help.sap.com/docs/business-network-for-supply-chain"
+    official_commercial_url: "https://www.sap.com/products/business-network/supply-chain-collaboration/pricing.html"
+    source_refs: [SRC-SAP-BN-SCC-PRODUCT, SRC-SAP-BN-SCC-PRICING]
+    status: source_verified
+
+  - id: APP-SAP-DIGITAL-MANUFACTURING
+    type: application_component
+    title: "SAP Digital Manufacturing"
+    aliases: ["SAP DM"]
+    domains: [DOM-MANUFACTURING]
+    architecture_role: "Cloud manufacturing operations management / MES layer"
+    description: >-
+      Cloud manufacturing operations management platform on SAP BTP that connects shop-floor
+      execution with enterprise planning, provides manufacturing execution and insights,
+      and coordinates production activities closer to operators, resources, and equipment.
+    best_fit: "Plant-floor execution, operator workflows, production visibility, manufacturing analytics, resource orchestration, and top-floor-to-shop-floor integration."
+    not_for: "It is not the ERP financial/material posting system and it is not the enterprise demand/S&OP planning layer."
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      metric: "Cost of Goods per year"
+      purchase_unit: "Blocks of EUR 100,000,000 Cost of Goods/year"
+      included: "Production tenant with Manufacturing Execution and Manufacturing Insights plus a test tenant in the reviewed offer"
+    limitations:
+      - "ERP integration and ownership of master data, orders, confirmations and postings must be explicitly designed."
+      - "Edge capabilities and some resource-orchestration scenarios have separate prerequisites and entitlements."
+    official_docs_url: "https://help.sap.com/docs/SAP_DIGITAL_MANUFACTURING"
+    official_commercial_url: "https://www.sap.com/products/scm/digital-manufacturing/pricing.html"
+    source_refs: [SRC-SAP-DM-PRODUCT, SRC-SAP-DM-PRICING]
+    status: source_verified
+
+  - id: APP-BUSINESS-NETWORK-FREIGHT
+    type: application_component
+    title: "SAP Business Network Freight Collaboration"
+    domains: [DOM-TRANSPORTATION, DOM-COLLABORATION]
+    architecture_role: "Carrier and logistics-service-provider collaboration network"
+    description: >-
+      Cloud network for freight tendering, subcontracting, carrier collaboration, settlement
+      collaboration, milestone reporting, dock appointments, and digital interaction between
+      shippers and logistics service providers.
+    best_fit: "Extending transportation execution outside the enterprise to carriers and logistics partners without point-to-point onboarding for every partner."
+    not_for: "It is not the internal transportation optimization engine; TM typically owns planning and freight-order logic while the network owns partner collaboration."
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      metric: "Documents per year"
+      purchase_unit: "Blocks of 10,000 documents/year"
+      document_examples: "Freight order/booking or appointment managed between logistics partners"
+    limitations:
+      - "A network does not replace the shipper's transportation-planning, warehouse, or ERP system of record."
+    official_docs_url: "https://help.sap.com/docs/business-network-freight-collaboration"
+    official_commercial_url: "https://www.sap.com/products/business-network/freight-collaboration/pricing.html"
+    source_refs: [SRC-SAP-BN-FREIGHT-PRODUCT, SRC-SAP-BN-FREIGHT-PRICING]
+    status: source_verified
+
+  - id: APP-BUSINESS-NETWORK-GTT
+    type: application_component
+    title: "SAP Business Network Global Track and Trace"
+    aliases: ["GTT", "Global Track and Trace"]
+    domains: [DOM-VISIBILITY, DOM-TRANSPORTATION]
+    architecture_role: "Cross-company order and shipment visibility"
+    description: >-
+      Cloud visibility service that captures and processes tracking information for business
+      processes and provides real-time transparency for inbound and outbound orders and shipments,
+      including external movement data, milestones, exceptions, and arrival information.
+    best_fit: "End-to-end shipment and order visibility when execution data comes from carriers, visibility providers, and enterprise systems."
+    not_for: "It is not the TMS that creates and optimizes freight plans and it is not the WMS that executes warehouse tasks."
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      metric: "Documents per year"
+      purchase_unit: "Blocks of 10,000 documents/year"
+      document_examples: "Sales order, purchase order, or shipment scenario"
+    limitations:
+      - "Current SAP Help documentation explicitly describes integration with S/4HANA on-premise and S/4HANA Cloud Private Edition with embedded TM; validate Public Edition scenarios separately."
+    official_docs_url: "https://help.sap.com/docs/business-network-global-track-and-trace"
+    official_commercial_url: "https://www.sap.com/products/business-network/global-track-and-trace/pricing.html"
+    source_refs: [SRC-SAP-BN-GTT-HELP, SRC-SAP-BN-GTT-PRICING]
+    status: source_verified
+
+  - id: APP-SAP-YARD-LOGISTICS
+    type: application_component
+    title: "SAP Yard Logistics"
+    domains: [DOM-YARD, DOM-WAREHOUSING, DOM-TRANSPORTATION]
+    architecture_role: "Yard planning and execution"
+    description: >-
+      Yard-management application for appointment planning, gate-in/gate-out, yard orders and
+      tasks, vehicle/container/rail movements, resource coordination, monitoring, and yard-service
+      scenarios between transportation and warehouse operations.
+    best_fit: "Sites where trucks, trailers, containers, rail cars, gates, parking, staging, docks, and yard resources require explicit planning and operational control."
+    not_for: "It is not a replacement for EWM warehouse execution or TM network transportation planning."
+    licensing:
+      commercial_model: "Separate SAP Yard Logistics entitlement"
+      metric: "Documents per year"
+      purchase_unit: "Blocks of 5,000 documents/year on the reviewed private-edition offer"
+      note: "The public product page states prerequisites apply."
+    limitations:
+      - "Yard processes sit between warehouse and transportation domains, so ownership and integration with EWM/TM must be clear."
+    official_docs_url: "https://help.sap.com/docs/SAP_YARD_LOGISTICS_FOR_SAP_S_4HANA"
+    official_commercial_url: "https://www.sap.com/products/scm/yard-logistics.html"
+    source_refs: [SRC-SAP-YARD-LOGISTICS]
+    status: source_verified
+
+  - id: APP-SAP-LOGISTICS-MANAGEMENT
+    type: application_component
+    title: "SAP Logistics Management"
+    domains: [DOM-WAREHOUSING, DOM-TRANSPORTATION, DOM-COLLABORATION]
+    architecture_role: "Native-cloud unified warehouse and transportation execution"
+    description: >-
+      Native-cloud logistics solution on SAP BTP that combines warehouse-management and
+      transportation-dispatching capabilities for inbound and outbound logistics and integrates
+      with S/4HANA and SAP Business Network Freight Collaboration.
+    best_fit: "Cloud-first logistics scenarios that benefit from one SaaS layer for warehouse execution and transportation dispatching with network collaboration."
+    not_for: "Do not assume feature parity with the full advanced scope of mature EWM and TM; treat it as a distinct cloud product with its own supported scenarios."
+    licensing:
+      commercial_model: "Separate cloud subscription"
+      metric: "Documents per year"
+      purchase_unit: "Blocks of 10,000 documents/year"
+      prerequisite: "SAP S/4HANA Cloud Private Edition or Public Edition must be available as the ERP system."
+      included: "SAP Help states an entitlement for SAP Business Network Freight Collaboration is received with SAP Logistics Management."
+    limitations:
+      - "Product scope is evolving; verify current availability and scenario coverage before treating it as a wholesale EWM/TM replacement."
+      - "Requires SAP S/4HANA integration and SAP Cloud Identity Services during setup."
+    official_docs_url: "https://help.sap.com/docs/SAP_LOGISTICS_MANAGEMENT/b1ca665eedee42208a2b32cbc4be23c4/ceccc66b118f487885e3157a5ff34113.html"
+    official_commercial_url: "https://www.sap.com/products/scm/logistics-management/pricing.html"
+    source_refs: [SRC-SAP-LOGISTICS-MANAGEMENT-HELP, SRC-SAP-LOGISTICS-MANAGEMENT-LICENSES, SRC-SAP-LOGISTICS-MANAGEMENT-PRICING]
+    status: source_verified
+
+  - id: APP-SAP-GTS
+    type: application_component
+    title: "SAP Global Trade Services, edition for SAP HANA"
+    aliases: ["SAP GTS", "GTS"]
+    domains: [DOM-GLOBAL-TRADE]
+    architecture_role: "Global trade compliance and customs execution"
+    description: >-
+      Dedicated trade-management system for product classification, compliance management,
+      customs management, preference management, Intrastat, and import/export processes integrated
+      with ERP feeder systems and the cross-border supply chain.
+    best_fit: "Enterprises with substantial customs, sanctions/compliance, classification, preference, and cross-border trade-process requirements."
+    not_for: "It is not the core purchasing, sales, transportation-planning, or warehouse execution system."
+    licensing:
+      commercial_model: "Separate product entitlement"
+      note: "SAP's current feature-scope documentation states that certain features may require a separate subscription license; exact commercial terms require contract review."
+    limitations:
+      - "Regulatory content and country-specific trade processes create ongoing legal-change and integration obligations."
+    official_docs_url: "https://help.sap.com/docs/SAP_GLOBAL_TRADE_SERVICES_EDITION_HANA/3e27235faf0442d380b529b89bb82982/6b68384cf23e47ca813a4e69746b2c68.html"
+    official_commercial_url: "https://www.sap.com/products/financial-management/global-trade-management.html"
+    source_refs: [SRC-SAP-GTS-HELP, SRC-SAP-GTS-LICENSE]
+    status: source_verified
+
+decision_guide:
+  - need: "Execute purchase requisitions, POs, receipts and purchasing commitments in the ERP"
+    primary_choice: APP-S4HANA-SOURCING-PROCUREMENT
+    why: "Keep executable purchasing and its logistics/financial integration in the ERP system of record."
+  - need: "Run strategic sourcing events and supplier competition"
+    primary_choice: APP-ARIBA-SOURCING
+    why: "Use a sourcing application rather than forcing operational purchasing documents to become the sourcing workspace."
+  - need: "Provide guided multi-ERP buying and invoicing"
+    primary_choice: APP-ARIBA-BUYING-INVOICING
+    why: "Use the spend-management layer for buyer experience and policy while ERP systems remain execution back ends."
+  - need: "Collaborate digitally with suppliers on orders and invoices"
+    primary_choice: APP-BUSINESS-NETWORK-PROCUREMENT
+    why: "Use the network for cross-company document exchange and supplier self-service."
+  - need: "Collaborate with direct-material suppliers on forecasts, inventory and subcontracting"
+    primary_choice: APP-BUSINESS-NETWORK-SUPPLY-CHAIN
+    why: "Use supply-chain collaboration when the problem extends beyond basic PO/invoice exchange."
+  - need: "Manage plant/storage-location stock and financial goods movements"
+    primary_choice: APP-S4HANA-INVENTORY-MANAGEMENT
+    why: "MM-IM owns enterprise stock quantities/values and goods-movement postings."
+  - need: "Plan material requirements close to ERP execution"
+    primary_choice: APP-S4HANA-MRP
+    why: "Use core MRP for demand-to-supply proposals before adding advanced planning complexity."
+  - need: "Plan constrained bottlenecks and detailed production sequences"
+    primary_choice: APP-S4HANA-PPDS
+    why: "PP/DS adds finite and detailed planning depth beyond classic MRP."
+  - need: "Run enterprise demand, supply, inventory and S&OP planning"
+    primary_choice: APP-SAP-IBP
+    why: "IBP is the cross-enterprise planning layer rather than an execution engine."
+  - need: "Execute production orders in the ERP"
+    primary_choice: APP-S4HANA-MANUFACTURING
+    why: "S/4HANA manufacturing remains the ERP owner of production and material/financial integration."
+  - need: "Orchestrate plant-floor operators, resources and manufacturing execution"
+    primary_choice: APP-SAP-DIGITAL-MANUFACTURING
+    why: "Use the MOM/MES layer when execution needs to move closer to the shop floor."
+  - need: "Control complex warehouse bins, tasks, waves and automation"
+    primary_choice: APP-S4HANA-EWM
+    why: "EWM is the dedicated advanced warehouse-execution layer."
+  - need: "Plan, tender, execute and settle freight"
+    primary_choice: APP-S4HANA-TM
+    why: "TM owns transportation planning and internal freight execution logic."
+  - need: "Collaborate with carriers on freight orders, tendering and appointments"
+    primary_choice: APP-BUSINESS-NETWORK-FREIGHT
+    why: "Use the network to extend transportation execution to external logistics partners."
+  - need: "Track orders and shipments across external parties in real time"
+    primary_choice: APP-BUSINESS-NETWORK-GTT
+    why: "Visibility is a separate responsibility from planning or warehouse execution."
+  - need: "Control gates, docks, trailers, containers and yard movements"
+    primary_choice: APP-SAP-YARD-LOGISTICS
+    why: "Yard execution sits between transportation and warehousing and deserves explicit ownership when operationally complex."
+  - need: "Use one native-cloud SaaS layer for warehouse and transportation dispatching"
+    primary_choice: APP-SAP-LOGISTICS-MANAGEMENT
+    why: "Evaluate SAP Logistics Management for supported cloud-first scenarios, while checking scope against EWM/TM requirements."
+  - need: "Manage customs, classification and trade compliance"
+    primary_choice: APP-SAP-GTS
+    why: "Use GTS for specialized global-trade controls rather than embedding them informally in core logistics."
+
+architecture_patterns:
+  - name: "Core operational procurement"
+    path: "S/4HANA Sourcing & Procurement → MM-IM → FI/AP"
+    fit: "Single-ERP or ERP-led source-to-pay execution."
+  - name: "Enterprise source-to-pay"
+    path: "Ariba Sourcing → Ariba Buying and Invoicing → Business Network → S/4HANA"
+    fit: "Strategic sourcing and guided multi-ERP procurement with supplier collaboration."
+  - name: "Direct-material collaboration"
+    path: "S/4HANA / MRP → Business Network Supply Chain Collaboration → Supplier"
+    fit: "Forecast, order, component, inventory and subcontracting collaboration."
+  - name: "Plan to produce"
+    path: "IBP → S/4HANA MRP / PP/DS → S/4HANA Manufacturing → Digital Manufacturing"
+    fit: "Enterprise plan through executable schedule to shop-floor execution."
+  - name: "Warehouse and transportation execution"
+    path: "S/4HANA → EWM ↔ TM → Business Network Freight Collaboration"
+    fit: "Advanced warehouse and freight planning with external carrier collaboration."
+  - name: "Integrated shipping and receiving"
+    path: "MM/SD → TM ↔ EWM → Goods Receipt / Goods Issue"
+    fit: "Coordinated transportation and warehouse execution using shared logistics context."
+  - name: "Cloud logistics alternative"
+    path: "S/4HANA → SAP Logistics Management → Business Network Freight Collaboration"
+    fit: "Cloud-first warehouse and transportation dispatching for supported scenarios."
+  - name: "Global logistics visibility"
+    path: "S/4HANA / TM → Business Network Global Track and Trace ← carriers / visibility providers"
+    fit: "Cross-company real-time order and shipment visibility."
+
+source_refs:
+  - SRC-SAP-S4-PROCUREMENT
+  - SRC-SAP-S4-MMIM
+  - SRC-SAP-S4-MANUFACTURING
+  - SRC-SAP-PPDS
+  - SRC-SAP-EWM-HELP
+  - SRC-SAP-TM-LICENSE-BOUNDARY
+  - SRC-SAP-IBP-PRICING
+  - SRC-SAP-DM-PRICING
+  - SRC-SAP-LOGISTICS-MANAGEMENT-HELP
+  - SRC-SAP-GTS-HELP
+
+tags:
+  - sap-supply-chain
+  - procurement
+  - materials-management
+  - inventory-management
+  - manufacturing
+  - ppds
+  - ibp
+  - quality-management
+  - ewm
+  - transportation-management
+  - logistics
+  - business-network
+  - yard-logistics
+  - global-trade
+  - licensing
+  - architecture
