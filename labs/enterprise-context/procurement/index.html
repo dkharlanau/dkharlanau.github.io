@@ -1,0 +1,264 @@
+---
+layout: default
+title: "Procurement Decision Map — Enterprise Context Lab"
+description: "A practical SAP procurement map from demand and source selection through PO approval, receipt, invoice verification, GR/IR, and settlement."
+permalink: /labs/enterprise-context/procurement/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-mm
+  - procurement
+  - sourcing
+  - purchasing
+  - purchase-order
+  - procure-to-pay
+  - troubleshooting
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.procurement %}
+{% assign evidence = site.data.labs.enterprise_context.sources.procurement %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Procurement</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Procurement</p>
+      <h1>A purchase order is one decision<br />inside a longer business chain.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#procurement-memory">Start with eleven questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Procurement deep-dive inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Draft research · practical reasoning · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
+    <p><strong>My working rule:</strong> I start with the original requirement and find the first wrong procurement decision. I do not repair a PO field until I know why that field has the value.</p>
+    <a href="/labs/enterprise-context/data/procurement-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="procurement-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>Eleven questions from demand to settlement.</h2>
+      <p>This is the sequence I use when a procurement result looks wrong. It keeps sourcing, pricing, logistics, workflow, and accounting separate.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article class="ecg-memory-card">
+        <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+        <strong>{{ item.key }}</strong>
+        <h3>{{ item.question }}</h3>
+        <p>{{ item.answer }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong> This is a diagnostic path. It is not a claim that every technical call is executed in this exact visual order.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">End-to-end</p>
+      <h2>Procurement is several decision engines connected together.</h2>
+      <p>The buyer sees one document. The architecture sees demand, sourcing, commercial terms, accounting, approval, supplier communication, execution, and settlement.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for stage in graph.runtime_pipeline %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>procurement stage</small></div>
+          <h3>{{ stage.title }}</h3>
+          <p class="ecg-question">{{ stage.question }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Inputs / controls</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Control model</p>
+      <h2>Do not mix the six control layers.</h2>
+      <p>A wrong supplier, wrong account and blocked PO may exist in the same document, but they belong to different decision layers.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for item in graph.control_layers %}
+      <article>
+        <span>CONTROL</span>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.purpose }}</p>
+        <p><strong>Ask:</strong> {{ item.diagnostic_question }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="source-determination" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Source determination</p>
+      <h2>Supplier selection is not “find the cheapest vendor”.</h2>
+      <p>Standard source determination checks several source objects. Validity date, plant, purchasing organization, fixed sources, blocks, quotas, and agreements matter before price comparison becomes useful.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Procurement source determination sequence">
+      <div class="ecg-rail__branch">
+        {% for item in graph.source_determination.sequence %}
+        <span class="ecg-node {% if forloop.last %}ecg-node--output{% else %}ecg-node--decision{% endif %}">{{ item.source }}</span>{% unless forloop.last %}<span class="ecg-arrow" aria-hidden="true">→</span>{% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="research-route-list">
+      {% for item in graph.source_determination.sequence %}
+      <a href="#failure-modes"><span>{{ item.order }}</span><strong>{{ item.source }}</strong><small>{{ item.role }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      {% endfor %}
+    </div>
+    <p class="ecg-lead-lens"><strong>Lead lens:</strong> {{ graph.source_determination.lead_lens }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Item behavior</p>
+      <h2>Item category defines the business events that should exist later.</h2>
+      <p>This is why I check item category before debugging goods receipt or invoice behavior.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for item in graph.item_category_model.examples %}
+      <article><span>ITEM</span><h3>{{ item.category }}</h3><p>{{ item.business_reading }}</p></article>
+      {% endfor %}
+    </div>
+    <p class="ecg-lead-lens"><strong>Working rule:</strong> {{ graph.item_category_model.principle }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Account assignment</p>
+      <h2>“What do we buy?” and “who pays for it?” are different questions.</h2>
+      <p>{{ graph.account_assignment_model.principle }}</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h4>Common objects</h4><ul>{% for item in graph.account_assignment_model.common_objects %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h4>Multiple assignment</h4><p>{{ graph.account_assignment_model.multiple_assignment }}</p></div>
+      <div><h4>Diagnostic split</h4><p>First prove item behavior. Then prove the account assignment category and object. Only after that move into G/L and FI/CO account determination.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="purchasing-price" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Purchasing price</p>
+      <h2>A PO price is an output, not a truth entered by nature.</h2>
+      <p>{{ graph.purchasing_price_model.lead_lens }}</p>
+    </header>
+    <div class="ecg-rail" aria-label="Purchasing price path"><div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">Source</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--input">Reference</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--decision">Condition</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--decision">Validity / Unit</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--output">PO Value</span></div></div>
+    <div class="ecg-decision-columns">
+      <div><h4>Standard sources</h4><ul>{% for item in graph.purchasing_price_model.standard_sources %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h4>Five checks</h4><ul>{% for item in graph.purchasing_price_model.checks %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h4>Do not start here</h4><p>Manual net-price overwrite can hide a wrong source, reference, validity period, order unit, or condition design.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Approval</p>
+      <h2>A valid purchasing document can still be correctly blocked.</h2>
+      <p>Approval is a business-control decision. I first identify the active workflow model, then distinguish a valid approval block from a broken workflow.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h4>Current model</h4><ul>{% for item in graph.approval_model.current_direction %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h4>Diagnostic path</h4><ol>{% for item in graph.approval_model.diagnostic_path %}<li>{{ item }}</li>{% endfor %}</ol></div>
+      <div><h4>Lead lens</h4><p>{{ graph.approval_model.lead_lens }}</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Execution + Finance</p>
+      <h2>Physical completion and financial completion are separate.</h2>
+      <p>A warehouse can receive 100% of the quantity while invoice verification or GR/IR still shows a commercial or accounting difference.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Procurement execution and settlement path"><div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">PO</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--decision">Goods / Service Receipt</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--decision">PO History + GR/IR</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--decision">Supplier Invoice</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--output">Liability / Reconciliation</span></div></div>
+    <div class="ecg-decision-columns">
+      <div><h4>Receipt</h4><ul>{% for item in graph.execution_and_finance.goods_receipt.business_effects %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h4>Invoice verification</h4><ul>{% for item in graph.execution_and_finance.invoice_verification.business_effects %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h4>GR/IR</h4><p>{{ graph.execution_and_finance.gr_ir.lead_lens }}</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Integration boundaries</p><h2>Ask who owns the business state at every handoff.</h2><p>Procurement crosses planning, supplier collaboration, inventory, warehouse execution, and finance. Technical success is not automatically business completion.</p></header>
+    <div class="research-route-list">
+      {% for item in graph.integration_boundaries %}
+      <a href="#impact-traces"><span>INT</span><strong>{{ item.boundary }}</strong><small>{{ item.question }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failure-modes" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>Start with the first wrong decision, not the loudest symptom.</h2><p>Each failure pattern has a different first check. Changing the final document value usually makes the root cause harder to see.</p></header>
+    <div class="ecg-determination-list">
+      {% for failure in graph.failure_modes %}
+      <article class="ecg-determination-detail"><header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header><div class="ecg-decision-columns"><div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div></div></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="impact-traces" data-reveal>
+    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>Follow one change downstream.</h2><p>These traces are useful in architecture discussions because they connect a small field or policy change to its operational and financial consequence.</p></header>
+    <div class="research-route-list">
+      {% for item in graph.impact_traces %}
+      <a href="#synthetic-cases"><span>TRACE</span><strong>{{ item.title }}</strong><small>{{ item.path }} · {{ item.lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="synthetic-cases" data-reveal>
+    <header><p class="research-canvas__eyebrow">Synthetic cases</p><h2>Three cases to practice the reasoning path.</h2><p>These are fictional learning scenarios. The useful part is the investigation sequence.</p></header>
+    <div class="ecg-determination-list">
+      {% for item in graph.synthetic_cases %}
+      <article class="ecg-determination-detail"><header><div><span>CASE</span><small>synthetic</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.scenario }}</p></header><div class="ecg-decision-columns"><div><h4>Lead path</h4><ol>{% for step in item.lead_path %}<li>{{ step }}</li>{% endfor %}</ol></div><div><h4>Lesson</h4><p>{{ item.lesson }}</p></div></div></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment drills</p><h2>Answer with a sequence, not a vocabulary list.</h2><p>A Lead answer should show what you check first, what decision owns the result, and which downstream consequences matter.</p></header>
+    <div class="research-route-list">
+      {% for drill in graph.assessment_drills %}
+      <a href="#sources"><span>Q</span><strong>{{ drill.question }}</strong><small>{{ drill.strong_answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Practitioner rules</p><h2>What I keep visible during design and troubleshooting.</h2></header>
+    <div class="ecg-decision-columns"><div><h4>Heuristics</h4><ul>{% for item in graph.practitioner_heuristics %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Anti-patterns</h4><ul>{% for item in graph.anti_patterns %}<li>{{ item }}</li>{% endfor %}</ul></div></div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header><p class="research-canvas__eyebrow">Primary sources</p><h2>Facts checked, explanations written independently.</h2><p>Current SAP behavior is linked to public primary documentation. The mental model, synthetic cases, heuristics, and assessment phrasing are independent synthesis.</p></header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.publisher }} · {{ source.title }}</strong><small>{{ source.product_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>

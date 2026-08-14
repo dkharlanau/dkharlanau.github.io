@@ -1,0 +1,280 @@
+---
+layout: default
+title: "Sales Master Data Architecture — Enterprise Context Lab"
+description: "A practical SAP S/4HANA Sales master-data map connecting Business Partner, customer, product, customer-material, pricing, credit, replication, governance, and runtime diagnostics."
+permalink: /labs/enterprise-context/master-data/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - master-data
+  - business-partner
+  - product-master
+  - pricing
+  - credit-management
+  - integration
+  - mdg
+  - troubleshooting
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.master_data %}
+{% assign evidence = site.data.labs.enterprise_context.sources.master_data %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-order/">Sales Order</a></li><li aria-current="page">Master Data</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Sales Master Data</p>
+      <h1>Master data is executable policy,<br />not background decoration.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#master-data-memory">Start with ten questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Master-data deep-dive inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.data_families | size }}</strong><small>Data families</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Draft research · practical reasoning · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>My working rule:</strong> name the wrong runtime value first. Then trace it back to the source object, organizational level, precedence rule, and replica. I do not start with a random BP or product screen.</p>
+    <a href="/labs/enterprise-context/data/master-data-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="master-data-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>Ten questions before changing a master record.</h2>
+      <p>The point is not to memorize every field. The point is to identify which data layer owns the behavior that the document shows at runtime.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article class="ecg-memory-card">
+        <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+        <strong>{{ item.key }}</strong>
+        <h3>{{ item.question }}</h3>
+        <p>{{ item.answer }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>WHO → ROLE → WHERE → WHAT → RELATE → COMMERCIAL → FULFILL → RISK → DISTRIBUTE → GOVERN.</strong> This is a diagnostic memory path, not one SAP technical call sequence.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Data families</p>
+      <h2>Master data becomes useful when its level and consumers are visible.</h2>
+      <p>For every family I want to know the organizational level, what it controls, who should own the meaning, and what kind of failure it creates.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for family in graph.data_families %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>data family</small></div>
+          <h3>{{ family.title }}</h3>
+          <p class="ecg-question">Level: {{ family.level }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Typical data</h4><ul>{% for value in family.examples %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Runtime consumers</h4><ul>{% for value in family.consumers %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Ownership / signal</h4><p><strong>Typical owner:</strong> {{ family.typical_owner }}</p><p>{{ family.diagnostic_signal }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business Partner</p>
+      <h2>One identity, several business contexts.</h2>
+      <p>I separate general BP data, customer sales-area data, company-code accounting data, partner roles, and credit data. A customer can be valid in one context and incomplete in another.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Business Partner master-data levels">
+      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">Business Partner</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">General identity / address</span></div>
+      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">BP + FLCU01</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--decision">Sales Area</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">Sales / Shipping / Billing defaults</span></div>
+      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">BP + FLCU00</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--decision">Company Code</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">FI customer context</span></div>
+      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">BP + Credit Management</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--decision">Credit Segment</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">Risk policy / limit</span></div>
+    </div>
+    <p class="ecg-lead-lens"><strong>Lead lens:</strong> When order creation works but billing or credit does not, I do not call the customer master “correct”. I ask: correct for which role and organizational level?</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Product</p>
+      <h2>A product is also a set of organizational views.</h2>
+      <p>Product behavior changes by sales organization/distribution channel and by plant. That is why “the material is correct” is not enough evidence.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Product master-data levels">
+      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">Product</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">Basic / cross-distribution data</span></div>
+      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">Product</span><span class="ecg-arrow" aria-hidden="true">+</span><span class="ecg-node ecg-node--input">Sales Org + DC</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">Sales data / plant proposal / pricing attributes</span></div>
+      <div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">Product</span><span class="ecg-arrow" aria-hidden="true">+</span><span class="ecg-node ecg-node--input">Plant</span><span class="ecg-arrow" aria-hidden="true">→</span><span class="ecg-node ecg-node--output">ATP / MRP / loading / logistics controls</span></div>
+    </div>
+    <p class="ecg-lead-lens"><strong>Lead lens:</strong> Compare failing and working records at the same organizational level. Comparing DE01 plant data with a global product view is a very efficient way to learn nothing.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Precedence</p>
+      <h2>There is no universal “master-data priority”.</h2>
+      <p>Precedence belongs to a specific determination. Plant, shipping condition, partners, and pricing use different rules.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.precedence_examples %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>precedence</small></div><h3>{{ item.decision }}</h3></header>
+        <div class="ecg-rail" aria-label="{{ item.decision | escape }} precedence">
+          <div class="ecg-rail__branch">
+            {% for step in item.path %}
+            <span class="ecg-node {% if forloop.last %}ecg-node--output{% else %}ecg-node--input{% endif %}">{{ step }}</span>{% unless forloop.last %}<span class="ecg-arrow" aria-hidden="true">→</span>{% endunless %}
+            {% endfor %}
+          </div>
+        </div>
+        <p>{{ item.note }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Decision engines</p>
+      <h2>The same master record can feed several different engines.</h2>
+      <p>This is why a master-data change needs regression thinking. One field may repair shipping and quietly change pricing, ATP, credit, or billing.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.engine_dependency_matrix %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>engine</small></div><h3>{{ item.engine }}</h3><p class="ecg-question">{{ item.lead_question }}</p></header>
+        <div class="ecg-decision-columns"><div><h4>Master-data inputs</h4><ul>{% for value in item.master_data_inputs %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Architecture question</h4><p>{{ item.lead_question }}</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Distribution</p>
+      <h2>A correct source record is only half of the design.</h2>
+      <p>{{ graph.replication_architecture.principle }}</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.replication_architecture.patterns %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>replication</small></div><h3>{{ item.title }}</h3></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Mechanisms</h4><ul>{% for value in item.mechanisms %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Controls</h4><ul>{% for value in item.controls %}<li>{{ value }}</li>{% endfor %}</ul></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-lead-lens"><strong>Lead lens:</strong> Interface success means bytes moved. Master-data success means the right semantic object, key, organizational views, relationships, and custom fields arrived and can be reconciled.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Governance</p>
+      <h2>Separate meaning, maintenance, approval, distribution, and process ownership.</h2>
+      <p>A governance tool helps only after these responsibilities are explicit.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for item in graph.governance_model.responsibilities %}
+      <article><span>ROLE</span><h3>{{ item.role }}</h3><p>{{ item.question }}</p><ul>{% for value in item.examples %}<li>{{ value }}</li>{% endfor %}</ul></article>
+      {% endfor %}
+    </div>
+    <div class="ecg-diagnostic"><div><h4>MDG boundary</h4><p>{{ graph.governance_model.mdg_boundary.statement }}</p></div><div><h4>Architecture test</h4><p>If the workflow is removed tomorrow, do we still know who owns the field, who validates it, where it is replicated, and which process depends on it? If not, the workflow was hiding the governance model.</p></div></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostic method</p>
+      <h2>Trace value → source → level → precedence → distribution.</h2>
+      <p>This is the shortest path from a document symptom to a durable master-data fix.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for step in graph.diagnostic_method.steps %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if step.order < 10 %}0{% endif %}{{ step.order }}</span><small>diagnostic step</small></div><h3>{{ step.name }}</h3></header>
+        <p>{{ step.example }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure modes</p>
+      <h2>Most master-data incidents look like another module at first.</h2>
+      <p>Pricing, ATP, shipping, credit, billing, and interfaces can all be technically healthy while they consume the wrong data.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for failure in graph.failure_modes %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>failure</small></div><h3>{{ failure.title }}</h3><p class="ecg-question">{{ failure.signal }}</p></header>
+        <div class="ecg-decision-columns"><div><h4>Trace</h4><ul>{% for value in failure.trace %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Lead lens</h4><p>{{ failure.lead_lens }}</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>Follow one master-data change into the process.</h2></header>
+    <div class="ecg-input-grid">
+      {% for item in graph.impact_traces %}<article><span>TRACE</span><h3>{{ item.title }}</h3><p>{{ item.path }}</p></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Synthetic cases</p><h2>Practice the architecture, not the definition.</h2><p>These cases are fictional and exist only for learning and assessment practice.</p></header>
+    <div class="ecg-determination-list">
+      {% for item in graph.synthetic_cases %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>synthetic case</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.task }}</p></header>
+        <div class="ecg-decision-columns"><div><h4>Setup</h4><ul>{% for value in item.setup %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Lead answer</h4><ul>{% for value in item.lead_answer %}<li>{{ value }}</li>{% endfor %}</ul></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment drills</p><h2>Answers should contain level, precedence, ownership, and runtime impact.</h2></header>
+    <div class="ecg-determination-list">
+      {% for item in graph.assessment_drills %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>Lead drill</small></div><h3>{{ item.question }}</h3></header>
+        <div><h4>Strong answer should mention</h4><ul>{% for value in item.expected %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Practitioner rules</p><h2>Small rules that prevent large master-data investigations.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h4>I prefer</h4><ul>{% for value in graph.practitioner_heuristics %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h4>I avoid</h4><ul>{% for value in graph.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence</p><h2>Primary SAP references behind the documented facts.</h2><p>The reasoning and synthetic cases above are independently written. Vendor sources are used to verify product behavior and boundaries.</p></header>
+    <div class="ecg-source-list">
+      {% for source in evidence.sources %}
+      <article><span>{{ source.publisher }}</span><h3>{{ source.title }}</h3><p>{{ source.product_scope }}</p><a href="{{ source.url }}" rel="nofollow noopener">Open source <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a></article>
+      {% endfor %}
+    </div>
+  </section>
+</div>

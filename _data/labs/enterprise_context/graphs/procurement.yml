@@ -1,0 +1,437 @@
+id: GRAPH-MM-PROCUREMENT-DECISIONS
+type: knowledge_graph
+title: "Procurement — Demand to Settlement Decision Map"
+domain: "SAP S/4HANA Sourcing and Procurement"
+process_family: "Source-to-Pay / Procure-to-Pay"
+process_step: "From requirement to financial settlement"
+status: researching
+created_at: "2026-08-14"
+updated_at: "2026-08-14"
+verified_at: "2026-08-14"
+
+summary: >-
+  A Lead-level map of procurement decisions from demand creation through source selection,
+  purchase order control, approval, receipt, invoice verification, and accounting.
+  The model separates business demand, sourcing, commercial conditions, logistics execution,
+  and financial settlement so that one wrong result can be traced to the first wrong decision.
+
+thesis: >-
+  A purchase order is not the procurement process. It is one controlled document in a chain
+  of decisions. I diagnose procurement by reconstructing demand, item behavior, source,
+  price, account assignment, approval, order communication, receipt, invoice, and settlement.
+
+boundary:
+  includes:
+    - "Purchase requisition and purchase order decision logic"
+    - "External procurement and selected internal stock-transfer context"
+    - "Source determination using quota arrangements, source lists, outline agreements, and purchasing info records"
+    - "Purchasing conditions and price determination at an architecture level"
+    - "Item category and account assignment"
+    - "Flexible workflow and classic release-procedure boundary"
+    - "Purchase order output and supplier integration boundary"
+    - "Goods receipt, service receipt, invoice verification, GR/IR, and FI/CO impact"
+  excludes_for_later_deep_dives:
+    - "Detailed purchasing pricing schema and condition technique"
+    - "Detailed flexible-workflow configuration and agent determination"
+    - "Detailed service procurement and Service Entry Sheet design"
+    - "Subcontracting component consumption"
+    - "Consignment settlement"
+    - "Ariba, Business Network, and Central Procurement product deep dives"
+
+memory_model:
+  path: "DEMAND → TYPE → SOURCE → SUPPLIER → PRICE → ACCOUNT → APPROVE → ORDER → RECEIVE → INVOICE → SETTLE"
+  questions:
+    - key: DEMAND
+      question: "Why do we need to procure?"
+      answer: "Start with the requirement: MRP, manual request, project, maintenance, service, sales-driven demand, or replenishment."
+    - key: TYPE
+      question: "What procurement behavior does the item need?"
+      answer: "Document type, item category, material/service type, plant, quantity, date, and stock-versus-consumption intent define the control frame."
+    - key: SOURCE
+      question: "Which source of supply is valid?"
+      answer: "Check quota arrangement, source list, outline agreements, and purchasing info records for the requirement date and organization."
+    - key: SUPPLIER
+      question: "Which supplier or supplying plant will execute the demand?"
+      answer: "A proposed source is not yet a business decision. Validate supplier status, organization, contract, capacity, and policy."
+    - key: PRICE
+      question: "Where did the commercial value come from?"
+      answer: "Trace info record, contract or other valid purchasing conditions, then the PO condition result and manual changes."
+    - key: ACCOUNT
+      question: "Where will the cost or stock value go?"
+      answer: "Item category and account assignment category define whether the item is stock or consumption and which account assignment objects are required."
+    - key: APPROVE
+      question: "Can the document be released?"
+      answer: "Identify the active approval model, start conditions, approvers, workflow status, and whether a later change restarts approval."
+    - key: ORDER
+      question: "What exactly is sent to the supplier?"
+      answer: "Validate PO document type, supplier, quantities, dates, terms, output channel, recipient, and integration contract."
+    - key: RECEIVE
+      question: "What event proves supply or service execution?"
+      answer: "Goods receipt or accepted service receipt updates quantity, stock or consumption, PO history, and accounting according to the item design."
+    - key: INVOICE
+      question: "What is the invoice matched against?"
+      answer: "Invoice verification can reference PO history, goods receipts, or service receipts depending on the item and invoice-verification design."
+    - key: SETTLE
+      question: "What closes the financial loop?"
+      answer: "Reconcile inventory or consumption posting, GR/IR, supplier liability, price differences, and open PO history."
+
+control_layers:
+  - id: PUR-CTRL-DOC-TYPE
+    title: "Purchasing Document Type"
+    purpose: "Controls document-level behavior, numbering, field selection, workflow context, and follow-on processing choices."
+    diagnostic_question: "Did the requirement become the intended purchasing document type?"
+  - id: PUR-CTRL-ITEM-CATEGORY
+    title: "Item Category"
+    purpose: "Controls core item behavior such as material-number requirement, stock management, account assignment, goods receipt, and invoice receipt."
+    diagnostic_question: "Is this really a standard stock item, service, subcontracting, consignment, stock transfer, third-party, or limit scenario?"
+    source_refs: [SRC-SAP-PUR-ITEM-CATEGORY]
+  - id: PUR-CTRL-ACCOUNT
+    title: "Account Assignment Category"
+    purpose: "Defines the account assignment object and required accounting data for direct consumption."
+    diagnostic_question: "Which business object should be charged and which G/L determination path follows?"
+    source_refs: [SRC-SAP-PUR-ACCOUNT-ASSIGNMENT]
+  - id: PUR-CTRL-ORG
+    title: "Purchasing Organization / Group / Plant"
+    purpose: "Defines commercial responsibility, buyer responsibility, receiving location, authorization context, and source-master relevance."
+    diagnostic_question: "Are we sourcing and ordering in the right organizational context?"
+  - id: PUR-CTRL-SOURCE
+    title: "Source of Supply"
+    purpose: "Separates valid, fixed, blocked, contracted, and informational supplier relationships from the purchase document."
+    diagnostic_question: "Why was this source selected instead of the alternative?"
+    source_refs: [SRC-SAP-PUR-SOURCE-DETERMINATION, SRC-SAP-PUR-SOURCE-LIST]
+  - id: PUR-CTRL-WORKFLOW
+    title: "Approval Model"
+    purpose: "Controls whether a PR or PO can continue to execution."
+    diagnostic_question: "Which workflow or release procedure owns this document state?"
+    source_refs: [SRC-SAP-PUR-PR-FLEX-WF, SRC-SAP-PUR-PO-FLEX-WF]
+
+runtime_pipeline:
+  - order: 1
+    id: PUR-RUNTIME-DEMAND
+    title: "Create or receive demand"
+    question: "What business requirement entered procurement?"
+    inputs: ["MRP or planning result", "manual/self-service requisition", "project, maintenance, sales, or production demand", "material/service, plant, quantity, required date"]
+    output: ["Purchase requisition or direct purchasing requirement"]
+    failure_signal: "Buyer fixes a PO while the original quantity, date, plant, or consumption intent is already wrong."
+  - order: 2
+    id: PUR-RUNTIME-ITEM-CONTROL
+    title: "Determine procurement item behavior"
+    question: "How must the item behave?"
+    inputs: ["document type", "item category", "material or service", "stock versus direct consumption", "plant and delivery context"]
+    output: ["GR/IR expectations, material requirement, stock behavior, account-assignment requirement"]
+    failure_signal: "The process expects stock but the item charges a cost center, or expects an invoice-only limit but requires a GR."
+    source_refs: [SRC-SAP-PUR-ITEM-CATEGORY]
+  - order: 3
+    id: PUR-RUNTIME-SOURCE
+    title: "Determine valid source of supply"
+    question: "Which source is proposed and why?"
+    inputs: ["material", "plant", "delivery date", "purchasing organization", "quota arrangement", "source list", "outline agreement", "purchasing info record"]
+    output: ["proposed supplier, contract, scheduling agreement, or source candidate"]
+    failure_signal: "The expected supplier exists but is not selected because a higher-priority or fixed source controls the date."
+    source_refs: [SRC-SAP-PUR-SOURCE-DETERMINATION, SRC-SAP-PUR-QUOTA, SRC-SAP-PUR-SOURCE-LIST, SRC-SAP-PUR-INFO-RECORD]
+  - order: 4
+    id: PUR-RUNTIME-COMMERCIAL
+    title: "Build commercial terms"
+    question: "How does the PO get price and conditions?"
+    inputs: ["supplier", "material/material group", "purchasing organization and plant", "info record", "contract/reference document", "general purchasing conditions", "order unit and validity date"]
+    output: ["net price, discounts, surcharges, freight or other purchasing condition values"]
+    failure_signal: "Correct supplier but unexpected price, unit, scale, or manual condition."
+    source_refs: [SRC-SAP-PUR-PRICE-DETERMINATION, SRC-SAP-PUR-INFO-CONDITIONS]
+  - order: 5
+    id: PUR-RUNTIME-ACCOUNT
+    title: "Resolve stock or consumption accounting"
+    question: "Where will the value be posted?"
+    inputs: ["item category", "account assignment category", "material valuation context", "cost center/order/project/asset/sales order", "automatic account determination"]
+    output: ["account assignment, commitment, stock or consumption posting path"]
+    failure_signal: "The PO is commercially correct but posts to the wrong object or cannot derive the required account."
+    source_refs: [SRC-SAP-PUR-ACCOUNT-ASSIGNMENT]
+  - order: 6
+    id: PUR-RUNTIME-APPROVE
+    title: "Run approval"
+    question: "Who must approve and what happens after a change?"
+    inputs: ["document type and value", "organization", "account assignment and other workflow conditions", "configured start conditions", "agent determination"]
+    output: ["approved, rejected, in approval, or automatically approved"]
+    failure_signal: "The document is valid but cannot be ordered because no workflow starts, the wrong workflow starts, or no approver can be found."
+    source_refs: [SRC-SAP-PUR-PR-FLEX-WF, SRC-SAP-PUR-PO-FLEX-WF]
+  - order: 7
+    id: PUR-RUNTIME-ORDER
+    title: "Create and release purchase order"
+    question: "What contractual instruction leaves procurement?"
+    inputs: ["supplier/source", "purchasing organization/group", "items, quantities, dates", "commercial conditions", "account assignment", "approval status"]
+    output: ["Purchase order ready for supplier communication"]
+    failure_signal: "PR is correct but conversion groups items unexpectedly or produces a different PO context."
+    source_refs: [SRC-SAP-PUR-PO, SRC-SAP-PUR-AUTO-PO]
+  - order: 8
+    id: PUR-RUNTIME-OUTPUT
+    title: "Send order to supplier"
+    question: "Which recipient, channel, and form carry the PO?"
+    inputs: ["PO output rules", "supplier/recipient", "output type", "channel", "dispatch timing", "integration endpoint"]
+    output: ["email, print, EDI/API or other supplier-facing order message"]
+    failure_signal: "PO is approved but the supplier does not receive the intended output or receives a stale version."
+    source_refs: [SRC-SAP-PUR-OUTPUT-PARAM]
+  - order: 9
+    id: PUR-RUNTIME-RECEIVE
+    title: "Post goods or service receipt"
+    question: "What execution event occurred?"
+    inputs: ["purchase order history", "received quantity", "movement/service acceptance", "stock type and location", "account assignment"]
+    output: ["goods/service receipt history and logistics/accounting update"]
+    failure_signal: "Supplier delivered, but stock, consumption, PO history, or accounting does not reflect the expected event."
+    source_refs: [SRC-SAP-PUR-GR]
+  - order: 10
+    id: PUR-RUNTIME-INVOICE
+    title: "Verify supplier invoice"
+    question: "What does the invoice match and why is it blocked or posted?"
+    inputs: ["PO item", "goods or service receipt history", "invoice quantity/value", "GR-based IV or other invoice-verification settings", "tolerance and tax context"]
+    output: ["posted, parked, blocked, or rejected supplier invoice"]
+    failure_signal: "Invoice value looks plausible but does not match the designed reference quantity/value or history."
+    source_refs: [SRC-SAP-PUR-INVOICE, SRC-SAP-PUR-GR-BASED-IV]
+  - order: 11
+    id: PUR-RUNTIME-SETTLE
+    title: "Reconcile financial settlement"
+    question: "Did procurement and finance close the same business event?"
+    inputs: ["goods receipt", "invoice receipt", "GR/IR clearing", "inventory or consumption accounts", "supplier liability", "price differences"]
+    output: ["financially reconciled procurement history"]
+    failure_signal: "PO is operationally complete while GR/IR, invoice blocks, or account balances remain unexplained."
+    source_refs: [SRC-SAP-PUR-PO-INVOICES]
+
+source_determination:
+  sequence:
+    - order: 1
+      source: "Quota arrangement"
+      role: "Distributes requirements across valid sources according to quota logic."
+      source_refs: [SRC-SAP-PUR-QUOTA]
+    - order: 2
+      source: "Source list"
+      role: "Controls valid, fixed, or blocked sources for material, plant, and validity period."
+      source_refs: [SRC-SAP-PUR-SOURCE-LIST]
+    - order: 3
+      source: "Outline agreements and purchasing info records"
+      role: "Provides contract, scheduling-agreement, and supplier-material source candidates when no earlier unique source controls the requirement."
+      source_refs: [SRC-SAP-PUR-SOURCE-DETERMINATION, SRC-SAP-PUR-INFO-RECORD]
+  lead_lens: >-
+    Source determination is date-sensitive and organization-sensitive. I reproduce the exact material,
+    plant, delivery date, purchasing organization, and source-master validity before changing source data.
+
+item_category_model:
+  principle: "Item category is a process switch. It changes which business events are expected, not only how the item is displayed."
+  examples:
+    - category: "Standard"
+      business_reading: "Normal external procurement; goods and invoices can be received."
+    - category: "Consignment"
+      business_reading: "Supplier-owned stock is received; normal PO invoice receipt is not the settlement event."
+    - category: "Subcontracting"
+      business_reading: "Supplier produces using provided components; receipt and invoice are expected."
+    - category: "Stock transfer"
+      business_reading: "Material moves from an internal supplying location; GR is expected and supplier invoice is not the standard event."
+    - category: "Third-party"
+      business_reading: "Procurement supports a customer-facing flow and requires account assignment."
+    - category: "Limit"
+      business_reading: "Value/limit-driven consumption; invoice is central and normal GR is not required."
+  source_refs: [SRC-SAP-PUR-ITEM-CATEGORY]
+
+account_assignment_model:
+  principle: "Account assignment answers who consumes the value. It is independent from source selection and must be traced before FI/CO troubleshooting."
+  common_objects: ["Cost center", "Order object", "Project/WBS", "Asset", "Sales order / customer requirement", "Unknown at ordering time where configuration allows later assignment"]
+  multiple_assignment: >-
+    One purchasing item can distribute cost across multiple account assignment objects. This affects commitments,
+    goods/service receipt valuation, and invoice processing.
+  source_refs: [SRC-SAP-PUR-ACCOUNT-ASSIGNMENT]
+
+purchasing_price_model:
+  path: "SOURCE → REFERENCE → CONDITION → VALIDITY/UNIT → PO VALUE"
+  standard_sources: ["Purchasing info record conditions", "Contract conditions for release orders", "General purchasing conditions where designed", "Last-PO adoption only where configured and applicable"]
+  checks:
+    - "Which supplier/material/purchasing-organization context was used?"
+    - "Was a contract or other reference document copied?"
+    - "Which order unit and price unit are active?"
+    - "Which validity date applies?"
+    - "Was the condition manually changed in the PO?"
+  lead_lens: >-
+    A wrong PO price can be a source-selection problem, a reference-document problem,
+    a validity/unit problem, or a condition problem. I do not start by overwriting the net price.
+  source_refs: [SRC-SAP-PUR-PRICE-DETERMINATION, SRC-SAP-PUR-INFO-CONDITIONS]
+
+approval_model:
+  current_direction:
+    - "Flexible workflow supports condition-based one-step or multi-step approval for purchase requisitions."
+    - "Purchase requisitions can use overall/header approval or item-level approval."
+    - "Flexible workflow supports automatic, one-step, or multi-step approval for purchase orders."
+    - "Classic release procedure with classification remains a separate model in on-premise landscapes."
+  diagnostic_path:
+    - "Confirm which approval model is active."
+    - "Read workflow/release status before changing document data."
+    - "Check start conditions and document values."
+    - "Check agent/approver resolution."
+    - "Check whether a document change caused restart or loss of release."
+  lead_lens: "Approval is a control policy, not a purchasing data field. I separate a correct business block from a workflow configuration or agent-resolution defect."
+  source_refs: [SRC-SAP-PUR-PR-FLEX-WF, SRC-SAP-PUR-PO-FLEX-WF, SRC-SAP-PUR-CLASSIC-RELEASE]
+
+execution_and_finance:
+  goods_receipt:
+    business_effects: ["Updates purchase order history.", "Updates stock or consumption according to item/account design.", "Creates accounting impact for valuated receipts."]
+    source_refs: [SRC-SAP-PUR-GR]
+  invoice_verification:
+    business_effects:
+      - "Matches supplier invoice to PO and/or receipt history according to design."
+      - "Can use GR-based invoice verification so invoice items match individual goods receipts."
+      - "Creates supplier liability and clears or changes GR/IR according to posting sequence."
+    source_refs: [SRC-SAP-PUR-INVOICE, SRC-SAP-PUR-GR-BASED-IV, SRC-SAP-PUR-PO-INVOICES]
+  gr_ir:
+    lead_lens: "GR/IR is the accounting bridge between physical receipt and supplier invoice. I reconcile it with PO history and posting sequence."
+
+integration_boundaries:
+  - boundary: "Planning / MRP → Procurement"
+    question: "Did the planning requirement create the correct material, plant, quantity, date, and source context?"
+  - boundary: "Procurement → Supplier"
+    question: "Did the approved PO reach the supplier through the intended output/integration channel and version?"
+  - boundary: "Procurement → Inventory / Warehouse"
+    question: "Did receipt create the intended stock or consumption movement and PO history?"
+  - boundary: "Procurement → FI/CO"
+    question: "Did account assignment, valuation, GR/IR, invoice and price differences post to the intended objects?"
+  - boundary: "Procurement → External sourcing / network"
+    question: "Which system owns source selection, approval, supplier collaboration, and final PO authority?"
+  - boundary: "API / automation → Purchase Order"
+    question: "Does the automated document carry the same source, price, account assignment, dates, and controls as the manual path?"
+
+failure_modes:
+  - id: PUR-FAIL-WRONG-SUPPLIER
+    symptom: "Purchase requisition proposes the wrong supplier."
+    first_checks: ["material, plant, delivery date", "quota arrangement validity and rating", "source list fixed/blocked entries", "contract/scheduling agreement validity", "purchasing info record and purchasing organization"]
+    avoid: "Do not hard-code the supplier in the requisition before explaining standard source determination."
+  - id: PUR-FAIL-NO-SOURCE
+    symptom: "Valid supplier relationship exists, but no source is determined."
+    first_checks: ["organizational level of the info record", "source-list requirement and validity", "MRP/automatic-sourcing relevance", "delivery date versus validity period", "material/plant mismatch"]
+    avoid: "Do not create duplicate info records until the missing organizational or validity condition is known."
+  - id: PUR-FAIL-WRONG-PRICE
+    symptom: "PO selects the correct supplier but price is unexpected."
+    first_checks: ["reference contract", "info-record conditions", "order unit and price unit", "validity date/scales", "manual PO conditions", "configured last-PO adoption"]
+    avoid: "Do not overwrite net price as the first fix."
+  - id: PUR-FAIL-WRONG-ACCOUNT
+    symptom: "PO or receipt charges the wrong cost object."
+    first_checks: ["stock versus consumption intent", "item category", "account assignment category", "account assignment object", "automatic G/L determination", "multiple account assignment"]
+    avoid: "Do not treat every wrong G/L as an FI-only issue."
+  - id: PUR-FAIL-WORKFLOW
+    symptom: "PR or PO is stuck in approval or unexpectedly auto-approved."
+    first_checks: ["active workflow/release model", "start conditions", "document value and organizational data", "agent resolution", "change/restart behavior"]
+    avoid: "Do not add an approver manually until the workflow path is understood."
+  - id: PUR-FAIL-OUTPUT
+    symptom: "PO is approved but supplier receives nothing or an incorrect output."
+    first_checks: ["output type", "recipient", "channel", "dispatch timing", "form/template", "message/integration status"]
+    avoid: "Do not resend blindly before confirming whether the original output is stale or duplicated."
+  - id: PUR-FAIL-GR
+    symptom: "Supplier delivered but goods receipt cannot be posted or posts incorrectly."
+    first_checks: ["PO item category", "GR indicator", "plant/storage location", "received quantity and UoM", "account assignment", "movement and stock context"]
+    avoid: "Do not change PO history after the physical event without reconciling downstream accounting."
+  - id: PUR-FAIL-INVOICE
+    symptom: "Invoice is blocked or quantity/value proposal is unexpected."
+    first_checks: ["PO history", "GR-based IV flag", "goods/service receipt quantities", "PO price and invoice quantity/value", "tolerances and tax context"]
+    avoid: "Do not release the invoice block before explaining the variance."
+  - id: PUR-FAIL-GRIR
+    symptom: "PO looks complete but GR/IR remains open."
+    first_checks: ["goods-receipt and invoice-receipt sequence", "quantities and values", "reversals", "final delivery/final invoice state", "price differences", "PO history"]
+    avoid: "Do not clear GR/IR manually before reconciling the business documents."
+  - id: PUR-FAIL-AUTO-MANUAL
+    symptom: "Automated/API-created PO behaves differently from a manually created PO."
+    first_checks: ["document type and purchasing organization", "supplier/source reference", "item and account categories", "conditions/reference document", "workflow status", "output and extension fields"]
+    avoid: "Do not call it an API defect until runtime payload and manual defaults are compared."
+
+impact_traces:
+  - title: "Demand date → supplier"
+    path: "Requirement Date → Quota/Source List Validity → Source Determination → Supplier/Contract → PO"
+    lesson: "A sourcing symptom can begin with the demand date."
+  - title: "Supplier → price"
+    path: "Selected Source → Info Record/Contract → Conditions → Order Unit/Validity → PO Net Value"
+    lesson: "Commercial value depends on the source context."
+  - title: "Item category → execution"
+    path: "Item Category → GR/IR Requirements → Receipt/Invoice Events → PO History"
+    lesson: "The item category defines which follow-on documents make sense."
+  - title: "Account assignment → FI/CO"
+    path: "Consumption Intent → Account Assignment Category → Cost Object/G/L → GR/IR Posting → Invoice"
+    lesson: "Procurement and accounting design meet at the PO item."
+  - title: "Approval → supplier communication"
+    path: "Document Data → Workflow Conditions → Approval → Output Determination → Supplier Message"
+    lesson: "An approved document still needs a reliable supplier communication path."
+  - title: "Receipt → settlement"
+    path: "Goods Receipt → PO History → GR/IR → Supplier Invoice → Liability/Clearing"
+    lesson: "Physical and financial completion are separate events that must reconcile."
+
+practitioner_heuristics:
+  - "I start with the original demand, not with the final PO."
+  - "I separate item category from account assignment category; they answer different questions."
+  - "I reproduce source determination with the exact delivery date because validity is part of the key."
+  - "I treat purchasing organization and plant as part of the data, not as screen decoration."
+  - "I trace price back to source/reference and conditions before changing the PO net price."
+  - "I separate a valid approval block from a broken workflow."
+  - "I read PO history before changing receipt or invoice data."
+  - "I reconcile GR/IR with quantities, values, and posting sequence."
+  - "I compare automated and manual PO runtime inputs field by field."
+  - "I prefer standard sourcing, conditions, workflow, and output rules before custom logic."
+
+anti_patterns:
+  - "Hard-code a supplier because source determination is confusing."
+  - "Treat info record, source list, and contract as interchangeable supplier master data."
+  - "Use manual PO price as the long-term solution to wrong condition determination."
+  - "Mix item category and account assignment category in troubleshooting."
+  - "Add custom workflow logic for a rule that standard start conditions already express."
+  - "Release invoice blocks without explaining the variance."
+  - "Clear GR/IR without reconciling PO history."
+  - "Assume a sent technical message means the supplier processed the business order."
+
+synthetic_cases:
+  - id: PUR-CASE-SOURCE
+    title: "The cheaper supplier is not selected"
+    synthetic: true
+    scenario: "Material RM-100 at plant DE01 has two valid suppliers. Supplier A has a lower current info-record price, but the requisition proposes Supplier B."
+    lead_path: ["Do not start with price comparison.", "Check quota arrangement for the requisition delivery date.", "Check source list fixed/blocked sources.", "Check outline agreement and purchasing organization context.", "Only after source logic is explained compare commercial terms."]
+    lesson: "Source selection and price optimization are related but different decisions."
+  - id: PUR-CASE-PRICE
+    title: "Correct supplier, wrong PO price"
+    synthetic: true
+    scenario: "A release order references a contract, but the PO price is higher than the buyer expects."
+    lead_path: ["Confirm the contract and item reference.", "Check condition validity and order/price unit.", "Check scales and supplementary conditions.", "Check whether a manual or copied PO condition changed the result."]
+    lesson: "The net price is the output of commercial context, not a master-data truth by itself."
+  - id: PUR-CASE-GRIR
+    title: "Goods received, invoice posted, GR/IR still open"
+    synthetic: true
+    scenario: "PO quantity is 100 EA. Warehouse received 100 EA and Finance posted the supplier invoice, but GR/IR is not zero."
+    lead_path: ["Read PO history quantities and values.", "Check invoice reference and GR-based IV design.", "Compare PO price, receipt valuation, invoice value, and reversals.", "Classify quantity variance versus value/price variance.", "Only then decide whether operational correction or accounting follow-up is needed."]
+    lesson: "A closed physical quantity does not prove a closed financial bridge."
+
+assessment_drills:
+  - question: "A purchase requisition chooses the wrong supplier. What do you check?"
+    strong_answer: "I reproduce the source-determination key: material, plant, date and purchasing organization, then trace quota, source list, outline agreement and info record before changing the supplier."
+  - question: "Explain item category versus account assignment category."
+    strong_answer: "Item category controls procurement behavior and expected follow-on events. Account assignment category controls who consumes the value and which accounting object is required."
+  - question: "Correct supplier, wrong PO price. Diagnose."
+    strong_answer: "I trace the reference source, info record or contract conditions, validity, order/price unit, scales and manual changes before overriding net price."
+  - question: "PO is valid but stuck in approval."
+    strong_answer: "First identify flexible workflow versus classic release. Then inspect start conditions, current document values, agent resolution and change/restart behavior."
+  - question: "Why can an invoice be blocked after a correct goods receipt?"
+    strong_answer: "Receipt proves logistics execution, not commercial match. I compare PO price/quantity, receipt history, invoice quantity/value, GR-based IV and tolerances."
+  - question: "What is GR/IR in one sentence?"
+    strong_answer: "It is the accounting bridge between receipt and supplier invoice; I reconcile it through PO history, quantities, values and posting sequence."
+  - question: "Manual PO works, API PO does not. Where do you start?"
+    strong_answer: "I compare the actual document type, organization, source/reference, item/account categories, conditions, workflow fields and extensions before blaming the API."
+  - question: "Would you customize source determination to always pick the cheapest supplier?"
+    strong_answer: "Not as a first move. Standard source determination expresses validity, fixed/blocked sources, quotas and agreements. Cheapest price alone may ignore contractual, capacity and policy constraints."
+  - question: "When would you use a scheduling agreement instead of many POs?"
+    strong_answer: "For a stable supplier relationship with recurring requirements and schedule-line collaboration, provided the business and integration model support that cadence."
+  - question: "How do you know procurement is complete?"
+    strong_answer: "I separate operational completion from financial completion: requirement covered, PO executed, receipt or service accepted, invoice processed, PO history reconciled, and GR/IR or related accounting explained."
+
+source_refs:
+  - SRC-SAP-PUR-PO
+  - SRC-SAP-PUR-PR
+  - SRC-SAP-PUR-ITEM-CATEGORY
+  - SRC-SAP-PUR-ACCOUNT-ASSIGNMENT
+  - SRC-SAP-PUR-SOURCE-DETERMINATION
+  - SRC-SAP-PUR-QUOTA
+  - SRC-SAP-PUR-SOURCE-LIST
+  - SRC-SAP-PUR-INFO-RECORD
+  - SRC-SAP-PUR-PRICE-DETERMINATION
+  - SRC-SAP-PUR-PR-FLEX-WF
+  - SRC-SAP-PUR-PO-FLEX-WF
+  - SRC-SAP-PUR-OUTPUT-PARAM
+  - SRC-SAP-PUR-GR
+  - SRC-SAP-PUR-GR-BASED-IV
+  - SRC-SAP-PUR-PO-INVOICES

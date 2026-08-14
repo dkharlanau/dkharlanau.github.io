@@ -1,0 +1,366 @@
+---
+layout: default
+title: "Sales Order Decision Map — Enterprise Context Lab"
+description: "A practical map of SAP sales-order decisions, dependencies, failure patterns, and diagnostic paths for S/4HANA Sales."
+permalink: /labs/enterprise-context/sales-order/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - sales-order
+  - order-to-cash
+  - pricing
+  - atp
+  - logistics
+  - troubleshooting
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.sales_order %}
+{% assign evidence = site.data.labs.enterprise_context.sources.sales_order_determinations %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Sales Order Decision Map</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Order-to-Cash</p>
+      <h1>A sales order is a chain of decisions.</h1>
+      <p>{{ graph.summary }} A process map says “Create Sales Order”. This page opens that box and asks what SAP has to decide inside it.</p>
+      <a class="research-canvas__button" href="#memory-model">Start with the memory model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Decision map inventory">
+      <p>Working map</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.determinations | size }}</strong><small>Decision areas</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.impact_traces | size }}</strong><small>Impact traces</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Draft research · no client data · human review still required</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <p><strong>Working rule:</strong> when a value is wrong, do not begin with the table. Begin with the question: <em>what decided this value, which inputs were used, and who uses the result next?</em></p>
+    <a href="/labs/enterprise-context/data/sales-order-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="memory-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>Remember eight questions, not eighty tables.</h2>
+      <p>The labels are simple on purpose. They give you a stable path through a sales order during an assessment, workshop, or incident.</p>
+    </header>
+
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article class="ecg-memory-card">
+        <span>0{{ forloop.index }}</span>
+        <strong>{{ item.key }}</strong>
+        <h3>{{ item.question }}</h3>
+        <p>{{ item.answer }}</p>
+      </article>
+      {% endfor %}
+    </div>
+
+    <p class="ecg-caption"><strong>WHO → WHAT → WHERE → WHEN → PRICE → PROMISE → RISK → FULFILL.</strong> This is a learning projection, not a claim about the exact SAP runtime sequence.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Document control</p>
+      <h2>First identify the control level.</h2>
+      <p>Before debugging a field, ask whether the behavior belongs mainly to the header, item, or schedule line. This removes a surprising amount of noise.</p>
+    </header>
+
+    <div class="ecg-control-stack">
+      {% for level in graph.control_stack.levels %}
+      <article>
+        <span>{{ level.level | replace: "_", " " }}</span>
+        <h3>{{ level.title }}</h3>
+        <p class="ecg-question">{{ level.question }}</p>
+        <ul>
+          {% for control in level.controls %}<li>{{ control }}</li>{% endfor %}
+        </ul>
+        <strong>{{ level.remember }}</strong>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Inputs before rules</p>
+      <h2>Most determinations do not start from empty space.</h2>
+      <p>Master data, organizational context, and explicit values from users or interfaces feed the decision chain. A correct rule with a wrong input still produces a perfectly wrong result.</p>
+    </header>
+
+    <div class="ecg-input-grid">
+      {% for input in graph.input_domains %}
+      <article>
+        <span>INPUT</span>
+        <h3>{{ input.title }}</h3>
+        <p>{{ input.purpose }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Three projections</p>
+      <h2>One order, three ways to read it.</h2>
+      <p>The process view tells you where you are. The object view tells you where data lives. The decision view explains why the data appeared.</p>
+    </header>
+
+    <div class="ecg-view-grid">
+      {% for view in graph.views %}
+      <article class="ecg-view-card">
+        <span>0{{ forloop.index }}</span>
+        <h3>{{ view.title }}</h3>
+        <p class="ecg-question">{{ view.question }}</p>
+        <p>{{ view.projection }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="dependency-engine" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Dependency chain</p>
+      <h2>The item is where several worlds meet.</h2>
+      <p>Customer data, product data, sales configuration, logistics configuration, calendars, supply, and commercial rules meet inside one document.</p>
+    </header>
+
+    <div class="ecg-rail" aria-label="Simplified sales-order dependency chains">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Customer + Product</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Plant Proposal</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Plant</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Shipping Point</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Shipping Point</span>
+      </div>
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Departure + Destination + Shipping Policy</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Route</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Scheduling</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Material Availability Date</span>
+      </div>
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Plant + Date + Quantity + Supply/Demand</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Availability</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Confirmed Qty / Date</span>
+      </div>
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Pricing Context + Condition Data</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Pricing</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Order Value</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Credit Check</span>
+        <span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Continue / Block</span>
+      </div>
+    </div>
+
+    <p class="ecg-caption">These rails show reasoning dependencies. They intentionally hide technical branches that are not needed to understand the core idea.</p>
+  </section>
+
+  <section class="ecg-anatomy" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Decision anatomy</p>
+      <h2>Use the same six questions every time.</h2>
+      <p>A repeated diagnostic shape makes the system easier to remember and makes comparisons between Pricing, ATP, Shipping, and other engines much easier.</p>
+    </div>
+    <ol>
+      <li><span>01</span><strong>Question</strong><p>What business decision is SAP making?</p></li>
+      <li><span>02</span><strong>Inputs</strong><p>Which document, master-data, organization, or runtime values are read?</p></li>
+      <li><span>03</span><strong>Mechanism</strong><p>Lookup, procedure, condition technique, calculation, check, or search.</p></li>
+      <li><span>04</span><strong>Output</strong><p>Which value or status is produced?</p></li>
+      <li><span>05</span><strong>Next</strong><p>Which later decision consumes the result?</p></li>
+      <li><span>06</span><strong>Failure</strong><p>What should a consultant check before changing design?</p></li>
+    </ol>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Decision catalogue</p>
+      <h2>Eleven decisions worth tracing.</h2>
+      <p>Open each card as a small diagnostic machine. The goal is not to remember every field. The goal is to remember the dependency shape.</p>
+    </header>
+
+    <div class="ecg-determination-list">
+      {% for determination in graph.determinations %}
+      <article class="ecg-determination-detail" id="{{ determination.id | downcase }}">
+        <header>
+          <div><span>{{ determination.memory_key }}</span><small>{{ determination.level | replace: "_", " " }}</small></div>
+          <h3>{{ determination.title }}</h3>
+          <p class="ecg-question">{{ determination.question }}</p>
+        </header>
+
+        <div class="ecg-decision-columns">
+          <div>
+            <h4>Inputs</h4>
+            <ul>{% for value in determination.inputs %}<li>{{ value }}</li>{% endfor %}</ul>
+          </div>
+          <div>
+            <h4>Output</h4>
+            <ul>{% for value in determination.output %}<li>{{ value | replace: "ATTR-SD-", "" | replace: "-", " " }}</li>{% endfor %}</ul>
+            <h4>Mechanism</h4>
+            <p>{{ determination.mechanism | replace: "_", " " }}</p>
+          </div>
+          <div>
+            <h4>Used next</h4>
+            <ul>{% for value in determination.downstream_effects %}<li>{{ value | replace: "DET-SD-", "" | replace: "-", " " }}</li>{% endfor %}</ul>
+          </div>
+        </div>
+
+        {% if determination.priority %}
+        <div class="ecg-priority">
+          <strong>Default priority</strong>
+          {% for value in determination.priority %}<span>{{ forloop.index }}. {{ value }}</span>{% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="ecg-diagnostic">
+          <div>
+            <h4>Common failure patterns</h4>
+            <ul>{% for value in determination.common_failures %}<li>{{ value }}</li>{% endfor %}</ul>
+          </div>
+          <div>
+            <h4>Check first</h4>
+            <ol>{% for value in determination.check_first %}<li>{{ value }}</li>{% endfor %}</ol>
+          </div>
+        </div>
+
+        <div class="ecg-remember"><strong>Remember</strong><p>{{ determination.remember }}</p></div>
+        <p class="ecg-lead-lens"><strong>Lead lens:</strong> {{ determination.lead_lens }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Impact tracing</p>
+      <h2>Forward for impact. Backward for explanation.</h2>
+      <p>A proposed change should be traced downstream. An unexpected value should be traced upstream. That simple direction switch is one of the most useful habits in SAP design work.</p>
+    </header>
+
+    <div class="ecg-traces">
+      {% for trace in graph.impact_traces %}
+      <article class="ecg-trace">
+        <div class="ecg-trace__head">
+          <span>{{ trace.direction }}</span>
+          <h3>{{ trace.title }}</h3>
+        </div>
+        <div class="ecg-trace__path">
+          {% for step in trace.path %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}
+        </div>
+        <p><strong>Lesson:</strong> {{ trace.lesson }}</p>
+        <p>{{ trace.caveat }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead reasoning</p>
+      <h2>Documentation explains the feature. Diagnosis needs a method.</h2>
+      <p>The rules below are stored as expert heuristics, not SAP facts. Their job is to make investigation repeatable.</p>
+    </header>
+
+    <div class="ecg-heuristic-grid">
+      {% for heuristic in graph.expert_heuristics %}
+      <article>
+        <span>HEURISTIC {{ forloop.index }}</span>
+        <h3>{{ heuristic.statement }}</h3>
+        <p>{{ heuristic.context }}</p>
+        {% if heuristic.questions %}<h4>Ask</h4><ul>{% for value in heuristic.questions %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+        {% if heuristic.anti_patterns %}<h4>Avoid</h4><ul>{% for value in heuristic.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-case" data-reveal>
+    <div class="ecg-case__intro">
+      <p class="research-canvas__eyebrow">Synthetic exercise</p>
+      <h2>{{ graph.synthetic_case.title }}</h2>
+      <p>{{ graph.synthetic_case.description }}</p>
+      <strong>Synthetic example. No customer or project data.</strong>
+    </div>
+    <div class="ecg-case__body">
+      <h3>Facts</h3>
+      <ul>{% for fact in graph.synthetic_case.facts %}<li>{{ fact }}</li>{% endfor %}</ul>
+      <h3>Reasoning path</h3>
+      <ol>{% for step in graph.synthetic_case.reasoning_path %}<li>{{ step }}</li>{% endfor %}</ol>
+      <p><strong>Lesson:</strong> {{ graph.synthetic_case.lesson }}</p>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Practice the path, not the definition.</h2>
+      <p>Each question is deliberately short. A strong answer should explain the diagnostic sequence, boundaries, and likely dependencies before proposing a fix.</p>
+    </header>
+
+    <div class="ecg-drill-list">
+      {% for drill in graph.assessment_drills %}
+      <details>
+        <summary><span>0{{ forloop.index }}</span><strong>{{ drill.title }}</strong><small>{{ drill.prompt }}</small></summary>
+        <div><p>Expected reasoning path</p><ol>{% for value in drill.expected_reasoning %}<li>{{ value }}</li>{% endfor %}</ol></div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Facts have a source. Heuristics have a label.</h2>
+      <p>The decision map uses primary SAP documentation as its factual baseline. Release scope stays visible because “SAP always works like this” tends to age badly.</p>
+    </header>
+
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">For tools and AI</p>
+      <h2>The page is a view. The graph is the asset.</h2>
+      <p>The same decision areas, failures, traces, heuristics, exercises, and evidence references are exposed as JSON. Later Lab iterations can use them for graph views, synthetic scenarios, or grounded AI evaluation.</p>
+    </div>
+    <div class="ecg-machine__actions">
+      <a class="research-canvas__button" href="/labs/enterprise-context/data/sales-order-graph.json">Graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+      <a href="/labs/enterprise-context/data/sales-order-sources.json">Sources JSON</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>

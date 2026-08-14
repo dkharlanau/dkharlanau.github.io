@@ -2,65 +2,93 @@ id: TOPIC-O2C-SALES-ORDER-CREATION
 type: research_topic
 title: "Order-to-Cash — Sales Order Creation"
 summary: >-
-  First deep vertical for the Enterprise Context Graph. The topic will connect the
+  First deep vertical for the Enterprise Context Graph. The topic connects the
   business purpose of sales-order creation to process steps, business objects,
-  master data, attributes, determination rules, integrations, failure modes, KPIs,
-  tests, and expert investigation heuristics.
+  master data, document-control levels, determinations, integrations, failure modes,
+  impact traces, expert heuristics, and assessment exercises.
 domain: "SAP S/4HANA Logistics"
 process_family: "Order-to-Cash"
 status: researching
 created_at: "2026-08-14"
 updated_at: "2026-08-14"
 verified_at: null
+page_url: "/labs/enterprise-context/sales-order/"
+graph_ref: "GRAPH-SD-SALES-ORDER-DECISIONS"
 
 business_question: >-
   What information and dependencies are required to create a valid sales order,
-  what can prevent creation or correct confirmation, and what should a consultant
-  or AI agent inspect before recommending a change?
+  why does the system derive particular values, what changes downstream when one
+  value changes, and what should a consultant or AI agent inspect before recommending
+  a design or configuration change?
 
 scope:
   include:
     - "standard sales-order creation concept"
     - "business partner / customer context"
-    - "material / product context"
-    - "sales document and item context"
-    - "pricing and availability touchpoints"
-    - "inbound integration touchpoints"
-    - "failure and test model"
+    - "product / material context"
+    - "customer-material information context"
+    - "sales document header, item, and schedule-line control"
+    - "partner determination"
+    - "item-category determination"
+    - "schedule-line-category determination"
+    - "delivering-plant proposal"
+    - "shipping-point determination"
+    - "route determination"
+    - "delivery and transportation scheduling"
+    - "pricing procedure and condition-technique touchpoints"
+    - "availability confirmation / aATP touchpoints"
+    - "credit-check touchpoint"
+    - "batch-determination touchpoint"
+    - "manual and inbound integration comparison"
+    - "failure, impact-trace, heuristic, synthetic-case, and assessment model"
   exclude_for_now:
+    - "full pricing-engine deep dive"
+    - "full aATP capability deep dive"
+    - "full credit-management design"
     - "full billing design"
     - "full warehouse execution"
     - "country-specific localization"
     - "customer-specific custom code"
 
 maturity:
-  gates_complete: 1
+  gates_complete: 6
   gates_total: 7
   gates:
     scope: done
-    sources: in_progress
-    model: planned
-    relationships: planned
-    expert_reasoning: planned
-    synthetic_example: planned
-    ai_evaluation: planned
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: in_progress
 
-planned_entities:
+entities:
   processes:
     - "Order-to-Cash"
     - "Create Sales Order"
   business_objects:
     - "Business Partner / Customer"
-    - "Material / Product"
+    - "Product / Material"
+    - "Customer-Material Information"
     - "Sales Order"
     - "Sales Order Item"
     - "Schedule Line"
-  rule_areas:
+  control_levels:
+    - "sales document type"
+    - "item category"
+    - "schedule line category"
+  decision_areas:
     - "partner determination"
-    - "item determination"
-    - "schedule-line determination"
+    - "item-category determination"
+    - "schedule-line-category determination"
+    - "delivering-plant proposal"
+    - "shipping-point determination"
+    - "route determination"
+    - "delivery and transportation scheduling"
     - "pricing"
-    - "availability"
+    - "availability confirmation"
+    - "credit check"
+    - "batch determination"
   integration_areas:
     - "manual order entry"
     - "inbound B2B / API / message-based order creation"
@@ -68,19 +96,45 @@ planned_entities:
     - "missing or inconsistent master data"
     - "organizational-data mismatch"
     - "determination / rule failure"
+    - "manual or inbound override"
     - "pricing issue"
     - "availability issue"
+    - "credit block"
     - "integration / mapping issue"
   evaluation_targets:
     - "dependency question"
-    - "impact trace"
+    - "forward impact trace"
+    - "backward provenance trace"
     - "diagnostic reasoning case"
+    - "manual-versus-inbound comparison"
     - "AI grounded answer"
 
-source_refs: []
+source_refs:
+  - SRC-SAP-SD-DOCUMENT-CONTROL
+  - SRC-SAP-SD-MASTER-DATA
+  - SRC-SAP-SD-PARTNER-DETERMINATION
+  - SRC-SAP-SD-ITEM-CATEGORY-DETERMINATION
+  - SRC-SAP-SD-SCHEDULE-LINE-CATEGORY
+  - SRC-SAP-SD-DELIVERING-PLANT
+  - SRC-SAP-SD-SHIPPING-POINTS
+  - SRC-SAP-SD-ROUTE-DETERMINATION
+  - SRC-SAP-SD-SCHEDULING
+  - SRC-SAP-SD-PRICING-PROCEDURE
+  - SRC-SAP-SD-CONDITION-TECHNIQUE
+  - SRC-SAP-AATP-PRODUCT-AVAILABILITY-CHECK
+  - SRC-SAP-AATP-ALTERNATIVE-CONFIRMATION
+  - SRC-SAP-SD-CREDIT-CHECK
+  - SRC-SAP-BATCH-SEARCH-STRATEGY
+
 tags:
   - o2c
   - sales-order
+  - determination
+  - dependency-graph
   - master-data
+  - pricing
+  - availability
+  - credit
   - integration
+  - assessment
   - ai-context

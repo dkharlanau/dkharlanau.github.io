@@ -1,0 +1,349 @@
+---
+layout: default
+title: "SAP ATP and aATP Promise Engine — Enterprise Context Lab"
+description: "A practical SAP ATP and aATP map: scope, PAC, PAL, SUP, BOP, ABC, extensions, integrations, failure patterns, and diagnostics."
+permalink: /labs/enterprise-context/atp/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-14
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - atp
+  - aatp
+  - product-availability-check
+  - backorder-processing
+  - product-allocation
+  - supply-protection
+  - alternative-based-confirmation
+  - troubleshooting
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.atp %}
+{% assign evidence = site.data.labs.enterprise_context.sources.atp %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-order/">Sales Order</a></li><li aria-current="page">ATP / aATP</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Availability Promise</p>
+      <h1>ATP is a promise engine.<br />Not a stock screenshot.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#atp-memory">Start with nine questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="ATP deep-dive inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.advanced_capabilities | size }}</strong><small>aATP capability blocks</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Draft research · practical reasoning · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+    <p><strong>My working rule:</strong> if ATP looks wrong, I first reconstruct the promise: requirement, plant, material availability date, scope, supply/demand, and policy restrictions.</p>
+    <a href="/labs/enterprise-context/data/atp-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="atp-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>Nine questions are enough to stop random ATP troubleshooting.</h2>
+      <p>I use the sequence from document control to business policy. It keeps a supply problem separate from a date problem, a scope problem, or a prioritization problem.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article class="ecg-memory-card">
+        <span>0{{ forloop.index }}</span>
+        <strong>{{ item.key }}</strong>
+        <h3>{{ item.question }}</h3>
+        <p>{{ item.answer }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>TRIGGER → WHERE → WHEN → SCOPE → NET → PROMISE → PROTECT → REBALANCE → ALTERNATIVE.</strong> This is the shortest path I know from "why zero confirmation?" to a useful technical conversation.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Classic control foundation</p>
+      <h2>Before supply, prove that the requirement is controlled correctly.</h2>
+      <p>Classic ATP concepts still matter in an aATP landscape. Schedule-line relevance, checking group, checking rule, and scope are part of the control chain. If this chain is wrong, advanced capabilities only make the wrong context more sophisticated.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for control in graph.classic_control_foundation.controls %}
+      <article>
+        <span>CONTROL {{ forloop.index }}</span>
+        <h3>{{ control.title }}</h3>
+        <p>{{ control.role }}</p>
+        <p class="ecg-question"><strong>Check:</strong> {{ control.check_first }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime path</p>
+      <h2>Follow the promise in the same order it can fail.</h2>
+      <p>The final confirmed quantity hides too much. I separate ATP relevance, requirement context, scheduling, scope, PAC, delivery proposal, business restrictions, alternatives, and later reconfirmation.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for stage in graph.runtime_pipeline %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>0{{ stage.order }}</span><small>promise stage</small></div>
+          <h3>{{ stage.title }}</h3>
+          <p class="ecg-question">{{ stage.question }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Inputs / controls</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Output</h4>{% if stage.output.first %}<ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul>{% else %}<p>{{ stage.output }}</p>{% endif %}</div>
+          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">aATP capability map</p>
+      <h2>Five different business questions hide behind the word "availability".</h2>
+      <p>I keep these capability blocks separate because each solves a different problem. Using the wrong one produces configuration that works technically and makes no business sense, a surprisingly popular enterprise tradition.</p>
+    </header>
+    <div class="ecg-view-grid">
+      {% for capability in graph.advanced_capabilities %}
+      <article class="ecg-view-card">
+        <span>{{ capability.title }}</span>
+        <h3>{{ capability.full_name }}</h3>
+        <p class="ecg-question">{{ capability.business_question }}</p>
+        <p><strong>Remember:</strong> {{ capability.remember }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">PAL and SUP</p>
+      <h2>One caps demand. The other protects supply.</h2>
+      <p>I explain this in business terms first. Product Allocation limits how much a matching group may consume from constrained supply. Supply Protection keeps quantities protected from demand belonging to other groups. The characteristic and time-bucket design matters because badly aligned models can block each other.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Product allocation and supply protection mental model">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Available Supply</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">SUP: keep minimum protected</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">PAL: limit group consumption</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Commercially Available Promise</span>
+      </div>
+    </div>
+    <p class="ecg-caption">The exact execution design depends on active methods and configuration. The mental model is about intent: protection and allocation are policy constraints, not inventory creation.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Backorder Processing</p>
+      <h2>BOP is a prioritization engine, not a repair job.</h2>
+      <p>When supply changes, BOP can revisit existing confirmations. I read variant, segment, strategy, and sorting before I call a worse confirmation a defect.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for strategy in graph.bop_strategies %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{{ strategy.code }}</span><small>confirmation strategy</small></div>
+          <h3>{{ strategy.meaning }}</h3>
+          <p class="ecg-question">{{ strategy.lead_question }}</p>
+        </header>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Alternative-Based Confirmation</p>
+      <h2>Availability can change the sourcing decision.</h2>
+      <p>ABC can evaluate substitute products, plants, or storage locations. That can improve the confirmation and still create new freight, route, tax, warehouse, or margin consequences. I therefore treat alternative selection as an Order-to-Cash design decision, not as an isolated ATP feature.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Alternative-Based Confirmation reasoning chain">
+      <div class="ecg-rail__branch">
+        <span class="ecg-node ecg-node--input">Original Requirement</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Original PAC Result</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Substitution Strategy</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--decision">Alternative Determination</span><span class="ecg-arrow" aria-hidden="true">→</span>
+        <span class="ecg-node ecg-node--output">Alternative Confirmation</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Released extension paths</p>
+      <h2>Extend prioritization only after standard policy is visible.</h2>
+      <p>I prefer standard BOP segments, sorting, confirmation strategies, and ABC determination first. When they cannot express the rule, released BAdIs are easier to govern if the business decision remains explicit and testable.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for ext in graph.extension_layers %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>EXT {{ forloop.index }}</span><small>released enhancement</small></div>
+          <h3>{{ ext.title }}</h3>
+          <p class="ecg-question">{{ ext.principle }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Technical shape</h4><ul>{% for value in ext.technical_shape %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Check first</h4><ul>{% for value in ext.diagnostic_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Typical trap</h4><p>{{ ext.trap }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration boundary</p>
+      <h2>The promise sits between Sales and the supply network.</h2>
+      <p>ATP reads a sales requirement but its answer depends on dates, location, inventory, future receipts, planning demand, and later delivery execution. External order channels may also ask for a simulated promise without creating an order.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for integration in graph.integration_boundary %}
+      <article>
+        <span>{{ integration.direction }}</span>
+        <h3>{{ integration.title }}</h3>
+        <ul>{% for value in integration.details %}<li>{{ value }}</li>{% endfor %}</ul>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead reasoning</p>
+      <h2>Five habits that keep availability analysis grounded.</h2>
+      <p>These are practitioner heuristics, not SAP configuration rules. They make the diagnostic path explainable to Sales, Supply Chain, and technical teams at the same time.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for heuristic in graph.practitioner_heuristics %}
+      <article>
+        <span>HEURISTIC {{ forloop.index }}</span>
+        <h3>{{ heuristic.statement }}</h3>
+        <p>{{ heuristic.context }}</p>
+        {% if heuristic.checks %}<h4>Check</h4><ul>{% for value in heuristic.checks %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+        {% if heuristic.questions %}<h4>Ask</h4><ul>{% for value in heuristic.questions %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+        {% if heuristic.anti_patterns %}<h4>Avoid</h4><ul>{% for value in heuristic.anti_patterns %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure patterns</p>
+      <h2>Start from the symptom, then reconstruct the promise.</h2>
+      <p>I treat symptoms as routing hints, not root causes. The goal is to find the first point where actual context differs from the intended design.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for failure in graph.failure_modes %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>SYMPTOM</span><small>triage</small></div>
+          <h3>{{ failure.symptom }}</h3>
+          <p class="ecg-question">Do not change ATP configuration until the current result can be explained.</p>
+        </header>
+        <div class="ecg-diagnostic">
+          <div><h4>Likely causes</h4><ul>{% for value in failure.likely_causes %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Check first</h4><ol>{% for value in failure.first_checks %}<li>{{ value }}</li>{% endfor %}</ol></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Impact traces</p>
+      <h2>A promise has upstream causes and downstream consequences.</h2>
+      <p>These traces are useful in design workshops because they stop the conversation from treating ATP as an isolated checkbox.</p>
+    </header>
+    <div class="ecg-traces">
+      {% for trace in graph.impact_traces %}
+      <article class="ecg-trace">
+        <div class="ecg-trace__head"><span>TRACE {{ forloop.index }}</span><h3>{{ trace.title }}</h3></div>
+        <div class="ecg-trace__path">{% for step in trace.path %}<span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
+        <p><strong>Lesson:</strong> {{ trace.explanation }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% for scenario in graph.synthetic_cases %}
+  <section class="ecg-case" data-reveal>
+    <div class="ecg-case__intro">
+      <p class="research-canvas__eyebrow">Synthetic exercise {{ forloop.index }}</p>
+      <h2>{{ scenario.title }}</h2>
+      <p>{{ scenario.task }}</p>
+      <strong>Synthetic example · no customer data</strong>
+    </div>
+    <div class="ecg-case__body">
+      <h3>Context</h3><ul>{% for value in scenario.context %}<li>{{ value }}</li>{% endfor %}</ul>
+      {% if scenario.lead_answer_shape %}<h3>Lead answer shape</h3><ol>{% for value in scenario.lead_answer_shape %}<li>{{ value }}</li>{% endfor %}</ol>{% endif %}
+    </div>
+  </section>
+  {% endfor %}
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Answer with sequence, business intent, and boundaries.</h2>
+      <p>A Lead answer should explain what is known, what is missing, which control layer owns the behavior, and what downstream process can change if the proposed fix is applied.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for drill in graph.assessment_drills %}
+      <details>
+        <summary><span>0{{ forloop.index }}</span><strong>{{ drill.question }}</strong><small>Open expected dimensions</small></summary>
+        <div><p>Expected reasoning dimensions</p><ol>{% for value in drill.expected_dimensions %}<li>{{ value }}</li>{% endfor %}</ol></div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Availability behavior and enhancement points stay source-tracked.</h2>
+      <p>Primary SAP documentation is used to verify ATP control, PAC, scope, scheduling, PAL, SUP, BOP, ABC, released BAdIs, and the availability-check API. The diagnostic method remains independently written.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">For tools and AI</p>
+      <h2>The promise model is machine-readable too.</h2>
+      <p>The control chain, runtime stages, aATP capability blocks, extensions, failures, traces, heuristics, synthetic cases, and assessment drills are exposed as JSON for later graph views and grounded evaluation.</p>
+    </div>
+    <div class="ecg-machine__actions">
+      <a class="research-canvas__button" href="/labs/enterprise-context/data/atp-graph.json">ATP graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+      <a href="/labs/enterprise-context/data/atp-sources.json">ATP sources JSON</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>

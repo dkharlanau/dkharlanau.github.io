@@ -1,0 +1,137 @@
+{% assign docmap = site.data.labs.enterprise_context.master_data.sales_master_data["05_document_consumption"] %}
+{% assign doc_registry = site.data.labs.enterprise_context.sources.sales_document_consumption_registry %}
+
+<section class="research-canvas sales-master-data smd-document-consumption" aria-labelledby="smd-doc-title" data-reveal>
+  <header class="research-canvas__inventory">
+    <p class="research-canvas__eyebrow">Runtime projection</p>
+    <h2 id="smd-doc-title">Where the master data lands.</h2>
+    <p>The maintained record is only the source. The useful question is which document field receives it, which mechanism determines it, and whether the next document copies or determines it again.</p>
+  </header>
+
+  <section class="smd-copy-model">
+    {% for item in docmap.copy_semantics %}
+    <article>
+      <code>{{ item.term }}</code>
+      <p>{{ item.meaning }}</p>
+    </article>
+    {% endfor %}
+  </section>
+
+  <section class="research-canvas__inventory">
+    <header>
+      <p class="research-canvas__eyebrow">Document nodes</p>
+      <h2>Order → delivery → billing.</h2>
+      <p>These are runtime nodes. They consume master data, but after a value is stored in the document it has its own lifecycle.</p>
+    </header>
+    <div class="smd-doc-grid">
+      {% for doc in docmap.document_nodes %}
+      <article class="smd-doc-card">
+        <header><code>{{ doc.code }}</code><h3>{{ doc.title }}</h3><p>{{ doc.purpose }}</p></header>
+        <div class="smd-doc-columns">
+          <section><span>Reads</span><ul>{% for item in doc.master_inputs %}<li>{{ item }}</li>{% endfor %}</ul></section>
+          <section><span>Runtime values</span><ul>{% for item in doc.important_runtime_values %}<li>{{ item }}</li>{% endfor %}</ul></section>
+        </div>
+        <details>
+          <summary>When to inspect <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <ul>{% for item in doc.inspect_when %}<li>{{ item }}</li>{% endfor %}</ul>
+          <p class="smd-tech"><span>Technical orientation</span>{% for item in doc.technical_orientation %}<code>{{ item }}</code>{% endfor %}</p>
+        </details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory">
+    <header>
+      <p class="research-canvas__eyebrow">Business Partner anatomy</p>
+      <h2>Role is not partner function.</h2>
+      <p><code>FLCU01</code> opens the customer Sales view. Partner functions answer a different question: who is sold-to, ship-to, bill-to or payer for this transaction?</p>
+    </header>
+
+    <div class="smd-bp-role-grid">
+      {% for role in docmap.partner_model.bp_roles %}
+      <article>
+        <code>{{ role.role }}</code>
+        <h3>{{ role.label }}</h3>
+        <p>{{ role.scope }}</p>
+        <div class="smd-pills">{% for key in role.key_dimensions %}<small>{{ key }}</small>{% endfor %}</div>
+        <strong>{{ role.why_it_matters }}</strong>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="smd-partner-grid">
+      {% for partner in docmap.partner_model.partner_functions %}
+      <article>
+        <header><span>{{ forloop.index | prepend: "0" }}</span><div><h3>{{ partner.title }}</h3><p>{{ partner.business_meaning }}</p></div></header>
+        <section>
+          <strong>Important master attributes</strong>
+          <ul>{% for item in partner.important_master_attributes %}<li>{{ item }}</li>{% endfor %}</ul>
+        </section>
+        <section>
+          <strong>Where it is used</strong>
+          <ul>{% for item in partner.document_usage %}<li>{{ item }}</li>{% endfor %}</ul>
+        </section>
+        <div class="smd-pills">{% for item in partner.downstream_effects %}<small>{{ item }}</small>{% endfor %}</div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="smd-rule-strip">
+      <h3>Partner determination rules</h3>
+      <ol>{% for rule in docmap.partner_model.determination_rules %}<li>{{ rule }}</li>{% endfor %}</ol>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory">
+    <header>
+      <p class="research-canvas__eyebrow">Field lineage</p>
+      <h2>Source → mechanism → document.</h2>
+      <p>This is the layer to use when an interviewer asks, “Where does this field come from?” The answer should include both the master source and the runtime destination.</p>
+    </header>
+    <div class="smd-lineage-grid">
+      {% for line in docmap.field_lineage %}
+      <article>
+        <h3>{{ line.topic }}</h3>
+        <div class="smd-lineage-path">
+          <section><span>Source</span>{% for item in line.source %}<code>{{ item }}</code>{% endfor %}</section>
+          <i aria-hidden="true">→</i>
+          <section><span>Mechanism</span><code>{{ line.mechanism }}</code></section>
+          <i aria-hidden="true">→</i>
+          <section><span>Runtime</span>{% for item in line.runtime %}<code>{{ item }}</code>{% endfor %}</section>
+        </div>
+        <p>{{ line.rule }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="smd-impact">
+    <div>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Trace the wrong result backwards.</h2>
+      <p>Start at the runtime symptom, then identify mechanism, partner role, master scope and precedence.</p>
+    </div>
+    <div class="smd-trace-grid">
+      {% for path in docmap.assessment_paths %}
+      <article>
+        <span>{{ path.question }}</span>
+        <div class="smd-path">{% for node in path.path %}<code>{{ node }}</code>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}{% endfor %}</div>
+        <p>{{ path.check }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory">
+    <header>
+      <p class="research-canvas__eyebrow">Document-consumption evidence</p>
+      <h2>Partner and copy behavior is source-tracked.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for source in doc_registry.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+</section>
