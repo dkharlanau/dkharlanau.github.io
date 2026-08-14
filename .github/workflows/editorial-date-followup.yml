@@ -21,7 +21,9 @@ jobs:
         with:
           python-version: "3.12"
       - run: python3 -m pip install pyyaml
-      - run: sed -i 's/last_modified_at: 2026-07-25/last_modified_at: 2026-08-14/' services/sap-integration-architecture.md
+      - name: Update review date
+        run: |
+          sed -i 's/last_modified_at: 2026-07-25/last_modified_at: 2026-08-14/' services/sap-integration-architecture.md
       - run: python3 scripts/generate_atlas_artifacts.py
       - name: Commit
         run: |
