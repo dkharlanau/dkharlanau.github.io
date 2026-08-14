@@ -1,0 +1,124 @@
+{
+  "id": "automotive-jit-standard-reference",
+  "title": "SAP Automotive JIT Standard Operations Reference",
+  "tags": ["sap", "automotive", "jit", "transactions", "reports", "bapi", "rfc", "handling-unit", "reference"],
+  "meta": {
+    "schema": "dkharlanau.dataset.byte",
+    "schema_version": "1.0",
+    "dataset": "automotive-jit",
+    "source_project": "Assessment Lab",
+    "source_path": "datasets/automotive-jit/standard-reference.json",
+    "canonical_url": "https://dkharlanau.github.io/datasets/automotive-jit/standard-reference.json",
+    "created_at_utc": "2026-08-14T18:15:00Z",
+    "updated_at_utc": "2026-08-14T18:15:00Z",
+    "entity_type": "standard_reference",
+    "entity_subtype": "sap_automotive_jit_operations",
+    "verification": "review_candidate",
+    "provenance": {
+      "method": "Reference names collected from SAP Help. Always verify availability in the target release and activated scope.",
+      "client_data": false
+    }
+  },
+  "classic_inbound_transactions": [
+    {"transaction":"JIT1","function":"Create JIT Call"},
+    {"transaction":"JIT2","function":"Change JIT Call"},
+    {"transaction":"JIT3","function":"Display JIT Call"},
+    {"transaction":"JIT4","function":"Simulate JIT Call"},
+    {"transaction":"JITXML","function":"XML Upload"},
+    {"transaction":"JITM / JITMX","function":"Inbound JIT Monitoring"},
+    {"transaction":"JITF / JITFX","function":"Enter Progress Confirmation in a List"},
+    {"transaction":"JITJ","function":"Signal Monitor"},
+    {"transaction":"JITG","function":"Inbound JIT Cockpit"},
+    {"transaction":"EMJIT","function":"IDoc Monitor for Incoming JIT Calls"},
+    {"transaction":"JITE","function":"Status Correction"},
+    {"transaction":"JITLOG","function":"Action Log"},
+    {"transaction":"JIT6","function":"Barcode Entry"},
+    {"transaction":"JIT7","function":"Barcode Entry with Standard Value"},
+    {"transaction":"JITA","function":"Components Requirements List"},
+    {"transaction":"JITH","function":"Requirements Match"},
+    {"transaction":"DLCN","function":"Delivery Confirmations: Match and Reprocess Manually"},
+    {"transaction":"DLC2","function":"Compare JIT Calls with Delivery Confirmations"},
+    {"transaction":"JITZ","function":"Change/Display Documentation Data"},
+    {"transaction":"JIT5","function":"Fast Change / Emergency"},
+    {"transaction":"JITX","function":"Microsoft Excel Download / Emergency context"},
+    {"transaction":"JITEMRA","function":"Emergency Creation of Summarized Range Call"},
+    {"transaction":"JITV","function":"Maintain Control Data"},
+    {"transaction":"JITL","function":"Maintain Production Information"},
+    {"transaction":"OJIT5","function":"Maintain Sort Variant"},
+    {"transaction":"JITR","function":"Reorganize Basic Data"},
+    {"transaction":"OJIT14","function":"Internet Access Data"},
+    {"transaction":"JITB","function":"Reprocess Goods Movements"},
+    {"transaction":"JITK","function":"Deliver Operations Due for Shipping"},
+    {"transaction":"JITI","function":"Overview of JIT Calls"},
+    {"transaction":"JITQ","function":"Display Action Network"},
+    {"transaction":"JITY","function":"Archiving"},
+    {"transaction":"OJITI","function":"JIT Inbound Customizing"},
+    {"transaction":"OJITO","function":"JIT Outbound Customizing"}
+  ],
+  "classic_outbound_transactions": [
+    {"transaction":"JITO1","function":"Create Outbound JIT Calls Manually"},
+    {"transaction":"JITO3","function":"Display Outbound JIT Calls"},
+    {"transaction":"JITOM","function":"Outbound JIT Monitoring"},
+    {"transaction":"JITOG","function":"Outbound JIT Cockpit"},
+    {"transaction":"JITOE","function":"Outbound Status Correction"},
+    {"transaction":"JITOAL","function":"Outbound Alerting"},
+    {"transaction":"JITO6","function":"Outbound Barcode Entry"},
+    {"transaction":"ODLC","function":"Outbound Delivery Confirmation"},
+    {"transaction":"PKMC","function":"Control Cycle Maintenance"},
+    {"transaction":"OJITO","function":"JIT Outbound Customizing"}
+  ],
+  "linked_transactions": [
+    {"transaction":"VL10HU","function":"Assign an existing HU to summarized JIT / delivery processing context"},
+    {"transaction":"VL32N / VL33N","function":"Change / display inbound delivery in classic supplier-side logistics context"},
+    {"transaction":"LT0F / LT21","function":"Create / display transfer order in classic WM context"},
+    {"transaction":"ME31L","function":"Create MM Scheduling Agreement"},
+    {"transaction":"MM02 / MM03","function":"Material master maintenance/display"},
+    {"transaction":"CS01","function":"Create BOM"},
+    {"transaction":"ME01","function":"Source list"},
+    {"transaction":"WE20","function":"Partner profiles"},
+    {"transaction":"SHD0","function":"Transaction variants; useful for simplified operator/scanner screens"}
+  ],
+  "programmatic_interfaces": [
+    {"name":"JITCallInbound.GetComponentGroupDetails","type":"BAPI method","function":"Read detailed component-group information for a subsystem"},
+    {"name":"JITCallInbound.GetComponentGroups","type":"BAPI method","function":"Select component groups for a subsystem"},
+    {"name":"JITCallInbound.GetDetails","type":"BAPI method","function":"Read JIT call details"},
+    {"name":"JITCallInbound.PerformAction","type":"BAPI method","function":"Execute a JIT action for component groups from a subsystem"},
+    {"name":"JITCallInbound.PerformActionFullCall","type":"BAPI method","function":"Execute a JIT action for full calls from a subsystem"},
+    {"name":"JIT04_SET_ACTION_EXTERN","type":"RFC function module","function":"Execute JIT actions externally with extensive transfer parameters"}
+  ],
+  "standard_reports": [
+    {"program":"RJITARCH01","function":"Archive JIT Inbound calls"},
+    {"program":"RJITARCH02","function":"Delete archived JIT Inbound transaction data"},
+    {"program":"RJITOUTARCH01","function":"Archive JIT Outbound calls"},
+    {"program":"RJITOUTARCH02","function":"Delete archived JIT Outbound transaction data"},
+    {"program":"RJITARCHNO","function":"Reset JIT Inbound archiving so calls can be processed again"}
+  ],
+  "log_and_recovery_reference": [
+    {"tool":"JITLOG","fact":"Action log records successful and failed actions, execution time, user and previous internal status when Logging Active is configured."},
+    {"tool":"JITLOGDEL","fact":"Deletes JIT action logs after authorization check."},
+    {"tool":"EMJIT","fact":"Combines IDoc technical monitoring with JIT business processing context."},
+    {"tool":"JITE","fact":"Changes external/internal status without considering Call Control and does not execute business actions."}
+  ],
+  "handling_unit_guardrails": [
+    "Classic JIT supports CRHU and DEHU for stock-transfer HU handling, DELI/JITK for automatic HU generation during delivery creation, VL10HU for retrospective HU assignment in summarized JIT, and HUPP for a deliverable HU.",
+    "In current Next Generation JIT documentation, action-control or other JIT-specific checks are not performed while deleting a handling unit. A recovery design must therefore validate JIT state explicitly.",
+    "For nested HUs, individual levels cannot be deleted; the complete HU must be deleted.",
+    "Unassigning or deleting an HU from an outbound delivery is allowed only together with cancellation of the outbound delivery, not as an independent step.",
+    "A documented background scheduling option for HU creation for sequenced JIT calls is marked deprecated in current documentation; do not build a new design around it without release-specific validation."
+  ],
+  "next_generation_reference": [
+    {"action":"S1_JC_CANC","function":"Cancel customer-side JIT call at component-group level"},
+    {"action":"S1_CG_EMGY","function":"Emergency status correction without considering business dependencies"},
+    {"action":"S2_IN_CANC","function":"Interlinked cancellation coordinating JIT call, warehouse tasks/request, outbound proxy and freight unit"},
+    {"action":"S2_IN_CNCG","function":"Cancel forwarded JIS call at component-group level and cancel freight unit when all groups are cancelled"},
+    {"action":"S2_IN_CNFW","function":"Cancel complete forwarded JIS call at header level and cancel freight unit"},
+    {"action":"S2_WH_CANC","function":"Cancel warehouse request"}
+  ],
+  "agent_rules": [
+    "Do not call a transaction or program standard unless it is listed here or verified in the target release.",
+    "Do not infer that status correction reverses business documents.",
+    "For scanner or MES design, prefer supported JIT action interfaces instead of direct database/status updates.",
+    "Before HU deletion or unassignment, inspect outbound delivery and warehouse state.",
+    "Treat a generic multi-document cancellation report as project-specific unless the target system contains a verified standard or customer solution."
+  ]
+}
