@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
-description: "An architect-level decision guide for SAP development: on-stack versus side-by-side, RAP versus CAP, ABAP Cloud, classic ABAP, CDS, BTP runtimes, tooling and clean-core trade-offs."
+description: "Architect-level SAP development guide: RAP vs CAP, ABAP Cloud, classic ABAP, CDS, BTP runtimes, side-by-side design and clean-core trade-offs."
 permalink: /labs/enterprise-context/development/
 status: draft
 verified: false
