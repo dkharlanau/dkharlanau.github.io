@@ -1,0 +1,74 @@
+name: Normalize MDG Graph Once
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/normalize-mdg-graph-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Normalize MDG graph node types
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          landscape = Path('_data/labs/enterprise_context/topics/master_data_governance_landscape.yml')
+          text = landscape.read_text(encoding='utf-8')
+          text = text.replace(
+              '  central_governance:\n    id: PROC-MDG-CENTRAL-GOVERNANCE\n    title:',
+              '  central_governance:\n    id: PROC-MDG-CENTRAL-GOVERNANCE\n    type: process\n    title:',
+          )
+          text = re.sub(
+              r'(?m)^(      - id: STEP-MDG-[A-Z0-9-]+\n)(?!        type: process_step\n)',
+              r'\1        type: process_step\n',
+              text,
+          )
+          landscape.write_text(text, encoding='utf-8')
+
+          architecture = Path('_data/labs/enterprise_context/topics/mdg_solution_architecture.yml')
+          text = architecture.read_text(encoding='utf-8')
+          text = re.sub(
+              r'(?m)^(  - id: VAR-MDG-[A-Z0-9-]+\n)    type: variant$',
+              r'\1    type: process_variant',
+              text,
+          )
+          architecture.write_text(text, encoding='utf-8')
+
+          contracts = Path('_data/labs/enterprise_context/topics/mdg_object_contracts.yml')
+          text = contracts.read_text(encoding='utf-8')
+          text = re.sub(
+              r'(?m)^(      - id: MSG-MDG-[A-Z0-9-]+\n)(?!        type: message\n)',
+              r'\1        type: message\n',
+              text,
+          )
+          contracts.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit MDG graph normalization
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add _data/labs/enterprise_context/topics/master_data_governance_landscape.yml \
+                  _data/labs/enterprise_context/topics/mdg_solution_architecture.yml \
+                  _data/labs/enterprise_context/topics/mdg_object_contracts.yml
+          if git diff --cached --quiet; then
+            echo "No MDG normalization changes."
+            exit 0
+          fi
+          git commit -m "Normalize MDG graph node types"
+          git push origin HEAD:main
