@@ -36,7 +36,7 @@ hide_global_cta: true
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">cloud</span>
-    <p><strong>Remember:</strong> deployment changes scope, extensions, upgrades, and operations. It does not replace the business-process model.</p>
+    <p><strong>Remember:</strong> deployment changes scope, extensions, upgrades, and operations. It does not replace the business process.</p>
     <a href="/labs/enterprise-context/industries/">Open industry solutions <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
@@ -44,7 +44,7 @@ hide_global_cta: true
     <header>
       <p class="research-canvas__eyebrow">Three S/4HANA models</p>
       <h2>Public = standardize. Private = flexible cloud. On-Premise = full control.</h2>
-      <p>Start with the memory line, then check scope, extensibility, upgrades, and operations.</p>
+      <p>Then check scope, extensions, upgrades, and operations.</p>
     </header>
     <div class="research-route-list">
       {% for model in topic.deployment_models %}
@@ -55,9 +55,9 @@ hide_global_cta: true
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">What changes</p>
-      <h2>Five things to compare first.</h2>
-      <p>These dimensions usually decide the architecture faster than product-name debates.</p>
+      <p class="research-canvas__eyebrow">Compare</p>
+      <h2>Six questions decide most architecture discussions.</h2>
+      <p>Process approach, scope, extensions, upgrades, operations, and transformation path.</p>
     </header>
     <div class="research-route-list">
       {% for row in topic.memory_compare %}
@@ -68,15 +68,15 @@ hide_global_cta: true
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Decision guide</p>
-      <h2>Choose the operating model after the business need.</h2>
+      <p class="research-canvas__eyebrow">Lead answer</p>
+      <h2>Choose after the business need, not before it.</h2>
       <p>{{ topic.lead_answer }}</p>
     </header>
     <div class="research-route-list">
       {% for decision in topic.decision_guide %}
       {% assign selected = nil %}
       {% for model in topic.deployment_models %}{% if model.id == decision.primary_choice %}{% assign selected = model %}{% endif %}{% endfor %}
-      <a href="/labs/enterprise-context/data/catalog.json"><span>→</span><strong>{{ decision.need }}</strong><small>{% if selected %}Primary: {{ selected.short_title }} · {% endif %}{{ decision.why }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/labs/enterprise-context/data/catalog.json"><span>→</span><strong>{{ decision.need }}</strong><small>{% if selected %}{{ selected.short_title }} · {% endif %}{{ decision.why }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
       {% endfor %}
     </div>
   </section>
@@ -84,7 +84,7 @@ hide_global_cta: true
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Watch-outs</p>
-      <h2>The same S/4HANA name does not mean the same design freedom.</h2>
+      <h2>Same S/4HANA name, different design freedom.</h2>
       <p>Always validate the exact feature, release, add-on, and extension path.</p>
     </header>
     <div class="research-route-list">
