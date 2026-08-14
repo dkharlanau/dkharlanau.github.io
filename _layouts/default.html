@@ -12,6 +12,19 @@
   {% if page.enterprise_context_graph %}
   <link rel="stylesheet" href="{{ '/assets/enterprise-context-graph.css' | relative_url }}" />
   {% endif %}
+  {% if page.sales_process_atlas %}
+  <link rel="stylesheet" href="{{ '/assets/sales-process-atlas.css' | relative_url }}" />
+  {% endif %}
+  {% if page.sales_control_plane %}
+  <link rel="stylesheet" href="{{ '/assets/sales-control-plane.css' | relative_url }}" />
+  {% endif %}
+  {% if page.sales_mechanism_library %}
+  <link rel="stylesheet" href="{{ '/assets/sales-mechanisms.css' | relative_url }}" />
+  {% endif %}
+  {% if page.sales_master_data_graph %}
+  <link rel="stylesheet" href="{{ '/assets/sales-master-data.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/assets/sales-master-document-consumption.css' | relative_url }}" />
+  {% endif %}
   {% if page.url contains '/labs/enterprise-context/' %}
   <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/catalog.json' | absolute_url }}" title="Enterprise Context Lab machine-readable catalog" />
   {% endif %}
@@ -30,6 +43,18 @@
     {% if graph_endpoint %}
   <link rel="describedby" type="application/json" href="{{ graph_endpoint | absolute_url }}" title="{{ graph_title | escape }} machine-readable graph" />
     {% endif %}
+  {% endif %}
+  {% if page.sales_process_atlas %}
+  <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/sales-process-atlas.json' | absolute_url }}" title="SAP Sales Process Atlas" />
+  {% endif %}
+  {% if page.sales_control_plane %}
+  <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/sales-control-plane.json' | absolute_url }}" title="SAP Sales Control Plane" />
+  {% endif %}
+  {% if page.sales_mechanism_library %}
+  <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/sales-mechanisms.json' | absolute_url }}" title="SAP Sales Mechanism Library" />
+  {% endif %}
+  {% if page.sales_master_data_graph %}
+  <link rel="describedby" type="application/json" href="{{ '/labs/enterprise-context/data/sales-master-data.json' | absolute_url }}" title="SAP Sales Master Data Graph" />
   {% endif %}
 </head>
 
@@ -57,6 +82,18 @@
   {% include header.html %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
     {{ content }}
+    {% if page.sales_master_data_graph %}
+    {% include labs/sales-master-document-consumption.html %}
+    {% endif %}
+    {% if page.sales_process_atlas %}
+    {% include labs/sales-control-plane-cta.html %}
+    {% endif %}
+    {% if page.sales_control_plane %}
+    {% include labs/sales-mechanism-cta.html %}
+    {% endif %}
+    {% if page.sales_mechanism_library %}
+    {% include labs/sales-master-data-cta.html %}
+    {% endif %}
     {% if page.url == '/labs/enterprise-context/' %}
       {% assign lab_manifest = site.data.labs.enterprise_context.manifest %}
       {% if lab_manifest.deep_dives %}
