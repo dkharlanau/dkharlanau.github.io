@@ -1,7 +1,7 @@
 id: lab-enterprise-context
 title: "Enterprise Context Lab"
 model_name: "Enterprise Context Graph"
-version: "0.1.0"
+version: "0.2.0"
 status: active_research
 started_at: "2026-08-14"
 updated_at: "2026-08-14"
@@ -11,9 +11,9 @@ owner: "Dzmitryi Kharlanau"
 
 purpose: >-
   Build a source-tracked, machine-readable model that connects enterprise business
-  processes, data, systems, rules, integrations, failures, KPIs, tests, and expert
-  reasoning so the same knowledge can support learning, impact analysis, diagnostics,
-  synthetic data, and AI evaluation.
+  processes, data, systems, determinations, integrations, failures, KPIs, tests,
+  and expert reasoning so the same knowledge can support learning, impact analysis,
+  diagnostics, synthetic data, and AI evaluation.
 
 principles:
   - id: source_tracked
@@ -31,6 +31,9 @@ principles:
   - id: deep_verticals
     label: "Depth before breadth"
     description: "A topic is expanded through relationships, failures, tests, and reasoning before another catalogue is created."
+  - id: causal_reasoning
+    label: "Model the why"
+    description: "Determinations are first-class nodes so inputs, outputs, rules, overrides, and downstream effects remain traversable."
 
 reference_enterprise:
   id: enterprise-global-transformation-industries
@@ -46,7 +49,7 @@ first_vertical:
   id: TOPIC-O2C-SALES-ORDER-CREATION
   title: "Order-to-Cash — Sales Order Creation"
   status: researching
-  gates_complete: 1
+  gates_complete: 4
   gates_total: 7
 
 maturity_gates:
@@ -61,7 +64,7 @@ maturity_gates:
   - id: model
     order: 3
     label: "Model"
-    done_definition: "Processes, objects, attributes, rules, and terminology are represented as structured entities."
+    done_definition: "Processes, objects, attributes, determinations, rules, and terminology are represented as structured entities."
   - id: relationships
     order: 4
     label: "Relationships"
@@ -84,3 +87,5 @@ machine_endpoints:
   schema: "/labs/enterprise-context/data/schema.json"
   topics: "/labs/enterprise-context/data/topics.json"
   sources: "/labs/enterprise-context/data/sources.json"
+  sales_order_graph: "/labs/enterprise-context/data/sales-order-graph.json"
+  sales_order_sources: "/labs/enterprise-context/data/sales-order-sources.json"
