@@ -1,7 +1,7 @@
 id: lab-enterprise-context
 title: "Enterprise Context Lab"
 model_name: "Enterprise Context Graph"
-version: "0.1.0"
+version: "0.2.0"
 status: active_research
 started_at: "2026-08-14"
 updated_at: "2026-08-14"
@@ -11,9 +11,9 @@ owner: "Dzmitryi Kharlanau"
 
 purpose: >-
   Build a source-tracked, machine-readable model that connects enterprise business
-  processes, data, systems, rules, integrations, failures, KPIs, tests, and expert
-  reasoning so the same knowledge can support learning, impact analysis, diagnostics,
-  synthetic data, and AI evaluation.
+  domains, processes, data, systems, rules, integrations, failures, KPIs, tests, AI
+  components, and expert reasoning so the same knowledge can support learning, impact
+  analysis, diagnostics, synthetic data, architecture decisions, and AI evaluation.
 
 principles:
   - id: source_tracked
@@ -31,6 +31,9 @@ principles:
   - id: deep_verticals
     label: "Depth before breadth"
     description: "A topic is expanded through relationships, failures, tests, and reasoning before another catalogue is created."
+  - id: domain_separation
+    label: "Business domains stay separate from products"
+    description: "Enterprise business ownership, process families, solution domains, application components, platform services, and AI assets are modeled as different entity types."
 
 reference_enterprise:
   id: enterprise-global-transformation-industries
@@ -61,7 +64,7 @@ maturity_gates:
   - id: model
     order: 3
     label: "Model"
-    done_definition: "Processes, objects, attributes, rules, and terminology are represented as structured entities."
+    done_definition: "Domains, processes, objects, attributes, rules, applications, platforms, AI assets, and terminology are represented as structured entities."
   - id: relationships
     order: 4
     label: "Relationships"
@@ -78,6 +81,12 @@ maturity_gates:
     order: 7
     label: "AI / evaluation"
     done_definition: "At least one grounded question, impact trace, diagnostic case, or benchmark task can be evaluated against the model."
+
+human_views:
+  enterprise_context: "/labs/enterprise-context/"
+  business_domains: "/labs/enterprise-context/domains/"
+  business_ai: "/labs/enterprise-context/business-ai/"
+  model_contract: "/labs/enterprise-context/model/"
 
 machine_endpoints:
   catalog: "/labs/enterprise-context/data/catalog.json"
