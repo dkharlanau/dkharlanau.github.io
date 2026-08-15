@@ -2,7 +2,7 @@
 
 layout: default
 title: "SAP Sales Order Block Diagnosis"
-description: "A practical diagnostic frame for separating common SAP sales order block causes in AMS support."
+description: "A practical diagnostic frame for finding what stops an SAP sales order from moving to delivery or billing."
 permalink: /atlas/diagnostics/sap-sales-order-block-diagnosis/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -41,7 +41,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP sales order block diagnosis</h1>
-    <p class="note-subtitle">A first-pass structure for finding why an order is stopped before delivery, billing, or completion.</p>
+    <p class="note-subtitle">A sales order can exist and still be unable to move. The useful question is not “why is the order blocked?” but “which control stops the next business step?”</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -54,58 +54,59 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>A blocked sales order is a symptom, not a root cause. The block may be intentional control, incomplete master data, credit exposure, delivery constraints, billing relevance, compliance logic, or custom governance.</p>
-    <p>The support goal is to identify which control is active and whether it is working as designed.</p>
+    <h2>Start with the next expected step</h2>
+    <p>“Blocked order” is a user description, not a diagnosis. Before looking for configuration, define what should happen next. Should the order receive a confirmation, appear in the delivery due list, create a delivery, become billable, or pass a commercial approval?</p>
+    <p>This changes the investigation. A delivery block, a credit decision, missing mandatory data, a rejected item, and a custom workflow can all stop progress, but they are different controls with different owners.</p>
 
-    <h2>First split</h2>
+    <h2>Separate the main paths</h2>
+    <div class="decision-table">
+      <table>
+        <thead><tr><th>What you see</th><th>What it usually means</th><th>First evidence to check</th></tr></thead>
+        <tbody>
+          <tr><td>The order is incomplete</td><td>Required business data is missing or inconsistent.</td><td>Header and item incompletion status, missing fields, partner/material/customer context.</td></tr>
+          <tr><td>Credit status prevents processing</td><td>A credit or risk control needs a decision or release.</td><td>Credit status, check result, exposure context, release ownership.</td></tr>
+          <tr><td>Delivery cannot be created</td><td>A delivery block, due-date issue, confirmation problem, or delivery-relevant status may stop fulfilment.</td><td>Header/item block fields, schedule lines, confirmed quantity/date, delivery status.</td></tr>
+          <tr><td>Billing cannot continue</td><td>A billing block or missing billing relevance may be active.</td><td>Billing block, document flow, billing status, reference document.</td></tr>
+          <tr><td>The standard statuses look normal</td><td>The stop may come from workflow, compliance, enhancement, interface logic, or a business rule outside the obvious SD fields.</td><td>Messages, change history, workflow/status evidence, enhancement or integration traces used in this landscape.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>A diagnostic sequence that keeps the scope small</h2>
+    <ol>
+      <li><strong>Capture one concrete example.</strong> Record order, item, customer, material, sales area, requested date, user message, and the business step that should happen next.</li>
+      <li><strong>Read the document flow and statuses.</strong> Find the last successful step. Check header, item, and schedule-line status rather than treating the order as one object.</li>
+      <li><strong>Look for explicit controls.</strong> Check incompletion, credit status, delivery or billing blocks, rejection reasons, and relevant approvals.</li>
+      <li><strong>Check the data behind the control.</strong> A block can be correct while the data that triggered it is wrong. Customer, material, partner, plant, shipping, pricing, and credit data are common examples.</li>
+      <li><strong>Check what changed.</strong> Compare a working order with the failing one and review recent master-data, configuration, workflow, or interface changes.</li>
+      <li><strong>Test the proposed correction against the next step.</strong> The incident is not solved because a field changed. It is solved when the expected process can continue and the control still behaves correctly.</li>
+    </ol>
+
+    <h2>What not to do</h2>
+    <p>Do not remove a block simply to see whether the order moves. In production, that “test” can create a delivery, invoice, credit exposure, or compliance problem. First identify why the control exists and who owns the release decision.</p>
+    <p>Also avoid using authorization analysis as a generic pre-check. If a user actually receives an authorization failure during an attempted action, tools such as SU53 can help analyse that failed check. They do not explain why a business block was set in the first place.</p>
+
+    <h2>Evidence worth putting into the ticket</h2>
     <ul>
-      <li><strong>Incomplete order:</strong> required fields are missing or inconsistent.</li>
-      <li><strong>Credit or risk control:</strong> release requires commercial or finance review.</li>
-      <li><strong>Delivery block:</strong> fulfillment is prevented until a condition is cleared.</li>
-      <li><strong>Billing block:</strong> billing is prevented while delivery or order handling may continue.</li>
-      <li><strong>Master data issue:</strong> customer, material, partner, plant, shipping, or pricing data does not support the transaction.</li>
-      <li><strong>Custom rule:</strong> enhancement, workflow, interface, or compliance logic applies in this landscape.</li>
+      <li>Order and item, exact symptom, and the next expected business result.</li>
+      <li>Relevant header, item, and schedule-line statuses.</li>
+      <li>Block or incompletion reason and whether it was set manually or by process logic, where this is known.</li>
+      <li>Customer, material, plant, dates, confirmed quantity, and credit context when relevant.</li>
+      <li>Document flow before and after the stopped point.</li>
+      <li>A comparable working document if one exists.</li>
+      <li>The owner who can approve a release when the block represents a business control.</li>
     </ul>
 
-    <h2>Evidence to collect</h2>
-    <p>A good diagnostic note should capture order number, item, block type, user-visible message, customer, material, sales area, requested delivery date, credit status if relevant, and the business reason the user expected the order to continue.</p>
+    <h2>The practical distinction</h2>
+    <p>A good support result is not “block removed.” It is “the blocking control was identified, its trigger was understood, the correct owner accepted the action, and the order reached the expected next step.” That small change in wording prevents a surprising amount of bad troubleshooting.</p>
 
-    <h2>Retail-specific: ATP mismatch</h2>
-    <p>In retail and omnichannel environments, ATP checks often aggregate inventory across DCs and eligible stores. A mismatch occurs when the system shows stock as available but the assigned fulfillment location cannot actually deliver.</p>
+    <h2>Where to continue</h2>
     <ul>
-      <li><strong>Check ATP scope of check:</strong> confirm whether the ATP configuration includes the store or DC that is being used for fulfillment. A store may be excluded from the scope.</li>
-      <li><strong>Check inventory accuracy:</strong> the location may show system stock that does not match physical stock due to shrinkage, unrecorded damage, or cycle count delays.</li>
-      <li><strong>Check reservation timeout:</strong> online orders often create a temporary reservation at the fulfillment location. If the reservation expires before picking is complete, the stock may be sold to another channel.</li>
-      <li><strong>Check store receiving backlog:</strong> goods may have arrived at the store but not yet been posted as goods receipt, so ATP does not see them.</li>
+      <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a> for the wider document and control chain.</li>
+      <li><a href="/atlas/diagnostics/sap-delivery-block-analysis/">SAP Delivery Block Analysis</a> when delivery creation is the exact stopped step.</li>
+      <li><a href="/atlas/diagnostics/sap-billing-block-analysis/">SAP Billing Block Analysis</a> when billing is the first missing result.</li>
+      <li><a href="/atlas/diagnostics/sap-credit-management-diagnostics/">SAP Credit Management Diagnostics</a> when the evidence points to credit or risk control.</li>
     </ul>
-    <p>A useful ATP mismatch ticket should include: order number, material, the location that was checked, the location assigned for fulfillment, current system stock at that location, and whether the issue is recurring for this product or location.</p>
-
-    <h2>Support takeaway</h2>
-    <p>Do not release blocks blindly. A block is often the only visible control protecting delivery, finance, compliance, or customer communication. Diagnose the control first, then decide whether to correct master data, change configuration, release the order, or escalate the business rule.</p>
-
-    <h2>Next diagnostic steps</h2>
-    <ul>
-      <li><a href="/atlas/maps/order-to-cash-map/">Order to Cash Map</a> — use this map to see how the sales order block fits into the wider order-to-cash process.</li>
-      <li><a href="/atlas/diagnostics/sap-delivery-block-analysis/">SAP Delivery Block Analysis</a> — go here when the order can proceed but delivery creation is stopped.</li>
-      <li><a href="/atlas/diagnostics/sap-billing-block-analysis/">SAP Billing Block Analysis</a> — use this when the order or delivery is blocked from billing.</li>
-      <li><a href="/atlas/diagnostics/sap-credit-management-diagnostics/">SAP Credit Management Diagnostics</a> — check this if the block reason points to credit exposure or risk control.</li>
-    </ul>
-
-    <h2>Practical checklist</h2>
-    <div markdown="1">
-- [ ] Collect order number, item, block reason code, and exact user message. **Synthetic example:** order 1234567890, item 10, block "Credit check".
-
-- [ ] Check VA02/VA03 block reason and incompletion log for the order and item.
-
-- [ ] Confirm whether the block is header-level, item-level, credit-related, or manual.
-
-- [ ] Document the business reason the user expected the order to continue and who can approve release.
-
-- [ ] Verify authorization to release the block in SU53 before attempting removal.
-
-- [ ] Safety limit: do not release credit or compliance blocks without written approval from the owning team.
-</div>
   </div>
 
   <section class="atlas-related">
