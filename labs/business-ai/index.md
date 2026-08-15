@@ -18,6 +18,10 @@ tags:
 ---
 
 {% assign catalog = site.data.labs.business_ai.catalog %}
+{% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
+{% assign all_patterns = catalog.patterns | concat: expansion.patterns %}
+{% assign all_cases = catalog.cases | concat: expansion.cases %}
+{% assign all_sources = catalog.source_registry | concat: expansion.source_registry %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Business AI</li></ol>
@@ -33,9 +37,9 @@ tags:
     </div>
     <div class="research-canvas__signal" aria-label="Business AI catalog status">
       <p>Current catalog</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ catalog.patterns | size }}</strong><small>Reusable patterns</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ catalog.cases | size }}</strong><small>Public cases</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ catalog.source_registry | size }}</strong><small>Tracked sources</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ all_patterns | size }}</strong><small>Reusable patterns</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ all_cases | size }}</strong><small>Public cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ all_sources | size }}</strong><small>Tracked sources</small></div>
       <em>Working material. Claims stay noindex until human review.</em>
     </div>
   </header>
@@ -55,7 +59,7 @@ tags:
     </header>
     <div class="research-route-list">
       <a href="/labs/business-ai/cases/"><span>01</span><strong>Implementation Cases</strong><small>Who built it, which process changed, what technology was disclosed, what result was reported, and what remains uncertain.</small><i class="material-symbols-outlined" aria-hidden="true">cases</i></a>
-      <a href="/labs/business-ai/patterns/"><span>02</span><strong>Reusable Patterns</strong><small>Conversation automation, enterprise knowledge, document-to-workflow, forecasting, optimization, and agentic exception handling.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/business-ai/patterns/"><span>02</span><strong>Reusable Patterns</strong><small>From document automation and forecasting to guided selling, cross-system copilots, manufacturing quality, and master-data foundations.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/business-ai/model/"><span>03</span><strong>Graph Model</strong><small>Node types and relationships for cases, companies, processes, patterns, technologies, KPIs, evidence, and limitations.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Machine-readable Catalog</strong><small>The same patterns, cases, evidence grades, source IDs, technologies, metrics, limits, and consultant notes as structured data.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/labs/enterprise-context/business-ai/"><span>SAP</span><strong>SAP Business AI Technology Map</strong><small>Joule, agents, AI Core, generative AI hub, grounding, build tools, runtime, and governance. Technology landscape stays separate from this use-case catalog.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
@@ -70,7 +74,7 @@ tags:
       <p>Each pattern states when it fits, when it does not, the minimum architecture shape, and the metrics that should decide whether it stays in production.</p>
     </header>
     <div class="research-route-list">
-      {% for pattern in catalog.patterns %}
+      {% for pattern in all_patterns %}
       <a href="/labs/business-ai/patterns/#{{ pattern.id }}"><span>AI</span><strong>{{ pattern.title }}</strong><small>{{ pattern.business_job }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       {% endfor %}
     </div>
@@ -78,12 +82,12 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Initial case set</p>
+      <p class="research-canvas__eyebrow">Case set</p>
       <h2>Measured enough to discuss. Not proven enough to worship.</h2>
       <p>Most public customer stories are reported by the customer or technology provider. The catalog marks that evidence level instead of quietly pretending every number is an audited experiment.</p>
     </header>
     <div class="research-route-list">
-      {% for item in catalog.cases %}
+      {% for item in all_cases %}
       <a href="/labs/business-ai/cases/#{{ item.id }}"><span>{{ item.evidence_grade }}</span><strong>{{ item.company }} · {{ item.title }}</strong><small>{{ item.process }} · {{ item.problem }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       {% endfor %}
     </div>
