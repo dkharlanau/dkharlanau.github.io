@@ -1,0 +1,260 @@
+---
+layout: default
+title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
+description: "A practical enterprise agent architecture for tools, MCP, A2A, identity, autonomy, human control, observability, and SAP implementation choices."
+permalink: /labs/enterprise-context/business-ai/agents/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+tags:
+  - sap
+  - business-ai
+  - ai-agents
+  - agentic-ai
+  - mcp
+  - a2a
+  - architecture
+---
+
+{% assign topic = site.data.labs.enterprise_context.topics.agent_architecture %}
+{% assign graph = site.data.labs.enterprise_context.graphs.agent_architecture %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/business-ai/">Business AI</a></li><li aria-current="page">Agent Architecture</li></ol>
+</nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Enterprise Context Lab / Agent architecture</p>
+      <h1>{{ topic.title }}</h1>
+      <p>{{ topic.summary }}</p>
+      <a class="research-canvas__button" href="#decision-boundary">Start with the boundary <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Agent architecture research status">
+      <p>Research status</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</strong><small>Maturity gates</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.agent_anatomy | size }}</strong><small>Agent responsibilities</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.autonomy_levels | size }}</strong><small>Autonomy levels</small></div>
+      <em>Reviewed together {{ topic.reviewed_together_at }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" id="decision-boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <p><strong>First rule:</strong> an enterprise agent is not a chatbot with more permissions. It is a governed software actor with a goal, context, tools, identity, controls, and observable business behavior.</p>
+    <p><strong>Memory path:</strong> {{ graph.memory_model.path }}</p>
+    <a href="/labs/enterprise-context/data/agent-architecture-graph.json">Open the AI-readable graph <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architecture thesis</p>
+      <h2>Use an agent only when the path really needs to be dynamic.</h2>
+      <p>Most enterprise work is still better served by rules, workflows, APIs, and deterministic controls.</p>
+    </header>
+    <div class="research-route-list">
+      {% for rule in graph.architecture_thesis %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>{{ forloop.index }}</span><strong>Design rule</strong><small>{{ rule }}</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Automation boundary</p>
+      <h2>Rule, workflow, skill, or agent?</h2>
+      <p>Choose the least complex mechanism that can own the decision safely.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.automation_boundary.sequence %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>{{ forloop.index }}</span><strong>{{ item.title }}</strong><small><b>{{ item.memory }}</b> {{ item.use_when }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Agent anatomy</p>
+      <h2>A production agent needs more than a model and a prompt.</h2>
+      <p>Each responsibility below should have an explicit owner or implementation choice.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.agent_anatomy %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>AG</span><strong>{{ item.part }}</strong><small>{{ item.question }} Risk if missing: {{ item.failure_if_missing }}</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Interoperability</p>
+      <h2>API, MCP, A2A, and events solve different communication problems.</h2>
+      <p>Do not replace a clear API contract merely because an agent can discover tools dynamically.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.interoperability %}
+      <a href="/labs/enterprise-context/integrations/"><span>INT</span><strong>{{ item.title }}</strong><small><b>{{ item.remember }}</b> {{ item.use_for }} {{ item.not_for }}</small><i class="material-symbols-outlined" aria-hidden="true">cable</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">key</span>
+    <p><strong>MCP reality:</strong> {{ graph.mcp_reality.formula | join: " " }}</p>
+    <p>{{ graph.mcp_reality.warning }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Identity and permission</p>
+      <h2>An agent is an actor, so treat it like one.</h2>
+      <p>{{ graph.identity_model.principle }}</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>IAM</span><strong>Effective permission</strong><small>{{ graph.identity_model.effective_permission }}</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
+      {% for control in graph.identity_model.controls %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>CTRL</span><strong>Identity control</strong><small>{{ control }}</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Tool contract</p>
+      <h2>A tool is a business capability with a contract, not just an endpoint.</h2>
+      <p>{{ graph.tool_contract.rule }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for field in graph.tool_contract.fields %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>TOOL</span><strong>{{ field }}</strong><small>Make this part of the tool contract before autonomous use.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Risk and autonomy</p>
+      <h2>Autonomy follows business risk.</h2>
+      <p>{{ graph.autonomy_lead_rule }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for level in graph.autonomy_levels %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>{{ level.level }}</span><strong>{{ level.title }}</strong><small>{{ level.behavior }}</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
+      {% endfor %}
+      {% for risk in graph.action_risk %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>RISK</span><strong>{{ risk.level }}</strong><small>{{ risk.meaning }} Control: {{ risk.default_control }}</small><i class="material-symbols-outlined" aria-hidden="true">shield</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Build choice</p>
+      <h2>Managed low-code or pro-code?</h2>
+      <p>The decision is about complexity, control, runtime, and lifecycle. It is not a contest between tools.</p>
+    </header>
+    <div class="research-route-list">
+      {% for model in graph.build_models %}
+      <a href="/labs/enterprise-context/development/"><span>BUILD</span><strong>{{ model.title }}</strong><small><b>Prefer when:</b> {{ model.prefer_when | join: " " }} <b>SAP fit:</b> {{ model.sap_fit }}</small><i class="material-symbols-outlined" aria-hidden="true">code</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lifecycle</p>
+      <h2>Provisioning without retirement is only half a governance model.</h2>
+      <p>An agent needs a controlled path from use-case selection to decommissioning.</p>
+    </header>
+    <div class="research-route-list">
+      {% for step in graph.lifecycle %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>{{ forloop.index }}</span><strong>{{ step.stage }}</strong><small>{{ step.question }} Evidence: {{ step.evidence }}</small><i class="material-symbols-outlined" aria-hidden="true">cycle</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Observability</p>
+      <h2>Measure business behavior, not only model traffic.</h2>
+      <p>{{ graph.observability.principle }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for metric in graph.observability.metrics %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>KPI</span><strong>{{ metric }}</strong><small>Trace this signal by agent version, scenario, tool, and business outcome where possible.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">science</span>
+    <p><strong>Availability note:</strong> {{ graph.observability.sap_forward_looking_note }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Logistics patterns</p>
+      <h2>Separate analytical agents from transactional agents.</h2>
+      <p>Reading, recommending, preparing, and committing a business transaction are different risk classes.</p>
+    </header>
+    <div class="research-route-list">
+      {% for pattern in graph.structured_data_patterns %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>{{ pattern.autonomy }}</span><strong>{{ pattern.title }}</strong><small><b>{{ pattern.mode }}</b> · {{ pattern.user_question }} · Risk: {{ pattern.risk }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Agentic engineering</p>
+      <h2>{{ graph.agentic_engineering.flow }}</h2>
+      <p>{{ graph.agentic_engineering.purpose }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for rule in graph.agentic_engineering.rules %}
+      <a href="/labs/enterprise-context/development/"><span>ENG</span><strong>Engineering rule</strong><small>{{ rule }}</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure modes</p>
+      <h2>Agent failures often look like successful API calls.</h2>
+      <p>Trace the first wrong decision, permission, context, or business result.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.failure_modes %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>!</span><strong>{{ item.symptom }}</strong><small>Check: {{ item.first_checks | join: " · " }} Likely causes: {{ item.likely_causes | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">report_problem</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead assessment</p>
+      <h2>Explain the control boundary, not only the AI feature.</h2>
+      <p>A strong answer connects business risk, identity, tool semantics, recovery, and measurable outcomes.</p>
+    </header>
+    <div class="research-route-list">
+      {% for drill in graph.assessment_drills %}
+      <a href="/labs/enterprise-context/data/agent-architecture-graph.json"><span>Q</span><strong>{{ drill.question }}</strong><small>{{ drill.strong_answer }}</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">link</span>
+    <p><strong>Related maps:</strong> the Business AI page explains SAP products; Integration explains APIs, events, and middleware; Development explains RAP, CAP, ABAP Cloud, and BTP runtimes. This page owns the agent design boundary.</p>
+    <p><a href="/labs/enterprise-context/business-ai/">Business AI</a> · <a href="/labs/enterprise-context/integrations/">Integration</a> · <a href="/labs/enterprise-context/development/">Development</a> · <a href="/labs/enterprise-context/data/agent-architecture-sources.json">Sources JSON</a></p>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
