@@ -1,0 +1,161 @@
+---
+layout: default
+title: "Condition Contract Management — Enterprise Context Lab"
+description: "A practical SAP S/4HANA CCM map for customer and supplier rebates: condition contracts, business volume, accruals, settlement, configuration, apps, and diagnostics."
+permalink: /labs/enterprise-context/condition-contract-management/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - settlement-management
+  - condition-contract-management
+  - rebates
+  - sales
+  - procurement
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.condition_contract_management %}
+{% assign evidence = site.data.labs.enterprise_context.sources.condition_contract_management %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Condition Contract Management</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Cross-domain component / Settlement Management</p>
+      <h1>CCM starts where one document is no longer enough.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#ccm-memory">Open the model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="CCM model inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>2</strong><small>Business sides</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.transactions | size }}</strong><small>Core SAP GUI tools</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>SAP sources</small></div>
+      <em>Draft research · source-tracked · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">contract</span>
+    <p><strong>Terminology:</strong> CCM means <strong>Condition Contract Management</strong>. It is part of Settlement Management. The central object is the condition contract.</p>
+    <a href="/labs/enterprise-context/data/condition-contract-management-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="ccm-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>{{ graph.positioning.common_flow }}</h2>
+      <p>{{ graph.positioning.boundary }}</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for object in graph.shared_objects %}
+      <article class="ecg-memory-card">
+        <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+        <strong>{{ object.object }}</strong>
+        <h3>{{ object.role }}</h3>
+        {% if object.warning %}<p>{{ object.warning }}</p>{% endif %}
+        {% if object.contains %}<p>{{ object.contains | join: " · " }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Two business sides</p>
+      <h2>One engine, different evidence.</h2>
+      <p>Sales and Procurement use the same CCM idea, but they do not use the same business-volume source or commercial direction.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/condition-contract-management/sales/"><span>SD</span><strong>{{ graph.sales.title }}</strong><small>{{ graph.sales.purpose }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/condition-contract-management/procurement/"><span>MM</span><strong>{{ graph.procurement.title }}</strong><small>{{ graph.procurement.purpose }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Shared configuration</p>
+      <h2>{{ graph.shared_configuration.memory_path }}</h2>
+      <p>Do not configure CCM as one giant switch. Each layer answers a different question.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for step in graph.shared_configuration.steps %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">{% if step.order < 10 %}0{% endif %}{{ step.order }}</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">Configuration layer</p>
+          <h3>{{ step.area }}</h3>
+          <p>{{ step.purpose }}</p>
+          <p><strong>Diagnostic:</strong> {{ step.check }}</p>
+          {% if step.configuration_objects %}<p><strong>Objects:</strong> {{ step.configuration_objects | join: " · " }}</p>{% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP GUI toolbox</p>
+      <h2>Use the transaction that answers the current question.</h2>
+      <p>The usual mistake is to run settlement first. The useful order is contract, business volume, settlement, then document and accounting trace.</p>
+    </header>
+    <div class="research-route-list">
+      {% for tx in graph.transactions %}
+      <a href="#"><span>{{ tx.id }}</span><strong>{{ tx.name }}</strong><small>{{ tx.use }}</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales vs Procurement</p>
+      <h2>The important difference is the economic event.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      {% for row in graph.sales_vs_procurement %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">{{ forloop.index }}</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">{{ row.dimension }}</p>
+          <h3>Sales: {{ row.sales }}</h3>
+          <p><strong>Procurement:</strong> {{ row.procurement }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead assessment</p>
+      <h2>Explain the separation, not only the transaction code.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for note in graph.lead_assessment_notes %}
+      <a href="#"><span>→</span><strong>{{ note }}</strong><small>Use this as an architecture statement, then support it with the Sales or Procurement runtime path.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary evidence</p>
+      <h2>Check product behavior against SAP Help.</h2>
+      <p>Configuration names and app availability can differ by S/4HANA edition and release. These links are the current research anchors for this model.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope | default: source.source_type }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+</div>
