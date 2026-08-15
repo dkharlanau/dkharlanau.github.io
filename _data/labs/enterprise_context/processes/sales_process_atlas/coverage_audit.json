@@ -1,1 +1,120 @@
-{"id":"AUDIT-SD-SALES-COVERAGE","updated_at":"2026-08-14","coverage_target":"High practical coverage of reusable SAP S/4HANA Sales process patterns. Localizations and narrow industry variants are mapped as aliases or adjacent capabilities unless they change a core business/control contract.","summary":{"atlas_records":50,"deep_control_plane_records":7,"specialized_return_claim_records":7,"mechanisms":15,"new_after_sales_records":8,"new_commercial_records":7,"new_industry_records":7,"new_billing_lifecycle_records":4,"cross_application_process_records":4,"order_origin_patterns":9,"execution_handoff_patterns":9},"decision_rules":["Separate a variant when it changes physical flow, stock ownership, supply source, legal entity, inspection/disposition, billing trigger, settlement model, product configuration, project/production cost object, or integration evidence.","Map a SAP scope item to an existing author code when it is mainly a packaged best-practice implementation of the same business contract.","Keep order origin, orchestration and downstream application ownership as separate graph classes instead of encoding every system combination into the process name."],"scope_aliases":[{"sap_scope":"BD9","maps_to":"SD.SFS","reason":"baseline sell from stock"},{"sap_scope":"BDG","maps_to":"SD.QUO","reason":"sales quotation"},{"sap_scope":"BDA","maps_to":"SD.FOC","reason":"free-of-charge delivery"},{"sap_scope":"I9I","maps_to":"SD.CTR","reason":"sales contract management"},{"sap_scope":"BDN","maps_to":"SD.PTO","reason":"non-stock item with order-specific procurement is the practical order-specific procurement branch"},{"sap_scope":"BD3","maps_to":"SD.TPO.SN","reason":"third-party with shipping notification"},{"sap_scope":"BDK","maps_to":"SD.TPO.NSN","reason":"third-party without shipping notification"},{"sap_scope":"4R6","maps_to":"SD.TPO.VC","reason":"third-party with variant configuration"},{"sap_scope":"BKP","maps_to":"SD.RET.ARM","reason":"full Customer Returns / Advanced Returns Management pattern"},{"sap_scope":"BDD","maps_to":"SD.RET.LEAN","reason":"lean customer returns"},{"sap_scope":"5CX","maps_to":"SD.RET.KIT","reason":"customer returns for sales kits"},{"sap_scope":"1EZ","maps_to":"SD.CLM.CMR","reason":"credit memo processing"},{"sap_scope":"1F1","maps_to":"SD.CLM.DMR","reason":"debit memo processing"},{"sap_scope":"BDQ/BKL","maps_to":"SD.CLM.ICR","reason":"invoice correction with debit/credit outcome"},{"sap_scope":"BDW","maps_to":"SD.RTNBL","reason":"returnables processing"},{"sap_scope":"BKA","maps_to":"SD.FG","reason":"free goods processing"},{"sap_scope":"BKZ","maps_to":"SD.BILL.COLL","reason":"invoice list and collective billing"},{"sap_scope":"1B6","maps_to":"SD.REB","reason":"sales rebate processing"},{"sap_scope":"1IQ","maps_to":"SD.INQ","reason":"sales inquiry"},{"sap_scope":"BDH","maps_to":"SD.OTC","reason":"one-time customer sales"},{"sap_scope":"1Z1/BKX","maps_to":"SD+PAY","reason":"payment overlays rather than new fulfillment branches"},{"sap_scope":"1YT","maps_to":"SD.MTO.VC","reason":"MTO with variant configuration"},{"sap_scope":"31Q","maps_to":"SD.KIT","reason":"sales order processing for sales kits"},{"sap_scope":"2EM","maps_to":"SD.JIT","reason":"JIT supply to customer"},{"sap_scope":"J14","maps_to":"SD.PROJ.PBS","reason":"sales order processing and billing for project-based services"}],"distinct_candidates":[{"sap_scope":"7KW","candidate_code":"SD.RET.VC","title":"Customer Returns for Material with Variant Configuration","why_distinct":"AVC configuration is copied or maintained in the returns order, can affect pricing/output, and has release/deployment-specific limitations on replacement and follow-up activities.","status":"candidate_for_next_card"},{"sap_scope":"BKJ","candidate_code":"SD.DP.CLASSIC","title":"Sales Order Processing with Customer Down Payment","why_distinct":"SAP explicitly documents the milestone-billing down-payment process as functionally and technically distinct from newer Advanced Down Payment Processing (7S7/7Z1).","status":"candidate_for_next_card"},{"sap_scope":"ETO-CTO+","candidate_code":"SD.ETO.CTO+","title":"Engineer-to-Order for Complex Assembly / CTO+","why_distinct":"Complex-assembly ETO adds order-specific engineering changes to product structures and production models beyond the basic project-stock ETO pattern.","status":"candidate_for_next_depth"}],"adjacent_capabilities":[{"name":"Advanced ATP","sap_scope":"1JW","maps_to":"MEC.SD.ATP","why_not_process":"changes confirmation and sourcing behavior across many processes"},{"name":"Credit Management","maps_to":"INT.SD.CREDIT / MEC.SD.CREDIT","why_not_process":"cross-process release/risk mechanism"},{"name":"Output Management","maps_to":"MEC.SD.OUTPUT","why_not_process":"communication layer on multiple business objects"},{"name":"Transportation Management","maps_to":"INT.SD.TM","why_not_process":"execution system/capability used by multiple sales branches"},{"name":"Extended Warehouse Management","maps_to":"INT.SD.EWM","why_not_process":"warehouse execution is downstream of multiple sales/returns processes"},{"name":"SAP GTS / trade compliance","maps_to":"INT.SD.GTS","why_not_process":"cross-border control can block or enrich many sales branches"},{"name":"Settlement Management","maps_to":"SD.REB","why_not_process":"broad platform; Sales Rebate Processing is the sales-specific branch represented in the atlas"},{"name":"In-House Repair","sap_scope":"3XK","maps_to":"SD.RET.REPAIR / INT.SD.SERVICE","why_not_process":"repair execution belongs to Service; Sales owns the return/complaint boundary"},{"name":"Omnichannel Convergent Billing","sap_scope":"1MC","maps_to":"adjacent billing architecture","why_not_process":"cross-channel billing capability broader than classic S/4 Sales order processing"},{"name":"Sales Order Fulfillment Monitoring","sap_scope":"BKK","maps_to":"monitoring / analytics capability","why_not_process":"monitors and resolves issues across multiple sales fulfillment branches rather than creating a new business flow"},{"name":"Solution Order Management","sap_scope":"4GT","maps_to":"ORC.SD.SOLUTION","why_not_process":"orchestrates sales, service, subscription and project follow-up objects instead of being one SD fulfillment branch"},{"name":"SAP Commerce Cloud","maps_to":"ORC.SD.COMMERCE / ORC.SD.CPQ","why_not_process":"changes order origin and customer-channel interaction while S/4HANA still owns the sales-order business object"},{"name":"SAP Sales Cloud Version 2","sap_scope":"6KO","maps_to":"ORC.SD.SALESCLOUD","why_not_process":"upstream opportunity/quote orchestration rather than a new ERP fulfillment contract"},{"name":"Subscription / recurring physical delivery","maps_to":"SD.SUB.RECUR / ORC.SD.SUBSCRIPTION","why_not_process":"the recurring contract owns lifecycle while generated sales orders execute each delivery cycle"},{"name":"SAP Event Mesh / Business Event Handling","maps_to":"EVT.SD.ORDER","why_not_process":"asynchronous event transport and side-by-side integration pattern rather than a sales process"}],"known_next_depth":[{"area":"Advanced Returns Management","status":"deep_control_plane_complete","items":["refund determination","inspection splits","follow-up activity codes","ownership/valuation states","EWM inspection ownership","direct customer-to-supplier return","supplier returns boundary","Service repair handoff","API choices"],"remaining_edges":["7KW configurable-material return as separate process card","TM-specific returns execution depth"]},{"area":"Claims","status":"deep_control_plane_complete","items":["billing blocks","approval workflow","copy/reference control","pricing context","credit memo request","debit memo request","invoice correction","invoice increase","free replacement"],"remaining_edges":["localization-specific tax/reference-date variants","workflow threshold examples by deployment"]},{"area":"Production and Project Fulfillment","status":"cross_application_depth_added","items":["ordinary MTO","assemble-to-order / assembly processing","engineer-to-order project stock","project-based services","recurring physical delivery"],"remaining_edges":["ETO CTO+ / complex assembly","deeper project billing and revenue-recognition comparison"]},{"area":"Order Origins and Application Handoffs","status":"cross_application_map_complete","items":["A2X API","A2A bulk","external buyer B2B","Commerce","CPQ","Sales Cloud v2","Solution Order","Subscription","Customer Project","PP","PS/EPPM","MM","EWM","TM","GTS","Credit","Finance","Service","business events"],"remaining_edges":["deployment-specific EWM message detail","third-party OMS patterns outside SAP-delivered integrations"]},{"area":"Down Payments","status":"atlas_deep_next","items":["classic BKJ milestone-billing process versus 7S7/7Z1 Advanced Down Payment","settlement and FI clearing","fulfillment/payment block policy"]},{"area":"Variant Configuration","status":"atlas_level","items":["AVC/classic VC boundary","configuration dependencies","BOM/routing selection","pricing integration","change management"]},{"area":"JIT / Scheduling Agreements","status":"atlas_level","items":["EDI messages","release types","cumulative quantities","JIT call status model","fallback/recovery"]},{"area":"Billing and Settlement","status":"atlas_level","items":["billing split","invoice list","preliminary billing","retroactive billing","billing cancellation","rebate settlement","digital payment refunds"]}]}
+{
+  "id": "AUDIT-SD-SALES-COVERAGE",
+  "updated_at": "2026-08-15",
+  "coverage_target": "High practical coverage of reusable SAP S/4HANA Sales process patterns. Localizations and narrow industry variants are mapped as aliases or adjacent capabilities unless they change a core business or control contract.",
+  "summary": {
+    "atlas_records": 53,
+    "groups": 11,
+    "deep_control_plane_records": 7,
+    "specialized_return_claim_records": 8,
+    "mechanisms": 15,
+    "after_sales_records": 9,
+    "commercial_extension_records": 7,
+    "industry_variant_records": 7,
+    "billing_lifecycle_records": 5,
+    "cross_application_process_records": 5,
+    "order_origin_patterns": 9,
+    "execution_handoff_patterns": 9
+  },
+  "decision_rules": [
+    "Separate a variant when it changes physical flow, stock ownership, supply source, legal entity, inspection or disposition, billing trigger, settlement model, configuration contract, product engineering, project or production cost object, or integration evidence.",
+    "Map a SAP scope item to an existing author code when it is mainly a packaged implementation of the same business contract.",
+    "Keep order origin, orchestration and downstream application ownership as separate graph classes instead of encoding every system combination into the process name.",
+    "For release-sensitive behavior, keep deployment scope and verification sources on the process card instead of presenting one release as universal SAP behavior."
+  ],
+  "closed_in_this_pass": [
+    {
+      "code": "SD.RET.VC",
+      "sap_scope": "7KW",
+      "title": "Customer Returns for Material with Variant Configuration",
+      "why_separate": "AVC configuration is part of the returned product context and can affect pricing, inspection, follow-up activities and refund behavior. The supported follow-up set is release-sensitive.",
+      "status": "atlas_card_complete"
+    },
+    {
+      "code": "SD.DP.CLASSIC",
+      "sap_scope": "BKJ",
+      "title": "Customer Down Payment with Milestone Billing",
+      "why_separate": "The classic milestone-billing process has a distinct SD-to-FI lifecycle and must be distinguished from Advanced Down Payment Processing.",
+      "status": "atlas_card_complete"
+    },
+    {
+      "code": "SD.ETO.CTO+",
+      "sap_scope": "ETO-CTO+",
+      "title": "Engineer-to-Order for Complex Assembly / CTO+",
+      "why_separate": "The customer configuration can be followed by order-specific engineering changes to the manufacturing BOM and shop-floor routing, which is deeper than ordinary configurable MTO.",
+      "status": "atlas_card_complete"
+    }
+  ],
+  "scope_aliases": [
+    {"sap_scope": "BD9", "maps_to": "SD.SFS", "reason": "baseline sell from stock"},
+    {"sap_scope": "BDG", "maps_to": "SD.QUO", "reason": "sales quotation"},
+    {"sap_scope": "BDA", "maps_to": "SD.FOC", "reason": "free-of-charge delivery"},
+    {"sap_scope": "I9I", "maps_to": "SD.CTR", "reason": "sales contract management"},
+    {"sap_scope": "BDN", "maps_to": "SD.PTO", "reason": "order-specific procurement branch"},
+    {"sap_scope": "BD3", "maps_to": "SD.TPO.SN", "reason": "third-party with shipping notification"},
+    {"sap_scope": "BDK", "maps_to": "SD.TPO.NSN", "reason": "third-party without shipping notification"},
+    {"sap_scope": "4R6", "maps_to": "SD.TPO.VC", "reason": "third-party with variant configuration"},
+    {"sap_scope": "BKP", "maps_to": "SD.RET.ARM", "reason": "full customer returns / ARM pattern"},
+    {"sap_scope": "BDD", "maps_to": "SD.RET.LEAN", "reason": "lean customer returns"},
+    {"sap_scope": "7KW", "maps_to": "SD.RET.VC", "reason": "customer returns for configurable material"},
+    {"sap_scope": "5CX", "maps_to": "SD.RET.KIT", "reason": "customer returns for sales kits"},
+    {"sap_scope": "1EZ", "maps_to": "SD.CLM.CMR", "reason": "credit memo processing"},
+    {"sap_scope": "1F1", "maps_to": "SD.CLM.DMR", "reason": "debit memo processing"},
+    {"sap_scope": "BDQ/BKL", "maps_to": "SD.CLM.ICR", "reason": "invoice correction with debit or credit outcome"},
+    {"sap_scope": "BDW", "maps_to": "SD.RTNBL", "reason": "returnables processing"},
+    {"sap_scope": "BKA", "maps_to": "SD.FG", "reason": "free goods processing"},
+    {"sap_scope": "BKZ", "maps_to": "SD.BILL.COLL", "reason": "invoice list and collective billing"},
+    {"sap_scope": "BKJ", "maps_to": "SD.DP.CLASSIC", "reason": "classic sales-order down-payment processing with milestone billing"},
+    {"sap_scope": "1B6", "maps_to": "SD.REB", "reason": "sales rebate processing"},
+    {"sap_scope": "1YT", "maps_to": "SD.MTO.VC", "reason": "MTO with variant configuration"},
+    {"sap_scope": "31Q", "maps_to": "SD.KIT", "reason": "sales order processing for sales kits"},
+    {"sap_scope": "2EM", "maps_to": "SD.JIT", "reason": "JIT supply to customer"},
+    {"sap_scope": "J14", "maps_to": "SD.PROJ.PBS", "reason": "sales order processing and billing for project-based services"}
+  ],
+  "adjacent_capabilities": [
+    {"name": "Advanced ATP", "maps_to": "MEC.SD.ATP", "why_not_process": "changes confirmation and sourcing behavior across many processes"},
+    {"name": "Credit Management", "maps_to": "INT.SD.CREDIT / MEC.SD.CREDIT", "why_not_process": "cross-process release and risk mechanism"},
+    {"name": "Output Management", "maps_to": "MEC.SD.OUTPUT", "why_not_process": "communication layer on multiple business objects"},
+    {"name": "Transportation Management", "maps_to": "INT.SD.TM", "why_not_process": "execution capability used by multiple sales branches"},
+    {"name": "Extended Warehouse Management", "maps_to": "INT.SD.EWM", "why_not_process": "warehouse execution downstream of multiple sales and returns processes"},
+    {"name": "SAP GTS / trade compliance", "maps_to": "INT.SD.GTS", "why_not_process": "cross-border control can block or enrich many sales branches"},
+    {"name": "Settlement Management", "maps_to": "SD.REB", "why_not_process": "broad platform; sales rebate processing is the sales-specific branch represented in the atlas"},
+    {"name": "In-House Repair", "maps_to": "SD.RET.REPAIR / INT.SD.SERVICE", "why_not_process": "repair execution belongs to Service; Sales owns the return and complaint boundary"},
+    {"name": "Solution Order Management", "maps_to": "ORC.SD.SOLUTION", "why_not_process": "orchestrates sales, service, subscription and project follow-up objects"},
+    {"name": "SAP Commerce Cloud", "maps_to": "ORC.SD.COMMERCE / ORC.SD.CPQ", "why_not_process": "changes order origin while S/4HANA still owns the ERP sales-order business object"},
+    {"name": "SAP Sales Cloud Version 2", "maps_to": "ORC.SD.SALESCLOUD", "why_not_process": "upstream opportunity and quote orchestration"},
+    {"name": "SAP Event Mesh / Business Event Handling", "maps_to": "EVT.SD.ORDER", "why_not_process": "asynchronous integration pattern rather than a sales process"}
+  ],
+  "known_next_depth": [
+    {
+      "area": "Advanced Returns Management",
+      "status": "strong",
+      "remaining_edges": ["TM-specific reverse-logistics execution", "release-specific configurable-material follow-up matrix"]
+    },
+    {
+      "area": "Down Payments",
+      "status": "classic_branch_complete",
+      "remaining_edges": ["separate Advanced Down Payment process card", "partial payment, cancellation and clearing diagnostics"]
+    },
+    {
+      "area": "Production and Project Fulfillment",
+      "status": "strong",
+      "remaining_edges": ["deeper project billing and revenue-recognition comparison", "CTO+ change-impact diagnostics after procurement or production release"]
+    },
+    {
+      "area": "JIT / Scheduling Agreements",
+      "status": "atlas_level",
+      "remaining_edges": ["release types and cumulative quantities", "EDI message/status recovery", "fallback and correction paths"]
+    },
+    {
+      "area": "Billing and Settlement",
+      "status": "strong_atlas_level",
+      "remaining_edges": ["billing split root-cause casebook", "electronic invoicing and DRC boundary", "advanced down-payment comparison"]
+    },
+    {
+      "area": "Operational Readiness",
+      "status": "cross_topic_needed",
+      "remaining_edges": ["authorization and segregation-of-duties view", "cutover and migration failure patterns", "performance and observability playbook for high-volume sales"]
+    }
+  ]
+}
