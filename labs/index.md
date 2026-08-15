@@ -30,9 +30,9 @@ tags:
     </div>
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>2</strong><small>Active labs</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Active labs</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>14+</strong><small>Architecture views</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>6+</strong><small>Machine endpoints</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>9+</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
   </header>
@@ -75,6 +75,20 @@ tags:
       <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture Lab</strong><small>Foundations, RAG, MCP, agents, evals, security, deployment, decision matrix, and hands-on track.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
       <a href="/labs/ai-ready/data/catalog.json"><span>JSON</span><strong>AI architecture catalog</strong><small>Dated tracks, decision rules, production rules, labs, and primary-source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/labs/ai-ready/data/eval-sample.jsonl"><span>EVAL</span><strong>Sample eval dataset</strong><small>Architecture cases with expected patterns, controls, and failure signals.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lab 03 / TRIZ for Digital Systems</p>
+      <h2>Start from the contradiction.</h2>
+      <p>A reworked TRIZ method for IT architecture, business processes, integration, data, automation, and AI. The classical principles stay as lineage; the digital framework focuses on decisions and experiments.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/triz/"><span>TRIZ</span><strong>TRIZ for Digital Systems</strong><small>Eight-step reasoning loop, digital transformation patterns, AI boundaries, process lens, and synthetic cases.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
+      <a href="/triz/patterns/"><span>PAT</span><strong>Digital transformation patterns</strong><small>Twelve reusable moves for separating responsibilities, handling uncertainty, reducing coupling, and controlling AI actions.</small><i class="material-symbols-outlined" aria-hidden="true">transform</i></a>
+      <a href="/datasets/triz-digital-framework/catalog.json"><span>JSON</span><strong>TRIZ digital catalog</strong><small>Framework steps, contradiction types, allocation rules, risk tiers, metrics, and agent contract.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/datasets/triz-digital-framework/cases.jsonl"><span>EVAL</span><strong>TRIZ reasoning cases</strong><small>Synthetic problem-to-contradiction examples for retrieval, reasoning, and agent evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
     </div>
   </section>
 
