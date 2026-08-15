@@ -20,27 +20,26 @@ tags:
 {% assign business_ai_expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
 {% assign business_ai_expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
 {% assign business_ai_domain_map = site.data.labs.business_ai.domain_map %}
+{% assign business_ai_process_map = site.data.labs.business_ai.process_map %}
 {% assign business_ai_tech = site.data.labs.business_ai.technology_landscape %}
 {% assign business_ai_cases = business_ai_catalog.cases | concat: business_ai_expansion.cases | concat: business_ai_expansion_b.cases %}
 {% assign business_ai_patterns = business_ai_catalog.patterns | concat: business_ai_expansion.patterns | concat: business_ai_expansion_b.patterns %}
 
-<nav class="breadcrumbs" aria-label="Breadcrumb">
-  <ol><li><a href="/">Home</a></li><li aria-current="page">Labs</li></ol>
-</nav>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">Labs</li></ol></nav>
 
 <div class="research-canvas">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Labs / practical architecture maps</p>
       <h1>Understand the business.<br />Then map the architecture.</h1>
-      <p>Source-tracked maps of business domains, SAP landscapes, integrations, data, enterprise AI systems, implementation cases, and the decisions that connect them.</p>
+      <p>Source-tracked maps of business domains, enterprise processes, SAP landscapes, integrations, data, AI systems, implementation cases, and the decisions that connect them.</p>
       <a class="research-canvas__button" href="#labs-inventory">Open the labs <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Active labs</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>20+</strong><small>Architecture and case views</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>9+</strong><small>Machine endpoints</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>21+</strong><small>Architecture and case views</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>10+</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
   </header>
@@ -55,11 +54,7 @@ tags:
   <p><strong>Publication rule.</strong> Vendor and primary sources verify facts; explanations stay independently written. See the <a href="/legal/research-attribution/">Research and Attribution Policy</a>.</p>
 
   <section class="research-canvas__inventory" id="labs-inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lab 01 / Enterprise Context</p>
-      <h2>Business first, system second.</h2>
-      <p>Move from business ownership and industry context to deployment model, process, SAP component, integration, data, and AI responsibility.</p>
-    </header>
+    <header><p class="research-canvas__eyebrow">Lab 01 / Enterprise Context</p><h2>Business first, system second.</h2><p>Move from business ownership and industry context to deployment model, process, SAP component, integration, data, and AI responsibility.</p></header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/"><span>01</span><strong>Enterprise Context Graph</strong><small>Sales, Supply Chain, processes, applications, boundaries, licensing, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/domains/"><span>02</span><strong>Enterprise Business Domains</strong><small>What the business owns, separate from processes and SAP products.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
@@ -73,11 +68,7 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lab 02 / AI Ready</p>
-      <h2>Build AI systems, not isolated demos.</h2>
-      <p>A vendor-neutral architecture map for data, retrieval, tools, MCP, agents, evaluations, security, deployment, and production decisions.</p>
-    </header>
+    <header><p class="research-canvas__eyebrow">Lab 02 / AI Ready</p><h2>Build AI systems, not isolated demos.</h2><p>A vendor-neutral architecture map for data, retrieval, tools, MCP, agents, evaluations, security, deployment, and production decisions.</p></header>
     <div class="research-route-list">
       <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture Lab</strong><small>Foundations, RAG, MCP, agents, evals, security, deployment, decision matrix, and hands-on track.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
       <a href="/labs/ai-ready/data/catalog.json"><span>JSON</span><strong>AI architecture catalog</strong><small>Dated tracks, decision rules, production rules, labs, and primary-source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
@@ -86,21 +77,19 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lab 03 / Business AI</p>
-      <h2>Processes, patterns, technologies, evidence.</h2>
-      <p>An enterprise-wide map across commercial, operational, financial, people, service, technology, legal, data, and knowledge processes. SAP is one important system landscape inside this larger model.</p>
-    </header>
+    <header><p class="research-canvas__eyebrow">Lab 03 / Business AI</p><h2>Processes, patterns, technologies, evidence.</h2><p>An enterprise-wide map across commercial, operational, financial, people, service, technology, legal, data, and knowledge processes. SAP is one important system landscape inside this larger model.</p></header>
     <div class="research-route-list">
       <a href="/labs/business-ai/"><span>AI</span><strong>Business AI Lab</strong><small>Enterprise map connecting processes, reusable patterns, technology families, platform examples, implementation evidence, and architecture controls.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      <a href="/labs/business-ai/domains/"><span>PROC</span><strong>Enterprise Processes and Domains</strong><small>{{ business_ai_domain_map.domains | size }} domain views with business jobs, system touchpoints, technology families, control questions, and evidence gaps.</small><i class="material-symbols-outlined" aria-hidden="true">domain</i></a>
+      <a href="/labs/business-ai/processes/"><span>PROC</span><strong>End-to-End Enterprise Processes</strong><small>{{ business_ai_process_map.processes | size }} process chains with stages, AI jobs, patterns, technology families, and control points.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/business-ai/domains/"><span>DOM</span><strong>Enterprise Domains</strong><small>{{ business_ai_domain_map.domains | size }} ownership views with business jobs, system touchpoints, technology families, architecture questions, and evidence gaps.</small><i class="material-symbols-outlined" aria-hidden="true">domain</i></a>
       <a href="/labs/business-ai/patterns/"><span>PAT</span><strong>Reusable Patterns</strong><small>{{ business_ai_patterns | size }} working patterns for extraction, forecasting, recommendation, exception management, copilots, optimization, physical execution, and data foundations.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/business-ai/technologies/"><span>TECH</span><strong>Enterprise AI Technologies</strong><small>{{ business_ai_tech.families | size }} capability families and {{ business_ai_tech.platforms | size }} platform examples across horizontal AI, application-native agents, workflow automation, data, evaluation, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
       <a href="/labs/business-ai/cases/"><span>CASE</span><strong>Implementation Cases</strong><small>{{ business_ai_cases | size }} working cases with process context, reported KPIs, evidence grade, limitations, and consultant notes.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/business-ai/model/"><span>GRAPH</span><strong>Graph Model</strong><small>Node and edge types for companies, cases, domains, processes, patterns, technologies, metrics, evidence sources, limitations, and case kinds.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-      <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Case and Pattern Data</strong><small>Machine-readable cases, patterns, evidence, technologies, KPIs, limitations, consultant notes, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="/labs/business-ai/data/domains.json"><span>DOM</span><strong>Domain Data</strong><small>Machine-readable business jobs, system touchpoints, technology families, architecture questions, and case IDs.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="/labs/business-ai/data/technologies.json"><span>MAP</span><strong>Technology Data</strong><small>Machine-readable capability families, platform roles, fit conditions, limits, and primary-source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/business-ai/model/"><span>GRAPH</span><strong>Graph Model</strong><small>Enterprise domains, end-to-end processes, process stages, patterns, technology families, platforms, controls, cases, metrics, and evidence.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/business-ai/data/processes.json"><span>P</span><strong>Process Data</strong><small>Machine-readable stages, AI jobs, patterns, technology families, controls, and owning domains.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/business-ai/data/domains.json"><span>D</span><strong>Domain Data</strong><small>Machine-readable business jobs, system touchpoints, technology families, architecture questions, and case IDs.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/business-ai/data/technologies.json"><span>T</span><strong>Technology Data</strong><small>Machine-readable capability families, platform roles, fit conditions, limits, and primary-source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/business-ai/data/catalog.json"><span>C</span><strong>Case and Pattern Data</strong><small>Machine-readable cases, patterns, evidence, technologies, KPIs, limitations, consultant notes, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
