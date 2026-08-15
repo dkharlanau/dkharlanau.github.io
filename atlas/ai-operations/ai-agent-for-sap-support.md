@@ -26,7 +26,7 @@ expert_context:
     - /atlas/ai-operations/ai-ready-process-documentation/
     - /atlas/automation/operational-memory-for-sap-ams/
 last_reviewed: 2026-05-06
-last_modified_at: 2026-08-11
+last_modified_at: 2026-08-15
 author: Dzmitryi Kharlanau
 
 tags:
