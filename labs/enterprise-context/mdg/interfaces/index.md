@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP MDG Interface Contracts — Enterprise Context Lab"
-description: "Object-level SAP MDG interface contracts for Business Partner, Customer, Supplier, and Material, including mapping, errors, reconciliation, and downstream proof."
+description: "SAP MDG interface contracts for Business Partner, Customer, Supplier, and Material: mapping, errors, monitoring, reconciliation, and proof."
 permalink: /labs/enterprise-context/mdg/interfaces/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 tags: [sap, mdg, integration, drf, soap, idoc, mdi, master-data]
 ---
@@ -37,6 +37,7 @@ tags: [sap, mdg, integration, drf, soap, idoc, mdi, master-data]
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
+    <p><strong>Problem:</strong> interface projects often stop at technical delivery even when keys, code mappings, ownership, or downstream usability are still unresolved.</p>
     <p><strong>Boundary:</strong> a successful message is not the business outcome. The target still has to identify the object, map codes, accept the data, and use it in a transaction.</p>
     <p><strong>Material warning:</strong> one business object can require several technical messages. MATMAS alone must not be assumed to cover classification, revision, quality, or every dependent data set.</p>
     <a href="/labs/enterprise-context/mdg/extensions/">Choose an extension path <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
