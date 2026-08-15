@@ -1,0 +1,431 @@
+schema_version: "1.0"
+reviewed_at: "2026-08-15"
+status: "working_catalog"
+scope: "Business AI patterns and public implementation cases. The catalog starts with the business problem and measured outcome, then records the technology used."
+principles:
+  - "Start with the business decision or task, not with a model name."
+  - "Keep generative AI, machine learning, optimization, and document AI in the same catalog when they solve a real business problem."
+  - "Record what was measured, who reported it, and what is still unknown."
+  - "Do not infer a technology stack when the source does not disclose it."
+  - "Separate assist, recommend, prepare, and execute. These are different automation levels."
+  - "Keep a human path for exceptions when the cost of a wrong action is meaningful."
+
+evidence_grades:
+  A:
+    label: "Strong"
+    rule: "Quantified result with a clear method or independent validation, plus enough implementation detail to understand the result."
+  B:
+    label: "Useful"
+    rule: "Quantified public result from the company or technology provider, but the measurement method is not fully disclosed."
+  C:
+    label: "Directional"
+    rule: "Public implementation evidence with mainly qualitative outcomes or scale signals."
+  D:
+    label: "Marketing only"
+    rule: "Product promise or claim without enough implementation evidence. Keep it out of the main case set."
+
+patterns:
+  - id: "conversation-automation"
+    title: "Conversation automation with escalation"
+    business_job: "Resolve repeat customer or employee requests without forcing every case through a human queue."
+    good_fit_when:
+      - "The request types repeat and the answer can be grounded in current policy or transaction data."
+      - "A clear escalation path exists for uncertain, emotional, regulated, or high-value cases."
+    bad_fit_when:
+      - "The assistant cannot access the current account or process state."
+      - "Success is measured only by deflection or headcount reduction."
+    architecture_shape:
+      - "intent and context"
+      - "retrieval or business-system reads"
+      - "bounded action tools"
+      - "policy checks"
+      - "human escalation"
+    evaluation:
+      - "first-contact resolution"
+      - "repeat-contact rate"
+      - "customer satisfaction"
+      - "unsafe or wrong action rate"
+      - "handoff quality"
+    automation_level: "execute_with_escalation"
+    related_cases: ["klarna-service-assistant"]
+
+  - id: "enterprise-knowledge-assistant"
+    title: "Permission-aware enterprise knowledge assistant"
+    business_job: "Reduce search time across large internal knowledge bases while keeping answers traceable."
+    good_fit_when:
+      - "Knowledge exists but is fragmented across many documents."
+      - "Users need evidence and permissions matter."
+    bad_fit_when:
+      - "The source corpus is stale or ownership is unclear."
+      - "The assistant is expected to invent an answer when evidence is missing."
+    architecture_shape:
+      - "permission-aware retrieval"
+      - "grounded generation"
+      - "citations"
+      - "evaluation dataset"
+      - "no-evidence state"
+    evaluation:
+      - "retrieval recall"
+      - "answer correctness"
+      - "citation correctness"
+      - "document coverage"
+      - "user adoption"
+    automation_level: "assist"
+    related_cases: ["morgan-stanley-assistant"]
+
+  - id: "document-to-workflow"
+    title: "Document understanding into a deterministic workflow"
+    business_job: "Turn invoices, confirmations, receipts, and similar business documents into validated structured data and process actions."
+    good_fit_when:
+      - "Input arrives in repeat document families but layout and wording vary."
+      - "Business rules can validate extracted values before posting or approval."
+    bad_fit_when:
+      - "There is no reliable master or transactional data for validation."
+      - "Low-confidence extraction is allowed to post directly without controls."
+    architecture_shape:
+      - "document ingestion"
+      - "OCR or document AI"
+      - "field extraction"
+      - "business validation"
+      - "workflow or posting"
+      - "exception queue"
+    evaluation:
+      - "field accuracy"
+      - "touchless rate"
+      - "cycle time"
+      - "exception rate"
+      - "posting correction rate"
+    automation_level: "execute_with_exceptions"
+    related_cases: ["frosta-touchless-invoices", "western-sugar-invoices"]
+
+  - id: "forecast-and-replenish"
+    title: "Demand forecasting linked to replenishment"
+    business_job: "Predict demand at the level where a planning or replenishment decision is actually made."
+    good_fit_when:
+      - "Historical demand, calendar, promotions, product, and location context are available."
+      - "Forecast errors can be measured against a business baseline."
+    bad_fit_when:
+      - "The model is evaluated only on aggregate accuracy while decisions happen by item and location."
+      - "No process exists to turn the forecast into a planning action."
+    architecture_shape:
+      - "feature pipeline"
+      - "forecast model"
+      - "baseline comparison"
+      - "planning rule"
+      - "replenishment or planner review"
+    evaluation:
+      - "forecast error by decision grain"
+      - "stock-out rate"
+      - "overstock or waste"
+      - "planner overrides"
+      - "service level"
+    automation_level: "recommend_or_execute"
+    related_cases: ["cainz-demand-forecasting"]
+
+  - id: "operations-optimization"
+    title: "Operations optimization under constraints"
+    business_job: "Choose a better route, sequence, allocation, or schedule when many valid options compete."
+    good_fit_when:
+      - "The objective and hard constraints can be expressed clearly."
+      - "The system receives enough current operational data to re-plan."
+    bad_fit_when:
+      - "The objective ignores service commitments or operational constraints."
+      - "A generative model is used for a problem better solved by optimization algorithms."
+    architecture_shape:
+      - "current operational state"
+      - "constraint model"
+      - "optimization engine"
+      - "route or plan"
+      - "execution feedback"
+    evaluation:
+      - "distance or time saved"
+      - "cost per execution unit"
+      - "service-level adherence"
+      - "re-plan stability"
+    automation_level: "recommend_or_execute"
+    related_cases: ["ups-orion"]
+
+  - id: "agentic-exception-management"
+    title: "Agentic exception management"
+    business_job: "Automate routine comparison and routing while sending real business exceptions to a specialist."
+    good_fit_when:
+      - "The agent works over a bounded document and transaction scope."
+      - "A deterministic system of record remains authoritative."
+      - "The business can define which differences require human judgment."
+    bad_fit_when:
+      - "The agent has broad write access with weak validation."
+      - "Success is based on autonomous steps rather than correct business outcomes."
+    architecture_shape:
+      - "document or message intake"
+      - "specialized agents or model steps"
+      - "system-of-record comparison"
+      - "confidence and business rules"
+      - "exception routing"
+      - "controlled update"
+    evaluation:
+      - "matching accuracy"
+      - "touchless rate"
+      - "false acceptance rate"
+      - "exception precision"
+      - "buyer time saved"
+    automation_level: "execute_with_exceptions"
+    related_cases: ["lemvigh-muller-confirmations"]
+
+cases:
+  - id: "klarna-service-assistant"
+    title: "Klarna customer-service AI assistant"
+    company: "Klarna"
+    industry: "Financial services / commerce"
+    process: "Customer service"
+    pattern: "conversation-automation"
+    problem: "Large volumes of repeat service conversations across many markets and languages."
+    implementation: "A customer-facing AI assistant powered by OpenAI technology, with transaction-oriented service tasks such as refunds and returns."
+    technology:
+      vendors: ["OpenAI"]
+      products: ["OpenAI models"]
+      models: ["Not disclosed in the cited implementation source"]
+      integration_notes: "The public source describes service tasks and global rollout, but does not disclose the full backend architecture."
+    reported_results:
+      - metric: "Share of customer-service chats handled in the first month"
+        value: "two-thirds"
+        claim_type: "company-reported"
+      - metric: "Repeat inquiries"
+        value: "25% lower"
+        claim_type: "company-reported"
+      - metric: "Average resolution time"
+        value: "under 2 minutes, from 11 minutes"
+        claim_type: "company-reported"
+      - metric: "Workload equivalent"
+        value: "700 full-time agents"
+        claim_type: "company-reported"
+    evidence_grade: "B"
+    limits:
+      - "The first-month metrics were reported by Klarna and OpenAI, not by an independent evaluator."
+      - "A later Reuters report in 2025 said Klarna was correcting an earlier over-focus on AI cost reduction and putting more weight on service quality and growth."
+    consultant_note: "This is a useful automation case, but also a warning. Deflection is not the business outcome. Keep customer satisfaction, repeat contacts, escalation quality, and growth signals in the scorecard."
+    source_ids: ["src-klarna-openai", "src-klarna-reuters-2025"]
+
+  - id: "morgan-stanley-assistant"
+    title: "Morgan Stanley internal knowledge assistant and meeting debrief"
+    company: "Morgan Stanley"
+    industry: "Financial services"
+    process: "Advisor knowledge and client follow-up"
+    pattern: "enterprise-knowledge-assistant"
+    problem: "Advisors needed faster access to a large internal knowledge base and less manual work after client meetings."
+    implementation: "GPT-4 was embedded into advisor workflows for internal knowledge retrieval. A separate Debrief workflow uses Whisper and GPT-4 to turn consented Zoom recordings into notes and draft follow-ups, with advisor review before final use."
+    technology:
+      vendors: ["OpenAI"]
+      products: ["GPT-4", "Whisper"]
+      models: ["GPT-4", "Whisper"]
+      integration_notes: "Debrief integrates generated notes into CRM systems. The program uses evaluation datasets and regression testing for quality control."
+    reported_results:
+      - metric: "Advisor-team adoption"
+        value: "over 98%"
+        claim_type: "customer/provider case study"
+      - metric: "Document access"
+        value: "increased from 20% to 80%"
+        claim_type: "customer/provider case study"
+      - metric: "Knowledge corpus scale"
+        value: "about 100,000 documents"
+        claim_type: "customer/provider case study"
+    evidence_grade: "B"
+    limits:
+      - "The case gives strong adoption and architecture signals, but not a controlled productivity study."
+    consultant_note: "The interesting part is not the chatbot. It is the operating model: retrieval, expert grading, regression evals, consent, CRM integration, and human review."
+    source_ids: ["src-morgan-openai"]
+
+  - id: "frosta-touchless-invoices"
+    title: "FRoSTA touchless supplier-invoice processing"
+    company: "FRoSTA AG"
+    industry: "Consumer products / food"
+    process: "Procure-to-pay / supplier invoices"
+    pattern: "document-to-workflow"
+    problem: "Supplier invoices arrived as paper, PDF, and Excel files and required too much manual processing."
+    implementation: "SAP Build Process Automation and SAP Document AI on SAP BTP extract and process invoice data, with automation connected to the procure-to-pay flow."
+    technology:
+      vendors: ["SAP"]
+      products: ["SAP Build Process Automation", "SAP Document AI", "SAP Business Technology Platform"]
+      models: ["Document AI models; specific model details not disclosed"]
+      integration_notes: "The case describes document processing into the supplier-invoice process; detailed interface contracts are not public."
+    reported_results:
+      - metric: "Touchless invoice rate"
+        value: "70% booked without any touch"
+        claim_type: "customer/vendor case study"
+      - metric: "Invoice processing time"
+        value: "under 1 minute from arrival to posting"
+        claim_type: "customer/vendor case study"
+      - metric: "Idea to go-live"
+        value: "3 months"
+        claim_type: "customer/vendor case study"
+    evidence_grade: "B"
+    limits:
+      - "The public case does not publish field-level extraction accuracy or exception distribution."
+    consultant_note: "This is a strong pattern for SAP logistics because AI does not replace posting logic. It converts weak document input into structured data, then normal process controls decide what can continue."
+    source_ids: ["src-frosta-sap"]
+
+  - id: "western-sugar-invoices"
+    title: "Western Sugar supplier-invoice automation"
+    company: "Western Sugar Cooperative"
+    industry: "Agribusiness"
+    process: "Accounts payable / supplier invoices"
+    pattern: "document-to-workflow"
+    problem: "Supplier invoice processing consumed too much monthly AP capacity."
+    implementation: "AI capabilities embedded in SAP Ariba Central Invoice Management with SAP S/4HANA Cloud Public Edition."
+    technology:
+      vendors: ["SAP"]
+      products: ["SAP Ariba Central Invoice Management", "SAP S/4HANA Cloud Public Edition"]
+      models: ["Not disclosed"]
+      integration_notes: "The public case identifies the SAP application landscape but not the detailed model or interface design."
+    reported_results:
+      - metric: "Monthly invoice-processing time"
+        value: "25% lower"
+        claim_type: "customer/vendor case study"
+      - metric: "Supplier invoices processed without human intervention"
+        value: "40,000"
+        claim_type: "customer/vendor case study"
+    evidence_grade: "B"
+    limits:
+      - "The public case does not state the measurement period for the 40,000 touchless invoices in the summary."
+    consultant_note: "A second public case for the same pattern matters more than another product feature. It suggests document-to-workflow automation is repeatable, while the exact economics still depend on document mix and exception rate."
+    source_ids: ["src-western-sugar-sap"]
+
+  - id: "lemvigh-muller-confirmations"
+    title: "Lemvigh-Müller agentic supplier-confirmation processing"
+    company: "Lemvigh-Müller A/S"
+    industry: "Wholesale distribution"
+    process: "Procurement / supplier confirmations"
+    pattern: "agentic-exception-management"
+    problem: "Buyers had to read and compare large volumes of supplier confirmations arriving by email and PDF."
+    implementation: "A multi-agent workflow interprets supplier confirmations, compares them with SAP Cloud ERP Private records, and routes meaningful differences for buyer attention."
+    technology:
+      vendors: ["SAP", "NTT DATA Business Solutions"]
+      products: ["SAP Cloud ERP Private", "SAP AI Launchpad", "SAP AI Core"]
+      models: ["Generative AI model details not disclosed in the public case"]
+      integration_notes: "The agents are fully integrated with SAP Cloud ERP Private according to the SAP case study."
+    reported_results:
+      - metric: "Touchless processing"
+        value: "over 90%"
+        claim_type: "customer/vendor case study"
+      - metric: "Matching accuracy"
+        value: "about 98%"
+        claim_type: "customer/vendor case study"
+      - metric: "Supplier onboarding in first weeks"
+        value: "about 23% of suppliers"
+        claim_type: "customer/vendor case study"
+    evidence_grade: "B"
+    limits:
+      - "This is a recent 2026 case and long-term operating results are not yet public."
+      - "The source does not disclose the false-acceptance rate for confirmations that passed without buyer review."
+    consultant_note: "This is the kind of agentic use case worth studying: narrow scope, authoritative ERP comparison, measurable matching quality, and humans focused on price, date, and quantity exceptions."
+    source_ids: ["src-lemvigh-sap"]
+
+  - id: "cainz-demand-forecasting"
+    title: "Cainz store-level demand forecasting"
+    company: "Cainz"
+    industry: "Retail"
+    process: "Demand planning and replenishment"
+    pattern: "forecast-and-replenish"
+    problem: "Moving-average replenishment did not handle seasonal products and short-term demand changes well, and planner experience created uneven forecast quality."
+    implementation: "A demand-forecasting solution built with Vertex AI and Google Cloud services was expanded across stores and product categories."
+    technology:
+      vendors: ["Google Cloud"]
+      products: ["Vertex AI", "BigQuery", "Cloud Run", "Cloud Storage", "Workflows"]
+      models: ["Custom demand-forecasting model; model family not disclosed"]
+      integration_notes: "Cloud Run jobs are used for preprocessing; the forecast supports store-level ordering decisions."
+    reported_results:
+      - metric: "Deployment scale"
+        value: "209 stores as of August 2024"
+        claim_type: "customer/provider case study"
+      - metric: "Preprocessing time"
+        value: "about 50 minutes regardless of store count"
+        claim_type: "customer/provider case study"
+    evidence_grade: "C"
+    limits:
+      - "The public case says predictions became more accurate but does not publish a forecast-error or inventory KPI."
+    consultant_note: "Useful architecture evidence, but not yet a complete value case. For an assessment, ask for forecast error by SKU/store, stock-out impact, inventory impact, and planner override rate before claiming ROI."
+    source_ids: ["src-cainz-google"]
+
+  - id: "ups-orion"
+    title: "UPS ORION route optimization"
+    company: "UPS"
+    industry: "Transportation and logistics"
+    process: "Last-mile delivery planning"
+    pattern: "operations-optimization"
+    problem: "Delivery routes must balance distance, time, pickup and delivery commitments, and changing operating conditions at very large scale."
+    implementation: "ORION uses advanced algorithms to determine delivery routes while meeting service commitments. Later Dynamic ORION added continuous re-optimization during the day."
+    technology:
+      vendors: ["UPS internal technology"]
+      products: ["ORION", "Dynamic ORION", "UPSNav"]
+      models: ["Proprietary optimization algorithms; detailed implementation not public"]
+      integration_notes: "UPSNav uses ORION routing data for driver navigation; Dynamic ORION re-plans with changing conditions and remaining work."
+    reported_results:
+      - metric: "Expected route reduction at full rollout in a 2014 UPS investor statement"
+        value: "about 7 to 8 miles per driver route per day"
+        claim_type: "company forecast at source date"
+      - metric: "Expected annual cost savings at full rollout in the same statement"
+        value: "$300M to $400M"
+        claim_type: "company forecast at source date"
+    evidence_grade: "B"
+    limits:
+      - "The numeric savings above were forward-looking estimates published in 2014, not an audited realized-result figure."
+      - "This is optimization, not generative AI. That is intentional: Business AI should use the method that fits the decision."
+    consultant_note: "A useful reminder that the best AI answer may be no LLM at all. Route sequencing is a constrained optimization problem; language models belong only around the edges if they add value."
+    source_ids: ["src-ups-2014-investor", "src-ups-dynamic-orion"]
+
+source_registry:
+  - id: "src-klarna-openai"
+    title: "Klarna's AI assistant does the work of 700 full-time agents"
+    publisher: "OpenAI"
+    source_type: "technology-provider customer case"
+    url: "https://openai.com/index/klarna/"
+    reviewed_at: "2026-08-15"
+  - id: "src-klarna-reuters-2025"
+    title: "Sweden's Klarna shifts AI focus from cost cuts to growth"
+    publisher: "Reuters"
+    source_type: "independent news follow-up"
+    url: "https://www.reuters.com/business/swedens-klarna-shifts-ai-focus-cost-cuts-growth-2025-09-10/"
+    published_at: "2025-09-10"
+    reviewed_at: "2026-08-15"
+  - id: "src-morgan-openai"
+    title: "Morgan Stanley uses AI evals to shape the future of financial services"
+    publisher: "OpenAI"
+    source_type: "technology-provider customer case"
+    url: "https://openai.com/index/morgan-stanley/"
+    reviewed_at: "2026-08-15"
+  - id: "src-frosta-sap"
+    title: "FRoSTA: Pioneering touchless invoice processing"
+    publisher: "SAP"
+    source_type: "vendor customer case"
+    url: "https://www.sap.com/swiss/asset/dynamic/2025/08/524629d1-1a7f-0010-bca6-c68f7e60039b.html"
+    reviewed_at: "2026-08-15"
+  - id: "src-western-sugar-sap"
+    title: "Western Sugar: Automating invoice processing with AI"
+    publisher: "SAP"
+    source_type: "vendor customer case"
+    url: "https://www.sap.com/canada/asset/dynamic/2025/02/4282b6dc-f67e-0010-bca6-c68f7e60039b.html"
+    reviewed_at: "2026-08-15"
+  - id: "src-lemvigh-sap"
+    title: "Lemvigh-Müller: Accelerating wholesale distribution with agentic AI and touchless procurement"
+    publisher: "SAP"
+    source_type: "vendor customer case"
+    url: "https://www.sap.com/asset/dynamic/2026/06/be80dd33-587f-0010-bca6-c68f7e60039b.html"
+    reviewed_at: "2026-08-15"
+  - id: "src-cainz-google"
+    title: "Cainz: Using Vertex AI for demand forecasting"
+    publisher: "Google Cloud"
+    source_type: "technology-provider customer case"
+    url: "https://cloud.google.com/customers/cainz"
+    reviewed_at: "2026-08-15"
+  - id: "src-ups-2014-investor"
+    title: "UPS investor conference press release"
+    publisher: "UPS Investor Relations"
+    source_type: "company investor statement"
+    url: "https://investors.ups.com/sec-filings/all-sec-filings/content/0001090727-14-000040/exhibit-pressreleasexinves.htm"
+    reviewed_at: "2026-08-15"
+  - id: "src-ups-dynamic-orion"
+    title: "UPS announces Dynamic ORION"
+    publisher: "UPS"
+    source_type: "company press release"
+    url: "https://about.ups.com/ca/en/newsroom/press-releases/customer-first/ups-announces-numerous-products-and-innovative-technology-programs-to-help-smbs-grow-and-compete.html"
+    published_at: "2020-01-29"
+    reviewed_at: "2026-08-15"
