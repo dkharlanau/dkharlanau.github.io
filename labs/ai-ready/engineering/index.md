@@ -26,6 +26,8 @@ The rule is simple: **do not add a layer because it is fashionable. Add it becau
 
 Use the handbook for concepts and decisions. Use [AI Engineering Practice](/labs/ai-ready/practice/) to run the same ideas as small local projects.
 
+For daily repository work, use the [Coding Agents Playbook](/labs/ai-ready/coding-agents/). It covers shared repository instructions, Skills, context control, subagents, verification, permissions, and practical adapters for Codex, Claude Code, and Kimi Code.
+
 ```text
 read the decision
 -> predict the result
@@ -149,4 +151,4 @@ problem
 
 If the explanation begins with “we will use an agent framework” before the problem is clear, the architecture has started at the wrong end.
 
-Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [Architecture Deep Dives](/labs/ai-ready/deep-dives/) · [Practice](/labs/ai-ready/practice/)
+Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [Architecture Deep Dives](/labs/ai-ready/deep-dives/) · [Practice](/labs/ai-ready/practice/) · [Coding Agents](/labs/ai-ready/coding-agents/)

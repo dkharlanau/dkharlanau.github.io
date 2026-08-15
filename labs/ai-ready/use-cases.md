@@ -75,6 +75,8 @@ The model is good at navigating messy code and forming hypotheses. Compilers, li
 
 Give write tools narrow scopes. A coding agent should not need unrestricted access to every repository, secret, and deployment environment because convenience had a good marketing meeting.
 
+For day-to-day use, open the [Coding Agents Playbook](/labs/ai-ready/coding-agents/). It turns this architecture into concrete rules, task templates, context tricks, Skills, subagents, permissions, and tool-specific notes for Codex, Claude Code, and Kimi Code.
+
 ## Data analysis {#data}
 
 **Goal:** turn a natural-language question into checked analysis.
