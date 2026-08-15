@@ -1,0 +1,288 @@
+id: EWM-INTERFACE-CATALOG
+title: "EWM Technical Interface Catalog"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+summary: >-
+  Technical view of the EWM integration map. It connects each business boundary to its common
+  interface style, transferred objects, direction, monitoring point and design caution. It is
+  deliberately release-scoped: a useful interface catalog must not pretend every API belongs to
+  every EWM deployment and edition.
+
+architecture_rule: >-
+  Protocol follows ownership. I first define the business event and system of record, then choose
+  the standard interface for that deployment. For operational support, every contract needs a
+  monitoring point, retry/recovery rule and a clear answer to whether duplicate processing is safe.
+
+interfaces:
+  - id: IF-EWM-LOCAL-EMBEDDED
+    title: "Embedded EWM Local Application Integration"
+    boundary: "Embedded EWM ↔ local SAP S/4HANA applications"
+    style: "Local application integration inside the same SAP S/4HANA system/client"
+    technologies:
+      - "local application calls and document integration"
+      - "synchronous goods-movement posting can be configured for supported scenarios"
+    objects:
+      - "deliveries"
+      - "goods movements"
+      - "warehouse requests / tasks"
+      - "inventory and accounting follow-on state"
+    direction: "bidirectional business state inside one system boundary"
+    monitor_first:
+      - "application document flow"
+      - "warehouse request / WT status"
+      - "material document / goods-movement state"
+    design_caution: "Do not use the decentralized qRFC support model as the default mental model for embedded EWM."
+    source_refs: [SRC-SAP-EWM-HELP, SRC-SAP-EWM-GM-COMMUNICATION]
+
+  - id: IF-EWM-DECENTRAL-DELIVERY-QRFC
+    title: "Decentralized Delivery Integration"
+    boundary: "SAP S/4HANA Enterprise Management ↔ Decentralized EWM"
+    style: "Asynchronous, serialized delivery-based integration"
+    technologies:
+      - "qRFC"
+      - "RFC destinations / logical systems"
+    objects:
+      - "inbound deliveries"
+      - "outbound deliveries / outbound delivery orders"
+      - "delivery split confirmations"
+      - "GR / GI and delivery confirmations"
+    direction: "S/4HANA → EWM demand; EWM → S/4HANA execution confirmation and selected delivery changes"
+    monitor_first:
+      - "SMQ1 / outbound queue context"
+      - "SMQ2 / inbound queue context"
+      - "first application error in the serialized chain"
+    design_caution: >-
+      A later queue may be blocked by an earlier message for the same business object. Fix the
+      first inconsistent message instead of repeatedly restarting the tail of the queue.
+    source_refs: [SRC-SAP-EWM-ERP-COMM]
+
+  - id: IF-EWM-DECENTRAL-MASTER-DATA
+    title: "Decentralized EWM Master Data Distribution"
+    boundary: "SAP S/4HANA ERP master data → Decentralized EWM"
+    style: "Distributed master data with explicit logical-system ownership"
+    technologies:
+      - "ALE / IDoc for documented decentralized-EWM master-data setup"
+      - "CIF / qRFC remains relevant in documented S/4HANA-EWM integration areas and landscape setup"
+    objects:
+      - "materials/products"
+      - "batches"
+      - "customers"
+      - "vendors / business partners"
+      - "classes and characteristics"
+      - "QM inspection setup through dedicated ALE/IDoc synchronization where used"
+    direction: "enterprise master-data owner → decentralized EWM"
+    monitor_first:
+      - "IDoc status / BD87 where ALE/IDoc is used"
+      - "CIF/qRFC queue where that distribution channel is used"
+      - "business-system and key-mapping context"
+    design_caution: >-
+      Decentralized warehouse execution creates a real master-data distribution problem. Agree
+      ownership, identifiers, filtering, initial load and delta handling before process testing.
+    source_refs: [SRC-SAP-EWM-DECENTRAL-MD-ALE, SRC-SAP-EWM-DECENTRAL-MD-INITIAL, SRC-SAP-EWM-QM-DECENTRAL]
+
+  - id: IF-EWM-GOODS-MOVEMENT
+    title: "EWM ↔ Inventory Management Goods Movement"
+    boundary: "EWM warehouse stock state ↔ Inventory Management enterprise stock state"
+    style: "Goods-movement integration; synchronous or asynchronous behavior depends on scenario/configuration"
+    technologies:
+      - "qRFC for asynchronous goods-movement communication"
+      - "synchronous goods-movement posting for supported configured scenarios"
+    objects:
+      - "product and quantity"
+      - "batch / serial-number context where supported"
+      - "goods receipt / issue / transfer posting"
+    direction: "bidirectional according to the goods-movement scenario"
+    monitor_first:
+      - "material / goods-movement document"
+      - "qRFC queue for asynchronous flow"
+      - "EWM stock and task state"
+    design_caution: "A goods-movement message does not carry HU information; HU integration belongs to delivery-related processing."
+    source_refs: [SRC-SAP-EWM-GM-COMMUNICATION, SRC-SAP-EWM-OTHER-INTERFACES]
+
+  - id: IF-EWM-WAREHOUSING-ODATA
+    title: "Warehousing OData APIs"
+    boundary: "External application / extension ↔ SAP S/4HANA Warehousing"
+    style: "Released A2X OData services where available for the exact release"
+    technologies:
+      - "OData V4"
+      - "HTTP GET / POST operations depending on service"
+    objects:
+      - "Warehouse Orders"
+      - "Warehouse Tasks"
+      - "other warehousing business objects exposed by released services"
+    example_capabilities:
+      - "retrieve warehouse orders and tasks"
+      - "assign warehouse order"
+      - "unassign warehouse order"
+      - "confirm or process supported warehouse operations according to API scope"
+    direction: "external consumer ↔ released warehousing service"
+    monitor_first:
+      - "HTTP response and application log"
+      - "API authorization / communication arrangement where applicable"
+      - "resulting EWM business object status"
+    design_caution: >-
+      Prefer released APIs for extension/integration use cases. Do not turn an A2X API into a
+      second warehouse orchestration engine that competes with EWM queues, resources or MFS.
+    source_refs: [SRC-SAP-EWM-WAREHOUSING-APIS, SRC-SAP-EWM-WO-TASK-API]
+
+  - id: IF-EWM-PRODUCTION-ABAP-APIS
+    title: "Advanced Production Integration APIs"
+    boundary: "Production integration extension / application ↔ EWM"
+    style: "Released ABAP API interfaces for advanced production integration"
+    technologies:
+      - "ABAP interfaces / released EWM APIs"
+    objects:
+      - "production staging"
+      - "production consumption"
+      - "receipt from production"
+      - "HU goods-receipt reversal after final putaway"
+    named_interfaces:
+      - "/SCWM/IF_API_MFG_STAGE"
+      - "/SCWM/IF_API_MFG_CONSUMPTION"
+      - "/SCWM/IF_API_MFG_RECEIVING"
+      - "/SCWM/IF_API_RVS_HU_PTWY"
+    direction: "application call into EWM production-integration behavior"
+    monitor_first:
+      - "API return/application messages"
+      - "PMR / staging / receipt object state"
+      - "warehouse tasks and stock state"
+    design_caution: "These APIs support specific production-integration actions; they are not generic substitutes for the production document model."
+    source_refs: [SRC-SAP-EWM-PRODUCTION-APIS]
+
+  - id: IF-EWM-MES
+    title: "MES-Driven Production Integration"
+    boundary: "MES / SAP Digital Manufacturing ↔ EWM"
+    style: "Production staging and confirmation integration according to the selected MES-driven scenario"
+    technologies:
+      - "staging requests / production integration messages"
+      - "PMR-linked execution context"
+    objects:
+      - "staging request"
+      - "PMR"
+      - "PSA"
+      - "consumption / receipt confirmation"
+      - "HU / WIP context in supported scenarios"
+    direction: "MES demand → EWM staging; execution/production state flows according to scenario"
+    monitor_first:
+      - "MES request/message"
+      - "PMR / staging request"
+      - "PSA and WT status"
+    design_caution: "State the production integration type before debugging the interface. MES-driven staging is not the same document chain as delivery-based supply."
+    source_refs: [SRC-SAP-EWM-PRODUCTION-INTEGRATION, SRC-SAP-DM-EWM]
+
+  - id: IF-EWM-QM-MASTER
+    title: "Decentralized QM Master-Data Synchronization"
+    boundary: "Enterprise QM master data → Decentralized EWM"
+    style: "ALE / IDoc synchronization for documented QM inspection setup"
+    technologies:
+      - "ALE"
+      - "IDoc MATQM"
+    objects:
+      - "QM inspection setup data"
+      - "inspection rules in decentralized EWM"
+    direction: "enterprise QM → decentralized EWM"
+    monitor_first:
+      - "IDoc status"
+      - "generated inspection rule / warehouse-dependent QM setup"
+    design_caution: "Quality execution cannot be reliable if QM-specific master data is stale or mapped to the wrong warehouse/product context."
+    source_refs: [SRC-SAP-EWM-QM-DECENTRAL]
+
+  - id: IF-EWM-WCU-IDOC
+    title: "EWM-WCU / Non-SAP Warehouse Control Interface"
+    boundary: "EWM ↔ external WCS / WCU / automation subsystem"
+    style: "Loosely coupled warehouse-control interface"
+    technologies:
+      - "tRFC"
+      - "ALE / IDoc processing"
+      - "TCP/IP RFC connectivity for external systems"
+    objects:
+      - "warehouse tasks"
+      - "task confirmations"
+      - "task cancellation"
+      - "wave release"
+      - "handling-unit movement"
+      - "bin / aisle blocking"
+      - "pick-HU creation in supported message set"
+    message_examples:
+      - "/SCWM/WMTORD - warehouse task"
+      - "/SCWM/WMTOCO - warehouse-task confirmation"
+      - "/SCWM/WMCATO - cancellation / cancellation request"
+      - "/SCWM/WMRREF - wave release"
+      - "/SCWM/WMSUMO - handling-unit move"
+    direction: "bidirectional; exact task split depends on the agreed EWM/WCS ownership model"
+    monitor_first:
+      - "IDoc processing"
+      - "tRFC status"
+      - "EWM WT/HU state"
+      - "external WCS task state"
+    design_caution: >-
+      Decide whether EWM or the WCS creates/decomposes work and how cancellation/recovery works.
+      Ambiguous ownership is more dangerous than an interface outage because both systems can act.
+    source_refs: [SRC-SAP-EWM-NONSAP-WCU]
+
+  - id: IF-EWM-MFS-PLC
+    title: "EWM MFS ↔ PLC"
+    boundary: "EWM Material Flow System ↔ programmable logic controller"
+    style: "Direct material-flow automation integration"
+    technologies:
+      - "MFS communication channels / telegram processing"
+      - "TCP/IP based PLC communication according to MFS design"
+    objects:
+      - "HU"
+      - "warehouse task"
+      - "communication point"
+      - "communication channel"
+      - "PLC / conveyor segment state"
+    direction: "EWM/MFS commands ↔ PLC confirmations/events"
+    monitor_first:
+      - "MFS channel"
+      - "telegram / communication-point state"
+      - "WT/HU location"
+      - "PLC/equipment state"
+    design_caution: "MFS is warehouse material-flow control, not a reason to push ERP or transport planning decisions into PLC logic."
+    source_refs: [SRC-SAP-EWM-MFS]
+
+interface_families:
+  - family: "Local application integration"
+    fit: "Embedded EWM and local S/4HANA business state"
+    examples: ["delivery integration", "goods movements", "QM/PP local context"]
+  - family: "qRFC / RFC"
+    fit: "Decentralized transactional distribution and selected goods-movement integration"
+    examples: ["delivery distribution", "GR/GI confirmations", "serialized remote processing"]
+  - family: "ALE / IDoc"
+    fit: "Distributed master data and external WCU contracts where documented"
+    examples: ["material/BP-related master data", "MATQM", "WCU task/confirmation messages"]
+  - family: "OData A2X"
+    fit: "Released external business APIs for warehousing"
+    examples: ["Warehouse Order and Task API"]
+  - family: "ABAP API"
+    fit: "In-system or controlled application integration for documented EWM functions"
+    examples: ["advanced production integration APIs"]
+  - family: "MFS / PLC"
+    fit: "Direct machine and conveyor material-flow execution"
+    examples: ["communication channels", "telegrams", "communication points"]
+
+selection_matrix:
+  - need: "Replicate an S/4 delivery to a separate EWM system and confirm GR/GI back"
+    preferred_standard: "Decentralized delivery integration / qRFC"
+    avoid: "custom REST wrapper around the delivery lifecycle without a strong reason"
+  - need: "Expose warehouse orders/tasks to an external app"
+    preferred_standard: "released Warehousing A2X API where the required operation is available"
+    avoid: "direct table access or unreleased internal function calls"
+  - need: "Connect classic external WCS controlling automated warehouse movements"
+    preferred_standard: "EWM-WCU interface or a deliberately designed modern integration pattern after checking product scope"
+    avoid: "two systems both creating competing WTs"
+  - need: "Control conveyors/ASRS directly from EWM"
+    preferred_standard: "MFS when its automation model fits"
+    avoid: "putting PLC routing decisions into ERP delivery logic"
+  - need: "Stage/consume/receive in advanced production integration from ABAP application logic"
+    preferred_standard: "released EWM production APIs"
+    avoid: "direct updates to PMR, WT or stock tables"
+
+support_questions:
+  - "Which interface family is this: local, qRFC/RFC, ALE/IDoc, OData, ABAP API, MES message, MFS or WCS?"
+  - "What is the business-object key used for serialization and retry?"
+  - "Where can I see the outbound message, inbound message and final application document?"
+  - "Can the message be retried safely, or can it duplicate a physical/business event?"
+  - "Which system is allowed to cancel or change the object after handoff?"
+  - "Which master data must exist before the transactional interface can work?"
