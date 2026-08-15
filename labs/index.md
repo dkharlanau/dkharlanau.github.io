@@ -65,6 +65,9 @@ tags:
       <a href="/labs/enterprise-context/integrations/"><span>06</span><strong>SAP Integration Architecture</strong><small>APIs, IDocs, RFC, events, Kafka, queues, files, B2B, middleware, logistics, and master-data distribution.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/enterprise-context/model/"><span>07</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/data/catalog.json"><span>08</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/enterprise-context/sales-processes/"><span>SD</span><strong>SAP Sales Process Atlas</strong><small>Business process variants, control points, data hinges, integration boundaries, constraints, and source-backed scope aliases.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/enterprise-context/sales-diagnostics/"><span>RCA</span><strong>SAP Sales Diagnostic Casebook</strong><small>Symptom-first cases with evidence paths, competing causes, ownership boundaries, handoffs, and proof of fix.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
+      <a href="/labs/enterprise-context/data/sales-agent-index.json"><span>AGENT</span><strong>Sales Agent Routing Index</strong><small>Machine-readable routing contract for choosing process, mechanism, integration, master-data, deep-dive, and diagnostic knowledge layers.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
