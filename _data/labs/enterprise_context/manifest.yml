@@ -1,10 +1,10 @@
 id: lab-enterprise-context
 title: "Enterprise Context Lab"
 model_name: "Enterprise Context Graph"
-version: "1.1.0"
+version: "1.2.0"
 status: active_research
 started_at: "2026-08-14"
-updated_at: "2026-08-14"
+updated_at: "2026-08-15"
 last_reviewed_together_at: "2026-08-14"
 review_note: "Last reviewed together against current primary SAP sources."
 owner: "Dzmitryi Kharlanau"
@@ -94,6 +94,15 @@ second_vertical:
   page_url: "/labs/enterprise-context/procurement/"
   graph_ref: "GRAPH-MM-PROCUREMENT-DECISIONS"
 
+warehouse_vertical:
+  id: TOPIC-EWM-WAREHOUSE-EXECUTION
+  title: "Extended Warehouse Management — Warehouse Execution"
+  status: researching
+  gates_complete: 6
+  gates_total: 7
+  page_url: "/labs/enterprise-context/ewm/"
+  graph_ref: "GRAPH-EWM-WAREHOUSE-EXECUTION"
+
 deep_dives:
   - id: DEEP-SD-SALES-ORDER
     title: "Sales Order Decision Map"
@@ -149,6 +158,19 @@ deep_dives:
       - "purchasing conditions"
       - "approval and supplier output"
       - "goods receipt, invoice verification, and GR/IR"
+  - id: DEEP-EWM-WAREHOUSE-EXECUTION
+    title: "EWM Deployment & Warehouse Execution Map"
+    parent_topic: TOPIC-EWM-WAREHOUSE-EXECUTION
+    status: researching
+    page_url: "/labs/enterprise-context/ewm/"
+    graph_ref: "GRAPH-EWM-WAREHOUSE-EXECUTION"
+    emphasis:
+      - "embedded vs decentralized deployment"
+      - "warehouse request, task, order, wave and HU"
+      - "inbound, outbound and internal warehouse processes"
+      - "production supply and PSA integration"
+      - "QM, MM-IM, SD, PP and TM boundaries"
+      - "RF, MFS automation and failure diagnostics"
 
 maturity_gates:
   - id: scope
@@ -206,6 +228,7 @@ human_views:
   shipping_scheduling: "/labs/enterprise-context/shipping/"
   master_data_architecture: "/labs/enterprise-context/master-data/"
   procurement_decision_map: "/labs/enterprise-context/procurement/"
+  ewm_warehouse_execution: "/labs/enterprise-context/ewm/"
   sales_master_data: "/labs/enterprise-context/sales-processes/master-data/"
   model_contract: "/labs/enterprise-context/model/"
   research_attribution_policy: "/legal/research-attribution/"
@@ -231,4 +254,6 @@ machine_endpoints:
   master_data_sources: "/labs/enterprise-context/data/master-data-sources.json"
   procurement_graph: "/labs/enterprise-context/data/procurement-graph.json"
   procurement_sources: "/labs/enterprise-context/data/procurement-sources.json"
+  ewm_graph: "/labs/enterprise-context/data/ewm-graph.json"
+  ewm_sources: "/labs/enterprise-context/data/ewm-sources.json"
   sales_master_data: "/labs/enterprise-context/data/sales-master-data.json"
