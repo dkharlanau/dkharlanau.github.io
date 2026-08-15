@@ -1,0 +1,161 @@
+{
+  "schema_version": "1.0",
+  "title": "AI Ready Architecture Catalog",
+  "reviewed_at": "2026-08-15",
+  "current_protocols": {
+    "mcp": {
+      "revision": "2026-07-28",
+      "maturity": "evolving",
+      "note": "The 2026-07-28 revision uses a stateless protocol core. Check the official specification before implementation because MCP is changing quickly."
+    }
+  },
+  "tracks": [
+    {
+      "id": "foundations",
+      "title": "Foundations",
+      "goal": "Understand what the model can do, what the application must do, and where deterministic software is still the better tool.",
+      "topics": ["tokens and context", "instruction layers", "structured output", "embeddings", "tool calling", "workflow vs agent", "state vs memory"]
+    },
+    {
+      "id": "data-retrieval",
+      "title": "Data and Retrieval",
+      "goal": "Make fresh or private knowledge usable without hiding data quality problems behind a chatbot.",
+      "topics": ["source of truth", "chunking", "metadata", "lexical search", "vector search", "hybrid search", "reranking", "citations", "provenance", "dataset versioning"]
+    },
+    {
+      "id": "tools-mcp",
+      "title": "Tools and MCP",
+      "goal": "Connect models to systems with explicit contracts, permissions, and failure behavior.",
+      "topics": ["function tools", "MCP", "tools", "resources", "prompts", "stdio", "Streamable HTTP", "authorization", "approval", "idempotency"]
+    },
+    {
+      "id": "agents",
+      "title": "Agent Architecture",
+      "goal": "Use adaptive loops only when a fixed workflow is not enough.",
+      "topics": ["tool loop", "router", "planner and executor", "orchestrator and workers", "supervisor", "human approval", "budget limits", "termination rules"]
+    },
+    {
+      "id": "evals-reliability",
+      "title": "Evals and Reliability",
+      "goal": "Turn quality into tests instead of opinions.",
+      "topics": ["golden datasets", "deterministic graders", "model graders", "regression tests", "tracing", "latency", "cost", "retries", "fallbacks"]
+    },
+    {
+      "id": "security-governance",
+      "title": "Security and Governance",
+      "goal": "Treat model input and retrieved content as untrusted data, and keep tool permissions narrow.",
+      "topics": ["prompt injection", "data exfiltration", "least privilege", "secret handling", "sandboxing", "approval gates", "audit logs", "PII classification"]
+    },
+    {
+      "id": "build-deploy",
+      "title": "Build and Deploy",
+      "goal": "Move from a local demo to an observable, versioned service.",
+      "topics": ["local and test environments", "containers", "serverless", "configuration", "secrets", "CI/CD", "observability", "rate limits", "caching", "rollback"]
+    }
+  ],
+  "decision_matrix": [
+    {
+      "need": "Fresh or private knowledge",
+      "default_choice": "retrieval",
+      "rule": "Use RAG or direct retrieval before fine-tuning. Keep source links and metadata."
+    },
+    {
+      "need": "Deterministic action in an external system",
+      "default_choice": "tool_call",
+      "rule": "Use a typed tool contract. Validate input and output outside the model."
+    },
+    {
+      "need": "Reusable integration across AI clients",
+      "default_choice": "mcp",
+      "rule": "Use MCP when a standard discovery and tool/resource interface creates real reuse. Do not wrap every internal API just because MCP exists."
+    },
+    {
+      "need": "Stable repeated multi-step process",
+      "default_choice": "workflow",
+      "rule": "Start deterministic. Add model decisions only where variation creates value."
+    },
+    {
+      "need": "Adaptive multi-step work with uncertain next actions",
+      "default_choice": "agent",
+      "rule": "Use an agent loop with tool allowlists, budgets, termination rules, tracing, and approval for risky writes."
+    },
+    {
+      "need": "Change style, format, or simple behavior",
+      "default_choice": "prompt_first",
+      "rule": "Improve instructions and examples first. Fine-tune only after eval evidence shows a stable gap."
+    }
+  ],
+  "production_rules": [
+    "Separate model reasoning from authorization decisions.",
+    "Read-only tools are the default; write tools need narrower scopes and stronger controls.",
+    "Never treat retrieved text as trusted instructions.",
+    "Make write operations idempotent where possible and use business keys or request IDs.",
+    "Log tool name, sanitized arguments, result status, latency, model, prompt version, and trace ID.",
+    "Test failure paths: timeout, partial result, duplicate request, stale data, denied permission, and malformed output.",
+    "Version prompts, tool schemas, retrieval configuration, datasets, and evals together with the application.",
+    "Define quality, latency, and cost budgets before production rollout."
+  ],
+  "hands_on_labs": [
+    {
+      "id": "lab-01-mcp-readonly",
+      "title": "Read-only MCP server",
+      "build": "Expose synthetic materials, sales orders, and stock through small read-only tools and resources.",
+      "learn": ["tool schema design", "resource boundaries", "local vs remote transport", "authorization boundary", "observability"]
+    },
+    {
+      "id": "lab-02-rag-evals",
+      "title": "RAG with an eval set",
+      "build": "Index a small policy corpus, answer with citations, and test retrieval and answer quality against a golden dataset.",
+      "learn": ["chunking", "metadata", "hybrid retrieval", "reranking", "grounding", "regression testing"]
+    },
+    {
+      "id": "lab-03-agent-approval",
+      "title": "Agent with approval",
+      "build": "Create an operations assistant that can investigate with read tools and prepare a change, but cannot execute a risky write without approval.",
+      "learn": ["agent loop", "tool permissions", "human in the loop", "idempotency", "audit trail"]
+    },
+    {
+      "id": "lab-04-production",
+      "title": "Production readiness",
+      "build": "Add traces, eval gates, retry policy, cost and latency budgets, rate limits, secrets, deployment pipeline, and rollback.",
+      "learn": ["SLO thinking", "observability", "CI/CD", "security", "capacity", "operations"]
+    }
+  ],
+  "sources": [
+    {
+      "id": "mcp-2026-07-28",
+      "title": "Model Context Protocol 2026-07-28 release",
+      "url": "https://blog.modelcontextprotocol.io/posts/2026-07-28/",
+      "type": "official",
+      "reviewed_at": "2026-08-15"
+    },
+    {
+      "id": "mcp-docs",
+      "title": "Model Context Protocol documentation",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "reviewed_at": "2026-08-15"
+    },
+    {
+      "id": "openai-api",
+      "title": "OpenAI API documentation",
+      "url": "https://platform.openai.com/docs/",
+      "type": "official",
+      "reviewed_at": "2026-08-15"
+    },
+    {
+      "id": "nist-ai-rmf",
+      "title": "NIST AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "reviewed_at": "2026-08-15"
+    },
+    {
+      "id": "owasp-genai",
+      "title": "OWASP GenAI Security Project",
+      "url": "https://genai.owasp.org/",
+      "type": "official",
+      "reviewed_at": "2026-08-15"
+    }
+  ]
+}
