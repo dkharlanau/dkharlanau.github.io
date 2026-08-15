@@ -3,7 +3,7 @@
     "id": "ddd-for-acting-systems",
     "name": "Domain-Driven Design for Acting Systems",
     "short_name": "DDD for Acting Systems",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "status": "working-framework",
     "verification": "needs_verification",
     "language": "en",
@@ -11,13 +11,16 @@
     "canonical_page": "https://dkharlanau.github.io/ddd/",
     "canonical_data": "https://dkharlanau.github.io/ddd/framework.json",
     "agent_context": "https://dkharlanau.github.io/ddd/agent-context.md",
+    "decision_schema": "https://dkharlanau.github.io/ddd/decision.schema.json",
+    "decision_canvas": "https://dkharlanau.github.io/ddd/decision-canvas/",
+    "reference_cases": "https://dkharlanau.github.io/ddd/examples.json",
     "last_updated": "2026-08-15",
-    "purpose": "Extend practical Domain-Driven Design for systems where people, deterministic software, AI models and agents can interpret, decide, delegate and act."
+    "purpose": "Extend practical Domain-Driven Design for systems where people, deterministic software, AI models and agents can interpret, decide, delegate, commit and learn."
   },
   "position": {
     "thesis": "A bounded context protects meaning. An acting system also needs explicit boundaries for decisions, commitments, authority and learning.",
     "short_formula": "Meaning -> Decision -> Commitment -> Evidence -> Learning",
-    "interpretation": "Meaning tells us what a business concept is. A decision chooses what should happen. A commitment changes a real obligation or state. Evidence shows why it happened. Learning decides what may change next time.",
+    "interpretation": "Meaning defines the business concept. A decision chooses what should happen. A commitment creates a durable business effect. Evidence explains what happened and why. Learning decides what may change next time.",
     "non_claim": "This is a personal working synthesis. It is not an official extension of Domain-Driven Design and it does not replace the original DDD strategic or tactical patterns."
   },
   "three_planes": [
@@ -25,7 +28,7 @@
       "id": "domain-plane",
       "name": "Domain Plane",
       "purpose": "Protect business meaning and ownership.",
-      "contains": ["context", "capability", "ubiquitous-language", "invariant", "contract"]
+      "contains": ["context", "ubiquitous-language", "capability", "invariant", "contract"]
     },
     {
       "id": "action-plane",
@@ -36,7 +39,7 @@
     {
       "id": "learning-plane",
       "name": "Learning Plane",
-      "purpose": "Observe outcomes and change the system without uncontrolled self-modification.",
+      "purpose": "Observe outcomes and improve behavior without uncontrolled self-modification.",
       "contains": ["event", "evidence", "evaluation", "change-proposal", "promotion-gate"]
     }
   ],
@@ -47,17 +50,6 @@
     {"concept": "aggregate-and-invariant", "reason": "Business consistency rules remain deterministic constraints even when AI assists the process."},
     {"concept": "domain-event", "reason": "Business facts remain useful for integration, observation and reconstruction of what happened."},
     {"concept": "anti-corruption-layer", "reason": "Foreign semantics should be translated before they influence the local model."}
-  ],
-  "extensions": [
-    {"id": "decision-boundary", "name": "Decision Boundary", "description": "Defines authoritative inputs, invariants, permitted judgment, actors and the decision outcome."},
-    {"id": "commitment-boundary", "name": "Commitment Boundary", "description": "Defines which actor may turn a decision into a durable business promise, transaction or external obligation."},
-    {"id": "authority-envelope", "name": "Authority Envelope", "description": "Defines scope, value, frequency, time, approval and reversibility limits for an actor or delegated task."},
-    {"id": "agent-contract", "name": "Agent Contract", "description": "Defines the role of an agent inside a domain context, including readable data, callable tools, forbidden actions, delegation rules and evidence requirements."},
-    {"id": "evidence-model", "name": "Evidence Model", "description": "Separates authoritative business truth from retrieved context, model output, execution traces and observations."},
-    {"id": "temporal-truth", "name": "Temporal Truth", "description": "Requires important evidence to carry state version, observation time, freshness and validity assumptions."},
-    {"id": "semantic-memory-boundary", "name": "Semantic Memory Boundary", "description": "Treats vector stores, knowledge graphs and retrieved documents as contextual memory, not transactional truth."},
-    {"id": "evaluation-contract", "name": "Evaluation Contract", "description": "Defines domain cases, failure cases and acceptance thresholds for probabilistic behavior."},
-    {"id": "learning-boundary", "name": "Learning Boundary", "description": "Separates production observation from changes to prompts, models, policies, tools, domain rules and autonomy."}
   ],
   "design_units": [
     {"id": "context", "name": "Context", "unit_of": "semantic integrity", "definition": "The boundary in which a domain model and language are coherent.", "design_question": "Where is this meaning valid, and where does it change?"},
@@ -70,76 +62,133 @@
     {"id": "evaluation", "name": "Evaluation", "unit_of": "learning", "definition": "A controlled test of behavior against domain cases, risks and desired outcomes.", "design_question": "What evidence is strong enough to change behavior or autonomy?"}
   ],
   "decision_boundary": {
-    "required_fields": ["decision_id", "domain_owner", "business_outcome", "authoritative_inputs", "contextual_inputs", "input_freshness", "invariants", "judgment_allowed", "allowed_actors", "authority_envelope", "approval_rule", "candidate_actions", "commitment_owner", "reversal_or_compensation", "evidence_to_record", "evaluation_cases"],
+    "principle": "Do not hide an important business decision inside a prompt, orchestration graph or service implementation. Model the decision as a domain artifact.",
+    "required_fields": [
+      "decision_id",
+      "business_outcome",
+      "home_context",
+      "decision_type",
+      "authoritative_inputs",
+      "contextual_inputs",
+      "freshness_rule",
+      "invariants",
+      "allowed_judgment",
+      "forbidden_judgment",
+      "authority_envelope",
+      "commitment",
+      "decision_economics",
+      "evidence",
+      "evaluation"
+    ],
     "classification": [
-      {"type": "deterministic-invariant", "use": "Rules that must always hold and should not be delegated to a probabilistic model."},
-      {"type": "bounded-judgment", "use": "Several valid options exist and AI may rank, explain or propose inside fixed constraints."},
+      {"type": "deterministic-invariant", "use": "A rule must always hold. Keep the rule deterministic even if AI explains it."},
+      {"type": "bounded-judgment", "use": "Several valid options exist and AI may rank, explain or propose inside explicit constraints."},
       {"type": "advisory", "use": "AI may interpret or recommend while a human or deterministic process keeps final authority."},
-      {"type": "cross-context", "use": "The choice requires facts or commitments owned by more than one bounded context."}
+      {"type": "cross-context", "use": "The choice depends on facts or commitments owned by more than one bounded context."}
     ],
     "sequence": ["truth", "evidence", "judgment", "authority", "commitment", "observation"]
   },
   "commitment_boundary": {
-    "principle": "A recommendation is not a commitment. A capability is not authority. A tool call is not automatically a valid business action.",
-    "examples": ["change a customer promise date", "release a purchase order", "approve a credit decision", "reserve inventory", "post a financial document", "send an externally binding confirmation"],
-    "required_fields": ["commitment_type", "owning_context", "authorized_actor", "preconditions", "domain_command", "transactional_system", "idempotency_or_duplicate_control", "reversal_or_compensation", "resulting_event"]
+    "principle": "A recommendation is not a commitment. A capability is not authority. A successful tool call is not automatically a valid business action.",
+    "examples": [
+      "change a customer promise date",
+      "release a purchase order",
+      "approve a credit decision",
+      "reserve inventory",
+      "activate master data",
+      "post a financial document",
+      "send an externally binding confirmation"
+    ],
+    "required_fields": [
+      "commitment_type",
+      "owning_context",
+      "authorized_actor",
+      "preconditions",
+      "domain_command",
+      "transactional_system",
+      "idempotency_or_duplicate_control",
+      "reversal_or_compensation",
+      "resulting_event"
+    ]
   },
   "authority_envelope": {
-    "principle": "Authority should be attached to a decision and action, not to an agent personality.",
+    "principle": "Authority belongs to a decision and action, not to an agent personality.",
     "dimensions": [
-      {"id": "scope", "question": "Which objects, customers, plants, company codes or process types are in scope?"},
+      {"id": "scope", "question": "Which objects, customers, plants, company codes, warehouses or process types are in scope?"},
       {"id": "value", "question": "What financial, quantity or business-impact limit applies?"},
       {"id": "frequency", "question": "How often or how many actions may be performed?"},
       {"id": "time", "question": "During which time window is the authority valid?"},
       {"id": "reversibility", "question": "Can the action be undone or compensated safely?"},
-      {"id": "approval", "question": "Which action requires explicit human or policy approval?"}
+      {"id": "approval", "question": "Which action requires an explicit human or policy checkpoint?"}
     ],
     "delegation_rule": "Delegation may preserve or reduce authority, but it must never amplify authority. A child task cannot receive more business authority than its parent actor holds.",
-    "confidence_rule": "Model confidence may inform review or routing, but confidence alone does not grant authority."
+    "confidence_rule": "Model confidence may inform routing or review, but confidence alone does not grant authority."
   },
+  "autonomy_levels": [
+    {"id": "A0", "name": "Read", "agent_may": "Retrieve, explain and summarize.", "human_role": "Owns every decision and action."},
+    {"id": "A1", "name": "Recommend", "agent_may": "Evaluate bounded options and recommend a next move.", "human_role": "Chooses and executes."},
+    {"id": "A2", "name": "Prepare", "agent_may": "Prepare a transaction, message or change without committing it.", "human_role": "Reviews and submits."},
+    {"id": "A3", "name": "Execute with approval", "agent_may": "Execute one defined action after an explicit approval checkpoint.", "human_role": "Approves material commitment and handles exceptions."},
+    {"id": "A4", "name": "Bounded execution", "agent_may": "Execute without per-action approval inside a narrow authority envelope.", "human_role": "Defines policy, observes outcomes and handles escalation."}
+  ],
   "decision_economics": {
-    "principle": "Use AI where bounded judgment creates enough value to justify uncertainty, cost and governance overhead.",
-    "factors": ["decision_volume", "cost_of_delay", "cost_of_error", "reversibility", "ambiguity", "latency_need", "evidence_quality", "human_review_cost"],
-    "rules": [
-      "High ambiguity plus high reversibility is a good candidate for AI-assisted judgment.",
-      "Hard invariants belong in deterministic logic even when AI explains them.",
-      "High irreversible loss pushes the design toward approval, simulation or recommendation rather than autonomous execution.",
-      "Do not add an agent when a deterministic rule or a simpler workflow solves the problem more reliably."
-    ]
+    "principle": "Use AI where bounded judgment creates enough value to justify uncertainty, latency, evaluation work and governance overhead.",
+    "factors": [
+      "ambiguity",
+      "decision_volume",
+      "cost_of_delay",
+      "cost_of_error",
+      "reversibility",
+      "evidence_quality",
+      "human_review_cost"
+    ],
+    "design_postures": [
+      {"id": "prefer-deterministic", "when": "Ambiguity is low or a stable rule already gives the right answer.", "default_autonomy": "deterministic"},
+      {"id": "advisory-ai", "when": "Error cost is high and the result is hard to reverse.", "default_autonomy": "A0-A1"},
+      {"id": "prepare-with-review", "when": "Judgment is useful but a material commitment still needs explicit review.", "default_autonomy": "A1-A2"},
+      {"id": "bounded-execution-candidate", "when": "Judgment is useful, evidence is strong, action is reversible and deterministic guardrails are available.", "default_autonomy": "A3 first, A4 only after evaluation"}
+    ],
+    "rule": "Do not add an agent when a deterministic rule or simpler workflow solves the problem more reliably."
   },
+  "truth_and_time": [
+    {"id": "system-of-record", "name": "System of Record", "role": "Transactional truth", "may_authorize_action": true, "requirements": ["object identity", "state version or equivalent", "observation time"]},
+    {"id": "event-memory", "name": "Event Memory", "role": "What happened", "may_authorize_action": "only when event semantics, ordering and freshness are sufficient", "requirements": ["event time", "producer context", "schema version"]},
+    {"id": "semantic-memory", "name": "Semantic Memory", "role": "What may be relevant", "may_authorize_action": false, "requirements": ["source context", "source date", "retrieval metadata when relevant"]},
+    {"id": "evidence-store", "name": "Evidence Store", "role": "Why a decision or action happened", "may_authorize_action": false, "requirements": ["decision id", "actor", "source references", "tool result", "outcome"]}
+  ],
   "agent_model": {
     "principle": "An AI agent is a domain actor, not a new bounded context by default.",
     "placement_rule": "Place the agent inside the business context whose language, decisions and contracts it uses. Create a separate bounded context only when it owns a genuinely separate domain model and lifecycle.",
     "tool_rule": "Expose domain-shaped tools with narrow intent. Avoid generic database, shell or system-wide mutation capabilities as business interfaces.",
     "truth_rule": "Agents may read, interpret and propose. They do not become the source of record by producing an answer.",
-    "capability_rule": "Protocol discovery can tell an agent what a server or another agent can do. It does not tell the business whether that action is authorized.",
+    "capability_rule": "Protocol discovery can tell an agent what a server or remote agent can do. It does not tell the business whether that action is authorized.",
     "cross_context_rule": "When an agent crosses a bounded context, require an explicit contract and translation just as for any other integration.",
-    "delegation_rule": "Every delegated task carries an explicit authority envelope, source context and expected artifact. Delegation cannot widen authority."
+    "delegation_rule": "Every delegated task carries source context, expected artifact and an authority envelope that is equal to or narrower than the parent authority."
   },
-  "autonomy_levels": [
-    {"id": "A0", "name": "Read", "agent_may": "Retrieve, explain and summarize.", "human_role": "Owns every decision and action.", "typical_use": "Knowledge retrieval, diagnostics, process explanation."},
-    {"id": "A1", "name": "Recommend", "agent_may": "Evaluate bounded options and recommend a next move.", "human_role": "Chooses and executes.", "typical_use": "Root-cause hypotheses, delivery-risk options, prioritization."},
-    {"id": "A2", "name": "Prepare", "agent_may": "Prepare a transaction, message, change set or workflow input without committing it.", "human_role": "Reviews and submits.", "typical_use": "Draft order change, create support response, prepare master-data correction."},
-    {"id": "A3", "name": "Execute with approval", "agent_may": "Execute a pre-defined action only after an explicit approval checkpoint.", "human_role": "Approves material action and handles exceptions.", "typical_use": "Controlled workflow action with traceable approval."},
-    {"id": "A4", "name": "Bounded execution", "agent_may": "Execute without per-action approval inside a narrow authority envelope.", "human_role": "Defines policy, observes outcomes and handles escalation.", "typical_use": "Low-risk reversible actions with strong deterministic guardrails."}
-  ],
-  "truth_and_time": [
-    {"id": "system-of-record", "name": "System of Record", "role": "Transactional truth", "may_authorize_action": true, "requirements": ["object identity", "state version or equivalent", "observation time"], "examples": ["SAP S/4HANA business document", "approved master data", "policy store"]},
-    {"id": "event-memory", "name": "Event Memory", "role": "What happened", "may_authorize_action": "only when event semantics, ordering and freshness are sufficient", "requirements": ["event time", "producer context", "schema version"], "examples": ["domain events", "business event log", "integration event stream"]},
-    {"id": "semantic-memory", "name": "Semantic Memory", "role": "What may be relevant", "may_authorize_action": false, "requirements": ["source context", "source date", "retrieval score when relevant"], "examples": ["vector index", "knowledge graph", "retrieved documents", "embeddings"]},
-    {"id": "evidence-store", "name": "Evidence Store", "role": "Why a decision or action happened", "may_authorize_action": false, "requirements": ["decision id", "actor", "source references", "tool result", "outcome"], "examples": ["source references", "tool calls", "approval record", "evaluation result", "outcome trace"]}
-  ],
   "integration_contracts": [
     {"id": "data-contract", "purpose": "Exchange stable facts or state snapshots with ownership and semantics."},
     {"id": "event-contract", "purpose": "Publish a durable business fact with producer context, schema and time semantics."},
     {"id": "command-tool-contract", "purpose": "Request one narrow domain action with preconditions, authority and explicit effects."},
-    {"id": "agent-task-contract", "purpose": "Delegate a goal or task with source context, authority envelope, expected artifact and lifecycle."},
-    {"id": "evidence-contract", "purpose": "Carry provenance and decision evidence across an integration without pretending it is domain truth."}
+    {"id": "agent-task-contract", "purpose": "Delegate a goal with source context, authority envelope, expected artifact and lifecycle."},
+    {"id": "evidence-contract", "purpose": "Carry provenance and decision evidence without pretending it is domain truth."}
   ],
   "learning_boundary": {
-    "principle": "Production execution may create evidence. Evidence may create a change proposal. It must not silently rewrite domain policy or authority.",
-    "runtime_may": ["observe outcomes", "capture failures", "record user corrections", "propose a change", "route cases for evaluation"],
-    "runtime_must_not_by_default": ["change deterministic invariants", "increase autonomy", "change business authority", "replace a production model", "rewrite tool permissions", "promote retrieved text into policy"],
+    "principle": "Production execution may create evidence. Evidence may create a change proposal. It must not silently rewrite domain policy, invariants or authority.",
+    "runtime_may": [
+      "observe outcomes",
+      "capture failures",
+      "record user corrections",
+      "propose a change",
+      "route cases for evaluation"
+    ],
+    "runtime_must_not_by_default": [
+      "change deterministic invariants",
+      "increase autonomy",
+      "change business authority",
+      "replace a production model",
+      "rewrite tool permissions",
+      "promote retrieved text into policy"
+    ],
     "promotion_flow": ["observe", "curate evidence", "add evaluation case", "propose change", "test", "review", "promote", "monitor"],
     "versioned_assets": ["domain model", "prompt or instructions", "model configuration", "retrieval policy", "tool schema", "authority policy", "evaluation set"]
   },
@@ -147,7 +196,7 @@
     {"step": 1, "id": "explore", "name": "Explore", "question": "What business problem, language, events, commitments and decisions exist?", "outputs": ["domain language", "event candidates", "decision candidates", "commitment candidates"]},
     {"step": 2, "id": "bound", "name": "Bound", "question": "Where does meaning change and who owns the capability?", "outputs": ["bounded contexts", "capability ownership", "context map"]},
     {"step": 3, "id": "contract", "name": "Contract", "question": "What may cross each boundary and in which form?", "outputs": ["data contracts", "event contracts", "tool contracts", "agent task contracts", "anti-corruption rules"]},
-    {"step": 4, "id": "decide", "name": "Decide", "question": "Which choices are deterministic, advisory or judgment-based, and what is their economics?", "outputs": ["decision map", "invariants", "decision economics", "authority envelope"]},
+    {"step": 4, "id": "decide", "name": "Decide", "question": "Which choices are deterministic, advisory or judgment-based, and what is their economics?", "outputs": ["decision cards", "invariants", "design posture", "authority envelopes"]},
     {"step": 5, "id": "commit", "name": "Commit", "question": "Who may turn a decision into a durable business effect?", "outputs": ["commitment boundaries", "domain commands", "approval and compensation rules"]},
     {"step": 6, "id": "observe", "name": "Observe", "question": "What event and evidence show what the system decided and actually did?", "outputs": ["domain events", "telemetry", "evidence records", "exception routes"]},
     {"step": 7, "id": "learn", "name": "Learn", "question": "Which evidence is strong enough to change policy, evaluation, model or design?", "outputs": ["evaluation cases", "change proposals", "promotion decisions", "domain-model feedback"]}
@@ -155,16 +204,38 @@
   "artifacts": [
     {"id": "context-card", "purpose": "Capture language, scope, owners, systems of record and context relationships."},
     {"id": "capability-map", "purpose": "Map business abilities to ownership and business outcomes."},
-    {"id": "decision-card", "purpose": "Capture truth, evidence, invariants, judgment, economics, authority and candidate actions."},
+    {"id": "decision-card", "purpose": "Capture truth, evidence, invariants, judgment, economics, authority and commitment.", "schema": "https://dkharlanau.github.io/ddd/decision.schema.json", "interactive_tool": "https://dkharlanau.github.io/ddd/decision-canvas/"},
     {"id": "commitment-card", "purpose": "Capture the durable business effect, authorized actor, command, transaction boundary and compensation."},
     {"id": "authority-envelope", "purpose": "Capture scope, value, frequency, time, approval and reversibility limits."},
     {"id": "tool-contract", "purpose": "Define one narrow executable domain operation with inputs, preconditions, authority, effects and failure states."},
     {"id": "event-contract", "purpose": "Define a stable business fact, owner, schema, time semantics and consumer expectations."},
     {"id": "agent-contract", "purpose": "Define agent role, context, tools, data, autonomy, delegation, forbidden actions, escalation and evidence requirements."},
-    {"id": "trust-policy", "purpose": "Classify sources by authority, freshness, sensitivity and permitted decision use."},
     {"id": "evaluation-set", "purpose": "Keep representative domain cases and known failure cases for probabilistic behavior."},
-    {"id": "learning-ledger", "purpose": "Link production evidence to proposed changes, evaluations, review and promotion decisions."},
-    {"id": "anti-corruption-map", "purpose": "Show where foreign system, agent or model semantics are translated before entering the local domain model."}
+    {"id": "learning-ledger", "purpose": "Link production evidence to proposed changes, evaluations, review and promotion decisions."}
+  ],
+  "practical_layer": {
+    "principle": "The framework should produce artifacts that can be reviewed by people and validated by software.",
+    "decision_schema": {
+      "url": "https://dkharlanau.github.io/ddd/decision.schema.json",
+      "schema_draft": "2020-12",
+      "purpose": "Validate the shape of a Decision Card and make agent output predictable."
+    },
+    "decision_canvas": {
+      "url": "https://dkharlanau.github.io/ddd/decision-canvas/",
+      "purpose": "Create one Decision Card interactively and expose missing design fields before implementation."
+    },
+    "reference_cases": {
+      "url": "https://dkharlanau.github.io/ddd/examples.json",
+      "domains": ["sales", "procurement", "credit-management", "master-data", "warehouse-execution"],
+      "purpose": "Show how the same contract behaves across SAP-heavy business decisions."
+    }
+  },
+  "reference_case_catalog": [
+    {"id": "sales-delivery-risk", "home_context": "Customer Order", "default_posture": "prepare-with-review", "default_autonomy": "A2"},
+    {"id": "procurement-source-selection", "home_context": "Operational Procurement", "default_posture": "prepare-with-review", "default_autonomy": "A2"},
+    {"id": "credit-block-release", "home_context": "Credit Management", "default_posture": "advisory-ai", "default_autonomy": "A1"},
+    {"id": "master-data-change", "home_context": "Product Master Data", "default_posture": "prepare-with-review", "default_autonomy": "A2"},
+    {"id": "ewm-warehouse-exception", "home_context": "Warehouse Execution", "default_posture": "bounded-execution-candidate", "default_autonomy": "A3"}
   ],
   "relation_graph": {
     "nodes": ["context", "capability", "contract", "decision", "commitment", "event", "evidence", "evaluation", "agent", "human", "system-of-record", "semantic-memory", "tool", "policy", "authority-envelope", "change-proposal"],
@@ -198,74 +269,102 @@
     "Delegation cannot amplify authority.",
     "Agents never own business truth merely because they generated an answer.",
     "Tools are domain contracts, not generic capabilities.",
-    "Events are memory and evidence, not only transport.",
     "Important evidence carries time and source context.",
-    "AI context is a first-class design artifact: source, freshness, authority and sensitivity must be known.",
     "Autonomy is explicit, risk-tiered and preferably reversible.",
     "Deterministic invariants stay outside probabilistic judgment.",
     "Production evidence may propose change; it does not silently rewrite policy, authority or invariants.",
-    "Increase autonomy only after evaluation shows that the bounded action is reliable enough and economically useful."
+    "A framework artifact should be machine-validatable when it drives automated behavior."
   ],
   "anti_patterns": [
-    {"id": "agent-as-integration-layer", "problem": "A general agent translates and coordinates every system without stable domain contracts.", "correction": "Use explicit context contracts and let the agent operate through them."},
+    {"id": "agent-as-integration-layer", "problem": "A general agent coordinates every system without stable domain contracts.", "correction": "Use explicit context contracts and let the agent operate through them."},
     {"id": "vector-store-as-truth", "problem": "Retrieved semantic memory is treated as current transactional truth.", "correction": "Resolve authoritative state from the system of record before material decisions."},
     {"id": "llm-enforces-invariant", "problem": "A probabilistic model is responsible for a rule that must always hold.", "correction": "Encode the invariant deterministically and let AI work around it, not replace it."},
     {"id": "super-agent", "problem": "One agent has broad access across contexts and can silently mix semantics and authority.", "correction": "Scope agents by context, role, tool, authority envelope and autonomy level."},
     {"id": "prompt-as-process", "problem": "Critical business workflow exists only inside a long system prompt.", "correction": "Model decisions, commitments, contracts, approvals and state transitions as durable domain artifacts."},
     {"id": "capability-equals-authority", "problem": "A discovered tool or remote agent skill is treated as permission to perform the business action.", "correction": "Evaluate business authority separately from technical capability discovery."},
     {"id": "delegation-authority-amplification", "problem": "A child agent or remote task receives broader rights than the delegating actor.", "correction": "Pass an explicit authority envelope and require child authority to be equal or narrower."},
-    {"id": "stale-truth", "problem": "An apparently authoritative value is used without checking state version or freshness.", "correction": "Carry temporal metadata and re-read material state before commitment."},
+    {"id": "stale-truth", "problem": "An authoritative value is used without checking state version or freshness.", "correction": "Carry temporal metadata and re-read material state before commitment."},
     {"id": "self-learning-policy", "problem": "Production feedback directly changes prompts, permissions, autonomy or business policy.", "correction": "Route evidence through evaluation and a controlled promotion gate."},
     {"id": "cross-context-rag", "problem": "Retrieval merges documents from several bounded contexts and makes conflicting terms look equivalent.", "correction": "Preserve source context and translate semantics before using retrieved content in a decision."},
-    {"id": "ai-before-domain-cleanup", "problem": "AI hides unclear ownership, weak master data and inconsistent business language behind a fluent interface.", "correction": "Fix domain ownership and truth boundaries before adding autonomous behavior."}
+    {"id": "ai-before-domain-cleanup", "problem": "AI hides unclear ownership, weak master data and inconsistent business language behind a fluent interface.", "correction": "Fix domain ownership and truth boundaries before adding autonomous behavior."},
+    {"id": "untyped-agent-output", "problem": "An agent produces architecture prose that downstream automation interprets differently each time.", "correction": "Use a stable schema for artifacts that cross from analysis into automated processing."}
   ],
   "sap_example": {
-    "id": "sap-order-fulfillment-delivery-risk",
+    "id": "sales-delivery-risk",
+    "full_case": "https://dkharlanau.github.io/ddd/examples.json",
     "business_outcome": "Keep a credible customer delivery promise while reacting quickly to fulfillment risk.",
     "bounded_contexts": ["Customer Order", "Availability", "Delivery Execution", "Transportation"],
-    "systems_of_record": ["SAP S/4HANA sales order and schedule lines", "ATP or aATP result", "delivery status", "approved master data", "transport status when authoritative for the scenario"],
-    "agent": {
-      "name": "Delivery Risk Advisor",
-      "home_context": "Customer Order",
-      "default_autonomy": "A1",
-      "may_read": ["sales order state and version", "availability result and timestamp", "delivery milestones", "transport or integration status", "approved operating knowledge"],
-      "may_do": ["explain delivery risk", "rank bounded alternatives", "request information from another context through a contract", "prepare a proposed promise change for review"],
-      "must_not_do": ["invent available stock", "override ATP truth", "change a customer promise without commitment authority", "treat retrieved documentation as current order state", "delegate broader rights than it holds"]
-    },
-    "decision": {
-      "id": "promise-date-risk-response",
-      "question": "What response should we take when the current customer promise is at risk?",
-      "deterministic_part": "Availability, authorization, document consistency and executable transaction validation remain deterministic.",
-      "ai_part": "Explain trade-offs, connect evidence, rank permitted alternatives and prepare a recommendation.",
-      "decision_economics": "AI is useful when there are many cases and several valid alternatives. It is less useful when one deterministic rule already decides the answer."
-    },
-    "commitment": {
-      "type": "CustomerPromiseChanged",
-      "owner": "Customer Order",
-      "rule": "A changed requested or confirmed promise is a business commitment, not merely an agent recommendation.",
-      "execution": "Use a domain command that validates current order version, ATP result, authorization and process rules before changing SAP state.",
-      "default_authority": "Human approval or explicit narrow policy."
-    },
-    "events": ["SalesOrderConfirmed", "ATPRecalculated", "DeliveryRiskDetected", "AlternativeProposed", "CustomerPromiseChanged"],
-    "evidence": ["order identifier and state version", "availability result and calculation time", "source timestamps", "recommendation and alternatives", "approval or policy reference", "tool call result", "resulting business event"],
-    "learning_rule": "Outcome evidence may add evaluation cases or propose a policy change. It must not silently change ATP rules, customer promise authority or agent autonomy."
+    "agent": "Delivery Risk Advisor",
+    "default_autonomy": "A2",
+    "rule": "ATP or aATP and current SAP document state remain authoritative. AI may explain risk, rank valid alternatives and prepare a proposal. Changing the customer promise is a separate authorized commitment."
   },
   "agent_interface": {
-    "instruction": "Use this framework to analyze a business or software domain. Start from domain meaning and ownership, then decisions, commitments, evidence and controlled learning. Do not start by assigning microservices, agents, databases or vendor products.",
-    "required_inputs": ["business outcome or problem", "important domain terms", "candidate capabilities and owners", "systems of record", "important decisions", "important commitments", "integration boundaries", "candidate AI or automation actions", "risk and approval constraints"],
-    "analysis_order": ["identify bounded contexts", "map capabilities and ownership", "identify authoritative systems of record and freshness needs", "map important decisions", "classify deterministic invariants versus bounded judgment", "identify business commitments", "define contracts and anti-corruption points", "place agents as actors inside contexts", "assign authority envelopes and autonomy levels", "define events and evidence", "define evaluation and learning boundaries"],
-    "output_sections": ["domain_scope", "ubiquitous_language", "bounded_contexts", "capabilities", "context_relationships", "decision_map", "commitment_map", "truth_and_time", "agent_contracts", "authority_and_autonomy", "events_and_evidence", "learning_boundary", "anti_patterns_or_risks", "open_questions"],
-    "safety_rules": ["Do not infer authority from data availability or technical capability.", "Do not classify model output as business truth.", "Do not let semantic memory override a transactional source of record.", "Do not delegate deterministic invariants to an LLM.", "Do not cross bounded contexts without naming the contract and translation.", "Do not let delegated tasks amplify authority.", "Do not commit material state from stale evidence when a current state read is available.", "Do not recommend higher autonomy without a reversal path, evidence, evaluation cases and decision economics.", "Do not let production feedback directly rewrite policy, permissions or invariants."]
+    "instruction": "Use this framework to analyze a business or software domain. Start from domain meaning and ownership, then model decisions, commitments, evidence and controlled learning. Do not start by assigning microservices, agents, databases or vendor products.",
+    "canonical_output_schema": "https://dkharlanau.github.io/ddd/decision.schema.json",
+    "reference_cases": "https://dkharlanau.github.io/ddd/examples.json",
+    "required_inputs": [
+      "business outcome or problem",
+      "important domain terms",
+      "candidate capabilities and owners",
+      "systems of record",
+      "important decisions",
+      "important commitments",
+      "integration boundaries",
+      "candidate AI or automation actions",
+      "risk and approval constraints"
+    ],
+    "analysis_order": [
+      "identify bounded contexts",
+      "map capabilities and ownership",
+      "identify authoritative systems of record and freshness needs",
+      "map important decisions",
+      "classify deterministic invariants versus bounded judgment",
+      "evaluate decision economics",
+      "identify business commitments",
+      "define contracts and anti-corruption points",
+      "place agents as actors inside contexts",
+      "assign authority envelopes and autonomy levels",
+      "define events and evidence",
+      "define evaluation and learning boundaries",
+      "validate material Decision Cards against decision.schema.json"
+    ],
+    "output_sections": [
+      "domain_scope",
+      "ubiquitous_language",
+      "bounded_contexts",
+      "capabilities",
+      "context_relationships",
+      "decision_map",
+      "commitment_map",
+      "truth_and_time",
+      "agent_contracts",
+      "authority_and_autonomy",
+      "events_and_evidence",
+      "learning_boundary",
+      "anti_patterns_or_risks",
+      "open_questions"
+    ],
+    "safety_rules": [
+      "Do not infer authority from data availability or technical capability.",
+      "Do not classify model output as business truth.",
+      "Do not let semantic memory override a transactional source of record.",
+      "Do not delegate deterministic invariants to an LLM.",
+      "Do not cross bounded contexts without naming the contract and translation.",
+      "Do not let delegated tasks amplify authority.",
+      "Do not commit material state from stale evidence when a current state read is available.",
+      "Do not recommend higher autonomy without a reversal path, evidence, evaluation cases and decision economics.",
+      "Do not let production feedback directly rewrite policy, permissions or invariants."
+    ]
   },
   "sources": [
     {"id": "ddd-reference", "title": "DDD Reference", "publisher": "Domain Language / Eric Evans", "url": "https://www.domainlanguage.com/ddd/reference/", "use": "Original DDD pattern vocabulary and strategic design reference."},
-    {"id": "ddd-ai-deterministic", "title": "AI Components for a Deterministic System", "publisher": "Domain Language / Eric Evans", "url": "https://www.domainlanguage.com/articles/ai-components-deterministic-system/", "use": "Distinguishes probabilistic classification from domain modeling and keeps structured deterministic boundaries."},
-    {"id": "ddd-ai-context-mapping", "title": "Context Mapping with an AI-based Component", "publisher": "Domain Language / Eric Evans", "url": "https://www.domainlanguage.com/articles/context-mapping-an-ai-based-component/", "use": "Primary 2026 discussion of integrating a probabilistic AI component into a deterministic system with context mapping."},
-    {"id": "mcp-2026", "title": "Model Context Protocol 2026-07-28 release", "publisher": "Model Context Protocol", "url": "https://blog.modelcontextprotocol.io/posts/2026-07-28/", "use": "Current direction for stateless tool/resource interaction, explicit capability discovery, authorization hardening and task extensions."},
-    {"id": "mcp-tools", "title": "Model Context Protocol Tools", "publisher": "Model Context Protocol", "url": "https://modelcontextprotocol.io/specification/draft/server/tools", "use": "Technical tool exposure, structured tool results and authorization-dependent tool availability."},
+    {"id": "ddd-ai-deterministic", "title": "AI Components for a Deterministic System", "publisher": "Domain Language / Eric Evans", "url": "https://www.domainlanguage.com/articles/ai-components-deterministic-system/", "use": "Separation between probabilistic classification and deliberate domain modeling."},
+    {"id": "ddd-ai-context-mapping", "title": "Context Mapping with an AI-based Component", "publisher": "Domain Language / Eric Evans", "url": "https://www.domainlanguage.com/articles/context-mapping-an-ai-based-component/", "use": "Primary discussion of integrating a probabilistic AI component into a structured deterministic system with context mapping."},
+    {"id": "mcp", "title": "Model Context Protocol", "publisher": "Model Context Protocol", "url": "https://modelcontextprotocol.io/specification/draft/server/tools", "use": "Technical tool exposure and model-controlled invocation; domain authority remains separate."},
     {"id": "a2a", "title": "Agent2Agent Protocol Specification", "publisher": "A2A Protocol", "url": "https://a2a-protocol.org/dev/specification/", "use": "Agent discovery, tasks, artifacts and remote-agent interoperability."},
-    {"id": "opentelemetry-genai", "title": "OpenTelemetry GenAI Semantic Conventions", "publisher": "OpenTelemetry", "url": "https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/", "use": "Signals for observing model, retrieval, agent and tool execution behavior, including sensitive-data considerations."},
+    {"id": "opentelemetry-genai", "title": "OpenTelemetry GenAI Semantic Conventions", "publisher": "OpenTelemetry", "url": "https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/", "use": "Signals for observing model, retrieval, agent and tool execution behavior."},
     {"id": "cloudevents", "title": "CloudEvents Specification", "publisher": "CNCF CloudEvents", "url": "https://github.com/cloudevents/spec", "use": "Vendor-neutral event metadata and interoperability model."},
+    {"id": "json-schema", "title": "JSON Schema Draft 2020-12", "publisher": "JSON Schema", "url": "https://json-schema.org/draft/2020-12", "use": "Machine validation contract for Decision Cards."},
     {"id": "nist-genai-profile", "title": "AI RMF Generative AI Profile", "publisher": "NIST", "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence", "use": "Risk, evaluation, governance and trust considerations across the generative AI lifecycle."}
   ],
   "retrieval_policy": {
