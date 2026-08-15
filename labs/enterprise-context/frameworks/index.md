@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "BRFplus and AIF — Decision and Exception Frameworks"
-description: "A practical SAP cross-application map for BRFplus business rules and SAP Application Interface Framework exception handling, monitoring, correction, and reprocessing."
+description: "A practical SAP map for BRFplus business rules and AIF exception handling, monitoring, correction, and reprocessing."
 permalink: /labs/enterprise-context/frameworks/
 status: draft
 verified: false
