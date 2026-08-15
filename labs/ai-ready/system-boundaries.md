@@ -20,6 +20,10 @@ tags: [ai, architecture, workflow, structured-output, state]
 
 A useful AI architecture starts by deciding what the model is allowed to decide. The common mistake is to put rules, permissions, calculations, memory, and process control into one large prompt. It works in a demo because the happy path is polite. Production is less polite.
 
+## Problem
+
+AI applications become hard to control when model reasoning, deterministic rules, authorization, state, and side effects are mixed together.
+
 ## The split
 
 ```text

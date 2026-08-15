@@ -20,6 +20,14 @@ tags: [ai, lab, agents, approval, tools, security]
 
 Build an operations assistant that may investigate with read-only tools and prepare a change, but cannot execute a risky write without a separate approval state.
 
+## Problem
+
+An investigation agent becomes risky when the same loop can both decide and execute a high-impact write.
+
+## Context
+
+This lab uses synthetic incident data to separate read-only investigation, prepared change, approval, and execution.
+
 ## Scenario
 
 Use synthetic incident and deployment data. The user asks:

@@ -20,6 +20,10 @@ tags: [ai, mcp, tools, api, authorization, integration]
 
 A model should not “know” a current ticket state, deployment status, account balance, or private policy from memory. It should call a controlled capability. The architecture question is whether that capability should be a direct application tool, a normal API integration, or an MCP server.
 
+## Problem
+
+Giving a model broad system access makes integration hard to secure, test, reuse, and observe.
+
 ## Tool first, protocol second
 
 Use a direct function tool when one application needs one controlled capability. Use MCP when several AI clients or agent runtimes benefit from the same discoverable tool/resource contract.

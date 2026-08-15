@@ -20,6 +20,10 @@ tags: [ai, lab, rag, retrieval, evals]
 
 Build a small retrieval system where every answer can be traced to source evidence. The point is not to collect vector-database screenshots. The point is to know why retrieval succeeded or failed.
 
+## Problem
+
+A RAG demo can look correct on a few questions while retrieval quality, source coverage, and no-evidence behavior remain untested.
+
 ## Scenario
 
 Create a synthetic product-and-team knowledge corpus with 20–40 short documents. Example topics:

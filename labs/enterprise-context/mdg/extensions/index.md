@@ -37,6 +37,7 @@ tags: [sap, mdg, extensibility, rap, abap-cloud, clean-core, architecture]
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">extension</span>
+    <p><strong>Problem:</strong> MDG extensions become expensive when a requirement is implemented in the wrong layer or breaks cloud-ready boundaries.</p>
     <p><strong>Cloud-ready rule:</strong> RAP extensibility is opt-in. Data model, behavior, nodes, and service exposure must be explicitly enabled by the business-object provider.</p>
     <p><strong>Architecture rule:</strong> a technical extension point does not prove that the requirement belongs inside MDG.</p>
     <a href="/labs/enterprise-context/mdg/architecture/">See the full solution architecture <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>

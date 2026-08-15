@@ -20,6 +20,10 @@ tags: [ai, evals, testing, reliability, observability]
 
 An AI change is not better because one answer looks better in chat. Prompts, models, retrieval, tool schemas, and agent logic need regression tests. Evals turn “I think this is better” into evidence.
 
+## Problem
+
+AI systems can regress silently when prompts, models, retrieval, tools, or policies change without repeatable tests.
+
 ## Build the dataset before tuning the system
 
 Keep a small golden set early. It should contain real decision shapes, not only friendly examples.

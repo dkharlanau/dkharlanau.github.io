@@ -35,6 +35,7 @@ tags: [ai, architecture, mcp, agents, rag, evals, security, automation]
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">architecture</span>
+    <p><strong>Problem:</strong> Teams often start with a model demo before defining data, tools, controls, evaluation, deployment, and failure handling.</p>
     <p><strong>Main rule:</strong> use the model for uncertainty. Keep identity, permissions, exact rules, durable state, and side effects in normal software.</p>
     <p><strong>Learning rule:</strong> build the smallest useful version first, create eval cases, then add retrieval, tools, agents, or fine-tuning only when a measured gap needs them.</p>
     <a href="/labs/ai-ready/deep-dives/">Open architecture deep dives <span class="material-symbols-outlined" aria-hidden="true">menu_book</span></a>
