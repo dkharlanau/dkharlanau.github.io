@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Transportation Management — Transport to Settle"
-description: "A Lead-level SAP TM map from transportation demand and Freight Units to planning, Freight Orders, EWM execution, carrier tendering, charges, and freight settlement."
+description: "A Lead-level SAP TM map from transportation demand and Freight Units to planning, master data, Freight Orders, EWM execution, carrier tendering, charges, and freight settlement."
 permalink: /labs/enterprise-context/transportation-management/
 status: draft
 verified: false
@@ -60,9 +60,9 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Object model</p><h2>Every TM document needs one clear job.</h2><p>This is the part worth remembering before transaction codes, apps, or configuration paths start breeding in captivity.</p></header>
-    <div class="research-route-list">
+    <div class="ecg-decision-columns">
       {% for item in graph.object_model %}
-      <div class="research-route-list__item"><span>OBJ</span><strong>{{ item.object }}</strong><small><b>{{ item.role }}</b> · {{ item.remember }}</small></div>
+      <article><h3>{{ item.object }}</h3><p><strong>{{ item.role }}</strong></p><p>{{ item.remember }}</p></article>
       {% endfor %}
     </div>
   </section>
@@ -80,9 +80,27 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Planning components</p><h2>Planning is a chain of decisions, not one optimizer button.</h2></header>
-    <div class="research-route-list">
+    <div class="ecg-decision-columns">
       {% for item in graph.planning_components %}
-      <div class="research-route-list__item"><span>TM</span><strong>{{ item.title }}</strong><small>{{ item.role }} <b>Lead lens:</b> {{ item.lead_lens }}</small></div>
+      <article><h3>{{ item.title }}</h3><p>{{ item.role }}</p><p><strong>Lead lens:</strong> {{ item.lead_lens }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Master data</p><h2>The plan is only as good as the world model behind it.</h2><p>When planning looks irrational, first prove the network, capacity, product, carrier, and commercial master data. The optimizer is usually an efficient messenger of bad assumptions.</p></header>
+    <div class="ecg-decision-columns">
+      {% for item in graph.master_data_map %}
+      <article><h3>{{ item.title }}</h3><p><strong>Objects:</strong> {{ item.objects | join: " · " }}</p><p>{{ item.controls }}</p><p><strong>Check first:</strong> {{ item.check_first }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Functional and commercial scope</p><h2>Basic and Advanced TM are not just two marketing labels.</h2><p>The same S/4HANA landscape can expose TM objects while the permitted functional scope still depends on the entitlement. Architecture and licensing have to be checked together.</p></header>
+    <div class="ecg-decision-columns">
+      {% for item in graph.scope_boundary %}
+      <article><h3>{{ item.title }}</h3><p>{{ item.role }}</p><p><strong>Boundary:</strong> {{ item.commercial_boundary }}</p><p><strong>Lead lens:</strong> {{ item.lead_lens }}</p></article>
       {% endfor %}
     </div>
   </section>
@@ -98,9 +116,9 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Deployment patterns</p><h2>Embedded does not mean boundary-free.</h2></header>
-    <div class="research-route-list">
+    <div class="ecg-decision-columns">
       {% for item in graph.deployment_patterns %}
-      <div class="research-route-list__item"><span>DEP</span><strong>{{ item.title }}</strong><small>{{ item.fit }} <b>Caution:</b> {{ item.caution }}</small></div>
+      <article><h3>{{ item.title }}</h3><p>{{ item.fit }}</p><p><strong>Caution:</strong> {{ item.caution }}</p></article>
       {% endfor %}
     </div>
   </section>
@@ -125,9 +143,9 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Synthetic case</p><h2>{{ graph.synthetic_case.title }}</h2><p>{{ graph.synthetic_case.lesson }}</p></header>
-    <div class="research-route-list">
+    <div class="ecg-rail">
       {% for step in graph.synthetic_case.steps %}
-      <div class="research-route-list__item"><span>{{ forloop.index }}</span><strong>{{ step }}</strong><small>Synthetic learning path, not a client case.</small></div>
+      <article><span>{{ forloop.index }}</span><div><h3>{{ step }}</h3><small>Synthetic learning path, not a client case.</small></div></article>
       {% endfor %}
     </div>
   </section>
