@@ -32,7 +32,7 @@ tags:
       <p>Current inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Active labs</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>14+</strong><small>Architecture views</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>9+</strong><small>Machine endpoints</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>10+</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
   </header>
@@ -82,12 +82,15 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Lab 03 / TRIZ for Digital Systems</p>
       <h2>Start from the contradiction.</h2>
-      <p>A reworked TRIZ method for IT architecture, business processes, integration, data, automation, and AI. The classical principles stay as lineage; the digital framework focuses on decisions and experiments.</p>
+      <p>A reworked TRIZ method for IT architecture, business processes, integration, data, automation, and AI. The stable method is separated from dated technology signals.</p>
     </header>
     <div class="research-route-list">
-      <a href="/triz/"><span>TRIZ</span><strong>TRIZ for Digital Systems</strong><small>Eight-step reasoning loop, digital transformation patterns, AI boundaries, process lens, and synthetic cases.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
-      <a href="/triz/patterns/"><span>PAT</span><strong>Digital transformation patterns</strong><small>Twelve reusable moves for separating responsibilities, handling uncertainty, reducing coupling, and controlling AI actions.</small><i class="material-symbols-outlined" aria-hidden="true">transform</i></a>
-      <a href="/datasets/triz-digital-framework/catalog.json"><span>JSON</span><strong>TRIZ digital catalog</strong><small>Framework steps, contradiction types, allocation rules, risk tiers, metrics, and agent contract.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/triz/"><span>TRIZ</span><strong>TRIZ for Digital Systems</strong><small>Three passes, nine reasoning steps, separation operators, resource scan, digital patterns, AI boundaries, and synthetic cases.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
+      <a href="/triz/operators/"><span>OPS</span><strong>Contradiction operators and resources</strong><small>Separate conflicts by time, condition, context, system level, authority, or representation before choosing technology.</small><i class="material-symbols-outlined" aria-hidden="true">call_split</i></a>
+      <a href="/triz/workbench/"><span>WB</span><strong>Practical workbench</strong><small>From evidence and useful function to options, complexity tax, authority chain, counter-metrics, and experiment.</small><i class="material-symbols-outlined" aria-hidden="true">edit_note</i></a>
+      <a href="/triz/signals/"><span>2026</span><strong>Current digital signals</strong><small>Dated notes on MCP, A2A, object-centric process data, simulation, process intelligence, and AI observability.</small><i class="material-symbols-outlined" aria-hidden="true">radar</i></a>
+      <a href="/datasets/triz-digital-framework/catalog.json"><span>JSON</span><strong>TRIZ digital catalog</strong><small>Method, contradiction types, operators, resources, allocation rules, authority model, risk tiers, metrics, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/datasets/triz-digital-framework/reasoning-schema.json"><span>SCHEMA</span><strong>Reasoning contract</strong><small>JSON Schema for inspectable problem analysis and agent output.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="/datasets/triz-digital-framework/cases.jsonl"><span>EVAL</span><strong>TRIZ reasoning cases</strong><small>Synthetic problem-to-contradiction examples for retrieval, reasoning, and agent evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
     </div>
   </section>

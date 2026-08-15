@@ -1,11 +1,12 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "framework_id": "triz-digital-systems",
   "title": "TRIZ for Digital Systems",
   "subtitle": "Contradiction-driven design for IT, business processes and AI",
   "status": "draft",
   "reviewed_at": "2026-08-15",
   "human_index": "/triz/",
+  "method_version": "0.2",
   "scope": [
     "it_architecture",
     "business_process_design",
@@ -15,62 +16,106 @@
     "ai_systems",
     "agents"
   ],
-  "principle": "Do not start from a product. Frame the job, expose the contradiction, redesign the system boundary, allocate deterministic and probabilistic mechanisms deliberately, then test both sides of the contradiction.",
+  "principle": "Do not start from a product. Define the useful function, expose the contradiction, separate the conflict, scan existing resources, generate different system shapes, allocate mechanism and authority deliberately, then test both sides of the contradiction.",
+  "design_sequence": [
+    "operator_first",
+    "pattern_second",
+    "technology_third"
+  ],
+  "passes": [
+    {"id":"understand","name":"Understand","steps":["frame","ideal_result","contradiction"]},
+    {"id":"recompose","name":"Recompose","steps":["separation","resource_scan","system_shapes"]},
+    {"id":"engineer","name":"Engineer","steps":["technology_authority","experiment","feedback"]}
+  ],
   "framework_steps": [
     {
       "id": "frame",
       "order": 1,
-      "name": "Frame the job",
-      "questions": ["What is observed?", "Who is affected?", "What evidence exists?", "What is the current workaround?", "What is inside and outside the boundary?"],
-      "output": ["problem_statement", "business_impact", "actors", "evidence", "boundary"]
+      "name": "Frame the job and useful function",
+      "questions": ["What is observed?", "What useful function must remain?", "Who is affected?", "Which business object changes?", "What evidence exists?", "What is inside and outside the boundary?"],
+      "output": ["problem_statement", "useful_function", "business_impact", "actors", "business_objects", "evidence", "boundary"]
     },
     {
       "id": "ideal_result",
       "order": 2,
       "name": "Define the ideal result",
-      "questions": ["What useful outcome should exist?", "What new complexity should not be required?", "Which existing resources could already provide part of the result?"],
-      "output": ["ideal_outcome", "complexity_budget", "existing_resources"]
+      "questions": ["What useful outcome should exist?", "What new coordination, state, ownership, manual work, runtime cost, or irreversible risk should not be required?"],
+      "output": ["ideal_outcome", "complexity_to_avoid", "reliability_expectation"]
     },
     {
       "id": "contradiction",
       "order": 3,
       "name": "Name the contradiction",
       "template": "If we improve {useful_property_a}, {useful_property_b} becomes worse.",
-      "output": ["improving_property", "worsening_property", "contradiction_type"]
+      "physical_template": "The same element should be {state_a} under {condition_a} and should be {state_b} under {condition_b}.",
+      "output": ["improving_property", "worsening_property", "contradiction_type", "physical_form"]
     },
     {
-      "id": "system_map",
+      "id": "separation",
       "order": 4,
-      "name": "Map the system",
-      "element_types": ["actor", "business_object", "event", "decision", "rule", "data", "constraint", "side_effect", "time"],
-      "output": ["nodes", "relationships", "decision_points", "delays", "failure_points"]
+      "name": "Apply separation operators",
+      "questions": ["Can the conflict be separated by time?", "By condition?", "By context?", "By system level?", "By authority?", "By representation?"],
+      "output": ["tested_operators", "selected_operators", "separation_reasoning"]
     },
     {
-      "id": "transform",
+      "id": "resource_scan",
       "order": 5,
-      "name": "Apply transformation patterns",
-      "pattern_source": "/datasets/triz-digital-framework/patterns.json",
-      "output": ["candidate_patterns", "candidate_system_shapes"]
+      "name": "Scan system resources",
+      "questions": ["What information already exists?", "What time or waiting window exists?", "What boundaries or interfaces exist?", "What history can be replayed?", "Which failures are useful signals?", "Which human judgment is still valuable?", "Which policies and permissions already exist?", "Where should compute and attention be spent?"],
+      "output": ["information", "time", "structure", "history", "negative_signals", "human_judgment", "policy_permission", "compute_attention"]
     },
     {
-      "id": "technology_allocation",
+      "id": "system_shapes",
       "order": 6,
-      "name": "Allocate technology",
-      "rule": "Use deterministic mechanisms for deterministic constraints. Use probabilistic mechanisms only where interpretation or uncertainty creates value.",
-      "output": ["rules", "workflow", "events", "retrieval", "ai", "agents", "human_controls"]
+      "name": "Map and generate system shapes",
+      "element_types": ["actor", "business_object", "event", "decision", "rule", "state", "data", "constraint", "time", "side_effect", "evidence"],
+      "pattern_source": "/datasets/triz-digital-framework/patterns.json",
+      "option_rule": "Generate at least two materially different system shapes; for complex problems prefer remove_or_simplify, deterministic_redesign and uncertainty_assisted_redesign.",
+      "output": ["system_map", "candidate_patterns", "options"]
+    },
+    {
+      "id": "technology_authority",
+      "order": 7,
+      "name": "Allocate technology and authority",
+      "rule": "Use deterministic mechanisms for deterministic constraints. Use probabilistic mechanisms only where interpretation or uncertainty creates value. Allocate read, propose, validate, approve and execute separately when useful.",
+      "output": ["deterministic_rules", "workflow", "events", "retrieval_or_read_tools", "ai_models", "agents", "human_judgment", "authority_chain"]
     },
     {
       "id": "experiment",
-      "order": 7,
+      "order": 8,
       "name": "Run a falsifiable experiment",
-      "output": ["hypothesis", "change", "primary_metric", "counter_metric", "failure_condition", "test_scope"]
+      "output": ["hypothesis", "change", "primary_metric", "counter_metrics", "failure_condition", "scope", "rollback_or_recovery"]
     },
     {
       "id": "feedback",
-      "order": 8,
-      "name": "Close the loop",
-      "output": ["observed_outcome", "new_failure_modes", "new_contradictions", "decision"]
+      "order": 9,
+      "name": "Close the feedback loop",
+      "output": ["observed_outcome", "new_failure_modes", "new_contradictions", "decision", "next_evidence_needed"]
     }
+  ],
+  "ideality_heuristic": {
+    "statement": "Useful outcome and reliability should improve faster than the complexity tax.",
+    "useful_side": ["business_outcome", "quality", "reliability", "adaptability_when_needed"],
+    "complexity_tax": ["coordination", "duplicated_state", "manual_work", "cognitive_load", "runtime_cost", "data_exposure", "operational_load", "irreversible_risk"],
+    "warning": "This is a qualitative design heuristic, not a numerical formula."
+  },
+  "separation_operators": [
+    {"id":"O1_time","name":"Separate by time","question":"Must the conflicting properties be active at the same moment?","moves":["prepare_before","validate_before_decision","batch_non_urgent","approve_on_risk","compensate_after"]},
+    {"id":"O2_condition","name":"Separate by condition","question":"Does every case need the same expensive or restrictive behavior?","moves":["normal_vs_exception","risk_tier","confidence_tier","threshold_route","hard_case_escalation"]},
+    {"id":"O3_context","name":"Separate by context","question":"Which behavior is common and which depends on valid local context?","moves":["global_policy_local_rule","core_extension","shared_schema_local_extension"]},
+    {"id":"O4_system_level","name":"Separate by system level","question":"Is the contradiction being solved at the wrong level?","moves":["component_to_process","transaction_to_event_layer","local_kpi_to_end_to_end","duplicate_logic_to_shared_capability"]},
+    {"id":"O5_authority","name":"Separate by authority","question":"Does the component that understands the situation also need permission to change it?","moves":["read_vs_write","propose_vs_approve","validate_vs_execute","prepared_change"]},
+    {"id":"O6_representation","name":"Separate by representation","question":"Does every consumer need the full raw data?","moves":["typed_extraction","derived_signal","redacted_view","summary_with_evidence","event_projection"]}
+  ],
+  "resource_categories": [
+    {"id":"R1_information","name":"Information","examples":["master_data","transaction_data","metadata","schemas","business_keys","documents","relationships"]},
+    {"id":"R2_time","name":"Time","examples":["waiting_time","batch_window","lead_time_before_event","deadline","idle_period"]},
+    {"id":"R3_structure","name":"Structure","examples":["apis","events","queues","workflow_states","extension_points","caches","indexes","boundaries"]},
+    {"id":"R4_history","name":"History","examples":["logs","traces","resolved_cases","past_decisions","process_events","corrections","replay_data"]},
+    {"id":"R5_negative_signals","name":"Negative signals","examples":["errors","rejects","retries","delays","overrides","exceptions"]},
+    {"id":"R6_human_judgment","name":"Human judgment","examples":["expert_knowledge","accountable_role","review_capacity","value_decision"]},
+    {"id":"R7_policy_permission","name":"Policy and permission","examples":["rules","authorization_scopes","segregation_of_duties","thresholds","ownership","contracts"]},
+    {"id":"R8_compute_attention","name":"Compute and attention","examples":["deterministic_check","cache","small_model","large_model","reasoning_budget","human_attention"]}
   ],
   "contradiction_types": [
     {"id":"speed_control","name":"Speed vs control","examples":["approval queues","write safeguards","manual verification"]},
@@ -81,7 +126,7 @@
     {"id":"accuracy_latency","name":"Accuracy vs latency","examples":["reranking","multiple tool calls","larger model"]},
     {"id":"context_privacy","name":"Context vs privacy","examples":["RAG context","agent memory","cross-system data access"]},
     {"id":"autonomy_trust","name":"Autonomy vs trust","examples":["agent tool scope","automated remediation","self-directed workflows"]},
-    {"id":"specialization_handoffs","name":"Specialization vs handoffs","examples":["expert queues","functional silos","multi-team incident flow"]},
+    {"id":"specialization_handoffs","name":"Specialization vs handoffs","examples":["expert queues","functional silos","multi-agent coordination"]},
     {"id":"local_global","name":"Local optimization vs end-to-end outcome","examples":["department KPI vs process lead time","component efficiency vs system resilience"]}
   ],
   "technology_allocation": [
@@ -93,6 +138,13 @@
     {"problem_shape":"unknown next useful step","default":"bounded_agent","examples":["investigation","research","diagnostic tool loop"]},
     {"problem_shape":"value conflict or high-impact approval","default":"accountable_human","examples":["policy exception","commercial approval","risk acceptance"]}
   ],
+  "authority_chain": [
+    {"id":"read","purpose":"inspect evidence and state","default_control":"permission-aware read scope"},
+    {"id":"propose","purpose":"prepare classification, plan or exact change object","default_control":"no side effect"},
+    {"id":"validate","purpose":"check exact rules, authorization, schema and preconditions","default_control":"deterministic software"},
+    {"id":"approve","purpose":"resolve remaining value or risk decision","default_control":"explicit policy or accountable human"},
+    {"id":"execute","purpose":"perform the approved side effect","default_control":"narrow auditable idempotent tool when possible"}
+  ],
   "ai_boundary_rules": [
     "Keep identity and authorization outside model control.",
     "Keep exact calculations and mandatory thresholds deterministic.",
@@ -101,7 +153,8 @@
     "Prefer broad read access and narrow write access for agents.",
     "Separate investigation, prepared change, validation, approval and execution for high-impact actions.",
     "Define budgets and explicit stop states for agent loops.",
-    "Evaluate outcome, evidence and trajectory separately."
+    "Evaluate outcome, evidence and trajectory separately.",
+    "Treat MCP and A2A as interoperability boundaries, not as substitutes for business authority design."
   ],
   "risk_tiers": [
     {"id":"R0","name":"Advisory","side_effect":"none","default_control":"normal application permissions"},
@@ -119,26 +172,38 @@
   ],
   "agent_contract": {
     "input_fields": ["problem_statement", "observed_behavior", "desired_outcome", "actors", "business_objects", "constraints", "evidence", "risk_tier"],
-    "required_reasoning_outputs": ["ideal_result", "contradiction", "system_map", "selected_patterns", "options", "technology_allocation", "experiment", "counter_metrics", "risks", "unknowns"],
+    "required_reasoning_outputs": ["useful_function", "ideal_result", "contradiction", "separation", "resource_scan", "system_map", "selected_patterns", "options", "technology_allocation", "authority_chain", "experiment", "risks", "assumptions", "unknowns"],
     "rules": [
-      "Do not choose a vendor or product before the contradiction and boundary are explicit.",
-      "Generate at least two system-shape options when evidence allows.",
+      "Do not choose a vendor or product before the contradiction, separation test and resource scan are explicit.",
+      "Test all six separation operators briefly before selecting one or more.",
+      "Generate at least two materially different system-shape options when evidence allows.",
+      "For complex problems prefer a remove-or-simplify option, a deterministic redesign, and an uncertainty-assisted option.",
       "For every improvement metric include at least one counter-metric.",
       "Mark assumptions separately from evidence.",
       "Do not grant an AI system authority merely because it can propose the action.",
-      "Prefer reversible experiments before production mutation."
-    ]
+      "Prefer reversible experiments before production mutation.",
+      "Return unknowns and missing evidence explicitly rather than filling gaps with plausible text."
+    ],
+    "schema": "/datasets/triz-digital-framework/reasoning-schema.json"
+  },
+  "current_signals": {
+    "human_page": "/triz/signals/",
+    "rule": "Treat current protocols and vendor capabilities as dated solution-space signals, not durable framework law."
   },
   "data_artifacts": [
     {"path":"/datasets/triz-digital-framework/patterns.json","purpose":"Reusable digital transformation patterns and graph links."},
+    {"path":"/datasets/triz-digital-framework/reasoning-schema.json","purpose":"JSON Schema for inspectable contradiction-driven reasoning output."},
     {"path":"/datasets/triz-digital-framework/cases.jsonl","purpose":"Synthetic reasoning and evaluation cases."}
   ],
   "sources": [
-    {"id":"openai-agents-guide","title":"A practical guide to building AI agents","url":"https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"mcp-2026-07-28","title":"The 2026-07-28 Model Context Protocol Specification","url":"https://blog.modelcontextprotocol.io/posts/2026-07-28/","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"a2a-linux-foundation-2026","title":"A2A Protocol first-year update","url":"https://www.linuxfoundation.org/press/a2a-protocol-surpasses-150-organizations-lands-in-major-cloud-platforms-and-sees-enterprise-production-use-in-first-year","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"a2a-cross-language-2026","title":"Build Cross-Language Multi-Agent Team with Google ADK and A2A","url":"https://developers.googleblog.com/build-cross-language-multi-agent-team-with-google-agent-development-kit-and-a2a/","type":"primary","reviewed_at":"2026-08-15"},
     {"id":"nist-genai-profile","title":"Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile","url":"https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence","type":"primary","reviewed_at":"2026-08-15"},
     {"id":"cloudevents","title":"CloudEvents specification project","url":"https://cloudevents.io/","type":"primary","reviewed_at":"2026-08-15"},
-    {"id":"opentelemetry","title":"OpenTelemetry documentation","url":"https://opentelemetry.io/docs/","type":"primary","reviewed_at":"2026-08-15"},
-    {"id":"sap-signavio-object-data","title":"SAP Signavio object-based data modeling","url":"https://help.sap.com/docs/signavio-process-intelligence/onboarding-and-data-integration-guide/getting-started-with-object-based-data-modeling","type":"primary","reviewed_at":"2026-08-15"},
-    {"id":"mcp-spec","title":"Model Context Protocol specification","url":"https://modelcontextprotocol.io/specification/2025-11-25","type":"primary","reviewed_at":"2026-08-15"}
+    {"id":"opentelemetry-semconv","title":"OpenTelemetry Semantic Conventions","url":"https://opentelemetry.io/docs/specs/semconv/","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"sap-signavio-ocpm","title":"SAP Signavio Object-Centric Process Mining","url":"https://www.signavio.com/wiki/process-discovery/object-centric-process-mining-ocpm/","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"sap-signavio-process-intelligence","title":"SAP Signavio Process Intelligence","url":"https://www.signavio.com/products/process-intelligence/","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"sap-signavio-july-2026","title":"SAP Signavio Product Release Webcast July 2026","url":"https://www.signavio.com/events/sap-signavio-product-release-webcast-july-2026/","type":"primary","reviewed_at":"2026-08-15"}
   ]
 }
