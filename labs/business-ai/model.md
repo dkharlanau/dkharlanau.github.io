@@ -32,16 +32,29 @@ tags:
       <p>Graph contract</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>10</strong><small>Core node types</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>12</strong><small>Core edge types</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Evidence path per claim</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>3</strong><small>Controlled case kinds</small></div>
       <em>The model stays simple enough to read as JSON and rich enough to connect across Lab domains.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
-    <p><strong>Boundary:</strong> this graph models business AI implementation knowledge. It does not replace the Enterprise Context graph or the AI Ready architecture model.</p>
+    <p><strong>Boundary:</strong> this graph models Business AI implementation knowledge. It does not replace the Enterprise Context graph or the AI Ready architecture model.</p>
     <p><strong>Cross-link rule.</strong> Business AI cases point outward to business domains, SAP processes, technologies, and architecture patterns instead of copying those models.</p>
     <a href="/labs/enterprise-context/">Open Enterprise Context <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="case-kinds" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Controlled case kinds</p>
+      <h2>Not every useful case is the same type of evidence.</h2>
+      <p>Case kind is a controlled property, not another graph node. It prevents an AI implementation, a data foundation, and a vendor solution example from being presented as equivalent proof.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/business-ai/cases/"><span>AI</span><strong>ai_implementation</strong><small>A company is using AI, ML, optimization, document AI, or agentic logic inside a real business process.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/business-ai/cases/#adani-master-data-foundation"><span>DATA</span><strong>ai_foundation</strong><small>A business capability such as governed master data is not AI by itself, but it is a prerequisite for reliable AI decisions and automation.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <a href="/labs/business-ai/cases/#dataxstream-quote-order-ai"><span>SOL</span><strong>solution_evidence</strong><small>A product or partner example shows a useful architecture shape, but the public evidence is weaker than a named end-customer implementation.</small><i class="material-symbols-outlined" aria-hidden="true">extension</i></a>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="node-types" data-reveal>
@@ -51,7 +64,7 @@ tags:
       <p>Each node has a stable ID. Display names can change without breaking relationships.</p>
     </header>
     <div class="research-route-list">
-      <a href="/labs/business-ai/cases/"><span>CASE</span><strong>BusinessAICase</strong><small>A public implementation in one company and process context.</small><i class="material-symbols-outlined" aria-hidden="true">case_study</i></a>
+      <a href="/labs/business-ai/cases/"><span>CASE</span><strong>BusinessAICase</strong><small>A public implementation, foundation, or solution-evidence case in a defined company and process context.</small><i class="material-symbols-outlined" aria-hidden="true">case_study</i></a>
       <a href="/labs/business-ai/patterns/"><span>PAT</span><strong>Pattern</strong><small>A reusable business and architecture shape that can survive a vendor change.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="/labs/enterprise-context/domains/"><span>DOM</span><strong>BusinessDomain</strong><small>Sales, Procurement, Supply Chain, Finance, Service, Manufacturing, and other ownership areas.</small><i class="material-symbols-outlined" aria-hidden="true">domain</i></a>
       <a href="/labs/enterprise-context/"><span>PROC</span><strong>BusinessProcess</strong><small>The operational flow changed by the use case, such as supplier-invoice processing or customer service.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
@@ -71,7 +84,7 @@ tags:
       <p>Edges should describe a real relationship, not a vague similarity.</p>
     </header>
     <div class="research-route-list">
-      <a href="#edge-types"><span>→</span><strong>Company IMPLEMENTS Case</strong><small>Who operates the implementation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="#edge-types"><span>→</span><strong>Company IMPLEMENTS Case</strong><small>Who operates or publishes the implementation context.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="#edge-types"><span>→</span><strong>Case IMPLEMENTS_PATTERN Pattern</strong><small>The reusable decision and system shape behind the implementation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="#edge-types"><span>→</span><strong>Case APPLIES_TO_PROCESS BusinessProcess</strong><small>The process where work or decisions changed.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="#edge-types"><span>→</span><strong>BusinessProcess BELONGS_TO BusinessDomain</strong><small>Connects the case back to Enterprise Context ownership.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
