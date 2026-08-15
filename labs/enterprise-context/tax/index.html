@@ -1,0 +1,280 @@
+---
+layout: default
+title: "SAP Tax in Sales & Procurement — Enterprise Context Lab"
+description: "A practical SAP S/4HANA tax map across Sales, Procurement, Logistics Invoice Verification, FI posting, jurisdiction, and external tax calculation."
+permalink: /labs/enterprise-context/tax/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - tax
+  - sap-sd
+  - sap-mm
+  - procurement
+  - sales
+  - fi-integration
+  - localization
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.tax %}
+{% assign evidence = site.data.labs.enterprise_context.sources.tax %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Tax</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Cross-domain deep dive / Sales + Procurement</p>
+      <h1>Tax is a dependency chain,<br />not one condition type.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#tax-memory">Start with six questions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Tax deep-dive inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.comparison | size }}</strong><small>Process lanes</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.configuration_layers | size }}</strong><small>Configuration layers</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary references</small></div>
+      <em>Draft research · country-safe reasoning · no legal advice</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_balance</span>
+    <p><strong>Working rule:</strong> first prove where the tax decision becomes wrong. Rate, tax code, jurisdiction, invoice check, and G/L posting are different layers.</p>
+    <a href="/labs/enterprise-context/data/tax-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="tax-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>Six questions are enough to locate the tax layer.</h2>
+      <p>Use the same path in Sales and Procurement. The objects differ, but the diagnostic logic stays stable.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article class="ecg-memory-card">
+        <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+        <strong>{{ item.key }}</strong>
+        <h3>{{ item.question }}</h3>
+        <p>{{ item.answer }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong> Do not jump from a wrong percentage directly into Customizing. Find the first wrong input or decision.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Two process lanes</p>
+      <h2>Sales and Procurement meet in FI, but they do not start in the same place.</h2>
+      <p>Sales asks what tax to charge. Procurement asks how the purchase and supplier invoice should be treated. The shared objects appear later: tax procedure, tax code, accounting, and localization.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      {% for lane in graph.comparison %}
+      <div>
+        <h4>{{ lane.lane }} · {{ lane.tax_view }}</h4>
+        <p><strong>{{ lane.business_question }}</strong></p>
+        <p>{{ lane.runtime_home }}</p>
+        <h4>Important inputs</h4>
+        <ul>{% for value in lane.important_inputs %}<li>{{ value }}</li>{% endfor %}</ul>
+        <h4>Configuration</h4>
+        <ul>{% for value in lane.core_configuration %}<li>{{ value }}</li>{% endfor %}</ul>
+        <p><strong>Accounting boundary:</strong> {{ lane.accounting_boundary }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sales / output tax</p>
+      <h2>Pricing calculates tax, but geography and classification build the key.</h2>
+      <p>The useful skill is not remembering one tax condition name. It is proving how the actual sales document reached its tax result.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for stage in graph.sales_path %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>sales tax stage</small></div>
+          <h3>{{ stage.title }}</h3>
+          <p class="ecg-question">{{ stage.question }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-lead-lens"><strong>Existing Sales mechanism:</strong> <code>MEC.SD.TAX</code>. This page adds the cross-domain configuration and FI boundary around it rather than duplicating the mechanism.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Procurement / input tax</p>
+      <h2>The PO carries context. The supplier invoice makes the tax accounting-critical.</h2>
+      <p>Procurement tax should be traced from organization and tax code through the purchase or service document into Logistics Invoice Verification and FI.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for stage in graph.procurement_path %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>procurement tax stage</small></div>
+          <h3>{{ stage.title }}</h3>
+          <p class="ecg-question">{{ stage.question }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration stack</p>
+      <h2>Know which layer owns which decision.</h2>
+      <p>One business document can contain a tax condition, tax code, jurisdiction, and accounting line at the same time. They are not interchangeable objects.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for layer in graph.configuration_layers %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{% if layer.order < 10 %}0{% endif %}{{ layer.order }}</span><small>configuration layer</small></div>
+          <h3>{{ layer.title }}</h3>
+          <p class="ecg-question">{{ layer.owns }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Used by</h4><ul>{% for value in layer.used_by %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Configuration surfaces</h4><ul>{% for value in layer.configuration_surfaces %}<li>{{ value }}</li>{% endfor %}</ul>{% if layer.classic_reference %}<p><small>{{ layer.classic_reference }}</small></p>{% endif %}</div>
+          <div><h4>Lead check</h4><p>{{ layer.lead_check }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Dependency chains</p>
+      <h2>Follow the value forward, then trace the wrong result backward.</h2>
+    </header>
+    <div class="ecg-input-grid">
+      {% for chain in graph.shared_dependencies %}
+      <article>
+        <span>TRACE</span>
+        <h3>{{ chain.title }}</h3>
+        <p><code>{{ chain.path }}</code></p>
+        <p><strong>Diagnostic rule:</strong> {{ chain.diagnostic_rule }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Localization boundary</p>
+      <h2>The universal model stops before country law starts.</h2>
+      <p>This is deliberate. VAT, GST, sales/use tax, jurisdiction models, and reporting obligations differ. The Lab should teach a reusable diagnostic method without pretending one country's setup is universal.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for item in graph.localization_boundaries %}
+      <article><span>BOUNDARY</span><h3>{{ item.title }}</h3><p>{{ item.explanation }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failure-modes" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure patterns</p>
+      <h2>A symptom should point to a layer, not to random configuration.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      {% for failure in graph.failure_modes %}
+      <article class="ecg-determination-detail">
+        <header><div><span>!</span><small>{{ failure.likely_layer }}</small></div><h3>{{ failure.symptom }}</h3></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Check first</h4><ul>{% for value in failure.first_checks %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div>
+          <div><h4>Goal</h4><p>Prove the first divergence between expected and actual tax context.</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead skill map</p>
+      <h2>What “I know tax” should mean in an assessment.</h2>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in graph.skill_map %}
+      <article><span>SKILL {{ forloop.index }}</span><h3>{{ item.skill }}</h3><p>{{ item.lead_level }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Test matrix</p>
+      <h2>Change one tax driver at a time.</h2>
+      <p>A good tax test does not only compare the final amount. It proves the input, rule, code, document flow, and accounting result.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for test in graph.test_matrix %}
+      <article><span>TEST</span><h3>{{ test.scenario }}</h3><ul>{% for value in test.prove %}<li>{{ value }}</li>{% endfor %}</ul></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Answer by boundary and trace.</h2>
+    </header>
+    <div class="ecg-determination-list">
+      {% for drill in graph.lead_drills %}
+      <article class="ecg-determination-detail">
+        <header><div><span>Q</span><small>Lead drill</small></div><h3>{{ drill.question }}</h3><p class="ecg-question">{{ drill.answer }}</p></header>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Working heuristics</p>
+      <h2>Four rules worth remembering.</h2>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in graph.practitioner_heuristics %}
+      <article><span>HEURISTIC {{ forloop.index }}</span><h3>{{ item.statement }}</h3><p>{{ item.context }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary references</p>
+      <h2>Facts stay attached to sources.</h2>
+      <p>The model is written for learning and diagnostics. Country tax law still requires the relevant localization and legal/tax expertise.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }}{% if source.country_scope %} · {{ source.country_scope }}{% endif %} · {{ source.release_scope }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+</div>
