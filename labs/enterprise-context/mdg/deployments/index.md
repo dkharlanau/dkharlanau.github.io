@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP MDG Deployment Options — Enterprise Context Lab"
-description: "Compare SAP MDG on S/4HANA, cloud edition, classic mode, cloud-ready mode, and Public Edition boundaries."
+description: "Problem-first comparison of SAP MDG deployment choices, product scope, operating modes, and current domain boundaries."
 permalink: /labs/enterprise-context/mdg/deployments/
 status: draft
 verified: false

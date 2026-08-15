@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP MDG Assessment Reasoning — Enterprise Context Lab"
-description: "Practice Explain, Compare, Design, and Diagnose questions for SAP MDG with evidence paths, weak answers, Lead-level signals, and scoring dimensions."
+description: "Problem-based SAP MDG assessment practice: Explain, Compare, Design, and Diagnose with evidence paths and Lead-level scoring."
 permalink: /labs/enterprise-context/mdg/reasoning/
 status: draft
 verified: false

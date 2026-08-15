@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP MDG Extension Matrix — Enterprise Context Lab"
-description: "A practical SAP MDG extension matrix for fields, validations, workflow, nodes, UI, and side-by-side applications across classic, cloud-ready, and cloud edition."
+description: "Problem-first SAP MDG extension matrix for fields, logic, workflow, nodes, UI, services, and side-by-side applications."
 permalink: /labs/enterprise-context/mdg/extensions/
 status: draft
 verified: false

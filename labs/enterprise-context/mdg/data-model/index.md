@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP MDG Data Model Anatomy — Enterprise Context Lab"
-description: "Understand SAP MDG data models from governed roots and entity types to keys, staging, active areas, Material structure, and extension decisions."
+description: "Problem-first SAP MDG data modeling: roots, entity types, keys, staging, active areas, Material structure, and extension decisions."
 permalink: /labs/enterprise-context/mdg/data-model/
 status: draft
 verified: false

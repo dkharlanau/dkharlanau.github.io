@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP MDG Interface Contracts — Enterprise Context Lab"
-description: "Object-level SAP MDG interface contracts for Business Partner, Customer, Supplier, and Material, including mapping, errors, reconciliation, and downstream proof."
+description: "Problem-first SAP MDG interface contracts for BP, Customer, Supplier, and Material with mapping, errors, reconciliation, and business proof."
 permalink: /labs/enterprise-context/mdg/interfaces/
 status: draft
 verified: false
