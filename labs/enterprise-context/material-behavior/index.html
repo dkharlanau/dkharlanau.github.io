@@ -1,0 +1,158 @@
+---
+layout: default
+title: "Material Behavior in Sales — Enterprise Context Lab"
+description: "A practical SAP S/4HANA Sales map for stock, service, Sales BOM, configurable products, packaging, returnables, batches, and serial numbers."
+permalink: /labs/enterprise-context/material-behavior/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - product-master
+  - material-master
+  - handling-unit
+  - returnable-packaging
+  - batch-management
+  - serial-number
+  - variant-configuration
+  - services
+---
+
+{% assign sales_md = site.data.labs.enterprise_context.master_data.sales_master_data %}
+{% assign data = sales_md["06_material_behavior"] %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/master-data/">Master Data</a></li><li aria-current="page">Material Behavior</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Sales / Product behavior</p>
+      <h1>The product number is not the behavior.</h1>
+      <p>{{ data.purpose }}</p>
+      <a class="research-canvas__button" href="#behavior-map">Compare the behaviors <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Material behavior inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ data.behavior_profiles | size }}</strong><small>Core behaviors</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ data.industry_extensions | size }}</strong><small>Industry extension</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>SD → Logistics</strong><small>Cross-process lens</small></div>
+      <em>One material can activate very different execution logic.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <p><strong>Lead rule:</strong> {{ data.lead_rule }}</p>
+    <a href="/labs/enterprise-context/sales-processes/">Open Sales Process Atlas <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Decision path</p>
+      <h2>Start with business behavior, then inspect the master data.</h2>
+      <p>Material type is a clue, not the final answer. Item category, schedule line, ATP, packing, ownership, configuration, and traceability decide what the transaction really does.</p>
+    </header>
+    <div class="ecg-rail" aria-label="Material behavior decision path">
+      <div class="ecg-rail__branch">
+        {% for step in data.decision_path %}
+        <span class="ecg-node {% if forloop.last %}ecg-node--output{% else %}ecg-node--input{% endif %}">{{ step }}</span>{% unless forloop.last %}<span class="ecg-arrow" aria-hidden="true">→</span>{% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="behavior-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Behavior map</p>
+      <h2>Eight common ways a product changes Sales execution.</h2>
+      <p>These are behavior profiles, not eight new SAP processes. Some are master-data capabilities, some point to a real process variant such as Returnables Processing.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in data.behavior_profiles %}
+      <article class="ecg-determination-detail" id="{{ item.id | downcase | replace: '.', '-' }}">
+        <header>
+          <div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>behavior</small></div>
+          <h3>{{ item.title }}</h3>
+          <p class="ecg-question">{{ item.memory_hook }}</p>
+        </header>
+        <p><strong>Business question:</strong> {{ item.business_question }}</p>
+        <div class="ecg-decision-columns">
+          <div>
+            <h4>Activation data</h4>
+            <ul>{% for value in item.activation_data %}<li>{{ value }}</li>{% endfor %}</ul>
+          </div>
+          <div>
+            <h4>What changes in Sales</h4>
+            <ul>{% for value in item.sales_effects %}<li>{{ value }}</li>{% endfor %}</ul>
+          </div>
+          <div>
+            <h4>Process links</h4>
+            <ul>{% for value in item.cross_process_links %}<li>{{ value }}</li>{% endfor %}</ul>
+          </div>
+        </div>
+        <div class="ecg-diagnostic">
+          <div><h4>Master / process nodes</h4><p>{% for value in item.master_nodes %}<code>{{ value }}</code>{% unless forloop.last %} · {% endunless %}{% endfor %}{% if item.process_links %}<br />{% for value in item.process_links %}<code>{{ value }}</code>{% unless forloop.last %} · {% endunless %}{% endfor %}{% endif %}</p></div>
+          <div><h4>Lead questions</h4><ul>{% for value in item.lead_questions %}<li>{{ value }}</li>{% endfor %}</ul></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Comparison</p>
+      <h2>Same Sales order, very different identity and fulfillment.</h2>
+      <p>The useful comparison is not the material-type code alone. Compare what identifies stock, whether a physical delivery exists, whether production matters, and what must be traced after goods issue.</p>
+    </header>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Behavior</th><th>Stock / execution identity</th><th>Physical delivery</th><th>Production link</th><th>After-sales identity</th></tr></thead>
+        <tbody>
+          {% for row in data.comparison_matrix %}
+          <tr><td><strong>{{ row.behavior }}</strong></td><td>{{ row.stock_identity }}</td><td>{{ row.physical_delivery }}</td><td>{{ row.production_link }}</td><td>{{ row.after_sales_identity }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Important distinctions</p>
+      <h2>Similar words do not mean the same control model.</h2>
+    </header>
+    <div class="ecg-input-grid">
+      <article><span>PACKING</span><h3>Packaging material ≠ returnable packaging</h3><p>A packaging material helps create the physical packing structure. A returnable adds ownership, customer-held stock, return, and possible charging logic.</p></article>
+      <article><span>SERVICE</span><h3>Sales service item ≠ service execution</h3><p>The commercial line can describe what the customer buys. Service execution can use a different object for labor, parts, expenses, confirmations, and operational status.</p></article>
+      <article><span>STRUCTURE</span><h3>Sales BOM ≠ Production BOM</h3><p>The Sales structure answers how the product is sold and processed in the document. Production needs a structure that answers how the product is built. They can be related without being the same decision.</p></article>
+      <article><span>IDENTITY</span><h3>Batch ≠ serial number</h3><p>A batch identifies a quantity with common attributes. A serial number identifies an individual physical unit. Both improve traceability, but they solve different questions.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Industry layer</p>
+      <h2>Keep special industry behavior below the universal model.</h2>
+      <p>Not every useful SAP pattern deserves equal visual weight. Otherwise the learning graph becomes technically correct and educationally useless, a traditional enterprise achievement.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for item in data.industry_extensions %}
+      <article><span>INDUSTRY</span><h3>{{ item.title }}</h3><p>{{ item.use_when }}</p><p><strong>Why below core:</strong> {{ item.why_not_core }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">route</span>
+    <p><strong>Next diagnostic step:</strong> once the behavior is identified, trace it into item-category determination, schedule-line determination, ATP, delivery, warehouse execution, billing, procurement, or production.</p>
+    <a href="/labs/enterprise-context/sales-processes/mechanisms/">Open Sales Mechanism Library <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+</div>

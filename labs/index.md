@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 tags:
   - sap
@@ -24,33 +24,33 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Labs / practical architecture maps</p>
-      <h1>Understand the business.<br />Then map the SAP landscape.</h1>
-      <p>Simple, source-tracked maps of business domains, deployment models, industries, processes, SAP applications, integrations, data, and AI.</p>
-      <a class="research-canvas__button" href="#labs-inventory">Open the lab <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>Understand the business.<br />Then map the architecture.</h1>
+      <p>Simple, source-tracked maps of business domains, SAP landscapes, integrations, data, AI systems, and the decisions that connect them.</p>
+      <a class="research-canvas__button" href="#labs-inventory">Open the labs <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>1</strong><small>Active lab</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>6</strong><small>Architecture views</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>4</strong><small>Machine endpoints</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>2</strong><small>Active labs</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>14+</strong><small>Architecture views</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>6+</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal aria-label="Lab boundary">
     <span class="material-symbols-outlined" aria-hidden="true">science</span>
-    <p><strong>Problem:</strong> product-first learning makes it hard to connect business ownership, process, architecture, and evidence.</p>
-    <p><strong>Working rule.</strong> Facts, expert judgment, and synthetic examples stay separate.</p>
+    <p><strong>Problem:</strong> product-first learning makes it hard to connect business ownership, process, architecture, evidence, and operational controls.</p>
+    <p><strong>Working rule.</strong> Facts, expert judgment, synthetic examples, and fast-moving technology notes stay separate.</p>
     <a href="/research/">Open Research <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
-  <p><strong>Publication rule.</strong> Vendor sources verify facts; explanations stay independently written. See the <a href="/legal/research-attribution/">Research and Attribution Policy</a>.</p>
+  <p><strong>Publication rule.</strong> Vendor and primary sources verify facts; explanations stay independently written. See the <a href="/legal/research-attribution/">Research and Attribution Policy</a>.</p>
 
   <section class="research-canvas__inventory" id="labs-inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Enterprise Context Lab</p>
+      <p class="research-canvas__eyebrow">Lab 01 / Enterprise Context</p>
       <h2>Business first, system second.</h2>
-      <p>Move from business ownership and industry context to deployment model, process, SAP component, integration, and AI responsibility.</p>
+      <p>Move from business ownership and industry context to deployment model, process, SAP component, integration, data, and AI responsibility.</p>
     </header>
 
     <div class="research-route-list">
@@ -65,12 +65,25 @@ tags:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lab 02 / AI Ready</p>
+      <h2>Build AI systems, not isolated demos.</h2>
+      <p>A vendor-neutral architecture map for data, retrieval, tools, MCP, agents, evaluations, security, deployment, and production decisions.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture Lab</strong><small>Foundations, RAG, MCP, agents, evals, security, deployment, decision matrix, and hands-on track.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/labs/ai-ready/data/catalog.json"><span>JSON</span><strong>AI architecture catalog</strong><small>Dated tracks, decision rules, production rules, labs, and primary-source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/ai-ready/data/eval-sample.jsonl"><span>EVAL</span><strong>Sample eval dataset</strong><small>Architecture cases with expected patterns, controls, and failure signals.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+
   <section class="research-canvas__method" data-reveal>
     <div><p class="research-canvas__eyebrow">Method</p><h2>Model, connect, exercise.</h2></div>
     <ol>
-      <li><span>01</span><strong>Model</strong><p>Define the domain, industry, deployment model, process, objects, rules, and systems.</p></li>
-      <li><span>02</span><strong>Connect</strong><p>Link integrations, failures, controls, tests, and evidence.</p></li>
-      <li><span>03</span><strong>Exercise</strong><p>Use a synthetic case and test the reasoning.</p></li>
+      <li><span>01</span><strong>Model</strong><p>Define the problem, owners, data, rules, systems, and boundaries.</p></li>
+      <li><span>02</span><strong>Connect</strong><p>Link integrations, tools, failures, controls, tests, and evidence.</p></li>
+      <li><span>03</span><strong>Exercise</strong><p>Use synthetic cases, build small systems, and test the reasoning.</p></li>
     </ol>
   </section>
 
