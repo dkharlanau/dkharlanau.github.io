@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Business AI by Domain — Business AI Lab"
-description: "A Lead-level map of Business AI opportunities, SAP touchpoints, architecture questions, and public cases across logistics and enterprise domains."
+title: "Business AI by Enterprise Domain — Business AI Lab"
+description: "An enterprise-wide map of Business AI jobs, system touchpoints, technology families, architecture questions, and implementation cases."
 permalink: /labs/business-ai/domains/
 status: draft
 verified: false
@@ -11,9 +11,9 @@ last_modified_at: 2026-08-15
 hide_global_cta: true
 tags:
   - business-ai
-  - sap
+  - enterprise-ai
   - assessment
-  - logistics
+  - processes
   - architecture
 ---
 
@@ -30,33 +30,33 @@ tags:
 <div class="research-canvas">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Business AI / domain view</p>
-      <h1>Do not ask where AI fits.<br />Ask which decision should improve.</h1>
-      <p>This view connects Business AI to the SAP domains used in real logistics work. Each domain starts from a business job, then shows SAP touchpoints, Lead-level architecture questions, and cases with public evidence.</p>
+      <p class="research-canvas__eyebrow">Business AI / enterprise domain view</p>
+      <h1>Map the process first.<br />Then choose the technology.</h1>
+      <p>Business AI crosses the whole company: sales, procurement, planning, logistics, manufacturing, finance, HR, service, IT, legal, data, and knowledge work. Each domain starts from a business job and control boundary, not from one vendor platform.</p>
       <a class="research-canvas__button" href="#domain-list">Open the domain map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
-      <p>Assessment view</p>
+      <p>Enterprise view</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ domain_map.domains | size }}</strong><small>Business domains</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ all_cases | size }}</strong><small>Cases available</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>5</strong><small>Questions before technology</small></div>
-      <em>The point is architecture judgment, not remembering a catalog of model names.</em>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ all_cases | size }}</strong><small>Evidence cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>5</strong><small>Control questions per domain</small></div>
+      <em>SAP is one important system landscape. It is not the definition of Business AI.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-    <p><strong>Context:</strong> this domain view is designed for SAP Lead assessment: business jobs, SAP touchpoints, control questions, and evidence-backed cases stay together.</p>
-    <p><strong>Lead rule:</strong> start with process ownership, data, system of record, decision rights, and KPI. AI enters only where uncertainty, documents, language, prediction, ranking, or optimization create a real gap.</p>
-    <p><strong>Control rule.</strong> Keep authorization, posting rules, hard constraints, financial controls, and physical safety outside free-form model behavior.</p>
-    <a href="/labs/business-ai/model/">Open the graph model <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <p><strong>Context:</strong> this view supports enterprise architecture and Lead assessment. It connects business jobs to system touchpoints, AI technology families, control questions, and evidence-backed cases.</p>
+    <p><strong>Lead rule:</strong> start with process ownership, data, system of record, decision rights, and KPI. AI enters only where uncertainty, documents, language, prediction, ranking, optimization, or adaptive orchestration create a real gap.</p>
+    <p><strong>Control rule.</strong> Keep authorization, exact calculations, hard constraints, accounting controls, master identity, and physical safety outside free-form model behavior.</p>
+    <a href="/labs/business-ai/technologies/">Open the technology landscape <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="domain-list" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Domain index</p>
-      <h2>Seven views of the same architecture problem.</h2>
-      <p>The useful question changes by domain, but the method stays stable: business job → data → decision → action → evidence.</p>
+      <h2>{{ domain_map.domains | size }} enterprise domains.</h2>
+      <p>The method stays stable across domains: business job → data and systems → decision → action → controls → evidence.</p>
     </header>
     <div class="research-route-list">
       {% for domain in domain_map.domains %}
@@ -73,27 +73,32 @@ tags:
       <p>{{ domain.business_jobs | join: " · " }}</p>
     </header>
     <div class="research-route-list">
-      <a href="#{{ domain.id }}"><span>SAP</span><strong>SAP touchpoints</strong><small>{{ domain.sap_touchpoints | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="#{{ domain.id }}"><span>SYS</span><strong>Enterprise system touchpoints</strong><small>{{ domain.system_touchpoints | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/business-ai/technologies/"><span>TECH</span><strong>Useful technology families</strong><small>{{ domain.technology_families | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
       {% for question in domain.lead_questions %}
-      <a href="#{{ domain.id }}"><span>?</span><strong>Lead question {{ forloop.index }}</strong><small>{{ question }}</small><i class="material-symbols-outlined" aria-hidden="true">help</i></a>
+      <a href="#{{ domain.id }}"><span>?</span><strong>Architecture question {{ forloop.index }}</strong><small>{{ question }}</small><i class="material-symbols-outlined" aria-hidden="true">help</i></a>
       {% endfor %}
-      {% for case_id in domain.case_ids %}
-        {% for item in all_cases %}
-          {% if item.id == case_id %}
-          <a href="/labs/business-ai/cases/#{{ item.id }}"><span>{{ item.evidence_grade }}</span><strong>{{ item.company }} · {{ item.title }}</strong><small>{{ item.process }} · {{ item.consultant_note }}</small><i class="material-symbols-outlined" aria-hidden="true">case_study</i></a>
-          {% endif %}
+      {% if domain.case_ids.size > 0 %}
+        {% for case_id in domain.case_ids %}
+          {% for item in all_cases %}
+            {% if item.id == case_id %}
+            <a href="/labs/business-ai/cases/#{{ item.id }}"><span>{{ item.evidence_grade }}</span><strong>{{ item.company }} · {{ item.title }}</strong><small>{{ item.process }} · {{ item.consultant_note }}</small><i class="material-symbols-outlined" aria-hidden="true">case_study</i></a>
+            {% endif %}
+          {% endfor %}
         {% endfor %}
-      {% endfor %}
+      {% else %}
+      <a href="#{{ domain.id }}"><span>GAP</span><strong>Evidence gap</strong><small>No case is linked yet. The domain stays in the model so research gaps remain visible instead of disappearing from the map.</small><i class="material-symbols-outlined" aria-hidden="true">search</i></a>
+      {% endif %}
     </div>
   </section>
   {% endfor %}
 
   <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Assessment answer shape</p><h2>Answer from control to technology.</h2></div>
+    <div><p class="research-canvas__eyebrow">Assessment answer shape</p><h2>Answer from business control to technology.</h2></div>
     <ol>
-      <li><span>01</span><strong>Business outcome</strong><p>Name the process problem and KPI before naming an AI product.</p></li>
-      <li><span>02</span><strong>Ownership and boundary</strong><p>Explain the system of record, data ownership, hard rules, authorization, human approval, and failure path.</p></li>
-      <li><span>03</span><strong>AI choice</strong><p>Choose extraction, retrieval, prediction, optimization, recommendation, agentic orchestration, or no AI based on the uncertain part of the job.</p></li>
+      <li><span>01</span><strong>Business outcome</strong><p>Name the process problem and KPI before naming a model or platform.</p></li>
+      <li><span>02</span><strong>Ownership and boundary</strong><p>Explain the system of record, data ownership, deterministic rules, authorization, human approval, and failure path.</p></li>
+      <li><span>03</span><strong>Technology choice</strong><p>Choose extraction, retrieval, prediction, optimization, workflow, agents, RPA, or no AI based on the actual uncertain part of the job.</p></li>
     </ol>
   </section>
 
