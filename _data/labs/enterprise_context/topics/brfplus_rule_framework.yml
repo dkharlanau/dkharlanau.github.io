@@ -1,0 +1,351 @@
+id: TOPIC-SAP-BRFPLUS-RULE-FRAMEWORK
+type: research_topic
+title: "BRFplus — Reusable Business Decision Framework"
+summary: >-
+  A practical map of SAP Business Rule Framework plus (BRFplus): what it is,
+  where SAP applications use it, how a rule is modeled and called, how it fits
+  MDG and S/4HANA Output Management, and when custom code is the better choice.
+domain: "Cross-Application Architecture"
+process_family: "Business Rules and Decision Automation"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+human_view: "/labs/enterprise-context/frameworks/#brfplus"
+source_reviewed_at: "2026-08-15"
+
+business_question: >-
+  When should BRFplus own business decision logic, how is the rule contract designed,
+  and how do MDG, Output Management, AIF, and custom ABAP consume it without turning
+  the rule repository into hidden application code?
+
+maturity:
+  gates_complete: 7
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: done
+
+memory_model:
+  phrase: "Context → Function → Rules → Result → Consumer"
+  short_definition: >-
+    BRFplus is an ABAP-based rule framework. The application sends context to a BRFplus
+    function; rules and expressions evaluate that context and return a result or execute actions.
+  lead_line: >-
+    Use BRFplus when a decision changes more often than the surrounding application code,
+    needs transparent rule maintenance, or is already the standard rule engine of the SAP application.
+
+core_entities:
+  - id: PLT-SAP-BRFPLUS
+    type: platform_component
+    title: "Business Rule Framework plus (BRFplus)"
+    summary: "ABAP rule framework with UI and API for defining and executing reusable business rules."
+    product_scope: "ABAP Platform and SAP applications that embed or consume BRFplus."
+    source_refs: [SRC-SAP-BRFPLUS-OVERVIEW]
+
+  - id: CAP-SAP-BUSINESS-RULE-DECISIONS
+    type: capability
+    title: "Business Rule Decision Automation"
+    summary: "Externalize selected validations, mappings, calculations, routing, and determination logic from procedural application code."
+
+  - id: MECH-BRFPLUS-DECISION-TABLE
+    type: determination_mechanism
+    title: "BRFplus Decision Table"
+    summary: "Tabular rule expression for matching context combinations to results."
+
+  - id: RSET-BRFPLUS-RULESET
+    type: rule_set
+    title: "BRFplus Ruleset"
+    summary: "Ordered container that groups rules evaluated by a function."
+
+  - id: APP-S4-OUTPUT-MANAGEMENT
+    type: application_component
+    title: "SAP S/4HANA Output Management"
+    summary: "Cross-application output control that can use Output Parameter Determination rules."
+
+  - id: DET-S4-OUTPUT-PARAMETER
+    type: determination
+    title: "Output Parameter Determination"
+    question: "Which output, receiver, channel, form, and relevance conditions should apply?"
+    mechanism: decision_table
+    inputs: ["Application object context", "Determination step", "Available condition fields"]
+    output: "One or more output parameter results"
+    source_refs: [SRC-SAP-S4-OUTPUT-PARAMETER-DETERMINATION]
+
+  - id: PLT-SAP-AIF
+    type: platform_component
+    title: "SAP Application Interface Framework"
+    summary: "Application-side interface framework for interface development, monitoring, error handling, and reprocessing."
+
+availability:
+  principle: >-
+    Do not answer the version question with one S/4HANA release. BRFplus is older than S/4HANA,
+    while each consuming SAP application has its own enablement and scope.
+  timeline:
+    - release: "SAP NetWeaver 7.0 Enhancement Package 1, SP Stack 00"
+      meaning: "BRFplus was introduced as a new SAP NetWeaver capability."
+      source_refs: [SRC-SAP-BRFPLUS-RELEASE-EHP1]
+    - release: "SAP S/4HANA / ABAP Platform 2025 FPS01"
+      meaning: "Current private/on-premise documentation still provides the full BRFplus framework and setup guidance."
+      source_refs: [SRC-SAP-BRFPLUS-OVERVIEW, SRC-SAP-BRFPLUS-S4-SETUP]
+    - release: "SAP S/4HANA Cloud Public Edition 2608"
+      meaning: "BRFplus documentation and a simplified workbench are available in the current public-cloud documentation."
+      source_refs: [SRC-SAP-BRFPLUS-PUBLIC-CLOUD]
+  application_boundary: >-
+    Availability of a BRFplus-based business feature is application-specific. Check the target application's
+    documentation and released configuration path instead of assuming every BRFplus expression can be attached everywhere.
+
+object_model:
+  - object: "Application"
+    role: "Top-level package and lifecycle boundary for rule objects."
+  - object: "Function"
+    role: "Stable contract between the calling application and the rule model. It defines context and result."
+  - object: "Data Object"
+    role: "Typed input, intermediate, or result data: element, structure, or table."
+  - object: "Expression"
+    role: "Reusable logic such as decision table, formula, search tree, or another supported expression type."
+  - object: "Rule"
+    role: "Condition and action/result logic."
+  - object: "Ruleset"
+    role: "Groups and sequences rules for function execution."
+  - object: "Catalog"
+    role: "Organizes objects for consumers and maintainers."
+
+setup_sequence:
+  - step: 1
+    title: "Open the workbench safely"
+    detail: >-
+      Ensure the required ICF services are active. In S/4HANA private/on-premise,
+      SAP documents Web Dynpro services for the BRFplus workbench, object manager, and catalog browser.
+    source_refs: [SRC-SAP-BRFPLUS-S4-SETUP]
+  - step: 2
+    title: "Define the application boundary"
+    detail: "Create or reuse a BRFplus application with clear ownership and transport strategy."
+  - step: 3
+    title: "Design the function contract"
+    detail: "Define context inputs and a stable result. Treat the function as an API, not as a random rule container."
+    source_refs: [SRC-SAP-BRFPLUS-OVERVIEW]
+  - step: 4
+    title: "Build data objects and expressions"
+    detail: "Use decision tables for transparent combinations, formulas for calculations, and other expression types only when they improve clarity."
+  - step: 5
+    title: "Compose rules and rulesets"
+    detail: "Keep the rule path readable. Split reusable logic instead of creating one giant decision table."
+  - step: 6
+    title: "Activate and test"
+    detail: "Run consistency checks, simulation, and trace before the application consumes the active version."
+    source_refs: [SRC-SAP-BRFPLUS-OVERVIEW]
+  - step: 7
+    title: "Integrate through the supported consumer"
+    detail: >-
+      Call the BRFplus function through the application API or maintain rules through the application-specific configuration,
+      for example MDG rule-based workflow or Output Parameter Determination.
+  - step: 8
+    title: "Transport with the application"
+    detail: >-
+      Keep rule transport, dependencies, and environment-specific values under the same change discipline as the consuming application.
+      BRFplus also supports XML export and import, but this is not a substitute for lifecycle governance.
+    source_refs: [SRC-SAP-BRFPLUS-OVERVIEW]
+
+use_cases:
+  - id: SCN-BRFPLUS-MDG-WORKFLOW
+    type: scenario
+    title: "MDG rule-based workflow"
+    problem: "Determine the next governance step, status, and responsible agents without redesigning a workflow template for every process change."
+    how_brfplus_fits: >-
+      MDG rule-based workflow evaluates BRFplus decision tables using workflow context such as current step and last action.
+    source_refs: [SRC-SAP-MDG-BRFPLUS-WORKFLOW]
+    lead_boundary: "BRFplus decides the route; workflow still owns work items, execution, deadlines, and process state."
+
+  - id: SCN-BRFPLUS-OUTPUT-PARAMETERS
+    type: scenario
+    title: "S/4HANA Output Parameter Determination"
+    problem: "Determine what to output, who receives it, by which channel, with which form, and under which relevance conditions."
+    how_brfplus_fits: >-
+      The Output Parameter Determination app maintains decision-table business rules for supported application objects and determination steps.
+    source_refs: [SRC-SAP-S4-OUTPUT-PARAMETER-DETERMINATION]
+    lead_boundary: "Use the application-supported condition fields and extension points. Do not build a parallel output engine in custom code."
+
+  - id: SCN-BRFPLUS-AIF-CHECKS
+    type: scenario
+    title: "AIF mappings and checks"
+    problem: "Reuse business rules while validating or transforming interface data."
+    how_brfplus_fits: >-
+      SAP AIF can integrate a BRFplus function for value mapping, structure mapping, and checks.
+    source_refs: [SRC-SAP-AIF-BRFPLUS-INTEGRATION]
+    lead_boundary: "Use BRFplus for the business rule; keep message persistence, monitoring, restart, and recipient responsibility in AIF."
+
+  - id: SCN-BRFPLUS-CUSTOM-DECISION
+    type: scenario
+    title: "Custom ABAP decision service"
+    problem: "A custom ABAP application needs configurable decision logic with stable inputs and outputs."
+    how_brfplus_fits: "Expose a focused BRFplus function and call it from the application code."
+    lead_boundary: >-
+      If the logic is deeply algorithmic, transaction-heavy, or almost never changes, normal code can be clearer and easier to test.
+
+design_rules:
+  - id: HEUR-BRFPLUS-STABLE-FUNCTION-CONTRACT
+    type: expert_heuristic
+    context: "BRFplus solution design"
+    statement: "Stabilize the function context and result before optimizing individual rules."
+    confidence: high
+    questions:
+      - "What exact decision is the caller asking for?"
+      - "Which inputs are business context and which are implementation details?"
+      - "Can the caller remain unchanged when rules change?"
+    anti_patterns:
+      - "Expose dozens of application internals as rule context."
+
+  - id: HEUR-BRFPLUS-RULES-NOT-PROGRAMS
+    type: expert_heuristic
+    context: "Rule maintainability"
+    statement: "Use BRFplus to make decisions visible, not to recreate an application in decision tables."
+    confidence: high
+    questions:
+      - "Can a domain expert explain the rule path?"
+      - "Is this a decision, or is it procedural processing disguised as a rule?"
+    anti_patterns:
+      - "One giant table with hidden sequencing."
+      - "Database side effects inside decision logic."
+
+  - id: HEUR-BRFPLUS-OWNER-AND-TRANSPORT
+    type: expert_heuristic
+    context: "Rule governance"
+    statement: "Define who may change rules, who approves them, and how they move across systems."
+    confidence: high
+    questions:
+      - "Who owns the business outcome?"
+      - "What regression tests protect rule changes?"
+      - "Which values are environment-specific?"
+    anti_patterns:
+      - "Treat production rule maintenance as harmless configuration."
+
+limitations:
+  - "BRFplus is strongest in ABAP-centered scenarios; it is not a general enterprise rules platform for every technology stack."
+  - "A rule engine does not remove the need for a stable domain model and clear ownership."
+  - "Large decision tables can become harder to review than code."
+  - "Application-specific BRFplus usage can restrict available context, result structure, or maintenance UI."
+  - "Calling external procedures or custom logic introduces runtime and exception behavior that the caller must handle."
+
+synthetic_examples:
+  - id: SCN-BRFPLUS-SYNTHETIC-MDG-SUPPLIER
+    title: "Synthetic supplier approval route"
+    synthetic: true
+    context:
+      country: "DE"
+      purchasing_org: "1000"
+      annual_spend_band: "HIGH"
+      risk_class: "MEDIUM"
+    decision: "Add purchasing lead approval before final activation."
+    lesson: "The rule returns the route decision; MDG workflow executes it."
+
+  - id: SCN-BRFPLUS-SYNTHETIC-OUTPUT
+    title: "Synthetic purchase-order output"
+    synthetic: true
+    context:
+      supplier_country: "DE"
+      document_type: "NB"
+      total_value_band: "STANDARD"
+    decision:
+      output_type: "PURCHASE_ORDER"
+      receiver: "Supplier"
+      channel: "EMAIL"
+      form: "Company standard PO form"
+    lesson: "The rule determines output parameters; the output framework creates and sends the output."
+
+assessment_cards:
+  - question: "Why use BRFplus instead of IF statements?"
+    answer: >-
+      I use BRFplus when the logic is a business decision that benefits from transparent maintenance, simulation,
+      reuse, and rule lifecycle. I keep procedural processing and heavy algorithms in code.
+  - question: "What is the most important BRFplus design object?"
+    answer: >-
+      The function contract. The caller gives context and expects a result. If that contract is stable,
+      rules can evolve without forcing application code changes.
+  - question: "How is BRFplus used in MDG?"
+    answer: >-
+      In rule-based workflow it can determine status, next step, and responsible agents from the current process context.
+      Workflow executes the process; BRFplus makes the decision.
+  - question: "How is BRFplus used in S/4HANA Output Management?"
+    answer: >-
+      Output Parameter Determination uses decision tables to determine supported output parameters such as output type,
+      receiver, channel, form, and relevance conditions.
+  - question: "Can BRFplus help in integration?"
+    answer: >-
+      Yes. AIF can call BRFplus functions for value mapping, structure mapping, and checks.
+      I would still keep monitoring, restart, and interface ownership in AIF.
+
+ai_evaluation:
+  grounded_questions:
+    - "A customer wants to change MDG approval routing without changing workflow templates. Which component should own the decision and which component executes the work?"
+    - "A purchase order must use different output channels by supplier and document context. Where should the determination logic sit?"
+    - "An AIF interface needs a reusable mapping rule. When is BRFplus useful and what stays in AIF?"
+    - "A rule table grows to hundreds of rows with procedural sequencing. What design smell does this indicate?"
+  expected_reasoning:
+    - "Separate decision logic from workflow or output execution."
+    - "Treat the BRFplus function as the stable rule API."
+    - "Use application-specific BRFplus integration instead of inventing a parallel framework."
+    - "Challenge rule models that hide procedural application logic."
+
+relations:
+  - subject: PLT-SAP-BRFPLUS
+    predicate: provides_capability
+    object: CAP-SAP-BUSINESS-RULE-DECISIONS
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-BRFPLUS-OVERVIEW]
+  - subject: PLT-SAP-BRFPLUS
+    predicate: uses_mechanism
+    object: MECH-BRFPLUS-DECISION-TABLE
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-BRFPLUS-OVERVIEW]
+  - subject: PLT-SAP-BRFPLUS
+    predicate: uses_rule_set
+    object: RSET-BRFPLUS-RULESET
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-BRFPLUS-OVERVIEW]
+  - subject: APP-S4-OUTPUT-MANAGEMENT
+    predicate: uses_mechanism
+    object: PLT-SAP-BRFPLUS
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-S4-OUTPUT-PARAMETER-DETERMINATION]
+  - subject: DET-S4-OUTPUT-PARAMETER
+    predicate: uses_mechanism
+    object: PLT-SAP-BRFPLUS
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-S4-OUTPUT-PARAMETER-DETERMINATION]
+  - subject: PLT-SAP-AIF
+    predicate: calls
+    object: PLT-SAP-BRFPLUS
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-AIF-BRFPLUS-INTEGRATION]
+
+source_refs:
+  - SRC-SAP-BRFPLUS-OVERVIEW
+  - SRC-SAP-BRFPLUS-RELEASE-EHP1
+  - SRC-SAP-BRFPLUS-S4-SETUP
+  - SRC-SAP-BRFPLUS-PUBLIC-CLOUD
+  - SRC-SAP-MDG-BRFPLUS-WORKFLOW
+  - SRC-SAP-S4-OUTPUT-PARAMETER-DETERMINATION
+  - SRC-SAP-AIF-BRFPLUS-INTEGRATION
+
+tags:
+  - sap
+  - brfplus
+  - business-rules
+  - decision-tables
+  - mdg
+  - output-management
+  - aif
+  - abap
+  - architecture
