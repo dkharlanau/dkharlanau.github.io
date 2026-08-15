@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Labs — Enterprise Context and AI"
-description: "Practical maps for SAP domains, deployment models, industries, processes, applications, integrations, data, and AI."
+description: "Practical maps for SAP domains, deployment models, industries, processes, applications, integrations, data, Business AI, and AI architecture."
 permalink: /labs/
 status: draft
 verified: false
@@ -25,14 +25,14 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Labs / practical architecture maps</p>
       <h1>Understand the business.<br />Then map the architecture.</h1>
-      <p>Simple, source-tracked maps of business domains, SAP landscapes, integrations, data, AI systems, and the decisions that connect them.</p>
+      <p>Simple, source-tracked maps of business domains, SAP landscapes, integrations, data, AI systems, implementation cases, and the decisions that connect them.</p>
       <a class="research-canvas__button" href="#labs-inventory">Open the labs <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>2</strong><small>Active labs</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>14+</strong><small>Architecture views</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>6+</strong><small>Machine endpoints</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Active labs</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>17+</strong><small>Architecture and case views</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>7+</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
   </header>
@@ -58,7 +58,7 @@ tags:
       <a href="/labs/enterprise-context/domains/"><span>02</span><strong>Enterprise Business Domains</strong><small>What the business owns, separate from processes and SAP products.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/enterprise-context/deployment-models/"><span>03</span><strong>SAP S/4HANA Deployment Models</strong><small>Public Cloud, Private Cloud, and On-Premise.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
       <a href="/labs/enterprise-context/industries/"><span>04</span><strong>SAP Industry Solutions</strong><small>Automotive, retail, fashion, industrial manufacturing, and mill products.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
-      <a href="/labs/enterprise-context/business-ai/"><span>05</span><strong>SAP Business AI</strong><small>Joule, agents, build tools, runtime, model access, grounding, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/enterprise-context/business-ai/"><span>05</span><strong>SAP Business AI Technology Landscape</strong><small>Joule, agents, build tools, runtime, model access, grounding, and governance. Use the separate Business AI Lab for implementation cases and reusable patterns.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       <a href="/labs/enterprise-context/integrations/"><span>06</span><strong>SAP Integration Architecture</strong><small>APIs, IDocs, RFC, events, Kafka, queues, files, B2B, middleware, logistics, and master-data distribution.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/enterprise-context/model/"><span>07</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/data/catalog.json"><span>08</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
@@ -78,11 +78,25 @@ tags:
     </div>
   </section>
 
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lab 03 / Business AI</p>
+      <h2>Start from the business job. Keep the evidence attached.</h2>
+      <p>A growing catalog of real implementation cases and reusable AI patterns across customer service, knowledge work, procurement, forecasting, logistics, and operational decisions.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/business-ai/"><span>AI</span><strong>Business AI Lab</strong><small>Business-first map of patterns, cases, evidence grades, technologies, metrics, limits, and cross-links to SAP and vendor-neutral architecture.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/business-ai/cases/"><span>CASE</span><strong>Implementation cases</strong><small>Klarna, Morgan Stanley, FRoSTA, Western Sugar, Lemvigh-Müller, Cainz, and UPS as the first evidence set.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/business-ai/patterns/"><span>PAT</span><strong>Reusable patterns</strong><small>Conversation automation, enterprise knowledge, document-to-workflow, forecasting, operations optimization, and agentic exception management.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Business AI catalog</strong><small>Machine-readable cases, patterns, source registry, evidence model, technologies, KPIs, limitations, and consultant notes.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+    </div>
+  </section>
+
   <section class="research-canvas__method" data-reveal>
     <div><p class="research-canvas__eyebrow">Method</p><h2>Model, connect, exercise.</h2></div>
     <ol>
       <li><span>01</span><strong>Model</strong><p>Define the problem, owners, data, rules, systems, and boundaries.</p></li>
-      <li><span>02</span><strong>Connect</strong><p>Link integrations, tools, failures, controls, tests, and evidence.</p></li>
+      <li><span>02</span><strong>Connect</strong><p>Link integrations, tools, failures, controls, tests, evidence, and related implementation cases.</p></li>
       <li><span>03</span><strong>Exercise</strong><p>Use synthetic cases, build small systems, and test the reasoning.</p></li>
     </ol>
   </section>
