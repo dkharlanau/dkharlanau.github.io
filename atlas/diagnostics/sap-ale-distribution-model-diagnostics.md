@@ -1,8 +1,7 @@
 ---
 layout: default
 title: SAP ALE Distribution Model Diagnostics
-description: A conservative diagnostic frame for ALE distribution model issues in
-  SAP master data replication.
+description: A practical way to trace ALE master-data distribution from scope and change detection through IDoc creation, routing, and target processing.
 permalink: /atlas/diagnostics/sap-ale-distribution-model-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -13,6 +12,7 @@ business_process: Integration
 status: reviewed
 verified: true
 last_reviewed: '2026-06-13'
+last_modified_at: 2026-08-15
 author: Dzmitryi Kharlanau
 tags:
 - integration
@@ -28,108 +28,71 @@ sitemap: true
 level: 2
 ---
 
-<nav class="breadcrumbs" aria-label="Breadcrumb">
-  <ol>
-    <li><a href="/">Home</a></li>
-    <li><a href="/atlas/">Knowledge Atlas</a></li>
-    <li><a href="/atlas/diagnostics/">Diagnostics</a></li>
-    <li aria-current="page">SAP ALE Distribution Model Diagnostics</li>
-  </ol>
-</nav>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/atlas/">Knowledge Atlas</a></li><li><a href="/atlas/diagnostics/">Diagnostics</a></li><li aria-current="page">SAP ALE Distribution Model Diagnostics</li></ol></nav>
 
 <article class="section note-detail atlas-page">
-  <header class="note-header">
-    <p class="eyebrow">Atlas Diagnostic</p>
-    <h1>SAP ALE distribution model diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for finding why master data is not distributed, arrives at the wrong target, or creates duplicate objects.</p>
-    <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
-  </header>
+<header class="note-header">
+  <p class="eyebrow">Atlas Diagnostic</p>
+  <h1>SAP ALE distribution model diagnostics</h1>
+  <p class="note-subtitle">Do not treat ALE as one switch. Trace whether the object was in distribution scope, detected as changed, converted into a message, routed, and accepted by the target.</p>
+  <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
+</header>
 
-  <aside class="atlas-meta-panel">
-    <dl>
-      <div><dt>Process</dt><dd>Integration</dd></div>
-      <div><dt>SAP area</dt><dd>ALE / master data distribution</dd></div>
-      <div><dt>Indexing</dt><dd>Index, reviewed</dd></div>
-    </dl>
-  </aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Process</dt><dd>Integration</dd></div><div><dt>SAP area</dt><dd>ALE / master data distribution</dd></div><div><dt>Indexing</dt><dd>Index, reviewed</dd></div></dl></aside>
 
-  <div class="note-body">
-    <h2>Core idea</h2>
-    <p>ALE distribution models decide which master data changes go to which target systems. A missing object usually means the model did not select it, the change pointer was not processed, or the target did not accept it. Duplicates usually mean key mapping is missing or wrong. The diagnostic job is to follow the selection chain: model → change pointer → IDoc → target.</p>
+<div class="note-body">
+  <h2>The problem is a broken distribution decision</h2>
+  <p>When master data is missing in a target system, several different controls can be responsible. The object may be outside the intended distribution scope, the source change may not have produced a distribution trigger, no outbound message may have been created, routing may point elsewhere, or the target may have rejected a valid message.</p>
+  <p>This distinction matters because changing the distribution model will not fix a target-side posting error, and reprocessing messages will not help if the source object was never selected.</p>
 
-    <h2>Common symptoms</h2>
-    <ul>
-      <li>Master data change in source system is not reflected in target system.</li>
-      <li>Change pointer exists but no IDoc was generated.</li>
-      <li>IDoc was sent to wrong target system or multiple systems unexpectedly.</li>
-      <li>Target system creates duplicate master data objects instead of updating existing ones.</li>
-      <li>Distribution model shows active but no messages for the object type.</li>
-    </ul>
+  <h2>Read the chain from left to right</h2>
+  <div class="decision-table"><table><thead><tr><th>Stage</th><th>Question</th><th>Useful evidence</th></tr></thead><tbody>
+    <tr><td>Business scope</td><td>Should this object be distributed to this receiver at all?</td><td>Object type, message type, sender, receiver, filters, organizational data.</td></tr>
+    <tr><td>Change detection</td><td>Did the relevant change create the trigger expected by this scenario?</td><td>Change timestamp, changed fields, change-pointer or application trigger where used.</td></tr>
+    <tr><td>Message creation</td><td>Was an outbound message created for the object?</td><td>Message/IDoc number, creation time, sender, receiver, message type.</td></tr>
+    <tr><td>Routing</td><td>Did the technical route match the intended target?</td><td>Partner/port or equivalent route, receiver system, filters, model assignment.</td></tr>
+    <tr><td>Target processing</td><td>Did the target receive and apply the object?</td><td>Inbound status, application log, target key, validation error, duplicate check.</td></tr>
+  </tbody></table></div>
 
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>Missing distribution model entry:</strong> the object type or message type is not included in the active distribution model.</li>
-      <li><strong>Change pointer not created:</strong> change documents were not written or the change pointer job (BD21) did not process them.</li>
-      <li><strong>Filter object mismatch:</strong> the filter object excludes the specific plant, company code, or sales organization from distribution.</li>
-      <li><strong>Partner profile issue:</strong> the receiver partner profile does not support the message type or the outbound parameter is missing.</li>
-      <li><strong>Target system key mapping:</strong> the target system does not recognize the source key and creates a new object instead of updating.</li>
-    </ul>
+  <h2>A practical diagnostic workflow</h2>
+  <ol>
+    <li><strong>Choose one object and one receiver.</strong> Capture the source key, object/message type, source system, expected target, and business change that should have triggered replication.</li>
+    <li><strong>Confirm distribution scope.</strong> Check that the sender-receiver relationship and any filters include this exact case. Do not assume that an active model means every object is eligible.</li>
+    <li><strong>Check change detection.</strong> Establish whether the scenario is change-pointer driven, application-event driven, manually triggered, or based on another mechanism.</li>
+    <li><strong>Find the outbound message.</strong> If none exists, remain on the source side. If it exists, continue with its exact receiver, timestamp, and status.</li>
+    <li><strong>Trace routing.</strong> Confirm that the message used the expected logical receiver and technical route rather than simply proving that “an IDoc was sent.”</li>
+    <li><strong>Read the target result.</strong> Separate transport success from application success. A message can arrive and still fail validation, key resolution, or update logic.</li>
+    <li><strong>Compare with a working object.</strong> Differences in organizational data, filters, changed fields, key mapping, or target state often expose the relevant control quickly.</li>
+  </ol>
 
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li>BD64 — distribution model display.</li>
-      <li>BD22 — change pointer overview.</li>
-      <li>BD21 — change pointer processing log.</li>
-      <li>WE20 — partner profile outbound parameters.</li>
-      <li>WE02 — generated IDocs for the message type.</li>
-    </ul>
+  <h2>Where classic ALE tools help</h2>
+  <p>In classic ALE/IDoc landscapes, consultants often inspect the distribution model, change-pointer processing, partner profiles, and IDoc status using the standard ALE and IDoc administration tools available in that release. Those tools are evidence sources, not the diagnostic method itself. The important result is to identify the first stage where the expected chain stops.</p>
 
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>BDCP / BDCPS</strong> — change pointers.</li>
-      <li><strong>EDIDC / EDIDS</strong> — IDoc control and status.</li>
-      <li><strong>TBD22 / TBD23</strong> — distribution model tables.</li>
-      <li><strong>TBDBE</strong> — filter objects.</li>
-    </ul>
+  <h2>Duplicates need a separate diagnosis</h2>
+  <p>If the target creates a second object instead of updating an existing one, do not immediately label it a distribution-model problem. Check how the target identifies the business object, whether source and target keys are expected to differ, whether mapping exists, and whether the earlier object was created outside the governed replication path.</p>
 
-    <h2>Diagnostic workflow</h2>
-    <ol>
-      <li>Identify the master data object, message type, source system, and expected target system.</li>
-      <li>Check BD64 for the distribution model: is the object/message type included and active?</li>
-      <li>Check BD22 for change pointers: was a change pointer created for the object change?</li>
-      <li>Run or check BD21 to see if change pointers were processed into IDocs.</li>
-      <li>Check WE20 for the receiver partner profile: does it have the outbound parameter for this message type?</li>
-      <li>Check WE02 for generated IDocs and their status.</li>
-      <li>On the target system, check if the IDoc was received and whether it created or updated the object.</li>
-    </ol>
+  <h2>Safe next actions</h2>
+  <ul>
+    <li>Correct scope or filters only after proving that the object should have been selected.</li>
+    <li>Repair change detection or scheduling when eligible changes are not converted into outbound work.</li>
+    <li>Correct routing or partner configuration when the generated message points to the wrong technical receiver.</li>
+    <li>Fix target-side validation, master data, or key mapping when transport succeeds but application posting fails.</li>
+    <li>Before mass reprocessing, verify that messages are safe to repeat and that the target has not already applied part of the change.</li>
+  </ul>
 
-    <h2>Typical fixes or next actions</h2>
-    <ul>
-      <li>Add the missing object type or message type to the distribution model.</li>
-      <li>Process change pointers with BD21 if they were not automatically processed.</li>
-      <li>Adjust filter objects if the distribution scope is too narrow.</li>
-      <li>Update the partner profile to include the missing outbound parameter.</li>
-      <li>Fix key mapping on the target system if duplicates are being created.</li>
-    </ul>
+  <h2>What to capture first</h2>
+  <p>Record the object type and key, sender, expected receiver, business change and timestamp, expected message type, distribution/filter context, outbound message if present, target status, and whether a comparable object works. That evidence makes ownership visible: source application, ALE configuration, routing, integration operations, or target application.</p>
 
-    <h2>What to capture first</h2>
-    <p>Before routing the issue, capture: object type, message type, source and target systems, change document number, distribution model name, and whether the issue is new or recurring. This distinguishes a one-time filter miss from a model gap that will keep producing failures.</p>
+  <h2>Limitations and boundaries</h2>
+  <p>This page covers the diagnostic logic of ALE-style distribution. Exact transactions, tables, change-pointer behavior, message types, and target processing differ by object, release, and landscape. Modern replication scenarios may use DRF, APIs, events, middleware, or application-specific frameworks instead of classic ALE change-pointer flows, so verify the actual mechanism before applying an ALE-specific fix.</p>
+</div>
 
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a diagnostic frame, not an ALE configuration guide. It does not cover distribution model design, filter object setup, or target system key mapping configuration. It does not replace SAP's ALE documentation.</p>
+<section class="atlas-related"><h2>Related Atlas Pages</h2><ul>
+  <li><a href="/atlas/diagnostics/idoc-aif-integration-diagnostics/">IDoc and AIF Integration Diagnostics</a></li>
+  <li><a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP IDoc Status Diagnostics</a></li>
+  <li><a href="/atlas/diagnostics/sap-key-mapping-diagnostics/">SAP Key Mapping Diagnostics</a></li>
+</ul></section>
 
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
-  </div>
-
-  <section class="atlas-related">
-    <h2>Related Atlas Pages</h2>
-    <ul>
-      <li><a href="/atlas/diagnostics/idoc-aif-integration-diagnostics/">Idoc Aif Integration Diagnostics</a></li>
-      <li><a href="/atlas/diagnostics/sap-idoc-status-diagnostics/">SAP Idoc Status Diagnostics</a></li>
-      <li><a href="/atlas/diagnostics/sap-key-mapping-diagnostics/">SAP Key Mapping Diagnostics</a></li>
-    </ul>
-  </section>
-
-  {% include atlas/author-block.html %}
-  {% include atlas/disclaimer.html %}
+{% include atlas/author-block.html %}
+{% include atlas/disclaimer.html %}
 </article>
