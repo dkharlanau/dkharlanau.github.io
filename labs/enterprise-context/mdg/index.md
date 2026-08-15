@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP Master Data Governance — Enterprise Context Lab"
-description: "A practical SAP MDG Data Book: product options, governance processes, data domains, solution architecture, interface contracts, extensibility, logistics dependencies, implementation rules, and presales decisions."
+description: "A practical SAP MDG Data Book covering deployments, governance, domains, architecture, integration, logistics, extensions, and implementation."
 permalink: /labs/enterprise-context/mdg/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 tags:
   - sap
