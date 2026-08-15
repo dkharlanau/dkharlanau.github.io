@@ -72,7 +72,7 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Lab 02 / AI Ready</p>
       <h2>Build AI systems, not isolated demos.</h2>
-      <p>A vendor-neutral architecture map for data, retrieval, tools, MCP, agents, evaluations, security, deployment, decision matrix, and hands-on track.</p>
+      <p>A vendor-neutral architecture map for data, retrieval, tools, MCP, agents, evaluations, security, deployment, and production decisions.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture Lab</strong><small>Foundations, RAG, MCP, agents, evals, security, deployment, decision matrix, and hands-on track.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
