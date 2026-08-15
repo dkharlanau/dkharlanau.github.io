@@ -1,11 +1,11 @@
 id: lab-enterprise-context
 title: "Enterprise Context Lab"
 model_name: "Enterprise Context Graph"
-version: "1.1.0"
+version: "1.2.0"
 status: active_research
 started_at: "2026-08-14"
-updated_at: "2026-08-14"
-last_reviewed_together_at: "2026-08-14"
+updated_at: "2026-08-15"
+last_reviewed_together_at: "2026-08-15"
 review_note: "Last reviewed together against current primary SAP sources."
 owner: "Dzmitryi Kharlanau"
 
@@ -94,6 +94,15 @@ second_vertical:
   page_url: "/labs/enterprise-context/procurement/"
   graph_ref: "GRAPH-MM-PROCUREMENT-DECISIONS"
 
+third_vertical:
+  id: TOPIC-TM-TRANSPORT-TO-SETTLE
+  title: "SAP Transportation Management — Transport to Settle"
+  status: researching
+  gates_complete: 6
+  gates_total: 7
+  page_url: "/labs/enterprise-context/transportation-management/"
+  graph_ref: "GRAPH-TM-TRANSPORT-TO-SETTLE"
+
 deep_dives:
   - id: DEEP-SD-SALES-ORDER
     title: "Sales Order Decision Map"
@@ -149,6 +158,19 @@ deep_dives:
       - "purchasing conditions"
       - "approval and supplier output"
       - "goods receipt, invoice verification, and GR/IR"
+  - id: DEEP-TM-TRANSPORT-TO-SETTLE
+    title: "SAP TM Transport-to-Settle Map"
+    parent_topic: TOPIC-TM-TRANSPORT-TO-SETTLE
+    status: researching
+    page_url: "/labs/enterprise-context/transportation-management/"
+    graph_ref: "GRAPH-TM-TRANSPORT-TO-SETTLE"
+    emphasis:
+      - "OTR and DTR transportation demand"
+      - "Freight Unit Building and planning granularity"
+      - "Transportation Cockpit and planning"
+      - "Freight Orders, Freight Bookings, carrier selection, and tendering"
+      - "TM and EWM execution ownership"
+      - "charge calculation and Freight Settlement Document integration to MM"
 
 maturity_gates:
   - id: scope
@@ -206,6 +228,7 @@ human_views:
   shipping_scheduling: "/labs/enterprise-context/shipping/"
   master_data_architecture: "/labs/enterprise-context/master-data/"
   procurement_decision_map: "/labs/enterprise-context/procurement/"
+  transportation_management: "/labs/enterprise-context/transportation-management/"
   sales_master_data: "/labs/enterprise-context/sales-processes/master-data/"
   model_contract: "/labs/enterprise-context/model/"
   research_attribution_policy: "/legal/research-attribution/"
@@ -231,4 +254,6 @@ machine_endpoints:
   master_data_sources: "/labs/enterprise-context/data/master-data-sources.json"
   procurement_graph: "/labs/enterprise-context/data/procurement-graph.json"
   procurement_sources: "/labs/enterprise-context/data/procurement-sources.json"
+  transportation_management_graph: "/labs/enterprise-context/data/transportation-management-graph.json"
+  transportation_management_sources: "/labs/enterprise-context/data/transportation-management-sources.json"
   sales_master_data: "/labs/enterprise-context/data/sales-master-data.json"
