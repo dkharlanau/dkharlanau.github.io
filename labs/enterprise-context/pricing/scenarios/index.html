@@ -1,0 +1,237 @@
+---
+layout: default
+title: "Advanced SAP Sales Pricing Scenarios — Enterprise Context Lab"
+description: "Scenario-based SAP S/4HANA pricing: promotions, customer hierarchies, variant pricing, intercompany, billing repricing, retroactive billing, rebates, tax, and external channels."
+permalink: /labs/enterprise-context/pricing/scenarios/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - pricing
+  - promotions
+  - customer-hierarchy
+  - variant-configuration
+  - intercompany
+  - retroactive-billing
+  - settlement-management
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.pricing_scenarios %}
+{% assign evidence = site.data.labs.enterprise_context.sources.pricing_scenarios %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/pricing/">Pricing</a></li><li aria-current="page">Advanced Scenarios</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Advanced Pricing</p>
+      <h1>First choose the commercial clock.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#scenario-selector">Choose the mechanism <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Advanced pricing inventory">
+      <p>Scenario model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.scenario_families | size }}</strong><small>Scenario families</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.synthetic_cases | size }}</strong><small>Synthetic cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Draft research · scenario based · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+    <p><strong>My rule:</strong> I do not select the condition type first. I identify when the agreement becomes relevant, who owns it, which value it controls, and which document must make that value effective.</p>
+    <a href="/labs/enterprise-context/data/pricing-scenarios.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Pricing deep dives</p>
+      <h2>Three views of the same engine.</h2>
+      <p>The base pricing page follows runtime. Anatomy explains the calculation pieces. Configuration explains build order. This page explains which commercial mechanism fits the problem.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/pricing/"><span>01</span><strong>Pricing Engine</strong><small>Runtime path, condition technique and diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/enterprise-context/pricing/anatomy/"><span>02</span><strong>Pricing Anatomy</strong><small>Condition types, bases, scales, formulas, Free Goods and extensions.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/pricing/configuration/"><span>03</span><strong>Configuration Playbook</strong><small>Build order, ownership, test matrix and implementation guardrails.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="scenario-selector" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mechanism selector</p>
+      <h2>The same word “discount” can belong to very different processes.</h2>
+      <p>I use the business need to select the mechanism before discussing condition names or custom logic.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.scenario_selector %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>0{{ forloop.index }}</span><small>decision</small></div>
+          <h3>{{ item.business_need }}</h3>
+          <p class="ecg-question">{{ item.preferred_mechanism }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Why</h4><p>{{ item.why }}</p></div>
+          <div><h4>Avoid</h4><p>{{ item.avoid }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Commercial clock</p>
+      <h2>Order pricing is only one moment in the lifecycle.</h2>
+      <p>A strong pricing design states which clock owns the commercial decision. Many production defects are simply two teams using different clocks without saying so.</p>
+    </header>
+    <div class="ecg-control-stack">
+      {% for clock in graph.commercial_clock %}
+      <article>
+        <span>{{ clock.stage }}</span>
+        <h3>{{ clock.main_question }}</h3>
+        <p><strong>Mechanisms:</strong> {{ clock.mechanisms | join: " · " }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Scenario families</p>
+      <h2>Nine mechanisms, nine different boundaries.</h2>
+      <p>The important difference is not the screen where configuration is stored. It is what commercial problem the mechanism owns.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for scenario in graph.scenario_families %}
+      <article class="ecg-determination-detail" id="{{ scenario.id | downcase }}">
+        <header>
+          <div><span>0{{ scenario.order }}</span><small>scenario</small></div>
+          <h3>{{ scenario.title }}</h3>
+          <p class="ecg-question">{{ scenario.business_question }}</p>
+        </header>
+        <p class="ecg-caption"><strong>Memory hook.</strong> {{ scenario.memory_hook }}</p>
+        <div class="ecg-decision-columns">
+          <div>
+            <h4>Boundary</h4>
+            <p>{{ scenario.boundary }}</p>
+            {% if scenario.advanced_boundary %}<ul>{% for value in scenario.advanced_boundary %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+          <div>
+            <h4>Runtime / shape</h4>
+            {% if scenario.runtime_path %}<ol>{% for value in scenario.runtime_path %}<li>{{ value }}</li>{% endfor %}</ol>{% endif %}
+            {% if scenario.classic_shape %}<ul>{% for value in scenario.classic_shape %}<li>{{ value }}</li>{% endfor %}</ul>{% endif %}
+            {% if scenario.common_pricing_types %}<ul>{% for value in scenario.common_pricing_types %}<li><strong>{{ value.code }}</strong> · {{ value.meaning }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+          <div>
+            <h4>Ask before changing</h4>
+            <ul>{% for value in scenario.design_questions %}<li>{{ value }}</li>{% endfor %}</ul>
+          </div>
+        </div>
+        {% if scenario.configuration_shape %}
+        <details><summary>Configuration shape</summary><div><ol>{% for value in scenario.configuration_shape %}<li>{{ value }}</li>{% endfor %}</ol></div></details>
+        {% endif %}
+        {% if scenario.billing_note %}<p class="ecg-caption"><strong>Billing:</strong> {{ scenario.billing_note }}</p>{% endif %}
+        {% if scenario.cross_link %}<p><a href="{{ scenario.cross_link }}">Open the dedicated Sales CCM vertical →</a></p>{% endif %}
+        <details><summary>Failure patterns</summary><div><ul>{% for value in scenario.failure_modes %}<li>{{ value }}</li>{% endfor %}</ul></div></details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Boundary rules</p>
+      <h2>The useful architecture lives between mechanisms.</h2>
+      <p>These rules are deliberately short. They are the sentences I want available when a workshop starts mixing pricing, billing, tax and settlement into one problem.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in graph.boundary_rules %}
+      <article><span>{{ item.id }}</span><h3>{{ item.rule }}</h3></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% for scenario in graph.synthetic_cases %}
+  <section class="ecg-case" data-reveal>
+    <div class="ecg-case__intro">
+      <p class="research-canvas__eyebrow">Synthetic commercial case {{ forloop.index }}</p>
+      <h2>{{ scenario.title }}</h2>
+      <p>{{ scenario.description }}</p>
+      <strong>Synthetic example · no customer data</strong>
+    </div>
+    <div class="ecg-case__body">
+      <h3>Facts</h3><ul>{% for value in scenario.facts %}<li>{{ value }}</li>{% endfor %}</ul>
+      <h3>Reasoning path</h3><ol>{% for value in scenario.reasoning_path %}<li>{{ value }}</li>{% endfor %}</ol>
+      <p><strong>Lesson:</strong> {{ scenario.lesson }}</p>
+    </div>
+  </section>
+  {% endfor %}
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Answer by separating clocks and owners.</h2>
+      <p>The expected answer is not a transaction code. It is a short architecture path that explains the commercial owner, runtime boundary, billing behavior and follow-on documents.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for drill in graph.assessment_drills %}
+      <details>
+        <summary><span>0{{ forloop.index }}</span><strong>{{ drill.prompt }}</strong></summary>
+        <div><p>Expected reasoning path</p><ol>{% for value in drill.expected_reasoning %}<li>{{ value }}</li>{% endfor %}</ol></div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead takeaways</p>
+      <h2>Pricing architecture becomes easier when the boundaries are explicit.</h2>
+    </header>
+    <div class="ecg-control-stack">
+      {% for item in graph.lead_takeaways %}
+      <article><span>RULE {{ forloop.index }}</span><h3>{{ item }}</h3></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Scenario facts stay source-tracked.</h2>
+      <p>Primary SAP documentation is used for product behavior. The scenario selector, boundary rules, synthetic cases and assessment drills are original synthesis for this Lab.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">For tools and AI</p>
+      <h2>The mechanism choice is machine-readable.</h2>
+      <p>The selector, commercial clocks, scenario boundaries, synthetic cases and assessment drills are exposed as structured JSON.</p>
+    </div>
+    <div class="ecg-machine__actions">
+      <a class="research-canvas__button" href="/labs/enterprise-context/data/pricing-scenarios.json">Scenario graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+      <a href="/labs/enterprise-context/data/pricing-scenario-sources.json">Scenario sources JSON</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>

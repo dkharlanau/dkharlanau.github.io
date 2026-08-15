@@ -1,0 +1,506 @@
+id: GRAPH-SD-PRICING-ANATOMY
+version: "1.0.0"
+type: knowledge_graph
+title: "Sales Pricing Anatomy — Conditions, Bases, Scales and Formulas"
+summary: >-
+  A Lead-level model of what actually sits inside SAP Sales pricing: pricing procedure rows,
+  condition type behavior, calculation bases, scales, group logic, exclusions, free goods,
+  formulas, manual changes, billing repricing, and safe extension patterns.
+domain: "SAP S/4HANA Sales"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: null
+
+mental_model:
+  sentence: "RATE × BASE, but only after ELIGIBILITY, SEARCH, SCALE and INTERACTION are resolved."
+  layers:
+    - id: PRCA-LAYER-01
+      key: PROCEDURE
+      question: "Which pricing path is active?"
+      answer: "The pricing procedure defines sequence, requirements, subtotals and calculation controls."
+    - id: PRCA-LAYER-02
+      key: TYPE
+      question: "What business meaning and behavior does this condition type own?"
+      answer: "Price, discount, surcharge, freight, tax, cost, group logic or another pricing purpose."
+    - id: PRCA-LAYER-03
+      key: RATE
+      question: "Where did the rate come from?"
+      answer: "Condition record, manual entry, cost source, formula or another supported source."
+    - id: PRCA-LAYER-04
+      key: BASE
+      question: "What value is the rate applied to?"
+      answer: "Quantity, value, weight, volume, subtotal, group total or a formula result."
+    - id: PRCA-LAYER-05
+      key: SCALE
+      question: "Which scale level applies?"
+      answer: "The scale basis and scale type decide which rate is selected."
+    - id: PRCA-LAYER-06
+      key: INTERACTION
+      question: "Does this condition coexist, compete, or distribute across items?"
+      answer: "Exclusion, group conditions, supplements and manual-priority rules can change the final active set."
+    - id: PRCA-LAYER-07
+      key: EXTENSION
+      question: "Is standard configuration enough?"
+      answer: "Prefer configuration first, then released extension logic, and classic routines only where the deployment model requires them."
+
+procedure_row_anatomy:
+  - id: PRCA-PROC-STEP
+    field: "Step / counter"
+    purpose: "Defines execution order and allows several entries around one pricing step."
+    lead_question: "What was already calculated before this row runs?"
+    source_refs: [SRC-SAP-PRICING-PROCEDURES]
+  - id: PRCA-PROC-CTYPE
+    field: "Condition type"
+    purpose: "Connects the procedure row to condition-type behavior and, where relevant, an access sequence."
+    lead_question: "Is the problem in the row, the type, or the record search?"
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP]
+  - id: PRCA-PROC-FROMTO
+    field: "From / To range"
+    purpose: "Uses earlier pricing rows as a calculation range or basis."
+    lead_question: "Which earlier values are included in this base?"
+    source_refs: [SRC-SAP-PRICING-PROCEDURES]
+  - id: PRCA-PROC-REQ
+    field: "Requirement"
+    purpose: "Allows the row only when the configured business rule is true."
+    lead_question: "Did the search fail, or was the row not allowed to run?"
+    source_refs: [SRC-SAP-PRICING-PROCEDURES]
+  - id: PRCA-PROC-MANUAL
+    field: "Manual / automatic control"
+    purpose: "Defines whether the element is determined automatically, entered manually, or both according to type/procedure design."
+    lead_question: "Can a manual value replace the automatic result here?"
+    source_refs: [SRC-SAP-PRICING-PROCEDURES, SRC-SAP-PRICING-CONDITION-TYPES-DEEP]
+  - id: PRCA-PROC-STAT
+    field: "Statistical / mandatory behavior"
+    purpose: "Separates informational price elements from values that contribute to the commercial result and can enforce required elements."
+    lead_question: "Is the condition visible but intentionally outside net value?"
+    source_refs: [SRC-SAP-PRICING-PROCEDURES]
+  - id: PRCA-PROC-SUBTOTAL
+    field: "Subtotal"
+    purpose: "Stores an intermediate pricing result for later rows or downstream processing."
+    lead_question: "Is a later formula reading the subtotal I expect?"
+    source_refs: [SRC-SAP-PRICING-PROCEDURES]
+  - id: PRCA-PROC-ALTBASE
+    field: "Alternative base formula"
+    purpose: "Replaces the standard condition base."
+    lead_question: "Is the percentage correct but applied to the wrong base?"
+    source_refs: [SRC-SAP-PRICING-VOFM]
+  - id: PRCA-PROC-ALTCALC
+    field: "Alternative calculation"
+    purpose: "Replaces the standard condition-value calculation."
+    lead_question: "Is custom math replacing normal rate × base behavior?"
+    source_refs: [SRC-SAP-PRICING-VOFM, SRC-SAP-PRICING-EXT-AMOUNT]
+  - id: PRCA-PROC-ACCOUNT
+    field: "Accounting / accrual relevance"
+    purpose: "Marks selected price elements for downstream accounting or accrual use where the design requires it."
+    lead_question: "Does this row only price the document, or also carry a downstream financial role?"
+    source_refs: [SRC-SAP-PRICING-PROCEDURES, SRC-SAP-PRICING-CONDITION-TYPES-DEEP]
+
+condition_families:
+  - id: PRCA-FAM-BASE
+    title: "Base price"
+    role: "Creates the commercial starting point for the item."
+    common_shapes: ["amount per quantity", "customer/product price", "price-list or agreement-driven price"]
+    config_focus: ["condition class/purpose", "calculation type", "access sequence", "pricing unit", "scales"]
+    diagnostic: "Prove procedure → condition type → access → exact record key before changing the price record."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP, SRC-SAP-PRICING-CONDITION-TECHNIQUE]
+  - id: PRCA-FAM-DISCOUNT
+    title: "Discount"
+    role: "Reduces a price using percentage, amount, quantity-related or other configured logic."
+    common_shapes: ["customer discount", "customer/product discount", "promotion discount", "quantity/value scale discount"]
+    config_focus: ["sign", "calculation type", "base", "scale", "manual policy", "exclusion"]
+    diagnostic: "A discount can be found and still be inactive because another condition wins."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP, SRC-SAP-PRICING-CONDITION-EXCLUSION-DEEP]
+  - id: PRCA-FAM-SURCHARGE
+    title: "Surcharge / freight"
+    role: "Adds commercial or logistics cost to the pricing result."
+    common_shapes: ["fixed charge", "percentage surcharge", "weight/volume freight", "manual freight"]
+    config_focus: ["calculation type", "base", "header/item behavior", "group logic", "manual policy"]
+    diagnostic: "Check whether the charge belongs to one item, the whole document, or a group of items."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP, SRC-SAP-PRICING-GROUP-CONDITIONS]
+  - id: PRCA-FAM-TAX
+    title: "Tax"
+    role: "Adds tax price elements according to tax determination and localization rules."
+    common_shapes: ["percentage tax", "jurisdiction/localization-specific calculation"]
+    config_focus: ["tax condition type", "base", "procedure position", "manual restriction"]
+    diagnostic: "Treat tax as a separate determination domain; do not repair tax by adding a normal discount/surcharge condition."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP]
+  - id: PRCA-FAM-COST
+    title: "Cost / statistical value"
+    role: "Provides internal or informational values that can support margin, reporting or later calculation."
+    common_shapes: ["cost source", "statistical subtotal", "internal comparison value"]
+    config_focus: ["data source", "statistical flag", "subtotal", "accounting relevance"]
+    diagnostic: "Visible does not mean net-value relevant. Prove statistical behavior before comparing totals."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP, SRC-SAP-PRICING-PROCEDURES]
+  - id: PRCA-FAM-GROUP
+    title: "Header / group condition"
+    role: "Uses several related items when calculating a scale base or condition value."
+    common_shapes: ["document-wide discount", "material-pricing-group discount", "combined quantity scale"]
+    config_focus: ["group-condition flag", "group key", "cumulation unit", "distribution/rounding"]
+    diagnostic: "Recalculate with the combined group base, not item quantity alone."
+    source_refs: [SRC-SAP-PRICING-GROUP-CONDITIONS]
+  - id: PRCA-FAM-SUPPLEMENT
+    title: "Condition supplement"
+    role: "Determines related conditions together with a main condition record when they share dependency and validity."
+    common_shapes: ["base price plus negotiated discount", "base price plus freight/surcharge"]
+    config_focus: ["main condition", "supplement procedure", "shared key and validity"]
+    diagnostic: "A supplement arrives with the main condition; do not expect its own access sequence."
+    source_refs: [SRC-SAP-PRICING-COND-SUPPLEMENTS]
+  - id: PRCA-FAM-MANUAL
+    title: "Manual condition / override"
+    role: "Allows controlled business-user intervention where the condition-type policy permits it."
+    common_shapes: ["manual freight", "negotiated one-off discount", "approved surcharge"]
+    config_focus: ["manual-entry policy", "priority versus automatic result", "change permissions"]
+    diagnostic: "Separate a manual override from a failed automatic search."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP]
+  - id: PRCA-FAM-FREE
+    title: "Free goods"
+    role: "Creates bonus quantity logic using condition-technique-style master data rather than treating the gift as a normal discount only."
+    common_shapes: ["inclusive bonus quantity", "exclusive bonus quantity", "different free product"]
+    config_focus: ["free-goods procedure/master data", "minimum quantity", "calculation rule", "item-category pricing behavior"]
+    diagnostic: "Prove free-goods determination first, then pricing of the generated/free quantity."
+    source_refs: [SRC-SAP-PRICING-FREE-GOODS, SRC-SAP-PRICING-FREE-GOODS-MASTER]
+
+calculation_models:
+  - id: PRCA-CALC-PCT
+    title: "Percentage"
+    formula: "condition value = percentage × condition base"
+    typical_use: "discounts, surcharges, taxes"
+    main_risk: "The rate is correct but the base is not."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP]
+  - id: PRCA-CALC-AMOUNT
+    title: "Fixed amount"
+    formula: "condition value follows a fixed currency amount according to condition design"
+    typical_use: "fees, manual charges, absolute discounts"
+    main_risk: "Header/group distribution or currency context makes the item result look unexpected."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP]
+  - id: PRCA-CALC-QUANTITY
+    title: "Amount per quantity"
+    formula: "rate per pricing unit × relevant quantity"
+    typical_use: "material price, freight per unit, quantity surcharge"
+    main_risk: "Pricing unit, UoM conversion or source quantity is different from what the user assumes."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP]
+  - id: PRCA-CALC-WEIGHT
+    title: "Weight / volume based"
+    formula: "rate × weight or volume basis"
+    typical_use: "freight, handling, commodity/logistics surcharges"
+    main_risk: "Master-data weight/volume or conversion becomes an invisible pricing dependency."
+    source_refs: [SRC-SAP-PRICING-SCALES-DEEP]
+  - id: PRCA-CALC-FORMULA
+    title: "Formula-based"
+    formula: "custom/released formula provides base, rate, value, or a combination"
+    typical_use: "rules that cannot be represented cleanly by standard rate/base configuration"
+    main_risk: "Business logic becomes hidden code unless formula ownership and inputs are explicit."
+    source_refs: [SRC-SAP-PRICING-CPF, SRC-SAP-PRICING-VOFM, SRC-SAP-PRICING-EXT-AMOUNT]
+
+base_models:
+  - id: PRCA-BASE-QTY
+    title: "Quantity base"
+    use_when: "The commercial rule depends on ordered/billed quantity."
+    proof: "Check pricing quantity, pricing unit and UoM conversion."
+  - id: PRCA-BASE-VALUE
+    title: "Value base"
+    use_when: "A percentage or scale depends on monetary value."
+    proof: "Identify which earlier values are included before applying the percentage."
+  - id: PRCA-BASE-SUBTOTAL
+    title: "Subtotal base"
+    use_when: "A later condition should use a controlled intermediate result."
+    proof: "Trace the procedure steps that populate the subtotal."
+    source_refs: [SRC-SAP-PRICING-PROCEDURES]
+  - id: PRCA-BASE-WEIGHT
+    title: "Weight / volume base"
+    use_when: "The rule depends on physical product characteristics."
+    proof: "Check product master values and unit conversion before the condition formula."
+    source_refs: [SRC-SAP-PRICING-SCALES-DEEP]
+  - id: PRCA-BASE-GROUP
+    title: "Cumulated group base"
+    use_when: "Several items must qualify together for one scale or discount."
+    proof: "Identify the grouping key and recalculate using the combined quantity/value."
+    source_refs: [SRC-SAP-PRICING-GROUP-CONDITIONS]
+  - id: PRCA-BASE-FORMULA
+    title: "Formula base"
+    use_when: "Standard bases do not represent the commercial agreement."
+    proof: "Inspect formula inputs and output separately from the condition rate."
+    source_refs: [SRC-SAP-PRICING-CPF, SRC-SAP-PRICING-VOFM]
+
+scale_models:
+  - id: PRCA-SCALE-FROM
+    title: "From-scale"
+    meaning: "A threshold becomes valid from a quantity or value upward."
+    example: "1+ → 100, 20+ → 80, 50+ → 60 per unit."
+    source_refs: [SRC-SAP-PRICING-SCALES-DEEP]
+  - id: PRCA-SCALE-TO
+    title: "To-scale"
+    meaning: "A threshold is valid up to the configured scale level."
+    example: "Use when the agreement is expressed as upper limits rather than lower thresholds."
+    source_refs: [SRC-SAP-PRICING-SCALES-DEEP]
+  - id: PRCA-SCALE-GRAD
+    title: "Graduated / interval scale"
+    meaning: "Different quantity intervals can receive different rates instead of one rate for the whole quantity."
+    example: "Useful when only the quantity inside each band gets that band's rate."
+    source_refs: [SRC-SAP-PRICING-SCALES-DEEP]
+  - id: PRCA-SCALE-GROUP
+    title: "Group scale"
+    meaning: "The scale base is built from several related document items."
+    example: "Two products in the same material pricing group can qualify together for a better discount."
+    source_refs: [SRC-SAP-PRICING-GROUP-CONDITIONS]
+
+interaction_models:
+  - id: PRCA-INT-EXCL-IND
+    title: "Condition exclusion indicator"
+    purpose: "A price or other condition can suppress selected later conditions according to procedure logic."
+    lead_question: "Was the discount missing, or was it found and then excluded?"
+    source_refs: [SRC-SAP-PRICING-CONDITION-EXCLUSION-DEEP]
+  - id: PRCA-INT-EXCL-GROUP
+    title: "Condition exclusion groups"
+    purpose: "Compares competing conditions or groups and keeps the configured best/worst/priority result."
+    lead_question: "Which conditions were compared, and which comparison method is active?"
+    source_refs: [SRC-SAP-PRICING-CONDITION-EXCLUSION-DEEP]
+  - id: PRCA-INT-SUPPL
+    title: "Condition supplements"
+    purpose: "Bundles related price elements under the main condition record and shared validity/key."
+    lead_question: "Did the supplement arrive because the main condition was found?"
+    source_refs: [SRC-SAP-PRICING-COND-SUPPLEMENTS]
+  - id: PRCA-INT-MANUAL
+    title: "Manual versus automatic priority"
+    purpose: "Controls whether user-entered pricing can override or coexist with automatic determination."
+    lead_question: "Is the document showing a deliberate override rather than a configuration failure?"
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP]
+  - id: PRCA-INT-GROUP
+    title: "Cross-item group logic"
+    purpose: "Cumulation can change both scale qualification and item-level distributed values."
+    lead_question: "Which items belong to the group, and what is the group base?"
+    source_refs: [SRC-SAP-PRICING-GROUP-CONDITIONS]
+
+free_goods_model:
+  memory_hook: "Free goods is quantity logic first, zero-price behavior second."
+  variants:
+    - id: PRCA-FG-INCLUSIVE
+      title: "Inclusive free goods"
+      meaning: "The bonus quantity is part of the ordered quantity; part of that quantity is free."
+    - id: PRCA-FG-EXCLUSIVE
+      title: "Exclusive free goods"
+      meaning: "The customer receives additional bonus quantity and the free product can be different."
+  quantity_controls:
+    - "validity period and condition key"
+    - "minimum quantity"
+    - "staged thresholds"
+    - "proportional calculation"
+    - "unit-based calculation"
+    - "whole-unit calculation"
+    - "custom quantity routine when the standard rules are not enough"
+  configuration_path:
+    - "define free-goods determination procedure / condition technique context"
+    - "maintain free-goods master data"
+    - "choose inclusive or exclusive agreement"
+    - "define minimum quantity, free quantity and calculation rule"
+    - "control the generated/free item pricing behavior through item-category design"
+    - "test partial delivery and billing behavior, not only order entry"
+  failure_modes:
+    - symptom: "No free item/quantity is created."
+      proof: "Procedure → key/validity → minimum quantity → free-goods rule."
+    - symptom: "Free quantity is too high or too low."
+      proof: "Compare proportional, unit-based and whole-unit rule against ordered quantity and UoM."
+    - symptom: "Free item is created but still affects price unexpectedly."
+      proof: "Separate free-goods determination from pricing/item-category control of the resulting item."
+  source_refs: [SRC-SAP-PRICING-FREE-GOODS, SRC-SAP-PRICING-FREE-GOODS-MASTER]
+
+formula_decision_table:
+  - id: PRCA-FORM-REQ
+    need: "Decide whether a condition/access may run"
+    best_fit: "Requirement"
+    avoid: "Do not calculate zero and call it eligibility."
+  - id: PRCA-FORM-BASE
+    need: "Change what a percentage/rate is applied to"
+    best_fit: "Alternative condition base"
+    avoid: "Do not change the rate to compensate for a wrong base."
+  - id: PRCA-FORM-AMOUNT
+    need: "Change the condition amount/value calculation"
+    best_fit: "Alternative calculation / condition amount logic"
+    avoid: "Do not hide the rule in document-save logic after pricing."
+  - id: PRCA-FORM-GROUP
+    need: "Aggregate several items before scale/calculation"
+    best_fit: "Group condition / group key logic"
+    avoid: "Do not manually duplicate header discounts on every item."
+  - id: PRCA-FORM-DATA
+    need: "Determine an auxiliary pricing field before a later price step"
+    best_fit: "Data determination / pricing communication / controlled formula"
+    avoid: "Do not create many duplicate condition tables if one derived classification is the real business rule."
+    source_refs: [SRC-SAP-PRICING-PRICE-BOOK]
+  - id: PRCA-FORM-COMPLEX
+    need: "Use several configurable parameters to derive base, rate or value"
+    best_fit: "Configurable Parameters and Formulas with BRFplus where supported"
+    avoid: "Do not move a simple condition-record problem into a rules engine."
+    source_refs: [SRC-SAP-PRICING-CPF]
+
+extension_patterns:
+  - id: PRCA-EXT-01
+    title: "Custom business attribute in the condition key"
+    problem: "Standard fields cannot distinguish the pricing agreement."
+    standard_first: "Check whether an existing standard field or hierarchy already represents the rule."
+    classic_shape: "Populate pricing communication, add field catalog entry, condition table, access and records."
+    clean_core_shape: "Use released custom pricing communication fields and configure field catalog/table/access/type."
+    proof: "Runtime pricing communication value → access key → matched record."
+    source_refs: [SRC-SAP-PRICING-EXT-CUSTOM-FIELDS]
+  - id: PRCA-EXT-02
+    title: "Commercial eligibility rule"
+    problem: "A condition should apply only for a precise business situation."
+    standard_first: "Try procedure/access requirement configuration before custom amount logic."
+    classic_shape: "VOFM requirement in classic/private landscapes where appropriate."
+    clean_core_shape: "Released pricing requirement BAdI/routine mapping where supported."
+    proof: "Requirement inputs → boolean result → condition/access executed or skipped."
+    source_refs: [SRC-SAP-PRICING-VOFM]
+  - id: PRCA-EXT-03
+    title: "Non-standard base"
+    problem: "The rate is correct but must apply to a special business base."
+    standard_first: "Try From/To and standard subtotals/base options."
+    classic_shape: "Alternative base formula."
+    clean_core_shape: "Released condition-base custom logic or CPF where supported."
+    proof: "Expected base → runtime base → rate → condition value."
+    source_refs: [SRC-SAP-PRICING-VOFM, SRC-SAP-PRICING-CPF]
+  - id: PRCA-EXT-04
+    title: "Custom amount calculation"
+    problem: "Standard calculation types cannot express the value rule."
+    standard_first: "Confirm the rule cannot be represented by calculation type, scale and base."
+    classic_shape: "Alternative calculation formula."
+    clean_core_shape: "Condition Amount custom logic or CPF where supported."
+    proof: "Inputs → formula result → condition amount/value."
+    source_refs: [SRC-SAP-PRICING-EXT-AMOUNT, SRC-SAP-PRICING-CPF]
+  - id: PRCA-EXT-05
+    title: "Custom cumulative discount group"
+    problem: "Items must qualify together using a business grouping not covered by the standard group key."
+    standard_first: "Use standard group-condition behavior and grouping dimensions first."
+    classic_shape: "Group key/group-condition routine where the classic model requires it."
+    clean_core_shape: "Prefer supported grouping/configuration; custom logic only for the missing grouping rule."
+    proof: "Group membership → combined base → scale → distributed item values."
+    source_refs: [SRC-SAP-PRICING-GROUP-CONDITIONS]
+  - id: PRCA-EXT-06
+    title: "Custom free-goods quantity"
+    problem: "Bonus quantity depends on packaging, whole-set or another rule beyond standard free-goods calculations."
+    standard_first: "Try proportional, unit-based and whole-unit rules first."
+    classic_shape: "Custom free-goods quantity routine in the supported classic extension point."
+    clean_core_shape: "Keep the rule in a released free-goods/pricing extension if available for the target deployment; otherwise reassess the process boundary."
+    proof: "Order quantity/UoM → threshold → rule → generated free quantity."
+    source_refs: [SRC-SAP-PRICING-FREE-GOODS-MASTER]
+  - id: PRCA-EXT-07
+    title: "Order and billing pricing parity"
+    problem: "The order is correct but billing finds another rate or loses a custom pricing field."
+    standard_first: "Prove billing pricing type and copy/repricing design before adding code."
+    classic_shape: "Ensure required pricing communication inputs exist in both order and billing contexts."
+    clean_core_shape: "Use released fields/business scenarios and keep pricing type behavior explicit."
+    proof: "Order context → billing copy/reprice type → billing context → first pricing-analysis divergence."
+    source_refs: [SRC-SAP-PRICING-BILLING-PRICING-TYPES, SRC-SAP-PRICING-COPYING-CONTROL]
+
+practitioner_patterns:
+  - id: PRCA-PAT-SEGMENT
+    title: "Customer segment + channel price key"
+    scenario: "A company wants the same product priced differently by a governed commercial segment and order channel."
+    preferred_shape: "One well-owned pricing attribute in the condition key, not many duplicated pricing procedures."
+    trap: "Populating the field after pricing has already run."
+  - id: PRCA-PAT-GROUPDISC
+    title: "Cumulative family discount"
+    scenario: "Several products in one commercial family should qualify together for a quantity discount."
+    preferred_shape: "Group condition with an explicit grouping key and cumulative scale base."
+    trap: "Checking each item quantity and concluding that the scale is wrong."
+  - id: PRCA-PAT-PROMO
+    title: "Promotion versus contract discount"
+    scenario: "A strong contract price or campaign condition should suppress a general discount."
+    preferred_shape: "Condition exclusion with a clear business priority model."
+    trap: "Deleting valid condition records to force one result."
+  - id: PRCA-PAT-FREIGHT
+    title: "Weight-based logistics surcharge"
+    scenario: "A surcharge depends on document/product weight and commercial region."
+    preferred_shape: "Condition record for stable commercial data plus a transparent weight/base calculation."
+    trap: "Putting route, region, conversion and final amount into one opaque formula."
+  - id: PRCA-PAT-FREEPACK
+    title: "Free goods in full packs"
+    scenario: "The bonus must be granted only in full packaging multiples."
+    preferred_shape: "Use the standard whole-unit free-goods rule where it fits; custom quantity logic only for the remaining packaging rule."
+    trap: "Using a 100% discount on a normal item when quantity creation is the real requirement."
+  - id: PRCA-PAT-INDEX
+    title: "Indexed or commodity surcharge"
+    scenario: "A surcharge depends on a governed index plus document-specific parameters."
+    preferred_shape: "Keep master/index ownership separate from pricing calculation; use a formula/CPF only for the calculation that cannot be expressed by condition records."
+    trap: "Hard-coding external commercial data into pricing logic."
+  - id: PRCA-PAT-MARGIN
+    title: "Margin or floor-price guard"
+    scenario: "A discount is allowed only when a defined commercial control is satisfied."
+    preferred_shape: "Use eligibility/requirement logic for the guard and keep price calculation separate."
+    trap: "Changing the calculated discount to zero without making the rejected rule visible."
+  - id: PRCA-PAT-BILL
+    title: "Custom field lost in billing"
+    scenario: "Sales order pricing uses a custom attribute, but billing reprices without the same input."
+    preferred_shape: "Compare pricing type and pricing communication on both documents before duplicating formulas."
+    trap: "Creating a second billing-only condition record as a workaround."
+
+failure_drills:
+  - id: PRCA-CASE-01
+    symptom: "The correct discount record exists but the condition is missing."
+    proof_path: ["pricing procedure", "requirement", "condition type", "access sequence", "runtime key", "record validity"]
+    lead_conclusion: "A record is evidence only after the condition is eligible and the access reaches its key."
+  - id: PRCA-CASE-02
+    symptom: "The discount rate is correct but the value is too large."
+    proof_path: ["condition rate", "base", "From/To or subtotal", "alternative base formula", "group base"]
+    lead_conclusion: "Debug rate and base as separate owners."
+  - id: PRCA-CASE-03
+    symptom: "Two items together should get a better scale, but they do not."
+    proof_path: ["group-condition flag", "group key", "cumulation unit", "combined scale base", "scale record"]
+    lead_conclusion: "Item pricing and group pricing are different calculation contexts."
+  - id: PRCA-CASE-04
+    symptom: "A promotion discount is found but inactive."
+    proof_path: ["pricing analysis", "condition exclusion indicator/group", "competing condition", "manual priority"]
+    lead_conclusion: "Found and inactive is not the same failure as not found."
+  - id: PRCA-CASE-05
+    symptom: "Free goods are generated in the wrong quantity."
+    proof_path: ["agreement key", "minimum quantity", "inclusive/exclusive", "calculation rule", "UoM", "custom routine if any"]
+    lead_conclusion: "Free goods is primarily a quantity-determination problem."
+  - id: PRCA-CASE-06
+    symptom: "A manual price remains although master data changed."
+    proof_path: ["manual-entry policy", "manual versus automatic priority", "repricing trigger/type"]
+    lead_conclusion: "A deliberate manual condition can survive a master-data change by design."
+  - id: PRCA-CASE-07
+    symptom: "Order pricing is correct, invoice pricing is different."
+    proof_path: ["billing pricing type", "copied/manual conditions", "pricing date", "custom pricing fields", "first analysis divergence"]
+    lead_conclusion: "Billing is a new pricing context unless copy control says otherwise."
+  - id: PRCA-CASE-08
+    symptom: "A formula works for one item but fails for another unit or currency."
+    proof_path: ["formula inputs", "pricing unit", "UoM conversion", "currency", "rounding", "base/value output"]
+    lead_conclusion: "Formula tests must cover dimensions and conversion, not only one happy-path number."
+
+assessment_drills:
+  - id: PRCA-DRILL-01
+    prompt: "Explain the difference between condition type, condition record and pricing-procedure row."
+    expected: "Type owns behavior; record owns maintained rate/key/validity; procedure row owns runtime sequence and row-level controls."
+  - id: PRCA-DRILL-02
+    prompt: "A 10% discount gives the wrong amount. What do you check?"
+    expected: "Rate → base → subtotal/From-To → group base → alternative base → rounding/currency."
+  - id: PRCA-DRILL-03
+    prompt: "When would you use a group condition?"
+    expected: "When several related items must build one scale base or shared condition result; explain grouping key and distribution."
+  - id: PRCA-DRILL-04
+    prompt: "How do inclusive and exclusive free goods differ?"
+    expected: "Inclusive makes part of ordered quantity free; exclusive adds bonus quantity and may use a different product."
+  - id: PRCA-DRILL-05
+    prompt: "Requirement versus alternative base versus alternative calculation?"
+    expected: "Requirement answers if it runs; base formula answers what value is used as base; alternative calculation answers how the condition amount/value is calculated."
+  - id: PRCA-DRILL-06
+    prompt: "How do you choose between condition records, formula and BRFplus/CPF?"
+    expected: "Use condition records for stable key/rate data, formulas for missing calculation logic, and CPF/BRFplus only when configurable multi-parameter rules justify the extra engine."
+
+source_refs:
+  - SRC-SAP-PRICING-PROCEDURES
+  - SRC-SAP-PRICING-CONDITION-TECHNIQUE
+  - SRC-SAP-PRICING-CONDITION-TYPES-DEEP
+  - SRC-SAP-PRICING-SCALES-DEEP
+  - SRC-SAP-PRICING-GROUP-CONDITIONS
+  - SRC-SAP-PRICING-FREE-GOODS
+  - SRC-SAP-PRICING-FREE-GOODS-MASTER
+  - SRC-SAP-PRICING-COND-SUPPLEMENTS
+  - SRC-SAP-PRICING-CONDITION-EXCLUSION-DEEP
+  - SRC-SAP-PRICING-CPF
+  - SRC-SAP-PRICING-PRICE-BOOK
+  - SRC-SAP-PRICING-EXT-CUSTOM-FIELDS
+  - SRC-SAP-PRICING-EXT-AMOUNT
+  - SRC-SAP-PRICING-VOFM
+  - SRC-SAP-PRICING-BILLING-PRICING-TYPES
+  - SRC-SAP-PRICING-COPYING-CONTROL

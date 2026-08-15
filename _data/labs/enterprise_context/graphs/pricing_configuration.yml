@@ -1,0 +1,301 @@
+id: GRAPH-SD-PRICING-CONFIGURATION
+version: "1.0.0"
+type: knowledge_graph
+title: "Sales Pricing Configuration Playbook"
+summary: >-
+  A configuration and test sequence for SAP Sales pricing. It separates business-rule design,
+  pricing master data, condition technique, procedure control, formulas, extensions, billing
+  repricing, and production diagnostics so each change has a clear owner and proof path.
+domain: "SAP S/4HANA Sales"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: null
+
+configuration_sequence:
+  - id: PRCC-STEP-01
+    order: 1
+    title: "Write the commercial rule before Customizing"
+    question: "What business outcome should be different, for whom, for which product/context, and from which date?"
+    actions:
+      - "classify the rule as price, discount, surcharge, tax, cost/statistical value, free-goods quantity, or eligibility logic"
+      - "define the business owner of each input field"
+      - "state whether the rule is stable master data or executable logic"
+    proof: "One example and one counterexample explain when the rule applies."
+  - id: PRCC-STEP-02
+    order: 2
+    title: "Choose the pricing procedure boundary"
+    question: "Can the existing procedure represent the rule, or is the business context materially different?"
+    actions:
+      - "prove current pricing-procedure determination"
+      - "reuse one procedure when only rates or condition keys differ"
+      - "split procedures only when calculation sequence or control differs materially"
+    proof: "The procedure difference can be explained as behavior, not only as a customer or country label."
+    source_refs: [SRC-SAP-PRICING-PROCEDURE-DETERMINATION, SRC-SAP-PRICING-PROCEDURES]
+  - id: PRCC-STEP-03
+    order: 3
+    title: "Design the condition key"
+    question: "Which attributes uniquely identify the commercial agreement?"
+    actions:
+      - "reuse standard pricing fields and hierarchies where they represent the rule"
+      - "add a custom pricing field only when the business distinction has a real owner"
+      - "keep volatile calculation inputs out of condition keys when a formula is the better owner"
+    proof: "Two agreements that need different rates produce different keys; agreements that should share a rate do not fragment into duplicate tables."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TECHNIQUE, SRC-SAP-PRICING-EXT-CUSTOM-FIELDS]
+  - id: PRCC-STEP-04
+    order: 4
+    title: "Build table and access sequence"
+    question: "In which order should pricing search from specific to general?"
+    actions:
+      - "create or reuse the condition table"
+      - "place tables in an access sequence with deliberate precedence"
+      - "use access requirements when an access should not run in every context"
+      - "decide when a successful earlier access should stop the search"
+    proof: "Pricing analysis shows the expected tables in the expected order and the exact runtime key."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TECHNIQUE]
+  - id: PRCC-STEP-05
+    order: 5
+    title: "Configure the condition type"
+    question: "What behavior belongs to this price element independent of one document?"
+    actions:
+      - "set the business/condition class and calculation type"
+      - "assign the access sequence where automatic master-data search is required"
+      - "define sign, manual-entry policy and header/item behavior"
+      - "define group-condition, scale, currency/quantity conversion and relevant financial controls where required"
+      - "enable CPF only when configurable formula behavior is part of the design"
+    proof: "The condition type can be explained without referring to one specific condition record."
+    source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP, SRC-SAP-PRICING-CPF]
+  - id: PRCC-STEP-06
+    order: 6
+    title: "Place the condition in the pricing procedure"
+    question: "When should it run, which base should it use, and how should it affect later rows?"
+    actions:
+      - "choose step and counter"
+      - "set requirement when eligibility belongs at the row"
+      - "use From/To or subtotal for transparent standard bases"
+      - "set statistical, mandatory, account/accrual and print behavior where relevant"
+      - "assign alternative base or amount logic only for the missing calculation rule"
+    proof: "A reviewer can trace every non-empty control column to a stated business reason."
+    source_refs: [SRC-SAP-PRICING-PROCEDURES, SRC-SAP-PRICING-VOFM, SRC-SAP-PRICING-EXT-AMOUNT]
+  - id: PRCC-STEP-07
+    order: 7
+    title: "Maintain rates, scales and validity"
+    question: "What is master data and who maintains it?"
+    actions:
+      - "maintain the condition record on the designed key"
+      - "set validity and pricing unit/currency"
+      - "maintain from/to/graduated scale data when the agreement is threshold-based"
+      - "use condition supplements when several price elements share one dependency and validity"
+    proof: "Boundary-date and boundary-scale tests return the intended rate."
+    source_refs: [SRC-SAP-PRICING-SCALES-DEEP, SRC-SAP-PRICING-COND-SUPPLEMENTS]
+  - id: PRCC-STEP-08
+    order: 8
+    title: "Configure interaction and quantity logic"
+    question: "Can several valid conditions coexist, and does the rule change value or quantity?"
+    actions:
+      - "use exclusion when competing valid conditions require a winner"
+      - "use group conditions when several items form one scale/calculation base"
+      - "use Free Goods when the business rule creates bonus quantity"
+      - "keep manual override policy explicit"
+    proof: "A multi-condition and multi-item test explains why each element is active or inactive."
+    source_refs: [SRC-SAP-PRICING-CONDITION-EXCLUSION-DEEP, SRC-SAP-PRICING-GROUP-CONDITIONS, SRC-SAP-PRICING-FREE-GOODS]
+  - id: PRCC-STEP-09
+    order: 9
+    title: "Extend only the missing layer"
+    question: "Is the gap data, eligibility, base, amount, grouping, or an external parameter?"
+    actions:
+      - "custom field for missing pricing context"
+      - "requirement for missing eligibility rule"
+      - "alternative base for missing base rule"
+      - "alternative calculation for missing amount rule"
+      - "CPF/BRFplus for configurable multi-parameter formulas when justified"
+      - "keep classic and clean-core extension choices aligned with the deployment model"
+    proof: "The custom logic has one responsibility and its result is visible in pricing analysis or a controlled trace."
+    source_refs: [SRC-SAP-PRICING-CPF, SRC-SAP-PRICING-EXT-CUSTOM-FIELDS, SRC-SAP-PRICING-EXT-AMOUNT, SRC-SAP-PRICING-VOFM]
+  - id: PRCC-STEP-10
+    order: 10
+    title: "Prove order, billing and boundary behavior"
+    question: "Does the rule survive the whole commercial lifecycle?"
+    actions:
+      - "test the sales document"
+      - "test reference/copy scenarios"
+      - "test billing pricing type and repricing"
+      - "test currency, UoM and scale boundaries"
+      - "test multi-item/group behavior"
+      - "test manual override and negative path"
+    proof: "Order and billing pricing analyses explain any intended difference."
+    source_refs: [SRC-SAP-PRICING-BILLING-PRICING-TYPES, SRC-SAP-PRICING-COPYING-CONTROL]
+
+condition_type_checklist:
+  - id: PRCC-CTYPE-CLASS
+    control: "Condition class / business role"
+    ask: "Is this a price, discount/surcharge, tax, cost, or another explicit pricing role?"
+  - id: PRCC-CTYPE-CALC
+    control: "Calculation type"
+    ask: "Percentage, fixed amount, quantity-dependent, weight/volume, or formula-driven?"
+  - id: PRCC-CTYPE-SOURCE
+    control: "Rate source and access sequence"
+    ask: "Is the amount found from condition records, entered manually, read from another source, or calculated?"
+  - id: PRCC-CTYPE-SIGN
+    control: "Plus/minus and manual policy"
+    ask: "May the user create/change it, and can a manual value take priority?"
+  - id: PRCC-CTYPE-GROUP
+    control: "Header/item/group behavior"
+    ask: "Is the base one item, the document, or a defined group of items?"
+  - id: PRCC-CTYPE-SCALE
+    control: "Scale behavior"
+    ask: "Which scale basis and threshold model are allowed?"
+  - id: PRCC-CTYPE-CONVERT
+    control: "Currency and quantity conversion"
+    ask: "Which unit/currency dimensions can change the value?"
+  - id: PRCC-CTYPE-FIN
+    control: "Account/accrual/intercompany relevance"
+    ask: "Does this element also carry a downstream financial role?"
+  - id: PRCC-CTYPE-CPF
+    control: "CPF enablement"
+    ask: "Does this type genuinely need configurable base/rate/value formulas?"
+  - id: PRCC-CTYPE-MASTER
+    control: "Master-data maintenance"
+    ask: "Who owns records, validity, scales and approvals after go-live?"
+  source_refs: [SRC-SAP-PRICING-CONDITION-TYPES-DEEP, SRC-SAP-PRICING-CPF]
+
+procedure_row_checklist:
+  - id: PRCC-PROW-STEP
+    control: "Step / counter"
+    ask: "What must already exist before this row executes?"
+  - id: PRCC-PROW-REQ
+    control: "Requirement"
+    ask: "What makes the row eligible?"
+  - id: PRCC-PROW-RANGE
+    control: "From / To"
+    ask: "Which previous rows make the standard base?"
+  - id: PRCC-PROW-SUBTOTAL
+    control: "Subtotal"
+    ask: "Which later calculation or downstream consumer needs this intermediate value?"
+  - id: PRCC-PROW-STAT
+    control: "Statistical / mandatory"
+    ask: "Does it change net value, provide information, or have to be present?"
+  - id: PRCC-PROW-BASE
+    control: "Alternative base"
+    ask: "Why is the standard base not sufficient?"
+  - id: PRCC-PROW-AMOUNT
+    control: "Alternative calculation"
+    ask: "Why is the standard calculation type not sufficient?"
+  - id: PRCC-PROW-FIN
+    control: "Account/accrual flags"
+    ask: "Which financial handoff consumes this row?"
+  source_refs: [SRC-SAP-PRICING-PROCEDURES]
+
+ownership_model:
+  - id: PRCC-OWN-CONFIG
+    layer: "Customizing"
+    owns: ["procedure determination", "condition types", "access sequences", "procedure rows", "exclusion/group design"]
+    change_question: "Does the pricing algorithm or control structure change?"
+  - id: PRCC-OWN-MASTER
+    layer: "Pricing master data"
+    owns: ["condition records", "rates", "validity", "scales", "supplements", "free-goods agreements"]
+    change_question: "Is the algorithm unchanged and only the commercial agreement changing?"
+  - id: PRCC-OWN-DATA
+    layer: "Business/master/document data"
+    owns: ["customer/product attributes", "pricing date", "quantity", "currency", "UoM", "custom pricing fields"]
+    change_question: "Did the runtime key/base receive the right business data?"
+  - id: PRCC-OWN-LOGIC
+    layer: "Extension logic"
+    owns: ["custom requirement", "custom base", "custom amount", "custom grouping", "CPF/BRFplus formula"]
+    change_question: "Which standard capability is missing, and can the extension remain one-purpose?"
+  - id: PRCC-OWN-COPY
+    layer: "Copy / billing repricing"
+    owns: ["copy unchanged", "full repricing", "partial repricing", "manual-condition handling", "billing pricing date/context"]
+    change_question: "Should the follow-on document preserve commercial history or calculate again?"
+
+extension_guardrails:
+  - id: PRCC-GUARD-01
+    rule: "Do not add a Z-field before naming its business owner."
+    why: "A technical field without governed source data creates an access key that nobody can reliably maintain."
+  - id: PRCC-GUARD-02
+    rule: "Do not use an amount formula to solve an eligibility problem."
+    why: "Returning zero hides why the condition did not apply; a requirement makes the decision visible."
+  - id: PRCC-GUARD-03
+    rule: "Do not change the rate to compensate for the wrong base."
+    why: "The same record will fail again for another quantity, item mix, currency or subtotal."
+  - id: PRCC-GUARD-04
+    rule: "Do not create a new pricing procedure for every customer variation."
+    why: "Rate/key variation belongs in condition technique; procedure variants should represent real calculation/control differences."
+  - id: PRCC-GUARD-05
+    rule: "Do not model bonus quantity as only a 100% discount when the process must create free quantity."
+    why: "Free Goods owns quantity generation and delivery behavior before pricing of the free item."
+  - id: PRCC-GUARD-06
+    rule: "Do not duplicate order pricing logic in billing before checking the pricing type."
+    why: "Copy control may intentionally copy or redetermine conditions."
+  - id: PRCC-GUARD-07
+    rule: "Do not put stable commercial rates inside code or BRFplus."
+    why: "Condition records are easier to govern, date, scale and audit when they already fit the requirement."
+  - id: PRCC-GUARD-08
+    rule: "Do not make one formula own data retrieval, eligibility, grouping and amount calculation."
+    why: "A smaller extension is easier to trace, test and replace."
+
+project_test_matrix:
+  - id: PRCC-TEST-BASE
+    dimension: "Base calculation"
+    cases: ["single item", "multiple previous procedure rows", "zero/negative base where allowed", "rounding boundary"]
+  - id: PRCC-TEST-SCALE
+    dimension: "Scales"
+    cases: ["below threshold", "exact threshold", "above threshold", "next threshold", "graduated interval"]
+  - id: PRCC-TEST-UOM
+    dimension: "Quantity / UoM"
+    cases: ["base UoM", "sales UoM", "conversion", "pricing unit", "full-pack Free Goods"]
+  - id: PRCC-TEST-CURRENCY
+    dimension: "Currency"
+    cases: ["document currency", "condition currency", "conversion date/rate context", "rounding"]
+  - id: PRCC-TEST-GROUP
+    dimension: "Group conditions"
+    cases: ["one item", "two items in group", "item outside group", "mixed units where supported"]
+  - id: PRCC-TEST-EXCLUSION
+    dimension: "Competing conditions"
+    cases: ["only condition A", "only condition B", "A and B together", "manual override"]
+  - id: PRCC-TEST-FREE
+    dimension: "Free Goods"
+    cases: ["below minimum", "at minimum", "between stages", "inclusive", "exclusive", "partial delivery"]
+  - id: PRCC-TEST-LIFECYCLE
+    dimension: "Document lifecycle"
+    cases: ["order", "reference document", "delivery where relevant", "billing copy", "billing repricing", "manual repricing trigger"]
+  - id: PRCC-TEST-EXT
+    dimension: "Extension"
+    cases: ["expected input", "blank input", "unexpected value", "order/billing parity", "error/rounding boundary"]
+
+lead_failure_cases:
+  - id: PRCC-CASE-01
+    symptom: "A team asks for a new pricing procedure because one customer gets another discount."
+    response: "First prove whether only the key/rate differs. If sequence and controls are the same, condition technique is usually the cleaner owner."
+  - id: PRCC-CASE-02
+    symptom: "A custom formula has grown to hundreds of lines."
+    response: "Split the responsibilities: data derivation, requirement, base and amount. Move stable rates back to condition records."
+  - id: PRCC-CASE-03
+    symptom: "A production incident is fixed by creating a more specific condition record."
+    response: "Check whether the new record expresses a real commercial exception or merely masks a wrong runtime key/access priority."
+  - id: PRCC-CASE-04
+    symptom: "A discount works in the order but not in billing."
+    response: "Compare billing pricing type, copied/manual conditions, pricing date and pricing communication before adding billing-only logic."
+  - id: PRCC-CASE-05
+    symptom: "A scale change gives different results for multi-item orders."
+    response: "Classify item versus group scale and prove the cumulated base before changing the scale record."
+  - id: PRCC-CASE-06
+    symptom: "Business asks for Buy 10 Get 1 Free."
+    response: "Clarify inclusive versus exclusive quantity, minimum/stages, calculation rule, product/UoM and delivery behavior before touching pricing discounts."
+
+source_refs:
+  - SRC-SAP-PRICING-CONDITION-TECHNIQUE
+  - SRC-SAP-PRICING-PROCEDURES
+  - SRC-SAP-PRICING-PROCEDURE-DETERMINATION
+  - SRC-SAP-PRICING-CONDITION-TYPES-DEEP
+  - SRC-SAP-PRICING-SCALES-DEEP
+  - SRC-SAP-PRICING-GROUP-CONDITIONS
+  - SRC-SAP-PRICING-FREE-GOODS
+  - SRC-SAP-PRICING-COND-SUPPLEMENTS
+  - SRC-SAP-PRICING-CONDITION-EXCLUSION-DEEP
+  - SRC-SAP-PRICING-CPF
+  - SRC-SAP-PRICING-EXT-CUSTOM-FIELDS
+  - SRC-SAP-PRICING-EXT-AMOUNT
+  - SRC-SAP-PRICING-VOFM
+  - SRC-SAP-PRICING-BILLING-PRICING-TYPES
+  - SRC-SAP-PRICING-COPYING-CONTROL

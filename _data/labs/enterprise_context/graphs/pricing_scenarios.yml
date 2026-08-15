@@ -1,0 +1,530 @@
+id: GRAPH-SD-ADVANCED-PRICING-SCENARIOS
+version: "1.0.0"
+type: knowledge_graph
+title: "Advanced Sales Pricing Scenarios"
+summary: >-
+  A scenario-based model for SAP S/4HANA Sales pricing when normal price, discount,
+  surcharge, and scale logic is not enough. It separates promotional agreements,
+  customer hierarchy pricing, configuration-dependent prices, intercompany value,
+  billing repricing, retroactive billing, rebate settlement, tax, and external channel pricing.
+domain: "SAP S/4HANA Sales"
+process_family: "Order-to-Cash"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: null
+
+thesis: >-
+  Advanced pricing problems are usually boundary problems. Before selecting a condition
+  type or writing a formula, identify the commercial clock, the party that owns the
+  agreement, the value being calculated, and the document where the result must become final.
+
+boundary:
+  included:
+    - "promotions and sales deals"
+    - "customer hierarchy pricing"
+    - "variant-condition pricing for configurable products"
+    - "classic and advanced intercompany pricing boundaries"
+    - "billing pricing types and repricing"
+    - "retroactive billing after pricing-agreement changes"
+    - "sales rebate settlement through condition contracts"
+    - "tax as a pricing interaction"
+    - "front-office pricing consistency through SAP Variant Configuration and Pricing service"
+  excluded:
+    - "full country tax configuration"
+    - "transfer-pricing policy and legal valuation design"
+    - "SAP CPQ implementation in depth"
+    - "settlement-management configuration already modeled in the CCM vertical"
+    - "client-specific condition names or custom code"
+
+memory_model:
+  title: "Nine questions before selecting the mechanism"
+  questions:
+    - key: "CLOCK"
+      question: "When does the commercial rule become valid?"
+      answer: "At order entry, at billing, after billing, or only when accumulated business volume is settled?"
+    - key: "PARTY"
+      question: "Who owns the agreement?"
+      answer: "One sold-to customer, a hierarchy node, an affiliate company, a settlement partner, or a tax authority context."
+    - key: "OBJECT"
+      question: "What is the commercial object?"
+      answer: "A product, configurable option, product family, customer group, invoice population, or accumulated business volume."
+    - key: "VALUE"
+      question: "Which value are we calculating?"
+      answer: "Customer selling price, discount, surcharge, internal transfer value, rebate amount, or tax."
+    - key: "ENGINE"
+      question: "Which engine owns the rule?"
+      answer: "Normal pricing, hierarchy search, variant configuration, intercompany pricing, billing repricing, settlement management, tax logic, or external pricing service."
+    - key: "DATE"
+      question: "Which date selects the commercial condition?"
+      answer: "Pricing date and validity must be explicit, especially when agreements change between order and billing."
+    - key: "COPY"
+      question: "Should billing copy or redetermine the price?"
+      answer: "Copying control and pricing type decide whether billing preserves, recalculates, or redetermines pricing elements."
+    - key: "POSTING"
+      question: "Which posting or follow-on document must reflect the result?"
+      answer: "Customer invoice, intercompany invoice, credit/debit memo, settlement document, tax posting, or accounting value."
+    - key: "TRACE"
+      question: "Where is the first document where expected and actual behavior diverge?"
+      answer: "Trace the mechanism at its own boundary instead of changing the condition record first."
+
+scenario_selector:
+  - business_need: "Temporary marketing campaign with several discount offers"
+    preferred_mechanism: "Promotion + Sales Deal + condition records"
+    why: "The commercial program has campaign structure, validity, and linked deal-level conditions."
+    avoid: "Embedding campaign dates and customer lists in a custom formula."
+  - business_need: "Corporate group agreement should apply to stores or subsidiaries below a negotiated node"
+    preferred_mechanism: "Customer hierarchy pricing"
+    why: "Pricing can search condition records maintained on pricing-relevant hierarchy nodes."
+    avoid: "Duplicating the same agreement for every child customer when hierarchy semantics are required."
+  - business_need: "Product options such as engine, package, color, or equipment change the price"
+    preferred_mechanism: "Variant conditions"
+    why: "Configuration selects variant-condition keys that pricing uses for surcharges or discounts."
+    avoid: "Hard-coding characteristic combinations directly in ordinary access sequences when configuration owns the option logic."
+  - business_need: "Delivering affiliate charges the selling company while the selling company charges the end customer"
+    preferred_mechanism: "Intercompany pricing"
+    why: "Customer selling price and internal affiliate value are different commercial views."
+    avoid: "Treating the intercompany value as another customer discount."
+  - business_need: "Commercial conditions changed before the first invoice is created"
+    preferred_mechanism: "Billing repricing through the required pricing type"
+    why: "Copying control decides what billing copies and what it redetermines."
+    avoid: "Assuming the order price is always frozen or always recalculated."
+  - business_need: "A new agreement must affect invoices that were already posted"
+    preferred_mechanism: "Retroactive Billing"
+    why: "Existing billing documents can be reevaluated and differences settled with debit or credit memos."
+    avoid: "Editing historical invoices or confusing this with normal invoice-time repricing."
+  - business_need: "Customer earns a quarterly or annual rebate from accumulated eligible sales"
+    preferred_mechanism: "Condition Contract Management / Settlement Management"
+    why: "The agreement depends on business volume over time and later settlement."
+    avoid: "Forcing a period-end rebate into one sales-order pricing condition."
+  - business_need: "Taxability, origin/destination, or jurisdiction changes the legal tax result"
+    preferred_mechanism: "Tax determination inside pricing, optionally with an external tax engine"
+    why: "Tax conditions use tax-specific context and may be redetermined independently from commercial price elements."
+    avoid: "Treating tax as a commercial discount or surcharge owned by sales pricing design."
+  - business_need: "A front-office channel needs the same back-end pricing rules"
+    preferred_mechanism: "SAP Variant Configuration and Pricing service where it fits"
+    why: "Pricing rules and replicated pricing data can be used outside the S/4HANA back-end."
+    avoid: "Rebuilding a second pricing engine in a portal or custom application."
+
+scenario_families:
+  - id: PRC-SCN-PROMOTION
+    order: 1
+    title: "Promotions and Sales Deals"
+    memory_hook: "A promotion groups the campaign; a sales deal narrows the commercial offer."
+    business_question: "How do I run a temporary campaign without turning the pricing procedure into campaign code?"
+    boundary: >-
+      Promotions and sales deals organize promotional pricing agreements. A promotion is a higher-level
+      marketing program and can contain several sales deals. Condition records can be linked to a sales deal.
+    runtime_path:
+      - "Sales document reaches normal pricing."
+      - "Relevant condition types search for valid condition records."
+      - "The condition record can be associated with the sales deal and promotion context."
+      - "Condition exclusion decides which competing commercial offers remain active when required."
+    configuration_shape:
+      - "Define the promotion and its validity."
+      - "Create one or more sales deals for the narrower product/customer offer."
+      - "Maintain or assign condition records to the sales deal."
+      - "Use normal pricing procedure, access sequence, scales, and exclusions for runtime calculation."
+    design_questions:
+      - "Is the campaign high-level or is each offer a separate deal?"
+      - "Can campaign conditions combine with contract prices or should one exclude the other?"
+      - "Which date controls eligibility at order and billing?"
+    failure_modes:
+      - "A campaign record exists but its validity does not match the pricing date."
+      - "A general discount remains active because exclusion was not designed."
+      - "Campaign logic is duplicated in formulas instead of maintained as commercial master data."
+    source_refs: [SRC-SAP-PRC-PROMOTIONAL-AGREEMENTS, SRC-SAP-PRC-CONDITION-EXCLUSION]
+
+  - id: PRC-SCN-HIERARCHY
+    order: 2
+    title: "Customer Hierarchy Pricing"
+    memory_hook: "Negotiate once at the node, consume below it through the hierarchy path."
+    business_question: "How can one agreement apply above the ordering customer?"
+    boundary: >-
+      Pricing-relevant hierarchy nodes can carry pricing condition records. During sales processing,
+      the hierarchy path is determined and valid node-level conditions can participate in pricing.
+    runtime_path:
+      - "Partner/customer context determines the current hierarchy path."
+      - "Pricing searches relevant nodes, beginning from the lower level of the path."
+      - "Valid node-level condition records are found through hierarchy-aware accesses."
+      - "Exclusive behavior or exclusion groups decide whether one or several hierarchy conditions remain active."
+    configuration_shape:
+      - "Model customer hierarchy and pricing-relevant nodes."
+      - "Provide hierarchy-capable condition types and access sequences in the pricing procedure."
+      - "Maintain condition records on the negotiated node."
+      - "Design exclusion if lower and upper hierarchy agreements compete."
+    design_questions:
+      - "Which node owns the commercial negotiation?"
+      - "Should local and national discounts stack?"
+      - "If the same agreement exists at several levels, should the nearest or most favorable result win?"
+    failure_modes:
+      - "The customer exists in the hierarchy but the node is not pricing relevant."
+      - "The hierarchy path differs from the commercial organization assumed by the project."
+      - "Competing node conditions stack when only one should survive."
+    source_refs: [SRC-SAP-PRC-CUSTOMER-HIERARCHY, SRC-SAP-PRC-CONDITION-EXCLUSION]
+
+  - id: PRC-SCN-VARIANT
+    order: 3
+    title: "Configuration-Dependent Pricing"
+    memory_hook: "Configuration determines the option key; pricing determines the commercial amount."
+    business_question: "How do characteristics of a configurable product change price?"
+    boundary: >-
+      Variant conditions connect variant configuration with pricing. Characteristic choices produce
+      variant-condition keys; pricing uses those keys to determine surcharges or discounts.
+    runtime_path:
+      - "User or process configures the product."
+      - "Configuration model activates the relevant variant-condition key or keys."
+      - "Pricing receives the key and searches the configured variant condition."
+      - "The surcharge or discount contributes to the normal pricing procedure."
+    configuration_shape:
+      - "Create a pricing condition type marked for variant configuration."
+      - "Use an access sequence and condition table containing the variant-condition key."
+      - "Define allowed variant-condition keys."
+      - "Maintain surcharge/discount master data for the keys."
+      - "Reference the keys from the configurable-product model."
+    billing_note: >-
+      Billing repricing must be designed deliberately. Pricing type O can redetermine variant conditions;
+      other pricing types may copy or redetermine different subsets of the original pricing result.
+    design_questions:
+      - "Does the configuration model own the key only, or also a price factor?"
+      - "Should changed configuration ever trigger repricing after order creation?"
+      - "Does front-office configuration use the same pricing semantics as S/4HANA?"
+    failure_modes:
+      - "The characteristic is selected but no variant-condition key reaches pricing."
+      - "The key exists but no valid pricing record matches it."
+      - "Billing uses a pricing type that does not preserve the intended variant result."
+    source_refs: [SRC-SAP-PRC-VARIANT-CONDITIONS, SRC-SAP-PRC-BILLING-PRICING]
+
+  - id: PRC-SCN-INTERCOMPANY
+    order: 4
+    title: "Intercompany Pricing"
+    memory_hook: "One physical sale can carry two commercial prices: customer price and affiliate price."
+    business_question: "Who earns what when another company code delivers the product?"
+    boundary: >-
+      Intercompany sales separates the price charged to the external customer from the price charged
+      by the delivering affiliate to the selling affiliate. These values use pricing condition technique
+      but belong to different business relationships and billing documents.
+    classic_shape:
+      - "Selling sales organization prices and bills the external customer."
+      - "Delivering plant belongs to another company code and performs delivery."
+      - "Delivering company creates an intercompany billing document to the selling company."
+      - "PI01 can represent a fixed intercompany amount per unit; PI02 can represent a percentage of net invoice value in standard classic processing."
+      - "Intercompany conditions can be statistical in the sales order and effective in the internal invoice."
+    advanced_boundary:
+      - "Advanced Intercompany Sales has its own value-chain setup and uses Value Chain Monitoring."
+      - "Pricing for delivering and selling companies is configured independently."
+      - "Do not assume that every classic PI01/PI02 design maps unchanged to an advanced intercompany process."
+    design_questions:
+      - "Which company owns the external selling price?"
+      - "How is the internal affiliate charge derived?"
+      - "Which billing document makes the internal value effective?"
+      - "Is the process classic, advanced, or multistage intercompany sales?"
+    failure_modes:
+      - "Customer price is correct but the internal affiliate charge is missing."
+      - "A statistical intercompany condition is mistaken for an ineffective condition."
+      - "Classic intercompany assumptions are copied into an advanced value-chain design."
+    source_refs: [SRC-SAP-PRC-INTERCOMPANY-PROCESS, SRC-SAP-PRC-INTERCOMPANY-CONDITIONS, SRC-SAP-PRC-ADVANCED-INTERCOMPANY]
+
+  - id: PRC-SCN-BILLING-REPRICE
+    order: 5
+    title: "Billing Repricing"
+    memory_hook: "Billing does not merely inherit a number. Copying control decides what survives."
+    business_question: "Should the invoice preserve the order price or use newer commercial data?"
+    boundary: >-
+      During billing, pricing elements can be copied, recalculated, or redetermined. The pricing type
+      in copying control defines the behavior for the relevant reference-to-billing relationship.
+    common_pricing_types:
+      - code: "A"
+        meaning: "Copy pricing elements and update according to scale."
+      - code: "B"
+        meaning: "Perform completely new pricing using conditions valid at billing."
+      - code: "C"
+        meaning: "Keep manual pricing elements and redetermine the remaining elements."
+      - code: "D"
+        meaning: "Copy pricing elements unchanged."
+      - code: "G"
+        meaning: "Copy most pricing elements but redetermine selected categories such as taxes and intercompany conditions."
+      - code: "O"
+        meaning: "Redetermine variant conditions."
+    design_questions:
+      - "Is the commercial agreement fixed at order, delivery, or invoice?"
+      - "Should manual discounts survive?"
+      - "Should taxes, freight, intercompany, or variant conditions be redetermined independently?"
+    failure_modes:
+      - "Order is correct but invoice differs because pricing type deliberately redetermined conditions."
+      - "A new condition record unexpectedly changes billing because the design uses new pricing."
+      - "Manual pricing disappears when pricing type B performs complete redetermination."
+    source_refs: [SRC-SAP-PRC-BILLING-PRICING]
+
+  - id: PRC-SCN-RETRO
+    order: 6
+    title: "Retroactive Billing"
+    memory_hook: "Repricing before invoice and correcting an already posted invoice are different clocks."
+    business_question: "What if a new price agreement must change invoices already processed?"
+    boundary: >-
+      Retroactive billing reevaluates existing billing documents affected by changed pricing conditions
+      and creates debit or credit memo documents for the difference.
+    runtime_path:
+      - "A pricing agreement or condition record changes with an effective date in the past."
+      - "Identify billing documents affected by the changed pricing agreement."
+      - "Reevaluate the relevant documents with the new pricing conditions."
+      - "Create debit or credit memos to settle the delta."
+    configuration_shape:
+      - "Maintain the changed pricing agreement as valid for the intended period."
+      - "Use the retroactive billing worklist/app to identify affected invoices."
+      - "Review calculated differences and error log before creating adjustment documents."
+    design_questions:
+      - "Should the agreement affect orders not yet billed, invoices already posted, or both?"
+      - "Which customer, sales organization, billing period, and pricing date define the affected set?"
+      - "How will delta documents be reconciled and communicated?"
+    failure_modes:
+      - "Normal invoice repricing is expected to repair historical invoices."
+      - "The changed condition record validity does not overlap the historical pricing date."
+      - "The business treats a credit/debit delta as if the original invoice had been rewritten."
+    source_refs: [SRC-SAP-PRC-RETROACTIVE-BILLING]
+
+  - id: PRC-SCN-CCM
+    order: 7
+    title: "Condition Contracts and Rebate Settlement"
+    memory_hook: "A rebate based on accumulated business volume belongs to settlement, not one sales order."
+    business_question: "How do I settle a quarterly or annual rebate from eligible sales volume?"
+    boundary: >-
+      A condition contract stores an agreement that requires subsequent settlement. It includes
+      business-volume criteria, settlement conditions, accrual logic, and a settlement calendar.
+    runtime_path:
+      - "Create condition contract and define partner, validity, eligible business volume, conditions, and calendar."
+      - "Operational billing creates the business volume used by the agreement."
+      - "Settlement determines the eligible accumulated volume."
+      - "Settlement pricing calculates rebate/accrual amounts and creates settlement documents."
+    cross_link: "/labs/enterprise-context/condition-contract-management/sales/"
+    design_questions:
+      - "Which billing documents count as business volume?"
+      - "Is settlement partial, final, delta accrual, or another agreed schedule?"
+      - "Who is contract partner and who receives settlement?"
+      - "Which accrual and tax behavior must reach accounting?"
+    failure_modes:
+      - "A transactional discount is used when the requirement is a period-end rebate."
+      - "The rebate percentage is correct but business-volume selection is wrong."
+      - "Settlement is debugged before validating eligible billing volume."
+    source_refs: [SRC-SAP-PRC-CONDITION-CONTRACT]
+
+  - id: PRC-SCN-TAX
+    order: 8
+    title: "Tax Interaction"
+    memory_hook: "Tax is calculated in pricing, but it is not owned by the commercial-discount model."
+    business_question: "Which facts make the tax result different from the commercial net price?"
+    boundary: >-
+      Sales tax conditions participate in the pricing procedure, but tax determination depends on
+      tax-specific context such as origin, destination, customer taxability, product taxability,
+      tax date, jurisdiction, and country-specific rules.
+    runtime_path:
+      - "Build tax context from document, partner, product, plant, and country data."
+      - "Determine the relevant tax condition or call the external tax calculation where configured."
+      - "Calculate tax on the appropriate commercial base."
+      - "Billing pricing type may redetermine taxes even when most commercial conditions are copied."
+    design_questions:
+      - "Which country/localization owns the tax procedure?"
+      - "What is the departure and destination context?"
+      - "Are customer/product tax classifications present and correct?"
+      - "Does billing need tax redetermination?"
+      - "Is an external tax engine involved?"
+    failure_modes:
+      - "A correct sales price produces wrong tax because ship-to or plant tax context is wrong."
+      - "A tax issue is fixed by changing commercial discount logic."
+      - "Order tax is assumed to prove invoice tax without checking billing redetermination."
+    source_refs: [SRC-SAP-PRC-TAX-RATES, SRC-SAP-PRC-TAX-DETERMINATION, SRC-SAP-PRC-BILLING-PRICING]
+
+  - id: PRC-SCN-EXTERNAL
+    order: 9
+    title: "Front-Office Pricing Consistency"
+    memory_hook: "Do not create a second price truth because a second channel exists."
+    business_question: "How can a portal or sales channel use the same pricing semantics as S/4HANA?"
+    boundary: >-
+      SAP Variant Configuration and Pricing can replicate relevant pricing data from ERP or S/4HANA
+      to BTP and expose pricing capabilities to front-office applications through APIs.
+    runtime_path:
+      - "Replicate relevant pricing master/configuration data to the pricing service."
+      - "Front-office application sends item and pricing context to the service."
+      - "Service calculates according to replicated pricing rules."
+      - "Back-end order still requires parity of relevant context, dates, currencies, quantities, and configuration."
+    design_questions:
+      - "Which system is authoritative for pricing master data?"
+      - "Which fields must be identical between channel simulation and final sales order?"
+      - "How is data replication monitored?"
+      - "What happens when the back-end rule changes before replicated data is refreshed?"
+    failure_modes:
+      - "Portal price and order price diverge because context fields are not equivalent."
+      - "A custom channel recreates discounts instead of consuming the pricing service."
+      - "Replication freshness is ignored when comparing results."
+    source_refs: [SRC-SAP-PRC-PRICING-SERVICE]
+
+commercial_clock:
+  - stage: "Before / at sales order"
+    mechanisms: ["normal pricing", "promotion and sales deal", "customer hierarchy", "variant conditions", "customer-side intercompany visibility", "tax"]
+    main_question: "What commercial result should the order commit or communicate?"
+  - stage: "At billing"
+    mechanisms: ["billing pricing type", "tax redetermination", "intercompany billing", "variant redetermination where selected"]
+    main_question: "Which order pricing elements are copied, recalculated, or redetermined?"
+  - stage: "After billing"
+    mechanisms: ["retroactive billing"]
+    main_question: "Which already-posted invoices require debit or credit delta documents?"
+  - stage: "Period / accumulated volume"
+    mechanisms: ["condition contract settlement"]
+    main_question: "Which business volume is eligible and what settlement amount is due?"
+  - stage: "External channel"
+    mechanisms: ["pricing service"]
+    main_question: "Can the channel reproduce the same pricing context and rule version as S/4HANA?"
+
+boundary_rules:
+  - id: PRC-BND-PROMO-HIER
+    rule: "Promotion and hierarchy can coexist. Treat campaign context and organizational customer context as different dimensions."
+  - id: PRC-BND-ORDER-BILLING
+    rule: "Order pricing correctness does not prove billing pricing correctness. Copying control is a separate design decision."
+  - id: PRC-BND-BILLING-RETRO
+    rule: "Billing repricing affects invoice creation; retroactive billing addresses invoices that already exist."
+  - id: PRC-BND-PRICE-REBATE
+    rule: "Immediate transactional discount and accumulated rebate settlement solve different commercial problems."
+  - id: PRC-BND-CUSTOMER-INTCO
+    rule: "External customer price and internal affiliate price must be modeled as separate values even if they share one physical delivery."
+  - id: PRC-BND-PRICE-TAX
+    rule: "Commercial net value can be a tax base, but tax determination has its own legal context and ownership."
+  - id: PRC-BND-CONFIG-PRICE
+    rule: "Variant configuration should expose pricing keys or factors; normal pricing remains responsible for monetary conditions."
+
+synthetic_cases:
+  - id: PRC-CASE-RETAIL-CAMPAIGN
+    title: "National promotion with a regional exception"
+    description: >-
+      A fictional retailer group receives a national hierarchy discount. During a two-week campaign,
+      one region also receives a product-family promotion, but the promotion must not stack with a local contract price.
+    facts:
+      - "National agreement is maintained on a pricing-relevant hierarchy node."
+      - "Campaign is modeled as a promotion with product-family sales deals."
+      - "A lower hierarchy node has a stronger local contract price for selected products."
+    reasoning_path:
+      - "Determine hierarchy path and node-level conditions."
+      - "Find promotion/sales-deal conditions valid for the pricing date."
+      - "Use exclusion design to prevent the campaign discount from stacking with the stronger local price where required."
+      - "Confirm billing pricing type preserves the intended commercial decision."
+    lesson: "Hierarchy answers who inherits the agreement; promotion answers which temporary offer is active; exclusion answers which valid offers may coexist."
+
+  - id: PRC-CASE-CONFIG-INTCO
+    title: "Configured product delivered by an affiliate"
+    description: >-
+      A fictional industrial product has paid configuration options and is shipped from a plant in another company code.
+    facts:
+      - "Base customer price is determined by normal sales pricing."
+      - "Configuration activates option-dependent variant-condition keys."
+      - "Delivering affiliate requires an internal intercompany charge."
+      - "Customer invoice and intercompany invoice must carry different commercial values."
+    reasoning_path:
+      - "Validate configuration-to-variant-condition key transfer."
+      - "Calculate customer-facing base price plus option surcharges."
+      - "Calculate internal affiliate value independently from customer discount logic."
+      - "Check billing pricing type for tax/intercompany/variant redetermination."
+    lesson: "One item can legitimately have configuration price effects, customer price, tax, and internal affiliate value at the same time."
+
+  - id: PRC-CASE-RETRO-METAL
+    title: "Late metal surcharge agreement"
+    description: >-
+      A fictional supplier and customer agree in April that a metal surcharge is effective from March,
+      after March invoices were already posted.
+    facts:
+      - "Condition record is updated with a validity date covering March."
+      - "Some March orders are not yet billed; others already have invoices."
+    reasoning_path:
+      - "For unbilled documents, decide whether invoice-time repricing should use the new agreement."
+      - "For invoices already posted, identify affected documents through retroactive billing."
+      - "Reevaluate and create debit or credit memo deltas instead of rewriting original invoices."
+    lesson: "The same commercial agreement can require two mechanisms because the document clock is different."
+
+  - id: PRC-CASE-ANNUAL-REBATE
+    title: "Annual customer rebate with quarterly accruals"
+    description: >-
+      A fictional customer earns a year-end percentage rebate based on eligible invoiced sales,
+      while the business wants periodic accrual visibility.
+    facts:
+      - "The rebate depends on accumulated billing business volume."
+      - "Only selected products and customer relationships count."
+      - "Settlement recipient may differ from individual ordering locations."
+    reasoning_path:
+      - "Model the agreement as a condition contract, not as a normal order discount."
+      - "Define business-volume selection and settlement calendar."
+      - "Validate volume before debating the rebate percentage."
+      - "Trace accrual and final settlement documents into accounting."
+    lesson: "For period rebates, the business-volume definition is often more important than the percentage formula."
+
+  - id: PRC-CASE-CHANNEL-PARITY
+    title: "Portal quote and S/4HANA order disagree"
+    description: >-
+      A fictional dealer portal uses replicated pricing data, but the final S/4HANA order is higher by 3%.
+    facts:
+      - "Both systems use the same nominal pricing procedure."
+      - "Portal request omits a customer hierarchy context field."
+      - "Replicated pricing data is one day older than the new campaign record."
+    reasoning_path:
+      - "Compare pricing context fields before comparing final values."
+      - "Check hierarchy and promotion context."
+      - "Check replication freshness and pricing-date semantics."
+      - "Reproduce both traces with the same input snapshot."
+    lesson: "Same pricing procedure name does not guarantee the same price when context or rule version differs."
+
+assessment_drills:
+  - id: PRC-DRILL-1
+    prompt: "A key account belongs to a national chain, but only one region should receive an extra discount. How would you model it?"
+    expected_reasoning:
+      - "Start with hierarchy ownership of the national and regional agreements."
+      - "Use pricing-relevant hierarchy nodes and condition records at the correct levels."
+      - "Decide whether discounts stack or require exclusion."
+      - "Test the hierarchy path of representative ordering customers."
+  - id: PRC-DRILL-2
+    prompt: "A configured option costs EUR 500 in the order but disappears in the invoice. Where do you look?"
+    expected_reasoning:
+      - "Trace the variant-condition key in the configured order."
+      - "Check condition record and pricing analysis."
+      - "Check billing pricing type and whether variant conditions are copied or redetermined."
+      - "Compare configuration/pricing context between order and invoice."
+  - id: PRC-DRILL-3
+    prompt: "A new price agreement is signed today but valid from last month. What happens?"
+    expected_reasoning:
+      - "Separate unbilled orders from invoices already posted."
+      - "For unbilled documents, evaluate billing repricing design."
+      - "For posted invoices, use retroactive billing to calculate and settle deltas."
+      - "Do not overwrite historical accounting documents."
+  - id: PRC-DRILL-4
+    prompt: "The customer wants a 2% annual rebate after EUR 5 million sales. Why not just add a discount condition to the order?"
+    expected_reasoning:
+      - "The agreement depends on accumulated business volume across documents and time."
+      - "Use condition contract settlement with eligible volume and settlement calendar."
+      - "Separate operational sales pricing from accrual and settlement logic."
+      - "Validate business-volume selection before settlement calculation."
+  - id: PRC-DRILL-5
+    prompt: "Customer invoice is correct, but the delivering company receives the wrong internal value."
+    expected_reasoning:
+      - "Separate external selling price from intercompany price."
+      - "Identify classic versus advanced intercompany process."
+      - "Trace intercompany condition determination and internal invoice."
+      - "Do not change the customer price to repair the affiliate charge."
+  - id: PRC-DRILL-6
+    prompt: "Order price and invoice price differ after a new condition record was created. Is it a bug?"
+    expected_reasoning:
+      - "Check copying control and billing pricing type first."
+      - "Determine whether new pricing or partial redetermination is expected."
+      - "Compare pricing dates, quantities, manual conditions, tax, and relevant condition categories."
+      - "Call it a defect only when runtime behavior violates the intended copying design."
+  - id: PRC-DRILL-7
+    prompt: "A portal and S/4HANA use the same prices master data but return different totals."
+    expected_reasoning:
+      - "Compare full context, not only master-data version."
+      - "Check customer hierarchy, quantities, currency, date, product configuration, and custom fields."
+      - "Check replication freshness if an external pricing service is used."
+      - "Compare condition-level traces."
+
+lead_takeaways:
+  - "Do not select a condition type before selecting the commercial mechanism."
+  - "Pricing has several clocks: order, invoice, post-invoice correction, and period settlement."
+  - "The same physical item can carry customer price, internal affiliate price, tax, rebate eligibility, and configuration surcharges without those values having the same owner."
+  - "Copying control is part of pricing architecture, not a billing afterthought."
+  - "When a new agreement is backdated, first split documents into not-yet-billed and already-billed populations."
+  - "For cumulative rebates, debug business volume before rate calculation."
+  - "For external channels, compare pricing context and data version before accusing the calculation engine."
