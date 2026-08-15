@@ -1,0 +1,83 @@
+id: AGENT-CONTRACT-E2E-ANALYTICS
+version: "1.0.0"
+updated_at: "2026-08-15"
+title: "End-to-End Logistics Analytics Agent Contract"
+purpose: >-
+  Route business-performance questions across Sales, Procurement, Supply Planning,
+  Manufacturing, Inventory, Warehousing, Transportation and Finance without assigning
+  a cross-functional KPI to the first SAP module that contains a visible symptom.
+
+primary_endpoint: "/labs/enterprise-context/data/end-to-end-business-kpis.json"
+
+namespaces:
+  - prefix: "KPI.E2E."
+    entity: "cross-functional business KPI or operational driver"
+    primary_endpoint: "/labs/enterprise-context/data/end-to-end-business-kpis.json"
+  - prefix: "AREA-"
+    entity: "business accountability area"
+    primary_endpoint: "/labs/enterprise-context/data/end-to-end-business-kpis.json"
+  - prefix: "DOM-"
+    entity: "stable supply-chain domain"
+    primary_endpoint: "/labs/enterprise-context/data/topics.json"
+
+routing_rules:
+  - intent: "OTIF, service level or customer promise is worse. Why?"
+    start_with: "KPI.E2E.OTIF"
+    then: ["KPI.E2E.PROMISE_STABILITY", "KPI.E2E.SUPPLY_SHORTAGE", "KPI.E2E.SUPPLIER_OTD", "KPI.E2E.MFG_SCHEDULE_ADHERENCE", "KPI.E2E.WH_OVERDUE_GI", "KPI.E2E.TRANSPORT_OTD"]
+    reason: "Find the first missed committed event before assigning the loss to Sales, supply, warehouse or transport."
+  - intent: "Order-to-cash is slow. Where is the delay?"
+    start_with: "KPI.E2E.ORDER_TO_CASH"
+    then: ["KPI.E2E.FULFILLMENT_CYCLE", "KPI.E2E.BILL_TO_CLEAR", "KPI.E2E.OVERDUE_AR"]
+    reason: "Separate physical fulfillment time from billing and receivable-clearing time."
+  - intent: "Supply is unreliable or confirmation dates keep moving."
+    start_with: "KPI.E2E.PROMISE_STABILITY"
+    then: ["KPI.E2E.SUPPLY_SHORTAGE", "KPI.E2E.SUPPLIER_CONFIRM_LT", "KPI.E2E.SUPPLIER_OTD", "KPI.E2E.MFG_SHORTAGE_HOLD", "KPI.E2E.MFG_SCHEDULE_ADHERENCE"]
+    reason: "Separate external supply, internal production, material shortage and planning-policy causes."
+  - intent: "Shipment is late although stock exists."
+    start_with: "KPI.E2E.WH_OUTBOUND_CYCLE"
+    then: ["KPI.E2E.WH_OVERDUE_GI", "KPI.E2E.TRANSPORT_EXCEPTION", "KPI.E2E.TRANSPORT_OTD"]
+    reason: "Prove whether delay enters before goods issue, at handoff to transportation or during carrier execution."
+  - intent: "Procure-to-pay is slow or working capital is poor."
+    start_with: "KPI.E2E.PO_TO_AP_CLEAR"
+    then: ["KPI.E2E.PR_TO_PO", "KPI.E2E.PO_TO_GR", "KPI.E2E.INVENTORY_DAYS"]
+    reason: "Do not treat fastest payment as the goal. Separate procurement and receipt delay from contractual payment timing."
+  - intent: "The process has too much manual work or rework."
+    start_with: "KPI.E2E.EXCEPTION_FREE"
+    then: ["KPI.E2E.MANUAL_TOUCH", "KPI.E2E.INTERFACE_EXCEPTION"]
+    reason: "Distinguish deliberate human judgment from avoidable recovery work."
+
+answer_policy:
+  - "State the KPI definition boundary before comparing values."
+  - "Name the start event, end event, population and important exclusions for lead-time or rate comparisons."
+  - "Use one accountable business owner and list only the contributing domains that materially explain the result."
+  - "A KPI movement is not proof of a root cause. Follow driver metrics and the first wrong event."
+  - "Do not invent universal targets. Use the target policy or a supplied SLA/business benchmark."
+  - "Do not invent detailed process IDs for domains that do not yet have a canonical Lab process atlas."
+  - "Use S/4HANA operational analytics for current execution questions, governed analytical semantics for reusable measures, and process intelligence for event-flow, backlog, rework and variants."
+  - "When Finance semantics affect a metric, state the accounting boundary rather than treating a logistics timestamp as the full financial definition."
+
+retrieval_sequence:
+  - step: 1
+    action: "Classify the business outcome and retrieve the matching KPI.E2E record."
+  - step: 2
+    action: "Freeze metric contract: event pair, population, exclusions, tolerance and grain."
+  - step: 3
+    action: "Slice the outcome by the dimensions named in the KPI and identify the material segment."
+  - step: 4
+    action: "Follow driver_refs until the first deteriorating event or domain boundary is found."
+  - step: 5
+    action: "Move into the detailed Sales, Procurement, Manufacturing, Warehouse, TM or Finance evidence model only after the owner is narrowed."
+  - step: 6
+    action: "Return business impact, driver, owner, evidence and proof-of-fix metric."
+
+quality_checks:
+  - question: "Did the answer blame one SAP module from an end-to-end KPI?"
+    fail_if: "The final symptom is assigned to a module without proving the first wrong event."
+  - question: "Did the answer compare different KPI contracts?"
+    fail_if: "Sites, periods or systems use different date basis, populations, exclusions or tolerance without disclosure."
+  - question: "Did the answer optimize the wrong direction?"
+    fail_if: "Context-sensitive measures such as payment timing or inventory are minimized without commercial, service or working-capital constraints."
+  - question: "Did the answer invent a target?"
+    fail_if: "A benchmark is presented as universal without a source or local policy."
+  - question: "Can another agent continue the trace?"
+    fail_if: "The response omits the KPI ID, material driver, accountable owner or evidence path when continuation needs them."

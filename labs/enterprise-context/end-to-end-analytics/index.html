@@ -1,0 +1,206 @@
+---
+layout: default
+title: "End-to-End Logistics KPI & Analytics — Enterprise Context Lab"
+description: "Cross-functional SAP logistics and finance KPIs connecting Sales, Procurement, Planning, Manufacturing, EWM, TM and FI through shared metric contracts and root-cause paths."
+permalink: /labs/enterprise-context/end-to-end-analytics/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags: [sap-s4hana, logistics, analytics, kpi, order-to-cash, procure-to-pay, manufacturing, ewm, tm, finance, lead-consulting]
+---
+
+{% assign model = site.data.labs.enterprise_context.graphs.end_to_end_business_kpis %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">End-to-End Analytics</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Logistics / End-to-End KPI & Analytics</p>
+      <h1>One outcome.<br />Several owners of evidence.</h1>
+      <p>{{ model.summary }}</p>
+      <a class="research-canvas__button" href="#e2e-kpis">Open KPI model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="End-to-end analytics inventory">
+      <p>Cross-functional measurement</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ model.kpis | size }}</strong><small>KPIs and drivers</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ model.analytics_lenses | size }}</strong><small>Business lenses</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ model.business_areas | size }}</strong><small>Business areas</small></div>
+      <em>{{ model.memory_path }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <p><strong>Boundary:</strong> a cross-functional KPI can have one accountable business owner and many technical contributors. A timestamp stored in one SAP component does not make that component the owner of the business outcome.</p>
+    <a href="/labs/enterprise-context/data/end-to-end-business-kpis.json">Open KPI JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Reasoning model</p>
+      <h2>{{ model.memory_path }}</h2>
+      <p>Start with the business result. Freeze the metric definition. Find the segment that moved. Then follow the first driver that breaks before the final outcome.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for rule in model.coverage_semantics %}
+      <article><span>RULE</span><p>{{ rule }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business areas</p>
+      <h2>Responsibility follows the event, not the module name.</h2>
+      <p>Sales, supply, procurement, production, inventory, warehouse, transportation and finance contribute different evidence to the same business result.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for area in model.business_areas %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</div>
+        <div class="ecg-determination-card__copy">
+          <h3>{{ area.title }}</h3>
+          <p>{{ area.accountability }}</p>
+          {% if area.domain_ref %}<small>{{ area.domain_ref }}</small>{% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Common language</p>
+      <h2>Requested, confirmed, planned and actual are four different facts.</h2>
+      <p>Most KPI arguments are definition arguments wearing a dashboard costume. Fix the event language before comparing sites or systems.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in model.common_language %}
+      <article><span>TERM</span><h3>{{ item.term }}</h3><p>{{ item.definition }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Business lenses</p>
+      <h2>Six conversations instead of one dashboard with forty-seven tiles.</h2>
+      <p>Each lens keeps the discussion around one business question and a small driver tree.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for lens in model.analytics_lenses %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">0{{ forloop.index }}</div>
+        <div class="ecg-determination-card__copy">
+          <h3>{{ lens.title }}</h3>
+          <p>{{ lens.business_question }}</p>
+          <small>{{ lens.kpi_refs | join: ' · ' }}</small>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="e2e-kpis" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">KPI contract</p>
+      <h2>Every number needs a boundary and an owner.</h2>
+      <p>The model stores the formula, event pair, population, exclusions, dimensions, owner, contributing areas, target policy and driver links. Targets stay local unless a primary source explicitly defines them.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for kpi in model.kpis %}
+      <details>
+        <summary><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ kpi.name }}</strong><small>{{ kpi.id }} · {{ kpi.kind }} · {{ kpi.unit }}</small></summary>
+        <div>
+          <p><strong>Business question.</strong> {{ kpi.business_question }}</p>
+          <p><strong>Formula.</strong> {{ kpi.formula }}</p>
+          <p><strong>Event pair.</strong> {{ kpi.start_event }} → {{ kpi.end_event }}</p>
+          <p><strong>Population.</strong> {{ kpi.population }}</p>
+          <p><strong>Exclusions.</strong> {{ kpi.exclusions | join: ' · ' }}</p>
+          <p><strong>Direction.</strong> {{ kpi.direction }} · <strong>Cadence.</strong> {{ kpi.cadence }}</p>
+          <p><strong>Accountable owner.</strong> {{ kpi.accountable_owner }}</p>
+          <p><strong>Contributing areas.</strong> {{ kpi.contributing_areas | join: ' · ' }}</p>
+          {% if kpi.domain_refs %}<p><strong>Domain refs.</strong> {{ kpi.domain_refs | join: ' · ' }}</p>{% endif %}
+          {% if kpi.sales_kpi_refs %}<p><strong>Sales KPI bridge.</strong> {{ kpi.sales_kpi_refs | join: ' · ' }}</p>{% endif %}
+          {% if kpi.graph_refs %}<p><strong>Detailed graph bridge.</strong> {{ kpi.graph_refs | join: ' · ' }}</p>{% endif %}
+          <p><strong>Target policy.</strong> {{ kpi.target_policy }}</p>
+          <h4>Slice by</h4>
+          <p>{{ kpi.grain | join: ' · ' }}</p>
+          <h4>Evidence signals</h4>
+          <ul>{% for signal in kpi.data_signals %}<li>{{ signal }}</li>{% endfor %}</ul>
+          {% if kpi.driver_refs %}<p><strong>Drivers.</strong> {{ kpi.driver_refs | join: ' · ' }}</p>{% endif %}
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Root-cause playbook</p>
+      <h2>Find the first wrong event.</h2>
+      <p>The final symptom is usually owned by several domains. The diagnostic job is to find where the first material loss enters the flow.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for play in model.root_cause_playbook %}
+      <details>
+        <summary><span>R{{ forloop.index }}</span><strong>{{ play.trigger }}</strong><small>{{ play.start_with | join: ' · ' }}</small></summary>
+        <div>
+          <p><strong>Slice by.</strong> {{ play.slice_by | join: ' · ' }}</p>
+          <p><strong>Drivers.</strong> {{ play.drivers | join: ' · ' }}</p>
+          <p><strong>Handoff.</strong> {{ play.handoff_rule }}</p>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Analytics routing</p>
+      <h2>Use the analytics layer that matches the question.</h2>
+      <p>Operational action, semantic governance, management reporting and process mining solve different problems.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for route in model.analytics_routing %}
+      <article><span>CHOOSE</span><h3>{{ route.question }}</h3><p><strong>{{ route.choose }}</strong><br />{{ route.reason }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead meeting language</p>
+      <h2>Keep the room on one measurement contract.</h2>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in model.meeting_language %}
+      <article><span>ASK</span><h3>{{ item.question }}</h3><p>{{ item.answer_shape }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Human + machine</p>
+      <h2>One performance contract, several drill paths.</h2>
+      <p>The human page supports Lead-level discussion. The JSON endpoint lets an agent retrieve the same outcome, drivers, domain ownership, evidence and analytics route.</p>
+    </div>
+    <div class="ecg-machine__actions">
+      {% for item in model.related_views %}<a href="{{ item.url }}">{{ item.title }}</a>{% endfor %}
+      <a class="research-canvas__button" href="/labs/enterprise-context/data/end-to-end-business-kpis.json">KPI JSON</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
