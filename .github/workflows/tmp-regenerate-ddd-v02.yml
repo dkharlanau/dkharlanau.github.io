@@ -1,0 +1,42 @@
+name: Regenerate DDD v0.2 artifacts
+
+on:
+  push:
+    paths:
+      - '.github/workflows/tmp-regenerate-ddd-v02.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: python -m pip install pyyaml
+
+      - name: Regenerate canonical artifacts
+        run: python scripts/generate_atlas_artifacts.py
+
+      - name: Commit generated artifacts and remove temporary workflow
+        run: |
+          rm .github/workflows/tmp-regenerate-ddd-v02.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+            exit 0
+          fi
+          git commit -m "Refresh AI artifacts for DDD v0.2"
+          git push
