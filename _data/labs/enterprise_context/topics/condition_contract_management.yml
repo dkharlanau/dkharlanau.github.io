@@ -1,0 +1,72 @@
+id: TOPIC-CCM-CONDITION-CONTRACT-MANAGEMENT
+type: research_topic
+title: "Condition Contract Management — Sales and Procurement"
+summary: >-
+  A cross-domain Settlement Management topic that explains how customer and supplier rebate agreements move from condition contract to business volume, accruals, partial settlement, final settlement, and accounting.
+business_question: "How does SAP turn a long-running customer or supplier rebate agreement into eligible business volume, accruals, and a controlled financial settlement?"
+domain: "SAP S/4HANA Settlement Management"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+page_url: "/labs/enterprise-context/condition-contract-management/"
+graph_ref: "GRAPH-CCM-CONDITION-CONTRACT-MANAGEMENT"
+
+scope:
+  includes:
+    - "Condition Contract Management positioning inside Settlement Management"
+    - "Sales rebate agreements with customers"
+    - "Purchasing rebate agreements with suppliers"
+    - "Business-volume determination"
+    - "Accrual and settlement conditions"
+    - "Partial and final settlement"
+    - "SAP GUI transactions and current Fiori apps"
+    - "Configuration layers and diagnostic sequence"
+  excludes:
+    - "Detailed external commission and royalty settlement"
+    - "Client-specific custom contract types"
+    - "Release-specific configuration claims that are not source-checked"
+
+maturity:
+  gates_complete: 6
+  gates_total: 7
+  gates:
+    - id: scope
+      status: complete
+    - id: sources
+      status: complete
+    - id: model
+      status: complete
+    - id: relationships
+      status: complete
+    - id: expert_reasoning
+      status: complete
+    - id: synthetic_example
+      status: complete
+    - id: ai_evaluation
+      status: planned
+
+entry_points:
+  overview: "/labs/enterprise-context/condition-contract-management/"
+  sales: "/labs/enterprise-context/condition-contract-management/sales/"
+  procurement: "/labs/enterprise-context/condition-contract-management/procurement/"
+  graph_json: "/labs/enterprise-context/data/condition-contract-management-graph.json"
+  sources_json: "/labs/enterprise-context/data/condition-contract-management-sources.json"
+
+assessment_questions:
+  - "What problem does CCM solve that normal SD or MM pricing does not solve alone?"
+  - "What is the role of the condition contract, business volume, accruals, and settlement calendar?"
+  - "How does Sales CCM differ from Procurement CCM?"
+  - "Why should WB2R_BUSVOL normally be checked before settlement when the rebate amount is wrong?"
+  - "Which configuration layers control scope, rate, settlement, tax, and accounting?"
+
+source_refs:
+  - SRC-SAP-CCM-OVERVIEW
+  - SRC-SAP-CCM-CONTRACT
+  - SRC-SAP-CCM-SALES
+  - SRC-SAP-CCM-PURCHASING
+  - SRC-SAP-CCM-BUSINESS-VOLUME
+  - SRC-SAP-CCM-SALES-APPS
+  - SRC-SAP-CCM-SUPPLIER-APPS
+  - SRC-SAP-CCM-SETTLEMENT-TCODES
+  - SRC-SAP-CCM-CUSTOMIZING
