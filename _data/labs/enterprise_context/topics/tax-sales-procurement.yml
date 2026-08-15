@@ -1,0 +1,184 @@
+id: TOPIC-TAX-SALES-PROCUREMENT
+type: research_topic
+title: "Indirect Tax — Sales and Procurement"
+summary: >-
+  Cross-domain tax model for SAP S/4HANA logistics. It separates output-tax determination
+  in Sales from input-tax handling in Procurement, then connects both paths to country tax
+  procedures, tax codes, jurisdiction logic, external tax calculation, invoice processing,
+  and FI posting boundaries.
+domain: "SAP S/4HANA Logistics and Finance"
+process_family: "Order-to-Cash / Procure-to-Pay"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+page_url: "/labs/enterprise-context/tax/"
+graph_ref: "GRAPH-TAX-SALES-PROCUREMENT"
+
+business_question: >-
+  How does SAP determine indirect tax in Sales and Procurement, which configuration and
+  master-data dependencies control the result, where does the tax decision cross into FI,
+  and how should a Lead consultant diagnose a wrong rate, wrong tax code, or wrong posting?
+
+scope:
+  include:
+    - "Sales output-tax determination inside pricing"
+    - "Procurement input-tax context in purchasing and supplier invoice processing"
+    - "tax calculation procedure and tax code"
+    - "customer and material tax classifications"
+    - "tax jurisdiction code where the localization uses jurisdictions"
+    - "external tax calculation as an optional localization pattern"
+    - "Logistics Invoice Verification tax data"
+    - "FI tax-account boundary"
+    - "configuration dependencies, diagnostics, test design, and Lead-level reasoning"
+  exclude:
+    - "country-by-country statutory tax design"
+    - "legal or tax advice"
+    - "withholding-tax configuration"
+    - "custom tax engines not described by a public product contract"
+
+related_topics:
+  - id: TOPIC-O2C-SALES-ORDER-CREATION
+    role: "Sales runtime context and existing MEC.SD.TAX mechanism"
+  - id: TOPIC-P2P-PROCUREMENT
+    role: "Purchasing, goods receipt, supplier invoice, and FI/CO settlement context"
+
+entities:
+  - id: DOM-TAX-INDIRECT-TAX
+    type: application_domain
+    title: "Indirect Tax in Logistics"
+    summary: "Cross-application tax logic used by Sales, Procurement, and Financial Accounting."
+  - id: DET-TAX-SALES-OUTPUT
+    type: determination
+    title: "Sales Output Tax Determination"
+    summary: "Determines the applicable sales tax result for a sales document item."
+  - id: DET-TAX-PROCUREMENT-INPUT
+    type: determination
+    title: "Procurement Input Tax Determination"
+    summary: "Determines or validates the tax context used for purchasing and supplier invoice processing."
+  - id: CFG-TAX-CALCULATION-PROCEDURE
+    type: configuration_object
+    title: "Tax Calculation Procedure"
+    summary: "Country-dependent procedure that defines tax calculation and posting logic."
+  - id: CFG-TAX-TAX-CODE
+    type: configuration_object
+    title: "Tax Code"
+    summary: "Country-specific key used to calculate, check, classify, and post tax."
+  - id: CFG-TAX-SALES-CONDITION
+    type: configuration_object
+    title: "Sales Tax Pricing Condition"
+    summary: "Pricing condition configuration used to determine sales tax inside the Sales pricing procedure."
+  - id: ATTR-TAX-CUSTOMER-CLASSIFICATION
+    type: attribute
+    title: "Customer Tax Classification"
+    summary: "Customer or ship-to tax classification used by relevant sales tax determination logic."
+  - id: ATTR-TAX-MATERIAL-CLASSIFICATION
+    type: attribute
+    title: "Material Tax Classification"
+    summary: "Product tax classification used by relevant sales tax determination logic."
+  - id: ATTR-TAX-JURISDICTION-CODE
+    type: attribute
+    title: "Tax Jurisdiction Code"
+    summary: "Location key used in jurisdiction-based tax procedures where the localization requires it."
+  - id: INT-TAX-EXTERNAL-CALCULATION
+    type: integration
+    title: "External Tax Calculation"
+    summary: "Optional integration pattern for localizations that calculate tax in an external tax system."
+  - id: APP-TAX-LOGISTICS-INVOICE-VERIFICATION
+    type: application_component
+    title: "Logistics Invoice Verification"
+    summary: "Procurement invoice-processing component that captures, checks, and posts supplier invoice tax data."
+
+relations:
+  - from: DOM-TAX-INDIRECT-TAX
+    type: contains
+    to: DET-TAX-SALES-OUTPUT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TAX-SD-CALC]
+  - from: DOM-TAX-INDIRECT-TAX
+    type: contains
+    to: DET-TAX-PROCUREMENT-INPUT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TAX-PROC-INVOICE-DATA]
+  - from: DET-TAX-SALES-OUTPUT
+    type: configured_by
+    to: CFG-TAX-SALES-CONDITION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TAX-CONDITION-TECHNIQUE]
+  - from: DET-TAX-SALES-OUTPUT
+    type: requires
+    to: CFG-TAX-CALCULATION-PROCEDURE
+    evidence_type: documented_fact
+    confidence: medium
+    source_refs: [SRC-SAP-TAX-COUNTRY-PROCEDURE]
+    rationale: "The exact runtime derivation is localization-dependent, but tax calculation is governed by the country-assigned calculation procedure."
+  - from: DET-TAX-SALES-OUTPUT
+    type: has_input
+    to: ATTR-TAX-CUSTOMER-CLASSIFICATION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TAX-SD-CALC]
+  - from: DET-TAX-SALES-OUTPUT
+    type: has_input
+    to: ATTR-TAX-MATERIAL-CLASSIFICATION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TAX-SD-CALC]
+  - from: DET-TAX-SALES-OUTPUT
+    type: has_input
+    to: ATTR-TAX-JURISDICTION-CODE
+    evidence_type: documented_fact
+    confidence: medium
+    source_refs: [SRC-SAP-TAX-JURISDICTION]
+    scope: "Jurisdiction-based localizations only"
+  - from: DET-TAX-PROCUREMENT-INPUT
+    type: configured_by
+    to: CFG-TAX-TAX-CODE
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TAX-CODES, SRC-SAP-TAX-PROC-INVOICE-DATA]
+  - from: DET-TAX-PROCUREMENT-INPUT
+    type: requires
+    to: CFG-TAX-CALCULATION-PROCEDURE
+    evidence_type: documented_fact
+    confidence: medium
+    source_refs: [SRC-SAP-TAX-COUNTRY-PROCEDURE]
+    rationale: "The country-assigned procedure defines which tax calculation and posting logic is available."
+  - from: DET-TAX-PROCUREMENT-INPUT
+    type: supported_by
+    to: APP-TAX-LOGISTICS-INVOICE-VERIFICATION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TAX-PROC-INVOICE-DATA, SRC-SAP-TAX-PROC-PO-INVOICE]
+  - from: INT-TAX-EXTERNAL-CALCULATION
+    type: applies_to
+    to: DET-TAX-SALES-OUTPUT
+    evidence_type: documented_fact
+    confidence: medium
+    source_refs: [SRC-SAP-TAX-SD-CALC, SRC-SAP-TAX-JURISDICTION]
+    scope: "Only where the selected localization and tax procedure use an external tax system"
+
+source_refs:
+  - SRC-SAP-TAX-SD-CALC
+  - SRC-SAP-TAX-CONDITION-TECHNIQUE
+  - SRC-SAP-TAX-CODES
+  - SRC-SAP-TAX-JURISDICTION
+  - SRC-SAP-TAX-COUNTRY-PROCEDURE
+  - SRC-SAP-TAX-PROC-INVOICE-DATA
+  - SRC-SAP-TAX-PROC-PO-INVOICE
+
+tags:
+  - tax
+  - indirect-tax
+  - sales
+  - procurement
+  - sap-sd
+  - sap-mm
+  - fi-integration
+  - pricing
+  - invoice-verification
+  - localization
+  - assessment

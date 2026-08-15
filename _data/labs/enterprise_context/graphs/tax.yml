@@ -1,0 +1,277 @@
+id: GRAPH-TAX-SALES-PROCUREMENT
+title: "SAP Tax in Sales & Procurement"
+summary: >-
+  Tax is not one configuration switch. Sales determines output tax inside pricing;
+  Procurement carries input-tax context through purchasing and supplier invoice processing;
+  FI owns the common calculation, tax-code, account, and posting boundary. Country localization
+  can add jurisdiction codes, external tax calculation, reporting dates, and other rules.
+topic_ref: TOPIC-TAX-SALES-PROCUREMENT
+status: researching
+updated_at: "2026-08-15"
+
+memory_model:
+  path: "CONTEXT → CLASSIFY → CALCULATE → CODE → POST → RECONCILE"
+  questions:
+    - key: "CONTEXT"
+      question: "Which business flow and country context are active?"
+      answer: "Start with Sales versus Procurement, company code, plant, ship-to or consumption location, document date, and localization."
+    - key: "CLASSIFY"
+      question: "Which business partner and product attributes make the transaction taxable, exempt, or special?"
+      answer: "In Sales this often includes customer and material tax classifications. Procurement uses the tax code and localization-specific document data."
+    - key: "CALCULATE"
+      question: "Which procedure and rule calculate the tax?"
+      answer: "The country tax calculation procedure defines the available calculation logic. Sales also runs tax conditions inside pricing."
+    - key: "CODE"
+      question: "Which tax code or jurisdiction result represents the tax treatment?"
+      answer: "A tax code identifies tax type and calculation/posting behavior. Jurisdiction code is an extra location key only where the localization needs it."
+    - key: "POST"
+      question: "Where does the tax become an accounting posting?"
+      answer: "Sales reaches FI through billing accounting. Procurement reaches FI through supplier invoice posting and related logistics/accounting events."
+    - key: "RECONCILE"
+      question: "Can I prove the rate, base, tax code, account, and document flow?"
+      answer: "A correct percentage is not enough. Reconcile the source inputs, calculation result, tax code, FI document, and tax account."
+
+comparison:
+  - lane: "Sales"
+    tax_view: "Output tax"
+    business_question: "What tax should we charge for this sales item?"
+    runtime_home: "Sales pricing in sales order and billing"
+    important_inputs:
+      - "delivering country / plant context"
+      - "ship-to and destination context"
+      - "customer tax classification"
+      - "material tax classification"
+      - "tax calculation date"
+      - "jurisdiction data where required"
+    core_configuration:
+      - "country tax calculation procedure"
+      - "pricing procedure tax condition"
+      - "condition type and access logic"
+      - "tax condition records or external calculation setup"
+      - "tax code and FI tax-account settings"
+    accounting_boundary: "Billing transfers the commercial and tax result to accounting."
+    existing_lab_ref: "MEC.SD.TAX"
+    source_refs: [SRC-SAP-TAX-SD-CALC, SRC-SAP-TAX-CONDITION-TECHNIQUE]
+  - lane: "Procurement"
+    tax_view: "Input tax"
+    business_question: "What tax treatment applies to this purchase and supplier invoice?"
+    runtime_home: "Purchase-order tax context and Logistics Invoice Verification"
+    important_inputs:
+      - "company code and country"
+      - "plant / receiving or consumption context"
+      - "supplier invoice tax data"
+      - "tax code"
+      - "tax date or reporting date where relevant"
+      - "jurisdiction data where required"
+    core_configuration:
+      - "country tax calculation procedure"
+      - "tax code"
+      - "default tax-code rules in invoice verification where used"
+      - "jurisdiction / localization settings where used"
+      - "FI tax-account settings"
+    accounting_boundary: "Supplier invoice posting creates the accounting-relevant tax result."
+    existing_lab_ref: "TOPIC-P2P-PROCUREMENT"
+    source_refs: [SRC-SAP-TAX-CODES, SRC-SAP-TAX-PROC-INVOICE-DATA, SRC-SAP-TAX-PROC-PO-INVOICE]
+
+sales_path:
+  - order: 1
+    title: "Establish tax geography"
+    question: "Where does the taxable movement start and end?"
+    inputs: ["delivering plant / origin", "ship-to / destination", "document and tax date", "jurisdiction inputs where relevant"]
+    output: ["tax-relevant geography"]
+    failure_signal: "Tax changes when plant or ship-to changes and the team treats it as a pricing defect."
+  - order: 2
+    title: "Read tax classifications"
+    question: "How are the customer and product classified for tax?"
+    inputs: ["customer tax classification", "material tax classification", "country/localization rules"]
+    output: ["taxability context for the pricing access"]
+    failure_signal: "The record exists but the actual customer/material classification does not match its key."
+  - order: 3
+    title: "Run sales pricing tax condition"
+    question: "Which tax condition, access, record, or external calculation is used?"
+    inputs: ["pricing procedure", "tax condition type", "access sequence", "condition records", "external tax setup where used"]
+    output: ["tax rate", "tax base", "tax amount", "tax code/jurisdiction result where applicable"]
+    failure_signal: "The tax line is missing, inactive, based on a different access, or calculated with unexpected geography."
+  - order: 4
+    title: "Re-evaluate at billing"
+    question: "Did billing keep or redetermine the required tax context?"
+    inputs: ["billing document", "copy/pricing behavior", "billing date", "tax-relevant fields"]
+    output: ["billing tax result"]
+    failure_signal: "The sales order looks correct but billing has a different rate, base, code, or jurisdiction."
+  - order: 5
+    title: "Post to FI"
+    question: "Which FI tax account receives the tax amount?"
+    inputs: ["tax code", "tax type", "tax procedure", "tax-account configuration", "billing accounting interface"]
+    output: ["accounting tax lines"]
+    failure_signal: "Tax percentage is correct but the accounting account or posting is wrong."
+
+procurement_path:
+  - order: 1
+    title: "Establish purchasing tax context"
+    question: "Which company-code, plant, country, and localization context applies?"
+    inputs: ["company code", "plant", "supplier", "material/service", "tax date", "jurisdiction where relevant"]
+    output: ["input-tax context"]
+    failure_signal: "A copied or defaulted tax value comes from a different organizational or localization context."
+  - order: 2
+    title: "Set or derive the tax code"
+    question: "Which tax code represents this purchase?"
+    inputs: ["country tax procedure", "purchasing/invoice defaults", "document data", "manual value where allowed"]
+    output: ["tax code and expected tax behavior"]
+    failure_signal: "The wrong tax code is accepted early and later looks like an FI calculation problem."
+  - order: 3
+    title: "Carry tax into execution"
+    question: "Does the purchasing or service document keep the expected tax information?"
+    inputs: ["purchase order", "service entry where used", "tax code", "tax date", "jurisdiction/localization data"]
+    output: ["tax context available for invoice processing"]
+    failure_signal: "The purchase order and receipt/service context do not agree with the invoice tax data."
+  - order: 4
+    title: "Validate supplier invoice tax"
+    question: "What does Logistics Invoice Verification calculate or check?"
+    inputs: ["supplier invoice amount", "tax code", "tax amount", "PO reference", "jurisdiction/localization data"]
+    output: ["validated tax amount", "invoice posting data"]
+    failure_signal: "The invoice tax differs from the PO expectation or from the supplier document."
+  - order: 5
+    title: "Post and reconcile in FI"
+    question: "How is input tax posted and checked?"
+    inputs: ["tax code", "tax type", "tax procedure", "tax accounts", "supplier invoice posting"]
+    output: ["FI tax lines", "supplier liability", "reconciled logistics/accounting history"]
+    failure_signal: "The tax amount is correct but tax account, deductibility treatment, or accounting split is unexpected."
+
+configuration_layers:
+  - order: 1
+    title: "Country and tax calculation procedure"
+    owns: "The tax calculation framework available for the country."
+    used_by: ["Sales", "Procurement", "FI"]
+    configuration_surfaces: ["Assign country to tax calculation procedure", "country/localization tax settings"]
+    lead_check: "Never start with a tax code before proving which country procedure is active."
+  - order: 2
+    title: "Tax code"
+    owns: "Input/output tax type, rate-related characteristics, checks, and tax-account determination context."
+    used_by: ["Procurement", "FI", "Sales where the sales tax path derives or transfers a tax code"]
+    configuration_surfaces: ["Define Tax Codes for Sales and Purchases", "tax rates / properties", "tax account settings"]
+    classic_reference: "FTXP is a classic reference for tax-code maintenance; use the supported configuration path for the target deployment."
+    lead_check: "Separate 'which code?' from 'which account?'. One is tax treatment; the other is posting."
+  - order: 3
+    title: "Sales pricing tax condition"
+    owns: "How Sales finds and calculates output tax during pricing."
+    used_by: ["Sales order", "Billing"]
+    configuration_surfaces: ["pricing procedure", "tax condition type", "access sequence", "condition tables", "condition records"]
+    lead_check: "Trace pricing analysis before changing a record. Prove procedure → condition → access → key → result."
+  - order: 4
+    title: "Tax classifications"
+    owns: "Tax-relevant classification of customer and material for supported sales tax access logic."
+    used_by: ["Sales tax determination"]
+    configuration_surfaces: ["tax categories/classifications in master data and localization"]
+    lead_check: "A valid condition record is useless if the runtime classifications build a different key."
+  - order: 5
+    title: "Jurisdiction"
+    owns: "Location hierarchy for tax calculation where jurisdiction-based procedures are used."
+    used_by: ["Sales", "Procurement", "FI", "external tax calculation"]
+    configuration_surfaces: ["jurisdiction structure", "jurisdiction codes", "master/address derivation", "condition or external engine setup"]
+    lead_check: "Do not apply US-style jurisdiction thinking to every country. This is a localization branch, not the universal core."
+  - order: 6
+    title: "Invoice Verification defaults and checks"
+    owns: "How supplier invoice tax data is proposed, entered, checked, and posted."
+    used_by: ["Procurement", "Logistics Invoice Verification"]
+    configuration_surfaces: ["default values for invoice tax codes", "invoice tax entry/check settings", "country-specific invoice settings"]
+    lead_check: "Compare PO expectation, supplier invoice, and LIV result before blaming FI."
+
+shared_dependencies:
+  - title: "Sales dependency chain"
+    path: "Plant / Ship-to → Tax Classifications → Pricing Procedure → Tax Condition → Tax Code / Jurisdiction → Billing → FI Tax Account"
+    diagnostic_rule: "Find the first value that differs from the expected path. A wrong FI account is not automatically an SD tax-determination defect."
+  - title: "Procurement dependency chain"
+    path: "Company Code / Plant → Tax Procedure → Tax Code → PO / Service Context → Supplier Invoice → LIV → FI Tax Account"
+    diagnostic_rule: "Prove where the tax code came from, then prove calculation, then prove posting. Do not collapse all three questions into 'tax is wrong'."
+
+localization_boundaries:
+  - title: "VAT / GST / sales-use tax are not one universal template"
+    explanation: "Country procedures, tax types, tax codes, document fields, and reporting rules differ. Use the cross-domain model for reasoning, then open the localization for the legal detail."
+  - title: "Tax jurisdiction is conditional"
+    explanation: "Jurisdiction codes are central in some localizations, especially sales/use tax scenarios, but they are not a mandatory concept in every country."
+  - title: "External tax is an integration choice"
+    explanation: "Some scenarios send tax-relevant data to an external tax system. The integration must preserve origin, destination, classifications, date, and other required fields."
+  - title: "Statutory reporting is downstream"
+    explanation: "The transaction must first calculate and post tax correctly. Reporting and compliance consume that result but may add their own country-specific data requirements."
+
+failure_modes:
+  - symptom: "Sales tax is missing"
+    likely_layer: "Sales pricing determination"
+    first_checks: ["pricing procedure contains the expected tax condition", "condition requirement is met", "customer/material tax classifications", "origin/destination", "condition record or external-tax response"]
+    avoid: "Creating a broad fallback record before proving the failed access."
+  - symptom: "Sales tax changes after ship-to or plant changes"
+    likely_layer: "Tax geography / jurisdiction"
+    first_checks: ["old versus new origin", "old versus new destination", "jurisdiction", "tax date", "runtime pricing analysis"]
+    avoid: "Assuming the percentage must remain constant because customer and material stayed the same."
+  - symptom: "Tax is correct in sales order but wrong in billing"
+    likely_layer: "Billing pricing/copy context"
+    first_checks: ["billing pricing behavior", "billing date", "tax-relevant fields", "re-determination versus copy", "external-tax request if used"]
+    avoid: "Changing the sales-order record when the divergence starts in billing."
+  - symptom: "PO tax code looks right but supplier invoice tax is wrong"
+    likely_layer: "Logistics Invoice Verification"
+    first_checks: ["invoice tax code", "invoice tax amount/base", "PO reference", "tax date", "jurisdiction/localization data", "manual changes"]
+    avoid: "Treating the PO as proof of the final invoice posting."
+  - symptom: "Correct rate, wrong tax G/L account"
+    likely_layer: "FI tax-account determination"
+    first_checks: ["tax code", "tax type", "tax procedure", "posting keys/account keys", "configured tax account"]
+    avoid: "Changing SD or MM rate determination to repair an accounting mapping."
+  - symptom: "External tax result differs from SAP expectation"
+    likely_layer: "Integration / localization"
+    first_checks: ["request origin", "request destination", "customer/material classifications", "tax date", "jurisdiction", "returned code/rate/amount", "mapping back to SAP"]
+    avoid: "Comparing only the final percentage and ignoring the request payload context."
+
+skill_map:
+  - skill: "Trace Sales tax"
+    lead_level: "Explain pricing procedure, tax condition, access key, customer/material classification, geography, billing, and FI handoff."
+  - skill: "Trace Procurement tax"
+    lead_level: "Explain tax procedure, tax code, PO context, supplier invoice tax entry/check, LIV, and FI handoff."
+  - skill: "Separate configuration ownership"
+    lead_level: "Know whether the defect belongs to SD pricing, MM/LIV, FI tax configuration, localization, master data, or integration."
+  - skill: "Read accounting impact"
+    lead_level: "Follow the tax code into the FI document and prove the tax account instead of stopping at the logistics document."
+  - skill: "Design country-safe tests"
+    lead_level: "Use a small matrix of geography, taxability, document type, dates, returns, and purchase scenarios without assuming one country's rules apply everywhere."
+  - skill: "Handle external tax boundaries"
+    lead_level: "Define required inputs, response mapping, retries/error handling, monitoring, and ownership when an external engine calculates tax."
+
+test_matrix:
+  - scenario: "Domestic taxable sale"
+    prove: ["expected output-tax condition", "rate/base", "billing result", "FI tax account"]
+  - scenario: "Tax-exempt or zero-rate sale where legally configured"
+    prove: ["classification/key", "zero/exempt tax result", "billing/FI consistency"]
+  - scenario: "Ship-to or plant geography change"
+    prove: ["changed origin/destination", "expected new tax determination", "no stale copied value"]
+  - scenario: "Sales return / credit memo"
+    prove: ["reference context", "tax sign/base", "accounting reversal or correction behavior"]
+  - scenario: "Domestic purchase"
+    prove: ["PO tax code", "supplier invoice tax", "LIV result", "FI input-tax line"]
+  - scenario: "Purchase with different tax code"
+    prove: ["code validity", "calculation result", "accounting treatment", "invoice check behavior"]
+  - scenario: "Service procurement"
+    prove: ["PO/service tax context", "invoice tax data", "tax date where relevant", "FI posting"]
+  - scenario: "Jurisdiction or external-tax scenario where configured"
+    prove: ["request/derivation location", "jurisdiction", "returned/calculated rate", "tax code", "posting"]
+
+lead_drills:
+  - question: "The tax percentage is correct but the G/L account is wrong. Where do you start?"
+    answer: "I leave rate determination alone. I trace tax code and tax type into FI tax-account determination and prove the configured account."
+  - question: "Why can tax change when only the ship-to changes?"
+    answer: "Destination is a tax input. In jurisdiction-based scenarios it can also change the jurisdiction. I compare old and new geography before touching pricing records."
+  - question: "What is the difference between an SD tax condition and an FI tax code?"
+    answer: "The SD tax condition is part of pricing logic that calculates output tax. The tax code is a cross-accounting key that represents tax treatment and supports calculation, checks, and tax-account posting. They interact, but they are not the same object."
+  - question: "Where is Procurement tax finally checked?"
+    answer: "The PO carries tax context, but supplier invoice processing is accounting-critical. I compare the PO, supplier invoice tax data, Logistics Invoice Verification result, and FI posting."
+  - question: "Who owns a tax defect?"
+    answer: "I assign ownership only after finding the first wrong layer: master data, SD pricing, MM/LIV, FI tax configuration, localization, or external-tax integration."
+  - question: "Why is memorizing MWST not enough?"
+    answer: "Condition types and tax procedures are localization and design dependent. The reusable knowledge is the dependency chain, not one condition name."
+
+practitioner_heuristics:
+  - statement: "Separate rate determination from account determination."
+    context: "A correct rate with a wrong account is an accounting-mapping problem until evidence proves otherwise."
+  - statement: "Geography is master data with financial consequences."
+    context: "Plant, ship-to, jurisdiction, and company-code country can change tax behavior without any change to commercial price."
+  - statement: "The invoice is not just a copy of the PO."
+    context: "Supplier invoice processing has its own tax entry, checks, dates, and posting context."
+  - statement: "Localization comes after the universal reasoning model."
+    context: "First trace context → classification → calculation → code → posting. Then apply the country-specific tax rules."
