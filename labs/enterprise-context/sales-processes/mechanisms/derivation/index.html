@@ -23,6 +23,7 @@ tags:
 {% assign provenance = library.field_provenance %}
 {% assign events = library.redetermination_events %}
 {% assign matrix = library.procedure_matrix %}
+{% assign playbook = library.derivation_playbook %}
 {% assign context_group = library["07_context"] %}
 {% assign registry = site.data.labs.enterprise_context.sources.sales_context_derivation %}
 
@@ -38,6 +39,7 @@ tags:
       <p>A field can come from master data, a predecessor, a procedure, a runtime determination, or a manual change. The useful question is not only where the field is configured. The useful question is who owns the current value, when SAP recalculates it, and what consumes it next.</p>
       <div class="sm-hero-actions">
         <a class="research-canvas__button" href="#field-provenance">Trace field provenance <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+        <a class="sm-text-link" href="#failure-drills">Open failure drills</a>
         <a class="sm-text-link" href="/labs/enterprise-context/sales-processes/mechanisms/">Back to Mechanism Library</a>
       </div>
     </div>
@@ -46,6 +48,7 @@ tags:
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ provenance.fields | size }}</strong><small>Field traces</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ events.events | size }}</strong><small>Redetermination events</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ matrix.rows | size }}</strong><small>Procedure patterns</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong>{{ playbook.cases | size }}</strong><small>Failure drills</small></div>
       <em>Source → rule → value → event → downstream effect.</em>
     </div>
   </header>
@@ -54,6 +57,27 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
     <p><strong>Lead debugging rule.</strong> Before changing Customizing, prove whether the wrong value was copied, determined, inherited, substituted, or manually overwritten. A correct rule can still produce an old result when the document intentionally keeps predecessor data.</p>
     <a href="/labs/enterprise-context/data/sales-mechanisms.json">Open JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostic layers</p>
+      <h2>Use layers, not a fake linear process.</h2>
+      <p>Several SD mechanisms can run beside each other and can run again after a change. These layers are a debugging order: establish context, prove the value source, identify the rule engine, follow runtime consequences, and then inspect the redetermination boundary.</p>
+    </header>
+    <div class="sm-dependency-map">
+      {% for layer in playbook.layers %}
+      <article>
+        <code>{{ layer.id }}</code>
+        <span>{{ forloop.index | prepend: "0" }}</span>
+        <strong>{{ layer.title }}</strong>
+        <p><b>Ask:</b> {{ layer.question }}</p>
+        <p><b>Check:</b> {{ layer.check | join: " · " }}</p>
+        {% if layer.mechanism_refs and layer.mechanism_refs.size > 0 %}<p class="sm-extension-list">{% for code in layer.mechanism_refs %}<code>{{ code }}</code>{% endfor %}</p>{% endif %}
+        <p>{{ layer.why }}</p>
+      </article>
+      {% endfor %}
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="field-provenance" data-reveal>
@@ -159,6 +183,30 @@ tags:
             <section><h5>Configuration surfaces</h5><ul>{% for item in mechanism.configuration_surfaces %}<li>{{ item }}</li>{% endfor %}</ul></section>
             <section><h5>Failure traces</h5><ul>{% for failure in mechanism.failure_modes %}<li><strong>{{ failure.symptom }}</strong><span>{{ failure.prove }}</span></li>{% endfor %}</ul></section>
             <section><h5>Proof tests</h5><ul>{% for test in mechanism.tests %}<li><strong>{{ test.id }}</strong><span>{{ test.setup }} <b>Prove:</b> {{ test.assert }}</span></li>{% endfor %}</ul></section>
+          </div>
+        </details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failure-drills" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure drills</p>
+      <h2>Practice the proof path, not the transaction code.</h2>
+      <p>Each case starts with a plausible wrong move. The goal is to prove ownership and dependencies before touching configuration.</p>
+    </header>
+    <div class="sm-card-grid">
+      {% for case in playbook.cases %}
+      <article class="sm-card">
+        <header><code>{{ case.id }}</code><h4>{{ case.title }}</h4><p class="sm-hook">{{ case.symptom }}</p></header>
+        <p class="sm-question"><strong>Wrong first move:</strong> {{ case.wrong_first_move }}</p>
+        <div class="sm-blast"><span>Mechanisms</span>{% for code in case.mechanism_refs %}<small>{{ code }}</small>{% endfor %}</div>
+        <details>
+          <summary>Prove it <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="sm-detail-grid">
+            <section><h5>Proof path</h5><ol>{% for step in case.proof_path %}<li>{{ step }}</li>{% endfor %}</ol></section>
+            <section><h5>Lead conclusion</h5><p>{{ case.lead_conclusion }}</p></section>
           </div>
         </details>
       </article>
