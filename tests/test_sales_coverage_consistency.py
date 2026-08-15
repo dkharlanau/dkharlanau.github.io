@@ -27,7 +27,7 @@ def test_sales_coverage_summary_matches_canonical_data():
     casebook = load_yaml(CASEBOOK_PATH)
 
     summary = audit["summary"]
-    assert summary["atlas_records"] == atlas_index["process_count"]
+    assert summary["atlas_records"] == atlas_index["coverage_model"]["process_count"]
     assert summary["groups"] == len(atlas_index["groups"])
     assert summary["mechanisms"] == len(mechanism_index["mechanism_codes"])
     assert summary["reviewed_process_mechanism_compositions"] == len(process_map["links"])
