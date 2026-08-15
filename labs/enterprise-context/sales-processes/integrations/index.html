@@ -1,13 +1,13 @@
 ---
 layout: default
-title: "SAP Sales Order Integration Map — Origins, Handoffs and Events"
-description: "A memory-first SAP S/4HANA Sales map showing where sales orders come from, which application owns the next execution step, and when to use APIs, B2B messages or business events."
+title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
+description: "A practical SAP S/4HANA Sales integration map: sales processes mapped to IDocs, EDI messages, released APIs, web services, business events, configuration and cross-application handoffs."
 permalink: /labs/enterprise-context/sales-processes/integrations/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 sales_process_atlas: true
 tags:
@@ -15,6 +15,10 @@ tags:
   - s4hana
   - sales
   - integration
+  - idoc
+  - edi
+  - api
+  - events
   - sales-order
   - commerce
   - manufacturing
@@ -22,8 +26,10 @@ tags:
 ---
 
 {% assign map = site.data.labs.enterprise_context.processes.sales_order_integration_map %}
+{% assign interface_catalog = site.data.labs.enterprise_context.processes.sales_interface_catalog %}
 {% assign cross = site.data.labs.enterprise_context.processes.sales_process_atlas.11_cross_application_execution %}
 {% assign registry = site.data.labs.enterprise_context.sources.sales_cross_application_registry %}
+{% assign interface_registry = site.data.labs.enterprise_context.sources.sales_interface_registry %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Integration Map</li></ol>
@@ -32,23 +38,24 @@ tags:
 <div class="research-canvas sales-process-atlas">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Sales order / cross-application map</p>
-      <h1>One order.<br />Several owners.</h1>
-      <p>A sales order can be created by an API, a web shop, a buyer message, CPQ, Sales Cloud, a project, or a solution contract. After creation, the next serious decision may belong to Manufacturing, Procurement, Warehouse, Transportation, Trade Compliance, Credit, Finance, or Service. The useful architecture question is not “which system is connected?” It is “who owns the next decision?”</p>
-      <a class="research-canvas__button" href="#origin-core-handoff">Open the map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p class="research-canvas__eyebrow">Sales integration / cross-application map</p>
+      <h1>One order.<br />Several contracts.</h1>
+      <p>A sales process can cross the system boundary as an IDoc, a B2B document, an API call, a SOAP message or a business event. These are not interchangeable names for the same thing. The useful question is: which business document moves, who waits for an answer, and who owns the next decision?</p>
+      <a class="research-canvas__button" href="#interface-contracts">Open interface catalog <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Integration inventory">
       <p>Integration inventory</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ map.origins | size }}</strong><small>Order origins</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ map.handoffs | size }}</strong><small>Execution handoffs</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ cross.processes | size }}</strong><small>Cross-app process cards</small></div>
-      <em>Origin is not process. Integration is not ownership. A connected box is not automatically a new business branch.</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ interface_catalog.processes | size }}</strong><small>Process contracts</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ map.origins | size }}</strong><small>Order origins</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ map.handoffs | size }}</strong><small>Execution handoffs</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong>{{ interface_catalog.configuration_playbook | size }}</strong><small>Setup patterns</small></div>
+      <em>Interface technology is a consequence of the business contract. Starting with “we need Kafka” is how architecture diagrams become expensive mood boards.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">schema</span>
-    <p><strong>Memory rule.</strong> Ask three separate questions: who created the order, what business process is running, and which application owns the next irreversible decision.</p>
+    <p><strong>Memory rule.</strong> IDoc or B2B transfers a business document. API reads or changes an object. Event says that something happened. Use an event plus an API read when a consumer needs loose coupling and current object details.</p>
     <a href="/labs/enterprise-context/data/sales-order-integration-map.json">Open machine-readable map <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
@@ -63,6 +70,92 @@ tags:
       <article><span>ORC.SD.*</span><h3>Who created or orchestrated it?</h3><p>Commerce, CPQ, Sales Cloud, an external buyer, Solution Order, subscription, customer project, or a generic API client.</p></article>
       <article><span>{{ map.center.code }}</span><h3>{{ map.center.object }}</h3><p>{{ map.center.rule }}</p></article>
       <article><span>INT.SD.*</span><h3>Who owns the next execution decision?</h3><p>PP, Project/EPPM, Procurement, EWM, TM, GTS, Credit, Finance, or Service.</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="interface-contracts" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Process → interface contract</p>
+      <h2>Choose the contract before the transport.</h2>
+      <p>{{ interface_catalog.decision_rule }} The cards below connect the sales step to concrete SAP interface families and show what each one is actually for.</p>
+    </header>
+
+    <div class="scp-compare-grid">
+      {% for rule in interface_catalog.memory_rules %}
+      <article class="scp-compare"><span>0{{ forloop.index }}</span><p>{{ rule }}</p></article>
+      {% endfor %}
+    </div>
+
+    <div class="spa-card-grid">
+      {% for process in interface_catalog.processes %}
+      <article class="spa-card">
+        <header class="spa-card__head">
+          <div><span class="spa-code">{{ process.code }}</span><span class="spa-kind">{{ process.object }}</span></div>
+        </header>
+        <h3>{{ process.title }}</h3>
+        <div class="spa-extension-row"><span>Used by</span>{% for code in process.process_codes %}<code>{{ code }}</code>{% endfor %}</div>
+        <p class="spa-hook">{{ process.lead_point }}</p>
+
+        {% for contract in process.contracts %}
+        <details>
+          <summary>{{ contract.family }} · {{ contract.name }} <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="spa-detail-grid">
+            <section>
+              <h4>Contract</h4>
+              {% if contract.technical_name %}<p><strong>Technical:</strong> <code>{{ contract.technical_name }}</code></p>{% endif %}
+              <p><strong>Direction:</strong> {{ contract.direction }}</p>
+              <p><strong>Mode:</strong> {{ contract.mode }}</p>
+            </section>
+            <section>
+              <h4>Best fit</h4>
+              <p>{{ contract.best_for }}</p>
+            </section>
+            <section>
+              <h4>Configure</h4>
+              <p>{{ contract.configuration }}</p>
+            </section>
+          </div>
+        </details>
+        {% endfor %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration playbook</p>
+      <h2>Three setup paths. Same support discipline.</h2>
+      <p>Do not memorize every transaction or communication scenario as one universal recipe. First identify the deployment model and the interface family, then follow the right setup path.</p>
+    </header>
+    <div class="spa-card-grid">
+      {% for pattern in interface_catalog.configuration_playbook %}
+      <article class="spa-card">
+        <header class="spa-card__head"><div><span class="spa-code">{{ pattern.code }}</span><span class="spa-kind">configuration</span></div></header>
+        <h3>{{ pattern.title }}</h3>
+        <p class="spa-hook">{{ pattern.scope }}</p>
+        <details open>
+          <summary>Build and monitor <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="spa-detail-grid">
+            <section><h4>Setup</h4><ol>{% for step in pattern.steps %}<li>{{ step }}</li>{% endfor %}</ol></section>
+            <section><h4>Operations</h4><ul>{% for item in pattern.monitoring %}<li>{{ item }}</li>{% endfor %}</ul></section>
+          </div>
+        </details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Release boundary</p>
+      <h2>The interface name may survive. The setup model may not.</h2>
+      <p>Assessment answers become much stronger when the deployment boundary is explicit. A WE20-based on-premise setup and a Public Edition communication arrangement are not two screens of one procedure.</p>
+    </header>
+    <div class="spa-compare-grid">
+      {% for item in interface_catalog.release_boundaries %}
+      <article><span>0{{ forloop.index }}</span><h3>{{ item.scope }}</h3><p>{{ item.rule }}</p></article>
+      {% endfor %}
     </div>
   </section>
 
@@ -143,10 +236,10 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead checklist</p>
-      <h2>Five questions before drawing another integration arrow.</h2>
+      <h2>Questions before drawing another integration arrow.</h2>
     </header>
     <div class="scp-answer-grid">
-      {% for question in map.lead_checks %}
+      {% for question in interface_catalog.lead_checks %}
       <article class="scp-answer"><span>0{{ forloop.index }}</span><p>{{ question }}</p></article>
       {% endfor %}
     </div>
@@ -155,10 +248,13 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Evidence boundary</p>
-      <h2>Interfaces and process boundaries are verified. The map is ours.</h2>
-      <p>The SAP references below verify current APIs, communication scenarios, production/project patterns and integration capabilities. The code system, memory model and architecture comparisons are independently written for this lab.</p>
+      <h2>Interface names are sourced. The decision model is ours.</h2>
+      <p>The SAP references below verify current APIs, business events, IDoc/EDI message families and configuration boundaries. The code system, memory rules and architecture comparisons are independently written for this lab. Older ERP documentation is used only where the classical IDoc contract itself is the subject, and the page marks that release boundary explicitly.</p>
     </header>
     <ul class="scp-source-list">
+      {% for source in interface_registry.sources %}
+      <li><a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.title }}</a><br /><small>{{ source.product_scope }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %}</small></li>
+      {% endfor %}
       {% for source in registry.sources %}
       <li><a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.title }}</a><br /><small>{{ source.product_scope }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %}</small></li>
       {% endfor %}
