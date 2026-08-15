@@ -17,6 +17,9 @@ tags:
 ---
 
 {% assign catalog = site.data.labs.business_ai.catalog %}
+{% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
+{% assign all_patterns = catalog.patterns | concat: expansion.patterns %}
+{% assign all_cases = catalog.cases | concat: expansion.cases %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/business-ai/">Business AI</a></li><li aria-current="page">Patterns</li></ol>
@@ -32,8 +35,8 @@ tags:
     </div>
     <div class="research-canvas__signal">
       <p>Pattern set</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ catalog.patterns | size }}</strong><small>Patterns</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>4</strong><small>AI method families</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ all_patterns | size }}</strong><small>Patterns</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>6+</strong><small>Method families</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Rule: measure the business</small></div>
       <em>Generative AI is one method family, not the definition of Business AI.</em>
     </div>
@@ -49,17 +52,17 @@ tags:
   <section class="research-canvas__inventory" id="pattern-list" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Pattern index</p>
-      <h2>Six starting patterns.</h2>
-      <p>This set will grow only when a new case adds a genuinely different decision shape.</p>
+      <h2>{{ all_patterns | size }} working patterns.</h2>
+      <p>This set grows only when a new case adds a genuinely different decision shape.</p>
     </header>
     <div class="research-route-list">
-      {% for pattern in catalog.patterns %}
+      {% for pattern in all_patterns %}
       <a href="#{{ pattern.id }}"><span>AI</span><strong>{{ pattern.title }}</strong><small>{{ pattern.business_job }} · {{ pattern.automation_level }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
       {% endfor %}
     </div>
   </section>
 
-  {% for pattern in catalog.patterns %}
+  {% for pattern in all_patterns %}
   <section class="research-canvas__inventory" id="{{ pattern.id }}" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Pattern / {{ pattern.automation_level }}</p>
@@ -72,12 +75,10 @@ tags:
       <a href="#{{ pattern.id }}"><span>NO</span><strong>Bad fit</strong><small>{{ pattern.bad_fit_when | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">block</i></a>
       <a href="#{{ pattern.id }}"><span>SYS</span><strong>Architecture shape</strong><small>{{ pattern.architecture_shape | join: " → " }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="#{{ pattern.id }}"><span>KPI</span><strong>Evaluation</strong><small>{{ pattern.evaluation | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
-      {% for case_id in pattern.related_cases %}
-        {% for item in catalog.cases %}
-          {% if item.id == case_id %}
-          <a href="/labs/business-ai/cases/#{{ item.id }}"><span>{{ item.evidence_grade }}</span><strong>{{ item.company }} · {{ item.title }}</strong><small>{{ item.process }} · {{ item.consultant_note }}</small><i class="material-symbols-outlined" aria-hidden="true">case_study</i></a>
-          {% endif %}
-        {% endfor %}
+      {% for item in all_cases %}
+        {% if item.pattern == pattern.id %}
+        <a href="/labs/business-ai/cases/#{{ item.id }}"><span>{{ item.evidence_grade }}</span><strong>{{ item.company }} · {{ item.title }}</strong><small>{{ item.process }} · {{ item.consultant_note }}</small><i class="material-symbols-outlined" aria-hidden="true">case_study</i></a>
+        {% endif %}
       {% endfor %}
     </div>
   </section>
