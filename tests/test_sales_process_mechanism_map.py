@@ -38,10 +38,12 @@ def test_process_mechanism_map_declares_partial_coverage_honestly():
     process_index = load_json(PROCESS_INDEX_PATH)
     process_map = load_json(PROCESS_MAP_PATH)
     coverage = process_map["coverage"]
+    atlas_process_count = process_index["coverage_model"]["process_count"]
 
-    assert coverage["atlas_process_count"] == process_index["process_count"]
+    assert coverage["atlas_process_count"] == atlas_process_count
     assert coverage["mapped_process_count"] == len(process_map["links"])
     assert coverage["is_exhaustive"] is (coverage["mapped_process_count"] == coverage["atlas_process_count"])
+    assert coverage["composition_semantics"]
     assert coverage["absence_semantics"]
     assert coverage["addition_rule"]
 
