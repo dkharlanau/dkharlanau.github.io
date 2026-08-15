@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "title": "AI Ready Engineering Map",
+  "reviewed_at": "2026-08-15",
+  "scope": "General-purpose AI engineering learning path",
+  "steps": [
+    {"step":1,"id":"models","title":"Models","page":"/labs/ai-ready/engineering/models/","decision":"Choose a model profile from task quality, latency, cost, modality, privacy, and eval results.","practice":"Compare fast, balanced, and reasoning profiles on the same cases."},
+    {"step":2,"id":"prompt-context","title":"Prompt and Context","page":"/labs/ai-ready/engineering/prompt-context/","decision":"Separate stable instructions, request instructions, examples, and untrusted evidence.","practice":"Compare full-history context with selected evidence context."},
+    {"step":3,"id":"structured-output","title":"Structured Output","page":"/labs/ai-ready/engineering/structured-output/","decision":"Use schemas when software consumes model output; validate business rules separately.","practice":"Run the schema validation example against valid and invalid payloads."},
+    {"step":4,"id":"embeddings-vector","title":"Embeddings and Vector Search","page":"/labs/ai-ready/engineering/embeddings-vector-search/","decision":"Start with lexical search; add semantic or hybrid retrieval only for measured gaps.","practice":"Build exact-term and paraphrase retrieval cases."},
+    {"step":5,"id":"rag","title":"RAG","page":"/labs/ai-ready/data-rag/","decision":"Use retrieval for changing or private evidence with provenance and permissions.","practice":"Build a small corpus and retrieval eval set."},
+    {"step":6,"id":"tool-calling","title":"Tool Calling","page":"/labs/ai-ready/tools-mcp/","decision":"Use typed tools for current facts and deterministic actions.","practice":"Expose two read-only tools and validate inputs and outputs."},
+    {"step":7,"id":"mcp","title":"MCP","page":"/labs/ai-ready/tools-mcp/","decision":"Use MCP when several AI clients benefit from shared discovery and governed capabilities.","practice":"Compare direct tools with the read-only MCP workspace lab."},
+    {"step":8,"id":"agents","title":"Agents","page":"/labs/ai-ready/agent-architecture/","decision":"Use bounded agents only when the next useful step depends on changing evidence.","practice":"Run a tool loop with step budget, duplicate-call protection, and stop states."},
+    {"step":9,"id":"memory-state","title":"Memory and State","page":"/labs/ai-ready/engineering/memory-state/","decision":"Separate request context, history, user preferences, durable application state, and cache.","practice":"Model an explicit state machine for a multi-step task."},
+    {"step":10,"id":"evals","title":"Evals","page":"/labs/ai-ready/evals-reliability/","decision":"Use golden cases and deterministic graders before tuning prompts, models, or agents.","practice":"Run a small regression dataset and fail the process on a critical case."},
+    {"step":11,"id":"observability","title":"Observability","page":"/labs/ai-ready/engineering/observability/","decision":"Trace model, retrieval, tools, agent steps, versions, latency, and cost end to end.","practice":"Design the trace needed to explain one wrong production answer."},
+    {"step":12,"id":"security-governance","title":"Security and Governance","page":"/labs/ai-ready/security-governance/","decision":"Treat external content as untrusted and keep identity, policy, secrets, and approvals outside model control.","practice":"Add prompt-injection and permission-denied eval cases."},
+    {"step":13,"id":"deployment","title":"Deployment","page":"/labs/ai-ready/build-operate/","decision":"Release model behavior with eval gates, budgets, degraded modes, and rollback.","practice":"Deploy one lab with explicit versions and a rollback drill."}
+  ],
+  "runnable_examples": [
+    {"id":"structured-output-validation","path":"/labs/ai-ready/examples/structured_output_validation.py","concepts":["json","schema","business_validation"]},
+    {"id":"lexical-retrieval","path":"/labs/ai-ready/examples/lexical_retrieval.py","concepts":["lexical_search","baseline","retrieval"]},
+    {"id":"tool-loop","path":"/labs/ai-ready/examples/tool_loop.py","concepts":["agent_loop","tool_allowlist","budget","stop_state"]},
+    {"id":"eval-runner","path":"/labs/ai-ready/examples/eval_runner.py","concepts":["golden_cases","deterministic_eval","regression"]},
+    {"id":"approval-state","path":"/labs/ai-ready/examples/approval_state.py","concepts":["prepared_change","approval","precondition","idempotency"]}
+  ],
+  "architecture_ladder": ["single_model_call","prompt_plus_schema","retrieval","typed_tools","workflow","bounded_agent","workers_only_with_measured_value"]
+}

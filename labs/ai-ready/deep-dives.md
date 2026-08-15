@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "AI Ready — Deep Dives"
-description: "A practical navigation map for general-purpose AI architecture decisions, failure modes, controls, and hands-on labs."
+description: "A practical navigation map for general-purpose AI architecture decisions, failure modes, controls, engineering practice, and hands-on labs."
 permalink: /labs/ai-ready/deep-dives/
 status: draft
 verified: false
@@ -18,7 +18,9 @@ tags: [ai, architecture, mcp, rag, agents, evals, security]
 
 # AI Ready: Deep Dives
 
-The [use-case map](/labs/ai-ready/use-cases/) starts from work. These pages start from architecture. Each topic answers the same questions: what problem it solves, when to use it, when not to use it, what can fail, which controls matter, and how to test the design.
+The [use-case map](/labs/ai-ready/use-cases/) starts from work. The [Engineering Handbook](/labs/ai-ready/engineering/) gives a 13-step build path. [Engineering Practice](/labs/ai-ready/practice/) turns the important layers into runnable local projects.
+
+These pages start from architecture. Each topic asks the same questions: what problem it solves, when to use it, when not to use it, what can fail, which controls matter, and how to test the design.
 
 ## Architecture pages
 
@@ -32,6 +34,19 @@ The [use-case map](/labs/ai-ready/use-cases/) starts from work. These pages star
 | Security | How do we keep untrusted content away from permissions and sensitive actions? | [Security and Governance](/labs/ai-ready/security-governance/) |
 | Production | How do we deploy, observe, version, and roll back an AI service? | [Build and Operate](/labs/ai-ready/build-operate/) |
 
+## Engineering path
+
+The handbook fills the gaps between those large architecture areas:
+
+- [Models](/labs/ai-ready/engineering/models/)
+- [Prompt and Context](/labs/ai-ready/engineering/prompt-context/)
+- [Structured Output](/labs/ai-ready/engineering/structured-output/)
+- [Embeddings and Vector Search](/labs/ai-ready/engineering/embeddings-vector-search/)
+- [Memory and State](/labs/ai-ready/engineering/memory-state/)
+- [Observability](/labs/ai-ready/engineering/observability/)
+
+Then the [Practice layer](/labs/ai-ready/practice/) makes model selection, context selection, retrieval, and a controlled local assistant executable.
+
 ## Four rules worth remembering
 
 **Known next step → workflow.** If the process is stable, code the sequence and let the model handle only uncertain interpretation.
@@ -42,20 +57,29 @@ The [use-case map](/labs/ai-ready/use-cases/) starts from work. These pages star
 
 **Risky write → application control.** The model can propose an action. Authorization, approval, validation, idempotency, and audit stay outside the model.
 
-## Hands-on path
+## Runnable practice
+
+1. [Model Selection Benchmark](/labs/ai-ready/practice/model-benchmark/) — compare profiles against the same quality gate.
+2. [Context Experiment](/labs/ai-ready/practice/context-experiment/) — measure evidence selection and trust filtering.
+3. [Retrieval Benchmark](/labs/ai-ready/practice/retrieval-benchmark/) — compare lexical, vector-style, and hybrid ranking.
+4. [Local Operations Assistant](/labs/ai-ready/practice/local-assistant/) — join retrieval, tools, state, approval, idempotency, and traces.
+
+All use synthetic general-purpose data and run without an AI-provider account.
+
+## Architecture labs
 
 1. [Read-only MCP Workspace](/labs/ai-ready/labs/mcp-readonly/) — expose synthetic projects, notes, and tasks through narrow tools and resources.
 2. [RAG with Evals](/labs/ai-ready/labs/rag-evals/) — build retrieval and test it with a golden set.
 3. [Agent with Approval](/labs/ai-ready/labs/agent-approval/) — investigate with reads, prepare a change, write only through an approval gate.
 4. [Production Readiness](/labs/ai-ready/labs/production-readiness/) — add traces, budgets, deployment gates, degraded modes, and rollback.
 
-All four core labs are general-purpose and use synthetic data. Domain-specific examples may exist elsewhere on the site, but they are not prerequisites for AI Ready.
-
 ## Machine-readable layer
 
 The human pages and the data layer should tell the same story:
 
 - [Architecture catalog](/labs/ai-ready/data/catalog.json)
+- [Engineering map](/labs/ai-ready/data/engineering-map.json)
+- [Practice map](/labs/ai-ready/data/practice-map.json)
 - [Architecture patterns](/labs/ai-ready/data/architecture-patterns.json)
 - [Eval cases](/labs/ai-ready/data/eval-sample.jsonl)
 

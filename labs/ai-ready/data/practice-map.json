@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "title": "AI Ready Engineering Practice Map",
+  "reviewed_at": "2026-08-15",
+  "scope": "General-purpose, provider-neutral AI engineering practice with synthetic data.",
+  "method": [
+    "predict",
+    "run",
+    "inspect",
+    "change_one_constraint",
+    "rerun",
+    "compare",
+    "record_decision"
+  ],
+  "projects": [
+    {
+      "id": "model-benchmark",
+      "title": "Model Selection Benchmark",
+      "page": "/labs/ai-ready/practice/model-benchmark/",
+      "command": "python3 labs/ai-ready/practice/model-benchmark/benchmark.py",
+      "inputs": ["cases.jsonl", "recorded_outputs.jsonl"],
+      "measures": ["pass_rate", "json_validity", "relative_latency_units", "relative_cost_units"],
+      "decision": "Choose the lowest-cost profile that clears the task quality floor."
+    },
+    {
+      "id": "context-experiment",
+      "title": "Context Experiment",
+      "page": "/labs/ai-ready/practice/context-experiment/",
+      "command": "python3 labs/ai-ready/practice/context-experiment/context_experiment.py",
+      "inputs": ["documents.jsonl", "cases.jsonl"],
+      "measures": ["evidence_recall", "evidence_precision", "context_words", "untrusted_exposures", "no_evidence_accuracy"],
+      "decision": "Select small trusted evidence instead of filling the context window by default."
+    },
+    {
+      "id": "retrieval-benchmark",
+      "title": "Retrieval Benchmark",
+      "page": "/labs/ai-ready/practice/retrieval-benchmark/",
+      "command": "python3 labs/ai-ready/practice/retrieval-benchmark/retrieval_benchmark.py",
+      "inputs": ["documents.jsonl", "queries.jsonl", "concepts.json"],
+      "measures": ["hit_at_1", "recall_at_3", "mrr"],
+      "decision": "Add semantic or hybrid retrieval only when it improves labeled retrieval cases."
+    },
+    {
+      "id": "local-assistant",
+      "title": "Local Operations Assistant",
+      "page": "/labs/ai-ready/practice/local-assistant/",
+      "command": "python3 labs/ai-ready/practice/local-assistant/app.py --incident inc-101 --approve",
+      "inputs": ["workspace.json", "knowledge.jsonl", "scenarios.jsonl"],
+      "controls": ["trusted_retrieval", "tool_budget", "prepared_change", "approval_hash", "expected_version", "idempotency", "trace"],
+      "decision": "Keep authority in deterministic application code even when the planner later becomes a model."
+    }
+  ],
+  "run_all": "python3 labs/ai-ready/practice/run_all.py"
+}
