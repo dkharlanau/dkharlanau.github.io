@@ -15,9 +15,15 @@ tags:
   - procurement
   - supply-chain
   - customer-service
+  - sales
+  - manufacturing
+  - master-data
 ---
 
 {% assign catalog = site.data.labs.business_ai.catalog %}
+{% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
+{% assign all_cases = catalog.cases | concat: expansion.cases %}
+{% assign all_sources = catalog.source_registry | concat: expansion.source_registry %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/business-ai/">Business AI</a></li><li aria-current="page">Cases</li></ol>
@@ -33,8 +39,8 @@ tags:
     </div>
     <div class="research-canvas__signal">
       <p>Evidence set</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ catalog.cases | size }}</strong><small>Cases</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ catalog.source_registry | size }}</strong><small>Sources</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ all_cases | size }}</strong><small>Cases</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ all_sources | size }}</strong><small>Sources</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>0</strong><small>Grade A so far</small></div>
       <em>That zero is intentional. Public customer stories rarely disclose enough measurement detail for the strongest evidence grade.</em>
     </div>
@@ -50,20 +56,20 @@ tags:
   <section class="research-canvas__inventory" id="case-list" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Case index</p>
-      <h2>From customer service to procurement and logistics.</h2>
-      <p>The first set deliberately mixes generative AI, document AI, forecasting, and optimization. Business value does not care which technology category wins a conference slide.</p>
+      <h2>From sales and procurement to planning, manufacturing, and master data.</h2>
+      <p>The set deliberately mixes generative AI, document AI, forecasting, recommendation, optimization, and data foundations. The business job decides the method, not the conference agenda.</p>
     </header>
     <div class="research-route-list">
-      {% for item in catalog.cases %}
-      <a href="#{{ item.id }}"><span>{{ item.evidence_grade }}</span><strong>{{ item.company }} · {{ item.title }}</strong><small>{{ item.process }} · Pattern: {{ item.pattern }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      {% for item in all_cases %}
+      <a href="#{{ item.id }}"><span>{{ item.evidence_grade }}</span><strong>{{ item.company }} · {{ item.title }}</strong><small>{{ item.process }} · Pattern: {{ item.pattern }}{% if item.case_kind %} · {{ item.case_kind }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
       {% endfor %}
     </div>
   </section>
 
-  {% for item in catalog.cases %}
+  {% for item in all_cases %}
   <section class="research-canvas__inventory" id="{{ item.id }}" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Case / evidence {{ item.evidence_grade }} / {{ item.industry }}</p>
+      <p class="research-canvas__eyebrow">Case / evidence {{ item.evidence_grade }} / {{ item.industry }}{% if item.case_kind %} / {{ item.case_kind }}{% endif %}</p>
       <h2>{{ item.company }} · {{ item.title }}</h2>
       <p><strong>Process:</strong> {{ item.process }}. <strong>Problem:</strong> {{ item.problem }}</p>
     </header>
@@ -79,7 +85,7 @@ tags:
       <a href="#{{ item.id }}"><span>!</span><strong>Limits</strong><small>{{ item.limits | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
       <a href="#{{ item.id }}"><span>NOTE</span><strong>Consultant note</strong><small>{{ item.consultant_note }}</small><i class="material-symbols-outlined" aria-hidden="true">comment</i></a>
       {% for source_id in item.source_ids %}
-        {% for source in catalog.source_registry %}
+        {% for source in all_sources %}
           {% if source.id == source_id %}
           <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.publisher }} · {{ source.title }}</strong><small>{{ source.source_type }}{% if source.published_at %} · {{ source.published_at }}{% endif %} · reviewed {{ source.reviewed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
           {% endif %}
