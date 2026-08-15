@@ -1683,101 +1683,64 @@ BUSINESS PROCESS: Integration
 TAGS: integration, sap-ale, diagnostics, master-data
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
-    Knowledge Atlas
-    Diagnostics
-    SAP ALE Distribution Model Diagnostics
+HomeKnowledge AtlasDiagnosticsSAP ALE Distribution Model Diagnostics
+
+  Atlas Diagnostic
+  SAP ALE distribution model diagnostics
+  Do not treat ALE as one switch. Trace whether the object was in distribution scope, detected as changed, converted into a message, routed, and accepted by the target.
 
 
+ProcessIntegrationSAP areaALE / master data distributionIndexingIndex, reviewed
 
-    Atlas Diagnostic
-    SAP ALE distribution model diagnostics
-    A first-pass structure for finding why master data is not distributed, arrives at the wrong target, or creates duplicate objects.
+  The problem is a broken distribution decision
+  When master data is missing in a target system, several different controls can be responsible. The object may be outside the intended distribution scope, the source change may not have produced a distribution trigger, no outbound message may have been created, routing may point elsewhere, or the target may have rejected a valid message.
+  This distinction matters because changing the distribution model will not fix a target-side posting error, and reprocessing messages will not help if the source object was never selected.
 
-
-
-
-
-      ProcessIntegration
-      SAP areaALE / master data distribution
-      IndexingIndex, reviewed
-
-
-
-
-    Core idea
-    ALE distribution models decide which master data changes go to which target systems. A missing object usually means the model did not select it, the change pointer was not processed, or the target did not accept it. Duplicates usually mean key mapping is missing or wrong. The diagnostic job is to follow the selection chain: model → change pointer → IDoc → target.
-
-    Common symptoms
-
-      Master data change in source system is not reflected in target system.
-      Change pointer exists but no IDoc was generated.
-      IDoc was sent to wrong target system or multiple systems unexpectedly.
-      Target system creates duplicate master data objects instead of updating existing ones.
-      Distribution model shows active but no messages for the object type.
+  Read the chain from left to right
+  StageQuestionUseful evidence
+    Business scopeShould this object be distributed to this receiver at all?Object type, message type, sender, receiver, filters, organizational data.
+    Change detectionDid the relevant change create the trigger expected by this scenario?Change timestamp, changed fields, change-pointer or application trigger where used.
+    Message creationWas an outbound message created for the object?Message/IDoc number, creation time, sender, receiver, message type.
+    RoutingDid the technical route match the intended target?Partner/port or equivalent route, receiver system, filters, model assignment.
+    Target processingDid the target receive and apply the object?Inbound status, application log, target key, validation error, duplicate check.
 
 
-    Likely causes
+  A practical diagnostic workflow
 
-      Missing distribution model entry: the object type or message type is not included in the active distribution model.
-      Change pointer not created: change documents were not written or the change pointer job (BD21) did not process them.
-      Filter object mismatch: the filter object excludes the specific plant, company code, or sales organization from distribution.
-      Partner profile issue: the receiver partner profile does not support the message type or the outbound parameter is missing.
-      Target system key mapping: the target system does not recognize the source key and creates a new object instead of updating.
-
-
-    Where to check in SAP
-
-      BD64 — distribution model display.
-      BD22 — change pointer overview.
-      BD21 — change pointer processing log.
-      WE20 — partner profile outbound parameters.
-      WE02 — generated IDocs for the message type.
+    Choose one object and one receiver. Capture the source key, object/message type, source system, expected target, and business change that should have triggered replication.
+    Confirm distribution scope. Check that the sender-receiver relationship and any filters include this exact case. Do not assume that an active model means every object is eligible.
+    Check change detection. Establish whether the scenario is change-pointer driven, application-event driven, manually triggered, or based on another mechanism.
+    Find the outbound message. If none exists, remain on the source side. If it exists, continue with its exact receiver, timestamp, and status.
+    Trace routing. Confirm that the message used the expected logical receiver and technical route rather than simply proving that “an IDoc was sent.”
+    Read the target result. Separate transport success from application success. A message can arrive and still fail validation, key resolution, or update logic.
+    Compare with a working object. Differences in organizational data, filters, changed fields, key mapping, or target state often expose the relevant control quickly.
 
 
-    Key tables / transactions / objects
+  Where classic ALE tools help
+  In classic ALE/IDoc landscapes, consultants often inspect the distribution model, change-pointer processing, partner profiles, and IDoc status using the standard ALE and IDoc administration tools available in that release. Those tools are evidence sources, not the diagnostic method itself. The important result is to identify the first stage where the expected chain stops.
 
-      BDCP / BDCPS — change pointers.
-      EDIDC / EDIDS — IDoc control and status.
-      TBD22 / TBD23 — distribution model tables.
-      TBDBE — filter objects.
+  Duplicates need a separate diagnosis
+  If the target creates a second object instead of updating an existing one, do not immediately label it a distribution-model problem. Check how the target identifies the business object, whether source and target keys are expected to differ, whether mapping exists, and whether the earlier object was created outside the governed replication path.
 
+  Safe next actions
 
-    Diagnostic workflow
-
-      Identify the master data object, message type, source system, and expected target system.
-      Check BD64 for the distribution model: is the object/message type included and active?
-      Check BD22 for change pointers: was a change pointer created for the object change?
-      Run or check BD21 to see if change pointers were processed into IDocs.
-      Check WE20 for the receiver partner profile: does it have the outbound parameter for this message type?
-      Check WE02 for generated IDocs and their status.
-      On the target system, check if the IDoc was received and whether it created or updated the object.
+    Correct scope or filters only after proving that the object should have been selected.
+    Repair change detection or scheduling when eligible changes are not converted into outbound work.
+    Correct routing or partner configuration when the generated message points to the wrong technical receiver.
+    Fix target-side validation, master data, or key mapping when transport succeeds but application posting fails.
+    Before mass reprocessing, verify that messages are safe to repeat and that the target has not already applied part of the change.
 
 
-    Typical fixes or next actions
+  What to capture first
+  Record the object type and key, sender, expected receiver, business change and timestamp, expected message type, distribution/filter context, outbound message if present, target status, and whether a comparable object works. That evidence makes ownership visible: source application, ALE configuration, routing, integration operations, or target application.
 
-      Add the missing object type or message type to the distribution model.
-      Process change pointers with BD21 if they were not automatically processed.
-      Adjust filter objects if the distribution scope is too narrow.
-      Update the partner profile to include the missing outbound parameter.
-      Fix key mapping on the target system if duplicates are being created.
+  Limitations and boundaries
+  This page covers the diagnostic logic of ALE-style distribution. Exact transactions, tables, change-pointer behavior, message types, and target processing differ by object, release, and landscape. Modern replication scenarios may use DRF, APIs, events, middleware, or application-specific frameworks instead of classic ALE change-pointer flows, so verify the actual mechanism before applying an ALE-specific fix.
 
-
-    What to capture first
-    Before routing the issue, capture: object type, message type, source and target systems, change document number, distribution model name, and whether the issue is new or recurring. This distinguishes a one-time filter miss from a model gap that will keep producing failures.
-
-    Boundaries and non-goals
-    This page is a diagnostic frame, not an ALE configuration guide. It does not cover distribution model design, filter object setup, or target system key mapping configuration. It does not replace SAP's ALE documentation.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
-
-
-
-    Related Atlas Pages
-
-      Idoc Aif Integration Diagnostics
-      SAP Idoc Status Diagnostics
-      SAP Key Mapping Diagnostics
+Related Atlas Pages
+  IDoc and AIF Integration Diagnostics
+  SAP IDoc Status Diagnostics
+  SAP Key Mapping Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
@@ -3351,101 +3314,65 @@ BUSINESS PROCESS: Master data governance
 TAGS: master-data, sap-mdg, diagnostics, integration
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
-    Knowledge Atlas
-    Diagnostics
-    SAP Key Mapping Diagnostics
+HomeKnowledge AtlasDiagnosticsSAP Key Mapping Diagnostics
+
+  Atlas Diagnostic
+  SAP key mapping diagnostics
+  Different technical keys are not automatically a problem. The problem starts when systems no longer agree which records represent the same business object.
 
 
+ProcessMaster data governanceSAP areaKey mapping / multi-systemIndexingIndex, reviewed
 
-    Atlas Diagnostic
-    SAP key mapping diagnostics
-    A first-pass structure for finding why objects have different keys across systems, causing duplicates, broken links, or failed replications.
+  The problem is identity across systems
+  In a distributed landscape, one supplier, customer, product, or business partner may legitimately use different identifiers in different systems. Key mapping preserves the statement that these identifiers describe the same business object.
+  An incident appears when that statement is missing, wrong, or ambiguous. Replication may create a duplicate, an interface may update the wrong object, a follow-on document may lose its reference, or analytics may split one business entity into several technical records.
 
-
-
-
-
-      ProcessMaster data governance
-      SAP areaKey mapping / multi-system
-      IndexingIndex, reviewed
-
-
-
-
-    Core idea
-    In multi-system SAP landscapes, the same business object may have different keys in different systems. Key mapping maintains the relationship between these keys. When mapping is missing, wrong, or inconsistent, replication creates duplicates, interfaces fail, and reporting produces fragmented results. The support goal is to identify which object type is affected, which systems are involved, and whether the gap is in the mapping table, the replication model, or the interface logic.
-    The first question to answer is whether the object was created directly in the target system. Manual creation is the most common reason a mapping entry is missing.
-
-    Common symptoms
-
-      Replication creates a new object in the target system instead of updating the existing one.
-      Interface reports 'object not found' even though the object exists under a different key.
-      Reporting or analytics shows duplicate records for the same business entity.
-      MDG or ALE replication log shows key mapping errors.
-      Customer or vendor number in S/4 does not match the corresponding BP number or external system key.
+  First decide what kind of identity failure you have
+  PatternQuestionEvidence
+    Missing mappingDoes the source object have no known target identity?Source system/key, target system, mapping lookup, replication history.
+    Wrong mappingDoes the source key point to the wrong target object?Current mapping, object attributes, creation/change history, downstream references.
+    Duplicate targetDid replication create a second object because an existing identity was not recognized?Both target keys, creation channels, duplicate-check result, mapping state.
+    Number-range collisionAre identical-looking keys from different systems being assumed to mean the same object?Logical-system context, number-range design, source ownership of the key.
+    Application-specific identityIs this really generic key mapping, or a specific relationship such as BP/customer/vendor synchronization?Object model, application link, replication framework, target relationship.
 
 
-    Likely causes
+  A practical diagnostic workflow
 
-      Missing mapping entry: the object was created directly in the target system without going through the mapping process.
-      Wrong mapping entry: the source key is mapped to a different target key than intended.
-      Number range conflict: source and target systems use overlapping number ranges, causing collisions.
-      Mapping table not maintained for new object type: the interface or replication expects mapping but the object type was recently added and mapping is not set up.
-      Manual creation bypass: the object was created manually in the target system, bypassing the mapping logic.
-
-
-    Where to check in SAP
-
-      Key mapping tables — landscape-specific tables that map source keys to target keys.
-      MDG key mapping UI — if MDG manages the mapping.
-      WE02 — IDoc status for ALE replication to see if key mapping errors are reported.
-      Object display in both source and target systems — compare keys and attributes.
-      Number range status (SNRO) — check if ranges overlap between systems.
+    Name the business object. Capture object type, source system/key, target system/key, and the business attributes that prove the records should represent the same entity.
+    Find the first governed creation. Determine where the object was originally created and which process should have established the cross-system identity.
+    Read the current mapping. Check the framework actually used by the landscape, not a guessed table. Confirm source/target system context as well as the keys.
+    Trace replication history. Ask whether the target object came from the governed replication path, a migration, manual creation, another hub, or a legacy interface.
+    Check duplicate evidence. Compare names, addresses, tax or registration identifiers, product attributes, and other domain-specific identity fields. Similarity alone is not proof that records may be merged.
+    Assess downstream references before correction. Orders, deliveries, invoices, contracts, analytics, and integrations may already reference one or both technical keys.
+    Fix the identity rule, not only the current record. If the creation path can produce the same failure again, a one-off mapping entry only postpones the next incident.
 
 
-    Key tables / transactions / objects
+  Manual creation is a clue, not an automatic root cause
+  An object created directly in a target system can explain why no mapping was generated, but many landscapes intentionally allow local creation. The real question is whether local creation was permitted and how the architecture is supposed to reconcile or govern that identity afterwards.
 
-      Key mapping tables — landscape-specific (e.g., USMD1700 for MDG).
-      CVI_LINK — CVI link between BP and customer/vendor.
-      NRIV — number range intervals.
+  Be careful when correcting mappings
+  Changing a mapping can redirect future updates to another target object. That may be correct, but it can also move the inconsistency into existing transactions and references. Before changing or deleting a mapping, understand which object is authoritative, which records already reference each key, and whether duplicate remediation requires governance approval.
 
+  Useful next actions
 
-    Diagnostic workflow
-
-      Identify the object type, source system key, target system, and expected target key.
-      Check the key mapping table or MDG key mapping UI for an existing entry.
-      If no entry exists, determine if the object was created manually in the target system or if the mapping was never maintained.
-      If the entry exists but is wrong, trace how the wrong mapping was created.
-      Check number ranges in both systems for overlaps or conflicts.
-      Verify the interface or replication model uses the correct mapping logic.
+    Create or repair a mapping only after source and target identity are proven.
+    Correct the governed creation/replication path when mappings are repeatedly missing.
+    Separate number-range design issues from mapping issues; identical numbers across logical systems are not automatically collisions.
+    Handle duplicates as a business-governance problem with downstream impact analysis, not as a simple table cleanup.
+    Use object-specific frameworks when the relationship is not generic key mapping, for example application-managed BP/customer/vendor links.
 
 
-    Typical fixes or next actions
+  What to capture first
+  Record object type, source and target logical systems, source and target keys, authoritative system, object creation channel, current mapping, replication message/error, duplicate evidence, and downstream documents that reference either key. This is enough to distinguish a mapping gap from a wider governance problem.
 
-      Create the missing key mapping entry between source and target systems.
-      Correct the wrong mapping entry and evaluate the impact on existing transactions.
-      Adjust number ranges to prevent future collisions.
-      If duplicates were created, evaluate merge, deactivation, or re-keying options with master data governance.
-      Update the interface or replication model to enforce mapping for new object types.
+  Limitations and boundaries
+  Key mapping is implemented differently across SAP MDG domains, replication frameworks, migration tools, and custom landscapes. There is no single universal mapping table or correction transaction. BP/customer/vendor relationships also have their own application semantics. Verify the active framework before editing identity data or recommending a merge.
 
-
-    What to capture first
-    Key mapping issues are usually maintenance gaps or number range conflicts. Capture: object type, source system, source key, target system, expected target key, actual target key, and whether the object was created manually or via replication.
-
-    Boundaries and non-goals
-    This page is a diagnostic frame, not a key mapping configuration guide. It does not cover number range design, MDG key mapping setup, or interface mapping logic. It does not replace SAP's multi-system integration documentation.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
-
-
-
-    Related Atlas Pages
-
-      SAP Business Partner Replication Diagnostics
-      SAP Mdg To S4 Replication Diagnostics
-      SAP Vendor Master Replication Diagnostics
-      SAP Customer Master Replication Diagnostics
+Related Atlas Pages
+  SAP Business Partner Replication Diagnostics
+  SAP MDG to S/4 Replication Diagnostics
+  SAP Vendor Master Replication Diagnostics
+  SAP Customer Master Replication Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
@@ -4412,117 +4339,64 @@ BUSINESS PROCESS: Integration
 TAGS: rfc, integration, sap-basis, diagnostics, distributed-systems
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
-    Knowledge Atlas
-    Diagnostics
-    SAP RFC Destination Diagnostics
+HomeKnowledge AtlasDiagnosticsSAP RFC Destination Diagnostics
+
+  Atlas Diagnostic
+  SAP RFC destination diagnostics
+  Separate destination connectivity from remote execution. A successful connection test does not prove that the business call will succeed.
 
 
+ProcessIntegrationSAP areaBasis / ALE / RFCIndexingIndex, reviewed
 
-    Atlas Diagnostic
-    SAP RFC destination diagnostics
-    A first-pass structure for finding why an RFC destination fails, why tRFC or qRFC queues are stuck, or why cross-system calls return errors.
+  The problem can sit before or after the remote call starts
+  RFC-related incidents cover several layers: name resolution and network reachability, destination parameters, logon and authorization, gateway or registered-program state, queued/transactional delivery, and the remote function's own application logic. Putting all of them under “RFC connection issue” makes ownership pleasantly vague and diagnosis predictably slow.
+  Start with one failing call or queue entry and determine how far it actually travelled.
 
-
-
-
-
-      ProcessIntegration
-      SAP areaBasis / ALE / RFC
-      IndexingIndex, reviewed
-
-
-
-
-    Core idea
-    RFC destinations in SAP define how one system calls another. When an RFC fails, the impact can be stuck IDocs, failed master data replication, missing transactional data, or batch job cancellations. The diagnostic task is to isolate whether the failure is in the network layer, the destination configuration, the target system availability, the user credentials, or the called function module.
-    The SM59 connection test and authorization test separate network or credential failures from application failures in the target system. Run both before opening a Basis or security ticket.
-
-    Common symptoms
-
-      RFC destination test in SM59 returns "Connection refused," "Name or password incorrect," or "Program not registered."
-      tRFC or qRFC queue in SM58 or SMQ1/SMQ2 shows repeated errors for a specific destination.
-      IDoc is stuck in status 03 (data passed to port) but never arrives at the target system.
-      Master data replication shows success in the source but the object is missing in the target.
-      Background job fails with RFC-related short dump (CALL_FUNCTION_REMOTE_ERROR).
-      Cross-system transaction fails with COMMIT_FAILURE or ROLLBACK_FAILURE.
-      RFC performance is slow, causing timeouts in calling programs.
+  Classify the failing layer
+  LayerQuestionEvidence
+    DestinationDoes the logical destination point to the intended target and connection type?Destination name, type, target host/system, logon/load-balancing context.
+    ConnectivityCan the source reach the target gateway/application path?Connection test, network/DNS evidence, timeout or refusal details.
+    IdentityCan the configured or propagated identity log on and perform the required action?Logon result, authorization error, user status, SNC/security context where used.
+    Gateway / server programFor registered-server scenarios, is the expected program registered and reachable?Program ID, gateway registration, connector/server process state.
+    Delivery mechanismIs the call synchronous, transactional, or queued, and where is it waiting?tRFC/qRFC state, queue name, transaction ID, retry/error text.
+    Remote applicationDid the remote function start and then fail on data, authorization, locking, or business logic?Target-side log, dump/application message, business object status.
 
 
-    Likely causes
+  A practical diagnostic workflow
 
-      Network or firewall: the target system is unreachable due to network changes, firewall rules, or DNS resolution failure.
-      Target system down: the target application server, message server, or gateway is not running.
-      User credentials: the user in the RFC destination is locked, expired, or has incorrect password.
-      Program not registered: for TCP/IP RFC destinations (e.g., PI/PO, external programs), the registered program is not running.
-      Gateway or message server issue: the SAP gateway (sapgwXX) or message server is not responding.
-      Load balancing misconfiguration: the logon group or message server parameters are incorrect.
-      Function module error: the RFC reaches the target system but the called function module fails due to data or authorization issues.
-
-
-    Where to check in SAP
-
-      SM59 — RFC destination administration; test connection, Unicode test, and authorization test.
-      SM58 — tRFC error log; check failed RFC calls and error texts.
-      SMQ1 / SMQ2 — qRFC queue monitor; check outbound and inbound queues.
-      SMGW — gateway monitor; check registered programs and active connections.
-      SMLG — logon group load balancing; check group assignment and server availability.
-      SM21 — system log; check for gateway or work process errors.
-      ST22 — short dump analysis; check for RFC-related dumps in the calling or target system.
-      AL11 — directory listing; check gateway trace files (dev_rd) if needed.
+    Capture the concrete failure. Record source, destination, target, timestamp, calling application/job/interface, error text, and business key.
+    Identify the RFC pattern. Synchronous RFC, tRFC, qRFC, or registered server scenarios leave different evidence and have different recovery behavior.
+    Test destination connectivity. Use the standard destination administration tools available in the system, but keep the result narrow: connection success proves reachability, not business success.
+    Check identity separately. A destination can reach the target but fail logon or authorization. Do not reset credentials simply because an application call failed.
+    Read queue or transactional state when applicable. Find the exact transaction/queue and its first error rather than mass-reprocessing everything for that destination.
+    Read target-side evidence. If the call reached the remote system, continue with the target application, logs, dumps, locks, or business validation.
+    Compare with a working call. Destination, user, target server/group, function, payload, and timing differences usually narrow the issue faster than infrastructure guessing.
 
 
-    Key tables / transactions / objects
+  Do not restart gateways or clear queues as a first move
+  Restarting a gateway, registered program, or queue can restore processing but may also discard evidence, interrupt unrelated flows, or repeat business actions. Preserve the failing transaction and prove the affected layer first. Recovery should follow the operational runbook and the delivery semantics of the interface.
 
-      RFCDES / RFCDOC — RFC destination definitions.
-      ARFCSDATA / ARFCSSTATE — tRFC execution data and status.
-      TRFCQOUT / TRFCQIN — tRFC queue tables.
-      SMQ1 / SMQ2 — qRFC queue monitor transactions.
-      GWY_CONN — gateway connection table (via SMGW).
-      USR02 — user master; check if the RFC user is locked or expired.
+  Safe next actions
 
-
-    Diagnostic workflow
-
-      Identify the RFC destination name and the exact error message from SM59, SM58, or the application log.
-      Test the connection in SM59: connection test, Unicode test, and authorization test.
-      If the connection test fails, check network connectivity (ping, telnet to gateway port) from the Basis team.
-      If the authorization test fails, check the user in USR02 for lock status, password expiry, or missing authorizations.
-      Check SMGW for registered programs if the destination uses a registered RFC server program.
-      Check SM58 for tRFC errors: note the transaction ID, error text, and retry count.
-      Check SMQ1/SMQ2 for qRFC queue status if the destination uses queued RFC.
-      Check ST22 in both source and target systems for RFC-related short dumps.
-      If the connection succeeds but the function fails, check the target system application log (SLG1) for function module errors.
+    Correct destination parameters when the logical route itself is wrong.
+    Route network or target-availability failures with exact source/target and timestamp evidence.
+    Correct user or authorization issues only after a logon/authorization failure is proven.
+    Restore registered-server connectivity when the expected external program is genuinely not registered.
+    Reprocess tRFC/qRFC work only after the root cause is fixed and duplicate/business-impact risk is understood.
+    Escalate remote application failures with target-side evidence rather than treating them as RFC configuration defects.
 
 
-    Typical fixes or next actions
+  What to capture first
+  Keep the destination, source and target systems, connection type, calling process, timestamp, exact error, test result, user/identity context, queue or transaction ID where relevant, and target-side evidence. This package normally makes the ownership boundary clear.
 
-      Correct the RFC destination host name, IP address, or gateway service if network details changed.
-      Unlock or reset the password for the RFC user in SU01.
-      Restart the registered RFC program or server if it is not running.
-      Restart the SAP gateway service (sapgwXX) if it is not responding.
-      Reprocess tRFC errors in SM58 after fixing the underlying issue.
-      Clear or restart qRFC queues in SMQ1/SMQ2 if they are stuck.
-      Adjust the RFC timeout or retry settings if the issue is intermittent network latency.
-      Escalate to the network or Basis team if the issue is infrastructure-related.
+  Limitations and boundaries
+  This page describes diagnostic logic, not RFC security or Basis configuration. Exact destination types, monitoring transactions, tables, gateway setup, SNC, load balancing, and cloud connectivity differ by release and architecture. Verify the system-specific RFC pattern before changing infrastructure or reprocessing queued work.
 
-
-    What to capture first
-    RFC destination failures are usually network, configuration, or credential issues. Capture: RFC destination name, source system, target system, exact error message, SM59 test results, and whether the issue is isolated to one destination or affects multiple.
-
-    Boundaries and non-goals
-    This page is a diagnostic frame, not an RFC configuration guide. It does not cover RFC destination creation, SNC/SSL setup, or PI/PO adapter configuration. It does not replace SAP's RFC and integration documentation.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
-
-
-
-    Related Atlas Pages
-
-      SAP qRFC and tRFC Diagnostics
-      SAP IDoc Status Diagnostics
-      SAP Interface Monitoring Diagnostics
-      SAP ALE Distribution Model Diagnostics
+Related Atlas Pages
+  SAP qRFC and tRFC Diagnostics
+  SAP IDoc Status Diagnostics
+  SAP Interface Monitoring Diagnostics
+  SAP ALE Distribution Model Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
