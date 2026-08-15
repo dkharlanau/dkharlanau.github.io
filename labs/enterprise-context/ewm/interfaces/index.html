@@ -1,0 +1,85 @@
+---
+layout: default
+title: "SAP EWM — Technical Interface Catalog"
+description: "Technical EWM interface map covering local integration, qRFC, ALE/IDoc, OData, production APIs, MES, WCU and MFS/PLC."
+permalink: /labs/enterprise-context/ewm/interfaces/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+tags: [sap, ewm, interfaces, api, qrfc, idoc, integration]
+---
+
+{% assign model = site.data.labs.enterprise_context.ewm.interfaces %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/ewm/">EWM</a></li><li aria-current="page">Interfaces</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">EWM / Technical integration</p>
+      <h1>{{ model.title }}</h1>
+      <p>{{ model.summary }}</p>
+      <a class="research-canvas__button" href="#interfaces">Open interface catalog <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Interface coverage">
+      <p>Interface model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ model.interfaces | size }}</strong><small>Contracts</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ model.interface_families | size }}</strong><small>Technology families</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ model.selection_matrix | size }}</strong><small>Selection patterns</small></div>
+      <em>Checked {{ model.verified_at }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">cable</span>
+    <p><strong>Architecture rule:</strong> {{ model.architecture_rule }}</p>
+    <p><a href="/labs/enterprise-context/ewm/integrations/">Business integration map</a> · <a href="/labs/enterprise-context/ewm/controls/">Determination map</a> · <a href="/labs/enterprise-context/data/ewm-interfaces.json">JSON</a></p>
+  </section>
+
+  <section class="research-canvas__inventory" id="interfaces" data-reveal>
+    <header><p class="research-canvas__eyebrow">Contracts</p><h2>Technology follows the business boundary.</h2><p>Each contract includes transferred objects, monitoring and a design caution.</p></header>
+    <div class="ecg-determination-list">
+      {% for item in model.interfaces %}
+      <article class="ecg-determination-detail">
+        <header><div><span>IF</span><small>{{ item.style }}</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.boundary }}</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Technologies</h4><ul>{% for value in item.technologies %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Objects</h4><ul>{% for value in item.objects %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Monitor first</h4><ul>{% for value in item.monitor_first %}<li>{{ value }}</li>{% endfor %}</ul></div>
+        </div>
+        {% if item.named_interfaces %}<p><strong>Released interfaces:</strong> {{ item.named_interfaces | join: " · " }}</p>{% endif %}
+        {% if item.message_examples %}<p><strong>Message examples:</strong> {{ item.message_examples | join: " · " }}</p>{% endif %}
+        {% if item.example_capabilities %}<p><strong>Example API operations:</strong> {{ item.example_capabilities | join: " · " }}</p>{% endif %}
+        <p><strong>Direction:</strong> {{ item.direction }}</p>
+        <p class="ecg-lead-lens"><strong>Design caution:</strong> {{ item.design_caution }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Interface families</p><h2>Six different technical families, not one generic “integration”.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.interface_families %}<article><span>TECH</span><strong>{{ item.family }}</strong><small>{{ item.fit }} · {{ item.examples | join: ", " }}</small></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Selection matrix</p><h2>Prefer the standard contract that matches the ownership model.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.selection_matrix %}<article><span>→</span><strong>{{ item.need }}</strong><small><b>Use:</b> {{ item.preferred_standard }} · <b>Avoid:</b> {{ item.avoid }}</small></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Support questions</p><h2>Trace the interface without guessing.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.support_questions %}<article><span>{{ forloop.index }}</span><strong>{{ item }}</strong></article>{% endfor %}
+    </div>
+  </section>
+</div>
