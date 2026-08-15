@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/ddd/decision.schema.json",
+  "title": "DDD for Acting Systems - Decision Card",
+  "description": "Machine-readable contract for one material decision, its authority envelope, commitment boundary, evidence and learning controls.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision_id",
+    "business_outcome",
+    "home_context",
+    "decision_type",
+    "truth",
+    "judgment",
+    "authority",
+    "commitment",
+    "economics",
+    "evidence",
+    "evaluation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.3.0"
+    },
+    "decision_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "business_outcome": {
+      "type": "string",
+      "minLength": 1
+    },
+    "home_context": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision_type": {
+      "enum": [
+        "deterministic-invariant",
+        "bounded-judgment",
+        "advisory",
+        "cross-context"
+      ]
+    },
+    "truth": {
+      "$ref": "#/$defs/truth"
+    },
+    "judgment": {
+      "$ref": "#/$defs/judgment"
+    },
+    "authority": {
+      "$ref": "#/$defs/authority"
+    },
+    "commitment": {
+      "$ref": "#/$defs/commitment"
+    },
+    "economics": {
+      "$ref": "#/$defs/economics"
+    },
+    "evidence": {
+      "$ref": "#/$defs/evidence"
+    },
+    "evaluation": {
+      "$ref": "#/$defs/evaluation"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "string_list": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "level": {
+      "enum": ["low", "medium", "high"]
+    },
+    "truth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authoritative_inputs", "contextual_inputs", "freshness_rule", "invariants"],
+      "properties": {
+        "authoritative_inputs": {
+          "$ref": "#/$defs/string_list"
+        },
+        "contextual_inputs": {
+          "$ref": "#/$defs/string_list"
+        },
+        "freshness_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invariants": {
+          "$ref": "#/$defs/string_list"
+        }
+      }
+    },
+    "judgment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed", "forbidden", "design_posture"],
+      "properties": {
+        "allowed": {
+          "$ref": "#/$defs/string_list"
+        },
+        "forbidden": {
+          "$ref": "#/$defs/string_list"
+        },
+        "design_posture": {
+          "enum": [
+            "prefer-deterministic",
+            "advisory-ai",
+            "prepare-with-review",
+            "bounded-execution-candidate"
+          ]
+        },
+        "design_posture_reason": {
+          "type": "string"
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["autonomy_level", "scope", "value_limit", "frequency_limit", "time_window", "reversibility", "approval"],
+      "properties": {
+        "autonomy_level": {
+          "enum": ["A0", "A1", "A2", "A3", "A4"]
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value_limit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "frequency_limit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "time_window": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reversibility": {
+          "enum": ["reversible", "compensatable", "hard-to-reverse"]
+        },
+        "approval": {
+          "enum": ["none", "policy-gate", "human-approval", "human-execution"]
+        },
+        "delegation_rule": {
+          "type": "string",
+          "default": "Delegation may preserve or reduce authority but never amplify it."
+        }
+      }
+    },
+    "commitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["creates_business_effect", "commitment_type", "owner", "domain_command", "transactional_system", "preconditions", "reversal_or_compensation", "resulting_event"],
+      "properties": {
+        "creates_business_effect": {
+          "type": "boolean"
+        },
+        "commitment_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain_command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "transactional_system": {
+          "type": "string",
+          "minLength": 1
+        },
+        "preconditions": {
+          "$ref": "#/$defs/string_list"
+        },
+        "idempotency_or_duplicate_control": {
+          "type": "string"
+        },
+        "reversal_or_compensation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resulting_event": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "economics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ambiguity", "volume", "cost_of_delay", "cost_of_error", "reversibility", "evidence_quality", "human_review_cost"],
+      "properties": {
+        "ambiguity": {
+          "$ref": "#/$defs/level"
+        },
+        "volume": {
+          "$ref": "#/$defs/level"
+        },
+        "cost_of_delay": {
+          "$ref": "#/$defs/level"
+        },
+        "cost_of_error": {
+          "$ref": "#/$defs/level"
+        },
+        "reversibility": {
+          "$ref": "#/$defs/level"
+        },
+        "evidence_quality": {
+          "$ref": "#/$defs/level"
+        },
+        "human_review_cost": {
+          "$ref": "#/$defs/level"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["retain", "outcome_observation"],
+      "properties": {
+        "retain": {
+          "$ref": "#/$defs/string_list"
+        },
+        "outcome_observation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sensitive_data_notes": {
+          "type": "string"
+        }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cases", "promotion_gate"],
+      "properties": {
+        "cases": {
+          "$ref": "#/$defs/string_list"
+        },
+        "promotion_gate": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime_must_not_change": {
+          "$ref": "#/$defs/string_list"
+        }
+      }
+    }
+  }
+}
