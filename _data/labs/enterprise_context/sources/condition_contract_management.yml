@@ -1,0 +1,126 @@
+updated_at: "2026-08-15"
+scope: "SAP S/4HANA Settlement Management and Condition Contract Management for sales and purchasing rebates"
+policy: >-
+  Primary SAP Help sources verify product behavior and current standard apps. The Lab explanation is independently written.
+  Configuration examples are release-sensitive and must be checked against the target S/4HANA edition and release.
+
+sources:
+  - id: SRC-SAP-CCM-OVERVIEW
+    title: "Managing Condition Contracts"
+    publisher: "SAP"
+    source_type: "product_documentation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/4d55062e1017497de10000000a15822b.html"
+    verifies:
+      - "Condition contracts centrally manage customer and supplier rebate agreements."
+      - "A condition contract stores partner, validity, business-volume settings, settlement conditions, accrual conditions, and a settlement calendar."
+    release_scope: "SAP S/4HANA 2025 FPS01"
+    status: source_verified
+
+  - id: SRC-SAP-CCM-CONTRACT
+    title: "Condition Contract"
+    publisher: "SAP"
+    source_type: "product_documentation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f89cf0387e8a460c8a37990b268da59f/4d4955a05ce3230de10000000a15822b.html"
+    verifies:
+      - "A condition contract can refer to customers, suppliers, materials, and eligible partners."
+      - "Quantity or value targets can be used for subsequent settlement conditions."
+    release_scope: "SAP S/4HANA 2025 FPS01"
+    status: source_verified
+
+  - id: SRC-SAP-CCM-SALES
+    title: "Maintaining Condition Contracts - Sales Rebate Management"
+    publisher: "SAP"
+    source_type: "product_documentation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/a41104a0081545a5bcbdd807ba60fcf0/feb25258fcce2060e10000000a44147b.html"
+    verifies:
+      - "Sales rebate business volume can be based on customer invoice data."
+      - "Standard sales rebate contract types include 0S01, 0SG1, 0S03, and 0SG3."
+      - "Partial settlement can create customer credit memos and reverse accruals."
+    release_scope: "SAP S/4HANA 2025 FPS01"
+    status: source_verified
+
+  - id: SRC-SAP-CCM-PURCHASING
+    title: "Maintaining Condition Contracts - Purchasing Rebate Management"
+    publisher: "SAP"
+    source_type: "product_documentation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2a560f6f15704c50a261627bb4691fbc/82048fb7aefd4ec1918a0c68f5216693.html"
+    verifies:
+      - "Purchasing rebate business volume can be based on goods receipts or supplier invoices depending on contract type."
+      - "Standard purchasing rebate contract types include 0PG* and 0PI* variants."
+      - "Partial and final settlements can post supplier-side settlement documents and accrual reversals."
+    release_scope: "SAP S/4HANA Cloud current documentation"
+    status: source_verified
+
+  - id: SRC-SAP-CCM-BUSINESS-VOLUME
+    title: "Display Business Volume - Condition Contracts"
+    publisher: "SAP"
+    source_type: "app_documentation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/7d9da5fff26b4461a9125401794c7be6/bb345758b2e30946e10000000a441470.html"
+    verifies:
+      - "WB2R_BUSVOL displays business volume for selected condition contracts."
+    app_id: "WB2R_BUSVOL"
+    status: source_verified
+
+  - id: SRC-SAP-CCM-SALES-APPS
+    title: "Manage Condition Contracts - Sales Rebates"
+    publisher: "SAP"
+    source_type: "app_documentation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/83bc764dd7874d349cc8150bdab246f6/5686f252dffe41f292a4f329e30ef65e.html"
+    verifies:
+      - "F6739 manages sales rebate condition contracts."
+      - "F6883 monitors sales rebate condition contracts."
+    app_ids: ["F6739", "F6883"]
+    status: source_verified
+
+  - id: SRC-SAP-CCM-SUPPLIER-APPS
+    title: "Manage Condition Contracts - Supplier Rebates"
+    publisher: "SAP"
+    source_type: "app_documentation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/2a560f6f15704c50a261627bb4691fbc/5c18763c8a514c9eaf99ad7b75d43887.html"
+    verifies:
+      - "F6740 manages supplier rebate condition contracts."
+      - "F6884 monitors supplier rebate condition contracts."
+    app_ids: ["F6740", "F6884"]
+    status: source_verified
+
+  - id: SRC-SAP-CCM-SETTLEMENT-TCODES
+    title: "Settlement Management in Sales"
+    publisher: "SAP"
+    source_type: "product_documentation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/60a09f68f2444ceca31dcac2e7017945/febc903ba05b4da2a6b28dc799d79112.html"
+    verifies:
+      - "WB2R_SC settles condition contracts in SAP GUI."
+      - "WZR2 changes settlement documents and WZR3 displays them."
+    status: source_verified
+
+  - id: SRC-SAP-CCM-AUTH
+    title: "Authorization check logic during Condition Contract Settlement"
+    publisher: "SAP"
+    source_type: "support_documentation"
+    url: "https://help.sap.com/docs/SUPPORT_CONTENT/ssm/3362944142.html"
+    verifies:
+      - "WB2R_SC and WB2R_SV are settlement transactions used in Condition Contract Settlement."
+      - "Condition contract and organizational authorizations are checked during settlement."
+    status: source_verified
+
+  - id: SRC-SAP-CCM-CUSTOMIZING
+    title: "How to use customer lists in CCM in S/4HANA"
+    publisher: "SAP"
+    source_type: "support_documentation"
+    url: "https://help.sap.com/docs/SUPPORT_CONTENT/ssm/3362944140.html"
+    verifies:
+      - "Customizing is under Logistics - General -> Settlement Management -> Condition Contract Management -> Condition Contract Settlement."
+      - "Contract type settings, field combinations, and business-volume determination profiles control selection behavior."
+    status: source_verified
+
+source_refs:
+  - SRC-SAP-CCM-OVERVIEW
+  - SRC-SAP-CCM-CONTRACT
+  - SRC-SAP-CCM-SALES
+  - SRC-SAP-CCM-PURCHASING
+  - SRC-SAP-CCM-BUSINESS-VOLUME
+  - SRC-SAP-CCM-SALES-APPS
+  - SRC-SAP-CCM-SUPPLIER-APPS
+  - SRC-SAP-CCM-SETTLEMENT-TCODES
+  - SRC-SAP-CCM-AUTH
+  - SRC-SAP-CCM-CUSTOMIZING
