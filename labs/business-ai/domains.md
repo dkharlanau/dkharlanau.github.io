@@ -46,6 +46,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Context:</strong> this domain view is designed for SAP Lead assessment: business jobs, SAP touchpoints, control questions, and evidence-backed cases stay together.</p>
     <p><strong>Lead rule:</strong> start with process ownership, data, system of record, decision rights, and KPI. AI enters only where uncertainty, documents, language, prediction, ranking, or optimization create a real gap.</p>
     <p><strong>Control rule.</strong> Keep authorization, posting rules, hard constraints, financial controls, and physical safety outside free-form model behavior.</p>
     <a href="/labs/business-ai/model/">Open the graph model <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
