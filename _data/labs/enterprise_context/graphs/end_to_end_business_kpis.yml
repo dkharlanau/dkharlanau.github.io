@@ -1,0 +1,713 @@
+schema_version: "1.0"
+id: GRAPH-E2E-BUSINESS-KPIS
+type: knowledge_graph
+topic: end_to_end_business_kpis
+title: "End-to-End Logistics KPIs and Business Performance"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+
+summary: >-
+  A business-first performance model across Sales, Procurement, Supply Planning,
+  Manufacturing, Inventory, Warehousing, Transportation and Finance. The model
+  treats a KPI as an outcome to explain, not as proof that one SAP component is at fault.
+
+thesis: >-
+  End-to-end performance has one business outcome and several technical contributors.
+  I start with the outcome, freeze the metric contract, isolate the failing segment,
+  follow driver metrics into the responsible domain, and only then inspect SAP controls.
+
+memory_path: "OUTCOME → CONTRACT → SEGMENT → DRIVER → DOMAIN → EVIDENCE → OWNER → ACTION"
+
+coverage_semantics:
+  - "domain_refs point to stable domain IDs already present in the Supply Chain landscape."
+  - "Sales and Finance can participate as business areas even where a shared domain catalogue ID is not yet available."
+  - "A domain reference means contributing responsibility, not proof that the domain caused the KPI movement."
+  - "Process IDs are linked only when a stable canonical process exists. Missing process refs are not silently invented."
+  - "Targets are local policy unless a primary source explicitly defines a standard threshold."
+
+business_areas:
+  - id: AREA-SALES
+    title: "Sales and Customer Fulfillment"
+    accountability: "Customer promise, commercial order, fulfillment coordination and billing readiness."
+  - id: AREA-PROCUREMENT
+    title: "Procurement"
+    domain_ref: DOM-PROCUREMENT
+    accountability: "External supply, supplier commitment, purchase order execution and invoice-related procurement controls."
+  - id: AREA-SUPPLY-PLANNING
+    title: "Supply Planning"
+    domain_ref: DOM-SUPPLY-PLANNING
+    accountability: "Translate demand into feasible supply and expose material or capacity shortages."
+  - id: AREA-MANUFACTURING
+    title: "Manufacturing"
+    domain_ref: DOM-MANUFACTURING
+    accountability: "Release and execute production against material, resource and date requirements."
+  - id: AREA-INVENTORY
+    title: "Inventory Management"
+    domain_ref: DOM-MATERIALS-INVENTORY
+    accountability: "Enterprise stock position, goods movements and inventory-value boundary."
+  - id: AREA-WAREHOUSING
+    title: "Warehouse Execution"
+    domain_ref: DOM-WAREHOUSING
+    accountability: "Inbound, picking, packing, staging and warehouse execution milestones."
+  - id: AREA-TRANSPORTATION
+    title: "Transportation"
+    domain_ref: DOM-TRANSPORTATION
+    accountability: "Transportation planning, carrier execution and delivery-event reliability."
+  - id: AREA-FI-AR
+    title: "Finance - Accounts Receivable"
+    accountability: "Receivable, due-date, collection and clearing outcome."
+  - id: AREA-FI-AP
+    title: "Finance - Accounts Payable"
+    accountability: "Supplier liability, payment and clearing outcome."
+
+metric_contract:
+  required_fields:
+    - business_question
+    - formula
+    - unit
+    - direction
+    - start_event
+    - end_event
+    - population
+    - exclusions
+    - grain
+    - accountable_owner
+    - contributing_areas
+    - cadence
+    - target_policy
+    - data_signals
+    - source_refs
+  rules:
+    - "Name the start and end event for every duration metric."
+    - "Publish the denominator and exclusions for every rate."
+    - "Separate requested, confirmed, planned and actual dates."
+    - "One accountable owner does not mean one technical cause."
+    - "Use percentiles as well as averages for skewed lead-time distributions."
+    - "Freeze currency, time-zone, calendar and quantity-conversion rules before trend comparison."
+    - "Do not compare sites until master-data and event semantics are aligned."
+
+common_language:
+  - term: "Requested date"
+    definition: "The date requested by the customer or consuming process. It is not automatically a feasible promise."
+  - term: "Confirmed date"
+    definition: "The date committed after availability and scheduling logic."
+  - term: "Planned date"
+    definition: "The expected execution date used by planning or logistics."
+  - term: "Actual milestone"
+    definition: "The timestamp of the real business event such as goods receipt, production confirmation, goods issue, delivery or clearing."
+  - term: "On time"
+    definition: "Actual milestone meets the published comparison date and tolerance rule."
+  - term: "In full"
+    definition: "Actual quantity meets the published committed quantity and tolerance rule."
+  - term: "Backlog"
+    definition: "An eligible object has not reached the expected milestone and remains open beyond the defined reference date."
+  - term: "Exception"
+    definition: "A condition that moves the case away from the agreed happy path. A valid control block is still an exception, not automatically a defect."
+  - term: "Cycle time"
+    definition: "Elapsed time between two explicitly named events for one defined population."
+  - term: "Driver metric"
+    definition: "A narrower measure used to explain movement in an outcome KPI."
+
+analytics_lenses:
+  - id: LENS-E2E-PROMISE
+    title: "Promise Reliability"
+    business_question: "Can we keep the quantity and date promised to the customer?"
+    kpi_refs: [KPI.E2E.OTIF, KPI.E2E.PROMISE_STABILITY, KPI.E2E.FULFILLMENT_CYCLE, KPI.E2E.SUPPLY_SHORTAGE]
+  - id: LENS-E2E-SUPPLY
+    title: "Supply Assurance"
+    business_question: "Does external and internal supply become available when demand needs it?"
+    kpi_refs: [KPI.E2E.PR_TO_PO, KPI.E2E.SUPPLIER_CONFIRM_LT, KPI.E2E.SUPPLIER_OTD, KPI.E2E.PO_TO_GR, KPI.E2E.SUPPLY_SHORTAGE]
+  - id: LENS-E2E-MFG-WH
+    title: "Manufacturing and Warehouse Flow"
+    business_question: "Where does material wait between production, stock and shipment?"
+    kpi_refs: [KPI.E2E.MFG_SCHEDULE_ADHERENCE, KPI.E2E.MFG_CYCLE, KPI.E2E.MFG_SHORTAGE_HOLD, KPI.E2E.WH_OUTBOUND_CYCLE, KPI.E2E.WH_OVERDUE_GI]
+  - id: LENS-E2E-TRANSPORT
+    title: "Transport and Delivery"
+    business_question: "Does a ready shipment become an on-time customer delivery without execution exceptions?"
+    kpi_refs: [KPI.E2E.TRANSPORT_OTD, KPI.E2E.TRANSPORT_EXCEPTION, KPI.E2E.OTIF]
+  - id: LENS-E2E-CASH
+    title: "Cash and Working Capital"
+    business_question: "How long is value tied up between fulfillment, billing, receivables, inventory and supplier settlement?"
+    kpi_refs: [KPI.E2E.ORDER_TO_CASH, KPI.E2E.BILL_TO_CLEAR, KPI.E2E.OVERDUE_AR, KPI.E2E.INVENTORY_DAYS, KPI.E2E.PO_TO_AP_CLEAR]
+  - id: LENS-E2E-EXCELLENCE
+    title: "Process Excellence"
+    business_question: "How much of the end-to-end flow runs without avoidable manual work, backlog or rework?"
+    kpi_refs: [KPI.E2E.EXCEPTION_FREE, KPI.E2E.MANUAL_TOUCH, KPI.E2E.INTERFACE_EXCEPTION]
+
+kpis:
+  - id: KPI.E2E.OTIF
+    name: "End-to-End On-Time In-Full"
+    kind: outcome
+    category: customer_service
+    business_question: "How often does the customer receive the committed quantity by the committed service date?"
+    formula: "Eligible fulfillment items meeting both the published on-time rule and in-full rule / all eligible fulfilled items * 100."
+    unit: "%"
+    direction: higher_is_better
+    start_event: "confirmed customer commitment"
+    end_event: "agreed customer fulfillment milestone"
+    population: "fulfilled customer demand in the selected service segment"
+    exclusions: ["cancelled demand", "agreed customer-caused holds", "test or non-service items defined by policy"]
+    grain: ["customer", "product", "plant", "fulfillment model", "warehouse", "route/carrier"]
+    accountable_owner: "Order-to-Cash / Customer Fulfillment Process Owner"
+    contributing_areas: [AREA-SALES, AREA-SUPPLY-PLANNING, AREA-PROCUREMENT, AREA-MANUFACTURING, AREA-WAREHOUSING, AREA-TRANSPORTATION]
+    domain_refs: [DOM-SUPPLY-PLANNING, DOM-PROCUREMENT, DOM-MANUFACTURING, DOM-WAREHOUSING, DOM-TRANSPORTATION]
+    sales_kpi_refs: [KPI.SD.OTIF]
+    cadence: "daily with weekly and monthly trend review"
+    target_policy: "Segment by service class and publish the date basis, quantity tolerance and exclusions."
+    data_signals: ["confirmed quantity/date", "supply dates", "production milestones", "warehouse goods issue", "transport delivery event"]
+    driver_refs: [KPI.E2E.PROMISE_STABILITY, KPI.E2E.SUPPLY_SHORTAGE, KPI.E2E.SUPPLIER_OTD, KPI.E2E.MFG_SCHEDULE_ADHERENCE, KPI.E2E.WH_OVERDUE_GI, KPI.E2E.TRANSPORT_OTD]
+    source_refs: [SRC-SAP-E2E-EWM-KPI, SRC-SAP-E2E-TM-KPI, SRC-SAP-E2E-SIGNAVIO-PPI]
+
+  - id: KPI.E2E.PROMISE_STABILITY
+    name: "Promise Stability Rate"
+    kind: driver
+    category: customer_promise
+    business_question: "How often does a confirmed customer date remain stable after the initial promise?"
+    formula: "Eligible confirmed items without a material confirmation-date deterioration / all eligible confirmed items * 100."
+    unit: "%"
+    direction: higher_is_better
+    start_event: "first committed confirmation"
+    end_event: "final confirmation before fulfillment"
+    population: "customer demand with at least one executable confirmation"
+    exclusions: ["customer-requested reschedule", "policy-approved scope changes"]
+    grain: ["customer", "material", "plant", "requirement class", "supply type"]
+    accountable_owner: "Customer Fulfillment / Supply Planning"
+    contributing_areas: [AREA-SALES, AREA-SUPPLY-PLANNING, AREA-PROCUREMENT, AREA-MANUFACTURING]
+    domain_refs: [DOM-SUPPLY-PLANNING, DOM-PROCUREMENT, DOM-MANUFACTURING]
+    cadence: "daily / weekly"
+    target_policy: "Define what date movement is material and distinguish customer changes from supply-driven changes."
+    data_signals: ["confirmation history", "requested and confirmed dates", "ATP/supply changes"]
+    driver_refs: [KPI.E2E.SUPPLY_SHORTAGE, KPI.E2E.SUPPLIER_CONFIRM_LT, KPI.E2E.MFG_SHORTAGE_HOLD]
+    source_refs: [SRC-SAP-E2E-SIGNAVIO-PPI, SRC-SAP-E2E-PPDS-ANALYTICS]
+
+  - id: KPI.E2E.FULFILLMENT_CYCLE
+    name: "Customer Fulfillment Cycle Time"
+    kind: outcome
+    category: flow_time
+    business_question: "How long does executable customer demand take to reach the agreed fulfillment milestone?"
+    formula: "Agreed fulfillment milestone timestamp minus executable order timestamp."
+    unit: "time"
+    direction: lower_is_better
+    start_event: "order becomes executable under the published rule"
+    end_event: "agreed fulfillment milestone"
+    population: "completed eligible customer demand"
+    exclusions: ["cancelled items", "approved customer hold time when policy excludes it"]
+    grain: ["fulfillment model", "plant", "warehouse", "route", "customer", "product"]
+    accountable_owner: "Customer Fulfillment Process Owner"
+    contributing_areas: [AREA-SALES, AREA-SUPPLY-PLANNING, AREA-PROCUREMENT, AREA-MANUFACTURING, AREA-WAREHOUSING, AREA-TRANSPORTATION]
+    domain_refs: [DOM-SUPPLY-PLANNING, DOM-PROCUREMENT, DOM-MANUFACTURING, DOM-WAREHOUSING, DOM-TRANSPORTATION]
+    sales_kpi_refs: [KPI.SD.ORDER_TO_GI]
+    cadence: "daily with percentile review"
+    target_policy: "Set by fulfillment model; compare make-to-stock, make-to-order and external fulfillment separately."
+    data_signals: ["order executable timestamp", "supply availability", "production", "warehouse", "transport milestones"]
+    source_refs: [SRC-SAP-E2E-SIGNAVIO-CYCLE]
+
+  - id: KPI.E2E.SUPPLY_SHORTAGE
+    name: "Demand Affected by Supply Shortage"
+    kind: driver
+    category: supply_exception
+    business_question: "What share of executable demand cannot progress because required material or capacity is not available?"
+    formula: "Eligible demand affected by a defined material or capacity shortage / all eligible executable demand * 100."
+    unit: "%"
+    direction: lower_is_better
+    start_event: "shortage condition becomes relevant"
+    end_event: "shortage is resolved or demand exits population"
+    population: "demand requiring planned or actual supply"
+    exclusions: ["deliberate policy constraints classified separately"]
+    grain: ["material", "plant", "shortage type", "source type", "supplier", "resource"]
+    accountable_owner: "Supply Planning"
+    contributing_areas: [AREA-SUPPLY-PLANNING, AREA-PROCUREMENT, AREA-MANUFACTURING, AREA-INVENTORY]
+    domain_refs: [DOM-SUPPLY-PLANNING, DOM-PROCUREMENT, DOM-MANUFACTURING, DOM-MATERIALS-INVENTORY]
+    cadence: "daily"
+    target_policy: "Use shortage reason and aging; do not hide shortages by moving the promise date."
+    data_signals: ["requirements", "stock", "procurement proposals", "production orders", "resource/component availability"]
+    source_refs: [SRC-SAP-E2E-PPDS-ANALYTICS]
+
+  - id: KPI.E2E.PR_TO_PO
+    name: "Purchase Requisition to Purchase Order Lead Time"
+    kind: driver
+    category: procurement_speed
+    business_question: "How quickly does approved demand become an executable supplier commitment?"
+    formula: "Purchase order creation/release timestamp minus eligible purchase requisition timestamp."
+    unit: "time"
+    direction: lower_is_better
+    start_event: "eligible purchase requisition created or released, according to policy"
+    end_event: "purchase order becomes executable"
+    population: "externally procured requisition items expected to convert to PO"
+    exclusions: ["intentionally held strategic sourcing events", "cancelled requisitions"]
+    grain: ["purchasing group", "plant", "material group", "supplier/source type", "approval path"]
+    accountable_owner: "Procurement Operations"
+    contributing_areas: [AREA-PROCUREMENT, AREA-SUPPLY-PLANNING]
+    domain_refs: [DOM-PROCUREMENT, DOM-SUPPLY-PLANNING]
+    graph_refs: [GRAPH-MM-PROCUREMENT-DECISIONS]
+    cadence: "daily / weekly"
+    target_policy: "Set by procurement channel and approval model; separate automated conversion from buyer-managed sourcing."
+    data_signals: ["PR creation/release", "source assignment", "workflow", "PO creation/release"]
+    source_refs: [SRC-SAP-E2E-PROCUREMENT, SRC-SAP-E2E-SIGNAVIO-PPI]
+
+  - id: KPI.E2E.SUPPLIER_CONFIRM_LT
+    name: "Supplier Confirmation Lead Time"
+    kind: driver
+    category: supplier_response
+    business_question: "How quickly does a supplier accept, reject or change our requested commitment?"
+    formula: "First valid supplier confirmation timestamp minus PO transmission timestamp."
+    unit: "time"
+    direction: lower_is_better
+    start_event: "purchase order transmitted to supplier"
+    end_event: "first valid supplier confirmation"
+    population: "PO items requiring supplier confirmation"
+    exclusions: ["channels or suppliers where confirmation is not contractually required"]
+    grain: ["supplier", "material", "purchasing organization", "plant", "integration channel"]
+    accountable_owner: "Procurement / Supplier Management"
+    contributing_areas: [AREA-PROCUREMENT]
+    domain_refs: [DOM-PROCUREMENT]
+    graph_refs: [GRAPH-MM-PROCUREMENT-DECISIONS]
+    cadence: "daily / weekly"
+    target_policy: "Set by supplier/service agreement and communication channel."
+    data_signals: ["PO output timestamp", "supplier confirmation", "confirmation status/change"]
+    source_refs: [SRC-SAP-E2E-PROCUREMENT, SRC-SAP-E2E-SIGNAVIO-CYCLE]
+
+  - id: KPI.E2E.SUPPLIER_OTD
+    name: "Supplier On-Time Delivery Rate"
+    kind: outcome
+    category: supplier_reliability
+    business_question: "How often does external supply arrive by the agreed supplier delivery date?"
+    formula: "Eligible received PO items meeting the published on-time rule / all eligible received PO items * 100."
+    unit: "%"
+    direction: higher_is_better
+    start_event: "supplier delivery commitment"
+    end_event: "goods receipt or agreed receiving milestone"
+    population: "received PO items in supplier-performance scope"
+    exclusions: ["buyer-requested postponements", "agreed force-majeure classifications if policy excludes them"]
+    grain: ["supplier", "material group", "material", "plant", "purchasing organization"]
+    accountable_owner: "Supplier Management / Procurement"
+    contributing_areas: [AREA-PROCUREMENT, AREA-INVENTORY]
+    domain_refs: [DOM-PROCUREMENT, DOM-MATERIALS-INVENTORY]
+    cadence: "weekly / monthly"
+    target_policy: "Publish date basis and tolerance. Segment by supplier and material criticality."
+    data_signals: ["PO delivery date", "supplier confirmation", "goods receipt"]
+    driver_refs: [KPI.E2E.SUPPLIER_CONFIRM_LT, KPI.E2E.PO_TO_GR]
+    source_refs: [SRC-SAP-E2E-SUPPLIER-EVAL, SRC-SAP-E2E-PROCUREMENT]
+
+  - id: KPI.E2E.PO_TO_GR
+    name: "Purchase Order to Goods Receipt Cycle Time"
+    kind: outcome
+    category: inbound_flow
+    business_question: "How long does an executable purchase order take to become received supply?"
+    formula: "Relevant goods receipt timestamp minus executable purchase order timestamp."
+    unit: "time"
+    direction: context_only
+    start_event: "purchase order becomes executable"
+    end_event: "agreed goods receipt milestone"
+    population: "externally procured PO items with expected GR"
+    exclusions: ["service items without GR", "cancelled items"]
+    grain: ["supplier", "material", "plant", "purchasing group", "inbound route"]
+    accountable_owner: "Procurement / Inbound Logistics"
+    contributing_areas: [AREA-PROCUREMENT, AREA-INVENTORY, AREA-WAREHOUSING, AREA-TRANSPORTATION]
+    domain_refs: [DOM-PROCUREMENT, DOM-MATERIALS-INVENTORY, DOM-WAREHOUSING, DOM-TRANSPORTATION]
+    cadence: "daily / weekly"
+    target_policy: "Treat planned supplier lead time separately from internal processing delay; lower is not automatically better."
+    data_signals: ["PO executable date", "confirmed delivery date", "inbound delivery", "goods receipt"]
+    source_refs: [SRC-SAP-E2E-PROCUREMENT, SRC-SAP-E2E-SIGNAVIO-CYCLE]
+
+  - id: KPI.E2E.MFG_SCHEDULE_ADHERENCE
+    name: "Production Schedule Adherence"
+    kind: outcome
+    category: manufacturing_reliability
+    business_question: "How often does production complete against the committed production schedule?"
+    formula: "Eligible orders completed within the published schedule tolerance / all eligible completed orders * 100."
+    unit: "%"
+    direction: higher_is_better
+    start_event: "published production schedule commitment"
+    end_event: "actual production completion milestone"
+    population: "released production/process orders in the selected planning scope"
+    exclusions: ["engineering/test orders", "formally rescheduled demand classified separately"]
+    grain: ["plant", "material", "resource/work center", "order type", "planner"]
+    accountable_owner: "Production Planning / Manufacturing"
+    contributing_areas: [AREA-SUPPLY-PLANNING, AREA-MANUFACTURING]
+    domain_refs: [DOM-SUPPLY-PLANNING, DOM-MANUFACTURING]
+    cadence: "daily / weekly"
+    target_policy: "Publish which scheduled finish baseline is frozen and how rescheduling is treated."
+    data_signals: ["scheduled order dates", "order status", "actual confirmations", "goods receipt from production"]
+    driver_refs: [KPI.E2E.MFG_SHORTAGE_HOLD, KPI.E2E.MFG_CYCLE]
+    source_refs: [SRC-SAP-E2E-PPDS-ANALYTICS, SRC-SAP-E2E-SIGNAVIO-PPI]
+
+  - id: KPI.E2E.MFG_CYCLE
+    name: "Manufacturing Cycle Time"
+    kind: outcome
+    category: manufacturing_flow
+    business_question: "How long does released production take to reach the agreed completion milestone?"
+    formula: "Actual completion timestamp minus production release/start timestamp under the published event rule."
+    unit: "time"
+    direction: lower_is_better_with_context
+    start_event: "production order release or actual start, according to metric version"
+    end_event: "production completion or goods receipt milestone"
+    population: "completed production/process orders"
+    exclusions: ["orders with explicitly excluded technical status", "test orders"]
+    grain: ["plant", "material", "order type", "resource/work center", "production version"]
+    accountable_owner: "Manufacturing"
+    contributing_areas: [AREA-MANUFACTURING, AREA-SUPPLY-PLANNING, AREA-INVENTORY]
+    domain_refs: [DOM-MANUFACTURING, DOM-SUPPLY-PLANNING, DOM-MATERIALS-INVENTORY]
+    cadence: "daily with percentile review"
+    target_policy: "Segment by manufacturing strategy and order family; compare actual time with planned time separately."
+    data_signals: ["order release", "operation confirmations", "goods movements", "completion status"]
+    source_refs: [SRC-SAP-E2E-PPDS-ANALYTICS, SRC-SAP-E2E-SIGNAVIO-CYCLE]
+
+  - id: KPI.E2E.MFG_SHORTAGE_HOLD
+    name: "Production Demand Delayed by Shortage"
+    kind: driver
+    category: manufacturing_exception
+    business_question: "How much production is delayed because required components are not available?"
+    formula: "Eligible production demand with a material-shortage delay / all eligible production demand * 100."
+    unit: "%"
+    direction: lower_is_better
+    start_event: "shortage blocks or materially delays production"
+    end_event: "shortage is resolved or order exits scope"
+    population: "released or near-term production demand"
+    exclusions: ["capacity-only delays classified separately"]
+    grain: ["plant", "component", "finished product", "supplier/source", "planner"]
+    accountable_owner: "Production Planning"
+    contributing_areas: [AREA-SUPPLY-PLANNING, AREA-MANUFACTURING, AREA-PROCUREMENT, AREA-INVENTORY]
+    domain_refs: [DOM-SUPPLY-PLANNING, DOM-MANUFACTURING, DOM-PROCUREMENT, DOM-MATERIALS-INVENTORY]
+    cadence: "daily"
+    target_policy: "Review affected demand, aging and material criticality together."
+    data_signals: ["component requirements", "available stock", "procurement proposals", "order status/date shifts"]
+    source_refs: [SRC-SAP-E2E-PPDS-ANALYTICS]
+
+  - id: KPI.E2E.WH_OUTBOUND_CYCLE
+    name: "Warehouse Outbound Cycle Time"
+    kind: outcome
+    category: warehouse_flow
+    business_question: "How long does warehouse-ready demand take from release to goods issue?"
+    formula: "Goods issue timestamp minus warehouse outbound release/start timestamp."
+    unit: "time"
+    direction: lower_is_better
+    start_event: "outbound demand released for warehouse execution"
+    end_event: "goods issue"
+    population: "completed outbound warehouse demand"
+    exclusions: ["documented customer or transport hold time when excluded by policy"]
+    grain: ["warehouse", "activity area", "wave/process type", "ship-to", "priority"]
+    accountable_owner: "Warehouse Operations"
+    contributing_areas: [AREA-WAREHOUSING, AREA-INVENTORY, AREA-TRANSPORTATION]
+    domain_refs: [DOM-WAREHOUSING, DOM-MATERIALS-INVENTORY, DOM-TRANSPORTATION]
+    cadence: "daily with percentile review"
+    target_policy: "Set by warehouse/service class and separate queue time from physical processing time where data allows."
+    data_signals: ["outbound delivery order", "warehouse tasks", "picking/packing", "goods issue"]
+    driver_refs: [KPI.E2E.WH_OVERDUE_GI]
+    source_refs: [SRC-SAP-E2E-EWM-KPI, SRC-SAP-E2E-SIGNAVIO-CYCLE]
+
+  - id: KPI.E2E.WH_OVERDUE_GI
+    name: "Overdue Outbound Items Without Goods Issue"
+    kind: driver
+    category: warehouse_backlog
+    business_question: "Which outbound demand missed its planned goods issue milestone?"
+    formula: "Eligible outbound items past planned GI without GI / all eligible outbound items due in the period * 100."
+    unit: "% and count"
+    direction: lower_is_better
+    start_event: "planned goods issue becomes due"
+    end_event: "actual goods issue or backlog resolution"
+    population: "outbound delivery order items due for GI"
+    exclusions: ["validly blocked items shown as a separate reason class"]
+    grain: ["warehouse", "ship-to", "block reason", "pick status", "planned GI bucket"]
+    accountable_owner: "Warehouse Operations"
+    contributing_areas: [AREA-WAREHOUSING, AREA-TRANSPORTATION, AREA-SALES]
+    domain_refs: [DOM-WAREHOUSING, DOM-TRANSPORTATION]
+    cadence: "intra-day / daily"
+    target_policy: "Use backlog aging and reason classes, not only the rate."
+    data_signals: ["planned GI", "pick task status", "block status", "GI status"]
+    source_refs: [SRC-SAP-E2E-EWM-KPI]
+
+  - id: KPI.E2E.TRANSPORT_OTD
+    name: "Transportation On-Time Delivery Rate"
+    kind: outcome
+    category: transportation_reliability
+    business_question: "How often does transportation execution meet the agreed destination milestone?"
+    formula: "Eligible transportation stages/orders meeting the published on-time rule / all eligible completed stages/orders * 100."
+    unit: "%"
+    direction: higher_is_better
+    start_event: "planned/committed transportation milestone"
+    end_event: "actual destination or delivery event"
+    population: "completed transportation execution objects in scope"
+    exclusions: ["customer-caused exceptions classified separately", "cancelled freight"]
+    grain: ["carrier", "trade lane", "mode", "shipping point", "destination", "customer"]
+    accountable_owner: "Transportation Operations"
+    contributing_areas: [AREA-TRANSPORTATION, AREA-WAREHOUSING, AREA-SALES]
+    domain_refs: [DOM-TRANSPORTATION, DOM-WAREHOUSING]
+    cadence: "daily / weekly / monthly"
+    target_policy: "Publish planned-versus-requested date basis and tolerance by service class."
+    data_signals: ["freight order/booking", "planned events", "actual execution events", "carrier"]
+    driver_refs: [KPI.E2E.TRANSPORT_EXCEPTION]
+    source_refs: [SRC-SAP-E2E-TM-KPI]
+
+  - id: KPI.E2E.TRANSPORT_EXCEPTION
+    name: "Transportation Execution Exception Rate"
+    kind: driver
+    category: transportation_exception
+    business_question: "What share of active transport demand has a critical execution status or delay?"
+    formula: "Eligible transportation objects with an agreed critical exception / all eligible active transportation objects * 100."
+    unit: "%"
+    direction: lower_is_better
+    start_event: "transportation object enters execution scope"
+    end_event: "exception resolved or object completed"
+    population: "active freight orders/bookings or stages"
+    exclusions: ["informational statuses not classified as business exceptions"]
+    grain: ["exception/status", "carrier", "trade lane", "mode", "location"]
+    accountable_owner: "Transportation Operations"
+    contributing_areas: [AREA-TRANSPORTATION]
+    domain_refs: [DOM-TRANSPORTATION]
+    cadence: "intra-day / daily"
+    target_policy: "Version the critical-status set and review aging and business impact."
+    data_signals: ["execution status", "delay status", "event timestamps", "carrier"]
+    source_refs: [SRC-SAP-E2E-TM-KPI]
+
+  - id: KPI.E2E.ORDER_TO_CASH
+    name: "End-to-End Order-to-Cash Cycle Time"
+    kind: outcome
+    category: cash_conversion
+    business_question: "How long does an agreed customer order take to become cleared cash?"
+    formula: "Customer receivable clearing timestamp minus agreed order start timestamp."
+    unit: "time"
+    direction: lower_is_better_with_policy
+    start_event: "agreed order start"
+    end_event: "FI-AR clearing"
+    population: "completed and cleared customer-order business in the selected O2C scope"
+    exclusions: ["cancelled business", "down-payment variants measured under a separately published event model"]
+    grain: ["customer", "company code", "sales organization", "payment terms", "fulfillment model"]
+    accountable_owner: "Order-to-Cash Process Owner"
+    contributing_areas: [AREA-SALES, AREA-SUPPLY-PLANNING, AREA-PROCUREMENT, AREA-MANUFACTURING, AREA-WAREHOUSING, AREA-TRANSPORTATION, AREA-FI-AR]
+    domain_refs: [DOM-SUPPLY-PLANNING, DOM-PROCUREMENT, DOM-MANUFACTURING, DOM-WAREHOUSING, DOM-TRANSPORTATION]
+    sales_kpi_refs: [KPI.SD.TIME_TO_CASH]
+    cadence: "weekly / monthly"
+    target_policy: "Segment by payment terms and business model; faster physical fulfillment and faster payment are different driver families."
+    data_signals: ["sales order", "goods issue/delivery", "billing", "receivable", "clearing"]
+    driver_refs: [KPI.E2E.FULFILLMENT_CYCLE, KPI.E2E.BILL_TO_CLEAR, KPI.E2E.OVERDUE_AR]
+    source_refs: [SRC-SAP-E2E-AR, SRC-SAP-E2E-SIGNAVIO-CYCLE, SRC-SAP-E2E-SIGNAVIO-PPI]
+
+  - id: KPI.E2E.BILL_TO_CLEAR
+    name: "Billing-to-Clearing Cycle Time"
+    kind: outcome
+    category: receivables_speed
+    business_question: "How long does a posted customer billing/receivable event take to clear?"
+    formula: "FI-AR clearing timestamp minus agreed billing/receivable posting timestamp."
+    unit: "time"
+    direction: lower_is_better_with_terms
+    start_event: "customer receivable becomes open under the published rule"
+    end_event: "FI-AR clearing"
+    population: "cleared customer receivables in scope"
+    exclusions: ["disputed/write-off classes handled under separate policy"]
+    grain: ["customer", "company code", "payment terms", "risk class", "collection segment"]
+    accountable_owner: "Accounts Receivable / Collections"
+    contributing_areas: [AREA-FI-AR, AREA-SALES]
+    cadence: "daily / weekly / monthly"
+    target_policy: "Compare against payment terms and due-date logic; do not optimize collection lead time without commercial context."
+    data_signals: ["billing/accounting document", "baseline/due date", "payment", "clearing"]
+    source_refs: [SRC-SAP-E2E-AR, SRC-SAP-E2E-SIGNAVIO-CYCLE]
+
+  - id: KPI.E2E.OVERDUE_AR
+    name: "Overdue Receivables Ratio"
+    kind: outcome
+    category: receivables_risk
+    business_question: "What share of open receivable value is overdue?"
+    formula: "Overdue open receivable amount / total open receivable amount * 100."
+    unit: "%"
+    direction: lower_is_better
+    start_event: "receivable due date passes"
+    end_event: "clearing or other valid close event"
+    population: "open customer receivables in scope"
+    exclusions: ["excluded special G/L or dispute classes according to finance policy"]
+    grain: ["customer", "company code", "due bucket", "accounting clerk", "country/region"]
+    accountable_owner: "Accounts Receivable / Collections"
+    contributing_areas: [AREA-FI-AR, AREA-SALES]
+    cadence: "daily / monthly"
+    target_policy: "Set by credit and collection policy; use aging and value, not one ratio alone."
+    data_signals: ["open amount", "overdue amount", "due date", "customer"]
+    source_refs: [SRC-SAP-E2E-AR]
+
+  - id: KPI.E2E.INVENTORY_DAYS
+    name: "Inventory Days in Scope"
+    kind: outcome
+    category: working_capital
+    business_question: "How much time-equivalent inventory value is tied up relative to the agreed consumption basis?"
+    formula: "Average eligible inventory value / agreed daily consumption or cost basis."
+    unit: "days"
+    direction: lower_is_better_with_service_constraint
+    start_event: "period opening under finance/logistics measurement calendar"
+    end_event: "period close"
+    population: "inventory value included in the published working-capital scope"
+    exclusions: ["classes excluded by finance policy", "values without comparable consumption basis"]
+    grain: ["company code", "plant", "material group", "material", "stock class"]
+    accountable_owner: "Supply Chain Finance / Inventory Management"
+    contributing_areas: [AREA-INVENTORY, AREA-SUPPLY-PLANNING, AREA-PROCUREMENT, AREA-MANUFACTURING]
+    domain_refs: [DOM-MATERIALS-INVENTORY, DOM-SUPPLY-PLANNING, DOM-PROCUREMENT, DOM-MANUFACTURING]
+    cadence: "monthly with weekly operational drivers"
+    target_policy: "Finance must approve valuation and denominator semantics. Never reduce inventory days without protecting service and supply risk."
+    data_signals: ["inventory quantity/value", "valuation", "consumption/cost basis", "period"]
+    source_refs: [SRC-SAP-E2E-EMBEDDED-ANALYTICS]
+
+  - id: KPI.E2E.PO_TO_AP_CLEAR
+    name: "Purchase Order to Accounts Payable Clearing Cycle"
+    kind: outcome
+    category: procure_to_pay
+    business_question: "How long does an executable purchase commitment take to reach financial settlement?"
+    formula: "Supplier liability clearing timestamp minus executable PO timestamp."
+    unit: "time"
+    direction: context_only
+    start_event: "purchase order becomes executable"
+    end_event: "FI-AP clearing"
+    population: "PO-based supplier business reaching AP clearing"
+    exclusions: ["non-PO invoices", "cancelled PO items"]
+    grain: ["supplier", "company code", "purchasing organization", "payment terms", "material group"]
+    accountable_owner: "Procure-to-Pay Process Owner"
+    contributing_areas: [AREA-PROCUREMENT, AREA-INVENTORY, AREA-WAREHOUSING, AREA-FI-AP]
+    domain_refs: [DOM-PROCUREMENT, DOM-MATERIALS-INVENTORY, DOM-WAREHOUSING]
+    graph_refs: [GRAPH-MM-PROCUREMENT-DECISIONS]
+    cadence: "weekly / monthly"
+    target_policy: "Do not optimize toward earliest possible payment. Compare process delay with contractual payment terms and working-capital policy."
+    data_signals: ["PO", "goods/service receipt", "supplier invoice", "payment block", "clearing"]
+    source_refs: [SRC-SAP-E2E-SIGNAVIO-PPI, SRC-SAP-E2E-PROCUREMENT]
+
+  - id: KPI.E2E.EXCEPTION_FREE
+    name: "Cross-Functional Exception-Free Flow Rate"
+    kind: outcome
+    category: process_quality
+    business_question: "What share of completed end-to-end cases avoids the agreed set of material exceptions?"
+    formula: "Completed cases without any versioned material exception flag / all eligible completed cases * 100."
+    unit: "%"
+    direction: higher_is_better
+    start_event: "case enters defined end-to-end process"
+    end_event: "case reaches defined completion"
+    population: "completed cases in the selected process family"
+    exclusions: ["exception types explicitly classified as informational"]
+    grain: ["process family", "site", "customer/supplier", "product/material group", "execution variant"]
+    accountable_owner: "End-to-End Process Owner"
+    contributing_areas: [AREA-SALES, AREA-PROCUREMENT, AREA-SUPPLY-PLANNING, AREA-MANUFACTURING, AREA-WAREHOUSING, AREA-TRANSPORTATION, AREA-FI-AR, AREA-FI-AP]
+    domain_refs: [DOM-PROCUREMENT, DOM-SUPPLY-PLANNING, DOM-MANUFACTURING, DOM-WAREHOUSING, DOM-TRANSPORTATION]
+    cadence: "weekly / monthly"
+    target_policy: "Version the exception set. A valid compliance or credit block is not automatically a process defect."
+    data_signals: ["blocks", "backlog", "rework", "manual changes", "late milestones", "integration failures"]
+    driver_refs: [KPI.E2E.MANUAL_TOUCH, KPI.E2E.INTERFACE_EXCEPTION]
+    source_refs: [SRC-SAP-E2E-SIGNAVIO-PPI]
+
+  - id: KPI.E2E.MANUAL_TOUCH
+    name: "Manual Touch Rate"
+    kind: driver
+    category: automation
+    business_question: "What share of eligible process objects requires manual processing in a step intended for automation?"
+    formula: "Eligible objects with a defined manual-touch event / all eligible objects * 100."
+    unit: "%"
+    direction: lower_is_better_when_avoidable
+    start_event: "object enters monitored step"
+    end_event: "object exits monitored step"
+    population: "objects in a step with a defined automation design"
+    exclusions: ["approved expert-review scenarios", "legally required manual decisions"]
+    grain: ["process step", "site", "user role", "document type", "integration channel"]
+    accountable_owner: "Process Excellence / Domain Process Owner"
+    contributing_areas: [AREA-SALES, AREA-PROCUREMENT, AREA-SUPPLY-PLANNING, AREA-MANUFACTURING, AREA-WAREHOUSING, AREA-TRANSPORTATION, AREA-FI-AR, AREA-FI-AP]
+    domain_refs: [DOM-PROCUREMENT, DOM-SUPPLY-PLANNING, DOM-MANUFACTURING, DOM-WAREHOUSING, DOM-TRANSPORTATION]
+    cadence: "weekly / monthly"
+    target_policy: "Optimize avoidable touch, not human judgment that the process deliberately requires."
+    data_signals: ["creation/change user", "interface channel", "workflow", "manual change events"]
+    source_refs: [SRC-SAP-E2E-SIGNAVIO-PPI]
+
+  - id: KPI.E2E.INTERFACE_EXCEPTION
+    name: "Integration Exception Rate"
+    kind: driver
+    category: integration_quality
+    business_question: "What share of monitored cross-system business messages fails or requires manual recovery?"
+    formula: "Business messages/cases with a material integration exception / all eligible monitored messages/cases * 100."
+    unit: "%"
+    direction: lower_is_better
+    start_event: "business message is emitted or expected"
+    end_event: "business acknowledgement or recovery outcome"
+    population: "cross-system messages and business events in the monitored contract scope"
+    exclusions: ["technical retries that recover inside the agreed service window if policy excludes them"]
+    grain: ["interface contract", "message type/event", "source system", "target system", "error class"]
+    accountable_owner: "Integration Operations with Business Process Owner"
+    contributing_areas: [AREA-SALES, AREA-PROCUREMENT, AREA-SUPPLY-PLANNING, AREA-MANUFACTURING, AREA-WAREHOUSING, AREA-TRANSPORTATION, AREA-FI-AR, AREA-FI-AP]
+    domain_refs: [DOM-PROCUREMENT, DOM-SUPPLY-PLANNING, DOM-MANUFACTURING, DOM-WAREHOUSING, DOM-TRANSPORTATION]
+    cadence: "intra-day / daily with weekly trend"
+    target_policy: "Measure business-impacting exceptions separately from harmless technical retries."
+    data_signals: ["message/event", "acknowledgement", "error", "retry", "business document status"]
+    source_refs: [SRC-SAP-E2E-SIGNAVIO-PPI]
+
+ownership_model:
+  principle: "One accountable business owner, several contributing domains."
+  rules:
+    - "The KPI owner owns the definition, review cadence and cross-functional escalation."
+    - "A contributing domain owns its driver and evidence, not the entire outcome."
+    - "A technical team is not made KPI owner merely because its system stores the timestamp."
+    - "When two domains disagree, return to the metric contract and the first wrong event."
+
+root_cause_playbook:
+  - trigger: "OTIF decreases"
+    start_with: [KPI.E2E.OTIF]
+    slice_by: ["fulfillment model", "plant", "warehouse", "carrier", "product", "customer"]
+    drivers: [KPI.E2E.PROMISE_STABILITY, KPI.E2E.SUPPLY_SHORTAGE, KPI.E2E.SUPPLIER_OTD, KPI.E2E.MFG_SCHEDULE_ADHERENCE, KPI.E2E.WH_OVERDUE_GI, KPI.E2E.TRANSPORT_OTD]
+    handoff_rule: "Find the first missed committed event. Do not assign the whole OTIF gap to SD, EWM or TM from the final symptom."
+  - trigger: "Order-to-cash gets slower"
+    start_with: [KPI.E2E.ORDER_TO_CASH]
+    slice_by: ["fulfillment model", "customer", "payment terms", "company code"]
+    drivers: [KPI.E2E.FULFILLMENT_CYCLE, KPI.E2E.BILL_TO_CLEAR, KPI.E2E.OVERDUE_AR]
+    handoff_rule: "Separate logistics time from billing/receivable time before choosing the owner."
+  - trigger: "Supply is unstable"
+    start_with: [KPI.E2E.PROMISE_STABILITY, KPI.E2E.SUPPLY_SHORTAGE]
+    slice_by: ["supply type", "material", "plant", "supplier", "resource"]
+    drivers: [KPI.E2E.SUPPLIER_CONFIRM_LT, KPI.E2E.SUPPLIER_OTD, KPI.E2E.MFG_SHORTAGE_HOLD, KPI.E2E.MFG_SCHEDULE_ADHERENCE]
+    handoff_rule: "Separate source-selection, supplier, component, capacity and planning-policy causes."
+  - trigger: "Outbound is late after material is ready"
+    start_with: [KPI.E2E.WH_OUTBOUND_CYCLE, KPI.E2E.TRANSPORT_OTD]
+    slice_by: ["warehouse", "wave/process", "carrier", "trade lane", "priority"]
+    drivers: [KPI.E2E.WH_OVERDUE_GI, KPI.E2E.TRANSPORT_EXCEPTION]
+    handoff_rule: "Prove whether the delay happens before GI, between GI and carrier departure, or during transport."
+  - trigger: "Process has too much manual work"
+    start_with: [KPI.E2E.EXCEPTION_FREE, KPI.E2E.MANUAL_TOUCH]
+    slice_by: ["process step", "document type", "site", "integration channel", "execution variant"]
+    drivers: [KPI.E2E.INTERFACE_EXCEPTION]
+    handoff_rule: "Distinguish required business judgment from rework caused by data, rules or integration failures."
+
+analytics_routing:
+  - question: "What is late or blocked right now in one S/4HANA execution domain?"
+    choose: "S/4HANA Embedded Analytics / domain operational app"
+    reason: "Keep current-state operational insight close to transactional data and action."
+    source_refs: [SRC-SAP-E2E-EMBEDDED-ANALYTICS]
+  - question: "Do we need one governed semantic definition reusable across dashboards?"
+    choose: "Released CDS view / analytical query semantic layer"
+    reason: "Separate stable metric semantics from presentation."
+    source_refs: [SRC-SAP-E2E-ANALYTICAL-QUERY]
+  - question: "Do management need trends across domains, companies or systems?"
+    choose: "SAP Analytics Cloud with governed data/semantic integration"
+    reason: "Cross-domain management analysis needs harmonized dimensions and metric contracts, not direct joins between random transactional tables."
+    source_refs: [SRC-SAP-E2E-ANALYTICAL-QUERY]
+  - question: "Do we need to explain waiting time, rework, backlog or execution variants?"
+    choose: "SAP Signavio Process Intelligence"
+    reason: "Event-based analysis can compare paths, cycle time, backlog, automation and exceptions across process cases."
+    source_refs: [SRC-SAP-E2E-SIGNAVIO-PPI, SRC-SAP-E2E-SIGNAVIO-CYCLE]
+  - question: "Do we need a Lead-level explanation across KPI, domain, process and evidence?"
+    choose: "Enterprise Context Lab reasoning model"
+    reason: "Use the Lab contract to route from business outcome to driver, owner and detailed SAP model without pretending one analytics product owns the definition."
+
+meeting_language:
+  - question: "What business outcome moved?"
+    answer_shape: "Name one outcome KPI and its material segment."
+  - question: "Are we measuring the same thing?"
+    answer_shape: "State event pair, denominator, exclusions, date basis and tolerance."
+  - question: "Where does the loss enter the flow?"
+    answer_shape: "Show the first driver that deteriorates before the outcome."
+  - question: "Who owns the next action?"
+    answer_shape: "Name one accountable business owner and the contributing domain that has the evidence."
+  - question: "How will we prove the fix?"
+    answer_shape: "Repeat the same metric contract by segment and compare trend plus exception aging."
+
+related_views:
+  - title: "Sales KPI & Analytics"
+    url: "/labs/enterprise-context/sales-analytics/"
+  - title: "Sales Process Atlas"
+    url: "/labs/enterprise-context/sales-processes/"
+  - title: "Procurement Decision Map"
+    url: "/labs/enterprise-context/procurement/"
+  - title: "Transportation Management"
+    url: "/labs/enterprise-context/transportation-management/"
+  - title: "Supply Chain Landscape"
+    url: "/labs/enterprise-context/#supply-chain-domain-map"
