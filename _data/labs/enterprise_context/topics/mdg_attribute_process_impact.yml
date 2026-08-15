@@ -1,0 +1,273 @@
+id: TOPIC-MDG-ATTRIBUTE-PROCESS-IMPACT
+type: research_topic
+title: "MDG Attribute to Business Process Impact"
+summary: "A causal graph that connects governed master-data attributes to SAP determinations, transactions, downstream execution, failure symptoms, and business proof."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/impact/"
+source_reviewed_at: "2026-08-15"
+
+business_question: "Why should this attribute be governed, and what business process changes when the value is wrong, missing, late, or inconsistent?"
+
+maturity:
+  gates_complete: 5
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: planned
+
+memory_model:
+  phrase: "Attribute → Determination → Transaction → Execution → Failure → Evidence"
+  design_rule: "Govern a field because a process depends on it, not because the field exists in SAP."
+
+impact_trace_contract:
+  required_questions:
+    - "Which object and organizational level own the attribute?"
+    - "Which SAP determination, validation, or transaction reads it?"
+    - "What is the fallback if the value is missing?"
+    - "Can a user override the result?"
+    - "Which downstream documents or systems inherit the effect?"
+    - "What symptom appears when the value is wrong?"
+    - "Which business transaction proves the value is usable?"
+
+impact_traces:
+  - id: ATTR-MAT-LOADING-GROUP
+    type: attribute
+    title: "Material Loading Group"
+    object: MD-MAT-MATERIAL
+    level: "Plant / sales-shipping context"
+    owner_hint: "Product / plant data stewardship"
+    documented_role: "The loading group can be used with the delivering plant and shipping condition to determine the shipping point."
+    chain:
+      - "Material.Loading Group"
+      - "Shipping Point Determination"
+      - "Sales Order Item"
+      - "Outbound Delivery Execution"
+    failure_modes:
+      - "Wrong shipping point is proposed."
+      - "The expected shipping point cannot be determined for the plant and customer combination."
+      - "Users repeatedly override shipping data, hiding a master-data defect."
+    diagnostic_check: "Compare plant + ship-to shipping condition + material loading group with shipping-point determination configuration."
+    business_proof: "Create the sales order and confirm the expected shipping point without manual repair."
+    source_refs: [SRC-SAP-S4-SHIPPING-POINT-DETERMINATION-2025]
+
+  - id: ATTR-BP-SHIPPING-CONDITION
+    type: attribute
+    title: "Customer / Ship-to Shipping Condition"
+    object: MD-BP-CUSTOMER
+    level: "Customer sales / shipping context"
+    owner_hint: "Sales master-data stewardship"
+    documented_role: "When configured for the determination, the ship-to shipping condition participates with plant and loading group in shipping-point selection."
+    chain:
+      - "Customer.Shipping Condition"
+      - "Shipping Point Determination"
+      - "Sales Order Item"
+      - "Delivery Execution"
+    failure_modes:
+      - "A valid material and plant still lead to an unexpected shipping point."
+      - "A document-type override is mistaken for a customer-master result."
+    diagnostic_check: "Check whether the shipping condition came from the customer or from the sales document type before changing master data."
+    business_proof: "Create the order with the intended ship-to party and verify the expected shipping execution result."
+    source_refs: [SRC-SAP-S4-SHIPPING-POINT-DETERMINATION-2025]
+
+  - id: ATTR-MAT-MRP-TYPE
+    type: attribute
+    title: "Material MRP Type"
+    object: MD-MAT-MATERIAL
+    level: "Plant planning data"
+    owner_hint: "Plant planning / product data stewardship"
+    documented_role: "The selected MRP procedure controls how requirements planning treats the material; planning can create procurement proposals for shortages."
+    chain:
+      - "Material.MRP Type and planning parameters"
+      - "MRP Planning Procedure"
+      - "Net Requirements Calculation"
+      - "Procurement Proposal"
+      - "Purchase Requisition or Planned Order"
+    failure_modes:
+      - "The material is not planned as the business expects."
+      - "A shortage does not create the expected procurement proposal."
+      - "Teams debug purchasing while the defect is in plant master data."
+    diagnostic_check: "Check the plant-specific MRP type and planning parameters before changing sourcing or purchasing configuration."
+    business_proof: "Run MRP for the plant and inspect the expected procurement proposal."
+    source_refs: [SRC-SAP-S4-MRP-PROCUREMENT-PROPOSAL-2025]
+
+  - id: ATTR-CUST-SALES-AREA
+    type: attribute
+    title: "Customer Sales Area Extension"
+    object: MD-BP-CUSTOMER
+    level: "Sales organization + distribution channel + division"
+    owner_hint: "Sales application-data owner"
+    documented_role: "Customer sales and distribution data is sales-area-specific, and sales transactions require the customer to have the relevant sales data."
+    chain:
+      - "Business Partner core identity"
+      - "Customer role"
+      - "Sales Area Extension"
+      - "Sales Order Eligibility"
+    failure_modes:
+      - "Business Partner exists but cannot be used in the required sales area."
+      - "Core identity replication is mistaken for complete customer readiness."
+    diagnostic_check: "Check customer role and the exact sales organization / distribution channel / division before investigating order configuration."
+    business_proof: "Create and save a sales order in the target sales area."
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+
+  - id: ATTR-SUPP-PURCH-ORG
+    type: attribute
+    title: "Supplier Purchasing Organization Extension"
+    object: MD-BP-SUPPLIER
+    level: "Purchasing organization"
+    owner_hint: "Procurement application-data owner"
+    documented_role: "Supplier purchasing data can differ by purchasing organization and includes purchasing data and partner functions."
+    chain:
+      - "Business Partner core identity"
+      - "Supplier role"
+      - "Purchasing Organization Extension"
+      - "Purchase Order Processing"
+    failure_modes:
+      - "Supplier exists but is not usable in the required purchasing organization."
+      - "Wrong purchasing terms or partner functions are applied."
+      - "Central BP ownership is wrongly treated as ownership of every purchasing field."
+    diagnostic_check: "Check the exact purchasing organization, supplier role, purchasing data, and partner-function context."
+    business_proof: "Create a purchase order in the intended purchasing organization without emergency local maintenance."
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+
+  - id: ATTR-MAT-BASE-UOM
+    type: attribute
+    title: "Material Base Unit of Measure"
+    object: MD-MAT-MATERIAL
+    level: "Global / basic product data"
+    owner_hint: "Product data owner"
+    documented_role: "Units of measure are part of the Material data model and are shared by several logistics consumers."
+    chain:
+      - "Material.Base Unit of Measure"
+      - "Quantity Semantics"
+      - "Purchasing / Sales / Warehouse / Transport Consumption"
+    failure_modes:
+      - "Incorrect conversions create quantity differences across systems."
+      - "An interface accepts the material identity but a consumer rejects or misinterprets a quantity."
+      - "A correction becomes expensive after stock and transactions already exist."
+    diagnostic_check: "Check the base unit, alternative units, conversion factors, interface mapping, and whether historical transactions already depend on the value."
+    business_proof: "Use the material in at least one quantity-bearing logistics transaction and reconcile the expected unit in the consumer."
+    evidence_note: "The delivered Material model documents units as part of the governed object. Cross-process failure examples are reasoned impact patterns for assessment and diagnostics."
+    source_refs: [SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025]
+
+impact_patterns:
+  - id: HEUR-MDG-IMPACT-OVERRIDES
+    type: expert_heuristic
+    context: "A process works only because users change proposed values manually."
+    statement: "Repeated manual overrides are evidence to inspect master-data defaults and determination inputs before adding more workflow or training."
+    confidence: high
+    related_nodes: [ATTR-MAT-LOADING-GROUP, ATTR-BP-SHIPPING-CONDITION]
+  - id: HEUR-MDG-IMPACT-COMPLETE-OBJECT
+    type: expert_heuristic
+    context: "The central object exists but the transaction still fails."
+    statement: "Check the application-specific organizational extension before blaming replication of the core identity."
+    confidence: high
+    related_nodes: [ATTR-CUST-SALES-AREA, ATTR-SUPP-PURCH-ORG]
+  - id: HEUR-MDG-IMPACT-BUSINESS-PROOF
+    type: expert_heuristic
+    context: "Governance reports an object as approved and active."
+    statement: "Approval is not the end test. Prove the critical attributes through the downstream business transaction that consumes them."
+    confidence: high
+    related_nodes: [MD-MAT-MATERIAL, MD-BP-CUSTOMER, MD-BP-SUPPLIER]
+
+synthetic_case:
+  id: SCN-MDG-GTI-WRONG-SHIPPING-POINT
+  type: scenario
+  title: "GTI: approved Material, wrong shipping point"
+  synthetic: true
+  symptom: "A new material is approved in MDG and replicated, but Sales proposes an unexpected shipping point."
+  evidence:
+    - "Material exists in the target system."
+    - "Customer exists and the order can be created."
+    - "The delivering plant is correct."
+  reasoning_path:
+    - "Read the actual shipping condition source: customer versus sales document type."
+    - "Read the Material loading group for the delivering plant."
+    - "Check the plant + shipping condition + loading group determination combination."
+    - "If the master-data value is wrong, correct it through governance rather than normalizing manual order overrides."
+  lesson: "A successful replication status cannot prove that a governed attribute produces the intended process determination."
+
+assessment_cases:
+  - id: TEST-MDG-IMPACT-EXPLAIN
+    type: test_case
+    level: explain
+    prompt: "Why should a loading group be in a governance discussion?"
+    answer_shape: ["attribute owner", "shipping-point input", "delivery consequence", "failure symptom", "business proof"]
+  - id: TEST-MDG-IMPACT-DIAGNOSE-CUSTOMER
+    type: test_case
+    level: diagnose
+    prompt: "The BP exists in S/4HANA, but a sales order cannot be created for sales area DE10/10/00. What do you check first?"
+    answer_shape: ["customer role", "sales-area extension", "organizational scope", "replication completeness", "only then configuration"]
+  - id: TEST-MDG-IMPACT-DIAGNOSE-SUPPLIER
+    type: test_case
+    level: diagnose
+    prompt: "The Supplier exists centrally, but Procurement cannot create a PO in purchasing organization DE10. Explain the diagnostic path."
+    answer_shape: ["supplier role", "purchasing-organization data", "partner / purchasing fields", "target completeness", "ownership boundary"]
+  - id: TEST-MDG-IMPACT-DESIGN
+    type: test_case
+    level: design
+    prompt: "How do you decide which Material fields need stronger governance?"
+    answer_shape: ["business process dependency", "failure cost", "override frequency", "cross-system reach", "change risk", "measurable business proof"]
+
+relations:
+  - subject: ATTR-MAT-LOADING-GROUP
+    predicate: influences
+    object: DET-SD-SHIPPING-POINT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-S4-SHIPPING-POINT-DETERMINATION-2025]
+  - subject: ATTR-BP-SHIPPING-CONDITION
+    predicate: influences
+    object: DET-SD-SHIPPING-POINT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-S4-SHIPPING-POINT-DETERMINATION-2025]
+  - subject: ATTR-MAT-MRP-TYPE
+    predicate: influences
+    object: PROC-PLAN-MRP
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-S4-MRP-PROCUREMENT-PROPOSAL-2025]
+  - subject: ATTR-CUST-SALES-AREA
+    predicate: impacts
+    object: PROC-O2C-ORDER-TO-CASH
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+  - subject: ATTR-SUPP-PURCH-ORG
+    predicate: impacts
+    object: PROC-P2P-PROCURE-TO-PAY
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+  - subject: SCN-MDG-GTI-WRONG-SHIPPING-POINT
+    predicate: can_fail_as
+    object: FAIL-SD-WRONG-SHIPPING-POINT
+    evidence_type: synthetic_example
+    confidence: high
+
+source_refs:
+  - SRC-SAP-S4-SHIPPING-POINT-DETERMINATION-2025
+  - SRC-SAP-S4-MRP-PROCUREMENT-PROPOSAL-2025
+  - SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025
+  - SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025
+
+tags:
+  - sap
+  - mdg
+  - master-data
+  - attribute-impact
+  - sales
+  - procurement
+  - mrp
+  - shipping
+  - diagnostics
