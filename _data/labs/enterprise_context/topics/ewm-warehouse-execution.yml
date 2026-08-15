@@ -1,0 +1,120 @@
+id: TOPIC-EWM-WAREHOUSE-EXECUTION
+type: research_topic
+title: "Extended Warehouse Management — Warehouse Execution"
+summary: >-
+  Lead-level warehouse vertical connecting the EWM deployment choice to warehouse requests,
+  tasks and orders, inbound and outbound execution, internal movements, production supply,
+  quality, automation, integration boundaries, and operational diagnostics.
+domain: "SAP S/4HANA Logistics"
+process_family: "Warehouse-to-Ship / Receive-to-Store / Production Supply"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+page_url: "/labs/enterprise-context/ewm/"
+graph_ref: "GRAPH-EWM-WAREHOUSE-EXECUTION"
+
+business_question: >-
+  How should SAP EWM be deployed and designed so that enterprise deliveries and inventory
+  requirements become executable warehouse work, while stock, quality, production,
+  transportation, people, and automation remain consistent across system boundaries?
+
+scope:
+  starts_with: "Warehouse-relevant demand: inbound delivery, outbound delivery, internal requirement, or production staging need"
+  ends_with: "Confirmed warehouse execution and the corresponding goods movement or execution status"
+  include:
+    - "Embedded EWM in SAP S/4HANA"
+    - "Decentralized EWM based on SAP S/4HANA"
+    - "Warehouse request, warehouse task, warehouse order, wave, handling unit, resource and queue"
+    - "Inbound receiving and putaway"
+    - "Outbound picking, packing, staging, loading and goods issue"
+    - "Internal movements, replenishment, posting changes and physical inventory"
+    - "Production supply and PSA integration"
+    - "QM integration boundary"
+    - "MM-IM, SD/Delivery, PP, QM and TM integration boundaries"
+    - "RF execution and Material Flow System automation boundary"
+    - "Failure modes, monitoring questions and assessment cases"
+  exclude_for_later_deep_dives:
+    - "Detailed slotting and rearrangement algorithms"
+    - "Labor Management configuration"
+    - "Yard Management product deep dive"
+    - "Full TM planning and freight settlement"
+    - "Customer-specific PLC telegrams or automation code"
+
+maturity:
+  gates_complete: 6
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: in_progress
+
+canonical_context:
+  domain_id: DOM-WAREHOUSING
+  application_id: APP-S4HANA-EWM
+  deployment_options:
+    - DEP-EWM-EMBEDDED
+    - DEP-EWM-DECENTRALIZED
+
+lead_questions:
+  - "Why does this warehouse need EWM instead of inventory management alone?"
+  - "Should EWM be embedded or decentralized, and which operational boundary drives that choice?"
+  - "Which business document becomes the warehouse request?"
+  - "What is the difference between a warehouse task and a warehouse order?"
+  - "Which strategy determines source or destination bins?"
+  - "When should outbound demand be grouped into waves?"
+  - "Where do handling units become operationally important?"
+  - "How are replenishment and internal stock movements triggered?"
+  - "How does production staging reach the correct PSA?"
+  - "Who owns quality status and follow-up actions?"
+  - "Which system owns goods receipt, goods issue, stock value and warehouse position?"
+  - "Where does TM stop and EWM start in shipping execution?"
+  - "Should automation be controlled by EWM MFS or an external WCS?"
+  - "Which queue, message, document status or task should be checked first when execution is stuck?"
+
+planned_deep_dives:
+  - "Embedded vs Decentralized EWM"
+  - "Warehouse Structure and Master Data"
+  - "Inbound and Putaway"
+  - "Outbound, Waves and Picking"
+  - "Warehouse Task and Warehouse Order Orchestration"
+  - "Handling Units and Packing"
+  - "Internal Movements, Replenishment and Physical Inventory"
+  - "Production Integration"
+  - "Quality Integration"
+  - "RF, Resources, Queues and MFS Automation"
+  - "EWM Integration and Failure Diagnostics"
+
+source_refs:
+  - SRC-SAP-EWM-HELP
+  - SRC-SAP-EWM-EMBEDDED-SCOPE
+  - SRC-SAP-EWM-DECENTRAL-ASR
+  - SRC-SAP-EWM-WAREHOUSE-REQUEST
+  - SRC-SAP-EWM-WAREHOUSE-TASK
+  - SRC-SAP-EWM-WAREHOUSE-ORDER
+  - SRC-SAP-EWM-WAVE
+  - SRC-SAP-EWM-REPLENISHMENT
+  - SRC-SAP-EWM-PRODUCTION-SUPPLY
+  - SRC-SAP-EWM-PRODUCTION-INTEGRATION
+  - SRC-SAP-EWM-MFS
+  - SRC-SAP-EWM-QM-EMBEDDED
+  - SRC-SAP-EWM-QM-DECENTRAL
+  - SRC-SAP-EWM-PHYSICAL-INVENTORY
+
+tags:
+  - sap-ewm
+  - warehousing
+  - embedded-ewm
+  - decentralized-ewm
+  - inbound
+  - outbound
+  - production-supply
+  - warehouse-task
+  - warehouse-order
+  - automation
+  - integration
+  - assessment
