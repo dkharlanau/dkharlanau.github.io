@@ -1,11 +1,11 @@
 id: AGENT-CONTRACT-SD-SALES
-version: "1.0.0"
+version: "1.1.0"
 updated_at: "2026-08-15"
 title: "SAP Sales Agent Routing Contract"
 purpose: >-
   Help an AI agent choose the right Sales knowledge layer before it answers. This file is a router,
   not a second copy of process facts. The canonical models remain the process atlas, mechanism library,
-  integration maps, master-data model, deep-dive graphs and diagnostic casebook.
+  integration maps, master-data model, KPI model, deep-dive graphs and diagnostic casebook.
 
 namespaces:
   - prefix: "SD."
@@ -14,6 +14,9 @@ namespaces:
   - prefix: "MEC.SD."
     entity: "reusable Sales decision or control mechanism"
     primary_endpoint: "/labs/enterprise-context/data/sales-mechanisms.json"
+  - prefix: "KPI.SD."
+    entity: "Sales business KPI or operational driver metric"
+    primary_endpoint: "/labs/enterprise-context/data/sales-process-kpis.json"
   - prefix: "ORC.SD."
     entity: "upstream order origin or orchestrator"
     primary_endpoint: "/labs/enterprise-context/data/sales-order-integration-map.json"
@@ -32,6 +35,10 @@ routing_rules:
     start_with: "/labs/enterprise-context/data/sales-process-atlas.json"
     then: ["sales-process-coverage", "sales-mechanisms"]
     reason: "Process classification should happen before detailed configuration advice."
+  - intent: "How is the Sales process performing, which KPI should we use, or why did a business metric move?"
+    start_with: "/labs/enterprise-context/data/sales-process-kpis.json"
+    then: ["sales-process-atlas", "sales-mechanisms", "sales-diagnostic-casebook"]
+    reason: "Start with the business outcome, segment the metric, inspect operational drivers and only then trace into SAP controls and evidence."
   - intent: "Why did SAP choose this item, plant, route, date, price, tax, invoice or output?"
     start_with: "/labs/enterprise-context/data/sales-mechanisms.json"
     then: ["sales-order-graph", "relevant deep-dive graph"]
@@ -58,13 +65,15 @@ routing_rules:
     reason: "The runtime graph is the best entry point for the decision chain inside one order."
 
 answer_policy:
-  - "Classify the entity before explaining it: process, mechanism, origin, handoff, master data, diagnostic case or deep-dive capability."
+  - "Classify the entity before explaining it: process, KPI, mechanism, origin, handoff, master data, diagnostic case or deep-dive capability."
   - "Use stable author IDs in the answer when they help a later agent continue the trace."
   - "Keep documented product facts separate from Lab reasoning and synthetic examples."
   - "If a source or process is release-sensitive, state the deployment or release boundary instead of silently generalizing it."
   - "Do not convert an absent relation into a negative claim unless the source model declares that relation set exhaustive."
   - "When evidence is missing, name the evidence to collect. Do not manufacture a root cause."
   - "Prefer one primary owner and an evidence-based handoff over a list of every team that might be involved."
+  - "For KPI comparisons, state the formula boundary, date basis, eligible population and important exclusions."
+  - "Do not invent a universal KPI target. Use the model's target policy or a supplied business benchmark."
 
 negative_semantics:
   process_mechanism_map: >-
@@ -76,6 +85,9 @@ negative_semantics:
   diagnostic_casebook: >-
     Missing case means the exact symptom pattern is not modeled yet. It does not prove that the product has no known
     failure mode or that another case cannot provide a useful reasoning pattern.
+  kpi_model: >-
+    A missing KPI does not prove that a business outcome cannot be measured. A listed KPI is a Lab definition unless
+    its source explicitly defines it as an SAP standard metric, and a missing target means the target must be agreed locally.
 
 retrieval_sequence:
   - step: 1
@@ -83,15 +95,19 @@ retrieval_sequence:
   - step: 2
     action: "Resolve stable IDs and read the canonical entity before following related IDs."
   - step: 3
-    action: "Follow only material relations: control owner, data hinge, integration handoff, failure evidence or source."
+    action: "Follow only material relations: outcome, driver, control owner, data hinge, integration handoff, failure evidence or source."
   - step: 4
-    action: "Check coverage and release boundaries before making a broad statement."
+    action: "Check coverage, metric boundaries and release boundaries before making a broad statement."
   - step: 5
     action: "Return a concise answer with the decision path, evidence and next owner."
 
 quality_checks:
   - question: "Did the answer confuse a process with a mechanism?"
     fail_if: "A reusable determination such as pricing or ATP is presented as a separate end-to-end process without context."
+  - question: "Did the answer confuse a KPI with a root cause?"
+    fail_if: "A moved metric is treated as proof of a configuration defect without segmentation, driver analysis or evidence."
+  - question: "Did the answer compare incompatible KPI definitions?"
+    fail_if: "Percentages or cycle times are compared without a common date/event basis, population or exclusion policy."
   - question: "Did the answer confuse an event with an API?"
     fail_if: "An event notification is described as if it carries the full current business object by definition."
   - question: "Did the answer jump from symptom to fix?"
