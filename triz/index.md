@@ -21,68 +21,83 @@ tags: [triz, problem-solving, architecture, business-processes, ai, systems-thin
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">TRIZ / digital systems</p>
       <h1>Do not start with a solution.<br />Start with the contradiction.</h1>
-      <p>I use TRIZ here as a thinking engine for IT systems, business processes, integrations, data, and AI. The point is not to replay forty principles mechanically. The point is to make the conflict visible, move it to the right layer, and test a simpler system shape.</p>
-      <a class="research-canvas__button" href="/triz/framework/">Open the framework <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+      <p>I use TRIZ here as a reasoning engine for IT systems, business processes, integrations, data, and AI. The classical ideas are useful, but digital systems need their own working language: state, authority, time, events, data representation, uncertainty, feedback, and system levels.</p>
+      <a class="research-canvas__button" href="/triz/workbench/">Open the workbench <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Framework summary">
       <p>Working model</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>8</strong><small>Reasoning steps</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>12</strong><small>Digital patterns</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>3</strong><small>Machine datasets</small></div>
-      <em>Draft framework. The structure is original; classic TRIZ ideas are used as lineage, not copied as a template.</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Reasoning passes</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>9</strong><small>Method steps</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>6 + 12</strong><small>Operators + patterns</small></div>
+      <em>Draft framework. Durable method and dated technology signals are kept separate.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">balance</span>
-    <p><strong>Core idea:</strong> many digital problems are not missing-feature problems. They are unresolved contradictions: faster but safer, standard but flexible, automated but controlled, integrated but loosely coupled.</p>
-    <p><strong>Working rule:</strong> keep deterministic rules, permissions, durable state, and irreversible side effects outside model reasoning. Use AI where interpretation and uncertainty are the actual problem.</p>
-    <a href="/triz/ai/">See the AI boundary <span class="material-symbols-outlined" aria-hidden="true">psychology</span></a>
+    <p><strong>Core idea:</strong> many digital problems are unresolved contradictions: faster but safer, standard but flexible, automated but accountable, integrated but loosely coupled, autonomous but trusted.</p>
+    <p><strong>Working rule:</strong> operator first, pattern second, technology third.</p>
+    <a href="/triz/framework/">Read the full method <span class="material-symbols-outlined" aria-hidden="true">menu_book</span></a>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">The framework</p><h2>From conflict to an experiment.</h2><p>The sequence is deliberately short. A framework that needs a framework to explain the framework has already lost the argument.</p></header>
+    <header><p class="research-canvas__eyebrow">The method</p><h2>Understand. Recompose. Engineer.</h2><p>The middle pass matters. It stops the framework from jumping directly from a contradiction to a favorite technology.</p></header>
     <div class="research-route-list">
-      <a href="/triz/framework/#frame"><span>01</span><strong>Frame the job</strong><small>Describe the observed problem, desired outcome, boundary, and evidence before naming a technology.</small><i class="material-symbols-outlined" aria-hidden="true">crop_free</i></a>
-      <a href="/triz/framework/#ideal"><span>02</span><strong>Define the ideal result</strong><small>What improves if we add as little new complexity, ownership, and manual work as possible?</small><i class="material-symbols-outlined" aria-hidden="true">flag</i></a>
-      <a href="/triz/framework/#contradiction"><span>03</span><strong>Name the contradiction</strong><small>Improving one useful property makes another property worse. Write both sides.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
-      <a href="/triz/framework/#system-map"><span>04</span><strong>Map the system</strong><small>Actors, business objects, decisions, events, data, rules, constraints, delays, and side effects.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/triz/patterns/"><span>05</span><strong>Apply transformation patterns</strong><small>Separate, move, make explicit, buffer, observe, simulate, route, or change the control boundary.</small><i class="material-symbols-outlined" aria-hidden="true">transform</i></a>
-      <a href="/triz/framework/#technology"><span>06</span><strong>Allocate technology</strong><small>Choose rules, workflow, events, search, AI, agents, or human approval according to the uncertainty.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
-      <a href="/triz/framework/#experiment"><span>07</span><strong>Run a falsifiable experiment</strong><small>Test the contradiction, not the attractiveness of the prototype.</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
-      <a href="/triz/framework/#feedback"><span>08</span><strong>Close the loop</strong><small>Observe outcome, latency, errors, manual effort, cost, and new failure modes.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
+      <a href="/triz/framework/#frame"><span>A1</span><strong>Frame the useful function</strong><small>Observed behavior, actors, business objects, evidence, impact, boundary.</small><i class="material-symbols-outlined" aria-hidden="true">crop_free</i></a>
+      <a href="/triz/framework/#ideal"><span>A2</span><strong>Define the ideal result</strong><small>Improve outcome while keeping coordination, duplicated state, cost, exposure, and irreversible risk small.</small><i class="material-symbols-outlined" aria-hidden="true">flag</i></a>
+      <a href="/triz/framework/#contradiction"><span>A3</span><strong>Name both useful sides</strong><small>If we improve A, B becomes worse. Explain why both still matter.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
+      <a href="/triz/framework/#separation"><span>B1</span><strong>Separate the conflict</strong><small>Try time, condition, context, system level, authority, and representation.</small><i class="material-symbols-outlined" aria-hidden="true">call_split</i></a>
+      <a href="/triz/framework/#resources"><span>B2</span><strong>Scan existing resources</strong><small>Information, time, structure, history, negative signals, people, policy, compute, attention.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/triz/framework/#system-map"><span>B3</span><strong>Generate different system shapes</strong><small>Map objects, events, decisions, state, rules, evidence, delays, and side effects; then apply patterns.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/triz/framework/#technology"><span>C1</span><strong>Allocate mechanism and authority</strong><small>Rules, workflow, events, retrieval, models, agents, humans, and read/propose/validate/approve/execute boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/triz/framework/#experiment"><span>C2</span><strong>Run a falsifiable experiment</strong><small>Primary metric, counter-metric, failure condition, reversible scope.</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
+      <a href="/triz/framework/#feedback"><span>C3</span><strong>Expose the next contradiction</strong><small>Observe outcome, failure modes, cost, rework, latency, and new constraints.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Where I use it</p><h2>Different problems, same reasoning spine.</h2><p>The framework is technology-neutral. SAP, cloud platforms, custom software, process tools, and AI are implementation choices after the contradiction is understood.</p></header>
+    <header><p class="research-canvas__eyebrow">Toolbox</p><h2>Use a small set of moves deeply.</h2><p>I do not want another catalogue where the method is buried under its own terminology.</p></header>
     <div class="research-route-list">
-      <a href="/triz/business-processes/"><span>BP</span><strong>Business processes</strong><small>Handoffs, approvals, queues, exceptions, compliance, local optimization, and process ownership.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-      <a href="/triz/framework/#integration"><span>IT</span><strong>IT and integration</strong><small>Latency vs coupling, reuse vs ownership, central control vs team autonomy, resilience vs simplicity.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="/triz/ai/"><span>AI</span><strong>AI systems</strong><small>Autonomy vs control, context vs privacy, accuracy vs cost, flexibility vs repeatability.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      <a href="/triz/cases/"><span>EX</span><strong>Synthetic cases</strong><small>Small examples for order exceptions, approvals, master data, integration load, and AI-assisted operations.</small><i class="material-symbols-outlined" aria-hidden="true">experiment</i></a>
+      <a href="/triz/operators/"><span>OPS</span><strong>Separation operators + resources</strong><small>Six ways to untie a conflict and eight resource groups to inspect before adding machinery.</small><i class="material-symbols-outlined" aria-hidden="true">call_split</i></a>
+      <a href="/triz/patterns/"><span>PAT</span><strong>Digital transformation patterns</strong><small>Twelve reusable moves around boundaries, state, events, exceptions, reversibility, authority, and observability.</small><i class="material-symbols-outlined" aria-hidden="true">transform</i></a>
+      <a href="/triz/workbench/"><span>WB</span><strong>Practical workbench</strong><small>A workshop flow from evidence to options, complexity tax, authority chain, experiment, and structured output.</small><i class="material-symbols-outlined" aria-hidden="true">edit_note</i></a>
+      <a href="/triz/failure-modes/"><span>FAIL</span><strong>False resolutions</strong><small>Ten ways a solution can move waiting, risk, state, responsibility, or complexity instead of removing it.</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Machine-readable layer</p><h2>The same framework as data.</h2><p>An agent should not have to reverse-engineer the method from prose. The datasets expose steps, contradiction classes, patterns, selection rules, controls, and worked cases.</p></header>
+    <header><p class="research-canvas__eyebrow">Domain lenses</p><h2>The mechanism changes. The reasoning spine stays.</h2></header>
     <div class="research-route-list">
-      <a href="/datasets/triz-digital-framework/catalog.json"><span>CAT</span><strong>Framework catalog</strong><small>Steps, contradiction types, decision rules, AI boundaries, metrics, and source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="/datasets/triz-digital-framework/patterns.json"><span>PAT</span><strong>Pattern graph</strong><small>Reusable transformation patterns with triggers, risks, related contradictions, and technology options.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/datasets/triz-digital-framework/cases.jsonl"><span>CASE</span><strong>Reasoning cases</strong><small>Compact problem → contradiction → pattern → experiment examples for retrieval and agent evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/triz/business-processes/"><span>BP</span><strong>Business processes</strong><small>Approvals, queues, handoffs, exceptions, process data, ownership, and end-to-end outcomes.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/triz/framework/#integration"><span>IT</span><strong>IT and integration</strong><small>Coupling, state, synchronous vs asynchronous flow, decision location, resilience, and ownership.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/triz/ai/"><span>AI</span><strong>AI and agents</strong><small>Autonomy, authority, privacy, cost, repeatability, MCP/A2A boundaries, and evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/triz/cases/"><span>EX</span><strong>Synthetic enterprise cases</strong><small>Sales, procurement, master data, integrations, global processes, and AI operations.</small><i class="material-symbols-outlined" aria-hidden="true">experiment</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Source baseline</p><h2>Keep new technology in context.</h2><p>The framework is mine; the moving technology facts are not. These primary sources anchor the AI, event, process, and observability parts.</p></header>
+    <header><p class="research-canvas__eyebrow">Evolution</p><h2>Ask what recurring contradiction the system is trying to remove next.</h2></header>
     <div class="research-route-list">
-      <a href="https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/" target="_blank" rel="noopener"><span>AI</span><strong>OpenAI: practical guide to building agents</strong><small>Agent use cases, tools, orchestration, and layered guardrails.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence" target="_blank" rel="noopener"><span>NIST</span><strong>Generative AI Profile</strong><small>Lifecycle risk management and trustworthiness controls.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://cloudevents.io/" target="_blank" rel="noopener"><span>EVT</span><strong>CloudEvents</strong><small>A common event format for interoperable event-driven systems.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://opentelemetry.io/docs/" target="_blank" rel="noopener"><span>OTel</span><strong>OpenTelemetry</strong><small>Vendor-neutral traces, metrics, and logs for observable systems.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://help.sap.com/docs/signavio-process-intelligence/onboarding-and-data-integration-guide/getting-started-with-object-based-data-modeling" target="_blank" rel="noopener"><span>PROC</span><strong>SAP Signavio object-based process data</strong><small>Business objects, events, and relationships as a reusable process-data foundation.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://modelcontextprotocol.io/specification/2025-11-25" target="_blank" rel="noopener"><span>MCP</span><strong>Model Context Protocol</strong><small>Resources, prompts, tools, control boundaries, and security considerations.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="/triz/evolution/"><span>EVOL</span><strong>Digital evolution hypotheses</strong><small>Ten directional prompts: explicit state, condition-based flow, selective synchronization, contextual decisions, bounded autonomy, purpose-specific data, prevention, object graphs, adaptive edges, self-observation.</small><i class="material-symbols-outlined" aria-hidden="true">trending_up</i></a>
+      <a href="/triz/signals/"><span>2026</span><strong>Current solution-space signals</strong><small>Dated notes on MCP, A2A, object-centric process data, simulation, AI-enabled process analysis, and GenAI observability.</small><i class="material-symbols-outlined" aria-hidden="true">radar</i></a>
     </div>
+    <p>Evolution hypotheses are not maturity laws. A batch job, synchronous call, or human approval can still be the better design when it matches the contradiction.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Machine-readable layer</p><h2>The method is data too.</h2><p>An agent should not have to reconstruct the workflow from prose and vibes.</p></header>
+    <div class="research-route-list">
+      <a href="/datasets/triz-digital-framework/catalog.json"><span>CAT</span><strong>Framework catalog</strong><small>Passes, steps, operators, resources, contradiction types, allocation rules, authority model, risk tiers, metrics, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/datasets/triz-digital-framework/patterns.json"><span>PAT</span><strong>Pattern graph</strong><small>Patterns with triggers, risks, controls, relationships, and classical lineage.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/datasets/triz-digital-framework/reasoning-schema.json"><span>SCHEMA</span><strong>Reasoning contract</strong><small>JSON Schema for inspectable problem analysis and agent output.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/datasets/triz-digital-framework/cases.jsonl"><span>CASE</span><strong>Reasoning cases</strong><small>Problem → contradiction → operators → resources → options → authority → experiment examples.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lineage</p><h2>Classic TRIZ remains a library, not a cage.</h2></header>
+    <p>The existing <a href="/datasets/TRIZ-bytes/">TRIZ-bytes dataset</a> keeps the classical principles and techniques as a separate reference layer. This framework uses that lineage without forcing every digital problem through a one-to-one mapping with the traditional forty principles.</p>
+    <p>Principles are reusable prompts. The digital framework is a decision process.</p>
   </section>
 
   <div class="research-canvas__support" data-reveal>
