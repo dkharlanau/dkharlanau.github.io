@@ -1,0 +1,202 @@
+---
+layout: default
+title: "SAP Data Migration and Controlled Bulk Loading"
+description: "A practical SAP map for Migration Cockpit, staging and direct transfer, migration-object extensions, and controlled custom loaders."
+permalink: /labs/enterprise-context/integrations/data-migration/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+tags:
+  - sap
+  - data-integration
+  - data-migration
+  - migration-cockpit
+  - bulk-load
+---
+
+{% assign topic = site.data.labs.enterprise_context.topics.data_migration_and_loading %}
+{% assign registry = site.data.labs.enterprise_context.sources.data_migration_loading %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">Enterprise Context</a></li>
+    <li><a href="/labs/enterprise-context/integrations/">Integrations</a></li>
+    <li aria-current="page">Data Migration</li>
+  </ol>
+</nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Data Integration / Migration and Bulk Loading</p>
+      <h1>{{ topic.title }}</h1>
+      <p>{{ topic.summary }}</p>
+      <a class="research-canvas__button" href="#tool-choice">Start with tool choice <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Research status">
+      <p>Memory model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Initial</strong><small>Migration Cockpit</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Repeat</strong><small>Integration</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>User</strong><small>Controlled loader</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</strong><small>Maturity gates</small></div>
+      <em>{{ topic.memory_model.phrase }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">database_upload</span>
+    <p><strong>Problem:</strong> teams often call every large data movement a migration. Then an initial-load tool becomes a nightly interface, or a spreadsheet becomes an application architecture.</p>
+    <p><strong>Working rule.</strong> Classify the need first: initial migration, recurring integration, mass maintenance, or controlled user upload. The tool choice comes after that.</p>
+    <a href="/labs/enterprise-context/data/data-migration-loading.json">Open machine-readable model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="tool-choice" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead decision</p>
+      <h2>Four needs. Four different answers.</h2>
+      <p>A useful architecture answer starts with lifecycle and ownership, not with the file extension.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.selection_guide %}
+      <a href="#migration-cockpit"><span>→</span><strong>{{ item.need }}</strong><small><b>{{ item.choose }}</b> · {{ item.why }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="migration-cockpit" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP standard</p>
+      <h2>Migrate Your Data - Migration Cockpit</h2>
+      <p>{{ topic.standard_migration_cockpit.purpose }}</p>
+      <p><strong>Remember:</strong> {{ topic.standard_migration_cockpit.memory_model }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for step in topic.standard_migration_cockpit.lifecycle %}
+      <a href="#approaches"><span>{{ step.step }}</span><strong>{{ step.title }}</strong><small>{{ step.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="approaches" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Migration approaches</p>
+      <h2>Staging and direct transfer solve different source problems.</h2>
+      <p>Both approaches still need cleansing, mapping, test cycles, target validation, and reconciliation.</p>
+    </header>
+    <div class="research-route-list">
+      {% for approach in topic.migration_approaches %}
+      <a href="#extensibility"><span>PATH</span><strong>{{ approach.title }}</strong><small><b>Choose when:</b> {{ approach.choose_when }} <b>Strength:</b> {{ approach.strengths[0] }} <b>Watch:</b> {{ approach.cautions[0] }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="extensibility" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Standard extension</p>
+      <h2>Check Migration Object Modeler before replacing the standard.</h2>
+      <p>{{ topic.migration_object_extensibility.principle }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for question in topic.migration_object_extensibility.check_before_change %}
+      <a href="#custom-loader"><span>?</span><strong>{{ question }}</strong><small>Confirm the release, migration approach, target business capability, and test lifecycle before changing the migration object.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="custom-loader" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Custom solution</p>
+      <h2>Build a loader for the operating experience, not to bypass SAP.</h2>
+      <p>{{ topic.custom_loader.purpose }}</p>
+      <p><strong>Memory model:</strong> {{ topic.custom_loader.memory_model }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for option in topic.custom_loader.implementation_options %}
+      <a href="#loader-controls"><span>BUILD</span><strong>{{ option.option }}</strong><small><b>Fit:</b> {{ option.fit }} <b>Shape:</b> {{ option.shape }}{% if option.boundary %} <b>Boundary:</b> {{ option.boundary }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">shield</span>
+    <p><strong>Target contract:</strong> {{ topic.custom_loader.target_contract.preferred }}</p>
+    <p><strong>Brownfield:</strong> {{ topic.custom_loader.target_contract.brownfield_note }}</p>
+    <p><strong>Avoid:</strong> {{ topic.custom_loader.target_contract.avoid }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="loader-controls" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Loader controls</p>
+      <h2>A nice upload screen is the easy part.</h2>
+      <p>The difficult part is making 5,000 imperfect records safe to validate, post, retry, explain, and reconcile.</p>
+    </header>
+    <div class="research-route-list">
+      {% for control in topic.custom_loader.required_controls %}
+      <a href="#examples"><span>{{ forloop.index }}</span><strong>{{ control }}</strong><small>Design this before productive bulk loading, not after the first partial failure.</small><i class="material-symbols-outlined" aria-hidden="true">check_circle</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="examples" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Logistics examples</p>
+      <h2>Use small scenarios to test the architecture.</h2>
+      <p>These are synthetic examples. They show the decision method without pretending that one migration object or API covers every release.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.synthetic_examples %}
+      <a href="#failures"><span>CASE</span><strong>{{ item.title }}</strong><small>{{ item.situation }} <b>Approach:</b> {{ item.approach }} <b>Lead lesson:</b> {{ item.lead_lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failures" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure modes</p>
+      <h2>Green technical status is not enough.</h2>
+      <p>Bulk data work fails in partial states, duplicate retries, and business-incomplete target objects. Those states need explicit recovery.</p>
+    </header>
+    <div class="research-route-list">
+      {% for failure in topic.failure_modes %}
+      <a href="#assessment"><span>!</span><strong>{{ failure.title }}</strong><small><b>Symptom:</b> {{ failure.symptom }} <b>Response:</b> {{ failure.response }}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="assessment" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead assessment</p>
+      <h2>Answers that show tool boundaries.</h2>
+      <p>The useful answer explains why the lifecycle fits, what target contract is protected, and how failure is recovered.</p>
+    </header>
+    <div class="research-route-list">
+      {% for card in topic.assessment_cards %}
+      <a href="#sources"><span>Q</span><strong>{{ card.question }}</strong><small>{{ card.answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Primary sources</p>
+      <h2>Current SAP documentation used for verification.</h2>
+      <p>The wording and architecture model on this page are independently written. Source links are for product and release verification.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in registry.sources %}
+      <a href="{{ source.url }}" rel="noopener noreferrer"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope | default: source.product_scope }} · Reviewed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <p><strong>Architecture boundary:</strong> Migration Cockpit owns supported initial-load lifecycle. Operational integration owns recurring system exchange. A custom loader owns a controlled user or batch experience. The target SAP application still owns business consistency.</p>
+    <a href="/labs/enterprise-context/integrations/">Back to Integration Architecture <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span></a>
+  </section>
+</div>
