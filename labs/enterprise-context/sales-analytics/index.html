@@ -1,0 +1,174 @@
+---
+layout: default
+title: "SAP Sales KPI & Analytics — Enterprise Context Lab"
+description: "Business-first SAP Sales KPIs, process metrics, operational drivers and root-cause analytics linked to Sales processes and mechanisms."
+permalink: /labs/enterprise-context/sales-analytics/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting]
+---
+
+{% assign model = site.data.labs.enterprise_context.graphs.sales_process_kpis %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Sales Analytics</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Sales / KPI & Analytics</p>
+      <h1>Measure the outcome.<br />Trace the driver.</h1>
+      <p>{{ model.summary }}</p>
+      <a class="research-canvas__button" href="#kpi-catalog">Open KPI catalog <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Sales analytics inventory">
+      <p>Business measurement layer</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ model.kpis | size }}</strong><small>KPIs and drivers</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ model.analytics_lenses | size }}</strong><small>Analytics lenses</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ model.common_language | size }}</strong><small>Common terms</small></div>
+      <em>{{ model.memory_path }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">monitoring</span>
+    <p><strong>Boundary:</strong> SAP provides Sales monitoring, analytical apps and process analytics. The formulas and governance rules on this page are Lab definitions unless a source says otherwise. One formula can be shared; one target usually cannot.</p>
+    <a href="/labs/enterprise-context/data/sales-process-kpis.json">Open KPI JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Common language</p>
+      <h2>Agree the words before arguing about the number.</h2>
+      <p>Requested date, confirmed date, goods issue and clearing date describe different business events. A KPI becomes useful only when everyone measures the same event pair and the same population.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in model.common_language %}
+      <article><span>TERM</span><h3>{{ item.term }}</h3><p>{{ item.definition }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Analytics lenses</p>
+      <h2>Six questions instead of one giant dashboard.</h2>
+      <p>Each lens starts with a business question and then points to a small set of outcome and driver metrics.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for lens in model.analytics_lenses %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">0{{ forloop.index }}</div>
+        <div class="ecg-determination-card__copy">
+          <h3>{{ lens.title }}</h3>
+          <p>{{ lens.business_question }}</p>
+          <small>{{ lens.kpi_refs | join: ' · ' }}</small>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="kpi-catalog" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">KPI catalog</p>
+      <h2>Outcome outside. Driver inside.</h2>
+      <p>Every metric states the question, formula, owner, cadence, target policy and the SAP control path that can explain movement.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for kpi in model.kpis %}
+      <details>
+        <summary><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ kpi.name }}</strong><small>{{ kpi.id }} · {{ kpi.kind }} · {{ kpi.unit }}</small></summary>
+        <div>
+          <p><strong>Business question.</strong> {{ kpi.business_question }}</p>
+          <p><strong>Formula.</strong> {{ kpi.formula }}</p>
+          <p><strong>Direction.</strong> {{ kpi.direction }} · <strong>Cadence.</strong> {{ kpi.cadence }}</p>
+          <p><strong>Owner.</strong> {{ kpi.owner }}</p>
+          <p><strong>Target policy.</strong> {{ kpi.target_policy }}</p>
+
+          <h4>Slice by</h4>
+          <p>{{ kpi.grain | join: ' · ' }}</p>
+
+          <h4>Evidence signals</h4>
+          <ul>{% for signal in kpi.data_signals %}<li>{{ signal }}</li>{% endfor %}</ul>
+
+          <h4>Trace into SAP</h4>
+          <p><strong>Processes.</strong> {{ kpi.process_refs | join: ' · ' }}</p>
+          <p><strong>Mechanisms.</strong> {{ kpi.mechanism_refs | join: ' · ' }}</p>
+          {% if kpi.diagnostic_case_refs %}<p><strong>Diagnostic cases.</strong> {{ kpi.diagnostic_case_refs | join: ' · ' }}</p>{% endif %}
+
+          {% if kpi.caveats %}<h4>Read carefully</h4><ul>{% for item in kpi.caveats %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Root-cause analytics</p>
+      <h2>A bad KPI is the start of analysis, not the diagnosis.</h2>
+      <p>First isolate the segment. Then inspect driver metrics. Only after that move into the process, control mechanism and evidence path.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for play in model.root_cause_playbook %}
+      <details>
+        <summary><span>R{{ forloop.index }}</span><strong>{{ play.trigger }}</strong><small>{{ play.start_with | join: ' · ' }}</small></summary>
+        <div>
+          <p><strong>Slice by.</strong> {{ play.slice_by | join: ' · ' }}</p>
+          <p><strong>Driver metrics.</strong> {{ play.drivers | join: ' · ' }}</p>
+          <p><strong>Continue in.</strong> {{ play.next_models | join: ' · ' }}</p>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead meeting language</p>
+      <h2>Four questions keep the discussion useful.</h2>
+      <p>A Lead should move from performance to evidence and ownership without turning the meeting into a transaction-code recital.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in model.meeting_language %}
+      <article><span>ASK</span><h3>{{ item.question }}</h3><p>{{ item.answer_shape }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Metric governance</p>
+      <h2>Keep the number comparable.</h2>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in model.principles %}
+      <article><span>RULE</span><p>{{ item }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Human + machine</p>
+      <h2>One KPI model, several reasoning paths.</h2>
+      <p>The page is for business discussion. The JSON endpoint lets an agent retrieve the same KPI by business question, process ID, mechanism ID or diagnostic case.</p>
+    </div>
+    <div class="ecg-machine__actions">
+      {% for item in model.related_views %}<a href="{{ item.url }}">{{ item.title }}</a>{% endfor %}
+      <a class="research-canvas__button" href="/labs/enterprise-context/data/sales-process-kpis.json">KPI JSON</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
