@@ -31,7 +31,7 @@ tags:
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Active labs</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>17+</strong><small>Architecture and case views</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>18+</strong><small>Architecture and case views</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>7+</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
@@ -88,6 +88,7 @@ tags:
       <a href="/labs/business-ai/"><span>AI</span><strong>Business AI Lab</strong><small>Business-first map of patterns, cases, evidence grades, technologies, metrics, limits, and cross-links to SAP and vendor-neutral architecture.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       <a href="/labs/business-ai/cases/"><span>CASE</span><strong>Implementation cases</strong><small>Klarna, Morgan Stanley, FRoSTA, Western Sugar, Lemvigh-Müller, Cainz, and UPS as the first evidence set.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/business-ai/patterns/"><span>PAT</span><strong>Reusable patterns</strong><small>Conversation automation, enterprise knowledge, document-to-workflow, forecasting, operations optimization, and agentic exception management.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/business-ai/model/"><span>GRAPH</span><strong>Graph model</strong><small>Node and edge types for companies, cases, domains, processes, patterns, technologies, metrics, evidence sources, and limitations.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Business AI catalog</strong><small>Machine-readable cases, patterns, source registry, evidence model, technologies, KPIs, limitations, and consultant notes.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
