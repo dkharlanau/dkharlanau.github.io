@@ -100,6 +100,9 @@ sitemap: false
       <li>A working comparison document when available.</li>
     </ul>
 
+    <h2>Limitations and boundaries</h2>
+    <p>This diagnostic is about classic sales-document pricing logic. It does not prove how a specific S/4HANA release, industry solution, external tax engine, commerce platform, settlement process, or custom pricing routine behaves. Configuration objects, apps, and technical data structures also vary by release. Use pricing analysis to locate the failed step first, then verify the release-specific implementation before changing configuration or condition data.</p>
+
     <h2>The useful end state</h2>
     <p>Do not close the analysis with “condition record fixed.” State the failed pricing step: for example, the wrong procedure was selected, the access keys did not match, the record was outside validity, a formula changed the base, or copied pricing was not redetermined. That explanation is reusable. A changed number is not.</p>
   </div>
