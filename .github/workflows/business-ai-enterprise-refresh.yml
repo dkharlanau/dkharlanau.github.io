@@ -1,0 +1,41 @@
+name: Refresh Business AI enterprise artifacts
+
+on:
+  push:
+    branches:
+      - agent/business-ai-catalog
+    paths:
+      - ".github/workflows/business-ai-enterprise-refresh.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/business-ai-catalog
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependency
+        run: python3 -m pip install pyyaml
+      - name: Regenerate repository artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Remove workflow and commit generated artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/business-ai-enterprise-refresh.yml
+          git add -A
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "refresh Business AI enterprise artifacts"
+          git push origin HEAD:agent/business-ai-catalog
