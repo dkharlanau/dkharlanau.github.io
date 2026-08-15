@@ -1,0 +1,41 @@
+name: Refresh AI Ready coding agent artifacts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "labs/ai-ready/**"
+      - ".github/workflows/refresh-ai-ready-coding-agents.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install generator dependencies
+        run: python3 -m pip install pyyaml
+      - name: Validate coding agents data
+        run: python3 -m json.tool labs/ai-ready/data/coding-agents.json > /dev/null
+      - name: Regenerate Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Commit generated changes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Generated artifacts are current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u
+          git commit -m "Refresh generated Atlas artifacts for coding agents playbook"
+          git push
