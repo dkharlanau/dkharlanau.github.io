@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.0",
+  "title": "AI Ready Coding Agents Playbook",
+  "reviewed_at": "2026-08-15",
+  "scope": "Practical, provider-neutral operating rules with current adapters for Codex, Claude Code, and Kimi Code.",
+  "core_loop": [
+    "understand",
+    "locate_evidence",
+    "decide_smallest_change",
+    "edit",
+    "verify_deterministically",
+    "inspect_diff",
+    "fix_failures",
+    "report_result"
+  ],
+  "task_contract": [
+    "goal",
+    "scope",
+    "evidence",
+    "constraints",
+    "do_not",
+    "verification",
+    "done_when"
+  ],
+  "portable_rules": [
+    "Keep always-on repository instructions short and operational.",
+    "Give every non-trivial task an executable definition of done.",
+    "Use read-only exploration before writing when the change surface is unclear.",
+    "Keep final write ownership clear even when research runs in parallel.",
+    "Use deterministic tests, builds, linters, and type checks as judges.",
+    "Move repeated procedures into Skills instead of retyping prompts.",
+    "Move repeated corrections into durable repository instructions or scoped rules.",
+    "Use hooks or permissions for rules that must be enforced, not prompt text alone.",
+    "Start a fresh context when the objective changes materially.",
+    "Do not claim success when required verification could not run."
+  ],
+  "task_modes": [
+    {
+      "id": "explore",
+      "write_access": false,
+      "goal": "Map evidence, files, dependencies, and the smallest likely change surface."
+    },
+    {
+      "id": "implement",
+      "write_access": true,
+      "goal": "Make the smallest defensible change and run named verification."
+    },
+    {
+      "id": "review",
+      "write_access": false,
+      "goal": "Review the diff for correctness, regression, security, data loss, and missing tests."
+    }
+  ],
+  "tools": [
+    {
+      "id": "codex",
+      "shared_instructions": ["AGENTS.md"],
+      "skills": [".agents/skills/<name>/SKILL.md"],
+      "agents": ["built-in subagents", ".codex/agents/*.toml"],
+      "controls": ["sandbox", "approvals", ".rules policy"],
+      "useful_commands": ["/skills", "/agent", "codex execpolicy check"],
+      "hints": [
+        "Layer AGENTS.md from repository root toward the working directory.",
+        "Use parallel agents first for read-heavy independent work.",
+        "Keep one clear owner for write-heavy changes.",
+        "Test command rules with execpolicy instead of assuming they match."
+      ]
+    },
+    {
+      "id": "claude-code",
+      "shared_instructions": ["CLAUDE.md", "CLAUDE.md can import @AGENTS.md"],
+      "skills": [".claude/skills/<name>/SKILL.md"],
+      "agents": ["built-in subagents", ".claude/agents/*.md"],
+      "controls": ["permissions", "hooks", "Plan mode"],
+      "useful_commands": ["/init", "/context", "/memory", "/agents", "/hooks", "/mcp", "/permissions", "/clear", "/compact"],
+      "hints": [
+        "Keep CLAUDE.md focused on information needed in nearly every session.",
+        "Use path-scoped rules for directory or language-specific instructions.",
+        "Use hooks for deterministic must-run actions.",
+        "Use a fresh context for final review after a large implementation."
+      ]
+    },
+    {
+      "id": "kimi-code",
+      "shared_instructions": ["AGENTS.md", "~/.agents/AGENTS.md"],
+      "skills": [".agents/skills/", ".kimi-code/skills/", "~/.agents/skills/"],
+      "agents": ["coder", "explore", "plan", "custom agents", "swarm"],
+      "controls": ["permissions", "Plan mode", "hooks are fail-open"],
+      "useful_commands": ["/init", "/plan", "/compact", "/mcp-config", "/update-config", "/import-from-cc-codex", "/swarm", "kimi --continue", "kimi -p"],
+      "hints": [
+        "Use explore for read-only investigation.",
+        "Use .agents/skills for workflows shared with Codex.",
+        "Do not use hooks as the only security boundary because hook failures are fail-open.",
+        "Use broad auto-approval only in trusted or strongly sandboxed environments."
+      ]
+    }
+  ],
+  "anti_patterns": [
+    "unbounded_improve_everything_task",
+    "giant_always_on_instruction_file",
+    "one_endless_session_for_many_objectives",
+    "agent_self_approves_high_impact_write",
+    "multi_agent_by_default",
+    "claiming_success_without_verification"
+  ],
+  "source_registry": [
+    {"id": "codex-agents-md", "url": "https://developers.openai.com/codex/agent-configuration/agents-md"},
+    {"id": "codex-skills", "url": "https://developers.openai.com/codex/skills"},
+    {"id": "codex-subagents", "url": "https://developers.openai.com/codex/subagents"},
+    {"id": "codex-rules", "url": "https://developers.openai.com/codex/rules"},
+    {"id": "claude-best-practices", "url": "https://code.claude.com/docs/en/best-practices"},
+    {"id": "claude-memory", "url": "https://code.claude.com/docs/en/memory"},
+    {"id": "claude-extensions", "url": "https://code.claude.com/docs/en/features-overview"},
+    {"id": "claude-hooks", "url": "https://code.claude.com/docs/en/hooks-guide"},
+    {"id": "kimi-getting-started", "url": "https://www.kimi.com/code/docs/en/kimi-code-cli/guides/getting-started.html"},
+    {"id": "kimi-skills", "url": "https://www.kimi.com/code/docs/en/kimi-code-cli/customization/skills.html"},
+    {"id": "kimi-agents", "url": "https://www.kimi.com/code/docs/en/kimi-code-cli/customization/agents.html"},
+    {"id": "kimi-hooks", "url": "https://www.kimi.com/code/docs/en/kimi-code-cli/customization/hooks.html"},
+    {"id": "kimi-commands", "url": "https://www.kimi.com/code/docs/en/kimi-code-cli/reference/slash-commands.html"}
+  ]
+}
