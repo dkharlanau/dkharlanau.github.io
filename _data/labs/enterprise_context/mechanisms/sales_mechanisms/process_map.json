@@ -3,11 +3,12 @@
   "coverage": {
     "mode": "curated_reviewed_compositions",
     "atlas_process_count": 53,
-    "mapped_process_count": 13,
+    "mapped_process_count": 18,
     "is_exhaustive": false,
+    "composition_semantics": "A link lists reviewed reusable mechanisms that are represented in the Sales Mechanism Library. Process-specific controls can remain in the process card when no reusable mechanism entity exists yet.",
     "absence_semantics": "A process without a mapping is not proven to use no mechanisms. It means that its reusable mechanism composition has not been reviewed in this map yet.",
     "addition_rule": "Add a process only after its control path is reviewed against the process card and mechanism contracts. Do not infer a full composition from a similar process name.",
-    "next_review_processes": ["SD.JIT", "SD.RET.VC", "SD.ETO.CTO+", "SD.TPO.SN", "SD.TPO.NSN"]
+    "next_review_processes": ["SD.RET.ARM", "SD.SA.CON", "SD.MTO.VC", "SD.PROJ.PBS", "SD.SUB.RECUR"]
   },
   "links": [
     {
@@ -17,6 +18,16 @@
     {
       "process": "SD.TPO",
       "mechanisms": ["MEC.SD.ICAT", "MEC.SD.SLINE", "MEC.SD.PARTNER", "MEC.SD.PRICE", "MEC.SD.CREDIT", "MEC.SD.INCOMP", "MEC.SD.COPY", "MEC.SD.BILL", "MEC.SD.TEXT", "MEC.SD.OUTPUT"]
+    },
+    {
+      "process": "SD.TPO.SN",
+      "mechanisms": ["MEC.SD.ICAT", "MEC.SD.SLINE", "MEC.SD.PARTNER", "MEC.SD.B2BCTX", "MEC.SD.PRICE", "MEC.SD.CREDIT", "MEC.SD.INCOMP", "MEC.SD.COPY", "MEC.SD.BILL", "MEC.SD.TEXT", "MEC.SD.OUTPUT"],
+      "unmodeled_controls": ["supplier shipping-notification status", "PO confirmation control", "supplier invoice quantity as process evidence"]
+    },
+    {
+      "process": "SD.TPO.NSN",
+      "mechanisms": ["MEC.SD.ICAT", "MEC.SD.SLINE", "MEC.SD.PARTNER", "MEC.SD.B2BCTX", "MEC.SD.PRICE", "MEC.SD.CREDIT", "MEC.SD.INCOMP", "MEC.SD.COPY", "MEC.SD.BILL", "MEC.SD.TEXT", "MEC.SD.OUTPUT"],
+      "unmodeled_controls": ["supplier confirmation without shipping notification", "invoice-receipt evidence for customer billing"]
     },
     {
       "process": "SD.PTO",
@@ -41,6 +52,21 @@
     {
       "process": "SD.MTO",
       "mechanisms": ["MEC.SD.ICAT", "MEC.SD.SLINE", "MEC.SD.REQTYPE", "MEC.SD.PARTNER", "MEC.SD.PLANT", "MEC.SD.SCHED", "MEC.SD.ATP", "MEC.SD.BATCH", "MEC.SD.PRICE", "MEC.SD.CREDIT", "MEC.SD.INCOMP", "MEC.SD.COPY", "MEC.SD.BILL", "MEC.SD.TEXT", "MEC.SD.OUTPUT"]
+    },
+    {
+      "process": "SD.JIT",
+      "mechanisms": ["MEC.SD.PARTNER", "MEC.SD.PLANT", "MEC.SD.B2BCTX", "MEC.SD.BILL", "MEC.SD.OUTPUT"],
+      "unmodeled_controls": ["JIT call type and status", "scheduling-agreement release semantics", "cumulative-quantity reconciliation", "delivery sequencing"]
+    },
+    {
+      "process": "SD.RET.VC",
+      "mechanisms": ["MEC.SD.ICAT", "MEC.SD.COPY", "MEC.SD.PRICE", "MEC.SD.BILLREL", "MEC.SD.BILLTYPE", "MEC.SD.BILL", "MEC.SD.OUTPUT"],
+      "unmodeled_controls": ["AVC configuration identity", "returns inspection", "logistical follow-up activity", "refund determination"]
+    },
+    {
+      "process": "SD.ETO.CTO+",
+      "mechanisms": ["MEC.SD.ICAT", "MEC.SD.SLINE", "MEC.SD.REQTYPE", "MEC.SD.PLANT", "MEC.SD.ATP", "MEC.SD.PRICE", "MEC.SD.CREDIT", "MEC.SD.BILL", "MEC.SD.OUTPUT"],
+      "unmodeled_controls": ["sales-order configuration model", "ETO production model", "engineering release state", "customer-specific BOM and shop-floor routing"]
     },
     {
       "process": "SD.CLM.INC",
