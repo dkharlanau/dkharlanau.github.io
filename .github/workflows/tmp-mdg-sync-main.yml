@@ -1,0 +1,45 @@
+name: Temporary MDG main sync
+
+on:
+  push:
+    branches:
+      - agent/mdg-knowledge-model
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mdg-knowledge-model
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: python3 -m pip install pyyaml
+
+      - name: Merge current main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge --no-edit origin/main
+
+      - name: Regenerate Atlas artifacts on current main
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Commit and push synchronized branch
+        run: |
+          git add ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh Atlas artifacts after main sync"
+          fi
+          git push origin HEAD:agent/mdg-knowledge-model
