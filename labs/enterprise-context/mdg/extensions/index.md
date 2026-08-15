@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 tags: [sap, mdg, extensibility, rap, abap-cloud, clean-core, architecture]
 ---
@@ -37,6 +37,7 @@ tags: [sap, mdg, extensibility, rap, abap-cloud, clean-core, architecture]
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">extension</span>
+    <p><strong>Problem:</strong> an available extension point can tempt a team to put unrelated application responsibility inside the MDG boundary.</p>
     <p><strong>Cloud-ready rule:</strong> RAP extensibility is opt-in. Data model, behavior, nodes, and service exposure must be explicitly enabled by the business-object provider.</p>
     <p><strong>Architecture rule:</strong> a technical extension point does not prove that the requirement belongs inside MDG.</p>
     <a href="/labs/enterprise-context/mdg/architecture/">See the full solution architecture <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
