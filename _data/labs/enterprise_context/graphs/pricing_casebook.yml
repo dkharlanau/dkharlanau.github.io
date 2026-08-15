@@ -1,0 +1,516 @@
+id: GRAPH-SD-PRICING-CASEBOOK
+version: "1.0.0"
+type: knowledge_graph
+status: draft
+verified: false
+updated_at: "2026-08-15"
+title: "SAP Sales Pricing Casebook"
+summary: >-
+  Worked pricing cases with concrete numbers. Each case starts from a commercial rule,
+  shows the pricing trace, identifies the owner of each decision, and ends with the
+  document or accounting boundary that must still be tested.
+memory_path: "RULE → OWNER → ROW → BASE → RATE → VALUE → COPY → POSTING"
+author_note: >-
+  All companies, products, prices, rates and thresholds below are synthetic. They are
+  deliberately simple enough to calculate by hand but realistic enough to discuss in
+  a design workshop or Lead assessment.
+
+case_design_rules:
+  - id: PCR.CASE.RULE.FIRST
+    rule: "Write the commercial rule in one sentence before choosing a condition type."
+    why: "A condition code is an implementation detail. The business rule is the contract."
+  - id: PCR.CASE.ONE.OWNER
+    rule: "Give each decision one primary owner: condition record, condition type, procedure row, formula, copy control, settlement, or account determination."
+    why: "Pricing becomes fragile when the same rule is partly hidden in several layers."
+  - id: PCR.CASE.CALCULATE
+    rule: "Calculate the expected result outside SAP before testing the document."
+    why: "A green pricing analysis is not useful if nobody can state the expected number."
+  - id: PCR.CASE.CLOCK
+    rule: "State the commercial clock: order, billing, after billing, or period settlement."
+    why: "The same rate change can require repricing, retroactive correction, or settlement depending on time."
+  - id: PCR.CASE.FI
+    rule: "Do not stop at net value when the condition is financially relevant."
+    why: "Billing still has to determine the correct revenue or sales-deduction account before the process is complete."
+
+worked_cases:
+  - id: PCR.CASE.01
+    title: "Layered price: discount, freight and tax"
+    level: foundation
+    clock: order_and_billing
+    scenario: >-
+      Northwind Parts buys 100 units of product P-100. The list price is EUR 120 per unit.
+      A customer discount of 5% applies. A campaign discount of EUR 4 per unit is also found,
+      but the commercial policy says the customer receives only the better of the two discounts.
+      Freight is EUR 250. The teaching example uses a 19% tax rate after freight.
+    commercial_rule: "Use the better commercial discount, then add freight, then calculate tax on the configured taxable base."
+    inputs:
+      quantity: 100
+      unit_price: 120.0
+      customer_discount_percent: 5.0
+      campaign_discount_per_unit: 4.0
+      freight: 250.0
+      tax_percent: 19.0
+    trace:
+      - step: 10
+        role: base_price
+        example_condition: "BASE"
+        base: "100 units"
+        rate: "EUR 120 / unit"
+        value: 12000.0
+        status: active
+        owner: condition_record
+      - step: 20
+        role: customer_discount
+        example_condition: "DISC-CUST"
+        base: "EUR 12,000"
+        rate: "5%"
+        value: -600.0
+        status: active
+        owner: condition_record
+      - step: 21
+        role: campaign_discount
+        example_condition: "DISC-CAMP"
+        base: "100 units"
+        rate: "EUR 4 / unit"
+        value: -400.0
+        status: inactive
+        owner: condition_exclusion
+        note: "The condition can be found correctly and still be inactive after exclusion."
+      - step: 30
+        role: freight
+        example_condition: "FREIGHT"
+        base: "document/item according to design"
+        rate: "EUR 250"
+        value: 250.0
+        status: active
+        owner: condition_record
+      - step: 40
+        role: net_before_tax
+        example_condition: "SUBTOTAL"
+        base: "12,000 - 600 + 250"
+        value: 11650.0
+        status: active
+        owner: pricing_procedure
+      - step: 50
+        role: tax
+        example_condition: "TAX"
+        base: "EUR 11,650 in this synthetic configuration"
+        rate: "19%"
+        value: 2213.5
+        status: active
+        owner: tax_determination
+    expected:
+      gross_before_discount: 12000.0
+      selected_discount: 600.0
+      net_before_tax: 11650.0
+      tax: 2213.5
+      amount_due: 13863.5
+    configuration_shape:
+      - "Price and discounts remain separate condition roles."
+      - "Condition exclusion decides which competing discount remains active."
+      - "Freight position and tax base must be explicit in the pricing procedure."
+      - "Financially relevant rows provide account keys for downstream revenue account determination."
+    diagnostic_questions:
+      - "Was the campaign condition not found, or found and excluded?"
+      - "Which subtotal forms the tax base?"
+      - "Does billing copy the order conditions or redetermine them?"
+      - "Which G/L accounts receive revenue, discount and freight amounts after billing?"
+    lead_answer: >-
+      I separate discovery from interaction. Both discounts can be valid condition records;
+      exclusion selects the commercial winner. Then I verify the subtotal used by freight/tax,
+      billing pricing type, and revenue account determination. I do not change the campaign
+      access sequence merely because its condition is inactive.
+    source_refs:
+      - SRC-SAP-PRC-CONDITION-EXCLUSION
+      - SRC-SAP-PRC-BILLING-PRICING
+      - SRC-SAP-PRC-ACCOUNT-DETERMINATION
+
+  - id: PCR.CASE.02
+    title: "Group scale across two order items"
+    level: intermediate
+    clock: order
+    scenario: >-
+      Product A has 30 units at EUR 100 and product B has 25 units at EUR 80. Both belong to
+      the same discount group. A 55-unit combined quantity reaches an 8% group discount.
+      The discount is distributed by item value.
+    commercial_rule: "Aggregate eligible item quantities for the scale, then distribute the resulting discount to the contributing items."
+    inputs:
+      item_a_qty: 30
+      item_a_unit_price: 100.0
+      item_b_qty: 25
+      item_b_unit_price: 80.0
+      threshold_qty: 50
+      discount_percent: 8.0
+    calculation:
+      item_a_value: 3000.0
+      item_b_value: 2000.0
+      combined_quantity: 55
+      combined_value: 5000.0
+      total_discount: 400.0
+      item_a_discount: 240.0
+      item_b_discount: 160.0
+      final_net: 4600.0
+    trace:
+      - step: 10
+        role: item_prices
+        owner: condition_records
+        proof: "A = 30 × 100 = 3,000; B = 25 × 80 = 2,000"
+      - step: 20
+        role: group_base
+        owner: group_condition
+        proof: "30 + 25 = 55 units, so the 50-unit scale is reached"
+      - step: 30
+        role: group_discount
+        owner: scale_and_group_condition
+        proof: "8% × EUR 5,000 = EUR 400"
+      - step: 40
+        role: distribution
+        owner: group_condition
+        proof: "60% of value belongs to A and 40% to B; discount = 240 / 160"
+    diagnostic_questions:
+      - "Do both items use the same grouping key?"
+      - "Is the scale base quantity or value?"
+      - "Is the condition marked and configured as a group condition?"
+      - "Does the distributed total still equal the document-level discount?"
+    lead_answer: >-
+      I prove the aggregation first. If the 55-unit base is wrong, I debug grouping and scale base.
+      If EUR 400 is correct but item values are wrong, I debug distribution. Those are different defects.
+    source_refs:
+      - SRC-SAP-PRICING-SCALES-DEEP
+      - SRC-SAP-PRICING-GROUP-CONDITIONS
+
+  - id: PCR.CASE.03
+    title: "Inclusive versus exclusive Free Goods"
+    level: intermediate
+    clock: order
+    scenario: "A promotion grants 10 free units for each 100-unit threshold. Compare inclusive and exclusive design."
+    commercial_rule: "Decide whether the bonus quantity is inside the requested quantity or added on top of it before configuring the agreement."
+    inputs:
+      requested_qty: 100
+      bonus_qty: 10
+      unit_price: 20.0
+    variants:
+      - mode: inclusive
+        ordered_or_requested_qty: 100
+        paid_qty: 90
+        free_qty: 10
+        delivered_qty: 100
+        billed_value: 1800.0
+        mental_model: "100 requested = 90 paid + 10 free"
+      - mode: exclusive
+        ordered_or_requested_qty: 100
+        paid_qty: 100
+        free_qty: 10
+        delivered_qty: 110
+        billed_value: 2000.0
+        mental_model: "100 paid + 10 extra free"
+    configuration_shape:
+      - "Free Goods is quantity determination, not merely a 100% discount condition."
+      - "Agreement/master data owns threshold, bonus quantity and calculation rule."
+      - "Item generation affects ATP, delivery, picking and billing behavior and must be tested end to end."
+    diagnostic_questions:
+      - "Is the business promise inclusive or exclusive?"
+      - "Which quantity should ATP confirm?"
+      - "Is the bonus material the same product or a different product?"
+      - "What happens when the order quantity is not an exact multiple of the threshold?"
+    lead_answer: >-
+      I start from the quantity promise. Inclusive and exclusive Free Goods can have a similar marketing sentence
+      but different order, delivery and billing quantities. I test quantity conversion and partial thresholds before price.
+    source_refs:
+      - SRC-SAP-PRICING-FREE-GOODS
+      - SRC-SAP-PRICING-FREE-GOODS-MASTER
+
+  - id: PCR.CASE.04
+    title: "Configured product with variant surcharges"
+    level: intermediate
+    clock: order_and_billing
+    scenario: >-
+      A configurable machine has a base price of EUR 30,000. A high-capacity battery adds EUR 1,500
+      and a precision package adds EUR 2,000. A fleet customer receives 7% after the option surcharges.
+    commercial_rule: "Configuration selects option keys; pricing converts those keys into monetary surcharges and applies the fleet discount to the configured subtotal."
+    inputs:
+      base_price: 30000.0
+      battery_surcharge: 1500.0
+      precision_package_surcharge: 2000.0
+      fleet_discount_percent: 7.0
+    calculation:
+      configured_subtotal: 33500.0
+      fleet_discount: 2345.0
+      net_value: 31155.0
+    trace:
+      - step: 10
+        role: base_price
+        value: 30000.0
+        owner: pricing
+      - step: 20
+        role: variant_condition_battery
+        value: 1500.0
+        owner: variant_configuration_plus_pricing
+      - step: 21
+        role: variant_condition_precision
+        value: 2000.0
+        owner: variant_configuration_plus_pricing
+      - step: 30
+        role: configured_subtotal
+        value: 33500.0
+        owner: pricing_procedure
+      - step: 40
+        role: fleet_discount
+        rate: "7%"
+        base: "EUR 33,500"
+        value: -2345.0
+        owner: pricing
+      - step: 50
+        role: net_value
+        value: 31155.0
+        owner: pricing
+    extension_boundary: >-
+      Do not code a monetary surcharge inside product configuration if a variant key plus pricing condition can express it.
+      Use custom logic only for the smallest missing rule, and prove that the same pricing context reaches billing.
+    lead_answer: >-
+      Configuration owns the selected option, not the final commercial amount. I trace characteristic → variant key → pricing condition,
+      then verify the billing pricing type so the option does not disappear or get recalculated with a different context.
+    source_refs:
+      - SRC-SAP-PRC-VARIANT-CONDITIONS
+      - SRC-SAP-PRC-BILLING-PRICING
+
+  - id: PCR.CASE.05
+    title: "Billing pricing type changes the invoice result"
+    level: advanced
+    clock: billing
+    scenario: >-
+      The sales order contains 10 units at EUR 100. Before billing, the valid master price becomes EUR 110.
+      The business asks why one invoice keeps EUR 1,000 while another becomes EUR 1,100.
+    inputs:
+      quantity: 10
+      order_unit_price: 100.0
+      billing_date_unit_price: 110.0
+    variants:
+      - pricing_type: D
+        simplified_effect: "copy pricing unchanged"
+        expected_invoice_value: 1000.0
+      - pricing_type: B
+        simplified_effect: "complete new pricing"
+        expected_invoice_value: 1100.0
+      - pricing_type: C
+        simplified_effect: "copy manual pricing elements and redetermine the remaining elements"
+        expected_invoice_value: "depends on which rows were manual"
+      - pricing_type: G
+        simplified_effect: "copy pricing unchanged, redetermine taxes and intercompany conditions"
+        expected_invoice_value: "commercial rows usually remain copied; tax/intercompany context is redetermined"
+    diagnostic_questions:
+      - "Which copying-control item combination applies?"
+      - "Which pricing type is assigned there?"
+      - "Which order rows are manual or fixed?"
+      - "Did pricing context fields change between order and billing?"
+    lead_answer: >-
+      I do not compare only condition records. First I prove the copying-control pricing type.
+      It decides whether the invoice is supposed to preserve or redetermine commercial rows.
+    source_refs:
+      - SRC-SAP-PRC-BILLING-PRICING
+
+  - id: PCR.CASE.06
+    title: "Backdated price after invoices already exist"
+    level: advanced
+    clock: after_billing
+    scenario: >-
+      A metal surcharge was billed for 1,000 units at EUR 10 per unit. A later agreement makes EUR 10.50 valid
+      for the already billed period. Another 300 units are still unbilled.
+    commercial_rule: "Use the new rate for unbilled documents; calculate a delta for the already billed population."
+    inputs:
+      billed_qty: 1000
+      old_unit_rate: 10.0
+      new_unit_rate: 10.5
+      unbilled_qty: 300
+    calculation:
+      original_billed_value: 10000.0
+      corrected_billed_value: 10500.0
+      retroactive_delta: 500.0
+      future_unbilled_value_at_new_rate: 3150.0
+    boundary:
+      unbilled_population: "normal billing/repricing can use the new rate according to pricing type and date logic"
+      billed_population: "retroactive billing calculates the difference and creates adjustment documents; the historic invoice is not simply overwritten"
+    diagnostic_questions:
+      - "What is the population by billing status and billing date?"
+      - "Which documents are eligible for retroactive billing?"
+      - "Is the delta positive or negative?"
+      - "How do debit/credit memo adjustments post to FI and customer account?"
+    lead_answer: >-
+      I split the population before changing configuration. Unbilled documents still live in the billing pricing clock;
+      posted invoices live in the retroactive-correction clock. Mixing the two produces either missed deltas or accidental repricing.
+    source_refs:
+      - SRC-SAP-PRC-BILLING-PRICING
+      - SRC-SAP-PRC-RETROACTIVE-BILLING
+
+  - id: PCR.CASE.07
+    title: "Annual rebate belongs to settlement, not the sales order"
+    level: advanced
+    clock: period_settlement
+    scenario: >-
+      A synthetic annual customer agreement pays 2% when eligible billed business volume reaches EUR 1,000,000.
+      Year-end eligible volume is EUR 1,200,000. During the year, operations accrued 1% as a planning assumption.
+    commercial_rule: "Select eligible billing business volume, calculate the contract settlement condition, then compare final entitlement with posted accruals."
+    inputs:
+      eligible_business_volume: 1200000.0
+      final_rebate_percent: 2.0
+      accrued_percent: 1.0
+    calculation:
+      final_rebate: 24000.0
+      accrued_amount: 12000.0
+      final_true_up_before_other_adjustments: 12000.0
+    trace:
+      - step: 10
+        role: business_volume_selection
+        proof: "Eligible billing documents total EUR 1,200,000"
+        owner: condition_contract
+      - step: 20
+        role: final_settlement_condition
+        proof: "2% × EUR 1,200,000 = EUR 24,000"
+        owner: settlement_pricing
+      - step: 30
+        role: accrual_comparison
+        proof: "EUR 24,000 final entitlement - EUR 12,000 accrued = EUR 12,000 remaining true-up"
+        owner: settlement_and_accounting
+    diagnostic_questions:
+      - "Which billing documents form business volume?"
+      - "Which customers/products/order reasons are in or out of scope?"
+      - "What has already been accrued or partially settled?"
+      - "Is the agreement AP or AR settlement in the selected process?"
+    lead_answer: >-
+      I do not add a 2% order discount to solve an annual rebate. The agreement depends on accumulated business volume and a settlement calendar,
+      so the correct owner is Condition Contract Management / Settlement Management.
+    source_refs:
+      - SRC-SAP-PRC-CONDITION-CONTRACT
+
+  - id: PCR.CASE.08
+    title: "Classic intercompany: two prices in one commercial flow"
+    level: advanced
+    clock: order_and_billing
+    scenario: >-
+      Selling company S invoices the external customer EUR 100,000. Delivering company D charges S 70% of the external net value.
+      The example uses the classic percentage intercompany pattern.
+    commercial_rule: "Keep external customer price and internal affiliate charge as separate values with separate billing/accounting consequences."
+    inputs:
+      external_customer_net: 100000.0
+      intercompany_percent: 70.0
+    calculation:
+      external_invoice_value: 100000.0
+      internal_intercompany_value: 70000.0
+      selling_company_spread_before_other_costs: 30000.0
+    trace:
+      - step: 10
+        role: customer_price
+        value: 100000.0
+        owner: external_sales_pricing
+      - step: 20
+        role: intercompany_condition
+        example_standard_condition: PI02
+        base: "external net invoice amount in the classic example"
+        rate: "70%"
+        value: 70000.0
+        owner: intercompany_pricing
+      - step: 30
+        role: accounting_boundary
+        owner: billing_and_fi
+        proof: "External and internal invoices represent different relationships and must not be collapsed into one net value."
+    lead_answer: >-
+      I model two commercial relationships: customer-to-selling-company and delivering-company-to-selling-company.
+      In classic intercompany, PI01/PI02 are standard examples for the internal value. I still validate the target design against Advanced Intercompany Sales before copying a classic pattern into a new S/4HANA program.
+    source_refs:
+      - SRC-SAP-PRC-INTERCOMPANY-CONDITIONS
+      - SRC-SAP-PRC-ADVANCED-INTERCOMPANY
+
+  - id: PCR.CASE.09
+    title: "Custom freight formula: prove standard cannot express it first"
+    level: advanced
+    clock: order_and_billing
+    scenario: >-
+      Freight should be EUR 0.18 per kg with a minimum charge of EUR 75. The document has 600 kg gross weight.
+      The calculated weight charge is EUR 108, so the minimum does not apply.
+    commercial_rule: "Freight = max(EUR 75, gross weight × EUR 0.18/kg)."
+    inputs:
+      gross_weight_kg: 600.0
+      rate_per_kg: 0.18
+      minimum_charge: 75.0
+    calculation:
+      weight_charge: 108.0
+      final_freight: 108.0
+    alternative_test:
+      gross_weight_kg: 200.0
+      weight_charge: 36.0
+      final_freight: 75.0
+    design_sequence:
+      - "Check whether a standard weight-based condition and scale can express the rule."
+      - "If the minimum-charge comparison is still missing, place only that missing calculation in a formula/extension."
+      - "Keep rate and minimum values in maintainable business data where possible."
+      - "Test the exact same logic in billing repricing and external pricing channels."
+    anti_pattern: >-
+      Do not hard-code customer, country, rate and minimum amount in one monolithic routine. That turns a commercial table into software deployment work.
+    lead_answer: >-
+      My first choice is standard condition technique with weight as the base. I add custom calculation only for the part that standard configuration cannot express,
+      and I keep the business parameters outside code. Then I regression-test order, billing and channel parity.
+    source_refs:
+      - SRC-SAP-PRICING-SCALES-DEEP
+      - SRC-SAP-PRICING-CPF
+      - SRC-SAP-PRC-BILLING-PRICING
+
+assessment_drills:
+  - id: PCR.DRILL.01
+    prompt: "A promotion exists in master data but the order shows it inactive. What do you check first?"
+    expected_shape:
+      - "Pricing analysis: found versus not found"
+      - "Condition exclusion / competing conditions"
+      - "Requirement and manual/fixed status"
+      - "Do not change access sequence until discovery is proven wrong"
+  - id: PCR.DRILL.02
+    prompt: "Two items should jointly reach a scale but receive the lower individual discount."
+    expected_shape:
+      - "Group condition indicator and grouping key"
+      - "Scale basis and UoM"
+      - "Aggregated base before distribution"
+  - id: PCR.DRILL.03
+    prompt: "The order price is correct and the invoice price changed overnight."
+    expected_shape:
+      - "Copying-control pricing type"
+      - "Pricing date and master-data validity"
+      - "Manual/fixed conditions"
+      - "Context fields available in billing"
+  - id: PCR.DRILL.04
+    prompt: "A backdated agreement must change invoices from last month."
+    expected_shape:
+      - "Split billed and unbilled populations"
+      - "Normal billing repricing for unbilled documents"
+      - "Retroactive billing / delta documents for already billed documents"
+      - "FI/customer-account impact"
+  - id: PCR.DRILL.05
+    prompt: "Business asks for a 2% discount once annual sales exceed EUR 1 million."
+    expected_shape:
+      - "Clarify immediate order discount versus period rebate"
+      - "If accumulated billed volume is required, use settlement/condition contract pattern"
+      - "Define business-volume selection and settlement calendar"
+  - id: PCR.DRILL.06
+    prompt: "The discount amount is correct in billing but posts to the wrong G/L account."
+    expected_shape:
+      - "Pricing is not necessarily the defect"
+      - "Check account key and revenue account determination"
+      - "Trace customer/material account assignment groups and billing context"
+
+related_views:
+  - title: "Pricing Engine"
+    url: "/labs/enterprise-context/pricing/"
+    purpose: "Runtime search and diagnosis"
+  - title: "Pricing Anatomy"
+    url: "/labs/enterprise-context/pricing/anatomy/"
+    purpose: "Condition types, bases, scales, formulas and interactions"
+  - title: "Pricing Configuration Playbook"
+    url: "/labs/enterprise-context/pricing/configuration/"
+    purpose: "Configuration and testing sequence"
+  - title: "Advanced Pricing Scenarios"
+    url: "/labs/enterprise-context/pricing/scenarios/"
+    purpose: "Mechanism selection by commercial boundary"
+  - title: "Sales Condition Contract Management"
+    url: "/labs/enterprise-context/condition-contract-management/sales/"
+    purpose: "Rebate business volume and settlement lifecycle"
+  - title: "Tax"
+    url: "/labs/enterprise-context/tax/"
+    purpose: "Tax determination as a separate legal/commercial concern"
