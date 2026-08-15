@@ -29,39 +29,59 @@ Home
 
     Atlas AI Operations
     AI agent for SAP support
-    A support assistant should retrieve context, structure the diagnosis, and escalate cleanly. It should not guess its way through ERP risk.
+    The useful agent is not the one that sounds confident. It is the one that knows what evidence to collect, what it may do, and when a human must decide.
 
 
 
 
 
       ProcessSupport operations
-      PatternRetrieval, diagnosis, escalation, human review
+      PatternEvidence, retrieval, tools, approval, traceability
       Reviewed06 May 2026
 
 
 
 
-    Core idea
-    An AI agent for SAP support is most useful when it acts as a disciplined support layer: it retrieves relevant context, summarizes the issue, suggests diagnostic paths, prepares tickets, and routes uncertainty to humans.
-    The goal is not autonomous configuration change. The goal is faster, more consistent first-pass support while preserving authorization boundaries, auditability, and human accountability.
+    The problem this architecture solves
+    SAP support work is expensive when every incident starts with the same manual search: find the document, collect logs, identify the process owner, search old tickets, and decide which evidence matters. The problem is not a lack of chat. It is repeated context reconstruction across systems, teams, and years of operational history.
+    An AI assistant can reduce that reconstruction work, but only if it respects access, evidence quality, and process ownership. Without those controls it may produce a faster answer while making the support decision less trustworthy.
+
+    Start with the support decision, not with the agent
+    “Build an SAP support agent” is too vague to be an architecture. A better starting point is a small support decision: classify an incident, collect missing evidence, find the right runbook, compare a failing document with a known pattern, or prepare an escalation.
+    Once the decision is clear, the role of AI becomes easier to control. It can read more context than a person has time to read, structure the evidence, and suggest the next check. That is useful. Quietly changing ERP data because a language model found a plausible answer is a different category of risk.
 
 
 
-    Minimum safe architecture
+    A practical architecture
+    LayerWhat it should doWhat can go wrong
+      Identity and accessKnow who is asking and which sources or tools that person may use.The model retrieves data the user should not see or acts with a broader technical account.
+      Context and retrievalBring in approved runbooks, process notes, incident history, system evidence, and product documentation.Old or unrelated material is treated as current truth.
+      Reasoning structureSeparate facts, assumptions, missing evidence, likely paths, and the next diagnostic step.A fluent explanation hides that the key evidence is missing.
+      ToolsRead statuses, search logs, create a draft ticket, or call approved services within a narrow contract.A broad tool turns a suggestion into an uncontrolled business action.
+      ApprovalPause before actions with financial, master-data, security, compliance, or process impact.The human becomes a decorative click after the system has already decided.
+      RecordKeep the evidence, source references, proposed action, approval, and result.The team cannot explain later why the action was taken.
 
-      Knowledge retrieval: approved runbooks, process notes, KEDB entries, public documentation, and system-specific support material where access is allowed.
-      Authorization awareness: the agent should not expose data or suggest actions outside the user context.
-      Structured diagnosis: the answer should separate evidence, likely cause, recommended next check, and escalation path.
-      Human approval: any material process change, master-data change, financial impact, or configuration change needs controlled review.
-      Traceability: responses should point to the sources used and leave an audit trail where the organization requires it.
 
+    Read wide, act narrow
+    This is a useful design rule for enterprise support. The agent may read a broad set of permitted evidence, but its write actions should be much narrower. Reading a sales-order status is not the same risk as releasing a credit block. Drafting a change request is not the same as transporting configuration.
+    Many early use cases need no autonomous write access at all. Ticket enrichment, incident summarization, runbook retrieval, duplicate detection, evidence checklists, and escalation drafts already remove a lot of repetitive support work.
 
-    Good use cases
-    Useful first use cases are ticket enrichment, incident summarization, runbook retrieval, duplicate issue detection, first-pass classification, and suggested diagnostic checklists. These are valuable because they reduce support friction without pretending the model owns the ERP decision.
+    Example: a blocked sales order
+    A useful agent does not jump from “order blocked” to “remove the block.” It first asks what should happen next, reads the available order context, identifies whether the evidence points to incompletion, credit, delivery, billing, or another control, and shows which facts are still missing.
+    If the case needs a credit release or master-data correction, the agent can prepare the evidence for the responsible person. The approval still belongs to the process owner. This is slower than pretending the model is autonomous and considerably faster than cleaning up a bad autonomous decision.
 
-    Support takeaway
-    A credible SAP support agent should be conservative by design. It should say when it does not know, ask for missing evidence, and escalate early when the issue touches authorization, finance, compliance, master data, or configuration.
+    Where AI helps and where rules are better
+    Use AI where the input is messy and interpretation has value: text classification, evidence extraction, semantic retrieval, summarization, comparison, and explanation. Use deterministic automation where the rule is stable and testable: required-field checks, routing by known codes, scheduled monitoring, exact validations, or a well-defined API workflow.
+    A mature design often combines both. AI interprets the situation, a rule checks the boundary, a human approves the risky step, and deterministic automation executes the approved action.
+
+    What the agent should say when evidence is weak
+    Uncertainty should be visible in the output. A good response can state: what is known, what is only likely, which source supports the conclusion, what evidence is missing, and which next check would reduce uncertainty. That is far more useful in SAP support than a polished paragraph that quietly mixes facts and guesses.
+
+    Measure support value, not chat activity
+    The useful measures are operational: time to collect complete evidence, first-assignment accuracy, reduction in repeated investigation, escalation quality, runbook reuse, and safe resolution time. Message count and answer length tell very little about whether the support process improved.
+
+    The boundary that matters
+    An SAP support agent should make the team better at diagnosis before it is allowed to make the system different. If the architecture cannot explain who saw what, which evidence supported the recommendation, who approved the action, and what changed afterwards, the automation boundary is too loose.
 
 
 
@@ -1498,41 +1518,66 @@ REVIEWED: 2026-06-13
 ----------------------------------------
 HomeKnowledge AtlasData QualityGovernance Failure Modes
 
-Knowledge Atlas
+  Knowledge Atlas
+  Master data governance failure modes
+  A bad record is visible. A weak governance system is the reason the same kind of bad record keeps coming back.
 
-Master data governance failure modes
 
-Weak governance shows up as operational friction: blocked orders, payment failures, reporting distrust, migration cleanup, and repeated support handling.
+DomainData operationsTypeData qualityReviewed2026-06-13
 
-DomainData operationsTypedata qualityReviewed2026-06-13
+  Governance becomes visible when the process fails
+  Master data governance often looks healthy on paper. There is an owner, a workflow, a policy, and perhaps an MDG system. Then a sales order fails because the customer extension is missing, a supplier is duplicated, or a material reaches production with the wrong control value.
+  The useful question is not whether governance exists. It is whether the governance path catches the important defect before the business process has to catch it.
 
-Where this fits
+  Seven failure modes worth looking for
+  Failure modeWhat it looks like in operationsWhat is actually missing
+    No real ownerSupport corrects records because nobody can decide the right business value.Named accountability for the object and decision.
+    Approval without validationA request is approved, but required fields or combinations are still wrong.Rules that check data quality before activation.
+    Validation without business meaningThe record passes technical checks but still sends the process down the wrong path.Rules tied to actual process decisions, not only field format.
+    Local correction against a central sourceThe same value is fixed repeatedly because replication overwrites the local change.Clear system-of-record and change-channel ownership.
+    Creation governed, extension ignoredThe object exists centrally but is unusable in a new plant, sales area, purchasing organization, or company code.Lifecycle governance across organizational extension.
+    No retirement disciplineOld customers, suppliers, materials, or mappings stay active and create duplicates or wrong selection.Blocking, archiving, validity, and decommission rules.
+    No feedback from incidentsThe same master-data ticket returns under different document numbers.A loop from support evidence back into validation and governance design.
 
-Governance failure modes explain why the same data defect keeps returning after individual records are repaired.
 
-Common issues
+  Do not confuse workflow with governance
+  A workflow proves that a record moved through steps. It does not prove that the right person approved it, that the right rules ran, or that the downstream systems received a usable result. Governance includes decision rights, validation, ownership, replication, monitoring, exception handling, and retirement.
+  MDG can support many of these controls, but the product cannot invent ownership for an organization that does not have it. Humans remain annoyingly necessary in the exact places where the policy slide said “business owner”.
 
-No clear owner for creation, extension, blocking, change approval, or retirement of master data.
+  Trace a recurring defect backwards
 
-Rules exist in documentation but not in workflow, validation, monitoring, or accountability.
+    Start from one real process failure. Which field or object state caused the business problem?
+    Find where that value entered the landscape. Manual creation, migration, interface, derivation, bulk load, workflow, or local maintenance.
+    Find the intended owner. Who is allowed to decide this value, not only who has technical access to change it?
+    Check the prevention point. Could the defect have been rejected, derived, enriched, or sent for approval before activation?
+    Check replication and local use. Did the correct source value reach every system and organizational context that needs it?
+    Look for siblings. Search for other records created by the same path or rule. This separates one bad record from a governance pattern.
+    Feed the lesson back. Add or change a rule, owner, workflow step, monitoring signal, or retirement control where it will prevent recurrence.
 
-Migration cleanup is treated as a one-time project instead of a continuous quality obligation.
 
-Diagnostic questions
+  Metrics that reveal weak governance
+  Counting workflow approvals is easy and not very informative. Better signals connect governance to process cost:
 
-Who owns the object and who approves change?
+    Incidents caused by master data, grouped by object and field.
+    Records corrected shortly after creation or activation.
+    Replication failures and manual local fixes.
+    Duplicate candidates and time to resolve them.
+    Missing organizational extensions discovered by transactions.
+    Exception approvals that become permanent behaviour.
+    Time between business-rule change and validation-rule update.
 
-Which quality rule failed, and was it preventable at entry time?
 
-Is this a single bad record or a pattern across objects, plants, company codes, or suppliers?
+  The repair and the governance action are different
+  The incident may need an immediate record correction. Governance work asks what should change so the next record does not fail in the same way. Sometimes the answer is a validation rule. Sometimes it is a clearer owner, a better source-system boundary, a different replication design, or the retirement of an obsolete option.
+  If every recurring data problem ends with “user trained”, inspect the process again. Training is useful; it is also a remarkably popular place to hide missing system controls.
 
-Governance failures become visible when the same ticket type keeps reopening. The signal is not the bad record; it is the absence of an owner, rule, or review loop that should have caught it.
+  The practical test
+  Take a recent master-data incident and ask four questions: who owned the value, where it should have been checked, why the invalid state was allowed, and what changed afterwards to prevent recurrence. If the fourth answer is “nothing”, you have a support fix, not governance.
 
 Related pages
-
-SAP Master Data Quality
-Authorization-Aware AI for SAP
-Operational Memory for SAP AMS
+  SAP Master Data Quality
+  Authorization-Aware AI for SAP
+  Operational Memory for SAP AMS
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with Business Partner, customer and supplier data, replication diagnostics, and master-data governance. This guide focuses on the evidence needed to separate data, mapping, and ownership problems.
@@ -1564,41 +1609,51 @@ REVIEWED: 2026-06-13
 ----------------------------------------
 HomeKnowledge AtlasData QualitySAP Master Data Quality
 
-Knowledge Atlas
+  Knowledge Atlas
+  SAP master data quality
+  Master data quality becomes visible when a business process asks the data to make a decision.
 
-SAP master data quality
 
-Master data quality is not an abstract data-management concern. In SAP support, it is often the hidden cause behind blocked processes and repeated tickets.
+DomainData operationsTypeData qualityReviewed2026-06-13
 
-DomainData operationsTypedata qualityReviewed2026-06-13
+  Bad data rarely stays inside the master record
+  A material can exist and still be unusable for a plant. A business partner can exist and still miss the role or organizational data needed for sales or procurement. A unit of measure can look harmless until an order, delivery, invoice, or interface tries to use it.
+  This is why master data quality is not mainly a “data team” topic. In SAP, master data participates in process decisions. Weak data appears later as blocked orders, failed procurement, wrong accounting, pricing differences, planning noise, replication errors, or manual work.
 
-Where this fits
+  Read the defect through its process effect
+  Data problemTypical process effectUseful first question
+    Missing organizational extension or viewThe object exists, but cannot be used in the required plant, sales area, purchasing organization, or company context.Is the object maintained for the organizational level used by the transaction?
+    Wrong or inconsistent control valueDetermination, planning, pricing, shipping, tax, account assignment, or workflow follows the wrong path.Which process decision reads this field?
+    Duplicate or conflicting objectUsers or interfaces select different records for the same real-world entity.Which record is authoritative, and why were two allowed to survive?
+    Stale dataThe process is technically valid but no longer reflects the current business situation.Who owns the value and what event should trigger its review?
+    Replication or mapping defectSource and target systems disagree even though each local record may look correct.Where did the value first diverge: source, mapping, transport, or target?
 
-Master data quality sits behind sales, procurement, inventory, finance, logistics, planning, and reporting. When support only fixes transaction symptoms, the same data problem returns.
 
-Common issues
+  Diagnose the object before editing it
 
-Required views or organizational extensions are missing.
+    Start from the failed process step. Capture the document, object, organizational context, message, and expected business result.
+    Identify the master data that controls that step. Do not search every field. Ask which data the process actually reads at the point of failure.
+    Compare with a working case. A similar customer, material, supplier, or business partner often reveals the missing extension or wrong control value quickly.
+    Find the system of record and owner. A local correction can be overwritten if another system governs the object.
+    Check whether the defect is isolated or systematic. One bad record needs correction. Fifty records with the same defect usually point to a rule, migration, interface, or governance problem.
+    Separate repair from prevention. Restore the process first when appropriate, then decide what validation, workflow, stewardship, monitoring, or ownership change prevents recurrence.
 
-Names, addresses, units of measure, payment terms, partner roles, or classifications are inconsistent.
 
-Ownership is unclear, so support corrects records one by one without changing governance.
+  Correction is not the same as data quality
+  Support teams are good at repairing individual records because the business needs to move. The trap is stopping there. If the same defect returns every week, the organization is paying people to act as a manual validation rule.
+  A stronger result links the incident to its creation path. Was the field optional when it should have been required? Did a migration create incomplete extensions? Did an interface accept an invalid code? Is ownership split between teams? Did a local workaround bypass governance? Those questions turn a data correction into process improvement.
 
-Diagnostic questions
+  Useful quality signals
+  “Data quality percentage” is rarely enough on its own. Better operational signals connect data defects to business use. Examples include orders blocked by missing master data, materials without required organizational extensions, failed BP replication, duplicate supplier candidates, manual corrections after interface loads, and repeated incidents caused by the same field or rule.
+  The aim is not to create a perfect database. The aim is to know which data is critical, who owns it, where it is validated, and what happens when it is wrong.
 
-Which master data object controls the failed process step?
-
-Is the problem missing data, inconsistent data, duplicate data, wrong ownership, or stale migration residue?
-
-Can the issue be prevented with validation, workflow, stewardship, or monitoring?
-
-Master data quality work is unglamorous until a blocked order or failed payment reveals the real cost. The best fixes combine a repaired record with a governance change that stops the same defect from recurring.
+  A practical rule
+  When a master-data incident repeats, stop asking only “which value should we enter?” Ask “why was this invalid state possible, and where should it have been caught?” That is the point where AMS, process design, and data governance meet.
 
 Related pages
-
-Master Data Governance Failure Modes
-AI-Ready Process Documentation
-Authorization-Aware AI for SAP
+  Master Data Governance Failure Modes
+  AI-Ready Process Documentation
+  Authorization-Aware AI for SAP
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with Business Partner, customer and supplier data, replication diagnostics, and master-data governance. This guide focuses on the evidence needed to separate data, mapping, and ownership problems.
@@ -1628,101 +1683,64 @@ BUSINESS PROCESS: Integration
 TAGS: integration, sap-ale, diagnostics, master-data
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
-    Knowledge Atlas
-    Diagnostics
-    SAP ALE Distribution Model Diagnostics
+HomeKnowledge AtlasDiagnosticsSAP ALE Distribution Model Diagnostics
+
+  Atlas Diagnostic
+  SAP ALE distribution model diagnostics
+  Do not treat ALE as one switch. Trace whether the object was in distribution scope, detected as changed, converted into a message, routed, and accepted by the target.
 
 
+ProcessIntegrationSAP areaALE / master data distributionIndexingIndex, reviewed
 
-    Atlas Diagnostic
-    SAP ALE distribution model diagnostics
-    A first-pass structure for finding why master data is not distributed, arrives at the wrong target, or creates duplicate objects.
+  The problem is a broken distribution decision
+  When master data is missing in a target system, several different controls can be responsible. The object may be outside the intended distribution scope, the source change may not have produced a distribution trigger, no outbound message may have been created, routing may point elsewhere, or the target may have rejected a valid message.
+  This distinction matters because changing the distribution model will not fix a target-side posting error, and reprocessing messages will not help if the source object was never selected.
 
-
-
-
-
-      ProcessIntegration
-      SAP areaALE / master data distribution
-      IndexingIndex, reviewed
-
-
-
-
-    Core idea
-    ALE distribution models decide which master data changes go to which target systems. A missing object usually means the model did not select it, the change pointer was not processed, or the target did not accept it. Duplicates usually mean key mapping is missing or wrong. The diagnostic job is to follow the selection chain: model → change pointer → IDoc → target.
-
-    Common symptoms
-
-      Master data change in source system is not reflected in target system.
-      Change pointer exists but no IDoc was generated.
-      IDoc was sent to wrong target system or multiple systems unexpectedly.
-      Target system creates duplicate master data objects instead of updating existing ones.
-      Distribution model shows active but no messages for the object type.
+  Read the chain from left to right
+  StageQuestionUseful evidence
+    Business scopeShould this object be distributed to this receiver at all?Object type, message type, sender, receiver, filters, organizational data.
+    Change detectionDid the relevant change create the trigger expected by this scenario?Change timestamp, changed fields, change-pointer or application trigger where used.
+    Message creationWas an outbound message created for the object?Message/IDoc number, creation time, sender, receiver, message type.
+    RoutingDid the technical route match the intended target?Partner/port or equivalent route, receiver system, filters, model assignment.
+    Target processingDid the target receive and apply the object?Inbound status, application log, target key, validation error, duplicate check.
 
 
-    Likely causes
+  A practical diagnostic workflow
 
-      Missing distribution model entry: the object type or message type is not included in the active distribution model.
-      Change pointer not created: change documents were not written or the change pointer job (BD21) did not process them.
-      Filter object mismatch: the filter object excludes the specific plant, company code, or sales organization from distribution.
-      Partner profile issue: the receiver partner profile does not support the message type or the outbound parameter is missing.
-      Target system key mapping: the target system does not recognize the source key and creates a new object instead of updating.
-
-
-    Where to check in SAP
-
-      BD64 — distribution model display.
-      BD22 — change pointer overview.
-      BD21 — change pointer processing log.
-      WE20 — partner profile outbound parameters.
-      WE02 — generated IDocs for the message type.
+    Choose one object and one receiver. Capture the source key, object/message type, source system, expected target, and business change that should have triggered replication.
+    Confirm distribution scope. Check that the sender-receiver relationship and any filters include this exact case. Do not assume that an active model means every object is eligible.
+    Check change detection. Establish whether the scenario is change-pointer driven, application-event driven, manually triggered, or based on another mechanism.
+    Find the outbound message. If none exists, remain on the source side. If it exists, continue with its exact receiver, timestamp, and status.
+    Trace routing. Confirm that the message used the expected logical receiver and technical route rather than simply proving that “an IDoc was sent.”
+    Read the target result. Separate transport success from application success. A message can arrive and still fail validation, key resolution, or update logic.
+    Compare with a working object. Differences in organizational data, filters, changed fields, key mapping, or target state often expose the relevant control quickly.
 
 
-    Key tables / transactions / objects
+  Where classic ALE tools help
+  In classic ALE/IDoc landscapes, consultants often inspect the distribution model, change-pointer processing, partner profiles, and IDoc status using the standard ALE and IDoc administration tools available in that release. Those tools are evidence sources, not the diagnostic method itself. The important result is to identify the first stage where the expected chain stops.
 
-      BDCP / BDCPS — change pointers.
-      EDIDC / EDIDS — IDoc control and status.
-      TBD22 / TBD23 — distribution model tables.
-      TBDBE — filter objects.
+  Duplicates need a separate diagnosis
+  If the target creates a second object instead of updating an existing one, do not immediately label it a distribution-model problem. Check how the target identifies the business object, whether source and target keys are expected to differ, whether mapping exists, and whether the earlier object was created outside the governed replication path.
 
+  Safe next actions
 
-    Diagnostic workflow
-
-      Identify the master data object, message type, source system, and expected target system.
-      Check BD64 for the distribution model: is the object/message type included and active?
-      Check BD22 for change pointers: was a change pointer created for the object change?
-      Run or check BD21 to see if change pointers were processed into IDocs.
-      Check WE20 for the receiver partner profile: does it have the outbound parameter for this message type?
-      Check WE02 for generated IDocs and their status.
-      On the target system, check if the IDoc was received and whether it created or updated the object.
+    Correct scope or filters only after proving that the object should have been selected.
+    Repair change detection or scheduling when eligible changes are not converted into outbound work.
+    Correct routing or partner configuration when the generated message points to the wrong technical receiver.
+    Fix target-side validation, master data, or key mapping when transport succeeds but application posting fails.
+    Before mass reprocessing, verify that messages are safe to repeat and that the target has not already applied part of the change.
 
 
-    Typical fixes or next actions
+  What to capture first
+  Record the object type and key, sender, expected receiver, business change and timestamp, expected message type, distribution/filter context, outbound message if present, target status, and whether a comparable object works. That evidence makes ownership visible: source application, ALE configuration, routing, integration operations, or target application.
 
-      Add the missing object type or message type to the distribution model.
-      Process change pointers with BD21 if they were not automatically processed.
-      Adjust filter objects if the distribution scope is too narrow.
-      Update the partner profile to include the missing outbound parameter.
-      Fix key mapping on the target system if duplicates are being created.
+  Limitations and boundaries
+  This page covers the diagnostic logic of ALE-style distribution. Exact transactions, tables, change-pointer behavior, message types, and target processing differ by object, release, and landscape. Modern replication scenarios may use DRF, APIs, events, middleware, or application-specific frameworks instead of classic ALE change-pointer flows, so verify the actual mechanism before applying an ALE-specific fix.
 
-
-    What to capture first
-    Before routing the issue, capture: object type, message type, source and target systems, change document number, distribution model name, and whether the issue is new or recurring. This distinguishes a one-time filter miss from a model gap that will keep producing failures.
-
-    Boundaries and non-goals
-    This page is a diagnostic frame, not an ALE configuration guide. It does not cover distribution model design, filter object setup, or target system key mapping configuration. It does not replace SAP's ALE documentation.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
-
-
-
-    Related Atlas Pages
-
-      Idoc Aif Integration Diagnostics
-      SAP Idoc Status Diagnostics
-      SAP Key Mapping Diagnostics
+Related Atlas Pages
+  IDoc and AIF Integration Diagnostics
+  SAP IDoc Status Diagnostics
+  SAP Key Mapping Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
@@ -1761,82 +1779,64 @@ Home
 
     Atlas Diagnostic
     SAP application log diagnostics
-    A first-pass structure for finding incident evidence in SAP application logs, system logs, and developer traces.
+    The right log is the one closest to the failed business step. Searching every technical monitor usually creates more noise than evidence.
 
 
 
 
 
       ProcessSAP AMS support
-      SAP areaApplication logs / SLG1 / SM21
+      SAP areaApplication logs / runtime evidence
       IndexingIndex, reviewed
 
 
 
 
-    Core idea
-    Application logs are often the fastest way to narrow an incident to a component, user, or transaction. When the symptom is vague, the goal is to move from the business report to the concrete log object, time window, and error text.
+    Start from the failure, then choose the evidence source
+    SAP has many logs because different layers fail in different ways. A background job, an application validation, an ABAP dump, an RFC problem, and a system-level event should not begin in the same monitor.
+    Before opening a log transaction, capture the exact time window, user or technical user, business object, program or interface if known, and what the user expected to happen. These details are the search key. Without them, “check the logs” becomes an expensive form of scrolling.
 
-    Common symptoms
-
-      A process failed but no application error message is visible to the user.
-      The support team needs to prove whether an error originated in SAP or in a connected system.
-      An interface or batch job failed and the job log is too short to explain why.
-      A user reports intermittent failures that are hard to reproduce.
-      A custom program or enhancement behaves unexpectedly after a transport.
-
-
-    Likely causes
-
-      Log object not activated: the application writes to a log object that is not active in SLG0/SLG2.
-      Wrong log level: the log is configured for errors only and omits the warning that explains the root cause.
-      Time-window mismatch: the log is searched outside the actual failure window.
-      Object overwritten: old log entries were deleted by housekeeping before the incident was reported.
-      Trace not collected: a short dump or SQL trace was not captured at the moment of failure.
+    Which evidence is closest to the symptom?
+    SymptomUseful starting evidenceWhy
+      Application step reports a business or processing errorApplication log where the application writes one, often visible through SLG1.It can contain object-specific messages and processing context that the UI does not show.
+      ABAP runtime terminatesST22 short dump for the matching user, program, and time.The dump gives exception, program context, and call information for the termination.
+      Background processing failsJob status and job log first; spool or application log next when relevant.The job itself tells you which step/program failed and under which user.
+      Broad technical or system event is suspectedSM21 system log and Basis monitoring appropriate to the time window.The problem may sit below one business application.
+      Interface message failsThe message-specific monitor first: IDoc, AIF, RFC, queue, middleware, or API evidence used by that interface.A generic system log rarely explains a business-message failure as well as the message trace itself.
+      Issue is reproducible but normal evidence is not enoughA controlled trace such as authorization, SQL, or runtime trace chosen for the hypothesis.Traces can be expensive and noisy, so they should answer a specific question.
 
 
-    Where to check in SAP
+    Using the application log well
+    SLG1 is valuable when the application uses the SAP Application Log. Search with the narrowest useful combination of object, subobject, external ID, user, and time. The exact object names are application-specific, so a known working case or technical documentation is often useful.
+    An empty SLG1 result does not prove that “SAP has no error.” The application may log elsewhere, the selection may be wrong, or the failure may happen before the logging point. Move to another evidence source only when the process path justifies it.
 
-      SLG1 — application log: filter by log object, sub-object, external ID, or time.
-      SM21 — system log: check for operating-system level or kernel errors around the failure time.
-      ST22 — short dump analysis for ABAP runtime errors.
-      ST05 / SQL trace — capture database activity if the issue is reproducible.
-      SM50 / SM66 — work process overview for stuck or failed dialogs.
+    A diagnostic sequence
 
-
-    Key tables / transactions / objects
-
-      SLG1 / SLG2 — application log entries and display.
-      SNAP — short dump header data.
-      TBPROF / TSP02 — spool and print request tables.
+      Pin down the event. Exact timestamp or narrow window, user, system/client, business object, and failed action.
+      Choose the nearest log. Application log for application processing, job log for jobs, dump for runtime termination, message monitor for interfaces.
+      Find the first useful error. Later messages often describe consequences. The earlier message may show the rejected value, missing object, failed call, or exception.
+      Correlate across layers only when needed. If an application error calls an RFC, then follow the RFC. If a job step dumps, then open the dump. Build a chain instead of a pile of screenshots.
+      Compare with a working case. Same program, object type, user group, or interface in a nearby time window can show what normal evidence looks like.
+      Record the finding in business terms. State which processing step failed and what the log proves.
 
 
-    Diagnostic workflow
+    Traces are not the first reflex
+    Tools such as ST05, SAT, authorization traces, and other low-level diagnostics can be extremely useful, but they should have a question behind them. “Maybe the database is slow” is not enough. Define the transaction, user, time, reproduction step, and expected signal before tracing, and follow local rules for production use.
 
-      Confirm the exact time, user, transaction, and business object involved in the incident.
-      Open SLG1 and filter by the relevant log object/sub-object or external ID.
-      If SLG1 is empty, check SM21 for system-level errors in the same time window.
-      For ABAP dumps, open ST22 and search by date/user/transaction.
-      If the failure is reproducible, run ST05 or SAT to capture SQL or runtime trace.
-      Document the log object, message ID, and timestamp; correlate with business process step.
+    A few common mistakes
 
-
-    Typical fixes or next actions
-
-      Activate or extend the relevant log object in SLG0 if logging is missing.
-      Adjust log retention or archive strategy so recent incidents are still available.
-      Add explicit error handling and logging in custom code.
-      Route critical log objects to alerting or incident workflow.
-      Escalate to development or basis if the trace points to a program or kernel issue.
+      Searching a whole day when the failure time is known to the minute.
+      Looking only at the latest error instead of the first meaningful failure in the chain.
+      Using a generic system log for a message-specific integration problem.
+      Changing log configuration during an incident without understanding retention, volume, or production impact.
+      Collecting technical screenshots without linking them to the failed business object or process step.
 
 
-    Support takeaway
-    A useful log investigation ticket includes: time window, user/background user, transaction or program name, business object ID, and the exact symptom. Without this context, log searches become slow and inconclusive.
+    What belongs in the escalation
+    Include system/client, time window, user or technical user, transaction/program/interface, business object, exact symptom, the relevant log or dump identifier, and the first useful error message. Add the path you already checked. This saves the next team from repeating the same search with the same incomplete information.
 
-    Boundaries and non-goals
-    This page is a diagnostic frame, not a configuration guide for SAP Log Management or SAP Cloud ALM. It does not cover detailed trace interpretation or code debugging.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
+    The useful outcome
+    Log analysis is complete when the evidence narrows the failure to a component or process step and gives the next owner a testable question. A 30-line copy of SLG1 is not a diagnosis. It is a souvenir.
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with recurring incidents, operational ownership, support improvement, and reusable support knowledge. This guide frames AMS decisions around the operating conditions that create repeated effort.
@@ -1875,7 +1875,7 @@ Home
 
     Atlas Diagnostic
     SAP authorization and role diagnostics
-    A first-pass structure for authorization failures, missing roles, and profile gaps in SAP support.
+    First prove which authorization check failed. Then decide whether access is missing, the role is wrong, or the process should not grant that access at all.
 
 
 
@@ -1888,69 +1888,56 @@ Home
 
 
 
-    Core idea
-    Authorization failures stop users before they can reproduce a functional issue. The diagnostic goal is to capture the missing authorization object, compare it with the user's roles and profiles, and decide whether the fix is a role change, a user exit, or a process change.
+    Not every disabled action is an authorization issue
+    A user who cannot perform an action may be missing an authorization, but the same symptom can come from document status, customizing, workflow, field control, or application logic. Security work starts with evidence of a failed authorization check, not with a request to copy another user's roles.
+    The business question matters too. Even when a technical authorization is missing, the correct answer may be “request approved access” rather than “add the object.” Roles exist to express a control model, not to make error messages disappear.
 
-    Common symptoms
-
-      User receives 'No authorization' or 'You are not authorized' messages.
-      A transaction starts but specific functions or fields are grayed out.
-      Background job fails with authorization errors under its service user.
-      An interface or RFC call fails with authorization_check errors.
-      Authorization works in one client but not another after a transport.
-
-
-    Likely causes
-
-      Missing authorization object: the role does not contain the required object/activity/value.
-      Organizational level mismatch: the user is authorized for a different company code, plant, or sales organization.
-      Profile not generated: the role was changed but the profile was not regenerated or not assigned.
-      Buffer refresh: user context still holds the old authorization after a role change.
-      User comparison incomplete: the user master record was not compared after role changes.
+    Choose the evidence for the type of failure
+    SituationUseful evidenceImportant caution
+      Dialog user gets a clear authorization errorReproduce the action and inspect the failed check immediately, for example with SU53 where appropriate.SU53 shows recent failed checks in that user context. It is not a complete explanation of the role design.
+      The failure is indirect or hard to reproduceUse an authorization trace approved for the environment and narrow it to the user/action.Trace data can be noisy and sensitive. Collect only what is needed.
+      Background job failsJob log, execution user, failed authorization evidence, and the job's business function.The interactive user's SU53 does not describe the background user's checks.
+      RFC, interface, or service call failsTechnical user, called function/service, error trace, and target-side authorization evidence.Do not solve a technical-user issue by broadening a human role.
+      Access differs by company code, plant, or sales organizationAuthorization object fields and organizational values in the assigned role.The object may exist in the role but with the wrong value scope.
 
 
-    Where to check in SAP
+    A clean diagnostic sequence
 
-      SU53 — display authorization check values from the last failed check.
-      PFCG — role maintenance: check objects, organizational levels, and profile generation status.
-      SU01 — user master: compare roles and profiles assigned to the user.
-      ST01 — authorization trace for harder cases.
-      SU56 — authorization buffer for the current user session.
-
-
-    Key tables / transactions / objects
-
-      UST04 / UST12 — user master authorization profiles.
-      AGR_1251 — authorization values in roles.
-      USR02 — user master logon data.
+      Capture the exact action. User, transaction or app, business object, activity, organizational context, timestamp, and message.
+      Confirm that an authorization check actually failed. If there is no failed check, return to functional diagnosis instead of forcing the issue into security.
+      Identify the object, field, and value. The useful evidence is more specific than “no access.”
+      Check the intended role. Does the user's business role normally include this activity and organizational scope?
+      Check role and user state. If the role should contain the authorization, verify role maintenance, generated profiles, assignment/user comparison, and current user context as relevant to the landscape.
+      Check governance before changing access. Confirm the business reason, role owner, approval path, and segregation-of-duties impact.
+      Retest the original action. A role change is not proven until the required task works with the intended scope and no unnecessary access was added.
 
 
-    Diagnostic workflow
+    Useful SAP tools
 
-      Reproduce the error or capture SU53 immediately after it occurs.
-      Identify the missing authorization object, field, and required value.
-      Check whether the user has a role that should contain that object.
-      If the role exists, verify profile generation, user comparison, and buffer refresh.
-      If the role does not contain the object, decide whether to extend the role or change the process.
-      Document the authorization object and value before requesting a security change.
+      SU53 for recent failed authorization checks in the current user's context.
+      PFCG for role content, organizational levels, profiles, and role maintenance.
+      SU01 for user assignments and user-master context.
+      SU56 for the user's authorization buffer.
+      ST01 or the approved authorization trace tooling in the landscape for cases that need deeper evidence.
+
+    The tool is chosen after the failure is understood. Running every security transaction is not a diagnostic method; it is sightseeing with production access.
+
+    What not to use as a fix
+
+      Do not copy a powerful colleague's roles as a shortcut.
+      Do not add broad wildcard values to make one check pass.
+      Do not assume a missing object should always be added. The application or process may be intentionally restricted.
+      Do not treat logout/login or buffer refresh as a root-cause correction when the role itself is wrong.
 
 
-    Typical fixes or next actions
+    What a useful access request contains
+    Include the user, exact business task, application or transaction, authorization object/field/value when known, organizational scope, evidence of the failed check, expected role, and business approval. This gives the security team enough information to make a controlled decision instead of reverse-engineering the incident from “please give same access as John.”
 
-      Add the missing authorization object/activity to the correct role and regenerate the profile.
-      Adjust organizational levels if the user works across company codes or plants.
-      Run user comparison for affected users after role changes.
-      Refresh the user context or have the user log off and on again.
-      Escalate to security team if the request conflicts with segregation of duties.
+    The practical end state
+    A good authorization diagnosis explains both sides: which check stopped the user and why the requested access is legitimate for that role. Technical evidence without business ownership creates over-access; business urgency without technical evidence creates guesswork.
 
-
-    Support takeaway
-    Authorization tickets are most useful when they include the SU53 screenshot or authorization object, the user's roles, the transaction and activity, and the business reason for access.
-
-    Boundaries and non-goals
-    This page is a support diagnostic, not a security role design or SoD review guide. It does not replace the security team's authorization concept.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
+    Boundaries
+    This page is a support diagnostic. It does not replace role architecture, privileged-access controls, segregation-of-duties analysis, or the security team's approval process.
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with recurring incidents, operational ownership, support improvement, and reusable support knowledge. This guide frames AMS decisions around the operating conditions that create repeated effort.
@@ -2468,127 +2455,69 @@ REVIEWED: 2026-06-13
 ----------------------------------------
 HomeKnowledge AtlasDiagnosticsGoods Receipt Diagnostics
 
-Knowledge Atlas
+  Knowledge Atlas
+  SAP goods receipt diagnostics
+  A goods receipt connects a physical event to purchasing, stock, accounting, quality, and later invoice matching.
 
-SAP goods receipt diagnostics
 
-Goods receipt is where physical delivery becomes system evidence. Mistakes ripple into stock, invoice matching, and finance.
+DomainSAP AMSTypeDiagnostic guideReviewed2026-06-13
 
-DomainSAP AMSTypediagnostic guideReviewed2026-06-13
+  Begin with three versions of reality
+  For a goods-receipt incident, compare three things: what physically arrived, what the purchase order expects, and what SAP already posted. Most confusion starts when one of these is treated as the truth without checking the other two.
+  A truck at the gate does not prove that the PO item is open. A PO with open quantity does not prove that the material can be posted to the requested plant or stock type. A material document does not prove that stock is available for the business use the user expects.
 
-Where this fits
+  First identify the exact failure
+  SymptomFirst questionLikely next evidence
+    The receipt cannot be postedWhat exact validation stops the posting?PO item/status, material/plant data, movement/reference context, batch/serial/QM requirements, posting date.
+    The receipt posted against the wrong reference or quantityWhat was posted and what should have been posted?Material document, PO history, delivery note, user input, reversal/follow-on documents.
+    PO history does not look as expectedIs the receipt missing, reversed, or posted to another item/reference?PO history sequence and material-document references.
+    Stock exists but is not usableWhich plant, storage location, batch, special-stock or quality status received it?Stock overview and stock type/status after posting.
+    Invoice matching is now blockedDo PO, receipt and invoice quantities/values describe the same business event?PO history, GR quantity/value, invoice variance and reversal history.
 
-Goods receipt sits at the boundary of inbound logistics, inventory management, invoice verification, and accounting. A posting failure here usually means the physical delivery, the purchase order, the material master, or the user input are not aligned.
 
-Common symptoms
+  A diagnostic sequence
 
-The purchase order is closed, blocked, wrong, or no longer matches the physical delivery.
+    Capture the physical evidence. Supplier, delivery note, material, delivered quantity, unit, batch/serial information where relevant, and receiving location.
+    Read the PO item. Check ordered and open quantity, delivery-completed/deletion or other relevant status, plant, delivery tolerances, units, and any expected receiving controls.
+    Read PO history before reposting. A receipt may already exist, may have been reversed, or may have been posted against a different item.
+    Capture the exact posting error. The message and posting context tell you whether the issue belongs to purchasing data, material controls, inventory configuration, accounting period, quality, batch/serial handling, or another layer.
+    Check the material and organizational context. Confirm that the material is valid for the plant and that required stock, batch, serial, valuation, or quality controls are satisfied.
+    Confirm the result after posting. Check the material document, PO history, stock location/status, and any accounting or quality follow-on result expected from the movement.
 
-The material, batch, serial number, storage location, or quality status prevents normal posting.
 
-A receipt was posted too early, too late, with the wrong quantity, or against the wrong reference.
+  Movement type is important, but it is not the whole diagnosis
+  The movement type controls important posting behaviour, but changing it to make an error disappear can create the wrong stock or accounting result. First confirm the business event and reference: purchase-order receipt, reversal, return, transfer, subcontracting, consignment, or another scenario. Then check whether the movement used by the process matches that event.
+  For deeper movement-type questions, use the movement type diagnostic rather than turning every receiving issue into configuration work.
 
-The receipt quantity does not match the invoice quantity, causing a three-way match block.
+  Quality, batch, serial, and warehouse controls change the path
+  A valid receipt may not land in unrestricted-use stock. Quality inspection, batch management, serial-number requirements, EWM or warehouse execution, and special-stock scenarios add their own evidence and status. Do not “correct” the inventory because the stock category differs from a simple PO receipt example.
 
-Stock is visible physically but not in the system, or posted to the wrong plant or storage location.
+  Be careful with reversal and reposting
+  Reversing an incorrect receipt can be the right correction, but it is not a harmless reset button. Check whether the receipt already affected invoice verification, stock consumption, quality, warehouse tasks, valuation, or later material movements. The later the process has moved, the more important the document flow becomes.
 
-Likely causes
+  Tools depend on the release and process
+  In classic GUI-based processes, consultants commonly use MIGO or the relevant Fiori app for the receipt, ME23N for PO and history context, and stock/material-document views for the posted result. S/4HANA data structures and apps differ from older ECC habits, so avoid building the diagnosis around one legacy transaction or table name.
 
-PO mismatch: the delivered material, quantity, or unit of measure differs from the purchase order item.
+  What belongs in the ticket
 
-Status block: the PO item is marked delivery completed, blocked, or deleted.
+    PO and item, supplier, material, plant and receiving location.
+    Physical quantity/unit versus ordered, already received, and remaining quantity.
+    Exact posting error or the material document if posting already occurred.
+    Batch, serial, quality, warehouse, or special-stock context when relevant.
+    Delivery note and business date/posting date.
+    Downstream impact: stock unavailable, invoice blocked, production waiting, accounting period issue, or another concrete result.
 
-Master data gap: the material is not extended to the plant or storage location, or the batch/serial profile is inconsistent.
 
-Quality inspection: the material requires inspection and cannot be posted directly to unrestricted stock.
-
-Movement type issue: the wrong movement type is used, or the movement type is not configured for the transaction.
-
-Timing issue: the invoice arrived before the goods receipt, or the receipt was posted against the wrong period.
-
-Where to check in SAP
-
-MIGO / MB01 — goods receipt entry and error messages.
-
-ME23N — purchase order history showing ordered, delivered, and still-to-deliver quantities.
-
-MB52 / MMBE — stock overview to confirm where stock was posted.
-
-MKPF / MSEG — material document header and item details.
-
-QA33 / QE51N — inspection lot status if quality management is involved.
-
-Key tables / transactions / objects
-
-MKPF — material document header.
-
-MSEG — material document items.
-
-EKBE — purchase order history.
-
-MARD — storage location stock.
-
-QALS — inspection lot data.
-
-Diagnostic workflow
-
-Confirm the physical delivery: material, quantity, batch/serial, supplier, and delivery note.
-
-Check the purchase order in ME23N for expected quantity, open quantity, delivery status, and blocks.
-
-Attempt or review the goods receipt posting in MIGO and capture the exact error message.
-
-Verify material master plant/storage location/batch settings and quality inspection requirements.
-
-Check whether stock was already posted elsewhere or the PO was already delivery-completed.
-
-Post the receipt correctly, or document the variance and route to procurement/quality/logistics.
-
-Typical fixes or next actions
-
-Reverse the incorrect receipt and repost against the correct PO item or quantity.
-
-Update the PO quantity or remove the delivery-completed indicator if the delivery is legitimate.
-
-Extend the material master to the required plant/storage location or resolve batch/serial issues.
-
-Process the inspection lot usage decision if stock is held in quality inspection.
-
-Coordinate with procurement if supplier deliveries repeatedly mismatch PO terms.
-
-Support takeaway
-
-Goods receipt diagnostics should always reconcile physical evidence, purchase order history, and material document data. A useful ticket should include: material number, PO number, delivery note, quantity expected versus received, exact error message, plant/storage location, and whether the issue is recurring.
-
-Boundaries and non-goals
-
-This page is a diagnostic frame, not a warehouse management or quality management configuration guide. It does not cover advanced EWM putaway, QM inspection plans, or customs/inbound logistics scenarios.
-
-Escalation signals
-
-Receipt failures affect multiple users, plants, or materials at the same time.
-
-The issue involves a closed accounting period, inventory valuation, or intercompany transfer.
-
-Quality inspection stock is blocked and operations cannot use the material.
-
-Supplier deliveries repeatedly mismatch PO terms and procurement must review the relationship.
+  The useful end state
+  A goods-receipt incident is solved when physical delivery, PO history, material document, and resulting stock tell the same story. If support only makes the posting screen accept the entry, the interesting problems have merely been moved downstream to invoice verification or inventory reconciliation, where humans traditionally rediscover them at a worse time.
 
 Related pages
-
-Procure to Pay Map
-
-GR/IR Clearing Explained
-
-SAP Invoice Verification Diagnostics
-
-SAP Three-Way Match Diagnostics
-
-SAP Purchase Order Creation Diagnostics
-
-SAP Material Document Diagnostics
-
-SAP Movement Types Diagnostics
+  Procure to Pay Map
+  GR/IR Clearing Explained
+  SAP Invoice Verification Diagnostics
+  SAP Three-Way Match Diagnostics
+  SAP Material Document Diagnostics
+  SAP Movement Types Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with SD/MM process diagnostics, logistics execution, document flow, and operational improvement.
@@ -2627,7 +2556,7 @@ Home
 
     Atlas Diagnostic
     SAP IDoc diagnostics
-    Trace IDoc failures from creation through partner profile to final posting status.
+    Treat the IDoc as a message journey. Find the last step that worked, then investigate the first step that did not.
 
 
 
@@ -2636,80 +2565,64 @@ Home
       ProcessCross-system integration
       SAP areaIDoc / ALE
       Reviewed13 Jun 2026
-          IndexingIndex, reviewed
+      IndexingIndex, reviewed
 
 
 
 
-    Core idea
-    IDocs fail at four points: creation, dispatch, receipt, and application posting. The status monitor shows the last failure, but the first error status in the history usually points to the real cause. The diagnostic job is to read the history from oldest to newest and trace the first error to partner profile, port, segment, or application validation.
+    Do not start with the status code alone
+    An IDoc status is evidence, but it is not the whole incident. First define the business message: what should have left the source system, where should it have gone, and which business document or update should have appeared in the target?
+    Then trace the message through the actual landscape. The failure can happen before an IDoc is created, during dispatch, in RFC or queue processing, after the target receives the IDoc, or inside the target application. The same user symptom can therefore belong to very different owners.
 
 
 
-    Common symptoms
-
-      Expected business document was not created from an inbound IDoc.
-      Outbound IDoc was not sent to the partner system.
-      IDoc shows status 51, 56, or 62 in the status monitor.
-      IDoc was sent but the receiving system reports a format error.
-      Duplicate IDocs create duplicate business documents.
-
-
-    Likely causes
-
-      Partner profile missing: the logical system or partner is not configured for the message type.
-      Port issue: RFC or file port used by the IDoc is unavailable.
-      Segment error: mandatory segment is missing or a value violates the IDoc type definition.
-      Application posting error: the IDoc arrived correctly but the business document failed validation.
-      Queue issue: qRFC queue is stuck and prevents sequential processing.
-      Duplicate IDoc: same message was resent and processed twice.
+    Split the problem by the last confirmed step
+    EvidenceWhat it tells youNext place to look
+      No expected outbound IDoc existsThe problem may be in the business trigger, output/change logic, distribution model, or selection before IDoc creation.Source document, trigger logic, change pointers or application-specific generation path.
+      IDoc exists but was not transferred as expectedThe message was created, so move downstream to partner, port, RFC, queue, or scheduling evidence.IDoc status history, partner profile, port, RFC/tRFC/qRFC evidence.
+      Target received the IDoc but no business document was postedTransport worked far enough for application processing to begin.Inbound status text, segment values, master data, mapping, application validation.
+      IDoc reached a success status but the business result is still wrongThe technical message path may be healthy while the application result or follow-on process is not.Created business document, application log, follow-on status, business rules.
+      The same business message appears more than onceDo not assume “duplicate IDoc” is the cause. Find whether the source sent twice, middleware retried, or the target processed twice.Message identifiers, timestamps, source trigger, middleware/retry history, target document references.
 
 
-    Where to check in SAP
+    A useful diagnostic path
 
-      WE02 / WE05 — IDoc status monitor.
-      WE20 — partner profiles.
-      WE21 — port definitions.
-      BD87 — IDoc reprocessing.
-      SM58 — asynchronous RFC errors.
-      SMQ1 / SMQ2 — qRFC outbound and inbound queues.
-
-
-    Key tables / transactions / objects
-
-      EDIDC — IDoc control record.
-      EDIDD — IDoc data segments.
-      EDIDS — IDoc status records.
-      EDPP1 / EDP13 — partner profile message control.
-      TBDLS — logical systems.
+      Capture the business context. Source and target systems, direction, message type, business object, expected result, time window, and one concrete example.
+      Find the IDoc and read its status history. Use the sequence and timestamps, not only the latest status. The first meaningful error often explains more than later reprocessing statuses.
+      Check the control record. Confirm sender/receiver partner information, message type, IDoc type, and basic routing context.
+      Inspect the failed layer. For transport problems, follow partner, port, RFC, tRFC, or qRFC evidence as used in this landscape. For application errors, read the target error text and the relevant segment values.
+      Compare with a successful message. A working IDoc of the same business scenario gives you routing, segment, and timing evidence without guessing.
+      Correct the cause before reprocessing. Reprocessing is a recovery step, not a diagnosis.
+      Confirm the business result. The incident is closed when the expected target document or update exists and the integration path is stable again.
 
 
-    Diagnostic workflow
+    Useful SAP tools
+    The exact tool set depends on direction and architecture. Common starting points in classic IDoc/ALE landscapes include:
 
-      Find the IDoc number from the business document reference or message trace.
-      Open WE02/WE05 and review the status history from creation to final status.
-      Identify the first error status and its text.
-      For outbound errors, check partner profile, port, and RFC destination.
-      For inbound errors, check segment data, business document validation, and queue status.
-      Fix the root cause before reprocessing.
+      WE02 / WE05 for IDoc content and status history.
+      WE20 for partner-profile context.
+      WE21 for port definitions.
+      BD87 for controlled IDoc reprocessing where applicable.
+      SM58 when transactional RFC processing is part of the failed path.
+      SMQ1 / SMQ2 when qRFC queues are part of the integration design.
+
+    Do not open every monitor because an IDoc failed. Use the IDoc history to decide which layer deserves attention.
+
+    What to capture before escalation
+
+      IDoc number, direction, message type, sender and receiver.
+      Business document or object reference and expected target result.
+      Status sequence with the first relevant error text and timestamp.
+      Relevant segment/value that failed application validation, if known.
+      RFC or queue evidence only when that layer is part of the failure.
+      A successful comparison message when available.
 
 
-    Typical fixes or next actions
+    Reprocessing needs a business check
+    Before reprocessing, confirm whether the message is safe to repeat. Some inbound processes have duplicate protection; others can create a second business effect if the original result already exists outside the status you are looking at. Check the target business object and the landscape's restart design before pressing the convenient button humans invented for making yesterday's problem happen twice.
 
-      Maintain the missing partner profile or message type assignment.
-      Restore the RFC or file port used for transmission.
-      Correct segment values or mapping in the sending system.
-      Fix the underlying business document validation error and reprocess.
-      Clear the qRFC queue and reprocess in correct sequence.
-
-
-    What to capture first
-    Before routing the issue, capture: IDoc number, direction, message type, partner, first error status, and error text. Reprocessing without fixing the cause produces more failed IDocs and makes the original failure harder to read.
-
-    Boundaries and non-goals
-    This page is a diagnostic frame, not an IDoc configuration guide. It does not cover partner profile setup, port or RFC destination configuration, IDoc segment design, or AIF mapping. It does not replace SAP's IDoc and ALE documentation.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
+    The end of the diagnosis
+    A strong IDoc incident says where the chain broke: generation, routing, transport, queue, mapping/data, or application posting. “Status 51 fixed” is not enough. The status is the symptom. The reusable knowledge is why the application rejected the message and what control prevents the same failure next time.
 
     Related diagnostics
 
@@ -3036,7 +2949,7 @@ Home
 
     Atlas Diagnostic
     SAP incident triage diagnostics
-    A first-pass structure for classifying and routing SAP support incidents.
+    The first ten minutes should reduce uncertainty. They should not produce a longer ticket with the same vague symptom.
 
 
 
@@ -3049,69 +2962,58 @@ Home
 
 
 
-    Core idea
-    Good triage prevents wrong teams, missing evidence, and wasted time. The diagnostic goal in the first minutes is to classify the incident by symptom area, urgency, and the minimum evidence needed before assignment.
+    Triage is a reduction exercise
+    A weak ticket says “SAP is slow”, “order not working”, or “interface failed”. A useful triage result is smaller and more concrete: one business outcome, one affected object or population, one time window, one known last-good step, and one owner for the next check.
+    You do not need the root cause during triage. You need enough evidence to stop the ticket from bouncing between teams.
 
-    Common symptoms
-
-      Incident description is vague or only says 'system is slow'.
-      Ticket is routed to a team that does not own the failing area.
-      Multiple users report different symptoms for the same underlying issue.
-      Incident is treated as urgent but has no business impact yet.
-      Previous incidents for the same symptom were closed without root cause.
-
-
-    Likely causes
-
-      Missing classification: the ticket lacks module, process, or object information.
-      Incorrect routing: routing rules rely on keywords that do not match the actual failure area.
-      Insufficient evidence: logs, error messages, or timestamps were not collected.
-      Urgency mismatch: priority is set by who reported it, not by business impact.
-      No known-pattern link: the symptom matches a known diagnostic page but was not checked.
+    Capture six things before choosing the team
+    QuestionWhy it matters
+      What business result failed?“Cannot create delivery” is more useful than “SD issue”.
+      Who or what is affected?One user, one document, one plant, or the whole company imply very different scope.
+      When did it start?A precise time window can connect the issue to jobs, interfaces, transports, or data changes.
+      What still works?A working boundary is often as valuable as the failure itself.
+      What changed recently?Recent releases, master data, schedules, certificates, or integration changes can shorten the search.
+      What is the business impact?Priority should describe lost service, money, volume, deadline, or control risk, not job title.
 
 
-    Where to check in SAP
+    Classify by failure layer, not by keyword
+    Module names are useful routing hints, but a sales-order symptom can come from master data, credit, pricing, ATP, workflow, authorization, integration, or a custom enhancement. A purchasing symptom can come from finance or inventory. “SD”, “MM”, and “Basis” are not root causes.
+    A better first classification is the failed layer:
 
-      Ticket fields — module, process, object, error text, time, user.
-      Atlas/Skill Hub diagnostic index — find a matching pattern.
-      System status monitors — SM50, SM66, SM37 for workload or job issues.
-      Application log (SLG1) or short dumps (ST22) for the time window.
-      Recent changes — transports, jobs, master data updates.
-
-
-    Key tables / transactions / objects
-
-      Incident/ticket system — classification and routing metadata.
-      SM50 / SM66 — work process overview.
-      TBTCO — background job status.
+      Business document or process status such as block, incompletion, wrong document flow, or missing follow-on document.
+      Master data such as missing extension, wrong control value, or replication gap.
+      Integration such as message generation, transport, mapping, queue, or target posting.
+      Authorization when there is evidence of a failed access check.
+      Batch or scheduling when the expected background execution did not complete.
+      Technical runtime or performance when dumps, work processes, database/runtime evidence, or broad degradation support that path.
+      Recent change when the timing and affected scope point to a release or configuration change.
 
 
-    Diagnostic workflow
+    Do not open every monitor
+    Tools are chosen from the symptom. If a job failed, start with the job. If an IDoc failed, start with the message. If one user cannot execute an action, check the document state and authorization evidence. If the whole system is slow, technical workload tools may be appropriate.
+    Opening SM50, SM66, SM37, SLG1, ST22, and five other transactions for every ticket is not thoroughness. It is a lack of hypothesis wearing a support badge.
 
-      Read the ticket and extract: symptom, process area, object key, time, user, and business impact.
-      Classify as master data, configuration, integration, authorization, batch, or performance.
-      Check for matching diagnostic pages or known patterns in the Atlas.
-      Collect minimum evidence: error text, status, log object, or job name.
-      Set priority based on business impact, not reporter seniority.
-      Route to the team that owns the component and attach the evidence.
+    A practical triage flow
 
-
-    Typical fixes or next actions
-
-      Add mandatory classification fields to the incident form.
-      Maintain routing rules based on object type and module keywords.
-      Link frequently seen symptoms to diagnostic pages in the knowledge base.
-      Create an evidence checklist for each major symptom category.
-      Review closed incidents for recurring patterns and update triage guidance.
+      Rewrite the symptom in business language. What should happen, and what happens instead?
+      Bound the scope. One object or many? One user or many? One system or cross-system?
+      Capture time and evidence. Exact message, document/object key, timestamp, user or technical user, and any relevant status.
+      Find the last good step. This usually tells you which team should look next.
+      Check recent change and known pattern. Use operational memory, not memory theatre. Link a known issue only when the evidence matches.
+      Set impact and priority. State the number of users/orders/plants affected, financial or operational deadline, and workaround if any.
+      Route with a question. Send the next team a concrete diagnostic question, not the original complaint.
 
 
-    Support takeaway
-    Triage tickets are most useful when they include a clear symptom, process area, affected object, time, user, and the business impact that justifies the priority.
+    Example of a better handoff
+    Instead of: “Urgent, sales order stuck, please check.”
+    Use: “Order 4711 item 10 is complete and confirmed, but no delivery is created for today's due date. Two other orders for the same plant work. The issue started after the morning master-data load. Please check delivery relevance and plant/shipping data for this material.”
+    The second version may still be wrong about the cause. That is acceptable. It gives the next person evidence that can be tested.
 
-    Boundaries and non-goals
-    This page is a triage diagnostic, not an ITIL incident-management process guide. It does not cover SLA definitions or escalation policies.
+    When triage should stop
+    Triage is finished when the impact is understood, the evidence is sufficient for the next specialist, and ownership is clear. It should not become a miniature root-cause investigation performed by a queue manager while the real owner waits.
 
-    This is not official SAP documentation and not a replacement for system-specific analysis.
+    What good triage improves
+    Measure fewer reassignments, shorter time to useful evidence, better priority accuracy, and fewer incidents reopened because the downstream business result was never checked. Those signals tell you more than the number of tickets touched by the triage team.
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with recurring incidents, operational ownership, support improvement, and reusable support knowledge. This guide frames AMS decisions around the operating conditions that create repeated effort.
@@ -3306,7 +3208,7 @@ Home
 
     Atlas Diagnostic
     SAP invoice verification diagnostics
-    A first-pass structure for separating invoice blocks caused by price, quantity, tax, or reference mismatches.
+    A blocked invoice is usually telling you that purchasing, receiving, supplier billing, or tolerance logic disagree. Read that disagreement before releasing anything.
 
 
 
@@ -3319,114 +3221,70 @@ Home
 
 
 
-    Core idea
-    Invoice verification is the control point where the supplier's bill is matched against purchase order and goods receipt evidence. A blocked invoice is usually process evidence, not a system error. The support goal is to identify which mismatch element triggered the block and whether it reflects a real discrepancy or a data timing issue.
-    In practice, most invoice blocks resolve to one of four variance types—price, quantity, tax, or reference—and the fastest path to resolution is comparing the invoice line against PO history before adjusting tolerance or master data.
+    First distinguish an error from a block
+    An invoice that cannot be posted is different from an invoice that posts but is blocked for payment. A parked document is different again. These states have different diagnostic paths, so the first useful question is simple: what document exists now, and what exactly prevents the next step?
+    Invoice verification sits in the middle of several truths: the commercial agreement in the PO, the physical event in goods receipt or service entry, the supplier invoice, tax/accounting rules, and configured tolerances. The system is useful precisely because it refuses to pretend these always match.
 
-    Common symptoms
-
-      Invoice posts with a blocking reason that prevents automatic payment.
-      MIRO shows price, quantity, or tax differences beyond tolerance.
-      Invoice references a purchase order item that has no goods receipt or partial receipt.
-      Multiple invoices for the same PO item create duplicate payment risk.
-      Tax code or tax jurisdiction mismatch prevents posting.
-
-
-    Likely causes
-
-      Price variance: invoice price differs from PO price beyond the configured tolerance. May be a valid supplier price change or a wrong PO price.
-      Quantity variance: invoice quantity exceeds GR quantity. May indicate partial delivery, returns not processed, or duplicate invoicing.
-      Reference mismatch: invoice references wrong PO number, item, or delivery note. Common with consolidated invoices or supplier numbering changes.
-      Tax mismatch: tax code on invoice differs from PO or supplier master. Often caused by jurisdiction changes or supplier tax registration updates.
-      Timing issue: GR was posted after invoice was entered, or invoice arrived before PO was released.
-      Master data issue: supplier not extended to company code, payment terms mismatch, or tax number invalid.
+    Read the mismatch as a process signal
+    DifferenceWhat to comparePossible business meaning
+      QuantityOrdered, received/accepted, reversed/returned, and invoiced quantity.Partial delivery, early invoice, wrong reference, return not reflected, or duplicate billing.
+      Price or valuePO conditions, invoice price, quantity basis, currency, planned delivery costs where relevant.Supplier price change, wrong PO price, unit/currency issue, or valid commercial variance.
+      Tax or account treatmentInvoice tax data, PO/account assignment, supplier/company context, local tax rules.Wrong tax code, changed tax treatment, or accounting data that needs finance review.
+      ReferenceSupplier, PO/item, delivery/service reference, invoice number/date.Wrong PO, consolidated invoice, duplicate document, or supplier reference problem.
+      TimingPO release, GR/service acceptance, reversals, invoice posting date and period.The documents may be correct individually but arrived in a different sequence.
 
 
-    Where to check in SAP
+    A practical diagnostic sequence
 
-      MIRO / MIR7 — invoice entry and blocking reason display.
-      ME23N — purchase order history showing GR and IR quantities.
-      MIR4 — invoice document display with variance details.
-      MRBR — blocked invoices report and release.
-      FBL1N — supplier line items to see if invoice was posted but blocked.
-      PO history tab — compare ordered, delivered, and invoiced quantities.
-
-
-    Key tables / transactions / objects
-
-      RBKP — invoice document header.
-      RSEG — invoice document items.
-      EKBE — PO history (GR and IR records).
-      LFA1 / LFB1 — supplier master (general and company code).
-      T169 — tolerance groups for invoice verification.
+      Capture the invoice state. Supplier, invoice/reference number, PO/item, company code, posting date, amount, currency, and whether the document is parked, posted, blocked, or rejected.
+      Read the PO history. Reconcile ordered, received or accepted, reversed/returned, and already invoiced quantities and values.
+      Read the actual variance or block reason. Do not infer it from the user's description. Use the invoice document and the release/blocking information available in the release.
+      Check whether the source document is wrong. A valid invoice should not be “fixed” by changing tolerance if the PO price, quantity, account assignment, or receipt is simply incorrect.
+      Check whether the supplier invoice is wrong. A system block can be the correct control when the supplier billed the wrong quantity, price, reference, or tax.
+      Check duplicate risk before any release or reposting. Use supplier/reference and PO history together; a second payment is a remarkably expensive way to prove that the first ticket was urgent.
+      Route the decision to the right owner. Procurement owns commercial terms, receiving owns the physical event, finance/tax owns accounting treatment, and support should keep the evidence chain clear.
 
 
-    Diagnostic workflow
+    Do not “solve” recurring variance by widening tolerance
+    Tolerance settings are controls. If many invoices hit the same variance, first understand why. Maybe supplier prices are not updated in POs, receipts are late, units are inconsistent, or a contractual process changed. Raising tolerance can reduce tickets while increasing uncontrolled spend. Dashboard serenity is not the same thing as process health.
 
-      Confirm the PO number, item, and supplier on the invoice match the system record.
-      Check PO history (EKBE) for GR quantity and IR quantity. Identify the gap.
-      Review the blocking reason in RBKP, MIR4, or MRBR. Determine if it is price, quantity, tax, or reference.
-      Check tolerance settings to see if the variance is within acceptable limits.
-      If the variance is valid, document the business reason and release. If not, return to supplier or correct master data.
-      Verify that releasing the invoice will not create a duplicate payment.
+    Release is a business decision
+    Classic SAP processes may use transactions such as MIR4 and MRBR; S/4HANA landscapes may use different apps and workflow patterns. The exact screen matters less than the rule: release only after the variance is understood, the responsible owner accepts it, and duplicate/tax/control risks are checked.
+    Do not document the solution as “MRBR release”. Document why the invoice was safe to release and what evidence supported that decision.
 
+    What belongs in the ticket
 
-    Typical fixes or next actions
-
-      Release the invoice with documented approval if the variance is within business tolerance.
-      Correct the PO price or quantity if the original document was wrong.
-      Post a subsequent debit or credit memo if the supplier issued a corrected invoice.
-      Update supplier master data (tax code, payment terms) if the mismatch stems from master data.
-      Escalate to procurement if the supplier repeatedly invoices outside agreed terms.
-
-
-    What to capture first
-    Before routing the ticket, capture: PO number, invoice number, supplier, variance type (price/quantity/tax/reference), expected versus actual values, and whether the issue is recurring. A blocked invoice should not be released without a documented variance reason and business approval.
-
-    Escalation signals
-
-      The variance exceeds the buyer's or finance team's delegated authority and needs procurement/finance approval.
-      The same supplier repeatedly invoices outside PO terms, suggesting a contractual or master-data problem.
-      Releasing the invoice would create a duplicate payment or bypass a required tax review.
-      The block involves complex tax jurisdiction, intercompany, or EDI invoicing scenarios outside standard MM support scope.
+      Supplier, invoice/reference number, PO/item, company code, amount and currency.
+      Current invoice state and exact variance/block reason.
+      Ordered, received/accepted, reversed/returned, and already invoiced quantity/value.
+      Expected versus actual price, quantity, tax, or reference where relevant.
+      Duplicate check result.
+      Owner and approval for any accepted commercial or accounting variance.
+      Whether the same pattern affects other invoices or suppliers.
 
 
-    Boundaries and non-goals
-    This page is a diagnostic frame, not an invoice verification configuration guide. It does not cover automatic invoice verification setup, EDI invoicing, or complex tax scenarios. It does not replace the judgment of a finance controller or procurement manager.
+    When the incident is bigger than one invoice
+    If the same supplier, purchasing organization, material group, interface, or invoice channel produces repeated blocks, move from invoice correction to problem management. Look for PO condition maintenance, supplier master data, receipt timing, EDI mapping, tax treatment, or governance rules that create the mismatch at scale.
 
-    This is not official SAP documentation and not a replacement for system-specific analysis.
+    The useful end state
+    Invoice verification is healthy when the PO, receipt/service evidence, supplier invoice, and accounting result can be reconciled. The goal is not to make blocked invoices disappear. It is to make valid invoices flow and invalid differences visible early enough for the right owner to decide.
 
     Next diagnostic steps
 
-      Procure to Pay Map — use this map to connect invoice blocks to the full procure-to-pay workflow.
-      SAP Goods Receipt Diagnostics — go here when the invoice block is caused by GR timing or quantity differences.
-      SAP Three-Way Match Diagnostics — check this to reconcile PO, GR, and invoice data.
-      SAP Purchase Order Creation Diagnostics — use this when the invoice references a wrong or blocked PO.
-
-
-    Practical checklist
-
-- [ ] Collect invoice number, PO number, item, supplier, and blocking reason. **Synthetic example:** invoice 1234567890, PO 9876543210, block "Quantity variance".
-
-- [ ] Check MIRO/MIR4 and PO history (EKBE) for ordered, delivered, and invoiced quantities.
-
-- [ ] Compare invoice price, quantity, and tax code against PO and GR within tolerance (T169).
-
-- [ ] Confirm no duplicate invoice exists for the same PO item before releasing.
-
-- [ ] Document the variance reason and the approver who authorized release.
-
-- [ ] Safety limit: do not release blocked invoices that would cause duplicate payment or exceed tolerance without documented approval.
+      Procure to Pay Map for the wider P2P chain.
+      SAP Goods Receipt Diagnostics when receipt timing or quantity is the key difference.
+      SAP Three-Way Match Diagnostics for PO, receipt and invoice reconciliation.
+      GR/IR Clearing Explained for the financial bridge between receipt and invoice.
 
 
 
 
     Related Atlas Pages
 
-      SAP Mm Procurement Overview
-      Gr Ir Clearing Explained
+      SAP MM Procurement Overview
+      GR/IR Clearing Explained
       SAP Goods Receipt Diagnostics
-      SAP Three Way Match Diagnostics
+      SAP Three-Way Match Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with SD/MM process diagnostics, logistics execution, document flow, and operational improvement.
@@ -3456,101 +3314,65 @@ BUSINESS PROCESS: Master data governance
 TAGS: master-data, sap-mdg, diagnostics, integration
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
-    Knowledge Atlas
-    Diagnostics
-    SAP Key Mapping Diagnostics
+HomeKnowledge AtlasDiagnosticsSAP Key Mapping Diagnostics
+
+  Atlas Diagnostic
+  SAP key mapping diagnostics
+  Different technical keys are not automatically a problem. The problem starts when systems no longer agree which records represent the same business object.
 
 
+ProcessMaster data governanceSAP areaKey mapping / multi-systemIndexingIndex, reviewed
 
-    Atlas Diagnostic
-    SAP key mapping diagnostics
-    A first-pass structure for finding why objects have different keys across systems, causing duplicates, broken links, or failed replications.
+  The problem is identity across systems
+  In a distributed landscape, one supplier, customer, product, or business partner may legitimately use different identifiers in different systems. Key mapping preserves the statement that these identifiers describe the same business object.
+  An incident appears when that statement is missing, wrong, or ambiguous. Replication may create a duplicate, an interface may update the wrong object, a follow-on document may lose its reference, or analytics may split one business entity into several technical records.
 
-
-
-
-
-      ProcessMaster data governance
-      SAP areaKey mapping / multi-system
-      IndexingIndex, reviewed
-
-
-
-
-    Core idea
-    In multi-system SAP landscapes, the same business object may have different keys in different systems. Key mapping maintains the relationship between these keys. When mapping is missing, wrong, or inconsistent, replication creates duplicates, interfaces fail, and reporting produces fragmented results. The support goal is to identify which object type is affected, which systems are involved, and whether the gap is in the mapping table, the replication model, or the interface logic.
-    The first question to answer is whether the object was created directly in the target system. Manual creation is the most common reason a mapping entry is missing.
-
-    Common symptoms
-
-      Replication creates a new object in the target system instead of updating the existing one.
-      Interface reports 'object not found' even though the object exists under a different key.
-      Reporting or analytics shows duplicate records for the same business entity.
-      MDG or ALE replication log shows key mapping errors.
-      Customer or vendor number in S/4 does not match the corresponding BP number or external system key.
+  First decide what kind of identity failure you have
+  PatternQuestionEvidence
+    Missing mappingDoes the source object have no known target identity?Source system/key, target system, mapping lookup, replication history.
+    Wrong mappingDoes the source key point to the wrong target object?Current mapping, object attributes, creation/change history, downstream references.
+    Duplicate targetDid replication create a second object because an existing identity was not recognized?Both target keys, creation channels, duplicate-check result, mapping state.
+    Number-range collisionAre identical-looking keys from different systems being assumed to mean the same object?Logical-system context, number-range design, source ownership of the key.
+    Application-specific identityIs this really generic key mapping, or a specific relationship such as BP/customer/vendor synchronization?Object model, application link, replication framework, target relationship.
 
 
-    Likely causes
+  A practical diagnostic workflow
 
-      Missing mapping entry: the object was created directly in the target system without going through the mapping process.
-      Wrong mapping entry: the source key is mapped to a different target key than intended.
-      Number range conflict: source and target systems use overlapping number ranges, causing collisions.
-      Mapping table not maintained for new object type: the interface or replication expects mapping but the object type was recently added and mapping is not set up.
-      Manual creation bypass: the object was created manually in the target system, bypassing the mapping logic.
-
-
-    Where to check in SAP
-
-      Key mapping tables — landscape-specific tables that map source keys to target keys.
-      MDG key mapping UI — if MDG manages the mapping.
-      WE02 — IDoc status for ALE replication to see if key mapping errors are reported.
-      Object display in both source and target systems — compare keys and attributes.
-      Number range status (SNRO) — check if ranges overlap between systems.
+    Name the business object. Capture object type, source system/key, target system/key, and the business attributes that prove the records should represent the same entity.
+    Find the first governed creation. Determine where the object was originally created and which process should have established the cross-system identity.
+    Read the current mapping. Check the framework actually used by the landscape, not a guessed table. Confirm source/target system context as well as the keys.
+    Trace replication history. Ask whether the target object came from the governed replication path, a migration, manual creation, another hub, or a legacy interface.
+    Check duplicate evidence. Compare names, addresses, tax or registration identifiers, product attributes, and other domain-specific identity fields. Similarity alone is not proof that records may be merged.
+    Assess downstream references before correction. Orders, deliveries, invoices, contracts, analytics, and integrations may already reference one or both technical keys.
+    Fix the identity rule, not only the current record. If the creation path can produce the same failure again, a one-off mapping entry only postpones the next incident.
 
 
-    Key tables / transactions / objects
+  Manual creation is a clue, not an automatic root cause
+  An object created directly in a target system can explain why no mapping was generated, but many landscapes intentionally allow local creation. The real question is whether local creation was permitted and how the architecture is supposed to reconcile or govern that identity afterwards.
 
-      Key mapping tables — landscape-specific (e.g., USMD1700 for MDG).
-      CVI_LINK — CVI link between BP and customer/vendor.
-      NRIV — number range intervals.
+  Be careful when correcting mappings
+  Changing a mapping can redirect future updates to another target object. That may be correct, but it can also move the inconsistency into existing transactions and references. Before changing or deleting a mapping, understand which object is authoritative, which records already reference each key, and whether duplicate remediation requires governance approval.
 
+  Useful next actions
 
-    Diagnostic workflow
-
-      Identify the object type, source system key, target system, and expected target key.
-      Check the key mapping table or MDG key mapping UI for an existing entry.
-      If no entry exists, determine if the object was created manually in the target system or if the mapping was never maintained.
-      If the entry exists but is wrong, trace how the wrong mapping was created.
-      Check number ranges in both systems for overlaps or conflicts.
-      Verify the interface or replication model uses the correct mapping logic.
+    Create or repair a mapping only after source and target identity are proven.
+    Correct the governed creation/replication path when mappings are repeatedly missing.
+    Separate number-range design issues from mapping issues; identical numbers across logical systems are not automatically collisions.
+    Handle duplicates as a business-governance problem with downstream impact analysis, not as a simple table cleanup.
+    Use object-specific frameworks when the relationship is not generic key mapping, for example application-managed BP/customer/vendor links.
 
 
-    Typical fixes or next actions
+  What to capture first
+  Record object type, source and target logical systems, source and target keys, authoritative system, object creation channel, current mapping, replication message/error, duplicate evidence, and downstream documents that reference either key. This is enough to distinguish a mapping gap from a wider governance problem.
 
-      Create the missing key mapping entry between source and target systems.
-      Correct the wrong mapping entry and evaluate the impact on existing transactions.
-      Adjust number ranges to prevent future collisions.
-      If duplicates were created, evaluate merge, deactivation, or re-keying options with master data governance.
-      Update the interface or replication model to enforce mapping for new object types.
+  Limitations and boundaries
+  Key mapping is implemented differently across SAP MDG domains, replication frameworks, migration tools, and custom landscapes. There is no single universal mapping table or correction transaction. BP/customer/vendor relationships also have their own application semantics. Verify the active framework before editing identity data or recommending a merge.
 
-
-    What to capture first
-    Key mapping issues are usually maintenance gaps or number range conflicts. Capture: object type, source system, source key, target system, expected target key, actual target key, and whether the object was created manually or via replication.
-
-    Boundaries and non-goals
-    This page is a diagnostic frame, not a key mapping configuration guide. It does not cover number range design, MDG key mapping setup, or interface mapping logic. It does not replace SAP's multi-system integration documentation.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
-
-
-
-    Related Atlas Pages
-
-      SAP Business Partner Replication Diagnostics
-      SAP Mdg To S4 Replication Diagnostics
-      SAP Vendor Master Replication Diagnostics
-      SAP Customer Master Replication Diagnostics
+Related Atlas Pages
+  SAP Business Partner Replication Diagnostics
+  SAP MDG to S/4 Replication Diagnostics
+  SAP Vendor Master Replication Diagnostics
+  SAP Customer Master Replication Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
@@ -3589,7 +3411,7 @@ Home
 
     Atlas Diagnostic
     SAP material document diagnostics
-    A first-pass structure for finding why a goods movement document is missing, incorrect, or cannot be reversed.
+    A material document is evidence of a goods movement. Diagnose the event it records, not only the document number.
 
 
 
@@ -3602,78 +3424,53 @@ Home
 
 
 
-    Core idea
-    Every goods movement in SAP creates a material document that records what moved, where, when, and with what accounting impact. When a document is missing, shows wrong quantities, posts to wrong accounts, or cannot be reversed, the support goal is to trace the document chain, identify the mismatch, and determine if a correction movement or reversal is needed.
+    First ask what should have happened to stock
+    A material document records a goods movement, but the support problem usually lives one level above it. Perhaps stock should have been received, transferred, issued, returned, or reversed. Perhaps the user expected an accounting document, PO-history update, reservation consumption, or delivery status change.
+    Define that expected business result first. Then use the material document to prove what SAP actually recorded.
 
-    Common symptoms
-
-      User reports a goods movement was posted but no material document exists.
-      Material document shows wrong quantity, movement type, or storage location.
-      Reversal fails because the original document is already reversed or cleared.
-      Accounting document linked to the material document shows unexpected GL accounts.
-      Goods movement posted in wrong period and period is now closed.
-
-
-    Likely causes
-
-      User error: wrong quantity, movement type, or storage location entered during posting.
-      Document not saved: the user thought the document was posted but it was only simulated or an error prevented commit.
-      Already reversed: the original document was reversed earlier and a second reversal is not allowed.
-      Period closed: the posting period for MM or FI is closed, preventing new documents or reversals.
-      Valuation mismatch: the material document triggers a valuation that does not match the material's current valuation class or price.
+    Separate the common cases
+    SituationFirst evidenceQuestion to answer
+      User says the movement posted, but no document is foundPosting message, time/user, reference document, PO/delivery/order history, stock change.Did a posting commit actually occur, and under which reference?
+      Document exists but quantity/location/status is wrongDocument item, movement type, material, plant, storage location, batch/special stock, quantity and unit.Was the wrong data entered, or did the process determine a different result?
+      Accounting result is unexpectedLinked accounting document and valuation/account-determination context.Is the goods movement correct but the valuation/accounting path wrong?
+      Reversal failsOriginal and reversal history, follow-on documents, posting periods, later stock movements.Is the original movement still reversible in the current process state?
+      Document is correct but the next process step is wrongDocument flow and downstream status.Did the movement update the expected PO, delivery, production, quality, or invoice process?
 
 
-    Where to check in SAP
+    A diagnostic sequence
 
-      MIGO — display material document by document number.
-      MB51 — material documents list, filter by material, plant, or movement type.
-      MBST — reversal transaction and error messages.
-      MMRV — allow posting to previous period.
-      FB03 — display accounting document linked to the material document.
-
-
-    Key tables / transactions / objects
-
-      MKPF — material document header.
-      MSEG — material document items.
-      BKPF / BSEG — accounting documents.
-      MBEW — material valuation.
+      Capture one concrete event. Material, quantity/unit, plant/location, business reference, posting date/time, user or interface, and expected result.
+      Find the material document or prove that none was created. Search by the business reference and time window when the document number is unknown.
+      Read the item data. Movement type, stock context, batch/special stock, reference, quantity, and posting date tell you what SAP believed happened.
+      Check the stock result. Confirm where the quantity ended up and whether later movements already changed it.
+      Check accounting when the movement is valuated. Follow the linked accounting result rather than guessing from the material document alone.
+      Read the surrounding document chain. PO history, delivery, reservation, production order, physical inventory, quality, or other reference may explain why reversal or follow-on processing behaves as it does.
+      Choose correction only after the chain is understood. Reversal, return, transfer, or another approved correction must preserve the real business history.
 
 
-    Diagnostic workflow
+    “Missing document” needs proof
+    Users sometimes remember clicking Post when the transaction actually returned an error, warning, timeout, or lost session. Before assuming database or update failure, check whether stock, PO history, or the reference document changed and whether a success message or document number was recorded.
+    If the evidence suggests a technical update problem, follow the appropriate application, update, dump, or system logs for the exact time window. Do not create a second movement just because the first one is hard to find.
 
-      Identify the material document number or the expected document that is missing.
-      Check MIGO or MB51 for the document details: material, plant, storage location, movement type, quantity.
-      Verify the accounting document in FB03 to confirm GL accounts and amounts.
-      If reversal is needed, check MBST for the reversal status and any error messages.
-      Check posting period status if the reversal or new posting fails.
-      Determine if the correction should be a reversal, a return movement, or a manual adjustment.
+    Reversal is part of document flow, not a delete operation
+    A reversal creates new business evidence. It does not erase the original movement. Before reversing, check whether the original movement has already been followed by invoice verification, consumption, transfer, quality processing, delivery, production settlement, or another stock movement.
+    Closed periods make the decision more sensitive. Opening a posting period is a finance/control action, not a support shortcut. The business owner and finance team need to decide the correct posting date and correction method.
 
+    S/4HANA changes the technical view
+    Older ECC habits often start with MKPF/MSEG and legacy list transactions. In S/4HANA, inventory data structures and available Fiori apps differ. The stable diagnostic method is to identify the goods-movement document, its item data, stock effect, accounting link, and process references using the tools supported by the target release.
 
-    Typical fixes or next actions
+    What belongs in the ticket
 
-      Reverse the incorrect document with MBST if the period is open and the document is not already reversed.
-      Re-post the movement with correct data if the original was wrong.
-      Open the posting period temporarily if the correction is urgent and authorized.
-      If reversal is not possible, use a compensating movement to correct stock or accounting.
-      Document the correction with business justification and approval.
-
-
-    Support takeaway
-    Material document issues are usually user entry or timing problems. A useful ticket should include: material, plant, movement type, expected versus actual quantity, document number if it exists, and the business reason for correction.
-
-    Escalation signals
-
-      A material document was posted to the wrong material, plant, or storage location and must be reversed.
-      The reversal affects inventory valuation, cost accounting, or a closed accounting period.
-      Multiple documents show the same unexpected movement type or account assignment.
-      The document ties to a production order, sales delivery, or physical inventory adjustment that needs cross-team validation.
+      Business event and expected result.
+      Material document/item if it exists, or the search evidence if it does not.
+      Material, quantity/unit, movement type, plant/location, batch/special stock and reference document.
+      Posting date/time and user or technical source.
+      Actual stock result and linked accounting result when relevant.
+      Reversal/follow-on history and period constraints for correction cases.
 
 
-    Boundaries and non-goals
-    This page is a diagnostic frame, not a material document configuration guide. It does not cover WM transfer orders, EWM goods movements, or period-end closing procedures. It does not replace SAP's inventory management documentation.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
+    The useful end state
+    A material-document diagnosis should tell a simple story: what business event occurred, what SAP recorded, where stock and value moved, and which later documents depend on that result. Once that story is clear, the correction is usually much less mysterious and much less dangerous.
 
 
 
@@ -3720,7 +3517,7 @@ Home
 
     Atlas Diagnostic
     SAP movement types diagnostics
-    A first-pass structure for finding why a goods movement posts to the wrong stock type, account, or status.
+    Do not start by asking which movement type looks similar. Start by defining what physically happened and what stock and accounting result the business expects.
 
 
 
@@ -3733,78 +3530,58 @@ Home
 
 
 
-    Core idea
-    Movement types in SAP define the direction, stock type, and accounting impact of every goods movement. A wrong movement type does not just misclassify stock — it can post to the wrong account, trigger wrong valuation, create incorrect GR/IR records, or leave inventory in an unusable status. The support goal is to identify which movement type was used, whether it matches the business intent, and what correction is needed.
+    Movement type is the system expression of a business event
+    A goods receipt, reversal, transfer, issue to production, return, scrapping, or inventory adjustment may all move stock, but they mean different things. The movement type helps SAP control that meaning together with reference documents, stock type, quantity/value update, account determination, field control, and follow-on logic.
+    This is why “use another movement type” is a poor first fix. A technically postable movement can still describe the wrong business event and create a stock or accounting problem that appears later.
 
-    Common symptoms
-
-      Goods receipt posted stock to quality inspection instead of unrestricted.
-      Transfer posting created an unexpected accounting entry.
-      Return to vendor did not reduce GR/IR or created a wrong reversal.
-      Movement type is not allowed for the material type or plant.
-      Inventory count adjustment posted to a consumption account instead of inventory.
-
-
-    Likely causes
-
-      Wrong movement type selected: user chose 101 instead of 103, or 311 instead of 301, changing stock type or valuation.
-      Movement type not configured for material type: the material type restricts which movements are allowed.
-      Account modification mismatch: the movement type posts to a G/L account that does not match the material's valuation class.
-      Stock type confusion: unrestricted, quality inspection, blocked, or in transit were not distinguished correctly.
-      Custom movement type: a landscape-specific movement type behaves differently from standard and is not documented.
+    Start with the expected result
+    QuestionEvidence to collect
+      What physically happened?Receipt, issue, transfer, return, reversal, scrap, adjustment, or another approved event.
+      What is the reference?PO, delivery, production order, reservation, material document, physical-inventory document, or no reference where the process allows it.
+      Where should the stock end up?Plant, storage location, batch, special-stock context, and stock status such as unrestricted, quality, blocked, or in transit.
+      Should value or accounting change?Expected FI/accounting effect, valuation area, and material valuation context.
+      What should happen next?PO history update, reservation consumption, production posting, delivery status, invoice matching, or another follow-on result.
 
 
-    Where to check in SAP
+    A clean diagnostic path
 
-      MIGO — display the material document and check the movement type on each item.
-      MB51 — material documents list, filter by movement type and material.
-      OMJJ — movement type configuration (transaction-dependent, view-only in production).
-      MB52 — stock overview showing stock types per storage location.
-      Material master — check material type and valuation class.
-
-
-    Key tables / transactions / objects
-
-      T156 — movement types.
-      T156T — movement type texts.
-      MKPF — material document header.
-      MSEG — material document items.
-      MBEW — material valuation.
+      Capture the original business event. Do not infer it only from the movement number already posted.
+      Read the reference and material document. Confirm movement type, quantity/unit, material, plant, storage location, batch/special stock, posting date, and reference.
+      Compare the actual stock effect with the expected one. Where did quantity move from and to, and in which status?
+      Check the accounting effect where the movement is valuated. If the financial result is unexpected, follow account determination and valuation evidence instead of assuming the movement type alone is wrong.
+      Check process-specific controls. Quality, batch, serial, EWM/WM, reservations, production, subcontracting, consignment, or delivery integration can change the valid path.
+      Compare with a working movement for the same business scenario. This is usually safer than comparing movement codes from memory.
+      Plan the correction through document flow. Reverse or compensate only after checking what later documents or processes already depend on the original posting.
 
 
-    Diagnostic workflow
+    Standard numbers are useful examples, not the diagnosis
+    Consultants often remember standard movement numbers because they are convenient shorthand. They are not enough to explain a production incident. Customizing, special processes, custom movement types, and the transaction or app that creates the movement can alter the behaviour around them.
+    For support notes, record the movement type actually used and the business event it was meant to represent. That survives release changes better than a list of memorized codes.
 
-      Identify the material document number and item from the user report or error.
-      Check MIGO or MB51 for the movement type used and compare with the business intent.
-      Verify the stock type before and after the movement in MB52.
-      Check if the movement type is allowed for the material type and plant.
-      Review the accounting document (FI) to see if the G/L accounts match expectations.
-      Determine if the movement should be reversed and re-posted with the correct type.
+    When stock type looks wrong
+    Do not correct stock simply because it is not unrestricted. Quality inspection, blocked stock, stock in transfer, consignment, project or sales-order stock, and other categories may be intentional. Check the process rule that selected the stock status before moving quantity again.
 
+    When accounting looks wrong
+    The movement type contributes to account determination, but valuation class, transaction/event keys, account modifiers, valuation area, special stock, and process context can also matter. A wrong G/L result therefore needs accounting evidence, not just OMJJ tourism.
 
-    Typical fixes or next actions
+    Reversal is not a universal undo
+    A reversal may be correct when the original business event was posted incorrectly and the downstream chain permits it. But an old movement may already have affected invoice verification, production, delivery, valuation, or period-end work. Check follow-on documents and periods before reversing and reposting.
 
-      Reverse the incorrect movement with the reversal movement type and re-post correctly.
-      Update user training or MIGO defaults to prevent repeated wrong selection.
-      If the movement type configuration is wrong, escalate to the configuration team with documented evidence.
-      For stock type issues, perform a transfer posting to move stock to the correct status.
+    Useful tools depend on the release
+    Classic GUI landscapes commonly use material-document and stock displays plus movement-type customizing for analysis. S/4HANA also offers Fiori apps and changed data structures. Use the tools available in the target release, and keep the article focused on the evidence they must show rather than one transaction path.
 
+    What belongs in the ticket
 
-    Support takeaway
-    Movement type errors are often user selection issues, not system bugs. Before escalating, collect the material document number, the movement type used, the expected movement type, the material, plant, and storage location. A useful movement type ticket should show the business intent and the system result.
-
-    Escalation signals
-
-      The same wrong movement type is used repeatedly, suggesting training or process design issues.
-      A correction movement affects inventory valuation, financial accounts, or month-end closing.
-      The movement type behavior differs between plants or clients and configuration review is needed.
-      The issue involves special stock (consignment, subcontracting, pipeline) with accounting implications.
+      Business event and expected stock/accounting result.
+      Material document and item when one exists.
+      Movement type, reference document, material, plant, storage location, quantity/unit, batch or special stock where relevant.
+      Actual stock result and accounting document when valuated.
+      Follow-on documents or processes already created from the posting.
+      A working comparison case if available.
 
 
-    Boundaries and non-goals
-    This page is a diagnostic frame, not a movement type configuration guide. It does not cover custom movement type design, WM movement types, or EWM-specific logic. It does not replace SAP's inventory management documentation.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
+    The practical end state
+    A movement-type diagnosis should explain why the posted movement did or did not represent the intended business event. “Wrong movement type” is only the beginning. The useful answer connects physical reality, document reference, stock status, valuation, and downstream process.
 
 
 
@@ -3813,7 +3590,7 @@ Home
       SAP Goods Receipt Diagnostics
       SAP Material Document Diagnostics
       SAP Batch Determination Diagnostics
-      SAP Mm Procurement Overview
+      SAP MM Procurement Overview
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with SD/MM process diagnostics, logistics execution, document flow, and operational improvement.
@@ -3974,7 +3751,7 @@ Home
 
     Atlas Diagnostic
     SAP purchase order creation diagnostics
-    A first-pass structure for finding why a purchase order cannot be created, saved, or released.
+    A purchase order is a supplier commitment. Diagnose why that commitment cannot be created, why it contains the wrong data, or why it cannot move to the next step.
 
 
 
@@ -3987,112 +3764,72 @@ Home
 
 
 
-    Core idea
-    Purchase order creation is the point where internal demand becomes a supplier commitment. Blocks at this stage prevent the entire procurement chain from starting. The support goal is to identify whether the block comes from master data, sourcing, release strategy, authorization, or document conversion issues.
-    The fastest way to narrow the cause is to test the same material and supplier in ME21N directly: if manual creation works, the block is likely in automatic conversion or release strategy.
+    Define what should have happened
+    “PO creation failed” can describe several different problems: a requisition cannot be converted, a supplier cannot be used, sourcing finds no valid source, the document cannot be saved, approval is missing, or the PO exists but contains the wrong price, date, account assignment, or partner data.
+    Start by naming the expected procurement path. Was the PO created manually, from a requisition, from planning, from a contract or scheduling agreement, or by another automated process? The source matters because it explains which data should have been copied or determined.
 
-    Common symptoms
-
-      ME21N or ME59N fails with a hard error or warning that prevents saving.
-      Purchase requisition cannot be converted to purchase order.
-      PO is created but immediately blocked by release strategy.
-      Automatic PO creation from PR or MRP does not generate expected orders.
-      PO saves but with wrong supplier, price, or delivery date.
-
-
-    Likely causes
-
-      Missing source of supply: no valid info record, source list, or quota arrangement exists for the material and plant.
-      Supplier master issue: supplier is blocked, not extended to purchasing organization, or missing required roles.
-      Release strategy block: the PO value, material group, or plant triggers a release strategy that requires approval.
-      Authorization issue: the user lacks the activity or field-level authorization to create or change POs for this plant or material.
-      PR conversion issue: the PR has a different plant, purchasing organization, or account assignment that does not match the PO context.
-      Document type mismatch: the PR document type is not configured for automatic PO creation.
+    Separate creation from release and follow-on processing
+    SymptomMain questionEvidence
+      Document cannot be savedWhich mandatory business rule or validation is failing?Exact message, document/item data, supplier, plant, purchasing organization, account assignment, tax/pricing context.
+      Requisition cannot become a POWhich conversion prerequisite is missing or inconsistent?PR item, source assignment, supplier/source, purchasing data, account assignment, conversion log.
+      No supplier/source is selectedIs there a valid source for the material/service, plant, date, and purchasing context?Source list/info record/contract/quota or other approved sourcing evidence.
+      PO exists but is not approvedDid the purchasing document trigger the expected approval workflow?Release/approval status, value/context, approver, workflow history.
+      PO contains wrong dataWas the value copied, determined, defaulted, or entered manually?Source document, master data, condition/source data, change history, working comparison.
+      PO saved but supplier never receives itIs the problem creation or output/integration?PO status plus output/message/interface evidence.
 
 
-    Where to check in SAP
+    A practical diagnostic sequence
 
-      ME21N / ME22N — manual PO creation and error messages.
-      ME59N — automatic PO creation log.
-      ME53N — purchase requisition display to check source of supply.
-      ME23N — existing POs for the same material/supplier to compare.
-      SU53 — authorization check after a failed transaction.
-
-
-    Key tables / transactions / objects
-
-      EKKO / EKPO — purchase order header and items.
-      EBAN / EBKN — purchase requisition header and items.
-      EINA / EINE — purchasing info record general and organization data.
-      A017 — info record validity (condition).
-      LFA1 / LFB1 — supplier master.
+      Capture the failing document and item. Requisition or PO, material/service, plant, purchasing organization/group, supplier where known, account-assignment context, quantity, date, and exact message.
+      Identify the creation path. Manual entry, requisition conversion, planning, contract call-off, automatic creation, or another scenario.
+      Check the supplier and purchasing context. Confirm the supplier/Business Partner is valid for the intended purchasing organization and not blocked for the relevant process.
+      Check source determination only if sourcing is the failed step. A valid info record, source list, contract, quota arrangement, or other source is relevant when the process expects one. Do not turn every PO error into a sourcing problem.
+      Check organizational and account-assignment data. Plant, purchasing organization, company code relationship, delivery terms, account assignment, and other required data must describe one coherent transaction.
+      Separate approval from creation. A PO waiting for approval is not necessarily a failed PO. Confirm whether the workflow or release status matches the document’s value and business context.
+      For wrong values, trace where they came from. Compare source document, master data, commercial conditions, and document changes instead of overwriting the final PO field first.
+      Confirm the next process step. If the PO is valid, verify the expected output, supplier communication, delivery, or follow-on integration according to the scenario.
 
 
-    Diagnostic workflow
+    Do not use manual creation as a universal control test
+    A manually created PO and an automatically converted PO can follow different rules, defaults, source requirements, workflows, or integrations. A successful manual PO proves that one path works. It does not prove that the automatic path is wrong for only one specific reason.
 
-      Identify the exact error message and transaction code where the block appears.
-      Check if the issue is isolated to one material, supplier, plant, or user.
-      Verify the source of supply: info record, source list, quota arrangement, or contract.
-      Check the supplier master for blocks or missing organizational assignments.
-      If release strategy is involved, identify the release code and who can approve.
-      If automatic creation fails, check ME59N log for specific rejection reasons.
+    Supplier and source are related, but not the same problem
+    A supplier may be valid but not selected as a source for this material or service. A source may exist but be outside validity, blocked by process rules, or inconsistent with the plant/date. Keep supplier master validity, source determination, and commercial conditions as separate checkpoints.
 
+    Approval is a business control
+    Do not “fix” a held PO by bypassing release or workflow. First determine why the document requires approval and whether the correct approver was found. Value thresholds, purchasing context, account assignment, material groups, risk controls, or custom workflow rules can all be part of the decision.
 
-    Typical fixes or next actions
+    Useful SAP evidence
+    Classic GUI environments often use purchase requisition and purchase-order apps/transactions to inspect source, item, account-assignment, message, and approval data. Automatic creation processes have their own logs. S/4HANA releases and Fiori apps vary, so the strongest evidence is the document path and the exact failed decision, not a fixed list of transaction codes or database tables.
 
-      Create or extend the source of supply (info record, source list) if missing.
-      Unblock or extend the supplier master to the purchasing organization.
-      Route the PO through the correct release strategy approval workflow.
-      Adjust the PR to match the PO context or create the PO manually with correct data.
-      Escalate authorization issues to the security team with SU53 evidence.
+    What belongs in the ticket
 
-
-    What to capture first
-    PO creation blocks are usually master data or sourcing issues, not system bugs. Capture: the PR number (if converting), material, plant, supplier, error message, transaction code, and whether the issue is new or recurring.
-
-    Escalation signals
-
-      PO creation fails for many users or plants, indicating a configuration or authorization change.
-      The error relates to tax calculation, account assignment, or commitment logic that finance must validate.
-      A supplier contract or info record appears incorrect and procurement must confirm the commercial terms.
-      The issue blocks a business-critical procurement category or affects legal/compliance requirements.
+      Creation path and source document, if one exists.
+      Material/service, plant, purchasing organization, supplier/source, quantity, date, and account assignment.
+      Exact save/conversion/approval/output symptom.
+      Expected versus actual supplier, price, date, or other disputed value.
+      Approval/workflow status when relevant.
+      A working comparison document when it helps isolate one determination difference.
 
 
-    Boundaries and non-goals
-    This page is a diagnostic frame, not a PO configuration guide. It does not cover release strategy setup, approval workflow design, or MRP batch scheduling. It does not replace SAP's purchasing documentation.
+    Limitations and boundaries
+    This page is a diagnostic frame, not a configuration guide for source determination, flexible workflow, release strategy, pricing, output management, MRP, or supplier master governance. Those areas should be reviewed only after the failed procurement step is identified.
 
     This is not official SAP documentation and not a replacement for system-specific analysis.
 
     Next diagnostic steps
 
-      Procure to Pay Map — use this map to relate the PO creation block to the full procure-to-pay diagnostic path.
-      SAP Release Strategy Diagnostics — go here when the PO is created but blocked for approval.
-      SAP Source Determination Diagnostics — check this if no source of supply is found.
-      SAP Purchase Requisition Diagnostics — use this when the issue is converting a requisition into a purchase order.
-
-
-    Practical checklist
-
-- [ ] Collect PR number, material, plant, purchasing organization, supplier, and exact error message. **Synthetic example:** PR 1234567890, material TEST_MAT_001, plant 0001.
-
-- [ ] Check ME21N/ME59N error log and SU53 if authorization is suspected.
-
-- [ ] Verify source of supply: info record, source list, quota arrangement, or contract in ME53N/ME23N.
-
-- [ ] Confirm supplier master is not blocked and is extended to the purchasing organization.
-
-- [ ] Check release strategy classification if the PO is created but held for approval.
-
-- [ ] Document whether the issue is isolated to one user, material, or plant.
-
-- [ ] Safety limit: do not create a PO with an unapproved supplier or bypass release strategy.
+      SAP Release Strategy Diagnostics — when the PO exists but approval is the real issue.
+      SAP Source Determination Diagnostics — when no valid source is selected.
+      SAP Purchase Requisition Diagnostics — when demand data is already wrong before conversion.
+      SAP Account Assignment Diagnostics — when the cost object or accounting context blocks the document.
 
 
 
 
     Related Atlas Pages
 
-      SAP Mm Procurement Overview
+      SAP MM Procurement Overview
       SAP Source Determination Diagnostics
       SAP Release Strategy Diagnostics
       SAP Purchase Requisition Diagnostics
@@ -4602,117 +4339,64 @@ BUSINESS PROCESS: Integration
 TAGS: rfc, integration, sap-basis, diagnostics, distributed-systems
 REVIEWED: 2026-06-13
 ----------------------------------------
-Home
-    Knowledge Atlas
-    Diagnostics
-    SAP RFC Destination Diagnostics
+HomeKnowledge AtlasDiagnosticsSAP RFC Destination Diagnostics
+
+  Atlas Diagnostic
+  SAP RFC destination diagnostics
+  Separate destination connectivity from remote execution. A successful connection test does not prove that the business call will succeed.
 
 
+ProcessIntegrationSAP areaBasis / ALE / RFCIndexingIndex, reviewed
 
-    Atlas Diagnostic
-    SAP RFC destination diagnostics
-    A first-pass structure for finding why an RFC destination fails, why tRFC or qRFC queues are stuck, or why cross-system calls return errors.
+  The problem can sit before or after the remote call starts
+  RFC-related incidents cover several layers: name resolution and network reachability, destination parameters, logon and authorization, gateway or registered-program state, queued/transactional delivery, and the remote function's own application logic. Putting all of them under “RFC connection issue” makes ownership pleasantly vague and diagnosis predictably slow.
+  Start with one failing call or queue entry and determine how far it actually travelled.
 
-
-
-
-
-      ProcessIntegration
-      SAP areaBasis / ALE / RFC
-      IndexingIndex, reviewed
-
-
-
-
-    Core idea
-    RFC destinations in SAP define how one system calls another. When an RFC fails, the impact can be stuck IDocs, failed master data replication, missing transactional data, or batch job cancellations. The diagnostic task is to isolate whether the failure is in the network layer, the destination configuration, the target system availability, the user credentials, or the called function module.
-    The SM59 connection test and authorization test separate network or credential failures from application failures in the target system. Run both before opening a Basis or security ticket.
-
-    Common symptoms
-
-      RFC destination test in SM59 returns "Connection refused," "Name or password incorrect," or "Program not registered."
-      tRFC or qRFC queue in SM58 or SMQ1/SMQ2 shows repeated errors for a specific destination.
-      IDoc is stuck in status 03 (data passed to port) but never arrives at the target system.
-      Master data replication shows success in the source but the object is missing in the target.
-      Background job fails with RFC-related short dump (CALL_FUNCTION_REMOTE_ERROR).
-      Cross-system transaction fails with COMMIT_FAILURE or ROLLBACK_FAILURE.
-      RFC performance is slow, causing timeouts in calling programs.
+  Classify the failing layer
+  LayerQuestionEvidence
+    DestinationDoes the logical destination point to the intended target and connection type?Destination name, type, target host/system, logon/load-balancing context.
+    ConnectivityCan the source reach the target gateway/application path?Connection test, network/DNS evidence, timeout or refusal details.
+    IdentityCan the configured or propagated identity log on and perform the required action?Logon result, authorization error, user status, SNC/security context where used.
+    Gateway / server programFor registered-server scenarios, is the expected program registered and reachable?Program ID, gateway registration, connector/server process state.
+    Delivery mechanismIs the call synchronous, transactional, or queued, and where is it waiting?tRFC/qRFC state, queue name, transaction ID, retry/error text.
+    Remote applicationDid the remote function start and then fail on data, authorization, locking, or business logic?Target-side log, dump/application message, business object status.
 
 
-    Likely causes
+  A practical diagnostic workflow
 
-      Network or firewall: the target system is unreachable due to network changes, firewall rules, or DNS resolution failure.
-      Target system down: the target application server, message server, or gateway is not running.
-      User credentials: the user in the RFC destination is locked, expired, or has incorrect password.
-      Program not registered: for TCP/IP RFC destinations (e.g., PI/PO, external programs), the registered program is not running.
-      Gateway or message server issue: the SAP gateway (sapgwXX) or message server is not responding.
-      Load balancing misconfiguration: the logon group or message server parameters are incorrect.
-      Function module error: the RFC reaches the target system but the called function module fails due to data or authorization issues.
-
-
-    Where to check in SAP
-
-      SM59 — RFC destination administration; test connection, Unicode test, and authorization test.
-      SM58 — tRFC error log; check failed RFC calls and error texts.
-      SMQ1 / SMQ2 — qRFC queue monitor; check outbound and inbound queues.
-      SMGW — gateway monitor; check registered programs and active connections.
-      SMLG — logon group load balancing; check group assignment and server availability.
-      SM21 — system log; check for gateway or work process errors.
-      ST22 — short dump analysis; check for RFC-related dumps in the calling or target system.
-      AL11 — directory listing; check gateway trace files (dev_rd) if needed.
+    Capture the concrete failure. Record source, destination, target, timestamp, calling application/job/interface, error text, and business key.
+    Identify the RFC pattern. Synchronous RFC, tRFC, qRFC, or registered server scenarios leave different evidence and have different recovery behavior.
+    Test destination connectivity. Use the standard destination administration tools available in the system, but keep the result narrow: connection success proves reachability, not business success.
+    Check identity separately. A destination can reach the target but fail logon or authorization. Do not reset credentials simply because an application call failed.
+    Read queue or transactional state when applicable. Find the exact transaction/queue and its first error rather than mass-reprocessing everything for that destination.
+    Read target-side evidence. If the call reached the remote system, continue with the target application, logs, dumps, locks, or business validation.
+    Compare with a working call. Destination, user, target server/group, function, payload, and timing differences usually narrow the issue faster than infrastructure guessing.
 
 
-    Key tables / transactions / objects
+  Do not restart gateways or clear queues as a first move
+  Restarting a gateway, registered program, or queue can restore processing but may also discard evidence, interrupt unrelated flows, or repeat business actions. Preserve the failing transaction and prove the affected layer first. Recovery should follow the operational runbook and the delivery semantics of the interface.
 
-      RFCDES / RFCDOC — RFC destination definitions.
-      ARFCSDATA / ARFCSSTATE — tRFC execution data and status.
-      TRFCQOUT / TRFCQIN — tRFC queue tables.
-      SMQ1 / SMQ2 — qRFC queue monitor transactions.
-      GWY_CONN — gateway connection table (via SMGW).
-      USR02 — user master; check if the RFC user is locked or expired.
+  Safe next actions
 
-
-    Diagnostic workflow
-
-      Identify the RFC destination name and the exact error message from SM59, SM58, or the application log.
-      Test the connection in SM59: connection test, Unicode test, and authorization test.
-      If the connection test fails, check network connectivity (ping, telnet to gateway port) from the Basis team.
-      If the authorization test fails, check the user in USR02 for lock status, password expiry, or missing authorizations.
-      Check SMGW for registered programs if the destination uses a registered RFC server program.
-      Check SM58 for tRFC errors: note the transaction ID, error text, and retry count.
-      Check SMQ1/SMQ2 for qRFC queue status if the destination uses queued RFC.
-      Check ST22 in both source and target systems for RFC-related short dumps.
-      If the connection succeeds but the function fails, check the target system application log (SLG1) for function module errors.
+    Correct destination parameters when the logical route itself is wrong.
+    Route network or target-availability failures with exact source/target and timestamp evidence.
+    Correct user or authorization issues only after a logon/authorization failure is proven.
+    Restore registered-server connectivity when the expected external program is genuinely not registered.
+    Reprocess tRFC/qRFC work only after the root cause is fixed and duplicate/business-impact risk is understood.
+    Escalate remote application failures with target-side evidence rather than treating them as RFC configuration defects.
 
 
-    Typical fixes or next actions
+  What to capture first
+  Keep the destination, source and target systems, connection type, calling process, timestamp, exact error, test result, user/identity context, queue or transaction ID where relevant, and target-side evidence. This package normally makes the ownership boundary clear.
 
-      Correct the RFC destination host name, IP address, or gateway service if network details changed.
-      Unlock or reset the password for the RFC user in SU01.
-      Restart the registered RFC program or server if it is not running.
-      Restart the SAP gateway service (sapgwXX) if it is not responding.
-      Reprocess tRFC errors in SM58 after fixing the underlying issue.
-      Clear or restart qRFC queues in SMQ1/SMQ2 if they are stuck.
-      Adjust the RFC timeout or retry settings if the issue is intermittent network latency.
-      Escalate to the network or Basis team if the issue is infrastructure-related.
+  Limitations and boundaries
+  This page describes diagnostic logic, not RFC security or Basis configuration. Exact destination types, monitoring transactions, tables, gateway setup, SNC, load balancing, and cloud connectivity differ by release and architecture. Verify the system-specific RFC pattern before changing infrastructure or reprocessing queued work.
 
-
-    What to capture first
-    RFC destination failures are usually network, configuration, or credential issues. Capture: RFC destination name, source system, target system, exact error message, SM59 test results, and whether the issue is isolated to one destination or affects multiple.
-
-    Boundaries and non-goals
-    This page is a diagnostic frame, not an RFC configuration guide. It does not cover RFC destination creation, SNC/SSL setup, or PI/PO adapter configuration. It does not replace SAP's RFC and integration documentation.
-
-    This is not official SAP documentation and not a replacement for system-specific analysis.
-
-
-
-    Related Atlas Pages
-
-      SAP qRFC and tRFC Diagnostics
-      SAP IDoc Status Diagnostics
-      SAP Interface Monitoring Diagnostics
-      SAP ALE Distribution Model Diagnostics
+Related Atlas Pages
+  SAP qRFC and tRFC Diagnostics
+  SAP IDoc Status Diagnostics
+  SAP Interface Monitoring Diagnostics
+  SAP ALE Distribution Model Diagnostics
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with interface monitoring, IDoc and API diagnostics, integration ownership, and incident resolution. This guide uses a practitioner-oriented approach to isolating failures before escalation or reprocessing.
@@ -5161,7 +4845,7 @@ Home
 
     Atlas Diagnostic
     SAP transport governance diagnostics
-    A first-pass structure for transport queue conflicts, import-order errors, and governance gaps.
+    A transport problem is not always an import problem. Sometimes the import only reveals that the change sequence was never under control.
 
 
 
@@ -5174,69 +4858,62 @@ Home
 
 
 
-    Core idea
-    Transport governance keeps multiple change streams from colliding. When imports fail because of queue conflicts, untracked dependencies, or unauthorized changes, the diagnostic goal is to identify the governance gap before fixing the individual transport.
+    First decide what kind of failure you have
+    A failed import, a wrong production result, an overwritten object, and an unapproved request in the queue are different problems. They may meet in STMS, but they should not be diagnosed as one generic “transport issue.”
+    The first job is to reconstruct the change path: which request carried which objects, which requests depended on it, where each request was imported, in what order, with which return code, and what the release plan expected.
 
-    Common symptoms
-
-      Multiple transports for the same object block each other in the import queue.
-      Production import order differs from the order tested in quality assurance.
-      A transport appears in the queue that was not approved for import.
-      Rollback or overwrite is needed because an earlier transport was skipped.
-      Cross-project transports create conflicts during release windows.
-
-
-    Likely causes
-
-      Parallel development: two work streams modify the same object without coordination.
-      Queue skipping: an earlier transport was bypassed, breaking dependency order.
-      Weak approval gate: transports enter production without proper review.
-      Untracked dependencies: a transport relies on a configuration that is not in the same request.
-      Emergency process bypass: urgent fixes skip normal governance and conflict with scheduled changes.
+    Separate technical import evidence from governance evidence
+    SymptomLikely investigationGovernance question
+      Import returns an errorImport logs, object activation, prerequisites, target-system state.Was the request tested and was its dependency set complete?
+      Import succeeds but behaviour is wrongCompare transported objects, versions, customizing, generated objects, and follow-on steps.Did a later or parallel request overwrite part of the tested state?
+      Required request is missing or imported laterRebuild the dependency and import sequence.How was predecessor/dependency information managed before the release?
+      An unexpected request is in the production queueRequest owner, content, route, release history, import plan.Who approved it and what gate allowed it into the release scope?
+      Emergency fix collides with planned workCompare changed objects and target versions in both streams.Was the emergency change merged or back-ported into the normal development line?
 
 
-    Where to check in SAP
+    A practical diagnostic sequence
 
-      STMS import queues — compare order across development, quality, and production.
-      SE01 / SE10 — transport ownership, project assignment, and release status.
-      Change approval records — check approval status and any emergency exceptions.
-      Object lock reports — identify overlapping objects across transports.
-      System change log — recent manual or emergency changes outside TMS.
-
-
-    Key tables / transactions / objects
-
-      E070 / E071 — transport request and object lists.
-      TMSBUFFER — TMS buffer and queue state.
-      TADIR — object directory for overlap analysis.
+      Freeze the story before changing the queue. Capture the affected system, release window, request numbers, owners, current queue state, return codes, and business symptom.
+      Read the import history and logs. Establish what actually happened rather than what the release plan says should have happened.
+      Inspect request content. Check which repository or customizing objects are included and where requests overlap.
+      Rebuild dependencies. Identify predecessor requests, related customizing, generated objects, notes, manual steps, or other changes needed for the tested result.
+      Compare quality and production sequence. If production received a different order or subset, that difference is evidence.
+      Check approvals and exceptions. Emergency or manual imports should still have an owner, reason, scope, and reconciliation plan.
+      Choose recovery with the technical owner. Re-import, forward correction, sequencing change, object reconciliation, or release deferral have different risks. Do not treat “import again” as the default repair.
 
 
-    Diagnostic workflow
+    Useful SAP evidence
 
-      Map the import queue state and the intended import order for the release window.
-      Identify transports that modify the same objects or depend on each other.
-      Check whether any transport was skipped or imported out of order.
-      Review approval records for transports in the production queue.
-      Resolve conflicts by adjusting sequence, merging objects, or deferring changes.
-      Document the governance gap and update the change-control checklist.
-
-
-    Typical fixes or next actions
-
-      Establish object-level coordination when parallel projects touch the same area.
-      Enforce predecessor checks before importing into production.
-      Require documented approval for every transport in the production queue.
-      Add dependency checks to the release-readiness review.
-      Keep emergency fixes in a separate track and merge them back into normal governance.
+      STMS import queue, import history, and detailed logs.
+      SE01 / SE10 request ownership, tasks, status, and object content.
+      E070 / E071 when table-level request and object analysis is useful.
+      Version or object comparison tools appropriate to the object type and release.
+      Change-management records outside SAP for approvals, planned sequence, emergency path, and release evidence.
 
 
-    Support takeaway
-    Governance tickets are most useful when they show the queue state, the conflicting transport numbers, the intended import order, and the business reason for each change.
+    Parallel change is where governance becomes real
+    Two projects can each test successfully and still produce a bad production result if they change the same object or depend on different versions. The dangerous part is not that SAP allows multiple transports. The dangerous part is assuming request numbers automatically express business dependency.
+    For critical releases, object overlap and predecessor information should be visible before the production window. If the team discovers dependencies by reading import errors at midnight, the transport system is merely reporting a planning failure with admirable punctuality.
 
-    Boundaries and non-goals
-    This page is a governance diagnostic, not a full SAP Solution Manager ChaRM or transport strategy design. It focuses on queue and approval gaps that cause import failures.
+    Emergency fixes need a return path
+    An urgent production correction creates a second problem if it never returns to the normal development line. The next planned transport can overwrite the fix or recreate the defect. The emergency process therefore needs both a fast path into production and a controlled reconciliation or back-port path afterwards.
 
-    This is not official SAP documentation and not a replacement for system-specific analysis.
+    What a useful transport incident contains
+
+      System and release window.
+      Transport request numbers, owners, and business change references.
+      Relevant object overlap and dependency information.
+      Actual import order in quality and production.
+      Return codes and the relevant import-log error, not only a screenshot of the queue.
+      Any emergency or manual exception.
+      The expected target state and the evidence that will prove recovery.
+
+
+    The governance lesson
+    A transport request is a technical package. A release is a coordinated business change. Good transport governance connects the two with ownership, dependency, testing, approval, and recovery evidence. Fixing one import without repairing that chain leaves the next release waiting for the same surprise.
+
+    Boundaries
+    This page is a diagnostic frame, not a complete transport strategy or SAP Cloud ALM, Solution Manager, ChaRM, gCTS, or third-party release-management design. The exact controls depend on the landscape and delivery model.
 
 EXPERT CONTEXT:
 This guide was prepared by Dzmitryi Kharlanau, a Senior SAP Consultant working with recurring incidents, operational ownership, support improvement, and reusable support knowledge. This guide frames AMS decisions around the operating conditions that create repeated effort.
