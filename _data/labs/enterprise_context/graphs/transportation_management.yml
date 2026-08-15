@@ -1,0 +1,238 @@
+id: GRAPH-TM-TRANSPORT-TO-SETTLE
+type: knowledge_graph
+title: "SAP TM — Transport Demand to Freight Settlement"
+domain: "SAP S/4HANA Transportation Management"
+process_family: "Transport-to-Settle"
+process_step: "Demand, planning, execution, collaboration, and settlement"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+
+summary: >-
+  A Lead-level map of SAP Transportation Management. It separates transportation demand,
+  planning units, capacity documents, carrier commitment, physical execution, warehouse
+  coordination, charges, and financial settlement so that each object has a clear job.
+
+thesis: >-
+  TM is not a better shipment document. It is a control layer between ERP demand and physical
+  transportation. The useful mental model is DEMAND → BUILD → PLAN → CAPACITY → CARRIER → EXECUTE → COST → SETTLE.
+
+memory_model:
+  path: "DEMAND → REQUIREMENT → FREIGHT UNIT → PLAN → FREIGHT DOCUMENT → CARRIER → EXECUTE → CHARGE → SETTLE"
+  questions:
+    - key: DEMAND
+      question: "What business demand needs transportation?"
+      answer: "Start with a sales order, purchase order, stock transfer, delivery, JIT call, or forwarding demand."
+    - key: REQUIREMENT
+      question: "Is the demand order-based or delivery-based?"
+      answer: "OTR represents order-based demand. DTR represents delivery-based demand. This choice controls when TM can start and how later delivery changes enter the model."
+    - key: BUILD
+      question: "What exactly will planning move?"
+      answer: "Freight Unit Building turns requirement quantities into Freight Units. The FUB rule controls useful split and merge behavior."
+    - key: PLAN
+      question: "How do we create a feasible transportation plan?"
+      answer: "Manual planning or optimization assigns Freight Units to capacities while dates, resources, locations, modes, costs, and constraints are considered."
+    - key: DOCUMENT
+      question: "Which execution document represents the planned capacity?"
+      answer: "Freight Orders are central for road and rail. Freight Bookings are used for air and sea."
+    - key: CARRIER
+      question: "Who will execute the transport?"
+      answer: "Carrier determination or selection can assign a carrier. Tendering can request, compare, award, confirm, or reject transportation capacity."
+    - key: EXECUTE
+      question: "What proves physical progress?"
+      answer: "Execution status and events show arrival, loading, departure, unloading, and other milestones. Warehouse execution may confirm quantities and loading results back to TM."
+    - key: CHARGE
+      question: "What should transportation cost?"
+      answer: "Charge calculation evaluates the freight document against the commercial rate and agreement context."
+    - key: SETTLE
+      question: "How does the carrier cost reach financial follow-on processing?"
+      answer: "TM creates a Freight Settlement Document and posts settlement information to MM for service purchasing, service entry, and invoice verification follow-on."
+
+object_model:
+  - object: "Order-Based Transportation Requirement (OTR)"
+    role: "Transportation demand from an order"
+    remember: "Demand, not the truck plan."
+  - object: "Delivery-Based Transportation Requirement (DTR)"
+    role: "Transportation demand from a delivery"
+    remember: "More execution-close demand. A DTR can consume Freight Units from a related OTR."
+  - object: "Freight Unit (FU)"
+    role: "Planning unit"
+    remember: "The optimizer and planner work with transportable demand units, not directly with the sales order."
+  - object: "Freight Order (FO)"
+    role: "Capacity and execution document, especially road and rail"
+    remember: "A planning result that can be assigned to a carrier and executed."
+  - object: "Freight Booking (FB)"
+    role: "Capacity and execution document for air and sea"
+    remember: "Think booked external capacity rather than a road truck order."
+  - object: "Freight Settlement Document (FSD)"
+    role: "Cost-settlement bridge from TM to MM"
+    remember: "It carries freight-cost settlement into purchasing and invoice-verification follow-on processing."
+
+runtime_pipeline:
+  - order: 1
+    title: "Receive transportation demand"
+    question: "Which business document starts TM relevance?"
+    inputs: ["sales order", "purchase order / stock transfer", "inbound or outbound delivery", "JIT call", "forwarding demand"]
+    output: ["TM-relevant transportation demand"]
+    failure_signal: "The business document exists but no expected TM demand appears, or the wrong items are transportation-relevant."
+  - order: 2
+    title: "Create transportation requirement"
+    question: "Do we plan early from the order or later from the delivery?"
+    inputs: ["integration settings", "document relevance", "OTR/DTR type determination", "dates, locations, partners, quantities"]
+    output: ["OTR or DTR"]
+    failure_signal: "Planning starts too late, too early, or with wrong demand attributes because requirement relevance or type is wrong."
+  - order: 3
+    title: "Build Freight Units"
+    question: "How is demand split into planning units?"
+    inputs: ["requirement quantities", "Freight Unit Building Rule", "product and packaging context", "dates and locations"]
+    output: ["one or more Freight Units"]
+    failure_signal: "Too many tiny FUs make planning noisy, while oversized FUs remove useful consolidation options."
+  - order: 4
+    title: "Plan transportation"
+    question: "Which capacity, route, dates, and mode can execute the demand?"
+    inputs: ["Freight Units", "planning profile", "locations", "resources", "transportation network", "constraints and costs"]
+    output: ["planned Freight Orders, Freight Bookings, or other capacity documents"]
+    failure_signal: "The optimizer returns no plan, a costly plan, impossible dates, or unexpected consolidation."
+  - order: 5
+    title: "Select carrier and tender"
+    question: "Which carrier gets the work and on which commercial basis?"
+    inputs: ["freight document", "carrier selection settings", "rates / agreements", "constraints", "tendering strategy"]
+    output: ["assigned or awarded carrier and subcontracting state"]
+    failure_signal: "No valid carrier is found, ranking is unexpected, or tendering remains unresolved."
+  - order: 6
+    title: "Coordinate execution"
+    question: "What is happening physically, and which system owns each event?"
+    inputs: ["Freight Order / Booking", "carrier updates", "warehouse loading and unloading", "execution events"]
+    output: ["execution status, milestone events, quantity and loading confirmations"]
+    failure_signal: "TM, EWM, carrier, and ERP show different business states although messages technically succeeded."
+  - order: 7
+    title: "Calculate transportation charges"
+    question: "What should the freight service cost?"
+    inputs: ["freight document", "charge calculation settings", "rates / agreements", "distance, weight, stages, services"]
+    output: ["transportation charge result"]
+    failure_signal: "Execution is correct but charge basis, rate, currency, scale, or calculation context is wrong."
+  - order: 8
+    title: "Settle freight cost"
+    question: "How does the transport cost become an MM and finance follow-on process?"
+    inputs: ["settlement-relevant freight document", "calculated charges", "service provider", "organizational and accounting context"]
+    output: ["Freight Settlement Document and MM follow-on documents"]
+    failure_signal: "The freight is completed but settlement is blocked, duplicated, or differs from the carrier invoice."
+
+planning_components:
+  - title: "Freight Unit Building"
+    role: "Creates useful planning granularity from transport demand."
+    lead_lens: "FUB is an architecture decision. Granularity changes consolidation freedom and planning complexity."
+  - title: "Transportation Cockpit"
+    role: "Main interactive planning workspace for requirements and capacities."
+    lead_lens: "Use it to explain planning state, not as the definition of the planning model."
+  - title: "Manual Planning"
+    role: "Planner assigns requirements such as FUs to capacities and creates or changes freight documents."
+    lead_lens: "Useful for controlled decisions, exceptions, and planner responsibility."
+  - title: "VSR Optimization"
+    role: "Automatic planning and scheduling against constraints and costs."
+    lead_lens: "An optimizer cannot repair bad demand, master data, or impossible constraints."
+  - title: "Carrier Selection"
+    role: "Ranks and assigns suitable carriers using configured decision context."
+    lead_lens: "Separate routing feasibility from commercial carrier choice."
+  - title: "Tendering"
+    role: "Requests or confirms carrier commitment using RFQ-based or direct processes."
+    lead_lens: "Planning says what we want to move. Tendering resolves who accepts the work."
+
+integration_boundaries:
+  - boundary: "SD → TM"
+    ownership: "SD owns commercial sales demand; TM owns transportation demand and plan."
+    handoff: "TM-relevant sales orders and deliveries create order-based or delivery-based transportation demand."
+    diagnostic_question: "Is the wrong value already present in the ERP document, or did TM derive it incorrectly?"
+  - boundary: "MM / STO → TM"
+    ownership: "MM owns purchasing or transfer commitment; TM owns transportation planning and freight execution."
+    handoff: "Purchase and stock-transfer demand can become TM transportation demand and Freight Units."
+    diagnostic_question: "Is this procurement problem, transport relevance problem, or planning problem?"
+  - boundary: "TM ↔ EWM"
+    ownership: "TM owns transportation; EWM owns detailed warehouse execution."
+    handoff: "Planning results and warehouse execution state must stay synchronized. Advanced Shipping and Receiving is based on the TM Freight Order."
+    diagnostic_question: "Who owns the disputed status: vehicle/transport execution or warehouse task/loading execution?"
+  - boundary: "TM → MM settlement"
+    ownership: "TM calculates and settles freight-service cost; MM handles purchasing/service-entry and invoice-verification follow-on."
+    handoff: "Freight Settlement Document transfers freight cost context into MM."
+    diagnostic_question: "Is the issue in TM charges, FSD posting, MM service purchasing, or invoice verification?"
+  - boundary: "TM ↔ Carrier / Business Network"
+    ownership: "TM owns the freight document and tendering intent; the carrier owns acceptance and physical service execution."
+    handoff: "Tendering, subcontracting, confirmations, milestones, and settlement collaboration cross the company boundary."
+    diagnostic_question: "Was the carrier never selected, never tendered, never confirmed, or simply not synchronized?"
+
+deployment_patterns:
+  - title: "Embedded TM with embedded EWM"
+    fit: "Tight S/4HANA logistics execution with shared enterprise context and Advanced Shipping and Receiving options."
+    caution: "Embedded does not remove ownership boundaries. TM and EWM still own different process states."
+  - title: "TM with external / decentralized EWM integration"
+    fit: "Warehouse execution is separated while transportation planning remains in TM."
+    caution: "Integration design, delivery synchronization, status ownership, and latency become more visible architecture concerns."
+  - title: "Decentralized EWM and TM for Advanced Shipping and Receiving"
+    fit: "A separate S/4HANA system can combine decentralized EWM and TM for specific ASR scenarios."
+    caution: "Check the exact process and release scope. Do not generalize one decentralized ASR pattern into a universal TM deployment rule."
+
+failure_modes:
+  - symptom: "No OTR / DTR appears"
+    first_checks: ["TM relevance of source document", "integration and requirement type determination", "document blocks and organizational context"]
+    avoid: "Creating a Freight Order manually before proving why demand was not transferred."
+  - symptom: "Unexpected number or size of Freight Units"
+    first_checks: ["FUB rule", "split/merge logic", "quantity basis", "dates, locations, packaging context"]
+    avoid: "Tuning optimizer settings before proving the input planning granularity."
+  - symptom: "No feasible plan"
+    first_checks: ["requested dates", "locations", "resources and capacities", "planning profile", "hard constraints", "network/mode compatibility"]
+    avoid: "Assuming the optimizer is wrong because it refuses an impossible business request."
+  - symptom: "Wrong carrier selected"
+    first_checks: ["carrier eligibility", "selection settings", "cost / agreement context", "constraints", "ranking result"]
+    avoid: "Hard-coding a carrier on the Freight Order without explaining the decision rule."
+  - symptom: "TM and EWM execution states disagree"
+    first_checks: ["integration pattern", "Freight Order or TU-based process", "delivery/HU references", "last confirmed physical event", "message/application logs"]
+    avoid: "Treating a successful interface status as proof that both systems represent the same business event."
+  - symptom: "Freight settlement fails or invoice differs"
+    first_checks: ["charge calculation", "settlement relevance", "FSD status", "MM follow-on documents", "service provider and accounting context"]
+    avoid: "Debugging invoice verification before proving what TM actually sent as the freight-cost basis."
+
+assessment_cards:
+  - question: "OTR vs DTR?"
+    answer: "OTR is order-based transportation demand and supports early planning. DTR is delivery-based demand. When a delivery is created for an order already in TM, the DTR can consume and receive the Freight Units from the related OTR."
+  - question: "Freight Unit vs Freight Order?"
+    answer: "A Freight Unit is the planning unit representing what must be moved. A Freight Order is an executable capacity document representing how planned transport will be performed."
+  - question: "Why Freight Unit Building matters?"
+    answer: "It defines planning granularity. Smaller units can increase consolidation choices but also increase planning complexity. Large units simplify planning but can reduce flexibility."
+  - question: "FO vs FB?"
+    answer: "Freight Order is used mainly for road and rail. Freight Booking is used for air and sea."
+  - question: "What is the TM/EWM boundary?"
+    answer: "TM owns transportation planning and freight execution. EWM owns detailed warehouse execution. They exchange planning and execution context, but they do not become one responsibility."
+  - question: "What changes with Advanced Shipping and Receiving?"
+    answer: "The TM Freight Order becomes the central transport object for the integrated shipping and receiving process. In the embedded EWM ASR pattern, the process does not use the EWM Transportation Unit or EWM vehicle."
+  - question: "How does freight settlement reach finance?"
+    answer: "TM calculates transportation charges, creates a Freight Settlement Document, and posts it to MM. MM follow-on processing creates service purchasing and service-entry context for invoice verification."
+
+synthetic_case:
+  title: "Two outbound orders, one truck"
+  steps:
+    - "Two sales orders create early transport demand as OTRs."
+    - "FUB creates Freight Units with compatible source, destination region, dates, and vehicle needs."
+    - "Planning consolidates the Freight Units into one road Freight Order."
+    - "Carrier selection ranks valid carriers; tendering awards the order."
+    - "Outbound deliveries are created. Their DTRs consume the relevant OTR demand and reuse the Freight Units."
+    - "EWM loads the truck and confirms warehouse execution. TM keeps the transport execution state."
+    - "After execution, TM calculates charges and creates the Freight Settlement Document for MM follow-on."
+  lesson: "Trace one business demand through object transformations. That is easier to explain and debug than memorizing isolated TM apps."
+
+source_refs:
+  - SRC-SAP-TM-OVERVIEW
+  - SRC-SAP-TM-INTERNAL-INTEGRATION
+  - SRC-SAP-TM-OTR
+  - SRC-SAP-TM-DTR
+  - SRC-SAP-TM-OTR-CONSUMPTION
+  - SRC-SAP-TM-FREIGHT-UNIT
+  - SRC-SAP-TM-PLANNING
+  - SRC-SAP-TM-MANUAL-PLANNING
+  - SRC-SAP-TM-FREIGHT-ORDER-MGMT
+  - SRC-SAP-TM-CARRIER-SELECTION
+  - SRC-SAP-TM-TENDERING
+  - SRC-SAP-TM-EWM-INTEGRATION
+  - SRC-SAP-TM-ASR
+  - SRC-SAP-TM-FREIGHT-SETTLEMENT
+  - SRC-SAP-TM-FSD
