@@ -1,0 +1,174 @@
+---
+layout: default
+title: "SAP Sales Pricing Configuration Playbook — Enterprise Context Lab"
+description: "A practical configuration sequence for SAP Sales pricing: condition technique, condition types, procedures, formulas, Free Goods, testing, and extensions."
+permalink: /labs/enterprise-context/pricing/configuration/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - pricing
+  - configuration
+  - condition-technique
+  - formulas
+  - free-goods
+  - testing
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.pricing_configuration %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/pricing/">Pricing</a></li><li aria-current="page">Configuration</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Pricing Configuration</p>
+      <h1>Configure the owner,<br />then test the boundary.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#configuration-sequence">Open configuration sequence <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Pricing configuration inventory">
+      <p>Playbook</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.configuration_sequence | size }}</strong><small>Configuration steps</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.project_test_matrix | size }}</strong><small>Test dimensions</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.extension_guardrails | size }}</strong><small>Guardrails</small></div>
+      <em>Draft research · practical configuration model</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+    <p><strong>Problem:</strong> pricing changes fail when configuration, master data and custom logic are mixed into one “pricing issue.” <strong>Context:</strong> this playbook assigns one owner to each layer before a change is designed.</p>
+    <a href="/labs/enterprise-context/data/pricing-configuration.json">Open configuration JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration-sequence" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Configuration sequence</p>
+      <h2>Ten steps from business rule to lifecycle test.</h2>
+      <p>I use this order to stop configuration from becoming the first design activity. A rate table is useful only after the rule, key, type, procedure row and lifecycle are clear.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.configuration_sequence %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if item.order < 10 %}0{% endif %}{{ item.order }}</span><small>configuration</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.question }}</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Actions</h4><ul>{% for value in item.actions %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Proof</h4><p>{{ item.proof }}</p></div>
+          <div><h4>Failure if skipped</h4><p>The next layer receives an assumption instead of a controlled input.</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Condition type checklist</p>
+      <h2>What belongs to the condition type?</h2>
+      <p>The condition type should describe reusable price-element behavior. The condition record should not be forced to compensate for a bad type design.</p>
+    </header>
+    <div class="ecg-control-stack">
+      {% for item in graph.condition_type_checklist %}
+      <article><span>{{ item.control }}</span><h3>{{ item.ask }}</h3></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Procedure row checklist</p>
+      <h2>What belongs to the pricing procedure row?</h2>
+      <p>A row owns runtime sequence and row-specific controls: eligibility, base, subtotal, calculation override and downstream relevance.</p>
+    </header>
+    <div class="ecg-control-stack">
+      {% for item in graph.procedure_row_checklist %}
+      <article><span>{{ item.control }}</span><h3>{{ item.ask }}</h3></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Ownership</p>
+      <h2>Five layers that should not impersonate each other.</h2>
+      <p>When ownership is clear, transport, maintenance, testing and incident handling become much easier.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.ownership_model %}
+      <article class="ecg-determination-detail">
+        <header><div><span>OWNER</span><small>{{ item.layer }}</small></div><h3>{{ item.layer }}</h3><p class="ecg-question">{{ item.change_question }}</p></header>
+        <div class="ecg-decision-columns"><div><h4>Owns</h4><ul>{% for value in item.owns %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Decision</h4><p>{{ item.change_question }}</p></div><div><h4>Lead check</h4><p>Can operations change this layer without changing another owner by accident?</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Extension guardrails</p>
+      <h2>Where project pricing usually becomes expensive.</h2>
+      <p>These rules are independent implementation guidance. They keep business data, configuration and code from collapsing into one custom routine.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in graph.extension_guardrails %}
+      <article><span>GUARDRAIL</span><h3>{{ item.rule }}</h3><p>{{ item.why }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Project test matrix</p>
+      <h2>Do not test one happy-path order and declare pricing complete.</h2>
+      <p>Pricing defects often live at a threshold, conversion, document boundary or interaction between conditions. The matrix makes those boundaries explicit.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.project_test_matrix %}
+      <article class="ecg-determination-detail">
+        <header><div><span>TEST</span><small>dimension</small></div><h3>{{ item.dimension }}</h3><p class="ecg-question">Cover the boundary, not only the normal value.</p></header>
+        <div class="ecg-diagnostic"><div><h4>Cases</h4><ul>{% for value in item.cases %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Expected result</h4><p>Pricing analysis explains the selected rate, base, scale and interaction for every case.</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead failure cases</p>
+      <h2>Common requests, better first responses.</h2>
+      <p>The point is not to reject change. It is to place the change in the smallest correct layer before creating more configuration or code.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for item in graph.lead_failure_cases %}
+      <details><summary><span>0{{ forloop.index }}</span><strong>{{ item.symptom }}</strong><small>Open response</small></summary><div><p>{{ item.response }}</p></div></details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Related pricing views</p>
+      <h2>Three views, three questions.</h2>
+      <p>The Pricing Engine explains runtime search. Pricing Anatomy explains condition behavior and calculation. This playbook explains configuration and testing order.</p>
+    </div>
+    <div class="ecg-machine__actions">
+      <a class="research-canvas__button" href="/labs/enterprise-context/pricing/">Pricing Engine</a>
+      <a href="/labs/enterprise-context/pricing/anatomy/">Pricing Anatomy</a>
+      <a href="/labs/enterprise-context/data/pricing-configuration.json">Configuration JSON</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>

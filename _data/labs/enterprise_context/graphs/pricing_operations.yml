@@ -1,0 +1,507 @@
+id: GRAPH-SD-PRICING-OPERATIONS
+version: "1.0.0"
+type: knowledge_graph
+title: "Sales Pricing Delivery and Operations"
+summary: >-
+  A Lead-level operating model for taking SAP Sales pricing from workshop to go-live and support.
+  It separates design decisions, condition-data movement, cutover, approvals, mass maintenance,
+  performance guardrails, production diagnostics, and continuous improvement.
+domain: "SAP S/4HANA Sales"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: null
+memory_path: "RULE → OWNER → DATA → LOAD → PROVE → CUTOVER → TRACE → IMPROVE"
+author_note: >-
+  Pricing delivery is not finished when the condition type works in a test order. The solution also
+  needs ownership, repeatable data loads, approval controls, cutover reconciliation, support evidence,
+  and a safe way to change prices after go-live.
+
+delivery_lifecycle:
+  - id: PRCO-LIFE-01
+    order: 1
+    key: DISCOVER
+    title: "Clarify the commercial rule and ownership"
+    question: "What changes the customer result, who owns the rule, and which date makes it active?"
+    outputs: ["rule statement", "owner", "examples and counterexamples", "commercial clock", "volume estimate"]
+    exit_criteria: "The rule can be explained without SAP field names."
+  - id: PRCO-LIFE-02
+    order: 2
+    key: DESIGN
+    title: "Design the pricing mechanism and data model"
+    question: "Which part belongs to condition technique, master data, document data, formula, or another process?"
+    outputs: ["condition key", "procedure impact", "rate/base/scale design", "copy and billing behavior", "extension decision"]
+    exit_criteria: "The team can calculate one expected result by hand and explain the runtime path."
+  - id: PRCO-LIFE-03
+    order: 3
+    key: BUILD
+    title: "Configure, extend and prepare maintenance"
+    question: "Can the design be maintained and tested without hidden dependencies?"
+    outputs: ["configuration", "released/classic extension where needed", "maintenance method", "authorization concept", "test pack"]
+    exit_criteria: "Configuration, rates and custom logic have different owners and proof paths."
+  - id: PRCO-LIFE-04
+    order: 4
+    key: LOAD
+    title: "Load condition data in controlled batches"
+    question: "Which data movement mode fits this population and how will errors be reconciled?"
+    outputs: ["load file or migration object", "batch plan", "error log", "record counts", "sampled price checks"]
+    exit_criteria: "Loaded records reconcile to the approved source population."
+    source_refs: [SRC-SAP-PRC-OPS-MANAGE-PRICES-CLOUD, SRC-SAP-PRC-OPS-MIGRATION-STAGING, SRC-SAP-PRC-OPS-MIGRATION-DIRECT]
+  - id: PRCO-LIFE-05
+    order: 5
+    key: CUTOVER
+    title: "Freeze, load deltas and activate the commercial date"
+    question: "How do we prevent old and new condition populations from competing during go-live?"
+    outputs: ["freeze window", "delta load", "validity boundary", "smoke orders", "billing proof", "rollback decision"]
+    exit_criteria: "The active population and first production transactions match the approved cutover baseline."
+  - id: PRCO-LIFE-06
+    order: 6
+    key: OPERATE
+    title: "Maintain, approve and diagnose safely"
+    question: "How can business users change prices while support can still explain every result?"
+    outputs: ["maintenance process", "approval path", "support runbook", "monitoring signals", "incident evidence"]
+    exit_criteria: "A price change and a pricing incident both have named owners and traceable evidence."
+    source_refs: [SRC-SAP-PRC-OPS-APPROVAL, SRC-SAP-PRC-OPS-PRICING-ANALYSIS]
+  - id: PRCO-LIFE-07
+    order: 7
+    key: IMPROVE
+    title: "Reduce complexity using production evidence"
+    question: "Which tables, records, procedures or extensions create avoidable maintenance and support cost?"
+    outputs: ["cleanup backlog", "duplicate-key review", "unused access review", "automation candidates", "regression updates"]
+    exit_criteria: "The next pricing change is easier to implement and support than the previous one."
+
+workshop_model:
+  - id: PRCO-WS-01
+    order: 1
+    title: "Start with commercial examples"
+    questions:
+      - "Who gets a different result?"
+      - "Which product, service, market or channel creates the difference?"
+      - "Is the result a price, discount, surcharge, free quantity, tax effect or settlement?"
+      - "From which date should it be valid?"
+    deliverable: "Business rule sheet with one positive and one negative example."
+  - id: PRCO-WS-02
+    order: 2
+    title: "Separate rate, eligibility and calculation"
+    questions:
+      - "Is the changing part the rate or the right to receive the condition?"
+      - "What is the calculation base?"
+      - "Does a scale or group total change the result?"
+      - "Can valid conditions coexist or must one win?"
+    deliverable: "Mechanism map: eligibility → search → rate → base → scale → interaction."
+  - id: PRCO-WS-03
+    order: 3
+    title: "Choose stable business keys"
+    questions:
+      - "Which attributes are maintained business data?"
+      - "Who owns each attribute?"
+      - "Can an existing hierarchy or standard field represent the distinction?"
+      - "Would a new key multiply condition records without adding business meaning?"
+    deliverable: "Condition-key proposal with expected population size."
+  - id: PRCO-WS-04
+    order: 4
+    title: "State every commercial clock"
+    questions:
+      - "Which pricing date selects the record?"
+      - "Should billing copy or redetermine?"
+      - "Can an agreement change after billing?"
+      - "Does settlement happen later than transactional pricing?"
+    deliverable: "Order/billing/after-billing timing map."
+  - id: PRCO-WS-05
+    order: 5
+    title: "Design maintenance and approval before go-live"
+    questions:
+      - "Who may create, change, approve and delete a price?"
+      - "Is maintenance interactive, spreadsheet-based, migrated, or integrated?"
+      - "Which changes need approval?"
+      - "How are validity overlaps reviewed?"
+    deliverable: "RACI plus maintenance and approval flow."
+    source_refs: [SRC-SAP-PRC-OPS-MANAGE-PRICES-CLOUD, SRC-SAP-PRC-OPS-APPROVAL, SRC-SAP-PRC-OPS-WORKFLOW]
+  - id: PRCO-WS-06
+    order: 6
+    title: "Make volume a design input"
+    questions:
+      - "How many records exist now?"
+      - "How many are expected after the new dimensions are added?"
+      - "How many records change per cycle?"
+      - "Which loads need background processing or batching?"
+    deliverable: "Population and batch estimate with release-specific limits separated from project assumptions."
+    source_refs: [SRC-SAP-PRC-OPS-MANAGE-PRICES-CLOUD, SRC-SAP-PRC-OPS-MANAGE-PRICES-ONPREM]
+  - id: PRCO-WS-07
+    order: 7
+    title: "Agree the production proof"
+    questions:
+      - "Which test order proves the rule?"
+      - "Which billing document proves copy/repricing?"
+      - "Which pricing-analysis evidence will support use?"
+      - "Which negative test proves the rule does not leak to other customers or products?"
+    deliverable: "Regression pack and production smoke-test list."
+    source_refs: [SRC-SAP-PRC-OPS-PRICING-ANALYSIS]
+
+data_movement_modes:
+  - id: PRCO-DATA-MIGRATION
+    mode: MIGRATION
+    use_when: "A project moves a governed condition population into a new S/4HANA target."
+    tools_or_patterns:
+      - "Migration Cockpit pricing-condition migration objects where they fit the source and deployment model"
+      - "staging-table migration for the general condition-record object"
+      - "direct-transfer sales pricing condition object for supported SAP ERP source scenarios"
+    controls: ["mapping", "validity", "record count", "duplicates", "sampled calculation", "delta strategy"]
+    not_for: "Routine business price changes after go-live."
+    source_refs: [SRC-SAP-PRC-OPS-MIGRATION-STAGING, SRC-SAP-PRC-OPS-MIGRATION-DIRECT]
+  - id: PRCO-DATA-MASS
+    mode: MASS_MAINTENANCE
+    use_when: "Pricing specialists need governed business maintenance of many condition records."
+    tools_or_patterns:
+      - "Manage Prices - Sales interactive maintenance"
+      - "spreadsheet import/export"
+      - "create with reference and mass changes where the release supports it"
+      - "background job and import-log monitoring"
+    controls: ["approval", "validity review", "batch size", "error download", "sampled price proof"]
+    not_for: "Replacing a formal migration/cutover design with an uncontrolled spreadsheet."
+    source_refs: [SRC-SAP-PRC-OPS-MANAGE-PRICES-CLOUD, SRC-SAP-PRC-OPS-MASS-REFERENCE]
+  - id: PRCO-DATA-INTEGRATION
+    mode: ONGOING_INTEGRATION
+    use_when: "An external system or governed upstream process owns pricing condition changes continuously."
+    tools_or_patterns:
+      - "Condition Record for Pricing in Sales API where supported"
+      - "replication/integration contract with create, update and delete semantics"
+    controls: ["source-of-truth rule", "idempotency", "error handling", "approval impact", "reconciliation"]
+    not_for: "A one-time project cutover with no ongoing interface requirement."
+    source_refs: [SRC-SAP-PRC-OPS-API, SRC-SAP-PRC-OPS-APPROVAL]
+
+migration_cutover:
+  principles:
+    - id: PRCO-CUT-P-01
+      rule: "Migrate commercial meaning, not old technical clutter."
+      why: "Obsolete keys and duplicate records are easier to remove before they become the new baseline."
+    - id: PRCO-CUT-P-02
+      rule: "Separate full load, correction load and delta load."
+      why: "One repeated file with mixed intent makes reconciliation and rollback difficult."
+    - id: PRCO-CUT-P-03
+      rule: "Use validity dates as part of cutover design."
+      why: "Old and new records can both be technically present while only the intended population is commercially active."
+    - id: PRCO-CUT-P-04
+      rule: "Reconcile business outcomes, not only record counts."
+      why: "Ten thousand successfully loaded records can still be wrong if keys, units, currencies or scales changed meaning."
+  steps:
+    - id: PRCO-CUT-01
+      order: 1
+      phase: "T-4w"
+      title: "Profile source population"
+      proof: ["counts by condition type", "key combinations", "validity distribution", "overlaps", "scale/supplement usage"]
+    - id: PRCO-CUT-02
+      order: 2
+      phase: "T-3w"
+      title: "Map and cleanse"
+      proof: ["target condition type", "target key", "currency/UoM mapping", "retired records", "duplicate rule"]
+    - id: PRCO-CUT-03
+      order: 3
+      phase: "T-2w"
+      title: "Dress rehearsal"
+      proof: ["load success", "error classification", "batch duration", "sample pricing", "rollback/reset method"]
+    - id: PRCO-CUT-04
+      order: 4
+      phase: "T-1w"
+      title: "Freeze configuration design"
+      proof: ["procedure stable", "condition tables stable", "accesses stable", "extensions transported", "test pack green"]
+    - id: PRCO-CUT-05
+      order: 5
+      phase: "T-1d"
+      title: "Take business baseline and start freeze"
+      proof: ["source count", "last approved extract", "open changes listed", "delta owner named"]
+    - id: PRCO-CUT-06
+      order: 6
+      phase: "T0 load"
+      title: "Load in controlled batches"
+      proof: ["batch IDs", "success/error counts", "rejected rows", "corrected retries"]
+    - id: PRCO-CUT-07
+      order: 7
+      phase: "T0 reconcile"
+      title: "Reconcile population and calculations"
+      proof: ["count by type", "count by key", "boundary validity", "scale samples", "manual expected-value samples"]
+    - id: PRCO-CUT-08
+      order: 8
+      phase: "T0 delta"
+      title: "Load approved deltas"
+      proof: ["delta list", "no duplicate intent", "final counts", "approval status where relevant"]
+    - id: PRCO-CUT-09
+      order: 9
+      phase: "T0 smoke"
+      title: "Prove order and billing"
+      proof: ["positive order", "negative order", "scale boundary", "billing copy/repricing", "FI handoff where relevant"]
+    - id: PRCO-CUT-10
+      order: 10
+      phase: "T+1"
+      title: "Open hypercare with known baseline"
+      proof: ["support owner", "incident route", "baseline counts", "known exceptions", "daily review window"]
+
+maintenance_governance:
+  roles:
+    - id: PRCO-ROLE-BUSINESS
+      role: "Commercial / Price Owner"
+      owns: ["commercial policy", "effective date", "allowed exceptions", "approval thresholds"]
+      should_not_own: "Technical condition-table or formula implementation."
+    - id: PRCO-ROLE-SPECIALIST
+      role: "Pricing Specialist"
+      owns: ["condition-record maintenance", "validity", "scales", "mass imports", "correction of rejected rows"]
+      should_not_own: "Unreviewed changes to pricing algorithms."
+      source_refs: [SRC-SAP-PRC-OPS-FEATURE-COMPARE, SRC-SAP-PRC-OPS-MANAGE-PRICES-CLOUD]
+    - id: PRCO-ROLE-APPROVER
+      role: "Price Approver"
+      owns: ["approval decision", "commercial reasonability", "release of approval-relevant prices"]
+      should_not_own: "Creating and approving the same governed change when separation is required."
+      source_refs: [SRC-SAP-PRC-OPS-APPROVAL, SRC-SAP-PRC-OPS-WORKFLOW]
+    - id: PRCO-ROLE-CONFIG
+      role: "Pricing Configuration Expert"
+      owns: ["condition technique", "pricing procedure controls", "extension design", "transported configuration"]
+      should_not_own: "Daily business rates when master data is the correct owner."
+    - id: PRCO-ROLE-INTEGRATION
+      role: "Integration Owner"
+      owns: ["API contract", "source-system ownership", "retry/idempotency", "interface reconciliation"]
+      should_not_own: "Commercial approval policy."
+      source_refs: [SRC-SAP-PRC-OPS-API]
+    - id: PRCO-ROLE-FINANCE
+      role: "Finance / Accounting Owner"
+      owns: ["revenue/account determination impact", "posting validation", "settlement/accrual boundaries where relevant"]
+      should_not_own: "Changing customer price logic to repair an accounting mapping issue."
+    - id: PRCO-ROLE-SUPPORT
+      role: "Production Support Lead"
+      owns: ["incident evidence", "scope assessment", "containment coordination", "root-cause classification", "regression proof"]
+      should_not_own: "Emergency price edits before the affected population is known."
+  controls:
+    - id: PRCO-GOV-01
+      control: "Validity discipline"
+      rule: "Every change states valid-from, valid-to and expected overlap behavior."
+    - id: PRCO-GOV-02
+      control: "Approval boundary"
+      rule: "Define which condition types/sales areas/changes require approval in deployments that use the price approval workflow."
+      source_refs: [SRC-SAP-PRC-OPS-APPROVAL, SRC-SAP-PRC-OPS-WORKFLOW]
+    - id: PRCO-GOV-03
+      control: "Source of truth"
+      rule: "For every condition population, state whether SAP, migration data, or an external system owns the next change."
+    - id: PRCO-GOV-04
+      control: "Mass-change evidence"
+      rule: "Keep the input population, batch result and business reconciliation together."
+    - id: PRCO-GOV-05
+      control: "Algorithm versus rate"
+      rule: "A rate change should not silently become a configuration change, and a configuration change should not be hidden in a mass data load."
+
+performance_guardrails:
+  - id: PRCO-PERF-01
+    topic: "Large spreadsheet import/export"
+    guidance: "For the SAP S/4HANA Cloud 2608 Manage Prices - Sales documentation, SAP recommends simplified spreadsheet format for large volume and states a maximum of 100000 condition records per import or export."
+    release_specific: true
+    documented_limit: 100000
+    unit: "condition records per import/export"
+    lead_use: "Treat this as a release-specific product boundary, then design smaller operational batches when rollback, approvals or business reconciliation need finer control."
+    source_refs: [SRC-SAP-PRC-OPS-MANAGE-PRICES-CLOUD]
+  - id: PRCO-PERF-02
+    topic: "Create with reference"
+    guidance: "For SAP S/4HANA 2025 FPS01 Manage Prices - Sales, SAP recommends creating no more than 10000 condition records at one time when using create-with-reference mass creation."
+    release_specific: true
+    documented_limit: 10000
+    unit: "condition records per mass creation"
+    lead_use: "Do not turn a product recommendation into one universal project batch size; combine it with approval, error-recovery and reconciliation needs."
+    source_refs: [SRC-SAP-PRC-OPS-MANAGE-PRICES-ONPREM, SRC-SAP-PRC-OPS-MASS-REFERENCE]
+  - id: PRCO-PERF-03
+    topic: "Access-sequence search order"
+    guidance: "SAP recommends ordering accesses from more specific cases to more generic cases."
+    release_specific: false
+    lead_use: "Use deliberate precedence; do not add broad condition tables early in the search only because they are easy to populate."
+    source_refs: [SRC-SAP-PRC-OPS-ACCESS-SEQUENCE]
+  - id: PRCO-PERF-04
+    topic: "Condition-key explosion"
+    guidance: "Estimate record population before adding another pricing dimension."
+    release_specific: false
+    evidence_class: "reasoned_interpretation"
+    lead_use: "A technically valid extra key can multiply maintenance, migration, approval and support work. Prefer a real business hierarchy or standard dimension when it represents the rule."
+  - id: PRCO-PERF-05
+    topic: "Background processing and error monitoring"
+    guidance: "Large imports and mass creation jobs should be treated as managed jobs with status and error review, not as a fire-and-forget upload."
+    release_specific: false
+    source_refs: [SRC-SAP-PRC-OPS-MANAGE-PRICES-CLOUD]
+
+production_runbook:
+  memory_path: "SCOPE → DOCUMENT → PROCEDURE → CONDITION → ACCESS → RECORD → MATH → COPY → POPULATION → FIX → PROVE"
+  steps:
+    - id: PRCO-INC-01
+      order: 1
+      title: "Scope the incident before changing data"
+      actions: ["capture affected document numbers", "sales area", "customer/product examples", "pricing date", "first known bad time", "business impact"]
+      proof: "One reproducible bad case and one unaffected comparison case."
+    - id: PRCO-INC-02
+      order: 2
+      title: "Preserve the document evidence"
+      actions: ["record active/inactive conditions", "manual changes", "currency and quantity", "reference document", "billing status"]
+      proof: "The original result can still be explained after the incident is fixed."
+    - id: PRCO-INC-03
+      order: 3
+      title: "Run pricing analysis"
+      actions: ["confirm pricing procedure", "check condition-type eligibility", "inspect accesses", "capture runtime keys", "identify record found or not found"]
+      proof: "The first divergence from the expected path is named."
+      source_refs: [SRC-SAP-PRC-OPS-PRICING-ANALYSIS]
+    - id: PRCO-INC-04
+      order: 4
+      title: "Recalculate the condition math"
+      actions: ["rate", "base", "scale", "group total", "exclusion", "manual override", "formula/subtotal"]
+      proof: "The expected value is reproduced independently from the screen total."
+    - id: PRCO-INC-05
+      order: 5
+      title: "Check document lifecycle"
+      actions: ["sales-order pricing", "reference/copy behavior", "billing pricing type", "billing date/context", "after-billing correction if relevant"]
+      proof: "The team knows whether the defect started in order pricing or a follow-on recalculation."
+    - id: PRCO-INC-06
+      order: 6
+      title: "Find the affected population"
+      actions: ["condition type", "condition key", "validity range", "record source", "recent mass load/change", "external integration batch"]
+      proof: "Impact is stated as a population, not only as one sample order."
+    - id: PRCO-INC-07
+      order: 7
+      title: "Choose the smallest containment"
+      actions: ["correct one governed record population", "adjust validity", "stop/retry interface batch", "rollback configuration transport only if configuration is the cause"]
+      proof: "Containment does not create a wider pricing change than the incident itself."
+    - id: PRCO-INC-08
+      order: 8
+      title: "Regression-test before release"
+      actions: ["bad case now correct", "unaffected case unchanged", "boundary date", "scale boundary", "order/billing", "manual/negative path"]
+      proof: "The fix has both positive and non-regression evidence."
+    - id: PRCO-INC-09
+      order: 9
+      title: "Close with root cause and prevention"
+      actions: ["classify owner: data/config/document/extension/copy/integration", "record why existing control did not catch it", "add regression or governance control"]
+      proof: "A similar change is less likely to fail silently next time."
+
+incident_classes:
+  - id: PRCO-CLASS-DATA
+    owner: "Pricing master data"
+    signals: ["wrong rate", "wrong validity", "missing record", "overlap", "wrong scale data"]
+    first_question: "Was the correct record population created and active for the runtime key/date?"
+  - id: PRCO-CLASS-CONFIG
+    owner: "Pricing configuration"
+    signals: ["wrong procedure", "wrong access order", "wrong requirement", "wrong subtotal/base", "unexpected exclusion"]
+    first_question: "Did configuration change the algorithm or search path?"
+  - id: PRCO-CLASS-DOCUMENT
+    owner: "Business/document context"
+    signals: ["wrong pricing date", "wrong customer/product attribute", "wrong quantity/UoM/currency", "manual change"]
+    first_question: "Did pricing receive the business inputs that the design assumes?"
+  - id: PRCO-CLASS-EXTENSION
+    owner: "Extension logic"
+    signals: ["custom field missing", "formula result wrong", "order/billing parity failure"]
+    first_question: "Which released/classic extension owns the first non-standard result?"
+  - id: PRCO-CLASS-COPY
+    owner: "Copy / billing repricing"
+    signals: ["order correct, invoice different", "manual condition lost", "new market price used unexpectedly"]
+    first_question: "Was the follow-on document meant to copy, partially redetermine or fully reprice?"
+  - id: PRCO-CLASS-INTEGRATION
+    owner: "Integration / load"
+    signals: ["partial batch", "duplicates", "unexpected deletes", "source/target count mismatch"]
+    first_question: "Which batch or upstream message created the active population?"
+
+operational_signals:
+  - id: PRCO-SIGNAL-01
+    title: "Rejected or partial pricing imports"
+    use: "Review failed rows and repeated correction cycles; they can indicate mapping or governance problems, not only bad spreadsheet cells."
+    source_refs: [SRC-SAP-PRC-OPS-MANAGE-PRICES-CLOUD]
+  - id: PRCO-SIGNAL-02
+    title: "Growth of condition-record population"
+    use: "Track by condition type/key to see whether a new dimension is creating maintenance multiplication."
+    evidence_class: "recommended_operational_metric"
+  - id: PRCO-SIGNAL-03
+    title: "Emergency/manual price changes"
+    use: "Repeated emergency overrides often mean the commercial rule or maintenance lead time is not modeled well."
+    evidence_class: "recommended_operational_metric"
+  - id: PRCO-SIGNAL-04
+    title: "Pricing elements in billing analytics"
+    use: "Use pricing-element analytics where available to review which condition types materially change billed value across dimensions."
+    source_refs: [SRC-SAP-PRC-OPS-FLEX-ANALYSIS]
+  - id: PRCO-SIGNAL-05
+    title: "Incident first-divergence category"
+    use: "Count whether defects start in data, configuration, document context, extension, copy/repricing or integration. This turns support history into design feedback."
+    evidence_class: "recommended_operational_metric"
+
+go_live_checklist:
+  - id: PRCO-GO-01
+    gate: "Commercial sign-off"
+    checks: ["rule and effective date approved", "exception policy approved", "condition population owner named"]
+  - id: PRCO-GO-02
+    gate: "Configuration sign-off"
+    checks: ["procedure/access/type design stable", "extensions transported", "copy/billing behavior proven"]
+  - id: PRCO-GO-03
+    gate: "Data sign-off"
+    checks: ["source population frozen", "migration/mass-maintenance method proven", "counts and errors reconciled", "validity overlaps reviewed"]
+  - id: PRCO-GO-04
+    gate: "Security and approval sign-off"
+    checks: ["maintainer roles assigned", "approver roles assigned where used", "separation/restrictions tested"]
+    source_refs: [SRC-SAP-PRC-OPS-FEATURE-COMPARE, SRC-SAP-PRC-OPS-WORKFLOW]
+  - id: PRCO-GO-05
+    gate: "Performance sign-off"
+    checks: ["record volume estimated", "batch strategy tested", "large-load monitoring tested", "access/key growth reviewed"]
+  - id: PRCO-GO-06
+    gate: "Business regression sign-off"
+    checks: ["positive/negative cases", "date boundaries", "scale boundaries", "order/billing", "FI impact where relevant"]
+  - id: PRCO-GO-07
+    gate: "Support sign-off"
+    checks: ["runbook available", "pricing-analysis proof understood", "rollback/containment owners named", "hypercare baseline stored"]
+
+assessment_drills:
+  - id: PRCO-DRILL-01
+    prompt: "You need to migrate several million pricing conditions. How do you approach it?"
+    expected_reasoning:
+      - "profile the population before choosing the loading mechanism"
+      - "challenge obsolete keys and duplicates instead of copying historical clutter"
+      - "separate migration, operational maintenance and ongoing interfaces"
+      - "dress-rehearse batches and reconcile counts plus sampled pricing results"
+      - "design freeze, delta load, validity activation and rollback before cutover"
+  - id: PRCO-DRILL-02
+    prompt: "Business wants to update 50000 prices next weekend. What do you check?"
+    expected_reasoning:
+      - "identify deployment/release and supported maintenance method"
+      - "check product-documented volume guidance and choose an operational batch size"
+      - "define approval and validity behavior"
+      - "prepare input/batch/error reconciliation"
+      - "sample expected prices and define rollback population"
+  - id: PRCO-DRILL-03
+    prompt: "A new discount caused order creation to slow down. What do you review?"
+    expected_reasoning:
+      - "compare before/after access sequence and condition-key design"
+      - "check whether a new broad table/access runs for many items unnecessarily"
+      - "estimate condition population growth and custom-field derivation cost"
+      - "prove the first changed layer with trace/evidence before redesigning"
+  - id: PRCO-DRILL-04
+    prompt: "An incorrect price reached production. What is your first action?"
+    expected_reasoning:
+      - "preserve one bad document and one unaffected comparison"
+      - "scope the affected population before editing conditions"
+      - "use pricing analysis to find procedure/condition/access/record divergence"
+      - "recalculate rate/base/scale independently"
+      - "contain the smallest governed population and regression-test order/billing"
+  - id: PRCO-DRILL-05
+    prompt: "Who should own pricing in production?"
+    expected_reasoning:
+      - "split commercial policy, condition maintenance, approval, configuration, integration, finance and support ownership"
+      - "keep rates in governed master data when possible"
+      - "keep algorithm changes under configuration/extension change control"
+      - "make approval and source-of-truth boundaries explicit"
+  - id: PRCO-DRILL-06
+    prompt: "Would you use spreadsheet import or an API for price updates?"
+    expected_reasoning:
+      - "start from ownership and recurrence, not tool preference"
+      - "spreadsheet/mass maintenance fits governed human-operated changes"
+      - "API fits recurring system-to-system ownership when the integration contract is justified"
+      - "migration tooling fits project cutover populations"
+      - "all three still need validity, reconciliation and error handling"
+
+source_refs:
+  - SRC-SAP-PRC-OPS-MANAGE-PRICES-CLOUD
+  - SRC-SAP-PRC-OPS-MANAGE-PRICES-ONPREM
+  - SRC-SAP-PRC-OPS-MASS-REFERENCE
+  - SRC-SAP-PRC-OPS-FEATURE-COMPARE
+  - SRC-SAP-PRC-OPS-MIGRATION-STAGING
+  - SRC-SAP-PRC-OPS-MIGRATION-DIRECT
+  - SRC-SAP-PRC-OPS-APPROVAL
+  - SRC-SAP-PRC-OPS-WORKFLOW
+  - SRC-SAP-PRC-OPS-PRICING-ANALYSIS
+  - SRC-SAP-PRC-OPS-API
+  - SRC-SAP-PRC-OPS-ACCESS-SEQUENCE
+  - SRC-SAP-PRC-OPS-FLEX-ANALYSIS

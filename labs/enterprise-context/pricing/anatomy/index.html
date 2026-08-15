@@ -1,0 +1,290 @@
+---
+layout: default
+title: "SAP Sales Pricing Anatomy — Enterprise Context Lab"
+description: "A practical pricing anatomy for SAP Sales: condition types, bases, scales, free goods, formulas, exclusions, group logic, and extension patterns."
+permalink: /labs/enterprise-context/pricing/anatomy/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-sd
+  - pricing
+  - condition-types
+  - free-goods
+  - condition-technique
+  - formulas
+  - extensibility
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.pricing_anatomy %}
+{% assign evidence = site.data.labs.enterprise_context.sources.pricing_anatomy %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/pricing/">Pricing</a></li><li aria-current="page">Anatomy</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Pricing Anatomy</p>
+      <h1>A rate is only one part<br />of a condition.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#pricing-anatomy-memory">Start with the anatomy <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Pricing anatomy inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.condition_families | size }}</strong><small>Condition families</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.extension_patterns | size }}</strong><small>Extension patterns</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.failure_drills | size }}</strong><small>Failure drills</small></div>
+      <em>Draft research · synthetic patterns · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">functions</span>
+    <p><strong>Working rule:</strong> {{ graph.mental_model.sentence }} A correct rate can still produce a wrong result when the base, scale, group, exclusion, manual policy, or formula is different.</p>
+    <a href="/labs/enterprise-context/data/pricing-anatomy.json">Open anatomy JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="pricing-anatomy-memory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>Seven layers before the final amount.</h2>
+      <p>The useful question is not only “which condition record was found?” I want to know what owns eligibility, rate, base, scale, interaction, and any extension.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.mental_model.layers %}
+      <article class="ecg-memory-card">
+        <span>0{{ forloop.index }}</span>
+        <strong>{{ item.key }}</strong>
+        <h3>{{ item.question }}</h3>
+        <p>{{ item.answer }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Pricing procedure row</p>
+      <h2>One row carries more control than the condition name suggests.</h2>
+      <p>Step, requirement, subtotal, base formula and accounting flags are separate controls. Debug the row before blaming the condition record.</p>
+    </header>
+    <div class="ecg-control-stack">
+      {% for item in graph.procedure_row_anatomy %}
+      <article>
+        <span>{{ item.field }}</span>
+        <h3>{{ item.purpose }}</h3>
+        <p class="ecg-question">{{ item.lead_question }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Condition families</p>
+      <h2>Price, discount, surcharge and free goods do not solve the same problem.</h2>
+      <p>The family tells me what the condition is trying to represent. The configuration then decides calculation, search, scale, manual policy and interaction with other elements.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for family in graph.condition_families %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>TYPE</span><small>pricing role</small></div>
+          <h3>{{ family.title }}</h3>
+          <p class="ecg-question">{{ family.role }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Common shapes</h4><ul>{% for value in family.common_shapes %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Configuration focus</h4><ul>{% for value in family.config_focus %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Diagnostic rule</h4><p>{{ family.diagnostic }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Calculation</p>
+      <h2>Separate rate from base.</h2>
+      <p>This one habit solves a surprising number of pricing investigations. A percentage can be correct while the subtotal, quantity, weight, group value, or formula base is wrong.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in graph.calculation_models %}
+      <article><span>CALC</span><h3>{{ item.title }}</h3><p>{{ item.formula }}</p><h4>Typical use</h4><p>{{ item.typical_use }}</p><h4>Main risk</h4><p>{{ item.main_risk }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Bases</p>
+      <h2>What exactly receives the rate?</h2>
+      <p>The base is often the hidden owner of the wrong amount. I prove it separately from the condition rate.</p>
+    </header>
+    <div class="ecg-control-stack">
+      {% for item in graph.base_models %}
+      <article><span>{{ item.title }}</span><h3>{{ item.use_when }}</h3><p class="ecg-question">Proof: {{ item.proof }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Scales</p>
+      <h2>The threshold model changes the commercial result.</h2>
+      <p>From, to, graduated and group scales are not interchangeable. The first diagnostic step is to calculate the scale basis exactly as SAP sees it.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in graph.scale_models %}
+      <article><span>SCALE</span><h3>{{ item.title }}</h3><p>{{ item.meaning }}</p><h4>Example</h4><p>{{ item.example }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Interaction</p>
+      <h2>A valid condition can still lose.</h2>
+      <p>Exclusion, supplements, manual priority and group logic act after or around the condition search. “Record found” is not the end of the trace.</p>
+    </header>
+    <div class="ecg-control-stack">
+      {% for item in graph.interaction_models %}
+      <article><span>{{ item.title }}</span><h3>{{ item.purpose }}</h3><p class="ecg-question">{{ item.lead_question }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-case" data-reveal>
+    <div class="ecg-case__intro">
+      <p class="research-canvas__eyebrow">Free Goods</p>
+      <h2>{{ graph.free_goods_model.memory_hook }}</h2>
+      <p>Free Goods is related to condition technique, but its first business result is a quantity decision. Pricing of the resulting item is a second control.</p>
+      <strong>Keep quantity determination and zero-price behavior separate.</strong>
+    </div>
+    <div class="ecg-case__body">
+      <h3>Variants</h3>
+      <ul>{% for item in graph.free_goods_model.variants %}<li><strong>{{ item.title }}:</strong> {{ item.meaning }}</li>{% endfor %}</ul>
+      <h3>Quantity controls</h3><ul>{% for value in graph.free_goods_model.quantity_controls %}<li>{{ value }}</li>{% endfor %}</ul>
+      <h3>Configuration path</h3><ol>{% for value in graph.free_goods_model.configuration_path %}<li>{{ value }}</li>{% endfor %}</ol>
+      <h3>Failure trace</h3><ul>{% for item in graph.free_goods_model.failure_modes %}<li><strong>{{ item.symptom }}</strong> {{ item.proof }}</li>{% endfor %}</ul>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Formula choice</p>
+      <h2>Use the smallest engine that owns the rule.</h2>
+      <p>A requirement, base formula, amount formula and group condition answer different questions. A rules engine is useful only when the rule actually needs one.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.formula_decision_table %}
+      <article class="ecg-determination-detail">
+        <header><div><span>RULE</span><small>owner</small></div><h3>{{ item.need }}</h3><p class="ecg-question">Best fit: {{ item.best_fit }}</p></header>
+        <div class="ecg-decision-columns"><div><h4>Use</h4><p>{{ item.best_fit }}</p></div><div><h4>Avoid</h4><p>{{ item.avoid }}</p></div><div><h4>Design test</h4><p>Can the rule be explained and tested without reading unrelated document code?</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Extension decision</p>
+      <h2>Configuration first. Logic only for the missing rule.</h2>
+      <p>These are reusable implementation patterns, not claims about a specific customer project. Each pattern starts with the standard option and keeps custom behavior narrow and testable.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.extension_patterns %}
+      <article class="ecg-determination-detail">
+        <header><div><span>EXT</span><small>pattern</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.problem }}</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Standard first</h4><p>{{ item.standard_first }}</p></div>
+          <div><h4>Classic / private shape</h4><p>{{ item.classic_shape }}</p></div>
+          <div><h4>Clean-core shape</h4><p>{{ item.clean_core_shape }}</p></div>
+        </div>
+        <p class="ecg-caption"><strong>Proof path:</strong> {{ item.proof }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Practitioner patterns</p>
+      <h2>Patterns worth recognizing in real designs.</h2>
+      <p>These are synthetic patterns built from common pricing design problems. They show where I would put ownership and what I would avoid.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in graph.practitioner_patterns %}
+      <article><span>PATTERN</span><h3>{{ item.title }}</h3><p>{{ item.scenario }}</p><h4>Preferred shape</h4><p>{{ item.preferred_shape }}</p><h4>Trap</h4><p>{{ item.trap }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure drills</p>
+      <h2>Start from the symptom and prove the owner.</h2>
+      <p>The goal is not to remember one transaction. It is to find the first pricing layer that differs from the expected design.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for item in graph.failure_drills %}
+      <details>
+        <summary><span>0{{ forloop.index }}</span><strong>{{ item.symptom }}</strong><small>{{ item.lead_conclusion }}</small></summary>
+        <div><p>Proof path</p><ol>{% for value in item.proof_path %}<li>{{ value }}</li>{% endfor %}</ol></div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Explain owners, not only definitions.</h2>
+      <p>A Lead answer separates condition behavior, data, calculation and extension before proposing a fix.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for item in graph.assessment_drills %}
+      <details><summary><span>0{{ forloop.index }}</span><strong>{{ item.prompt }}</strong><small>Open reasoning target</small></summary><div><p>{{ item.expected }}</p></div></details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Standard behavior remains source-tracked.</h2>
+      <p>Primary SAP documentation verifies condition types, scales, group conditions, Free Goods, supplements, exclusion, configurable formulas and released pricing extension points. The practitioner patterns are independently authored.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">For tools and AI</p>
+      <h2>The anatomy is machine-readable.</h2>
+      <p>Condition families, bases, scales, Free Goods, formula choices, extension patterns and failure drills are exposed as structured data.</p>
+    </div>
+    <div class="ecg-machine__actions">
+      <a class="research-canvas__button" href="/labs/enterprise-context/data/pricing-anatomy.json">Pricing anatomy JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+      <a href="/labs/enterprise-context/data/pricing-anatomy-sources.json">Pricing anatomy sources</a>
+      <a href="/labs/enterprise-context/pricing/">Back to Pricing Engine</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
