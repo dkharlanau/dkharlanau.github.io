@@ -159,6 +159,36 @@ impact_traces:
     evidence_note: "The delivered Material model documents units as part of the governed object. Cross-process failure examples are reasoned impact patterns for assessment and diagnostics."
     source_refs: [SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025]
 
+supporting_nodes:
+  - id: DET-SD-SHIPPING-POINT
+    type: determination
+    title: "Shipping Point Determination"
+    summary: "Sales and delivery determination that can evaluate the delivering plant, shipping condition, and material loading group."
+    source_refs: [SRC-SAP-S4-SHIPPING-POINT-DETERMINATION-2025]
+  - id: PROC-PLAN-MRP
+    type: process
+    title: "Material Requirements Planning"
+    summary: "Planning process that evaluates requirements and can create procurement proposals for shortages."
+    source_refs: [SRC-SAP-S4-MRP-PROCUREMENT-PROPOSAL-2025]
+  - id: PROC-O2C-ORDER-TO-CASH
+    type: process
+    title: "Order-to-Cash"
+    summary: "Sales process family used here as the downstream consumer of customer sales-area and product shipping data."
+    evidence_note: "Process node is a Lab abstraction; the cited SAP source verifies the relevant customer sales-area dependency."
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+  - id: PROC-P2P-PROCURE-TO-PAY
+    type: process
+    title: "Procure-to-Pay"
+    summary: "Procurement process family used here as the downstream consumer of supplier purchasing-organization data."
+    evidence_note: "Process node is a Lab abstraction; the cited SAP source verifies the supplier purchasing-organization dependency."
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+  - id: FAIL-SD-WRONG-SHIPPING-POINT
+    type: failure_mode
+    title: "Unexpected Shipping Point"
+    symptom: "The sales document proposes a shipping point that does not match the intended execution design."
+    diagnostic_path: "Read delivering plant, effective shipping condition, material loading group, and the configured determination combination."
+    source_refs: [SRC-SAP-S4-SHIPPING-POINT-DETERMINATION-2025]
+
 impact_patterns:
   - id: HEUR-MDG-IMPACT-OVERRIDES
     type: expert_heuristic
