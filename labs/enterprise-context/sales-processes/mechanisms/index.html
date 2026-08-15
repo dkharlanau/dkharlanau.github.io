@@ -22,13 +22,15 @@ tags:
 ---
 
 {% assign library = site.data.labs.enterprise_context.mechanisms.sales_mechanisms %}
-{% assign group_keys = "01_commercial,02_fulfillment,03_financial,04_communication,05_determinations,06_planning" | split: "," %}
+{% assign group_keys = "01_commercial,02_fulfillment,03_financial,04_communication,05_determinations,06_planning,07_context" | split: "," %}
 {% assign registry = site.data.labs.enterprise_context.sources.sales_mechanism_registry %}
 {% assign planning_registry = site.data.labs.enterprise_context.sources.sales_requirements_type %}
+{% assign context_registry = site.data.labs.enterprise_context.sources.sales_context_derivation %}
 {% assign mechanism_count = library.index.mechanism_codes | size %}
 {% assign source_count = registry.sources | size %}
 {% assign planning_source_count = planning_registry.sources | size %}
-{% assign source_count = source_count | plus: planning_source_count %}
+{% assign context_source_count = context_registry.sources | size %}
+{% assign source_count = source_count | plus: planning_source_count | plus: context_source_count %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Mechanism Library</li></ol>
@@ -42,6 +44,7 @@ tags:
       <p>A process tells you which branch is running. A mechanism tells you why SAP chose this item category, material, plant, route, planning behavior, confirmation, price, tax, account, partner, invoice, or output. Learn the mechanism once; reuse it across every sales variant.</p>
       <div class="sm-hero-actions">
         <a class="research-canvas__button" href="#mechanism-cards">Open mechanism cards <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+        <a class="sm-text-link" href="/labs/enterprise-context/sales-processes/mechanisms/derivation/">Trace how an order is built</a>
         <a class="sm-text-link" href="/labs/enterprise-context/sales-processes/control-plane/">Back to Control Plane</a>
       </div>
     </div>
@@ -237,6 +240,9 @@ tags:
       {% endfor %}
       {% for source in planning_registry.sources %}
       <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+      {% for source in context_registry.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · verified {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
   </section>
