@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Business AI Graph Model — Business AI Lab"
-description: "The ontology and relationship model behind the Business AI case catalog: cases, patterns, processes, technologies, KPIs, evidence, limits, and cross-domain links."
+description: "The graph model behind the Business AI catalog: cases, patterns, processes, technologies, metrics, evidence, limits, and domain links."
 permalink: /labs/business-ai/model/
 status: draft
 verified: false
@@ -39,6 +39,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Problem:</strong> a flat case list cannot show how companies, processes, patterns, technologies, KPIs, evidence, and limitations relate.</p>
     <p><strong>Boundary:</strong> this graph models Business AI implementation knowledge. It does not replace the Enterprise Context graph or the AI Ready architecture model.</p>
     <p><strong>Cross-link rule.</strong> Business AI cases point outward to business domains, SAP processes, technologies, and architecture patterns instead of copying those models.</p>
     <a href="/labs/enterprise-context/">Open Enterprise Context <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
