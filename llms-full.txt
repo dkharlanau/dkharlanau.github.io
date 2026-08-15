@@ -42,6 +42,10 @@ Home
 
 
 
+    The problem this architecture solves
+    SAP support work is expensive when every incident starts with the same manual search: find the document, collect logs, identify the process owner, search old tickets, and decide which evidence matters. The problem is not a lack of chat. It is repeated context reconstruction across systems, teams, and years of operational history.
+    An AI assistant can reduce that reconstruction work, but only if it respects access, evidence quality, and process ownership. Without those controls it may produce a faster answer while making the support decision less trustworthy.
+
     Start with the support decision, not with the agent
     “Build an SAP support agent” is too vague to be an architecture. A better starting point is a small support decision: classify an incident, collect missing evidence, find the right runbook, compare a failing document with a known pattern, or prepare an escalation.
     Once the decision is clear, the role of AI becomes easier to control. It can read more context than a person has time to read, structure the evidence, and suggest the next check. That is useful. Quietly changing ERP data because a language model found a plausible answer is a different category of risk.
@@ -3820,7 +3824,7 @@ Home
 
     Atlas Diagnostic
     SAP purchase order creation diagnostics
-    A first-pass structure for finding why a purchase order cannot be created, saved, or released.
+    A purchase order is a supplier commitment. Diagnose why that commitment cannot be created, why it contains the wrong data, or why it cannot move to the next step.
 
 
 
@@ -3833,112 +3837,72 @@ Home
 
 
 
-    Core idea
-    Purchase order creation is the point where internal demand becomes a supplier commitment. Blocks at this stage prevent the entire procurement chain from starting. The support goal is to identify whether the block comes from master data, sourcing, release strategy, authorization, or document conversion issues.
-    The fastest way to narrow the cause is to test the same material and supplier in ME21N directly: if manual creation works, the block is likely in automatic conversion or release strategy.
+    Define what should have happened
+    “PO creation failed” can describe several different problems: a requisition cannot be converted, a supplier cannot be used, sourcing finds no valid source, the document cannot be saved, approval is missing, or the PO exists but contains the wrong price, date, account assignment, or partner data.
+    Start by naming the expected procurement path. Was the PO created manually, from a requisition, from planning, from a contract or scheduling agreement, or by another automated process? The source matters because it explains which data should have been copied or determined.
 
-    Common symptoms
-
-      ME21N or ME59N fails with a hard error or warning that prevents saving.
-      Purchase requisition cannot be converted to purchase order.
-      PO is created but immediately blocked by release strategy.
-      Automatic PO creation from PR or MRP does not generate expected orders.
-      PO saves but with wrong supplier, price, or delivery date.
-
-
-    Likely causes
-
-      Missing source of supply: no valid info record, source list, or quota arrangement exists for the material and plant.
-      Supplier master issue: supplier is blocked, not extended to purchasing organization, or missing required roles.
-      Release strategy block: the PO value, material group, or plant triggers a release strategy that requires approval.
-      Authorization issue: the user lacks the activity or field-level authorization to create or change POs for this plant or material.
-      PR conversion issue: the PR has a different plant, purchasing organization, or account assignment that does not match the PO context.
-      Document type mismatch: the PR document type is not configured for automatic PO creation.
+    Separate creation from release and follow-on processing
+    SymptomMain questionEvidence
+      Document cannot be savedWhich mandatory business rule or validation is failing?Exact message, document/item data, supplier, plant, purchasing organization, account assignment, tax/pricing context.
+      Requisition cannot become a POWhich conversion prerequisite is missing or inconsistent?PR item, source assignment, supplier/source, purchasing data, account assignment, conversion log.
+      No supplier/source is selectedIs there a valid source for the material/service, plant, date, and purchasing context?Source list/info record/contract/quota or other approved sourcing evidence.
+      PO exists but is not approvedDid the purchasing document trigger the expected approval workflow?Release/approval status, value/context, approver, workflow history.
+      PO contains wrong dataWas the value copied, determined, defaulted, or entered manually?Source document, master data, condition/source data, change history, working comparison.
+      PO saved but supplier never receives itIs the problem creation or output/integration?PO status plus output/message/interface evidence.
 
 
-    Where to check in SAP
+    A practical diagnostic sequence
 
-      ME21N / ME22N — manual PO creation and error messages.
-      ME59N — automatic PO creation log.
-      ME53N — purchase requisition display to check source of supply.
-      ME23N — existing POs for the same material/supplier to compare.
-      SU53 — authorization check after a failed transaction.
-
-
-    Key tables / transactions / objects
-
-      EKKO / EKPO — purchase order header and items.
-      EBAN / EBKN — purchase requisition header and items.
-      EINA / EINE — purchasing info record general and organization data.
-      A017 — info record validity (condition).
-      LFA1 / LFB1 — supplier master.
+      Capture the failing document and item. Requisition or PO, material/service, plant, purchasing organization/group, supplier where known, account-assignment context, quantity, date, and exact message.
+      Identify the creation path. Manual entry, requisition conversion, planning, contract call-off, automatic creation, or another scenario.
+      Check the supplier and purchasing context. Confirm the supplier/Business Partner is valid for the intended purchasing organization and not blocked for the relevant process.
+      Check source determination only if sourcing is the failed step. A valid info record, source list, contract, quota arrangement, or other source is relevant when the process expects one. Do not turn every PO error into a sourcing problem.
+      Check organizational and account-assignment data. Plant, purchasing organization, company code relationship, delivery terms, account assignment, and other required data must describe one coherent transaction.
+      Separate approval from creation. A PO waiting for approval is not necessarily a failed PO. Confirm whether the workflow or release status matches the document’s value and business context.
+      For wrong values, trace where they came from. Compare source document, master data, commercial conditions, and document changes instead of overwriting the final PO field first.
+      Confirm the next process step. If the PO is valid, verify the expected output, supplier communication, delivery, or follow-on integration according to the scenario.
 
 
-    Diagnostic workflow
+    Do not use manual creation as a universal control test
+    A manually created PO and an automatically converted PO can follow different rules, defaults, source requirements, workflows, or integrations. A successful manual PO proves that one path works. It does not prove that the automatic path is wrong for only one specific reason.
 
-      Identify the exact error message and transaction code where the block appears.
-      Check if the issue is isolated to one material, supplier, plant, or user.
-      Verify the source of supply: info record, source list, quota arrangement, or contract.
-      Check the supplier master for blocks or missing organizational assignments.
-      If release strategy is involved, identify the release code and who can approve.
-      If automatic creation fails, check ME59N log for specific rejection reasons.
+    Supplier and source are related, but not the same problem
+    A supplier may be valid but not selected as a source for this material or service. A source may exist but be outside validity, blocked by process rules, or inconsistent with the plant/date. Keep supplier master validity, source determination, and commercial conditions as separate checkpoints.
 
+    Approval is a business control
+    Do not “fix” a held PO by bypassing release or workflow. First determine why the document requires approval and whether the correct approver was found. Value thresholds, purchasing context, account assignment, material groups, risk controls, or custom workflow rules can all be part of the decision.
 
-    Typical fixes or next actions
+    Useful SAP evidence
+    Classic GUI environments often use purchase requisition and purchase-order apps/transactions to inspect source, item, account-assignment, message, and approval data. Automatic creation processes have their own logs. S/4HANA releases and Fiori apps vary, so the strongest evidence is the document path and the exact failed decision, not a fixed list of transaction codes or database tables.
 
-      Create or extend the source of supply (info record, source list) if missing.
-      Unblock or extend the supplier master to the purchasing organization.
-      Route the PO through the correct release strategy approval workflow.
-      Adjust the PR to match the PO context or create the PO manually with correct data.
-      Escalate authorization issues to the security team with SU53 evidence.
+    What belongs in the ticket
 
-
-    What to capture first
-    PO creation blocks are usually master data or sourcing issues, not system bugs. Capture: the PR number (if converting), material, plant, supplier, error message, transaction code, and whether the issue is new or recurring.
-
-    Escalation signals
-
-      PO creation fails for many users or plants, indicating a configuration or authorization change.
-      The error relates to tax calculation, account assignment, or commitment logic that finance must validate.
-      A supplier contract or info record appears incorrect and procurement must confirm the commercial terms.
-      The issue blocks a business-critical procurement category or affects legal/compliance requirements.
+      Creation path and source document, if one exists.
+      Material/service, plant, purchasing organization, supplier/source, quantity, date, and account assignment.
+      Exact save/conversion/approval/output symptom.
+      Expected versus actual supplier, price, date, or other disputed value.
+      Approval/workflow status when relevant.
+      A working comparison document when it helps isolate one determination difference.
 
 
-    Boundaries and non-goals
-    This page is a diagnostic frame, not a PO configuration guide. It does not cover release strategy setup, approval workflow design, or MRP batch scheduling. It does not replace SAP's purchasing documentation.
+    Limitations and boundaries
+    This page is a diagnostic frame, not a configuration guide for source determination, flexible workflow, release strategy, pricing, output management, MRP, or supplier master governance. Those areas should be reviewed only after the failed procurement step is identified.
 
     This is not official SAP documentation and not a replacement for system-specific analysis.
 
     Next diagnostic steps
 
-      Procure to Pay Map — use this map to relate the PO creation block to the full procure-to-pay diagnostic path.
-      SAP Release Strategy Diagnostics — go here when the PO is created but blocked for approval.
-      SAP Source Determination Diagnostics — check this if no source of supply is found.
-      SAP Purchase Requisition Diagnostics — use this when the issue is converting a requisition into a purchase order.
-
-
-    Practical checklist
-
-- [ ] Collect PR number, material, plant, purchasing organization, supplier, and exact error message. **Synthetic example:** PR 1234567890, material TEST_MAT_001, plant 0001.
-
-- [ ] Check ME21N/ME59N error log and SU53 if authorization is suspected.
-
-- [ ] Verify source of supply: info record, source list, quota arrangement, or contract in ME53N/ME23N.
-
-- [ ] Confirm supplier master is not blocked and is extended to the purchasing organization.
-
-- [ ] Check release strategy classification if the PO is created but held for approval.
-
-- [ ] Document whether the issue is isolated to one user, material, or plant.
-
-- [ ] Safety limit: do not create a PO with an unapproved supplier or bypass release strategy.
+      SAP Release Strategy Diagnostics — when the PO exists but approval is the real issue.
+      SAP Source Determination Diagnostics — when no valid source is selected.
+      SAP Purchase Requisition Diagnostics — when demand data is already wrong before conversion.
+      SAP Account Assignment Diagnostics — when the cost object or accounting context blocks the document.
 
 
 
 
     Related Atlas Pages
 
-      SAP Mm Procurement Overview
+      SAP MM Procurement Overview
       SAP Source Determination Diagnostics
       SAP Release Strategy Diagnostics
       SAP Purchase Requisition Diagnostics
