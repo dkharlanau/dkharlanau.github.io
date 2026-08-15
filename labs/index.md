@@ -82,14 +82,14 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Lab 03 / Business AI</p>
       <h2>Start from the business job. Keep the evidence attached.</h2>
-      <p>A growing catalog of real implementation cases and reusable AI patterns across customer service, knowledge work, procurement, forecasting, logistics, and operational decisions.</p>
+      <p>A growing catalog of public implementation evidence across Sales, O2C, Procurement, Supply Chain Planning, Manufacturing, Service, Knowledge Work, Logistics, and Master Data.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/business-ai/"><span>AI</span><strong>Business AI Lab</strong><small>Business-first map of patterns, cases, evidence grades, technologies, metrics, limits, and cross-links to SAP and vendor-neutral architecture.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      <a href="/labs/business-ai/cases/"><span>CASE</span><strong>Implementation cases</strong><small>Klarna, Morgan Stanley, FRoSTA, Western Sugar, Lemvigh-Müller, Cainz, and UPS as the first evidence set.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/business-ai/patterns/"><span>PAT</span><strong>Reusable patterns</strong><small>Conversation automation, enterprise knowledge, document-to-workflow, forecasting, operations optimization, and agentic exception management.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/business-ai/model/"><span>GRAPH</span><strong>Graph model</strong><small>Node and edge types for companies, cases, domains, processes, patterns, technologies, metrics, evidence sources, and limitations.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-      <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Business AI catalog</strong><small>Machine-readable cases, patterns, source registry, evidence model, technologies, KPIs, limitations, and consultant notes.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/business-ai/cases/"><span>CASE</span><strong>Implementation cases</strong><small>15 working cases across customer service, sales, O2C, procurement, demand planning, manufacturing, logistics, knowledge work, and master-data foundations.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/business-ai/patterns/"><span>PAT</span><strong>Reusable patterns</strong><small>11 working patterns including conversation automation, document-to-workflow, forecasting, guided selling, cross-system copilots, optimization, manufacturing quality, and trusted master data.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/business-ai/model/"><span>GRAPH</span><strong>Graph model</strong><small>Node and edge types for companies, cases, domains, processes, patterns, technologies, metrics, evidence sources, limitations, and case kinds.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Business AI catalog</strong><small>Machine-readable cases, patterns, source registry, evidence model, technologies, KPIs, limitations, consultant notes, and case classification.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
