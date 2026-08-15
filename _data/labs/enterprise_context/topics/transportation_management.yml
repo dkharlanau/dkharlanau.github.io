@@ -1,0 +1,295 @@
+id: TOPIC-TM-TRANSPORT-TO-SETTLE
+type: research_topic
+title: "SAP Transportation Management — Transport to Settle"
+summary: >-
+  A process and object model for SAP Transportation Management that connects ERP demand,
+  transportation requirements, freight-unit building, planning, freight documents, carrier
+  collaboration, execution, warehouse integration, charge calculation, and freight settlement.
+domain: "SAP Supply Chain / Transportation"
+process_family: "Transport-to-Settle"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+page_url: "/labs/enterprise-context/transportation-management/"
+graph_ref: "GRAPH-TM-TRANSPORT-TO-SETTLE"
+tags: [sap-tm, transportation, freight, planning, ewm, settlement]
+
+business_question: >-
+  How does SAP TM turn sales, purchasing, stock-transfer, delivery, or logistics-service demand
+  into transportable units, an executable transportation plan, carrier commitment, warehouse
+  coordination, execution status, transportation charges, and financial settlement?
+
+scope:
+  starts_with: "TM-relevant order, delivery, JIT call, or forwarding demand"
+  ends_with: "Executed freight document and freight-cost settlement"
+  includes:
+    - "Order-based and delivery-based transportation demand"
+    - "Freight Unit Building and Freight Unit Building Rules"
+    - "Manual planning, Transportation Cockpit, and VSR optimization context"
+    - "Freight Orders and Freight Bookings"
+    - "Carrier determination, carrier selection, tendering, and subcontracting boundary"
+    - "Execution monitoring and change propagation"
+    - "TM and EWM integration, including Advanced Shipping and Receiving"
+    - "Charge calculation and freight settlement to MM"
+  excludes_for_later_deep_dives:
+    - "Forwarding-order management for logistics service providers"
+    - "Detailed transportation charge-management condition technique"
+    - "Strategic freight procurement and freight agreements"
+    - "Dangerous goods and foreign-trade compliance"
+    - "Detailed optimizer algorithms and performance tuning"
+
+maturity:
+  gates_complete: 6
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: planned
+
+lead_questions:
+  - "Is the transportation demand order-based or delivery-based, and why?"
+  - "What is the difference between a transportation requirement, a freight unit, and a freight order?"
+  - "Why do we create freight units before planning?"
+  - "What happens to an order-based plan when the delivery is created or changed?"
+  - "Which constraints and resources make the transportation plan feasible?"
+  - "When do we use a Freight Order and when a Freight Booking?"
+  - "Who selects the carrier, and when does tendering start?"
+  - "Which system owns warehouse execution and which system owns transportation execution?"
+  - "Why does Advanced Shipping and Receiving use the TM Freight Order instead of an EWM Transportation Unit?"
+  - "Where are freight charges calculated, and how do they reach MM invoice verification?"
+
+entities:
+  - id: PROC-TM-TRANSPORT-TO-SETTLE
+    type: process
+    title: "Transport to Settle"
+  - id: OBJ-TM-OTR
+    type: business_object
+    title: "Order-Based Transportation Requirement"
+  - id: OBJ-TM-DTR
+    type: business_object
+    title: "Delivery-Based Transportation Requirement"
+  - id: OBJ-TM-FREIGHT-UNIT
+    type: business_object
+    title: "Freight Unit"
+  - id: OBJ-TM-FREIGHT-ORDER
+    type: business_object
+    title: "Freight Order"
+  - id: OBJ-TM-FREIGHT-BOOKING
+    type: business_object
+    title: "Freight Booking"
+  - id: OBJ-TM-FREIGHT-SETTLEMENT-DOCUMENT
+    type: business_object
+    title: "Freight Settlement Document"
+  - id: STEP-TM-FREIGHT-UNIT-BUILDING
+    type: process_step
+    title: "Freight Unit Building"
+  - id: STEP-TM-TRANSPORT-PLANNING
+    type: process_step
+    title: "Transportation Planning"
+  - id: STEP-TM-CARRIER-SELECTION
+    type: process_step
+    title: "Carrier Selection"
+  - id: STEP-TM-TENDERING
+    type: process_step
+    title: "Freight Tendering"
+  - id: STEP-TM-EXECUTION
+    type: process_step
+    title: "Transportation Execution"
+  - id: STEP-TM-CHARGE-CALCULATION
+    type: process_step
+    title: "Transportation Charge Calculation"
+  - id: STEP-TM-FREIGHT-SETTLEMENT
+    type: process_step
+    title: "Freight Settlement"
+  - id: CFG-TM-FUB-RULE
+    type: configuration_object
+    title: "Freight Unit Building Rule"
+  - id: CFG-TM-PLANNING-PROFILE
+    type: configuration_object
+    title: "Planning Profile"
+  - id: INT-TM-ERP-DEMAND
+    type: integration
+    title: "ERP Order and Delivery Integration with TM"
+  - id: INT-TM-EWM
+    type: integration
+    title: "TM and EWM Execution Integration"
+  - id: INT-TM-MM-SETTLEMENT
+    type: integration
+    title: "TM Freight Settlement to Materials Management"
+
+relations:
+  - from: APP-S4HANA-TM
+    type: supports_domain
+    to: DOM-TRANSPORTATION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-PRODUCT]
+  - from: PROC-TM-TRANSPORT-TO-SETTLE
+    type: provided_by
+    to: APP-S4HANA-TM
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-OVERVIEW]
+  - from: INT-TM-ERP-DEMAND
+    type: integrated_via
+    to: APP-S4HANA-TM
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-INTERNAL-INTEGRATION]
+  - from: INT-TM-ERP-DEMAND
+    type: creates
+    to: OBJ-TM-OTR
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-OTR]
+  - from: INT-TM-ERP-DEMAND
+    type: creates
+    to: OBJ-TM-DTR
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-DTR]
+  - from: OBJ-TM-OTR
+    type: precedes
+    to: STEP-TM-FREIGHT-UNIT-BUILDING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-FREIGHT-UNIT]
+  - from: OBJ-TM-DTR
+    type: precedes
+    to: STEP-TM-FREIGHT-UNIT-BUILDING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-FREIGHT-UNIT]
+  - from: CFG-TM-FUB-RULE
+    type: configured_by
+    to: STEP-TM-FREIGHT-UNIT-BUILDING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-FREIGHT-UNIT]
+    rationale: "The rule controls how transportation demand quantities are split or merged into planning units."
+  - from: STEP-TM-FREIGHT-UNIT-BUILDING
+    type: creates
+    to: OBJ-TM-FREIGHT-UNIT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-FREIGHT-UNIT]
+  - from: OBJ-TM-DTR
+    type: updates
+    to: OBJ-TM-FREIGHT-UNIT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-OTR-CONSUMPTION]
+    rationale: "A DTR can consume and receive freight units previously assigned to a related OTR."
+  - from: OBJ-TM-FREIGHT-UNIT
+    type: precedes
+    to: STEP-TM-TRANSPORT-PLANNING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-PLANNING]
+  - from: CFG-TM-PLANNING-PROFILE
+    type: configured_by
+    to: STEP-TM-TRANSPORT-PLANNING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-PLANNING-PROFILE]
+  - from: STEP-TM-TRANSPORT-PLANNING
+    type: creates
+    to: OBJ-TM-FREIGHT-ORDER
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-FREIGHT-ORDER-MGMT]
+  - from: STEP-TM-TRANSPORT-PLANNING
+    type: creates
+    to: OBJ-TM-FREIGHT-BOOKING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-FREIGHT-ORDER-MGMT]
+  - from: OBJ-TM-FREIGHT-ORDER
+    type: precedes
+    to: STEP-TM-CARRIER-SELECTION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-CARRIER-SELECTION]
+  - from: STEP-TM-CARRIER-SELECTION
+    type: triggers
+    to: STEP-TM-TENDERING
+    evidence_type: documented_fact
+    confidence: medium
+    source_refs: [SRC-SAP-TM-CARRIER-SELECTION]
+    rationale: "Automatic carrier selection can trigger tendering when configured to do so."
+  - from: STEP-TM-TENDERING
+    type: precedes
+    to: STEP-TM-EXECUTION
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-SAP-TM-TENDERING]
+    rationale: "Carrier commitment is normally resolved before physical transportation execution."
+  - from: INT-TM-EWM
+    type: integrates_with
+    to: APP-S4HANA-EWM
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-EWM-INTEGRATION]
+  - from: INT-TM-EWM
+    type: provides_context_to
+    to: OBJ-TM-FREIGHT-ORDER
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-ASR]
+    rationale: "Advanced Shipping and Receiving coordinates warehouse execution around the TM Freight Order."
+  - from: STEP-TM-EXECUTION
+    type: precedes
+    to: STEP-TM-CHARGE-CALCULATION
+    evidence_type: reasoned_interpretation
+    confidence: medium
+    rationale: "Charges may be calculated earlier, but settlement should use the correct executable freight-document state and charge basis."
+  - from: STEP-TM-CHARGE-CALCULATION
+    type: precedes
+    to: STEP-TM-FREIGHT-SETTLEMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-FREIGHT-SETTLEMENT]
+  - from: STEP-TM-FREIGHT-SETTLEMENT
+    type: creates
+    to: OBJ-TM-FREIGHT-SETTLEMENT-DOCUMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-FREIGHT-SETTLEMENT]
+  - from: OBJ-TM-FREIGHT-SETTLEMENT-DOCUMENT
+    type: integrated_via
+    to: INT-TM-MM-SETTLEMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-TM-FSD]
+
+expert_heuristics:
+  - id: HEUR-TM-FIRST-WRONG-OBJECT
+    context: "TM troubleshooting"
+    statement: "Find the first object whose business meaning is wrong. Do not start by repairing the Freight Order if the OTR, DTR, or Freight Unit already carries the wrong demand."
+    confidence: high
+  - id: HEUR-TM-DEMAND-PLAN-EXECUTION
+    context: "TM architecture"
+    statement: "Keep demand, planning unit, and execution document separate: OTR/DTR describe demand, Freight Unit is the planning unit, Freight Order or Freight Booking is the executable capacity document."
+    confidence: high
+  - id: HEUR-TM-OWNERSHIP-BOUNDARY
+    context: "TM/EWM integration"
+    statement: "At every TM/EWM handoff ask which system owns transportation state, warehouse state, and the physical event confirmation. A technically successful message is not the same as a consistent business process."
+    confidence: high
+
+synthetic_case:
+  id: SCN-TM-OUTBOUND-CONSOLIDATION
+  title: "Synthetic outbound consolidation"
+  assumption: "Two customer orders from the same shipping location are transport-relevant and can share one truck."
+  path:
+    - "Sales orders create order-based transportation demand."
+    - "Freight Unit Building creates planning units according to the configured rule."
+    - "Transportation planning consolidates compatible freight units into one road Freight Order."
+    - "A carrier is selected and the Freight Order is tendered."
+    - "Warehouse execution loads the truck and sends execution confirmations across the TM/EWM boundary."
+    - "TM calculates transportation charges and creates a Freight Settlement Document for MM follow-on processing."
+  lesson: "The value of TM is not another shipment document. It is the controlled transition from transport demand to feasible capacity, execution, partner commitment, and cost settlement."
