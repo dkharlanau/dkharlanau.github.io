@@ -1,131 +1,131 @@
 id: GRAPH-TM-VSR-PLANNING
- type: knowledge_graph
- title: "SAP TM — VSR Planning & Constraints"
- domain: "SAP S/4HANA Transportation Management"
- process_family: "Transportation Planning"
- status: researching
- created_at: "2026-08-15"
- updated_at: "2026-08-15"
- verified_at: "2026-08-15"
+type: knowledge_graph
+title: "SAP TM — VSR Planning & Constraints"
+domain: "SAP S/4HANA Transportation Management"
+process_family: "Transportation Planning"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
 
- summary: >-
-   Lead-level model of how SAP TM converts Freight Units and transportation master data into
-   feasible plans. It separates hard constraints, soft constraints, penalty costs, planning
-   profiles, initial solutions, network feasibility, resource capacity, and time-window logic.
+summary: >-
+  Lead-level model of how SAP TM converts Freight Units and transportation master data into
+  feasible plans. It separates hard constraints, soft constraints, penalty costs, planning
+  profiles, initial solutions, network feasibility, resource capacity, and time-window logic.
 
- thesis: >-
-   The optimizer does not decide whether business reality is true. It optimizes the world model
-   given to it. If locations, lanes, capacities, dates, incompatibilities, or costs are wrong,
-   the optimizer can produce a mathematically reasonable answer to the wrong problem.
+thesis: >-
+  The optimizer does not decide whether business reality is true. It optimizes the world model
+  given to it. If locations, lanes, capacities, dates, incompatibilities, or costs are wrong,
+  the optimizer can produce a mathematically reasonable answer to the wrong problem.
 
- memory_model:
-   path: "FU → WORLD MODEL → CONSTRAINTS → COSTS → INITIAL SOLUTION → VSR → FO/FB"
-   rules:
-     - "Hard constraints cannot be violated."
-     - "Soft constraints can be violated when the penalty is cheaper than another alternative."
-     - "The objective is cost-based, so penalty weights are architecture decisions, not decoration."
-     - "A valid plan requires both feasible network/capacity data and usable planning settings."
+memory_model:
+  path: "FU → WORLD MODEL → CONSTRAINTS → COSTS → INITIAL SOLUTION → VSR → FO/FB"
+  rules:
+    - "Hard constraints cannot be violated."
+    - "Soft constraints can be violated when the penalty is cheaper than another alternative."
+    - "The objective is cost-based, so penalty weights are architecture decisions, not decoration."
+    - "A valid plan requires both feasible network/capacity data and usable planning settings."
 
- optimizer_inputs:
-   - area: "Demand"
-     objects: ["Freight Units", "pickup/delivery locations", "requested dates", "quantities"]
-     question: "What must move, from where to where, and by when?"
-   - area: "Network"
-     objects: ["locations", "zones", "transportation lanes", "means of transport", "distance", "duration"]
-     question: "Which paths are possible?"
-   - area: "Capacity"
-     objects: ["vehicle resources", "equipment", "compartments", "handling resources"]
-     question: "What can physically carry and handle the demand?"
-   - area: "Compatibility"
-     objects: ["incompatibilities", "equipment restrictions", "product/resource restrictions"]
-     question: "Which combinations are forbidden?"
-   - area: "Time"
-     objects: ["time windows", "operating times", "schedules", "driving/working constraints"]
-     question: "When can each activity happen?"
-   - area: "Economics"
-     objects: ["distance cost", "duration cost", "capacity cost", "lateness/earliness penalties", "non-delivery cost"]
-     question: "Which feasible result is preferred?"
+optimizer_inputs:
+  - area: "Demand"
+    objects: ["Freight Units", "pickup/delivery locations", "requested dates", "quantities"]
+    question: "What must move, from where to where, and by when?"
+  - area: "Network"
+    objects: ["locations", "zones", "transportation lanes", "means of transport", "distance", "duration"]
+    question: "Which paths are possible?"
+  - area: "Capacity"
+    objects: ["vehicle resources", "equipment", "compartments", "handling resources"]
+    question: "What can physically carry and handle the demand?"
+  - area: "Compatibility"
+    objects: ["incompatibilities", "equipment restrictions", "product/resource restrictions"]
+    question: "Which combinations are forbidden?"
+  - area: "Time"
+    objects: ["time windows", "operating times", "schedules", "driving/working constraints"]
+    question: "When can each activity happen?"
+  - area: "Economics"
+    objects: ["distance cost", "duration cost", "capacity cost", "lateness/earliness penalties", "non-delivery cost"]
+    question: "Which feasible result is preferred?"
 
- constraint_model:
-   - kind: "Hard"
-     behavior: "VSR must obey it."
-     examples: ["vehicle loading capacity", "incompatibility", "schedule availability", "maximum distance when configured as hard"]
-     lead_lens: "A no-plan result can be correct. Prove which hard constraint made the request impossible."
-   - kind: "Soft"
-     behavior: "VSR may violate it and adds penalty cost."
-     examples: ["requested pickup/delivery time", "distance preference", "duration preference", "number of stops"]
-     lead_lens: "A late plan may be cheaper than adding another capacity. Check penalty weights before calling the plan wrong."
-   - kind: "Hard + Soft"
-     behavior: "Tolerance can be modeled with a penalty range plus a final hard boundary."
-     examples: ["time windows", "maximum distance/duration variants"]
-     lead_lens: "This is useful when the business accepts small deviations but has a non-negotiable outer limit."
+constraint_model:
+  - kind: "Hard"
+    behavior: "VSR must obey it."
+    examples: ["vehicle loading capacity", "incompatibility", "schedule availability", "maximum distance when configured as hard"]
+    lead_lens: "A no-plan result can be correct. Prove which hard constraint made the request impossible."
+  - kind: "Soft"
+    behavior: "VSR may violate it and adds penalty cost."
+    examples: ["requested pickup/delivery time", "distance preference", "duration preference", "number of stops"]
+    lead_lens: "A late plan may be cheaper than adding another capacity. Check penalty weights before calling the plan wrong."
+  - kind: "Hard + Soft"
+    behavior: "Tolerance can be modeled with a penalty range plus a final hard boundary."
+    examples: ["time windows", "maximum distance/duration variants"]
+    lead_lens: "This is useful when the business accepts small deviations but has a non-negotiable outer limit."
 
- planning_runtime:
-   - order: 1
-     step: "Select planning scope"
-     output: "Freight Units and capacities in scope"
-     failure: "Relevant demand/resource is missing or too broad."
-   - order: 2
-     step: "Load planning profile"
-     output: "Optimizer settings, planning strategy, costs, restrictions"
-     failure: "Correct data is evaluated with the wrong profile or strategy."
-   - order: 3
-     step: "Build or reuse initial solution"
-     output: "Starting transportation plan"
-     failure: "Existing plan is incompatible with lanes, selected capacities, or incompatibilities."
-   - order: 4
-     step: "Evaluate constraints"
-     output: "Feasible search space"
-     failure: "Hard constraints remove every useful alternative."
-   - order: 5
-     step: "Minimize total cost"
-     output: "Preferred assignment and sequence"
-     failure: "Cost weights produce a technically feasible but commercially strange result."
-   - order: 6
-     step: "Create/update capacity documents"
-     output: "Freight Orders / Freight Bookings and schedule"
-     failure: "The result cannot be persisted because document or planning state changed."
+planning_runtime:
+  - order: 1
+    step: "Select planning scope"
+    output: "Freight Units and capacities in scope"
+    failure: "Relevant demand/resource is missing or too broad."
+  - order: 2
+    step: "Load planning profile"
+    output: "Optimizer settings, planning strategy, costs, restrictions"
+    failure: "Correct data is evaluated with the wrong profile or strategy."
+  - order: 3
+    step: "Build or reuse initial solution"
+    output: "Starting transportation plan"
+    failure: "Existing plan is incompatible with lanes, selected capacities, or incompatibilities."
+  - order: 4
+    step: "Evaluate constraints"
+    output: "Feasible search space"
+    failure: "Hard constraints remove every useful alternative."
+  - order: 5
+    step: "Minimize total cost"
+    output: "Preferred assignment and sequence"
+    failure: "Cost weights produce a technically feasible but commercially strange result."
+  - order: 6
+    step: "Create/update capacity documents"
+    output: "Freight Orders / Freight Bookings and schedule"
+    failure: "The result cannot be persisted because document or planning state changed."
 
- diagnostic_playbook:
-   - symptom: "No plan"
-     trace: ["FU dates/locations", "lane and mode", "resource capacity", "hard incompatibility", "operating/schedule windows", "planning profile"]
-     principle: "Find the first impossible condition. Do not start by changing optimizer costs."
-   - symptom: "Too many trucks"
-     trace: ["FU granularity", "capacity", "consolidation compatibility", "time windows", "non-delivery vs capacity cost"]
-     principle: "A fragmentation problem often begins before VSR, in FUB or tight demand windows."
-   - symptom: "Late delivery"
-     trace: ["requested window", "soft penalty", "capacity alternatives", "distance/duration", "driving-time rules"]
-     principle: "Determine whether lateness was permitted and economically preferred."
-   - symptom: "Long route"
-     trace: ["network/lane", "distance determination", "hard restrictions", "cost weights", "intermediate stops"]
-     principle: "Shortest route is not always lowest total cost under constraints."
+diagnostic_playbook:
+  - symptom: "No plan"
+    trace: ["FU dates/locations", "lane and mode", "resource capacity", "hard incompatibility", "operating/schedule windows", "planning profile"]
+    principle: "Find the first impossible condition. Do not start by changing optimizer costs."
+  - symptom: "Too many trucks"
+    trace: ["FU granularity", "capacity", "consolidation compatibility", "time windows", "non-delivery vs capacity cost"]
+    principle: "A fragmentation problem often begins before VSR, in FUB or tight demand windows."
+  - symptom: "Late delivery"
+    trace: ["requested window", "soft penalty", "capacity alternatives", "distance/duration", "driving-time rules"]
+    principle: "Determine whether lateness was permitted and economically preferred."
+  - symptom: "Long route"
+    trace: ["network/lane", "distance determination", "hard restrictions", "cost weights", "intermediate stops"]
+    principle: "Shortest route is not always lowest total cost under constraints."
 
- assessment_cards:
-   - question: "Hard vs soft constraint?"
-     answer: "Hard constraints must be respected. Soft constraints can be violated and are represented by penalty costs in the total optimization objective."
-   - question: "Why can VSR return a late delivery?"
-     answer: "Requested dates can be modeled as soft constraints. The optimizer may accept lateness if its penalty is cheaper than another feasible alternative."
-   - question: "What is an initial solution?"
-     answer: "It is the starting plan for optimization. It can come from an existing/manual plan or be generated heuristically before VSR improves it."
-   - question: "What do you check before optimizer settings?"
-     answer: "Demand, locations, lanes, distances/durations, capacity, incompatibilities, schedules, and time windows. Bad master data creates bad optimization."
+assessment_cards:
+  - question: "Hard vs soft constraint?"
+    answer: "Hard constraints must be respected. Soft constraints can be violated and are represented by penalty costs in the total optimization objective."
+  - question: "Why can VSR return a late delivery?"
+    answer: "Requested dates can be modeled as soft constraints. The optimizer may accept lateness if its penalty is cheaper than another feasible alternative."
+  - question: "What is an initial solution?"
+    answer: "It is the starting plan for optimization. It can come from an existing/manual plan or be generated heuristically before VSR improves it."
+  - question: "What do you check before optimizer settings?"
+    answer: "Demand, locations, lanes, distances/durations, capacity, incompatibilities, schedules, and time windows. Bad master data creates bad optimization."
 
- synthetic_case:
-   title: "Late delivery is not automatically an optimizer defect"
-   situation: "Three Freight Units fit into one truck, but one customer asks for a very tight delivery window."
-   reasoning:
-     - "One truck is physically feasible."
-     - "The tight window is configured as soft with a moderate lateness penalty."
-     - "A second truck would avoid lateness but adds high capacity cost."
-     - "VSR selects one truck and a small delay because total cost is lower."
-     - "If the business says the window is mandatory, the model must change: hard constraint or much higher penalty, depending on the real rule."
-   lesson: "Challenge the modeled business rule before challenging the optimization engine."
+synthetic_case:
+  title: "Late delivery is not automatically an optimizer defect"
+  situation: "Three Freight Units fit into one truck, but one customer asks for a very tight delivery window."
+  reasoning:
+    - "One truck is physically feasible."
+    - "The tight window is configured as soft with a moderate lateness penalty."
+    - "A second truck would avoid lateness but adds high capacity cost."
+    - "VSR selects one truck and a small delay because total cost is lower."
+    - "If the business says the window is mandatory, the model must change: hard constraint or much higher penalty, depending on the real rule."
+  lesson: "Challenge the modeled business rule before challenging the optimization engine."
 
- source_refs:
-   - SRC-SAP-TM-VSR-OPTIMIZATION
-   - SRC-SAP-TM-VSR-CONSTRAINTS
-   - SRC-SAP-TM-VSR-TIME-WINDOWS
-   - SRC-SAP-TM-VSR-DRIVING-HOURS
-   - SRC-SAP-TM-VSR-INITIAL-SOLUTION
-   - SRC-SAP-TM-PLANNING-PROFILE
-   - SRC-SAP-TM-MASTER-DATA
+source_refs:
+  - SRC-SAP-TM-VSR-OPTIMIZATION
+  - SRC-SAP-TM-VSR-CONSTRAINTS
+  - SRC-SAP-TM-VSR-TIME-WINDOWS
+  - SRC-SAP-TM-VSR-DRIVING-HOURS
+  - SRC-SAP-TM-VSR-INITIAL-SOLUTION
+  - SRC-SAP-TM-PLANNING-PROFILE
+  - SRC-SAP-TM-MASTER-DATA
