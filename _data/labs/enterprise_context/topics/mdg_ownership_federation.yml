@@ -56,6 +56,20 @@ concepts:
     definition: "A federated-process step used after validation to determine which additional data owners must participate."
     source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025]
 
+owner_role_nodes:
+  - id: TERM-MDG-SALES-APPLICATION-DATA-OWNER
+    type: term
+    title: "Sales Application Data Owner"
+    definition: "Lab role for the owner of Sales-specific Business Partner / Customer attribute groups such as sales-area data."
+    evidence_note: "The exact organizational owner is an enterprise design choice; the application-specific data boundary is grounded in SAP Customer master structure."
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+  - id: TERM-MDG-PROCUREMENT-APPLICATION-DATA-OWNER
+    type: term
+    title: "Procurement Application Data Owner"
+    definition: "Lab role for the owner of Procurement-specific Business Partner / Supplier attribute groups such as purchasing-organization data."
+    evidence_note: "The exact organizational owner is an enterprise design choice; the application-specific data boundary is grounded in SAP Supplier master structure."
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+
 current_product_boundary:
   documented_scope: "Federated MDG is part of cloud-ready mode. Current SAP documentation describes Business Partner federation and requires the data-ownership configuration for the participating systems."
   process_families:
@@ -76,7 +90,7 @@ ownership_layers:
       - "Global Business Partner identity"
     owner_pattern: "Core data owner"
   - layer: "Application-specific extension"
-    question: "Which attributes exist because one application process needs them?"
+    question: "Which attributes exist because one application process or organizational level needs them?"
     examples:
       - "Customer sales-area data"
       - "Supplier purchasing-organization data"
@@ -109,6 +123,7 @@ bp_ownership_example:
       - "Core tax / registration identity according to enterprise policy"
   sales_owner:
     title: "Sales Application Data Owner"
+    role_node: TERM-MDG-SALES-APPLICATION-DATA-OWNER
     object_extension: MD-BP-CUSTOMER
     attribute_groups:
       - "Sales-area extension"
@@ -118,6 +133,7 @@ bp_ownership_example:
     business_proof: "Customer can be used in the intended sales area."
   procurement_owner:
     title: "Procurement Application Data Owner"
+    role_node: TERM-MDG-PROCUREMENT-APPLICATION-DATA-OWNER
     object_extension: MD-BP-SUPPLIER
     attribute_groups:
       - "Purchasing-organization extension"
@@ -137,35 +153,44 @@ bp_ownership_example:
 federation_flow:
   - order: 1
     id: STEP-MDG-FED-REQUEST
+    type: process_step
     title: "Create or change core data"
     owner: "Core Data Owner or initiating system according to the selected process"
     result: "A governed BP change enters the process."
   - order: 2
     id: STEP-MDG-FED-VALIDATE
+    type: process_step
     title: "Validate core state"
     owner: "Core Data Owner"
     result: "The process is ready to determine additional owners."
   - order: 3
-    id: STEP-MDG-OWNER-DETERMINATION
+    id: STEP-MDG-FED-OWNER-DETERMINATION
+    type: process_step
     title: "Determine application owners"
     owner: "Core Data Owner"
     result: "Relevant application data owners are selected from configured ownership rules."
   - order: 4
     id: STEP-MDG-FED-REVISE
+    type: process_step
     title: "Revise application-owned data"
     owner: "Application Data Owner(s)"
     result: "Each owner enriches or confirms the attributes in its scope."
   - order: 5
     id: STEP-MDG-FED-CONSOLIDATE
+    type: process_step
     title: "Collect confirmations and continue governance"
     owner: "Core Data Owner"
     result: "The core process receives the owner responses and continues to its final controlled state."
   - order: 6
     id: STEP-MDG-FED-REPLICATE
+    type: process_step
     title: "Replicate and monitor"
     owner: "Core / integration operations according to architecture"
     result: "Related systems receive the approved state and exceptions are monitored."
-  source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025, SRC-SAP-MDG-FEDERATED-PROCESS-2025]
+
+federation_source_refs:
+  - SRC-SAP-MDG-FEDERATED-WORKING-2025
+  - SRC-SAP-MDG-FEDERATED-PROCESS-2025
 
 ownership_decision_matrix:
   - question: "Does the value identify the object across applications?"
@@ -258,30 +283,35 @@ relations:
     evidence_type: documented_fact
     confidence: high
     source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025]
-  - subject: TERM-MDG-APPLICATION-DATA-OWNER
-    predicate: owned_by
-    object: "Application domain"
+  - subject: TERM-MDG-SALES-APPLICATION-DATA-OWNER
+    predicate: specializes
+    object: TERM-MDG-APPLICATION-DATA-OWNER
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TERM-MDG-PROCUREMENT-APPLICATION-DATA-OWNER
+    predicate: specializes
+    object: TERM-MDG-APPLICATION-DATA-OWNER
     evidence_type: reasoned_interpretation
     confidence: high
   - subject: MD-BP-CUSTOMER
     predicate: owned_by
-    object: "Sales application data owner"
+    object: TERM-MDG-SALES-APPLICATION-DATA-OWNER
     evidence_type: synthetic_assumption
     confidence: medium
   - subject: MD-BP-SUPPLIER
     predicate: owned_by
-    object: "Procurement application data owner"
+    object: TERM-MDG-PROCUREMENT-APPLICATION-DATA-OWNER
     evidence_type: synthetic_assumption
     confidence: medium
   - subject: ATTR-CUST-SALES-AREA
     predicate: owned_by
-    object: "Sales application data owner"
+    object: TERM-MDG-SALES-APPLICATION-DATA-OWNER
     evidence_type: reasoned_interpretation
     confidence: high
     source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
   - subject: ATTR-SUPP-PURCH-ORG
     predicate: owned_by
-    object: "Procurement application data owner"
+    object: TERM-MDG-PROCUREMENT-APPLICATION-DATA-OWNER
     evidence_type: reasoned_interpretation
     confidence: high
     source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
