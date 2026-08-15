@@ -1,0 +1,318 @@
+id: TOPIC-SAP-DATA-MIGRATION-TOOLBOX
+type: research_topic
+title: "Data Migration Toolbox"
+summary: >-
+  A companion toolbox for SAP data migration and bulk maintenance: monitoring, ETL and transformation,
+  profiling and data quality, standard mass maintenance, governed master-data processing, and enterprise migration orchestration.
+domain: "Data Integration and Distribution"
+process_family: "Data Migration and Controlled Bulk Loading"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+human_view: "/labs/enterprise-context/integrations/data-migration/#toolbox"
+source_reviewed_at: "2026-08-15"
+
+business_question: >-
+  Which tools around SAP S/4HANA Migration Cockpit are useful for preparation, data quality, monitoring,
+  productive mass changes, and larger migration programs, and where does each tool stop?
+
+maturity:
+  gates_complete: 7
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: done
+
+memory_model:
+  phrase: "Assess → Prepare → Load → Monitor → Reconcile → Maintain"
+  lead_line: >-
+    Do not ask which migration tool is best in general. Ask which lifecycle step is weak: source quality, transformation,
+    migration execution, monitoring, productive mass change, governance, or program orchestration.
+
+categories:
+  - id: CAT-DATA-MIG-MONITORING
+    title: "Migration monitoring and audit"
+    question: "How do we know what happened during migration?"
+  - id: CAT-DATA-MIG-ETL
+    title: "Extraction, transformation, and preparation"
+    question: "How do we turn heterogeneous source data into migration-ready structures?"
+  - id: CAT-DATA-MIG-QUALITY
+    title: "Profiling and data quality"
+    question: "How do we understand quality problems before cutover?"
+  - id: CAT-DATA-MIG-MASS
+    title: "Productive mass maintenance"
+    question: "How do business users change many live master-data records safely?"
+  - id: CAT-DATA-MIG-GOVERNED
+    title: "Governed consolidation and mass processing"
+    question: "How do we combine cleansing, consolidation, validation, and controlled mass change?"
+  - id: CAT-DATA-MIG-PROGRAM
+    title: "Migration program orchestration"
+    question: "How do we coordinate large migration waves, objects, preparation, validation, and reuse across a transformation program?"
+
+tools_note: "Tool names are less important than their boundary. Several tools can appear in one migration architecture without doing the same job."
+
+tools:
+  - id: APP-S4-DATA-MIGRATION-STATUS
+    type: application_component
+    title: "Data Migration Status"
+    category: CAT-DATA-MIG-MONITORING
+    product: "SAP S/4HANA"
+    app_id: "F3280"
+    role: >-
+      Operational view for simulated and migrated instances in Migration Cockpit projects using the staging-table approach.
+    useful_for:
+      - "Project and migration-object status overview."
+      - "Instance-level messages and running jobs."
+      - "Extended statistics and audit."
+      - "Navigation from migrated instances to standard SAP Fiori apps for target validation where supported."
+    not_for:
+      - "It does not replace the migration project or perform source transformation."
+      - "SAP documents it for the staging-table migration approach, not direct transfer."
+    lead_rule: "Treat monitoring and audit as part of migration design, not as a dashboard added during cutover."
+    source_refs: [SRC-SAP-DATA-MIGRATION-STATUS-S4-2025]
+
+  - id: APP-SAP-DATA-SERVICES
+    type: application_component
+    title: "SAP Data Services"
+    category: CAT-DATA-MIG-ETL
+    product: "SAP Data Services 2025"
+    role: >-
+      Enterprise ETL and data-quality platform for extracting, transforming, profiling, cleansing, and delivering data from heterogeneous sources.
+    useful_for:
+      - "Extracting data from several source systems."
+      - "Transforming legacy structures into migration-ready structures."
+      - "Standardization, correction, matching, and deduplication where licensed capabilities fit."
+      - "Populating Migration Cockpit staging tables as an external preparation tool."
+      - "Reusable jobs for repeated migration test cycles."
+    not_for:
+      - "It does not remove the need for Migration Cockpit target validation and business reconciliation."
+      - "An ETL job should not become the hidden owner of S/4HANA business rules."
+    lead_rule: >-
+      Use Data Services when source preparation is a real engineering problem. Keep target posting semantics in the target application boundary.
+    source_refs: [SRC-SAP-DATA-SERVICES-2025, SRC-SAP-DATA-SERVICES-STAGING-2608]
+
+  - id: APP-SAP-INFORMATION-STEWARD
+    type: application_component
+    title: "SAP Information Steward"
+    category: CAT-DATA-MIG-QUALITY
+    product: "SAP Information Steward 2025"
+    role: >-
+      Data-quality and metadata environment for profiling, validation rules, quality scores, failed-record analysis, and data-quality monitoring.
+    useful_for:
+      - "Profile legacy data before mapping workshops."
+      - "Measure completeness, conformity, uniqueness, and rule failures."
+      - "Show actual bad-record samples instead of debating data quality in abstract terms."
+      - "Track quality trends through migration waves."
+      - "Connect technical data issues with data-steward ownership."
+    not_for:
+      - "It is not the S/4HANA business-object load engine."
+      - "A quality score does not prove that target organizational views or process dependencies are complete."
+    lead_rule: "Profile before you transform. Otherwise the migration team discovers data semantics one failed load at a time."
+    source_refs: [SRC-SAP-INFORMATION-STEWARD-2025, SRC-SAP-INFORMATION-STEWARD-DATA-INSIGHT-2025]
+
+  - id: APP-S4-MASS-MAINTENANCE
+    type: application_component
+    title: "Start / Manage Mass Maintenance"
+    category: CAT-DATA-MIG-MASS
+    product: "SAP S/4HANA"
+    role: >-
+      Standard mass-maintenance capability for productive master data such as material/product and business partner data.
+    useful_for:
+      - "Changing many existing productive records without building a custom loader."
+      - "CSV or Office Open XML file upload for supported objects and fields."
+      - "Validation before activation."
+      - "Background execution and saved mass-maintenance runs."
+    not_for:
+      - "It is not a replacement for an initial migration program."
+      - "Its object and field scope must be checked before promising a generic Excel upload."
+    lead_rule: "For recurring business-user mass changes, check standard Mass Maintenance before writing custom code."
+    source_refs: [SRC-SAP-S4-MASS-MAINTENANCE-2025]
+
+  - id: APP-SAP-MDG-CONSOLIDATION-MASS
+    type: application_component
+    title: "SAP MDG Consolidation and Mass Processing"
+    category: CAT-DATA-MIG-GOVERNED
+    product: "SAP Master Data Governance"
+    role: >-
+      Configurable process framework for consolidating master data and updating many records through controlled process steps.
+    useful_for:
+      - "Material and business partner consolidation."
+      - "Supplier and customer data preparation."
+      - "Custom-object mass processing where supported."
+      - "Standardization, matching, review, best-record logic, and controlled activation in relevant MDG scenarios."
+      - "Combining mass processing with central governance when approvals and change requests are required."
+    not_for:
+      - "Do not deploy MDG only because one project needs a file uploader."
+      - "Governance, consolidation, and migration execution remain different responsibilities."
+    lead_rule: >-
+      Use MDG when the problem is governed master-data quality and ownership, not merely because the data volume is large.
+    source_refs: [SRC-SAP-MDG-CONSOLIDATION-MASS-2025, SRC-SAP-MDG-CONSOLIDATION-OVERVIEW-2025]
+
+  - id: APP-SAP-ADM-SYNITI
+    type: application_component
+    title: "SAP Advanced Data Migration and Management by Syniti"
+    category: CAT-DATA-MIG-PROGRAM
+    product: "SAP Advanced Data Migration and Management by Syniti"
+    role: >-
+      Cloud migration-program solution for connecting, preparing, validating, automating, and organizing data migration across waves and process areas.
+    useful_for:
+      - "Large transformation programs with several source systems and migration waves."
+      - "Reusable migration knowledge, mappings, rules, and process assets."
+      - "Coordinating migration objects and work across business and technical teams."
+      - "Reducing spreadsheet-driven program management when migration itself is a major workstream."
+    not_for:
+      - "It does not make target SAP business validation irrelevant."
+      - "It is usually excessive for a small one-off upload that a standard app already covers."
+    lead_rule: >-
+      Use a migration factory platform when repeatability and program scale justify it. Do not buy program orchestration to solve one missing field upload.
+    source_refs: [SRC-SAP-ADVANCED-DATA-MIGRATION-SYNITI]
+
+tool_chain_patterns:
+  - id: PAT-DATA-MIG-LEAN
+    title: "Lean standard migration"
+    fit: "A supported S/4HANA initial load with moderate source complexity."
+    chain: "Source files → cleansing/preparation → Migration Cockpit → Data Migration Status → target reconciliation"
+    tools: ["Migrate Your Data - Migration Cockpit", "Data Migration Status"]
+    lead_comment: "Do not add a platform layer when a controlled file and standard migration object are enough."
+
+  - id: PAT-DATA-MIG-ETL
+    title: "ETL-assisted migration"
+    fit: "Several legacy sources need repeatable extraction, transformation, cleansing, or deduplication."
+    chain: "Legacy sources → SAP Data Services → Migration Cockpit staging tables → Data Migration Status → business reconciliation"
+    tools: ["SAP Data Services", "Migrate Your Data - Migration Cockpit", "Data Migration Status"]
+    lead_comment: "The ETL layer prepares data; Migration Cockpit and the target application still own target migration behavior."
+
+  - id: PAT-DATA-MIG-QUALITY
+    title: "Quality-led migration"
+    fit: "Source quality is uncertain and business ownership needs objective measures before cutover."
+    chain: "Source systems → Information Steward profiling/rules → cleansing/remediation → migration preparation → target load → quality and business reconciliation"
+    tools: ["SAP Information Steward", "SAP Data Services or another preparation tool", "Migration Cockpit"]
+    lead_comment: "Use profiling to find the real problem early, while there is still time to fix ownership and mappings."
+
+  - id: PAT-DATA-MIG-GOVERNED
+    title: "Governed master-data preparation"
+    fit: "The migration also needs duplicate resolution, golden-record decisions, steward review, or durable governance."
+    chain: "Legacy master data → MDG consolidation/governance → approved master data → migration/distribution → downstream proof"
+    tools: ["SAP MDG Consolidation and Mass Processing", "Migration or distribution tool selected for the target boundary"]
+    lead_comment: "Do not confuse the golden-record decision with the transport mechanism."
+
+  - id: PAT-DATA-MIG-FACTORY
+    title: "Migration factory"
+    fit: "A large program has many waves, countries, source systems, objects, rules, and repeated dress rehearsals."
+    chain: "Migration program platform → source preparation and validation → target-specific load mechanism → monitoring → reconciliation → wave metrics"
+    tools: ["SAP Advanced Data Migration and Management by Syniti", "SAP Data Services where useful", "Migration Cockpit or target-specific supported interfaces"]
+    lead_comment: "At scale, reuse and orchestration become products in their own right. Target business consistency still stays with the target application."
+
+operational_after_go_live:
+  principle: >-
+    After go-live, stop thinking in migration terms. Decide whether the requirement is mass maintenance,
+    governed master-data processing, a user bulk loader, or system-to-system integration.
+  choices:
+    - need: "Supported bulk update of material or business partner data"
+      choose: "Standard S/4HANA Mass Maintenance"
+      reason: "It already provides file upload, validation, activation, background execution, and saved runs for supported scope."
+    - need: "Governed master-data consolidation or mass change"
+      choose: "SAP MDG Consolidation and Mass Processing"
+      reason: "Use it when quality, matching, stewardship, and governance are part of the requirement."
+    - need: "Unsupported but stable business-user upload scenario"
+      choose: "Controlled custom loader"
+      reason: "Build the missing operating experience, but post through supported target business interfaces."
+    - need: "Recurring automatic source-to-target synchronization"
+      choose: "Operational integration"
+      reason: "Use an API, IDoc, event, queue, middleware flow, or another repeatable contract with monitoring and reconciliation."
+
+not_the_same:
+  - left: "Migration Cockpit"
+    right: "SAP Data Services"
+    distinction: "Migration Cockpit owns supported S/4HANA migration objects and target migration lifecycle. Data Services prepares and transforms data and can populate staging tables."
+  - left: "SAP Data Services"
+    right: "SAP Information Steward"
+    distinction: "Data Services is an execution platform for data integration and transformation. Information Steward focuses on profiling, quality assessment, metadata, rules, and stewardship insight."
+  - left: "Migration Cockpit"
+    right: "Mass Maintenance"
+    distinction: "Migration Cockpit is for initial migration. Mass Maintenance is for supported bulk changes to productive master data."
+  - left: "Mass Maintenance"
+    right: "MDG Mass Processing"
+    distinction: "Both can change many records, but MDG is the stronger fit when consolidation, matching, configurable process steps, stewardship, or governance are part of the business requirement."
+  - left: "Migration program platform"
+    right: "Target load mechanism"
+    distinction: "A program platform can organize preparation and waves. The target load mechanism still has to create or change SAP business objects correctly."
+
+selection_guide:
+  - question: "Do I only need to migrate supported objects into S/4HANA?"
+    answer: "Start with Migration Cockpit. Add another tool only for a concrete missing responsibility."
+  - question: "Is source extraction and transformation complex?"
+    answer: "Consider SAP Data Services or an equivalent governed ETL layer."
+  - question: "Do we understand source data quality?"
+    answer: "Use profiling and rule-based assessment such as Information Steward before repeated migration failures become your profiling method."
+  - question: "Is the requirement a productive mass change after go-live?"
+    answer: "Check standard S/4HANA Mass Maintenance first."
+  - question: "Do we need consolidation, matching, steward review, or durable governance?"
+    answer: "Consider MDG Consolidation and Mass Processing."
+  - question: "Do we have a global migration factory with many waves and reusable rules?"
+    answer: "Consider a migration-program platform such as SAP Advanced Data Migration and Management by Syniti."
+
+assessment_cards:
+  - question: "What tools can sit around Migration Cockpit?"
+    answer: >-
+      I separate responsibilities. Data Services can extract and transform source data. Information Steward can profile and measure quality.
+      Migration Cockpit executes supported S/4HANA migration objects. Data Migration Status gives operational visibility for staging projects.
+      After go-live I check Mass Maintenance or MDG mass processing before building custom upload logic.
+  - question: "When would you add SAP Data Services?"
+    answer: >-
+      When several sources need repeatable extraction, transformation, cleansing, matching, or preparation across migration cycles.
+      I do not use it to bypass the target S/4HANA business contract.
+  - question: "When is Information Steward useful?"
+    answer: >-
+      Before and during migration when data quality is uncertain. It gives profiling, validation rules, quality measures, and bad-record samples,
+      which helps business owners fix the source problem instead of only fixing load errors.
+  - question: "Mass Maintenance or custom loader?"
+    answer: >-
+      I check the standard app first. If its business object and field scope cover the need, I prefer the standard capability.
+      I build custom only for a stable unsupported requirement where the extra user experience and controls justify ownership.
+  - question: "When does a migration factory platform make sense?"
+    answer: >-
+      When migration is a large repeatable program with many waves, systems, objects, mappings, teams, and rehearsals.
+      It is a scale and reuse decision, not a default component for every project.
+
+grounded_ai_evaluation:
+  - prompt: "A migration has five source ERPs and repeated country waves. Which additional tool roles should be considered?"
+    expected_points:
+      - "ETL/transformation layer for repeatable source preparation."
+      - "Profiling/data-quality capability before load."
+      - "Migration program orchestration if wave scale justifies it."
+      - "Migration Cockpit or another supported target-specific load mechanism remains the target boundary."
+  - prompt: "After go-live users want to update 20,000 product records from a file every month. What should be checked first?"
+    expected_points:
+      - "Check standard S/4HANA Mass Maintenance scope first."
+      - "If unsupported, classify whether the need is a custom user loader or system integration."
+      - "Preserve target business validation, authorization, retry, audit, and reconciliation."
+
+source_refs:
+  - SRC-SAP-DATA-MIGRATION-STATUS-S4-2025
+  - SRC-SAP-DATA-SERVICES-2025
+  - SRC-SAP-DATA-SERVICES-STAGING-2608
+  - SRC-SAP-INFORMATION-STEWARD-2025
+  - SRC-SAP-INFORMATION-STEWARD-DATA-INSIGHT-2025
+  - SRC-SAP-S4-MASS-MAINTENANCE-2025
+  - SRC-SAP-MDG-CONSOLIDATION-MASS-2025
+  - SRC-SAP-MDG-CONSOLIDATION-OVERVIEW-2025
+  - SRC-SAP-ADVANCED-DATA-MIGRATION-SYNITI
+
+tags:
+  - sap
+  - s4hana
+  - data-migration
+  - data-services
+  - information-steward
+  - mass-maintenance
+  - mdg
+  - syniti
+  - data-quality
+  - etl

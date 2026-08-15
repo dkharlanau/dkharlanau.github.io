@@ -1,0 +1,504 @@
+id: TOPIC-SAP-DATA-MIGRATION-LOADING
+type: research_topic
+title: "Data Migration and Controlled Bulk Loading"
+summary: >-
+  A practical map for SAP S/4HANA Migration Cockpit, staging and direct-transfer approaches,
+  migration-object extensibility, and custom loaders for repeated or business-friendly bulk uploads.
+domain: "Data Integration and Distribution"
+process_family: "Data Migration and Controlled Bulk Loading"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+human_view: "/labs/enterprise-context/integrations/data-migration/"
+source_reviewed_at: "2026-08-15"
+
+business_question: >-
+  When should a project use the standard SAP S/4HANA Migration Cockpit, when is staging or direct transfer the right approach,
+  and when should we build a controlled custom loader instead of forcing a migration tool or spreadsheet into an operational integration role?
+
+maturity:
+  gates_complete: 7
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: done
+
+memory_model:
+  phrase: "Source → Prepare → Validate → Map → Load → Reprocess → Reconcile"
+  short_definition: >-
+    Data loading is a controlled movement of business data into a target application. The important design work is not the file upload;
+    it is source selection, validation, mapping, target business logic, restart, traceability, and reconciliation.
+  lead_line: >-
+    Use Migration Cockpit for supported initial migration. Use operational interfaces for system-to-system integration.
+    Use a custom loader only when a repeated or user-facing bulk-load requirement needs a better controlled experience.
+
+core_entities:
+  - id: DOM-DATA-INTEGRATION
+    type: application_domain
+    title: "Data Integration and Distribution"
+    summary: "Cross-application domain for migration, replication, synchronization, distribution, and controlled data movement."
+
+  - id: CAP-DATA-INITIAL-MIGRATION
+    type: capability
+    title: "Initial Data Migration"
+    summary: "Move selected business data into a new SAP S/4HANA implementation with controlled mapping, simulation, load, and reconciliation."
+
+  - id: APP-S4-MIGRATE-YOUR-DATA
+    type: application_component
+    title: "Migrate Your Data - Migration Cockpit"
+    summary: "SAP Fiori app F3473 for migration projects, migration objects, mapping, simulation, migration, and monitoring."
+    source_refs: [SRC-SAP-MIGRATE-YOUR-DATA-S4-2025, SRC-SAP-MIGRATE-YOUR-DATA-CLOUD-2608]
+
+  - id: CFG-S4-MIGRATION-PROJECT
+    type: configuration_object
+    title: "Migration Project"
+    summary: "Lifecycle container that groups migration objects and migration activities for a defined target migration."
+    source_refs: [SRC-SAP-MIGRATION-PROJECTS-S4-2025]
+
+  - id: CFG-S4-MIGRATION-OBJECT
+    type: configuration_object
+    title: "Migration Object"
+    summary: "Object-specific migration definition covering source structures, relationships, mappings, and conversion behavior."
+    source_refs: [SRC-SAP-MIGRATION-DIRECT-CLOUD-2608, SRC-SAP-MIGRATION-OBJECTS-S4]
+
+  - id: INT-S4-MIGRATION-STAGING
+    type: integration
+    title: "Migration via Staging Tables"
+    summary: "Load source data into generated staging tables, then process it through the Migration Cockpit."
+    source_refs: [SRC-SAP-MIGRATION-STAGING-S4-2025, SRC-SAP-MIGRATION-STAGING-CLOUD-2608]
+
+  - id: INT-S4-MIGRATION-DIRECT
+    type: integration
+    title: "Direct Transfer from SAP Source System"
+    summary: "Transfer supported data directly from certain SAP source systems using migration objects."
+    source_refs: [SRC-SAP-MIGRATION-DIRECT-CLOUD-2608]
+
+  - id: APP-S4-MIGRATION-OBJECT-MODELER
+    type: application_component
+    title: "Migration Object Modeler"
+    summary: "Tool for supported migration-object adjustments; exact functions depend on migration approach and deployment."
+    source_refs: [SRC-SAP-MIGRATION-OBJECT-MODELER-S4-2025, SRC-SAP-MIGRATION-MODELER-CLOUD-2608]
+
+  - id: CAP-DATA-CONTROLLED-BULK-LOAD
+    type: capability
+    title: "Controlled Bulk Loading"
+    summary: "Repeated or user-triggered high-volume creation or change with validation, traceability, restart, and reconciliation."
+
+  - id: APP-CUSTOM-DATA-LOADER
+    type: application_component
+    title: "Custom Data Loader"
+    summary: >-
+      A project-specific application that provides a controlled upload experience and calls supported target business interfaces
+      instead of writing directly to application tables.
+
+  - id: CTRL-DATA-LOAD-PREVALIDATION
+    type: control
+    title: "Pre-validation and Preview"
+    summary: "Validate syntax, required fields, mappings, business prerequisites, and likely target errors before posting."
+
+  - id: CTRL-DATA-LOAD-IDEMPOTENCY
+    type: control
+    title: "Idempotency and Duplicate Control"
+    summary: "Make retries safe by identifying already processed business records and preventing accidental duplicate posting."
+
+  - id: CTRL-DATA-LOAD-TRACEABILITY
+    type: control
+    title: "Source-to-Target Traceability"
+    summary: "Keep a durable link from input row or record to target business key, processing status, and error history."
+
+  - id: CTRL-DATA-LOAD-RECONCILIATION
+    type: control
+    title: "Business Reconciliation"
+    summary: "Prove that the expected target objects, quantities, values, and required views exist after the technical load."
+
+availability:
+  principle: >-
+    Check deployment, release, migration approach, and migration-object scope together. The existence of the Migration Cockpit
+    does not mean that every business object, field, or update scenario is supported in the same way.
+  current_views:
+    - deployment: "SAP S/4HANA 2025 FPS01 / SAP S/4HANA Cloud Private Edition scope"
+      app: "Migrate Your Data - Migration Cockpit, F3473"
+      approaches: ["Staging tables", "Direct transfer from supported SAP source systems"]
+      extension_note: "Migration Object Modeler is available for supported adjustments; functions depend on migration approach."
+      source_refs: [SRC-SAP-MIGRATE-YOUR-DATA-S4-2025, SRC-SAP-MIGRATION-OBJECT-MODELER-S4-2025]
+    - deployment: "SAP S/4HANA Cloud Public Edition 2608 documentation"
+      app: "Migrate Your Data - Migration Cockpit, F3473"
+      approaches: ["Staging tables", "Direct transfer from supported SAP source systems"]
+      extension_note: "Migration Object Modeler exists, but access and enhancement scope depend on the migration approach and released object support."
+      source_refs: [SRC-SAP-MIGRATE-YOUR-DATA-CLOUD-2608, SRC-SAP-MIGRATION-MODELER-CLOUD-2608]
+  release_check: >-
+    Review the available migration-object catalogue for the target release. Object availability, dependencies, custom-field support,
+    and migration approach are part of the solution design, not details to discover during cutover.
+
+standard_migration_cockpit:
+  memory_model: "Project → Object → Source → Map → Simulate → Migrate → Reconcile"
+  purpose: >-
+    Use the standard cockpit when the requirement is an initial migration into SAP S/4HANA and the required migration objects
+    cover the business scope. SAP explicitly positions the cockpit for initial-load scenarios rather than continuous synchronization.
+  source_refs: [SRC-SAP-MIGRATE-YOUR-DATA-S4-2025, SRC-SAP-MIGRATION-DIRECT-CLOUD-2608, SRC-SAP-MIGRATION-OBJECTS-S4]
+  lifecycle:
+    - step: 1
+      title: "Plan the migration scope"
+      detail: "List target business objects, required organizational views, dependencies, data owners, source systems, cutover waves, and reconciliation rules."
+    - step: 2
+      title: "Create the migration project"
+      detail: "Create a project and select the migration objects that fit the scope."
+      source_refs: [SRC-SAP-MIGRATION-PROJECTS-S4-2025]
+    - step: 3
+      title: "Prepare and map source data"
+      detail: "Clean source values, resolve code mappings, complete required structures, and make mapping ownership explicit."
+    - step: 4
+      title: "Load or select source data"
+      detail: "Populate staging tables or use direct transfer from a supported SAP source system, depending on the project approach."
+      source_refs: [SRC-SAP-MIGRATION-STAGING-S4-2025, SRC-SAP-MIGRATION-DIRECT-CLOUD-2608]
+    - step: 5
+      title: "Simulate"
+      detail: "Run simulation and fix mapping or target-processing issues before the productive migration."
+      source_refs: [SRC-SAP-MIGRATE-YOUR-DATA-S4-2025]
+    - step: 6
+      title: "Migrate and monitor"
+      detail: "Execute the migration, monitor processing, correct controlled errors, and repeat the test cycle until the cutover is predictable."
+    - step: 7
+      title: "Reconcile the business result"
+      detail: "Compare source scope with created target objects and prove that required downstream processes can use the migrated data."
+
+migration_approaches:
+  - id: INT-S4-MIGRATION-STAGING
+    title: "Staging tables"
+    choose_when: >-
+      Source data comes from files, non-SAP systems, transformed extracts, or an ETL preparation flow and a controlled intermediate structure is useful.
+    input_options:
+      - "SAP-provided migration-object template files"
+      - "External preparation or ETL tools that populate the staging tables"
+    strengths:
+      - "Clear intermediate data boundary."
+      - "Useful when source extraction and cleansing happen outside the target application."
+      - "Supports controlled preparation before Migration Cockpit processing."
+    cautions:
+      - "A successful staging-table fill is not a successful business migration."
+      - "The staging schema is not a new operational integration database."
+      - "External tools still need schema, ownership, security, restart, and reconciliation rules."
+    source_refs: [SRC-SAP-MIGRATION-STAGING-S4-2025, SRC-SAP-MIGRATION-STAGING-CLOUD-2608]
+
+  - id: INT-S4-MIGRATION-DIRECT
+    title: "Direct transfer"
+    choose_when: "A supported SAP source system and migration object provide the required direct-transfer path."
+    strengths:
+      - "Reduces custom extraction and file handling for supported source scenarios."
+      - "Migration objects keep source-target structures, mappings, and conversion rules together."
+    cautions:
+      - "It is not a general real-time replication mechanism."
+      - "Source selection, object scope, mappings, dependencies, and target reconciliation still need project ownership."
+    source_refs: [SRC-SAP-MIGRATION-DIRECT-CLOUD-2608]
+
+migration_object_extensibility:
+  principle: >-
+    Extend a standard migration object only when the supported migration-object mechanism fits the missing requirement.
+    Do not assume that every target structure or field can be added in every deployment or migration approach.
+  tool: "Migration Object Modeler"
+  classic_reference: "Transaction LTMOM in SAP S/4HANA documentation"
+  public_cloud_reference: "Migration Object Modeler access depends on the migration approach and released enhancement scope"
+  use_for:
+    - "Supported source selection changes."
+    - "Supported mapping or rule adjustments."
+    - "Supported migration-object enhancements required by the target scope."
+  check_before_change:
+    - "Is the field or structure supported by the migration object?"
+    - "Does the target API or business logic support the intended data?"
+    - "Does the same enhancement path exist in this deployment and migration approach?"
+    - "How will the change be transported, tested, and repeated across migration cycles?"
+  source_refs: [SRC-SAP-MIGRATION-OBJECT-MODELER-S4-2025, SRC-SAP-MIGRATION-MODELER-CLOUD-2608]
+
+custom_loader:
+  purpose: >-
+    A custom loader is useful when users need a repeatable, controlled bulk-load experience that is not an initial migration project
+    and no standard mass-maintenance or import application covers the requirement well.
+  memory_model: "Template → Validate → Preview → Post → Error list → Retry → Reconcile"
+  input_channels:
+    - "Excel or CSV for controlled business-user uploads"
+    - "JSON or API input for another application"
+    - "Prepared files from a data-quality or transformation process"
+  required_controls:
+    - "Version the input template or schema."
+    - "Validate file structure before business processing."
+    - "Validate mandatory fields, code values, organizational prerequisites, and cross-field rules."
+    - "Show a preview or dry-run result before posting when the business risk justifies it."
+    - "Process large loads in controlled chunks or background jobs instead of one long user request."
+    - "Return business-readable errors at record level."
+    - "Keep source-row to target-key traceability."
+    - "Make retry safe and prevent accidental duplicates."
+    - "Protect the function with authorization and an audit trail."
+    - "Reconcile the target business state after processing."
+  target_contract:
+    preferred: >-
+      Call released or supported business APIs, RAP business objects, or other application services that preserve SAP business validation and posting logic.
+    brownfield_note: >-
+      In controlled classic S/4HANA landscapes an established BAPI, IDoc, or other supported interface may still be a valid target contract.
+      Treat that as an explicit architecture decision, not a universal clean-core pattern.
+    avoid: >-
+      Do not make direct application-table updates the normal loader design. A convenient spreadsheet is not a reason to bypass locks,
+      validations, document logic, authorizations, change history, or application consistency.
+  implementation_options:
+    - option: "On-stack ABAP / RAP loader"
+      fit: "The load is tightly coupled to S/4HANA business objects, needs low-latency validation, and should live with the application lifecycle."
+      shape: "Fiori or Fiori elements UI → upload/parser → validation service → released target business interface → job/status/error persistence"
+    - option: "Side-by-side CAP or BTP loader"
+      fit: "The upload needs an independent lifecycle, broader external connectivity, richer orchestration, or long-running asynchronous processing."
+      shape: "Web UI → CAP service → file/object storage or work queue → mapping/validation → S/4HANA API → status/reconciliation store"
+    - option: "Integration-flow driven bulk load"
+      fit: "The source is system-owned rather than human-owned and transformation/routing is the main problem."
+      shape: "Source → integration runtime → target API/business message → monitoring/reconciliation"
+      boundary: "If this repeats automatically, treat it as integration, not as a user upload application."
+
+selection_guide:
+  - need: "One-time supported migration into a new S/4HANA implementation"
+    choose: "Migrate Your Data - Migration Cockpit"
+    why: "It already provides migration projects, objects, mapping, simulation, execution, and monitoring."
+  - need: "Initial migration from files, non-SAP extracts, or prepared datasets"
+    choose: "Migration Cockpit with staging tables"
+    why: "The staging approach gives a controlled intermediate structure that can be populated by templates or preparation tools."
+  - need: "Initial migration from a supported SAP source system"
+    choose: "Migration Cockpit direct transfer"
+    why: "Use the supported source-to-target migration-object path instead of inventing a parallel extraction framework."
+  - need: "Small gap in a supported migration object"
+    choose: "Check Migration Object Modeler first"
+    why: "A supported object adjustment is usually safer than replacing the complete standard migration lifecycle."
+  - need: "Repeated business-user bulk upload into a live process"
+    choose: "Standard mass app if available; otherwise controlled custom loader"
+    why: "This is an operational application capability, not an initial migration project."
+  - need: "Recurring system-to-system synchronization"
+    choose: "Operational integration pattern"
+    why: "Use APIs, IDocs, events, queues, middleware, or another integration contract designed for repeat processing."
+  - need: "High-risk mass change of existing productive data"
+    choose: "Governed mass-maintenance or custom process with validation, approval, audit, restart, and reconciliation"
+    why: "A raw spreadsheet upload does not provide enough control for a business-critical change."
+
+synthetic_examples:
+  - id: SCN-MIG-MATERIAL-INITIAL
+    type: scenario
+    title: "Synthetic initial material migration"
+    synthetic: true
+    situation: >-
+      A new S/4HANA implementation needs material data with basic, plant, purchasing, and sales-relevant views from several legacy extracts.
+    approach: >-
+      Check the target release's migration objects and dependencies. Use a staging-table project when the legacy data needs external cleansing and consolidation.
+      Map codes, simulate, migrate in test cycles, then reconcile counts and prove a small purchasing and sales process sample.
+    lead_lesson: "Do not call the migration complete when the material number exists. Required organizational views and downstream usability are part of acceptance."
+
+  - id: SCN-LOAD-MATERIAL-PLANT
+    type: scenario
+    title: "Synthetic recurring material-plant loader"
+    synthetic: true
+    situation: >-
+      A central team repeatedly prepares hundreds of material extensions for new plants and wants a simple Excel upload with clear errors.
+    approach: >-
+      First check for a suitable standard mass-maintenance/import function. If none fits, build a controlled loader with a versioned template,
+      pre-validation, preview, asynchronous batches, record-level status, safe retry, and a supported target business interface.
+    lead_lesson: "The custom value is the controlled user workflow and recoverability, not another way to write SAP tables."
+
+  - id: SCN-LOAD-SUPPLIER-PURCHASING
+    type: scenario
+    title: "Synthetic supplier purchasing-data load"
+    synthetic: true
+    situation: "A procurement onboarding process needs a controlled bulk enrichment of supplier purchasing data after governance approval."
+    approach: >-
+      Keep governance approval separate from the load application. Validate organizational prerequisites and duplicate keys,
+      post through the supported business contract, capture target keys, and reconcile the supplier records before releasing the next process step.
+    lead_lesson: "Governance decides what is allowed; the loader executes a controlled data change."
+
+failure_modes:
+  - id: FAIL-DATA-LOAD-PARTIAL
+    type: failure_mode
+    title: "Partial Load"
+    symptom: "Some records were created while later records failed."
+    response: "Keep per-record status, make reruns selective and idempotent, and reconcile the expected target set."
+  - id: FAIL-DATA-LOAD-DUPLICATE
+    type: failure_mode
+    title: "Duplicate Posting After Retry"
+    symptom: "A restarted load creates the same business record twice or repeats a business action."
+    response: "Use stable source keys, target lookup/idempotency logic, and explicit retry states."
+  - id: FAIL-DATA-LOAD-BUSINESS-INCOMPLETE
+    type: failure_mode
+    title: "Technically Loaded but Business-Incomplete"
+    symptom: "The object exists, but required organizational data or dependent records are missing."
+    response: "Reconcile business completeness and prove the object in the consuming process."
+
+expert_heuristics:
+  - id: HEUR-DATA-LOAD-CLASSIFY-FIRST
+    type: expert_heuristic
+    context: "Tool selection"
+    statement: "Classify the need as migration, recurring integration, mass maintenance, or user bulk upload before choosing a tool."
+    confidence: high
+    questions:
+      - "Is this initial load or repeat processing?"
+      - "Who triggers it: a cutover team, another system, or a business user?"
+      - "Are we creating new data, changing productive data, or synchronizing systems?"
+    anti_patterns:
+      - "Use Migration Cockpit for a nightly interface because it can move data."
+      - "Build a custom upload before checking standard mass capabilities."
+
+  - id: HEUR-DATA-LOAD-TARGET-CONTRACT
+    type: expert_heuristic
+    context: "Custom loader design"
+    statement: "A custom loader should improve the input and operating experience while preserving the target application's business contract."
+    confidence: high
+    questions:
+      - "Which supported interface owns target validation and posting?"
+      - "How are locks, authorizations, application messages, and commits handled?"
+      - "Can target behavior change without rewriting every upload rule?"
+    anti_patterns:
+      - "Treat direct table update as a convenient mass-load API."
+
+  - id: HEUR-DATA-LOAD-RECONCILE
+    type: expert_heuristic
+    context: "Migration acceptance"
+    statement: "Technical success is not migration acceptance; reconcile the business object and prove downstream use."
+    confidence: high
+    questions:
+      - "Did every expected source object arrive?"
+      - "Were required views and dependent data created?"
+      - "Can the target process actually use the migrated object?"
+    anti_patterns:
+      - "Use a green migration job as the only completion evidence."
+
+assessment_cards:
+  - question: "When would you use Migrate Your Data instead of a custom program?"
+    answer: >-
+      I use Migration Cockpit for a supported initial S/4HANA migration because it already gives me projects, migration objects,
+      mappings, simulation, execution, and monitoring. I build custom only when the requirement is outside that lifecycle and the business value justifies owning the extra application.
+  - question: "Staging tables or direct transfer?"
+    answer: >-
+      Direct transfer fits supported SAP source scenarios. Staging fits files, non-SAP extracts, or externally prepared data.
+      In both cases I still own cleansing, mapping, test cycles, and reconciliation.
+  - question: "Can Migration Cockpit be used as a permanent integration?"
+    answer: >-
+      I would not design it that way. SAP positions it for initial load. A recurring system exchange needs an operational interface with retry,
+      idempotency, monitoring, and reconciliation designed for repeated processing.
+  - question: "What makes a custom Excel loader acceptable?"
+    answer: >-
+      Excel is only an input format. The application needs a versioned schema, validation, preview when useful, a supported target API or business service,
+      background processing for volume, record-level errors, safe retry, authorization, audit, and reconciliation.
+  - question: "What is the Lead-level mistake in data migration?"
+    answer: >-
+      Treating data movement as a technical file exercise. The real contract includes business completeness, object dependencies,
+      organizational views, target validation, cutover repeatability, and proof that the next business process works.
+
+grounded_ai_evaluation:
+  - prompt: "A team wants to schedule Migration Cockpit every night to synchronize suppliers. What should a Lead challenge?"
+    expected_points:
+      - "Migration Cockpit is an initial-load tool, not the default recurring synchronization platform."
+      - "Define source ownership and a recurring integration contract."
+      - "Design retry, duplicate handling, monitoring, and reconciliation."
+  - prompt: "A business user asks for an Excel upload for 50,000 records. What should the design contain?"
+    expected_points:
+      - "Check standard mass functionality first."
+      - "Versioned input schema and pre-validation."
+      - "Asynchronous chunked processing."
+      - "Supported target business interface."
+      - "Record-level errors, safe retry, traceability, and reconciliation."
+  - prompt: "A staging-table load completed without errors. Is the migration done?"
+    expected_points:
+      - "No. Staging success only proves intermediate data movement."
+      - "Migration processing, target creation, reconciliation, and downstream process proof are still required."
+
+relations:
+  - subject: DOM-DATA-INTEGRATION
+    predicate: contains
+    object: CAP-DATA-INITIAL-MIGRATION
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: DOM-DATA-INTEGRATION
+    predicate: contains
+    object: CAP-DATA-CONTROLLED-BULK-LOAD
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: APP-S4-MIGRATE-YOUR-DATA
+    predicate: provides_capability
+    object: CAP-DATA-INITIAL-MIGRATION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MIGRATE-YOUR-DATA-S4-2025, SRC-SAP-MIGRATE-YOUR-DATA-CLOUD-2608]
+  - subject: APP-S4-MIGRATE-YOUR-DATA
+    predicate: contains
+    object: CFG-S4-MIGRATION-PROJECT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MIGRATION-PROJECTS-S4-2025]
+  - subject: CFG-S4-MIGRATION-PROJECT
+    predicate: contains
+    object: CFG-S4-MIGRATION-OBJECT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MIGRATE-YOUR-DATA-S4-2025]
+  - subject: APP-S4-MIGRATE-YOUR-DATA
+    predicate: integrated_via
+    object: INT-S4-MIGRATION-STAGING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MIGRATION-STAGING-S4-2025]
+  - subject: APP-S4-MIGRATE-YOUR-DATA
+    predicate: integrated_via
+    object: INT-S4-MIGRATION-DIRECT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MIGRATION-DIRECT-CLOUD-2608]
+  - subject: APP-S4-MIGRATION-OBJECT-MODELER
+    predicate: updates
+    object: CFG-S4-MIGRATION-OBJECT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MIGRATION-OBJECT-MODELER-S4-2025, SRC-SAP-MIGRATION-MODELER-CLOUD-2608]
+  - subject: APP-CUSTOM-DATA-LOADER
+    predicate: provides_capability
+    object: CAP-DATA-CONTROLLED-BULK-LOAD
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: APP-CUSTOM-DATA-LOADER
+    predicate: controlled_by
+    object: CTRL-DATA-LOAD-PREVALIDATION
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: APP-CUSTOM-DATA-LOADER
+    predicate: controlled_by
+    object: CTRL-DATA-LOAD-IDEMPOTENCY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: APP-CUSTOM-DATA-LOADER
+    predicate: controlled_by
+    object: CTRL-DATA-LOAD-TRACEABILITY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: APP-CUSTOM-DATA-LOADER
+    predicate: controlled_by
+    object: CTRL-DATA-LOAD-RECONCILIATION
+    evidence_type: expert_heuristic
+    confidence: high
+
+source_refs:
+  - SRC-SAP-MIGRATE-YOUR-DATA-S4-2025
+  - SRC-SAP-MIGRATION-STAGING-S4-2025
+  - SRC-SAP-MIGRATION-OBJECT-MODELER-S4-2025
+  - SRC-SAP-MIGRATION-PROJECTS-S4-2025
+  - SRC-SAP-MIGRATION-OBJECTS-S4
+  - SRC-SAP-MIGRATE-YOUR-DATA-CLOUD-2608
+  - SRC-SAP-MIGRATION-DIRECT-CLOUD-2608
+  - SRC-SAP-MIGRATION-MODELER-CLOUD-2608
+  - SRC-SAP-MIGRATION-STAGING-CLOUD-2608
+
+tags:
+  - sap
+  - s4hana
+  - data-integration
+  - data-migration
+  - migration-cockpit
+  - bulk-load
+  - cutover
+  - rap
+  - cap
+  - logistics
