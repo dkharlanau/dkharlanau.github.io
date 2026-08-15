@@ -1,0 +1,388 @@
+id: EWM-CONTROL-PLANE
+title: "EWM Determination & Control Plane"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+summary: >-
+  A diagnostic map of the main EWM determinations. It explains which input context controls
+  warehouse-task behavior, source and destination selection, multi-step storage, outbound
+  grouping, work packaging, shipping locations, packing, replenishment, and production staging.
+
+lead_rule: >-
+  When EWM chooses the wrong process, stock, bin or work package, I reproduce the exact request,
+  product, stock, warehouse and execution context. I then trace the first wrong determination.
+  Manual correction of the final bin or task is evidence, not a design solution.
+
+runtime_path: "REQUEST → WPT → STORAGE PROCESS → SOURCE / DESTINATION → WAVE → WT → WOCR / QUEUE → RESOURCE → STAGE / DOOR / PACK → CONFIRM"
+
+controls:
+  - id: DET-EWM-WPT
+    title: "Warehouse Process Type Determination"
+    question: "What kind of warehouse task behavior should this request item use?"
+    purpose: >-
+      The Warehouse Process Type is a central process-control result. It influences how a
+      warehouse task is processed and participates in later storage and execution decisions.
+    typical_inputs:
+      - "warehouse number"
+      - "delivery / warehouse-request document type"
+      - "item type"
+      - "process indicator or special-process context"
+      - "priority or scenario-specific inputs where configured"
+    output:
+      - "Warehouse Process Type"
+    downstream:
+      - "WT behavior"
+      - "storage-process / storage-control context"
+      - "putaway and stock-removal determination context"
+      - "activity / work execution"
+    first_checks:
+      - "document and item type"
+      - "actual WPT on the warehouse request"
+      - "determination entry and fallback"
+      - "manual/custom override"
+    source_refs: [SRC-SAP-EWM-WPT-DETERMINATION, SRC-SAP-EWM-OUTBOUND-WR-GENERATION]
+
+  - id: DET-EWM-STORAGE-PROCESS
+    title: "Storage Process / POSC Determination"
+    question: "Which business process steps must happen between source and final destination?"
+    purpose: >-
+      Process-Oriented Storage Control adds business steps such as unloading, deconsolidation,
+      quality, VAS, packing or staging before the final stock movement is complete.
+    typical_inputs:
+      - "Warehouse Process Type"
+      - "warehouse request / delivery context"
+      - "HU/process context"
+      - "configured storage process"
+    output:
+      - "ordered external process steps"
+    downstream:
+      - "intermediate warehouse tasks"
+      - "work-center processing"
+      - "VAS / quality / packing steps"
+    first_checks:
+      - "WPT and storage-process assignment"
+      - "expected external steps"
+      - "work-center determination"
+      - "step status on the HU/task chain"
+    source_refs: [SRC-SAP-EWM-STORAGE-CONTROL, SRC-SAP-EWM-POSC]
+
+  - id: DET-EWM-LOSC
+    title: "Layout-Oriented Storage Control"
+    question: "Does the physical layout require an intermediate movement point?"
+    purpose: >-
+      LOSC adds layout-driven intermediate movements when source and destination cannot be
+      connected directly, for example through an identification point or conveyor handoff.
+    typical_inputs:
+      - "source and destination storage type/bin"
+      - "warehouse layout"
+      - "intermediate storage type / identification point"
+      - "HU and movement context"
+    output:
+      - "layout-oriented intermediate step"
+    downstream:
+      - "additional WT"
+      - "MFS / automation handoff where relevant"
+    first_checks:
+      - "source/destination combination"
+      - "LOSC configuration"
+      - "intermediate bin availability"
+      - "whether POSC already created a process step"
+    source_refs: [SRC-SAP-EWM-STORAGE-CONTROL, SRC-SAP-EWM-LOSC]
+
+  - id: DET-EWM-PUTAWAY-STORAGE-TYPE
+    title: "Putaway Storage Type Search"
+    question: "In which storage type should EWM search for the destination?"
+    purpose: "Select the destination storage-type sequence before finding the final bin."
+    typical_inputs:
+      - "putaway control indicator"
+      - "Warehouse Process Type"
+      - "stock type / stock usage"
+      - "quantity classification"
+      - "party entitled to dispose where relevant"
+      - "warehouse-specific product settings"
+    output:
+      - "storage type or storage-type search sequence"
+    downstream:
+      - "storage section search"
+      - "bin-type / bin search"
+      - "putaway strategy execution"
+    first_checks:
+      - "warehouse product putaway indicators"
+      - "WPT"
+      - "stock attributes"
+      - "search sequence and storage-type settings"
+    source_refs: [SRC-SAP-EWM-PUTAWAY-STRATEGIES]
+
+  - id: DET-EWM-PUTAWAY-BIN
+    title: "Putaway Bin Determination"
+    question: "Which exact destination bin is valid and preferred?"
+    purpose: >-
+      Apply the putaway strategy inside the selected storage type, for example fixed bin,
+      addition to existing stock, empty-bin search, near fixed picking bin, pallet or bulk storage.
+    typical_inputs:
+      - "selected storage type"
+      - "putaway strategy"
+      - "storage section"
+      - "bin type / HU type"
+      - "capacity and stock state"
+      - "product master / slotting attributes"
+    output:
+      - "destination storage bin"
+    downstream:
+      - "putaway warehouse task"
+    first_checks:
+      - "strategy on storage type"
+      - "product/bin compatibility"
+      - "capacity and blocks"
+      - "slotting-derived attributes"
+    source_refs: [SRC-SAP-EWM-PUTAWAY-STRATEGIES]
+
+  - id: DET-EWM-STOCK-REMOVAL-SEQUENCE
+    title: "Stock Removal Storage Type Search"
+    question: "Where should EWM search for stock?"
+    purpose: >-
+      Determine the storage-type search sequence for picking or internal stock removal before
+      selecting the best quant or HU.
+    typical_inputs:
+      - "Warehouse Process Type / WPT group"
+      - "stock removal control indicator"
+      - "warehouse task context"
+      - "product and stock attributes"
+    output:
+      - "stock-removal storage-type search sequence"
+    downstream:
+      - "stock selection"
+      - "source-bin determination"
+    first_checks:
+      - "actual SRCI / WPT group"
+      - "search-sequence assignment"
+      - "eligible storage types"
+      - "fallback/wildcard entry"
+    source_refs: [SRC-SAP-EWM-STOCK-REMOVAL]
+
+  - id: DET-EWM-STOCK-REMOVAL-RULE
+    title: "Stock / Quant Selection"
+    question: "Which eligible stock should be removed first?"
+    purpose: >-
+      Sort and select stock within the eligible storage types using a removal rule and stock
+      determination, for example FIFO, shelf-life or quantity-oriented selection.
+    typical_inputs:
+      - "storage type / group"
+      - "stock-removal rule"
+      - "stock determination group"
+      - "GR date / SLED / quantity / stock type"
+      - "batch and ownership attributes where relevant"
+    output:
+      - "selected stock / quant / HU and source bin"
+    downstream:
+      - "picking or internal-movement WT"
+    first_checks:
+      - "eligible stock actually available"
+      - "removal rule"
+      - "stock type / batch / SLED"
+      - "blocked bins or HUs"
+    source_refs: [SRC-SAP-EWM-STOCK-REMOVAL, SRC-SAP-EWM-STOCK-DETERMINATION]
+
+  - id: DET-EWM-WAVE
+    title: "Wave Assignment & Release"
+    question: "Which outbound items should be processed together, and when should picking work start?"
+    purpose: "Group outbound request items into operational time windows and release them for WT creation."
+    typical_inputs:
+      - "outbound delivery order"
+      - "route / departure and cutoff context"
+      - "activity area / warehouse process"
+      - "wave template / condition context"
+    output:
+      - "wave assignment and release time"
+    downstream:
+      - "warehouse-task creation"
+      - "outbound workload timing"
+    first_checks:
+      - "wave assignment"
+      - "release status"
+      - "template/cutoff"
+      - "whether WT creation is wave-dependent in this process"
+    source_refs: [SRC-SAP-EWM-WAVE, SRC-SAP-EWM-OUTBOUND-WR-GENERATION]
+
+  - id: DET-EWM-WOCR
+    title: "Warehouse Order Creation Rule"
+    question: "How should warehouse tasks be grouped into executable work packages?"
+    purpose: >-
+      Apply warehouse-order creation rules and limit/sort/filter criteria to create WOs that
+      can be assigned to resources. Remainder or standard rules can apply when custom rules do not.
+    typical_inputs:
+      - "warehouse tasks"
+      - "activity area"
+      - "queue"
+      - "consolidation group / delivery context"
+      - "WOCR search sequence"
+      - "size / weight / duration limits"
+    output:
+      - "Warehouse Order"
+    downstream:
+      - "queue/resource execution"
+      - "RF / Labor Management"
+    first_checks:
+      - "WOCR actually used"
+      - "activity area and queue"
+      - "limit values"
+      - "remainder/standard rule"
+    source_refs: [SRC-SAP-EWM-WO-CREATION, SRC-SAP-EWM-WAREHOUSE-ORDER]
+
+  - id: DET-EWM-QUEUE
+    title: "Queue / Resource Work Selection"
+    question: "Which execution channel or resource should receive the work?"
+    purpose: "Connect warehouse orders with resources and operational work queues."
+    typical_inputs:
+      - "warehouse order"
+      - "activity area"
+      - "source/destination context"
+      - "resource type/group and allowed queues"
+      - "execution mode / RF context"
+    output:
+      - "queue and executable resource context"
+    downstream:
+      - "RF or equipment execution"
+      - "Labor Management workload"
+    first_checks:
+      - "queue on WO"
+      - "resource queue access"
+      - "resource type/group"
+      - "current assignment / mode"
+    source_refs: [SRC-SAP-EWM-WAREHOUSE-ORDER, SRC-SAP-EWM-LABOR]
+
+  - id: DET-EWM-STAGING-DOOR
+    title: "Staging Area & Door Determination"
+    question: "Where should goods wait and through which door should loading or unloading happen?"
+    purpose: >-
+      Determine staging-area groups/areas/bays and doors for inbound or outbound delivery execution.
+    typical_inputs:
+      - "delivery"
+      - "warehouse and shipping/receiving context"
+      - "route / transport context where relevant"
+      - "staging-area / door determination groups"
+    output:
+      - "staging area / bay"
+      - "warehouse door"
+    downstream:
+      - "staging WT"
+      - "loading/unloading"
+      - "ASR / shipping execution"
+    first_checks:
+      - "delivery determination result"
+      - "door/staging assignments"
+      - "loading point in ASR"
+      - "manual override"
+    source_refs: [SRC-SAP-EWM-STAGING-DOOR, SRC-SAP-EWM-ASR-PREREQ]
+
+  - id: DET-EWM-PACK-SPEC
+    title: "Packaging Specification Determination"
+    question: "Which packing structure and instructions should apply?"
+    purpose: >-
+      Determine packaging master data used by packing, VAS, package building or putaway-related
+      processes. Packaging specifications can define levels, quantities and packaging materials.
+    typical_inputs:
+      - "product"
+      - "vendor/customer/process characteristics"
+      - "condition / determination context"
+      - "validity and packaging-specification group"
+    output:
+      - "Packaging Specification"
+    downstream:
+      - "HU creation / packing"
+      - "VAS"
+      - "putaway task split or package building where relevant"
+    first_checks:
+      - "determination business key"
+      - "validity"
+      - "packing levels and target quantities"
+      - "process that requested the packaging specification"
+    source_refs: [SRC-SAP-EWM-PACK-SPEC-CREATION, SRC-SAP-EWM-PACKAGING-SPEC]
+
+  - id: DET-EWM-REPLENISHMENT
+    title: "Replenishment Trigger & Quantity"
+    question: "When and how much stock should move from reserve to the picking area?"
+    purpose: "Create warehouse replenishment work based on the selected replenishment method and stock situation."
+    typical_inputs:
+      - "warehouse product replenishment settings"
+      - "minimum / maximum quantity"
+      - "open demand"
+      - "fixed bin / picking storage type"
+      - "available reserve stock"
+    output:
+      - "replenishment requirement / warehouse task"
+    downstream:
+      - "picking-area stock availability"
+    first_checks:
+      - "replenishment method"
+      - "min/max or demand trigger"
+      - "source-stock eligibility"
+      - "WT creation/execution"
+    source_refs: [SRC-SAP-EWM-REPLENISHMENT]
+
+  - id: DET-EWM-PRODUCTION-STAGING
+    title: "Production Staging / PSA Determination"
+    question: "Which production demand, PSA and staging model should EWM execute?"
+    purpose: >-
+      Translate production or MES demand into warehouse staging using the selected production
+      integration type and the PSA/product/bin mapping.
+    typical_inputs:
+      - "production integration type"
+      - "production/process order or MES request"
+      - "product and quantity"
+      - "PSA"
+      - "staging method / WPT"
+    output:
+      - "staging requirement / PMR context"
+      - "PSA / destination bin"
+      - "warehouse tasks"
+    downstream:
+      - "production consumption"
+      - "line-side availability"
+    first_checks:
+      - "integration type"
+      - "PSA/product/bin mapping"
+      - "PMR/staging request"
+      - "WPT and WT"
+    source_refs: [SRC-SAP-EWM-PRODUCTION-SUPPLY, SRC-SAP-EWM-PRODUCTION-INTEGRATION]
+
+control_layers:
+  - layer: "Business demand"
+    examples: ["delivery type/item", "production request", "internal replenishment need"]
+    question: "What business event asked the warehouse to work?"
+  - layer: "Process control"
+    examples: ["Warehouse Process Type", "storage process", "POSC/LOSC"]
+    question: "What kind of work and process steps are required?"
+  - layer: "Stock/location strategy"
+    examples: ["putaway search", "stock-removal search", "removal rule"]
+    question: "Where should stock come from or go to?"
+  - layer: "Work orchestration"
+    examples: ["wave", "WOCR", "queue", "resource"]
+    question: "When and by whom should the work be executed?"
+  - layer: "Shipping/packing/production context"
+    examples: ["door/staging", "pack spec", "PSA"]
+    question: "Which physical interface or handling requirement completes the process?"
+
+impact_traces:
+  - title: "Wrong WPT"
+    path: "Delivery item → wrong WPT → wrong storage process / strategy context → wrong WT behavior"
+    lesson: "Do not repair the final WT before proving WPT determination."
+  - title: "Wrong stock-removal indicator"
+    path: "Warehouse product → search sequence → removal rule → selected quant/bin → picking travel / shelf-life outcome"
+    lesson: "A picking complaint may originate in warehouse product master data, not the delivery."
+  - title: "Wrong activity area"
+    path: "Bin assignment/sorting → WT activity area → WOCR/queue → resource work sequence"
+    lesson: "Physical-bin grouping can become a labor and execution problem downstream."
+  - title: "Wrong staging/door"
+    path: "Delivery / transport context → staging/door determination → staging WT → loading readiness → transport delay"
+    lesson: "Warehouse and transportation delays can originate in one determination before loading."
+  - title: "Wrong PSA mapping"
+    path: "Production request → PSA/bin → staging WT → line-side stock → production interruption"
+    lesson: "A warehouse staging defect can stop manufacturing even when plant stock is sufficient."
+
+lead_anti_patterns:
+  - "Changing a final bin manually without understanding the search sequence."
+  - "Treating Warehouse Process Type as just another code instead of a central process-control result."
+  - "Mixing POSC business steps with LOSC physical-layout steps."
+  - "Debugging WT creation before checking wave release when the outbound process is wave-controlled."
+  - "Changing WOCR when the real issue is an incorrect activity area or queue."
+  - "Treating packaging, staging/door, or PSA determination as isolated master-data problems when they drive physical execution."
