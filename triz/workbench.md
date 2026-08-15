@@ -223,7 +223,7 @@ tags: [triz, workshop, problem-solving, architecture, sap, business-processes, a
     <a href="/datasets/triz-digital-framework/decision-map.json"><span>MAP</span><strong>Decision map</strong><small>Contradiction → operators → patterns → resource focus → experiment metrics.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
     <a href="/datasets/triz-digital-framework/workbench-presets.json"><span>PRE</span><strong>Synthetic presets</strong><small>SAP Sales, Procurement, master data, integration, AI operations, and global/local process cases.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
     <a href="/datasets/triz-digital-framework/reasoning-schema.json"><span>JSON</span><strong>Reasoning schema</strong><small>Structured contract for a deeper agent analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-    <a href="/agent-skills/skills/triz-digital-problem-solving/SKILL.md"><span>SKILL</span><strong>Agent workflow</strong><small>Operational instructions for contradiction-driven problem solving.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+    <a href="https://github.com/dkharlanau/dkharlanau.github.io/blob/main/agent-skills/skills/triz-digital-problem-solving/SKILL.md"><span>SKILL</span><strong>Agent workflow</strong><small>Operational instructions for contradiction-driven problem solving.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
   </div>
 </section>
 
