@@ -1,0 +1,198 @@
+---
+layout: default
+title: "SAP Sales Pricing Delivery & Operations — Enterprise Context Lab"
+description: "A practical SAP Sales pricing operating model for workshops, migration, cutover, mass maintenance, governance, performance and production support."
+permalink: /labs/enterprise-context/pricing/operations/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags: [sap-s4hana, sap-sd, pricing, migration, cutover, governance, support, operations]
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.pricing_operations %}
+{% assign evidence = site.data.labs.enterprise_context.sources.pricing_operations %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/pricing/">Pricing</a></li><li aria-current="page">Delivery & Operations</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Pricing Delivery & Operations</p>
+      <h1>A price is not live<br />because Customizing is done.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#lifecycle">Follow the delivery lifecycle <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Pricing operations inventory">
+      <p>Operating model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.delivery_lifecycle | size }}</strong><small>Lifecycle stages</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.migration_cutover.steps | size }}</strong><small>Cutover steps</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.production_runbook.steps | size }}</strong><small>Incident steps</small></div>
+      <em>{{ graph.memory_path }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+    <p><strong>Boundary:</strong> SAP sources verify product behavior, tools and release-specific limits. The workshop, cutover and support methods are my operating model, not SAP methodology.</p>
+    <a href="/labs/enterprise-context/data/pricing-operations.json">Open operations JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Pricing stack</p><h2>Six views of the same pricing problem.</h2><p>Each page answers a different question. I do not mix runtime diagnosis, configuration design, commercial scenarios and production ownership into one giant diagram.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/pricing/"><span>01</span><strong>Pricing Engine</strong><small>Runtime path and diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/enterprise-context/pricing/anatomy/"><span>02</span><strong>Pricing Anatomy</strong><small>Rates, bases, scales and interaction.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/pricing/configuration/"><span>03</span><strong>Configuration Playbook</strong><small>Build order and design guardrails.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
+      <a href="/labs/enterprise-context/pricing/scenarios/"><span>04</span><strong>Advanced Scenarios</strong><small>Commercial mechanism selection.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/enterprise-context/pricing/casebook/"><span>05</span><strong>Pricing Casebook</strong><small>Worked calculations and proof paths.</small><i class="material-symbols-outlined" aria-hidden="true">calculate</i></a>
+      <a href="#lifecycle"><span>06</span><strong>Delivery & Operations</strong><small>Workshop to cutover, maintenance and support.</small><i class="material-symbols-outlined" aria-hidden="true">engineering</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="lifecycle" data-reveal>
+    <header><p class="research-canvas__eyebrow">Delivery lifecycle</p><h2>DISCOVER → DESIGN → BUILD → LOAD → CUTOVER → OPERATE → IMPROVE</h2><p>The point is not project ceremony. Each stage closes one pricing risk before the next stage makes it harder and more expensive to change.</p></header>
+    <div class="ecg-determination-list">
+      {% for stage in graph.delivery_lifecycle %}
+      <article class="ecg-determination-detail">
+        <header><div><span>0{{ stage.order }}</span><small>{{ stage.key }}</small></div><h3>{{ stage.title }}</h3><p class="ecg-question">{{ stage.question }}</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Outputs</h4><ul>{% for value in stage.outputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Exit criterion</h4><p>{{ stage.exit_criteria }}</p></div>
+          <div><h4>Lead check</h4><p>Do not advance because a task is technically closed. Advance when the next team can prove what it inherited.</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Workshop</p><h2>Design the operating model while the rule is still cheap to change.</h2><p>A pricing workshop should produce more than condition types. I want commercial examples, owners, keys, clocks, volume and production proof.</p></header>
+    <div class="ecg-drill-list">
+      {% for item in graph.workshop_model %}
+      <details>
+        <summary><span>0{{ item.order }}</span><strong>{{ item.title }}</strong><small>{{ item.deliverable }}</small></summary>
+        <div><p>Questions to resolve</p><ul>{% for value in item.questions %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Condition data movement</p><h2>Migration, mass maintenance and integration are different contracts.</h2><p>All three can create condition records. That does not make them interchangeable.</p></header>
+    <div class="ecg-heuristic-grid">
+      {% for mode in graph.data_movement_modes %}
+      <article><span>{{ mode.mode }}</span><h3>{{ mode.use_when }}</h3><h4>Patterns</h4><ul>{% for value in mode.tools_or_patterns %}<li>{{ value }}</li>{% endfor %}</ul><h4>Controls</h4><ul>{% for value in mode.controls %}<li>{{ value }}</li>{% endfor %}</ul><p><strong>Not for:</strong> {{ mode.not_for }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Cutover board</p><h2>Record counts are necessary. Correct prices are the real acceptance test.</h2><p>{{ graph.migration_cutover.principles[3].why }}</p></header>
+    <div class="ecg-control-stack">
+      {% for principle in graph.migration_cutover.principles %}
+      <article><span>PRINCIPLE</span><h3>{{ principle.rule }}</h3><p>{{ principle.why }}</p></article>
+      {% endfor %}
+    </div>
+    <div class="ecg-determination-list">
+      {% for step in graph.migration_cutover.steps %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{{ step.phase }}</span><small>cutover</small></div><h3>{{ step.title }}</h3><p class="ecg-question">Evidence required before the next step.</p></header>
+        <div class="ecg-decision-columns"><div><h4>Proof</h4><ul>{% for value in step.proof %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Why</h4><p>Keep population, error and business-result evidence together. A clean technical load can still produce the wrong commercial result.</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Governance</p><h2>Split commercial authority from technical authority.</h2><p>One person can wear several hats in a small team, but the responsibilities should still be visible.</p></header>
+    <div class="ecg-heuristic-grid">
+      {% for role in graph.maintenance_governance.roles %}
+      <article><span>ROLE</span><h3>{{ role.role }}</h3><h4>Owns</h4><ul>{% for value in role.owns %}<li>{{ value }}</li>{% endfor %}</ul><p><strong>Should not own:</strong> {{ role.should_not_own }}</p></article>
+      {% endfor %}
+    </div>
+    <div class="ecg-control-stack">
+      {% for control in graph.maintenance_governance.controls %}
+      <article><span>{{ control.control }}</span><h3>{{ control.rule }}</h3></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Volume and performance</p><h2>Make population size part of the design.</h2><p>Limits below are deliberately marked as release-specific where SAP documents them. They are product facts, not magic project batch sizes.</p></header>
+    <div class="ecg-determination-list">
+      {% for item in graph.performance_guardrails %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if item.release_specific %}RELEASE{% else %}DESIGN{% endif %}</span><small>guardrail</small></div><h3>{{ item.topic }}</h3><p class="ecg-question">{{ item.guidance }}</p></header>
+        <div class="ecg-decision-columns">
+          {% if item.documented_limit %}<div><h4>Documented value</h4><p><strong>{{ item.documented_limit }}</strong> {{ item.unit }}</p></div>{% endif %}
+          <div><h4>Lead use</h4><p>{{ item.lead_use }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Production incident runbook</p><h2>{{ graph.production_runbook.memory_path }}</h2><p>Do not start by changing a condition record. First preserve evidence and identify the affected population.</p></header>
+    <div class="ecg-determination-list">
+      {% for step in graph.production_runbook.steps %}
+      <article class="ecg-determination-detail">
+        <header><div><span>0{{ step.order }}</span><small>incident</small></div><h3>{{ step.title }}</h3><p class="ecg-question">{{ step.proof }}</p></header>
+        <div class="ecg-decision-columns"><div><h4>Actions</h4><ul>{% for value in step.actions %}<li>{{ value }}</li>{% endfor %}</ul></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Root-cause classes</p><h2>A pricing incident needs an owner before it needs a fix.</h2><p>These classes stop data, configuration, integration and accounting conversations from collapsing into one vague “pricing issue”.</p></header>
+    <div class="ecg-heuristic-grid">
+      {% for item in graph.incident_classes %}
+      <article><span>{{ item.owner }}</span><h3>{{ item.first_question }}</h3><ul>{% for value in item.signals %}<li>{{ value }}</li>{% endfor %}</ul></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Go-live gates</p><h2>Seven sign-offs before pricing becomes somebody else's production problem.</h2><p>A checkbox is weak evidence. Each gate should have a document, test result, population or named owner behind it.</p></header>
+    <div class="ecg-control-stack">
+      {% for gate in graph.go_live_checklist %}
+      <article><span>{{ gate.gate }}</span><ul>{% for value in gate.checks %}<li>{{ value }}</li>{% endfor %}</ul></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment drills</p><h2>Answer as a workstream owner, not as a transaction manual.</h2><p>The expected reasoning includes data volume, ownership, cutover, diagnostics and regression. SAP configuration is only one part.</p></header>
+    <div class="ecg-drill-list">
+      {% for drill in graph.assessment_drills %}
+      <details><summary><span>0{{ forloop.index }}</span><strong>{{ drill.prompt }}</strong><small>Lead reasoning</small></summary><div><ol>{% for value in drill.expected_reasoning %}<li>{{ value }}</li>{% endfor %}</ol></div></details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence</p><h2>Product facts stay source-tracked.</h2><p>Sources cover price maintenance, mass creation, migration objects, approval workflows, APIs, access sequences, pricing analysis and pricing-element analytics. Project methods above are independently written.</p></header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div><p class="research-canvas__eyebrow">For tools and AI</p><h2>Delivery and support logic is machine-readable.</h2><p>Lifecycle stages, workshop questions, movement modes, cutover steps, governance roles, limits, runbook and assessment drills are exposed as structured data.</p></div>
+    <div class="ecg-machine__actions"><a class="research-canvas__button" href="/labs/enterprise-context/data/pricing-operations.json">Operations JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a><a href="/labs/enterprise-context/data/pricing-operations-sources.json">Operations sources JSON</a></div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
