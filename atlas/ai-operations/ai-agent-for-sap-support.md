@@ -74,6 +74,10 @@ sitemap: true
   </aside>
 
   <div class="note-body">
+    <h2>The problem this architecture solves</h2>
+    <p>SAP support work is expensive when every incident starts with the same manual search: find the document, collect logs, identify the process owner, search old tickets, and decide which evidence matters. The problem is not a lack of chat. It is repeated context reconstruction across systems, teams, and years of operational history.</p>
+    <p>An AI assistant can reduce that reconstruction work, but only if it respects access, evidence quality, and process ownership. Without those controls it may produce a faster answer while making the support decision less trustworthy.</p>
+
     <h2>Start with the support decision, not with the agent</h2>
     <p>“Build an SAP support agent” is too vague to be an architecture. A better starting point is a small support decision: classify an incident, collect missing evidence, find the right runbook, compare a failing document with a known pattern, or prepare an escalation.</p>
     <p>Once the decision is clear, the role of AI becomes easier to control. It can read more context than a person has time to read, structure the evidence, and suggest the next check. That is useful. Quietly changing ERP data because a language model found a plausible answer is a different category of risk.</p>
