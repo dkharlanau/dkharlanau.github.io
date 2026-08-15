@@ -1,0 +1,378 @@
+id: TOPIC-ABAP-RUNTIME-UI-TOOLKIT
+type: research_topic
+title: "ABAP Runtime and UI Toolkit: Logs, Lists and Fiori Choices"
+summary: "A practical map of ABAP utilities and UI approaches: Business Application Log, ALV and SALV, diagnostics, RAP, Fiori elements and freestyle SAPUI5. The focus is not API memory. It is choosing the right tool for the support and user problem."
+domain: "SAP Technical Architecture"
+process_family: "ABAP application support, reporting and user experience"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+reviewed_together_at: "2026-08-15"
+
+lead_thesis:
+  - "Start from the lifecycle of the information. A business log that support must find tomorrow is different from a developer trace used for ten minutes."
+  - "Do not rebuild a SAP GUI ALV screen in a browser only because Fiori is modern. Keep a working GUI report when the user, lifecycle and economics still fit."
+  - "For a new standard business-object UI, prefer metadata-driven Fiori elements before writing a large freestyle SAPUI5 application."
+  - "RAP owns business behavior and service exposure. Fiori elements owns a standard UI floorplan. SAPUI5 owns browser-side interaction. These layers work together; they are not competing frameworks."
+  - "A Lead should know the operational consequence of the choice: who can support it, how errors are found, what is persisted, and which channel the user needs."
+
+selection_questions:
+  - "Does the information need to survive the current request or job?"
+  - "Who needs it: end user, support team, developer, batch operator, or integration team?"
+  - "Is the UI SAP GUI, browser/Fiori, mobile/scanner, or headless API?"
+  - "Is the list read-only, interactive, or a real mass-maintenance transaction?"
+  - "Does the user need a standard list/object page or a genuinely custom interaction model?"
+  - "Is the solution on classic ABAP, ABAP Cloud, or a mixed S/4HANA landscape?"
+
+utility_groups:
+  - id: UTIL-BAL
+    title: "Business Application Log (BAL)"
+    purpose: "Persist business and process messages so support can find and understand what happened after the request has finished."
+    use_when:
+      - "A background job processes many business objects and support needs one searchable history."
+      - "An interface creates or changes sales, delivery, purchasing or master-data documents and business errors must be traceable."
+      - "A process has warnings, skipped records or partial results that should not disappear with the user session."
+    do_not_use_when:
+      - "You only need a short technical trace for debugging."
+      - "You are about to write a message for every row of a very large loop without a support use case."
+      - "The real problem is an ABAP dump, SQL bottleneck or system-level error that belongs in diagnostic tools."
+    key_concepts:
+      - "Log object: stable application area used to classify logs."
+      - "Subobject: smaller process or scenario inside the log object."
+      - "External ID: business correlation key such as delivery, purchase order, run ID or interface message ID."
+      - "Messages and exceptions: what happened, with severity and useful business context."
+      - "Persistence: decide whether the log is temporary in memory or saved for later analysis."
+    classic_abap:
+      create: "BAL_LOG_CREATE"
+      add_message: "BAL_LOG_MSG_ADD"
+      add_exception: "BAL_LOG_EXCEPTION_ADD"
+      display_memory: "BAL_DSP_LOG_DISPLAY"
+      save_database: "BAL_DB_SAVE"
+      analyze: "SLG1"
+      lead_note: "Classic BAL is still a normal choice in S/4HANA on-premise and private-cloud custom code. Wrap the calls behind an application logger instead of spreading function modules through business logic."
+    abap_cloud:
+      api: "XCO Business Application Log module"
+      lead_note: "In ABAP Cloud, use released APIs such as the XCO BAL abstractions available for the target environment. Do not copy classic unreleased patterns into cloud code."
+    fields_to_design:
+      - "Object and subobject with names that support teams can understand."
+      - "External ID that connects the log to a business document or technical correlation ID."
+      - "Message severity: success, information, warning or error."
+      - "Message class/number and variables when message-based logging is used."
+      - "Context only when it helps diagnosis; avoid passwords, tokens and unnecessary personal data."
+      - "Retention and deletion approach for high-volume logs."
+    logistics_example: "Outbound delivery integration: one log per interface request. External ID = message ID or delivery. Log start, validation result, document key, warnings and final status. Do not log every successful field mapping."
+    source_refs: [SRC-ABAP-BAL-BASICS, SRC-ABAP-BAL-DB, SRC-ABAP-BAL-ANALYZE, SRC-ABAP-XCO-BAL]
+
+  - id: UTIL-SALV
+    title: "SALV object model"
+    purpose: "Build a standard SAP GUI list quickly when users mainly need to view, sort, filter, aggregate and export structured data."
+    use_when:
+      - "A report is mainly read-only."
+      - "You want a small amount of ABAP for a standard table, tree or hierarchical list."
+      - "The existing user workflow is SAP GUI and a browser migration has no business value."
+    do_not_use_when:
+      - "The screen is a complex editing transaction."
+      - "The requirement is a new strategic browser or mobile application."
+    main_classes:
+      - "CL_SALV_TABLE for a simple two-dimensional table."
+      - "CL_SALV_HIERSEQ_TABLE for hierarchical-sequential output."
+      - "CL_SALV_TREE for a tree."
+    lead_note: "SALV is a good default for a compact read-oriented SAP GUI report. It keeps standard ALV functions without making the program a small UI framework of its own."
+    logistics_example: "Sales order exception list for a support user: selection screen plus SALV table, status icons, filters and navigation to the business object."
+    source_refs: [SRC-ABAP-SALV-MAIN]
+
+  - id: UTIL-ALV-GRID
+    title: "ALV Grid Control"
+    purpose: "Provide a richer SAP GUI grid when the application needs custom events, controls or an established editable-grid pattern."
+    use_when:
+      - "A mature SAP GUI application already uses ALV Grid and the workflow is still valid."
+      - "The grid needs interaction that a simple SALV report cannot provide."
+      - "A controlled mass-maintenance use case is intentionally implemented in SAP GUI."
+    cautions:
+      - "CL_GUI_ALV_GRID belongs to the SAP GUI Control Framework and has frontend/channel constraints."
+      - "Editable-grid scenarios need careful validation, save logic and released API checks. Do not assume every method is released for customer use."
+      - "A grid is not a business object model. Keep validation and update rules outside UI event handlers where possible."
+    lead_note: "Do not choose ALV Grid because 'we always used it'. Choose it because the SAP GUI interaction still fits. Also do not rewrite a stable ALV into Fiori just to change the paint."
+    logistics_example: "Buyer mass-maintenance tool with controlled editable fields, validation protocol and explicit save. If the process is being redesigned for modern S/4HANA roles, re-evaluate Fiori instead of extending the grid forever."
+    source_refs: [SRC-ABAP-ALV-GRID, SRC-ABAP-ALV-RELEASE]
+
+  - id: UTIL-SALV-IDA
+    title: "ALV with Integrated Data Access (IDA)"
+    purpose: "Display large HANA-backed datasets while keeping selection, filtering and list operations close to the database."
+    use_when:
+      - "A large read-oriented list is still a SAP GUI requirement."
+      - "The target ABAP/HANA stack supports the required IDA functions."
+    lead_note: "Use it as a scale-oriented SAP GUI list option, not as a universal replacement for normal SALV. Check release and restrictions on the actual S/4HANA stack."
+    key_api: "CL_SALV_GUI_TABLE_IDA"
+    logistics_example: "Large historical delivery-item analysis where the user needs filtering and navigation but not transactional editing."
+    source_refs: [SRC-ABAP-SALV-IDA]
+
+  - id: UTIL-DIAGNOSTICS
+    title: "Diagnostics: trace, dump and performance tools"
+    purpose: "Analyze technical failures and performance problems with evidence instead of turning BAL into a debug file."
+    tools:
+      - name: "ST22"
+        use_for: "ABAP runtime errors and dumps."
+      - name: "SAT"
+        use_for: "ABAP runtime analysis and call-level performance evidence."
+      - name: "ST05"
+        use_for: "SQL and related technical traces when database or access behavior is in question."
+      - name: "SLG1 / Application Log"
+        use_for: "Business/process history that was deliberately logged by the application."
+    lead_note: "The question is not 'which log transaction do you know?'. The question is which evidence layer owns the problem."
+    source_refs: [SRC-ABAP-BAL-ANALYZE, SRC-TBX-ABAP-PERFORMANCE]
+
+  - id: UTIL-FIORI-ELEMENTS
+    title: "Fiori elements"
+    purpose: "Build standard enterprise UIs from OData metadata and annotations with less custom JavaScript."
+    use_when:
+      - "The application is a normal business-object list, object page, worklist, analytical page or form-oriented flow."
+      - "The service semantics and annotations can describe most of the UX."
+      - "Consistency and upgrade cost matter more than pixel-level freedom."
+    do_not_use_when:
+      - "The interaction is highly visual, device-specific or cannot be expressed cleanly with supported floorplans and extensions."
+    lead_note: "For a new standard S/4HANA business application, Fiori elements is usually my first UI check. Extend only where metadata and supported extension points are not enough."
+    source_refs: [SRC-ABAP-FIORI-ELEMENTS]
+
+  - id: UTIL-RAP-UI
+    title: "RAP service and behavior layer"
+    purpose: "Model transactional ABAP business objects, validations, determinations, actions and service exposure for modern ABAP applications."
+    layers:
+      - "CDS data model and projection."
+      - "Behavior definition and implementation for transactional rules."
+      - "Service definition for what is exposed."
+      - "Service binding for protocol and consumption, commonly OData UI or Web API scenarios."
+      - "Fiori elements can consume the UI service and use annotations for the screen."
+    lead_note: "Do not put business validation in the browser because it was convenient during a demo. The RAP business object owns business behavior; the UI consumes it."
+    logistics_example: "Custom logistics exception object: RAP owns status changes, validations and actions; service binding exposes OData; Fiori elements provides list/object pages."
+    source_refs: [SRC-ABAP-RAP-SERVICE, SRC-ABAP-RAP-TOOLS]
+
+  - id: UTIL-UI5-FREESTYLE
+    title: "Freestyle SAPUI5"
+    purpose: "Build a custom browser UI when the interaction model genuinely needs more control than Fiori elements provides."
+    use_when:
+      - "Scanner, map, visual planning, special keyboard interaction or other custom UX is central to the job."
+      - "The supported Fiori elements extension model would become more complex than a focused freestyle app."
+    cautions:
+      - "You own more JavaScript/TypeScript, state handling, UI tests and accessibility details."
+      - "Do not create a custom component library for standard Fiori behavior unless there is a real product need."
+    lead_note: "Freestyle is a deliberate cost decision. Freedom is useful, but somebody pays for every custom interaction during testing and upgrades."
+    source_refs: [SRC-ABAP-UI5-FREESTYLE]
+
+decision_matrix:
+  - need: "Persistent business/process history for support"
+    prefer: "BAL / Business Application Log"
+    avoid: "Developer trace files or ad-hoc Z tables as the first choice"
+    why: "The log has business classification, messages and searchable persistence."
+  - need: "Short technical investigation of runtime or SQL performance"
+    prefer: "SAT / ST05 and the relevant diagnostics"
+    avoid: "Adding thousands of BAL messages to reproduce a performance trace"
+    why: "Trace tools capture technical evidence at the correct layer."
+  - need: "Small read-only SAP GUI report"
+    prefer: "CL_SALV_TABLE"
+    avoid: "Custom dynpro grid framework"
+    why: "SALV gives standard list behavior with low code volume."
+  - need: "Large HANA-backed read list in SAP GUI"
+    prefer: "SALV IDA when supported and suitable"
+    avoid: "Loading a huge dataset into an internal table only to filter it later"
+    why: "IDA keeps more data access work close to HANA."
+  - need: "Existing complex or editable SAP GUI grid"
+    prefer: "ALV Grid when the GUI workflow remains justified"
+    avoid: "Forced rewrite with no business or lifecycle benefit"
+    why: "Migration is an architecture decision, not a fashion tax."
+  - need: "New standard business-object UI on modern ABAP"
+    prefer: "RAP + OData service + Fiori elements"
+    avoid: "Large freestyle UI5 application for ordinary CRUD"
+    why: "Business behavior stays in ABAP and the UI is mostly metadata-driven."
+  - need: "Highly custom browser or device interaction"
+    prefer: "Freestyle SAPUI5 with a stable service contract"
+    avoid: "Forcing a standard floorplan beyond its useful limits"
+    why: "Custom UX is valid when the job itself is custom."
+
+graph:
+  nodes:
+    - id: ABAP-BUSINESS-PROCESS
+      label: "ABAP business process"
+      kind: "application"
+    - id: BAL
+      label: "Business Application Log"
+      kind: "operations"
+    - id: SUPPORT
+      label: "Support / operations"
+      kind: "actor"
+    - id: SALV
+      label: "SALV"
+      kind: "sap-gui-ui"
+    - id: ALV-GRID
+      label: "ALV Grid"
+      kind: "sap-gui-ui"
+    - id: SALV-IDA
+      label: "SALV IDA"
+      kind: "sap-gui-ui"
+    - id: RAP
+      label: "RAP business object"
+      kind: "backend"
+    - id: ODATA
+      label: "OData service binding"
+      kind: "service"
+    - id: FIORI-ELEMENTS
+      label: "Fiori elements"
+      kind: "web-ui"
+    - id: UI5
+      label: "Freestyle SAPUI5"
+      kind: "web-ui"
+    - id: DIAGNOSTICS
+      label: "SAT / ST05 / ST22"
+      kind: "diagnostics"
+  edges:
+    - from: ABAP-BUSINESS-PROCESS
+      to: BAL
+      relation: "writes support-relevant process messages"
+    - from: SUPPORT
+      to: BAL
+      relation: "searches and analyzes persisted logs"
+    - from: ABAP-BUSINESS-PROCESS
+      to: DIAGNOSTICS
+      relation: "is investigated with technical evidence when needed"
+    - from: ABAP-BUSINESS-PROCESS
+      to: SALV
+      relation: "can expose read-oriented SAP GUI lists"
+    - from: ABAP-BUSINESS-PROCESS
+      to: ALV-GRID
+      relation: "can support richer SAP GUI grid interaction"
+    - from: ABAP-BUSINESS-PROCESS
+      to: SALV-IDA
+      relation: "can expose large HANA-backed SAP GUI lists"
+    - from: RAP
+      to: ODATA
+      relation: "exposes business service through a service binding"
+    - from: ODATA
+      to: FIORI-ELEMENTS
+      relation: "provides metadata and business data"
+    - from: ODATA
+      to: UI5
+      relation: "provides service contract for custom UI"
+
+log_design_checklist:
+  - "Define a log object and subobject around a stable business area, not around a developer name or program include."
+  - "Choose an external ID that lets support correlate the log with a business document, job run or interface message."
+  - "Log milestones and exceptions. Aggregate repetitive warnings instead of recording noise."
+  - "Do not log secrets, authentication tokens or unnecessary personal data."
+  - "Make retry or restart behavior visible when the process is asynchronous."
+  - "Plan retention. A useful log becomes a database problem if nobody owns deletion."
+  - "Keep logging behind a small application interface so classic BAL and cloud-safe implementations can evolve independently of business logic."
+
+logistics_scenarios:
+  - scenario: "Sales order inbound API"
+    design: "RAP/API or classic service processes the request; BAL stores business validation and document result using the external message ID; ST22/ST05 are used only if a technical failure needs deeper diagnosis."
+  - scenario: "Outbound delivery background run"
+    design: "One application log per run or useful processing unit. Store counts, skipped deliveries, warnings, document keys and final status. Avoid one success message per item."
+  - scenario: "Purchasing exception report"
+    design: "SALV is enough for a read-only SAP GUI support report. Use navigation to PO or supplier object instead of turning the report into a second ME22N."
+  - scenario: "Buyer mass change"
+    design: "If SAP GUI remains the target, ALV Grid can support controlled editing. Keep validations and save logic in reusable application services. For a new strategic UX, re-evaluate RAP/Fiori."
+  - scenario: "New logistics exception cockpit"
+    design: "Use RAP for business object behavior, OData service binding for exposure, and Fiori elements for a standard list/object flow. Choose freestyle UI5 only if the operator interaction is truly special."
+
+anti_patterns:
+  - name: "BAL as debug trace"
+    smell: "Every method and loop iteration writes a persistent message."
+    correction: "Log business milestones and failures; use technical trace tools for technical investigation."
+  - name: "Z log table by reflex"
+    smell: "A custom table is created before checking the standard application log."
+    correction: "Use BAL when its classification, persistence and analysis model fits; add custom persistence only for a real domain requirement."
+  - name: "SALV for a transaction"
+    smell: "A simple reporting tool grows into complex editing and save logic."
+    correction: "Move transactional behavior to a proper application service and choose a UI designed for the interaction."
+  - name: "ALV forever"
+    smell: "A strategic new process is forced into SAP GUI because an old grid can be copied quickly."
+    correction: "Evaluate user channel, lifecycle and clean-core direction before reusing the old pattern."
+  - name: "Fiori rewrite by fashion"
+    smell: "A stable internal GUI report is rebuilt without user, lifecycle or cost benefit."
+    correction: "Modernize where the business channel or architecture improves, not just where the CSS changes."
+  - name: "Freestyle for standard CRUD"
+    smell: "A large UI5 app manually implements filters, tables and object pages already covered by Fiori elements."
+    correction: "Start with Fiori elements and supported extensions; move to freestyle only when the interaction demands it."
+  - name: "Business rules in UI handlers"
+    smell: "Validation and status logic exist only in JavaScript or ALV event code."
+    correction: "Keep authoritative business behavior in the backend service or business object."
+
+lead_assessment_answers:
+  - question: "When would you use BAL?"
+    answer: "When the process needs a persistent support history after the request is finished. I define object, subobject and a useful external correlation ID, then log business milestones, warnings and errors. I do not use BAL as a high-volume debug trace."
+  - question: "SALV or ALV Grid?"
+    answer: "For a small read-oriented SAP GUI report I start with SALV. I use ALV Grid only when the GUI interaction really needs richer control or an existing editable-grid workflow must be maintained. I keep business validation outside the UI where possible."
+  - question: "Would you replace every ALV with Fiori?"
+    answer: "No. I modernize when the user channel, lifecycle, process design or support model improves. A stable internal GUI report can remain. For a new strategic business application I would normally evaluate RAP and Fiori first."
+  - question: "Fiori elements or freestyle SAPUI5?"
+    answer: "Fiori elements is my first choice for standard business-object applications because metadata and annotations remove UI boilerplate. Freestyle is for a genuinely custom interaction, and I accept the extra code and test cost deliberately."
+  - question: "Where does RAP end and Fiori begin?"
+    answer: "RAP models backend data, business behavior and service exposure. The service binding exposes the contract. Fiori elements or SAPUI5 consumes that contract. I do not move authoritative business rules to the browser."
+  - question: "A delivery interface is slow and also has business errors. What do you check?"
+    answer: "I separate the evidence. BAL can explain business validation and processing results. SAT or ST05 can measure technical runtime and SQL behavior. Mixing both into one giant log makes support worse, not better."
+
+sources:
+  - id: SRC-ABAP-BAL-BASICS
+    title: "Application Log (BC-SRV-BAL) - Basics"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/addb96cd90c945dfb3182865363bbc47/4e21029235d44180e10000000a15822b.html"
+    supports: "Classic BAL function modules and core concepts."
+  - id: SRC-ABAP-BAL-DB
+    title: "Application Log - Database Interface"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/addb96cd90c945dfb3182865363bbc47/4e21021635d44180e10000000a15822b.html"
+    supports: "BAL_DB_SAVE and persisted logs."
+  - id: SRC-ABAP-BAL-ANALYZE
+    title: "Application Log - Analyze Logs"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_2020/b5670aaaa2364a29935f40b16499972d/4e21048535d44180e10000000a15822b.html"
+    supports: "SLG1 selection by object, subobject, external number and time."
+  - id: SRC-ABAP-XCO-BAL
+    title: "Business Application Log in SAP BTP ABAP Environment"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/sap-btp-abap-environment/abap-environment/business-application-log"
+    supports: "XCO BAL model, persistence, external IDs, messages and exceptions."
+  - id: SRC-ABAP-SALV-MAIN
+    title: "Main ALV Classes"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b1c834a22d05483b8a75710743b5ff26/4ec1f117076868b8e10000000a42189e.html"
+    supports: "CL_SALV_TABLE, hierarchical SALV and tree classes."
+  - id: SRC-ABAP-ALV-GRID
+    title: "ALV Grid Control"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/70396d7dec4c4f19b9ca3b2e47559d12/4eba23f5250f568be10000000a421937.html"
+    supports: "ALV Grid Control setup and SAP GUI control model."
+  - id: SRC-ABAP-ALV-RELEASE
+    title: "ALV - customer usage guidance"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/SUPPORT_CONTENT/abaptools/3353523583.html"
+    supports: "Released ALV classes and cautions around editable CL_GUI_ALV_GRID methods."
+  - id: SRC-ABAP-SALV-IDA
+    title: "ALV with Integrated Data Access"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/SAP_NETWEAVER_AS_ABAP_FOR_SOH_740/b1c834a22d05483b8a75710743b5ff26/efeb734c8e6f41939c39fa15ce51eb4e.html"
+    supports: "CL_SALV_GUI_TABLE_IDA and HANA-oriented ALV IDA model."
+  - id: SRC-ABAP-RAP-SERVICE
+    title: "Creating a Service Definition and a Service Binding"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/abap-cloud/abap-rap/creating-service-definition-and-service-binding"
+    supports: "RAP service definition, service binding and OData UI exposure."
+  - id: SRC-ABAP-RAP-TOOLS
+    title: "ABAP RAP Tools"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/abap-cloud/abap-development-tools-for-visual-studio-code/abap-rap-tools"
+    supports: "RAP service bindings and Fiori elements preview."
+  - id: SRC-ABAP-FIORI-ELEMENTS
+    title: "How To Use SAP Fiori Elements"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/SAPUI5/b2f662dd9d7a4ec680056733050b4d34/867a38c295994142b72e088acf11d1e5.html"
+    supports: "OData, annotations, Fiori tools and extension approach."
+  - id: SRC-ABAP-UI5-FREESTYLE
+    title: "Freestyle SAPUI5"
+    publisher: "SAP Help Portal"
+    url: "https://help.sap.com/docs/SAP_FIORI_tools/17d50220bcd848aa854c9c182d65b699/616b1a4bd4314070a9fa5bf79ecb3909.html"
+    supports: "Freestyle SAPUI5 application generation."
+  - id: SRC-TBX-ABAP-PERFORMANCE
+    title: "SAT, ST05 and SQL performance tools"
+    publisher: "Existing Lab toolbox reference"
+    supports: "ABAP runtime and SQL diagnostics already modeled in Development Toolbox."
