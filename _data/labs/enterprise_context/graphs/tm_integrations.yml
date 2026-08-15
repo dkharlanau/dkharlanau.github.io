@@ -1,0 +1,160 @@
+id: GRAPH-TM-INTEGRATIONS
+type: knowledge_graph
+title: "SAP TM — Integration Contracts, APIs & Events"
+domain: "SAP S/4HANA Transportation Management"
+process_family: "Transportation Integration"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+
+summary: >-
+  Architecture map for SAP TM integration. It separates ERP demand integration, external planning,
+  carrier/LSP collaboration, synchronous object APIs, asynchronous B2B services, execution-event
+  reporting, S/4HANA business events, and warehouse/visibility boundaries.
+
+thesis: >-
+  Choose an integration contract by business ownership and interaction pattern. A CRUD API,
+  asynchronous subcontracting message, execution event, and publish-subscribe business event
+  solve different problems even when they all mention a Freight Order.
+
+contract_model:
+  - contract: "Internal ERP → TM demand integration"
+    pattern: "Application integration inside or between SAP systems"
+    business_owner: "ERP owns sales/purchase/delivery demand; TM owns transportation requirement and plan."
+    use_for: "OTR/DTR and transportation relevance from SD/MM/delivery context."
+    avoid: "Treating a generic external API as a replacement for standard document integration without a reason."
+  - contract: "Freight Order OData API"
+    pattern: "Request/response object API"
+    technology: "OData V4"
+    use_for: "Create, update, cancel, assign/unassign Freight Units, report events, and calculate charges where the released API fits the edition/release."
+    avoid: "Using it to modify objects during an external-planning lifecycle that is owned by another communication scenario."
+  - contract: "Transportation Order B2B service"
+    pattern: "Asynchronous business message"
+    technology: "SOAP enterprise service"
+    use_for: "Send a freight order to a carrier/LSP and receive acceptance/rejection or related business confirmations."
+    avoid: "Modeling carrier collaboration as many low-level CRUD calls."
+  - contract: "Execution event reporting"
+    pattern: "Event notification into transportation execution"
+    technology: "TransportationEventBulkNotification_In / released event-reporting service"
+    use_for: "Arrival, departure, check-in/out and other stop/location execution events from carriers or providers."
+    avoid: "Directly forcing document status when the business state should be derived from an execution event."
+  - contract: "S/4HANA Business Event Handling"
+    pattern: "Publish-subscribe"
+    technology: "Business Event Handling with event broker such as SAP Event Mesh"
+    use_for: "Loose-coupled notification to side-by-side consumers when a supported business-object event exists."
+    avoid: "Assuming every TM execution event is automatically the same thing as an S/4HANA business event topic."
+
+communication_scenarios:
+  - id: "SAP_COM_0414"
+    title: "Order-Based Transportation Consolidation Integration"
+    role: "External transportation planning integration"
+    key_point: "SOAP messages exchange planning context with an external TM system; ownership of the planning phase must stay clear."
+  - id: "SAP_COM_0534"
+    title: "LSP Freight Order Integration"
+    role: "Carrier/LSP subcontracting collaboration"
+    key_point: "Freight orders, subcontracting requests, confirmations, cancellations, and later invoice-related collaboration form a business conversation."
+  - id: "SAP_COM_0756"
+    title: "Freight Agreement Integration"
+    role: "Freight-agreement integration"
+    key_point: "Use released agreement integration instead of inventing file structures for contract master data where the scenario fits."
+  - id: "SAP_COM_00905"
+    title: "Freight Order Integration"
+    role: "Released Freight Order API communication scenario"
+    key_point: "Check the current edition and release because public-cloud communication scenarios evolve."
+
+message_lifecycle:
+  - phase: "Plan"
+    messages: ["order/delivery transportation demand", "external planning messages when applicable"]
+    ownership_question: "Who is allowed to create or overwrite the transportation plan?"
+  - phase: "Subcontract"
+    messages: ["TransportationOrderRequest_Out", "carrier confirmation", "cancellation"]
+    ownership_question: "Is this a tender/request conversation or direct object maintenance?"
+  - phase: "Execute"
+    messages: ["arrival", "check-in", "loading", "departure", "unloading", "check-out"]
+    ownership_question: "Which physical event happened, and which document status should derive from it?"
+  - phase: "Observe"
+    messages: ["business-object notifications", "tracking/visibility events"]
+    ownership_question: "Does the consumer need the new state, or only notification that state changed?"
+  - phase: "Settle"
+    messages: ["freight settlement follow-on", "invoice/collaboration context"]
+    ownership_question: "Which system owns the commercial amount and which system owns invoice verification/payment?"
+
+api_selection_guide:
+  - need: "Read or change Freight Order object data from an application"
+    prefer: "Released Freight Order OData API where supported"
+    reason: "Object-oriented request/response contract."
+  - need: "Subcontract a Freight Order to an external carrier"
+    prefer: "B2B transportation-order / Business Network integration"
+    reason: "The business interaction includes request, acceptance/rejection, changes, and cancellation, not only CRUD."
+  - need: "Report physical execution milestone"
+    prefer: "Released event-reporting service / configured TM event processing"
+    reason: "Execution status should follow a business event model."
+  - need: "Notify a side-by-side service that something changed"
+    prefer: "S/4HANA Business Event Handling when a suitable event is released"
+    reason: "Loose coupling and publish-subscribe are better than polling when only notification is needed."
+  - need: "Move bulk commercial rate data"
+    prefer: "Released freight-agreement/rate-table interfaces where available"
+    reason: "Contract data has its own lifecycle and should not be smuggled through freight-order messages."
+
+execution_event_model:
+  source: "user, carrier/LSP, external event service, warehouse or integrated execution source"
+  event_profile_role: "Defines expected/allowed event sequence and mandatory/optional event behavior."
+  status_rule: "Handling execution status changes are tied to events; status is not an independent truth to patch casually."
+  common_events: ["cargo ready", "arrival", "check-in", "loading begin/end", "departure", "unloading begin/end", "checkout"]
+
+integration_failure_modes:
+  - symptom: "Freight Order overwritten after external planning"
+    check_first: ["planning ownership", "SAP_COM_0414 lifecycle", "which API/service wrote last", "object version/timestamp"]
+    anti_pattern: "Two integrations both believe they own the planning phase."
+  - symptom: "Carrier accepted but TM still looks unconfirmed"
+    check_first: ["outbound request ID", "confirmation correlation", "acceptance code", "message processing/error log", "subcontracting status"]
+    anti_pattern: "Checking transport execution status before checking the subcontracting conversation."
+  - symptom: "Event received but status is wrong"
+    check_first: ["event code", "event profile", "stop/location identification", "event timestamp", "propagation rules"]
+    anti_pattern: "Forcing status directly instead of fixing event semantics."
+  - symptom: "Side-by-side consumer polls every minute"
+    check_first: ["supported business events", "event broker", "consumer need", "idempotency/replay design"]
+    anti_pattern: "Using a read API as a notification mechanism."
+  - symptom: "Duplicate carrier action"
+    check_first: ["message ID/correlation", "retry behavior", "idempotency contract", "application log", "partner acknowledgement"]
+    anti_pattern: "Retrying business messages without defining duplicate handling."
+
+lead_principles:
+  - "One business phase should have one authoritative writer."
+  - "Use APIs for object interaction, messages for business conversations, and events for facts that happened."
+  - "Correlation, idempotency, retry, ordering, and ownership matter more than transport protocol names."
+  - "A technically successful interface is not proof that both systems share the same business state."
+  - "Release scope is part of the interface contract. Public Cloud communication scenarios and on-prem/private services must not be mixed casually."
+
+assessment_cards:
+  - question: "API vs SOAP message vs event?"
+    answer: "Use an API for object-oriented request/response operations, an asynchronous business message for a cross-company process conversation, and an event to report or announce something that happened."
+  - question: "Why not update Freight Order status directly?"
+    answer: "TM execution status is event-driven. Reporting the correct business event keeps status changes consistent with event profiles and propagation logic."
+  - question: "What is the main risk in external planning integration?"
+    answer: "Competing ownership. If an external TM owns the planning phase, another API must not silently overwrite the same Freight Order during that lifecycle."
+  - question: "Where does Event Mesh fit?"
+    answer: "At the publish-subscribe notification layer for supported S/4HANA business events. It is not a replacement for TM's carrier B2B messages or execution-event semantics."
+
+synthetic_case:
+  title: "Carrier mobile app reports departure"
+  path:
+    - "TM sends a Freight Order to a carrier through a subcontracting contract."
+    - "Carrier accepts it; the confirmation updates subcontracting state."
+    - "At pickup, the driver app reports a departure execution event."
+    - "TM validates the event against stop/location context and event profile, then updates handling execution status."
+    - "A side-by-side ETA service can be notified through an event-driven integration if an appropriate business event is exposed; otherwise it reads the released API using a deliberate integration pattern."
+  lesson: "Acceptance, departure, and downstream notification are three different contracts. Do not compress them into one generic 'Freight Order interface'."
+
+source_refs:
+  - SRC-SAP-TM-INTERNAL-INTEGRATION
+  - SRC-SAP-TM-FREIGHT-ORDER-A2X
+  - SRC-SAP-TM-COMMUNICATION-SCENARIOS
+  - SRC-SAP-TM-COM-ORDER-CONSOLIDATION
+  - SRC-SAP-TM-COM-LSP-FREIGHT-ORDER
+  - SRC-SAP-TM-SOAP-TRANSPORTATION-ORDER-REQUEST
+  - SRC-SAP-TM-REPORT-EVENTS-SERVICE
+  - SRC-SAP-TM-EVENT-PROFILES
+  - SRC-SAP-TM-EXECUTION-EVENTS
+  - SRC-SAP-S4-BUSINESS-EVENT-HANDLING
