@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "TRIZ Digital Workbench"
-description: "A practical worksheet for turning an IT, business-process, integration, data, or AI problem into contradiction-driven options and a falsifiable experiment."
+description: "A browser-based contradiction workbench for IT, SAP, business-process, integration, data, and AI design."
 permalink: /triz/workbench/
 status: draft
 verified: false
@@ -9,8 +9,10 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-15
 hide_global_cta: true
-tags: [triz, workshop, problem-solving, architecture, business-processes, ai]
+tags: [triz, workshop, problem-solving, architecture, sap, business-processes, ai]
 ---
+
+<link rel="stylesheet" href="/assets/triz-workbench.css" />
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/triz/">TRIZ</a></li><li aria-current="page">Workbench</li></ol>
@@ -19,83 +21,217 @@ tags: [triz, workshop, problem-solving, architecture, business-processes, ai]
 <div class="research-canvas">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">TRIZ / workbench</p>
-      <h1>One problem in.<br />Several system shapes out.</h1>
-      <p>This is the practical version of the framework. It is meant for architecture workshops, process redesign, incident patterns, requirement discussions, and AI use-case reviews. The output is not “the answer”. It is a small set of better-framed options that can be tested.</p>
+      <p class="research-canvas__eyebrow">TRIZ / interactive workbench</p>
+      <h1>Frame the contradiction.<br />Then force different system shapes.</h1>
+      <p>This workbench turns a problem into a structured design draft. It does not call an AI model. The routing is deterministic, so the framework itself has to do useful work before we add probabilistic reasoning.</p>
+      <a class="research-canvas__button" href="#workbench">Start with a problem <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Workbench behavior">
+      <p>Workbench</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>6</strong><small>Separation operators checked</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>3</strong><small>Different system shapes</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Machine-readable draft</small></div>
+      <em>No model call. No server-side form submission.</em>
     </div>
   </header>
+</div>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Input card</p><h2>Start with evidence that already exists.</h2></header>
-    <p><strong>Observed behavior:</strong> what happens now, in plain language.</p>
-    <p><strong>Useful function:</strong> what outcome the process or system must provide.</p>
-    <p><strong>Actor and business object:</strong> who needs the result and what object changes state.</p>
-    <p><strong>Business impact:</strong> delay, cost, quality, risk, lost revenue, compliance, manual effort, or poor decision quality.</p>
-    <p><strong>Evidence:</strong> process data, transaction examples, logs, traces, queue age, errors, user reports, or measurements.</p>
-    <p><strong>Constraints:</strong> policy, authorization, legal, financial, timing, integration, data residency, or operational limits.</p>
-  </section>
+<section class="triz-workbench-shell" id="workbench" data-triz-workbench>
+  <div class="triz-workbench__notice">
+    <span class="material-symbols-outlined" aria-hidden="true">privacy_tip</span>
+    <p><strong>Public-site rule.</strong> The workbench runs in the browser and does not submit the form to this site. Still, do not paste client names, internal IDs, proprietary configuration, credentials, or confidential process details. Use synthetic or anonymized wording.</p>
+  </div>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Contradiction card</p><h2>Write the conflict so both sides sound useful.</h2></header>
-    <p><strong>Template:</strong> “We need more A because …, but more A makes B worse because … . We still need B because … .”</p>
-    <p>A weak contradiction is “speed vs bad process”. Nobody wants the bad process. A stronger one is “speed vs independent risk review”. Now both sides have a reason to exist, so the design problem becomes interesting.</p>
-    <p><strong>Physical version:</strong> when possible, make it sharper: “The same step should exist for high-risk cases and should not exist for routine low-risk cases.” That often points directly to separation by condition.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Operator card</p><h2>Try separation before compromise.</h2></header>
-    <div class="research-route-list">
-      <a href="/triz/operators/#time"><span>O1</span><strong>Time</strong><small>Can preparation, validation, approval, execution, or correction happen at different moments?</small><i class="material-symbols-outlined" aria-hidden="true">schedule</i></a>
-      <a href="/triz/operators/#condition"><span>O2</span><strong>Condition</strong><small>Can normal, exception, low-risk, high-risk, high-confidence, and low-confidence cases behave differently?</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
-      <a href="/triz/operators/#context"><span>O3</span><strong>Context</strong><small>Can common policy and local context be separated instead of mixed into one giant branch tree?</small><i class="material-symbols-outlined" aria-hidden="true">location_on</i></a>
-      <a href="/triz/operators/#level"><span>O4</span><strong>System level</strong><small>Does the contradiction belong to the component, process, integration layer, platform, or enterprise policy?</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/triz/operators/#authority"><span>O5</span><strong>Authority</strong><small>Can read, propose, validate, approve, and execute be separated?</small><i class="material-symbols-outlined" aria-hidden="true">admin_panel_settings</i></a>
-      <a href="/triz/operators/#representation"><span>O6</span><strong>Representation</strong><small>Can the consumer use a safe derived signal instead of full raw data?</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+  <div class="triz-workbench__stage">
+    <div class="triz-workbench__intro">
+      <p class="triz-workbench__eyebrow">Input / problem frame</p>
+      <h2>Useful function first. Technology later.</h2>
+      <p>Choose a synthetic example or enter your own problem. The output is a design hypothesis, not an architecture decision. Its purpose is to make assumptions and trade-offs visible early.</p>
+      <p class="triz-workbench__status" data-triz-status aria-live="polite">Loading synthetic presets…</p>
     </div>
+
+    <form class="triz-workbench__form" data-triz-form>
+      <div class="triz-workbench__form-group">
+        <label for="triz-preset">Synthetic preset</label>
+        <div class="triz-workbench__field">
+          <select id="triz-preset" data-triz-preset>
+            <option value="">Start from an empty frame</option>
+          </select>
+          <small>Presets are synthetic and safe to reuse in workshops or assessment practice.</small>
+        </div>
+      </div>
+
+      <div class="triz-workbench__form-group triz-workbench__form-group--split">
+        <label>Context</label>
+        <div>
+          <div class="triz-workbench__field">
+            <label for="triz-domain">Domain</label>
+            <select id="triz-domain" name="domain">
+              <option value="sap_sales">SAP Sales</option>
+              <option value="sap_procurement">SAP Procurement</option>
+              <option value="master_data">Master data</option>
+              <option value="integration">Integration</option>
+              <option value="business_process">Business process</option>
+              <option value="ai_agents">AI / agents</option>
+              <option value="it_architecture">IT architecture</option>
+            </select>
+          </div>
+          <div class="triz-workbench__field">
+            <label for="triz-risk">Risk tier</label>
+            <select id="triz-risk" name="risk_tier">
+              <option value="R0">R0 · advisory only</option>
+              <option value="R1">R1 · low-impact reversible</option>
+              <option value="R2" selected>R2 · business-significant</option>
+              <option value="R3">R3 · high-impact / hard to reverse</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="triz-workbench__form-group">
+        <label for="triz-observed">Observed behavior</label>
+        <div class="triz-workbench__field">
+          <textarea id="triz-observed" name="observed_behavior" placeholder="What happens now? Describe the failure, waiting, repeated work, coupling, or decision problem."></textarea>
+          <small>Describe behavior, not the requested solution.</small>
+        </div>
+      </div>
+
+      <div class="triz-workbench__form-group">
+        <label for="triz-function">Useful function</label>
+        <div class="triz-workbench__field">
+          <textarea id="triz-function" name="useful_function" placeholder="What useful outcome must the system or process provide?"></textarea>
+          <small>Try to write this without naming a product, protocol, model, or platform.</small>
+        </div>
+      </div>
+
+      <div class="triz-workbench__form-group triz-workbench__form-group--split">
+        <label>Ownership</label>
+        <div>
+          <div class="triz-workbench__field">
+            <label for="triz-actor">Actor</label>
+            <input id="triz-actor" name="actor" type="text" placeholder="Process owner / sales ops / service owner" />
+          </div>
+          <div class="triz-workbench__field">
+            <label for="triz-object">Business object</label>
+            <input id="triz-object" name="business_object" type="text" placeholder="Sales order / purchase order / incident" />
+          </div>
+        </div>
+      </div>
+
+      <div class="triz-workbench__form-group triz-workbench__form-group--split">
+        <label>Contradiction</label>
+        <div>
+          <div class="triz-workbench__field">
+            <label for="triz-improve">Improve A</label>
+            <input id="triz-improve" name="improve" type="text" placeholder="speed, freshness, automation…" />
+          </div>
+          <div class="triz-workbench__field">
+            <label for="triz-preserve">Preserve B</label>
+            <input id="triz-preserve" name="preserve" type="text" placeholder="control, privacy, flexibility…" />
+          </div>
+        </div>
+      </div>
+
+      <div class="triz-workbench__form-group triz-workbench__form-group--split">
+        <label>Classification</label>
+        <div>
+          <div class="triz-workbench__field">
+            <label for="triz-type">Contradiction type</label>
+            <select id="triz-type" name="contradiction_type">
+              <option value="speed_control">Speed vs control</option>
+              <option value="standard_flexible">Standardization vs flexibility</option>
+              <option value="automation_accountability">Automation vs accountability</option>
+              <option value="integration_coupling">Integration vs coupling</option>
+              <option value="freshness_cost">Freshness vs cost</option>
+              <option value="accuracy_latency">Accuracy vs latency</option>
+              <option value="context_privacy">Context vs privacy</option>
+              <option value="autonomy_trust">Autonomy vs trust</option>
+              <option value="specialization_handoffs">Specialization vs handoffs</option>
+              <option value="local_global">Local optimization vs end-to-end outcome</option>
+            </select>
+          </div>
+          <div class="triz-workbench__field">
+            <label for="triz-evidence">Evidence</label>
+            <textarea id="triz-evidence" name="evidence" placeholder="Queue age; logs; process data; rejected cases; correction rate"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="triz-workbench__form-group">
+        <label for="triz-constraints">Constraints</label>
+        <div class="triz-workbench__field">
+          <textarea id="triz-constraints" name="constraints" placeholder="Authorization; policy; timing; legal; integration; data; operational limits"></textarea>
+          <small>Separate hard constraints from habits and existing implementation choices.</small>
+        </div>
+      </div>
+
+      <div class="triz-workbench__actions">
+        <button class="triz-workbench__button" type="submit">Build design draft</button>
+        <button class="triz-workbench__button triz-workbench__button--secondary" type="button" data-triz-reset>Reset</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="triz-workbench__output" data-triz-output hidden></div>
+
+  <section class="triz-workbench__lead" data-triz-lead hidden>
+    <p class="triz-workbench__eyebrow">Assessment mode / 60–90 seconds</p>
+    <h2>Explain the reasoning like a Lead.</h2>
+    <p class="triz-workbench__lead-answer" data-triz-lead-answer></p>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Resource card</p><h2>Use what is already inside the system.</h2></header>
-    <p>Scan the eight resource groups from the <a href="/triz/operators/#resources">resource model</a>: information, time, structure, history, negative signals, human judgment, policy/permission, and compute/attention.</p>
-    <p>Useful prompt: <strong>“What do we already have that is currently waste, waiting, noise, history, or an unused boundary?”</strong> An exception queue can become training/eval evidence. Waiting time can become a pre-validation window. A rejected action can become a control signal. An existing correlation ID can remove hours of incident archaeology.</p>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Option generation</p><h2>Force different system shapes.</h2><p>Do not generate five versions of the same preferred solution. That is not exploration; it is a meeting ritual.</p></header>
-    <div class="research-route-list">
-      <a href="#"><span>A</span><strong>Remove or simplify</strong><small>What if a step, copy, handoff, sync call, or approval disappears because its useful function moves elsewhere?</small><i class="material-symbols-outlined" aria-hidden="true">remove_circle_outline</i></a>
-      <a href="#"><span>B</span><strong>Deterministic redesign</strong><small>Can rules, workflow, eventing, state, policy, or data structure resolve the conflict without AI?</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-      <a href="#"><span>C</span><strong>Uncertainty-assisted redesign</strong><small>Where interpretation, search, prediction, or adaptive investigation remains after the deterministic shape is clean?</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+  <section class="triz-workbench__machine" data-triz-machine hidden>
+    <div class="triz-workbench__machine-head">
+      <div>
+        <p class="triz-workbench__eyebrow">Agent handoff</p>
+        <h2>Structured draft.</h2>
+      </div>
+      <button class="triz-workbench__button triz-workbench__button--secondary" type="button" data-triz-copy disabled>Copy JSON</button>
     </div>
-    <p><strong>Default rule:</strong> produce at least two materially different options. For a complex problem, I prefer three: simpler boundary, deterministic redesign, and AI-assisted redesign. “Same architecture with a different vendor” does not count as a new option.</p>
+    <pre class="triz-workbench__json" data-triz-json tabindex="0"></pre>
+    <p><small>The draft follows the same concepts as the <a href="/datasets/triz-digital-framework/reasoning-schema.json">reasoning schema</a>. A deeper agent pass should verify evidence, assumptions, current technology facts, and real system constraints before recommending implementation.</small></p>
   </section>
+</section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Option score</p><h2>Compare useful effect and complexity tax.</h2></header>
-    <p>Score qualitatively, not with fake precision. I compare: <strong>useful outcome, reliability, reversibility, new coordination, duplicated state, operational load, cognitive load, data exposure, authority risk, and evidence quality</strong>.</p>
-    <p>An option that performs slightly better but creates a new platform, new state store, new approval queue, and new operational team may have poor ideality. Sometimes the boring option is the inventive one because it removes machinery.</p>
-  </section>
+<section class="triz-workbench__method" aria-labelledby="workbench-method">
+  <p class="triz-workbench__eyebrow">Why this shape</p>
+  <h2 id="workbench-method">Three options are more useful than three vendors.</h2>
+  <p>I want the workbench to create real design distance. If every option keeps the same process, state, authority, and integration boundary, we did not explore the problem. We just changed the label on the box.</p>
+  <div class="triz-workbench__method-grid">
+    <article>
+      <p class="triz-workbench__index">A / Simplify</p>
+      <h3>Remove machinery.</h3>
+      <p>Ask whether a handoff, copy, check, queue, or synchronous dependency can disappear because its useful function moves somewhere better.</p>
+    </article>
+    <article>
+      <p class="triz-workbench__index">B / Deterministic</p>
+      <h3>Redesign the system.</h3>
+      <p>Use explicit state, rules, workflow, events, ownership, or data representation before adding probabilistic behavior.</p>
+    </article>
+    <article>
+      <p class="triz-workbench__index">C / Uncertainty-assisted</p>
+      <h3>Add AI where uncertainty remains.</h3>
+      <p>Use models for interpretation and agents for unknown next steps, while authority and hard controls stay explicit.</p>
+    </article>
+  </div>
+</section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Experiment card</p><h2>Make the preferred option easy to disprove.</h2></header>
-    <p><strong>Hypothesis:</strong> if we make change X, useful property A improves without unacceptable damage to property B.</p>
-    <p><strong>Primary metric:</strong> the result we want to improve.</p>
-    <p><strong>Counter-metric:</strong> the useful property that could become worse.</p>
-    <p><strong>Failure condition:</strong> the threshold or observation that tells us to stop, roll back, or redesign.</p>
-    <p><strong>Scope:</strong> shadow, replay, one process variant, one country, one interface, one user group, or a low-risk action class.</p>
-  </section>
+<section class="triz-workbench__method" aria-labelledby="machine-data">
+  <p class="triz-workbench__eyebrow">Machine layer</p>
+  <h2 id="machine-data">The browser and the agent use the same concepts.</h2>
+  <div class="research-route-list">
+    <a href="/datasets/triz-digital-framework/decision-map.json"><span>MAP</span><strong>Decision map</strong><small>Contradiction → operators → patterns → resource focus → experiment metrics.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+    <a href="/datasets/triz-digital-framework/workbench-presets.json"><span>PRE</span><strong>Synthetic presets</strong><small>SAP Sales, Procurement, master data, integration, AI operations, and global/local process cases.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+    <a href="/datasets/triz-digital-framework/reasoning-schema.json"><span>JSON</span><strong>Reasoning schema</strong><small>Structured contract for a deeper agent analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+    <a href="/agent-skills/skills/triz-digital-problem-solving/SKILL.md"><span>SKILL</span><strong>Agent workflow</strong><small>Operational instructions for contradiction-driven problem solving.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+  </div>
+</section>
 
-  <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">AI / agent output</p><h2>Make the reasoning inspectable.</h2></header>
-    <p>The agent should return structured output, not a polished essay that hides how it got there. The machine contract requires the useful function, contradiction, operator choices, resource scan, system map, options, technology allocation, authority boundary, experiment, risks, assumptions, and unknowns.</p>
-    <div class="research-route-list">
-      <a href="/datasets/triz-digital-framework/reasoning-schema.json"><span>SCHEMA</span><strong>Reasoning schema</strong><small>JSON Schema for a reusable problem-analysis result.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="/datasets/triz-digital-framework/cases.jsonl"><span>CASES</span><strong>Reasoning examples</strong><small>Synthetic examples for retrieval, regression checks, and agent evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-    </div>
-  </section>
-
+<div class="research-canvas">
   <div class="research-canvas__support" data-reveal>
     {% include atlas/author-block.html %}
     {% include atlas/disclaimer.html %}
   </div>
 </div>
+
+<script src="/assets/triz-workbench.js" defer></script>
