@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-14
 hide_global_cta: true
 tags:
   - sap
@@ -44,7 +44,7 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
     <p><strong>Problem:</strong> SAP Business AI names overlap, so architecture responsibilities are easy to mix up.</p>
     <p><strong>Remember:</strong> use AI, build AI, run AI, ground AI, and govern AI. Keep these responsibilities separate.</p>
-    <a href="/labs/enterprise-context/business-ai/agents/">Open Enterprise Agent Architecture <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <a href="/labs/enterprise-context/deployment-models/">Compare S/4HANA deployment models <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="ai-layers" data-reveal>
