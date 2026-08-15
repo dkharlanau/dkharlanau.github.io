@@ -19,6 +19,7 @@ tags:
 {% assign business_ai_catalog = site.data.labs.business_ai.catalog %}
 {% assign business_ai_expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
 {% assign business_ai_expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
+{% assign business_ai_domain_map = site.data.labs.business_ai.domain_map %}
 {% assign business_ai_cases = business_ai_catalog.cases | concat: business_ai_expansion.cases | concat: business_ai_expansion_b.cases %}
 {% assign business_ai_patterns = business_ai_catalog.patterns | concat: business_ai_expansion.patterns | concat: business_ai_expansion_b.patterns %}
 
@@ -37,8 +38,8 @@ tags:
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Active labs</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>18+</strong><small>Architecture and case views</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>7+</strong><small>Machine endpoints</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>19+</strong><small>Architecture and case views</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>8+</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
   </header>
@@ -92,10 +93,12 @@ tags:
     </header>
     <div class="research-route-list">
       <a href="/labs/business-ai/"><span>AI</span><strong>Business AI Lab</strong><small>Business-first map of patterns, cases, evidence grades, technologies, metrics, limits, and cross-links to SAP and vendor-neutral architecture.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/business-ai/domains/"><span>DOM</span><strong>Business AI by Domain</strong><small>{{ business_ai_domain_map.domains | size }} Lead-level domain views with business jobs, SAP touchpoints, architecture questions, and linked implementation cases.</small><i class="material-symbols-outlined" aria-hidden="true">domain</i></a>
       <a href="/labs/business-ai/cases/"><span>CASE</span><strong>Implementation cases</strong><small>{{ business_ai_cases | size }} working cases across customer service, sales, O2C, procurement, demand planning, manufacturing, logistics, knowledge work, and master-data foundations.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/business-ai/patterns/"><span>PAT</span><strong>Reusable patterns</strong><small>{{ business_ai_patterns | size }} working patterns including conversation automation, document-to-workflow, forecasting, guided selling, cross-system copilots, optimization, embodied logistics, manufacturing quality, and trusted master data.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/business-ai/model/"><span>GRAPH</span><strong>Graph model</strong><small>Node and edge types for companies, cases, domains, processes, patterns, technologies, metrics, evidence sources, limitations, and case kinds.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Business AI catalog</strong><small>Machine-readable cases, patterns, source registry, evidence model, technologies, KPIs, limitations, consultant notes, and case classification.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/business-ai/data/domains.json"><span>MAP</span><strong>Business AI domain data</strong><small>Machine-readable business jobs, SAP touchpoints, Lead questions, and case IDs by domain.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
