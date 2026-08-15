@@ -1,0 +1,217 @@
+{% assign procurement_atlas = site.data.labs.enterprise_context.processes.procurement_process_atlas %}
+{% assign procurement_process_sources = site.data.labs.enterprise_context.sources.procurement_process_registry %}
+{% assign procurement_process_count = 0 %}
+{% for group in procurement_atlas.groups %}
+  {% assign group_size = group.processes | size %}
+  {% assign procurement_process_count = procurement_process_count | plus: group_size %}
+{% endfor %}
+
+<section class="research-canvas__inventory" id="process-atlas" data-reveal>
+  <header>
+    <p class="research-canvas__eyebrow">Procurement process atlas / memory first</p>
+    <h2>Start with standard P2P. Then explain what changed.</h2>
+    <p>{{ procurement_atlas.summary }}</p>
+  </header>
+
+  <div class="spa-code-grid">
+    <article><span>MM.</span><strong>Process / variant</strong><p>Stable learning keys such as <code>MM.P2P</code>, <code>MM.SUB</code>, <code>MM.STO</code>, and <code>MM.TPO</code>.</p></article>
+    <article><span>DOC</span><strong>Business document</strong><p>PR, PO, agreement, goods receipt, service entry, invoice, or another document that owns a business decision.</p></article>
+    <article><span>INT</span><strong>Integration boundary</strong><p>Where MM hands state to Sales, MRP, Inventory/EWM, QM, FI/CO, or supplier integration.</p></article>
+  </div>
+</section>
+
+<section class="spa-memory-model" data-reveal>
+  <div>
+    <p class="research-canvas__eyebrow">Seven questions</p>
+    <h2>If you can answer these, you own the procurement process.</h2>
+    <p class="ecg-caption"><strong>Baseline:</strong> {{ procurement_atlas.memory_rule }}</p>
+  </div>
+  <ol>
+    {% for question in procurement_atlas.memory_questions %}
+    <li><span>0{{ forloop.index }}</span><p>{{ question }}</p></li>
+    {% endfor %}
+  </ol>
+</section>
+
+<section class="research-canvas__inventory" id="procurement-process-groups" data-reveal>
+  <header>
+    <p class="research-canvas__eyebrow">Coverage map</p>
+    <h2>{{ procurement_process_count }} processes are easier to learn as {{ procurement_atlas.groups | size }} families.</h2>
+    <p>Use the families as navigation. In an assessment, start from the baseline and name the control rule that changes.</p>
+  </header>
+  <div class="research-route-list">
+    {% for group in procurement_atlas.groups %}
+    <a href="#proc-group-{{ group.code }}"><span>{{ group.code }}</span><strong>{{ group.title }}</strong><small>{{ group.processes | size }} processes · {{ group.purpose }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="research-canvas__inventory" id="procurement-memory-cards" data-reveal>
+  <header>
+    <p class="research-canvas__eyebrow">Memory cards</p>
+    <h2>Learn the document flow first. Open the controls when you need depth.</h2>
+    <p>The visible card gives intent and flow. The expandable layer shows documents, controls, integration boundaries, and Lead-level questions.</p>
+  </header>
+
+  {% for group in procurement_atlas.groups %}
+  <section class="spa-process-group" id="proc-group-{{ group.code }}">
+    <header>
+      <p class="research-canvas__eyebrow">Family {{ group.code }}</p>
+      <h3>{{ group.title }}</h3>
+      <p>{{ group.purpose }}</p>
+    </header>
+
+    <div class="spa-card-grid">
+      {% for process in group.processes %}
+      <article class="spa-card" id="{{ process.code | downcase | replace: '.', '-' }}">
+        <header class="spa-card__head">
+          <div>
+            <span class="spa-code">{{ process.code }}</span>
+            <span class="spa-kind">{{ process.kind | replace: '_', ' ' }}</span>
+          </div>
+        </header>
+        <h3>{{ process.title }}</h3>
+        <p class="spa-hook">{{ process.memory_hook }}</p>
+        <p class="spa-intent">{{ process.business_intent }}</p>
+
+        <div class="spa-flow" aria-label="{{ process.title }} document flow">
+          {% for step in process.flow %}
+          <span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}
+          {% endfor %}
+        </div>
+
+        <details>
+          <summary>Documents, controls and boundaries <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="spa-detail-grid">
+            <section>
+              <h4>Main documents</h4>
+              <ul>{% for item in process.main_documents %}<li><strong>{{ item }}</strong></li>{% endfor %}</ul>
+            </section>
+            <section>
+              <h4>Key controls</h4>
+              <ul>{% for item in process.key_controls %}<li>{{ item }}</li>{% endfor %}</ul>
+            </section>
+            <section>
+              <h4>Integration</h4>
+              <ul>{% for item in process.integrations %}<li>{{ item }}</li>{% endfor %}</ul>
+            </section>
+            <section>
+              <h4>Diagnostic lens</h4>
+              <ul><li>Find the first document or rule where this variant differs from <code>MM.P2P</code>.</li><li>Then follow quantity, ownership, account assignment, receipt evidence, and financial consequence downstream.</li></ul>
+            </section>
+          </div>
+
+          <div class="spa-lead">
+            <p>Lead questions</p>
+            <ol>{% for item in process.lead_questions %}<li>{{ item }}</li>{% endfor %}</ol>
+          </div>
+        </details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+</section>
+
+<section class="research-canvas__inventory" id="procurement-comparisons" data-reveal>
+  <header>
+    <p class="research-canvas__eyebrow">Fast comparisons</p>
+    <h2>Most assessment questions hide inside a contrast.</h2>
+    <p>The useful answer is the changed ownership, supply, receipt, stock, or commercial rule, not two dictionary definitions.</p>
+  </header>
+  <div class="spa-compare-grid">
+    {% for item in procurement_atlas.fast_comparisons %}
+    <article><span>{{ item.pair }}</span><h3>{{ item.title }}</h3><p>{{ item.distinction }}</p></article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="research-canvas__inventory" id="procurement-documents" data-reveal>
+  <header>
+    <p class="research-canvas__eyebrow">Document cheat sheet</p>
+    <h2>Know what the document means and which fields carry the process.</h2>
+    <p>A Lead answer should explain the business role of the document, the fields that drive the next step, and the expected follow-on object. Transaction codes can wait patiently in the corner.</p>
+  </header>
+
+  <div class="spa-card-grid">
+    {% for item in procurement_atlas.document_cheat_sheet %}
+    <article class="spa-card">
+      <header class="spa-card__head"><div><span class="spa-code">DOC</span><span class="spa-kind">{{ item.created_by | truncate: 28 }}</span></div></header>
+      <h3>{{ item.document }}</h3>
+      <p class="spa-hook">{{ item.role }}</p>
+      <details>
+        <summary>Fields and follow-on <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+        <div class="spa-detail-grid">
+          <section><h4>Usually fill / verify</h4><ul>{% for field in item.usually_fill %}<li>{{ field }}</li>{% endfor %}</ul></section>
+          <section><h4>Created by</h4><ul><li>{{ item.created_by }}</li></ul></section>
+          <section><h4>Follow-on</h4><ul><li>{{ item.follow_on }}</li></ul></section>
+          <section><h4>Lead lens</h4><ul><li>Which values are copied, determined, or manually entered?</li><li>Which later document exposes an error in this document?</li></ul></section>
+        </div>
+      </details>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="research-canvas__inventory" id="procurement-master-data" data-reveal>
+  <header>
+    <p class="research-canvas__eyebrow">Master data behind the documents</p>
+    <h2>Many PO problems start before the PO exists.</h2>
+    <p>Supplier, material, purchasing relationship, source validity, and quotas feed the document flow. Manual correction is useful mainly when the goal is to hide the actual design problem.</p>
+  </header>
+  <div class="spa-code-grid">
+    {% for item in procurement_atlas.master_data_inputs %}
+    <article><span>DATA</span><strong>{{ item.object }}</strong><p>{{ item.why }}</p></article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="research-canvas__inventory" id="procurement-integration-map" data-reveal>
+  <header>
+    <p class="research-canvas__eyebrow">Cross-application map</p>
+    <h2>MM does not end at the Purchasing boundary.</h2>
+    <p>The useful question at every handoff is who owns the business state now, and which document proves it.</p>
+  </header>
+  <div class="research-route-list">
+    {% for item in procurement_atlas.integration_map %}
+    <a href="#procurement-memory-cards"><span>INT</span><strong>{{ item.boundary }}</strong><small>{{ item.processes | join: ' · ' }} · {{ item.ownership_question }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="research-canvas__inventory" id="procurement-assessment-path" data-reveal>
+  <header>
+    <p class="research-canvas__eyebrow">Assessment answer pattern</p>
+    <h2>Answer from process to control, then to integration.</h2>
+    <p>This keeps the answer compact while still showing that you understand documents, ownership, configuration, and downstream impact.</p>
+  </header>
+  <div class="research-route-list">
+    {% for item in procurement_atlas.assessment_path %}
+    <a href="#procurement-memory-cards"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item }}</strong><small>Use one concrete procurement variant as the example.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_upward</i></a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="spa-machine" data-reveal>
+  <div>
+    <p class="research-canvas__eyebrow">For datasets and AI</p>
+    <h2>The cards are a view. The process records are the asset.</h2>
+    <p>The same process codes, document flows, controls, fields, comparisons, integrations, and source references are exposed as structured data for study prompts, impact analysis, and graph traversal.</p>
+  </div>
+  <div>
+    <a class="research-canvas__button" href="/labs/enterprise-context/data/procurement-process-atlas.json">Process atlas JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </div>
+</section>
+
+<section class="research-canvas__inventory" id="procurement-process-sources" data-reveal>
+  <header>
+    <p class="research-canvas__eyebrow">Process sources</p>
+    <h2>Special-process boundaries are checked against SAP Help.</h2>
+    <p>The source registry is evidence. The process codes, memory hooks, comparisons, and assessment wording are independent synthesis.</p>
+  </header>
+  <div class="research-route-list">
+    {% for source in procurement_process_sources.sources %}
+    <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.publisher }} · {{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+    {% endfor %}
+  </div>
+</section>

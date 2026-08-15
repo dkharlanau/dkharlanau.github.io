@@ -1,0 +1,335 @@
+id: PROC-MM-PROCESS-ATLAS
+kind: process_atlas
+title: "SAP Procurement Process Atlas"
+updated_at: "2026-08-15"
+status: researching
+scope: "SAP S/4HANA Materials Management and Sourcing and Procurement, with selected SD, MRP, warehouse, QM, and FI/CO boundaries"
+summary: >-
+  A Lead-level map of procurement processes. It starts from standard Procure-to-Pay and then shows what changes
+  when the source is an agreement, another plant, a subcontractor, supplier-owned stock, a service provider,
+  or a supplier linked to a customer sales order.
+memory_rule: >-
+  Start with MM.P2P. For every variant ask five questions: who creates demand, who supplies, who owns the stock,
+  what document proves receipt or performance, and what event creates the financial obligation.
+
+memory_questions:
+  - "What creates the requirement: MRP, a user, a project, production, maintenance, or a sales order?"
+  - "Is the source an external supplier, an agreement, or an internal supplying plant?"
+  - "Is the item stock, direct consumption, service, subcontracting, consignment, or stock transfer?"
+  - "Which document is the commercial commitment?"
+  - "Which event proves execution: goods receipt, service acceptance, supplier confirmation, or customer-facing event?"
+  - "Does ownership change at receipt, at withdrawal, or at another transfer-of-control point?"
+  - "Which document and account assignment close the financial loop?"
+
+groups:
+  - code: "01"
+    title: "Core buying and sourcing"
+    purpose: "The normal external-procurement chain and the main ways to choose or formalize a supplier."
+    processes:
+      - code: "MM.P2P"
+        title: "Standard Procure-to-Pay"
+        kind: core_process
+        memory_hook: "Need something, order it, receive it, match the invoice, pay it."
+        business_intent: "Buy stock or consumption material from an external supplier with controlled quantity, date, price, receipt, and invoice history."
+        flow: ["Demand / MRP", "Purchase Requisition", "Source", "Purchase Order", "Goods Receipt", "Supplier Invoice", "FI Payment"]
+        main_documents: ["Purchase Requisition", "Purchase Order", "Material Document", "Supplier Invoice", "Accounting Document"]
+        key_controls: ["Document type", "Item category", "Account assignment", "Source determination", "Purchasing conditions", "Approval", "GR/IR settings"]
+        integrations: ["MRP", "Inventory Management / EWM", "FI/CO", "Supplier integration"]
+        lead_questions: ["Which step owns the first wrong value?", "Is the item stock or direct consumption?", "What exactly is matched during invoice verification?"]
+        source_refs: ["SRC-SAP-PUR-PR", "SRC-SAP-PUR-PO", "SRC-SAP-PUR-GR", "SRC-SAP-PUR-INVOICE"]
+
+      - code: "MM.MRP"
+        title: "MRP-Driven External Procurement"
+        kind: demand_generation
+        memory_hook: "Planning creates the proposal; Purchasing turns it into a supplier commitment."
+        business_intent: "Cover material shortage using externally procured supply generated from planning instead of a manually created buying request."
+        flow: ["Demand / Forecast", "MRP", "Purchase Requisition", "Source Determination", "Purchase Order", "Receipt"]
+        main_documents: ["Planning result", "Purchase Requisition", "Purchase Order", "Material Document"]
+        key_controls: ["Procurement type", "MRP type", "Lot size", "Planned delivery time", "Purchasing group", "Source list / quota"]
+        integrations: ["PP/MRP", "Purchasing", "Inventory Management"]
+        lead_questions: ["Why did MRP create a PR instead of another supply element?", "Which dates come from planning and which can Purchasing change?", "Which source is fixed for the requirement date?"]
+        source_refs: ["SRC-SAP-PUR-PR", "SRC-SAP-PUR-SOURCE-DETERMINATION", "SRC-SAP-PUR-QUOTA"]
+
+      - code: "MM.RFQ"
+        title: "RFQ and Supplier Quotation"
+        kind: competitive_sourcing
+        memory_hook: "Ask several suppliers before a PO becomes the commitment."
+        business_intent: "Collect comparable commercial offers before selecting a source and creating a purchase order or agreement."
+        flow: ["Requirement", "RFQ", "Supplier Quotation", "Price Comparison", "Source Selection", "PO / Agreement"]
+        main_documents: ["RFQ", "Supplier Quotation", "Purchase Order or Outline Agreement"]
+        key_controls: ["Suppliers invited", "Material/service", "Quantity", "Delivery date", "Quotation deadline", "Commercial conditions"]
+        integrations: ["Sourcing", "Purchasing"]
+        lead_questions: ["Is this source selection or purchase execution?", "Which quantities and dates are comparable?", "Why is account assignment not the main RFQ control?"]
+        source_refs: ["SRC-SAP-PROC-RFQ"]
+
+      - code: "MM.CTR"
+        title: "Contract Release Procurement"
+        kind: outline_agreement
+        memory_hook: "Agree the commercial frame once; release orders consume it later."
+        business_intent: "Use a long-term quantity or value agreement and create purchase orders against agreed validity and commercial conditions."
+        flow: ["Negotiation", "Purchase Contract", "Purchase Requisition / Demand", "Release Purchase Order", "Receipt", "Invoice"]
+        main_documents: ["Purchase Contract", "Purchase Requisition", "Release Purchase Order", "Material / Service Receipt", "Supplier Invoice"]
+        key_controls: ["Agreement type", "Validity", "Target quantity/value", "Supplier", "Material/service", "Conditions", "Release consumption"]
+        integrations: ["Source determination", "Purchasing", "Invoice Verification"]
+        lead_questions: ["Contract or scheduling agreement: what is the operational difference?", "Which terms are copied into the release order?", "How do you detect over-consumption or expired validity?"]
+        source_refs: ["SRC-SAP-PROC-OUTLINE", "SRC-SAP-PROC-CONTRACT"]
+
+      - code: "MM.SA"
+        title: "Scheduling Agreement"
+        kind: outline_agreement
+        memory_hook: "The agreement stays; schedule lines tell the supplier when and how much."
+        business_intent: "Manage repeated supply under long-term conditions using schedule lines instead of creating a new purchase order for every call-off."
+        flow: ["Scheduling Agreement", "MRP / Manual Schedule Line", "Delivery Schedule / Release", "Supplier Delivery / ASN", "Goods Receipt", "Invoice"]
+        main_documents: ["Scheduling Agreement", "Schedule Lines / Releases", "Inbound Delivery or ASN when used", "Material Document", "Supplier Invoice"]
+        key_controls: ["Supplier", "Validity", "Target quantity", "Purchasing organization/group", "Plant", "Schedule lines", "Release documentation"]
+        integrations: ["MRP", "Supplier communication", "Inbound logistics", "Automotive/JIT where designed"]
+        lead_questions: ["Why use an agreement instead of repeated POs?", "Who creates schedule lines?", "How are forecast and delivery instructions communicated?"]
+        source_refs: ["SRC-SAP-PROC-SCHEDULING"]
+
+  - code: "02"
+    title: "Special procurement and stock ownership"
+    purpose: "The process changes because components, ownership, or the supplying party are different from standard external procurement."
+    processes:
+      - code: "MM.SUB"
+        title: "Subcontracting"
+        kind: special_procurement
+        memory_hook: "We buy the finished result, but we provide components to the supplier."
+        business_intent: "Outsource a manufacturing or value-added step while the company provides components that the subcontractor consumes."
+        flow: ["PR / MRP", "Subcontracting PO", "Component Provision", "Supplier Processing", "GR Finished Material + Component Consumption", "Supplier Invoice"]
+        main_documents: ["Subcontracting PR", "Subcontracting PO", "Component material documents / outbound delivery when used", "Goods Receipt", "Supplier Invoice"]
+        key_controls: ["Item category L", "Finished material", "Component list / BOM explosion", "Plant", "Supplier", "Component availability", "Subcontracting stock"]
+        integrations: ["MRP", "BOM / Production master data", "Inventory Management", "Shipping / EWM when components are delivered", "Invoice Verification"]
+        lead_questions: ["Who owns the components at the subcontractor?", "When is component consumption posted?", "What happens when actual component consumption differs from planned consumption?"]
+        source_refs: ["SRC-SAP-PROC-SUBCONTRACTING"]
+
+      - code: "MM.CON"
+        title: "Supplier Consignment"
+        kind: special_stock
+        memory_hook: "The stock is in our warehouse, but it is still the supplier's stock until we withdraw it."
+        business_intent: "Keep supplier-owned material available on site and create the payment obligation only when stock is withdrawn or consumed."
+        flow: ["Consignment Agreement / Source", "Consignment PO", "Goods Receipt to Consignment Stock", "Withdrawal / Consumption", "Consignment Settlement", "Supplier Liability"]
+        main_documents: ["Consignment PO", "Material Document", "Consignment Settlement / Accounting Documents"]
+        key_controls: ["Consignment item category", "Supplier", "Plant", "Material", "Consignment info/price", "Special stock", "Withdrawal quantity"]
+        integrations: ["Inventory Management", "MRP", "Invoice Verification / FI"]
+        lead_questions: ["Who owns stock before withdrawal?", "Why is normal supplier invoice receipt not expected at consignment GR?", "Which event creates the payable amount?"]
+        source_refs: ["SRC-SAP-PROC-CONSIGNMENT"]
+
+      - code: "MM.STO"
+        title: "Stock Transport Order"
+        kind: internal_supply
+        memory_hook: "Purchasing requests the stock; Shipping may execute it; Finance depends on company-code boundary."
+        business_intent: "Move material between plants with planning, document flow, stock-in-transit visibility, and optional delivery and intercompany billing."
+        flow: ["Demand at Receiving Plant", "Stock Transport Order", "Outbound Delivery when used", "Goods Issue", "Stock in Transit", "Goods Receipt", "Intercompany Billing / Invoice when cross-company design requires it"]
+        main_documents: ["Stock Transport Order", "Outbound Delivery when used", "Material Documents for GI/GR", "Billing Document and Supplier Invoice in cross-company scenario"]
+        key_controls: ["Supplying plant", "Receiving plant", "PO document type", "Item category", "Delivery type", "Shipping data", "Company-code relationship", "Pricing for cross-company flow"]
+        integrations: ["MM-PUR", "Inventory Management", "SD Shipping", "SD Billing", "MM Invoice Verification", "FI"]
+        lead_questions: ["Same company code or cross-company code?", "With delivery or without delivery?", "When does stock enter stock in transit and which valuation applies?", "Why does SD appear inside an MM stock transfer?"]
+        source_refs: ["SRC-SAP-PROC-STO", "SRC-SAP-PROC-STO-XCC"]
+
+  - code: "03"
+    title: "Services and direct consumption"
+    purpose: "Receipt is not always a warehouse event. The control can be service acceptance, value limits, or direct account assignment."
+    processes:
+      - code: "MM.SRV"
+        title: "Service Procurement"
+        kind: service_procurement
+        memory_hook: "The receipt is evidence that work was performed, not a pallet arriving at a dock."
+        business_intent: "Procure planned or unplanned services, record performed work, accept it, and use accepted service evidence for invoice processing."
+        flow: ["Service Requirement", "PR / PO", "Service Performance", "Service Entry Sheet", "Acceptance", "Supplier Invoice", "FI/CO"]
+        main_documents: ["Purchase Requisition", "Service Purchase Order", "Service Entry Sheet", "Supplier Invoice", "Accounting Document"]
+        key_controls: ["Service or lean-service item design", "Account assignment", "Service lines or limits", "Performance period", "Service performer", "Stated quantity/value", "Acceptance / workflow"]
+        integrations: ["Projects / Maintenance where relevant", "FI/CO", "Workflow", "Supplier invoicing"]
+        lead_questions: ["What proves that the service was performed?", "Planned or unplanned service?", "Which limit prevents uncontrolled value?", "Can invoice posting happen before required acceptance?"]
+        source_refs: ["SRC-SAP-PROC-SERVICE-ENTRY", "SRC-SAP-PROC-LEAN-SERVICES"]
+
+      - code: "MM.LIM"
+        title: "Limit / Blanket Purchase Order"
+        kind: value_based_consumption
+        memory_hook: "Control the spend ceiling when exact quantities are not known at order time."
+        business_intent: "Buy low-detail or unplanned consumption within a defined value limit rather than controlling every item by a fixed material quantity."
+        flow: ["Need / Budget", "Limit PO", "Consumption / Service Evidence", "Supplier Invoice", "Limit Check", "FI/CO"]
+        main_documents: ["Purchase Order with limit item", "Service Entry Sheet when required by design", "Supplier Invoice"]
+        key_controls: ["Item category / limit design", "Overall or expected value", "Account assignment", "Validity", "Supplier", "Invoice tolerance"]
+        integrations: ["FI/CO", "Service procurement", "Workflow"]
+        lead_questions: ["What controls spend if quantity is unknown?", "Is a receipt or service entry required in this design?", "Which account object receives the cost?"]
+        source_refs: ["SRC-SAP-PUR-ITEM-CATEGORY", "SRC-SAP-PROC-LEAN-SERVICES"]
+
+      - code: "MM.CONS"
+        title: "Account-Assigned Direct Consumption"
+        kind: direct_consumption
+        memory_hook: "We buy for a cost object, not for unrestricted warehouse stock."
+        business_intent: "Charge procurement directly to a cost center, order, project, asset, sales order, or another account-assignment object."
+        flow: ["Business Need", "PR with Account Assignment", "PO", "GR / Service Receipt if required", "Invoice", "Cost Object / Asset / Project"]
+        main_documents: ["Purchase Requisition", "Purchase Order", "Material or Service Receipt", "Supplier Invoice", "CO/FI document"]
+        key_controls: ["Account assignment category", "G/L account", "Cost center / order / WBS / asset / sales order", "GR and IR indicators", "Distribution for multiple account assignment"]
+        integrations: ["FI/CO", "Projects", "Asset Accounting", "Maintenance", "Sales where sales-order account assignment is used"]
+        lead_questions: ["Stock or consumption?", "Which account object is mandatory?", "What changes when one item is split across multiple account assignments?"]
+        source_refs: ["SRC-SAP-PUR-ACCOUNT-ASSIGNMENT"]
+
+  - code: "04"
+    title: "Sales-linked procurement"
+    purpose: "SD creates customer demand, while MM owns the supplier-side commercial process. The shipping destination decides which variant you have."
+    processes:
+      - code: "MM.TPO"
+        title: "Third-Party Order Processing"
+        kind: sd_mm_integration
+        memory_hook: "Customer orders from us; supplier ships directly to the customer."
+        business_intent: "Fulfil a customer sales item through an external supplier without receiving the product into the selling company's normal warehouse flow."
+        flow: ["Sales Order", "Automatic Purchase Requisition", "Purchase Order", "Supplier Ships to Customer", "Supplier Invoice / Confirmation", "Customer Billing"]
+        main_documents: ["Sales Order", "Purchase Requisition", "Purchase Order", "Supplier Invoice", "Customer Billing Document"]
+        key_controls: ["Sales item category", "Schedule line category", "Third-party purchasing item", "Delivery address", "Supplier/source", "Confirmation control", "Billing relevance"]
+        integrations: ["SD Sales", "MM Purchasing", "Supplier integration", "FI/CO"]
+        lead_questions: ["Who physically ships the goods?", "Why does the sales order create a PR?", "Which supplier confirmation can update customer dates?", "What triggers customer billing in the chosen variant?"]
+        source_refs: ["SRC-SAP-PROC-THIRD-PARTY"]
+
+      - code: "MM.IPO"
+        title: "Individual Purchase Order / Order-Specific Procurement"
+        kind: sd_mm_integration
+        memory_hook: "The supplier ships to us, but the purchased stock belongs to one sales order."
+        business_intent: "Procure externally for one customer requirement, receive the goods into sales-order stock, and then deliver them to that customer."
+        flow: ["Sales Order", "Automatic Purchase Requisition", "Purchase Order", "Supplier Ships to Plant", "GR to Sales Order Stock", "Outbound Delivery", "Customer Billing"]
+        main_documents: ["Sales Order", "Purchase Requisition", "Purchase Order", "Material Document", "Outbound Delivery", "Billing Document"]
+        key_controls: ["Sales item/schedule-line control", "Sales-order account assignment / stock segment", "Supplier", "Plant", "Delivery date", "GR"]
+        integrations: ["SD Sales", "MM Purchasing", "MRP / individual requirements", "Inventory Management", "Shipping", "FI/CO"]
+        lead_questions: ["How is this different from third-party processing?", "Why can this stock not satisfy another customer demand?", "What document proves that supply arrived before customer delivery?"]
+        source_refs: ["SRC-SAP-PROC-INDIVIDUAL-PO"]
+
+  - code: "05"
+    title: "Returns and reverse flow"
+    purpose: "Procurement also owns controlled reversal: stock leaves the company and the commercial side expects a supplier credit or replacement."
+    processes:
+      - code: "MM.RET"
+        title: "Return to Supplier"
+        kind: reverse_procurement
+        memory_hook: "Reverse the logistics and the commercial claim together."
+        business_intent: "Return defective, excess, or rejected goods to a supplier while preserving a traceable link between stock movement, return delivery, credit, and replacement when used."
+        flow: ["Return Decision", "Returns PO or Return Delivery", "Outbound Delivery when used", "Goods Issue / Return Posting", "Supplier Credit Memo", "Replacement PO when required"]
+        main_documents: ["Returns Purchase Order or referenced material document", "Outbound Delivery when used", "Material Document", "Supplier Credit Memo", "Replacement Purchase Order when used"]
+        key_controls: ["Reference document", "Returns indicator / returns PO", "Quantity", "Stock type / batch", "Shipping processing", "Credit quantity/value", "Replacement requirement"]
+        integrations: ["QM", "Inventory Management", "Shipping / EWM", "Invoice Verification", "FI"]
+        lead_questions: ["Simple return posting or managed supplier-return process?", "Is shipping documentation required?", "How is the supplier credit matched to the returned quantity?", "Is replacement supply a new procurement requirement?"]
+        source_refs: ["SRC-SAP-PROC-SUPPLIER-RETURNS"]
+
+document_cheat_sheet:
+  - document: "Purchase Requisition (PR)"
+    role: "Internal request or planning proposal. It is not yet the supplier commitment."
+    usually_fill: ["Material or service", "Quantity and unit", "Delivery date", "Plant", "Purchasing group", "Account assignment when consumption", "Optional source / supplier"]
+    created_by: "Requester, MRP, project/maintenance process, or sales-driven process"
+    follow_on: "Source assignment, RFQ, contract reference, or Purchase Order"
+
+  - document: "Request for Quotation (RFQ)"
+    role: "Invitation to one or more suppliers to submit an offer."
+    usually_fill: ["Supplier(s)", "Material/service", "Quantity", "Delivery date", "Quotation deadline", "Plant / purchasing organization context"]
+    created_by: "Purchasing"
+    follow_on: "Supplier Quotation and source selection"
+
+  - document: "Supplier Quotation"
+    role: "Supplier commercial offer recorded for comparison and later reference."
+    usually_fill: ["Price and conditions", "Validity", "Delivery time/date", "Quantity / scales", "Commercial terms"]
+    created_by: "Purchasing records supplier response"
+    follow_on: "Purchase Order or Outline Agreement"
+
+  - document: "Purchase Contract"
+    role: "Long-term quantity or value agreement used as a source for later release orders."
+    usually_fill: ["Supplier", "Agreement type", "Validity", "Target quantity or value", "Material/service", "Plant/account assignment where relevant", "Conditions"]
+    created_by: "Purchasing / strategic buyer"
+    follow_on: "Release Purchase Order"
+
+  - document: "Scheduling Agreement"
+    role: "Long-term supply agreement executed through schedule lines and releases."
+    usually_fill: ["Supplier", "Validity", "Target quantity", "Material", "Plant", "Purchasing organization/group", "Conditions", "Schedule lines / release setup"]
+    created_by: "Purchasing"
+    follow_on: "Delivery schedules, ASN/inbound delivery, Goods Receipt"
+
+  - document: "Purchase Order (PO)"
+    role: "Main supplier-facing commercial commitment."
+    usually_fill: ["Document type", "Supplier", "Purchasing organization/group", "Company code", "Material/service", "Item category", "Account assignment", "Plant/storage location", "Quantity/unit", "Delivery date", "Price/conditions", "Tax", "Incoterms/payment terms where relevant", "GR/IR and confirmation controls"]
+    created_by: "Purchasing, conversion from PR, or automation"
+    follow_on: "Supplier output/confirmation, inbound delivery, receipt, invoice"
+
+  - document: "Inbound Delivery / ASN"
+    role: "Expected physical receipt and supplier shipping information when inbound processing is used."
+    usually_fill: ["PO reference", "Supplier", "Expected date", "Quantity", "Receiving location", "Batch / handling unit data when relevant"]
+    created_by: "Supplier message, EDI/API, or receiving process"
+    follow_on: "Warehouse processing and Goods Receipt"
+
+  - document: "Material Document / Goods Receipt"
+    role: "Proof that a goods movement happened and the inventory/accounting consequences were posted."
+    usually_fill: ["PO or delivery reference", "Movement type", "Quantity", "Plant/storage location", "Stock type", "Batch/serial data when relevant", "Posting date"]
+    created_by: "Warehouse / Inventory Management"
+    follow_on: "PO history, stock update, GR/IR, quality or warehouse follow-up"
+
+  - document: "Service Entry Sheet (SES)"
+    role: "Evidence that ordered service work was performed and, after acceptance, can support invoice processing."
+    usually_fill: ["Reference PO", "Service lines", "Stated quantity/value", "Performance period", "Service performer", "Text/notes", "Acceptance / approval status"]
+    created_by: "Requester, service recipient, or integrated service process"
+    follow_on: "Acceptance and Supplier Invoice"
+
+  - document: "Supplier Invoice"
+    role: "Supplier claim matched against the purchasing and receipt history according to the process design."
+    usually_fill: ["Supplier invoice reference", "Invoice/posting date", "PO reference", "Amount/currency", "Tax", "Quantity/value", "GR/SES reference when required"]
+    created_by: "Accounts Payable / Invoice Verification / supplier integration"
+    follow_on: "Liability, block/release, payment, GR/IR clearing"
+
+  - document: "Accounting Document"
+    role: "Financial result created from goods movement, invoice, settlement, or other valuated event."
+    usually_fill: ["Usually generated from logistics context rather than manually completed in Purchasing", "G/L accounts", "Supplier", "Tax", "Cost object", "Amounts and currency"]
+    created_by: "Automatic integration or Finance posting"
+    follow_on: "FI/CO reporting, clearing, payment"
+
+master_data_inputs:
+  - object: "Business Partner – Supplier"
+    why: "Provides supplier identity, company-code data, purchasing-organization data, ordering currency/terms, partner roles, and communication context."
+  - object: "Material Master"
+    why: "Provides units, plant/MRP settings, purchasing values, valuation, batch/serial controls, and data needed by logistics execution."
+  - object: "Purchasing Info Record"
+    why: "Stores supplier-material purchasing relationship and can provide lead time, order unit, and conditions."
+  - object: "Source List"
+    why: "Controls valid, fixed, or blocked sources for a material, plant, and validity period."
+  - object: "Quota Arrangement"
+    why: "Distributes requirements between allowed sources when more than one source should share demand."
+
+integration_map:
+  - boundary: "MM ↔ SD"
+    processes: ["Third-party processing", "Individual purchase order", "Stock transport order with delivery/billing", "Supplier returns with shipping"]
+    ownership_question: "Is SD only executing shipping/billing, or did the sales order create the procurement requirement?"
+  - boundary: "MM ↔ PP/MRP"
+    processes: ["MRP-driven procurement", "Subcontracting", "Scheduling agreements", "Stock transport planning"]
+    ownership_question: "Did planning create the demand correctly before Purchasing selected a source?"
+  - boundary: "MM ↔ Inventory / EWM"
+    processes: ["Goods receipt", "Inbound delivery", "STO", "Subcontracting components", "Supplier returns"]
+    ownership_question: "Which logistics document proves the physical movement and which stock type owns the quantity now?"
+  - boundary: "MM ↔ FI/CO"
+    processes: ["Stock procurement", "Direct consumption", "Service procurement", "Invoice verification", "Consignment settlement", "Cross-company STO"]
+    ownership_question: "Which event creates inventory value, cost, GR/IR, supplier liability, or intercompany clearing?"
+  - boundary: "MM ↔ QM"
+    processes: ["Goods receipt inspection", "Blocked/quality stock", "Supplier complaint and return"]
+    ownership_question: "Is the procurement problem really a source/commercial issue, or did quality control block the usable stock?"
+  - boundary: "MM ↔ Supplier Integration"
+    processes: ["PO output", "Order confirmation", "ASN/inbound delivery", "Supplier invoice"]
+    ownership_question: "Did the message arrive technically, and did it change the expected business state?"
+
+fast_comparisons:
+  - pair: "MM.SUB ↔ MM.CON"
+    title: "Subcontracting vs supplier consignment"
+    distinction: "Subcontracting: your components go to the supplier and are consumed to make the ordered product. Consignment: supplier-owned stock sits at your site and becomes payable when you withdraw it."
+  - pair: "MM.STO ↔ MM.P2P"
+    title: "Internal supplying plant vs external supplier"
+    distinction: "STO controls plant-to-plant supply and may use SD shipping and intercompany billing. Standard P2P is an external supplier purchase."
+  - pair: "MM.TPO ↔ MM.IPO"
+    title: "Direct-to-customer vs order-specific stock"
+    distinction: "Third-party: supplier can ship directly to the customer. Individual PO: supplier ships to your plant and the received stock is reserved for one sales order."
+  - pair: "MM.CTR ↔ MM.SA"
+    title: "Contract vs scheduling agreement"
+    distinction: "A contract is normally consumed by release purchase orders. A scheduling agreement is executed through schedule lines/releases under the same long-term agreement."
+  - pair: "MM.SRV ↔ MM.P2P"
+    title: "Service acceptance vs goods receipt"
+    distinction: "Service procurement proves work with a service entry/acceptance process. Material procurement normally proves execution with a goods movement."
+
+assessment_path:
+  - "Draw the standard PR → PO → GR → Invoice chain first."
+  - "Name the process variant and explain what changed from the standard chain."
+  - "List the controlling documents and the key item-level switches."
+  - "Explain stock ownership and the receipt or acceptance event."
+  - "Trace one integration boundary: SD, MRP, warehouse, QM, or FI/CO."
+  - "Finish with a failure example and the first object you would check."
