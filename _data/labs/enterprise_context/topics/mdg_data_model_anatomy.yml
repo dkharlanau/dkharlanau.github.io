@@ -1,0 +1,263 @@
+id: TOPIC-MDG-DATA-MODEL-ANATOMY
+type: research_topic
+title: "SAP MDG Data Model Anatomy"
+summary: "A design model for understanding governed roots, dependent entities, attributes, relationships, staging, active areas, keys, and the delivered Material structure before touching UI or workflow."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/data-model/"
+source_reviewed_at: "2026-08-15"
+
+business_question: "What is the governed object made of, where is each part stored, how is it keyed, and what changes when we extend the model?"
+
+maturity:
+  gates_complete: 5
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: planned
+
+memory_model:
+  phrase: "Root → Entity → Attribute → Relationship → Staging → Activate → Active Area"
+  design_rule: "Model the business object before the screen. A field request is incomplete until its entity, key, ownership, validation, storage, replication, and consumer are known."
+
+modeling_layers:
+  - order: 1
+    title: "Governed root"
+    question: "What object is independently governed?"
+    example: "Material is a governed root in the delivered MM model."
+  - order: 2
+    title: "Entity structure"
+    question: "Which data belongs to the root and which data is a dependent node?"
+    example: "Plant, sales, purchasing, valuation, units, classification, and texts are different parts of the Material structure."
+  - order: 3
+    title: "Attributes and keys"
+    question: "Which fields describe the entity and which fields qualify its identity or organizational level?"
+    example: "A plant-dependent entity needs the Material context plus a plant qualifier."
+  - order: 4
+    title: "Relationships and cardinality"
+    question: "Is the child optional, single, or repeating, and what leads its key?"
+    example: "A material can have several units of measure or organizational extensions."
+  - order: 5
+    title: "Processing state"
+    question: "Where does an unapproved change live and what becomes active after approval?"
+    example: "Change-request data is held in staging until activation."
+  - order: 6
+    title: "Active storage"
+    question: "Does MDG own active storage or reuse an application active area?"
+    example: "The choice affects business-logic reuse, activation, and replication design."
+
+storage_and_use_types:
+  - id: TERM-MDG-ENTITY-TYPE-1
+    type: term
+    title: "Storage and use type 1"
+    meaning: "Root-style entity that can be changed through an MDG change request. MDG generates the required storage structures."
+    design_use: "Use for independently governed roots or entities that start governance processing."
+    source_refs: [SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025, SRC-SAP-MDG-CUSTOM-OBJECT-ENTITY-TYPES]
+  - id: TERM-MDG-ENTITY-TYPE-2
+    type: term
+    title: "Storage and use type 2"
+    meaning: "Generated reference-list style entity that is not processed in change requests."
+    design_use: "Use when the values are maintained as supporting lists inside the MDG model rather than governed as the main object."
+    source_refs: [SRC-SAP-MDG-CUSTOM-OBJECT-ENTITY-TYPES]
+  - id: TERM-MDG-ENTITY-TYPE-3
+    type: term
+    title: "Storage and use type 3"
+    meaning: "External or reference entity known to the system but not changed by MDG; MDG does not generate storage for it."
+    design_use: "Useful for qualifying relationships and reference values that already exist outside the governed object."
+    source_refs: [SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025, SRC-SAP-MDG-CUSTOM-OBJECT-ENTITY-TYPES]
+  - id: TERM-MDG-ENTITY-TYPE-4
+    type: term
+    title: "Storage and use type 4"
+    meaning: "Dependent entity changed only in the context of a type-1 entity; MDG generates storage for it."
+    design_use: "Use for dependent nodes such as repeating or organizational parts of a governed root."
+    source_refs: [SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025, SRC-SAP-MDG-CUSTOM-OBJECT-ENTITY-TYPES]
+
+active_area_decision:
+  id: DEC-MDG-ACTIVE-AREA
+  type: configuration_decision
+  question: "Should MDG be the active area, or should it reuse an existing application active area?"
+  options:
+    - option: "MDG active area"
+      fit: "There is no existing active application model or direct reuse of application logic is not required."
+      consequence: "Active and staging states use MDG-generated storage; local and remote consumption may require explicit replication."
+    - option: "Reuse active area"
+      fit: "Existing application tables and business logic should remain the active source."
+      consequence: "Inactive changes are staged in MDG and activation writes through the reuse-area access layer."
+  decision_checks:
+    - "Which application owns the active business object today?"
+    - "Which existing validations and update logic must be reused?"
+    - "Does local consumption need the active record immediately after activation?"
+    - "What replication is needed after activation?"
+  source_refs: [SRC-SAP-MDG-DESIGN-DATA-MODEL-2025, SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025]
+
+material_anatomy:
+  root:
+    id: MD-MAT-MATERIAL
+    title: "Material / Product"
+    delivered_root_entity: "MATERIAL"
+    business_role: "Shared product identity used by planning, procurement, sales, warehouse, production, quality, and finance."
+  slices:
+    - id: OBJ-MDG-MAT-BASIC
+      type: business_object
+      title: "Basic Material Data"
+      scope: "Identity and cross-organizational product attributes."
+      examples: ["description", "base unit of measure", "weight and dimensions", "division"]
+      consumers: ["Sales", "Procurement", "Warehouse", "Transport", "Finance"]
+    - id: OBJ-MDG-MAT-PLANT
+      type: business_object
+      title: "Plant Data"
+      scope: "Plant-dependent planning, procurement, production, ATP, quality, storage, costing, and work-scheduling attributes."
+      examples: ["MRP settings", "procurement settings", "loading group", "ATP settings", "work scheduling"]
+      consumers: ["MRP", "Procurement", "Production", "Sales", "Warehouse"]
+    - id: OBJ-MDG-MAT-SALES
+      type: business_object
+      title: "Sales Data"
+      scope: "Sales-organization / distribution-channel and sales-relevant product attributes."
+      examples: ["sales unit", "minimum order quantity", "sales texts", "tax classification"]
+      consumers: ["Sales Order", "Delivery", "Billing"]
+    - id: OBJ-MDG-MAT-PURCH
+      type: business_object
+      title: "Purchasing Data"
+      scope: "Purchasing-relevant attributes and texts that support sourcing and purchasing use."
+      examples: ["purchasing data", "purchasing text", "order-unit context"]
+      consumers: ["Purchase Requisition", "Purchase Order"]
+    - id: OBJ-MDG-MAT-VALUATION
+      type: business_object
+      title: "Accounting and Valuation Data"
+      scope: "Valuation, accounting, costing, and material-ledger-relevant parts of the product record."
+      examples: ["valuation data", "accounting data", "costing data"]
+      consumers: ["Inventory Valuation", "Goods Movement Accounting", "Product Costing"]
+    - id: OBJ-MDG-MAT-UNITS
+      type: business_object
+      title: "Units of Measure"
+      scope: "Alternative and logistical units used when the same product is bought, sold, stored, or transported in different measures."
+      examples: ["base unit", "alternative unit", "conversion"]
+      consumers: ["Procurement", "Sales", "Warehouse", "Transport"]
+    - id: OBJ-MDG-MAT-CLASS
+      type: business_object
+      title: "Classification"
+      scope: "Class assignments and characteristic values used for search, grouping, determination, or downstream logic."
+      examples: ["class assignment", "characteristic valuation"]
+      consumers: ["Search", "Warehouse", "Engineering", "Downstream Integrations"]
+  source_refs: [SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025]
+
+extension_reasoning:
+  requirement: "Add a new governed field or dependent node"
+  path:
+    - step: 1
+      question: "Does the data belong to this master-data object?"
+      weak_answer: "It is shown on the same screen."
+      lead_signal: "Ownership and lifecycle define the boundary, not screen proximity."
+    - step: 2
+      question: "Which entity and organizational level own the value?"
+      weak_answer: "Put it on Material."
+      lead_signal: "Separate global, plant, sales-area, purchasing, valuation, and repeating data."
+    - step: 3
+      question: "Is it an attribute or a new dependent entity?"
+      weak_answer: "Create a custom table because it is easier."
+      lead_signal: "Use cardinality, key structure, lifecycle, search, and replication needs to choose."
+    - step: 4
+      question: "Which active area and business logic should be reused?"
+      weak_answer: "MDG stores everything."
+      lead_signal: "Classic MDG can use MDG active storage or a reuse active area depending on the object design."
+    - step: 5
+      question: "What else must change?"
+      weak_answer: "Only the UI field."
+      lead_signal: "Validation, workflow, authorization, replication, search, reporting, migration, and consumer logic may all be affected."
+
+synthetic_case:
+  id: SCN-MDG-GTI-MATERIAL-PLANT-EXTENSION
+  type: scenario
+  title: "GTI extends an existing material to Plant DE02"
+  synthetic: true
+  starting_state: "Material GTI-AXLE-100 already exists globally and in Plant DE01."
+  request: "Plant DE02 needs the material for external procurement and outbound delivery."
+  required_model_reasoning:
+    - "Do not create a new Material identity. Extend the existing root with plant-dependent data."
+    - "Identify the plant-dependent MRP, procurement, ATP, shipping, storage, quality, and valuation slices required by the process scope."
+    - "Validate that organizational references such as Plant DE02 exist and are valid reference values."
+    - "Activate the change and verify that downstream consumers receive every required organizational slice."
+  proof:
+    - "MRP can plan the material in Plant DE02."
+    - "A purchase order can use the material for Plant DE02."
+    - "A sales delivery can determine the expected shipping execution data when the material is sold from Plant DE02."
+
+assessment_cases:
+  - id: TEST-MDG-DM-EXPLAIN-STAGING
+    type: test_case
+    level: explain
+    prompt: "Why does MDG need staging?"
+    answer_shape: ["unapproved change state", "change request lifecycle", "activation boundary", "conflict / active-state awareness"]
+    weak_answer: "Because workflow needs a temporary table."
+  - id: TEST-MDG-DM-DESIGN-FIELD
+    type: test_case
+    level: design
+    prompt: "The business asks for a new plant-specific hazardous-storage field on Material. How do you decide where to model it?"
+    answer_shape: ["object boundary", "plant-level entity", "attribute versus child entity", "validation", "authorization", "replication", "consumer proof"]
+  - id: TEST-MDG-DM-COMPARE-ACTIVE-AREA
+    type: test_case
+    level: compare
+    prompt: "When would you prefer a reuse active area over MDG active storage?"
+    answer_shape: ["existing application model", "business-logic reuse", "activation path", "local availability", "replication trade-off"]
+
+relations:
+  - subject: TOPIC-MDG-DATA-MODEL-ANATOMY
+    predicate: applies_to
+    object: APP-SAP-MDG-S4
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025]
+  - subject: MD-MAT-MATERIAL
+    predicate: contains
+    object: OBJ-MDG-MAT-PLANT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025]
+  - subject: MD-MAT-MATERIAL
+    predicate: contains
+    object: OBJ-MDG-MAT-SALES
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025]
+  - subject: MD-MAT-MATERIAL
+    predicate: contains
+    object: OBJ-MDG-MAT-VALUATION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025]
+  - subject: SCN-MDG-GTI-MATERIAL-PLANT-EXTENSION
+    predicate: applies_to
+    object: MD-MAT-MATERIAL
+    evidence_type: synthetic_example
+    confidence: high
+  - subject: DEC-MDG-ACTIVE-AREA
+    predicate: applies_to
+    object: TOPIC-MDG-DATA-MODEL-ANATOMY
+    evidence_type: reasoned_interpretation
+    confidence: high
+
+source_refs:
+  - SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025
+  - SRC-SAP-MDG-DESIGN-DATA-MODEL-2025
+  - SRC-SAP-MDG-CUSTOM-OBJECT-ENTITY-TYPES
+  - SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025
+
+tags:
+  - sap
+  - mdg
+  - data-model
+  - entity-type
+  - staging
+  - active-area
+  - reuse-area
+  - material
+  - master-data
