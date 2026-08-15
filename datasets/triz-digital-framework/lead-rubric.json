@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "rubric_id": "sap-lead-contradiction-rubric",
+  "title": "SAP Lead Assessment Rubric",
+  "updated_at": "2026-08-15",
+  "max_score": 24,
+  "purpose": "Score a 60-90 second architecture or process answer. Reward problem framing, contradiction thinking, options, authority design, evidence and concise Lead communication.",
+  "dimensions": [
+    {
+      "id": "framing",
+      "name": "Problem framing and useful function",
+      "max": 4,
+      "anchors": {
+        "0": "Jumps directly to a product, transaction or configuration change.",
+        "1": "Restates the symptom but not the business outcome or affected object.",
+        "2": "Names the business outcome and main actors, but boundary or evidence is weak.",
+        "3": "Frames observed behavior, useful function, business object, boundary and key evidence.",
+        "4": "Also separates facts, assumptions and constraints, and identifies the decision that matters."
+      }
+    },
+    {
+      "id": "contradiction",
+      "name": "Contradiction quality",
+      "max": 4,
+      "anchors": {
+        "0": "No trade-off is visible.",
+        "1": "Names a generic trade-off where one side is obviously undesirable.",
+        "2": "Names two useful properties but accepts compromise too early.",
+        "3": "States why both sides are useful and selects a plausible separation operator.",
+        "4": "Tests more than one separation axis and shows how the conflict can disappear for different conditions, times, contexts, levels, authorities or representations."
+      }
+    },
+    {
+      "id": "options",
+      "name": "System-shape options",
+      "max": 4,
+      "anchors": {
+        "0": "Offers one preferred solution only.",
+        "1": "Offers several products that implement the same design.",
+        "2": "Offers two technical alternatives with limited process or ownership change.",
+        "3": "Offers at least two materially different system shapes with trade-offs.",
+        "4": "Includes simplification, deterministic redesign and uncertainty-assisted design where relevant, and states the complexity tax of each."
+      }
+    },
+    {
+      "id": "authority",
+      "name": "Technology and authority allocation",
+      "max": 4,
+      "anchors": {
+        "0": "Technology choice and authority are mixed together or uncontrolled.",
+        "1": "Mentions controls but ownership is vague.",
+        "2": "Separates some deterministic rules from flexible logic.",
+        "3": "Places rules, workflow, events, retrieval, AI and human judgment deliberately and names accountable ownership.",
+        "4": "Also separates read, propose, validate, approve and execute, with risk-based limits and reversibility."
+      }
+    },
+    {
+      "id": "evidence",
+      "name": "Evidence, experiment and counter-metric",
+      "max": 4,
+      "anchors": {
+        "0": "No evidence or test is proposed.",
+        "1": "Uses a target metric only.",
+        "2": "Names useful evidence and a primary metric.",
+        "3": "Adds a counter-metric and a bounded test scope.",
+        "4": "Adds failure condition, rollback or recovery, and explains what evidence would change the recommendation."
+      }
+    },
+    {
+      "id": "communication",
+      "name": "Lead communication",
+      "max": 4,
+      "anchors": {
+        "0": "Answer is a list of features or acronyms.",
+        "1": "Technically correct but difficult to follow.",
+        "2": "Has a clear recommendation but weak structure or ownership language.",
+        "3": "Concise structure: problem, contradiction, options, decision criteria, experiment.",
+        "4": "Makes uncertainty explicit, avoids false certainty, and explains the decision in business and architecture language within 60-90 seconds."
+      }
+    }
+  ],
+  "bands": [
+    {"min": 0, "max": 9, "id": "narrow", "name": "Narrow solution answer", "interpretation": "Mostly configuration or product thinking. Needs stronger business framing and system trade-offs."},
+    {"min": 10, "max": 15, "id": "consultant", "name": "Solid consultant answer", "interpretation": "Good delivery knowledge, but the architecture decision and counter-effects are not yet consistently explicit."},
+    {"min": 16, "max": 20, "id": "lead_ready", "name": "Lead-ready answer", "interpretation": "Frames the problem, exposes trade-offs, compares system shapes and links the recommendation to evidence and ownership."},
+    {"min": 21, "max": 24, "id": "strong_lead", "name": "Strong Lead answer", "interpretation": "Shows system-level judgment, authority design, reversible experimentation and concise communication without pretending uncertainty is gone."}
+  ],
+  "hard_fail_signals": [
+    {"id": "vendor_first", "label": "Vendor or product selected before problem and boundary are clear"},
+    {"id": "single_option", "label": "Only one system shape is considered"},
+    {"id": "authority_gap", "label": "No accountable owner or write/approval boundary"},
+    {"id": "ai_authority", "label": "AI capability is treated as authorization"},
+    {"id": "no_counter_metric", "label": "Only the improvement metric is measured"},
+    {"id": "invented_fact", "label": "Current configuration, policy or system behavior is invented instead of marked unknown"}
+  ],
+  "answer_spine": [
+    "Frame the observed behavior and useful function.",
+    "State the contradiction: improving A makes useful property B worse.",
+    "Separate the conflict by condition, time, context, level, authority or representation.",
+    "Compare at least two materially different system shapes.",
+    "Allocate deterministic logic, workflow/events, AI and human authority deliberately.",
+    "Name the evidence, experiment, primary metric and counter-metric."
+  ]
+}
