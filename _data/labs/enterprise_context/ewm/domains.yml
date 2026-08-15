@@ -1,0 +1,429 @@
+id: EWM-DOMAIN-MAP
+title: "EWM Domain & Capability Map"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+summary: >-
+  A responsibility map of SAP Extended Warehouse Management. It separates warehouse foundation,
+  execution, optimization, shipping, production, quality, labor, automation, and monitoring so
+  that processes and objects are not mixed into one long feature list.
+
+working_rule: >-
+  I classify an EWM requirement by business responsibility first. Then I identify the owning
+  object, control mechanism, integration boundary, and operational failure signal. A transaction
+  code is useful only after those four questions are clear.
+
+subdomains:
+  - id: EWM-AREA-FOUNDATION
+    title: "Warehouse Foundation & Master Data"
+    purpose: "Describe the physical warehouse and the data that controls warehouse execution."
+    capabilities:
+      - "warehouse-number design"
+      - "storage types, sections and bins"
+      - "activity areas and bin sorting"
+      - "work centers"
+      - "doors, staging areas and loading points"
+      - "warehouse product data"
+      - "packaging specifications"
+      - "resources and queues"
+    core_objects:
+      - "Warehouse Number"
+      - "Storage Type"
+      - "Storage Section"
+      - "Storage Bin"
+      - "Activity Area"
+      - "Work Center"
+      - "Door"
+      - "Staging Area"
+      - "Loading Point"
+      - "Warehouse Product"
+      - "Packaging Specification"
+      - "Resource"
+      - "Queue"
+    key_controls:
+      - "warehouse-number settings"
+      - "storage-type roles and search sequences"
+      - "activity-dependent bin sorting"
+      - "packaging-specification determination"
+    integrations:
+      - "Product / Material Master"
+      - "Business Partner"
+      - "MM-IM organizational assignments"
+      - "PP Production Supply Area"
+      - "TM loading point"
+    failure_signal: "Execution logic looks wrong because the warehouse structure or warehouse-specific master data does not represent the physical operation."
+    source_refs: [SRC-SAP-EWM-WAREHOUSE-NUMBER, SRC-SAP-EWM-ACTIVITY-AREA, SRC-SAP-EWM-WORK-CENTER, SRC-SAP-EWM-PACKAGING-SPEC]
+
+  - id: EWM-AREA-INBOUND
+    title: "Inbound Logistics & Putaway"
+    purpose: "Turn an expected or received delivery into controlled receipt, inspection, deconsolidation and final putaway."
+    capabilities:
+      - "inbound delivery processing"
+      - "unloading and receiving"
+      - "goods receipt"
+      - "deconsolidation"
+      - "quality steps"
+      - "putaway task creation"
+      - "putaway strategy"
+      - "multi-step storage control"
+    core_objects:
+      - "Inbound Delivery"
+      - "Warehouse Request"
+      - "Handling Unit"
+      - "Warehouse Task"
+      - "Warehouse Order"
+      - "Inspection Document / Inspection Lot"
+    key_controls:
+      - "Warehouse Process Type"
+      - "putaway control indicator"
+      - "storage-type search"
+      - "storage-section and bin determination"
+      - "POSC / LOSC"
+    integrations:
+      - "MM Purchasing / Inbound Delivery"
+      - "QM"
+      - "TM / Shipping and Receiving"
+      - "production receipt"
+    failure_signal: "Goods have arrived, but delivery status, GR, stock type, HU, putaway WT or destination determination disagree."
+    source_refs: [SRC-SAP-EWM-WAREHOUSE-REQUEST, SRC-SAP-EWM-WAREHOUSE-TASK, SRC-SAP-EWM-STORAGE-CONTROL]
+
+  - id: EWM-AREA-OUTBOUND
+    title: "Outbound Fulfillment"
+    purpose: "Convert delivery demand into picking, packing, staging, loading and goods issue."
+    capabilities:
+      - "outbound delivery order processing"
+      - "wave management"
+      - "stock removal"
+      - "picking"
+      - "warehouse-order creation"
+      - "packing and cartonization context"
+      - "staging and loading"
+      - "goods issue"
+    core_objects:
+      - "Outbound Delivery Order"
+      - "Wave"
+      - "Warehouse Task"
+      - "Warehouse Order"
+      - "Handling Unit"
+      - "Planned Shipping Handling Unit"
+      - "Freight Order or Transportation Unit depending on shipping model"
+    key_controls:
+      - "wave template / wave release"
+      - "stock-removal strategy"
+      - "Warehouse Order Creation Rule"
+      - "queue/resource selection"
+      - "staging-area and door determination"
+    integrations:
+      - "SD / Delivery Management"
+      - "TM"
+      - "Advanced Shipping and Receiving"
+      - "GTS through the transportation/shipping architecture where applicable"
+    failure_signal: "The delivery is due but work is not released, stock is not selected, tasks are not grouped, or staging/loading cannot reach GI."
+    source_refs: [SRC-SAP-EWM-WAVE, SRC-SAP-EWM-WAREHOUSE-ORDER, SRC-SAP-EWM-STAGING-DOOR]
+
+  - id: EWM-AREA-INTERNAL
+    title: "Internal Warehouse Logistics"
+    purpose: "Keep stock positioned, available and consistent inside the warehouse."
+    capabilities:
+      - "ad hoc movements"
+      - "replenishment"
+      - "posting changes"
+      - "scrapping"
+      - "rearrangement"
+      - "internal HU movements"
+    core_objects:
+      - "Warehouse Task"
+      - "Handling Unit"
+      - "Stock / Quant"
+      - "Posting Change"
+      - "Warehouse Order"
+    key_controls:
+      - "replenishment method"
+      - "minimum/maximum or demand trigger"
+      - "stock type"
+      - "internal Warehouse Process Type"
+      - "destination determination"
+    integrations:
+      - "MM-IM stock state"
+      - "QM stock status"
+      - "production stock status"
+    failure_signal: "Stock exists in the warehouse but is in the wrong area, wrong stock type, or not replenished to the point of use."
+    source_refs: [SRC-SAP-EWM-REPLENISHMENT, SRC-SAP-EWM-POSTING-CHANGE, SRC-SAP-EWM-REARRANGEMENT]
+
+  - id: EWM-AREA-PRODUCTION
+    title: "Production Logistics"
+    purpose: "Stage components to production and receive production output without losing ownership between PP/MES and warehouse execution."
+    capabilities:
+      - "delivery-based production supply"
+      - "advanced production integration"
+      - "MES-driven staging"
+      - "JIT supply to production"
+      - "MES-driven repetitive manufacturing"
+      - "receipt from production"
+    core_objects:
+      - "Production Supply Area"
+      - "Production Material Request (PMR)"
+      - "Staging Requirement"
+      - "Expected Goods Receipt"
+      - "Warehouse Task"
+      - "Handling Unit"
+    key_controls:
+      - "production integration type"
+      - "PSA and bin mapping"
+      - "staging method"
+      - "warehouse process type"
+      - "consumption / receipt posting model"
+    integrations:
+      - "PP-SFC Production Orders"
+      - "PP-PI Process Orders"
+      - "Repetitive Manufacturing"
+      - "Kanban"
+      - "SAP Digital Manufacturing / MES"
+    failure_signal: "Production demand is valid, but staging, PSA destination, consumption or production receipt is inconsistent across systems."
+    source_refs: [SRC-SAP-EWM-PRODUCTION-SUPPLY, SRC-SAP-EWM-PRODUCTION-INTEGRATION, SRC-SAP-DM-EWM]
+
+  - id: EWM-AREA-SHIPPING
+    title: "Shipping, Receiving & Dock Execution"
+    purpose: "Connect warehouse readiness with vehicles, freight orders, loading points, doors and staging capacity."
+    capabilities:
+      - "shipping and receiving"
+      - "Advanced Shipping and Receiving"
+      - "door and staging-area determination"
+      - "loading and unloading"
+      - "transportation-unit processing in classic scenarios"
+      - "freight-order-driven processing in Advanced Shipping and Receiving"
+    core_objects:
+      - "Door"
+      - "Staging Area / Staging Bay"
+      - "Loading Point"
+      - "Transportation Unit (classic Shipping and Receiving)"
+      - "Vehicle (classic Shipping and Receiving)"
+      - "Freight Order (Advanced Shipping and Receiving)"
+      - "Delivery"
+    key_controls:
+      - "staging-area determination"
+      - "door determination"
+      - "loading-point assignment"
+      - "arrival / loading / departure status"
+    integrations:
+      - "TM"
+      - "SD / Delivery Management"
+      - "MM-IM"
+      - "Dock Appointment Scheduling in relevant classic scenarios"
+    failure_signal: "Warehouse work is complete but the truck, freight order, door, staging location or loading status does not represent the same execution state."
+    source_refs: [SRC-SAP-EWM-SHIPPING-RECEIVING, SRC-SAP-EWM-ASR-EMBEDDED, SRC-SAP-EWM-ASR-PREREQ, SRC-SAP-EWM-STAGING-DOOR]
+
+  - id: EWM-AREA-CROSSDOCK
+    title: "Cross-Docking & Flow-Through"
+    purpose: "Move inbound stock toward outbound demand without unnecessary final storage."
+    capabilities:
+      - "planned cross-docking"
+      - "EWM-triggered opportunistic cross-docking"
+      - "merchandise-distribution cross-docking"
+      - "transportation cross-docking in supported decentralized scenarios"
+    core_objects:
+      - "Inbound Delivery"
+      - "Outbound Delivery Order"
+      - "Handling Unit"
+      - "Warehouse Task"
+      - "Cross-Docking Route"
+    key_controls:
+      - "cross-docking relevance"
+      - "warehouse/product activation"
+      - "putaway delay where relevant"
+      - "cross-docking work-center determination"
+    integrations:
+      - "ERP delivery demand"
+      - "transportation/shipping"
+      - "warehouse RF execution for selected opportunistic processes"
+    failure_signal: "The system stores goods that should flow through, or cross-docks goods without a valid outbound or control context."
+    source_refs: [SRC-SAP-EWM-CROSSDOCK-PLANNED, SRC-SAP-EWM-CROSSDOCK-OPPORTUNISTIC]
+
+  - id: EWM-AREA-VAS-PACKING
+    title: "Packing, Kitting & Value-Added Services"
+    purpose: "Change the logistical presentation of goods through packing, labeling, assembly, kitting and related work-center activities."
+    capabilities:
+      - "packing and repacking"
+      - "deconsolidation"
+      - "VAS orders"
+      - "labeling"
+      - "kitting"
+      - "customer-specific packing"
+    core_objects:
+      - "Handling Unit"
+      - "Packaging Specification"
+      - "Work Center"
+      - "VAS Order"
+      - "Warehouse Request"
+    key_controls:
+      - "VAS relevance"
+      - "packaging-specification determination"
+      - "process-oriented storage control"
+      - "work-center determination"
+    integrations:
+      - "delivery processing"
+      - "product / packaging master data"
+      - "Labor Management"
+    failure_signal: "Physical handling requirements exist, but the delivery, packaging specification, VAS order or work-center step does not trigger the required work."
+    source_refs: [SRC-SAP-EWM-VAS, SRC-SAP-EWM-PACKAGING-SPEC, SRC-SAP-EWM-WORK-CENTER, SRC-SAP-EWM-POSC]
+
+  - id: EWM-AREA-OPTIMIZATION
+    title: "Slotting, Rearrangement & Warehouse Optimization"
+    purpose: "Improve where stock is placed and how future work is executed."
+    capabilities:
+      - "slotting"
+      - "rearrangement"
+      - "replenishment optimization"
+      - "activity-area sorting"
+    core_objects:
+      - "Warehouse Product"
+      - "Storage Type"
+      - "Storage Bin"
+      - "Slotting Result"
+      - "Warehouse Task"
+    key_controls:
+      - "putaway control indicator"
+      - "storage-type search sequence"
+      - "slotting attributes"
+      - "rearrangement WPT"
+    integrations:
+      - "product master"
+      - "warehouse execution"
+    failure_signal: "The warehouse works, but travel, replenishment or storage utilization stays poor because execution data and product placement rules disagree."
+    source_refs: [SRC-SAP-EWM-SLOTTING, SRC-SAP-EWM-REARRANGEMENT, SRC-SAP-EWM-ACTIVITY-AREA]
+
+  - id: EWM-AREA-LABOR
+    title: "Labor & Resource Management"
+    purpose: "Plan, distribute and measure human warehouse work without changing the underlying business process."
+    capabilities:
+      - "resource execution"
+      - "queue-based work selection"
+      - "planned workload"
+      - "executed workload"
+      - "labor utilization"
+      - "indirect labor tasks"
+    core_objects:
+      - "Resource"
+      - "Queue"
+      - "Warehouse Order"
+      - "Planned Workload"
+      - "Executed Workload"
+      - "Labor Activity"
+    key_controls:
+      - "resource type/group"
+      - "queue determination"
+      - "labor activity"
+      - "standard / planned duration"
+    integrations:
+      - "warehouse-order execution"
+      - "VAS"
+      - "physical inventory"
+      - "RF"
+    failure_signal: "Warehouse tasks exist, but workload is badly distributed, execution is delayed, or performance measures do not reflect the real process."
+    source_refs: [SRC-SAP-EWM-LABOR, SRC-SAP-EWM-WAREHOUSE-ORDER]
+
+  - id: EWM-AREA-INVENTORY
+    title: "Physical Inventory & Stock Integrity"
+    purpose: "Prove that system stock and physical stock agree, with controlled differences and auditability."
+    capabilities:
+      - "periodic inventory"
+      - "continuous inventory"
+      - "cycle counting"
+      - "recount"
+      - "difference posting"
+      - "stock-type changes"
+    core_objects:
+      - "Physical Inventory Document"
+      - "Count Item"
+      - "Stock / Quant"
+      - "Warehouse Task"
+      - "Difference"
+    key_controls:
+      - "inventory procedure"
+      - "cycle-count class and interval"
+      - "blocking / counting status"
+      - "difference approval / posting"
+    integrations:
+      - "MM-IM / accounting reconciliation"
+      - "warehouse execution"
+    failure_signal: "A stock difference is posted as a number before open tasks, HUs, bins, stock types and system boundaries are reconciled."
+    source_refs: [SRC-SAP-EWM-PHYSICAL-INVENTORY, SRC-SAP-EWM-CYCLE-COUNT]
+
+  - id: EWM-AREA-AUTOMATION
+    title: "Automation & Material Flow"
+    purpose: "Translate warehouse intent into machine-executable movement without creating two competing control systems."
+    capabilities:
+      - "MFS"
+      - "PLC communication"
+      - "conveyor / communication-point routing"
+      - "external warehouse-control-unit integration"
+      - "automated storage-type black-box patterns"
+    core_objects:
+      - "Warehouse Task"
+      - "Handling Unit"
+      - "Communication Point"
+      - "Communication Channel"
+      - "PLC"
+      - "External WCS / WCU"
+    key_controls:
+      - "MFS routing"
+      - "communication-point logic"
+      - "task handoff and confirmation ownership"
+      - "recovery and retry design"
+    integrations:
+      - "PLC"
+      - "external WCS / WCU"
+      - "RF/manual fallback where designed"
+    failure_signal: "EWM says work exists, but the automation layer, PLC or external WCS does not accept, route or confirm the physical move."
+    source_refs: [SRC-SAP-EWM-MFS, SRC-SAP-EWM-NONSAP-WCU, SRC-SAP-EWM-LOSC]
+
+  - id: EWM-AREA-MONITORING
+    title: "Monitoring & Exception Handling"
+    purpose: "Find the first inconsistent warehouse or integration state and recover it without hiding the root cause."
+    capabilities:
+      - "Warehouse Management Monitor"
+      - "alert monitoring"
+      - "document and task analysis"
+      - "stock and HU analysis"
+      - "physical-inventory monitoring"
+      - "integration queue and message diagnostics"
+    core_objects:
+      - "Warehouse Request Status"
+      - "Warehouse Task Status"
+      - "Warehouse Order Status"
+      - "HU / Stock State"
+      - "qRFC Queue / Integration Message"
+      - "Alert"
+    key_controls:
+      - "monitor profiles and nodes"
+      - "exception handling"
+      - "queue serialization / retry"
+      - "operational ownership"
+    integrations:
+      - "S/4HANA enterprise-management system"
+      - "TM"
+      - "QM"
+      - "MES"
+      - "automation systems"
+    failure_signal: "Support restarts or manually completes downstream documents before identifying where the process first diverged."
+    source_refs: [SRC-SAP-EWM-MONITOR, SRC-SAP-EWM-ERP-COMM]
+
+cross_domain_patterns:
+  - title: "Inbound with Quality and VAS"
+    path: "Inbound Delivery → GR → Quality / Deconsolidation → VAS → Putaway WT → WO → Final Bin"
+    lesson: "Storage control connects several subdomains; do not debug each step as an isolated transaction."
+  - title: "Outbound with TM"
+    path: "Delivery Demand → Outbound Delivery Order → Wave → Pick → Pack → Stage → Freight Order / Loading → GI"
+    lesson: "Warehouse readiness and transportation readiness are different states."
+  - title: "Production with MES"
+    path: "Production/MES Need → PMR or Staging Request → PSA → WT/WO → Consumption → Production Receipt"
+    lesson: "The integration type changes the document chain, but EWM still owns physical warehouse work."
+  - title: "Automated High-Bay"
+    path: "Warehouse Request → WT → MFS / WCS Handoff → PLC Movement → Confirmation → EWM Stock State"
+    lesson: "Make one system responsible for every routing and confirmation decision."
+
+assessment_lenses:
+  - "Can I name the EWM subdomain before naming the transaction?"
+  - "Can I identify the business object that carries the requirement?"
+  - "Can I identify the control object that determines the next step?"
+  - "Can I explain which external application owns the adjacent business state?"
+  - "Can I describe the first failure signal and the first monitor or document to inspect?"
