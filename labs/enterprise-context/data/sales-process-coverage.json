@@ -3,14 +3,15 @@ layout: null
 permalink: /labs/enterprise-context/data/sales-process-coverage.json
 sitemap: false
 ---
+{% assign sales_atlas = site.data.labs.enterprise_context.processes.sales_process_atlas %}
 {% assign sales_mechanisms = site.data.labs.enterprise_context.mechanisms.sales_mechanisms %}
 {
-  "audit": {{ site.data.labs.enterprise_context.processes.sales_process_atlas.coverage_audit | jsonify }},
-  "after_sales": {{ site.data.labs.enterprise_context.processes.sales_process_atlas.07_after_sales | jsonify }},
-  "commercial_extensions": {{ site.data.labs.enterprise_context.processes.sales_process_atlas.08_commercial_extensions | jsonify }},
-  "industry_variants": {{ site.data.labs.enterprise_context.processes.sales_process_atlas.09_industry_variants | jsonify }},
-  "billing_lifecycle": {{ site.data.labs.enterprise_context.processes.sales_process_atlas.10_billing_lifecycle | jsonify }},
-  "cross_application_execution": {{ site.data.labs.enterprise_context.processes.sales_process_atlas.11_cross_application_execution | jsonify }},
+  "audit": {{ sales_atlas.coverage_audit | jsonify }},
+  "after_sales": {{ sales_atlas["07_after_sales"] | jsonify }},
+  "commercial_extensions": {{ sales_atlas["08_commercial_extensions"] | jsonify }},
+  "industry_variants": {{ sales_atlas["09_industry_variants"] | jsonify }},
+  "billing_lifecycle": {{ sales_atlas["10_billing_lifecycle"] | jsonify }},
+  "cross_application_execution": {{ sales_atlas["11_cross_application_execution"] | jsonify }},
   "sales_order_integration_map": {{ site.data.labs.enterprise_context.processes.sales_order_integration_map | jsonify }},
   "mechanism_index": {{ sales_mechanisms.index | jsonify }},
   "process_mechanism_map": {{ sales_mechanisms.process_map | jsonify }},
