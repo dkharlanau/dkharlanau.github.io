@@ -1,7 +1,7 @@
 ---
 title: SAP Goods Receipt Diagnostics
 layout: default
-description: "A practical way to diagnose SAP goods receipt failures by reconciling physical delivery, purchase-order history, material controls, posting context, and downstream stock."
+description: "Diagnose SAP goods receipt failures by reconciling physical delivery, PO history, material controls, posting context, and resulting stock."
 permalink: /atlas/diagnostics/sap-goods-receipt-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
