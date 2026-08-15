@@ -1,0 +1,171 @@
+---
+layout: default
+title: "Agent Terminology and Design Patterns — Enterprise Context Lab"
+description: "Practical agentic AI terms and patterns with distinctions, SAP logistics examples, decision rules, and Lead-level explanations."
+permalink: /labs/enterprise-context/business-ai/agents/terminology/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+tags:
+  - sap
+  - business-ai
+  - ai-agents
+  - agentic-ai
+  - terminology
+  - design-patterns
+  - rag
+  - mcp
+  - a2a
+---
+
+{% assign topic = site.data.labs.enterprise_context.topics.agent_terminology %}
+{% assign graph = site.data.labs.enterprise_context.graphs.agent_terminology %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/business-ai/">Business AI</a></li><li><a href="/labs/enterprise-context/business-ai/agents/">Agent Architecture</a></li><li aria-current="page">Terminology</li></ol>
+</nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Enterprise Context Lab / Agent vocabulary</p>
+      <h1>{{ topic.title }}</h1>
+      <p>{{ topic.summary }}</p>
+      <a class="research-canvas__button" href="#terms">Open the vocabulary <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Agent terminology research status">
+      <p>Learning map</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.terms | size }}</strong><small>Core terms</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.patterns | size }}</strong><small>Design patterns</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.distinctions | size }}</strong><small>Do-not-confuse pairs</small></div>
+      <em>{{ topic.learning_model.path }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">school</span>
+    <p><strong>Learning rule:</strong> {{ topic.learning_model.rule }}</p>
+    <p><strong>Use this page to answer six questions:</strong> What does the term mean? What is it not? What problem does it solve? When should I use it? When should I avoid it? How do I explain the choice at Lead level?</p>
+    <a href="/labs/enterprise-context/data/agent-terminology.json">Open the AI-readable terminology graph <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Mental model</p>
+      <h2>{{ graph.learning_model.path }}</h2>
+      <p>Vocabulary is useful only when it changes an architecture decision.</p>
+    </header>
+    <div class="research-route-list">
+      {% for rule in graph.learning_model.rules %}
+      <a href="#decision-guide"><span>{{ forloop.index }}</span><strong>Learning rule</strong><small>{{ rule }}</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Do not confuse these</p>
+      <h2>Most architecture mistakes start with two similar words treated as the same thing.</h2>
+      <p>Use the difference, not the definition, to remember the concept.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.distinctions %}
+      <a href="#terms"><span>≠</span><strong>{{ item.left }} vs {{ item.right }}</strong><small>{{ item.answer }}</small><i class="material-symbols-outlined" aria-hidden="true">difference</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="terms" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Terminology</p>
+      <h2>Terms grouped by the architecture question they answer.</h2>
+      <p>Each term includes a boundary and a memory line. The boundary is usually more useful than the textbook definition.</p>
+    </header>
+    {% for category in graph.term_categories %}
+    <div class="research-canvas__boundary" data-reveal>
+      <span class="material-symbols-outlined" aria-hidden="true">category</span>
+      <p><strong>{{ category.title }}</strong></p>
+      <p>{{ category.question }}</p>
+    </div>
+    <div class="research-route-list">
+      {% for term in graph.terms %}
+        {% if term.category == category.id %}
+        <a href="/labs/enterprise-context/data/agent-terminology.json"><span>TERM</span><strong>{{ term.title }}</strong><small>{{ term.meaning }} <b>Not the same as:</b> {{ term.not_same_as }} <b>Use when:</b> {{ term.use_when }} <b>Remember:</b> {{ term.lead_memory }}</small><i class="material-symbols-outlined" aria-hidden="true">menu_book</i></a>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Execution patterns</p>
+      <h2>Choose a pattern from the uncertainty in the task.</h2>
+      <p>A fashionable pattern is not a requirement. Start from dependency, state, risk, latency, ownership, and recovery.</p>
+    </header>
+    <div class="research-route-list">
+      {% for pattern in graph.patterns %}
+      <a href="/labs/enterprise-context/data/agent-terminology.json"><span>PAT</span><strong>{{ pattern.title }} · {{ pattern.flow }}</strong><small>{{ pattern.meaning }} <b>Use:</b> {{ pattern.use_when | join: " " }} <b>Avoid:</b> {{ pattern.avoid_when | join: " " }} <b>Logistics:</b> {{ pattern.logistics_example }} <b>Lead:</b> {{ pattern.lead_memory }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="decision-guide" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Decision guide</p>
+      <h2>Start from the question, then choose the mechanism.</h2>
+      <p>This is the part to remember for architecture interviews. Product names come later.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.decision_guide %}
+      <a href="/labs/enterprise-context/business-ai/agents/"><span>?</span><strong>{{ item.question }}</strong><small><b>Prefer:</b> {{ item.prefer }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP logistics examples</p>
+      <h2>The same vocabulary should survive contact with real business objects.</h2>
+      <p>These examples are synthetic. They show architecture reasoning, not project history.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.logistics_examples %}
+      <a href="/labs/enterprise-context/data/agent-terminology.json"><span>{{ item.autonomy }}</span><strong>{{ item.title }}</strong><small>{{ item.business_question }} <b>Pattern:</b> {{ item.pattern }} <b>Tools:</b> {{ item.deterministic_tools | join: " · " }} <b>Lesson:</b> {{ item.lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead assessment</p>
+      <h2>Use short distinctions first, then add the architecture reason.</h2>
+      <p>Good answers show where deterministic control stays and why complexity is justified.</p>
+    </header>
+    <div class="research-route-list">
+      {% for drill in graph.assessment_drills %}
+      <a href="/labs/enterprise-context/data/agent-terminology.json"><span>Q</span><strong>{{ drill.question }}</strong><small>{{ drill.strong_answer }}</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+    <p><strong>Five useful boundaries:</strong> Agentic ≠ autonomous. Memory ≠ business state. Structured output ≠ correct output. Retry ≠ recovery. Tool access ≠ business authority.</p>
+    <p>These boundaries are deliberately stronger than a long list of framework names because frameworks change faster than the architecture problems.</p>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">link</span>
+    <p><strong>Related maps:</strong> Agent Architecture owns identity, autonomy, tools, risk, lifecycle, and governance. Integration owns API/event/middleware choices. Development owns implementation and runtime choices.</p>
+    <p><a href="/labs/enterprise-context/business-ai/agents/">Agent Architecture</a> · <a href="/labs/enterprise-context/integrations/">Integration</a> · <a href="/labs/enterprise-context/development/">Development</a> · <a href="/labs/enterprise-context/data/agent-architecture-sources.json">Sources JSON</a></p>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
