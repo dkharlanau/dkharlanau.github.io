@@ -14,6 +14,7 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
 ---
 
 {% assign model = site.data.labs.enterprise_context.graphs.sales_process_kpis %}
+{% assign architecture = site.data.labs.enterprise_context.graphs.sales_analytics_architecture %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Sales Analytics</li></ol>
@@ -31,7 +32,7 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
       <p>Business measurement layer</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ model.kpis | size }}</strong><small>KPIs and drivers</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ model.analytics_lenses | size }}</strong><small>Analytics lenses</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ model.common_language | size }}</strong><small>Common terms</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ architecture.layers | size }}</strong><small>Analytics layers</small></div>
       <em>{{ model.memory_path }}</em>
     </div>
   </header>
@@ -75,6 +76,45 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
     </div>
   </section>
 
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Analytics architecture</p>
+      <h2>Use the layer that matches the question.</h2>
+      <p>Operational action, management trends and process-flow analysis are different jobs. The KPI definition should stay stable even when the presentation tool changes.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for layer in architecture.layers %}
+      <details>
+        <summary><span>A{{ forloop.index }}</span><strong>{{ layer.title }}</strong><small>{{ layer.id }}</small></summary>
+        <div>
+          <p><strong>Business job.</strong> {{ layer.business_job }}</p>
+          <p><strong>Best for.</strong> {{ layer.best_for | join: ' · ' }}</p>
+          <p><strong>Data pattern.</strong> {{ layer.data_pattern }}</p>
+          <h4>Typical capabilities</h4>
+          <p>{{ layer.typical_capabilities | join: ' · ' }}</p>
+          <h4>Strengths</h4>
+          <ul>{% for item in layer.strengths %}<li>{{ item }}</li>{% endfor %}</ul>
+          <h4>Limits</h4>
+          <ul>{% for item in layer.limits %}<li>{{ item }}</li>{% endfor %}</ul>
+          <p><strong>KPI examples.</strong> {{ layer.kpi_examples | join: ' · ' }}</p>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Selection rules</p>
+      <h2>Choose analytics from the business question.</h2>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for rule in architecture.selection_rules %}
+      <article><span>CHOOSE</span><h3>{{ rule.question }}</h3><p><strong>{{ rule.choose }}</strong><br />{{ rule.reason }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="kpi-catalog" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">KPI catalog</p>
@@ -102,8 +142,6 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
           <p><strong>Processes.</strong> {{ kpi.process_refs | join: ' · ' }}</p>
           <p><strong>Mechanisms.</strong> {{ kpi.mechanism_refs | join: ' · ' }}</p>
           {% if kpi.diagnostic_case_refs %}<p><strong>Diagnostic cases.</strong> {{ kpi.diagnostic_case_refs | join: ' · ' }}</p>{% endif %}
-
-          {% if kpi.caveats %}<h4>Read carefully</h4><ul>{% for item in kpi.caveats %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}
         </div>
       </details>
       {% endfor %}
@@ -159,7 +197,7 @@ tags: [sap-s4hana, sap-sd, sales, analytics, kpi, order-to-cash, lead-consulting
     <div>
       <p class="research-canvas__eyebrow">Human + machine</p>
       <h2>One KPI model, several reasoning paths.</h2>
-      <p>The page is for business discussion. The JSON endpoint lets an agent retrieve the same KPI by business question, process ID, mechanism ID or diagnostic case.</p>
+      <p>The page is for business discussion. The JSON endpoint lets an agent retrieve the same KPI by business question, process ID, mechanism ID or diagnostic case, plus the analytics-layer decision map.</p>
     </div>
     <div class="ecg-machine__actions">
       {% for item in model.related_views %}<a href="{{ item.url }}">{{ item.title }}</a>{% endfor %}
