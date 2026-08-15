@@ -110,6 +110,23 @@ def test_agent_contract_is_present_per_case():
         assert len(case["intent_aliases"]) >= 3
 
 
+def test_down_payment_case_routes_classic_and_advanced_models():
+    graph = load_yaml(CASEBOOK_PATH)
+    cases = {case["id"]: case for case in graph["diagnostic_cases"]}
+    down_payment = cases["SDC.DP.01"]
+
+    assert {"SD.DP.CLASSIC", "SD.DP.ADV"}.issubset(down_payment["process_refs"])
+    assert {"SRC-SAP-DP-CLASSIC-BKJ", "SRC-SAP-DP-ADVANCED"}.issubset(down_payment["source_refs"])
+
+
+def test_related_views_use_registered_sales_routes():
+    graph = load_yaml(CASEBOOK_PATH)
+    related = {item["title"]: item["url"] for item in graph["related_views"]}
+
+    assert related["Sales Process Atlas"] == "/labs/enterprise-context/sales-processes/"
+    assert related["Sales Mechanisms"] == "/labs/enterprise-context/sales-processes/mechanisms/"
+
+
 def test_all_case_source_refs_resolve():
     graph = load_yaml(CASEBOOK_PATH)
     sources = known_source_ids()
