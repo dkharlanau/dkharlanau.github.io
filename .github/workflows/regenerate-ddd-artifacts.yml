@@ -1,0 +1,42 @@
+name: Regenerate DDD artifacts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/regenerate-ddd-artifacts.yml
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install generator dependencies
+        run: python3 -m pip install pyyaml
+
+      - name: Regenerate canonical artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Commit generated artifacts and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/regenerate-ddd-artifacts.yml
+          git add ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          git commit -m "Refresh AI artifacts for DDD framework"
+          git push origin HEAD:main
