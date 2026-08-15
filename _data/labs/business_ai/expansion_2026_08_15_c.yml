@@ -1,0 +1,77 @@
+patterns:
+- id: autonomous-commercial-negotiation
+  title: Autonomous commercial negotiation within approved guardrails
+  business_job: Negotiate repetitive supplier terms at a scale where human buyer time is not economical.
+  good_fit_when:
+  - Procurement can define acceptable commercial ranges and trade-offs before negotiation begins.
+  - The target population is high-volume, repeatable, and lower strategic complexity.
+  bad_fit_when:
+  - The agent is allowed to invent commercial strategy or obligations.
+  - Supplier segmentation, legal terms, escalation thresholds, or approval boundaries are unclear.
+  architecture_shape:
+  - supplier and category context
+  - approved negotiation strategy
+  - bounded offer space
+  - autonomous conversation
+  - agreement or escalation
+  - procurement-system writeback
+  - audit trail
+  evaluation:
+  - savings or cost avoidance
+  - payment-term improvement
+  - supplier agreement rate
+  - supplier experience
+  - escalation rate
+  - out-of-policy offer rate
+  automation_level: execute_with_commercial_guardrails
+- id: vision-to-workflow-verification
+  title: Computer vision into a controlled physical workflow
+  business_job: Use images or video to identify, verify, track, or classify a physical object and trigger a concrete operational
+    step.
+  good_fit_when:
+  - The visual task has a clear operational consequence such as labeling, inspection, tracking, counting, or exception routing.
+  - False positives and false negatives can be measured against real physical outcomes.
+  bad_fit_when:
+  - A model accuracy score is treated as business value without a downstream workflow KPI.
+  - Unsafe physical actions can occur without deterministic safety controls or human review.
+  architecture_shape:
+  - camera or image input
+  - vision model
+  - confidence and object identity
+  - business validation
+  - physical workflow action
+  - exception queue
+  - outcome feedback
+  evaluation:
+  - precision and recall
+  - tracking success
+  - manual handling time
+  - throughput
+  - inventory or label accuracy
+  - safety exceptions
+  automation_level: detect_or_execute_with_validation
+- id: ai-assisted-security-triage
+  title: AI-assisted security triage and investigation
+  business_job: Reduce alert noise and investigation time while keeping security authority, evidence, and remediation controls
+    explicit.
+  good_fit_when:
+  - The AI can read current security telemetry, incident context, and threat intelligence.
+  - Analysts can verify evidence and high-consequence remediation stays governed.
+  bad_fit_when:
+  - Generated explanations replace evidence from the security tools.
+  - The agent can take broad destructive or identity actions without approval, rollback, and audit.
+  architecture_shape:
+  - security alerts and telemetry
+  - correlation and enrichment
+  - AI summary and prioritization
+  - analyst investigation
+  - bounded remediation
+  - audit and feedback
+  evaluation:
+  - false-positive reduction
+  - mean time to triage
+  - mean time to resolve
+  - missed malicious alerts
+  - analyst productivity
+  - wrong remediation rate
+  automation_level: assist_or_execute_low_risk

@@ -1,0 +1,330 @@
+schema_version: "1.0"
+reviewed_at: "2026-08-15"
+status: "working_matrix"
+scope: "Lead-level decision matrix for Business AI. It connects business process, AI job, reusable pattern, autonomy, risk, KPI, control boundary, failure pattern, and public scenario evidence."
+
+reading_rule: "Do not choose autonomy from model capability alone. Choose it from business consequence, reversibility, system authority, evidence quality, and exception design."
+
+autonomy_levels:
+  - id: L0
+    label: Observe
+    meaning: "AI classifies, detects, or summarizes. It does not recommend or change business state."
+  - id: L1
+    label: Assist
+    meaning: "AI prepares information or drafts. A person owns the decision and action."
+  - id: L2
+    label: Recommend
+    meaning: "AI ranks, predicts, or proposes an action. A person or deterministic rule approves it."
+  - id: L3
+    label: Bounded execute
+    meaning: "AI can perform low-risk actions inside explicit rules. Exceptions move to a person or deterministic workflow."
+  - id: L4
+    label: Guardrailed autonomy
+    meaning: "AI can execute a defined business objective inside approved limits, with audit, monitoring, rollback, and escalation."
+  - id: L5
+    label: Unbounded autonomy
+    meaning: "AI decides and acts without a meaningful external control boundary. This is normally an anti-pattern for consequential enterprise work."
+
+risk_classes:
+  low: "A wrong result is cheap, reversible, and easy to detect."
+  medium: "A wrong result creates service, productivity, or operational cost but can usually be corrected."
+  high: "A wrong result can create material financial, contractual, employment, security, or customer impact."
+  critical: "A wrong result can create safety, legal-rights, major financial, or destructive security consequences."
+
+decision_rules:
+  - id: dr-consequence-first
+    rule: "Autonomy should fall as the consequence of a wrong action rises."
+  - id: dr-reversible-before-irreversible
+    rule: "Automate reversible reads, drafts, and low-risk updates before irreversible postings, commitments, deletions, or payments."
+  - id: dr-system-of-record
+    rule: "AI may interpret uncertainty, but an authoritative business system should still own identity, policy, transaction state, and final posting."
+  - id: dr-business-kpi
+    rule: "A model KPI is a gate, not the business case. Attach accuracy, latency, or adoption to a process KPI."
+  - id: dr-exception-budget
+    rule: "Define which exceptions are acceptable, which require review, and which stop automation."
+  - id: dr-separate-authority
+    rule: "Separate the ability to propose from the authority to commit money, policy, employment, safety, or security actions."
+  - id: dr-evidence-aware-scale
+    rule: "Pilot evidence, provider claims, independent evidence, and controlled experiments should not receive the same confidence."
+  - id: dr-full-loop
+    rule: "Measure retrieval, model output, validation, integration, human review, rework, cost, quality, and final business result as one operating loop."
+
+profiles:
+  - id: customer-service-routine-resolution
+    process: "Case-to-Resolution"
+    ai_job: "Resolve repeat customer questions and prepare routine actions."
+    pattern_ids: ["conversation-automation"]
+    recommended_autonomy: L3
+    maximum_autonomy_before_extra_controls: L3
+    risk_class: medium
+    primary_kpis: ["first-contact resolution", "repeat-contact rate", "customer satisfaction", "wrong-action rate", "handoff quality"]
+    system_authority: "CRM, policy store, order or account system"
+    required_controls: ["grounded retrieval", "current account reads", "bounded tools", "no-answer state", "human escalation", "quality guardrail KPI"]
+    failure_pattern_ids: ["fp-authoritative-hallucination", "fp-metric-tunnel-vision"]
+    scenario_ids: ["verizon-hybrid-customer-service", "klarna-ai-service-course-correction", "air-canada-policy-chatbot"]
+    assessment_prompt: "Would you allow a service agent to issue refunds or policy exceptions autonomously?"
+    lead_answer: "Only inside explicit amount, policy, identity, and eligibility rules. Ambiguous policy or unusual customer impact should move to a person."
+
+  - id: cash-collection-and-payment-matching
+    process: "Order-to-Cash / Collections"
+    ai_job: "Match cash, prioritize cases, prepare collector actions, and route customer inquiries."
+    pattern_ids: ["cross-system-process-copilot", "agentic-exception-management"]
+    recommended_autonomy: L2
+    maximum_autonomy_before_extra_controls: L3
+    risk_class: high
+    primary_kpis: ["cash applied within target time", "matching accuracy", "DSO", "cash collected", "manual touch rate", "false-match correction cost"]
+    system_authority: "ERP accounts receivable and bank transaction records"
+    required_controls: ["authoritative payment and customer data", "confidence threshold", "exception queue", "posting validation", "segregation of duties", "reconciliation"]
+    failure_pattern_ids: ["fp-model-kpi-is-not-business-kpi", "fp-prediction-to-capital"]
+    scenario_ids: ["microsoft-global-collections-ai", "us-venture-finance-reconciliation"]
+    assessment_prompt: "Where should AI stop in an accounts-receivable flow?"
+    lead_answer: "It can match, rank, summarize, and prepare. Final high-value or ambiguous posting needs deterministic validation and finance controls."
+
+  - id: supplier-negotiation-tail-spend
+    process: "Source-to-Pay"
+    ai_job: "Negotiate repetitive supplier terms where manual buyer effort is not economical."
+    pattern_ids: ["autonomous-commercial-negotiation"]
+    recommended_autonomy: L4
+    maximum_autonomy_before_extra_controls: L4
+    risk_class: high
+    primary_kpis: ["savings or cost avoidance", "payment-term improvement", "agreement rate", "supplier experience", "out-of-policy offer rate", "escalation rate"]
+    system_authority: "Procurement platform, approved negotiation strategy, contract and supplier master data"
+    required_controls: ["supplier segmentation", "approved offer space", "legal-term boundary", "commercial thresholds", "audit trail", "escalation"]
+    failure_pattern_ids: ["fp-claims-ahead-of-evidence"]
+    scenario_ids: ["walmart-autonomous-procurement-negotiation"]
+    assessment_prompt: "Why can procurement negotiation sometimes use more autonomy than HR or legal advice?"
+    lead_answer: "Because the commercial objective, acceptable trade-offs, target supplier segment, and escalation boundary can be defined before the conversation starts."
+
+  - id: document-to-transaction-preparation
+    process: "Source-to-Pay / Claims / Finance Operations"
+    ai_job: "Extract semi-structured documents, validate fields, and prepare a controlled transaction."
+    pattern_ids: ["document-to-workflow"]
+    recommended_autonomy: L3
+    maximum_autonomy_before_extra_controls: L3
+    risk_class: high
+    primary_kpis: ["field accuracy", "touchless rate", "cycle time", "exception rate", "posting correction rate", "manual maintenance effort"]
+    system_authority: "ERP, claims core, vendor/customer master, tax and approval rules"
+    required_controls: ["field validation", "master-data checks", "confidence threshold", "duplicate detection", "exception queue", "posting controls"]
+    failure_pattern_ids: ["fp-demo-environment-gap", "fp-model-kpi-is-not-business-kpi"]
+    scenario_ids: ["ellby-invoice-automation", "uniqa-health-claims-document-ai", "sun-finance-id-fraud-pipeline"]
+    assessment_prompt: "When is document AI safe enough for touchless processing?"
+    lead_answer: "When extraction is validated against business data and rules, low-confidence cases are routed out, and posting authority stays deterministic."
+
+  - id: last-mile-address-interpretation
+    process: "Forecast-to-Fulfill / Last Mile"
+    ai_job: "Interpret messy delivery addresses and produce a precise geocoding input for routing."
+    pattern_ids: ["cross-system-process-copilot"]
+    recommended_autonomy: L2
+    maximum_autonomy_before_extra_controls: L3
+    risk_class: medium
+    primary_kpis: ["geocoding precision", "delivery success", "re-route rate", "latency", "serving cost", "manual correction rate"]
+    system_authority: "Address master, route engine, delivery execution system"
+    required_controls: ["precision threshold", "address validation", "fallback geocoder", "delivery feedback loop", "production monitoring"]
+    failure_pattern_ids: ["fp-model-kpi-is-not-business-kpi", "fp-demo-environment-gap"]
+    scenario_ids: ["delhivery-llm-geocoding"]
+    assessment_prompt: "Is 160 ms latency a business KPI?"
+    lead_answer: "No. It is an engineering constraint. The business KPI is successful delivery, fewer corrections, lower cost, or better route quality."
+
+  - id: warehouse-resource-orchestration
+    process: "Forecast-to-Fulfill / Warehouse Execution"
+    ai_job: "Coordinate resources, priorities, robots, and exceptions inside a live fulfillment operation."
+    pattern_ids: ["operations-optimization", "agentic-exception-management"]
+    recommended_autonomy: L3
+    maximum_autonomy_before_extra_controls: L4
+    risk_class: high
+    primary_kpis: ["throughput", "resource utilization", "SLA adherence", "cost per unit", "exception recovery", "safety events"]
+    system_authority: "WMS or EWM, robot fleet state, inventory and task records"
+    required_controls: ["hard operational constraints", "current warehouse state", "safety boundaries", "rollback or re-plan", "exception routing", "task confirmation"]
+    failure_pattern_ids: ["fp-demo-environment-gap", "fp-model-kpi-is-not-business-kpi"]
+    scenario_ids: ["oplog-fulfillment-agent-orchestration"]
+    assessment_prompt: "What makes an agent useful in a warehouse rather than merely impressive?"
+    lead_answer: "It must optimize a measurable constrained system and remain synchronized with task, inventory, safety, and exception state."
+
+  - id: warehouse-vision-verification
+    process: "Warehouse and Returns"
+    ai_job: "Identify, track, count, or verify physical objects from images or video."
+    pattern_ids: ["vision-to-workflow-verification"]
+    recommended_autonomy: L2
+    maximum_autonomy_before_extra_controls: L3
+    risk_class: high
+    primary_kpis: ["precision and recall", "tracking success", "manual handling time", "throughput", "inventory or label accuracy", "safety exceptions"]
+    system_authority: "WMS or returns system, product identity, physical process state"
+    required_controls: ["confidence threshold", "object identity validation", "exception path", "safe physical action", "business KPI after model KPI"]
+    failure_pattern_ids: ["fp-model-kpi-is-not-business-kpi"]
+    scenario_ids: ["daniel-wellington-vision-returns", "nichirei-warehouse-vision-pilot"]
+    assessment_prompt: "What is missing when a warehouse-vision pilot reports 97% tracking success?"
+    lead_answer: "The second metric: labor, throughput, inventory accuracy, safety, search time, or another end-to-end warehouse result."
+
+  - id: predictive-maintenance
+    process: "Maintain-to-Repair"
+    ai_job: "Predict equipment risk early enough to change inspection, maintenance, spare-parts, or technician planning."
+    pattern_ids: ["manufacturing-quality-prediction"]
+    recommended_autonomy: L2
+    maximum_autonomy_before_extra_controls: L3
+    risk_class: high
+    primary_kpis: ["unplanned downtime", "maintenance cost", "false alarm rate", "missed failure rate", "asset availability", "technician utilization"]
+    system_authority: "Asset master, maintenance system, sensor history, work-order system"
+    required_controls: ["confirmed failure labels", "risk threshold", "maintenance-rule validation", "human review for shutdown", "feedback from completed work orders"]
+    failure_pattern_ids: ["fp-model-kpi-is-not-business-kpi"]
+    scenario_ids: ["arneg-predictive-maintenance"]
+    assessment_prompt: "Why is predictive maintenance not mainly a model-accuracy problem?"
+    lead_answer: "Because value appears only when the prediction changes a maintenance decision at lower total cost and risk."
+
+  - id: safety-and-policy-knowledge
+    process: "Knowledge-to-Action"
+    ai_job: "Answer questions from safety rules, policy, contracts, or regulated guidance."
+    pattern_ids: ["enterprise-knowledge-assistant"]
+    recommended_autonomy: L1
+    maximum_autonomy_before_extra_controls: L1
+    risk_class: critical
+    primary_kpis: ["retrieval recall", "answer correctness", "citation correctness", "rule coverage", "no-answer precision", "expert override rate"]
+    system_authority: "Governed policy or rule source"
+    required_controls: ["clause-level retrieval", "mandatory citations", "coverage evaluation", "no-answer state", "expert verification", "version control"]
+    failure_pattern_ids: ["fp-authoritative-hallucination", "fp-context-is-not-grounding"]
+    scenario_ids: ["cando-rail-safety-knowledge", "amazon-fintech-regulatory-contract-review"]
+    assessment_prompt: "Why is a 100-page rulebook inside the context window not enough?"
+    lead_answer: "Context capacity does not prove retrieval coverage, correct interpretation, source version, or safe handling of missing evidence."
+
+  - id: hr-case-assistance
+    process: "Hire-to-Retire"
+    ai_job: "Summarize HR cases, retrieve knowledge, and prepare employee communications."
+    pattern_ids: ["conversation-automation", "enterprise-knowledge-assistant"]
+    recommended_autonomy: L1
+    maximum_autonomy_before_extra_controls: L2
+    risk_class: high
+    primary_kpis: ["case throughput", "resolution time", "answer correctness", "employee satisfaction", "escalation rate", "segment error rate"]
+    system_authority: "HR case system, policy, employee master, approved knowledge"
+    required_controls: ["role-based access", "policy grounding", "human decision for employment actions", "fairness by segment", "appeal path"]
+    failure_pattern_ids: ["fp-biased-history", "fp-bad-rule-at-scale"]
+    scenario_ids: ["microsoft-hr-case-copilot", "amazon-recruiting-bias", "itutorgroup-age-filter"]
+    assessment_prompt: "Where is the safe boundary between HR copilot and HR decision automation?"
+    lead_answer: "Knowledge and communication assistance can be useful. Hiring, firing, compensation, and eligibility decisions require stronger legal, fairness, and human controls."
+
+  - id: security-incident-triage
+    process: "Incident-to-Resolution"
+    ai_job: "Reduce alert noise, summarize evidence, prioritize incidents, and prepare bounded remediation."
+    pattern_ids: ["ai-assisted-security-triage"]
+    recommended_autonomy: L2
+    maximum_autonomy_before_extra_controls: L3
+    risk_class: critical
+    primary_kpis: ["false-positive reduction", "mean time to triage", "mean time to resolve", "missed malicious alerts", "wrong remediation rate", "analyst load"]
+    system_authority: "SIEM, identity platform, endpoint and cloud security controls"
+    required_controls: ["telemetry evidence", "severity-aware approval", "least privilege", "rollback", "audit trail", "human approval for destructive actions"]
+    failure_pattern_ids: ["fp-claims-ahead-of-evidence", "fp-demo-environment-gap"]
+    scenario_ids: ["johannesburg-security-copilot"]
+    assessment_prompt: "Should a SOC agent automatically disable accounts?"
+    lead_answer: "Only for a tightly defined low-risk class with evidence, rollback, and audit. Broad identity or destructive action needs stronger approval."
+
+  - id: software-engineering-assistance
+    process: "Software Delivery"
+    ai_job: "Assist coding, testing, explanation, and review while engineers retain delivery responsibility."
+    pattern_ids: ["cross-system-process-copilot"]
+    recommended_autonomy: L1
+    maximum_autonomy_before_extra_controls: L2
+    risk_class: medium
+    primary_kpis: ["completed tasks", "successful builds", "pull requests", "defect rate", "review load", "developer experience"]
+    system_authority: "Source repository, CI/CD, code review, production change controls"
+    required_controls: ["tests", "code review", "dependency policy", "security scanning", "CI gates", "production approval"]
+    failure_pattern_ids: ["fp-model-kpi-is-not-business-kpi"]
+    scenario_ids: ["accenture-github-copilot-rct"]
+    assessment_prompt: "Why is accepted code not enough to prove developer productivity?"
+    lead_answer: "Because accepted output can still increase defects, review effort, build failures, or incomplete work. Measure completed engineering outcomes."
+
+  - id: customer-entity-resolution
+    process: "Master-Data Change"
+    ai_job: "Match fragmented customer identities across systems and maintain a usable unified identity."
+    pattern_ids: ["trusted-master-data-foundation"]
+    recommended_autonomy: L2
+    maximum_autonomy_before_extra_controls: L3
+    risk_class: high
+    primary_kpis: ["false merge rate", "false split rate", "match precision", "duplicate rate", "manual review rate", "downstream correction rate"]
+    system_authority: "Master-data governance, source-system identifiers, golden-record mapping"
+    required_controls: ["deterministic plus probabilistic matching", "survivorship rules", "manual review band", "lineage", "merge rollback", "key mapping"]
+    failure_pattern_ids: ["fp-model-kpi-is-not-business-kpi"]
+    scenario_ids: ["united-entity-resolution"]
+    assessment_prompt: "Why must false merges and false splits be measured separately?"
+    lead_answer: "Because merging two different customers and failing to merge one customer have different business consequences and need different thresholds."
+
+  - id: forecast-to-capital-decision
+    process: "Forecast-to-Fulfill / Capital Allocation"
+    ai_job: "Use prediction to support inventory, pricing, purchasing, or asset-value decisions."
+    pattern_ids: ["forecast-and-replenish"]
+    recommended_autonomy: L2
+    maximum_autonomy_before_extra_controls: L2
+    risk_class: critical
+    primary_kpis: ["forecast error at decision grain", "inventory exposure", "margin", "write-down", "service level", "stress-case loss"]
+    system_authority: "Planning, pricing, inventory, and financial control systems"
+    required_controls: ["confidence-aware limits", "scenario stress tests", "portfolio caps", "human approval", "stop-loss conditions", "decision-grain evaluation"]
+    failure_pattern_ids: ["fp-prediction-to-capital"]
+    scenario_ids: ["zillow-offers-forecast-execution"]
+    assessment_prompt: "What changes when a forecast directly controls capital?"
+    lead_answer: "The cost of error becomes asymmetric and cumulative. Accuracy alone is insufficient; limits, stress tests, exposure caps, and stop conditions become architecture requirements."
+
+  - id: voice-order-intake
+    process: "Lead-to-Cash / Order Capture"
+    ai_job: "Interpret spoken customer orders and prepare a basket or order."
+    pattern_ids: ["conversation-automation"]
+    recommended_autonomy: L2
+    maximum_autonomy_before_extra_controls: L3
+    risk_class: medium
+    primary_kpis: ["order accuracy", "correction rate", "service time", "abandonment", "customer satisfaction", "wrong commitment rate"]
+    system_authority: "Product catalog, pricing, availability, order-management system"
+    required_controls: ["confirmation before commitment", "real-noise evaluation", "fallback to person", "basket validation", "production monitoring"]
+    failure_pattern_ids: ["fp-demo-environment-gap"]
+    scenario_ids: ["mcdonalds-ibm-voice-ordering"]
+    assessment_prompt: "Why can a voice demo look good and still fail at drive-through scale?"
+    lead_answer: "Production adds accents, noise, interruptions, corrections, edge products, and real commitment cost. The evaluation set must contain those conditions."
+
+  - id: contract-and-regulatory-review
+    process: "Contract-to-Obligation"
+    ai_job: "Retrieve obligations, summarize changes, compare clauses, and prepare expert review."
+    pattern_ids: ["enterprise-knowledge-assistant", "document-to-workflow"]
+    recommended_autonomy: L1
+    maximum_autonomy_before_extra_controls: L2
+    risk_class: critical
+    primary_kpis: ["review cycle time", "expert acceptance", "missed obligation rate", "citation correctness", "false escalation rate", "coverage"]
+    system_authority: "Contract repository, legal policy, regulatory source, obligation register"
+    required_controls: ["source citation", "clause retrieval", "expert approval", "version and jurisdiction context", "no-answer state", "obligation reconciliation"]
+    failure_pattern_ids: ["fp-context-is-not-grounding", "fp-claims-ahead-of-evidence"]
+    scenario_ids: ["amazon-fintech-regulatory-contract-review", "donotpay-ai-lawyer-claims"]
+    assessment_prompt: "What is the correct role of AI in legal or regulatory review?"
+    lead_answer: "Compress evidence and prepare expert work. Do not claim expert equivalence or allow uncited generated interpretation to become the legal source of truth."
+
+  - id: fraud-and-onboarding-verification
+    process: "Customer Onboarding / Risk"
+    ai_job: "Extract identity data, detect suspicious signals, and prioritize manual risk review."
+    pattern_ids: ["document-to-workflow"]
+    recommended_autonomy: L2
+    maximum_autonomy_before_extra_controls: L2
+    risk_class: high
+    primary_kpis: ["fraud recall", "specificity", "false rejection", "manual review rate", "onboarding cycle time", "fraud loss"]
+    system_authority: "KYC system, identity source, risk rules, customer master"
+    required_controls: ["separate extraction and fraud evaluation", "risk threshold", "manual review", "appeal or retry path", "segment analysis", "fraud-loss measurement"]
+    failure_pattern_ids: ["fp-model-kpi-is-not-business-kpi", "fp-bad-rule-at-scale"]
+    scenario_ids: ["sun-finance-id-fraud-pipeline"]
+    assessment_prompt: "Can an 81% accurate fraud pipeline be the only onboarding control?"
+    lead_answer: "No. Recall, specificity, false rejection, fraud cost, and customer impact matter separately. A model with limited recall must remain one control in a broader risk process."
+
+  - id: field-service-report-generation
+    process: "Maintain-to-Repair / Field Service"
+    ai_job: "Generate standardized work-order reports from technician context."
+    pattern_ids: ["cross-system-process-copilot"]
+    recommended_autonomy: L1
+    maximum_autonomy_before_extra_controls: L2
+    risk_class: medium
+    primary_kpis: ["report completion time", "report completeness", "rework", "customer communication time", "technician adoption", "downstream data quality"]
+    system_authority: "Field-service work order and asset history"
+    required_controls: ["technician review", "source work-order context", "required-field validation", "pilot exit criteria", "production KPI"]
+    failure_pattern_ids: ["fp-model-kpi-is-not-business-kpi"]
+    scenario_ids: ["siemens-field-service-report-pilot"]
+    assessment_prompt: "When should a good pilot still remain a mixed result?"
+    lead_answer: "When the process and rollout are sensible but the expected business benefit has not yet been measured in production."
+
+assessment_answer_pattern:
+  - "Name the process and the decision grain."
+  - "State what AI is good at in this step."
+  - "Name the authoritative system and what AI must not own."
+  - "Choose an autonomy level from consequence and reversibility, not fashion."
+  - "Define the primary business KPI and one quality or risk guardrail KPI."
+  - "Name the likely failure pattern and the control that limits it."
+  - "Use one strong case and, when possible, one failure or mixed case to explain the trade-off."

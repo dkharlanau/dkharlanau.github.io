@@ -1,0 +1,1172 @@
+schema_version: '1.0'
+reviewed_at: '2026-08-15'
+title: Enterprise Business AI Scenario Library
+purpose: Compare strong implementations, mixed results, and failures by business process, architecture choice, controls, and
+  evidence.
+reading_rules:
+- Do not call a case successful only because a vendor published it. Look for a business KPI and a clear process boundary.
+- Do not call a case an AI failure when the real failure is rollout, economics, capacity, policy, or governance.
+- Separate model quality from process quality. A good model inside a bad operating model still creates a bad result.
+- For high-impact decisions, measure errors by segment and consequence, not only average accuracy.
+- A pilot that is stopped can still be useful evidence if it shows where a pattern does not fit.
+best_practices:
+- id: bp-business-kpi-first
+  title: Start with the business KPI
+  problem: Teams optimize model metrics that may not improve the real process.
+  practice: Define the business decision, baseline, target KPI, and cost of error before choosing the model or platform.
+  measure:
+  - cycle time
+  - touchless rate
+  - correction rate
+  - service level
+  - cost per completed case
+  - business loss from wrong decisions
+  source_ids:
+  - nist-ai-rmf-genai
+  - aws-agentcore-best-practices
+- id: bp-bounded-autonomy
+  title: Bound autonomy by consequence
+  problem: The same agent design is often used for low-risk answers and high-risk actions.
+  practice: Keep irreversible, financial, legal, safety, employment, and master-data writes behind deterministic controls
+    or explicit approval.
+  measure:
+  - autonomous completion rate
+  - approval rate
+  - wrong-action rate
+  - rollback rate
+  - escalation quality
+  source_ids:
+  - microsoft-responsible-agents
+  - aws-agentic-guardrails
+- id: bp-eval-before-scale
+  title: Evaluate before scale
+  problem: A demo can look strong while edge cases, wrong tool calls, and no-answer behavior remain untested.
+  practice: Create a representative evaluation set before rollout. Add production failures back into the set and rerun it
+    after model, prompt, retrieval, or tool changes.
+  measure:
+  - task success
+  - groundedness
+  - tool selection accuracy
+  - false acceptance
+  - false rejection
+  - regression rate
+  source_ids:
+  - openai-evals
+  - aws-agentcore-evaluations
+  - google-agent-evaluation
+- id: bp-source-of-truth
+  title: Keep the system of record outside the model
+  problem: A language model can sound authoritative while inventing policy, price, identity, or state.
+  practice: Retrieve current governed data and use deterministic APIs for values that already have an authoritative owner.
+    The model explains or proposes; the system of record decides.
+  measure:
+  - unsupported-answer rate
+  - citation coverage
+  - source freshness
+  - master-data match confidence
+  - policy mismatch rate
+  source_ids:
+  - nist-ai-rmf-genai
+  - air-canada-chatbot
+- id: bp-no-answer-escalation
+  title: Design the no-answer path
+  problem: Many assistants are optimized to always answer, even when evidence is weak.
+  practice: Make insufficient evidence, low confidence, conflict, and missing authorization explicit stop states with a clear
+    human handoff.
+  measure:
+  - safe refusal precision
+  - escalation rate
+  - repeat contact rate
+  - wrong confident answer rate
+  source_ids:
+  - microsoft-responsible-agents
+  - aws-agentcore-best-practices
+- id: bp-shadow-canary
+  title: Scale through shadow and canary stages
+  problem: A model can behave differently on real traffic, accents, documents, seasonal data, and operational exceptions.
+  practice: Observe the AI beside the current process first, then allow a small controlled share of production work before
+    wider automation.
+  measure:
+  - difference from human decision
+  - exception rate
+  - segment accuracy
+  - production drift
+  - rollback trigger
+  source_ids:
+  - nist-ai-rmf-genai
+  - aws-bedrock-start-small
+- id: bp-full-loop-economics
+  title: Measure the whole operating loop
+  problem: Model accuracy can improve while the business loses money because capacity, inventory, rework, latency, or downstream
+    operations cannot absorb the decisions.
+  practice: Evaluate the AI together with workflow capacity, human effort, downstream cost, working capital, and the cost
+    of wrong actions.
+  measure:
+  - end-to-end cost
+  - working capital
+  - inventory exposure
+  - rework
+  - throughput
+  - loss severity
+  source_ids:
+  - zillow-2021-10q
+  - nist-ai-rmf-genai
+- id: bp-fairness-by-segment
+  title: Test fairness by segment
+  problem: Average accuracy can hide systematic harm to a protected or operationally important group.
+  practice: For people decisions, compare outcomes across relevant groups, inspect proxy features, and keep a review path
+    for disputed decisions.
+  measure:
+  - selection-rate differences
+  - false negative by group
+  - false positive by group
+  - appeal outcome
+  - manual override rate
+  source_ids:
+  - eeoc-itutorgroup
+  - amazon-recruiting-reuters
+  - nist-ai-rmf-genai
+- id: bp-human-ai-routing
+  title: Route by complexity and consequence
+  problem: Customer and employee service designs often force a false choice between full automation and full human handling.
+  practice: Let AI handle routine, well-bounded work and route ambiguous, emotional, high-value, or high-consequence cases
+    to a person with the collected context attached.
+  measure:
+  - autonomous resolution rate
+  - handoff success
+  - repeat contact rate
+  - customer satisfaction
+  - human handling time after handoff
+  source_ids:
+  - verizon-reuters-hybrid
+  - klarna-reuters-course-correction
+- id: bp-pilot-exit-criteria
+  title: Define pilot exit criteria before the demo
+  problem: A technically impressive pilot can continue indefinitely because nobody agreed what production success means.
+  practice: Before the pilot starts, define the minimum business KPI, quality threshold, exception rate, operating cost, control
+    evidence, and scale condition required to move forward. A stopped pilot can be a successful decision.
+  measure:
+  - business KPI delta
+  - technical quality threshold
+  - exception rate
+  - unit economics
+  - control failures
+  - production readiness
+  source_ids:
+  - siemens-field-service-microsoft
+  - nichirei-aws
+scenarios:
+- id: amazon-fintech-regulatory-contract-review
+  status: strong_pattern
+  company: Amazon Finance Technology
+  domain: Finance, Tax, Legal, and Compliance
+  process: Regulatory change monitoring and contract review
+  pattern_ids:
+  - enterprise-knowledge-retrieval
+  - document-to-workflow
+  technology:
+  - Amazon Bedrock
+  - Amazon SageMaker embeddings
+  - Amazon OpenSearch Service
+  - Amazon S3
+  what_worked: Regulatory updates are searched, grouped, summarized, and reviewed by tax experts. Contract review uses indexed
+    documents and AI-assisted interpretation.
+  reported_results:
+  - 92% faster time to regulatory insight, from 26 minutes to 2 minutes per update.
+  - 80% reduction in contract analysis time.
+  - Tax experts approved 80% of suggested titles, summaries, and impact predictions.
+  - Contract review accuracy reported above 90%.
+  good_controls:
+  - Expert review remains in the regulatory decision loop.
+  - Retrieval and document indexing keep source evidence available.
+  - The use case measures process time, not only model quality.
+  limits:
+  - Results are company/provider reported.
+  - Public material does not provide the complete false-positive and false-negative distribution.
+  lesson: Good enterprise GenAI often compresses evidence for an expert instead of replacing the expert decision.
+  evidence_grade: B
+  source_ids:
+  - amazon-fintech-aws
+- id: chime-call-summary
+  status: strong_pattern
+  company: Chime Financial
+  domain: Customer Service
+  process: Call summarization and after-call work
+  pattern_ids:
+  - conversation-resolution-automation
+  technology:
+  - Amazon Bedrock
+  - Anthropic Claude
+  - ChimeCore
+  what_worked: AI creates call summaries so agents can focus on the conversation and reuse the summary during later contacts.
+  reported_results:
+  - More than 250,000 hours saved per year.
+  - 18 seconds lower average agent handling time.
+  - Five-point increase in net promoter score.
+  - About $700,000 in annual efficiency gains reported.
+  good_controls:
+  - The AI prepares documentation rather than making a financial decision for the customer.
+  - The tool was tested before production rollout.
+  - Customer experience was measured together with efficiency.
+  limits:
+  - Results are company/provider reported.
+  - The public case does not publish detailed summary-error rates.
+  lesson: A narrow assistive task can create value without giving the model authority over the business transaction.
+  evidence_grade: B
+  source_ids:
+  - chime-aws
+- id: microsoft-hr-case-copilot
+  status: strong_pattern
+  company: Microsoft HR
+  domain: Human Resources
+  process: Employee HR case management
+  pattern_ids:
+  - enterprise-knowledge-retrieval
+  - conversation-resolution-automation
+  technology:
+  - Dynamics 365 Customer Service
+  - Copilot
+  - unified HR knowledge base
+  what_worked: HR advisors use case summaries, draft emails, and knowledge assistance inside the case workflow.
+  reported_results:
+  - 20% increase in employee service case throughput.
+  - 72% monthly active user adoption for Dynamics 365.
+  - 47% daily active user adoption.
+  good_controls:
+  - The solution assists HR advisors instead of autonomously deciding employee cases.
+  - Sensitive HR data stays inside an enterprise case-management context.
+  - Adoption and satisfaction are measured in addition to throughput.
+  limits:
+  - This is a Microsoft-on-Microsoft customer story.
+  - Public material does not publish case-level correctness statistics.
+  lesson: For HR, assistance around knowledge and communication is a lower-risk starting point than automated employment decisions.
+  evidence_grade: B
+  source_ids:
+  - microsoft-hr-copilot
+- id: servicenow-internal-agentic-it
+  status: strong_pattern
+  company: ServiceNow
+  domain: IT Operations and Employee Service
+  process: Software provisioning and routine IT support
+  pattern_ids:
+  - agentic-exception-management
+  technology:
+  - ServiceNow AI Platform
+  - AI Agents
+  - workflow and service-management controls
+  what_worked: Agents automate routine provisioning and support tasks inside a workflow platform that already owns requests,
+    approvals, and service state.
+  reported_results:
+  - 97% of software provisioning requests automated.
+  - Nearly 40% reduction in service desk volume.
+  - 85% of routine internal IT support requests autonomously solved.
+  - 50% faster resolution for a reported class of complex support cases.
+  good_controls:
+  - Agent actions sit inside an existing service-management workflow.
+  - The platform already has identity, request state, and operational records.
+  limits:
+  - Results are ServiceNow's own internal and customer-reported figures.
+  - Public material does not expose the detailed exception or rollback distribution.
+  lesson: Agentic automation fits better when the workflow already has typed requests, ownership, permissions, and recoverable
+    state.
+  evidence_grade: B
+  source_ids:
+  - servicenow-agentic-workforce
+- id: klarna-ai-service-course-correction
+  status: mixed_result
+  company: Klarna
+  domain: Customer Service
+  process: Conversational service automation
+  linked_case_id: klarna-service-assistant
+  what_worked: Early deployment reported strong automation, speed, and repeat-contact metrics.
+  what_changed: Later management commentary said the company had over-indexed on AI and cost cutting and was restoring more
+    human service capacity.
+  failure_mode: 'Optimization target became too narrow: cost and automation were easier to measure than service quality over
+    time.'
+  lesson: Do not treat deflection or FTE-equivalent capacity as the final KPI. Keep service quality, repeat contacts, escalation
+    quality, and human-channel availability in the scorecard.
+  evidence_grade: B
+  source_ids:
+  - klarna-openai
+  - klarna-reuters-course-correction
+- id: air-canada-policy-chatbot
+  status: failure
+  company: Air Canada
+  domain: Customer Service and Policy
+  process: Customer policy guidance
+  pattern_ids:
+  - conversation-resolution-automation
+  what_failed: A website chatbot gave incorrect information about applying a bereavement fare after travel. A British Columbia
+    tribunal found Air Canada liable for negligent misrepresentation.
+  failure_mode: The conversational layer was allowed to present policy as authoritative without reliable source-of-truth control.
+  missing_controls:
+  - authoritative policy retrieval
+  - conflict detection between chatbot answer and published policy
+  - no-answer or escalation path for uncertain policy
+  - ownership of chatbot content as company content
+  lesson: A chatbot is not a separate legal or operational entity. If it speaks for the company, the company owns the answer.
+  evidence_grade: A
+  source_ids:
+  - air-canada-chatbot
+- id: amazon-recruiting-bias
+  status: failure
+  company: Amazon
+  domain: Human Resources
+  process: Candidate screening
+  what_failed: An experimental recruiting model learned patterns from historical resumes that reflected a male-dominated technical
+    workforce and penalized signals associated with women. Amazon abandoned the system for hiring decisions.
+  failure_mode: Historical success data encoded an existing imbalance, while proxy features reproduced the bias even without
+    an explicit gender field.
+  missing_controls:
+  - fairness evaluation by group before operational use
+  - proxy-feature review
+  - clear decision boundary between ranking assistance and hiring decision
+  lesson: Historical outcomes are not neutral labels. In people decisions, a model can reproduce the organization's past faster
+    than the organization can correct it.
+  evidence_grade: B
+  source_ids:
+  - amazon-recruiting-reuters
+- id: itutorgroup-age-filter
+  status: failure
+  company: iTutorGroup
+  domain: Human Resources
+  process: Online tutor application screening
+  what_failed: The EEOC said application software automatically rejected women aged 55 or older and men aged 60 or older,
+    rejecting more than 200 qualified applicants. The companies settled the discrimination suit for $365,000 plus other relief.
+  failure_mode: This was an automated decision-rule failure, not a mysterious model hallucination. The discriminatory policy
+    was encoded directly into software.
+  missing_controls:
+  - legal review of automated eligibility rules
+  - segment outcome monitoring
+  - appeal and human-review path
+  lesson: Not every AI-era failure needs a complex model. Deterministic automation can scale a bad rule just as efficiently.
+  evidence_grade: A
+  source_ids:
+  - eeoc-itutorgroup
+- id: zillow-offers-forecast-execution
+  status: failure
+  company: Zillow Group
+  domain: Finance, Pricing, and Operations
+  process: Automated home valuation, buying, inventory holding, and resale
+  what_failed: Zillow wound down Zillow Offers after home-price unpredictability, capacity constraints, and operational challenges
+    created unacceptable earnings and balance-sheet volatility. Its 2021 filing reported a $304.4 million inventory write-down
+    related to homes purchased above updated estimates of future selling prices.
+  failure_mode: Forecast uncertainty was coupled directly to capital-intensive execution and inventory risk. Operational capacity
+    and market volatility amplified forecast error.
+  missing_controls:
+  - risk limits tied to forecast uncertainty
+  - capacity-aware buying limits
+  - stress tests for regime change
+  - portfolio-level loss limits and rapid stop conditions
+  lesson: Prediction is not the same as a safe decision. The cost of forecast error depends on how much capital and irreversible
+    action sits behind it.
+  evidence_grade: A
+  source_ids:
+  - zillow-2021-10q
+  - zillow-2021-results
+- id: mcdonalds-ibm-voice-ordering
+  status: mixed_result
+  company: McDonald's
+  domain: Customer Operations
+  process: Drive-through voice order taking
+  what_happened: McDonald's ended its IBM automated order-taking test at more than 100 restaurants in 2024 without expanding
+    that implementation, while saying voice ordering still had future potential.
+  failure_mode: The pilot showed that noisy real-world voice input, accents, correction loops, and order accuracy are harder
+    than a controlled conversational demo.
+  missing_controls:
+  - strong confirmation before committing the basket
+  - fast human takeover when speech confidence or correction loops degrade
+  - segment testing across accents, noise, and menu complexity
+  lesson: A stopped pilot is useful evidence. Do not scale a conversational pattern until the environment, not only the model,
+    is inside the evaluation set.
+  evidence_grade: B
+  source_ids:
+  - mcdonalds-aot
+- id: donotpay-ai-lawyer-claims
+  status: failure
+  company: DoNotPay
+  domain: Legal Services
+  process: Automated legal guidance and document generation
+  what_failed: The US Federal Trade Commission alleged that DoNotPay made claims that its AI service could substitute for
+    a human lawyer without testing whether the output matched that level of expertise.
+  failure_mode: Capability claims exceeded the evidence and evaluation behind the product.
+  missing_controls:
+  - domain-expert validation
+  - defined scope and limitations
+  - evidence for equivalence claims
+  - clear escalation to qualified legal professionals
+  lesson: Do not market a probabilistic assistant as a professional substitute unless the evidence actually supports that
+    claim.
+  evidence_grade: A
+  source_ids:
+  - ftc-donotpay
+- id: sun-finance-id-fraud-pipeline
+  status: strong_pattern
+  company: Sun Finance
+  domain: Financial Services, Risk, and Customer Onboarding
+  process: Identity document extraction and fraud detection
+  pattern_ids:
+  - document-to-workflow
+  technology:
+  - Amazon Textract
+  - Amazon Rekognition
+  - Amazon Bedrock
+  - Claude Sonnet 4
+  - Amazon Titan Multimodal Embeddings
+  - Amazon S3 Vectors
+  - AWS Step Functions
+  - AWS Lambda
+  what_worked: The design separated OCR, LLM structuring, validation, visual fraud analysis, vector similarity, and workflow
+    orchestration instead of asking one model to do every job.
+  reported_results:
+  - ID extraction accuracy improved from 79.73% to 90.80% on 585 ID images.
+  - Document type classification reached 96.40%.
+  - Average ID processing time was 4.42 seconds.
+  - Per-document ID extraction cost fell 91% versus the previous solution.
+  - Fraud detection reported 81% accuracy, 59% recall, and 83% specificity.
+  good_controls:
+  - Specialized OCR runs before LLM structuring.
+  - Validation and Rekognition fallback improve weak fields.
+  - Fraud methods run in parallel and combine scores.
+  - The published evaluation includes recall and specificity, not only average accuracy.
+  limits:
+  - Results are company/provider reported.
+  - Fraud recall of 59% means the pipeline still misses a material share of fraud and must sit inside a wider control system.
+  - Some operational savings in the source are projections after production launch.
+  lesson: Use the best component for each uncertainty. A composed pipeline can outperform a general model, and residual risk
+    should stay visible in the KPI set.
+  evidence_grade: B
+  source_ids:
+  - sun-finance-aws-2026
+- id: ellby-invoice-automation
+  status: strong_pattern
+  company: Ellby
+  domain: Finance and Accounts Payable
+  process: Invoice extraction, validation, and onboarding
+  pattern_ids:
+  - document-to-workflow
+  technology:
+  - Amazon Bedrock
+  - generative AI prompts
+  - invoice automation workflow
+  what_worked: Generative extraction replaced brittle vendor-specific OCR templates, reducing setup and maintenance work while
+    leaving invoice processing inside a controlled workflow.
+  reported_results:
+  - More than 94% of invoice processing automated, up from below 60%.
+  - More than 300 hours per month saved in manual maintenance.
+  - Customer onboarding time reduced by more than 55%.
+  good_controls:
+  - The company tested multiple cloud approaches against real invoice performance before selecting the platform.
+  - The AI is embedded in an existing accounts-payable automation product rather than acting as an independent financial authority.
+  limits:
+  - Results are company/provider reported.
+  - The public case does not publish field-level false-acceptance rates or downstream posting error rates.
+  lesson: Document AI creates value when it removes template maintenance and manual exceptions, but finance controls still
+    belong to the transaction workflow.
+  evidence_grade: B
+  source_ids:
+  - ellby-aws
+- id: us-venture-finance-reconciliation
+  status: strong_pattern
+  company: U.S. Venture / U.S. AutoForce
+  domain: Finance
+  process: Bank and credit-card reconciliation
+  pattern_ids:
+  - cross-system-operational-copilot
+  technology:
+  - Microsoft 365 Copilot for Finance
+  - Microsoft Excel
+  - Dynamics 365
+  what_worked: The finance copilot was applied to a recurring reconciliation task with governed finance data instead of a
+    vague general-productivity goal.
+  reported_results:
+  - More than 30 accounting hours saved each month.
+  - A bank reconciliation process was reported to take about 80% less time.
+  - The initial setup took four weeks.
+  good_controls:
+  - The use case has a deterministic financial record and a repeatable before/after process.
+  - The copilot assists reconciliation work rather than owning the accounting system of record.
+  limits:
+  - Results are Microsoft/customer reported.
+  - The public case does not provide independent error-rate or audit-quality measurements.
+  lesson: Finance AI is easier to defend when it attacks a repetitive reconciliation step with an authoritative ledger and
+    a measurable baseline.
+  evidence_grade: B
+  source_ids:
+  - us-venture-microsoft
+- id: verizon-hybrid-customer-service
+  status: strong_pattern
+  company: Verizon
+  domain: Customer Service and Sales
+  process: Call triage, agent knowledge assistance, routine self-service, and complex human support
+  pattern_ids:
+  - enterprise-knowledge-retrieval
+  - conversation-resolution-automation
+  technology:
+  - Google Gemini
+  - Google Cloud AI
+  - enterprise knowledge retrieval
+  what_worked: AI was used to retrieve information and assist service representatives, while routine requests could move to
+    self-service and complex or empathy-heavy cases remained with people.
+  reported_results:
+  - Verizon said its AI assistant used about 15,000 internal documents and reduced call handling time.
+  - In April 2025 Verizon reported a nearly 40% increase in sales associated with the assisted-service rollout.
+  - By late 2025 the company still emphasized human handling for complex customer issues.
+  good_controls:
+  - AI augments human representatives for complex service rather than forcing complete automation.
+  - Routine and complex work follow different routes.
+  - Human access remains part of the operating model.
+  limits:
+  - Business results are based on company statements reported by Reuters.
+  - The public evidence does not isolate how much of the sales change came from AI versus other operating changes.
+  lesson: The mature customer-service pattern is often hybrid. AI handles triage, retrieval, and routine work; people handle
+    ambiguity, empathy, negotiation, and exceptions.
+  evidence_grade: B
+  source_ids:
+  - verizon-reuters-assist
+  - verizon-reuters-hybrid
+- id: cando-rail-safety-knowledge
+  status: failure
+  company: Cando Rail and Terminals
+  domain: Safety, Operations, and Knowledge Management
+  process: Employee access to rail safety rules, reports, and training material
+  what_failed: An internal chatbot could not consistently and correctly summarize the roughly 100-page Canadian Rail Operating
+    Rules. Reuters reported that it sometimes forgot or misinterpreted rules and sometimes invented them. Cando paused the
+    project.
+  failure_mode: The project treated a safety rulebook as a summarization problem without evidence that every important rule
+    could be retrieved and reproduced reliably.
+  missing_controls:
+  - rule-level evaluation set
+  - mandatory citations to the authoritative rule text
+  - explicit no-answer state
+  - expert verification for safety guidance
+  - coverage tests for information buried inside long documents
+  lesson: Putting a document inside a model context is not the same as grounding. Safety knowledge needs clause-level retrieval,
+    traceable evidence, and tests that prove important rules are not silently skipped.
+  evidence_grade: B
+  source_ids:
+  - cando-reuters-2025
+- id: microsoft-global-collections-ai
+  status: strong_pattern
+  company: Microsoft Global Collections
+  domain: Finance, Treasury, and Accounts Receivable
+  process: Cash collection, payment matching, case prioritization, routing, and customer inquiry handling
+  pattern_ids:
+  - cross-system-process-copilot
+  - agentic-exception-management
+  technology:
+  - SAP
+  - Microsoft Dynamics 365
+  - Microsoft IQ
+  - Copilot and AI agents
+  - predictive models
+  what_worked: The team first consolidated fragmented finance and collection data, standardized workflows, and only then layered
+    AI into prioritization, matching, routing, summarization, and drafting.
+  reported_results:
+  - Payment matching accuracy improved from 40% to 90%.
+  - 98% of payments could be applied within 48 hours.
+  - Call preparation time fell 40%.
+  - Automatic cash applications doubled.
+  - Customer inquiry resolution accelerated 2.5x.
+  - Inquiry handling time fell by up to 60%.
+  - Hundreds of thousands of hours were reported as unlocked annually.
+  good_controls:
+  - Human-led operating model remained explicit.
+  - SAP and Dynamics 365 formed the transaction data foundation.
+  - The team measured dollars collected, cycle time, throughput, and hours worked.
+  - Frontline users and change management were included in rollout.
+  limits:
+  - All metrics are Microsoft internal data and are explicitly described by Microsoft as directional for the measurement period.
+  - The public article does not publish false-match costs by payment type or customer segment.
+  lesson: Fix fragmented data and workflow ownership before adding agents. Collections AI works best when it prepares and
+    prioritizes work around an authoritative finance process instead of becoming the finance process.
+  evidence_grade: B
+  source_ids:
+  - microsoft-global-collections-2026
+- id: walmart-autonomous-procurement-negotiation
+  status: strong_pattern
+  company: Walmart
+  domain: Procurement and Working Capital
+  process: Supplier payment-term and price-discount negotiation
+  pattern_ids:
+  - autonomous-commercial-negotiation
+  technology:
+  - Pactum AI Agents
+  - procurement data and commercial guardrails
+  what_worked: The agent handled high-volume supplier negotiations that were uneconomic to run manually, while procurement
+    defined the strategy and acceptable trade-offs before negotiation started.
+  reported_results:
+  - 3% average gain across negotiations.
+  - Payment terms extended by an average of 35 days.
+  - 68% of engaged suppliers closed an agreement.
+  - 83% of surveyed suppliers described the system as easy to use.
+  good_controls:
+  - Commercial strategy and negotiation space are defined before the agent acts.
+  - The program targets tail-end or otherwise unmanaged negotiation volume rather than replacing strategic sourcing teams.
+  - Supplier acceptance is measured together with buyer value.
+  limits:
+  - Metrics are reported by the AI negotiation provider.
+  - The public material does not provide a control group or category-level distribution of savings and supplier outcomes.
+  lesson: Autonomy becomes defensible when the commercial authority is bounded in advance. The agent executes a negotiation
+    policy; it should not invent procurement strategy.
+  evidence_grade: B
+  source_ids:
+  - walmart-pactum-clients
+- id: oplog-fulfillment-agent-orchestration
+  status: strong_pattern
+  company: OPLOG
+  domain: Warehouse and Fulfillment Operations
+  process: Resource coordination, fulfillment decisions, and operational scaling
+  pattern_ids:
+  - operations-optimization
+  - agentic-exception-management
+  technology:
+  - Amazon Bedrock AgentCore
+  - AWS
+  - proprietary warehouse software
+  - autonomous mobile robots
+  what_worked: AI agents were inserted into a live fulfillment operating model where warehouse state, resources, robots, and
+    service commitments were already observable and measurable.
+  reported_results:
+  - Decision-making time reduced by 90%.
+  - Resource usage reported at 85-95% versus a cited industry range of 60-70%.
+  - Operational costs reduced by 30-40%.
+  - The same management team could oversee three times the previous scale.
+  - SLA compliance improved by 3.5 percentage points.
+  - Customer satisfaction increased by 8 percentage points.
+  good_controls:
+  - The business already had measurable service-level commitments and operational state.
+  - Agent outcomes are tied to resource use, cost, scale, SLA, and customer metrics rather than chat quality.
+  - Physical execution remains connected to warehouse software and robots.
+  limits:
+  - Results are company/provider reported.
+  - The public case does not publish the distribution of wrong decisions, rollback events, or safety exceptions.
+  lesson: Warehouse agents are useful when they optimize a visible constrained system. The important metrics are throughput,
+    resource use, SLA, cost, and recoverability, not how autonomous the agent sounds.
+  evidence_grade: B
+  source_ids:
+  - oplog-aws
+- id: delhivery-llm-geocoding
+  status: strong_pattern
+  company: Delhivery
+  domain: Transportation and Last-Mile Logistics
+  process: Pickup and delivery address geocoding
+  pattern_ids:
+  - cross-system-process-copilot
+  technology:
+  - fine-tuned large language model
+  - Amazon EKS
+  - AWS
+  what_worked: 'Delhivery used a fine-tuned model for a narrow operational language problem: translating messy delivery addresses
+    into high-precision geocoding results at production scale.'
+  reported_results:
+  - Up to 8,000 requests per minute.
+  - 160 millisecond latency at the reported concurrency benchmark.
+  - Model-serving costs reduced by approximately 80%.
+  - Prototype cycles reduced from about two days to under six hours.
+  good_controls:
+  - The use case has clear latency, throughput, cost, and internal precision benchmarks.
+  - The model is a component inside the navigation stack rather than an autonomous delivery decision maker.
+  limits:
+  - The public case does not disclose the exact geocoding accuracy or delivery-failure reduction.
+  - Most published KPIs are technical and cost metrics rather than final customer-delivery outcomes.
+  lesson: LLMs can be useful in logistics when language itself is the uncertain input. Keep routing and delivery execution
+    downstream of measurable geocoding quality.
+  evidence_grade: B
+  source_ids:
+  - delhivery-aws
+- id: arneg-predictive-maintenance
+  status: strong_pattern
+  company: Arneg
+  domain: Manufacturing and Field Service
+  process: Predictive maintenance for commercial refrigeration
+  pattern_ids:
+  - manufacturing-quality-prediction
+  technology:
+  - IoT infrastructure
+  - Amazon Forecast
+  - Amazon SageMaker
+  - AWS
+  what_worked: Machine and IoT data were connected to a maintenance decision so the business could move from reactive service
+    toward predicted maintenance needs.
+  reported_results:
+  - Maintenance needs predicted with more than 80% accuracy.
+  - AWS reports a substantial reduction in refrigeration downtime, without publishing the exact percentage.
+  good_controls:
+  - The prediction has a clear downstream maintenance action.
+  - The case is grounded in equipment telemetry rather than free-form text generation.
+  limits:
+  - The case is from 2020 and uses an older AWS service mix.
+  - The exact downtime reduction and false-positive maintenance cost are not public.
+  lesson: Predictive maintenance is not a dashboard problem. The value appears only when a risk signal changes inspection,
+    scheduling, spare-parts, or technician action.
+  evidence_grade: C
+  source_ids:
+  - arneg-aws
+- id: johannesburg-security-copilot
+  status: strong_pattern
+  company: City of Johannesburg
+  domain: Cybersecurity and IT Operations
+  process: SOC alert triage, investigation, reporting, and response
+  pattern_ids:
+  - ai-assisted-security-triage
+  technology:
+  - Microsoft Security Copilot
+  - Microsoft security stack
+  - AI agents
+  what_worked: AI was embedded into an existing SOC workflow to summarize evidence, reduce false positives, speed repetitive
+    analysis, and support analysts rather than replacing security ownership.
+  reported_results:
+  - False positives reduced by up to 95%.
+  - Analyst task completion reported up to 26% faster.
+  - Overall productivity gains reported between 23% and 46.7%.
+  good_controls:
+  - The SOC remains the owner of investigation and remediation.
+  - AI operates over existing security telemetry and incident state.
+  - The case measures false positives and analyst productivity rather than prompt quality.
+  limits:
+  - Results are Microsoft/customer reported.
+  - The public case does not provide severity-weighted miss rates or details for autonomous remediation boundaries.
+  lesson: Security AI should compress investigation and noise first. High-consequence remediation still needs explicit authority,
+    auditability, and rollback.
+  evidence_grade: B
+  source_ids:
+  - johannesburg-microsoft-security
+- id: accenture-github-copilot-rct
+  status: strong_pattern
+  company: Accenture
+  domain: Software Engineering
+  process: Daily software development with AI coding assistance
+  pattern_ids:
+  - cross-system-process-copilot
+  technology:
+  - GitHub Copilot Business
+  - GitHub
+  what_worked: Accenture and GitHub evaluated the coding assistant in a randomized controlled trial instead of relying only
+    on developer surveys or accepted-line counts.
+  reported_results:
+  - The Accenture trial compared 450 developers with Copilot against 200 developers without it.
+  - GitHub reports statistically significant increases in successful builds and pull requests for the treatment group.
+  - 95% of developers surveyed said they enjoyed coding more with Copilot.
+  - A later Microsoft Research analysis combining three field experiments, including Accenture, reported a 26.08% increase
+    in completed tasks across 4,867 developers.
+  good_controls:
+  - Random assignment created a stronger causal design than a normal customer story.
+  - Telemetry and developer experience were measured separately.
+  - The research distinguishes adoption from productivity outcomes.
+  limits:
+  - GitHub and Microsoft were involved in the research and product being evaluated.
+  - The public Accenture story does not expose every project-level quality or defect metric.
+  lesson: For developer AI, accepted code is not enough. Measure completed work, build success, pull requests, defects, review
+    load, and developer experience with a real comparison group when possible.
+  evidence_grade: A
+  source_ids:
+  - accenture-github-rct
+  - microsoft-developer-field-experiments
+- id: uniqa-health-claims-document-ai
+  status: strong_pattern
+  company: UNIQA Southeastern Europe
+  domain: Insurance Operations
+  process: Health claim and medical referral intake, extraction, validation, and core-system preparation
+  pattern_ids:
+  - document-to-workflow
+  technology:
+  - Microsoft Foundry
+  - Azure Document Intelligence
+  - Azure OpenAI
+  - APIs to legacy core systems
+  what_worked: The solution used AI to convert fragmented medical documents into validated structured data and connected the
+    result to the existing claims core through APIs.
+  reported_results:
+  - Average processing time reduced from 15-30 minutes to 2-3 minutes.
+  - Processing time reduction reported at 85-90%.
+  - Call-center volumes decreased and claim responses that once took weeks were reported as taking days or hours.
+  good_controls:
+  - Document extraction and validation are separated from the core claims record.
+  - APIs integrate the prepared result into the existing system instead of replacing it.
+  - Human staff remain available for complex cases.
+  limits:
+  - Results are Microsoft/customer reported.
+  - The public story does not publish field-level false-acceptance rates or claim-payment error rates.
+  lesson: Document AI is strongest when it removes re-keying and preparation while policy, eligibility, pricing, and payment
+    authority stay in the claims process.
+  evidence_grade: B
+  source_ids:
+  - uniqa-microsoft-2026
+- id: daniel-wellington-vision-returns
+  status: strong_pattern
+  company: Daniel Wellington
+  domain: Warehouse and Returns
+  process: Product identification and return-label processing
+  pattern_ids:
+  - vision-to-workflow-verification
+  technology:
+  - Amazon Rekognition
+  - AWS Lambda
+  - Amazon DynamoDB
+  - Amazon EC2
+  what_worked: 'Computer vision identifies returned products and drives a concrete warehouse workflow step: printing labels
+    and moving returns faster through processing.'
+  reported_results:
+  - Returns processed 15 times faster than before.
+  - The company also reported higher accuracy, without publishing the exact accuracy figure.
+  good_controls:
+  - Vision is used for a bounded identification task tied to a known product process.
+  - The output feeds a warehouse workflow instead of becoming a free-form business decision.
+  limits:
+  - The result is an AWS customer statement and the measurement method is not published.
+  - The source does not provide the exact error or exception rate.
+  lesson: Computer vision earns its keep when detection immediately removes a physical-process bottleneck and exceptions remain
+    observable.
+  evidence_grade: B
+  source_ids:
+  - daniel-wellington-aws-rekognition
+- id: united-entity-resolution
+  status: strong_pattern
+  company: United Airlines
+  domain: Master Data, Customer Identity, and Customer Experience
+  process: Customer identity resolution across booking, CRM, and journey data
+  pattern_ids:
+  - trusted-master-data-foundation
+  technology:
+  - AWS Entity Resolution
+  - rule-based matching
+  - ML-based matching
+  - Amazon Connect Customer Profiles
+  what_worked: United combined deterministic and probabilistic matching across fragmented customer systems to create a unified
+    identity used downstream for the traveler journey.
+  reported_results:
+  - Matching accuracy reported above 90%.
+  - The solution ingests data from 14 backend and legacy sources.
+  - A probabilistic customer ID can be associated with each booking in near real time.
+  good_controls:
+  - Deterministic and probabilistic matching are both used instead of pretending one method fits every record.
+  - Identity resolution produces a persistent business identity for downstream processes.
+  - The source systems remain traceable inputs to the unified profile.
+  limits:
+  - The public source does not publish false-merge versus false-split rates.
+  - Customer-experience and marketing ROI improvements are described without a controlled attribution method.
+  lesson: Entity resolution is an AI foundation problem with business consequences. Measure false merges and false splits
+    separately because a wrong golden record can poison every downstream agent.
+  evidence_grade: B
+  source_ids:
+  - united-aws-entity-resolution
+- id: siemens-field-service-report-pilot
+  status: mixed_result
+  company: Siemens Smart Infrastructure
+  domain: Field Service
+  process: Technician work-order report generation
+  pattern_ids:
+  - cross-system-process-copilot
+  technology:
+  - Dynamics 365 Field Service
+  - Microsoft Copilot for Dynamics 365
+  what_happened: 'Siemens built a generative AI application to standardize technician work-order reports. The business context
+    is large: more than 10,000 technicians and more than 1.4 million work-order reports per year. Public material describes
+    a pilot that began with a handful of technicians and planned expansion to 40.'
+  reported_results:
+  - Concept to first pilot took about six months.
+  - The target scale is more than 1.4 million work-order reports per year.
+  good_controls:
+  - Technicians remain responsible for the service work and can review generated reports.
+  - The team piloted with a small group and incorporated technician feedback before expanding.
+  limits:
+  - The source describes expected quality, workflow, customer-communication, and satisfaction benefits but does not publish
+    a realized production KPI.
+  - This is evidence of a sensible pattern and rollout method, not proof of business value at full scale.
+  lesson: A pilot with a clear process and users is useful evidence, but expected benefits are not realized benefits. Define
+    the production KPI before calling the transformation successful.
+  evidence_grade: C
+  source_ids:
+  - siemens-field-service-microsoft
+- id: nichirei-warehouse-vision-pilot
+  status: mixed_result
+  company: Nichirei Logistics Group
+  domain: Warehouse Operations
+  process: Cold-warehouse camera tracking of forklifts and roll containers
+  pattern_ids:
+  - vision-to-workflow-verification
+  technology:
+  - AWS computer vision services
+  - camera video analytics
+  - Automagi solution
+  what_happened: Nichirei ran a proof of concept that used warehouse camera video to identify and track forklifts and roll
+    containers as part of a broader warehouse digitization effort.
+  reported_results:
+  - The proof of concept reported a 97% tracking success rate.
+  good_controls:
+  - The company explicitly ran a proof of concept and accuracy validation before broader rollout.
+  - The technical KPI is attached to a concrete physical warehouse task.
+  limits:
+  - The public case is an older pilot and does not publish a realized labor, safety, throughput, or inventory KPI after production
+    rollout.
+  - A 97% tracking metric does not by itself prove warehouse value or safe operational automation.
+  lesson: Technical accuracy is only the first gate for warehouse vision. The production case needs a second metric such as
+    labor saved, search time, inventory accuracy, safety, or throughput.
+  evidence_grade: C
+  source_ids:
+  - nichirei-aws
+failure_patterns:
+- id: fp-authoritative-hallucination
+  title: Authoritative hallucination
+  signal: The assistant invents policy, price, eligibility, contract meaning, or system state and presents it as final.
+  controls:
+  - retrieval
+  - citations
+  - system-of-record API
+  - no-answer state
+  - human escalation
+  examples:
+  - air-canada-policy-chatbot
+- id: fp-biased-history
+  title: Biased history becomes a target
+  signal: The model learns historical outcomes as if they represented the desired future policy.
+  controls:
+  - fairness tests
+  - proxy analysis
+  - segment metrics
+  - appeals
+  - human review
+  examples:
+  - amazon-recruiting-bias
+- id: fp-bad-rule-at-scale
+  title: Bad rule at machine speed
+  signal: A deterministic or AI-assisted rule automates a policy that should not exist.
+  controls:
+  - policy review
+  - legal review
+  - segment monitoring
+  - exception path
+  examples:
+  - itutorgroup-age-filter
+- id: fp-prediction-to-capital
+  title: Prediction directly controls capital
+  signal: Forecast error immediately creates inventory, pricing, credit, or financial exposure.
+  controls:
+  - confidence-aware limits
+  - stress tests
+  - portfolio caps
+  - human approval
+  - stop-loss conditions
+  examples:
+  - zillow-offers-forecast-execution
+- id: fp-demo-environment-gap
+  title: Demo environment is cleaner than reality
+  signal: Production input contains accents, noise, long documents, edge cases, missing data, or adversarial content not represented
+    in testing.
+  controls:
+  - realistic eval set
+  - shadow mode
+  - canary rollout
+  - fallback
+  - production monitoring
+  examples:
+  - mcdonalds-ibm-voice-ordering
+- id: fp-metric-tunnel-vision
+  title: One KPI wins and the process loses
+  signal: Automation, deflection, or cost improves while quality, trust, repeat contacts, or long-term value degrades.
+  controls:
+  - balanced scorecard
+  - quality guardrail KPI
+  - human channel
+  - cohort monitoring
+  examples:
+  - klarna-ai-service-course-correction
+- id: fp-claims-ahead-of-evidence
+  title: Claims are ahead of evidence
+  signal: The product is sold as equivalent to an expert or as autonomous before that capability has been tested.
+  controls:
+  - explicit scope
+  - expert evaluation
+  - claims review
+  - documented limitations
+  examples:
+  - donotpay-ai-lawyer-claims
+- id: fp-context-is-not-grounding
+  title: The document fits in context, so the model must know it
+  signal: A long policy, rulebook, contract, or manual is sent to a model and the team assumes complete, stable recall without
+    clause-level evidence.
+  controls:
+  - retrieval by clause
+  - mandatory citations
+  - coverage-oriented evals
+  - no-answer state
+  - expert review for consequential guidance
+  examples:
+  - cando-rail-safety-knowledge
+- id: fp-model-kpi-is-not-business-kpi
+  title: The model KPI becomes the business case
+  signal: Accuracy, tracking success, latency, or adoption looks strong, but no one measures whether the end-to-end process,
+    cost, service level, risk, or customer outcome improved.
+  controls:
+  - business baseline
+  - end-to-end KPI
+  - cost of error
+  - pilot exit criteria
+  - production follow-up measurement
+  examples:
+  - nichirei-warehouse-vision-pilot
+  - siemens-field-service-report-pilot
+source_registry:
+- id: nist-ai-rmf-genai
+  publisher: NIST
+  source_type: government guidance
+  url: https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence
+- id: microsoft-responsible-agents
+  publisher: Microsoft Learn
+  source_type: primary technical guidance
+  url: https://learn.microsoft.com/en-us/agents/center-of-excellence/responsible-ai
+- id: aws-agentcore-best-practices
+  publisher: AWS
+  source_type: primary technical guidance
+  url: https://aws.amazon.com/blogs/machine-learning/ai-agents-in-enterprises-best-practices-with-amazon-bedrock-agentcore/
+- id: aws-agentic-guardrails
+  publisher: AWS
+  source_type: primary technical guidance
+  url: https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentsec04-bp01.html
+- id: aws-bedrock-start-small
+  publisher: AWS
+  source_type: primary technical guidance
+  url: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_bedrock_best_practices.html
+- id: aws-agentcore-evaluations
+  publisher: AWS
+  source_type: primary technical guidance
+  url: https://aws.amazon.com/blogs/machine-learning/build-reliable-ai-agents-with-amazon-bedrock-agentcore-evaluations/
+- id: google-agent-evaluation
+  publisher: Google Cloud
+  source_type: primary technical documentation
+  url: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/evaluate
+- id: openai-evals
+  publisher: OpenAI
+  source_type: primary technical documentation
+  url: https://platform.openai.com/docs/api-reference/evals
+- id: amazon-fintech-aws
+  publisher: AWS / Amazon Finance Technology
+  source_type: company/provider case study
+  url: https://aws.amazon.com/solutions/case-studies/amazon-finance-case-study/
+- id: chime-aws
+  publisher: AWS / Chime Financial
+  source_type: company/provider case study
+  url: https://aws.amazon.com/solutions/case-studies/chime-financial-case-study/
+- id: microsoft-hr-copilot
+  publisher: Microsoft
+  source_type: company case study
+  url: https://www.microsoft.com/en/customers/story/25046-microsoft-dynamics-365-customer-service
+- id: servicenow-agentic-workforce
+  publisher: ServiceNow
+  source_type: company release
+  url: https://newsroom.servicenow.com/press-releases/details/2025/ServiceNow-Extends-End-to-End-AI-Agent-Orchestration-With-Agentic-Workforce-Management/default.aspx
+- id: klarna-openai
+  publisher: OpenAI / Klarna
+  source_type: company/provider case study
+  url: https://openai.com/index/klarna/
+- id: klarna-reuters-course-correction
+  publisher: Reuters
+  source_type: independent reporting
+  url: https://www.reuters.com/
+  note: 2025 reporting on Klarna restoring hiring and rebalancing service after over-indexing on AI and cost reduction.
+- id: air-canada-chatbot
+  publisher: British Columbia Civil Resolution Tribunal / CanLII
+  source_type: legal decision
+  url: https://www.canlii.org/en/bc/bccrt/doc/2024/2024bccrt149/2024bccrt149.html
+- id: amazon-recruiting-reuters
+  publisher: Reuters
+  source_type: independent reporting
+  url: https://www.reuters.com/
+  note: 2018 investigation into Amazon's abandoned experimental recruiting model.
+- id: eeoc-itutorgroup
+  publisher: US Equal Employment Opportunity Commission
+  source_type: government enforcement
+  url: https://www.eeoc.gov/newsroom/itutorgroup-pay-365000-settle-eeoc-discriminatory-hiring-suit
+- id: zillow-2021-10q
+  publisher: Zillow Group / SEC
+  source_type: regulatory filing
+  url: https://www.sec.gov/Archives/edgar/data/1617640/000161764021000087/z-20210930.htm
+- id: zillow-2021-results
+  publisher: Zillow Group
+  source_type: company financial release
+  url: https://investors.zillowgroup.com/news-and-events/news/news-details/2021/Zillow-Group-Reports-Third-Quarter-2021-Financial-Results--Shares-Plan-to-Wind-Down-Zillow-Offers-Operations/default.aspx
+- id: mcdonalds-aot
+  publisher: Restaurant Business / McDonald's statements
+  source_type: industry reporting
+  url: https://www.restaurantbusinessonline.com/technology/mcdonalds-ending-its-drive-thru-ai-test
+- id: ftc-donotpay
+  publisher: US Federal Trade Commission
+  source_type: government enforcement
+  url: https://www.ftc.gov/news-events/news/press-releases/2024/09/ftc-announces-crackdown-deceptive-ai-claims-schemes
+- id: sun-finance-aws-2026
+  publisher: AWS / Sun Finance
+  source_type: company/provider technical case
+  url: https://aws.amazon.com/blogs/machine-learning/sun-finance-automates-id-extraction-and-fraud-detection-with-generative-ai-on-aws/
+- id: ellby-aws
+  publisher: AWS / Ellby
+  source_type: company/provider case study
+  url: https://aws.amazon.com/solutions/case-studies/ellby-case-study/
+- id: us-venture-microsoft
+  publisher: Microsoft / U.S. Venture
+  source_type: company/provider case study
+  url: https://www.microsoft.com/en/customers/story/20600-us-venture-microsoft-365-copilot-for-finance
+- id: verizon-reuters-assist
+  publisher: Reuters
+  source_type: independent reporting
+  url: https://www.reuters.com/technology/verizon-says-google-ai-customer-service-agents-has-led-sales-jump-2025-04-09/
+- id: verizon-reuters-hybrid
+  publisher: Reuters
+  source_type: independent reporting
+  url: https://www.reuters.com/business/business-leaders-agree-ai-is-future-they-just-wish-it-worked-right-now-2025-12-16/
+- id: cando-reuters-2025
+  publisher: Reuters
+  source_type: independent reporting
+  url: https://www.reuters.com/business/business-leaders-agree-ai-is-future-they-just-wish-it-worked-right-now-2025-12-16/
+- id: microsoft-global-collections-2026
+  publisher: Microsoft Inside Track
+  source_type: company internal case study
+  url: https://www.microsoft.com/insidetrack/blog/streamlining-finance-cash-collection-at-microsoft-with-ai/
+- id: walmart-pactum-clients
+  publisher: Pactum
+  source_type: provider customer case
+  url: https://pactum.com/clients
+- id: oplog-aws
+  publisher: AWS / OPLOG
+  source_type: company/provider case study
+  url: https://aws.amazon.com/solutions/case-studies/oplog/
+- id: delhivery-aws
+  publisher: AWS / Delhivery
+  source_type: company/provider case study
+  url: https://aws.amazon.com/solutions/case-studies/delhivery-case-study/
+- id: arneg-aws
+  publisher: AWS / Arneg
+  source_type: company/provider case study
+  url: https://aws.amazon.com/solutions/case-studies/arneg/
+- id: johannesburg-microsoft-security
+  publisher: Microsoft / City of Johannesburg
+  source_type: company/provider case study
+  url: https://www.microsoft.com/en/customers/story/26144-city-of-johannesburg-microsoft-security-copilot
+- id: accenture-github-rct
+  publisher: GitHub / Accenture
+  source_type: provider research with randomized controlled trial
+  url: https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/
+- id: microsoft-developer-field-experiments
+  publisher: Microsoft Research
+  source_type: research paper
+  url: https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/
+- id: uniqa-microsoft-2026
+  publisher: Microsoft / UNIQA SEE
+  source_type: company/provider case study
+  url: https://www.microsoft.com/en/customers/story/26467-uniqa-insurance-group-azure
+- id: daniel-wellington-aws-rekognition
+  publisher: AWS / Daniel Wellington
+  source_type: provider customer statement
+  url: https://aws.amazon.com/rekognition/customers/
+- id: united-aws-entity-resolution
+  publisher: AWS / United Airlines
+  source_type: company/provider implementation example
+  url: https://aws.amazon.com/blogs/industries/how-to-create-a-unified-view-of-your-consumer/
+- id: siemens-field-service-microsoft
+  publisher: Microsoft / Siemens
+  source_type: company/provider pilot case
+  url: https://www.microsoft.com/en/customers/story/19736-siemens-ag-germany-dynamics-365-field-service
+- id: nichirei-aws
+  publisher: AWS / Nichirei Logistics Group
+  source_type: company/provider proof of concept
+  url: https://aws.amazon.com/jp/solutions/case-studies/nichireilogi-automagi/
