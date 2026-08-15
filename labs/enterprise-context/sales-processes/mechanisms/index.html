@@ -22,9 +22,13 @@ tags:
 ---
 
 {% assign library = site.data.labs.enterprise_context.mechanisms.sales_mechanisms %}
-{% assign group_keys = "01_commercial,02_fulfillment,03_financial,04_communication,05_determinations" | split: "," %}
+{% assign group_keys = "01_commercial,02_fulfillment,03_financial,04_communication,05_determinations,06_planning" | split: "," %}
 {% assign registry = site.data.labs.enterprise_context.sources.sales_mechanism_registry %}
+{% assign planning_registry = site.data.labs.enterprise_context.sources.sales_requirements_type %}
 {% assign mechanism_count = library.index.mechanism_codes | size %}
+{% assign source_count = registry.sources | size %}
+{% assign planning_source_count = planning_registry.sources | size %}
+{% assign source_count = source_count | plus: planning_source_count %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li aria-current="page">Mechanism Library</li></ol>
@@ -35,7 +39,7 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Sales process atlas / reusable mechanisms</p>
       <h1>Processes are compositions.<br />Mechanisms are reusable.</h1>
-      <p>A process tells you which branch is running. A mechanism tells you why SAP chose this item category, material, plant, route, confirmation, price, tax, account, partner, invoice, or output. Learn the mechanism once; reuse it across every sales variant.</p>
+      <p>A process tells you which branch is running. A mechanism tells you why SAP chose this item category, material, plant, route, planning behavior, confirmation, price, tax, account, partner, invoice, or output. Learn the mechanism once; reuse it across every sales variant.</p>
       <div class="sm-hero-actions">
         <a class="research-canvas__button" href="#mechanism-cards">Open mechanism cards <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
         <a class="sm-text-link" href="/labs/enterprise-context/sales-processes/control-plane/">Back to Control Plane</a>
@@ -45,7 +49,7 @@ tags:
       <p>Reusable control layer</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ mechanism_count }}</strong><small>Mechanisms</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ library.relations.edges | size }}</strong><small>Typed dependencies</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ registry.sources | size }}</strong><small>Primary references</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ source_count }}</strong><small>Primary references</small></div>
       <em><code>SD.*</code> = process. <code>MEC.SD.*</code> = reusable decision/control mechanism.</em>
     </div>
   </header>
@@ -72,7 +76,7 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Decision lanes</p>
       <h2>{{ mechanism_count }} mechanisms, {{ library.index.lanes | size }} mental lanes.</h2>
-      <p>This is deliberately not one fake linear process. Some decisions use condition technique, some use master-data precedence, some use configuration tables, and some are runtime checks. Pricing and partner determination can run beside fulfillment logic; output belongs after a business object exists; copy control can change pricing again in the next document.</p>
+      <p>This is deliberately not one fake linear process. Some decisions use condition technique, some use master-data precedence, some use configuration tables, and some are runtime checks. Pricing and partner determination can run beside fulfillment logic; planning logic crosses into MRP and controlling; output belongs after a business object exists; copy control can change pricing again in the next document.</p>
     </header>
     <div class="sm-lanes">
       {% for lane in library.index.lanes %}
@@ -112,7 +116,7 @@ tags:
       <article><span>Plant changed</span><p><code>PLANT</code> → <code>SHIPPT</code> → <code>ROUTE</code> → <code>SCHED</code> → <code>ATP</code>. Then ask whether company-code/intercompany context changed too.</p></article>
       <article><span>Invoice price wrong</span><p><code>COPY</code> → pricing type → <code>PRICE</code> → pricing procedure → access sequence → condition record.</p></article>
       <article><span>Customer gets nothing</span><p><code>BILL</code> / sales object exists → <code>OUTPUT</code> → output item → rule result → recipient → channel → dispatch/rendering status.</p></article>
-      <article><span>Wrong batch</span><p><code>BATCH</code> → search procedure → strategy type → strategy key → selection class → availability → sort rule. Manual correction comes last, not first.</p></article>
+      <article><span>Wrong planning behavior</span><p><code>ICAT</code> + MRP/strategy context → <code>REQTYPE</code> → requirements class → planning, account assignment, and ATP interaction.</p></article>
     </div>
   </section>
 
@@ -197,7 +201,7 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Process composition</p>
       <h2>The same mechanisms reappear across different business branches.</h2>
-      <p>This is the reason for separating them. Third-party sales still needs pricing, partner, billing, copy and output. Make-to-order still needs item/schedule-line logic, scheduling, ATP and often batch context. The process changes; the mechanisms remain reusable.</p>
+      <p>This is the reason for separating them. Third-party sales still needs pricing, partner, billing, copy and output. Make-to-order adds a stronger planning dependency through requirements type and class. The process changes; the mechanisms remain reusable.</p>
     </header>
     <div class="sm-process-map">
       {% for link in library.process_map.links %}
@@ -229,6 +233,9 @@ tags:
     </header>
     <div class="research-route-list">
       {% for source in registry.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+      {% for source in planning_registry.sources %}
       <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · accessed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
