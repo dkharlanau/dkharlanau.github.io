@@ -1,0 +1,249 @@
+---
+layout: default
+title: "SAP EWM — Deployment & Warehouse Execution Map"
+description: "A Lead-level map of Embedded and Decentralized SAP EWM, warehouse documents, inbound, outbound, internal processes, production supply, automation and integration boundaries."
+permalink: /labs/enterprise-context/ewm/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+enterprise_context_graph: true
+last_modified_at: 2026-08-15
+hide_global_cta: true
+tags:
+  - sap
+  - ewm
+  - warehousing
+  - logistics
+  - architecture
+  - integration
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.ewm %}
+{% assign evidence = site.data.labs.enterprise_context.sources.ewm %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">EWM</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Enterprise Context / Warehousing</p>
+      <h1>{{ graph.title }}</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#deployment">Start with deployment <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Research status">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.deployment_models | size }}</strong><small>Deployment models</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.process_families | size }}</strong><small>Process families</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure paths</small></div>
+      <em>Source checked {{ graph.verified_at }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">warehouse</span>
+    <p><strong>Working thesis:</strong> {{ graph.thesis }}</p>
+    <p><strong>Boundary:</strong> EWM owns detailed warehouse position and execution. ERP Inventory Management remains the enterprise inventory and accounting context. The useful question is not “Which transaction?” but “Which system and document owns the next decision?”</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="deployment" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architecture decision</p>
+      <h2>Embedded or decentralized is a system-boundary decision.</h2>
+      <p>There are two S/4HANA EWM deployment models in this map. “Direct” describes integration behavior; it is not modeled as a third deployment option.</p>
+    </header>
+    <div class="research-route-list">
+      {% for deployment in graph.deployment_models %}
+      <article>
+        <span>DEP</span>
+        <strong>{{ deployment.title }}</strong>
+        <small>{{ deployment.documented_model }}</small>
+        <p><b>Remember:</b> {{ deployment.remember }}</p>
+        <p><b>Strengths:</b> {{ deployment.architecture_reading.strengths | join: " · " }}</p>
+        <p><b>Trade-offs:</b> {{ deployment.architecture_reading.tradeoffs | join: " · " }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p><strong>Lead rule:</strong> {{ graph.deployment_decision_rule }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>{{ graph.memory_model.title }}</h2>
+      <p>Each question points to one layer: architecture, document, stock, determination, execution, integration or monitoring.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.memory_model.questions %}
+      <article><span>{{ item.key }}</span><strong>{{ item.question }}</strong><small>{{ item.answer }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="objects" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Execution objects</p>
+      <h2>Request, task and work package are different objects.</h2>
+      <p><strong>{{ graph.object_chain.path }}</strong></p>
+      <p>{{ graph.object_chain.note }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for object in graph.execution_object_model %}
+      <article><span>OBJ</span><strong>{{ object.title }}</strong><small>{{ object.purpose }}{% if object.examples %} Examples: {{ object.examples | join: ", " }}.{% endif %}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Warehouse structure</p>
+      <h2>Map the physical warehouse before tuning strategies.</h2>
+      <p>{{ graph.warehouse_structure.lead_lens }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for level in graph.warehouse_structure.levels %}
+      <article><span>MD</span><strong>{{ level.object }}</strong><small>{{ level.role }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="processes" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Core processes</p>
+      <h2>Warehouse execution is several process families, not one giant chain.</h2>
+      <p>Inbound, outbound, internal movement, production supply and physical inventory start from different business needs but share the same execution language.</p>
+    </header>
+    {% for process in graph.process_families %}
+    <div class="research-canvas__boundary" data-reveal>
+      <span class="material-symbols-outlined" aria-hidden="true">route</span>
+      <p><strong>{{ process.title }}</strong> · {{ process.memory_path }}</p>
+      {% if process.steps %}<p>{{ process.steps | join: " → " }}</p>{% endif %}
+      {% if process.scenarios %}<p><strong>Scenarios:</strong> {{ process.scenarios | join: ", " }}</p>{% endif %}
+      {% if process.concepts %}<p><strong>Concepts:</strong> {{ process.concepts | join: ", " }}</p>{% endif %}
+      <p><strong>Failure signal:</strong> {{ process.failure_signal }}</p>
+    </div>
+    {% endfor %}
+  </section>
+
+  <section class="research-canvas__inventory" id="controls" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Control plane</p>
+      <h2>Most “wrong bin” or “no task” problems are determination problems with a document context.</h2>
+      <p>Reproduce the exact request, stock and warehouse context before changing a strategy globally.</p>
+    </header>
+    <div class="research-route-list">
+      {% for control in graph.control_model %}
+      <article><span>CTRL</span><strong>{{ control.title }}</strong><small>{{ control.question }} Consequence: {{ control.affects | join: ", " }}.</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="integration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration boundaries</p>
+      <h2>EWM should be strong at warehouse execution without becoming owner of every logistics decision.</h2>
+      <p>Use ownership language: who owns the business demand, who owns detailed execution, and who confirms the final state.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.integration_boundaries %}
+      <article>
+        <span>INT</span><strong>{{ item.system }}</strong>
+        <small><b>Other side:</b> {{ item.owns }} <b>EWM:</b> {{ item.ewm_owns }}</small>
+        <p><b>Diagnostic:</b> {{ item.diagnostic_question }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Quality</p>
+      <h2>QM troubleshooting starts with the deployment model.</h2>
+      <p>{{ graph.quality_integration.lead_lens }}</p>
+    </header>
+    <div class="research-route-list">
+      <article><span>QM</span><strong>{{ graph.quality_integration.embedded.title }}</strong><small>{{ graph.quality_integration.embedded.model }}</small></article>
+      <article><span>QM</span><strong>{{ graph.quality_integration.decentralized.title }}</strong><small>{{ graph.quality_integration.decentralized.model }}</small></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="automation" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Execution & automation</p>
+      <h2>Human RF and machine automation use the same warehouse intent at different control levels.</h2>
+    </header>
+    <div class="research-route-list">
+      <article><span>RF</span><strong>{{ graph.rf_and_automation.rf.title }}</strong><small>{{ graph.rf_and_automation.rf.role }} {{ graph.rf_and_automation.rf.lead_lens }}</small></article>
+      <article><span>MFS</span><strong>{{ graph.rf_and_automation.mfs.title }}</strong><small>{{ graph.rf_and_automation.mfs.role }} Objects: {{ graph.rf_and_automation.mfs.objects | join: ", " }}. {{ graph.rf_and_automation.mfs.lead_lens }}</small></article>
+      <article><span>WCS</span><strong>{{ graph.rf_and_automation.external_wcs.title }}</strong><small>{{ graph.rf_and_automation.external_wcs.role }} {{ graph.rf_and_automation.external_wcs.lead_lens }}</small></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failures" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostics</p>
+      <h2>Find the first broken state, not the loudest downstream symptom.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for failure in graph.failure_modes %}
+      <article><span>!</span><strong>{{ failure.symptom }}</strong><small><b>Check first:</b> {{ failure.check_first }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architecture trade-offs</p>
+      <h2>Use the smallest boundary that still protects operations.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.architecture_tradeoffs %}
+      <article><span>DEC</span><strong>{{ item.decision }}</strong><small><b>Lighter boundary:</b> {{ item.lighter_choice }} <b>Stronger boundary:</b> {{ item.stronger_choice }}{% if item.caution %} {{ item.caution }}{% endif %}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="assessment" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment lens</p>
+      <h2>Answers that show ownership and reasoning, not transaction memory.</h2>
+      <p>A strong Lead answer explains the boundary, document chain, first diagnostic check and business consequence.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.assessment_questions %}
+      <article><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.strong_answer }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Synthetic case</p>
+      <h2>{{ graph.synthetic_case.company }} / {{ graph.synthetic_case.warehouse }}</h2>
+      <p>{{ graph.synthetic_case.situation }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for step in graph.synthetic_case.reasoning_path %}
+      <article><span>{{ forloop.index }}</span><strong>{{ step }}</strong></article>
+      {% endfor %}
+      <article><span>?</span><strong>{{ graph.synthetic_case.assessment_prompt }}</strong></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Primary SAP references used for this vertical.</h2>
+      <p>The explanation is independently written; source links verify product behavior and release-sensitive boundaries.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+    <p><a href="/labs/enterprise-context/data/ewm-graph.json">Machine-readable graph</a> · <a href="/labs/enterprise-context/data/ewm-sources.json">Source registry</a></p>
+  </section>
+</div>
