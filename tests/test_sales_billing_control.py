@@ -6,6 +6,7 @@ import yaml
 
 ROOT = Path("_data/labs/enterprise_context")
 MECHANISM_ROOT = ROOT / "mechanisms" / "sales_mechanisms"
+PROCESS_ROOT = ROOT / "processes" / "sales_process_atlas"
 SOURCE_ROOT = ROOT / "sources"
 
 
@@ -68,3 +69,19 @@ def test_billing_lane_contains_specialized_controls():
         "MEC.SD.BILL",
     }
     assert set(billing_lane["codes"]) == expected
+
+
+def test_billing_lifecycle_processes_are_composed_from_known_controls():
+    index = load_json(MECHANISM_ROOT / "index.json")
+    process_map = load_json(MECHANISM_ROOT / "process_map.json")
+    lifecycle = load_json(PROCESS_ROOT / "10_billing_lifecycle.json")
+
+    codes = set(index["mechanism_codes"])
+    lifecycle_codes = {process["code"] for process in lifecycle["processes"]}
+    mapped = {link["process"]: link["mechanisms"] for link in process_map["links"]}
+
+    for process_code in lifecycle_codes:
+        assert process_code in mapped, f"Billing lifecycle process {process_code} has no mechanism composition"
+        assert "MEC.SD.BILL" in mapped[process_code], f"{process_code} must include billing lifecycle orchestration"
+        for mechanism_code in mapped[process_code]:
+            assert mechanism_code in codes, f"{process_code} references unknown mechanism {mechanism_code}"
