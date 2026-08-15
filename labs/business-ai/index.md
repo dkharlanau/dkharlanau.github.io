@@ -20,6 +20,7 @@ tags:
 {% assign catalog = site.data.labs.business_ai.catalog %}
 {% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
 {% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
+{% assign domain_map = site.data.labs.business_ai.domain_map %}
 {% assign all_patterns = catalog.patterns | concat: expansion.patterns | concat: expansion_b.patterns %}
 {% assign all_cases = catalog.cases | concat: expansion.cases | concat: expansion_b.cases %}
 {% assign all_sources = catalog.source_registry | concat: expansion.source_registry | concat: expansion_b.source_registry %}
@@ -40,7 +41,7 @@ tags:
       <p>Current catalog</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ all_patterns | size }}</strong><small>Reusable patterns</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ all_cases | size }}</strong><small>Public cases</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ all_sources | size }}</strong><small>Tracked sources</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ domain_map.domains | size }}</strong><small>Domain views</small></div>
       <em>Working material. Claims stay noindex until human review.</em>
     </div>
   </header>
@@ -49,20 +50,22 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
     <p><strong>Question:</strong> where does AI improve a business decision, cycle time, quality, service level, or cost enough to justify the extra system complexity?</p>
     <p><strong>Working rule.</strong> A model name is metadata, not a use case. Start from the business job and the measurable failure.</p>
-    <a href="/labs/business-ai/cases/">Open implementation cases <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <a href="/labs/business-ai/domains/">Open the Lead assessment view <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="business-ai-map" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Catalog map</p>
-      <h2>Cases, patterns, technology, evidence.</h2>
+      <h2>Cases, patterns, domains, technology, evidence.</h2>
       <p>The same pattern can appear in SAP, Google Cloud, OpenAI, internal platforms, or a classical optimization engine. That comparison is the point.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/business-ai/cases/"><span>01</span><strong>Implementation Cases</strong><small>Who built it, which process changed, what technology was disclosed, what result was reported, and what remains uncertain.</small><i class="material-symbols-outlined" aria-hidden="true">cases</i></a>
       <a href="/labs/business-ai/patterns/"><span>02</span><strong>Reusable Patterns</strong><small>From document automation and forecasting to guided selling, cross-system copilots, manufacturing quality, embodied logistics, and master-data foundations.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/business-ai/model/"><span>03</span><strong>Graph Model</strong><small>Node types and relationships for cases, companies, processes, patterns, technologies, KPIs, evidence, limitations, and case classification.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-      <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Machine-readable Catalog</strong><small>The same patterns, cases, evidence grades, source IDs, technologies, metrics, limits, and consultant notes as structured data.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/business-ai/domains/"><span>03</span><strong>Business AI by Domain</strong><small>Sales/O2C, Procurement, Planning, Warehouse and Logistics, Manufacturing and Quality, Master Data, and Knowledge/Service with SAP touchpoints and Lead questions.</small><i class="material-symbols-outlined" aria-hidden="true">domain</i></a>
+      <a href="/labs/business-ai/model/"><span>04</span><strong>Graph Model</strong><small>Node types and relationships for cases, companies, processes, patterns, technologies, KPIs, evidence, limitations, and case classification.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Machine-readable Catalog</strong><small>Patterns, cases, evidence grades, source IDs, technologies, metrics, limits, and consultant notes as structured data.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/business-ai/data/domains.json"><span>MAP</span><strong>Machine-readable Domain Map</strong><small>Business jobs, SAP touchpoints, Lead questions, and case IDs by domain.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/labs/enterprise-context/business-ai/"><span>SAP</span><strong>SAP Business AI Technology Map</strong><small>Joule, agents, AI Core, generative AI hub, grounding, build tools, runtime, and governance. Technology landscape stays separate from this use-case catalog.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/ai-ready/"><span>SYS</span><strong>AI Ready Architecture Lab</strong><small>Vendor-neutral architecture patterns for RAG, tools, MCP, agents, evaluations, security, and production operation.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
     </div>
