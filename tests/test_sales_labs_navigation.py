@@ -1,19 +1,30 @@
 from pathlib import Path
 
+import yaml
 
-LABS_INDEX = Path("labs/index.md")
+
+ROOT = Path("labs/enterprise-context")
+CONTRACT = Path("_data/labs/enterprise_context/agent_contracts/sales.yml")
 
 
-REQUIRED_SALES_ROUTES = {
-    "/labs/enterprise-context/sales-processes/": "SAP Sales Process Atlas",
-    "/labs/enterprise-context/sales-diagnostics/": "SAP Sales Diagnostic Casebook",
-    "/labs/enterprise-context/data/sales-agent-index.json": "Sales Agent Routing Index",
+HUMAN_VIEWS = {
+    ROOT / "sales-processes" / "index.html": "/labs/enterprise-context/sales-processes/",
+    ROOT / "sales-diagnostics" / "index.html": "/labs/enterprise-context/sales-diagnostics/",
+    ROOT / "sales-analytics" / "index.html": "/labs/enterprise-context/sales-analytics/",
 }
 
 
-def test_labs_index_exposes_sales_human_and_agent_routes():
-    body = LABS_INDEX.read_text(encoding="utf-8")
+def test_sales_human_views_have_stable_routes():
+    for path, route in HUMAN_VIEWS.items():
+        assert path.exists(), f"Missing Sales human view: {path}"
+        body = path.read_text(encoding="utf-8")
+        assert f"permalink: {route}" in body
 
-    for route, label in REQUIRED_SALES_ROUTES.items():
-        assert route in body, f"Missing Sales route on Labs index: {route}"
-        assert label in body, f"Missing Sales route label on Labs index: {label}"
+
+def test_sales_agent_router_exposes_analytics_endpoint():
+    contract = yaml.safe_load(CONTRACT.read_text(encoding="utf-8"))
+    endpoints = {item["primary_endpoint"] for item in contract["namespaces"]}
+
+    assert "/labs/enterprise-context/data/sales-process-atlas.json" in endpoints
+    assert "/labs/enterprise-context/data/sales-diagnostic-casebook.json" in endpoints
+    assert "/labs/enterprise-context/data/sales-process-kpis.json" in endpoints
