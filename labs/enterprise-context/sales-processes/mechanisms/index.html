@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 sales_mechanism_library: true
 tags:
@@ -22,7 +22,7 @@ tags:
 ---
 
 {% assign library = site.data.labs.enterprise_context.mechanisms.sales_mechanisms %}
-{% assign group_keys = "01_commercial,02_fulfillment,03_financial,04_communication" | split: "," %}
+{% assign group_keys = "01_commercial,02_fulfillment,03_financial,04_communication,05_determinations" | split: "," %}
 {% assign registry = site.data.labs.enterprise_context.sources.sales_mechanism_registry %}
 {% assign mechanism_count = library.index.mechanism_codes | size %}
 
@@ -35,7 +35,7 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Sales process atlas / reusable mechanisms</p>
       <h1>Processes are compositions.<br />Mechanisms are reusable.</h1>
-      <p>A process tells you which branch is running. A mechanism tells you why SAP chose this item category, plant, route, confirmation, price, partner, invoice, or output. Learn the mechanism once; reuse it across every sales variant.</p>
+      <p>A process tells you which branch is running. A mechanism tells you why SAP chose this item category, material, plant, route, confirmation, price, tax, account, partner, invoice, or output. Learn the mechanism once; reuse it across every sales variant.</p>
       <div class="sm-hero-actions">
         <a class="research-canvas__button" href="#mechanism-cards">Open mechanism cards <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
         <a class="sm-text-link" href="/labs/enterprise-context/sales-processes/control-plane/">Back to Control Plane</a>
@@ -71,8 +71,8 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Decision lanes</p>
-      <h2>{{ mechanism_count }} mechanisms, four mental lanes.</h2>
-      <p>This is deliberately not one fake linear process. Pricing and partner determination can run beside fulfillment logic; output belongs after a business object exists; copy control can change pricing again in the next document. The lanes preserve that distinction.</p>
+      <h2>{{ mechanism_count }} mechanisms, {{ library.index.lanes | size }} mental lanes.</h2>
+      <p>This is deliberately not one fake linear process. Some decisions use condition technique, some use master-data precedence, some use configuration tables, and some are runtime checks. Pricing and partner determination can run beside fulfillment logic; output belongs after a business object exists; copy control can change pricing again in the next document.</p>
     </header>
     <div class="sm-lanes">
       {% for lane in library.index.lanes %}
@@ -212,7 +212,7 @@ tags:
   <section class="sm-assessment" data-reveal>
     <div>
       <p class="research-canvas__eyebrow">Lead answer pattern</p>
-      <h2>Answer mechanisms in six moves.</h2>
+      <h2>Answer mechanisms in seven moves.</h2>
     </div>
     <ol>
       {% for q in library.index.learning_model.questions %}
