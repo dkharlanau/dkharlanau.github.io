@@ -1,0 +1,68 @@
+{
+  "id": "SALES-REDETERMINATION-EVENTS-V1",
+  "title": "Sales Redetermination Events",
+  "updated_at": "2026-08-15",
+  "purpose": "Make recalculation triggers explicit. A mechanism is only half the story; the other half is knowing when SAP keeps an old value and when it calculates again.",
+  "events": [
+    {
+      "id": "EVT.SD.NEW-NO-REFERENCE",
+      "title": "Create document without reference",
+      "evidence_class": "documented_fact",
+      "trigger": "A new sales document starts without a preceding sales document.",
+      "kept_or_copied": "No predecessor business data is available to copy.",
+      "rechecked": ["current business partner/customer master", "current product master", "current customer-material records", "active determination procedures"],
+      "diagnostic_question": "Which current master or mechanism supplied this value?",
+      "source_refs": ["SRC-SALES-MASTER-DATA"]
+    },
+    {
+      "id": "EVT.SD.CREATE-WITH-REFERENCE",
+      "title": "Create document with reference",
+      "evidence_class": "documented_fact",
+      "trigger": "A target sales document is created from an inquiry, quotation, order, or another allowed predecessor.",
+      "kept_or_copied": "Relevant predecessor data is copied. Later changes to master data do not automatically replace values already copied from the predecessor.",
+      "rechecked": ["newly entered target items can read current master data", "copy-control-dependent values can be redetermined according to configuration"],
+      "diagnostic_question": "Did this value come from today's master data or yesterday's predecessor?",
+      "source_refs": ["SRC-SALES-REFERENCE-DATA"]
+    },
+    {
+      "id": "EVT.SD.CHANGE-DOC-TYPE",
+      "title": "Change sales document type",
+      "evidence_class": "documented_fact",
+      "trigger": "An allowed alternative sales document type is selected during document processing.",
+      "kept_or_copied": "The change is only allowed when key control settings are compatible, including partner and text procedure constraints.",
+      "rechecked": ["item categories", "pricing when the document determination procedure differs", "material determination when its procedure differs", "listing/exclusion when its procedure differs", "free goods when its procedure differs"],
+      "diagnostic_question": "Which procedure changed with the document type, and which result therefore had to be rebuilt?",
+      "source_refs": ["SRC-SALES-DOC-TYPE-CHANGE"]
+    },
+    {
+      "id": "EVT.SD.CHANGE-PLANT",
+      "title": "Change delivering plant",
+      "evidence_class": "reasoned_interpretation",
+      "trigger": "The order item receives a different plant through redetermination or manual change.",
+      "kept_or_copied": "Do not assume shipping results remain valid just because the item still exists.",
+      "rechecked": ["shipping point", "route", "scheduling", "ATP", "intercompany or legal context where relevant"],
+      "diagnostic_question": "What downstream logistics decisions consumed the old plant?",
+      "source_refs": ["SRC-MEC-PLANT", "SRC-MEC-SHIPPT", "SRC-MEC-ROUTE", "SRC-MEC-SCHED", "SRC-MEC-ATP"]
+    },
+    {
+      "id": "EVT.SD.CHANGE-MATERIAL",
+      "title": "Change or substitute material",
+      "evidence_class": "reasoned_interpretation",
+      "trigger": "The entered product changes or material determination substitutes another product.",
+      "kept_or_copied": "Commercial intent may stay the same while the product-dependent control context changes.",
+      "rechecked": ["item category context", "plant", "availability", "pricing", "tax classification", "batch and logistics attributes"],
+      "diagnostic_question": "Which downstream result still belongs to the old material context?",
+      "source_refs": ["SRC-MEC-MATDET", "SRC-MEC-ICAT", "SRC-MEC-PLANT", "SRC-MEC-ATP", "SRC-MEC-PRICE", "SRC-MEC-TAX"]
+    },
+    {
+      "id": "EVT.SD.CHANGE-PARTNER",
+      "title": "Change partner context",
+      "evidence_class": "reasoned_interpretation",
+      "trigger": "Sold-to, ship-to, bill-to, payer, or another business partner changes.",
+      "kept_or_copied": "Some document values may already have been copied from the old partner context.",
+      "rechecked": ["partner functions and source control", "shipping address and plant assumptions", "route destination", "payment terms", "billing and tax context", "credit context", "output recipient"],
+      "diagnostic_question": "Which fields were copied from the old partner and which mechanisms actively redetermined?",
+      "source_refs": ["SRC-MEC-PARTNER", "SRC-SALES-MASTER-DATA"]
+    }
+  ]
+}
