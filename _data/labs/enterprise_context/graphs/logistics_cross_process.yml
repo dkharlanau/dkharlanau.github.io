@@ -1,0 +1,361 @@
+id: GRAPH-LO-CROSS-PROCESS-LOGISTICS
+type: knowledge_graph
+title: "Cross-Process Logistics Capabilities"
+domain: "SAP S/4HANA Logistics"
+process_family: "Procurement / Inventory / Manufacturing / Sales / Warehouse / Quality"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+
+summary: >-
+  A Lead-level map of logistics capabilities that cut across module boundaries. Batch, handling unit,
+  serial number, classification, split valuation, and stock determination are modeled as shared
+  control layers because the same object can influence procurement, inventory, production, quality,
+  warehouse execution, sales, and delivery.
+
+thesis: >-
+  I do not treat these capabilities as MM, SD, PP, or EWM features. I first ask which business identity
+  must survive the process: a lot, a physical package, an individual unit, a classified object, a valued
+  sub-stock, or a preferred stock source. Then I configure the lightest control that preserves that identity.
+
+memory_model:
+  path: "LOT → PACKAGE → UNIT → ATTRIBUTES → VALUE → SOURCE"
+  questions:
+    - key: LOT
+      question: "Do we need to distinguish quantities of the same material by lot?"
+      capability: "Batch Management"
+    - key: PACKAGE
+      question: "Must logistics move and scan a packed physical unit?"
+      capability: "Handling Unit Management"
+    - key: UNIT
+      question: "Must one individual piece have its own identity?"
+      capability: "Serial Number Management"
+    - key: ATTRIBUTES
+      question: "Do objects need reusable characteristics and classes?"
+      capability: "Classification System"
+    - key: VALUE
+      question: "Must partial stocks of one material carry different valuation?"
+      capability: "Split Valuation"
+    - key: SOURCE
+      question: "Must the system choose which stock source is consumed first?"
+      capability: "Stock Determination"
+
+capabilities:
+  - id: CAP-LO-BATCH-MANAGEMENT
+    type: capability
+    title: "Batch Management"
+    group: "Traceability and stock selection"
+    business_identity: "Lot / batch"
+    purpose: >-
+      Separate quantities of one material into identifiable batches and keep batch-specific information
+      available across goods movements, production, quality, sales, delivery, and stock selection.
+    process_coverage:
+      - "Procurement and goods receipt"
+      - "Inventory Management"
+      - "Production and process orders"
+      - "Quality Management"
+      - "Sales and outbound delivery"
+      - "Warehouse execution"
+    activation_and_configuration:
+      - "Set the material/product as batch managed where the business requires lot-level identity."
+      - "Define batch level and numbering design for the system landscape."
+      - "Use batch classes and characteristics for batch-specific properties."
+      - "Configure batch search strategies when automatic batch determination is required."
+      - "Use batch status and shelf-life data where operational controls require them."
+    mandatory_logic: >-
+      Optional as an enterprise capability. Once a material is batch managed, relevant stock transactions
+      must preserve batch identity. Batch classification becomes required when Batch Determination uses
+      classified characteristics for selection.
+    key_subcapabilities:
+      - id: CAP-LO-BATCH-DETERMINATION
+        title: "Batch Determination"
+        role: "Automatically select suitable batches according to search strategy and batch characteristics."
+      - id: CAP-LO-SHELF-LIFE
+        title: "Shelf-Life Management"
+        role: "Control total shelf life, minimum remaining shelf life, and shelf-life expiration date at receipt and stock selection."
+    lead_lens: >-
+      A batch is not only a number printed on a label. It is a stock identity with downstream consequences.
+      If a batch cannot be selected, I separate batch existence, classification, availability, status,
+      shelf life, and search strategy before changing the determination rule.
+    source_refs: [SRC-SAP-LO-BATCH-DETERMINATION, SRC-SAP-LO-BATCH-CLASSIFICATION, SRC-SAP-LO-SHELF-LIFE]
+
+  - id: CAP-LO-HANDLING-UNIT-MANAGEMENT
+    type: capability
+    title: "Handling Unit Management"
+    group: "Packaging and logistics execution"
+    business_identity: "Physical logistics unit"
+    purpose: >-
+      Represent packed goods as a logistics unit such as a carton, pallet, or container, so the package
+      and its contents can be packed, nested, moved, scanned, received, stored, and shipped together.
+    process_coverage:
+      - "Inbound delivery and goods receipt"
+      - "Inventory movements and transfer postings"
+      - "Warehouse receiving, storage, picking, packing, and staging"
+      - "Outbound delivery and goods issue"
+      - "Transportation handover"
+    activation_and_configuration:
+      - "Define packaging materials and the required packaging structure."
+      - "Define handling-unit identification and numbering rules; external standards such as SSCC can be used where required."
+      - "Use packing instructions or packing rules when repeatable packing proposals are needed."
+      - "Decide where stock must be managed inside handling units instead of as loose stock."
+    mandatory_logic: >-
+      Optional globally. It becomes operationally mandatory where a location/process is designed as HU-managed;
+      for example, a storage location can be configured so stock exists only in handling units.
+    key_subcapabilities:
+      - id: CAP-LO-PACKING-INSTRUCTIONS
+        title: "Packing Instructions"
+        role: "Describe repeatable packaging structures and packing proposals; keep this below HU Management in the graph."
+    lead_lens: >-
+      I use HUs when the package itself is a process object. If the business only needs a delivery quantity,
+      forcing HU Management adds scans, status, master data, and integration work without creating value.
+    source_refs: [SRC-SAP-LO-HU-MANAGEMENT, SRC-SAP-LO-HU-SERIAL]
+
+  - id: CAP-LO-SERIAL-NUMBER-MANAGEMENT
+    type: capability
+    title: "Serial Number Management"
+    group: "Individual-unit traceability"
+    business_identity: "Individual physical unit"
+    purpose: >-
+      Identify one piece of a material independently from every other piece of the same material and carry
+      that identity through purchasing, inventory, production, quality, sales, delivery, and service-related processes.
+    process_coverage:
+      - "Purchasing"
+      - "Inventory Management and physical inventory"
+      - "Production"
+      - "Quality Management"
+      - "Sales, delivery, and returns"
+      - "Plant Maintenance / service-related object tracking"
+    activation_and_configuration:
+      - "Create a serial number profile."
+      - "Assign the profile to the material/product master."
+      - "Choose the procedures/business transactions where serial numbers are optional or required."
+      - "Define internal/external serial-number assignment and numbering behavior as needed."
+    mandatory_logic: >-
+      Optional globally. The serial number profile controls where serial numbers are required for business transactions;
+      once a procedure requires serialization, the process cannot complete without the required serial identity.
+    lead_lens: >-
+      Batch answers “which lot?”. Serial number answers “which exact unit?”. A business can need either one or both.
+      I do not substitute one identity model for the other.
+    source_refs: [SRC-SAP-LO-SERIAL-NUMBERS, SRC-SAP-LO-SERIAL-PROFILE, SRC-SAP-LO-HU-SERIAL]
+
+  - id: CAP-LO-CLASSIFICATION
+    type: capability
+    title: "Classification System"
+    group: "Shared attribute model"
+    business_identity: "Reusable characteristics and classes"
+    purpose: >-
+      Describe objects with reusable characteristics, group similar objects into classes, and make those attributes
+      available for search, selection, and process rules. Batch classification is one important logistics use case.
+    process_coverage:
+      - "Material/product attributes"
+      - "Batch characteristics and batch determination"
+      - "Equipment and technical objects"
+      - "Search and selection scenarios that use classes and characteristics"
+    activation_and_configuration:
+      - "Define characteristics with data type, allowed values, and semantics."
+      - "Create classes and assign characteristics."
+      - "Choose the correct class type for the business object."
+      - "Assign objects to classes and maintain characteristic values."
+    mandatory_logic: >-
+      Optional as a general cross-application capability. It becomes a dependency when another process explicitly
+      uses classification, for example characteristic-based Batch Determination.
+    lead_lens: >-
+      Classification is infrastructure. I keep the characteristic model stable and business-readable because many
+      downstream search rules become fragile when characteristics are created only to solve one local transaction.
+    source_refs: [SRC-SAP-LO-CLASSIFICATION, SRC-SAP-LO-BATCH-CLASSIFICATION]
+
+  - id: CAP-LO-SPLIT-VALUATION
+    type: capability
+    title: "Split Valuation"
+    group: "Inventory valuation"
+    business_identity: "Separately valued partial stock"
+    purpose: >-
+      Value partial stocks of one material separately when origin, quality, procurement type, status, or another
+      defined criterion requires different valuation without creating a different material number.
+    process_coverage:
+      - "Goods receipt"
+      - "Goods issue"
+      - "Transfer postings"
+      - "Inventory valuation"
+      - "Physical inventory and invoice-related valuation context"
+    activation_and_configuration:
+      - "Define and activate valuation categories and valuation types."
+      - "Maintain the valuation category for the material/product in the accounting view."
+      - "Create or maintain valuation-type-specific accounting data as required."
+      - "Design posting and master-data ownership so valuation type is supplied consistently."
+    mandatory_logic: >-
+      Optional. Use it only when the same material must carry separately valued partial stocks. If operational
+      differences do not change valuation, batch, stock type, or another lighter mechanism may be enough.
+    lead_lens: >-
+      Split valuation is an accounting identity, not merely a warehouse label. I first prove that the business needs
+      a different inventory value before adding valuation types to a logistics design.
+    source_refs: [SRC-SAP-LO-SPLIT-VALUATION]
+
+  - id: CAP-LO-STOCK-DETERMINATION
+    type: capability
+    title: "Stock Determination"
+    group: "Stock selection and consumption"
+    business_identity: "Prioritized stock source"
+    purpose: >-
+      Let the system choose which eligible stock should be withdrawn or consumed first when several stock sources,
+      stock categories, or ownership models could satisfy the same requirement.
+    process_coverage:
+      - "Inventory Management goods movements"
+      - "Production orders and repetitive manufacturing"
+      - "Sales-related stock withdrawal"
+      - "Warehouse-related stock selection scenarios"
+    activation_and_configuration:
+      - "Define stock determination strategies with the intended priority and stock access logic."
+      - "Assign the stock determination group to the material where the rule should apply."
+      - "Assign the stock determination rule to the relevant application/business transaction."
+      - "Use rule plus group to select the strategy at runtime."
+    mandatory_logic: >-
+      Optional. It is useful where automatic stock-source prioritization is a business rule. Do not add it when one
+      obvious stock source exists or when another execution system owns detailed stock-removal logic.
+    lead_lens: >-
+      Stock determination answers “from which eligible stock?”. It does not replace ATP, batch determination, or EWM
+      removal strategies. Those mechanisms answer different questions and can coexist in one fulfillment flow.
+    source_refs: [SRC-SAP-LO-STOCK-DETERMINATION]
+
+nested_capabilities:
+  - id: CAP-LO-BATCH-DETERMINATION
+    type: capability
+    title: "Batch Determination"
+    parent: CAP-LO-BATCH-MANAGEMENT
+    status: modeled_as_nested
+    source_refs: [SRC-SAP-LO-BATCH-DETERMINATION, SRC-SAP-LO-BATCH-CLASSIFICATION]
+  - id: CAP-LO-SHELF-LIFE
+    type: capability
+    title: "Shelf-Life Management"
+    parent: CAP-LO-BATCH-MANAGEMENT
+    status: modeled_as_nested
+    source_refs: [SRC-SAP-LO-SHELF-LIFE]
+  - id: CAP-LO-PACKING-INSTRUCTIONS
+    type: capability
+    title: "Packing Instructions"
+    parent: CAP-LO-HANDLING-UNIT-MANAGEMENT
+    status: modeled_as_nested
+    source_refs: [SRC-SAP-LO-HU-MANAGEMENT]
+
+relations:
+  - from: CAP-LO-BATCH-MANAGEMENT
+    type: contains_component
+    to: CAP-LO-BATCH-DETERMINATION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-LO-BATCH-DETERMINATION]
+  - from: CAP-LO-BATCH-MANAGEMENT
+    type: contains_component
+    to: CAP-LO-SHELF-LIFE
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-SAP-LO-SHELF-LIFE]
+    rationale: "Shelf-life controls are modeled as a batch/inventory capability rather than as a peer architecture domain."
+  - from: CAP-LO-HANDLING-UNIT-MANAGEMENT
+    type: contains_component
+    to: CAP-LO-PACKING-INSTRUCTIONS
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-SAP-LO-HU-MANAGEMENT]
+  - from: CAP-LO-BATCH-DETERMINATION
+    type: requires
+    to: CAP-LO-CLASSIFICATION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-LO-BATCH-CLASSIFICATION]
+  - from: CAP-LO-HANDLING-UNIT-MANAGEMENT
+    type: integrates_with
+    to: CAP-LO-SERIAL-NUMBER-MANAGEMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-LO-HU-SERIAL]
+
+process_matrix:
+  columns: ["Procurement", "Inventory", "Production", "Quality", "Sales/Delivery", "Warehouse"]
+  rows:
+    - capability: "Batch Management"
+      coverage: ["strong", "strong", "strong", "strong", "strong", "strong"]
+    - capability: "Handling Unit Management"
+      coverage: ["medium", "strong", "medium", "low", "strong", "strong"]
+    - capability: "Serial Number Management"
+      coverage: ["strong", "strong", "strong", "strong", "strong", "medium"]
+    - capability: "Classification System"
+      coverage: ["supporting", "supporting", "supporting", "supporting", "supporting", "supporting"]
+    - capability: "Split Valuation"
+      coverage: ["strong", "strong", "medium", "low", "medium", "medium"]
+    - capability: "Stock Determination"
+      coverage: ["low", "strong", "strong", "low", "medium", "medium"]
+  note: >-
+    Coverage values are an architecture reading for learning, not SAP scope entitlements. They show where the capability
+    commonly matters in an end-to-end logistics design, not whether every process variant uses it.
+
+selection_guide:
+  - signal: "Trace a homogeneous lot and select stock by lot properties"
+    choose: "Batch Management + Classification; add Batch Determination only when automatic selection is needed."
+  - signal: "Move, scan, nest, and ship a physical pallet/carton/container as one unit"
+    choose: "Handling Unit Management."
+  - signal: "Identify one exact device, machine part, or sellable unit"
+    choose: "Serial Number Management."
+  - signal: "Reuse attributes across objects or drive characteristic-based selection"
+    choose: "Classification System."
+  - signal: "Same material, different inventory value by origin/quality/status"
+    choose: "Split Valuation."
+  - signal: "Automatically prioritize which eligible stock source is consumed"
+    choose: "Stock Determination."
+
+architecture_boundaries:
+  - "Batch Management is not Serial Number Management: lot identity and individual-unit identity solve different traceability problems."
+  - "Handling Unit Management is not warehouse management: an HU is a logistics object; EWM adds warehouse topology, tasks, waves, resources, and execution rules."
+  - "Classification is not master-data governance: it models object attributes; governance controls ownership, quality, workflow, and lifecycle."
+  - "Split Valuation is not a substitute for batch management: valuation identity and traceability identity can be independent."
+  - "Stock Determination is not ATP: stock determination chooses a source for withdrawal; ATP answers whether and when demand can be confirmed."
+  - "Stock Determination is not Batch Determination: one chooses stock-source priority, the other selects suitable batches."
+
+failure_modes:
+  - id: FAIL-LO-BATCH-NOT-DETERMINED
+    symptom: "Stock exists but no batch is selected."
+    first_checks: ["batch availability and status", "classification values", "selection class", "search strategy and validity", "shelf-life constraints"]
+  - id: FAIL-LO-HU-PROCESS-BLOCK
+    symptom: "Goods exist but the movement cannot continue without an HU."
+    first_checks: ["HU-managed location/process", "packing status", "HU identification", "delivery/HU consistency", "nested HU structure"]
+  - id: FAIL-LO-SERIAL-MISSING
+    symptom: "Document quantity is correct but posting cannot complete."
+    first_checks: ["serial number profile", "active procedure", "required number of serials", "serial status and document assignment"]
+  - id: FAIL-LO-SPLIT-VALUATION
+    symptom: "Goods movement reaches the correct material but valuation is wrong or incomplete."
+    first_checks: ["valuation category", "valuation type", "material accounting data", "movement/reference context", "posting/account determination"]
+  - id: FAIL-LO-STOCK-DETERMINATION
+    symptom: "System withdraws from an unexpected stock source."
+    first_checks: ["material stock determination group", "application rule", "resolved strategy", "stock priority and eligibility", "whether another execution layer owns removal"]
+
+practitioner_heuristics:
+  - "Start with the identity the business must preserve: lot, package, unit, attribute set, value, or stock source."
+  - "Do not activate a cross-process capability only because one transaction can technically use it."
+  - "Separate mandatory-by-design from mandatory-by-standard: a feature may be optional globally but compulsory once a profile, managed location, or process rule is active."
+  - "Model nested capabilities below their parent. Shelf life belongs under batch/inventory; packing instructions belong under HU Management."
+  - "When two mechanisms coexist, state the question each one answers. That avoids ATP, batch determination, stock determination, and EWM removal logic becoming one vague 'availability' box."
+
+assessment_drills:
+  - question: "Batch versus serial number: what is the difference?"
+    strong_answer: "A batch identifies a lot of material. A serial number identifies one individual unit. A product can require either or both."
+  - question: "When does Handling Unit Management become mandatory?"
+    strong_answer: "It is optional globally, but a process or storage location can be designed as HU-managed. Then stock and movements must preserve the HU object."
+  - question: "Why is Classification relevant to logistics?"
+    strong_answer: "It gives reusable characteristics and classes. Batch determination is a practical example because selection can depend on batch characteristics."
+  - question: "Split valuation versus batch management?"
+    strong_answer: "Split valuation separates inventory value; batch management separates lot identity and traceability. They can be used independently or together."
+  - question: "Stock determination versus ATP?"
+    strong_answer: "ATP confirms whether and when demand can be fulfilled. Stock determination chooses which eligible stock source should be consumed."
+
+source_refs:
+  - SRC-SAP-LO-BATCH-DETERMINATION
+  - SRC-SAP-LO-BATCH-CLASSIFICATION
+  - SRC-SAP-LO-SHELF-LIFE
+  - SRC-SAP-LO-HU-MANAGEMENT
+  - SRC-SAP-LO-HU-SERIAL
+  - SRC-SAP-LO-SERIAL-NUMBERS
+  - SRC-SAP-LO-SERIAL-PROFILE
+  - SRC-SAP-LO-CLASSIFICATION
+  - SRC-SAP-LO-SPLIT-VALUATION
+  - SRC-SAP-LO-STOCK-DETERMINATION
