@@ -1,8 +1,7 @@
 ---
 layout: default
 title: SAP Incident Triage Diagnostics
-description: Conservative diagnostic frame for classifying and routing SAP support
-  incidents before deep investigation.
+description: A practical first-pass method for turning vague SAP incidents into clear business impact, evidence, ownership, and next action.
 permalink: /atlas/diagnostics/sap-incident-triage-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -42,7 +41,7 @@ sitemap: true
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP incident triage diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for classifying and routing SAP support incidents.</p>
+    <p class="note-subtitle">The first ten minutes should reduce uncertainty. They should not produce a longer ticket with the same vague symptom.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -55,68 +54,57 @@ sitemap: true
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Good triage prevents wrong teams, missing evidence, and wasted time. The diagnostic goal in the first minutes is to classify the incident by symptom area, urgency, and the minimum evidence needed before assignment.</p>
+    <h2>Triage is a reduction exercise</h2>
+    <p>A weak ticket says “SAP is slow”, “order not working”, or “interface failed”. A useful triage result is smaller and more concrete: one business outcome, one affected object or population, one time window, one known last-good step, and one owner for the next check.</p>
+    <p>You do not need the root cause during triage. You need enough evidence to stop the ticket from bouncing between teams.</p>
 
-    <h2>Common symptoms</h2>
+    <h2>Capture six things before choosing the team</h2>
+    <div class="decision-table"><table><thead><tr><th>Question</th><th>Why it matters</th></tr></thead><tbody>
+      <tr><td>What business result failed?</td><td>“Cannot create delivery” is more useful than “SD issue”.</td></tr>
+      <tr><td>Who or what is affected?</td><td>One user, one document, one plant, or the whole company imply very different scope.</td></tr>
+      <tr><td>When did it start?</td><td>A precise time window can connect the issue to jobs, interfaces, transports, or data changes.</td></tr>
+      <tr><td>What still works?</td><td>A working boundary is often as valuable as the failure itself.</td></tr>
+      <tr><td>What changed recently?</td><td>Recent releases, master data, schedules, certificates, or integration changes can shorten the search.</td></tr>
+      <tr><td>What is the business impact?</td><td>Priority should describe lost service, money, volume, deadline, or control risk, not job title.</td></tr>
+    </tbody></table></div>
+
+    <h2>Classify by failure layer, not by keyword</h2>
+    <p>Module names are useful routing hints, but a sales-order symptom can come from master data, credit, pricing, ATP, workflow, authorization, integration, or a custom enhancement. A purchasing symptom can come from finance or inventory. “SD”, “MM”, and “Basis” are not root causes.</p>
+    <p>A better first classification is the failed layer:</p>
     <ul>
-      <li>Incident description is vague or only says 'system is slow'.</li>
-      <li>Ticket is routed to a team that does not own the failing area.</li>
-      <li>Multiple users report different symptoms for the same underlying issue.</li>
-      <li>Incident is treated as urgent but has no business impact yet.</li>
-      <li>Previous incidents for the same symptom were closed without root cause.</li>
+      <li><strong>Business document or process status</strong> such as block, incompletion, wrong document flow, or missing follow-on document.</li>
+      <li><strong>Master data</strong> such as missing extension, wrong control value, or replication gap.</li>
+      <li><strong>Integration</strong> such as message generation, transport, mapping, queue, or target posting.</li>
+      <li><strong>Authorization</strong> when there is evidence of a failed access check.</li>
+      <li><strong>Batch or scheduling</strong> when the expected background execution did not complete.</li>
+      <li><strong>Technical runtime or performance</strong> when dumps, work processes, database/runtime evidence, or broad degradation support that path.</li>
+      <li><strong>Recent change</strong> when the timing and affected scope point to a release or configuration change.</li>
     </ul>
 
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>Missing classification:</strong> the ticket lacks module, process, or object information.</li>
-      <li><strong>Incorrect routing:</strong> routing rules rely on keywords that do not match the actual failure area.</li>
-      <li><strong>Insufficient evidence:</strong> logs, error messages, or timestamps were not collected.</li>
-      <li><strong>Urgency mismatch:</strong> priority is set by who reported it, not by business impact.</li>
-      <li><strong>No known-pattern link:</strong> the symptom matches a known diagnostic page but was not checked.</li>
-    </ul>
+    <h2>Do not open every monitor</h2>
+    <p>Tools are chosen from the symptom. If a job failed, start with the job. If an IDoc failed, start with the message. If one user cannot execute an action, check the document state and authorization evidence. If the whole system is slow, technical workload tools may be appropriate.</p>
+    <p>Opening SM50, SM66, SM37, SLG1, ST22, and five other transactions for every ticket is not thoroughness. It is a lack of hypothesis wearing a support badge.</p>
 
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li>Ticket fields — module, process, object, error text, time, user.</li>
-      <li>Atlas/Skill Hub diagnostic index — find a matching pattern.</li>
-      <li>System status monitors — SM50, SM66, SM37 for workload or job issues.</li>
-      <li>Application log (SLG1) or short dumps (ST22) for the time window.</li>
-      <li>Recent changes — transports, jobs, master data updates.</li>
-    </ul>
-
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>Incident/ticket system</strong> — classification and routing metadata.</li>
-      <li><strong>SM50 / SM66</strong> — work process overview.</li>
-      <li><strong>TBTCO</strong> — background job status.</li>
-    </ul>
-
-    <h2>Diagnostic workflow</h2>
+    <h2>A practical triage flow</h2>
     <ol>
-      <li>Read the ticket and extract: symptom, process area, object key, time, user, and business impact.</li>
-      <li>Classify as master data, configuration, integration, authorization, batch, or performance.</li>
-      <li>Check for matching diagnostic pages or known patterns in the Atlas.</li>
-      <li>Collect minimum evidence: error text, status, log object, or job name.</li>
-      <li>Set priority based on business impact, not reporter seniority.</li>
-      <li>Route to the team that owns the component and attach the evidence.</li>
+      <li><strong>Rewrite the symptom in business language.</strong> What should happen, and what happens instead?</li>
+      <li><strong>Bound the scope.</strong> One object or many? One user or many? One system or cross-system?</li>
+      <li><strong>Capture time and evidence.</strong> Exact message, document/object key, timestamp, user or technical user, and any relevant status.</li>
+      <li><strong>Find the last good step.</strong> This usually tells you which team should look next.</li>
+      <li><strong>Check recent change and known pattern.</strong> Use operational memory, not memory theatre. Link a known issue only when the evidence matches.</li>
+      <li><strong>Set impact and priority.</strong> State the number of users/orders/plants affected, financial or operational deadline, and workaround if any.</li>
+      <li><strong>Route with a question.</strong> Send the next team a concrete diagnostic question, not the original complaint.</li>
     </ol>
 
-    <h2>Typical fixes or next actions</h2>
-    <ul>
-      <li>Add mandatory classification fields to the incident form.</li>
-      <li>Maintain routing rules based on object type and module keywords.</li>
-      <li>Link frequently seen symptoms to diagnostic pages in the knowledge base.</li>
-      <li>Create an evidence checklist for each major symptom category.</li>
-      <li>Review closed incidents for recurring patterns and update triage guidance.</li>
-    </ul>
+    <h2>Example of a better handoff</h2>
+    <p>Instead of: “Urgent, sales order stuck, please check.”</p>
+    <p>Use: “Order 4711 item 10 is complete and confirmed, but no delivery is created for today's due date. Two other orders for the same plant work. The issue started after the morning master-data load. Please check delivery relevance and plant/shipping data for this material.”</p>
+    <p>The second version may still be wrong about the cause. That is acceptable. It gives the next person evidence that can be tested.</p>
 
-    <h2>Support takeaway</h2>
-    <p>Triage tickets are most useful when they include a clear symptom, process area, affected object, time, user, and the business impact that justifies the priority.</p>
+    <h2>When triage should stop</h2>
+    <p>Triage is finished when the impact is understood, the evidence is sufficient for the next specialist, and ownership is clear. It should not become a miniature root-cause investigation performed by a queue manager while the real owner waits.</p>
 
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a triage diagnostic, not an ITIL incident-management process guide. It does not cover SLA definitions or escalation policies.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <h2>What good triage improves</h2>
+    <p>Measure fewer reassignments, shorter time to useful evidence, better priority accuracy, and fewer incidents reopened because the downstream business result was never checked. Those signals tell you more than the number of tickets touched by the triage team.</p>
   </div>
 </article>
