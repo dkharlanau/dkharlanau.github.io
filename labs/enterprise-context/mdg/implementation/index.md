@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP MDG Implementation and Presales Guide — Enterprise Context Lab"
-description: "A practical MDG implementation sequence: ownership, data model, workflow, data quality, replication, testing, operating model, failure modes, and presales questions."
+description: "A practical MDG guide for ownership, data model, workflow, quality, replication, testing, operations, failures, and presales."
 permalink: /labs/enterprise-context/mdg/implementation/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 tags: [sap, mdg, implementation, presales, data-governance, architecture]
 ---
