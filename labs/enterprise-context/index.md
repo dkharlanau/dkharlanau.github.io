@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 tags:
   - sap
@@ -75,7 +75,7 @@ tags:
     <div class="research-route-list">
       {% for topic_entry in site.data.labs.enterprise_context.topics %}
       {% assign topic = topic_entry[1] %}
-      <a href="/labs/enterprise-context/model/#topic-lifecycle"><span>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</span><strong>{{ topic.title }}</strong><small>{{ topic.business_question }}</small><i class="material-symbols-outlined" aria-hidden="true">query_stats</i></a>
+      <a href="{% if topic.page_url %}{{ topic.page_url }}{% else %}/labs/enterprise-context/model/#topic-lifecycle{% endif %}"><span>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</span><strong>{{ topic.title }}</strong><small>{{ topic.business_question }}</small><i class="material-symbols-outlined" aria-hidden="true">query_stats</i></a>
       {% endfor %}
     </div>
   </section>
