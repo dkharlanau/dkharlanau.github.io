@@ -2,7 +2,7 @@
 
 layout: default
 title: "AI Agent for SAP Support"
-description: "A practical architecture pattern for AI-assisted SAP support with retrieval, escalation, authorization boundaries, and human review."
+description: "A practical architecture for AI-assisted SAP support with retrieval, evidence, tools, approvals, and clear action boundaries."
 permalink: /atlas/ai-operations/ai-agent-for-sap-support/
 atlas_section: ai-operations
 domain: AI-assisted operations
@@ -61,39 +61,55 @@ sitemap: true
   <header class="note-header">
     <p class="eyebrow">Atlas AI Operations</p>
     <h1>AI agent for SAP support</h1>
-    <p class="note-subtitle">A support assistant should retrieve context, structure the diagnosis, and escalate cleanly. It should not guess its way through ERP risk.</p>
+    <p class="note-subtitle">The useful agent is not the one that sounds confident. It is the one that knows what evidence to collect, what it may do, and when a human must decide.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
   <aside class="atlas-meta-panel">
     <dl>
       <div><dt>Process</dt><dd>Support operations</dd></div>
-      <div><dt>Pattern</dt><dd>Retrieval, diagnosis, escalation, human review</dd></div>
+      <div><dt>Pattern</dt><dd>Evidence, retrieval, tools, approval, traceability</dd></div>
       <div><dt>Reviewed</dt><dd>06 May 2026</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>An AI agent for SAP support is most useful when it acts as a disciplined support layer: it retrieves relevant context, summarizes the issue, suggests diagnostic paths, prepares tickets, and routes uncertainty to humans.</p>
-    <p>The goal is not autonomous configuration change. The goal is faster, more consistent first-pass support while preserving authorization boundaries, auditability, and human accountability.</p>
+    <h2>Start with the support decision, not with the agent</h2>
+    <p>“Build an SAP support agent” is too vague to be an architecture. A better starting point is a small support decision: classify an incident, collect missing evidence, find the right runbook, compare a failing document with a known pattern, or prepare an escalation.</p>
+    <p>Once the decision is clear, the role of AI becomes easier to control. It can read more context than a person has time to read, structure the evidence, and suggest the next check. That is useful. Quietly changing ERP data because a language model found a plausible answer is a different category of risk.</p>
 
     {% include atlas/expert-context.html %}
 
-    <h2>Minimum safe architecture</h2>
-    <ul>
-      <li><strong>Knowledge retrieval:</strong> approved runbooks, process notes, KEDB entries, public documentation, and system-specific support material where access is allowed.</li>
-      <li><strong>Authorization awareness:</strong> the agent should not expose data or suggest actions outside the user context.</li>
-      <li><strong>Structured diagnosis:</strong> the answer should separate evidence, likely cause, recommended next check, and escalation path.</li>
-      <li><strong>Human approval:</strong> any material process change, master-data change, financial impact, or configuration change needs controlled review.</li>
-      <li><strong>Traceability:</strong> responses should point to the sources used and leave an audit trail where the organization requires it.</li>
-    </ul>
+    <h2>A practical architecture</h2>
+    <div class="decision-table"><table><thead><tr><th>Layer</th><th>What it should do</th><th>What can go wrong</th></tr></thead><tbody>
+      <tr><td>Identity and access</td><td>Know who is asking and which sources or tools that person may use.</td><td>The model retrieves data the user should not see or acts with a broader technical account.</td></tr>
+      <tr><td>Context and retrieval</td><td>Bring in approved runbooks, process notes, incident history, system evidence, and product documentation.</td><td>Old or unrelated material is treated as current truth.</td></tr>
+      <tr><td>Reasoning structure</td><td>Separate facts, assumptions, missing evidence, likely paths, and the next diagnostic step.</td><td>A fluent explanation hides that the key evidence is missing.</td></tr>
+      <tr><td>Tools</td><td>Read statuses, search logs, create a draft ticket, or call approved services within a narrow contract.</td><td>A broad tool turns a suggestion into an uncontrolled business action.</td></tr>
+      <tr><td>Approval</td><td>Pause before actions with financial, master-data, security, compliance, or process impact.</td><td>The human becomes a decorative click after the system has already decided.</td></tr>
+      <tr><td>Record</td><td>Keep the evidence, source references, proposed action, approval, and result.</td><td>The team cannot explain later why the action was taken.</td></tr>
+    </tbody></table></div>
 
-    <h2>Good use cases</h2>
-    <p>Useful first use cases are ticket enrichment, incident summarization, runbook retrieval, duplicate issue detection, first-pass classification, and suggested diagnostic checklists. These are valuable because they reduce support friction without pretending the model owns the ERP decision.</p>
+    <h2>Read wide, act narrow</h2>
+    <p>This is a useful design rule for enterprise support. The agent may read a broad set of permitted evidence, but its write actions should be much narrower. Reading a sales-order status is not the same risk as releasing a credit block. Drafting a change request is not the same as transporting configuration.</p>
+    <p>Many early use cases need no autonomous write access at all. Ticket enrichment, incident summarization, runbook retrieval, duplicate detection, evidence checklists, and escalation drafts already remove a lot of repetitive support work.</p>
 
-    <h2>Support takeaway</h2>
-    <p>A credible SAP support agent should be conservative by design. It should say when it does not know, ask for missing evidence, and escalate early when the issue touches authorization, finance, compliance, master data, or configuration.</p>
+    <h2>Example: a blocked sales order</h2>
+    <p>A useful agent does not jump from “order blocked” to “remove the block.” It first asks what should happen next, reads the available order context, identifies whether the evidence points to incompletion, credit, delivery, billing, or another control, and shows which facts are still missing.</p>
+    <p>If the case needs a credit release or master-data correction, the agent can prepare the evidence for the responsible person. The approval still belongs to the process owner. This is slower than pretending the model is autonomous and considerably faster than cleaning up a bad autonomous decision.</p>
+
+    <h2>Where AI helps and where rules are better</h2>
+    <p>Use AI where the input is messy and interpretation has value: text classification, evidence extraction, semantic retrieval, summarization, comparison, and explanation. Use deterministic automation where the rule is stable and testable: required-field checks, routing by known codes, scheduled monitoring, exact validations, or a well-defined API workflow.</p>
+    <p>A mature design often combines both. AI interprets the situation, a rule checks the boundary, a human approves the risky step, and deterministic automation executes the approved action.</p>
+
+    <h2>What the agent should say when evidence is weak</h2>
+    <p>Uncertainty should be visible in the output. A good response can state: what is known, what is only likely, which source supports the conclusion, what evidence is missing, and which next check would reduce uncertainty. That is far more useful in SAP support than a polished paragraph that quietly mixes facts and guesses.</p>
+
+    <h2>Measure support value, not chat activity</h2>
+    <p>The useful measures are operational: time to collect complete evidence, first-assignment accuracy, reduction in repeated investigation, escalation quality, runbook reuse, and safe resolution time. Message count and answer length tell very little about whether the support process improved.</p>
+
+    <h2>The boundary that matters</h2>
+    <p>An SAP support agent should make the team better at diagnosis before it is allowed to make the system different. If the architecture cannot explain who saw what, which evidence supported the recommendation, who approved the action, and what changed afterwards, the automation boundary is too loose.</p>
   </div>
 
   <section class="atlas-related">
