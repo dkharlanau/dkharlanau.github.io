@@ -133,6 +133,38 @@
       "extension_points": ["EXT-FIELD", "EXT-LOGIC", "EXT-API"],
       "source_refs": ["SRC-SAP-DP-CLASSIC-BKJ", "SRC-SAP-DP-ADVANCED"],
       "tags": ["billing", "down-payment", "milestone-billing", "fi", "cash"]
+    },
+    {
+      "code": "SD.DP.ADV",
+      "id": "VAR-SD-DP-ADVANCED",
+      "title": "Advanced Down Payment Processing",
+      "kind": "billing_payment_framework",
+      "memory_hook": "The advance payment is not a side posting. It is a controlled sales-to-delivery-to-settlement lifecycle.",
+      "sap_scope_items": [
+        {"id": "7S7", "label": "Sell from Stock with Down Payment Processing"},
+        {"id": "7Z1", "label": "Sales Order Processing with Milestone Billing"}
+      ],
+      "deployment_scope": "SAP S/4HANA Cloud Public Edition 2608. Current standard processes cover delivery-related sell-from-stock and order-related milestone billing. Verify the target release before solution design.",
+      "business_intent": "Run customer down payments as an integrated sales and financial lifecycle, with a sales-order billing plan driving requests, received cash controlling execution where required, and settlement performed transparently in the customer invoice.",
+      "flow": ["ADP-Enabled Sales Order Item", "Billing Plan", "Down Payment Request", "Incoming Down Payment and Clearing", "Delivery / Service Execution", "Settlement Invoice", "Remaining Customer Payment"],
+      "control_plane": [
+        {"control": "ADP enablement on the sales item category", "why": "selects the advanced framework for the sales item instead of the classic down-payment model"},
+        {"control": "billing plan and down-payment date categories", "why": "orchestrate request timing, amount and execution blocks"},
+        {"control": "incoming down-payment clearing", "why": "turns the requested amount into proven received cash and can release blocked execution"},
+        {"control": "settlement invoice and down-payment allocation", "why": "reduce the customer invoice by eligible received down payments while keeping the settlement history visible"}
+      ],
+      "data_hinges": [
+        {"data": "ADP-enabled item category", "changes": "whether the transaction follows the advanced or classic down-payment framework"},
+        {"data": "billing-plan dates and requested amounts", "changes": "when and how much the customer is asked to pay in advance"},
+        {"data": "cleared incoming down payment", "changes": "execution release and the amount available for later settlement"},
+        {"data": "invoice item and down-payment allocation", "changes": "how received advance payments reduce the settlement invoice"}
+      ],
+      "impact_summary": ["ADP keeps sales, delivery and financial accounting synchronized around the same down-payment lifecycle instead of treating the payment as an isolated FI correction.", "The framework supports both delivery-related billing for sell-from-stock and order-related milestone billing, so the billing reference remains a design decision inside ADP."],
+      "constraints": ["Do not combine classic and advanced down-payment elements in one business transaction.", "Advanced Down Payment Processing cannot be combined with retroactive billing or reference billing plans in the documented 2608 scope.", "Activation can affect how existing open sales orders with relevant item categories must be completed, so migration and cutover need explicit planning."],
+      "lead_questions": ["Do we need delivery-related or order-related settlement, and what business event makes the request due?", "Which item categories are ADP-enabled and what happens to open orders during activation?", "Which event proves cash is cleared and may release delivery?", "How is each received down payment allocated across settlement invoice items?", "Why is ADP a better fit than the classic BKJ path for this transaction?"],
+      "extension_points": ["EXT-FIELD", "EXT-API", "EXT-LOGIC"],
+      "source_refs": ["SRC-SAP-DP-ADVANCED", "SRC-SAP-DP-ADVANCED-SETUP"],
+      "tags": ["billing", "advanced-down-payment", "settlement", "delivery-related-billing", "milestone-billing", "fi"]
     }
   ]
 }
