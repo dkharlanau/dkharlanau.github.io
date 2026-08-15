@@ -3,18 +3,18 @@
   "updated_at": "2026-08-15",
   "coverage_target": "High practical coverage of reusable SAP S/4HANA Sales process patterns. Localizations and narrow industry variants are mapped as aliases or adjacent capabilities unless they change a core business or control contract.",
   "summary": {
-    "atlas_records": 53,
+    "atlas_records": 54,
     "groups": 11,
     "deep_control_plane_records": 7,
     "specialized_return_claim_records": 8,
     "mechanisms": 33,
-    "reviewed_process_mechanism_compositions": 18,
+    "reviewed_process_mechanism_compositions": 19,
     "diagnostic_cases": 6,
     "assessment_drills": 6,
     "after_sales_records": 9,
     "commercial_extension_records": 7,
     "industry_variant_records": 7,
-    "billing_lifecycle_records": 5,
+    "billing_lifecycle_records": 6,
     "cross_application_process_records": 5,
     "order_origin_patterns": 9,
     "execution_handoff_patterns": 9
@@ -22,14 +22,14 @@
   "coverage_layers": [
     {
       "layer": "process_atlas",
-      "records": 53,
+      "records": 54,
       "purpose": "Name distinct business branches and explain their flow, control plane, data hinges, constraints and integration boundaries.",
       "coverage_semantics": "Broad practical coverage. A missing narrow scope item can still be an alias of an existing business contract."
     },
     {
       "layer": "mechanism_library",
       "records": 33,
-      "reviewed_process_compositions": 18,
+      "reviewed_process_compositions": 19,
       "is_process_mapping_exhaustive": false,
       "purpose": "Represent reusable decisions such as item category, schedule line, plant, route, ATP, pricing, billing and output without repeating the same logic in every process card.",
       "coverage_semantics": "A process without a mechanism composition is unreviewed in that map, not proof that no mechanisms apply."
@@ -67,6 +67,13 @@
       "sap_scope": "BKJ",
       "title": "Customer Down Payment with Milestone Billing",
       "why_separate": "The classic milestone-billing process has a distinct SD-to-FI lifecycle and must be distinguished from Advanced Down Payment Processing.",
+      "status": "atlas_card_complete"
+    },
+    {
+      "code": "SD.DP.ADV",
+      "sap_scope": "7S7 / 7Z1",
+      "title": "Advanced Down Payment Processing",
+      "why_separate": "The advanced framework supports its own down-payment request, execution-release and settlement lifecycle, including delivery-related and order-related variants, and cannot be mixed with classic processing in one transaction.",
       "status": "atlas_card_complete"
     },
     {
@@ -115,6 +122,8 @@
     {"sap_scope": "BKA", "maps_to": "SD.FG", "reason": "free goods processing"},
     {"sap_scope": "BKZ", "maps_to": "SD.BILL.COLL", "reason": "invoice list and collective billing"},
     {"sap_scope": "BKJ", "maps_to": "SD.DP.CLASSIC", "reason": "classic sales-order down-payment processing with milestone billing"},
+    {"sap_scope": "7S7", "maps_to": "SD.DP.ADV", "reason": "advanced down-payment sell-from-stock with delivery-related billing"},
+    {"sap_scope": "7Z1", "maps_to": "SD.DP.ADV", "reason": "advanced down-payment milestone billing with order-related billing"},
     {"sap_scope": "1B6", "maps_to": "SD.REB", "reason": "sales rebate processing"},
     {"sap_scope": "1YT", "maps_to": "SD.MTO.VC", "reason": "MTO with variant configuration"},
     {"sap_scope": "31Q", "maps_to": "SD.KIT", "reason": "sales order processing for sales kits"},
@@ -143,8 +152,8 @@
     },
     {
       "area": "Down Payments",
-      "status": "classic_branch_and_diagnostic_layer",
-      "remaining_edges": ["separate Advanced Down Payment process card", "partial payment, cancellation and clearing edge cases"]
+      "status": "classic_and_advanced_branches_with_diagnostic_layer",
+      "remaining_edges": ["partial payment, cancellation and clearing edge cases", "cutover comparison when moving existing item categories to ADP"]
     },
     {
       "area": "Production and Project Fulfillment",
@@ -158,8 +167,8 @@
     },
     {
       "area": "Billing and Settlement",
-      "status": "strong_with_split_diagnostic",
-      "remaining_edges": ["electronic invoicing and DRC boundary", "advanced down-payment comparison", "settlement split and reconciliation casebook"]
+      "status": "strong_with_split_and_down_payment_diagnostics",
+      "remaining_edges": ["electronic invoicing and DRC boundary", "settlement split and reconciliation casebook"]
     },
     {
       "area": "Operational Readiness",
