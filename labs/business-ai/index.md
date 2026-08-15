@@ -19,9 +19,10 @@ tags:
 
 {% assign catalog = site.data.labs.business_ai.catalog %}
 {% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
-{% assign all_patterns = catalog.patterns | concat: expansion.patterns %}
-{% assign all_cases = catalog.cases | concat: expansion.cases %}
-{% assign all_sources = catalog.source_registry | concat: expansion.source_registry %}
+{% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
+{% assign all_patterns = catalog.patterns | concat: expansion.patterns | concat: expansion_b.patterns %}
+{% assign all_cases = catalog.cases | concat: expansion.cases | concat: expansion_b.cases %}
+{% assign all_sources = catalog.source_registry | concat: expansion.source_registry | concat: expansion_b.source_registry %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Business AI</li></ol>
@@ -59,8 +60,8 @@ tags:
     </header>
     <div class="research-route-list">
       <a href="/labs/business-ai/cases/"><span>01</span><strong>Implementation Cases</strong><small>Who built it, which process changed, what technology was disclosed, what result was reported, and what remains uncertain.</small><i class="material-symbols-outlined" aria-hidden="true">cases</i></a>
-      <a href="/labs/business-ai/patterns/"><span>02</span><strong>Reusable Patterns</strong><small>From document automation and forecasting to guided selling, cross-system copilots, manufacturing quality, and master-data foundations.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/business-ai/model/"><span>03</span><strong>Graph Model</strong><small>Node types and relationships for cases, companies, processes, patterns, technologies, KPIs, evidence, and limitations.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/business-ai/patterns/"><span>02</span><strong>Reusable Patterns</strong><small>From document automation and forecasting to guided selling, cross-system copilots, manufacturing quality, embodied logistics, and master-data foundations.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/business-ai/model/"><span>03</span><strong>Graph Model</strong><small>Node types and relationships for cases, companies, processes, patterns, technologies, KPIs, evidence, limitations, and case classification.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Machine-readable Catalog</strong><small>The same patterns, cases, evidence grades, source IDs, technologies, metrics, limits, and consultant notes as structured data.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/labs/enterprise-context/business-ai/"><span>SAP</span><strong>SAP Business AI Technology Map</strong><small>Joule, agents, AI Core, generative AI hub, grounding, build tools, runtime, and governance. Technology landscape stays separate from this use-case catalog.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/ai-ready/"><span>SYS</span><strong>AI Ready Architecture Lab</strong><small>Vendor-neutral architecture patterns for RAG, tools, MCP, agents, evaluations, security, and production operation.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
