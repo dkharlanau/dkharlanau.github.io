@@ -45,6 +45,8 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">schema</span>
+    <p><strong>Problem:</strong> product-led AI lists are hard to transfer between companies because they describe tools instead of business decisions and control boundaries.</p>
+    <p><strong>Context:</strong> these patterns abstract public cases into reusable shapes that can survive a vendor, model, or platform change.</p>
     <p><strong>Pattern test:</strong> if the same business shape can be implemented with different vendors, models, or platforms, it is probably a useful pattern.</p>
     <p><strong>Anti-pattern:</strong> “Use an LLM for procurement” says almost nothing. “Compare supplier confirmations with ERP records and route only material differences to buyers” is an implementable shape.</p>
     <a href="/labs/business-ai/cases/">Compare with real cases <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
