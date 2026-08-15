@@ -7,7 +7,10 @@
     "groups": 11,
     "deep_control_plane_records": 7,
     "specialized_return_claim_records": 8,
-    "mechanisms": 15,
+    "mechanisms": 33,
+    "reviewed_process_mechanism_compositions": 18,
+    "diagnostic_cases": 6,
+    "assessment_drills": 6,
     "after_sales_records": 9,
     "commercial_extension_records": 7,
     "industry_variant_records": 7,
@@ -16,11 +19,40 @@
     "order_origin_patterns": 9,
     "execution_handoff_patterns": 9
   },
+  "coverage_layers": [
+    {
+      "layer": "process_atlas",
+      "records": 53,
+      "purpose": "Name distinct business branches and explain their flow, control plane, data hinges, constraints and integration boundaries.",
+      "coverage_semantics": "Broad practical coverage. A missing narrow scope item can still be an alias of an existing business contract."
+    },
+    {
+      "layer": "mechanism_library",
+      "records": 33,
+      "reviewed_process_compositions": 18,
+      "is_process_mapping_exhaustive": false,
+      "purpose": "Represent reusable decisions such as item category, schedule line, plant, route, ATP, pricing, billing and output without repeating the same logic in every process card.",
+      "coverage_semantics": "A process without a mechanism composition is unreviewed in that map, not proof that no mechanisms apply."
+    },
+    {
+      "layer": "diagnostic_casebook",
+      "records": 6,
+      "purpose": "Start from an observable symptom and walk through boundary, evidence, competing causes, ownership, change and proof of fix.",
+      "coverage_semantics": "Cases are authored reasoning models. Source references anchor product facts, while diagnosis and handoff logic remain independent synthesis."
+    },
+    {
+      "layer": "human_machine_discovery",
+      "status": "registered",
+      "purpose": "Expose Sales Atlas, coverage, mechanisms, control planes, integrations, master data and diagnostics through the central Lab manifest and machine endpoints.",
+      "coverage_semantics": "A knowledge asset should be discoverable from the Lab contract instead of requiring a guessed URL."
+    }
+  ],
   "decision_rules": [
     "Separate a variant when it changes physical flow, stock ownership, supply source, legal entity, inspection or disposition, billing trigger, settlement model, configuration contract, product engineering, project or production cost object, or integration evidence.",
     "Map a SAP scope item to an existing author code when it is mainly a packaged implementation of the same business contract.",
     "Keep order origin, orchestration and downstream application ownership as separate graph classes instead of encoding every system combination into the process name.",
-    "For release-sensitive behavior, keep deployment scope and verification sources on the process card instead of presenting one release as universal SAP behavior."
+    "For release-sensitive behavior, keep deployment scope and verification sources on the process card instead of presenting one release as universal SAP behavior.",
+    "Do not treat an absent graph edge as a negative fact. Partial maps must state their coverage semantics explicitly."
   ],
   "closed_in_this_pass": [
     {
@@ -43,6 +75,24 @@
       "title": "Engineer-to-Order for Complex Assembly / CTO+",
       "why_separate": "The customer configuration can be followed by order-specific engineering changes to the manufacturing BOM and shop-floor routing, which is deeper than ordinary configurable MTO.",
       "status": "atlas_card_complete"
+    },
+    {
+      "code": "GRAPH-SD-SALES-DIAGNOSTIC-CASEBOOK",
+      "title": "Sales Diagnostic Casebook",
+      "why_separate": "Process and mechanism cards explain structure. The casebook adds symptom-first reasoning, evidence packages, ownership boundaries and proof-of-fix logic for consultants and AI agents.",
+      "status": "diagnostic_layer_added"
+    },
+    {
+      "code": "MAP-SD-PROCESS-MECHANISM",
+      "title": "Process-to-mechanism coverage semantics",
+      "why_separate": "Partial composition maps now distinguish an unreviewed edge from a negative fact and expose process-specific controls that are not yet reusable mechanism entities.",
+      "status": "agent_semantics_added"
+    },
+    {
+      "code": "MANIFEST-SD-DISCOVERY",
+      "title": "Sales human and machine discovery",
+      "why_separate": "The central Lab manifest now exposes the Sales Atlas, coverage, mechanisms, control plane, integrations, master data and diagnostics instead of leaving them discoverable only by direct URL.",
+      "status": "discovery_registered"
     }
   ],
   "scope_aliases": [
@@ -88,28 +138,28 @@
   "known_next_depth": [
     {
       "area": "Advanced Returns Management",
-      "status": "strong",
+      "status": "strong_with_configurable_return_diagnostic",
       "remaining_edges": ["TM-specific reverse-logistics execution", "release-specific configurable-material follow-up matrix"]
     },
     {
       "area": "Down Payments",
-      "status": "classic_branch_complete",
-      "remaining_edges": ["separate Advanced Down Payment process card", "partial payment, cancellation and clearing diagnostics"]
+      "status": "classic_branch_and_diagnostic_layer",
+      "remaining_edges": ["separate Advanced Down Payment process card", "partial payment, cancellation and clearing edge cases"]
     },
     {
       "area": "Production and Project Fulfillment",
-      "status": "strong",
-      "remaining_edges": ["deeper project billing and revenue-recognition comparison", "CTO+ change-impact diagnostics after procurement or production release"]
+      "status": "strong_with_cto_change_diagnostic",
+      "remaining_edges": ["deeper project billing and revenue-recognition comparison", "cross-object change governance beyond the first CTO+ case"]
     },
     {
       "area": "JIT / Scheduling Agreements",
-      "status": "atlas_level",
-      "remaining_edges": ["release types and cumulative quantities", "EDI message/status recovery", "fallback and correction paths"]
+      "status": "diagnostic_layer_started",
+      "remaining_edges": ["explicit release-type model", "cumulative-quantity object and reset semantics", "fallback and correction playbook"]
     },
     {
       "area": "Billing and Settlement",
-      "status": "strong_atlas_level",
-      "remaining_edges": ["billing split root-cause casebook", "electronic invoicing and DRC boundary", "advanced down-payment comparison"]
+      "status": "strong_with_split_diagnostic",
+      "remaining_edges": ["electronic invoicing and DRC boundary", "advanced down-payment comparison", "settlement split and reconciliation casebook"]
     },
     {
       "area": "Operational Readiness",
