@@ -1,16 +1,19 @@
 # DDD for Acting Systems — agent context
 
 Status: `working-framework`  
-Version: `0.2.0`  
+Version: `0.3.0`  
 Verification: `needs_verification`  
 Canonical model: `https://dkharlanau.github.io/ddd/framework.json`  
+Decision schema: `https://dkharlanau.github.io/ddd/decision.schema.json`  
+Reference cases: `https://dkharlanau.github.io/ddd/examples.json`  
+Decision Canvas: `https://dkharlanau.github.io/ddd/decision-canvas/`  
 Human-readable page: `https://dkharlanau.github.io/ddd/`
 
 ## Role
 
-Use this framework when a business or software domain includes people, deterministic applications, integrations, AI models, agents, or delegated tasks.
+Use this framework when a business or software domain includes people, deterministic applications, integrations, AI models, agents, delegated tasks, or autonomous actions.
 
-This is a practical extension of Domain-Driven Design. It keeps domain language, bounded contexts, invariants, context mapping, events, and anti-corruption layers. It adds explicit models for decision, commitment, authority, evidence, time, evaluation, and controlled learning.
+The framework keeps the practical DDD base: domain language, bounded contexts, invariants, context mapping, events, and anti-corruption layers. It adds explicit models for decision, commitment, authority, evidence, time, evaluation, and controlled learning.
 
 It is a personal working synthesis, not an official DDD standard.
 
@@ -18,7 +21,7 @@ It is a personal working synthesis, not an official DDD standard.
 
 **Meaning -> Decision -> Commitment -> Evidence -> Learning**
 
-A bounded context answers: **where is this business meaning valid?**
+A bounded context asks: **where is this business meaning valid?**
 
 A decision boundary asks: **what should happen, from which evidence, and which part may use judgment?**
 
@@ -30,30 +33,30 @@ Do not collapse these questions into one prompt or one agent.
 
 ## Three planes
 
-### 1. Domain Plane
-Protect meaning and ownership.
+### Domain Plane
 
-Model:
+Protect meaning and ownership:
+
 - bounded contexts;
 - ubiquitous language;
 - capabilities and owners;
 - invariants;
 - contracts and anti-corruption layers.
 
-### 2. Action Plane
-Control judgment and real business effects.
+### Action Plane
 
-Model:
+Control judgment and real business effects:
+
 - decisions;
 - actors;
 - authority envelopes;
 - domain tools or commands;
 - commitments.
 
-### 3. Learning Plane
-Improve behavior without uncontrolled self-modification.
+### Learning Plane
 
-Model:
+Improve behavior without uncontrolled self-modification:
+
 - events;
 - evidence;
 - evaluations;
@@ -62,14 +65,14 @@ Model:
 
 ## Eight design units
 
-1. **Context — unit of semantic integrity.** Where one model and language are coherent.
-2. **Capability — unit of value ownership.** A business ability with an accountable owner and outcome.
-3. **Contract — unit of boundary crossing.** What may cross between contexts, systems, or agents.
-4. **Decision — unit of judgment.** A choice with inputs, invariants, uncertainty, authority, and consequences.
-5. **Commitment — unit of business effect.** A promise, transaction, reservation, approval, or durable state change.
-6. **Event — unit of temporal memory.** A durable statement that something relevant happened.
-7. **Evidence — unit of trust.** Traceable information that explains or reconstructs a decision and action.
-8. **Evaluation — unit of learning.** A controlled test used to decide whether behavior should change.
+1. **Context — semantic integrity.** Where one model and language are coherent.
+2. **Capability — value ownership.** A business ability with an accountable owner and outcome.
+3. **Contract — boundary crossing.** What may cross between contexts, systems, or agents.
+4. **Decision — judgment.** A choice with inputs, invariants, uncertainty, authority, and consequences.
+5. **Commitment — business effect.** A promise, transaction, reservation, approval, or durable state change.
+6. **Event — temporal memory.** A durable statement that something relevant happened.
+7. **Evidence — trust.** Traceable information that explains or reconstructs a decision and action.
+8. **Evaluation — learning.** A controlled test used to decide whether behavior should change.
 
 ## Non-negotiable rules
 
@@ -89,6 +92,7 @@ Model:
 - Material commitments need evidence, authority, a transaction path, and a reversal or compensation rule.
 - Production feedback may create a change proposal. It must not silently rewrite business policy, permissions, invariants, or autonomy.
 - Increase autonomy only after evaluation shows that the action is reliable enough and economically useful.
+- If a machine or agent will consume an architecture artifact, prefer a typed machine-readable contract over free prose.
 
 ## Analysis procedure
 
@@ -96,32 +100,39 @@ Run the analysis in this order:
 
 1. **Explore** business outcomes, language, events, decisions, and commitments.
 2. **Bound** the model into bounded contexts and assign capability ownership.
-3. **Contract** the relationships between contexts, systems, tools, events, and agent tasks.
+3. **Contract** relationships between contexts, systems, tools, events, and agent tasks.
 4. **Decide** which choices are deterministic, advisory, bounded judgment, or cross-context. Evaluate decision economics.
 5. **Commit** by defining who may turn a decision into a durable business effect, through which command, transaction, approval, and compensation path.
 6. **Observe** domain events, state versions, execution telemetry, evidence, and exceptions.
 7. **Learn** by converting evidence into evaluation cases and controlled change proposals.
 
-## Decision card
+## Decision Card
 
-For each important decision record:
+For each important decision produce a Decision Card compatible with:
+
+`https://dkharlanau.github.io/ddd/decision.schema.json`
+
+The interactive reference tool is:
+
+`https://dkharlanau.github.io/ddd/decision-canvas/`
+
+A Decision Card contains:
 
 - `decision_id`;
 - business outcome;
-- domain owner;
+- home bounded context;
+- decision type;
 - authoritative inputs;
 - contextual inputs;
-- freshness or state-version requirement;
+- freshness or state-version rule;
 - deterministic invariants;
-- allowed judgment;
-- candidate actors;
-- authority envelope;
-- approval rule;
-- candidate actions;
-- commitment owner;
-- reversal or compensation;
+- allowed and forbidden judgment;
+- design posture;
+- authority envelope and autonomy level;
+- commitment owner and command;
+- decision economics;
 - evidence to retain;
-- evaluation cases.
+- evaluation cases and promotion gate.
 
 Classify the decision as one of:
 
@@ -130,15 +141,26 @@ Classify the decision as one of:
 - `advisory`;
 - `cross-context`.
 
+Use one of these design postures when useful:
+
+- `prefer-deterministic`;
+- `advisory-ai`;
+- `prepare-with-review`;
+- `bounded-execution-candidate`.
+
+The posture is an architecture heuristic, not a probability score.
+
 ## Commitment boundary
 
 A commitment is the point where analysis becomes a business effect.
 
 Examples:
+
 - change a customer promise date;
 - reserve inventory;
 - release a purchase order;
 - approve credit;
+- activate master data;
 - post a financial document;
 - send an externally binding confirmation.
 
@@ -153,13 +175,13 @@ For each commitment record:
 - reversal or compensation;
 - resulting business event.
 
-Never treat an LLM recommendation, an A2A task result, or a successful MCP tool discovery as a commitment by itself.
+Never treat an LLM recommendation, an A2A task result, successful MCP tool discovery, or a technically successful tool call as a commitment by itself.
 
 ## Authority envelope
 
 Authority should be explicit and narrow. Record:
 
-- `scope`: objects, customers, plants, company codes, process types, or similar domain scope;
+- `scope`: objects, customers, plants, company codes, warehouses, process types, or similar domain scope;
 - `value`: financial, quantity, or impact limits;
 - `frequency`: allowed number or rate of actions;
 - `time`: validity window;
@@ -178,21 +200,21 @@ Do not add AI only because a decision contains words.
 
 Evaluate:
 
+- ambiguity;
 - decision volume;
 - cost of delay;
 - cost of error;
 - reversibility;
-- ambiguity;
-- latency need;
 - evidence quality;
 - human review cost.
 
 Useful heuristics:
 
-- high ambiguity plus high reversibility is often a strong AI-assistance candidate;
-- hard invariants stay deterministic;
-- high irreversible loss usually means recommendation, simulation, or approval before execution;
-- if a simple deterministic rule solves the problem reliably, prefer it.
+- low ambiguity often means deterministic logic is the better design;
+- high error cost plus low reversibility normally means advisory AI and human commitment;
+- high ambiguity plus high reversibility can be a good AI-assistance candidate;
+- material commitments with weak evidence normally stay in recommendation or preparation mode;
+- bounded execution should start lower and earn promotion through evaluation.
 
 ## Truth and time
 
@@ -258,6 +280,18 @@ Version and review changes to:
 
 Runtime behavior must not silently increase autonomy, widen permissions, change deterministic invariants, or turn retrieved text into business policy.
 
+## Reference cases
+
+Use `https://dkharlanau.github.io/ddd/examples.json` for concrete patterns. The current catalog contains:
+
+- Sales delivery-risk response;
+- Procurement source-selection exception;
+- Credit-block response;
+- Material-master change proposal;
+- EWM warehouse-exception response.
+
+Use these as analysis shapes, not as product configuration instructions. Preserve each case's distinction between authoritative state, AI judgment, authority, and commitment.
+
 ## Expected output
 
 When applying the framework, return these sections when relevant:
@@ -277,26 +311,23 @@ When applying the framework, return these sections when relevant:
 13. `anti_patterns_or_risks`
 14. `open_questions`
 
+For each material decision, also return a `decision_card` object that validates against `decision.schema.json` whenever enough input is available.
+
 Prefer graph-like facts, explicit owners, source context, and relationships over long generic prose.
 
 ## SAP logistics interpretation
 
-Do not treat SAP modules as bounded contexts automatically. Start with business meaning, then map the implementation.
+Do not treat SAP modules as bounded contexts automatically. Start with business meaning, then map the SAP implementation.
 
-Example for delivery risk:
+Examples:
 
-- `Customer Order` owns the customer promise.
-- `Availability` owns the availability model and ATP/aATP result.
-- `Delivery Execution` owns delivery execution state.
-- `Transportation` owns transport planning or execution facts when relevant.
+- `Customer Order` owns the customer promise while `Availability` owns ATP or aATP meaning.
+- `Operational Procurement` owns the purchasing commitment while sourcing evidence may come from several data and supplier contexts.
+- `Credit Management` owns credit-release authority even when Sales provides urgency and customer context.
+- `Product Master Data` owns activation of approved master data; extracted document text is contextual evidence until validated.
+- `Warehouse Execution` owns executable warehouse state; historical exception patterns do not replace current EWM stock, HU, or task state.
 
-A `Delivery Risk Advisor` can live in Customer Order and read facts through contracts. It may explain risk, rank alternatives, or prepare a change. It must not invent stock, override ATP truth, or change a customer promise only because it found a technically callable API.
-
-Changing the promise is a **commitment**. The command should validate current sales-order state, ATP evidence, authority, and process rules before SAP state changes.
-
-Outcome evidence may improve evaluation cases. It must not silently rewrite ATP rules, promise authority, or agent autonomy.
-
-Use the `sap_example` object in `framework.json` as the reference shape.
+Use the reference catalog for full Decision Cards.
 
 ## Retrieval policy
 
