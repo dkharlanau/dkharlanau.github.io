@@ -5,6 +5,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 GRAPH_PATH = ROOT / "_data/labs/enterprise_context/graphs/end_to_end_business_kpis.yml"
 SOURCE_PATH = ROOT / "_data/labs/enterprise_context/sources/end_to_end_analytics_registry.json"
+AGENT_PATH = ROOT / "_data/labs/enterprise_context/agent_contracts/end_to_end_analytics.yml"
 PAGE_PATH = ROOT / "labs/enterprise-context/end-to-end-analytics/index.html"
 ENDPOINT_PATH = ROOT / "labs/enterprise-context/data/end-to-end-business-kpis.json"
 
@@ -15,6 +16,10 @@ def load_graph():
 
 def load_sources():
     return json.loads(SOURCE_PATH.read_text(encoding="utf-8"))
+
+
+def load_agent():
+    return yaml.safe_load(AGENT_PATH.read_text(encoding="utf-8"))
 
 
 def test_e2e_kpi_contract_is_business_first_and_complete():
@@ -74,13 +79,14 @@ def test_metric_governance_avoids_fake_standard_targets():
         assert not isinstance(kpi.get("target"), (int, float))
 
 
-def test_human_and_machine_views_discover_model():
+def test_human_and_machine_views_discover_model_and_agent():
     page = PAGE_PATH.read_text(encoding="utf-8")
     endpoint = ENDPOINT_PATH.read_text(encoding="utf-8")
     assert "site.data.labs.enterprise_context.graphs.end_to_end_business_kpis" in page
     assert "/labs/enterprise-context/data/end-to-end-business-kpis.json" in page
     assert "site.data.labs.enterprise_context.graphs.end_to_end_business_kpis" in endpoint
     assert "site.data.labs.enterprise_context.sources.end_to_end_analytics_registry" in endpoint
+    assert "site.data.labs.enterprise_context.agent_contracts.end_to_end_analytics" in endpoint
 
 
 def test_core_lead_metrics_and_cross_functional_driver_paths_exist():
@@ -105,3 +111,22 @@ def test_core_lead_metrics_and_cross_functional_driver_paths_exist():
     otc = by_id["KPI.E2E.ORDER_TO_CASH"]
     assert "AREA-FI-AR" in otc["contributing_areas"]
     assert "KPI.E2E.BILL_TO_CLEAR" in otc["driver_refs"]
+
+
+def test_agent_routing_references_real_kpis_and_preserves_evidence_first_policy():
+    graph = load_graph()
+    agent = load_agent()
+    kpi_ids = {kpi["id"] for kpi in graph["kpis"]}
+    assert agent["id"] == "AGENT-CONTRACT-E2E-ANALYTICS"
+    assert agent["primary_endpoint"] == "/labs/enterprise-context/data/end-to-end-business-kpis.json"
+
+    for rule in agent["routing_rules"]:
+        if rule["start_with"].startswith("KPI.E2E."):
+            assert rule["start_with"] in kpi_ids
+        for ref in rule.get("then", []):
+            if ref.startswith("KPI.E2E."):
+                assert ref in kpi_ids
+
+    policy_text = " ".join(agent["answer_policy"]).lower()
+    assert "root cause" in policy_text
+    assert "do not invent universal targets" in policy_text
