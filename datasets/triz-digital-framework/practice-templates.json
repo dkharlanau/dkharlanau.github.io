@@ -1,0 +1,231 @@
+{
+  "schema_version": "1.0",
+  "framework_id": "triz-digital-systems",
+  "dataset_id": "practice-templates",
+  "updated_at": "2026-08-15",
+  "status": "draft",
+  "purpose": "Reusable templates for consultants, architects and developers working on real process, SAP, integration, data and AI problems.",
+  "usage_rule": "Choose the smallest template that matches the problem. Fill evidence first, contradiction second, solution options third.",
+  "templates": [
+    {
+      "id": "T01_problem_frame",
+      "name": "Problem Framing Card",
+      "use_when": ["a requirement is vague", "a workshop starts from symptoms", "several teams describe the same problem differently"],
+      "duration_minutes": 10,
+      "participants": ["consultant", "product owner", "developer", "process owner"],
+      "inputs": ["observed behavior", "examples", "affected actor", "business object", "known constraints"],
+      "questions": [
+        "What happens now, in plain language?",
+        "What useful outcome must remain?",
+        "Who is affected?",
+        "Which business object changes state?",
+        "What evidence do we already have?",
+        "What is inside and outside the problem boundary?",
+        "Which facts are known and which points are assumptions?"
+      ],
+      "outputs": ["problem statement", "useful function", "boundary", "evidence list", "assumptions", "unknowns"],
+      "red_flags": ["solution named before problem boundary", "no evidence", "problem described only as user dissatisfaction"]
+    },
+    {
+      "id": "T02_contradiction_canvas",
+      "name": "Contradiction Canvas",
+      "use_when": ["two useful requirements conflict", "teams argue about a compromise", "a design improves one KPI but damages another"],
+      "duration_minutes": 15,
+      "participants": ["consultant", "architect", "developer", "business owner"],
+      "inputs": ["useful function", "property to improve", "property to preserve", "constraints"],
+      "questions": [
+        "What do we want to improve?",
+        "What useful property becomes worse?",
+        "Why do we still need both properties?",
+        "Can the conflict be separated by time?",
+        "By condition?",
+        "By context?",
+        "By system level?",
+        "By authority?",
+        "By representation?"
+      ],
+      "outputs": ["contradiction statement", "tested operators", "selected separation operators", "new design questions"],
+      "red_flags": ["one side of the contradiction is not useful", "compromise accepted before separation is tested"]
+    },
+    {
+      "id": "T03_process_redesign",
+      "name": "Business Process Redesign Canvas",
+      "use_when": ["approvals are slow", "queues grow", "handoffs create rework", "exceptions dominate the process"],
+      "duration_minutes": 45,
+      "participants": ["process consultant", "business owner", "key user", "developer", "integration owner"],
+      "inputs": ["process steps", "states", "roles", "wait times", "exceptions", "rework", "controls"],
+      "questions": [
+        "What useful function does each step protect?",
+        "Which steps only move information or responsibility?",
+        "Where is waiting created?",
+        "Which cases are normal and which are exceptions?",
+        "Which control must stay independent?",
+        "Can evidence or validation move earlier?",
+        "Can low-risk and high-risk cases follow different paths?",
+        "Which process state should become explicit?",
+        "What would we remove before automating?"
+      ],
+      "outputs": ["current friction map", "steps to remove or move", "normal and exception paths", "control boundaries", "target process shapes", "experiment plan"],
+      "recommended_operators": ["O1_time", "O2_condition", "O4_system_level", "O5_authority"],
+      "recommended_patterns": ["P04", "P06", "P07", "P08", "P11", "P12"],
+      "red_flags": ["automating every current step", "new queue presented as improvement", "control removed without identifying the risk it protected"]
+    },
+    {
+      "id": "T04_integration_decision",
+      "name": "Integration Decision Template",
+      "use_when": ["choosing sync vs async", "designing API, event or file integration", "source system is overloaded", "several consumers duplicate reads"],
+      "duration_minutes": 30,
+      "participants": ["integration architect", "application consultant", "developer", "system owner"],
+      "inputs": ["producer", "consumer", "business object", "trigger", "freshness need", "consistency need", "volume", "failure behavior"],
+      "questions": [
+        "Is this a command, query, notification or bulk transfer?",
+        "Does the caller need an immediate business confirmation?",
+        "Which system owns the durable state?",
+        "How fresh must the consumer view be for the actual decision?",
+        "Can the producer continue if the consumer is unavailable?",
+        "How are ordering, replay, duplicate delivery and idempotency handled?",
+        "Does the consumer need raw data or a purpose-specific representation?",
+        "What happens during partial failure?",
+        "Who owns monitoring and recovery?"
+      ],
+      "outputs": ["integration shape", "state ownership", "delivery semantics", "failure and retry rules", "observability plan", "ADR input"],
+      "recommended_operators": ["O1_time", "O4_system_level", "O6_representation"],
+      "recommended_patterns": ["P01", "P03", "P04", "P05", "P12"],
+      "red_flags": ["technology chosen before semantics", "event used as remote procedure call", "duplicate state without ownership", "retry without idempotency"]
+    },
+    {
+      "id": "T05_sap_change_extension",
+      "name": "SAP Change and Extension Template",
+      "use_when": ["a change request arrives", "standard behavior seems insufficient", "custom code is proposed", "clean-core boundary is unclear"],
+      "duration_minutes": 30,
+      "participants": ["SAP consultant", "solution architect", "ABAP or cloud developer", "process owner"],
+      "inputs": ["business requirement", "current standard behavior", "configuration options", "extension points", "integration dependencies", "upgrade constraints"],
+      "questions": [
+        "What business outcome is missing in the current design?",
+        "Can standard configuration solve the useful function?",
+        "Is the variation stable policy, local context or true custom behavior?",
+        "Where should the change live: configuration, in-app extension, developer extension or side-by-side service?",
+        "Which business object and lifecycle events are affected?",
+        "What data and authorization boundary is required?",
+        "What upgrade or ownership cost does the extension create?",
+        "What would make the change reversible?",
+        "How will we test the counter-effect on the standard process?"
+      ],
+      "outputs": ["requirement frame", "standard vs extension decision", "extension boundary", "affected objects and events", "risk and upgrade notes", "test plan"],
+      "recommended_operators": ["O3_context", "O4_system_level", "O5_authority"],
+      "recommended_patterns": ["P01", "P07", "P08", "P12"],
+      "red_flags": ["custom code as first option", "extension without lifecycle owner", "local requirement embedded into global core without separation"]
+    },
+    {
+      "id": "T06_ai_use_case",
+      "name": "AI Use-Case Boundary Template",
+      "use_when": ["AI is proposed for a business process", "an assistant may call tools", "RAG or an agent is considered", "automation and accountability conflict"],
+      "duration_minutes": 30,
+      "participants": ["business consultant", "AI engineer", "developer", "security or data owner", "process owner"],
+      "inputs": ["business decision", "input data", "uncertainty", "candidate actions", "risk tier", "current manual work"],
+      "questions": [
+        "What part of the problem is genuinely uncertain or interpretive?",
+        "Which exact rules should remain deterministic?",
+        "What can the model read?",
+        "What may it propose?",
+        "What must deterministic software validate?",
+        "Who or what approves a material action?",
+        "What narrow action can be executed?",
+        "What evidence is shown with the model output?",
+        "What is the stop condition for an agent loop?",
+        "How will quality, cost, latency and unsafe attempts be measured?"
+      ],
+      "outputs": ["AI responsibility", "non-AI responsibility", "authority chain", "tool boundary", "evaluation metrics", "fallback path"],
+      "recommended_operators": ["O2_condition", "O5_authority", "O6_representation"],
+      "recommended_patterns": ["P08", "P09", "P10", "P12"],
+      "red_flags": ["AI used for exact policy", "model capability treated as authorization", "broad write access", "no evaluation or fallback"]
+    },
+    {
+      "id": "T07_incident_systemic",
+      "name": "Incident to Systemic Problem Template",
+      "use_when": ["an incident repeats", "support fixes symptoms", "root cause spans systems", "manual recovery becomes normal work"],
+      "duration_minutes": 30,
+      "participants": ["support lead", "functional consultant", "developer", "integration owner", "operations engineer"],
+      "inputs": ["timeline", "logs", "business impact", "failed state", "recovery steps", "previous incidents"],
+      "questions": [
+        "What useful function failed?",
+        "Which state became incorrect, missing or invisible?",
+        "Where was the first observable deviation?",
+        "Which retries, rejects, delays or overrides are useful signals?",
+        "Did recovery repair the cause or only restore the symptom?",
+        "Which boundary made diagnosis difficult?",
+        "What could make the failure observable earlier?",
+        "What change reduces recurrence without creating a new hidden dependency?"
+      ],
+      "outputs": ["failure chain", "state and ownership gaps", "signal inventory", "systemic options", "preventive experiment", "observability improvements"],
+      "recommended_operators": ["O1_time", "O4_system_level", "O6_representation"],
+      "recommended_patterns": ["P04", "P06", "P10", "P12"],
+      "red_flags": ["root cause equals last error message", "manual workaround becomes permanent design", "monitoring added without changing the failure mechanism"]
+    },
+    {
+      "id": "T08_architecture_decision",
+      "name": "Contradiction-Driven ADR Template",
+      "use_when": ["several architecture options exist", "a technology decision has long-term cost", "teams disagree about boundaries"],
+      "duration_minutes": 30,
+      "participants": ["architect", "lead developer", "consultant", "system owner"],
+      "inputs": ["context", "constraints", "contradiction", "options", "evidence"],
+      "questions": [
+        "What useful properties conflict?",
+        "Which separation operator changes the design space?",
+        "What is the remove-or-simplify option?",
+        "What is the deterministic redesign option?",
+        "Where does uncertainty justify AI, if anywhere?",
+        "Which option adds the lowest complexity tax?",
+        "Which assumptions could invalidate the decision?",
+        "What evidence will trigger a review of this ADR?"
+      ],
+      "outputs": ["decision", "context", "contradiction", "considered options", "trade-offs", "assumptions", "review triggers"],
+      "red_flags": ["ADR is only a technology choice", "alternatives are different vendors for the same design", "no review trigger"]
+    },
+    {
+      "id": "T09_data_governance",
+      "name": "Data and Master Data Governance Template",
+      "use_when": ["duplicate or poor master data causes process issues", "ownership is unclear", "global and local data needs conflict", "new governance is proposed"],
+      "duration_minutes": 45,
+      "participants": ["data owner", "SAP consultant", "data steward", "integration owner", "developer"],
+      "inputs": ["data object", "consumers", "creation and change process", "quality rules", "ownership", "replication"],
+      "questions": [
+        "Which business decisions depend on this data?",
+        "Who owns the semantic definition?",
+        "Who may create, propose, approve and publish a change?",
+        "Which fields are global and which are contextual?",
+        "Which quality checks are exact and which need judgment?",
+        "Where should duplicate detection happen?",
+        "What representation does each consumer actually need?",
+        "How are changes distributed and reconciled?",
+        "Which quality metric has a business counter-metric such as lead time?"
+      ],
+      "outputs": ["ownership model", "authority chain", "global/local split", "quality rules", "distribution model", "quality and speed metrics"],
+      "recommended_operators": ["O2_condition", "O3_context", "O5_authority", "O6_representation"],
+      "recommended_patterns": ["P03", "P04", "P07", "P09", "P12"],
+      "red_flags": ["governance equals more approvals", "quality measured without lead-time effect", "one canonical view forced on every consumer"]
+    },
+    {
+      "id": "T10_experiment",
+      "name": "Reversible Experiment Template",
+      "use_when": ["an option looks promising but evidence is weak", "a redesign has material risk", "an AI or automation use case needs proof"],
+      "duration_minutes": 20,
+      "participants": ["consultant", "developer", "product owner", "operations owner"],
+      "inputs": ["preferred option", "baseline", "primary metric", "counter-metric", "risk tier"],
+      "questions": [
+        "What exact hypothesis are we testing?",
+        "What is the smallest reversible change?",
+        "Which primary metric should improve?",
+        "Which useful property could become worse?",
+        "What counter-metric detects that damage?",
+        "What failure condition stops the experiment?",
+        "Can we use shadow, replay, one country, one interface or one low-risk class?",
+        "How do we roll back or recover?",
+        "What decision will be made after the experiment?"
+      ],
+      "outputs": ["hypothesis", "scope", "baseline", "primary metric", "counter-metric", "stop condition", "rollback", "decision rule"],
+      "recommended_patterns": ["P08", "P10", "P12"],
+      "red_flags": ["pilot with no baseline", "success metric without counter-metric", "experiment is already irreversible production rollout"]
+    }
+  ]
+}
