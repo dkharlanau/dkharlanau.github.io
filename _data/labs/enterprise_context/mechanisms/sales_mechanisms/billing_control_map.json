@@ -1,0 +1,200 @@
+{
+  "id": "SALES-BILLING-CONTROL-V1",
+  "title": "Sales Billing Control Map",
+  "updated_at": "2026-08-15",
+  "purpose": "Separate billing eligibility, plan timing, billing type, copy control, split/convergence, document creation and downstream financial effects into traceable controls.",
+  "mental_model": [
+    "Start before VF04. First prove why the reference is billable.",
+    "Do not mix billing relevance with billing quantity, billing type, pricing type, or invoice split.",
+    "A correct billing document can still carry an incorrect inherited value if copying control intentionally preserved it.",
+    "Unexpected invoice count is a grouping problem until split analysis proves otherwise."
+  ],
+  "stages": [
+    {
+      "id": "BILL.STAGE.01",
+      "title": "Define billing basis and eligibility",
+      "owner": "MEC.SD.BILLREL",
+      "question": "Is the sales or delivery reference billable, on which basis, and is it due now?",
+      "result": "billing basis + due-list eligibility"
+    },
+    {
+      "id": "BILL.STAGE.02",
+      "title": "Build billing-plan timing when required",
+      "owner": "MEC.SD.BILLPLAN",
+      "question": "Which periodic or milestone date controls the next billing event?",
+      "result": "plan type + due date + amount/percentage + date status"
+    },
+    {
+      "id": "BILL.STAGE.03",
+      "title": "Choose the target billing type",
+      "owner": "MEC.SD.BILLTYPE",
+      "question": "What billing document type should this reference create?",
+      "result": "target billing type"
+    },
+    {
+      "id": "BILL.STAGE.04",
+      "title": "Transfer data, quantity and pricing",
+      "owner": "MEC.SD.COPY",
+      "question": "What is copied from the reference, what is recalculated, and which quantity is billed?",
+      "result": "target billing data + pricing/quantity transfer behavior"
+    },
+    {
+      "id": "BILL.STAGE.05",
+      "title": "Group or split billable items",
+      "owner": "MEC.SD.BILLSPLIT",
+      "question": "Can the items share one billing header or do differences force several documents?",
+      "result": "billing grouping + split reason"
+    },
+    {
+      "id": "BILL.STAGE.06",
+      "title": "Create and hand off the billing document",
+      "owner": "MEC.SD.BILL",
+      "question": "Did the billable result become the expected billing document, FI event and output object?",
+      "result": "billing document + posting/document-flow status"
+    }
+  ],
+  "copy_boundaries": [
+    {
+      "topic": "Billing quantity",
+      "owner": "MEC.SD.COPY",
+      "rule": "Billing relevance defines the business basis; copying control can still decide which source quantity is transferred for billing.",
+      "source_refs": [
+        "SRC-MEC-BILL",
+        "SRC-MEC-BILL-COPY"
+      ]
+    },
+    {
+      "topic": "Pricing",
+      "owner": "MEC.SD.COPY",
+      "rule": "The pricing type in billing copying control decides whether pricing conditions are copied, redetermined, or combined according to the configured pricing behavior.",
+      "source_refs": [
+        "SRC-MEC-COPY-PRICE",
+        "SRC-MEC-BILL-COPY"
+      ]
+    },
+    {
+      "topic": "Payment terms and other header data",
+      "owner": "MEC.SD.COPY",
+      "rule": "Billing data normally follows the reference and copying/data-transfer logic. A copying requirement or data-transfer routine can intentionally source selected data, such as payment terms, from another owner such as customer master data.",
+      "source_refs": [
+        "SRC-MEC-BILL-COPYREQ"
+      ]
+    },
+    {
+      "topic": "Reference and assignment numbers",
+      "owner": "MEC.SD.COPY",
+      "rule": "How reference and assignment numbers are transferred can itself create different billing headers and therefore an invoice split.",
+      "source_refs": [
+        "SRC-MEC-BILLSPLIT",
+        "SRC-MEC-BILL-COPY"
+      ]
+    }
+  ],
+  "standard_split_examples": [
+    "Sales organization",
+    "Distribution channel",
+    "Division",
+    "Sold-to party",
+    "Bill-to party",
+    "Payer",
+    "Document currency",
+    "Destination/tax country context",
+    "Customer reference",
+    "Payment terms",
+    "Payment method",
+    "Incoterms"
+  ],
+  "failure_drills": [
+    {
+      "id": "CASE.BILL.01",
+      "symptom": "Sales order or delivery is complete but is missing from the billing due list.",
+      "wrong_first_move": "Change the billing type or run VF01 manually.",
+      "proof_path": [
+        "MEC.SD.BILLREL",
+        "billing relevance",
+        "billing status",
+        "billing date/block",
+        "copying requirement"
+      ],
+      "lead_conclusion": "Eligibility is upstream of document creation. Prove why the reference is not due before bypassing the due list."
+    },
+    {
+      "id": "CASE.BILL.02",
+      "symptom": "A milestone invoice is not available although the project team expects it.",
+      "wrong_first_move": "Change the billing date directly.",
+      "proof_path": [
+        "MEC.SD.BILLPLAN",
+        "plan date",
+        "milestone/status",
+        "date-level billing block",
+        "MEC.SD.BILLREL"
+      ],
+      "lead_conclusion": "Milestone timing belongs to the billing plan. The due list only consumes the resulting plan status."
+    },
+    {
+      "id": "CASE.BILL.03",
+      "symptom": "The reference proposes the wrong invoice or credit/debit memo type.",
+      "wrong_first_move": "Change account determination.",
+      "proof_path": [
+        "MEC.SD.BILLTYPE",
+        "reference document type",
+        "configured billing type",
+        "copying-control source/target pair",
+        "due-list override"
+      ],
+      "lead_conclusion": "Billing type is decided before posting. Account determination is downstream and cannot repair a wrong billing transaction type."
+    },
+    {
+      "id": "CASE.BILL.04",
+      "symptom": "Invoice price differs from the sales order although the expected condition record exists.",
+      "wrong_first_move": "Change the condition record.",
+      "proof_path": [
+        "MEC.SD.COPY",
+        "billing pricing type",
+        "MEC.SD.PRICE",
+        "pricing date/conditions"
+      ],
+      "lead_conclusion": "Billing may intentionally reprice. Prove the copy-control pricing boundary before touching pricing master data."
+    },
+    {
+      "id": "CASE.BILL.05",
+      "symptom": "Two deliveries for the same customer create separate invoices.",
+      "wrong_first_move": "Write a custom split routine.",
+      "proof_path": [
+        "MEC.SD.BILLSPLIT",
+        "split analysis",
+        "billing type/date",
+        "partner and organizational fields",
+        "payment terms/Incoterms",
+        "reference/assignment transfer"
+      ],
+      "lead_conclusion": "A standard split criterion is evidence, not a defect. Custom logic comes only after the differing owner is understood."
+    },
+    {
+      "id": "CASE.BILL.06",
+      "symptom": "One sales order creates several invoices.",
+      "wrong_first_move": "Assume collective billing configuration is broken.",
+      "proof_path": [
+        "MEC.SD.BILLSPLIT",
+        "item-level values copied to billing header",
+        "split analysis",
+        "MEC.SD.COPY"
+      ],
+      "lead_conclusion": "A single reference document does not guarantee a single billing document. Item differences can force multiple target headers."
+    }
+  ],
+  "source_refs": [
+    "SRC-MEC-BILL-BASICS",
+    "SRC-MEC-BILL",
+    "SRC-MEC-BILL-DUELIST",
+    "SRC-MEC-BILLPLAN",
+    "SRC-MEC-BILLPLAN-CONTROL",
+    "SRC-MEC-BILLTYPE",
+    "SRC-MEC-BILLTYPE-REF",
+    "SRC-MEC-BILLSPLIT",
+    "SRC-MEC-BILLSPLIT-CRITERIA",
+    "SRC-MEC-BILL-COPY",
+    "SRC-MEC-BILL-COPYREQ",
+    "SRC-MEC-COPY-PRICE"
+  ]
+}
