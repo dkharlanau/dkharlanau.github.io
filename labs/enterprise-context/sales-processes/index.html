@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 sales_process_atlas: true
 tags:
@@ -21,8 +21,14 @@ tags:
 
 {% assign atlas_groups = site.data.labs.enterprise_context.processes.sales_process_atlas %}
 {% assign atlas = atlas_groups.index %}
-{% assign group_keys = "01_baseline,02_fulfillment,03_intercompany,04_commercial,05_execution,06_overlays" | split: "," %}
+{% assign group_keys = "01_baseline,02_fulfillment,03_intercompany,04_commercial,05_execution,06_overlays,07_after_sales,08_commercial_extensions,09_industry_variants,10_billing_lifecycle,11_cross_application_execution" | split: "," %}
 {% assign registry = site.data.labs.enterprise_context.sources.sales_process_registry %}
+{% assign process_count = 0 %}
+{% for group_key in group_keys %}
+  {% assign count_group = atlas_groups[group_key] %}
+  {% assign count_group_size = count_group.processes | size %}
+  {% assign process_count = process_count | plus: count_group_size %}
+{% endfor %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Sales Process Atlas</li></ol>
@@ -33,13 +39,13 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Sales process atlas / memory first</p>
       <h1>Learn the branch, not the transaction code.</h1>
-      <p>A special sales process becomes memorable when you can explain what changed from ordinary sell-from-stock: ownership, procurement, legal entity, production, billing, or the customer promise. The page is built around those changes.</p>
-      <a class="research-canvas__button" href="#memory-cards">Open the memory cards <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p>A special sales process becomes memorable when you can explain what changed from ordinary sell-from-stock: ownership, procurement, legal entity, production, billing, customer recovery, or the customer promise. Start from the baseline and trace the changed control rule.</p>
+      <a class="research-canvas__button" href="#process-groups">Open the process groups <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Atlas inventory">
       <p>Working inventory</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>20</strong><small>Processes & overlays</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ atlas.extension_surfaces | size }}</strong><small>Extension surfaces</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ process_count }}</strong><small>Processes & overlays</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ group_keys | size }}</strong><small>Process groups</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ registry.sources | size }}</strong><small>Primary references</small></div>
       <em>Author codes are stable memory keys. SAP scope-item IDs remain external references.</em>
     </div>
@@ -47,7 +53,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">fork_right</span>
-    <p><strong>Memory rule.</strong> Start from <code>SD.SFS</code>. Every special process is the baseline plus a changed control rule: who supplies, who owns stock, when control transfers, what triggers billing, or whether supply is made specifically for one customer.</p>
+    <p><strong>Memory rule.</strong> Start from <code>SD.SFS</code>. Every special process is the baseline plus a changed control rule: who supplies, who owns stock, when control transfers, what triggers billing, how a claim is resolved, or whether supply is made specifically for one customer.</p>
     <a href="/labs/enterprise-context/data/sales-process-atlas.json">Open JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
@@ -59,7 +65,7 @@ tags:
     </header>
     <div class="spa-code-grid">
       <article><span>SD.</span><strong>Process / variant</strong><p>Examples: <code>SD.TPO</code>, <code>SD.CON</code>, <code>SD.AIC</code>.</p></article>
-      <article><span>SD+</span><strong>Overlay / capability</strong><p>Examples: <code>SD+OSP</code> promotions and <code>SD+REL</code> related-object navigation.</p></article>
+      <article><span>SD+</span><strong>Overlay / capability</strong><p>Examples: promotions, payment overlays, or related-object navigation.</p></article>
       <article><span>EXT-</span><strong>Extension surface</strong><p>Field, logic, API, copy/reference, or side-by-side extension.</p></article>
     </div>
   </section>
@@ -76,89 +82,130 @@ tags:
     </ol>
   </section>
 
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment path</p>
+      <h2>Use the atlas for the branch, then open the engine.</h2>
+      <p>A process answer is stronger when you can move from the business variant into the decision engine that controls price, promise, risk, shipping, or master data.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/sales-order/"><span>SO</span><strong>Sales Order Decision Map</strong><small>WHO → WHAT → WHERE → WHEN → PRICE → PROMISE → RISK → FULFILL.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/pricing/"><span>PRC</span><strong>Pricing</strong><small>Procedure, condition technique, calculation, diagnostics, and extension boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP / aATP</strong><small>Promise logic, scope, PAC, PAL, SUP, BOP, and alternative confirmation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/shipping/"><span>SHP</span><strong>Shipping & Scheduling</strong><small>Plant, shipping point, route, dates, delivery due logic, EWM and TM boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/credit/"><span>CRD</span><strong>Credit Management</strong><small>Trigger, account, segment, exposure, check rule, block, release, and recheck.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/master-data/"><span>MD</span><strong>Sales Master Data</strong><small>Business partner, product, customer-material data, organization, defaults, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="process-groups" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Coverage map</p>
+      <h2>{{ process_count }} branches are easier to learn as {{ group_keys | size }} families.</h2>
+      <p>The model now exposes the full structured dataset, including after-sales, billing lifecycle, industry variants, and cross-application execution. Use the families as navigation, not as a taxonomy you have to recite.</p>
+    </header>
+    <div class="research-route-list">
+      {% for group_key in group_keys %}
+      {% assign group = atlas_groups[group_key] %}
+      <a href="#group-{{ group_key | replace: '_', '-' }}"><span>{{ forloop.index }}</span><strong>{{ group.title }}</strong><small>{{ group.processes | size }} processes / variants</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" id="memory-cards" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Memory cards</p>
-      <h2>Twenty branches, each reduced to the decisions that matter.</h2>
+      <h2>Each branch is reduced to the decisions that matter.</h2>
       <p>The first screen gives the mnemonic, promise, and flow. Expand a card for the controlling elements, data hinges, limits, lead-level questions, and extension points.</p>
     </header>
 
-    <div class="spa-card-grid">
-      {% for group_key in group_keys %}
-      {% assign group = atlas_groups[group_key] %}
-      {% for process in group.processes %}
-      <article class="spa-card" id="{{ process.code | downcase | replace: '.', '-' | replace: '+', '-plus-' }}">
-        <header class="spa-card__head">
-          <div>
-            <span class="spa-code">{{ process.code }}</span>
-            <span class="spa-kind">{{ process.kind | replace: "_", " " }}</span>
+    {% for group_key in group_keys %}
+    {% assign group = atlas_groups[group_key] %}
+    <section class="spa-process-group" id="group-{{ group_key | replace: '_', '-' }}">
+      <header>
+        <p class="research-canvas__eyebrow">{{ group_key | replace: '_', ' ' }}</p>
+        <h3>{{ group.title }}</h3>
+        <p>{{ group.processes | size }} related processes and variants. Compare them by the control rule that changes from the baseline.</p>
+      </header>
+      <div class="spa-card-grid">
+        {% for process in group.processes %}
+        <article class="spa-card" id="{{ process.code | downcase | replace: '.', '-' | replace: '+', '-plus-' }}">
+          <header class="spa-card__head">
+            <div>
+              <span class="spa-code">{{ process.code }}</span>
+              <span class="spa-kind">{{ process.kind | replace: '_', ' ' }}</span>
+            </div>
+            {% if process.sap_scope_items and process.sap_scope_items.size > 0 %}
+            <p class="spa-scope">
+              {% for scope in process.sap_scope_items %}<span>{{ scope.id }}</span>{% endfor %}
+            </p>
+            {% endif %}
+          </header>
+          <h3>{{ process.title }}</h3>
+          <p class="spa-hook">{{ process.memory_hook }}</p>
+          <p class="spa-intent">{{ process.business_intent }}</p>
+
+          <div class="spa-flow" aria-label="{{ process.title }} flow">
+            {% for step in process.flow %}
+            <span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}
+            {% endfor %}
           </div>
-          {% if process.sap_scope_items and process.sap_scope_items.size > 0 %}
-          <p class="spa-scope">
-            {% for scope in process.sap_scope_items %}<span>{{ scope.id }}</span>{% endfor %}
-          </p>
+
+          {% if process.modes %}
+          <div class="spa-modes">
+            {% for mode in process.modes %}
+            <span><b>{{ mode.code }}</b> {{ mode.title }}</span>
+            {% endfor %}
+          </div>
           {% endif %}
-        </header>
-        <h3>{{ process.title }}</h3>
-        <p class="spa-hook">{{ process.memory_hook }}</p>
-        <p class="spa-intent">{{ process.business_intent }}</p>
 
-        <div class="spa-flow" aria-label="{{ process.title }} flow">
-          {% for step in process.flow %}
-          <span>{{ step }}</span>{% unless forloop.last %}<i aria-hidden="true">→</i>{% endunless %}
-          {% endfor %}
-        </div>
+          {% if process.deployment_scope %}
+          <p class="ecg-caption"><strong>Deployment:</strong> {{ process.deployment_scope }}</p>
+          {% endif %}
 
-        {% if process.modes %}
-        <div class="spa-modes">
-          {% for mode in process.modes %}
-          <span><b>{{ mode.code }}</b> {{ mode.title }}</span>
-          {% endfor %}
-        </div>
-        {% endif %}
+          <details>
+            <summary>Controls, data and boundaries <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+            <div class="spa-detail-grid">
+              <section>
+                <h4>Control plane</h4>
+                <ul>{% for item in process.control_plane %}<li><strong>{{ item.control }}</strong><span>{{ item.why }}</span></li>{% endfor %}</ul>
+              </section>
+              <section>
+                <h4>Data hinges</h4>
+                <ul>{% for item in process.data_hinges %}<li><strong>{{ item.data }}</strong><span>{{ item.changes }}</span></li>{% endfor %}</ul>
+              </section>
+              <section>
+                <h4>What changes</h4>
+                <ul>{% for item in process.impact_summary %}<li>{{ item }}</li>{% endfor %}</ul>
+              </section>
+              <section>
+                <h4>Constraints</h4>
+                <ul>{% for item in process.constraints %}<li>{{ item }}</li>{% endfor %}</ul>
+              </section>
+            </div>
 
-        <details>
-          <summary>Controls, data and boundaries <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
-          <div class="spa-detail-grid">
-            <section>
-              <h4>Control plane</h4>
-              <ul>{% for item in process.control_plane %}<li><strong>{{ item.control }}</strong><span>{{ item.why }}</span></li>{% endfor %}</ul>
-            </section>
-            <section>
-              <h4>Data hinges</h4>
-              <ul>{% for item in process.data_hinges %}<li><strong>{{ item.data }}</strong><span>{{ item.changes }}</span></li>{% endfor %}</ul>
-            </section>
-            <section>
-              <h4>What changes</h4>
-              <ul>{% for item in process.impact_summary %}<li>{{ item }}</li>{% endfor %}</ul>
-            </section>
-            <section>
-              <h4>Constraints</h4>
-              <ul>{% for item in process.constraints %}<li>{{ item }}</li>{% endfor %}</ul>
-            </section>
-          </div>
+            <div class="spa-lead">
+              <p>Lead questions</p>
+              <ol>{% for q in process.lead_questions %}<li>{{ q }}</li>{% endfor %}</ol>
+            </div>
 
-          <div class="spa-lead">
-            <p>Lead questions</p>
-            <ol>{% for q in process.lead_questions %}<li>{{ q }}</li>{% endfor %}</ol>
-          </div>
-
-          <div class="spa-extension-row">
-            <span>Extensions</span>
-            {% for ext in process.extension_points %}<code>{{ ext }}</code>{% endfor %}
-          </div>
-        </details>
-      </article>
-      {% endfor %}
-      {% endfor %}
-    </div>
+            <div class="spa-extension-row">
+              <span>Extensions</span>
+              {% for ext in process.extension_points %}<code>{{ ext }}</code>{% endfor %}
+            </div>
+          </details>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Fast comparisons</p>
       <h2>Most assessment questions hide inside a contrast.</h2>
-      <p>The useful answer is rarely a definition. It is the boundary between two processes that look similar until one document, stock segment, or billing trigger changes.</p>
+      <p>The useful answer is rarely a definition. It is the boundary between two processes that look similar until one document, stock segment, ownership rule, billing trigger, or execution object changes.</p>
     </header>
 
     <div class="spa-compare-grid">
@@ -168,6 +215,9 @@ tags:
       <article><span>SD.CSH ↔ SD.RSH</span><h3>Immediate payment vs immediate delivery</h3><p><b>Cash sales:</b> payment and order-related cash billing are immediate. <b>Rush order:</b> delivery is immediate, but normal delivery-related invoicing follows later.</p></article>
       <article><span>SD.BOM.ERLA ↔ SD.BOM.LUMF</span><h3>Main item vs component ownership</h3><p><b>ERLA:</b> commercial and logistics behavior sits mainly on the higher-level item. <b>LUMF:</b> subitems become operationally relevant, including delivery-group behavior.</p></article>
       <article><span>SD.CON.FILL ↔ SD.CON.ISSUE</span><h3>Move stock vs transfer ownership</h3><p><b>Fill-up:</b> stock moves to the customer site but stays yours. <b>Issue:</b> customer withdrawal consumes consignment stock and becomes billing relevant.</p></article>
+      <article><span>SD.RET.LEAN ↔ SD.RET.ARM</span><h3>Simple receipt vs controlled disposition</h3><p><b>Lean:</b> receive, return to valuated stock, then credit. <b>ARM:</b> inspection, follow-up activity, refund logic, and replacement create a real reverse-logistics decision tree.</p></article>
+      <article><span>SD.TPO.SN ↔ SD.TPO.NSN</span><h3>Supplier event visibility</h3><p><b>With notification:</b> supplier shipment becomes an explicit logistics signal. <b>Without notification:</b> customer visibility depends more heavily on confirmations and invoice events.</p></article>
+      <article><span>SD.BILL.CANCEL ↔ SD.CLM.CMR</span><h3>Reverse an invoice vs grant a credit</h3><p><b>Cancellation:</b> the billing document itself was wrong and should be nullified. <b>Credit memo:</b> the invoice may remain valid while the commercial receivable is reduced.</p></article>
     </div>
   </section>
 
@@ -184,7 +234,7 @@ tags:
         <span>{{ ext.code }}</span>
         <h3>{{ ext.title }}</h3>
         <p class="spa-hook">{{ ext.memory_hook }}</p>
-        <p>{{ ext.applies_to | join: " · " }}</p>
+        <p>{{ ext.applies_to | join: ' · ' }}</p>
       </article>
       {% endfor %}
     </div>
@@ -194,7 +244,7 @@ tags:
     <div>
       <p class="research-canvas__eyebrow">For datasets and AI</p>
       <h2>The cards are a view. The structured process records are the asset.</h2>
-      <p>The same codes, flows, controls, data hinges, constraints, sources, and extension points are published as JSON so they can be reused for study prompts, comparison tasks, synthetic cases, impact analysis, and later graph traversal.</p>
+      <p>The same codes, flows, controls, data hinges, constraints, sources, and extension points are published as JSON so they can be reused for study prompts, comparison tasks, synthetic cases, impact analysis, and graph traversal.</p>
     </div>
     <div>
       <a class="research-canvas__button" href="/labs/enterprise-context/data/sales-process-atlas.json">Process atlas JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
