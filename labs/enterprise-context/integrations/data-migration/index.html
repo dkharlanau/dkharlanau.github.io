@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Data Migration and Controlled Bulk Loading"
-description: "A practical SAP map for Migration Cockpit, staging and direct transfer, migration-object extensions, and controlled custom loaders."
+description: "A practical SAP map for Migration Cockpit, data-quality tools, ETL, mass maintenance, migration programs, and controlled custom loaders."
 permalink: /labs/enterprise-context/integrations/data-migration/
 status: draft
 verified: false
@@ -15,10 +15,13 @@ tags:
   - data-migration
   - migration-cockpit
   - bulk-load
+  - data-quality
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.data_migration_and_loading %}
+{% assign toolbox = site.data.labs.enterprise_context.topics.data_migration_toolbox %}
 {% assign registry = site.data.labs.enterprise_context.sources.data_migration_loading %}
+{% assign toolbox_registry = site.data.labs.enterprise_context.sources.data_migration_toolbox %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
@@ -41,9 +44,9 @@ tags:
     <div class="research-canvas__signal" aria-label="Research status">
       <p>Memory model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>Initial</strong><small>Migration Cockpit</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>Repeat</strong><small>Integration</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>User</strong><small>Controlled loader</small></div>
-      <div class="research-canvas__signal-line"><span>04</span><strong>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</strong><small>Maturity gates</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Prepare</strong><small>ETL + quality</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Live</strong><small>Mass or custom</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong>{{ toolbox.tools | size }}</strong><small>Adjacent tools</small></div>
       <em>{{ topic.memory_model.phrase }}</em>
     </div>
   </header>
@@ -51,19 +54,60 @@ tags:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">database_upload</span>
     <p><strong>Problem:</strong> teams often call every large data movement a migration. Then an initial-load tool becomes a nightly interface, or a spreadsheet becomes an application architecture.</p>
-    <p><strong>Working rule.</strong> Classify the need first: initial migration, recurring integration, mass maintenance, or controlled user upload. The tool choice comes after that.</p>
-    <a href="/labs/enterprise-context/data/data-migration-loading.json">Open machine-readable model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+    <p><strong>Working rule.</strong> Classify the need first: initial migration, source preparation, data quality, recurring integration, mass maintenance, governed processing, or controlled user upload.</p>
+    <a href="/labs/enterprise-context/data/data-migration-loading.json">Open migration model <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+    <a href="/labs/enterprise-context/data/data-migration-toolbox.json">Open toolbox data <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="tool-choice" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lead decision</p>
-      <h2>Four needs. Four different answers.</h2>
-      <p>A useful architecture answer starts with lifecycle and ownership, not with the file extension.</p>
+      <h2>Start with lifecycle, not product names.</h2>
+      <p>A useful architecture answer explains who owns preparation, target posting, monitoring, recovery, and productive maintenance.</p>
     </header>
     <div class="research-route-list">
       {% for item in topic.selection_guide %}
-      <a href="#migration-cockpit"><span>→</span><strong>{{ item.need }}</strong><small><b>{{ item.choose }}</b> · {{ item.why }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="#toolbox"><span>→</span><strong>{{ item.need }}</strong><small><b>{{ item.choose }}</b> · {{ item.why }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="toolbox" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Toolbox</p>
+      <h2>Useful tools around Migration Cockpit.</h2>
+      <p>{{ toolbox.tools_note }}</p>
+      <p><strong>Remember:</strong> {{ toolbox.memory_model.phrase }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for tool in toolbox.tools %}
+      <a href="#tool-chains"><span>TOOL</span><strong>{{ tool.title }}</strong><small><b>{{ tool.product }}</b> · {{ tool.role }} <b>Use:</b> {{ tool.useful_for[0] }} <b>Boundary:</b> {{ tool.not_for[0] }} <b>Lead rule:</b> {{ tool.lead_rule }}</small><i class="material-symbols-outlined" aria-hidden="true">build</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="tool-chains" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Reference chains</p>
+      <h2>Combine tools only when each one has a clear job.</h2>
+      <p>Large migrations can need several tools. That is acceptable when responsibilities are explicit and there is still one target business contract.</p>
+    </header>
+    <div class="research-route-list">
+      {% for pattern in toolbox.tool_chain_patterns %}
+      <a href="#not-the-same"><span>PATH</span><strong>{{ pattern.title }}</strong><small><b>Fit:</b> {{ pattern.fit }} <b>Chain:</b> {{ pattern.chain }} <b>Lead comment:</b> {{ pattern.lead_comment }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="not-the-same" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Do not confuse</p>
+      <h2>Similar data tools can own very different work.</h2>
+      <p>The quickest way to over-design migration is to compare products before separating their responsibilities.</p>
+    </header>
+    <div class="research-route-list">
+      {% for pair in toolbox.not_the_same %}
+      <a href="#migration-cockpit"><span>≠</span><strong>{{ pair.left }} ≠ {{ pair.right }}</strong><small>{{ pair.distinction }}</small><i class="material-symbols-outlined" aria-hidden="true">difference</i></a>
       {% endfor %}
     </div>
   </section>
@@ -103,7 +147,20 @@ tags:
     </header>
     <div class="research-route-list">
       {% for question in topic.migration_object_extensibility.check_before_change %}
-      <a href="#custom-loader"><span>?</span><strong>{{ question }}</strong><small>Confirm the release, migration approach, target business capability, and test lifecycle before changing the migration object.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="#after-go-live"><span>?</span><strong>{{ question }}</strong><small>Confirm the release, migration approach, target business capability, and test lifecycle before changing the migration object.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="after-go-live" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">After go-live</p>
+      <h2>Stop calling productive maintenance a migration.</h2>
+      <p>{{ toolbox.operational_after_go_live.principle }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in toolbox.operational_after_go_live.choices %}
+      <a href="#custom-loader"><span>LIVE</span><strong>{{ item.need }}</strong><small><b>{{ item.choose }}</b> · {{ item.reason }}</small><i class="material-symbols-outlined" aria-hidden="true">sync_alt</i></a>
       {% endfor %}
     </div>
   </section>
@@ -175,6 +232,11 @@ tags:
       <p>The useful answer explains why the lifecycle fits, what target contract is protected, and how failure is recovered.</p>
     </header>
     <div class="research-route-list">
+      {% for card in toolbox.assessment_cards %}
+      <a href="#assessment-migration"><span>Q</span><strong>{{ card.question }}</strong><small>{{ card.answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
+      {% endfor %}
+    </div>
+    <div class="research-route-list" id="assessment-migration">
       {% for card in topic.assessment_cards %}
       <a href="#sources"><span>Q</span><strong>{{ card.question }}</strong><small>{{ card.answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
       {% endfor %}
@@ -185,10 +247,13 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Primary sources</p>
       <h2>Current SAP documentation used for verification.</h2>
-      <p>The wording and architecture model on this page are independently written. Source links are for product and release verification.</p>
+      <p>The wording and architecture model are independently written. Source links verify current product roles and release boundaries.</p>
     </header>
     <div class="research-route-list">
       {% for source in registry.sources %}
+      <a href="{{ source.url }}" rel="noopener noreferrer"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope | default: source.product_scope }} · Reviewed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+      {% for source in toolbox_registry.sources %}
       <a href="{{ source.url }}" rel="noopener noreferrer"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope | default: source.product_scope }} · Reviewed {{ source.accessed_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
@@ -196,7 +261,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">hub</span>
-    <p><strong>Architecture boundary:</strong> Migration Cockpit owns supported initial-load lifecycle. Operational integration owns recurring system exchange. A custom loader owns a controlled user or batch experience. The target SAP application still owns business consistency.</p>
+    <p><strong>Architecture boundary:</strong> source tools prepare and measure data. Migration Cockpit owns supported initial-load behavior. Monitoring explains execution. Mass-maintenance tools own supported productive bulk change. Operational integration owns recurring system exchange. The target SAP application still owns business consistency.</p>
     <a href="/labs/enterprise-context/integrations/">Back to Integration Architecture <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span></a>
   </section>
 </div>
