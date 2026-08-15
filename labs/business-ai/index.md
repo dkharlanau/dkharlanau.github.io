@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "Business AI Lab — Patterns, Cases, Evidence"
-description: "A practical catalog of Business AI patterns and implementation cases with outcomes, evidence quality, limits, and architecture lessons."
+title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
+description: "An enterprise-wide Business AI map linking processes, reusable patterns, technology families, platform examples, implementation cases, and evidence."
 permalink: /labs/business-ai/
 status: draft
 verified: false
@@ -11,9 +11,9 @@ last_modified_at: 2026-08-15
 hide_global_cta: true
 tags:
   - business-ai
-  - ai-use-cases
   - enterprise-ai
-  - sap
+  - processes
+  - technologies
   - architecture
 ---
 
@@ -21,6 +21,7 @@ tags:
 {% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
 {% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
 {% assign domain_map = site.data.labs.business_ai.domain_map %}
+{% assign tech = site.data.labs.business_ai.technology_landscape %}
 {% assign all_patterns = catalog.patterns | concat: expansion.patterns | concat: expansion_b.patterns %}
 {% assign all_cases = catalog.cases | concat: expansion.cases | concat: expansion_b.cases %}
 {% assign all_sources = catalog.source_registry | concat: expansion.source_registry | concat: expansion_b.source_registry %}
@@ -33,42 +34,44 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Lab 03 / Business AI</p>
-      <h1>Find the business pattern.<br />Then choose the AI.</h1>
-      <p>This lab collects real implementation cases without turning them into a product brochure. Each case records the business job, architecture pattern, technology, reported result, evidence quality, and what the public source does not tell us.</p>
-      <a class="research-canvas__button" href="#business-ai-map">Open the catalog <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>Process first.<br />Pattern second. Technology third.</h1>
+      <p>This lab maps Business AI across the enterprise. It starts from business work and decisions, connects them to reusable AI patterns, compares technology families and platforms, and keeps implementation evidence attached.</p>
+      <a class="research-canvas__button" href="#business-ai-map">Open the map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Business AI catalog status">
       <p>Current catalog</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>{{ all_patterns | size }}</strong><small>Reusable patterns</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ all_cases | size }}</strong><small>Public cases</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ domain_map.domains | size }}</strong><small>Domain views</small></div>
-      <em>Working material. Claims stay noindex until human review.</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ domain_map.domains | size }}</strong><small>Enterprise domains</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ all_patterns | size }}</strong><small>Reusable patterns</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ tech.families | size }}</strong><small>Technology families</small></div>
+      <em>{{ all_cases | size }} evidence cases are linked to the map. Working material remains noindex until human review.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-    <p><strong>Problem:</strong> enterprise AI discussions often start with a model or vendor before the business decision, control boundary, and measurable outcome are clear.</p>
-    <p><strong>Context:</strong> this lab compares public cases across SAP and non-SAP stacks, then links each case to a reusable business pattern and evidence grade.</p>
-    <p><strong>Working rule.</strong> A model name is metadata, not a use case. Start from the business job and the measurable failure.</p>
-    <a href="/labs/business-ai/domains/">Open the Lead assessment view <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <p><strong>Problem:</strong> enterprise AI discussions often start with a vendor or model and only later ask which business process should improve.</p>
+    <p><strong>Context:</strong> this lab covers corporate scenarios across Sales, Procurement, Planning, Logistics, Manufacturing, Finance, HR, Service, IT, Legal, Master Data, and Knowledge Work.</p>
+    <p><strong>Working rule.</strong> A model or platform name is metadata, not a use case. First define the business job, system boundary, KPI, and control model.</p>
+    <a href="/labs/business-ai/domains/">Start from enterprise processes <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="business-ai-map" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Catalog map</p>
-      <h2>Cases, patterns, domains, technology, evidence.</h2>
-      <p>The same pattern can appear in SAP, Google Cloud, OpenAI, internal platforms, or a classical optimization engine. That comparison is the point.</p>
+      <p class="research-canvas__eyebrow">Knowledge map</p>
+      <h2>Processes, patterns, technologies, cases, evidence.</h2>
+      <p>SAP is part of this map because many enterprise processes run there. Microsoft, Google, AWS, OpenAI, Salesforce, ServiceNow, Oracle, UiPath, specialist ML tools, optimizers, and internal platforms are part of the same architecture discussion.</p>
     </header>
     <div class="research-route-list">
-      <a href="/labs/business-ai/cases/"><span>01</span><strong>Implementation Cases</strong><small>Who built it, which process changed, what technology was disclosed, what result was reported, and what remains uncertain.</small><i class="material-symbols-outlined" aria-hidden="true">cases</i></a>
-      <a href="/labs/business-ai/patterns/"><span>02</span><strong>Reusable Patterns</strong><small>From document automation and forecasting to guided selling, cross-system copilots, manufacturing quality, embodied logistics, and master-data foundations.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/business-ai/domains/"><span>03</span><strong>Business AI by Domain</strong><small>Sales/O2C, Procurement, Planning, Warehouse and Logistics, Manufacturing and Quality, Master Data, and Knowledge/Service with SAP touchpoints and Lead questions.</small><i class="material-symbols-outlined" aria-hidden="true">domain</i></a>
-      <a href="/labs/business-ai/model/"><span>04</span><strong>Graph Model</strong><small>Node types and relationships for cases, companies, processes, patterns, technologies, KPIs, evidence, limitations, and case classification.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-      <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Machine-readable Catalog</strong><small>Patterns, cases, evidence grades, source IDs, technologies, metrics, limits, and consultant notes as structured data.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="/labs/business-ai/data/domains.json"><span>MAP</span><strong>Machine-readable Domain Map</strong><small>Business jobs, SAP touchpoints, Lead questions, and case IDs by domain.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="/labs/enterprise-context/business-ai/"><span>SAP</span><strong>SAP Business AI Technology Map</strong><small>Joule, agents, AI Core, generative AI hub, grounding, build tools, runtime, and governance. Technology landscape stays separate from this use-case catalog.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="/labs/ai-ready/"><span>SYS</span><strong>AI Ready Architecture Lab</strong><small>Vendor-neutral architecture patterns for RAG, tools, MCP, agents, evaluations, security, and production operation.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/labs/business-ai/domains/"><span>01</span><strong>Enterprise Processes and Domains</strong><small>Business jobs, system touchpoints, technology families, control questions, and evidence gaps across {{ domain_map.domains | size }} domains.</small><i class="material-symbols-outlined" aria-hidden="true">domain</i></a>
+      <a href="/labs/business-ai/patterns/"><span>02</span><strong>Reusable AI Patterns</strong><small>Decision and workflow shapes that survive a vendor change: extraction, forecasting, recommendation, exception management, copilots, optimization, and more.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/business-ai/technologies/"><span>03</span><strong>Enterprise AI Technology Landscape</strong><small>{{ tech.families | size }} capability families and {{ tech.platforms | size }} platform examples, compared by architecture role rather than product category.</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
+      <a href="/labs/business-ai/cases/"><span>04</span><strong>Implementation Cases</strong><small>Who changed which process, what technology was disclosed, what result was reported, and what remains uncertain.</small><i class="material-symbols-outlined" aria-hidden="true">cases</i></a>
+      <a href="/labs/business-ai/model/"><span>05</span><strong>Graph Model</strong><small>Nodes and edges for companies, processes, domains, patterns, technology, metrics, evidence, limitations, and case classification.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/business-ai/data/catalog.json"><span>JSON</span><strong>Case and Pattern Data</strong><small>Machine-readable cases, patterns, evidence grades, sources, technologies, metrics, limits, and consultant notes.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/business-ai/data/domains.json"><span>DOM</span><strong>Domain Data</strong><small>Machine-readable business jobs, enterprise systems, technology families, architecture questions, and case IDs.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/business-ai/data/technologies.json"><span>TECH</span><strong>Technology Data</strong><small>Machine-readable capability families, platform roles, fit conditions, limits, and primary-source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/ai-ready/"><span>SYS</span><strong>AI Ready Architecture Lab</strong><small>Deeper vendor-neutral engineering patterns for RAG, tools, MCP, agents, evaluations, security, deployment, and production operation.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/labs/enterprise-context/business-ai/"><span>SAP</span><strong>SAP Business AI Detail</strong><small>Joule, Joule Studio, AI Core, generative AI hub, grounding, runtime, and SAP-specific integration. It is a technology detail view, not the scope of Business AI itself.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
     </div>
   </section>
 
@@ -76,7 +79,7 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Pattern index</p>
       <h2>Reusable shapes, not demo ideas.</h2>
-      <p>Each pattern states when it fits, when it does not, the minimum architecture shape, and the metrics that should decide whether it stays in production.</p>
+      <p>Patterns describe what the system must do. Platform choice comes later.</p>
     </header>
     <div class="research-route-list">
       {% for pattern in all_patterns %}
@@ -87,9 +90,9 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Case set</p>
-      <h2>Measured enough to discuss. Not proven enough to worship.</h2>
-      <p>Most public customer stories are reported by the customer or technology provider. The catalog marks that evidence level instead of quietly pretending every number is an audited experiment.</p>
+      <p class="research-canvas__eyebrow">Evidence set</p>
+      <h2>Cases make the patterns concrete.</h2>
+      <p>Public customer stories are useful evidence, not audited experiments. The catalog keeps claim type and limitations visible.</p>
     </header>
     <div class="research-route-list">
       {% for item in all_cases %}
@@ -99,11 +102,12 @@ tags:
   </section>
 
   <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Review method</p><h2>Read a case like a consultant.</h2></div>
+    <div><p class="research-canvas__eyebrow">Review method</p><h2>Read Business AI in four layers.</h2></div>
     <ol>
-      <li><span>01</span><strong>Business job</strong><p>What decision, task, or exception became faster or better?</p></li>
-      <li><span>02</span><strong>System shape</strong><p>What data, model, workflow, integration, and human boundary made the result possible?</p></li>
-      <li><span>03</span><strong>Evidence</strong><p>Who measured the result, against which baseline, and what important number is still missing?</p></li>
+      <li><span>01</span><strong>Process</strong><p>Which task, decision, exception, or business outcome should improve?</p></li>
+      <li><span>02</span><strong>Pattern</strong><p>Is the uncertain part extraction, retrieval, prediction, optimization, recommendation, generation, or adaptive orchestration?</p></li>
+      <li><span>03</span><strong>Technology</strong><p>Which platform, model, workflow, data, and integration components fit the existing enterprise landscape?</p></li>
+      <li><span>04</span><strong>Evidence</strong><p>What was measured, who reported it, and what important result is still missing?</p></li>
     </ol>
   </section>
 
