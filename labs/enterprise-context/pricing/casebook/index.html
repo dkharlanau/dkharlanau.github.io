@@ -1,0 +1,133 @@
+---
+layout: default
+title: "SAP Sales Pricing Casebook — Enterprise Context Lab"
+description: "Worked SAP Sales pricing cases with concrete numbers: discounts, scales, Free Goods, variant pricing, billing repricing, retroactive billing, rebates, intercompany and formulas."
+permalink: /labs/enterprise-context/pricing/casebook/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags: [sap-s4hana, sap-sd, pricing, casebook, free-goods, billing, rebates, intercompany]
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.pricing_casebook %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/pricing/">Pricing</a></li><li aria-current="page">Casebook</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Pricing Casebook</p>
+      <h1>Know the expected number<br />before opening the order.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#worked-cases">Open worked cases <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Pricing casebook inventory">
+      <p>Casebook</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.worked_cases | size }}</strong><small>Worked cases</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.assessment_drills | size }}</strong><small>Assessment drills</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.case_design_rules | size }}</strong><small>Design rules</small></div>
+      <em>{{ graph.memory_path }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">calculate</span>
+    <p><strong>Boundary:</strong> these are synthetic teaching cases, not customer stories. SAP sources verify product behavior; the numbers are chosen so the commercial result can be checked by hand.</p>
+    <a href="/labs/enterprise-context/data/pricing-casebook.json">Open casebook JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Case method</p><h2>{{ graph.memory_path }}</h2><p>{{ graph.author_note }}</p></header>
+    <div class="ecg-heuristic-grid">
+      {% for item in graph.case_design_rules %}
+      <article><span>RULE</span><h3>{{ item.rule }}</h3><p>{{ item.why }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="worked-cases" data-reveal>
+    <header><p class="research-canvas__eyebrow">Worked cases</p><h2>From commercial sentence to traceable result.</h2><p>Open a case and follow the owner of each decision. The calculation is simple on purpose; the architecture is not.</p></header>
+    <div class="ecg-drill-list">
+      {% for case in graph.worked_cases %}
+      <details>
+        <summary><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ case.title }}</strong><small>{{ case.level }} · {{ case.clock | replace: '_', ' ' }}</small></summary>
+        <div>
+          <p><strong>Scenario.</strong> {{ case.scenario }}</p>
+          <p><strong>Commercial rule.</strong> {{ case.commercial_rule }}</p>
+
+          {% if case.trace %}
+          <h4>Pricing / process trace</h4>
+          <div class="research-route-list">
+            {% for row in case.trace %}
+            <a href="#"><span>{{ row.step }}</span><strong>{{ row.role | replace: '_', ' ' }}</strong><small>{% if row.base %}Base: {{ row.base }} · {% endif %}{% if row.rate %}Rate: {{ row.rate }} · {% endif %}{% if row.value %}Value: {{ row.value }} · {% endif %}Owner: {{ row.owner | replace: '_', ' ' }}{% if row.status %} · {{ row.status }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">functions</i></a>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% if case.calculation %}
+          <h4>Calculation checkpoint</h4>
+          <div class="ecg-control-stack">
+            {% for pair in case.calculation %}
+            <article><span>{{ pair[0] | replace: '_', ' ' }}</span><h3>{{ pair[1] }}</h3></article>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% if case.expected %}
+          <h4>Expected result</h4>
+          <div class="ecg-control-stack">
+            {% for pair in case.expected %}
+            <article><span>{{ pair[0] | replace: '_', ' ' }}</span><h3>{{ pair[1] }}</h3></article>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% if case.variants %}
+          <h4>Variants</h4>
+          <div class="ecg-determination-list">
+            {% for variant in case.variants %}
+            <article class="ecg-determination-card"><div class="ecg-determination-card__index">{{ forloop.index }}</div><div class="ecg-determination-card__copy"><h3>{% if variant.mode %}{{ variant.mode }}{% else %}Pricing type {{ variant.pricing_type }}{% endif %}</h3><p>{% if variant.mental_model %}{{ variant.mental_model }}{% elsif variant.simplified_effect %}{{ variant.simplified_effect }}{% endif %}</p></div></article>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% if case.diagnostic_questions %}
+          <h4>Diagnostic questions</h4>
+          <ul>{% for q in case.diagnostic_questions %}<li>{{ q }}</li>{% endfor %}</ul>
+          {% endif %}
+
+          <p><strong>Lead answer.</strong> {{ case.lead_answer }}</p>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment drills</p><h2>Answer with a proof path, not a transaction code.</h2><p>Each prompt is intentionally ambiguous. The expected shape shows the first layers to separate before proposing a change.</p></header>
+    <div class="ecg-drill-list">
+      {% for drill in graph.assessment_drills %}
+      <details><summary><span>Q{{ forloop.index }}</span><strong>{{ drill.prompt }}</strong><small>Open answer shape</small></summary><div><ul>{% for item in drill.expected_shape %}<li>{{ item }}</li>{% endfor %}</ul></div></details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div><p class="research-canvas__eyebrow">Pricing learning path</p><h2>Engine → anatomy → configuration → scenarios → casebook.</h2><p>The casebook is the last layer: apply the earlier models to a concrete expected result, then follow the value into billing, settlement or FI.</p></div>
+    <div class="ecg-machine__actions">
+      {% for item in graph.related_views %}<a href="{{ item.url }}">{{ item.title }}</a>{% endfor %}
+      <a class="research-canvas__button" href="/labs/enterprise-context/data/pricing-casebook.json">Casebook JSON</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
