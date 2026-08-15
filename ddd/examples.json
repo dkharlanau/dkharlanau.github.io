@@ -1,0 +1,530 @@
+{
+  "catalog": {
+    "id": "ddd-acting-systems-examples",
+    "version": "0.3.0",
+    "status": "needs_verification",
+    "framework": "https://dkharlanau.github.io/ddd/framework.json",
+    "schema": "https://dkharlanau.github.io/ddd/decision.schema.json",
+    "purpose": "Reference cases for applying DDD for Acting Systems to SAP-heavy enterprise decisions. They are patterns for analysis, not product configuration instructions."
+  },
+  "examples": [
+    {
+      "id": "sales-delivery-risk",
+      "title": "Sales: delivery risk response",
+      "summary": "Use AI to explain and rank valid responses when a customer promise is at risk, while SAP availability and order state remain authoritative.",
+      "decision_card": {
+        "schema_version": "0.3.0",
+        "decision_id": "delivery-risk-response",
+        "business_outcome": "Keep a credible customer promise while reacting quickly to fulfillment risk.",
+        "home_context": "Customer Order",
+        "decision_type": "cross-context",
+        "truth": {
+          "authoritative_inputs": [
+            "SAP S/4HANA sales order and schedule-line state",
+            "current ATP or aATP result",
+            "delivery execution status when a delivery exists"
+          ],
+          "contextual_inputs": [
+            "transport status",
+            "approved operating procedures",
+            "historical exception outcomes"
+          ],
+          "freshness_rule": "Re-read current order state and availability before a material promise change.",
+          "invariants": [
+            "Do not invent available quantity or dates.",
+            "Do not bypass sales-order authorization or document consistency checks."
+          ]
+        },
+        "judgment": {
+          "allowed": [
+            "Explain why the promise is at risk.",
+            "Rank alternatives that are returned by valid domain services.",
+            "Prepare a proposed promise change for review."
+          ],
+          "forbidden": [
+            "Override ATP truth.",
+            "Change customer promise only because an API is callable."
+          ],
+          "design_posture": "prepare-with-review",
+          "design_posture_reason": "The case has useful ambiguity, but the customer promise is a material commitment and current state can change quickly."
+        },
+        "authority": {
+          "autonomy_level": "A2",
+          "scope": "Named sales organizations, order types and approved exception scenarios.",
+          "value_limit": "No autonomous commercial value change.",
+          "frequency_limit": "Prepare proposals without execution limit; execution remains separately authorized.",
+          "time_window": "Proposal is valid only while referenced order and ATP versions remain current.",
+          "reversibility": "compensatable",
+          "approval": "human-execution",
+          "delegation_rule": "A delegated task may read or analyze narrower data but cannot receive promise-change authority."
+        },
+        "commitment": {
+          "creates_business_effect": true,
+          "commitment_type": "CustomerPromiseChanged",
+          "owner": "Customer Order",
+          "domain_command": "ChangeCustomerPromise",
+          "transactional_system": "SAP S/4HANA",
+          "preconditions": [
+            "Current sales-order version is re-read.",
+            "Current ATP or aATP evidence is valid.",
+            "Required authorization and process checks pass."
+          ],
+          "idempotency_or_duplicate_control": "Use document version and change request identity to avoid duplicate updates.",
+          "reversal_or_compensation": "Create a controlled follow-up change and customer communication if the new promise must be corrected.",
+          "resulting_event": "CustomerPromiseChanged"
+        },
+        "economics": {
+          "ambiguity": "high",
+          "volume": "high",
+          "cost_of_delay": "high",
+          "cost_of_error": "high",
+          "reversibility": "medium",
+          "evidence_quality": "high",
+          "human_review_cost": "medium"
+        },
+        "evidence": {
+          "retain": [
+            "order id and state version",
+            "ATP or aATP result and calculation time",
+            "alternatives considered",
+            "recommendation",
+            "approval or execution actor",
+            "resulting event"
+          ],
+          "outcome_observation": "Compare the changed promise with later delivery execution and customer-impact outcome.",
+          "sensitive_data_notes": "Avoid storing unnecessary customer personal data in model or telemetry traces."
+        },
+        "evaluation": {
+          "cases": [
+            "Shortage with one valid alternative plant.",
+            "Shortage where no valid alternative exists.",
+            "Order state changes after the recommendation but before execution.",
+            "Conflicting transport and ATP signals."
+          ],
+          "promotion_gate": "Increase autonomy only after stale-state handling, false alternatives and customer-impact cases meet agreed acceptance criteria.",
+          "runtime_must_not_change": [
+            "ATP rules",
+            "sales-order authorization",
+            "promise-change authority"
+          ]
+        },
+        "notes": "Good example of why a recommendation and a commitment need separate boundaries."
+      }
+    },
+    {
+      "id": "procurement-source-selection",
+      "title": "Procurement: source selection exception",
+      "summary": "Use AI to compare approved sourcing options when several suppliers or agreements are valid, but keep release strategy and purchasing commitments deterministic.",
+      "decision_card": {
+        "schema_version": "0.3.0",
+        "decision_id": "source-selection-exception",
+        "business_outcome": "Choose a valid source quickly without creating an uncontrolled purchasing commitment.",
+        "home_context": "Operational Procurement",
+        "decision_type": "bounded-judgment",
+        "truth": {
+          "authoritative_inputs": [
+            "approved source list or sourcing master data",
+            "purchasing info records and valid conditions",
+            "quota arrangement when active",
+            "current purchase requisition state"
+          ],
+          "contextual_inputs": [
+            "supplier performance history",
+            "lead-time observations",
+            "approved buyer notes"
+          ],
+          "freshness_rule": "Validate source validity, purchasing conditions and requisition state before creating or changing a purchasing document.",
+          "invariants": [
+            "Do not select a blocked or invalid source.",
+            "Do not bypass mandatory release or approval strategy."
+          ]
+        },
+        "judgment": {
+          "allowed": [
+            "Rank valid sources using agreed business factors.",
+            "Explain trade-offs between lead time, price and supplier performance.",
+            "Prepare a source assignment or purchase-order proposal."
+          ],
+          "forbidden": [
+            "Invent supplier capacity.",
+            "Use an unapproved supplier because historical text recommends it."
+          ],
+          "design_posture": "prepare-with-review",
+          "design_posture_reason": "Several valid options may exist, but creating a purchase order is a financial and supply commitment."
+        },
+        "authority": {
+          "autonomy_level": "A2",
+          "scope": "Approved material groups, plants and sourcing scenarios.",
+          "value_limit": "No autonomous PO release or value increase.",
+          "frequency_limit": "Proposal generation is unrestricted within workload controls.",
+          "time_window": "Recommendation expires when source validity, price, requisition or supplier status changes.",
+          "reversibility": "compensatable",
+          "approval": "human-execution",
+          "delegation_rule": "Remote sourcing analysis may receive read access only unless purchasing authority is explicitly delegated."
+        },
+        "commitment": {
+          "creates_business_effect": true,
+          "commitment_type": "PurchaseOrderCreatedOrReleased",
+          "owner": "Operational Procurement",
+          "domain_command": "CreateOrReleasePurchaseOrder",
+          "transactional_system": "SAP S/4HANA",
+          "preconditions": [
+            "Chosen source is valid and approved.",
+            "Current purchasing conditions are resolved.",
+            "Release and authorization rules pass."
+          ],
+          "idempotency_or_duplicate_control": "Reference the originating requisition and proposal identity to prevent duplicate purchasing commitments.",
+          "reversal_or_compensation": "Change or cancel the PO through the controlled purchasing process when allowed.",
+          "resulting_event": "PurchaseOrderCommitted"
+        },
+        "economics": {
+          "ambiguity": "high",
+          "volume": "medium",
+          "cost_of_delay": "medium",
+          "cost_of_error": "high",
+          "reversibility": "medium",
+          "evidence_quality": "high",
+          "human_review_cost": "medium"
+        },
+        "evidence": {
+          "retain": [
+            "requisition id and version",
+            "valid sources considered",
+            "commercial and operational facts used",
+            "ranking explanation",
+            "buyer decision",
+            "resulting purchasing document"
+          ],
+          "outcome_observation": "Compare selected source with actual confirmation, delivery and supplier-performance outcome.",
+          "sensitive_data_notes": "Commercial conditions may be sensitive and should not be copied into broad semantic memory without access control."
+        },
+        "evaluation": {
+          "cases": [
+            "Two valid suppliers with different lead time and price.",
+            "Preferred supplier becomes blocked after recommendation.",
+            "Quota arrangement conflicts with a historical performance preference.",
+            "No approved source is valid."
+          ],
+          "promotion_gate": "Autonomy can increase only for low-value, reversible, policy-defined cases with strong source validity checks.",
+          "runtime_must_not_change": [
+            "release strategy",
+            "supplier block status",
+            "approved source policy"
+          ]
+        },
+        "notes": "The AI contribution is ranking and explanation, not purchasing authority."
+      }
+    },
+    {
+      "id": "credit-block-release",
+      "title": "Sales and Finance: credit block response",
+      "summary": "Use AI to assemble evidence and recommend next action for a credit-blocked order, while credit policy and release authority remain explicit.",
+      "decision_card": {
+        "schema_version": "0.3.0",
+        "decision_id": "credit-block-response",
+        "business_outcome": "Resolve blocked orders quickly without weakening credit governance.",
+        "home_context": "Credit Management",
+        "decision_type": "cross-context",
+        "truth": {
+          "authoritative_inputs": [
+            "current credit exposure",
+            "credit limit and risk class",
+            "blocked sales document state",
+            "approved credit policy"
+          ],
+          "contextual_inputs": [
+            "customer payment history",
+            "sales urgency",
+            "approved dispute or collection notes"
+          ],
+          "freshness_rule": "Recalculate or re-read current exposure and block state before release.",
+          "invariants": [
+            "Do not rewrite the credit limit through recommendation logic.",
+            "Do not release when mandatory policy conditions fail."
+          ]
+        },
+        "judgment": {
+          "allowed": [
+            "Summarize the reason for the block.",
+            "Explain which evidence supports release, rejection or escalation.",
+            "Prepare a release recommendation."
+          ],
+          "forbidden": [
+            "Grant credit authority based on model confidence.",
+            "Treat sales urgency as a replacement for credit policy."
+          ],
+          "design_posture": "advisory-ai",
+          "design_posture_reason": "The decision is high impact and may be hard to reverse, so AI should support the authorized credit role rather than execute by default."
+        },
+        "authority": {
+          "autonomy_level": "A1",
+          "scope": "Credit cases visible to the assigned credit role.",
+          "value_limit": "Recommendation only.",
+          "frequency_limit": "No material execution authority.",
+          "time_window": "Recommendation is valid only for the exposure snapshot and block state referenced in the evidence.",
+          "reversibility": "hard-to-reverse",
+          "approval": "human-execution",
+          "delegation_rule": "Analysis tasks may not inherit credit-release authority."
+        },
+        "commitment": {
+          "creates_business_effect": true,
+          "commitment_type": "CreditBlockReleased",
+          "owner": "Credit Management",
+          "domain_command": "ReleaseCreditBlock",
+          "transactional_system": "SAP S/4HANA Credit Management",
+          "preconditions": [
+            "Current exposure is known.",
+            "Authorized credit role approves release.",
+            "Mandatory policy checks pass."
+          ],
+          "idempotency_or_duplicate_control": "Use current block state and release action identity.",
+          "reversal_or_compensation": "Re-block or apply follow-up credit controls where process rules permit, but treat customer exposure as already affected.",
+          "resulting_event": "CreditBlockReleased"
+        },
+        "economics": {
+          "ambiguity": "medium",
+          "volume": "medium",
+          "cost_of_delay": "high",
+          "cost_of_error": "high",
+          "reversibility": "low",
+          "evidence_quality": "high",
+          "human_review_cost": "medium"
+        },
+        "evidence": {
+          "retain": [
+            "credit exposure snapshot",
+            "policy checks",
+            "blocked order reference",
+            "recommendation",
+            "authorized approver",
+            "release result"
+          ],
+          "outcome_observation": "Track later exposure, overdue payment and exception outcome for evaluation.",
+          "sensitive_data_notes": "Credit and payment information requires restricted access and careful telemetry design."
+        },
+        "evaluation": {
+          "cases": [
+            "Exposure just below limit after payment update.",
+            "Exposure changes between analysis and release.",
+            "High-value strategic order with weak payment history.",
+            "Policy requires escalation regardless of model recommendation."
+          ],
+          "promotion_gate": "Keep execution human-authorized unless policy defines a narrow low-risk class with deterministic release conditions.",
+          "runtime_must_not_change": [
+            "credit limit",
+            "credit policy",
+            "release authority"
+          ]
+        },
+        "notes": "A strong case for AI evidence assembly without autonomous commitment."
+      }
+    },
+    {
+      "id": "master-data-change",
+      "title": "Master Data: material change proposal",
+      "summary": "Use AI to detect inconsistencies and prepare a governed master-data change, while validation, workflow and activation remain controlled.",
+      "decision_card": {
+        "schema_version": "0.3.0",
+        "decision_id": "material-master-change-proposal",
+        "business_outcome": "Improve master-data quality without turning inferred values into authoritative data.",
+        "home_context": "Product Master Data",
+        "decision_type": "bounded-judgment",
+        "truth": {
+          "authoritative_inputs": [
+            "current approved material master",
+            "governance rules and field ownership",
+            "active change request state when governance workflow is used"
+          ],
+          "contextual_inputs": [
+            "supplier documents",
+            "product specifications",
+            "similar approved material patterns"
+          ],
+          "freshness_rule": "Validate the current master record and open governance workflow before proposing or activating a change.",
+          "invariants": [
+            "Do not activate inferred values without required validation.",
+            "Do not bypass field ownership or governance workflow."
+          ]
+        },
+        "judgment": {
+          "allowed": [
+            "Detect likely inconsistencies.",
+            "Extract candidate values from approved source documents.",
+            "Prepare a structured change request with provenance."
+          ],
+          "forbidden": [
+            "Convert similarity into business truth.",
+            "Activate master data outside the governance path."
+          ],
+          "design_posture": "prepare-with-review",
+          "design_posture_reason": "AI is useful for extraction and comparison, but master data becomes shared enterprise truth only after controlled validation."
+        },
+        "authority": {
+          "autonomy_level": "A2",
+          "scope": "Approved fields, material types and source-document classes.",
+          "value_limit": "No direct activation authority.",
+          "frequency_limit": "Bulk proposal creation is allowed within workflow and review capacity.",
+          "time_window": "Proposal is linked to the source document and current master-data version.",
+          "reversibility": "compensatable",
+          "approval": "human-execution",
+          "delegation_rule": "Extraction tasks may receive document scope only, never activation authority."
+        },
+        "commitment": {
+          "creates_business_effect": true,
+          "commitment_type": "MaterialMasterChanged",
+          "owner": "Product Master Data",
+          "domain_command": "ApproveAndActivateMasterDataChange",
+          "transactional_system": "SAP MDG or governed SAP S/4HANA master-data process",
+          "preconditions": [
+            "Required validations pass.",
+            "Field owners or workflow approvers accept the change.",
+            "Current object and change-request versions match."
+          ],
+          "idempotency_or_duplicate_control": "Use change-request identity and object version.",
+          "reversal_or_compensation": "Create a governed correction or rollback change request where supported.",
+          "resulting_event": "MaterialMasterChanged"
+        },
+        "economics": {
+          "ambiguity": "high",
+          "volume": "high",
+          "cost_of_delay": "medium",
+          "cost_of_error": "high",
+          "reversibility": "medium",
+          "evidence_quality": "medium",
+          "human_review_cost": "high"
+        },
+        "evidence": {
+          "retain": [
+            "source document reference",
+            "extracted candidate value",
+            "current master-data value",
+            "validation result",
+            "review decision",
+            "activated change event"
+          ],
+          "outcome_observation": "Track correction rate, rejected proposals and downstream issue reduction.",
+          "sensitive_data_notes": "Respect document classification and field-level access restrictions."
+        },
+        "evaluation": {
+          "cases": [
+            "Clear value in one approved specification.",
+            "Two source documents disagree.",
+            "Similar materials suggest a value not present in the source.",
+            "Master record changes while the proposal is under review."
+          ],
+          "promotion_gate": "Automation may expand for fields with high extraction precision and deterministic validation, but activation remains separately governed.",
+          "runtime_must_not_change": [
+            "field ownership",
+            "validation rules",
+            "workflow approval requirements"
+          ]
+        },
+        "notes": "This case separates semantic extraction from authoritative master-data commitment."
+      }
+    },
+    {
+      "id": "ewm-warehouse-exception",
+      "title": "Warehouse: execution exception response",
+      "summary": "Use AI to explain and rank recovery actions for a warehouse exception, while stock, warehouse-task state and execution commands remain authoritative.",
+      "decision_card": {
+        "schema_version": "0.3.0",
+        "decision_id": "warehouse-exception-response",
+        "business_outcome": "Recover warehouse flow quickly without corrupting stock or execution state.",
+        "home_context": "Warehouse Execution",
+        "decision_type": "bounded-judgment",
+        "truth": {
+          "authoritative_inputs": [
+            "current warehouse task state",
+            "stock and handling-unit state",
+            "warehouse order or queue state",
+            "resource and bin constraints"
+          ],
+          "contextual_inputs": [
+            "past exception resolutions",
+            "approved warehouse SOPs",
+            "equipment or integration diagnostics"
+          ],
+          "freshness_rule": "Re-read affected task, stock and handling-unit state immediately before an execution command.",
+          "invariants": [
+            "Do not create impossible stock movement.",
+            "Do not confirm a warehouse task that is no longer executable."
+          ]
+        },
+        "judgment": {
+          "allowed": [
+            "Classify likely exception cause.",
+            "Rank valid recovery actions.",
+            "Prepare a warehouse action for review or bounded execution."
+          ],
+          "forbidden": [
+            "Invent stock position.",
+            "Ignore current HU or task state because a historical case looks similar."
+          ],
+          "design_posture": "bounded-execution-candidate",
+          "design_posture_reason": "Some low-risk warehouse recovery actions are high-volume and reversible, but only after deterministic state checks and narrow scope controls."
+        },
+        "authority": {
+          "autonomy_level": "A3",
+          "scope": "Named warehouse, exception type, queue and low-risk recovery command.",
+          "value_limit": "No inventory write-off, ownership change or high-impact stock adjustment.",
+          "frequency_limit": "Rate-limited by exception type and resource.",
+          "time_window": "Authority applies only while the referenced execution state is current.",
+          "reversibility": "reversible",
+          "approval": "human-approval",
+          "delegation_rule": "Diagnostic sub-tasks remain read-only; execution authority is not delegated by default."
+        },
+        "commitment": {
+          "creates_business_effect": true,
+          "commitment_type": "WarehouseRecoveryActionExecuted",
+          "owner": "Warehouse Execution",
+          "domain_command": "ExecuteWarehouseRecoveryAction",
+          "transactional_system": "SAP EWM",
+          "preconditions": [
+            "Current warehouse task and stock state are valid.",
+            "Recovery action is allowed for the exception class.",
+            "Required approval or bounded policy is present."
+          ],
+          "idempotency_or_duplicate_control": "Reference exception identity, task state and command id.",
+          "reversal_or_compensation": "Cancel or reverse the recovery action using the defined warehouse process when possible.",
+          "resulting_event": "WarehouseRecoveryActionExecuted"
+        },
+        "economics": {
+          "ambiguity": "high",
+          "volume": "high",
+          "cost_of_delay": "high",
+          "cost_of_error": "high",
+          "reversibility": "high",
+          "evidence_quality": "high",
+          "human_review_cost": "high"
+        },
+        "evidence": {
+          "retain": [
+            "exception and task identity",
+            "stock or HU state version",
+            "diagnostic evidence",
+            "recovery options considered",
+            "approval or policy reference",
+            "execution result"
+          ],
+          "outcome_observation": "Measure recovery success, repeat exception rate and any follow-up stock correction.",
+          "sensitive_data_notes": "Operational traces should avoid unnecessary worker-identifying data."
+        },
+        "evaluation": {
+          "cases": [
+            "Recoverable task sequencing issue.",
+            "HU state changes before action.",
+            "Historical recovery action is no longer allowed by current process rules.",
+            "Exception requires stock adjustment and must escalate."
+          ],
+          "promotion_gate": "Move from A3 to A4 only for named reversible actions with strong state validation and stable exception classification.",
+          "runtime_must_not_change": [
+            "stock invariants",
+            "warehouse authorization",
+            "allowed recovery-action catalog"
+          ]
+        },
+        "notes": "Warehouse exceptions show where bounded execution can become realistic when state checks and reversibility are strong."
+      }
+    }
+  ]
+}
