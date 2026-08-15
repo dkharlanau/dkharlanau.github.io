@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 tags: [sap, mdg, cloud, s4hana, architecture]
 ---
@@ -37,6 +37,7 @@ tags: [sap, mdg, cloud, s4hana, architecture]
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+    <p><strong>Problem:</strong> the word “cloud” hides materially different MDG products, modes, domain scope, and ownership models.</p>
     <p><strong>Current boundary:</strong> SAP MDG, cloud edition 2605 focuses on core Business Partner. SAP MDG on S/4HANA remains the broad multi-domain choice for Business Partner, Material/Product, Financials, and Custom Objects.</p>
     <p><strong>Architectural consequence:</strong> if Material governance is a hard requirement, “cloud edition because we want cloud” is not a design decision. It is a scope mismatch.</p>
     <a href="/labs/enterprise-context/mdg/logistics/">See the logistics consequence <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
