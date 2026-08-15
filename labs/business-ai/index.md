@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Business AI Lab — Patterns, Cases, Evidence"
-description: "A practical catalog of Business AI patterns and public implementation cases, with technologies, outcomes, evidence quality, limits, and reusable architecture lessons."
+description: "A practical catalog of Business AI patterns and implementation cases with outcomes, evidence quality, limits, and architecture lessons."
 permalink: /labs/business-ai/
 status: draft
 verified: false
@@ -48,7 +48,8 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-    <p><strong>Question:</strong> where does AI improve a business decision, cycle time, quality, service level, or cost enough to justify the extra system complexity?</p>
+    <p><strong>Problem:</strong> enterprise AI discussions often start with a model or vendor before the business decision, control boundary, and measurable outcome are clear.</p>
+    <p><strong>Context:</strong> this lab compares public cases across SAP and non-SAP stacks, then links each case to a reusable business pattern and evidence grade.</p>
     <p><strong>Working rule.</strong> A model name is metadata, not a use case. Start from the business job and the measurable failure.</p>
     <a href="/labs/business-ai/domains/">Open the Lead assessment view <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
