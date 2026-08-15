@@ -1,0 +1,42 @@
+---
+layout: default
+title: "SAP TM — VSR Planning & Constraints"
+description: "A Lead-level SAP TM planning map for VSR optimization, hard and soft constraints, planning profiles, costs, time windows, and diagnostics."
+permalink: /labs/enterprise-context/transportation-management/planning/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags: [sap, sap-tm, transportation, planning, optimization, assessment]
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.tm_vsr_planning %}
+{% assign evidence = site.data.labs.enterprise_context.sources.transportation_management_deep_dives %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/transportation-management/">SAP TM</a></li><li aria-current="page">Planning</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">SAP TM / Deep Dive</p><h1>{{ graph.title }}</h1><p>{{ graph.summary }}</p><a class="research-canvas__button" href="#constraints">Read the constraint model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></div>
+    <div class="research-canvas__signal" aria-label="Planning model"><p>Memory path</p><div class="research-canvas__signal-line"><span>01</span><strong>World model</strong><small>Demand + network + capacity</small></div><div class="research-canvas__signal-line"><span>02</span><strong>Constraints</strong><small>Hard + soft</small></div><div class="research-canvas__signal-line"><span>03</span><strong>Objective</strong><small>Total cost</small></div><em>Reviewed {{ graph.verified_at }}</em></div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">route</span><p><strong>Lead rule:</strong> {{ graph.thesis }}</p><p><strong>Remember:</strong> {{ graph.memory_model.path }}</p></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Optimizer input</p><h2>What world does VSR believe?</h2><p>Before changing optimizer parameters, prove the input model. Otherwise the tuning exercise becomes expensive theatre.</p></header><div class="ecg-decision-columns">{% for item in graph.optimizer_inputs %}<article><h3>{{ item.area }}</h3><p><strong>{{ item.question }}</strong></p><p>{{ item.objects | join: " · " }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" id="constraints" data-reveal><header><p class="research-canvas__eyebrow">Constraint model</p><h2>Hard, soft, and the useful area between them.</h2></header><div class="ecg-decision-columns">{% for item in graph.constraint_model %}<article><h3>{{ item.kind }}</h3><p><strong>{{ item.behavior }}</strong></p><p>Examples: {{ item.examples | join: " · " }}</p><p><strong>Lead lens:</strong> {{ item.lead_lens }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Runtime</p><h2>How a planning run becomes a freight plan.</h2></header><div class="ecg-rail">{% for item in graph.planning_runtime %}<article><span>{{ item.order }}</span><div><h3>{{ item.step }}</h3><p><strong>Output:</strong> {{ item.output }}</p><small>Failure signal: {{ item.failure }}</small></div></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Diagnostics</p><h2>Do not tune what you have not explained.</h2></header><div class="ecg-decision-columns">{% for item in graph.diagnostic_playbook %}<article><h3>{{ item.symptom }}</h3><p><strong>Trace:</strong> {{ item.trace | join: " → " }}</p><p>{{ item.principle }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Assessment cards</p><h2>Short answers with architectural meaning.</h2></header><div class="ecg-memory-grid">{% for item in graph.assessment_cards %}<article><span>Q</span><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Synthetic case</p><h2>{{ graph.synthetic_case.title }}</h2><p>{{ graph.synthetic_case.situation }}</p></header><div class="ecg-rail">{% for item in graph.synthetic_case.reasoning %}<article><span>{{ forloop.index }}</span><div><h3>{{ item }}</h3></div></article>{% endfor %}</div><p><strong>Lesson:</strong> {{ graph.synthetic_case.lesson }}</p></section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">data_object</span><p><strong>Machine-readable:</strong> planning model for retrieval and assessment experiments.</p><a href="/labs/enterprise-context/data/tm-vsr-planning-graph.json">Open planning graph JSON <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+</div>
