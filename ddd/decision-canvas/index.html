@@ -1,0 +1,203 @@
+---
+layout: default
+title: "Decision Canvas · DDD for Acting Systems"
+description: "A practical canvas for modeling one business decision, its truth, judgment, authority, commitment, evidence, and learning boundary."
+permalink: /ddd/decision-canvas/
+last_modified_at: 2026-08-15
+status: needs_verification
+verified: false
+author: Dzmitryi Kharlanau
+robots: noindex,follow
+sitemap: false
+hide_global_cta: true
+ddd_framework: true
+ddd_decision_canvas: true
+---
+
+<div class="ddd-canvas-tool">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol><li><a href="/">Home</a></li><li><a href="/ddd/">DDD for Acting Systems</a></li><li aria-current="page">Decision Canvas</li></ol>
+  </nav>
+
+  <header class="ddd-canvas-tool__hero">
+    <div>
+      <p class="ddd-kicker">Working tool · v0.3</p>
+      <h1>Decision Canvas.</h1>
+      <p class="ddd-hero__lead">Use this canvas for one material business decision. Start with truth and invariants. Then describe judgment, authority, the real commitment, evidence, and learning. The output is JSON that follows the framework decision schema.</p>
+    </div>
+    <aside class="ddd-canvas-tool__aside">
+      <p class="ddd-label">Why this exists</p>
+      <strong>Do not design an agent. Design one decision first.</strong>
+      <p>A useful decision model should still make sense if the actor later changes from a person to deterministic software, an AI model, or a mix of all three.</p>
+      <div class="ddd-canvas-links">
+        <a href="/ddd/decision.schema.json">decision.schema.json</a>
+        <a href="/ddd/examples.json">SAP examples</a>
+        <a href="/ddd/framework.json">framework.json</a>
+      </div>
+    </aside>
+  </header>
+
+  <div class="ddd-canvas-tool__shell">
+    <form id="ddd-decision-form" class="ddd-canvas-form">
+      <section class="ddd-canvas-group" aria-labelledby="canvas-scope">
+        <div class="ddd-canvas-group__head"><span>01</span><div><h2 id="canvas-scope">Scope the decision.</h2><p>Name the business outcome and the semantic context before choosing technology.</p></div></div>
+        <div class="ddd-canvas-fields">
+          <div class="ddd-field">
+            <label for="decision_id">Decision ID</label>
+            <input id="decision_id" name="decision_id" type="text" placeholder="delivery-risk-response" />
+            <small>Use a stable machine-friendly id. If empty, it is generated from the outcome.</small>
+          </div>
+          <div class="ddd-field">
+            <label for="home_context">Home bounded context</label>
+            <input id="home_context" name="home_context" type="text" placeholder="Customer Order" required />
+          </div>
+          <div class="ddd-field ddd-field--wide">
+            <label for="business_outcome">Business outcome</label>
+            <textarea id="business_outcome" name="business_outcome" placeholder="Keep a credible customer promise while reacting quickly to fulfillment risk." required></textarea>
+          </div>
+          <div class="ddd-field">
+            <label for="decision_type">Decision type</label>
+            <select id="decision_type" name="decision_type">
+              <option value="bounded-judgment">Bounded judgment</option>
+              <option value="advisory">Advisory</option>
+              <option value="cross-context">Cross-context</option>
+              <option value="deterministic-invariant">Deterministic invariant</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="ddd-canvas-group" aria-labelledby="canvas-truth">
+        <div class="ddd-canvas-group__head"><span>02</span><div><h2 id="canvas-truth">Separate truth from context.</h2><p>One line per item. A retrieved document and a current SAP object are not the same kind of evidence.</p></div></div>
+        <div class="ddd-canvas-fields">
+          <div class="ddd-field">
+            <label for="authoritative_inputs">Authoritative inputs</label>
+            <textarea id="authoritative_inputs" name="authoritative_inputs" placeholder="SAP sales order and schedule-line state&#10;Current ATP or aATP result" required></textarea>
+          </div>
+          <div class="ddd-field">
+            <label for="contextual_inputs">Contextual inputs</label>
+            <textarea id="contextual_inputs" name="contextual_inputs" placeholder="Transport status&#10;Approved operating procedure&#10;Historical outcomes"></textarea>
+          </div>
+          <div class="ddd-field ddd-field--wide">
+            <label for="freshness_rule">Freshness or state-version rule</label>
+            <input id="freshness_rule" name="freshness_rule" type="text" placeholder="Re-read current order state before a material promise change." required />
+          </div>
+          <div class="ddd-field ddd-field--wide">
+            <label for="invariants">Deterministic invariants</label>
+            <textarea id="invariants" name="invariants" placeholder="Do not invent available quantity or dates.&#10;Do not bypass authorization or document consistency checks." required></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="ddd-canvas-group" aria-labelledby="canvas-judgment">
+        <div class="ddd-canvas-group__head"><span>03</span><div><h2 id="canvas-judgment">Bound the judgment.</h2><p>Be explicit about what interpretation is useful and what must stay outside probabilistic behavior.</p></div></div>
+        <div class="ddd-canvas-fields">
+          <div class="ddd-field">
+            <label for="judgment_allowed">Allowed judgment</label>
+            <textarea id="judgment_allowed" name="judgment_allowed" placeholder="Explain the risk.&#10;Rank valid alternatives.&#10;Prepare a proposal."></textarea>
+          </div>
+          <div class="ddd-field">
+            <label for="judgment_forbidden">Forbidden judgment</label>
+            <textarea id="judgment_forbidden" name="judgment_forbidden" placeholder="Override ATP truth.&#10;Invent an approval.&#10;Change policy at runtime."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="ddd-canvas-group" aria-labelledby="canvas-economics">
+        <div class="ddd-canvas-group__head"><span>04</span><div><h2 id="canvas-economics">Check decision economics.</h2><p>The canvas uses these factors only to suggest a design posture. It does not produce a fake scientific score.</p></div></div>
+        <div class="ddd-economics-grid">
+          <div class="ddd-field"><label for="ambiguity">Ambiguity</label><select id="ambiguity" name="ambiguity"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+          <div class="ddd-field"><label for="volume">Volume</label><select id="volume" name="volume"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+          <div class="ddd-field"><label for="cost_of_delay">Cost of delay</label><select id="cost_of_delay" name="cost_of_delay"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+          <div class="ddd-field"><label for="cost_of_error">Cost of error</label><select id="cost_of_error" name="cost_of_error"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+          <div class="ddd-field"><label for="reversibility_score">Reversibility</label><select id="reversibility_score" name="reversibility_score"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+          <div class="ddd-field"><label for="evidence_quality">Evidence quality</label><select id="evidence_quality" name="evidence_quality"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+          <div class="ddd-field"><label for="human_review_cost">Human review cost</label><select id="human_review_cost" name="human_review_cost"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+        </div>
+      </section>
+
+      <section class="ddd-canvas-group" aria-labelledby="canvas-authority">
+        <div class="ddd-canvas-group__head"><span>05</span><div><h2 id="canvas-authority">Shape the authority envelope.</h2><p>Autonomy is not a personality setting. Attach it to this action and define its limits.</p></div></div>
+        <div class="ddd-canvas-fields">
+          <div class="ddd-field">
+            <label for="autonomy_level">Autonomy level</label>
+            <select id="autonomy_level" name="autonomy_level"><option value="A0">A0 · Read</option><option value="A1" selected>A1 · Recommend</option><option value="A2">A2 · Prepare</option><option value="A3">A3 · Execute with approval</option><option value="A4">A4 · Bounded execution</option></select>
+          </div>
+          <div class="ddd-field">
+            <label for="approval">Approval</label>
+            <select id="approval" name="approval"><option value="human-execution" selected>Human executes</option><option value="human-approval">Human approves</option><option value="policy-gate">Policy gate</option><option value="none">No per-action approval</option></select>
+          </div>
+          <div class="ddd-field ddd-field--wide"><label for="authority_scope">Scope</label><input id="authority_scope" name="authority_scope" type="text" placeholder="Named sales orgs, order types, plants, or exception classes." required /></div>
+          <div class="ddd-field"><label for="value_limit">Value or impact limit</label><input id="value_limit" name="value_limit" type="text" value="No autonomous material value change." /></div>
+          <div class="ddd-field"><label for="frequency_limit">Frequency limit</label><input id="frequency_limit" name="frequency_limit" type="text" value="Within normal workload and rate controls." /></div>
+          <div class="ddd-field"><label for="time_window">Time window</label><input id="time_window" name="time_window" type="text" value="Only while referenced state and evidence remain current." /></div>
+          <div class="ddd-field"><label for="authority_reversibility">Action reversibility</label><select id="authority_reversibility" name="authority_reversibility"><option value="reversible">Reversible</option><option value="compensatable" selected>Compensatable</option><option value="hard-to-reverse">Hard to reverse</option></select></div>
+          <div class="ddd-field ddd-field--wide"><label for="delegation_rule">Delegation rule</label><input id="delegation_rule" name="delegation_rule" type="text" value="Delegation may preserve or reduce authority but never amplify it." /></div>
+        </div>
+      </section>
+
+      <section class="ddd-canvas-group" aria-labelledby="canvas-commitment">
+        <div class="ddd-canvas-group__head"><span>06</span><div><h2 id="canvas-commitment">Name the commitment.</h2><p>This is the point where analysis becomes a promise, transaction, reservation, approval, or durable state change.</p></div></div>
+        <div class="ddd-canvas-fields">
+          <div class="ddd-field ddd-field--wide"><label><input name="creates_business_effect" type="checkbox" checked /> This decision can create a durable business effect.</label></div>
+          <div class="ddd-field"><label for="commitment_type">Commitment type</label><input id="commitment_type" name="commitment_type" type="text" placeholder="CustomerPromiseChanged" /></div>
+          <div class="ddd-field"><label for="commitment_owner">Commitment owner</label><input id="commitment_owner" name="commitment_owner" type="text" placeholder="Customer Order" /></div>
+          <div class="ddd-field"><label for="domain_command">Domain command</label><input id="domain_command" name="domain_command" type="text" placeholder="ChangeCustomerPromise" /></div>
+          <div class="ddd-field"><label for="transactional_system">Transactional system</label><input id="transactional_system" name="transactional_system" type="text" placeholder="SAP S/4HANA" /></div>
+          <div class="ddd-field ddd-field--wide"><label for="preconditions">Preconditions</label><textarea id="preconditions" name="preconditions" placeholder="Current object state is re-read.&#10;Required authority is present.&#10;Deterministic validation passes."></textarea></div>
+          <div class="ddd-field ddd-field--wide"><label for="idempotency">Idempotency or duplicate control</label><input id="idempotency" name="idempotency" type="text" placeholder="Use document version and command identity." /></div>
+          <div class="ddd-field ddd-field--wide"><label for="reversal_or_compensation">Reversal or compensation</label><textarea id="reversal_or_compensation" name="reversal_or_compensation" placeholder="Describe how the business can undo, compensate, or safely escalate the effect."></textarea></div>
+          <div class="ddd-field ddd-field--wide"><label for="resulting_event">Resulting business event</label><input id="resulting_event" name="resulting_event" type="text" placeholder="CustomerPromiseChanged" /></div>
+        </div>
+      </section>
+
+      <section class="ddd-canvas-group" aria-labelledby="canvas-evidence">
+        <div class="ddd-canvas-group__head"><span>07</span><div><h2 id="canvas-evidence">Keep the operating trail.</h2><p>Evidence should make the decision reviewable without turning every trace into permanent business truth.</p></div></div>
+        <div class="ddd-canvas-fields">
+          <div class="ddd-field ddd-field--wide"><label for="evidence_retain">Evidence to retain</label><textarea id="evidence_retain" name="evidence_retain" placeholder="Object id and state version&#10;Sources and timestamps&#10;Alternatives considered&#10;Approval or policy reference&#10;Resulting event" required></textarea></div>
+          <div class="ddd-field ddd-field--wide"><label for="outcome_observation">Outcome observation</label><textarea id="outcome_observation" name="outcome_observation" placeholder="How will we know later whether this decision helped or failed?"></textarea></div>
+          <div class="ddd-field ddd-field--wide"><label for="sensitive_data_notes">Sensitive-data notes</label><input id="sensitive_data_notes" name="sensitive_data_notes" type="text" placeholder="Do not copy unnecessary customer, worker, or commercial data into traces." /></div>
+        </div>
+      </section>
+
+      <section class="ddd-canvas-group" aria-labelledby="canvas-learning">
+        <div class="ddd-canvas-group__head"><span>08</span><div><h2 id="canvas-learning">Define the learning boundary.</h2><p>Production evidence may propose a change. It should not quietly promote itself into policy.</p></div></div>
+        <div class="ddd-canvas-fields">
+          <div class="ddd-field ddd-field--wide"><label for="evaluation_cases">Evaluation cases</label><textarea id="evaluation_cases" name="evaluation_cases" placeholder="Normal valid case.&#10;Stale-state case.&#10;Conflicting-evidence case.&#10;No-valid-action case." required></textarea></div>
+          <div class="ddd-field ddd-field--wide"><label for="promotion_gate">Promotion gate</label><textarea id="promotion_gate" name="promotion_gate" placeholder="What must be proven before changing model behavior, authority, or autonomy?"></textarea></div>
+          <div class="ddd-field ddd-field--wide"><label for="runtime_must_not_change">Runtime must not change</label><textarea id="runtime_must_not_change" name="runtime_must_not_change" placeholder="Business invariants&#10;Authority policy&#10;Production permissions&#10;Source-of-record ownership"></textarea></div>
+          <div class="ddd-field ddd-field--wide"><label for="notes">Working notes</label><textarea id="notes" name="notes" placeholder="Open questions, assumptions, or architecture concerns."></textarea></div>
+        </div>
+      </section>
+
+      <button type="submit" hidden>Generate JSON</button>
+    </form>
+
+    <aside class="ddd-canvas-output" aria-label="Decision Canvas output">
+      <div class="ddd-canvas-output__head">
+        <p class="ddd-label">Live output</p>
+        <h2>Decision Card JSON</h2>
+        <p id="ddd-decision-status" class="ddd-canvas-output__status">Draft</p>
+      </div>
+      <div class="ddd-posture">
+        <p class="ddd-posture__label">Suggested design posture</p>
+        <strong id="ddd-posture-name">Prepare with review</strong>
+        <p id="ddd-posture-reason">The posture updates from the decision economics and commitment settings.</p>
+      </div>
+      <pre id="ddd-decision-json" aria-live="polite"></pre>
+      <div class="ddd-canvas-actions">
+        <button id="ddd-copy-json" type="button" data-primary="true">Copy JSON</button>
+        <button id="ddd-reset" type="button">Reset</button>
+      </div>
+      <div class="ddd-canvas-output__head">
+        <p class="ddd-label">Load a reference case</p>
+        <p>Examples fill the same schema. Change them and see where the design boundary moves.</p>
+        <div id="ddd-example-picker" class="ddd-example-picker"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="ddd-canvas-tool__note">
+    <p><strong>Working rule:</strong> if you cannot explain the truth, invariants, commitment owner, and authority envelope, the architecture is not ready for an autonomous agent. The missing box is usually governance or domain design, not another prompt.</p>
+  </div>
+</div>
