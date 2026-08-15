@@ -1,0 +1,140 @@
+name: Lab quality cleanup for Business AI PR
+
+on:
+  push:
+    branches:
+      - agent/business-ai-catalog
+    paths:
+      - ".github/workflows/lab-quality-cleanup-business-ai.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/business-ai-catalog
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependency
+        run: python3 -m pip install pyyaml
+
+      - name: Apply targeted Lab quality fixes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          markdown_signals = {
+              "labs/ai-ready/agent-architecture.md": [
+                  ("Problem", "Unbounded agents add cost, latency, and risk when a deterministic workflow would be enough.")
+              ],
+              "labs/ai-ready/build-operate.md": [
+                  ("Problem", "A demo can appear useful while lacking versioning, observability, budgets, rollback, and operational ownership.")
+              ],
+              "labs/ai-ready/data-rag.md": [
+                  ("Problem", "A model cannot reliably answer from current or private enterprise knowledge unless retrieval preserves source, permission, and freshness.")
+              ],
+              "labs/ai-ready/evals-reliability.md": [
+                  ("Problem", "AI systems can regress silently when prompts, models, retrieval, tools, or policies change without repeatable tests.")
+              ],
+              "labs/ai-ready/index.md": [
+                  ("Problem", "Teams often start with a model demo before defining data, tools, controls, evaluation, deployment, and failure handling.")
+              ],
+              "labs/ai-ready/labs/agent-approval.md": [
+                  ("Problem", "An investigation agent becomes risky when the same loop can both decide and execute a high-impact write."),
+                  ("Context", "This lab uses synthetic incident data to separate read-only investigation, prepared change, approval, and execution.")
+              ],
+              "labs/ai-ready/labs/mcp-readonly.md": [
+                  ("Context", "This lab uses a synthetic workspace to show how narrow read tools and resources can be exposed through MCP without write access.")
+              ],
+              "labs/ai-ready/labs/rag-evals.md": [
+                  ("Problem", "A RAG demo can look correct on a few questions while retrieval quality, source coverage, and no-evidence behavior remain untested.")
+              ],
+              "labs/ai-ready/system-boundaries.md": [
+                  ("Problem", "AI applications become hard to control when model reasoning, deterministic rules, authorization, state, and side effects are mixed together.")
+              ],
+              "labs/ai-ready/tools-mcp.md": [
+                  ("Problem", "Giving a model broad system access makes integration hard to secure, test, reuse, and observe.")
+              ],
+          }
+
+          html_problems = {
+              "labs/enterprise-context/mdg/deployments/index.md": "Choosing an MDG product only by deployment label can create gaps in domain coverage, ownership, extensibility, and integration.",
+              "labs/enterprise-context/mdg/extensions/index.md": "MDG extensions become expensive when a requirement is implemented in the wrong layer or breaks cloud-ready boundaries.",
+              "labs/enterprise-context/mdg/interfaces/index.md": "Master-data replication fails when teams design only the middleware flow and ignore object ownership, keys, mapping, confirmation, and reconciliation.",
+          }
+
+          descriptions = {
+              "labs/enterprise-context/mdg/implementation/index.md": "A practical SAP MDG implementation guide covering ownership, data model, workflow, quality, integration, operations, and delivery decisions.",
+              "labs/enterprise-context/mdg/index.md": "A practical SAP MDG Data Book covering product options, governance processes, domains, architecture, interfaces, extensibility, and logistics.",
+              "labs/enterprise-context/mdg/interfaces/index.md": "A practical SAP MDG interface guide for Business Partner, Customer, Supplier, Material, mapping, replication, reconciliation, and operations.",
+          }
+
+          def insert_markdown_signals(path: str, signals):
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              missing = [(label, sentence) for label, sentence in signals if not re.search(rf"^##\s+{re.escape(label)}\s*$", text, re.M)]
+              if not missing:
+                  return
+              first_h2 = re.search(r"^##\s+", text, re.M)
+              if not first_h2:
+                  raise RuntimeError(f"No level-2 heading found in {path}")
+              block = "".join(f"## {label}\n\n{sentence}\n\n" for label, sentence in missing)
+              text = text[:first_h2.start()] + block + text[first_h2.start():]
+              p.write_text(text, encoding="utf-8")
+
+          def insert_html_problem(path: str, sentence: str):
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              if "<strong>Problem:</strong>" in text:
+                  return
+              pattern = re.compile(r'(<section class="research-canvas__boundary"[^>]*>\s*\n\s*<span[^>]*>.*?</span>\s*\n)', re.S)
+              m = pattern.search(text)
+              if not m:
+                  raise RuntimeError(f"Boundary marker not found in {path}")
+              insert = f"    <p><strong>Problem:</strong> {sentence}</p>\n"
+              text = text[:m.end()] + insert + text[m.end():]
+              p.write_text(text, encoding="utf-8")
+
+          def replace_description(path: str, value: str):
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              new, count = re.subn(r'^description:\s*"[^"]*"\s*$', f'description: "{value}"', text, count=1, flags=re.M)
+              if count != 1:
+                  raise RuntimeError(f"Description not found in {path}")
+              p.write_text(new, encoding="utf-8")
+
+          for path, signals in markdown_signals.items():
+              insert_markdown_signals(path, signals)
+          for path, sentence in html_problems.items():
+              insert_html_problem(path, sentence)
+          for path, value in descriptions.items():
+              replace_description(path, value)
+          PY
+
+      - name: Regenerate repository artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Remove workflow and commit cleanup
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/lab-quality-cleanup-business-ai.yml
+          git add -A
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix Lab quality signals for Business AI review"
+          git push origin HEAD:agent/business-ai-catalog
