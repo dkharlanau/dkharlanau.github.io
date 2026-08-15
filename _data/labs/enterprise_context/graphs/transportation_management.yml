@@ -12,7 +12,7 @@ verified_at: "2026-08-15"
 summary: >-
   A Lead-level map of SAP Transportation Management. It separates transportation demand,
   planning units, capacity documents, carrier commitment, physical execution, warehouse
-  coordination, charges, and financial settlement so that each object has a clear job.
+  coordination, master data, charges, and financial settlement so that each object has a clear job.
 
 thesis: >-
   TM is not a better shipment document. It is a control layer between ERP demand and physical
@@ -44,7 +44,7 @@ memory_model:
       answer: "Execution status and events show arrival, loading, departure, unloading, and other milestones. Warehouse execution may confirm quantities and loading results back to TM."
     - key: CHARGE
       question: "What should transportation cost?"
-      answer: "Charge calculation evaluates the freight document against the commercial rate and agreement context."
+      answer: "Charge calculation evaluates the freight document against agreements, calculation sheets, rate tables, and logistical data."
     - key: SETTLE
       question: "How does the carrier cost reach financial follow-on processing?"
       answer: "TM creates a Freight Settlement Document and posts settlement information to MM for service purchasing, service entry, and invoice verification follow-on."
@@ -109,9 +109,9 @@ runtime_pipeline:
   - order: 7
     title: "Calculate transportation charges"
     question: "What should the freight service cost?"
-    inputs: ["freight document", "charge calculation settings", "rates / agreements", "distance, weight, stages, services"]
+    inputs: ["freight document", "freight agreement", "calculation sheet", "rate table", "distance, weight, stages, services"]
     output: ["transportation charge result"]
-    failure_signal: "Execution is correct but charge basis, rate, currency, scale, or calculation context is wrong."
+    failure_signal: "Execution is correct but agreement, charge type, rate, currency, scale, or calculation basis is wrong."
   - order: 8
     title: "Settle freight cost"
     question: "How does the transport cost become an MM and finance follow-on process?"
@@ -138,6 +138,55 @@ planning_components:
   - title: "Tendering"
     role: "Requests or confirms carrier commitment using RFQ-based or direct processes."
     lead_lens: "Planning says what we want to move. Tendering resolves who accepts the work."
+
+master_data_map:
+  - title: "Business Partners & Organization"
+    objects: ["carrier business partner", "purchasing organization", "organizational hierarchy"]
+    controls: "Who can execute or buy transportation services and which organizational context owns the agreement or settlement."
+    check_first: "Carrier role, organizational assignment, and responsible purchasing context."
+    source_refs: [SRC-SAP-TM-MASTER-DATA]
+  - title: "Transportation Network"
+    objects: ["locations", "transportation zones", "transportation lanes", "means of transport", "schedules", "default routes"]
+    controls: "Where transportation is possible and how the system finds paths, distance, duration, modes, and eligible lane context."
+    check_first: "Source/destination location, zone membership, lane, means of transport, distance, and duration."
+    source_refs: [SRC-SAP-TM-MASTER-DATA, SRC-SAP-TM-TRANSPORT-LANES, SRC-SAP-TM-LDDD]
+  - title: "Resources & Equipment"
+    objects: ["vehicle resources", "equipment groups/types", "capacity characteristics"]
+    controls: "Which physical capacity can carry the planned demand."
+    check_first: "Capacity, availability, means-of-transport compatibility, and equipment restrictions."
+    source_refs: [SRC-SAP-TM-MASTER-DATA]
+  - title: "Product Logistics Data"
+    objects: ["product", "weight", "dimensions", "units of measure", "packaging-relevant attributes"]
+    controls: "How much physical load the demand represents and whether a resource can carry it."
+    check_first: "Weight, volume, dimensions, UoM conversion, and packaging context before blaming planning."
+    source_refs: [SRC-SAP-TM-MASTER-DATA]
+  - title: "Carrier Profile"
+    objects: ["carrier profile", "lanes", "transportation groups", "equipment", "priority", "business share"]
+    controls: "Which carrier is eligible or preferred for a transportation context."
+    check_first: "Carrier BP role, lane assignment, means of transport, equipment, priority, and restrictions."
+    source_refs: [SRC-SAP-TM-CARRIER-PROFILE]
+  - title: "Charge Management"
+    objects: ["freight agreement", "calculation sheet", "rate table", "rates", "scales", "charge types"]
+    controls: "Which transportation charges are calculated and on which commercial basis."
+    check_first: "Agreement determination first, then calculation sheet, charge type, rate table, scale, and rate."
+    source_refs: [SRC-SAP-TM-CHARGE-CALCULATION, SRC-SAP-TM-AGREEMENT-CALC-SHEET]
+
+scope_boundary:
+  - title: "Basic TM"
+    role: "Defined and limited TM scope for a simpler transportation process comparable to classic LE-TRA."
+    commercial_boundary: "Included in the SAP S/4HANA Enterprise Management license according to SAP's Basic-vs-Advanced usage guidance."
+    lead_lens: "Do not assume that every TM function is part of Basic TM just because it is technically visible in the same S/4HANA system."
+    source_refs: [SRC-SAP-TM-LICENSE-BOUNDARY]
+  - title: "Advanced TM"
+    role: "Fuller TM functional scope for more advanced transportation scenarios."
+    commercial_boundary: "SAP places Advanced TM functions in additional S/4HANA Enhanced LoB Functions licensing."
+    lead_lens: "Architecture scope and entitlement scope are separate decisions. Verify the concrete functions used, not the product label alone."
+    source_refs: [SRC-SAP-TM-LICENSE-BOUNDARY]
+  - title: "Usage Check"
+    role: "Implementation and audit support for distinguishing Basic and Advanced TM object/function usage."
+    commercial_boundary: "SAP documents transaction /SCMTMS/AUDIT for orientation, with stated coverage limitations."
+    lead_lens: "Treat the report as evidence for scope review, not as a substitute for the signed contract."
+    source_refs: [SRC-SAP-TM-LICENSE-BOUNDARY]
 
 integration_boundaries:
   - boundary: "SD → TM"
@@ -180,16 +229,16 @@ failure_modes:
     first_checks: ["FUB rule", "split/merge logic", "quantity basis", "dates, locations, packaging context"]
     avoid: "Tuning optimizer settings before proving the input planning granularity."
   - symptom: "No feasible plan"
-    first_checks: ["requested dates", "locations", "resources and capacities", "planning profile", "hard constraints", "network/mode compatibility"]
+    first_checks: ["requested dates", "locations and zones", "transportation lanes", "distance/duration", "resources and capacities", "planning profile", "hard constraints"]
     avoid: "Assuming the optimizer is wrong because it refuses an impossible business request."
   - symptom: "Wrong carrier selected"
-    first_checks: ["carrier eligibility", "selection settings", "cost / agreement context", "constraints", "ranking result"]
+    first_checks: ["carrier BP role", "carrier profile", "lane eligibility", "means of transport", "selection settings", "agreement/cost context", "ranking result"]
     avoid: "Hard-coding a carrier on the Freight Order without explaining the decision rule."
   - symptom: "TM and EWM execution states disagree"
     first_checks: ["integration pattern", "Freight Order or TU-based process", "delivery/HU references", "last confirmed physical event", "message/application logs"]
     avoid: "Treating a successful interface status as proof that both systems represent the same business event."
   - symptom: "Freight settlement fails or invoice differs"
-    first_checks: ["charge calculation", "settlement relevance", "FSD status", "MM follow-on documents", "service provider and accounting context"]
+    first_checks: ["freight agreement", "calculation sheet", "rate table and scales", "charge calculation", "settlement relevance", "FSD status", "MM follow-on documents"]
     avoid: "Debugging invoice verification before proving what TM actually sent as the freight-cost basis."
 
 assessment_cards:
@@ -199,12 +248,18 @@ assessment_cards:
     answer: "A Freight Unit is the planning unit representing what must be moved. A Freight Order is an executable capacity document representing how planned transport will be performed."
   - question: "Why Freight Unit Building matters?"
     answer: "It defines planning granularity. Smaller units can increase consolidation choices but also increase planning complexity. Large units simplify planning but can reduce flexibility."
+  - question: "Which master data should I check when planning looks wrong?"
+    answer: "Start with locations, zones, lanes, means of transport, distance and duration, resources, product weight/volume, and the planning profile. For carrier choice, add carrier profile and lane eligibility."
   - question: "FO vs FB?"
     answer: "Freight Order is used mainly for road and rail. Freight Booking is used for air and sea."
+  - question: "Basic TM vs Advanced TM?"
+    answer: "Basic TM is a defined limited scope intended for simpler transportation processes and is included in the Enterprise Management license. Advanced TM uses broader TM scope and has an additional licensing boundary. Check concrete function usage rather than guessing from the system name."
   - question: "What is the TM/EWM boundary?"
     answer: "TM owns transportation planning and freight execution. EWM owns detailed warehouse execution. They exchange planning and execution context, but they do not become one responsibility."
   - question: "What changes with Advanced Shipping and Receiving?"
     answer: "The TM Freight Order becomes the central transport object for the integrated shipping and receiving process. In the embedded EWM ASR pattern, the process does not use the EWM Transportation Unit or EWM vehicle."
+  - question: "How are charges determined?"
+    answer: "Think agreement → calculation sheet → charge type/rate table → scale/rate → calculated charge. Start diagnosis at agreement determination before editing a final amount."
   - question: "How does freight settlement reach finance?"
     answer: "TM calculates transportation charges, creates a Freight Settlement Document, and posts it to MM. MM follow-on processing creates service purchasing and service-entry context for invoice verification."
 
@@ -213,12 +268,12 @@ synthetic_case:
   steps:
     - "Two sales orders create early transport demand as OTRs."
     - "FUB creates Freight Units with compatible source, destination region, dates, and vehicle needs."
-    - "Planning consolidates the Freight Units into one road Freight Order."
-    - "Carrier selection ranks valid carriers; tendering awards the order."
+    - "Planning uses locations, lanes, resources, distances, dates, and constraints to consolidate the Freight Units into one road Freight Order."
+    - "Carrier selection uses eligible carrier and commercial context; tendering awards the order."
     - "Outbound deliveries are created. Their DTRs consume the relevant OTR demand and reuse the Freight Units."
     - "EWM loads the truck and confirms warehouse execution. TM keeps the transport execution state."
-    - "After execution, TM calculates charges and creates the Freight Settlement Document for MM follow-on."
-  lesson: "Trace one business demand through object transformations. That is easier to explain and debug than memorizing isolated TM apps."
+    - "TM determines the freight agreement and charge calculation context, calculates charges, and creates the Freight Settlement Document for MM follow-on."
+  lesson: "Trace one business demand through object transformations and master-data decisions. That is easier to explain and debug than memorizing isolated TM apps."
 
 source_refs:
   - SRC-SAP-TM-OVERVIEW
@@ -232,7 +287,14 @@ source_refs:
   - SRC-SAP-TM-FREIGHT-ORDER-MGMT
   - SRC-SAP-TM-CARRIER-SELECTION
   - SRC-SAP-TM-TENDERING
+  - SRC-SAP-TM-MASTER-DATA
+  - SRC-SAP-TM-TRANSPORT-LANES
+  - SRC-SAP-TM-CARRIER-PROFILE
+  - SRC-SAP-TM-LDDD
+  - SRC-SAP-TM-CHARGE-CALCULATION
+  - SRC-SAP-TM-AGREEMENT-CALC-SHEET
   - SRC-SAP-TM-EWM-INTEGRATION
   - SRC-SAP-TM-ASR
   - SRC-SAP-TM-FREIGHT-SETTLEMENT
   - SRC-SAP-TM-FSD
+  - SRC-SAP-TM-LICENSE-BOUNDARY
