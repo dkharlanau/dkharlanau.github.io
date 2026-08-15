@@ -1,0 +1,266 @@
+id: GRAPH-CCM-CONDITION-CONTRACT-MANAGEMENT
+type: knowledge_graph
+title: "Condition Contract Management — Sales and Procurement"
+domain: "SAP S/4HANA Settlement Management"
+process_family: "Rebate and Subsequent Settlement"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+
+summary: >-
+  Condition Contract Management (CCM) is the agreement and settlement layer for commercial conditions that are not finished inside one order, purchase order, invoice, or goods receipt. It connects a negotiated agreement to eligible business volume, accruals, partial settlement, final settlement, and accounting follow-on.
+
+positioning:
+  component: "Condition Contract Management (CCM)"
+  parent_capability: "Settlement Management"
+  central_object: "Condition Contract"
+  common_flow: "AGREEMENT → SCOPE → BUSINESS VOLUME → ACCRUAL → SETTLE → ACCOUNT"
+  boundary: >-
+    Pricing decides conditions inside transactional documents. CCM manages conditions whose economic result depends on accumulated business volume and later settlement. The two can interact, especially when accrual conditions are determined during sales or purchasing processing.
+
+shared_objects:
+  - object: "Condition Contract"
+    role: "Commercial agreement and control object"
+    contains: ["partner", "validity", "organizational data", "business-volume selection", "settlement conditions", "accrual conditions", "settlement calendar", "status"]
+  - object: "Business Volume"
+    role: "Eligible transactional value or quantity used as settlement basis"
+    warning: "Do not confuse total company turnover with CCM business volume. Only documents that pass the configured source and selection logic are relevant."
+  - object: "Settlement Calendar"
+    role: "Dates and settlement types for accrual, partial, delta, or final processing"
+  - object: "Settlement Document"
+    role: "Financial follow-on document created by settlement processing"
+  - object: "Condition Record"
+    role: "Rate, scale, or amount used to calculate accrual or settlement value"
+
+shared_configuration:
+  memory_path: "TYPE → VOLUME → CONDITION → CALENDAR → DOCUMENT → ACCOUNT"
+  steps:
+    - order: 1
+      area: "Condition contract type"
+      purpose: "Defines the agreement family, partner side, business-volume logic, allowed conditions, layout, and settlement behavior."
+      check: "Start here when the wrong fields, partner side, or settlement process appears."
+    - order: 2
+      area: "Business-volume determination"
+      purpose: "Defines the transactional source and how relevant business volume is selected."
+      configuration_objects: ["business-volume determination profile", "set of field combinations", "field combinations for business-volume selection"]
+      check: "If the contract exists but turnover is missing or excessive, debug selection before settlement pricing."
+    - order: 3
+      area: "Settlement and accrual conditions"
+      purpose: "Controls rate, scale, calculation base, and whether accruals are posted before settlement."
+      check: "Separate the agreement rate from the business-volume selection. A correct 5% condition still produces a wrong result if the volume is wrong."
+    - order: 4
+      area: "Settlement calendar"
+      purpose: "Plans partial, final, delta-accrual, or other settlement dates depending on the process."
+      check: "A correct contract can still fail operationally if the expected settlement date is missing, locked, or already processed."
+    - order: 5
+      area: "Settlement document control"
+      purpose: "Controls how settlement documents are created and processed."
+      check: "Trace document category, process type, pricing, tax, and reversal behavior."
+    - order: 6
+      area: "Accounting and tax"
+      purpose: "Maps the commercial settlement into the correct receivable, payable, tax, accrual, and reversal postings."
+      check: "A pricing-looking settlement error can actually be tax determination or account determination."
+
+transactions:
+  - id: "WCOCO"
+    name: "Maintain Condition Contracts"
+    use: "Create, change, display, release, and maintain condition-contract data in SAP GUI depending on release and authorization."
+  - id: "WB2R_BUSVOL"
+    name: "Display Business Volume - Condition Contracts"
+    use: "Inspect which transactional values the contract sees. This is the first diagnostic transaction for a wrong rebate base."
+  - id: "WB2R_SC"
+    name: "Settle Condition Contract"
+    use: "Execute condition contract settlement in SAP GUI."
+  - id: "WB2R_SV"
+    name: "Condition Contract Settlement variant processing"
+    use: "Used in Condition Contract Settlement processing; exact operational use depends on the configured scenario and release."
+  - id: "WZR2"
+    name: "Change Settlement Document"
+    use: "Inspect or change a settlement document where the process allows it."
+  - id: "WZR3"
+    name: "Display Settlement Document"
+    use: "Display the generated settlement document and follow the financial result."
+
+sales:
+  title: "Sales CCM — Customer Rebates"
+  purpose: >-
+    Manage rebate agreements with customers when the final commercial amount depends on accumulated eligible sales. The typical basis is customer billing data, not the sales order alone.
+  partner_side: "Customer"
+  business_volume_sources:
+    - "Customer billing / invoice data for standard sales rebate scenarios"
+  standard_contract_type_examples:
+    - "0S01 — Sales Rebate"
+    - "0SG1 — Sales Rebate Goods Related"
+    - "0S03 — Sales Rebate - 2Step"
+    - "0SG3 — Sales Rebate Goods Related - 2Step"
+  memory_path: "AGREE → BILL → ACCRUE → CHECK VOLUME → PARTIAL → FINAL → CREDIT"
+  runtime:
+    - order: 1
+      step: "Create the customer condition contract"
+      action: "Maintain customer, validity, sales organization data, eligible scope, rebate conditions, accrual conditions, and settlement dates."
+      tool: "WCOCO or Manage Condition Contracts - Sales Rebates (F6739)"
+    - order: 2
+      step: "Release the contract for operational use"
+      action: "Complete the required status or workflow so the agreement can participate in processing."
+      tool: "F6739 / configured workflow"
+    - order: 3
+      step: "Create normal sales and billing documents"
+      action: "Eligible billing items become the source for business volume. Accrual conditions can also be integrated into pricing when configured."
+      tool: "Standard SD order and billing process"
+    - order: 4
+      step: "Check business volume"
+      action: "Confirm that the expected customers, products, periods, and billing items are included and excluded correctly."
+      tool: "WB2R_BUSVOL"
+    - order: 5
+      step: "Run partial settlement when required"
+      action: "Settle the achieved business volume, create the customer-side settlement result, and reverse the relevant accrual portion."
+      tool: "WB2R_SC or scheduled Fiori settlement apps"
+    - order: 6
+      step: "Run final settlement"
+      action: "Settle the final eligible business volume after the agreement period and clear the remaining accrual logic."
+      tool: "WB2R_SC"
+    - order: 7
+      step: "Trace the financial result"
+      action: "Review settlement document, pricing, tax, FI posting, and reversal chain if the amount is wrong."
+      tool: "WZR3 and accounting document display"
+  fiori_apps:
+    - id: "F6739"
+      name: "Manage Condition Contracts - Sales Rebates"
+    - id: "F6883"
+      name: "Monitor Condition Contracts - Sales Rebates"
+    - id: "F6792"
+      name: "Schedule Unplanned Contract Settlement - Customer Contracts"
+  configuration_focus:
+    - "Sales-oriented condition contract type and organizational fields"
+    - "Billing-document business-volume source"
+    - "Eligible customer, product, hierarchy, or other field-combination logic as required"
+    - "Settlement and accrual condition types and scales"
+    - "Customer-side settlement document and pricing control"
+    - "Tax code determination for settlement"
+    - "Workflow, release, and settlement locks where used"
+  diagnostic_sequence:
+    - "Is the contract active and valid on the business date?"
+    - "Is the customer or other eligible partner inside the contract scope?"
+    - "Does WB2R_BUSVOL show the expected billing items?"
+    - "If volume is wrong, inspect source/profile/field combinations before pricing."
+    - "If volume is right but amount is wrong, inspect settlement condition, scale, and calculation basis."
+    - "If amount is right but posting fails, inspect settlement-document control, tax, and account determination."
+  failure_modes:
+    - symptom: "No rebate accrual in sales or billing pricing"
+      likely_causes: ["contract not eligible", "accrual condition not configured for determination", "pricing integration incomplete", "validity mismatch"]
+    - symptom: "Business volume is zero"
+      likely_causes: ["wrong data source", "field-combination selection excludes billing items", "partner/material scope mismatch", "date selection mismatch"]
+    - symptom: "Rebate base is too high"
+      likely_causes: ["selection is too broad", "returns/cancellations handling misunderstood", "wrong amount field group", "eligible partner scope too broad"]
+    - symptom: "Settlement amount is wrong although volume is correct"
+      likely_causes: ["condition record or scale", "calculation basis", "settlement pricing procedure", "sign handling"]
+
+procurement:
+  title: "Procurement CCM — Supplier Rebates"
+  purpose: >-
+    Manage rebate agreements with suppliers when the economic benefit depends on accumulated purchasing activity. Standard scenarios can calculate business volume from goods receipts or supplier invoices, depending on the condition contract type.
+  partner_side: "Supplier"
+  business_volume_sources:
+    - "Goods receipts related to purchase orders"
+    - "Supplier invoices"
+  standard_contract_type_examples:
+    - "0PG1 / 0PG2 / 0PG3 / 0PG4 — purchasing rebate variants based on goods receipt"
+    - "0PI1 / 0PI2 / 0PI3 / 0PI4 — purchasing rebate variants based on supplier invoice"
+  memory_path: "AGREE → BUY/RECEIVE/INVOICE → ACCRUE → CHECK VOLUME → PARTIAL → FINAL → CLAIM"
+  runtime:
+    - order: 1
+      step: "Create the supplier condition contract"
+      action: "Maintain supplier, validity, purchasing organization data, eligible scope, rebate and accrual conditions, business-volume source, and settlement dates."
+      tool: "WCOCO or Manage Condition Contracts - Supplier Rebates (F6740)"
+    - order: 2
+      step: "Choose the economic event that forms business volume"
+      action: "Use the contract type and business-volume profile to make goods receipt or supplier invoice data the settlement basis."
+      tool: "Configuration plus condition contract"
+    - order: 3
+      step: "Run normal procurement execution"
+      action: "Purchase orders, goods receipts, and supplier invoices create the purchasing history from which eligible business volume is selected."
+      tool: "Standard MM purchasing, MIGO, and invoice verification process"
+    - order: 4
+      step: "Check business volume"
+      action: "Verify supplier, material, plant, purchasing organization, document source, date, and amount selection."
+      tool: "WB2R_BUSVOL"
+    - order: 5
+      step: "Run partial settlement when required"
+      action: "Recognize the supplier rebate for the achieved volume and reverse the related accrual portion according to the configured process."
+      tool: "WB2R_SC or Schedule Contract Settlement - Supplier Contracts (F2203)"
+    - order: 6
+      step: "Run final settlement"
+      action: "Settle the final purchasing volume and complete the agreement period."
+      tool: "WB2R_SC / F2203"
+    - order: 7
+      step: "Trace accounting and tax"
+      action: "Follow the settlement document, supplier/customer-side accounting direction, tax, and accrual reversal."
+      tool: "WZR3 and accounting document display"
+  fiori_apps:
+    - id: "F6740"
+      name: "Manage Condition Contracts - Supplier Rebates"
+    - id: "F6884"
+      name: "Monitor Condition Contracts - Supplier Rebates"
+    - id: "F2203"
+      name: "Schedule Contract Settlement - Supplier Contracts"
+    - id: "F6793"
+      name: "Schedule Unplanned Contract Settlement - Supplier Contracts"
+  configuration_focus:
+    - "Supplier-oriented condition contract type and purchasing organizational fields"
+    - "Goods-receipt versus supplier-invoice business-volume source"
+    - "Eligible supplier, material, plant, or other field-combination logic as required"
+    - "Settlement and accrual conditions"
+    - "Supplier-side settlement document and pricing control"
+    - "Tax and account determination"
+    - "Two-step settlement only where the process requires collective accounting follow-on"
+  diagnostic_sequence:
+    - "Is the contract active, valid, and assigned to the intended supplier side?"
+    - "Is business volume based on the expected event: goods receipt or supplier invoice?"
+    - "Does WB2R_BUSVOL show the expected purchasing documents?"
+    - "If volume is wrong, inspect source/profile/field combinations before settlement pricing."
+    - "If volume is right but amount is wrong, inspect rate, scale, condition base, and sign."
+    - "If settlement posting fails, inspect tax, document control, accounting direction, and authorization."
+  failure_modes:
+    - symptom: "Supplier rebate misses recent purchases"
+      likely_causes: ["contract expects supplier invoices but only goods receipt exists", "contract expects goods receipt but scope excludes it", "validity mismatch", "selection fields exclude the document"]
+    - symptom: "Wrong supplier or plant volume included"
+      likely_causes: ["eligible partner logic", "field-combination design", "plant selection", "business-volume profile"]
+    - symptom: "Settlement gives an unexpected debit/credit direction"
+      likely_causes: ["settlement type or process direction", "sign handling", "document configuration", "scenario misunderstood"]
+
+sales_vs_procurement:
+  - dimension: "Agreement partner"
+    sales: "Customer"
+    procurement: "Supplier"
+  - dimension: "Typical business-volume source"
+    sales: "Billing / customer invoice data"
+    procurement: "Goods receipt or supplier invoice data"
+  - dimension: "Commercial result"
+    sales: "Rebate payable / credit to customer in the normal sales rebate pattern"
+    procurement: "Rebate claim / supplier-side settlement in the normal purchasing rebate pattern"
+  - dimension: "Organizational context"
+    sales: "Sales organization, distribution channel, division"
+    procurement: "Purchasing organization and purchasing group, plus plant where relevant"
+  - dimension: "First diagnostic question"
+    sales: "Which billing items form the business volume?"
+    procurement: "Which event forms the business volume: receipt or supplier invoice?"
+
+lead_assessment_notes:
+  - "CCM is not a replacement for SD or MM pricing. It owns subsequent settlement over accumulated business volume."
+  - "The condition contract is the agreement; business volume is the evidence; settlement is the financial execution."
+  - "When the amount is wrong, split the problem into scope, volume, rate, settlement document, and accounting."
+  - "Sales and Procurement share the CCM engine, but the source documents, organizational context, partner side, and accounting direction differ."
+  - "Do not start debugging with WB2R_SC. First prove that the contract sees the right business volume."
+
+source_refs:
+  - SRC-SAP-CCM-OVERVIEW
+  - SRC-SAP-CCM-CONTRACT
+  - SRC-SAP-CCM-SALES
+  - SRC-SAP-CCM-PURCHASING
+  - SRC-SAP-CCM-BUSINESS-VOLUME
+  - SRC-SAP-CCM-SALES-APPS
+  - SRC-SAP-CCM-SUPPLIER-APPS
+  - SRC-SAP-CCM-SETTLEMENT-TCODES
+  - SRC-SAP-CCM-AUTH
+  - SRC-SAP-CCM-CUSTOMIZING
