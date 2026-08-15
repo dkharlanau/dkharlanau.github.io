@@ -18,8 +18,9 @@ tags:
 
 {% assign catalog = site.data.labs.business_ai.catalog %}
 {% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
-{% assign all_patterns = catalog.patterns | concat: expansion.patterns %}
-{% assign all_cases = catalog.cases | concat: expansion.cases %}
+{% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
+{% assign all_patterns = catalog.patterns | concat: expansion.patterns | concat: expansion_b.patterns %}
+{% assign all_cases = catalog.cases | concat: expansion.cases | concat: expansion_b.cases %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/business-ai/">Business AI</a></li><li aria-current="page">Patterns</li></ol>
@@ -36,7 +37,7 @@ tags:
     <div class="research-canvas__signal">
       <p>Pattern set</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ all_patterns | size }}</strong><small>Patterns</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>6+</strong><small>Method families</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>7+</strong><small>Method families</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Rule: measure the business</small></div>
       <em>Generative AI is one method family, not the definition of Business AI.</em>
     </div>
@@ -78,6 +79,8 @@ tags:
       {% for item in all_cases %}
         {% if item.pattern == pattern.id %}
         <a href="/labs/business-ai/cases/#{{ item.id }}"><span>{{ item.evidence_grade }}</span><strong>{{ item.company }} · {{ item.title }}</strong><small>{{ item.process }} · {{ item.consultant_note }}</small><i class="material-symbols-outlined" aria-hidden="true">case_study</i></a>
+        {% elsif item.secondary_patterns contains pattern.id %}
+        <a href="/labs/business-ai/cases/#{{ item.id }}"><span>{{ item.evidence_grade }}</span><strong>{{ item.company }} · {{ item.title }}</strong><small>Secondary pattern · {{ item.process }} · {{ item.consultant_note }}</small><i class="material-symbols-outlined" aria-hidden="true">case_study</i></a>
         {% endif %}
       {% endfor %}
     </div>
