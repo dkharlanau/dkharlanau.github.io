@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0",
+  "framework_id": "triz-digital-systems",
+  "updated_at": "2026-08-15",
+  "purpose": "Deterministic routing hints for the browser workbench and AI agents. These are prompts for exploration, not final architecture decisions.",
+  "contradictions": {
+    "speed_control": {
+      "name": "Speed vs control",
+      "operators": ["O2_condition", "O1_time", "O5_authority"],
+      "patterns": ["P11", "P08", "P09", "P06"],
+      "resource_focus": ["time", "history", "policy_permission", "negative_signals"],
+      "simplify_prompt": "Remove checks or handoffs that do not protect an independent risk. Move exact validation earlier.",
+      "deterministic_move": "Use risk-based routing, pre-validation, explicit state, and an approval only where the remaining risk needs independent judgment.",
+      "uncertainty_move": "Use AI only to classify ambiguous cases or prepare evidence. Keep policy, approval, and execution outside model authority.",
+      "primary_metric": "cycle_time",
+      "counter_metric": "control_failure_or_rework_rate"
+    },
+    "standard_flexible": {
+      "name": "Standardization vs flexibility",
+      "operators": ["O3_context", "O4_system_level", "O2_condition"],
+      "patterns": ["P01", "P07", "P04"],
+      "resource_focus": ["structure", "policy_permission", "information", "history"],
+      "simplify_prompt": "Keep only the common states and controls that are truly shared. Remove local branches that duplicate the same outcome.",
+      "deterministic_move": "Separate stable enterprise policy from contextual decision tables or extension points.",
+      "uncertainty_move": "Use AI to interpret unstructured local context or propose a route, not to redefine global policy.",
+      "primary_metric": "common_path_ratio_or_change_lead_time",
+      "counter_metric": "invalid_local_workaround_or_policy_violation_rate"
+    },
+    "automation_accountability": {
+      "name": "Automation vs accountability",
+      "operators": ["O5_authority", "O2_condition", "O1_time"],
+      "patterns": ["P03", "P08", "P09", "P10"],
+      "resource_focus": ["policy_permission", "history", "human_judgment", "negative_signals"],
+      "simplify_prompt": "Automate evidence collection and exact checks first. Keep only decisions that carry independent business responsibility.",
+      "deterministic_move": "Use prepared changes, deterministic validation, approval binding, and idempotent execution.",
+      "uncertainty_move": "Let AI interpret, rank, summarize, or propose. Do not make model capability equal to business authority.",
+      "primary_metric": "manual_touch_reduction_or_resolution_time",
+      "counter_metric": "wrong_action_rework_or_approval_failure_rate"
+    },
+    "integration_coupling": {
+      "name": "Integration vs coupling",
+      "operators": ["O4_system_level", "O6_representation", "O1_time"],
+      "patterns": ["P01", "P05", "P12"],
+      "resource_focus": ["information", "structure", "time", "negative_signals"],
+      "simplify_prompt": "Remove duplicate reads, copies, and point-to-point calls that do not protect a real consistency need.",
+      "deterministic_move": "Separate command from notification. Use stable business events or a purpose-specific read model where synchronous confirmation is not required.",
+      "uncertainty_move": "Use AI only after integration semantics are stable, for example to interpret messages or explain anomalies.",
+      "primary_metric": "source_dependency_or_request_volume",
+      "counter_metric": "stale_state_event_loss_duplicate_or_replay_failure_rate"
+    },
+    "freshness_cost": {
+      "name": "Freshness vs cost",
+      "operators": ["O1_time", "O2_condition", "O6_representation"],
+      "patterns": ["P05", "P01", "P12"],
+      "resource_focus": ["time", "information", "compute_attention", "negative_signals"],
+      "simplify_prompt": "Ask which decisions truly need real-time data. Stop refreshing data that no decision consumes.",
+      "deterministic_move": "Use event-triggered refresh, thresholds, cache policy, or tiered service levels instead of uniform polling.",
+      "uncertainty_move": "Use AI or deeper retrieval only for cases where the expected decision value justifies extra cost and latency.",
+      "primary_metric": "data_age_at_decision",
+      "counter_metric": "runtime_cost_source_load_or_latency"
+    },
+    "accuracy_latency": {
+      "name": "Accuracy vs latency",
+      "operators": ["O2_condition", "O1_time", "O6_representation"],
+      "patterns": ["P02", "P10", "P12"],
+      "resource_focus": ["time", "history", "compute_attention", "information"],
+      "simplify_prompt": "Remove analysis steps that do not change the decision. Define the minimum evidence needed for the common path.",
+      "deterministic_move": "Use a fast default path and an explicit escalation path for difficult or high-risk cases.",
+      "uncertainty_move": "Route only ambiguous cases to deeper retrieval, larger models, extra tools, or a bounded agent.",
+      "primary_metric": "task_quality_or_decision_accuracy",
+      "counter_metric": "latency_cost_or_timeout_rate"
+    },
+    "context_privacy": {
+      "name": "Context vs privacy",
+      "operators": ["O6_representation", "O5_authority", "O3_context"],
+      "patterns": ["P03", "P02", "P09", "P12"],
+      "resource_focus": ["information", "policy_permission", "structure", "human_judgment"],
+      "simplify_prompt": "Do not provide data merely because it exists. Reduce context to what changes the decision.",
+      "deterministic_move": "Use purpose-specific views, field-level filtering, permission-scoped retrieval, and short-lived context.",
+      "uncertainty_move": "Let AI reason over the minimum authorized representation. Keep identity and authorization outside model control.",
+      "primary_metric": "task_quality_with_minimum_context",
+      "counter_metric": "data_exposure_or_permission_violation_rate"
+    },
+    "autonomy_trust": {
+      "name": "Autonomy vs trust",
+      "operators": ["O5_authority", "O2_condition", "O1_time"],
+      "patterns": ["P03", "P08", "P10", "P12"],
+      "resource_focus": ["policy_permission", "history", "negative_signals", "human_judgment"],
+      "simplify_prompt": "Use a workflow if the next step is already known. Do not create an agent where deterministic orchestration is enough.",
+      "deterministic_move": "Start read-only. Add budgets, tool allowlists, stop states, prepared changes, validation, and approval by risk tier.",
+      "uncertainty_move": "Use a bounded agent only when the next useful read or analysis action depends on evidence discovered during the task.",
+      "primary_metric": "task_success_without_unnecessary_human_work",
+      "counter_metric": "unsafe_attempts_wrong_actions_or_unnecessary_tool_steps"
+    },
+    "specialization_handoffs": {
+      "name": "Specialization vs handoffs",
+      "operators": ["O2_condition", "O4_system_level", "O1_time"],
+      "patterns": ["P11", "P04", "P06", "P07"],
+      "resource_focus": ["human_judgment", "history", "information", "time"],
+      "simplify_prompt": "Remove handoffs that add no independent expertise or control. Package evidence before expert involvement.",
+      "deterministic_move": "Route by explicit condition, keep state visible, and involve specialists only when their unique decision is required.",
+      "uncertainty_move": "Use AI to collect context, classify the case, and prepare the expert decision package.",
+      "primary_metric": "handoff_count_or_end_to_end_lead_time",
+      "counter_metric": "wrong_route_rework_or_quality_loss"
+    },
+    "local_global": {
+      "name": "Local optimization vs end-to-end outcome",
+      "operators": ["O4_system_level", "O3_context", "O6_representation"],
+      "patterns": ["P07", "P12", "P01"],
+      "resource_focus": ["information", "structure", "history", "policy_permission"],
+      "simplify_prompt": "Stop optimizing a local metric that is not connected to the business outcome. Reframe the measure at process level.",
+      "deterministic_move": "Expose end-to-end state and measures, then move policy or decision ownership to the level that carries the consequence.",
+      "uncertainty_move": "Use AI to explain cross-process evidence or surface likely causes, not to replace outcome ownership.",
+      "primary_metric": "end_to_end_outcome",
+      "counter_metric": "local_regression_or_new_bottleneck_rate"
+    }
+  },
+  "risk_authority": {
+    "R0": {"read": "normal authorized read", "propose": "allowed", "validate": "normal application validation", "approve": "not required for advisory output", "execute": "none"},
+    "R1": {"read": "authorized and purpose-scoped", "propose": "allowed", "validate": "deterministic preconditions", "approve": "optional by policy", "execute": "bounded, reversible, audited tool"},
+    "R2": {"read": "authorized and purpose-scoped", "propose": "allowed", "validate": "deterministic business and permission checks", "approve": "explicit approval bound to exact action", "execute": "idempotent, audited, recoverable"},
+    "R3": {"read": "minimum necessary, tightly scoped", "propose": "advisory only", "validate": "independent deterministic controls", "approve": "accountable human or formal policy authority", "execute": "separate privileged mechanism; AI does not own authorization"}
+  },
+  "resources": [
+    {"id": "information", "name": "Information", "prompt": "What data, status, identifiers, events, or derived signals already exist?"},
+    {"id": "time", "name": "Time", "prompt": "Can preparation, validation, observation, or correction happen before or after the critical moment?"},
+    {"id": "structure", "name": "Structure", "prompt": "Which existing boundary, state, object, queue, interface, or role can carry the function?"},
+    {"id": "history", "name": "History", "prompt": "What resolved cases, logs, traces, changes, decisions, or outcomes can be reused as evidence?"},
+    {"id": "negative_signals", "name": "Negative signals", "prompt": "Which errors, rejections, delays, retries, exceptions, or failures can become useful signals?"},
+    {"id": "human_judgment", "name": "Human judgment", "prompt": "Where does a person add unique judgment, and where are they only collecting or moving information?"},
+    {"id": "policy_permission", "name": "Policy and permission", "prompt": "Which existing rule, authorization, approval, or segregation boundary already controls the risk?"},
+    {"id": "compute_attention", "name": "Compute and attention", "prompt": "Where should expensive reasoning, human attention, or runtime cost be reserved for exceptional cases?"}
+  ]
+}
