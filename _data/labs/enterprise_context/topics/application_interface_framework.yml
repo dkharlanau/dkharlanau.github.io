@@ -1,0 +1,404 @@
+id: TOPIC-SAP-AIF-EXCEPTION-HANDLING
+type: research_topic
+title: "SAP AIF — Interface Exception Handling and Reprocessing"
+summary: >-
+  A practical map of SAP Application Interface Framework (AIF): where it is available,
+  how interfaces are modeled, how monitoring and error handling work, how business users
+  correct and restart messages, and how AIF fits beside middleware and SAP Cloud ALM.
+domain: "Integration Architecture"
+process_family: "Interface Monitoring and Exception Handling"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+human_view: "/labs/enterprise-context/frameworks/#aif"
+source_reviewed_at: "2026-08-15"
+
+business_question: >-
+  How should SAP interface exceptions be made visible, owned, corrected, and reprocessed close to the application,
+  and when should AIF be used instead of leaving every error in middleware or technical logs?
+
+maturity:
+  gates_complete: 7
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: done
+
+memory_model:
+  phrase: "Detect → Explain → Assign → Correct → Reprocess → Reconcile"
+  short_definition: >-
+    AIF is an application-side framework for interface development, monitoring, error handling,
+    and controlled reprocessing. It can expose business keys and business-readable errors instead
+    of forcing every support case through low-level technical monitors.
+  lead_line: >-
+    Middleware tells me whether transport worked. AIF helps answer whether the business message
+    can be understood, corrected, and processed by the SAP application.
+
+core_entities:
+  - id: PLT-SAP-AIF
+    type: platform_component
+    title: "SAP Application Interface Framework"
+    summary: "Framework for interface development, monitoring, error handling, and reprocessing in SAP ABAP systems."
+    source_refs: [SRC-SAP-AIF-OVERVIEW]
+
+  - id: CAP-AIF-MESSAGE-MONITORING
+    type: capability
+    title: "Application-Side Message Monitoring"
+    summary: "Monitor interface messages with business keys, statuses, logs, and responsibility."
+
+  - id: CAP-AIF-ERROR-HANDLING
+    type: capability
+    title: "Interface Error Handling"
+    summary: "Analyze errors, edit permitted payload fields, and restart or reprocess supported messages."
+
+  - id: CAP-AIF-INTERFACE-DEVELOPMENT
+    type: capability
+    title: "Reusable Interface Building Blocks"
+    summary: "Define mappings, checks, actions, engines, and interface metadata in one framework."
+
+  - id: MSG-AIF-DATA-MESSAGE
+    type: message
+    title: "AIF Data Message"
+    summary: "Runtime message instance with status, payload or persistence reference, logs, and interface metadata."
+
+  - id: CTRL-AIF-RECIPIENT-ROUTING
+    type: control
+    title: "AIF Recipient Routing"
+    summary: "Assign interface messages and alerts to responsible users by interface, categories, or business key values."
+
+  - id: CTRL-AIF-CHANGEABLE-FIELDS
+    type: control
+    title: "AIF Changeable Fields"
+    summary: "Explicitly define which payload fields may be corrected during error handling."
+
+  - id: PLT-SAP-BRFPLUS
+    type: platform_component
+    title: "Business Rule Framework plus (BRFplus)"
+    summary: "Reusable ABAP rule framework that AIF can call for selected mappings and checks."
+
+availability:
+  principle: >-
+    AIF has several product forms. Separate the classic add-on lineage, the modern ABAP Platform delivery,
+    and Message Monitoring in SAP S/4HANA Cloud Public Edition.
+  timeline:
+    - release: "SAP Application Interface Framework 1.0 / AIF 700"
+      meaning: "Runs on SAP NetWeaver 7.0 with NW 700 SP17 or higher."
+      source_refs: [SRC-SAP-AIF-SOFTWARE-COMPONENTS]
+    - release: "SAP Application Interface Framework 2.0 and 3.0"
+      meaning: >-
+        The main components also support SAP NetWeaver 7.0 SP17 or higher; optional AIFX extensions
+        require SAP NetWeaver 7.31 in the documented 2.0/3.0 landscape.
+      source_refs: [SRC-SAP-AIF-SOFTWARE-COMPONENTS]
+    - release: "SAP Application Interface Framework 4.0 add-on"
+      meaning: "The 4.0 Master and Upgrade Guide first release is dated April 2018."
+      source_refs: [SRC-SAP-AIF-4-MASTER-GUIDE]
+    - release: "SAP S/4HANA / ABAP Platform 2021, 2022, 2023, 2025"
+      meaning: "SAP Help lists AIF documentation as part of these ABAP Platform generations."
+      source_refs: [SRC-SAP-AIF-VERSION-OVERVIEW]
+    - release: "SAP S/4HANA Cloud Public Edition"
+      meaning: >-
+        AIF capabilities are exposed as Message Monitoring. Available actions depend on the delivered interface
+        and underlying message technology; restart or edit is not universal.
+      source_refs: [SRC-SAP-AIF-PUBLIC-MESSAGE-MONITORING]
+  lead_answer: >-
+    If someone asks "from which version?", first ask which deployment: classic ERP add-on, S/4HANA private/on-premise,
+    or S/4HANA Cloud Public Edition. A single version number is usually misleading.
+
+architecture_position:
+  owns:
+    - "Application-side interface monitoring"
+    - "Business-readable message keys and error context"
+    - "Controlled correction of configured fields"
+    - "Restart, reprocessing, and mass error handling where the interface technology supports it"
+    - "Recipient and alert responsibility"
+    - "Reusable mappings, checks, and actions"
+  does_not_replace:
+    - "SAP Integration Suite or another middleware runtime"
+    - "API management"
+    - "Enterprise event broker or Kafka platform"
+    - "End-to-end observability across all systems"
+    - "Business reconciliation proving that sender and receiver agree"
+
+setup_sequence:
+  - step: 1
+    title: "Activate the error-handling application"
+    detail: >-
+      In /AIF/CUST under Error Handling, define the error-handling application.
+      SAP recommends checking the standard application AIF and running /AIF/SETUP if it is missing.
+    source_refs: [SRC-SAP-AIF-ERROR-APP]
+  - step: 2
+    title: "Set global trace behavior"
+    detail: "Maintain the global error-handling features and trace levels required for productive support."
+    source_refs: [SRC-SAP-AIF-INITIAL-SETUP]
+  - step: 3
+    title: "Define namespace and interface"
+    detail: >-
+      Create a namespace, then an interface with interface name and version.
+      Depending on the technology, define raw and SAP structures and the relevant proxy or interface metadata.
+    source_refs: [SRC-SAP-AIF-INTERFACE-CREATION]
+  - step: 4
+    title: "Choose interface engines"
+    detail: >-
+      Select application, persistence, selection, and logging engines according to the message technology and persistence model.
+    source_refs: [SRC-SAP-AIF-ENGINE-FACTORY]
+  - step: 5
+    title: "Build mappings, checks, and actions"
+    detail: >-
+      Define structure mappings and, where needed, value mappings, fix values, checks, and actions.
+      AIF can also call BRFplus functions for selected mappings and checks.
+    source_refs: [SRC-SAP-AIF-INTERFACE-CREATION, SRC-SAP-AIF-BRFPLUS-INTEGRATION]
+  - step: 6
+    title: "Expose business keys"
+    detail: >-
+      Define key fields so support users can find messages by meaningful identifiers such as sales order,
+      purchase order, supplier, or material instead of only technical message IDs.
+    source_refs: [SRC-SAP-AIF-KEY-FIELDS]
+  - step: 7
+    title: "Control correction"
+    detail: "Explicitly define which fields users may change when a message is in error."
+    source_refs: [SRC-SAP-AIF-ERROR-HANDLING]
+  - step: 8
+    title: "Assign responsibility"
+    detail: >-
+      Configure recipients and assign users so the right team sees the right errors and alerts.
+      Recipient determination can use message categories and key-field values.
+    source_refs: [SRC-SAP-AIF-RECIPIENTS]
+  - step: 9
+    title: "Monitor and reprocess"
+    detail: >-
+      Use Monitoring and Error Handling (/AIF/ERR), Interface Monitor, or the relevant Fiori Message Monitoring apps.
+      Correct permitted data or configuration and restart/reprocess supported messages.
+    source_refs: [SRC-SAP-AIF-ERROR-HANDLING, SRC-SAP-AIF-PUBLIC-MESSAGE-MONITORING]
+  - step: 10
+    title: "Close with reconciliation"
+    detail: >-
+      Verify the receiving business object or posting, not only the technical success status.
+      A green interface message is transport evidence, not automatically business reconciliation.
+
+runtime_model:
+  stages:
+    - "Message enters or is attached to an AIF-enabled interface."
+    - "AIF selects the configured engines for processing, persistence, selection, and logging."
+    - "Mappings, checks, and actions execute according to the interface design."
+    - "Business and technical messages are logged with interface and key-field context."
+    - "Recipient rules expose the exception to the responsible user."
+    - "A permitted correction or configuration fix is applied."
+    - "The message is restarted or reprocessed where supported."
+    - "The business result is reconciled in the target application."
+
+technology_examples:
+  note: >-
+    AIF technology support is engine-based and release-dependent. Do not assume every feature is available for every message type.
+  examples:
+    - "ABAP Proxy"
+    - "IDoc"
+    - "XML / AIF persistence"
+    - "tRFC / qRFC"
+    - "Structured persistence"
+  source_refs: [SRC-SAP-AIF-ENGINE-FACTORY, SRC-SAP-AIF-INTERFACE-CREATION]
+
+exception_types:
+  - type: "Business data error"
+    example: "Supplier code or organizational value cannot be mapped."
+    preferred_response: "Correct allowed payload data or mapping, then reprocess."
+  - type: "Configuration error"
+    example: "Required mapping, check, or customizing entry is missing."
+    preferred_response: "Fix configuration, then reprocess the original message."
+  - type: "Temporary technical error"
+    example: "Lock or transient resource problem."
+    preferred_response: "Use controlled retry or automatic reprocessing where supported."
+  - type: "Permanent technical design error"
+    example: "Interface structure or processing logic is wrong."
+    preferred_response: "Escalate to development; do not teach business users to repair code defects in the payload."
+  - type: "Business reconciliation mismatch"
+    example: "Message is technically successful but the expected business object or posting is incomplete."
+    preferred_response: "Investigate the end-to-end process. AIF success alone is not enough."
+
+integration_with_brfplus:
+  statement: >-
+    AIF can integrate BRFplus functions for value mapping, structure mapping, and checks.
+    This is useful when a mapping or validation is a reusable business rule rather than interface-specific procedural code.
+  source_refs: [SRC-SAP-AIF-BRFPLUS-INTEGRATION]
+  design_split:
+    brfplus: "Decision or reusable mapping rule."
+    aif: "Message context, persistence, monitoring, correction, recipient ownership, and reprocessing."
+
+design_rules:
+  - id: HEUR-AIF-BUSINESS-KEYS-FIRST
+    type: expert_heuristic
+    context: "AIF monitoring design"
+    statement: "Expose the business keys that support teams use before optimizing the monitor layout."
+    confidence: high
+    questions:
+      - "Which ID does the business team know when it raises a ticket?"
+      - "Can the monitor search by that ID?"
+    anti_patterns:
+      - "Only technical GUIDs are searchable."
+
+  - id: HEUR-AIF-CORRECT-SAFELY
+    type: expert_heuristic
+    context: "AIF payload correction"
+    statement: "Make only safe, owned fields changeable."
+    confidence: high
+    questions:
+      - "Who owns this field?"
+      - "Can changing it violate the sender's system of record?"
+      - "Should the real fix happen in master data or customizing instead?"
+    anti_patterns:
+      - "Allow broad payload editing because it is convenient."
+
+  - id: HEUR-AIF-RECIPIENTS-AS-OPERATING-MODEL
+    type: expert_heuristic
+    context: "AIF operations"
+    statement: "Design recipients from operational ownership, not from the project organization chart."
+    confidence: high
+    questions:
+      - "Who can actually resolve this class of error?"
+      - "What happens outside business hours?"
+      - "Which errors need escalation rather than notification?"
+    anti_patterns:
+      - "One shared recipient for every interface."
+
+  - id: HEUR-AIF-RECONCILE-AFTER-RESTART
+    type: expert_heuristic
+    context: "AIF reprocessing"
+    statement: "After restart, verify the business result in the target application."
+    confidence: high
+    questions:
+      - "Was the intended object created or updated?"
+      - "Did the posting happen exactly once?"
+      - "Did downstream processing continue?"
+    anti_patterns:
+      - "Close the incident when the message turns green."
+
+limitations:
+  - "AIF does not replace middleware or enterprise-wide monitoring."
+  - "Edit and restart capabilities depend on the underlying interface technology and configuration."
+  - "Public Cloud Message Monitoring is not identical to the classic add-on workbench."
+  - "Poorly designed changeable fields can create data ownership and audit problems."
+  - "Without business key fields and recipients, AIF can become another technical inbox."
+  - "Reprocessing must account for idempotency and duplicate business effects."
+
+synthetic_example:
+  id: SCN-AIF-SYNTHETIC-SUPPLIER-REPLICATION
+  type: scenario
+  title: "Synthetic supplier replication exception"
+  synthetic: true
+  flow:
+    - "MDG activates supplier."
+    - "Outbound integration sends supplier data to S/4HANA consumer."
+    - "AIF check rejects purchasing organization value Z999."
+    - "Message is assigned to the master-data integration recipient."
+    - "Support confirms that Z999 should map to 1000."
+    - "Mapping is corrected."
+    - "Original message is reprocessed."
+    - "Supplier is verified in the target purchasing organization."
+  lesson: >-
+    The real result is not "message green". The result is "the target supplier is usable in the required process without duplicate creation".
+
+assessment_cards:
+  - question: "Why use AIF if we already have Integration Suite?"
+    answer: >-
+      Integration Suite owns transport, mediation, and orchestration across systems.
+      AIF is useful close to the SAP application when business users need business keys, application errors,
+      controlled correction, responsibility, and reprocessing.
+  - question: "What do you configure first in AIF?"
+    answer: >-
+      I first define the error-handling baseline, namespace, and interface contract. Then I choose engines,
+      mappings and checks, business key fields, changeable fields, and recipients. Monitoring is useful only after ownership is designed.
+  - question: "Can users edit failed messages?"
+    answer: >-
+      Only fields explicitly allowed for correction should be changeable, and support depends on the message technology.
+      I avoid correcting authoritative master data in a payload if the source record itself is wrong.
+  - question: "How does BRFplus fit with AIF?"
+    answer: >-
+      AIF can call BRFplus for value mapping, structure mapping, and checks.
+      BRFplus owns the reusable decision; AIF owns message operations and recovery.
+  - question: "What is the most dangerous AIF anti-pattern?"
+    answer: >-
+      Treating a successful restart as proof that the business process is correct.
+      I always add reconciliation and duplicate/idempotency checks for critical interfaces.
+
+ai_evaluation:
+  grounded_questions:
+    - "An IDoc fails because a plant mapping is missing. Which platform should own transport, which tool can support application-side correction, and what should be reconciled after restart?"
+    - "A support team sees only message GUIDs. Which AIF model element should be improved first?"
+    - "A project wants to make every payload field editable in AIF. What risks should a Lead challenge?"
+    - "A reusable mapping is shared by several AIF interfaces. When can BRFplus be a better home than custom mapping code?"
+  expected_reasoning:
+    - "Separate middleware responsibility from application-side exception handling."
+    - "Expose business key fields and explicit recipient ownership."
+    - "Restrict correction to safe fields and fix source/master data when appropriate."
+    - "Reconcile target business state after reprocessing."
+    - "Consider idempotency before automatic or manual retry."
+
+relations:
+  - subject: PLT-SAP-AIF
+    predicate: provides_capability
+    object: CAP-AIF-MESSAGE-MONITORING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-AIF-OVERVIEW]
+  - subject: PLT-SAP-AIF
+    predicate: provides_capability
+    object: CAP-AIF-ERROR-HANDLING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-AIF-ERROR-HANDLING]
+  - subject: PLT-SAP-AIF
+    predicate: provides_capability
+    object: CAP-AIF-INTERFACE-DEVELOPMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-AIF-INTERFACE-CREATION]
+  - subject: CAP-AIF-ERROR-HANDLING
+    predicate: controlled_by
+    object: CTRL-AIF-CHANGEABLE-FIELDS
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-AIF-ERROR-HANDLING]
+  - subject: CAP-AIF-MESSAGE-MONITORING
+    predicate: controlled_by
+    object: CTRL-AIF-RECIPIENT-ROUTING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-AIF-RECIPIENTS]
+  - subject: PLT-SAP-AIF
+    predicate: calls
+    object: PLT-SAP-BRFPLUS
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-AIF-BRFPLUS-INTEGRATION]
+
+source_refs:
+  - SRC-SAP-AIF-OVERVIEW
+  - SRC-SAP-AIF-SOFTWARE-COMPONENTS
+  - SRC-SAP-AIF-4-MASTER-GUIDE
+  - SRC-SAP-AIF-VERSION-OVERVIEW
+  - SRC-SAP-AIF-PUBLIC-MESSAGE-MONITORING
+  - SRC-SAP-AIF-ERROR-APP
+  - SRC-SAP-AIF-INITIAL-SETUP
+  - SRC-SAP-AIF-INTERFACE-CREATION
+  - SRC-SAP-AIF-ENGINE-FACTORY
+  - SRC-SAP-AIF-KEY-FIELDS
+  - SRC-SAP-AIF-RECIPIENTS
+  - SRC-SAP-AIF-ERROR-HANDLING
+  - SRC-SAP-AIF-BRFPLUS-INTEGRATION
+
+tags:
+  - sap
+  - aif
+  - exception-handling
+  - error-handling
+  - integration
+  - monitoring
+  - reprocessing
+  - idoc
+  - brfplus
+  - architecture
