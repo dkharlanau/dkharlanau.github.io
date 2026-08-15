@@ -1,0 +1,131 @@
+---
+layout: default
+title: "SAP Sales Diagnostic Casebook — Enterprise Context Lab"
+description: "Symptom-first SAP Sales diagnostic cases for billing, down payments, JIT, configurable returns, CTO+ and third-party fulfillment."
+permalink: /labs/enterprise-context/sales-diagnostics/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags: [sap-s4hana, sap-sd, sales, diagnostics, lead-consulting, jit, returns, billing, eto]
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.sales_diagnostic_casebook %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Sales Diagnostics</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Sales / Diagnostic Casebook</p>
+      <h1>Start from the symptom.<br />Prove the owner.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#diagnostic-cases">Open cases <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Sales diagnostic inventory">
+      <p>Reasoning layer</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.diagnostic_cases | size }}</strong><small>Diagnostic cases</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.assessment_drills | size }}</strong><small>Assessment drills</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.case_design_rules | size }}</strong><small>Reasoning rules</small></div>
+      <em>{{ graph.memory_path }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Boundary:</strong> this casebook is authored diagnostic reasoning. SAP sources anchor product behavior and release-sensitive limits. A case is not a replacement for system evidence.</p>
+    <a href="/labs/enterprise-context/data/sales-diagnostic-casebook.json">Open casebook JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Method</p>
+      <h2>{{ graph.memory_path }}</h2>
+      <p>A good diagnosis narrows the owner before it proposes a change. That sounds obvious. Production incidents remain creative evidence that it is not.</p>
+    </header>
+    <div class="ecg-heuristic-grid">
+      {% for item in graph.case_design_rules %}
+      <article><span>RULE</span><h3>{{ item.rule }}</h3><p>{{ item.why }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="diagnostic-cases" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Cases</p>
+      <h2>Evidence before configuration.</h2>
+      <p>Each case connects a visible symptom with process IDs, mechanism IDs, competing causes and a handoff package.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for case in graph.diagnostic_cases %}
+      <details>
+        <summary><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ case.title }}</strong><small>{{ case.level }} · {{ case.process_refs | join: ' / ' }}</small></summary>
+        <div>
+          <p><strong>Boundary.</strong> {{ case.boundary }}</p>
+          <p><strong>Business impact.</strong> {{ case.business_impact }}</p>
+
+          <h4>Observable symptoms</h4>
+          <ul>{% for item in case.symptoms %}<li>{{ item }}</li>{% endfor %}</ul>
+
+          <h4>Diagnostic path</h4>
+          <div class="research-route-list">
+            {% for step in case.diagnostic_path %}
+            <a href="#"><span>{{ step.order }}</span><strong>{{ step.check }}</strong><small>Evidence: {{ step.evidence }} · Decision: {{ step.decision }}</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
+            {% endfor %}
+          </div>
+
+          <h4>Competing failure modes</h4>
+          <div class="ecg-determination-list">
+            {% for failure in case.failure_modes %}
+            <article class="ecg-determination-card"><div class="ecg-determination-card__index">{{ forloop.index }}</div><div class="ecg-determination-card__copy"><h3>{{ failure.cause }}</h3><p>{{ failure.discriminator }}</p><small>Owner: {{ failure.owner }}</small></div></article>
+            {% endfor %}
+          </div>
+
+          <h4>Handoff package</h4>
+          <p><strong>Primary owner.</strong> {{ case.handoff.primary_owner }}</p>
+          <ul>{% for item in case.handoff.evidence_package %}<li>{{ item }}</li>{% endfor %}</ul>
+          <p><strong>Proof of fix.</strong> {{ case.handoff.proof_of_fix }}</p>
+
+          <p><strong>Lead answer.</strong> {{ case.lead_answer }}</p>
+          <p><strong>Agent retrieval.</strong> {{ case.agent_case_contract.retrieve_when }}</p>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Give the proof path, not the first fix.</h2>
+      <p>The expected shape is deliberately short. A Lead answer should expose boundaries and evidence without turning into a configuration dump.</p>
+    </header>
+    <div class="ecg-drill-list">
+      {% for drill in graph.assessment_drills %}
+      <details><summary><span>Q{{ forloop.index }}</span><strong>{{ drill.prompt }}</strong><small>Open answer shape</small></summary><div><ul>{% for item in drill.expected_shape %}<li>{{ item }}</li>{% endfor %}</ul></div></details>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ecg-machine" data-reveal>
+    <div>
+      <p class="research-canvas__eyebrow">Human + machine</p>
+      <h2>One reasoning model, two consumers.</h2>
+      <p>Consultants read the case. Agents retrieve the same case by symptom, process ID or mechanism ID and keep the evidence boundary intact.</p>
+    </div>
+    <div class="ecg-machine__actions">
+      {% for item in graph.related_views %}<a href="{{ item.url }}">{{ item.title }}</a>{% endfor %}
+      <a class="research-canvas__button" href="/labs/enterprise-context/data/sales-diagnostic-casebook.json">Diagnostic JSON</a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
