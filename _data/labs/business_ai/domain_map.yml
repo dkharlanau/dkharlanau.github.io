@@ -1,0 +1,189 @@
+schema_version: "1.0"
+reviewed_at: "2026-08-15"
+
+principle: "A business domain does not need an AI strategy. It needs a small number of measurable decisions and workflows where uncertainty, language, documents, prediction, or optimization make deterministic automation insufficient."
+
+domains:
+  - id: "sales-o2c"
+    title: "Sales and Order-to-Cash"
+    business_jobs:
+      - "Recommend the next relevant product or action to a seller."
+      - "Turn customer emails, PDFs, drawings, and purchase orders into structured order proposals."
+      - "Explain why a sales-order commitment changed across availability, allocation, supply, and delivery context."
+      - "Reduce manual navigation across customer, sales, procurement, and fulfillment documents."
+    sap_touchpoints:
+      - "SAP S/4HANA Sales"
+      - "sales order and quotation APIs"
+      - "Business Partner and customer master data"
+      - "material and product master data"
+      - "pricing"
+      - "ATP and allocation"
+      - "credit management"
+      - "SAP BTP"
+      - "Joule and Joule Studio"
+    lead_questions:
+      - "Which values may AI propose, and which values must SAP determine?"
+      - "Does AI create a draft, a recommendation, or a posted sales document?"
+      - "How are material, customer, ship-to, unit-of-measure, pricing, ATP, and credit validated?"
+      - "What is the fallback when product or partner matching confidence is low?"
+      - "Do we measure order-entry speed only, or also correction rate, margin, service level, and customer impact?"
+    case_ids:
+      - "wipro-guided-selling"
+      - "amd-sales-order-troubleshooter"
+      - "lc-waikiki-smartbot"
+      - "dataxstream-quote-order-ai"
+      - "synthomer-agentic-order-intake"
+      - "pharmaoverseas-joule-operations"
+
+  - id: "procurement-p2p"
+    title: "Procurement and Procure-to-Pay"
+    business_jobs:
+      - "Extract supplier documents and continue a controlled purchasing or invoice workflow."
+      - "Compare supplier confirmations with ERP purchase-order data and route only real differences."
+      - "Match purchase orders, invoices, and contracts while keeping financial and purchasing controls explicit."
+      - "Answer cross-document procurement questions without manual navigation."
+    sap_touchpoints:
+      - "SAP S/4HANA Sourcing and Procurement"
+      - "purchase orders and confirmations"
+      - "supplier and Business Partner master data"
+      - "supplier invoices"
+      - "SAP Ariba Central Invoice Management"
+      - "SAP Document AI"
+      - "SAP Build Process Automation"
+      - "SAP AI Core and AI Launchpad"
+      - "Joule"
+    lead_questions:
+      - "Which document fields are extracted by AI and which business rules validate them?"
+      - "What difference is material enough to become a buyer exception?"
+      - "Can a low-confidence extraction post anything, or must it stop?"
+      - "How are duplicate documents, unit conversions, price differences, and date tolerances handled?"
+      - "Do we measure touchless rate together with false acceptance and correction rate?"
+    case_ids:
+      - "frosta-touchless-invoices"
+      - "western-sugar-invoices"
+      - "lemvigh-muller-confirmations"
+      - "lc-waikiki-smartbot"
+      - "pharmaoverseas-joule-operations"
+
+  - id: "planning-inventory"
+    title: "Demand Planning and Inventory"
+    business_jobs:
+      - "Predict demand at the product and location level where the planning decision is made."
+      - "Sense short-term demand changes and turn them into planning exceptions."
+      - "Detect inventory risk early enough to change replenishment, production, or delivery decisions."
+    sap_touchpoints:
+      - "SAP Integrated Business Planning for Supply Chain"
+      - "demand planning and demand sensing"
+      - "inventory planning"
+      - "SAP S/4HANA supply and inventory data"
+      - "product and location master data"
+      - "planning calendars and promotions"
+    lead_questions:
+      - "What is the forecast grain: family, SKU, plant, DC, store, customer, or week?"
+      - "Which baseline does the model beat?"
+      - "How does forecast improvement change service level, stock, waste, or working capital?"
+      - "Where can a planner override the model and is the override measured?"
+      - "How are promotions, launches, seasonality, and structural breaks handled?"
+    case_ids:
+      - "cainz-demand-forecasting"
+      - "forvia-ai-demand-planning"
+      - "brf-daily-demand-sensing"
+      - "pharmaoverseas-joule-operations"
+
+  - id: "warehouse-logistics"
+    title: "Warehouse, Transportation, and Intralogistics"
+    business_jobs:
+      - "Optimize routes, sequences, and allocations under operational constraints."
+      - "Turn warehouse and production priorities into autonomous physical material movement."
+      - "Detect delivery or capacity risk before it becomes a service failure."
+    sap_touchpoints:
+      - "SAP Extended Warehouse Management"
+      - "warehouse tasks and warehouse orders"
+      - "handling units and stock identity"
+      - "production supply and line feeding"
+      - "transportation and route context"
+      - "SAP S/4HANA"
+      - "SAP Embodied AI"
+      - "Joule"
+    lead_questions:
+      - "Is this an optimization problem, an AI reasoning problem, or both?"
+      - "Which constraints are hard and must never be relaxed by a model?"
+      - "Who owns physical safety, task state, stock confirmation, and exception recovery?"
+      - "What happens when robot, network, model, or warehouse-system state disagree?"
+      - "Do we measure throughput together with accuracy, recovery time, safety, and service level?"
+    case_ids:
+      - "ups-orion"
+      - "martur-fompak-embodied-intralogistics"
+      - "pharmaoverseas-joule-operations"
+
+  - id: "manufacturing-quality"
+    title: "Manufacturing and Quality"
+    business_jobs:
+      - "Detect quality problems before defective output continues through production."
+      - "Predict equipment or process risk early enough to schedule an intervention."
+      - "Connect production priorities with autonomous material execution."
+    sap_touchpoints:
+      - "SAP Digital Manufacturing"
+      - "SAP S/4HANA Manufacturing"
+      - "SAP Quality Management"
+      - "inspection results and quality notifications"
+      - "maintenance and asset data"
+      - "production orders and operations"
+      - "EWM production supply"
+    lead_questions:
+      - "What confirmed label defines a defect or failure?"
+      - "What is the cost of false acceptance versus false rejection?"
+      - "Which action follows a model signal: inspect, stop, rework, scrap, maintain, or only inform?"
+      - "How is the model connected to production genealogy, batch, serial, and equipment context?"
+      - "Does the KPI describe model accuracy or actual scrap, downtime, utilization, and quality cost?"
+    case_ids:
+      - "rolls-royce-quality-prediction"
+      - "martur-fompak-embodied-intralogistics"
+
+  - id: "master-data"
+    title: "Master Data and Governance"
+    business_jobs:
+      - "Give AI stable identities for customer, supplier, product, material, and asset data."
+      - "Reduce duplicate, inconsistent, and weakly governed data before it enters automated decisions."
+      - "Match external language to governed enterprise objects without allowing the model to invent identity."
+    sap_touchpoints:
+      - "SAP Master Data Governance"
+      - "Business Partner"
+      - "material and product master data"
+      - "key mapping"
+      - "duplicate check"
+      - "data-quality rules"
+      - "workflow and ownership"
+      - "replication and distribution"
+    lead_questions:
+      - "What is the system of record for identity?"
+      - "Can AI suggest a match, and who approves a new or changed master record?"
+      - "How are duplicates, aliases, units, descriptions, and cross-system keys governed?"
+      - "Which data-quality rules are deterministic and which matching steps benefit from ML?"
+      - "Can every downstream AI decision be traced to the master-data version it used?"
+    case_ids:
+      - "adani-master-data-foundation"
+      - "synthomer-agentic-order-intake"
+      - "wipro-guided-selling"
+
+  - id: "knowledge-service"
+    title: "Knowledge Work and Service"
+    business_jobs:
+      - "Resolve repeat service requests with current account and policy context."
+      - "Find relevant enterprise knowledge with permissions and citations."
+      - "Turn meetings and conversations into reviewed follow-up work."
+    sap_touchpoints:
+      - "service and customer data"
+      - "knowledge repositories"
+      - "CRM"
+      - "authorization and identity"
+      - "workflow and escalation"
+    lead_questions:
+      - "What evidence is required before the assistant may answer?"
+      - "How are permissions enforced before retrieval, not after generation?"
+      - "Which actions are read-only, prepared, approved, or automatically executed?"
+      - "How is a no-evidence state represented?"
+      - "Do we measure deflection alone, or also correctness, repeat contacts, satisfaction, and escalation quality?"
+    case_ids:
+      - "klarna-service-assistant"
+      - "morgan-stanley-assistant"
