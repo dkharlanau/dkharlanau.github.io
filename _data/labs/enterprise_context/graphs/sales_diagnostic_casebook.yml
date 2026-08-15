@@ -1,0 +1,452 @@
+id: GRAPH-SD-SALES-DIAGNOSTIC-CASEBOOK
+version: "1.0.0"
+type: diagnostic_casebook
+status: draft
+verified: false
+updated_at: "2026-08-15"
+title: "SAP Sales Diagnostic Casebook"
+summary: >-
+  A symptom-first reasoning layer for SAP Sales. The cases connect a business problem to
+  process families, control mechanisms, evidence, ownership and a safe handoff. The aim is
+  not to memorize fixes. It is to prove which layer owns the problem before changing it.
+memory_path: "SYMPTOM → BOUNDARY → EVIDENCE → OWNER → CAUSE → CHANGE → PROOF"
+audiences:
+  - "SAP Sales and logistics consultants"
+  - "Lead consultants and solution architects"
+  - "AI agents that need structured diagnostic paths instead of text-only retrieval"
+authoring_policy:
+  facts: "SAP product behavior and release-sensitive limits are anchored by source_refs."
+  reasoning: "Symptoms, diagnostic order, failure patterns, handoff rules and Lead answers are independently authored for this Lab."
+  examples: "Names, incidents and operational situations are synthetic unless a case says otherwise."
+  language: "English B2. Prefer short decisions and explicit ownership over documentation-style prose."
+
+agent_contract:
+  retrieval_keys:
+    - "case id"
+    - "process_refs"
+    - "mechanism_refs"
+    - "intent_aliases"
+    - "symptoms"
+  reasoning_rules:
+    - "Do not jump from a symptom to a configuration change. Follow diagnostic_path in order."
+    - "Separate source-backed product facts from authored diagnostic interpretation."
+    - "If the required evidence is missing, state what must be collected instead of inventing a root cause."
+    - "Prefer the narrowest owner that explains the evidence. Escalate across teams only when the boundary is proven."
+    - "Keep release and deployment uncertainty visible when the referenced process is release-sensitive."
+  answer_shape:
+    - "Observed symptom"
+    - "Most likely ownership boundary"
+    - "Evidence to collect"
+    - "Competing hypotheses"
+    - "Recommended next action"
+    - "Proof that the action worked"
+
+case_design_rules:
+  - id: SDC.RULE.SYMPTOM
+    rule: "Start with what the business or support team can observe."
+    why: "A transaction code is not a symptom and usually hides the real boundary."
+  - id: SDC.RULE.COMPARE
+    rule: "Compare a good document with a bad document before reading every Customizing table."
+    why: "A field-level difference often reduces the search space faster than broad configuration review."
+  - id: SDC.RULE.OWNER
+    rule: "Name one primary owner for every hypothesis."
+    why: "Cross-functional incidents become slow when Sales, FI, manufacturing and integration all change things at once."
+  - id: SDC.RULE.PROOF
+    rule: "Every proposed change needs a positive test and a negative test."
+    why: "Fixing one document is not proof that the control rule is correct."
+  - id: SDC.RULE.HANDOFF
+    rule: "A handoff must carry evidence, not only a ticket description."
+    why: "The receiving team should know what was proven, what was excluded and which object is still suspicious."
+
+diagnostic_cases:
+  - id: SDC.DP.01
+    title: "Down payment flow uses the wrong process model"
+    level: advanced
+    intent_aliases:
+      - "Customer paid, but final invoice clearing is wrong"
+      - "Should we use classic milestone down payment or Advanced Down Payment Processing?"
+      - "Down payment request exists but the lifecycle is inconsistent"
+    symptoms:
+      - "The team can create a request, but cannot explain which sales milestone made it due."
+      - "FI shows a customer down payment while the sales-side document flow does not match the intended settlement model."
+      - "Design discussions mix classic milestone billing and Advanced Down Payment Processing as if they were one process."
+    business_impact: "Cash can be received correctly while billing, clearing and audit logic remain inconsistent."
+    process_refs: ["SD.DP.CLASSIC", "SD.DP.ADV"]
+    mechanism_refs: ["MEC.SD.BILLPLAN", "MEC.SD.BILLREL", "MEC.SD.BILLTYPE", "MEC.SD.COPY", "MEC.SD.BILL", "MEC.SD.ACCOUNT"]
+    boundary: "Sales billing plan and billing control ↔ FI customer down-payment posting and clearing"
+    diagnostic_path:
+      - order: 1
+        check: "Classify the process family before checking individual postings."
+        evidence: "Sales document type, billing-plan design, down-payment request flow and the agreed target process model."
+        decision: "If classic milestone billing is intended, continue on the classic control path. If the design is Advanced Down Payment Processing, stop comparing it as a small variant of BKJ."
+      - order: 2
+        check: "Prove why the down-payment request became due."
+        evidence: "Billing-plan dates, percentages or amounts, date status, billing relevance and billing block status."
+        decision: "A request without a proven milestone is a billing-control problem before it is an FI problem."
+      - order: 3
+        check: "Separate requested money from received money."
+        evidence: "Sales billing/request document flow plus the FI customer down-payment posting and clearing status."
+        decision: "A request proves commercial intent. The FI posting proves that cash was recorded. They are not interchangeable evidence."
+      - order: 4
+        check: "Prove final settlement behavior."
+        evidence: "Final billing document, copied down-payment values, open items and clearing result."
+        decision: "The case is closed only when the commercial request, received cash and final receivable reconcile."
+    failure_modes:
+      - id: SDC.DP.F01
+        cause: "Wrong process family selected during solution design"
+        discriminator: "Classic milestone objects and advanced-process objects are mixed in one expected lifecycle."
+        owner: "Solution design / Sales + FI"
+      - id: SDC.DP.F02
+        cause: "Billing-plan date or status does not make the request due"
+        discriminator: "FI is not yet relevant because Sales cannot prove a valid due event."
+        owner: "Sales billing"
+      - id: SDC.DP.F03
+        cause: "Cash posting or clearing is missing or linked to the wrong customer/open item context"
+        discriminator: "Sales request is correct, but FI evidence does not reconcile with final billing."
+        owner: "FI-AR with Sales handoff"
+    handoff:
+      primary_owner: "Sales billing until request/due logic is proven; FI-AR for payment and clearing evidence"
+      evidence_package: ["sales document flow", "billing plan", "request/final billing documents", "FI down-payment item", "clearing result"]
+      proof_of_fix: "One positive milestone and one not-yet-due milestone behave correctly, and final clearing reconciles the received amount."
+    lead_answer: >-
+      I first identify the down-payment model. Then I separate three events: the sales request,
+      the real FI payment, and final clearing. I do not repair a missing billing milestone in FI,
+      and I do not call a request proof of payment. The design is correct only when all three
+      events reconcile in one process model.
+    agent_case_contract:
+      retrieve_when: "The prompt contains down payment, milestone, request, clearing, advance payment or a classic-versus-advanced design question."
+      do_not_conflate: ["billing request with cash receipt", "classic milestone processing with Advanced Down Payment Processing"]
+      minimum_output: ["process family", "due-event evidence", "payment evidence", "clearing evidence", "owner"]
+    source_refs: ["SRC-SAP-DP-CLASSIC-BKJ", "SRC-SAP-DP-ADVANCED"]
+
+  - id: SDC.BILL.02
+    title: "Unexpected invoice split"
+    level: advanced
+    intent_aliases:
+      - "Why did two deliveries create two invoices?"
+      - "Why does one sales order create several billing documents?"
+      - "Collective billing does not combine the documents"
+    symptoms:
+      - "References that look commercially similar create separate billing headers."
+      - "The first proposed fix is a custom split routine before standard split analysis is reviewed."
+    business_impact: "Extra invoices increase customer confusion, reconciliation effort and interface volume, even when each invoice is technically valid."
+    process_refs: ["SD.SFS", "SD.BILL.COLL"]
+    mechanism_refs: ["MEC.SD.BILLSPLIT", "MEC.SD.COPY", "MEC.SD.BILLTYPE", "MEC.SD.BILL"]
+    boundary: "Source document/item values ↔ billing header convergence"
+    diagnostic_path:
+      - order: 1
+        check: "Prove that the references are eligible for the same billing run and target type."
+        evidence: "Billing due status, target billing type, billing date and relevant source references."
+        decision: "If eligibility or target type differs, this is not yet a split-analysis problem."
+      - order: 2
+        check: "Run split analysis and capture the actual differing fields."
+        evidence: "Split-analysis result plus values from both source items/documents."
+        decision: "Treat the differing field as evidence. Do not label it a defect until its owner is understood."
+      - order: 3
+        check: "Trace each differing field back to its owner."
+        evidence: "Partner, organization, currency, payment terms, Incoterms, customer reference, assignment/reference transfer or other header-relevant values."
+        decision: "Fix the upstream owner or copy rule when the field is wrong. Keep the split when the business difference is real."
+      - order: 4
+        check: "Retest convergence and the negative case."
+        evidence: "A pair that should combine and a pair with one intentional split criterion."
+        decision: "The solution is proven only when desired invoices combine and valid differences still split."
+    failure_modes:
+      - id: SDC.BILL.F01
+        cause: "A standard split-relevant field genuinely differs"
+        discriminator: "Split analysis points to a business field with different source values."
+        owner: "Owner of the source field"
+      - id: SDC.BILL.F02
+        cause: "Copy/data-transfer logic creates different billing header values"
+        discriminator: "Source values are compatible, but target header values diverge after copy."
+        owner: "Sales copy control"
+      - id: SDC.BILL.F03
+        cause: "Custom logic is compensating for an upstream data problem"
+        discriminator: "A custom routine forces grouping without explaining why the source values differ."
+        owner: "Sales design / extension owner"
+    handoff:
+      primary_owner: "Sales billing and the owner of the first proven differing field"
+      evidence_package: ["two source documents/items", "split analysis", "target billing type", "copied header values", "copy-control context"]
+      proof_of_fix: "Expected references combine without suppressing an intentional split in the negative test."
+    lead_answer: >-
+      I treat invoice count as a grouping result. First I prove common eligibility and billing type,
+      then I use split analysis to find the field that prevents convergence. The important question
+      is not how to suppress the split, but who owns that field and whether the difference is valid.
+    agent_case_contract:
+      retrieve_when: "The prompt mentions invoice split, collective billing, several invoices, grouping or billing convergence."
+      do_not_conflate: ["billing eligibility with billing split", "different invoices with incorrect invoices"]
+      minimum_output: ["split evidence", "differing field", "field owner", "copy boundary", "positive and negative retest"]
+    source_refs: ["SRC-MEC-BILLSPLIT", "SRC-MEC-BILLSPLIT-CRITERIA", "SRC-MEC-BILL-COPY"]
+
+  - id: SDC.JIT.03
+    title: "JIT release or cumulative quantity no longer reconciles"
+    level: advanced
+    intent_aliases:
+      - "Customer JIT call looks duplicated"
+      - "Cumulative quantities disagree with the customer"
+      - "A changed JIT call created the wrong execution quantity"
+    symptoms:
+      - "The current executable quantity cannot be explained from the latest accepted customer signal."
+      - "Supplier and customer cumulative quantities diverge after a duplicate, replacement or recovery message."
+      - "Operations asks Sales to correct quantities manually while message history is still unclear."
+    business_impact: "A message-level error can become an immediate line-side shortage, overdelivery or sequence problem."
+    process_refs: ["SD.JIT", "SD.SA"]
+    mechanism_refs: ["MEC.SD.B2BCTX", "MEC.SD.PARTNER", "MEC.SD.PLANT", "MEC.SD.OUTPUT"]
+    boundary: "Customer release/JIT message ↔ scheduling-agreement context ↔ physical execution"
+    diagnostic_path:
+      - order: 1
+        check: "Reconstruct the signal timeline before changing quantities."
+        evidence: "Message identifiers, timestamps, call/release type, original payload, replacement/cancellation references and processing status."
+        decision: "If message order or identity is not known, quantity correction is premature."
+      - order: 2
+        check: "Prove idempotency and replacement semantics."
+        evidence: "Which message was new, duplicate, correction or replacement, and which one SAP accepted as executable."
+        decision: "A duplicate transport event must not be treated as new business demand. A replacement signal must not be added blindly to the old one."
+      - order: 3
+        check: "Reconcile cumulative quantities at one agreed cut-off."
+        evidence: "Customer cumulative, supplier cumulative, last accepted delivery/PGI state and the agreed horizon or reset point."
+        decision: "The delta must be explainable from the same baseline on both sides."
+      - order: 4
+        check: "Trace the accepted signal into execution."
+        evidence: "JIT call status, delivery quantity, packing/sequence context and PGI result."
+        decision: "If the message is correct but execution differs, hand off with the accepted call as proven input."
+    failure_modes:
+      - id: SDC.JIT.F01
+        cause: "Duplicate message processed as new demand"
+        discriminator: "Same business identity/payload leads to an extra executable quantity."
+        owner: "Integration / JIT message processing"
+      - id: SDC.JIT.F02
+        cause: "Replacement or change semantics interpreted as additive demand"
+        discriminator: "Message history shows a correction, but cumulative/execution logic adds both versions."
+        owner: "JIT process design + integration"
+      - id: SDC.JIT.F03
+        cause: "Customer and supplier use different cumulative baselines"
+        discriminator: "Each side is internally consistent but starts from a different cut-off/reset value."
+        owner: "Business reconciliation / scheduling agreement"
+      - id: SDC.JIT.F04
+        cause: "Accepted JIT demand is correct but delivery execution is not"
+        discriminator: "Call quantity/status is proven while delivery, packing or PGI differs."
+        owner: "Shipping / warehouse execution"
+    handoff:
+      primary_owner: "Integration/JIT processing until accepted signal identity is proven; then the execution owner"
+      evidence_package: ["raw message timeline", "business/message IDs", "accepted JIT call", "cumulative reconciliation", "delivery/PGI document flow"]
+      proof_of_fix: "Replay of the same message is idempotent, a replacement changes demand only once, and cumulative quantities reconcile at the agreed cut-off."
+    lead_answer: >-
+      I do not start with the delivery quantity. I rebuild the message timeline and prove which JIT
+      signal SAP accepted. Then I reconcile cumulative quantities from one baseline and only then
+      trace the accepted call into delivery execution. Manual quantity correction without that proof
+      usually hides the next duplicate rather than solving it.
+    agent_case_contract:
+      retrieve_when: "The prompt mentions JIT, automotive call, release, cumulative quantity, duplicate EDI or changed call."
+      do_not_conflate: ["transport duplicate with new demand", "forecast signal with executable JIT call", "cumulative mismatch with delivery defect"]
+      minimum_output: ["message timeline", "accepted business signal", "cumulative baseline", "execution result", "handoff owner"]
+    source_refs: ["SRC-SAP-JIT"]
+
+  - id: SDC.RETVC.04
+    title: "Configurable return lost the commercial identity of the product"
+    level: advanced
+    intent_aliases:
+      - "Returned material number is correct but configuration is wrong"
+      - "Variant return credit does not match the sold configuration"
+      - "Which configuration should a return use?"
+    symptoms:
+      - "The return has the right material but missing or changed characteristic values."
+      - "Pricing, inspection or refund behavior cannot be reconciled with what the customer originally bought."
+      - "The team assumes ordinary ARM follow-up behavior without checking the configurable-material boundary."
+    business_impact: "A return can be physically correct yet commercially wrong if the configuration evidence is lost."
+    process_refs: ["SD.RET.VC", "SD.RET.ARM"]
+    mechanism_refs: ["MEC.SD.COPY", "MEC.SD.ICAT", "MEC.SD.PRICE", "MEC.SD.BILL"]
+    boundary: "Original configured sale ↔ returns configuration ↔ inspection/disposition ↔ compensation"
+    diagnostic_path:
+      - order: 1
+        check: "Identify the configuration source of truth for the return."
+        evidence: "Reference sales order/configuration, return configuration and reason for any intentional change."
+        decision: "If the return should represent the sold product, unexplained characteristic differences are the first defect."
+      - order: 2
+        check: "Separate configuration identity from physical inspection."
+        evidence: "Configuration values plus received quantity, inspection result and observed condition of the returned product."
+        decision: "Inspection explains condition; configuration explains what product variant the commercial process is handling."
+      - order: 3
+        check: "Verify the supported follow-up path for the target release/deployment."
+        evidence: "Target release, deployment model and the selected logistical follow-up activity."
+        decision: "Do not assume every ARM disposition is available for a configurable-material return."
+      - order: 4
+        check: "Reconcile the compensation with the proven return identity."
+        evidence: "Reference pricing context, return pricing/credit values, inspection/refund decision and resulting billing document."
+        decision: "Credit must be explainable from the commercial identity and the approved refund rule, not only the material number."
+    failure_modes:
+      - id: SDC.RETVC.F01
+        cause: "Configuration was not copied or was changed without a governed reason"
+        discriminator: "Reference sale and return carry different characteristic values before inspection starts."
+        owner: "Sales returns / configuration"
+      - id: SDC.RETVC.F02
+        cause: "Unsupported follow-up activity assumed from ordinary ARM"
+        discriminator: "The planned disposition is not valid for the target configurable-material scenario/release."
+        owner: "Returns solution design"
+      - id: SDC.RETVC.F03
+        cause: "Refund logic ignores configuration-dependent commercial value"
+        discriminator: "Physical receipt is correct but credit cannot be reconciled with the referenced configured sale."
+        owner: "Sales pricing/billing with returns"
+    handoff:
+      primary_owner: "Sales returns/configuration until the returned variant identity is proven"
+      evidence_package: ["original sales configuration", "return configuration", "inspection result", "follow-up activity", "refund/credit document flow", "target release"]
+      proof_of_fix: "The original and returned configuration relationship is explicit, supported follow-up logic is used, and compensation is reproducible from the same evidence."
+    lead_answer: >-
+      For a configurable return, material and quantity are not enough. I first prove which
+      configuration the return represents. Then I keep that identity separate from inspection
+      and disposition. Finally I verify release-specific follow-up support and reconcile the credit
+      with the proven configured sale.
+    agent_case_contract:
+      retrieve_when: "The prompt combines returns with variant configuration, AVC, characteristic values, configurable material or 7KW."
+      do_not_conflate: ["product identity with product condition", "ordinary ARM capability with configurable-material capability"]
+      minimum_output: ["configuration source", "inspection evidence", "supported follow-up", "refund evidence", "release caveat"]
+    source_refs: ["SRC-SAP-RET-VC-7KW", "SRC-SAP-RET-VC-ONPREM"]
+
+  - id: SDC.CTO.05
+    title: "Late sales change enters CTO+ after engineering has started"
+    level: lead
+    intent_aliases:
+      - "Customer changed configuration after engineering release"
+      - "Can we update the sales order after the ETO production model exists?"
+      - "CTO+ sales change affects BOM or routing"
+    symptoms:
+      - "A commercial change looks small in the sales order but changes components or operations already used by execution."
+      - "Teams disagree whether Sales, engineering or production owns the next change."
+      - "The order configuration and the customer-specific production model no longer describe the same intended product."
+    business_impact: "An ungoverned late change can create wrong procurement, obsolete work, rework or a product that no longer matches the customer promise."
+    process_refs: ["SD.ETO.CTO+", "SD.ETO", "SD.MTO.VC"]
+    mechanism_refs: ["MEC.SD.REQTYPE", "MEC.SD.ATP", "MEC.SD.PRICE"]
+    boundary: "Configured sales order ↔ ETO production model ↔ engineering release ↔ procurement/production execution"
+    diagnostic_path:
+      - order: 1
+        check: "Classify what the customer changed."
+        evidence: "Old/new sales configuration, commercial impact and whether the changed characteristic influences product structure or operations."
+        decision: "A pure commercial change can stay in Sales. A product-structure change crosses into engineering impact analysis."
+      - order: 2
+        check: "Identify the current engineering source of truth and release state."
+        evidence: "ETO production model, version BOM, shop-floor routing and engineering/release status."
+        decision: "The later the release state, the less safe it is to treat the sales-order edit as an isolated change."
+      - order: 3
+        check: "Measure downstream exposure before applying the change."
+        evidence: "Open or released procurement, production orders/operations, reserved or consumed components and completed work."
+        decision: "Change strategy depends on what has already become execution commitment."
+      - order: 4
+        check: "Apply a governed change and re-prove alignment."
+        evidence: "Approved change object/status, updated engineering structure, updated commercial values and execution delta."
+        decision: "Close only when sales promise, engineered product and open execution objects agree again."
+    failure_modes:
+      - id: SDC.CTO.F01
+        cause: "Sales change treated as independent after engineering became the execution source of truth"
+        discriminator: "Sales configuration changes but the ETO version BOM/routing does not."
+        owner: "Cross-functional change governance"
+      - id: SDC.CTO.F02
+        cause: "Engineering change applied without downstream impact review"
+        discriminator: "Updated structure conflicts with already procured, reserved or executed components/operations."
+        owner: "Engineering / manufacturing"
+      - id: SDC.CTO.F03
+        cause: "Commercial value is not synchronized with the engineered change"
+        discriminator: "Product structure is updated but pricing/customer approval still represents the previous option set."
+        owner: "Sales + engineering handoff"
+    handoff:
+      primary_owner: "Cross-functional change owner; Sales owns customer promise, engineering owns the customer-specific production model"
+      evidence_package: ["old/new sales configuration", "ETO production model", "version BOM/routing", "release state", "downstream execution exposure", "commercial approval"]
+      proof_of_fix: "A controlled change updates the intended product and price while every affected open execution object is either aligned, replaced or explicitly accepted."
+    lead_answer: >-
+      I classify the customer change before touching the order. If it changes the product structure,
+      I find the engineering release state and measure downstream exposure. Sales still owns the
+      customer promise, but the ETO production model owns how this individual product is built.
+      The change is complete only when those two views and open execution are aligned again.
+    agent_case_contract:
+      retrieve_when: "The prompt mentions CTO+, ETO production model, late configuration change, customer-specific BOM/routing or engineering release."
+      do_not_conflate: ["normal MTO variant configuration with CTO+ engineering", "sales-order edit with approved engineering change"]
+      minimum_output: ["change class", "engineering source of truth", "release state", "execution exposure", "alignment proof"]
+    source_refs: ["SRC-SAP-ETO-CTO-PLUS", "SRC-SAP-ETO-MANAGE-MODEL"]
+
+  - id: SDC.TPO.06
+    title: "Third-party order has no trustworthy customer shipment status"
+    level: advanced
+    intent_aliases:
+      - "Supplier says shipped but customer service cannot see it"
+      - "ASN and supplier invoice quantities disagree"
+      - "Third-party order status is stale"
+    symptoms:
+      - "Customer service has a sales order and PO but no reliable proof of supplier shipment."
+      - "Shipping notification, supplier confirmation and invoice quantity tell different stories."
+      - "The process was designed without deciding which supplier event changes the customer-facing promise."
+    business_impact: "The company can bill or communicate from the wrong event while the physical shipment remains outside its warehouse."
+    process_refs: ["SD.TPO", "SD.TPO.SN", "SD.TPO.NSN"]
+    mechanism_refs: ["MEC.SD.B2BCTX", "MEC.SD.COPY", "MEC.SD.BILL", "MEC.SD.OUTPUT"]
+    boundary: "Sales order ↔ purchasing ↔ external supplier event ↔ customer status/billing"
+    diagnostic_path:
+      - order: 1
+        check: "Identify which third-party variant the process actually uses."
+        evidence: "Sales item/schedule-line behavior, PO flow and whether a supplier shipping-notification event is part of the agreed design."
+        decision: "Do not diagnose a missing ASN in a process that intentionally has no ASN contract."
+      - order: 2
+        check: "Name the event that is allowed to change customer-facing shipment status."
+        evidence: "Supplier confirmation, shipping notification/ASN, invoice receipt and their mapped sales-order updates."
+        decision: "One event should have a clear semantic role; invoice receipt should not silently become shipment proof unless the process was designed that way."
+      - order: 3
+        check: "Compare quantities and dates across the event chain."
+        evidence: "Sales quantity, PO quantity, confirmed quantity/date, ASN quantity/date if used, supplier invoice quantity and customer billing quantity."
+        decision: "A mismatch must be classified as planning, shipment, invoice or billing evidence before correction."
+      - order: 4
+        check: "Prove recovery behavior for missing or late supplier signals."
+        evidence: "Retry/reprocessing status, manual exception rule, monitoring owner and customer communication outcome."
+        decision: "A happy-path interface is not sufficient when the supplier event is part of the customer promise."
+    failure_modes:
+      - id: SDC.TPO.F01
+        cause: "Process variant and integration contract do not match"
+        discriminator: "Business expects shipment visibility but no shipping-notification event is implemented."
+        owner: "Solution design / procurement integration"
+      - id: SDC.TPO.F02
+        cause: "Supplier event arrived but did not update the sales-side status"
+        discriminator: "External message is proven while the expected sales/PO status transition is absent."
+        owner: "Integration / purchasing-to-sales handoff"
+      - id: SDC.TPO.F03
+        cause: "Billing uses a different quantity evidence than customer service expects"
+        discriminator: "Shipment/confirmation and supplier invoice quantities differ and the billing rule is not explicit."
+        owner: "Sales billing + procurement"
+    handoff:
+      primary_owner: "Sales/procurement integration until the authoritative supplier event is proven"
+      evidence_package: ["sales/PO document flow", "supplier confirmations", "ASN/message when applicable", "supplier invoice", "customer billing quantity", "interface status"]
+      proof_of_fix: "The authoritative supplier event updates status once, quantity differences are classified explicitly, and the missing-event recovery path produces a visible exception."
+    lead_answer: >-
+      In third-party sales, our warehouse cannot prove shipment because it never owns the physical
+      event. I first identify whether the design includes a supplier shipping notification. Then I
+      name the authoritative supplier signal, reconcile it with PO and invoice quantities, and test
+      the failure path. Customer visibility is an integration contract, not a side effect.
+    agent_case_contract:
+      retrieve_when: "The prompt mentions third-party sales, direct ship, supplier ASN/shipping notification, stale shipment status or supplier invoice mismatch."
+      do_not_conflate: ["supplier invoice with physical shipment", "no-ASN process with failed ASN process"]
+      minimum_output: ["process variant", "authoritative supplier event", "quantity reconciliation", "billing evidence", "recovery owner"]
+    source_refs: ["SRC-SAP-TPO-SN", "SRC-SAP-TPO-NSN"]
+
+assessment_drills:
+  - id: SDC.Q01
+    prompt: "A customer paid 30%, but the final invoice still shows the full open amount. Where do you start?"
+    expected_shape: ["identify down-payment model", "prove billing-plan/request event", "prove FI payment", "prove final clearing"]
+  - id: SDC.Q02
+    prompt: "Two deliveries for one payer create two invoices. Business asks for a custom routine."
+    expected_shape: ["prove common billing eligibility/type", "run split analysis", "find differing field", "name field owner", "test valid negative split"]
+  - id: SDC.Q03
+    prompt: "Automotive customer says the JIT cumulative is 120 units lower than ours after a resend."
+    expected_shape: ["message timeline", "duplicate/replacement semantics", "common cumulative cut-off", "accepted call", "execution trace"]
+  - id: SDC.Q04
+    prompt: "A configurable machine is returned, but the credit value matches the base material rather than the sold options."
+    expected_shape: ["original configuration", "return configuration", "inspection/follow-up", "pricing/refund evidence", "release scope"]
+  - id: SDC.Q05
+    prompt: "Customer changes one option after CTO+ engineering release. The option changes a component."
+    expected_shape: ["classify change", "engineering source/release state", "downstream exposure", "governed change", "commercial and execution alignment"]
+  - id: SDC.Q06
+    prompt: "Supplier says the third-party item shipped yesterday, but the sales order still shows no meaningful shipment progress."
+    expected_shape: ["identify SN vs no-SN variant", "authoritative supplier event", "message/status evidence", "quantity/date reconciliation", "recovery path"]
+
+related_views:
+  - title: "Sales Process Atlas"
+    url: "/labs/enterprise-context/sales-processes/"
+  - title: "Sales Mechanisms"
+    url: "/labs/enterprise-context/sales-processes/mechanisms/"
+  - title: "Pricing Casebook"
+    url: "/labs/enterprise-context/pricing/casebook/"
+  - title: "Sales process coverage JSON"
+    url: "/labs/enterprise-context/data/sales-process-coverage.json"

@@ -1,1 +1,170 @@
-{"group":"10_billing_lifecycle","title":"Billing lifecycle, negotiation and correction","updated_at":"2026-08-14","processes":[{"code":"SD.CLM.INC","id":"VAR-SD-CLM-INC","title":"Invoice Increase Request","kind":"claim_financial","memory_hook":"The invoice was too low; calculate the delta and bill only the correction.","sap_scope_items":[],"business_intent":"Increase the price or quantity value of an existing invoice through a controlled request that calculates the delta and later creates a debit memo.","flow":["Existing Invoice","Invoice Increase Request","Correct Price / Quantity","Review / Billing Block","Debit Memo","FI Adjustment"],"control_plane":[{"control":"invoice reference","why":"provides the original billed quantity and value"},{"control":"corrected quantity / price","why":"defines the new target amount and therefore the delta"},{"control":"billing block / release","why":"controls when the correction can become a debit memo"}],"data_hinges":[{"data":"original invoice item","changes":"reference value and copied commercial context"},{"data":"corrected price / quantity","changes":"calculated increase"},{"data":"pricing and tax context","changes":"financial correctness of the resulting debit memo"}],"impact_summary":["The process changes billed value and receivables without changing physical delivery; SAP calculates the difference between original and corrected values."],"constraints":["Use this when an existing invoice needs an increase, not when a new unrelated charge should be raised.","Reference and pricing-date rules matter because the process corrects a historical commercial event."],"lead_questions":["Why is invoice increase preferable to a generic debit memo request here?","Which values are copied from the invoice and which are corrected?","What approval or billing block protects the customer from an accidental increase?"],"extension_points":["EXT-COPY","EXT-FIELD","EXT-LOGIC","EXT-API"],"source_refs":["SRC-SAP-INVOICE-INCREASE"],"tags":["billing","claim","invoice-increase","debit"]},{"code":"SD.BILL.PRELIM","id":"VAR-SD-BILL-PRELIM","title":"Preliminary Billing","kind":"billing_negotiation","memory_hook":"Agree on the invoice before the invoice becomes accounting truth.","sap_scope_items":[],"business_intent":"Create a non-posting preliminary billing document for customer negotiation or internal approval before creating the final billing document.","flow":["Billable Reference","Preliminary Billing Document","Customer / Internal Review","Change / Approve","Final Billing Document","FI Posting / Output"],"control_plane":[{"control":"preliminary-billing relevance and due-list selection","why":"decide which billable references enter the preliminary stage"},{"control":"approval / negotiation status","why":"controls whether the preliminary document is ready to become final"},{"control":"copy to final billing","why":"transfers the agreed billing content into a posting-relevant document"}],"data_hinges":[{"data":"price / payment terms / billing date","changes":"what customer is asked to approve"},{"data":"approval status and reason","changes":"whether final billing can proceed"},{"data":"reference document","changes":"which commercial event is ultimately billed"}],"impact_summary":["The preliminary document is relevant for output and negotiation but not for posting to financial accounting; the final billing document remains the accounting event."],"constraints":["Preliminary billing is an optional intermediary, not a substitute for the legal/final billing document.","SAP does not support preliminary credit memos in the standard creation flow described for preliminary billing documents."],"lead_questions":["What business risk justifies a preliminary invoice stage?","Who may change the preliminary document and who approves it?","Which fields must remain identical when the final invoice is created?"],"extension_points":["EXT-FIELD","EXT-COPY","EXT-API","EXT-LOGIC"],"source_refs":["SRC-SAP-PRELIM-BILL"],"tags":["billing","preliminary","approval","negotiation"]},{"code":"SD.BILL.RETRO","id":"VAR-SD-BILL-RETRO","title":"Retroactive Billing","kind":"billing_adjustment","memory_hook":"The price changed after the invoice. Recalculate history and settle only the difference.","sap_scope_items":[],"business_intent":"Re-evaluate existing billing documents after pricing conditions change and create credit or debit memos for the resulting differences.","flow":["Changed Price Agreement / Condition","Generate Retroactive Billing List","Reprice Historical Billing Documents","Calculate Difference","Credit / Debit Memo","FI Adjustment"],"control_plane":[{"control":"retroactive-billing selection criteria","why":"find historical billing documents affected by the price change"},{"control":"pricing redetermination","why":"calculates the new effective value using changed conditions"},{"control":"credit/debit settlement","why":"posts only the difference rather than recreating the original invoice"}],"data_hinges":[{"data":"condition record validity / price agreement","changes":"which historical invoices are affected"},{"data":"pricing date","changes":"whether a document falls into the changed-price period"},{"data":"order reason / retroactive relevance","changes":"selection and traceability of adjustments"}],"impact_summary":["Commercial history is re-evaluated after invoicing; the original invoice remains part of history while delta credit/debit documents settle the new agreement."],"constraints":["The retroactive billing list must be generated deliberately; changing a condition record does not itself automatically settle historical invoices.","Retroactive billing creates credit/debit memos with reference to billing documents, not sales documents.","Advanced Down Payment Processing cannot be combined with retroactive billing."],"lead_questions":["Which invoices are legally/commercially covered by the new price agreement?","How do returns and previous corrections affect the retroactive base?","How do we prevent repeated or duplicate adjustment?"],"extension_points":["EXT-FIELD","EXT-API","EXT-LOGIC"],"source_refs":["SRC-SAP-RETRO-BILL","SRC-SAP-ADP-DISTINCT"],"tags":["billing","retroactive","pricing","credit","debit"]},{"code":"SD.BILL.CANCEL","id":"VAR-SD-BILL-CANCEL","title":"Billing Cancellation","kind":"billing_reversal","memory_hook":"Do not edit accounting history into correctness. Reverse it, reopen the reference, then bill correctly.","sap_scope_items":[],"business_intent":"Cancel an incorrect billing document by creating a cancellation document that nullifies the billing result and reopens the billed reference for correct billing where applicable.","flow":["Incorrect Billing Document","Cancel Billing Document","Cancellation Document","Offset FI Posting if Required","Reference Reopened for Billing","Correct Billing"],"control_plane":[{"control":"billing type and cancellation billing type","why":"define the document pair used for reversal"},{"control":"cancellation date / reversal reason","why":"control accounting period and audit context"},{"control":"posting status","why":"decides whether an offsetting FI entry must be posted"}],"data_hinges":[{"data":"original billing document","changes":"what commercial/accounting result is nullified"},{"data":"cancellation date","changes":"posting period and accounting timing"},{"data":"reversal reason","changes":"audit and reporting context"}],"impact_summary":["Cancellation creates a separate cancellation billing document; if the original was posted to FI, the cancellation must offset the accounting entry. The billed reference can become open for billing again."],"constraints":["Cancellation is not the same as a credit memo granted for a valid invoice; it says the billing document itself should be nullified.","Period locks, accounting status and downstream interfaces can constrain when cancellation is possible."],"lead_questions":["Was the invoice commercially valid but later credited, or was it simply wrong and should be canceled?","Which accounting period should carry the reversal?","What downstream tax/output/integration artifacts also need correction?"],"extension_points":["EXT-API","EXT-FIELD","EXT-LOGIC"],"source_refs":["SRC-SAP-BILL-CANCEL"],"tags":["billing","cancellation","reversal","fi"]}]}
+{
+  "group": "10_billing_lifecycle",
+  "title": "Billing lifecycle, negotiation and correction",
+  "updated_at": "2026-08-15",
+  "processes": [
+    {
+      "code": "SD.CLM.INC",
+      "id": "VAR-SD-CLM-INC",
+      "title": "Invoice Increase Request",
+      "kind": "claim_financial",
+      "memory_hook": "The invoice was too low; calculate the delta and bill only the correction.",
+      "sap_scope_items": [],
+      "business_intent": "Increase the price or quantity value of an existing invoice through a controlled request that calculates the delta and later creates a debit memo.",
+      "flow": ["Existing Invoice", "Invoice Increase Request", "Correct Price / Quantity", "Review / Billing Block", "Debit Memo", "FI Adjustment"],
+      "control_plane": [
+        {"control": "invoice reference", "why": "provides the original billed quantity and value"},
+        {"control": "corrected quantity / price", "why": "defines the new target amount and therefore the delta"},
+        {"control": "billing block / release", "why": "controls when the correction can become a debit memo"}
+      ],
+      "data_hinges": [
+        {"data": "original invoice item", "changes": "reference value and copied commercial context"},
+        {"data": "corrected price / quantity", "changes": "calculated increase"},
+        {"data": "pricing and tax context", "changes": "financial correctness of the resulting debit memo"}
+      ],
+      "impact_summary": ["The process changes billed value and receivables without changing physical delivery; SAP calculates the difference between original and corrected values."],
+      "constraints": ["Use this when an existing invoice needs an increase, not when a new unrelated charge should be raised.", "Reference and pricing-date rules matter because the process corrects a historical commercial event."],
+      "lead_questions": ["Why is invoice increase preferable to a generic debit memo request here?", "Which values are copied from the invoice and which are corrected?", "What approval or billing block protects the customer from an accidental increase?"],
+      "extension_points": ["EXT-COPY", "EXT-FIELD", "EXT-LOGIC", "EXT-API"],
+      "source_refs": ["SRC-SAP-INVOICE-INCREASE"],
+      "tags": ["billing", "claim", "invoice-increase", "debit"]
+    },
+    {
+      "code": "SD.BILL.PRELIM",
+      "id": "VAR-SD-BILL-PRELIM",
+      "title": "Preliminary Billing",
+      "kind": "billing_negotiation",
+      "memory_hook": "Agree on the invoice before the invoice becomes accounting truth.",
+      "sap_scope_items": [],
+      "business_intent": "Create a non-posting preliminary billing document for customer negotiation or internal approval before creating the final billing document.",
+      "flow": ["Billable Reference", "Preliminary Billing Document", "Customer / Internal Review", "Change / Approve", "Final Billing Document", "FI Posting / Output"],
+      "control_plane": [
+        {"control": "preliminary-billing relevance and due-list selection", "why": "decide which billable references enter the preliminary stage"},
+        {"control": "approval / negotiation status", "why": "controls whether the preliminary document is ready to become final"},
+        {"control": "copy to final billing", "why": "transfers the agreed billing content into a posting-relevant document"}
+      ],
+      "data_hinges": [
+        {"data": "price / payment terms / billing date", "changes": "what customer is asked to approve"},
+        {"data": "approval status and reason", "changes": "whether final billing can proceed"},
+        {"data": "reference document", "changes": "which commercial event is ultimately billed"}
+      ],
+      "impact_summary": ["The preliminary document is relevant for output and negotiation but not for posting to financial accounting; the final billing document remains the accounting event."],
+      "constraints": ["Preliminary billing is an optional intermediary, not a substitute for the legal/final billing document.", "SAP does not support preliminary credit memos in the standard creation flow described for preliminary billing documents."],
+      "lead_questions": ["What business risk justifies a preliminary invoice stage?", "Who may change the preliminary document and who approves it?", "Which fields must remain identical when the final invoice is created?"],
+      "extension_points": ["EXT-FIELD", "EXT-COPY", "EXT-API", "EXT-LOGIC"],
+      "source_refs": ["SRC-SAP-PRELIM-BILL"],
+      "tags": ["billing", "preliminary", "approval", "negotiation"]
+    },
+    {
+      "code": "SD.BILL.RETRO",
+      "id": "VAR-SD-BILL-RETRO",
+      "title": "Retroactive Billing",
+      "kind": "billing_adjustment",
+      "memory_hook": "The price changed after the invoice. Recalculate history and settle only the difference.",
+      "sap_scope_items": [],
+      "business_intent": "Re-evaluate existing billing documents after pricing conditions change and create credit or debit memos for the resulting differences.",
+      "flow": ["Changed Price Agreement / Condition", "Generate Retroactive Billing List", "Reprice Historical Billing Documents", "Calculate Difference", "Credit / Debit Memo", "FI Adjustment"],
+      "control_plane": [
+        {"control": "retroactive-billing selection criteria", "why": "find historical billing documents affected by the price change"},
+        {"control": "pricing redetermination", "why": "calculates the new effective value using changed conditions"},
+        {"control": "credit/debit settlement", "why": "posts only the difference rather than recreating the original invoice"}
+      ],
+      "data_hinges": [
+        {"data": "condition record validity / price agreement", "changes": "which historical invoices are affected"},
+        {"data": "pricing date", "changes": "whether a document falls into the changed-price period"},
+        {"data": "order reason / retroactive relevance", "changes": "selection and traceability of adjustments"}
+      ],
+      "impact_summary": ["Commercial history is re-evaluated after invoicing; the original invoice remains part of history while delta credit/debit documents settle the new agreement."],
+      "constraints": ["The retroactive billing list must be generated deliberately; changing a condition record does not itself automatically settle historical invoices.", "Retroactive billing creates credit/debit memos with reference to billing documents, not sales documents.", "Advanced Down Payment Processing cannot be combined with retroactive billing."],
+      "lead_questions": ["Which invoices are legally/commercially covered by the new price agreement?", "How do returns and previous corrections affect the retroactive base?", "How do we prevent repeated or duplicate adjustment?"],
+      "extension_points": ["EXT-FIELD", "EXT-API", "EXT-LOGIC"],
+      "source_refs": ["SRC-SAP-RETRO-BILL", "SRC-SAP-ADP-DISTINCT"],
+      "tags": ["billing", "retroactive", "pricing", "credit", "debit"]
+    },
+    {
+      "code": "SD.BILL.CANCEL",
+      "id": "VAR-SD-BILL-CANCEL",
+      "title": "Billing Cancellation",
+      "kind": "billing_reversal",
+      "memory_hook": "Do not edit accounting history into correctness. Reverse it, reopen the reference, then bill correctly.",
+      "sap_scope_items": [],
+      "business_intent": "Cancel an incorrect billing document by creating a cancellation document that nullifies the billing result and reopens the billed reference for correct billing where applicable.",
+      "flow": ["Incorrect Billing Document", "Cancel Billing Document", "Cancellation Document", "Offset FI Posting if Required", "Reference Reopened for Billing", "Correct Billing"],
+      "control_plane": [
+        {"control": "billing type and cancellation billing type", "why": "define the document pair used for reversal"},
+        {"control": "cancellation date / reversal reason", "why": "control accounting period and audit context"},
+        {"control": "posting status", "why": "decides whether an offsetting FI entry must be posted"}
+      ],
+      "data_hinges": [
+        {"data": "original billing document", "changes": "what commercial/accounting result is nullified"},
+        {"data": "cancellation date", "changes": "posting period and accounting timing"},
+        {"data": "reversal reason", "changes": "audit and reporting context"}
+      ],
+      "impact_summary": ["Cancellation creates a separate cancellation billing document; if the original was posted to FI, the cancellation must offset the accounting entry. The billed reference can become open for billing again."],
+      "constraints": ["Cancellation is not the same as a credit memo granted for a valid invoice; it says the billing document itself should be nullified.", "Period locks, accounting status and downstream interfaces can constrain when cancellation is possible."],
+      "lead_questions": ["Was the invoice commercially valid but later credited, or was it simply wrong and should be canceled?", "Which accounting period should carry the reversal?", "What downstream tax/output/integration artifacts also need correction?"],
+      "extension_points": ["EXT-API", "EXT-FIELD", "EXT-LOGIC"],
+      "source_refs": ["SRC-SAP-BILL-CANCEL"],
+      "tags": ["billing", "cancellation", "reversal", "fi"]
+    },
+    {
+      "code": "SD.DP.CLASSIC",
+      "id": "VAR-SD-DP-CLASSIC",
+      "title": "Customer Down Payment with Milestone Billing",
+      "kind": "billing_payment_variant",
+      "memory_hook": "The customer pays before final delivery, but the commercial schedule still lives in the sales document.",
+      "sap_scope_items": [{"id": "BKJ", "label": "Sales Order Processing with Customer Down Payment"}],
+      "deployment_scope": "SAP S/4HANA and SAP S/4HANA Cloud variants where the classic milestone-billing down-payment process is available. Compare with Advanced Down Payment Processing before designing a new solution.",
+      "business_intent": "Request and clear a customer down payment before final billing when the sales order or contract uses milestone billing to control payment timing.",
+      "flow": ["Sales Order / Contract", "Milestone Billing Plan", "Down Payment Request", "Customer Down Payment in FI", "Delivery / Performance", "Final Invoice", "Down Payment Clearing"],
+      "control_plane": [
+        {"control": "billing plan and milestone dates", "why": "decide when the down-payment request and final billing become due"},
+        {"control": "down-payment request billing logic", "why": "creates the request from the sales document instead of treating the payment as an unrelated FI event"},
+        {"control": "FI down-payment posting and clearing", "why": "connects the commercial request with cash received and settlement on the final invoice"}
+      ],
+      "data_hinges": [
+        {"data": "billing-plan dates and percentages / amounts", "changes": "when and how much is requested before final billing"},
+        {"data": "customer down-payment posting", "changes": "whether cash has actually been received and can later be cleared"},
+        {"data": "final billing amount", "changes": "the remaining receivable after down-payment settlement"}
+      ],
+      "impact_summary": ["Sales and FI share the lifecycle: Sales controls the requested milestones while FI records the real payment and clearing.", "The classic BKJ path is functionally and technically different from Advanced Down Payment Processing."],
+      "constraints": ["Do not mix classic milestone-based down-payment processing with Advanced Down Payment Processing inside one business transaction.", "For a new design, compare the classic process with the newer advanced model instead of selecting BKJ only because it is familiar."],
+      "lead_questions": ["Why is a down payment required, and which milestone makes it due?", "Which object proves that the customer actually paid, not only that a request was issued?", "Are we extending a classic process or designing a new one where Advanced Down Payment Processing is the better boundary?", "How are cancellation, partial payment and final clearing handled?"],
+      "extension_points": ["EXT-FIELD", "EXT-LOGIC", "EXT-API"],
+      "source_refs": ["SRC-SAP-DP-CLASSIC-BKJ", "SRC-SAP-DP-ADVANCED"],
+      "tags": ["billing", "down-payment", "milestone-billing", "fi", "cash"]
+    },
+    {
+      "code": "SD.DP.ADV",
+      "id": "VAR-SD-DP-ADVANCED",
+      "title": "Advanced Down Payment Processing",
+      "kind": "billing_payment_framework",
+      "memory_hook": "The advance payment is not a side posting. It is a controlled sales-to-delivery-to-settlement lifecycle.",
+      "sap_scope_items": [
+        {"id": "7S7", "label": "Sell from Stock with Down Payment Processing"},
+        {"id": "7Z1", "label": "Sales Order Processing with Milestone Billing"}
+      ],
+      "deployment_scope": "SAP S/4HANA Cloud Public Edition 2608. Current standard processes cover delivery-related sell-from-stock and order-related milestone billing. Verify the target release before solution design.",
+      "business_intent": "Run customer down payments as an integrated sales and financial lifecycle, with a sales-order billing plan driving requests, received cash controlling execution where required, and settlement performed transparently in the customer invoice.",
+      "flow": ["ADP-Enabled Sales Order Item", "Billing Plan", "Down Payment Request", "Incoming Down Payment and Clearing", "Delivery / Service Execution", "Settlement Invoice", "Remaining Customer Payment"],
+      "control_plane": [
+        {"control": "ADP enablement on the sales item category", "why": "selects the advanced framework for the sales item instead of the classic down-payment model"},
+        {"control": "billing plan and down-payment date categories", "why": "orchestrate request timing, amount and execution blocks"},
+        {"control": "incoming down-payment clearing", "why": "turns the requested amount into proven received cash and can release blocked execution"},
+        {"control": "settlement invoice and down-payment allocation", "why": "reduce the customer invoice by eligible received down payments while keeping the settlement history visible"}
+      ],
+      "data_hinges": [
+        {"data": "ADP-enabled item category", "changes": "whether the transaction follows the advanced or classic down-payment framework"},
+        {"data": "billing-plan dates and requested amounts", "changes": "when and how much the customer is asked to pay in advance"},
+        {"data": "cleared incoming down payment", "changes": "execution release and the amount available for later settlement"},
+        {"data": "invoice item and down-payment allocation", "changes": "how received advance payments reduce the settlement invoice"}
+      ],
+      "impact_summary": ["ADP keeps sales, delivery and financial accounting synchronized around the same down-payment lifecycle instead of treating the payment as an isolated FI correction.", "The framework supports both delivery-related billing for sell-from-stock and order-related milestone billing, so the billing reference remains a design decision inside ADP."],
+      "constraints": ["Do not combine classic and advanced down-payment elements in one business transaction.", "Advanced Down Payment Processing cannot be combined with retroactive billing or reference billing plans in the documented 2608 scope.", "Activation can affect how existing open sales orders with relevant item categories must be completed, so migration and cutover need explicit planning."],
+      "lead_questions": ["Do we need delivery-related or order-related settlement, and what business event makes the request due?", "Which item categories are ADP-enabled and what happens to open orders during activation?", "Which event proves cash is cleared and may release delivery?", "How is each received down payment allocated across settlement invoice items?", "Why is ADP a better fit than the classic BKJ path for this transaction?"],
+      "extension_points": ["EXT-FIELD", "EXT-API", "EXT-LOGIC"],
+      "source_refs": ["SRC-SAP-DP-ADVANCED", "SRC-SAP-DP-ADVANCED-SETUP"],
+      "tags": ["billing", "advanced-down-payment", "settlement", "delivery-related-billing", "milestone-billing", "fi"]
+    }
+  ]
+}

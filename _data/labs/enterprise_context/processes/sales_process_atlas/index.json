@@ -1,1 +1,64 @@
-{"id":"ATLAS-SD-SALES-PROCESSES","title":"SAP Sales Process Atlas","version":"0.3.0","updated_at":"2026-08-14","domain":"SAP S/4HANA Sales","purpose":"A memory-first, source-tracked map of standard, special, after-sales, billing, industry, production, project and cross-application sales variants, their control points, data hinges, consequences, constraints, and extension surfaces.","code_system":{"pattern":"SD.<MNEMONIC>","variant_pattern":"SD.<FAMILY>.<VARIANT>","overlay_pattern":"SD+<MNEMONIC>","rule":"The code is ours and stays stable even if SAP renames a scope item or app. SAP scope-item IDs remain external references, not primary keys.","families":[{"prefix":"SD.","meaning":"Process or process family"},{"prefix":"SD.<FAMILY>.<VARIANT>","meaning":"Child variant that changes a meaningful control rule inside a process family"},{"prefix":"SD.CLM.","meaning":"Customer claim or commercial correction without assuming physical reverse logistics"},{"prefix":"SD.BILL.","meaning":"Billing lifecycle or correction process beyond ordinary invoice creation"},{"prefix":"SD+","meaning":"Overlay, extension, or cross-cutting capability"}]},"linked_code_systems":[{"prefix":"ORC.SD.","meaning":"Upstream order origin or orchestrator","model":"sales_order_integration_map"},{"prefix":"INT.SD.","meaning":"Cross-application execution or control handoff","model":"sales_order_integration_map"},{"prefix":"EVT.SD.","meaning":"Event-driven integration contract","model":"sales_order_integration_map"}],"coverage_model":{"target":"high practical coverage, not an exhaustive dump of every localization or industry scope item","rule":"Create a separate card when a variant changes a business promise, document chain, stock ownership, supply source, inspection/disposition, billing trigger, settlement logic, project/production cost object, or integration boundary.","process_count":50,"groups_count":11},"memory_model":{"questions":["What business promise changes?","Which documents or stock segments appear?","Which control decides the branch?","Which data fields become hinges for the next step?","What is different in accounting, inventory, delivery, billing, production or project execution?","What breaks first when the design is wrong?","Where can the process be extended without rewriting the core?"]},"extension_surfaces":[{"code":"EXT-FIELD","title":"Custom fields and UI adaptation","memory_hook":"Add context before adding logic.","applies_to":["sales document header","sales document item","selected apps and APIs"],"source_refs":["SRC-SAP-SALES-EXT"]},{"code":"EXT-LOGIC","title":"Custom logic and BAdIs","memory_hook":"Use a defined hook, not an invisible side effect.","applies_to":["header/item modifications","checks","copying","request transformation"],"source_refs":["SRC-SAP-SALES-BADI"]},{"code":"EXT-API","title":"APIs and integration contracts","memory_hook":"The integration boundary is part of the process design.","applies_to":["OData V4/V2","SOAP","BAPI where available","external order capture"],"source_refs":["SRC-SAP-SALES-API-EXT"]},{"code":"EXT-COPY","title":"Reference and copy-control logic","memory_hook":"A follow-on document inherits rules, not just fields.","applies_to":["quotation to order","contract to release order","returns references","claims and billing corrections","custom reference flows"],"source_refs":["SRC-SAP-SALES-BADI"]},{"code":"EXT-SIDECAR","title":"Side-by-side capabilities","memory_hook":"Keep orchestration outside the core when ownership sits outside the ERP transaction.","applies_to":["promotion services","external sourcing","AI-assisted capture","payment services","BTP integrations"],"source_refs":["SRC-SAP-OSP-EXT"]}],"groups":[{"key":"01_baseline","title":"Baseline and pre-sales","codes":["SD.SFS","SD.QUO","SD.FOC","SD.CTR"]},{"key":"02_fulfillment","title":"Special fulfillment and stock","codes":["SD.TPO","SD.PTO","SD.CON"]},{"key":"03_intercompany","title":"Intercompany and transfer of control","codes":["SD.ICO","SD.AIC","SD.VST"]},{"key":"04_commercial","title":"Commercial and product structure","codes":["SD.ADP","SD.MDP","SD.BOM"]},{"key":"05_execution","title":"Production, immediate sales, returns and schedules","codes":["SD.MTO","SD.CSH","SD.RSH","SD.RET","SD.SA"]},{"key":"06_overlays","title":"Cross-process overlays","codes":["SD+OSP","SD+REL"]},{"key":"07_after_sales","title":"Claims, returns and customer recovery","codes":["SD.RET.LEAN","SD.RET.ARM","SD.RET.KIT","SD.CLM.CMR","SD.CLM.DMR","SD.CLM.ICR","SD.CLM.FOS","SD.RET.REPAIR"]},{"key":"08_commercial_extensions","title":"Commercial variants, billing and settlement","codes":["SD.INQ","SD.OTC","SD.FG","SD.RTNBL","SD.BILL.COLL","SD.REB","SD+PAY"]},{"key":"09_industry_variants","title":"Industry, configuration and execution variants","codes":["SD.TPO.SN","SD.TPO.NSN","SD.TPO.VC","SD.MTO.VC","SD.KIT","SD.SA.CON","SD.JIT"]},{"key":"10_billing_lifecycle","title":"Billing lifecycle, negotiation and correction","codes":["SD.CLM.INC","SD.BILL.PRELIM","SD.BILL.RETRO","SD.BILL.CANCEL"]},{"key":"11_cross_application_execution","title":"Production, project and cross-application execution","codes":["SD.MTO.ATO","SD.ETO","SD.PROJ.PBS","SD.SUB.RECUR"]}]}
+{
+  "id": "ATLAS-SD-SALES-PROCESSES",
+  "title": "SAP Sales Process Atlas",
+  "version": "0.4.0",
+  "updated_at": "2026-08-15",
+  "domain": "SAP S/4HANA Sales",
+  "purpose": "A memory-first, source-tracked map of standard, special, after-sales, billing, industry, production, project and cross-application sales variants, their control points, data hinges, consequences, constraints, and extension surfaces.",
+  "code_system": {
+    "pattern": "SD.<MNEMONIC>",
+    "variant_pattern": "SD.<FAMILY>.<VARIANT>",
+    "overlay_pattern": "SD+<MNEMONIC>",
+    "rule": "The code is ours and stays stable even if SAP renames a scope item or app. SAP scope-item IDs remain external references, not primary keys.",
+    "families": [
+      {"prefix": "SD.", "meaning": "Process or process family"},
+      {"prefix": "SD.<FAMILY>.<VARIANT>", "meaning": "Child variant that changes a meaningful control rule inside a process family"},
+      {"prefix": "SD.CLM.", "meaning": "Customer claim or commercial correction without assuming physical reverse logistics"},
+      {"prefix": "SD.BILL.", "meaning": "Billing lifecycle or correction process beyond ordinary invoice creation"},
+      {"prefix": "SD.DP.", "meaning": "Customer down-payment process variants"},
+      {"prefix": "SD+", "meaning": "Overlay, extension, or cross-cutting capability"}
+    ]
+  },
+  "linked_code_systems": [
+    {"prefix": "ORC.SD.", "meaning": "Upstream order origin or orchestrator", "model": "sales_order_integration_map"},
+    {"prefix": "INT.SD.", "meaning": "Cross-application execution or control handoff", "model": "sales_order_integration_map"},
+    {"prefix": "EVT.SD.", "meaning": "Event-driven integration contract", "model": "sales_order_integration_map"}
+  ],
+  "coverage_model": {
+    "target": "high practical coverage, not an exhaustive dump of every localization or industry scope item",
+    "rule": "Create a separate card when a variant changes a business promise, document chain, stock ownership, supply source, inspection/disposition, billing trigger, settlement logic, project/production cost object, configuration contract, or integration boundary.",
+    "process_count": 54,
+    "groups_count": 11
+  },
+  "memory_model": {
+    "questions": [
+      "What business promise changes?",
+      "Which documents or stock segments appear?",
+      "Which control decides the branch?",
+      "Which data fields become hinges for the next step?",
+      "What is different in accounting, inventory, delivery, billing, production or project execution?",
+      "What breaks first when the design is wrong?",
+      "Where can the process be extended without rewriting the core?"
+    ]
+  },
+  "extension_surfaces": [
+    {"code": "EXT-FIELD", "title": "Custom fields and UI adaptation", "memory_hook": "Add context before adding logic.", "applies_to": ["sales document header", "sales document item", "selected apps and APIs"], "source_refs": ["SRC-SAP-SALES-EXT"]},
+    {"code": "EXT-LOGIC", "title": "Custom logic and BAdIs", "memory_hook": "Use a defined hook, not an invisible side effect.", "applies_to": ["header/item modifications", "checks", "copying", "request transformation"], "source_refs": ["SRC-SAP-SALES-BADI"]},
+    {"code": "EXT-API", "title": "APIs and integration contracts", "memory_hook": "The integration boundary is part of the process design.", "applies_to": ["OData V4/V2", "SOAP", "BAPI where available", "external order capture"], "source_refs": ["SRC-SAP-SALES-API-EXT"]},
+    {"code": "EXT-COPY", "title": "Reference and copy-control logic", "memory_hook": "A follow-on document inherits rules, not just fields.", "applies_to": ["quotation to order", "contract to release order", "returns references", "claims and billing corrections", "custom reference flows"], "source_refs": ["SRC-SAP-SALES-BADI"]},
+    {"code": "EXT-SIDECAR", "title": "Side-by-side capabilities", "memory_hook": "Keep orchestration outside the core when ownership sits outside the ERP transaction.", "applies_to": ["promotion services", "external sourcing", "AI-assisted capture", "payment services", "BTP integrations"], "source_refs": ["SRC-SAP-OSP-EXT"]}
+  ],
+  "groups": [
+    {"key": "01_baseline", "title": "Baseline and pre-sales", "codes": ["SD.SFS", "SD.QUO", "SD.FOC", "SD.CTR"]},
+    {"key": "02_fulfillment", "title": "Special fulfillment and stock", "codes": ["SD.TPO", "SD.PTO", "SD.CON"]},
+    {"key": "03_intercompany", "title": "Intercompany and transfer of control", "codes": ["SD.ICO", "SD.AIC", "SD.VST"]},
+    {"key": "04_commercial", "title": "Commercial and product structure", "codes": ["SD.ADP", "SD.MDP", "SD.BOM"]},
+    {"key": "05_execution", "title": "Production, immediate sales, returns and schedules", "codes": ["SD.MTO", "SD.CSH", "SD.RSH", "SD.RET", "SD.SA"]},
+    {"key": "06_overlays", "title": "Cross-process overlays", "codes": ["SD+OSP", "SD+REL"]},
+    {"key": "07_after_sales", "title": "Claims, returns and customer recovery", "codes": ["SD.RET.LEAN", "SD.RET.ARM", "SD.RET.VC", "SD.RET.KIT", "SD.CLM.CMR", "SD.CLM.DMR", "SD.CLM.ICR", "SD.CLM.FOS", "SD.RET.REPAIR"]},
+    {"key": "08_commercial_extensions", "title": "Commercial variants, billing and settlement", "codes": ["SD.INQ", "SD.OTC", "SD.FG", "SD.RTNBL", "SD.BILL.COLL", "SD.REB", "SD+PAY"]},
+    {"key": "09_industry_variants", "title": "Industry, configuration and execution variants", "codes": ["SD.TPO.SN", "SD.TPO.NSN", "SD.TPO.VC", "SD.MTO.VC", "SD.KIT", "SD.SA.CON", "SD.JIT"]},
+    {"key": "10_billing_lifecycle", "title": "Billing lifecycle, negotiation and correction", "codes": ["SD.CLM.INC", "SD.BILL.PRELIM", "SD.BILL.RETRO", "SD.BILL.CANCEL", "SD.DP.CLASSIC", "SD.DP.ADV"]},
+    {"key": "11_cross_application_execution", "title": "Production, project and cross-application execution", "codes": ["SD.MTO.ATO", "SD.ETO", "SD.ETO.CTO+", "SD.PROJ.PBS", "SD.SUB.RECUR"]}
+  ]
+}

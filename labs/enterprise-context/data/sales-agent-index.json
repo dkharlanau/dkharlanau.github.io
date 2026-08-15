@@ -1,0 +1,25 @@
+---
+layout: null
+permalink: /labs/enterprise-context/data/sales-agent-index.json
+sitemap: false
+---
+{
+  "contract": {{ site.data.labs.enterprise_context.agent_contracts.sales | jsonify }},
+  "process_index": {{ site.data.labs.enterprise_context.processes.sales_process_atlas.index | jsonify }},
+  "coverage": {{ site.data.labs.enterprise_context.processes.sales_process_atlas.coverage_audit | jsonify }},
+  "mechanism_index": {{ site.data.labs.enterprise_context.mechanisms.sales_mechanisms.index | jsonify }},
+  "process_mechanism_coverage": {{ site.data.labs.enterprise_context.mechanisms.sales_mechanisms.process_map.coverage | jsonify }},
+  "kpi_model_meta": {
+    "id": {{ site.data.labs.enterprise_context.graphs.sales_process_kpis.id | jsonify }},
+    "title": {{ site.data.labs.enterprise_context.graphs.sales_process_kpis.title | jsonify }},
+    "kpi_count": {{ site.data.labs.enterprise_context.graphs.sales_process_kpis.kpis | size | jsonify }},
+    "lens_count": {{ site.data.labs.enterprise_context.graphs.sales_process_kpis.analytics_lenses | size | jsonify }},
+    "endpoint": "/labs/enterprise-context/data/sales-process-kpis.json"
+  },
+  "diagnostic_casebook_meta": {
+    "id": {{ site.data.labs.enterprise_context.graphs.sales_diagnostic_casebook.id | jsonify }},
+    "title": {{ site.data.labs.enterprise_context.graphs.sales_diagnostic_casebook.title | jsonify }},
+    "case_count": {{ site.data.labs.enterprise_context.graphs.sales_diagnostic_casebook.diagnostic_cases | size | jsonify }},
+    "endpoint": "/labs/enterprise-context/data/sales-diagnostic-casebook.json"
+  }
+}
