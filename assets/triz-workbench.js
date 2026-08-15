@@ -154,8 +154,6 @@
     };
 
     const result = {
-      framework_id: 'triz-digital-systems',
-      generated_by: 'browser_workbench_deterministic_v1',
       problem: {
         statement: data.observed_behavior,
         observed_behavior: splitList(data.observed_behavior),
