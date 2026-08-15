@@ -1,0 +1,303 @@
+/* DDD for Acting Systems — interactive Decision Canvas. */
+
+.ddd-canvas-tool {
+  width: min(100%, 74rem);
+  margin-inline: auto;
+  padding-bottom: clamp(3rem, 7vw, 6rem);
+}
+
+.ddd-canvas-tool__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.65fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  padding: clamp(2rem, 5vw, 4.5rem) 0 clamp(2.5rem, 6vw, 4rem);
+  border-bottom: 1px solid var(--ps-line);
+}
+
+.ddd-canvas-tool__hero h1 {
+  max-width: 12ch;
+  margin: 0;
+}
+
+.ddd-canvas-tool__hero p {
+  max-width: 44rem;
+}
+
+.ddd-canvas-tool__aside {
+  border-top: 3px solid var(--ps-signal);
+  padding-top: 1rem;
+}
+
+.ddd-canvas-tool__aside strong {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: var(--ps-ink);
+}
+
+.ddd-canvas-tool__shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  padding: clamp(2.5rem, 6vw, 5rem) 0;
+}
+
+.ddd-canvas-form {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.ddd-canvas-group {
+  border-top: 1px solid var(--ps-line);
+  padding-top: 1.25rem;
+}
+
+.ddd-canvas-group__head {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.ddd-canvas-group__head span {
+  color: var(--ps-signal);
+  font-family: var(--ps-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.ddd-canvas-group__head h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+}
+
+.ddd-canvas-group__head p {
+  margin: 0.35rem 0 0;
+  max-width: 42rem;
+}
+
+.ddd-canvas-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+}
+
+.ddd-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.ddd-field--wide {
+  grid-column: 1 / -1;
+}
+
+.ddd-field label,
+.ddd-field legend {
+  color: var(--ps-ink);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.ddd-field small {
+  color: var(--ps-ink-muted);
+  line-height: 1.4;
+}
+
+.ddd-field input,
+.ddd-field select,
+.ddd-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--ps-line-strong);
+  border-radius: var(--ps-radius-s);
+  background: var(--ps-surface);
+  color: var(--ps-ink);
+  padding: 0.72rem 0.8rem;
+  font: inherit;
+}
+
+.ddd-field textarea {
+  min-height: 6.8rem;
+  resize: vertical;
+}
+
+.ddd-field input:focus,
+.ddd-field select:focus,
+.ddd-field textarea:focus,
+.ddd-canvas-actions button:focus,
+.ddd-example-picker button:focus {
+  outline: 2px solid var(--ps-signal);
+  outline-offset: 2px;
+}
+
+.ddd-economics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.ddd-economics-grid .ddd-field {
+  border: 1px solid var(--ps-line);
+  border-radius: var(--ps-radius-s);
+  padding: 0.8rem;
+  background: var(--ps-surface);
+}
+
+.ddd-canvas-output {
+  position: sticky;
+  top: 1.5rem;
+  align-self: start;
+  border: 1px solid var(--ps-line);
+  background: var(--ps-surface);
+}
+
+.ddd-canvas-output__head {
+  padding: 1.15rem;
+  border-bottom: 1px solid var(--ps-line);
+}
+
+.ddd-canvas-output__head h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.ddd-canvas-output__status {
+  margin: 0.4rem 0 0;
+  color: var(--ps-ink-muted);
+  font-family: var(--ps-mono);
+  font-size: 0.72rem;
+}
+
+.ddd-posture {
+  padding: 1.15rem;
+  border-bottom: 1px solid var(--ps-line);
+  background: var(--ps-signal-soft);
+}
+
+.ddd-posture__label {
+  margin: 0 0 0.3rem;
+  color: var(--ps-ink-muted);
+  font-family: var(--ps-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ddd-posture strong {
+  display: block;
+  color: var(--ps-ink);
+  font-size: 1.05rem;
+}
+
+.ddd-posture p:last-child {
+  margin: 0.45rem 0 0;
+  font-size: 0.9rem;
+}
+
+.ddd-canvas-output pre {
+  max-height: 46rem;
+  overflow: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 1rem;
+  background: var(--ps-surface-muted);
+  color: var(--ps-ink);
+  font-family: var(--ps-mono);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ddd-canvas-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  padding: 1rem;
+  border-top: 1px solid var(--ps-line);
+}
+
+.ddd-canvas-actions button,
+.ddd-example-picker button {
+  min-height: 2.4rem;
+  border: 1px solid var(--ps-line-strong);
+  border-radius: var(--ps-radius-s);
+  background: var(--ps-surface);
+  color: var(--ps-ink);
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ddd-canvas-actions button[data-primary="true"] {
+  border-color: var(--ps-signal);
+  background: var(--ps-signal);
+  color: var(--ps-page);
+}
+
+.ddd-example-picker {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.ddd-example-picker button {
+  text-align: left;
+}
+
+.ddd-canvas-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.ddd-canvas-links a {
+  border: 1px solid var(--ps-line);
+  border-radius: var(--ps-radius-s);
+  padding: 0.45rem 0.65rem;
+  color: var(--ps-ink);
+  font-family: var(--ps-mono);
+  font-size: 0.72rem;
+  text-decoration: none;
+}
+
+.ddd-canvas-tool__note {
+  margin-top: 1.5rem;
+  border-left: 3px solid var(--ps-signal);
+  padding-left: 1rem;
+}
+
+.ddd-canvas-tool__note p {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .ddd-canvas-tool__hero,
+  .ddd-canvas-tool__shell {
+    grid-template-columns: 1fr;
+  }
+
+  .ddd-canvas-output {
+    position: static;
+  }
+
+  .ddd-economics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .ddd-canvas-fields,
+  .ddd-economics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ddd-canvas-group__head {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+  }
+}
