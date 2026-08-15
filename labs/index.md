@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Labs — Enterprise Context and AI"
-description: "Practical maps for SAP domains, deployment models, industries, processes, applications, integrations, data, and AI."
+description: "Practical maps for SAP, enterprise processes, AI architecture, Business AI patterns, technologies, outcomes, failures, and digital problem solving."
 permalink: /labs/
 status: draft
 verified: false
@@ -16,6 +16,10 @@ tags:
   - business-ai
 ---
 
+{% assign business_ai_processes = site.data.labs.business_ai.process_map %}
+{% assign business_ai_tech = site.data.labs.business_ai.technology_landscape %}
+{% assign business_ai_scenarios = site.data.labs.business_ai.scenario_library %}
+
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li aria-current="page">Labs</li></ol>
 </nav>
@@ -25,13 +29,13 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Labs / practical architecture maps</p>
       <h1>Understand the business.<br />Then map the architecture.</h1>
-      <p>Simple, source-tracked maps of business domains, SAP landscapes, integrations, data, AI systems, and the decisions that connect them.</p>
+      <p>Simple, source-tracked maps of business processes, SAP landscapes, integrations, data, AI systems, implementation outcomes, and the decisions that connect them.</p>
       <a class="research-canvas__button" href="#labs-inventory">Open the labs <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Active labs</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>14+</strong><small>Architecture views</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Active labs</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>18+</strong><small>Architecture and outcome views</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>10+</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
     </div>
@@ -40,7 +44,7 @@ tags:
   <section class="research-canvas__boundary" data-reveal aria-label="Lab boundary">
     <span class="material-symbols-outlined" aria-hidden="true">science</span>
     <p><strong>Problem:</strong> product-first learning makes it hard to connect business ownership, process, architecture, evidence, and operational controls.</p>
-    <p><strong>Working rule.</strong> Facts, expert judgment, synthetic examples, and fast-moving technology notes stay separate.</p>
+    <p><strong>Working rule.</strong> Facts, expert judgment, synthetic examples, fast-moving technology notes, and failure evidence stay separate.</p>
     <a href="/research/">Open Research <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
@@ -52,13 +56,12 @@ tags:
       <h2>Business first, system second.</h2>
       <p>Move from business ownership and industry context to deployment model, process, SAP component, integration, data, and AI responsibility.</p>
     </header>
-
     <div class="research-route-list">
       <a href="/labs/enterprise-context/"><span>01</span><strong>Enterprise Context Graph</strong><small>Sales, Supply Chain, processes, applications, boundaries, licensing, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/domains/"><span>02</span><strong>Enterprise Business Domains</strong><small>What the business owns, separate from processes and SAP products.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/enterprise-context/deployment-models/"><span>03</span><strong>SAP S/4HANA Deployment Models</strong><small>Public Cloud, Private Cloud, and On-Premise.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
       <a href="/labs/enterprise-context/industries/"><span>04</span><strong>SAP Industry Solutions</strong><small>Automotive, retail, fashion, industrial manufacturing, and mill products.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
-      <a href="/labs/enterprise-context/business-ai/"><span>05</span><strong>SAP Business AI</strong><small>Joule, agents, build tools, runtime, model access, grounding, and governance.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/enterprise-context/business-ai/"><span>05</span><strong>SAP Business AI Detail</strong><small>Joule, agents, build tools, runtime, model access, grounding, governance, and SAP-specific integration.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       <a href="/labs/enterprise-context/integrations/"><span>06</span><strong>SAP Integration Architecture</strong><small>APIs, IDocs, RFC, events, Kafka, queues, files, B2B, middleware, logistics, and master-data distribution.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/enterprise-context/model/"><span>07</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/labs/enterprise-context/data/catalog.json"><span>08</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
@@ -92,6 +95,22 @@ tags:
       <a href="/datasets/triz-digital-framework/catalog.json"><span>JSON</span><strong>TRIZ digital catalog</strong><small>Method, contradiction types, operators, resources, allocation rules, authority model, risk tiers, metrics, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/datasets/triz-digital-framework/reasoning-schema.json"><span>SCHEMA</span><strong>Reasoning contract</strong><small>JSON Schema for inspectable problem analysis and agent output.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="/datasets/triz-digital-framework/cases.jsonl"><span>EVAL</span><strong>TRIZ reasoning cases</strong><small>Synthetic problem-to-contradiction examples for retrieval, reasoning, and agent evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lab 04 / Business AI</p>
+      <h2>Process first. Evidence includes failures.</h2>
+      <p>Enterprise-wide Business AI across processes, domains, reusable patterns, technology families, platforms, strong implementations, mixed outcomes, failed pilots, and recurring anti-patterns.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/business-ai/"><span>AI</span><strong>Business AI Lab</strong><small>Business process → pattern → technology → control → outcome → evidence.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/business-ai/processes/"><span>PROC</span><strong>Enterprise processes</strong><small>{{ business_ai_processes.processes | size }} end-to-end process chains with AI jobs and control points.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/business-ai/technologies/"><span>TECH</span><strong>Technology landscape</strong><small>{{ business_ai_tech.families | size }} capability families and {{ business_ai_tech.platforms | size }} platform examples across vendors.</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
+      <a href="/labs/business-ai/scenarios/"><span>CASE</span><strong>Scenario outcomes</strong><small>{{ business_ai_scenarios.scenarios | size }} strong, mixed, and failed scenarios with evidence, missing controls, and lessons.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
+      <a href="/labs/business-ai/practices/"><span>RISK</span><strong>Best practices and anti-patterns</strong><small>{{ business_ai_scenarios.best_practices | size }} operating rules and {{ business_ai_scenarios.failure_patterns | size }} recurring failure shapes.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
+      <a href="/labs/business-ai/data/scenarios.json"><span>JSON</span><strong>Scenario and failure data</strong><small>Machine-readable outcomes, controls, lessons, practices, anti-patterns, and source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 

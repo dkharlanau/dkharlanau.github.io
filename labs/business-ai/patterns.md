@@ -19,7 +19,8 @@ tags:
 {% assign catalog = site.data.labs.business_ai.catalog %}
 {% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
 {% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
-{% assign all_patterns = catalog.patterns | concat: expansion.patterns | concat: expansion_b.patterns %}
+{% assign expansion_c = site.data.labs.business_ai.expansion_2026_08_15_c %}
+{% assign all_patterns = catalog.patterns | concat: expansion.patterns | concat: expansion_b.patterns | concat: expansion_c.patterns %}
 {% assign all_cases = catalog.cases | concat: expansion.cases | concat: expansion_b.cases %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
