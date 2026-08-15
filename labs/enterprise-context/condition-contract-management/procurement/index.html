@@ -1,0 +1,124 @@
+---
+layout: default
+title: "Procurement CCM — Supplier Rebates | Enterprise Context Lab"
+description: "SAP S/4HANA Procurement Condition Contract Management: supplier rebates, goods-receipt or invoice business volume, accruals, settlement, configuration, apps, and diagnostics."
+permalink: /labs/enterprise-context/condition-contract-management/procurement/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags: [sap-s4hana, sap-mm, settlement-management, condition-contract-management, supplier-rebates]
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.condition_contract_management %}
+{% assign model = graph.procurement %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/condition-contract-management/">CCM</a></li><li aria-current="page">Procurement</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">CCM / Procurement</p>
+      <h1>Supplier rebate: first identify the economic event.</h1>
+      <p>{{ model.purpose }}</p>
+      <a class="research-canvas__button" href="#procurement-ccm-runtime">Follow the runtime <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Memory path</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ model.runtime | size }}</strong><small>Runtime steps</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ model.fiori_apps | size }}</strong><small>Fiori anchors</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ model.failure_modes | size }}</strong><small>Failure groups</small></div>
+      <em>{{ model.memory_path }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
+    <p><strong>Boundary:</strong> MM pricing determines purchasing conditions in transactional documents. Procurement CCM manages a supplier agreement whose result depends on accumulated eligible purchasing activity and later settlement.</p>
+    <a href="/labs/enterprise-context/condition-contract-management/">Back to the CCM core model <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Business-volume source</p><h2>Receipt or invoice is an architecture decision.</h2><p>The same purchase order can lead to different rebate timing depending on which event the condition contract type uses as business volume.</p></header>
+    <div class="research-route-list">
+      {% for source in model.business_volume_sources %}
+      <a href="#"><span>VOL</span><strong>{{ source }}</strong><small>Choose the source that represents when the commercial entitlement should become measurable.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Standard examples</p><h2>Contract type tells you what the process considers.</h2><p>0PG* and 0PI* are useful standard examples. Projects can extend the design, so read the configuration instead of guessing from the number.</p></header>
+    <div class="research-route-list">
+      {% for item in model.standard_contract_type_examples %}
+      <a href="#"><span>TYPE</span><strong>{{ item }}</strong><small>The important question is whether business volume is driven by goods receipt or supplier invoice and how settlement is posted.</small><i class="material-symbols-outlined" aria-hidden="true">contract_edit</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="procurement-ccm-runtime" data-reveal>
+    <header><p class="research-canvas__eyebrow">Runtime</p><h2>{{ model.memory_path }}</h2><p>This path keeps purchasing execution, rebate evidence, settlement calculation, and accounting separate.</p></header>
+    <div class="ecg-determination-list">
+      {% for step in model.runtime %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">0{{ step.order }}</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">{{ step.tool }}</p>
+          <h3>{{ step.step }}</h3>
+          <p>{{ step.action }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Configuration</p><h2>Make the business-volume source explicit.</h2><p>If receipt-based and invoice-based logic are mixed mentally, the settlement will look mysterious even when SAP is doing exactly what was configured.</p></header>
+    <div class="research-route-list">
+      {% for item in model.configuration_focus %}
+      <a href="#"><span>CFG</span><strong>{{ item }}</strong><small>Validate this layer against the target S/4HANA release and the selected purchasing rebate process.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Operational toolbox</p><h2>Contract → volume → settlement → accounting.</h2></header>
+    <div class="research-route-list">
+      {% for tx in graph.transactions %}
+      <a href="#"><span>{{ tx.id }}</span><strong>{{ tx.name }}</strong><small>{{ tx.use }}</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
+      {% endfor %}
+      {% for app in model.fiori_apps %}
+      <a href="#"><span>{{ app.id }}</span><strong>{{ app.name }}</strong><small>Fiori entry point for the Procurement CCM lifecycle.</small><i class="material-symbols-outlined" aria-hidden="true">apps</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Diagnostic sequence</p><h2>Ask which event created the entitlement.</h2><p>This is the key difference from the Sales side.</p></header>
+    <div class="research-route-list">
+      {% for item in model.diagnostic_sequence %}
+      <a href="#"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item }}</strong><small>Stop at the first layer that produces the wrong result.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure patterns</p><h2>Most errors belong to volume, rate, or posting.</h2></header>
+    <div class="ecg-determination-list">
+      {% for failure in model.failure_modes %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">!</div>
+        <div class="ecg-determination-card__copy">
+          <h3>{{ failure.symptom }}</h3>
+          <p><strong>Check:</strong> {{ failure.likely_causes | join: " · " }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+</div>
