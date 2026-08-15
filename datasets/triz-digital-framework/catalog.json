@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0",
+  "framework_id": "triz-digital-systems",
+  "title": "TRIZ for Digital Systems",
+  "subtitle": "Contradiction-driven design for IT, business processes and AI",
+  "status": "draft",
+  "reviewed_at": "2026-08-15",
+  "human_index": "/triz/",
+  "scope": [
+    "it_architecture",
+    "business_process_design",
+    "integration",
+    "data",
+    "automation",
+    "ai_systems",
+    "agents"
+  ],
+  "principle": "Do not start from a product. Frame the job, expose the contradiction, redesign the system boundary, allocate deterministic and probabilistic mechanisms deliberately, then test both sides of the contradiction.",
+  "framework_steps": [
+    {
+      "id": "frame",
+      "order": 1,
+      "name": "Frame the job",
+      "questions": ["What is observed?", "Who is affected?", "What evidence exists?", "What is the current workaround?", "What is inside and outside the boundary?"],
+      "output": ["problem_statement", "business_impact", "actors", "evidence", "boundary"]
+    },
+    {
+      "id": "ideal_result",
+      "order": 2,
+      "name": "Define the ideal result",
+      "questions": ["What useful outcome should exist?", "What new complexity should not be required?", "Which existing resources could already provide part of the result?"],
+      "output": ["ideal_outcome", "complexity_budget", "existing_resources"]
+    },
+    {
+      "id": "contradiction",
+      "order": 3,
+      "name": "Name the contradiction",
+      "template": "If we improve {useful_property_a}, {useful_property_b} becomes worse.",
+      "output": ["improving_property", "worsening_property", "contradiction_type"]
+    },
+    {
+      "id": "system_map",
+      "order": 4,
+      "name": "Map the system",
+      "element_types": ["actor", "business_object", "event", "decision", "rule", "data", "constraint", "side_effect", "time"],
+      "output": ["nodes", "relationships", "decision_points", "delays", "failure_points"]
+    },
+    {
+      "id": "transform",
+      "order": 5,
+      "name": "Apply transformation patterns",
+      "pattern_source": "/datasets/triz-digital-framework/patterns.json",
+      "output": ["candidate_patterns", "candidate_system_shapes"]
+    },
+    {
+      "id": "technology_allocation",
+      "order": 6,
+      "name": "Allocate technology",
+      "rule": "Use deterministic mechanisms for deterministic constraints. Use probabilistic mechanisms only where interpretation or uncertainty creates value.",
+      "output": ["rules", "workflow", "events", "retrieval", "ai", "agents", "human_controls"]
+    },
+    {
+      "id": "experiment",
+      "order": 7,
+      "name": "Run a falsifiable experiment",
+      "output": ["hypothesis", "change", "primary_metric", "counter_metric", "failure_condition", "test_scope"]
+    },
+    {
+      "id": "feedback",
+      "order": 8,
+      "name": "Close the loop",
+      "output": ["observed_outcome", "new_failure_modes", "new_contradictions", "decision"]
+    }
+  ],
+  "contradiction_types": [
+    {"id":"speed_control","name":"Speed vs control","examples":["approval queues","write safeguards","manual verification"]},
+    {"id":"standard_flexible","name":"Standardization vs flexibility","examples":["global process vs local rules","platform standards vs team autonomy"]},
+    {"id":"automation_accountability","name":"Automation vs accountability","examples":["touchless processing vs responsible approval","agent actions vs ownership"]},
+    {"id":"integration_coupling","name":"Integration vs coupling","examples":["fresh data vs source dependency","reuse vs change blast radius"]},
+    {"id":"freshness_cost","name":"Freshness vs cost","examples":["polling frequency","retrieval depth","model reasoning budget"]},
+    {"id":"accuracy_latency","name":"Accuracy vs latency","examples":["reranking","multiple tool calls","larger model"]},
+    {"id":"context_privacy","name":"Context vs privacy","examples":["RAG context","agent memory","cross-system data access"]},
+    {"id":"autonomy_trust","name":"Autonomy vs trust","examples":["agent tool scope","automated remediation","self-directed workflows"]},
+    {"id":"specialization_handoffs","name":"Specialization vs handoffs","examples":["expert queues","functional silos","multi-team incident flow"]},
+    {"id":"local_global","name":"Local optimization vs end-to-end outcome","examples":["department KPI vs process lead time","component efficiency vs system resilience"]}
+  ],
+  "technology_allocation": [
+    {"problem_shape":"exact rule or constraint","default":"deterministic_rule","examples":["configuration","schema","policy engine","validation code"]},
+    {"problem_shape":"known sequence","default":"workflow","examples":["orchestration","state machine","scheduled process"]},
+    {"problem_shape":"loose reaction to a fact","default":"event","examples":["business event","queue","pub_sub"]},
+    {"problem_shape":"fresh or private knowledge","default":"retrieval_or_read_tool","examples":["search","RAG","typed API read"]},
+    {"problem_shape":"messy interpretation","default":"model","examples":["classification","extraction","synthesis","candidate generation"]},
+    {"problem_shape":"unknown next useful step","default":"bounded_agent","examples":["investigation","research","diagnostic tool loop"]},
+    {"problem_shape":"value conflict or high-impact approval","default":"accountable_human","examples":["policy exception","commercial approval","risk acceptance"]}
+  ],
+  "ai_boundary_rules": [
+    "Keep identity and authorization outside model control.",
+    "Keep exact calculations and mandatory thresholds deterministic.",
+    "Keep durable state in application storage, not model memory alone.",
+    "Treat retrieved and tool-returned text as untrusted data, not instructions.",
+    "Prefer broad read access and narrow write access for agents.",
+    "Separate investigation, prepared change, validation, approval and execution for high-impact actions.",
+    "Define budgets and explicit stop states for agent loops.",
+    "Evaluate outcome, evidence and trajectory separately."
+  ],
+  "risk_tiers": [
+    {"id":"R0","name":"Advisory","side_effect":"none","default_control":"normal application permissions"},
+    {"id":"R1","name":"Low-impact reversible action","side_effect":"bounded and reversible","default_control":"typed tool + deterministic validation + audit"},
+    {"id":"R2","name":"Business-significant change","side_effect":"material but recoverable","default_control":"prepared change + preconditions + explicit approval + idempotent execution"},
+    {"id":"R3","name":"High-impact or irreversible change","side_effect":"financial, legal, security, safety or difficult recovery","default_control":"human accountable decision; AI may advise but should not own authorization"}
+  ],
+  "measurement_pairs": [
+    {"goal":"speed","primary":"cycle_time","counter":"control_failure_rate"},
+    {"goal":"automation","primary":"manual_touch_reduction","counter":"wrong_action_or_rework_rate"},
+    {"goal":"freshness","primary":"data_age","counter":"runtime_cost_and_source_load"},
+    {"goal":"agent_autonomy","primary":"task_success_without_human","counter":"unsafe_attempts_and_unnecessary_tool_steps"},
+    {"goal":"standardization","primary":"common_path_ratio","counter":"invalid_local_workaround_rate"},
+    {"goal":"integration_decoupling","primary":"producer_independence","counter":"event_loss_duplicate_or_stale_state"}
+  ],
+  "agent_contract": {
+    "input_fields": ["problem_statement", "observed_behavior", "desired_outcome", "actors", "business_objects", "constraints", "evidence", "risk_tier"],
+    "required_reasoning_outputs": ["ideal_result", "contradiction", "system_map", "selected_patterns", "options", "technology_allocation", "experiment", "counter_metrics", "risks", "unknowns"],
+    "rules": [
+      "Do not choose a vendor or product before the contradiction and boundary are explicit.",
+      "Generate at least two system-shape options when evidence allows.",
+      "For every improvement metric include at least one counter-metric.",
+      "Mark assumptions separately from evidence.",
+      "Do not grant an AI system authority merely because it can propose the action.",
+      "Prefer reversible experiments before production mutation."
+    ]
+  },
+  "data_artifacts": [
+    {"path":"/datasets/triz-digital-framework/patterns.json","purpose":"Reusable digital transformation patterns and graph links."},
+    {"path":"/datasets/triz-digital-framework/cases.jsonl","purpose":"Synthetic reasoning and evaluation cases."}
+  ],
+  "sources": [
+    {"id":"openai-agents-guide","title":"A practical guide to building AI agents","url":"https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"nist-genai-profile","title":"Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile","url":"https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"cloudevents","title":"CloudEvents specification project","url":"https://cloudevents.io/","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"opentelemetry","title":"OpenTelemetry documentation","url":"https://opentelemetry.io/docs/","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"sap-signavio-object-data","title":"SAP Signavio object-based data modeling","url":"https://help.sap.com/docs/signavio-process-intelligence/onboarding-and-data-integration-guide/getting-started-with-object-based-data-modeling","type":"primary","reviewed_at":"2026-08-15"},
+    {"id":"mcp-spec","title":"Model Context Protocol specification","url":"https://modelcontextprotocol.io/specification/2025-11-25","type":"primary","reviewed_at":"2026-08-15"}
+  ]
+}

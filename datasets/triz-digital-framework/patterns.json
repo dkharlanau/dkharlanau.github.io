@@ -1,0 +1,156 @@
+{
+  "schema_version": "1.0",
+  "framework_id": "triz-digital-systems",
+  "reviewed_at": "2026-08-15",
+  "patterns": [
+    {
+      "id": "P01",
+      "slug": "split-system",
+      "name": "Split the system by responsibility",
+      "intent": "Separate parts that need different ownership, risk, change speed, scale or consistency.",
+      "triggers": ["one_component_serves_conflicting_owners", "different_release_speed", "different_risk_profile", "mixed_transactional_and_analytical_load"],
+      "moves": ["command_query_separation", "core_extension_boundary", "transactional_analytical_split", "common_local_split", "sync_async_split"],
+      "risks": ["too_many_interfaces", "distributed_state", "ownership_gaps"],
+      "contradictions": ["standard_flexible", "integration_coupling", "local_global"],
+      "classic_lineage": ["segmentation", "local_quality"]
+    },
+    {
+      "id": "P02",
+      "slug": "move-uncertainty",
+      "name": "Move uncertainty to the edge",
+      "intent": "Keep the critical core deterministic while interpreting messy or incomplete input before it enters the core flow.",
+      "triggers": ["unstructured_input", "ambiguous_language", "document_extraction", "human_intent"],
+      "moves": ["classify_then_route", "extract_to_schema", "normalize_before_core", "request_missing_context"],
+      "ai_fit": "high",
+      "risks": ["silent_misclassification", "schema_loss", "false_confidence"],
+      "controls": ["confidence_or_evidence", "fallback_state", "typed_output", "eval_dataset"],
+      "contradictions": ["standard_flexible", "accuracy_latency"],
+      "classic_lineage": ["taking_out", "local_quality"]
+    },
+    {
+      "id": "P03",
+      "slug": "separate-read-write",
+      "name": "Separate read from write",
+      "intent": "Allow broad investigation or visibility without granting broad mutation authority.",
+      "triggers": ["agent_needs_context", "wide_search_narrow_authority", "high_impact_actions"],
+      "moves": ["read_only_tools", "narrow_write_tools", "prepared_change", "approval_binding", "idempotent_execution"],
+      "ai_fit": "very_high",
+      "risks": ["approval_fatigue", "stale_prepared_change", "write_tool_over_scope"],
+      "controls": ["preconditions", "expiry", "exact_target_binding", "audit"],
+      "contradictions": ["autonomy_trust", "automation_accountability", "context_privacy"],
+      "classic_lineage": ["separation", "intermediary"]
+    },
+    {
+      "id": "P04",
+      "slug": "make-state-explicit",
+      "name": "Make state explicit",
+      "intent": "Replace hidden status and memory with explicit state, ownership, evidence and transitions.",
+      "triggers": ["work_lost_in_email", "hidden_flags", "unclear_owner", "unmeasured_waiting"],
+      "moves": ["state_machine", "explicit_owner", "transition_reason", "timestamp", "evidence_reference"],
+      "risks": ["state_model_overcomplexity", "duplicate_sources_of_truth"],
+      "contradictions": ["specialization_handoffs", "local_global"],
+      "classic_lineage": ["feedback", "parameter_change"]
+    },
+    {
+      "id": "P05",
+      "slug": "replace-sync-events",
+      "name": "Replace blocking coordination with events",
+      "intent": "Decouple reaction from the producer when consumers need to know that a fact happened but do not need to block the source transaction.",
+      "triggers": ["many_consumers_poll_source", "availability_coupling", "fan_out_updates", "long_running_reactions"],
+      "moves": ["business_event", "pub_sub", "queue", "event_log"],
+      "risks": ["event_loss", "duplicates", "ordering", "eventual_consistency", "schema_drift"],
+      "controls": ["idempotency", "correlation_id", "replay_policy", "dead_letter_handling", "event_schema_ownership"],
+      "contradictions": ["integration_coupling", "freshness_cost", "accuracy_latency"],
+      "classic_lineage": ["dynamization", "intermediary"]
+    },
+    {
+      "id": "P06",
+      "slug": "exception-signal",
+      "name": "Turn exceptions into signals",
+      "intent": "Capture repeated failure as structured evidence for routing, learning and prevention.",
+      "triggers": ["repeat_incidents", "manual_exception_resolution", "tribal_knowledge", "same_workaround_reappears"],
+      "moves": ["exception_taxonomy", "context_capture", "resolution_capture", "outcome_link", "rule_or_eval_feedback"],
+      "ai_fit": "high_for_classification",
+      "risks": ["bad_taxonomy", "label_drift", "confusing_correlation_with_cause"],
+      "contradictions": ["automation_accountability", "specialization_handoffs"],
+      "classic_lineage": ["feedback", "blessing_in_disguise"]
+    },
+    {
+      "id": "P07",
+      "slug": "move-decision",
+      "name": "Move the decision to the right layer",
+      "intent": "Place a decision where the required context, authority and consequence are visible.",
+      "triggers": ["central_component_lacks_context", "local_component_lacks_policy", "slow_escalation", "duplicate_policy_logic"],
+      "moves": ["separate_policy_execution", "centralize_stable_constraints", "localize_contextual_choice", "decision_service"],
+      "risks": ["policy_fragmentation", "local_override_abuse", "unclear_accountability"],
+      "contradictions": ["standard_flexible", "local_global", "automation_accountability"],
+      "classic_lineage": ["local_quality", "separation"]
+    },
+    {
+      "id": "P08",
+      "slug": "reversible-path",
+      "name": "Create a reversible path",
+      "intent": "Reduce the cost of wrong action by preparing, previewing, staging, compensating or rolling back change.",
+      "triggers": ["high_impact_mutation", "uncertain_change_effect", "agent_write_action", "risky_rollout"],
+      "moves": ["dry_run", "preview", "prepared_change", "staged_rollout", "compensation", "rollback", "expiry"],
+      "ai_fit": "high_for_preparation_low_for_authorization",
+      "risks": ["false_sense_of_safety", "incomplete_compensation", "rollback_not_tested"],
+      "contradictions": ["autonomy_trust", "automation_accountability"],
+      "classic_lineage": ["beforehand_cushioning", "partial_action"]
+    },
+    {
+      "id": "P09",
+      "slug": "separate-judgment",
+      "name": "Separate interpretation from accountability",
+      "intent": "Use AI or analytical logic to interpret and propose while keeping permission, policy and accountable approval separate.",
+      "triggers": ["ai_recommendation", "high_impact_decision", "messy_evidence", "policy_exception"],
+      "moves": ["model_proposes", "software_validates", "human_approves_when_needed", "execution_audited"],
+      "risks": ["rubber_stamp_approval", "automation_bias", "unclear_reason_codes"],
+      "controls": ["evidence_summary", "counterevidence", "explicit_decision_owner", "approval_scope"],
+      "contradictions": ["automation_accountability", "autonomy_trust", "context_privacy"],
+      "classic_lineage": ["separation", "intermediary"]
+    },
+    {
+      "id": "P10",
+      "slug": "simulate-first",
+      "name": "Simulate before mutation",
+      "intent": "Learn from replay, shadow mode, synthetic data, process simulation or a digital twin before touching production state.",
+      "triggers": ["hard_to_predict_change", "expensive_failure", "agent_rollout", "process_redesign"],
+      "moves": ["historical_replay", "shadow_mode", "synthetic_cases", "what_if_model", "sandbox", "digital_twin"],
+      "risks": ["simulation_gap", "missing_variables", "overfitting_to_history"],
+      "contradictions": ["autonomy_trust", "speed_control", "accuracy_latency"],
+      "classic_lineage": ["copying", "prior_action"]
+    },
+    {
+      "id": "P11",
+      "slug": "collapse-handoffs",
+      "name": "Collapse handoffs, preserve controls",
+      "intent": "Remove coordination steps that add no independent decision or risk reduction.",
+      "triggers": ["many_approvals", "duplicate_data_entry", "manual_evidence_collection", "routing_overhead"],
+      "moves": ["automate_evidence_collection", "prevalidate", "route_by_rule", "retain_only_independent_decisions"],
+      "risks": ["hidden_informal_approval", "loss_of_separation_of_duties", "central_bottleneck"],
+      "contradictions": ["speed_control", "specialization_handoffs", "automation_accountability"],
+      "classic_lineage": ["merging", "universality"]
+    },
+    {
+      "id": "P12",
+      "slug": "self-observation",
+      "name": "Design for self-observation",
+      "intent": "Make the system emit enough evidence to diagnose behavior and evaluate outcomes without adding instrumentation after failure.",
+      "triggers": ["unknown_unknowns", "cross_system_incidents", "agent_debugging", "process_waiting_hidden"],
+      "moves": ["traces", "metrics", "structured_logs", "business_correlation_id", "decision_reason", "agent_trajectory", "outcome_telemetry"],
+      "risks": ["sensitive_data_in_telemetry", "high_cardinality", "telemetry_without_ownership"],
+      "controls": ["data_minimization", "retention_policy", "sampling", "semantic_conventions"],
+      "contradictions": ["accuracy_latency", "context_privacy", "local_global"],
+      "classic_lineage": ["feedback", "self_service"]
+    }
+  ],
+  "relationships": [
+    {"from":"P02","to":"P03","type":"often_combined","reason":"Interpret uncertain input, then keep mutation separate."},
+    {"from":"P03","to":"P08","type":"often_combined","reason":"Prepared changes create a safer write path."},
+    {"from":"P08","to":"P10","type":"often_combined","reason":"Simulation and shadow mode reduce uncertainty before execution."},
+    {"from":"P05","to":"P12","type":"requires_support","reason":"Asynchronous flow needs correlation and observability."},
+    {"from":"P06","to":"P12","type":"requires_support","reason":"Exception learning depends on structured outcome evidence."},
+    {"from":"P11","to":"P09","type":"control_boundary","reason":"Removing handoffs must not remove accountability."}
+  ]
+}
