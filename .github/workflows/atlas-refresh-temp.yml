@@ -1,0 +1,35 @@
+name: Temporary Atlas artifact refresh
+
+on:
+  push:
+    branches:
+      - agent/atlas-editorial-pass
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/atlas-editorial-pass
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml
+      - name: Generate Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Commit generated artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add atlas/manifest.json llms-full.txt ai/atlas-compact-index.json ai/verified-pages.json ai/markdown-clusters.json ai/rag/related.json _data/expert_context.yml ai/expert-evidence.json ai/expert-promotion-inventory.json
+          if git diff --cached --quiet; then
+            echo "Atlas artifacts are already current."
+            exit 0
+          fi
+          git commit -m "Regenerate Atlas artifacts"
+          git push origin HEAD:agent/atlas-editorial-pass
