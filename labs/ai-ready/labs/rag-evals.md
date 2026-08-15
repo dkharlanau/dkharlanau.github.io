@@ -22,17 +22,17 @@ Build a small retrieval system where every answer can be traced to source eviden
 
 ## Scenario
 
-Create a synthetic logistics policy corpus with 20–40 short documents. Example topics:
+Create a synthetic product-and-team knowledge corpus with 20–40 short documents. Example topics:
 
-- order block rules;
-- plant selection rules;
-- delivery priority;
-- returns policy;
-- procurement tolerance;
-- batch handling;
-- obsolete and current versions of the same rule.
+- authentication rules;
+- deployment procedure;
+- refund policy;
+- API version migration;
+- incident escalation;
+- project naming rules;
+- obsolete and current versions of the same policy.
 
-Do not use client documents.
+Do not use private client or employer documents.
 
 ## Target architecture
 
@@ -55,10 +55,9 @@ Minimum fields:
 
 ```json
 {
-  "source_id": "policy-route-002",
-  "title": "EU Route Determination Rule",
-  "domain": "sales",
-  "process": "order-to-cash",
+  "source_id": "auth-policy-002",
+  "title": "Authentication Token Policy",
+  "domain": "platform",
   "version": "2.0",
   "valid_from": "2026-07-01",
   "status": "current",
@@ -72,10 +71,10 @@ Create one obsolete version on purpose. Retrieval must prefer the current source
 
 Start with lexical search. Test exact identifiers, terms, and phrases. Record the result before adding embeddings.
 
-Questions should include both exact and semantic wording:
+Questions should include exact and semantic wording:
 
-- “Which rule controls route ZEU2?”
-- “How do we decide the transport route for an EU customer?”
+- “Which rule covers `ERR_AUTH_403`?”
+- “Why do users lose access after token refresh?”
 
 If lexical search already works well, keep that evidence. Architecture is allowed to remain simple.
 
@@ -92,53 +91,28 @@ Create at least 20 cases with:
 ```json
 {
   "id": "rag-007",
-  "question": "Which current rule applies when ...?",
-  "expected_source_ids": ["policy-route-002"],
-  "forbidden_source_ids": ["policy-route-001"],
+  "question": "Which current rule applies to token refresh?",
+  "expected_source_ids": ["auth-policy-002"],
+  "forbidden_source_ids": ["auth-policy-001"],
   "expected_behavior": "answer_with_citation"
 }
 ```
 
-Include:
-
-- exact match;
-- paraphrase;
-- obsolete version;
-- conflicting sources;
-- missing answer;
-- forbidden source;
-- similar but wrong process;
-- question requiring two sources.
+Include exact match, paraphrase, obsolete version, conflicting sources, missing answer, forbidden source, similar-but-wrong topic, and a question requiring two sources.
 
 ## Step 5: evaluate retrieval before generation
 
-Check:
-
-- expected source in top K;
-- wrong version rejected;
-- forbidden source rejected;
-- no-answer case returns no useful evidence;
-- latency per retrieval stage.
+Check expected source in top K, wrong version rejection, forbidden-source rejection, no-answer behavior, and latency per retrieval stage.
 
 Only after retrieval is acceptable should you judge answer quality.
 
 ## Step 6: generate with citations
 
-Give the model selected evidence with stable source IDs. Require the answer to include the supporting IDs or links. If the evidence is not enough, return an explicit insufficient-evidence state.
+Give the model selected evidence with stable source IDs. Require the answer to include supporting IDs or links. If evidence is not enough, return an explicit `insufficient_evidence` state.
 
 ## Step 7: break it deliberately
 
-Change one thing at a time:
-
-- chunk size;
-- metadata filter;
-- embedding model;
-- top K;
-- reranker;
-- prompt;
-- model.
-
-Run the same eval set. Record quality, latency, and cost.
+Change one thing at a time: chunk size, metadata filter, embedding model, top K, reranker, prompt, or model. Run the same eval set and record quality, latency, and cost.
 
 ## Done when
 

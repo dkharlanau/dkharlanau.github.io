@@ -46,9 +46,10 @@ Use when the steps are stable. A model can still be used inside a workflow for c
 
 ```text
 request -> model/router
-             |-- sales-order workflow
-             |-- procurement workflow
-             |-- master-data workflow
+             |-- research workflow
+             |-- coding workflow
+             |-- support workflow
+             |-- data-analysis workflow
 ```
 
 Use when the possible paths are known, but the correct path depends on messy input.
@@ -68,7 +69,7 @@ Use for investigations where each result changes the next useful read.
 
 ## Pattern 4: orchestrator and workers
 
-Use when independent tasks can run in parallel and have a clear merge rule. Example: one worker checks order data, one checks ATP, one checks integration history, then an orchestrator compares results.
+Use when independent tasks can run in parallel and have a clear merge rule. Example: one worker checks logs, one checks documentation, and one checks recent code changes before an orchestrator compares the evidence.
 
 Do not use workers only to make the diagram look important. Parallel agents can repeat the same search, disagree, and multiply latency without improving the answer.
 
@@ -90,7 +91,7 @@ Useful stop states include: `resolved`, `insufficient_evidence`, `permission_den
 
 ## Separate investigation from action
 
-A strong enterprise pattern is:
+A strong general pattern is:
 
 ```text
 read tools -> diagnosis -> proposed change -> validation -> approval -> write tool
@@ -100,24 +101,23 @@ The investigation can be adaptive. The write path should be much more determinis
 
 For high-impact actions, the model should produce a prepared change with evidence and expected effect. A human or policy engine approves it. The application then executes through a narrow write tool.
 
-## SAP logistics example
+## Practical example
 
-Question: “Why can sales order 4711 not confirm the requested quantity?”
+Question: “Why did deployment `deploy-284` fail?”
 
 A bounded agent may choose among:
 
-- order schedule lines;
-- ATP snapshot;
-- material/plant status;
-- plant determination inputs;
-- credit status;
-- delivery or rejection blocks;
-- recent interface errors;
-- product allocation or supply constraints.
+- deployment status;
+- failing job logs;
+- recent commits;
+- environment configuration;
+- dependency health;
+- service events;
+- relevant runbook sections.
 
 It stops when evidence supports a cause, when no authorized read can reduce uncertainty, or when a change is required.
 
-The agent should not remove a block just because it found one. Diagnosis and correction are different permissions.
+The agent should not roll back production just because it found a suspicious commit. Diagnosis and correction are different permissions.
 
 ## Failure modes
 
@@ -161,4 +161,4 @@ Good eval cases include:
 - budget is exhausted;
 - hostile instructions arrive inside a tool result.
 
-Related: [System Boundaries](/labs/ai-ready/system-boundaries/) · [Tools and MCP](/labs/ai-ready/tools-mcp/) · [Agent with Approval Lab](/labs/ai-ready/labs/agent-approval/)
+Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [System Boundaries](/labs/ai-ready/system-boundaries/) · [Agent with Approval Lab](/labs/ai-ready/labs/agent-approval/)

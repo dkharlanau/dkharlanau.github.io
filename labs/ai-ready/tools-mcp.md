@@ -18,7 +18,7 @@ tags: [ai, mcp, tools, api, authorization, integration]
 
 # Tools and MCP
 
-A model should not “know” current stock, create an order, or read a private policy from memory. It should call a controlled capability. The architecture question is whether that capability should be a direct application tool, a normal API integration, or an MCP server.
+A model should not “know” a current ticket state, deployment status, account balance, or private policy from memory. It should call a controlled capability. The architecture question is whether that capability should be a direct application tool, a normal API integration, or an MCP server.
 
 ## Tool first, protocol second
 
@@ -29,38 +29,38 @@ One AI app -> direct function/API -> backend
 
 Several AI clients
       |       |       |
-      +---- MCP server ---- governed backend capabilities
+      +---- MCP server ---- governed capabilities
 ```
 
-MCP can reduce duplicate client integrations. It does not remove the need for API design, identity, authorization, monitoring, or business rules.
+MCP can reduce duplicate client integrations. It does not remove the need for API design, identity, authorization, monitoring, or domain rules.
 
 ## MCP 2026-07-28 baseline
 
 Reviewed: **15 Aug 2026**. Current protocol revision used by this page: **2026-07-28**.
 
-The revision moved MCP to a stateless protocol core. Protocol-level `initialize` / `initialized` and session IDs are removed. Requests carry their own protocol and client metadata. Remote HTTP calls also expose method and tool names in headers, which makes gateway routing, rate limiting, and authorization easier to apply without parsing the full body.
+The revision moved MCP to a stateless protocol core. Protocol-level `initialize` / `initialized` and session IDs are removed. Requests carry their own protocol and client metadata. Remote HTTP calls expose useful routing metadata, making gateway routing, rate limiting, and authorization easier to apply without treating the model as the policy engine.
 
-The revision also introduced cache hints for list/read responses and Multi Round-Trip Requests for cases where a tool needs more input during an active request. Tasks now live in an extension. Legacy HTTP+SSE and some older core capabilities are on a deprecation path, so implementations should check the current specification before copying older examples.
+The revision also introduced cache hints for list/read responses and Multi Round-Trip Requests for cases where a tool needs more input during an active request. Tasks live in an extension. Legacy examples may show older lifecycle or transport behavior, so check the current specification before copying them.
 
 Primary source: [MCP 2026-07-28 specification release](https://blog.modelcontextprotocol.io/posts/2026-07-28/).
 
 ## Tools, resources, prompts
 
-Use the MCP primitives for different jobs:
+Use MCP primitives for different jobs:
 
 | Primitive | Use it for | Example |
 |---|---|---|
-| Tool | Controlled action or query | `get_stock(material, plant)` |
-| Resource | Addressable context | material policy, schema, reference document |
-| Prompt | Reusable interaction template | diagnostic review template |
+| Tool | Controlled action or query | `get_issue(issue_id)` |
+| Resource | Addressable context | project handbook, schema, reference document |
+| Prompt | Reusable interaction template | incident review template |
 
-Do not expose the same backend operation in five vague tools. Small contracts are easier for the model to select, easier to authorize, and easier to test.
+Keep each contract small and clear.
 
 ## Design a tool like an API
 
 A good tool has:
 
-- a clear name with one business meaning;
+- a clear name with one meaning;
 - typed required and optional inputs;
 - useful field descriptions;
 - bounded output;
@@ -72,18 +72,19 @@ A good tool has:
 Bad:
 
 ```text
-run_sap_action(text)
+run_backend_action(text)
 ```
 
 Better:
 
 ```text
-get_sales_order(order_id)
-get_atp_snapshot(material, plant, requested_date)
-prepare_delivery_block(order_id, reason_code)
+get_issue(issue_id)
+get_deployment_status(deployment_id)
+search_project_notes(query, project_id)
+prepare_issue_close(issue_id, resolution_code)
 ```
 
-The last tool should prepare a change, not silently execute a high-impact write.
+The last tool prepares a change. It does not silently execute a high-impact write.
 
 ## Authorization is not a model decision
 
@@ -91,11 +92,11 @@ The model may choose a tool. The application or gateway must still decide:
 
 - who the caller is;
 - whether the caller may use this tool;
-- which plants, sales areas, customers, or fields are allowed;
+- which tenant, workspace, repository, account, or field is allowed;
 - whether approval is required;
 - which backend credential is used.
 
-Self-reported client metadata and tool descriptions are useful context, not security proof.
+Self-reported client metadata and tool descriptions are context, not security proof.
 
 ## Read and write boundaries
 
@@ -109,20 +110,21 @@ Default to read-only tools. For writes, add more friction on purpose:
 6. return the committed backend object ID;
 7. write an audit event.
 
-Retries are normal. A tool that creates two deliveries because the network timed out after the first commit is not “agentic”; it is simply broken.
+Retries are normal. A tool that sends the same payment, message, deployment, or destructive update twice because the network timed out after the first commit is not agentic. It is broken.
 
-## SAP logistics example
+## Practical tool set
 
-For an order-confirmation assistant, expose narrow reads such as:
+For an engineering operations assistant, narrow reads may include:
 
-- `get_sales_order`;
-- `get_material_sales_data`;
-- `get_atp_snapshot`;
-- `get_credit_status`;
-- `get_delivery_blocks`;
-- `get_recent_integration_errors`.
+```text
+get_incident(incident_id)
+get_deployment_status(deployment_id)
+get_recent_service_events(service_id)
+search_runbooks(query, service_id?)
+get_repository_change(commit_id)
+```
 
-The agent can investigate across these reads. A later write such as removing a delivery block should live behind a separate permission and approval path.
+The assistant can investigate across these reads. A later write such as closing an incident, restarting a service, or rolling back a deployment should use a separate permission and approval path.
 
 ## When MCP is worth it
 
@@ -131,7 +133,7 @@ Choose MCP when:
 - multiple AI clients need the same tools;
 - capabilities should be discovered through a shared contract;
 - central authorization and observability add value;
-- you want a vendor-neutral integration surface.
+- you want a portable integration surface.
 
 Stay with direct tools when:
 
@@ -144,7 +146,8 @@ Stay with direct tools when:
 
 - valid read;
 - missing required input;
-- forbidden plant or customer;
+- unknown object;
+- forbidden workspace or repository;
 - backend timeout;
 - malformed backend response;
 - duplicate write request;
@@ -153,4 +156,4 @@ Stay with direct tools when:
 - tool result contains hostile instructions;
 - tool catalog changes between versions.
 
-Related: [SAP Diagnostics MCP Lab](/mcp/sap-diagnostics-mcp/) · [Agent Architecture](/labs/ai-ready/agent-architecture/) · [Security and Governance](/labs/ai-ready/security-governance/)
+Related: [Read-only MCP Lab](/labs/ai-ready/labs/mcp-readonly/) · [Agent Architecture](/labs/ai-ready/agent-architecture/) · [Security and Governance](/labs/ai-ready/security-governance/)

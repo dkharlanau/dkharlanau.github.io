@@ -25,7 +25,7 @@ RAG is not “put documents in a vector database”. It is a controlled way to f
 For every important answer, define:
 
 - source system or document;
-- business owner;
+- owner;
 - effective date or version;
 - access classification;
 - stable source ID;
@@ -54,28 +54,28 @@ Do not add every step by default. Start simple and add complexity only when an e
 
 ## Lexical, vector, or hybrid?
 
-**Lexical search** is strong for exact terms: material numbers, error codes, table names, document types, legal phrases, transaction codes, and product names.
+**Lexical search** is strong for exact terms: error codes, issue IDs, API names, product SKUs, contract clauses, repository symbols, and version numbers.
 
-**Vector search** helps when the wording changes but the meaning is similar.
+**Vector search** helps when wording changes but meaning stays similar.
 
-**Hybrid search** is useful when both exact enterprise identifiers and semantic language matter. SAP support is a good example: `VL02N`, an IDoc message type, and “delivery cannot be changed” should not compete under one matching method.
+**Hybrid search** is useful when both exact identifiers and semantic language matter. Example: `ERR_AUTH_403`, `/v2/session`, and “users cannot sign in after token refresh” may belong to the same investigation but need different matching signals.
 
 ## Chunking is a content decision
 
 Do not select a chunk size because a tutorial used it. Split content around useful meaning:
 
 - one procedure step group;
-- one configuration concept;
-- one business rule;
+- one product concept;
+- one policy rule;
 - one error pattern and resolution;
 - one table section with its header;
-- one process branch.
+- one decision branch.
 
-Keep metadata beside the chunk. Useful fields often include domain, process, system/version, object, language, validity date, security class, source URL, and parent document.
+Keep metadata beside the chunk. Useful fields often include domain, product, object, language, validity date, security class, source URL, and parent document.
 
 ## Reranking and context selection
 
-Retrieval finds candidates. Reranking decides which candidates deserve the limited context budget. The final context builder should also remove duplicates, preserve source boundaries, and avoid mixing conflicting versions without telling the model.
+Retrieval finds candidates. Reranking decides which candidates deserve the limited context budget. The final context builder should remove duplicates, preserve source boundaries, and avoid mixing conflicting versions without telling the model.
 
 A large context is not automatically a better context. Too much irrelevant evidence makes the answer harder to control and more expensive to test.
 
@@ -83,7 +83,7 @@ A large context is not automatically a better context. Too much irrelevant evide
 
 Do not create a vector index that quietly removes source permissions. A user who cannot read a document in the source system should not gain access because an embedding was stored elsewhere.
 
-Think about four separate controls:
+Ask four separate questions:
 
 1. May this content be indexed?
 2. May this user retrieve it?
@@ -103,18 +103,29 @@ Measure retrieval separately from answer quality. Useful checks include:
 
 Then measure the final answer: factual support, completeness, unsafe guessing, citation quality, latency, and cost.
 
-## SAP logistics example
+## Practical example
 
-Question: “Why was route ZEU2 selected for this sales order?”
+Question: “Why does the current API reject this request after the authentication change?”
 
 A useful retrieval design may combine:
 
-- current route determination documentation;
-- configuration explanation for shipping conditions, transportation group, departure zone, destination zone;
-- project-specific mapping rules;
-- the actual order and master-data values through read tools.
+- current authentication documentation;
+- migration notes for the latest API version;
+- a known-error article;
+- project-specific implementation notes;
+- current runtime facts through read tools such as deployment version and recent error events.
 
-Documentation explains the rule. Tools provide the current transactional facts. Mixing those two sources without labels is how a confident explanation becomes fiction with good typography.
+Documentation explains expected behavior. Tools provide current system facts. Mixing those sources without labels is how a confident explanation becomes fiction with good formatting.
+
+## RAG or tool?
+
+Use RAG for unstructured knowledge and evidence. Use a tool for a current structured fact.
+
+Examples:
+
+- “What does our refund policy say?” → retrieval.
+- “What is ticket INC-204 status right now?” → read tool.
+- “Why did this deployment fail?” → probably both retrieval and tools.
 
 ## Failure modes
 
@@ -130,9 +141,9 @@ Documentation explains the rule. Tools provide the current transactional facts. 
 - Define sources of truth.
 - Classify data before indexing.
 - Keep stable source IDs and provenance.
-- Build lexical baseline first.
+- Build a lexical baseline first.
 - Add vector/hybrid only against an eval gap.
 - Test stale, conflicting, forbidden, and missing evidence.
 - Trace query, filters, retrieved IDs, scores, reranking, and final citations.
 
-Related: [Evals and Reliability](/labs/ai-ready/evals-reliability/) · [Security and Governance](/labs/ai-ready/security-governance/) · [RAG with Evals Lab](/labs/ai-ready/labs/rag-evals/)
+Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [Evals and Reliability](/labs/ai-ready/evals-reliability/) · [RAG with Evals Lab](/labs/ai-ready/labs/rag-evals/)

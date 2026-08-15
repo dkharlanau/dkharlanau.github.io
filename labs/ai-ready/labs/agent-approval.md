@@ -22,34 +22,34 @@ Build an operations assistant that may investigate with read-only tools and prep
 
 ## Scenario
 
-Use synthetic sales-order data. The user asks:
+Use synthetic incident and deployment data. The user asks:
 
-> Why is order 4711 blocked, and can we release it?
+> Why is incident `INC-4711` still open, and can we close it?
 
-Possible causes include credit, delivery block, material status, ATP, or an integration problem.
+Possible causes include an unresolved service error, failed deployment, missing validation, stale incident status, or an incomplete runbook step.
 
 ## Tool set
 
 Read tools:
 
 ```text
-get_sales_order(order_id)
-get_credit_status(order_id)
-get_delivery_blocks(order_id)
-get_atp_snapshot(order_id)
-get_material_status(order_id)
-get_integration_events(order_id)
+get_incident(incident_id)
+get_service_status(service_id)
+get_deployment_status(deployment_id)
+get_recent_events(service_id)
+search_runbooks(query, service_id?)
+get_validation_checks(incident_id)
 ```
 
 Write path:
 
 ```text
-prepare_block_removal(order_id, block_type, reason)
+prepare_incident_close(incident_id, resolution_code, evidence_ids)
 approve_change(change_id)
 execute_approved_change(change_id, request_id)
 ```
 
-Do not expose one generic `update_order` tool.
+Do not expose one generic `update_anything` tool.
 
 ## Agent loop
 
@@ -76,16 +76,15 @@ The model may propose:
 
 ```json
 {
-  "action": "remove_delivery_block",
-  "order_id": "4711",
-  "block_type": "Z1",
-  "reason": "block no longer matches current policy",
-  "evidence_ids": ["order:4711", "policy:block-z1:v3"],
-  "expected_effect": "delivery processing may continue"
+  "action": "close_incident",
+  "incident_id": "INC-4711",
+  "resolution_code": "fixed_and_verified",
+  "evidence_ids": ["incident:INC-4711", "check:health-882", "deploy:284"],
+  "expected_effect": "incident status becomes closed"
 }
 ```
 
-The application validates the proposal and creates a `change_id`. The user approves that exact change. Approval should expire and should include the current object version or another precondition.
+The application validates the proposal and creates a `change_id`. The user approves that exact change. Approval should expire and include the current object version or another precondition.
 
 ## Execution
 
@@ -101,15 +100,15 @@ Execution receives only an approved change ID plus an idempotency/request ID. It
 
 1. Root cause is found after one read.
 2. Two causes are possible and another read is needed.
-3. Credit data is forbidden for the user.
-4. One tool times out and succeeds on retry.
+3. One log source is forbidden for the user.
+4. A tool times out and succeeds on retry.
 5. Tool result contains prompt-injection text.
 6. No evidence supports a safe conclusion.
 7. Agent proposes a write without enough evidence.
 8. User rejects approval.
 9. Approval expires.
 10. Same execution request is sent twice.
-11. Order changes after approval but before execution.
+11. Incident changes after approval but before execution.
 12. Step budget is exhausted.
 
 ## Trace model
@@ -133,6 +132,6 @@ stop reason
 
 ## Done when
 
-The assistant can investigate several root causes, but there is no conversational trick that lets it bypass the application approval gate. Duplicate execution is safe, and every conclusion can be connected to evidence.
+The assistant can investigate several causes, but there is no conversational trick that lets it bypass the application approval gate. Duplicate execution is safe, and every conclusion can be connected to evidence.
 
 Read first: [Agent Architecture](/labs/ai-ready/agent-architecture/) · [Security and Governance](/labs/ai-ready/security-governance/) · [Tools and MCP](/labs/ai-ready/tools-mcp/)

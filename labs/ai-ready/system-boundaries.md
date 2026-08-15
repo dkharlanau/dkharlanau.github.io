@@ -18,7 +18,7 @@ tags: [ai, architecture, workflow, structured-output, state]
 
 # System Boundaries
 
-A useful AI architecture starts by deciding what the model is allowed to decide. The common mistake is to put business rules, permissions, calculations, memory, and process control into one large prompt. It works in a demo because the happy path is polite. Production is less polite.
+A useful AI architecture starts by deciding what the model is allowed to decide. The common mistake is to put rules, permissions, calculations, memory, and process control into one large prompt. It works in a demo because the happy path is polite. Production is less polite.
 
 ## The split
 
@@ -27,7 +27,7 @@ User / Event
     |
 Application boundary
     |-- identity and authorization
-    |-- deterministic business rules
+    |-- deterministic rules
     |-- state and transaction control
     |-- tool validation
     |
@@ -50,18 +50,18 @@ The model is strongest where the input is uncertain. Deterministic software is s
 Use the model for tasks such as:
 
 - understanding a free-text request;
-- mapping a user question to a process or tool;
+- mapping a question to a known workflow or tool;
 - extracting structured fields from messy text;
 - comparing several pieces of evidence;
 - explaining a result in useful language;
-- choosing the next diagnostic read when the path is not known in advance.
+- choosing the next read when the path is not known in advance.
 
 ## Keep this outside the model
 
 Use normal application logic for:
 
 - authorization and role checks;
-- exact calculations and legal thresholds;
+- exact calculations and thresholds;
 - transaction commits and locks;
 - durable application state;
 - duplicate protection;
@@ -69,7 +69,7 @@ Use normal application logic for:
 - secret handling;
 - validation of tool input and output.
 
-A prompt saying “never skip the credit check” is not the same as code that makes the credit check impossible to skip.
+A prompt saying “never skip the approval check” is not the same as code that makes approval impossible to skip.
 
 ## State is not one thing
 
@@ -77,10 +77,10 @@ Do not call every stored value “memory”. Separate at least these layers:
 
 | Layer | Example | Typical lifetime |
 |---|---|---|
-| Request context | Current user question and retrieved evidence | One request |
+| Request context | Current question and retrieved evidence | One request |
 | Conversation state | Previous turns and tool results | Session or thread |
-| User preference | Preferred language or display format | Long-lived |
-| Business record | Sales order, approval, incident status | System of record |
+| User preference | Preferred language or output format | Long-lived |
+| Application record | Task, ticket, order, approval, incident | System of record |
 | Cache | Tool catalog or retrieval result | Short-lived |
 | Trace | Model/tool calls and timings | Operational retention period |
 
@@ -93,27 +93,27 @@ If software consumes the result, return a schema rather than prose and hope. Val
 Bad boundary:
 
 ```text
-Model: “It looks like we should block the order.”
-Application: executes block.
+Model: “It looks like this account should be suspended.”
+Application: suspends account.
 ```
 
 Better boundary:
 
 ```text
-Model -> {"recommendation":"block","reason_code":"credit_risk","confidence":0.78}
+Model -> {"recommendation":"suspend","reason_code":"policy_violation","confidence":0.78}
 Application -> validates evidence, authorization, policy and approval requirement
 Application -> executes or rejects
 ```
 
 ## Workflow or agent?
 
-Use a workflow when the next steps are known. Use an agent loop when the next useful read depends on evidence found during the investigation.
+Use a workflow when the next steps are known. Use an agent loop when the next useful action depends on evidence found during the task.
 
-SAP example: creating a delivery from an approved order is mostly a workflow. Investigating why an order cannot confirm quantity may need adaptive reads across ATP, material data, plant, credit, blocks, and integration status.
+Example: converting an approved form into a structured record is mostly a workflow. Investigating why a deployment failed may need adaptive reads across build logs, configuration, recent commits, service health, and dependency status.
 
 ## Failure modes
 
-- Business rules exist only in prompts.
+- Important rules exist only in prompts.
 - The model owns transaction state.
 - Tool results are trusted without schema validation.
 - Conversation history is treated as a source of truth.
@@ -132,4 +132,4 @@ Before adding another model call, answer:
 6. What happens on retry or timeout?
 7. How will we test the boundary?
 
-Related: [Data and RAG](/labs/ai-ready/data-rag/) · [Agent Architecture](/labs/ai-ready/agent-architecture/) · [Security and Governance](/labs/ai-ready/security-governance/)
+Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [Data and RAG](/labs/ai-ready/data-rag/) · [Agent Architecture](/labs/ai-ready/agent-architecture/)

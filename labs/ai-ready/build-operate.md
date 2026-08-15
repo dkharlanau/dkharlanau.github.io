@@ -48,7 +48,7 @@ TEST -> controlled integrations, regression evals
 PROD -> real identity, real policy, strict logging and budgets
 ```
 
-Do not let a developer prompt test accidentally use a production write credential.
+Do not let a local experiment accidentally use a production write credential.
 
 ## Deployment gate
 
@@ -70,7 +70,7 @@ canary / limited traffic
 production
 ```
 
-Critical eval failures should block release. A small drop in a low-risk wording score may be acceptable. Define the rule before a release is under pressure.
+Critical eval failures should block release. Define the rule before a release is under pressure.
 
 ## Observe the request end to end
 
@@ -90,8 +90,7 @@ Useful operational measures include:
 - success/error rate;
 - p50/p95/p99 latency;
 - model and tool latency separately;
-- tokens or model usage;
-- cost per request and per business outcome;
+- model usage and cost;
 - retrieval hit quality;
 - tool failure rate;
 - approval rate;
@@ -99,8 +98,6 @@ Useful operational measures include:
 - budget-exhausted rate.
 
 ## Retry at the right layer
-
-Not every failure should be retried.
 
 Retry examples:
 
@@ -112,7 +109,7 @@ Do not blindly retry:
 
 - validation error;
 - permission denied;
-- business precondition failure;
+- failed business precondition;
 - unsafe request;
 - non-idempotent write without duplicate protection.
 
@@ -132,13 +129,13 @@ Set explicit limits before production:
 - rate limits by user or tenant;
 - external-system concurrency.
 
-Enterprise backends often have stricter capacity limits than the model API. An agent that fans out 30 SAP reads can become a denial-of-service feature with excellent reasoning traces.
+A tool-using agent can fan out many backend calls from one user request. The model may still be cheerful while the dependency is becoming an accidental load test.
 
 ## Caching
 
 Cache only when the freshness rule is clear. Good candidates can include stable reference content, tool catalogs, schemas, or repeated read results with a short TTL.
 
-Do not cache business facts without knowing how stale they may become. Stock, credit status, order status, and availability can change quickly.
+Do not cache changing facts without knowing how stale they may become. Account state, ticket status, deployment health, prices, availability, and permissions can change quickly.
 
 ## Rollback
 
@@ -153,14 +150,14 @@ Plan rollback for several layers:
 
 A model change can be rolled back even when no application code changed. Treat model and prompt changes as releases.
 
-## SAP logistics example
+## Practical service example
 
-An order-diagnostics service may depend on a model API, vector/keyword search, an MCP server, SAP read APIs, identity, and tracing. A production runbook should say what happens when each dependency is slow or unavailable.
+A research-and-operations assistant may depend on a model API, lexical/vector search, an MCP server, repository or ticket APIs, identity, and tracing. A production runbook should say what happens when each dependency is slow or unavailable.
 
 Example degraded behavior:
 
-- retrieval unavailable -> use trusted read tools only;
-- one SAP diagnostic API unavailable -> return partial diagnosis with explicit gap;
+- vector retrieval unavailable -> use lexical retrieval;
+- one read API unavailable -> return a partial answer with the missing evidence named;
 - model unavailable -> keep deterministic status lookup available;
 - write service unavailable -> keep prepared change, do not pretend execution succeeded.
 

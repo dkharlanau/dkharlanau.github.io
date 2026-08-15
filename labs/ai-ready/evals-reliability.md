@@ -18,7 +18,7 @@ tags: [ai, evals, testing, reliability, observability]
 
 # Evals and Reliability
 
-An AI change is not better because the answer looks better in one chat. Prompts, models, retrieval, tool schemas, and agent logic need regression tests. Evals turn “I think this is better” into evidence.
+An AI change is not better because one answer looks better in chat. Prompts, models, retrieval, tool schemas, and agent logic need regression tests. Evals turn “I think this is better” into evidence.
 
 ## Build the dataset before tuning the system
 
@@ -40,20 +40,18 @@ A dataset of 30 useful cases can teach more than 3,000 synthetic questions that 
 
 ## Separate what you measure
 
-Do not collapse everything into one score.
-
 | Layer | Example metric |
 |---|---|
 | Classification | correct route / intent |
 | Retrieval | expected source in top K |
-| Grounding | claims supported by retrieved evidence |
+| Grounding | claims supported by evidence |
 | Tool use | correct tool and arguments |
 | Safety | forbidden action not executed |
 | Agent loop | correct stop reason, no repeated calls |
 | Output | schema validity, required fields |
 | Operations | latency, cost, error rate |
 
-This separation matters because a good final answer can hide bad retrieval, and bad prose can hide a correct tool result.
+A good final answer can hide bad retrieval, and weak prose can hide a correct tool result. Measure layers separately.
 
 ## Use deterministic graders first
 
@@ -62,14 +60,14 @@ If code can check the requirement, use code.
 Good deterministic checks:
 
 - JSON schema valid;
-- exact business ID matches;
+- expected ID matches;
 - required source ID present;
 - forbidden tool not called;
 - maximum step count respected;
-- expected error code returned;
+- expected error state returned;
 - latency below budget.
 
-Use a model grader for qualities that are hard to express as exact rules, such as explanation completeness or whether a summary preserves the important evidence. Keep model-grader criteria narrow and test the grader itself.
+Use a model grader for qualities that are hard to express as exact rules, such as explanation completeness or whether a summary preserves important evidence. Keep model-grader criteria narrow and test the grader itself.
 
 ## Retrieval evals
 
@@ -79,7 +77,7 @@ Test retrieval before generation:
 question -> expected source IDs -> retrieval -> ranking check
 ```
 
-Useful retrieval measures include recall at K, ranking position, permission correctness, stale-version rejection, and no-result behavior.
+Useful measures include recall at K, ranking position, permission correctness, stale-version rejection, and no-result behavior.
 
 Then test grounded generation:
 
@@ -93,7 +91,7 @@ For tools, check selection, arguments, authorization path, output validation, an
 
 For agents, also check the trajectory:
 
-- Did it choose the right first read?
+- Did it choose a useful first read?
 - Did it repeat equivalent calls?
 - Did it stop when evidence was enough?
 - Did it escalate when evidence was weak?
@@ -106,15 +104,15 @@ The final sentence is only one part of agent quality.
 A practical release rule can be simple:
 
 ```text
-no critical safety regressions
+critical safety regressions = 0
 schema pass rate = 100%
 retrieval recall >= agreed threshold
-key business cases = 100%
-latency p95 <= budget
+critical use cases = 100%
+p95 latency <= budget
 cost/request <= budget
 ```
 
-Do not chase one global score. Some cases are business-critical and should be hard gates.
+Do not chase one global score. Some cases should be hard gates.
 
 ## Trace every evaluated run
 
@@ -133,36 +131,36 @@ Store enough information to explain why the result changed:
 
 Without version context, an eval history becomes a spreadsheet of unexplained numbers, humanity’s favorite form of confidence.
 
-## SAP logistics example
+## Practical golden set
 
-For an order-confirmation assistant, the golden set should include:
+For a deployment-investigation assistant, include cases such as:
 
-- missing plant;
-- ATP shortage;
-- credit block;
-- material status problem;
-- product allocation;
-- integration failure;
+- obvious build failure;
+- dependency timeout;
+- configuration mismatch;
+- permission denied while reading logs;
 - two simultaneous causes;
-- no evidence for any known cause;
-- user without permission to see credit information;
-- a tool timeout during investigation.
+- stale runbook page;
+- no evidence for a safe conclusion;
+- a tool timeout during investigation;
+- hostile instructions inside a log or retrieved page;
+- proposed rollback without enough evidence.
 
-Expected output is not only the root cause. It can also include required evidence, allowed tools, forbidden actions, and the correct stop state.
+Expected output is not only the root cause. It can include required evidence, allowed tools, forbidden actions, and the correct stop state.
 
 ## Failure modes
 
 - Testing only one prompt by hand.
 - Using only synthetic easy questions.
-- Model grader judges exact facts that code could check.
+- A model grader judges exact facts that code could check.
 - Retrieval changes without retrieval evals.
 - Production failure never becomes a regression case.
 - Dataset is edited without version history.
-- Average score hides a critical business failure.
+- Average score hides a critical failure.
 
 ## Build checklist
 
-1. Define the business decisions that matter.
+1. Define the decisions that matter.
 2. Create golden cases before optimization.
 3. Add deterministic checks wherever possible.
 4. Evaluate retrieval and generation separately.

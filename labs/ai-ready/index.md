@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "AI Ready — Practical Architecture Lab"
-description: "A practical architecture map for AI systems: data, retrieval, tools, MCP, agents, evals, security, deployment, and production rules."
+title: "AI Ready — Practical AI Architecture Lab"
+description: "A practical learning area for using AI in real systems: research, knowledge, coding, data, tools, MCP, agents, evals, security, and deployment."
 permalink: /labs/ai-ready/
 status: draft
 verified: false
@@ -9,14 +9,7 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-15
 hide_global_cta: true
-tags:
-  - ai
-  - architecture
-  - mcp
-  - agents
-  - rag
-  - evals
-  - security
+tags: [ai, architecture, mcp, agents, rag, evals, security, automation]
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -27,151 +20,93 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Labs / AI Ready</p>
-      <h1>Build AI systems.<br />Not AI demos.</h1>
-      <p>A practical map for choosing data, retrieval, tools, MCP, agents, evaluations, controls, and deployment patterns. Start with the problem. Add autonomy only where it earns its place.</p>
-      <a class="research-canvas__button" href="#architecture-map">Open the architecture map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <h1>Use AI.<br />Build the system around it.</h1>
+      <p>This lab is technology-first, not industry-first. Learn how to use models for research, knowledge work, coding, data analysis, automation, tool use, and agents. Then learn how to make those systems testable, secure, and deployable.</p>
+      <a class="research-canvas__button" href="/labs/ai-ready/use-cases/">Start from a use case <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Review status">
       <p>Current baseline</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>8</strong><small>Architecture areas</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>7</strong><small>Architecture areas</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>4</strong><small>Hands-on labs</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>2026-07-28</strong><small>MCP revision tracked</small></div>
-      <em>Reviewed 15 Aug 2026. Fast-moving items are dated on purpose.</em>
+      <em>Reviewed 15 Aug 2026. Fast-moving protocol details are dated.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">architecture</span>
-    <p><strong>Architecture rule:</strong> the model is one component. Data quality, permissions, deterministic code, APIs, observability, and operations still belong to the application.</p>
-    <p><strong>Default:</strong> use the least autonomous design that solves the problem well.</p>
-    <a href="/labs/ai-ready/data/catalog.json">Open machine-readable catalog <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+    <p><strong>Main rule:</strong> use the model for uncertainty. Keep identity, permissions, exact rules, durable state, and side effects in normal software.</p>
+    <p><strong>Learning rule:</strong> build the smallest useful version first, create eval cases, then add retrieval, tools, agents, or fine-tuning only when a measured gap needs them.</p>
+    <a href="/labs/ai-ready/deep-dives/">Open architecture deep dives <span class="material-symbols-outlined" aria-hidden="true">menu_book</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Use it for real work</p>
+      <h2>Start from the job, not the buzzword.</h2>
+      <p>The same model can sit inside very different systems. The useful architecture depends on what must be correct, fresh, private, repeatable, or reversible.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/ai-ready/use-cases/#research"><span>01</span><strong>Research and synthesis</strong><small>Search, compare sources, extract evidence, summarize, and keep citations.</small><i class="material-symbols-outlined" aria-hidden="true">travel_explore</i></a>
+      <a href="/labs/ai-ready/use-cases/#knowledge"><span>02</span><strong>Knowledge assistant</strong><small>Answer from private or changing documents using retrieval, metadata, and permissions.</small><i class="material-symbols-outlined" aria-hidden="true">library_books</i></a>
+      <a href="/labs/ai-ready/use-cases/#coding"><span>03</span><strong>Coding and engineering</strong><small>Read repositories, explain code, propose patches, run tests, and use tools with bounded write access.</small><i class="material-symbols-outlined" aria-hidden="true">code</i></a>
+      <a href="/labs/ai-ready/use-cases/#data"><span>04</span><strong>Data analysis</strong><small>Translate questions into deterministic calculations, SQL, Python, charts, and checked outputs.</small><i class="material-symbols-outlined" aria-hidden="true">analytics</i></a>
+      <a href="/labs/ai-ready/use-cases/#automation"><span>05</span><strong>Automation and integrations</strong><small>Connect models to APIs and applications through typed tools, workflows, events, and MCP.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/ai-ready/use-cases/#agents"><span>06</span><strong>Agents and operations</strong><small>Use bounded loops when the next useful action depends on evidence found during the task.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="architecture-map" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Architecture map</p>
-      <h2>Learn the system in layers.</h2>
-      <p>The useful question is not “which model is best?”. It is “where does uncertainty belong, and where must behavior stay deterministic?”.</p>
-    </header>
+    <header><p class="research-canvas__eyebrow">Architecture map</p><h2>Learn the system in layers.</h2><p>You do not need every layer for every product. Learn what each layer solves and what it can break.</p></header>
     <div class="research-route-list">
-      <a href="#foundations"><span>01</span><strong>Foundations</strong><small>Context, instructions, structured output, embeddings, tool calls, state, memory, workflow vs agent.</small><i class="material-symbols-outlined" aria-hidden="true">foundation</i></a>
-      <a href="#data"><span>02</span><strong>Data and Retrieval</strong><small>Sources of truth, datasets, chunking, metadata, hybrid search, reranking, grounding, provenance.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
-      <a href="#mcp"><span>03</span><strong>Tools and MCP</strong><small>Typed tool contracts, resources, prompts, transport, authorization, approvals, idempotency.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="#agents"><span>04</span><strong>Agent Architecture</strong><small>Tool loops, routing, planning, workers, supervisors, budgets, termination rules, human approval.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="#evals"><span>05</span><strong>Evals and Reliability</strong><small>Golden cases, graders, regressions, traces, latency, cost, retries, fallbacks.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="#security"><span>06</span><strong>Security and Governance</strong><small>Prompt injection, exfiltration, least privilege, secrets, audit, PII, sandboxing.</small><i class="material-symbols-outlined" aria-hidden="true">shield</i></a>
-      <a href="#deploy"><span>07</span><strong>Build and Deploy</strong><small>Environments, configuration, containers, serverless, CI/CD, observability, rate limits, rollback.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
-      <a href="#decisions"><span>08</span><strong>Decision Matrix</strong><small>RAG or fine-tune? Tool or MCP? Workflow or agent? A short default for each architecture choice.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/ai-ready/system-boundaries/"><span>01</span><strong>System Boundaries</strong><small>Model vs application, structured output, state, memory, deterministic rules.</small><i class="material-symbols-outlined" aria-hidden="true">foundation</i></a>
+      <a href="/labs/ai-ready/data-rag/"><span>02</span><strong>Data and RAG</strong><small>Sources, metadata, lexical/vector/hybrid retrieval, reranking, citations, permissions.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <a href="/labs/ai-ready/tools-mcp/"><span>03</span><strong>Tools and MCP</strong><small>Typed tools, resources, prompts, transport, authorization, write safety, reuse.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/ai-ready/agent-architecture/"><span>04</span><strong>Agent Architecture</strong><small>Workflow, router, bounded tool loop, workers, budgets, termination, approval.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/ai-ready/evals-reliability/"><span>05</span><strong>Evals and Reliability</strong><small>Golden cases, deterministic graders, model graders, trajectory tests, regressions.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/ai-ready/security-governance/"><span>06</span><strong>Security and Governance</strong><small>Prompt injection, least privilege, secrets, sensitive data, approvals, audit.</small><i class="material-symbols-outlined" aria-hidden="true">shield</i></a>
+      <a href="/labs/ai-ready/build-operate/"><span>07</span><strong>Build and Operate</strong><small>Versions, deployment, traces, budgets, retries, degraded modes, rollback.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" id="foundations" data-reveal>
-    <header><p class="research-canvas__eyebrow">01 / Foundations</p><h2>Know what belongs to the model.</h2><p>Language models are good at interpretation, synthesis, classification, planning, and working with uncertain input. They are poor substitutes for permissions, transaction rules, exact calculations, and durable state.</p></header>
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision defaults</p><h2>Choose the simplest useful shape.</h2><p>Architecture gets easier when each extra layer has to prove why it is needed.</p></header>
     <div class="research-route-list">
-      <a href="#foundations"><span>CTX</span><strong>Context is a budget</strong><small>Do not dump everything into the prompt. Select useful context, keep provenance, and measure whether more context actually improves answers.</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
-      <a href="#foundations"><span>OUT</span><strong>Structured output is an interface</strong><small>When another component consumes the answer, use a schema and validate it. Natural language is for people; contracts are for software.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="#foundations"><span>MEM</span><strong>State is not memory</strong><small>Conversation state, user memory, application records, cache, and model context have different lifecycles. Store each one deliberately.</small><i class="material-symbols-outlined" aria-hidden="true">storage</i></a>
-      <a href="#decisions"><span>WF</span><strong>Workflow before agent</strong><small>If the next step is known, code it. Use model decisions only where the next step depends on messy or variable evidence.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="data" data-reveal>
-    <header><p class="research-canvas__eyebrow">02 / Data and Retrieval</p><h2>AI quality starts before the prompt.</h2><p>For enterprise work, the difficult part is usually finding the right source, version, scope, and permission. RAG does not repair weak master data or unclear ownership.</p></header>
-    <div class="research-route-list">
-      <a href="#data"><span>SRC</span><strong>Source of truth</strong><small>Define which system or document owns the fact. Carry source ID, effective date, owner, classification, and access rules as metadata.</small><i class="material-symbols-outlined" aria-hidden="true">verified</i></a>
-      <a href="#data"><span>RET</span><strong>Retrieval pipeline</strong><small>Start with lexical or filtered search when it is enough. Add vector search and reranking when semantic matching creates measurable value.</small><i class="material-symbols-outlined" aria-hidden="true">search</i></a>
-      <a href="#evals"><span>DS</span><strong>Datasets have different jobs</strong><small>Keep source data, retrieval corpus, synthetic test data, golden eval cases, and fine-tuning data separate. Version them.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
-      <a href="#security"><span>PII</span><strong>Classify before indexing</strong><small>Decide what may be embedded, cached, logged, sent to a model, or returned to a user. Retrieval permissions must follow the source.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="mcp" data-reveal>
-    <header><p class="research-canvas__eyebrow">03 / Tools and MCP</p><h2>A protocol is not an architecture strategy.</h2><p>MCP is useful when several AI clients need a reusable way to discover and call capabilities. A normal API or direct function tool is still simpler when reuse is not needed.</p></header>
-    <div class="research-route-list">
-      <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener"><span>MCP</span><strong>Current MCP baseline</strong><small>The 2026-07-28 protocol revision moved the core to stateless request/response behavior. Check the current specification before implementing a server.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener"><span>3</span><strong>Tools, resources, prompts</strong><small>Tools perform actions or retrieval, resources expose context, and prompts provide reusable interaction templates. Keep each contract small and clear.</small><i class="material-symbols-outlined" aria-hidden="true">extension</i></a>
-      <a href="#security"><span>AUTH</span><strong>Authorization stays outside the model</strong><small>The model may propose a call. Your application decides whether the caller is allowed to make it. Tool descriptions are not security controls.</small><i class="material-symbols-outlined" aria-hidden="true">lock</i></a>
-      <a href="#labs"><span>IDEM</span><strong>Design writes for retries</strong><small>Use request IDs, business keys, preconditions, dry-run modes, and approval when duplicate or high-impact writes are possible.</small><i class="material-symbols-outlined" aria-hidden="true">repeat</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="agents" data-reveal>
-    <header><p class="research-canvas__eyebrow">04 / Agent Architecture</p><h2>Autonomy needs boundaries.</h2><p>An agent is useful when the system must choose the next action from changing evidence. More loops do not create more intelligence; sometimes they just create a larger invoice and a stranger incident report.</p></header>
-    <div class="research-route-list">
-      <a href="#agents"><span>LOOP</span><strong>Tool loop</strong><small>Model selects a tool, application validates the request, tool runs, result returns to the model, and the loop stops on a clear condition.</small><i class="material-symbols-outlined" aria-hidden="true">sync</i></a>
-      <a href="#agents"><span>RTR</span><strong>Router</strong><small>Use one decision to select a workflow, specialist, model, or tool set. Good when the space of paths is known.</small><i class="material-symbols-outlined" aria-hidden="true">call_split</i></a>
-      <a href="#agents"><span>WRK</span><strong>Orchestrator and workers</strong><small>Split independent tasks when parallel work creates value. Merge results with explicit acceptance rules.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="#security"><span>STOP</span><strong>Budget and termination</strong><small>Limit steps, time, cost, tools, data scope, and retries. Escalate or stop when evidence is weak or a risky action is required.</small><i class="material-symbols-outlined" aria-hidden="true">stop_circle</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="evals" data-reveal>
-    <header><p class="research-canvas__eyebrow">05 / Evals and Reliability</p><h2>Make quality testable.</h2><p>Before changing a prompt, model, retrieval method, or tool schema, keep cases that tell you whether the change helped or broke something else.</p></header>
-    <div class="research-route-list">
-      <a href="/labs/ai-ready/data/eval-sample.jsonl"><span>DATA</span><strong>Sample eval dataset</strong><small>Eight architecture cases with expected patterns, controls, and failure signals. Small on purpose; extend it from real failures.</small><i class="material-symbols-outlined" aria-hidden="true">download</i></a>
-      <a href="#evals"><span>GOLD</span><strong>Golden set</strong><small>Keep representative easy, hard, ambiguous, unsafe, and failure-path cases. Store expected facts, tool choice, required controls, or outcome.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="#evals"><span>GRD</span><strong>Use the simplest grader</strong><small>Exact values and schemas should use deterministic checks. Use model graders for qualities that cannot be expressed reliably as code.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
-      <a href="#deploy"><span>OBS</span><strong>Trace the whole request</strong><small>Capture retrieval, model calls, tool calls, approvals, latency, errors, and versions. Logs without correlation IDs are archaeology.</small><i class="material-symbols-outlined" aria-hidden="true">timeline</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="security" data-reveal>
-    <header><p class="research-canvas__eyebrow">06 / Security and Governance</p><h2>Treat content as data, not authority.</h2><p>Prompt injection can arrive through a user, file, webpage, ticket, email, or retrieved document. The safe design assumes external content may be hostile.</p></header>
-    <div class="research-route-list">
-      <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noopener"><span>INJ</span><strong>Prompt injection</strong><small>Retrieved instructions must not override system policy, permissions, or approval rules. RAG and fine-tuning do not remove this risk.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="#security"><span>LP</span><strong>Least privilege</strong><small>Give each tool the minimum data and action scope it needs. Separate read tools from write tools and high-impact actions.</small><i class="material-symbols-outlined" aria-hidden="true">key</i></a>
-      <a href="#security"><span>SEC</span><strong>Secrets stay outside context</strong><small>Use secret stores and short-lived credentials. Never rely on “do not reveal this” instructions to protect a credential placed in model context.</small><i class="material-symbols-outlined" aria-hidden="true">password</i></a>
-      <a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener"><span>RMF</span><strong>Govern the lifecycle</strong><small>Record ownership, intended use, risk, evaluation, monitoring, change control, and retirement. Governance is an operating process, not a PDF at project end.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="deploy" data-reveal>
-    <header><p class="research-canvas__eyebrow">07 / Build and Deploy</p><h2>A local success is only the first environment.</h2><p>Production AI needs the same boring disciplines as other software, plus model, prompt, retrieval, and eval versioning.</p></header>
-    <div class="research-route-list">
-      <a href="#deploy"><span>ENV</span><strong>Separate environments</strong><small>Keep development, test, and production data, credentials, tools, quotas, and endpoints separate.</small><i class="material-symbols-outlined" aria-hidden="true">lan</i></a>
-      <a href="#deploy"><span>VER</span><strong>Version the behavior</strong><small>Track model, prompt, tool schemas, retrieval settings, datasets, and evals with the application release.</small><i class="material-symbols-outlined" aria-hidden="true">commit</i></a>
-      <a href="#deploy"><span>SLO</span><strong>Define budgets</strong><small>Set targets for answer quality, latency, availability, token or request cost, and tool failure rate. Optimize against a target, not a feeling.</small><i class="material-symbols-outlined" aria-hidden="true">speed</i></a>
-      <a href="#deploy"><span>FAIL</span><strong>Engineer failure paths</strong><small>Handle timeouts, malformed output, stale retrieval, denied permissions, partial tool results, duplicate requests, rate limits, and model fallback.</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" id="decisions" data-reveal>
-    <header><p class="research-canvas__eyebrow">08 / Decision matrix</p><h2>Start with these defaults.</h2><p>Architecture becomes easier when every new technology has to prove why the simpler option is not enough.</p></header>
-    <div class="research-route-list">
-      <a href="#data"><span>RAG</span><strong>Fresh or private knowledge → retrieval</strong><small>Retrieve from the source of truth and carry provenance. Fine-tuning is not a database update mechanism.</small><i class="material-symbols-outlined" aria-hidden="true">search</i></a>
-      <a href="#mcp"><span>TOOL</span><strong>External deterministic action → typed tool</strong><small>Validate inputs and outputs in code. Use MCP when standard reuse across clients is useful, not as ceremony.</small><i class="material-symbols-outlined" aria-hidden="true">build</i></a>
-      <a href="#agents"><span>WF</span><strong>Known sequence → workflow</strong><small>Keep fixed steps fixed. Add an agent only when the system must adapt its next action to evidence.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-      <a href="#evals"><span>FT</span><strong>Behavior gap → prompt and eval first</strong><small>Try clearer instructions, examples, schemas, retrieval, or tools. Fine-tune after tests show a stable gap worth training for.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
+      <a href="/labs/ai-ready/data-rag/"><span>RAG</span><strong>Changing knowledge → retrieval</strong><small>Retrieve current evidence. Fine-tuning is not a database refresh mechanism.</small><i class="material-symbols-outlined" aria-hidden="true">search</i></a>
+      <a href="/labs/ai-ready/tools-mcp/"><span>API</span><strong>External fact or action → typed tool</strong><small>Use code to validate inputs, outputs, permissions, and errors.</small><i class="material-symbols-outlined" aria-hidden="true">build</i></a>
+      <a href="/labs/ai-ready/tools-mcp/"><span>MCP</span><strong>Shared AI integration → consider MCP</strong><small>Use MCP when several clients benefit from one governed capability surface.</small><i class="material-symbols-outlined" aria-hidden="true">extension</i></a>
+      <a href="/labs/ai-ready/agent-architecture/"><span>WF</span><strong>Known sequence → workflow</strong><small>Keep fixed steps fixed. Put the model only where interpretation is useful.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/ai-ready/agent-architecture/"><span>AG</span><strong>Unknown next step → bounded agent</strong><small>Add hard budgets, allowed tools, stop states, and traces.</small><i class="material-symbols-outlined" aria-hidden="true">sync</i></a>
+      <a href="/labs/ai-ready/evals-reliability/"><span>FT</span><strong>Behavior gap → prompt/schema/eval first</strong><small>Fine-tune only after a stable measured gap remains.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="labs" data-reveal>
-    <header><p class="research-canvas__eyebrow">Hands-on track</p><h2>Build four small systems.</h2><p>The goal is not another tutorial clone. Each lab adds one production concern and leaves a testable artifact.</p></header>
+    <header><p class="research-canvas__eyebrow">Hands-on track</p><h2>Build four small systems.</h2><p>All core labs use synthetic general-purpose data. No SAP system, client data, or vendor product is required.</p></header>
     <div class="research-route-list">
-      <a href="/mcp/sap-diagnostics-mcp/"><span>01</span><strong>Read-only MCP server</strong><small>Expose a narrow SAP-like diagnostic capability. Focus on tool contracts, boundaries, transport, authorization, and traces.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="/labs/ai-ready/data/eval-sample.jsonl"><span>02</span><strong>RAG plus evals</strong><small>Build a small retrieval corpus with citations, then test retrieval and answer behavior with a golden dataset.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="#agents"><span>03</span><strong>Agent with approval</strong><small>Investigate with read tools, prepare a change, and require explicit approval before a risky write.</small><i class="material-symbols-outlined" aria-hidden="true">approval</i></a>
-      <a href="#deploy"><span>04</span><strong>Production readiness</strong><small>Add tracing, eval gates, retry rules, cost and latency budgets, secrets, rate limits, deployment, and rollback.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
+      <a href="/labs/ai-ready/labs/mcp-readonly/"><span>01</span><strong>Read-only MCP workspace</strong><small>Expose projects, notes, and tasks through narrow tools and resources.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/ai-ready/labs/rag-evals/"><span>02</span><strong>RAG with evals</strong><small>Build a small knowledge corpus, retrieve with citations, and measure quality.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/ai-ready/labs/agent-approval/"><span>03</span><strong>Agent with approval</strong><small>Investigate with read tools, prepare a change, and execute only after approval.</small><i class="material-symbols-outlined" aria-hidden="true">approval</i></a>
+      <a href="/labs/ai-ready/labs/production-readiness/"><span>04</span><strong>Production readiness</strong><small>Add versioning, traces, eval gates, budgets, failure policy, and rollback.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Production checklist</p><h2>Before a real user gets access.</h2><p>A short checklist catches more problems than a long architecture deck nobody opens after the workshop.</p></header>
+    <header><p class="research-canvas__eyebrow">Machine-readable layer</p><h2>Use the material as data too.</h2><p>The pages explain the ideas. The data files keep reusable patterns and eval cases in a form that can later feed retrieval or an architecture assistant.</p></header>
     <div class="research-route-list">
-      <a href="#security"><span>01</span><strong>Identity and permissions</strong><small>User identity reaches the tool boundary. Reads and writes use least privilege. High-impact actions have approval.</small><i class="material-symbols-outlined" aria-hidden="true">badge</i></a>
-      <a href="#evals"><span>02</span><strong>Quality and regression</strong><small>Representative evals exist, failure cases are included, and a release can be compared with the previous version.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
-      <a href="#deploy"><span>03</span><strong>Observability and recovery</strong><small>Trace IDs, sanitized logs, metrics, rate limits, retries, fallback behavior, and rollback are defined.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
-      <a href="#data"><span>04</span><strong>Data lifecycle</strong><small>Sources, freshness, retention, PII, caches, embeddings, logs, and deletion behavior have owners.</small><i class="material-symbols-outlined" aria-hidden="true">cycle</i></a>
+      <a href="/labs/ai-ready/data/catalog.json"><span>CAT</span><strong>Architecture catalog</strong><small>Tracks, decision rules, use cases, labs, and production rules.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/ai-ready/data/architecture-patterns.json"><span>GRF</span><strong>Architecture patterns</strong><small>Use conditions, controls, failure modes, and graph links.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/ai-ready/data/eval-sample.jsonl"><span>EVAL</span><strong>Eval cases</strong><small>General-purpose architecture decisions and failure-path examples.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Source baseline</p><h2>Date the moving parts.</h2><p>AI platform details change quickly. This lab separates durable architecture rules from dated protocol and product facts.</p></header>
+    <header><p class="research-canvas__eyebrow">Source baseline</p><h2>Date the moving parts.</h2><p>Durable architecture rules live separately from protocol and platform details that change quickly.</p></header>
     <div class="research-route-list">
       <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/" target="_blank" rel="noopener"><span>MCP</span><strong>Model Context Protocol</strong><small>Official 2026-07-28 release notes. Reviewed 15 Aug 2026.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://platform.openai.com/docs/" target="_blank" rel="noopener"><span>API</span><strong>OpenAI developer documentation</strong><small>Current reference for Responses, tools, remote MCP, agents, and eval capabilities. Reviewed 15 Aug 2026.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener"><span>NIST</span><strong>AI Risk Management Framework</strong><small>Risk management baseline and Generative AI profile. Reviewed 15 Aug 2026.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="https://genai.owasp.org/" target="_blank" rel="noopener"><span>OWASP</span><strong>GenAI Security Project</strong><small>Security risks and practical defensive guidance. Reviewed 15 Aug 2026.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://platform.openai.com/docs/" target="_blank" rel="noopener"><span>API</span><strong>OpenAI developer documentation</strong><small>Model, tool, MCP, agent, and eval reference. Reviewed 15 Aug 2026.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener"><span>NIST</span><strong>AI Risk Management Framework</strong><small>Lifecycle risk-management baseline. Reviewed 15 Aug 2026.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      <a href="https://genai.owasp.org/" target="_blank" rel="noopener"><span>OWASP</span><strong>GenAI Security Project</strong><small>Security risks and defensive guidance. Reviewed 15 Aug 2026.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
     </div>
   </section>
 
