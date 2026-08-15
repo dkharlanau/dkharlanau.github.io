@@ -1,0 +1,242 @@
+---
+layout: default
+title: "How SAP Builds a Sales Order — Field Provenance and Redetermination"
+description: "Trace where SAP sales-order values come from, when they are copied or recalculated, and which procedures and mechanisms own the result."
+permalink: /labs/enterprise-context/sales-processes/mechanisms/derivation/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+tags:
+  - sap
+  - s4hana
+  - sales
+  - sd
+  - determination
+  - master-data
+  - integration
+---
+
+{% assign library = site.data.labs.enterprise_context.mechanisms.sales_mechanisms %}
+{% assign provenance = library.field_provenance %}
+{% assign events = library.redetermination_events %}
+{% assign matrix = library.procedure_matrix %}
+{% assign playbook = library.derivation_playbook %}
+{% assign context_group = library["07_context"] %}
+{% assign registry = site.data.labs.enterprise_context.sources.sales_context_derivation %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/sales-processes/">Sales Process Atlas</a></li><li><a href="/labs/enterprise-context/sales-processes/mechanisms/">Mechanism Library</a></li><li aria-current="page">Derivation Map</li></ol>
+</nav>
+
+<div class="research-canvas sales-mechanisms">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Sales mechanism library / derivation layer</p>
+      <h1>How did this value<br />get into the order?</h1>
+      <p>A field can come from master data, a predecessor, a procedure, a runtime determination, or a manual change. The useful question is not only where the field is configured. The useful question is who owns the current value, when SAP recalculates it, and what consumes it next.</p>
+      <div class="sm-hero-actions">
+        <a class="research-canvas__button" href="#field-provenance">Trace field provenance <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+        <a class="sm-text-link" href="#failure-drills">Open failure drills</a>
+        <a class="sm-text-link" href="/labs/enterprise-context/sales-processes/mechanisms/">Back to Mechanism Library</a>
+      </div>
+    </div>
+    <div class="research-canvas__signal" aria-label="Derivation inventory">
+      <p>Order construction model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ provenance.fields | size }}</strong><small>Field traces</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ events.events | size }}</strong><small>Redetermination events</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ matrix.rows | size }}</strong><small>Procedure patterns</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong>{{ playbook.cases | size }}</strong><small>Failure drills</small></div>
+      <em>Source → rule → value → event → downstream effect.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Lead debugging rule.</strong> Before changing Customizing, prove whether the wrong value was copied, determined, inherited, substituted, or manually overwritten. A correct rule can still produce an old result when the document intentionally keeps predecessor data.</p>
+    <a href="/labs/enterprise-context/data/sales-mechanisms.json">Open JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostic layers</p>
+      <h2>Use layers, not a fake linear process.</h2>
+      <p>Several SD mechanisms can run beside each other and can run again after a change. These layers are a debugging order: establish context, prove the value source, identify the rule engine, follow runtime consequences, and then inspect the redetermination boundary.</p>
+    </header>
+    <div class="sm-dependency-map">
+      {% for layer in playbook.layers %}
+      <article>
+        <code>{{ layer.id }}</code>
+        <span>{{ forloop.index | prepend: "0" }}</span>
+        <strong>{{ layer.title }}</strong>
+        <p><b>Ask:</b> {{ layer.question }}</p>
+        <p><b>Check:</b> {{ layer.check | join: " · " }}</p>
+        {% if layer.mechanism_refs and layer.mechanism_refs.size > 0 %}<p class="sm-extension-list">{% for code in layer.mechanism_refs %}<code>{{ code }}</code>{% endfor %}</p>{% endif %}
+        <p>{{ layer.why }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="field-provenance" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Field provenance</p>
+      <h2>Find the owner before you fix the value.</h2>
+      <p>These traces separate master-data copy, predecessor copy, procedure logic, runtime determination, and manual document data. The model is intentionally field-focused: Payment Terms and Incoterms are important, but they are not independent decision engines.</p>
+    </header>
+    <div class="sm-card-grid">
+      {% for item in provenance.fields %}
+      <article class="sm-card">
+        <header>
+          <code>{{ item.id }}</code>
+          <h4>{{ item.field }}</h4>
+          <p class="sm-hook">{{ item.level }}</p>
+        </header>
+        <div class="sm-blast">
+          <span>Possible sources</span>
+          {% for source in item.primary_sources %}<small>{{ source }}</small>{% endfor %}
+        </div>
+        <p class="sm-determination">{{ item.precedence_or_rule }}</p>
+        <details>
+          <summary>Copy, change, recheck <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="sm-detail-grid">
+            <section><h5>Manual change</h5><p>{{ item.manual_override }}</p></section>
+            <section><h5>Reference behavior</h5><p>{{ item.reference_behavior }}</p></section>
+            <section><h5>Redetermination</h5><p>{{ item.redetermination }}</p></section>
+            <section><h5>Downstream</h5><p class="sm-extension-list">{% for target in item.downstream %}<code>{{ target }}</code>{% endfor %}</p></section>
+          </div>
+        </details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Redetermination events</p>
+      <h2>Mechanisms matter. Triggers matter just as much.</h2>
+      <p>A good diagnostic answer explains what SAP keeps and what it calculates again. This is especially important in reference chains, document-type changes, and partner or logistics changes.</p>
+    </header>
+    <div class="sm-dependency-map">
+      {% for event in events.events %}
+      <article>
+        <code>{{ event.id }}</code>
+        <span>{{ event.evidence_class | replace: "_", " " | upcase }}</span>
+        <strong>{{ event.title }}</strong>
+        <p><b>Trigger:</b> {{ event.trigger }}</p>
+        <p><b>Keep/copy:</b> {{ event.kept_or_copied }}</p>
+        <p><b>Recheck:</b> {{ event.rechecked | join: " · " }}</p>
+        <p><b>Ask:</b> {{ event.diagnostic_question }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Procedure comparison</p>
+      <h2>Same word: procedure. Different engines.</h2>
+      <p>Partner, text, pricing, material determination, incompletion, output, and product proposal all use procedures or procedure-like control. Their search models are not interchangeable.</p>
+    </header>
+    <div class="sm-card-grid">
+      {% for row in matrix.rows %}
+      <article class="sm-card">
+        <header><code>{{ row.mechanism }}</code><h4>{{ row.procedure }}</h4><p class="sm-hook">{{ row.engine }}</p></header>
+        <p class="sm-question">{{ row.assignment_anchor }}</p>
+        <div class="sm-io">
+          <div><span>Condition technique</span><strong>{{ row.condition_technique }}</strong></div>
+          <i aria-hidden="true">→</i>
+          <div><span>Access</span><small>{{ row.access_sequence }}</small></div>
+        </div>
+        <p class="sm-determination"><strong>Trace:</strong> {{ row.trace }}</p>
+        <div class="sm-blast"><span>Managed data</span><small>{{ row.managed_data }}</small></div>
+        <details><summary>Redetermination note <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary><p>{{ row.redetermination_note }}</p></details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">New context mechanisms</p>
+      <h2>Only create a mechanism when something actually decides.</h2>
+      <p>Dynamic product proposal, cross-selling, inbound B2B context, and profit-center derivation have their own inputs and results. They earn separate mechanism identities. Ordinary copied fields do not.</p>
+    </header>
+    <div class="sm-card-grid">
+      {% for mechanism in context_group.mechanisms %}
+      <article class="sm-card" id="{{ mechanism.code | downcase | replace: '.', '-' }}">
+        <header><code>{{ mechanism.code }}</code><h4>{{ mechanism.title }}</h4><p class="sm-hook">{{ mechanism.memory_hook }}</p></header>
+        <p class="sm-question">{{ mechanism.question }}</p>
+        <div class="sm-io">
+          <div><span>Inputs</span>{% for input in mechanism.inputs %}<small>{{ input.name }}</small>{% endfor %}</div>
+          <i aria-hidden="true">→</i>
+          <div><span>Writes</span>{% for output in mechanism.outputs %}<strong>{{ output }}</strong>{% endfor %}</div>
+        </div>
+        <p class="sm-determination">{{ mechanism.determination }}</p>
+        <div class="sm-blast"><span>Blast radius</span>{% for item in mechanism.controls %}<small>{{ item }}</small>{% endfor %}</div>
+        {% if mechanism.downstream and mechanism.downstream.size > 0 %}<div class="sm-downstream"><span>Feeds</span>{% for item in mechanism.downstream %}<code>{{ item }}</code>{% endfor %}</div>{% endif %}
+        <details>
+          <summary>Debug, test, configure <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="sm-detail-grid">
+            <section><h5>Configuration surfaces</h5><ul>{% for item in mechanism.configuration_surfaces %}<li>{{ item }}</li>{% endfor %}</ul></section>
+            <section><h5>Failure traces</h5><ul>{% for failure in mechanism.failure_modes %}<li><strong>{{ failure.symptom }}</strong><span>{{ failure.prove }}</span></li>{% endfor %}</ul></section>
+            <section><h5>Proof tests</h5><ul>{% for test in mechanism.tests %}<li><strong>{{ test.id }}</strong><span>{{ test.setup }} <b>Prove:</b> {{ test.assert }}</span></li>{% endfor %}</ul></section>
+          </div>
+        </details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failure-drills" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure drills</p>
+      <h2>Practice the proof path, not the transaction code.</h2>
+      <p>Each case starts with a plausible wrong move. The goal is to prove ownership and dependencies before touching configuration.</p>
+    </header>
+    <div class="sm-card-grid">
+      {% for case in playbook.cases %}
+      <article class="sm-card">
+        <header><code>{{ case.id }}</code><h4>{{ case.title }}</h4><p class="sm-hook">{{ case.symptom }}</p></header>
+        <p class="sm-question"><strong>Wrong first move:</strong> {{ case.wrong_first_move }}</p>
+        <div class="sm-blast"><span>Mechanisms</span>{% for code in case.mechanism_refs %}<small>{{ code }}</small>{% endfor %}</div>
+        <details>
+          <summary>Prove it <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
+          <div class="sm-detail-grid">
+            <section><h5>Proof path</h5><ol>{% for step in case.proof_path %}<li>{{ step }}</li>{% endfor %}</ol></section>
+            <section><h5>Lead conclusion</h5><p>{{ case.lead_conclusion }}</p></section>
+          </div>
+        </details>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="sm-assessment" data-reveal>
+    <div><p class="research-canvas__eyebrow">Lead answer pattern</p><h2>When a field is wrong, answer in six moves.</h2></div>
+    <ol>
+      <li><span>01</span><p>Name the field and document level.</p></li>
+      <li><span>02</span><p>Separate copy, master data, procedure, runtime derivation, and manual override.</p></li>
+      <li><span>03</span><p>Prove the winning source or access.</p></li>
+      <li><span>04</span><p>Identify the event that should keep or recalculate the value.</p></li>
+      <li><span>05</span><p>Trace downstream mechanisms that consumed the result.</p></li>
+      <li><span>06</span><p>Change the narrowest owner and test one controlled variation.</p></li>
+    </ol>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence boundary</p><h2>Source-backed behavior, independently written model.</h2><p>SAP Help verifies product behavior and release scope. The provenance model, diagnostic questions, comparison structure, and memory hooks are independent synthesis for learning and architecture reasoning.</p></header>
+    <div class="research-route-list">
+      {% for source in registry.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · verified {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>

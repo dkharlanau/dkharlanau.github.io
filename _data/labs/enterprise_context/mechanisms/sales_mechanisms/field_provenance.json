@@ -1,0 +1,133 @@
+{
+  "id": "SALES-FIELD-PROVENANCE-V1",
+  "title": "Sales Order Field Provenance",
+  "updated_at": "2026-08-15",
+  "purpose": "Explain where important sales-order values come from, what can override them, what happens with reference documents, and which downstream controls consume them.",
+  "mental_model": [
+    "Do not ask only where a field is configured. Ask who owns the value in this document.",
+    "Separate master-data copy, procedure determination, runtime derivation, manual override, and predecessor copy.",
+    "A value copied from a predecessor can intentionally differ from today's master data."
+  ],
+  "fields": [
+    {
+      "id": "FIELD-SD-PARTNERS",
+      "field": "Partner functions",
+      "level": "header and item",
+      "primary_sources": ["business partner/customer master relationships", "partner determination procedure", "preceding document context"],
+      "precedence_or_rule": "The partner procedure defines allowed and mandatory functions and source control. Master relationships provide candidate partners.",
+      "manual_override": "Can be restricted or allowed by partner-function settings.",
+      "reference_behavior": "Reference processing can preserve partner context from the preceding document depending on document and copy rules.",
+      "redetermination": "Changing partner context is a trigger to re-check dependent shipping, billing, credit, and output assumptions.",
+      "downstream": ["MEC.SD.PLANT", "MEC.SD.ROUTE", "MEC.SD.BILL", "MEC.SD.CREDIT", "MEC.SD.OUTPUT"],
+      "source_refs": ["SRC-MEC-PARTNER", "SRC-SALES-MASTER-DATA"]
+    },
+    {
+      "id": "FIELD-SD-PAYTERMS",
+      "field": "Payment terms",
+      "level": "header with item inheritance",
+      "primary_sources": ["payer business partner/customer master", "preceding document header", "manual document value"],
+      "precedence_or_rule": "For a new document without reference, payment terms are copied from the relevant payer master data. Header data then applies to items unless the process allows a deviation.",
+      "manual_override": "Document values can be changed when the process and field control allow it.",
+      "reference_behavior": "When a new document is created with reference, the predecessor header can supply the old payment terms even if master data changed later.",
+      "redetermination": "Do not assume a payer-master change will update an already copied reference chain.",
+      "downstream": ["MEC.SD.BILL", "MEC.SD.CREDIT"],
+      "source_refs": ["SRC-SALES-MASTER-DATA", "SRC-SALES-REFERENCE-DATA"]
+    },
+    {
+      "id": "FIELD-SD-INCOTERMS",
+      "field": "Incoterms",
+      "level": "header with item inheritance",
+      "primary_sources": ["business partner/customer sales-area data", "preceding document", "manual document value"],
+      "precedence_or_rule": "Incoterms are copied into the sales document from sales-area master context and normally propagate from header to items.",
+      "manual_override": "A transaction-specific value can be maintained when field control permits it.",
+      "reference_behavior": "Reference creation can copy the predecessor value instead of reading the latest master data again.",
+      "redetermination": "Treat Incoterms as copied business context unless a process explicitly redetermines them.",
+      "downstream": ["shipping responsibility", "billing and trade-document context"],
+      "source_refs": ["SRC-SALES-MASTER-DATA", "SRC-SALES-REFERENCE-DATA"]
+    },
+    {
+      "id": "FIELD-SD-CUSTMAT",
+      "field": "Customer-material data",
+      "level": "item",
+      "primary_sources": ["customer-material information record", "product master", "customer master"],
+      "precedence_or_rule": "For values maintained in a customer-material record, that customer-specific record can take priority over generic customer or product data.",
+      "manual_override": "Transaction data can still be changed when the field is open for entry.",
+      "reference_behavior": "Referenced items may carry copied predecessor values; a newly entered item reads current master context.",
+      "redetermination": "Re-check customer-material records when the sold-to, sales area, or entered customer material changes.",
+      "downstream": ["material identification", "description", "delivery priority", "partial-delivery behavior"],
+      "source_refs": ["SRC-SALES-MASTER-DATA", "SRC-SALES-REFERENCE-DATA"]
+    },
+    {
+      "id": "FIELD-SD-PRODUCT",
+      "field": "Product details",
+      "level": "item",
+      "primary_sources": ["product/material master", "material determination result", "preceding document"],
+      "precedence_or_rule": "Weights, descriptions, and other item attributes are copied from the product master for a newly entered item. Material determination can replace the product before downstream controls run.",
+      "manual_override": "Some copied item values are changeable; core product identity follows document and substitution controls.",
+      "reference_behavior": "A referenced item can keep predecessor values while a new item in the same target document reads current master data.",
+      "redetermination": "A material change can alter item category, plant, ATP, pricing, and tax context.",
+      "downstream": ["MEC.SD.ICAT", "MEC.SD.PLANT", "MEC.SD.ATP", "MEC.SD.PRICE", "MEC.SD.TAX"],
+      "source_refs": ["SRC-SALES-MASTER-DATA", "SRC-SALES-REFERENCE-DATA", "SRC-MEC-MATDET"]
+    },
+    {
+      "id": "FIELD-SD-SHIPCOND",
+      "field": "Shipping condition",
+      "level": "header",
+      "primary_sources": ["sales document type", "ship-to sales-area master data"],
+      "precedence_or_rule": "When both are maintained, the sales-document-type shipping condition is the stronger control in the existing mechanism model.",
+      "manual_override": "Treat manual changes as process-specific; first prove the configured source.",
+      "reference_behavior": "In a reference chain, inspect whether the value was copied before assuming current master data won.",
+      "redetermination": "A changed shipping condition can change shipping point and route.",
+      "downstream": ["MEC.SD.SHIPPT", "MEC.SD.ROUTE"],
+      "source_refs": ["SRC-MEC-SHIPCOND"]
+    },
+    {
+      "id": "FIELD-SD-PLANT",
+      "field": "Delivering plant",
+      "level": "item",
+      "primary_sources": ["sales document and partner/product context", "plant determination logic", "preceding document"],
+      "precedence_or_rule": "Plant is a runtime logistics result. Its exact source should be proven through the plant mechanism instead of inferred from one master record.",
+      "manual_override": "A manual plant change is possible in many order scenarios but creates a new logistics context that must be checked downstream.",
+      "reference_behavior": "Copied predecessor context can preserve a plant that differs from today's default.",
+      "redetermination": "A plant change requires re-checking shipping point, route, scheduling, ATP, and intercompany or legal context where relevant.",
+      "downstream": ["MEC.SD.SHIPPT", "MEC.SD.ROUTE", "MEC.SD.SCHED", "MEC.SD.ATP"],
+      "source_refs": ["SRC-MEC-PLANT", "SRC-SALES-REFERENCE-DATA"]
+    },
+    {
+      "id": "FIELD-SD-TEXT",
+      "field": "Sales document texts",
+      "level": "header and item",
+      "primary_sources": ["preceding document texts", "business partner/customer texts", "customer-material texts", "standard texts"],
+      "precedence_or_rule": "The text determination access sequence searches configured sources in order for each text type.",
+      "manual_override": "Texts can be manually maintained according to text control.",
+      "reference_behavior": "A text procedure can copy predecessor text or search master sources. This distinction matters when old text survives into a follow-on document.",
+      "redetermination": "Trace text type, procedure, access sequence, and source rather than editing the output form.",
+      "downstream": ["MEC.SD.COPY", "MEC.SD.OUTPUT"],
+      "source_refs": ["SRC-MEC-TEXT"]
+    },
+    {
+      "id": "FIELD-SD-PROFITCTR",
+      "field": "Profit center",
+      "level": "item",
+      "primary_sources": ["controlling object when relevant", "product/material inheritance", "flexible determination rules where supported"],
+      "precedence_or_rule": "Standard derivation commonly inherits the profit center from the product; some sales scenarios support broader flexible derivation. A controlling object can have stronger accounting meaning.",
+      "manual_override": "Treat changes as controlled financial derivation, not a casual sales-field override.",
+      "reference_behavior": "Once established, profit-center context should remain consistent through follow-on financial processing.",
+      "redetermination": "If profit center is wrong, prove the original derivation source before correcting billing or FI account logic.",
+      "downstream": ["MEC.SD.BILL", "MEC.SD.ACCOUNT"],
+      "source_refs": ["SRC-MEC-PROFITCTR-BASE", "SRC-MEC-PROFITCTR-FLEX"]
+    },
+    {
+      "id": "FIELD-SD-B2BCTX",
+      "field": "Sales area and sales document type for inbound B2B",
+      "level": "document creation context",
+      "primary_sources": ["inbound EDI/SOAP message fields", "customer/supplier assignment", "flexible determination rules"],
+      "precedence_or_rule": "For supported B2B services, the system can derive sales area, document type, and payment-term discrepancy allowance from inbound message context instead of relying only on a static customer/supplier pair.",
+      "manual_override": "This is integration-time context determination, not normal interactive order entry.",
+      "reference_behavior": "Not a predecessor-copy case; the important boundary is message-to-business-context mapping.",
+      "redetermination": "When inbound mapping changes, retest downstream sales-order controls because a different sales area or document type can select different procedures.",
+      "downstream": ["MEC.SD.PARTNER", "MEC.SD.PRICE", "MEC.SD.MATDET", "MEC.SD.LISTEX", "MEC.SD.FREE"],
+      "source_refs": ["SRC-MEC-B2BCTX"]
+    }
+  ]
+}

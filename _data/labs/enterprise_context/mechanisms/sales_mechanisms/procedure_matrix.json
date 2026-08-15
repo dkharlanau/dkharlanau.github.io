@@ -1,0 +1,116 @@
+{
+  "id": "SALES-PROCEDURE-MATRIX-V1",
+  "title": "SD Basic Functions and Procedure Matrix",
+  "updated_at": "2026-08-15",
+  "purpose": "Compare similar-looking SD procedures without pretending they all use the same engine.",
+  "rows": [
+    {
+      "mechanism": "MEC.SD.PARTNER",
+      "procedure": "Partner determination procedure",
+      "assignment_anchor": "Customer master/account group, sales document type, and item category depending on partner object.",
+      "engine": "Partner functions, source control, and master relationships",
+      "condition_technique": "no",
+      "access_sequence": "No condition-technique access sequence",
+      "managed_data": "Business partner/customer relationships and document partners",
+      "trace": "Procedure assignment → partner function → mandatory/changeable flag → source control → master relationship",
+      "redetermination_note": "Changing document or partner context can change the partner set; prove source control before downstream debugging.",
+      "source_refs": ["SRC-MEC-PARTNER"]
+    },
+    {
+      "mechanism": "MEC.SD.TEXT",
+      "procedure": "Text determination procedure",
+      "assignment_anchor": "Text object level such as sales document header or item category.",
+      "engine": "Text types plus ordered source search",
+      "condition_technique": "no",
+      "access_sequence": "Yes, but this is a text-source access sequence rather than pricing condition technique",
+      "managed_data": "Master texts, predecessor texts, and standard texts",
+      "trace": "Procedure assignment → text type → access sequence → first valid source → copy/reference behavior",
+      "redetermination_note": "A follow-on document can copy old predecessor text or search a source again depending on the text rules.",
+      "source_refs": ["SRC-MEC-TEXT"]
+    },
+    {
+      "mechanism": "MEC.SD.PRICE",
+      "procedure": "Pricing procedure",
+      "assignment_anchor": "Sales area + customer pricing procedure + document pricing procedure determine the pricing procedure.",
+      "engine": "Condition technique",
+      "condition_technique": "yes",
+      "access_sequence": "Yes, per condition type where automatic record search is required",
+      "managed_data": "Prices, discounts, surcharges, tax, and other condition records",
+      "trace": "Procedure determination → condition type → access sequence → key → validity → requirement/formula",
+      "redetermination_note": "Copy control and document-type changes can cause repricing. Prove the pricing type and procedure before changing records.",
+      "source_refs": ["SRC-MEC-PRICE", "SRC-MEC-CONDITION-TECHNIQUE", "SRC-SALES-DOC-TYPE-CHANGE"]
+    },
+    {
+      "mechanism": "MEC.SD.MATDET",
+      "procedure": "Material determination procedure",
+      "assignment_anchor": "Assigned to sales document type.",
+      "engine": "Condition technique",
+      "condition_technique": "yes",
+      "access_sequence": "yes",
+      "managed_data": "Material substitution and product-selection condition records",
+      "trace": "Document type → procedure → condition type → access sequence → condition record → substitution reason",
+      "redetermination_note": "If the material-determination procedure changes with the document type, material determination is run again.",
+      "source_refs": ["SRC-MEC-MATDET", "SRC-SALES-DOC-TYPE-CHANGE"]
+    },
+    {
+      "mechanism": "MEC.SD.LISTEX",
+      "procedure": "Listing / exclusion procedure",
+      "assignment_anchor": "Activated for the relevant sales-document context and evaluated against customer/material condition records.",
+      "engine": "Condition-technique record search plus allow/block check",
+      "condition_technique": "yes",
+      "access_sequence": "yes where configured for the listing/exclusion condition type",
+      "managed_data": "Customer/material listing or exclusion records",
+      "trace": "Procedure/context → condition type/access → customer/material key → validity → allow/block result",
+      "redetermination_note": "A changed document type can cause listing/exclusion to be checked again when its procedure differs.",
+      "source_refs": ["SRC-MEC-LISTEX", "SRC-SALES-DOC-TYPE-CHANGE"]
+    },
+    {
+      "mechanism": "MEC.SD.FREE",
+      "procedure": "Free goods determination",
+      "assignment_anchor": "Sales-order commercial context plus free-goods configuration and valid master record.",
+      "engine": "Free-goods agreement search and quantity qualification",
+      "condition_technique": "yes",
+      "access_sequence": "Uses condition-technique concepts in classic SD free-goods design",
+      "managed_data": "Free-goods agreements, thresholds, and inclusive/exclusive rules",
+      "trace": "Process support → agreement validity → quantity threshold → free-goods rule → generated subitem",
+      "redetermination_note": "A changed document type can cause free-goods determination to run again when its procedure differs.",
+      "source_refs": ["SRC-MEC-FREE", "SRC-SALES-DOC-TYPE-CHANGE"]
+    },
+    {
+      "mechanism": "MEC.SD.INCOMP",
+      "procedure": "Incompletion procedure",
+      "assignment_anchor": "Sales document type and item category; other document-control levels can participate by process.",
+      "engine": "Configured required fields plus status effects",
+      "condition_technique": "no",
+      "access_sequence": "no",
+      "managed_data": "Required-field definitions and status groups",
+      "trace": "Procedure assignment → missing field → status group → affected follow-on processing",
+      "redetermination_note": "Completeness changes when a controlled field is filled, cleared, or changed; the important result is the follow-on status.",
+      "source_refs": ["SRC-MEC-INCOMP"]
+    },
+    {
+      "mechanism": "MEC.SD.OUTPUT",
+      "procedure": "Output determination / output parameter determination",
+      "assignment_anchor": "Framework-specific: classic SD output procedures are assigned to document context; S/4HANA Output Control uses output parameter rules.",
+      "engine": "Classic condition technique or modern rule/decision-table evaluation",
+      "condition_technique": "framework-dependent",
+      "access_sequence": "Classic: yes where output conditions are used. Modern Output Control: rule-based parameter determination.",
+      "managed_data": "Output conditions or output rules, recipients, channels, forms, and dispatch parameters",
+      "trace": "First identify framework → output item → successful rule/condition → recipient → channel → form → dispatch status",
+      "redetermination_note": "Do not mix NAST-style output analysis with S/4HANA Output Control analysis.",
+      "source_refs": ["SRC-MEC-OUTPUT", "SRC-MEC-OUTPUT-CLASSIC"]
+    },
+    {
+      "mechanism": "MEC.SD.PROPOSAL",
+      "procedure": "Dynamic product proposal procedure",
+      "assignment_anchor": "Customer procedure + document procedure + product-proposal procedure determination.",
+      "engine": "Ordered access to proposal data sources",
+      "condition_technique": "no",
+      "access_sequence": "yes, as a proposal-source sequence",
+      "managed_data": "Order history, listing/exclusion, item proposals, customer-material records, and customer-specific sources",
+      "trace": "Customer/document procedure → proposal procedure → source order → proposal result → user acceptance",
+      "redetermination_note": "Standard sales checks start after the user accepts a proposal and enters order quantity.",
+      "source_refs": ["SRC-MEC-PROPOSAL"]
+    }
+  ]
+}

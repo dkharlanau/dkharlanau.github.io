@@ -1,1 +1,168 @@
-{"id":"sales_mechanism_library_v0_3","title":"SAP Sales Mechanism Library","updated_at":"2026-08-15","groups":["01_commercial","02_fulfillment","03_financial","04_communication","05_determinations","06_planning"],"mechanism_codes":["MEC.SD.ICAT","MEC.SD.PARTNER","MEC.SD.PRICE","MEC.SD.COPY","MEC.SD.SLINE","MEC.SD.PLANT","MEC.SD.SHIPPT","MEC.SD.ROUTE","MEC.SD.SCHED","MEC.SD.ATP","MEC.SD.BATCH","MEC.SD.CREDIT","MEC.SD.BILL","MEC.SD.TEXT","MEC.SD.OUTPUT","MEC.SD.SHIPCOND","MEC.SD.MATDET","MEC.SD.LISTEX","MEC.SD.FREE","MEC.SD.TAX","MEC.SD.DLICAT","MEC.SD.PICKLOC","MEC.SD.ACCOUNT","MEC.SD.REQTYPE"],"learning_model":{"rule":"Start with the question a mechanism answers. Then learn its inputs, decision engine, result and downstream blast radius.","questions":["What decision does this mechanism own?","Which fields/master data/configuration are its inputs?","What decision engine does it use: lookup table, precedence, condition technique, copy rule or runtime check?","What exact output does it write?","Which mechanisms consume that output?","What is the fastest failure trace?","What one test proves the rule?"]},"lanes":[{"id":"commercial","title":"Commercial semantics","codes":["MEC.SD.ICAT","MEC.SD.PARTNER","MEC.SD.PRICE","MEC.SD.COPY"]},{"id":"fulfillment","title":"Fulfillment promise","codes":["MEC.SD.SLINE","MEC.SD.PLANT","MEC.SD.SHIPPT","MEC.SD.ROUTE","MEC.SD.SCHED","MEC.SD.ATP","MEC.SD.BATCH"]},{"id":"financial","title":"Financial release","codes":["MEC.SD.CREDIT","MEC.SD.BILL"]},{"id":"communication","title":"Communication","codes":["MEC.SD.TEXT","MEC.SD.OUTPUT"]},{"id":"determinations","title":"Cross-cutting determinations","codes":["MEC.SD.SHIPCOND","MEC.SD.MATDET","MEC.SD.LISTEX","MEC.SD.FREE","MEC.SD.TAX","MEC.SD.DLICAT","MEC.SD.PICKLOC","MEC.SD.ACCOUNT"]},{"id":"planning","title":"Planning integration","codes":["MEC.SD.REQTYPE"]}]}
+{
+  "id": "sales_mechanism_library_v0_6",
+  "title": "SAP Sales Mechanism Library",
+  "updated_at": "2026-08-15",
+  "groups": [
+    "01_commercial",
+    "02_fulfillment",
+    "03_financial",
+    "04_communication",
+    "05_determinations",
+    "06_planning",
+    "07_context"
+  ],
+  "mechanism_codes": [
+    "MEC.SD.ICAT",
+    "MEC.SD.PARTNER",
+    "MEC.SD.PRICE",
+    "MEC.SD.COPY",
+    "MEC.SD.INCOMP",
+    "MEC.SD.SLINE",
+    "MEC.SD.PLANT",
+    "MEC.SD.SHIPPT",
+    "MEC.SD.ROUTE",
+    "MEC.SD.SCHED",
+    "MEC.SD.ATP",
+    "MEC.SD.BATCH",
+    "MEC.SD.CREDIT",
+    "MEC.SD.BILLREL",
+    "MEC.SD.BILLPLAN",
+    "MEC.SD.BILLTYPE",
+    "MEC.SD.BILLSPLIT",
+    "MEC.SD.BILL",
+    "MEC.SD.TEXT",
+    "MEC.SD.OUTPUT",
+    "MEC.SD.SHIPCOND",
+    "MEC.SD.MATDET",
+    "MEC.SD.LISTEX",
+    "MEC.SD.FREE",
+    "MEC.SD.TAX",
+    "MEC.SD.DLICAT",
+    "MEC.SD.PICKLOC",
+    "MEC.SD.ACCOUNT",
+    "MEC.SD.REQTYPE",
+    "MEC.SD.PROPOSAL",
+    "MEC.SD.CROSSSELL",
+    "MEC.SD.B2BCTX",
+    "MEC.SD.PROFITCTR"
+  ],
+  "learning_model": {
+    "rule": "Start with the question a mechanism answers. Then learn its inputs, decision engine, result and downstream blast radius.",
+    "questions": [
+      "What decision does this mechanism own?",
+      "Which fields/master data/configuration are its inputs?",
+      "What decision engine does it use: lookup table, precedence, condition technique, copy rule or runtime check?",
+      "What exact output does it write?",
+      "Which mechanisms consume that output?",
+      "What is the fastest failure trace?",
+      "What one test proves the rule?"
+    ]
+  },
+  "lanes": [
+    {
+      "id": "basic_functions",
+      "title": "SD basic functions / assigned procedures",
+      "codes": [
+        "MEC.SD.PARTNER",
+        "MEC.SD.TEXT",
+        "MEC.SD.PRICE",
+        "MEC.SD.MATDET",
+        "MEC.SD.LISTEX",
+        "MEC.SD.FREE",
+        "MEC.SD.INCOMP",
+        "MEC.SD.OUTPUT",
+        "MEC.SD.PROPOSAL"
+      ]
+    },
+    {
+      "id": "commercial",
+      "title": "Commercial semantics",
+      "codes": [
+        "MEC.SD.ICAT",
+        "MEC.SD.PARTNER",
+        "MEC.SD.PRICE",
+        "MEC.SD.COPY",
+        "MEC.SD.INCOMP"
+      ]
+    },
+    {
+      "id": "fulfillment",
+      "title": "Fulfillment promise",
+      "codes": [
+        "MEC.SD.SLINE",
+        "MEC.SD.PLANT",
+        "MEC.SD.SHIPPT",
+        "MEC.SD.ROUTE",
+        "MEC.SD.SCHED",
+        "MEC.SD.ATP",
+        "MEC.SD.BATCH"
+      ]
+    },
+    {
+      "id": "billing_control",
+      "title": "Billing eligibility, timing, type and grouping",
+      "codes": [
+        "MEC.SD.BILLREL",
+        "MEC.SD.BILLPLAN",
+        "MEC.SD.BILLTYPE",
+        "MEC.SD.COPY",
+        "MEC.SD.BILLSPLIT",
+        "MEC.SD.BILL"
+      ]
+    },
+    {
+      "id": "financial",
+      "title": "Financial release and derivation",
+      "codes": [
+        "MEC.SD.CREDIT",
+        "MEC.SD.BILL",
+        "MEC.SD.PROFITCTR",
+        "MEC.SD.ACCOUNT"
+      ]
+    },
+    {
+      "id": "communication",
+      "title": "Communication",
+      "codes": [
+        "MEC.SD.TEXT",
+        "MEC.SD.OUTPUT"
+      ]
+    },
+    {
+      "id": "determinations",
+      "title": "Cross-cutting determinations",
+      "codes": [
+        "MEC.SD.SHIPCOND",
+        "MEC.SD.MATDET",
+        "MEC.SD.LISTEX",
+        "MEC.SD.FREE",
+        "MEC.SD.TAX",
+        "MEC.SD.DLICAT",
+        "MEC.SD.PICKLOC",
+        "MEC.SD.ACCOUNT"
+      ]
+    },
+    {
+      "id": "planning",
+      "title": "Planning integration",
+      "codes": [
+        "MEC.SD.REQTYPE"
+      ]
+    },
+    {
+      "id": "assisted_entry",
+      "title": "Assisted sales entry",
+      "codes": [
+        "MEC.SD.PROPOSAL",
+        "MEC.SD.CROSSSELL"
+      ]
+    },
+    {
+      "id": "integration_context",
+      "title": "Inbound integration context",
+      "codes": [
+        "MEC.SD.B2BCTX"
+      ]
+    }
+  ]
+}

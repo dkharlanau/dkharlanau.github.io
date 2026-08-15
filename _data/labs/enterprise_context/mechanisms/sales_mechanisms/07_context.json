@@ -1,0 +1,114 @@
+{
+  "group": "07_context",
+  "title": "Sales entry, integration context and financial derivation",
+  "mechanisms": [
+    {
+      "code": "MEC.SD.PROPOSAL",
+      "id": "MEC-SD-PROPOSAL",
+      "title": "Dynamic Product Proposal",
+      "memory_hook": "A proposal helps the user choose products; it is not yet an order item.",
+      "question": "Which products should SAP propose for this customer and business context before normal item checks run?",
+      "inputs": [
+        {"name": "customer and sales area", "origin": "sales document / master data"},
+        {"name": "customer procedure for product proposal", "origin": "customer master / configuration"},
+        {"name": "document procedure for product proposal", "origin": "sales document type / configuration"},
+        {"name": "product proposal procedure and access sequence", "origin": "configuration"},
+        {"name": "proposal sources such as order history, listing/exclusion, item proposal and customer-material records", "origin": "transaction history and master data"}
+      ],
+      "determination": "The product-proposal procedure searches configured data sources in order and builds a customer-specific proposal list. The proposal is an entry aid; normal sales checks such as pricing, ATP, incompletion, material determination and free-goods determination run after an item is accepted and quantity is entered.",
+      "outputs": ["proposed products", "proposal sequence", "historical or proposed quantity context"],
+      "controls": ["sales-order entry assistance", "repeat-order speed", "promotion support", "customer-specific product suggestion"],
+      "downstream": ["MEC.SD.LISTEX", "MEC.SD.MATDET", "MEC.SD.ICAT", "MEC.SD.PRICE", "MEC.SD.ATP"],
+      "configuration_surfaces": ["Customer procedure for product proposal", "Document procedure for product proposal", "Product proposal procedure", "Access sequences", "Proposal source/origin table"],
+      "failure_modes": [
+        {"symptom": "Expected products are not proposed", "prove": "Check customer/document procedure determination → proposal procedure → access/source sequence → source data availability."},
+        {"symptom": "Proposal shows a product but order checks fail after selection", "prove": "Separate proposal generation from normal item processing; trace listing, material determination, item category, pricing and ATP after quantity entry."}
+      ],
+      "tests": [
+        {"id": "TEST-MEC-PROPOSAL-01", "setup": "Configure order history and an item proposal as two proposal sources for one customer.", "assert": "The proposal follows the configured source sequence and normal sales checks begin only after a proposed item is accepted with quantity."}
+      ],
+      "extension_points": ["EXT-LOGIC", "EXT-API"],
+      "source_refs": ["SRC-MEC-PROPOSAL", "SRC-MEC-ITEMPROPOSAL"]
+    },
+    {
+      "code": "MEC.SD.CROSSSELL",
+      "id": "MEC-SD-CROSSSELL",
+      "title": "Cross-Selling Determination",
+      "memory_hook": "Product proposal starts with the customer. Cross-selling starts with the product.",
+      "question": "Which additional products should be suggested because this material is in the order?",
+      "inputs": [
+        {"name": "trigger material or product characteristic", "origin": "sales item"},
+        {"name": "cross-selling condition records", "origin": "master data"},
+        {"name": "condition tables and access sequence", "origin": "configuration"},
+        {"name": "cross-selling profile and pricing scheme", "origin": "configuration"}
+      ],
+      "determination": "Cross-selling uses condition-technique-based rules to find additional products for the material or product context already entered in the sales order.",
+      "outputs": ["suggested cross-selling products", "cross-selling proposal context"],
+      "controls": ["complementary-item suggestion", "sales-entry guidance", "cross-selling analysis"],
+      "downstream": ["MEC.SD.ICAT", "MEC.SD.PRICE", "MEC.SD.ATP"],
+      "configuration_surfaces": ["Cross-selling condition tables", "Access sequence", "Calculation scheme", "Cross-selling profile"],
+      "failure_modes": [
+        {"symptom": "No complementary items are suggested", "prove": "Check trigger material → cross-selling profile → condition-technique access → valid condition record."},
+        {"symptom": "Suggestions are confused with customer product proposal", "prove": "Identify the trigger: customer/sales area means product proposal; entered material means cross-selling."}
+      ],
+      "tests": [
+        {"id": "TEST-MEC-CROSSSELL-01", "setup": "Maintain a cross-selling relation for one trigger material and leave a similar material without a record.", "assert": "Suggested products appear only for the configured trigger context."}
+      ],
+      "extension_points": ["EXT-LOGIC"],
+      "source_refs": ["SRC-MEC-CROSSSELL"]
+    },
+    {
+      "code": "MEC.SD.B2BCTX",
+      "id": "MEC-SD-B2BCTX",
+      "title": "Inbound B2B Sales Context Determination",
+      "memory_hook": "Before an inbound purchase order becomes a sales order, SAP must decide which commercial world it belongs to.",
+      "question": "Which sales area, sales document type and payment-term tolerance should be used for this inbound B2B message?",
+      "inputs": [
+        {"name": "inbound EDI/SOAP message fields", "origin": "external buyer / SAP Business Network"},
+        {"name": "customer and supplier identifiers", "origin": "message and integration mapping"},
+        {"name": "standard assignment or flexible determination rules", "origin": "configuration"},
+        {"name": "B2B sales-order service context", "origin": "integration architecture"}
+      ],
+      "determination": "For supported B2B order services, SAP can use standard customer/supplier assignments or evaluate a wider set of inbound fields to determine sales area, sales document type and discrepancy allowance for payment terms.",
+      "outputs": ["sales area", "sales document type", "payment-terms discrepancy allowance"],
+      "controls": ["inbound sales-order creation", "returns-order context", "procedure selection downstream", "commercial interpretation of external purchase orders"],
+      "downstream": ["MEC.SD.PARTNER", "MEC.SD.PRICE", "MEC.SD.MATDET", "MEC.SD.LISTEX", "MEC.SD.FREE"],
+      "configuration_surfaces": ["Customer/Supplier to Sales Organization assignment", "Flexible determination rules for inbound B2B", "Sales Order/Customer Return B2B service"],
+      "failure_modes": [
+        {"symptom": "Inbound order reaches S/4HANA but creates the wrong order type or sales area", "prove": "Trace message fields → standard/flexible context rule → determined sales area/document type before debugging SD item logic."},
+        {"symptom": "Correct payload fails only for one buyer/supplier relationship", "prove": "Compare identifiers and rule match against a working inbound message before changing sales configuration."}
+      ],
+      "tests": [
+        {"id": "TEST-MEC-B2BCTX-01", "setup": "Send two controlled B2B messages that differ in one field used by flexible context determination.", "assert": "The configured rule selects the expected sales area, document type, or tolerance for each message."}
+      ],
+      "extension_points": ["EXT-API", "EXT-LOGIC"],
+      "source_refs": ["SRC-MEC-B2BCTX"]
+    },
+    {
+      "code": "MEC.SD.PROFITCTR",
+      "id": "MEC-SD-PROFITCTR",
+      "title": "Profit Center Derivation",
+      "memory_hook": "Revenue account says where to post. Profit center says whose performance it belongs to.",
+      "question": "Which profit center should the sales item carry into the financial process chain?",
+      "inputs": [
+        {"name": "controlling object where relevant", "origin": "sales item / account assignment"},
+        {"name": "product/material profit center", "origin": "product master"},
+        {"name": "flexible sales determination dimensions where supported", "origin": "sales document and configuration"}
+      ],
+      "determination": "In standard derivation, a sales-order item commonly inherits the profit center from the product. In supported flexible scenarios, additional sales dimensions can participate. Once derived, the value should remain consistent through follow-on financial processing.",
+      "outputs": ["profit center on sales item and financial context"],
+      "controls": ["profit-center reporting", "margin ownership", "financial consistency across sales and billing"],
+      "downstream": ["MEC.SD.BILL", "MEC.SD.ACCOUNT"],
+      "configuration_surfaces": ["Product/material profit-center assignment", "Controlling-object assignment", "Flexible profit-center determination where supported"],
+      "failure_modes": [
+        {"symptom": "Correct revenue account but wrong profit center", "prove": "Separate G/L account determination from profit-center derivation; trace controlling object, product, and flexible-rule source."},
+        {"symptom": "Profit center changes unexpectedly later in the chain", "prove": "Compare the original sales-item derivation with follow-on document inheritance before introducing FI substitution."}
+      ],
+      "tests": [
+        {"id": "TEST-MEC-PROFITCTR-01", "setup": "Create sales items with controlled products or account-assignment contexts that carry different profit-center sources.", "assert": "The sales item receives the expected profit center and downstream documents preserve the intended context."}
+      ],
+      "extension_points": ["EXT-LOGIC", "EXT-FIELD"],
+      "source_refs": ["SRC-MEC-PROFITCTR-BASE", "SRC-MEC-PROFITCTR-FLEX"]
+    }
+  ]
+}

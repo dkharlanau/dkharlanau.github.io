@@ -1,0 +1,118 @@
+{
+  "id": "SALES-DERIVATION-PLAYBOOK-V1",
+  "title": "Sales Order Derivation Diagnostic Playbook",
+  "updated_at": "2026-08-15",
+  "principle": "Use layers for diagnosis, not as a fake runtime sequence. Several mechanisms can run beside each other and can be triggered again after a change.",
+  "layers": [
+    {
+      "id": "LAYER-SD-CONTEXT",
+      "title": "Document context",
+      "question": "Which commercial context did the order start in?",
+      "check": ["channel or inbound message", "sales area", "sales document type", "sold-to / ship-to context"],
+      "mechanism_refs": ["MEC.SD.B2BCTX", "MEC.SD.PARTNER"],
+      "why": "A different sales area or document type can select different procedures before item-level debugging even begins."
+    },
+    {
+      "id": "LAYER-SD-PROVENANCE",
+      "title": "Copied and inherited values",
+      "question": "Was the value copied from master data, a customer-material record, or a predecessor?",
+      "check": ["master-data source", "customer-material precedence", "reference document", "manual document value"],
+      "mechanism_refs": [],
+      "why": "The current master record is not proof that an existing reference chain should contain the same value."
+    },
+    {
+      "id": "LAYER-SD-PROCEDURE",
+      "title": "Assigned procedures and search engines",
+      "question": "Which procedure or rule engine owns this result?",
+      "check": ["procedure assignment", "engine type", "access sequence or source control", "condition/master record", "requirement or status rule"],
+      "mechanism_refs": ["MEC.SD.PARTNER", "MEC.SD.TEXT", "MEC.SD.PRICE", "MEC.SD.MATDET", "MEC.SD.LISTEX", "MEC.SD.FREE", "MEC.SD.INCOMP", "MEC.SD.OUTPUT", "MEC.SD.PROPOSAL"],
+      "why": "The word procedure is reused across SD, but the engines behind it are not the same."
+    },
+    {
+      "id": "LAYER-SD-RUNTIME",
+      "title": "Runtime item and logistics decisions",
+      "question": "Which current item context produced the logistics result?",
+      "check": ["material and item category", "schedule line and requirements type", "plant", "shipping condition", "shipping point", "route", "scheduling", "ATP and batch context"],
+      "mechanism_refs": ["MEC.SD.ICAT", "MEC.SD.SLINE", "MEC.SD.REQTYPE", "MEC.SD.PLANT", "MEC.SD.SHIPCOND", "MEC.SD.SHIPPT", "MEC.SD.ROUTE", "MEC.SD.SCHED", "MEC.SD.ATP", "MEC.SD.BATCH"],
+      "why": "A correct upstream value can still create a surprising downstream result when another input changes."
+    },
+    {
+      "id": "LAYER-SD-FINCOMM",
+      "title": "Financial and communication consequences",
+      "question": "What commercial, financial, or communication control consumed the result?",
+      "check": ["pricing and tax", "credit", "profit center", "billing relevance", "revenue account", "text and output"],
+      "mechanism_refs": ["MEC.SD.PRICE", "MEC.SD.TAX", "MEC.SD.CREDIT", "MEC.SD.PROFITCTR", "MEC.SD.BILL", "MEC.SD.ACCOUNT", "MEC.SD.TEXT", "MEC.SD.OUTPUT"],
+      "why": "Do not correct a downstream posting or form when the wrong commercial context was created upstream."
+    },
+    {
+      "id": "LAYER-SD-EVENT",
+      "title": "Redetermination boundary",
+      "question": "What event should keep the old value, and what should run again?",
+      "check": ["new document versus reference", "document-type change", "partner change", "material substitution", "plant change", "copy-control pricing behavior"],
+      "mechanism_refs": ["MEC.SD.COPY", "MEC.SD.PRICE", "MEC.SD.MATDET", "MEC.SD.PARTNER", "MEC.SD.PLANT"],
+      "why": "Many difficult incidents are not wrong determination. They are wrong assumptions about redetermination."
+    }
+  ],
+  "cases": [
+    {
+      "id": "CASE-SD-REF-PAYTERM",
+      "title": "Payment terms look old after master-data change",
+      "symptom": "The payer master was changed, but a new order created with reference still shows the old payment terms.",
+      "wrong_first_move": "Change partner determination or billing configuration because the field looks stale.",
+      "proof_path": ["Confirm the order was created with reference", "Inspect predecessor header payment terms", "Compare the date of the master-data change", "Create a controlled order without reference and compare the value"],
+      "lead_conclusion": "The predecessor can intentionally carry the old business context. Master data describes today's default; it does not rewrite an existing reference chain.",
+      "mechanism_refs": ["MEC.SD.COPY"],
+      "source_refs": ["SRC-SALES-MASTER-DATA", "SRC-SALES-REFERENCE-DATA"]
+    },
+    {
+      "id": "CASE-SD-PLANT-CASCADE",
+      "title": "Manual plant change moves the customer promise",
+      "symptom": "A user changes the delivering plant and the shipping point, route, dates, or confirmed quantity no longer match the original order result.",
+      "wrong_first_move": "Fix route or ATP independently because those are the visible differences.",
+      "proof_path": ["Compare old and new plant", "Re-run shipping-point inputs", "Trace route inputs", "Compare scheduling dates", "Compare ATP context and confirmation"],
+      "lead_conclusion": "Plant is an upstream logistics input. A manual override creates a new fulfillment context and downstream differences can be correct consequences.",
+      "mechanism_refs": ["MEC.SD.PLANT", "MEC.SD.SHIPPT", "MEC.SD.ROUTE", "MEC.SD.SCHED", "MEC.SD.ATP"],
+      "source_refs": ["SRC-MEC-PLANT", "SRC-MEC-SHIPPT", "SRC-MEC-ROUTE", "SRC-MEC-SCHED", "SRC-MEC-ATP"]
+    },
+    {
+      "id": "CASE-SD-B2B-CONTEXT",
+      "title": "Inbound purchase order creates the wrong sales context",
+      "symptom": "An inbound B2B message reaches S/4HANA, but the resulting order uses an unexpected sales area or document type and then pricing or material rules differ.",
+      "wrong_first_move": "Debug pricing condition records before proving how the order context was selected.",
+      "proof_path": ["Capture the inbound identifiers and relevant message fields", "Trace standard or flexible B2B context determination", "Confirm sales area and document type", "Only then compare the procedures selected by that context"],
+      "lead_conclusion": "Integration mapping can decide the commercial world in which normal SD mechanisms run. A downstream difference can begin at message-to-context determination.",
+      "mechanism_refs": ["MEC.SD.B2BCTX", "MEC.SD.PRICE", "MEC.SD.MATDET", "MEC.SD.LISTEX", "MEC.SD.FREE"],
+      "source_refs": ["SRC-MEC-B2BCTX"]
+    },
+    {
+      "id": "CASE-SD-OUTPUT-FRAMEWORK",
+      "title": "The team debugs the wrong output framework",
+      "symptom": "A sales or billing document exists but no expected customer communication is produced.",
+      "wrong_first_move": "Open Output Parameter Determination or classic NAST configuration without first identifying which framework the application uses.",
+      "proof_path": ["Identify application and active output framework", "Confirm output item or proposal creation", "Trace rule or condition result", "Confirm recipient and channel", "Check form/render/send status"],
+      "lead_conclusion": "S/4HANA Output Control and classic SD Output Determination have different rule paths. Framework identification is step zero.",
+      "mechanism_refs": ["MEC.SD.OUTPUT", "MEC.SD.PARTNER", "MEC.SD.TEXT"],
+      "source_refs": ["SRC-MEC-OUTPUT", "SRC-MEC-OUTPUT-CLASSIC"]
+    },
+    {
+      "id": "CASE-SD-PROPOSAL-CROSSSELL",
+      "title": "Product proposal is confused with cross-selling",
+      "symptom": "The business expects an additional product suggestion but configuration is changed in the wrong feature.",
+      "wrong_first_move": "Treat every product suggestion as the same SD mechanism.",
+      "proof_path": ["Identify the trigger", "If customer and sales area drive the list, trace Dynamic Product Proposal", "If an entered material drives complementary items, trace Cross-Selling", "After acceptance, trace normal item checks"],
+      "lead_conclusion": "Dynamic Product Proposal is customer-context driven; Cross-Selling is product-context driven. Both help entry, but they answer different questions.",
+      "mechanism_refs": ["MEC.SD.PROPOSAL", "MEC.SD.CROSSSELL", "MEC.SD.ICAT", "MEC.SD.PRICE", "MEC.SD.ATP"],
+      "source_refs": ["SRC-MEC-PROPOSAL", "SRC-MEC-CROSSSELL"]
+    },
+    {
+      "id": "CASE-SD-PROFITCTR",
+      "title": "Revenue account is correct but profit center is wrong",
+      "symptom": "Billing posts to the expected G/L account, but profitability is assigned to an unexpected profit center.",
+      "wrong_first_move": "Change revenue account determination because both results appear in the same financial document.",
+      "proof_path": ["Separate G/L account determination from profit-center derivation", "Check controlling object where relevant", "Check product/material profit center", "Check flexible sales derivation if used", "Trace inheritance into billing and FI"],
+      "lead_conclusion": "G/L account and profit center are separate financial derivations. One can be correct while the other is wrong.",
+      "mechanism_refs": ["MEC.SD.PROFITCTR", "MEC.SD.ACCOUNT", "MEC.SD.BILL"],
+      "source_refs": ["SRC-MEC-PROFITCTR-BASE", "SRC-MEC-PROFITCTR-FLEX", "SRC-MEC-ACCOUNT"]
+    }
+  ]
+}
