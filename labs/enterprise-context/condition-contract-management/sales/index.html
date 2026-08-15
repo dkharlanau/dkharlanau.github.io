@@ -1,0 +1,115 @@
+---
+layout: default
+title: "Sales CCM — Customer Rebates | Enterprise Context Lab"
+description: "SAP S/4HANA Sales Condition Contract Management: customer rebates, billing-based business volume, accruals, settlement, configuration, apps, and diagnostics."
+permalink: /labs/enterprise-context/condition-contract-management/sales/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags: [sap-s4hana, sap-sd, settlement-management, condition-contract-management, sales-rebates]
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.condition_contract_management %}
+{% assign model = graph.sales %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/condition-contract-management/">CCM</a></li><li aria-current="page">Sales</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">CCM / Sales</p>
+      <h1>Customer rebate: first prove the billing volume.</h1>
+      <p>{{ model.purpose }}</p>
+      <a class="research-canvas__button" href="#sales-ccm-runtime">Follow the runtime <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Memory path</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ model.runtime | size }}</strong><small>Runtime steps</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ model.fiori_apps | size }}</strong><small>Fiori anchors</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ model.failure_modes | size }}</strong><small>Failure groups</small></div>
+      <em>{{ model.memory_path }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">sell</span>
+    <p><strong>Boundary:</strong> SD pricing calculates document conditions. Sales CCM manages a customer agreement whose final value depends on accumulated eligible billing business volume and later settlement.</p>
+    <a href="/labs/enterprise-context/condition-contract-management/">Back to the CCM core model <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Standard examples</p><h2>Know the contract type before discussing the rate.</h2><p>Standard delivered types are examples, not a rule that every project must use them unchanged.</p></header>
+    <div class="research-route-list">
+      {% for item in model.standard_contract_type_examples %}
+      <a href="#"><span>TYPE</span><strong>{{ item }}</strong><small>The contract type controls important parts of partner side, business volume, layout, allowed conditions, and settlement behavior.</small><i class="material-symbols-outlined" aria-hidden="true">contract_edit</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sales-ccm-runtime" data-reveal>
+    <header><p class="research-canvas__eyebrow">Runtime</p><h2>{{ model.memory_path }}</h2><p>This is the practical story to tell in an assessment or design workshop.</p></header>
+    <div class="ecg-determination-list">
+      {% for step in model.runtime %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">0{{ step.order }}</div>
+        <div class="ecg-determination-card__copy">
+          <p class="research-canvas__eyebrow">{{ step.tool }}</p>
+          <h3>{{ step.step }}</h3>
+          <p>{{ step.action }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Configuration</p><h2>Configure the scope before the settlement.</h2><p>For Sales CCM the most important design decision is what billing business counts for the agreement.</p></header>
+    <div class="research-route-list">
+      {% for item in model.configuration_focus %}
+      <a href="#"><span>CFG</span><strong>{{ item }}</strong><small>Validate this layer against the target S/4HANA release and the selected condition contract type.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Operational toolbox</p><h2>Contract → volume → settlement → accounting.</h2></header>
+    <div class="research-route-list">
+      {% for tx in graph.transactions %}
+      <a href="#"><span>{{ tx.id }}</span><strong>{{ tx.name }}</strong><small>{{ tx.use }}</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
+      {% endfor %}
+      {% for app in model.fiori_apps %}
+      <a href="#"><span>{{ app.id }}</span><strong>{{ app.name }}</strong><small>Fiori entry point for the Sales CCM lifecycle.</small><i class="material-symbols-outlined" aria-hidden="true">apps</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Diagnostic sequence</p><h2>Do not debug the rebate percentage first.</h2><p>The correct order prevents pricing, master data, and accounting issues from being mixed together.</p></header>
+    <div class="research-route-list">
+      {% for item in model.diagnostic_sequence %}
+      <a href="#"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item }}</strong><small>Stop at the first layer that produces the wrong result.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure patterns</p><h2>Symptoms become useful when tied to a layer.</h2></header>
+    <div class="ecg-determination-list">
+      {% for failure in model.failure_modes %}
+      <article class="ecg-determination-card">
+        <div class="ecg-determination-card__index">!</div>
+        <div class="ecg-determination-card__copy">
+          <h3>{{ failure.symptom }}</h3>
+          <p><strong>Check:</strong> {{ failure.likely_causes | join: " · " }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+</div>
