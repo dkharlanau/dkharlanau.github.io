@@ -1,8 +1,7 @@
 ---
 layout: default
 title: SAP Authorization and Role Diagnostics
-description: Diagnose SAP authorization failures using SU53, role and profile checks,
-  organizational values, and trace evidence before requesting access changes.
+description: Diagnose SAP authorization failures by separating the failed check from role design, organizational values, user context, and business access need.
 permalink: /atlas/diagnostics/sap-authorization-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -41,7 +40,7 @@ sitemap: true
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP authorization and role diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for authorization failures, missing roles, and profile gaps in SAP support.</p>
+    <p class="note-subtitle">First prove which authorization check failed. Then decide whether access is missing, the role is wrong, or the process should not grant that access at all.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -54,68 +53,55 @@ sitemap: true
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Authorization failures stop users before they can reproduce a functional issue. The diagnostic goal is to capture the missing authorization object, compare it with the user's roles and profiles, and decide whether the fix is a role change, a user exit, or a process change.</p>
+    <h2>Not every disabled action is an authorization issue</h2>
+    <p>A user who cannot perform an action may be missing an authorization, but the same symptom can come from document status, customizing, workflow, field control, or application logic. Security work starts with evidence of a failed authorization check, not with a request to copy another user's roles.</p>
+    <p>The business question matters too. Even when a technical authorization is missing, the correct answer may be “request approved access” rather than “add the object.” Roles exist to express a control model, not to make error messages disappear.</p>
 
-    <h2>Common symptoms</h2>
-    <ul>
-      <li>User receives 'No authorization' or 'You are not authorized' messages.</li>
-      <li>A transaction starts but specific functions or fields are grayed out.</li>
-      <li>Background job fails with authorization errors under its service user.</li>
-      <li>An interface or RFC call fails with authorization_check errors.</li>
-      <li>Authorization works in one client but not another after a transport.</li>
-    </ul>
+    <h2>Choose the evidence for the type of failure</h2>
+    <div class="decision-table"><table><thead><tr><th>Situation</th><th>Useful evidence</th><th>Important caution</th></tr></thead><tbody>
+      <tr><td>Dialog user gets a clear authorization error</td><td>Reproduce the action and inspect the failed check immediately, for example with SU53 where appropriate.</td><td>SU53 shows recent failed checks in that user context. It is not a complete explanation of the role design.</td></tr>
+      <tr><td>The failure is indirect or hard to reproduce</td><td>Use an authorization trace approved for the environment and narrow it to the user/action.</td><td>Trace data can be noisy and sensitive. Collect only what is needed.</td></tr>
+      <tr><td>Background job fails</td><td>Job log, execution user, failed authorization evidence, and the job's business function.</td><td>The interactive user's SU53 does not describe the background user's checks.</td></tr>
+      <tr><td>RFC, interface, or service call fails</td><td>Technical user, called function/service, error trace, and target-side authorization evidence.</td><td>Do not solve a technical-user issue by broadening a human role.</td></tr>
+      <tr><td>Access differs by company code, plant, or sales organization</td><td>Authorization object fields and organizational values in the assigned role.</td><td>The object may exist in the role but with the wrong value scope.</td></tr>
+    </tbody></table></div>
 
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>Missing authorization object:</strong> the role does not contain the required object/activity/value.</li>
-      <li><strong>Organizational level mismatch:</strong> the user is authorized for a different company code, plant, or sales organization.</li>
-      <li><strong>Profile not generated:</strong> the role was changed but the profile was not regenerated or not assigned.</li>
-      <li><strong>Buffer refresh:</strong> user context still holds the old authorization after a role change.</li>
-      <li><strong>User comparison incomplete:</strong> the user master record was not compared after role changes.</li>
-    </ul>
-
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li>SU53 — display authorization check values from the last failed check.</li>
-      <li>PFCG — role maintenance: check objects, organizational levels, and profile generation status.</li>
-      <li>SU01 — user master: compare roles and profiles assigned to the user.</li>
-      <li>ST01 — authorization trace for harder cases.</li>
-      <li>SU56 — authorization buffer for the current user session.</li>
-    </ul>
-
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>UST04 / UST12</strong> — user master authorization profiles.</li>
-      <li><strong>AGR_1251</strong> — authorization values in roles.</li>
-      <li><strong>USR02</strong> — user master logon data.</li>
-    </ul>
-
-    <h2>Diagnostic workflow</h2>
+    <h2>A clean diagnostic sequence</h2>
     <ol>
-      <li>Reproduce the error or capture SU53 immediately after it occurs.</li>
-      <li>Identify the missing authorization object, field, and required value.</li>
-      <li>Check whether the user has a role that should contain that object.</li>
-      <li>If the role exists, verify profile generation, user comparison, and buffer refresh.</li>
-      <li>If the role does not contain the object, decide whether to extend the role or change the process.</li>
-      <li>Document the authorization object and value before requesting a security change.</li>
+      <li><strong>Capture the exact action.</strong> User, transaction or app, business object, activity, organizational context, timestamp, and message.</li>
+      <li><strong>Confirm that an authorization check actually failed.</strong> If there is no failed check, return to functional diagnosis instead of forcing the issue into security.</li>
+      <li><strong>Identify the object, field, and value.</strong> The useful evidence is more specific than “no access.”</li>
+      <li><strong>Check the intended role.</strong> Does the user's business role normally include this activity and organizational scope?</li>
+      <li><strong>Check role and user state.</strong> If the role should contain the authorization, verify role maintenance, generated profiles, assignment/user comparison, and current user context as relevant to the landscape.</li>
+      <li><strong>Check governance before changing access.</strong> Confirm the business reason, role owner, approval path, and segregation-of-duties impact.</li>
+      <li><strong>Retest the original action.</strong> A role change is not proven until the required task works with the intended scope and no unnecessary access was added.</li>
     </ol>
 
-    <h2>Typical fixes or next actions</h2>
+    <h2>Useful SAP tools</h2>
     <ul>
-      <li>Add the missing authorization object/activity to the correct role and regenerate the profile.</li>
-      <li>Adjust organizational levels if the user works across company codes or plants.</li>
-      <li>Run user comparison for affected users after role changes.</li>
-      <li>Refresh the user context or have the user log off and on again.</li>
-      <li>Escalate to security team if the request conflicts with segregation of duties.</li>
+      <li><strong>SU53</strong> for recent failed authorization checks in the current user's context.</li>
+      <li><strong>PFCG</strong> for role content, organizational levels, profiles, and role maintenance.</li>
+      <li><strong>SU01</strong> for user assignments and user-master context.</li>
+      <li><strong>SU56</strong> for the user's authorization buffer.</li>
+      <li><strong>ST01</strong> or the approved authorization trace tooling in the landscape for cases that need deeper evidence.</li>
+    </ul>
+    <p>The tool is chosen after the failure is understood. Running every security transaction is not a diagnostic method; it is sightseeing with production access.</p>
+
+    <h2>What not to use as a fix</h2>
+    <ul>
+      <li>Do not copy a powerful colleague's roles as a shortcut.</li>
+      <li>Do not add broad wildcard values to make one check pass.</li>
+      <li>Do not assume a missing object should always be added. The application or process may be intentionally restricted.</li>
+      <li>Do not treat logout/login or buffer refresh as a root-cause correction when the role itself is wrong.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Authorization tickets are most useful when they include the SU53 screenshot or authorization object, the user's roles, the transaction and activity, and the business reason for access.</p>
+    <h2>What a useful access request contains</h2>
+    <p>Include the user, exact business task, application or transaction, authorization object/field/value when known, organizational scope, evidence of the failed check, expected role, and business approval. This gives the security team enough information to make a controlled decision instead of reverse-engineering the incident from “please give same access as John.”</p>
 
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a support diagnostic, not a security role design or SoD review guide. It does not replace the security team's authorization concept.</p>
+    <h2>The practical end state</h2>
+    <p>A good authorization diagnosis explains both sides: which check stopped the user and why the requested access is legitimate for that role. Technical evidence without business ownership creates over-access; business urgency without technical evidence creates guesswork.</p>
 
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <h2>Boundaries</h2>
+    <p>This page is a support diagnostic. It does not replace role architecture, privileged-access controls, segregation-of-duties analysis, or the security team's approval process.</p>
   </div>
 </article>

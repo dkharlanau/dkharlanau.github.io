@@ -1,0 +1,331 @@
+schema_version: "1.0"
+reviewed_at: "2026-08-15"
+
+principle: "Technology is selected after the business pattern. A process may use several AI and automation families together: deterministic workflow, document extraction, prediction, optimization, retrieval, agents, and human approval."
+
+families:
+  - id: "foundation-model-platform"
+    title: "Foundation model and AI application platform"
+    job: "Provide governed model access, inference, multimodal capabilities, model choice, deployment, and application building blocks."
+    use_when:
+      - "The solution needs language, vision, audio, reasoning, or model-based classification and extraction."
+      - "A central platform team needs model governance, networking, identity, monitoring, and cost control."
+    not_enough_when:
+      - "The business problem still needs workflow ownership, process data, tools, or deterministic rules."
+    platform_examples:
+      - "Microsoft Foundry"
+      - "Google Gemini Enterprise Agent Platform"
+      - "Amazon Bedrock and AgentCore"
+      - "OpenAI API"
+      - "SAP AI Core and generative AI hub"
+
+  - id: "agent-runtime-orchestration"
+    title: "Agent runtime and orchestration"
+    job: "Let a model plan bounded steps, choose tools or subagents, maintain context, and execute a controlled multi-step task."
+    use_when:
+      - "The next useful step depends on evidence discovered during the task."
+      - "Several tools, knowledge sources, or specialized agents must be coordinated."
+    not_enough_when:
+      - "The process is already a fixed workflow that can be expressed deterministically."
+      - "The agent has no clear tool boundary, stop state, approval rule, or evaluation set."
+    platform_examples:
+      - "Microsoft Foundry Agent Service"
+      - "Microsoft Copilot Studio"
+      - "Google Agent Platform / ADK / Agent Engine"
+      - "Amazon Bedrock AgentCore"
+      - "Salesforce Agentforce"
+      - "ServiceNow AI Agents"
+      - "Oracle AI Agent Studio"
+      - "SAP Joule Studio"
+      - "UiPath Agents and Maestro"
+      - "OpenAI Agents SDK"
+
+  - id: "knowledge-rag-search"
+    title: "Enterprise knowledge, search, and RAG"
+    job: "Ground answers and decisions in current enterprise documents, records, and knowledge while preserving permissions and source traceability."
+    use_when:
+      - "Knowledge changes faster than a model can be retrained."
+      - "The answer must come from private or role-restricted enterprise sources."
+    not_enough_when:
+      - "The task requires an exact system transaction or calculation rather than a knowledge answer."
+    platform_examples:
+      - "Amazon Bedrock Knowledge Bases"
+      - "Microsoft Foundry knowledge integrations and enterprise search"
+      - "Google enterprise search and Agent Platform grounding"
+      - "Salesforce Data 360 and Agentforce grounding"
+      - "ServiceNow knowledge and record context"
+      - "SAP grounding and connected enterprise repositories"
+
+  - id: "document-intelligence"
+    title: "Document and multimodal intelligence"
+    job: "Extract, classify, compare, and structure information from PDFs, emails, scans, drawings, images, and other weakly structured inputs."
+    use_when:
+      - "A human currently reads documents before entering structured data into a process."
+      - "The source may contain language, tables, images, layout, or inconsistent descriptions."
+    not_enough_when:
+      - "Extracted values are treated as trusted business facts without validation or confidence handling."
+    platform_examples:
+      - "SAP Document AI"
+      - "Microsoft Foundry models and document tools"
+      - "Google Document AI and Gemini multimodal models"
+      - "Amazon Bedrock Data Automation"
+      - "UiPath Document Understanding"
+      - "OpenAI multimodal models"
+
+  - id: "predictive-ml"
+    title: "Predictive machine learning"
+    job: "Estimate demand, risk, failure, churn, delay, propensity, anomaly, or another future or hidden state from historical data."
+    use_when:
+      - "A repeat decision has enough historical outcomes to learn useful patterns."
+      - "The business can define a baseline and the cost of false positives and false negatives."
+    not_enough_when:
+      - "The process cannot act differently when the prediction changes."
+    platform_examples:
+      - "SAP AI Core and embedded business ML"
+      - "Google Vertex AI / Agent Platform ML services"
+      - "Microsoft Foundry and Azure ML capabilities"
+      - "Amazon SageMaker and Bedrock-based application stacks"
+      - "business-suite embedded ML"
+
+  - id: "optimization"
+    title: "Optimization and operations research"
+    job: "Find a feasible or best plan under explicit constraints for routing, scheduling, allocation, inventory, production, or network decisions."
+    use_when:
+      - "The decision has hard constraints and a measurable objective."
+      - "Combinatorial complexity makes simple rules weak."
+    not_enough_when:
+      - "The problem is mainly language understanding or uncertain document interpretation."
+    platform_examples:
+      - "specialized route and scheduling engines"
+      - "supply-chain planning optimizers"
+      - "mathematical programming libraries and cloud solvers"
+      - "ERP and planning-suite optimization services"
+
+  - id: "workflow-rpa-process"
+    title: "Workflow, RPA, and process orchestration"
+    job: "Keep stable process steps deterministic while coordinating people, robots, agents, approvals, timers, and system actions."
+    use_when:
+      - "The business process has known states, controls, SLAs, and approval points."
+      - "AI is one participant inside a larger process, not the process engine itself."
+    not_enough_when:
+      - "The next step genuinely cannot be known until new evidence is discovered."
+    platform_examples:
+      - "UiPath Maestro and robots"
+      - "Microsoft Power Automate and Copilot Studio flows"
+      - "ServiceNow Flow and agentic workflows"
+      - "SAP Build Process Automation"
+      - "Oracle Fusion workflows"
+      - "BPMN engines and event-driven orchestration"
+
+  - id: "integration-tools-protocols"
+    title: "Tools, APIs, integration, and agent protocols"
+    job: "Expose business capabilities to AI through narrow, typed, authorized interfaces instead of direct unrestricted system access."
+    use_when:
+      - "An assistant or agent must read or act in enterprise applications."
+      - "Capabilities should be reusable across several AI clients or agents."
+    not_enough_when:
+      - "The interface exposes a generic write-anything operation or bypasses business authorization."
+    platform_examples:
+      - "REST and OpenAPI"
+      - "events and messaging"
+      - "Model Context Protocol (MCP)"
+      - "Agent2Agent (A2A)"
+      - "platform connectors and action catalogs"
+      - "ERP and CRM business APIs"
+
+  - id: "data-semantic-layer"
+    title: "Data and semantic foundation"
+    job: "Provide trusted business entities, metrics, history, lineage, and governed access for AI and analytics."
+    use_when:
+      - "The same business object or KPI is represented differently across systems."
+      - "AI needs structured facts in addition to documents and free text."
+    not_enough_when:
+      - "A data platform is expected to solve process ownership or weak master-data governance by itself."
+    platform_examples:
+      - "data warehouses and lakehouses"
+      - "semantic layers and metric stores"
+      - "MDM and master-data governance"
+      - "CRM/ERP/HCM operational data"
+      - "knowledge graphs"
+
+  - id: "eval-observability"
+    title: "Evaluation, observability, and AI operations"
+    job: "Measure task quality, retrieval, tool use, trajectories, cost, latency, safety, and production regressions."
+    use_when:
+      - "Models, prompts, retrieval, or tools can change behavior without code changes."
+      - "The solution performs business actions or high-volume knowledge work."
+    not_enough_when:
+      - "Only model-level accuracy is measured while the business workflow can still fail."
+    platform_examples:
+      - "Microsoft Foundry evaluations and tracing"
+      - "Google Agent Platform observability and evaluation"
+      - "Amazon AgentCore Observability and Evaluations"
+      - "platform-native agent testing"
+      - "OpenTelemetry and custom business KPI monitoring"
+
+  - id: "security-governance"
+    title: "Identity, security, and AI governance"
+    job: "Control who or what may retrieve data, call tools, take actions, and see outputs, with audit and policy enforcement."
+    use_when:
+      - "Always. The required depth grows with data sensitivity and action impact."
+    not_enough_when:
+      - "A prompt says 'do not access sensitive data' but the runtime still has broad credentials."
+    platform_examples:
+      - "enterprise IAM and workload identities"
+      - "RBAC and ABAC"
+      - "data-loss prevention and content controls"
+      - "AI gateways and policy engines"
+      - "agent registries and approval workflows"
+      - "audit logs and trace stores"
+
+  - id: "enterprise-copilot-ux"
+    title: "Enterprise copilot and conversational UX"
+    job: "Give employees or customers one conversational entry point to knowledge, analysis, and business actions."
+    use_when:
+      - "Natural language reduces navigation cost across many systems."
+      - "The user benefits from explanation, synthesis, or guided action."
+    not_enough_when:
+      - "A chat interface is added over a broken process without fixing the underlying workflow or data."
+    platform_examples:
+      - "Microsoft 365 Copilot and Copilot Studio"
+      - "Gemini Enterprise"
+      - "SAP Joule"
+      - "Salesforce Agentforce experiences"
+      - "ServiceNow Now Assist"
+      - "Oracle Fusion AI experiences"
+
+  - id: "embodied-ai"
+    title: "Embodied AI, computer use, and robotics"
+    job: "Allow AI to interact with physical environments or existing user interfaces when an API or deterministic automation is unavailable or insufficient."
+    use_when:
+      - "The task requires physical movement, visual interaction, or legacy UI operation."
+      - "Safety, supervision, and recovery can be engineered explicitly."
+    not_enough_when:
+      - "A stable API or normal automation would be safer and cheaper."
+    platform_examples:
+      - "warehouse and manufacturing robots"
+      - "autonomous mobile robots"
+      - "computer-use agents"
+      - "vision-guided automation"
+
+platforms:
+  - id: "microsoft-foundry"
+    name: "Microsoft Foundry"
+    category: "horizontal_ai_platform"
+    role: "Models, agents, tools, evaluation, observability, enterprise controls, MCP/A2A integration."
+    source_id: "src-microsoft-foundry"
+
+  - id: "microsoft-copilot-studio"
+    name: "Microsoft Copilot Studio"
+    category: "agent_and_workflow_platform"
+    role: "Low-code agents, knowledge, tools, generative orchestration, triggers, approvals, and Microsoft ecosystem integration."
+    source_id: "src-copilot-studio"
+
+  - id: "google-agent-platform"
+    name: "Gemini Enterprise Agent Platform"
+    category: "horizontal_ai_platform"
+    role: "Build, scale, govern, and optimize enterprise agents with model, agent, evaluation, and deployment services."
+    source_id: "src-google-agent-platform"
+
+  - id: "aws-agentcore"
+    name: "Amazon Bedrock AgentCore"
+    category: "horizontal_agent_platform"
+    role: "Framework-neutral agent runtime, tools, memory, identity, gateway, registry, observability, and evaluation."
+    source_id: "src-aws-agentcore"
+
+  - id: "openai-platform"
+    name: "OpenAI API and Agents SDK"
+    category: "model_and_agent_platform"
+    role: "Multimodal models, Responses API, built-in and custom tools, remote MCP, and code-based agent orchestration."
+    source_id: "src-openai-platform"
+
+  - id: "salesforce-agentforce"
+    name: "Salesforce Agentforce"
+    category: "application_native_agent_platform"
+    role: "Agents grounded in Salesforce data with actions, Trust Layer controls, and CRM-native process context."
+    source_id: "src-salesforce-agentforce"
+
+  - id: "servicenow-ai-agents"
+    name: "ServiceNow AI Agents"
+    category: "workflow_native_agent_platform"
+    role: "Agents and agentic workflows operating on records, knowledge, tools, and ServiceNow process context."
+    source_id: "src-servicenow-agents"
+
+  - id: "oracle-ai-agent-studio"
+    name: "Oracle AI Agent Studio"
+    category: "application_native_agent_platform"
+    role: "Agent teams, tools, topics, approvals, and direct integration with Oracle Fusion Cloud Applications."
+    source_id: "src-oracle-agent-studio"
+
+  - id: "sap-business-ai"
+    name: "SAP Business AI platform layer"
+    category: "application_and_ai_platform"
+    role: "Joule and Joule Studio for business interaction and agents; SAP AI Core and generative AI hub for governed model and AI runtime capabilities."
+    source_id: "src-sap-business-ai"
+
+  - id: "uipath-agentic-automation"
+    name: "UiPath Agents and Maestro"
+    category: "automation_and_agent_orchestration"
+    role: "Agents combined with RPA robots, humans, BPMN/flow/case orchestration, governance, and enterprise automation."
+    source_id: "src-uipath-agents"
+
+source_registry:
+  - id: "src-microsoft-foundry"
+    publisher: "Microsoft Learn"
+    title: "What is Microsoft Foundry?"
+    url: "https://learn.microsoft.com/en-us/azure/ai-foundry/what-is-ai-foundry"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-copilot-studio"
+    publisher: "Microsoft Learn"
+    title: "Apply generative orchestration capabilities"
+    url: "https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-orchestration"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-google-agent-platform"
+    publisher: "Google Cloud"
+    title: "Gemini Enterprise Agent Platform"
+    url: "https://cloud.google.com/products/gemini-enterprise-agent-platform"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-aws-agentcore"
+    publisher: "AWS Documentation"
+    title: "Amazon Bedrock AgentCore Overview"
+    url: "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-openai-platform"
+    publisher: "OpenAI"
+    title: "OpenAI API Developer Quickstart"
+    url: "https://platform.openai.com/docs/quickstart/make-your-first-api-request"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-salesforce-agentforce"
+    publisher: "Salesforce Developers"
+    title: "Get Started with Agentforce and AI Agents"
+    url: "https://developer.salesforce.com/docs/ai/agentforce/guide/get-started.html"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-servicenow-agents"
+    publisher: "ServiceNow Documentation"
+    title: "Exploring Now Assist AI agents"
+    url: "https://www.servicenow.com/docs/r/xanadu/intelligent-experiences/exploring-ai-agents.html"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-oracle-agent-studio"
+    publisher: "Oracle Documentation"
+    title: "Overview of AI Agent Studio"
+    url: "https://docs.oracle.com/en/cloud/saas/fusion-ai/26b/aiaas/overview.html"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-sap-business-ai"
+    publisher: "SAP Help Portal"
+    title: "Joule, SAP AI Core, and generative AI hub"
+    url: "https://help.sap.com/docs/joule/serviceguide/what-is-joule"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-uipath-agents"
+    publisher: "UiPath Documentation"
+    title: "About agents and agentic automation"
+    url: "https://docs.uipath.com/agents/automation-cloud/latest/user-guide/about-agents"
+    reviewed_at: "2026-08-15"

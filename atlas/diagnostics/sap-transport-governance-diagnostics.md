@@ -1,8 +1,7 @@
 ---
 layout: default
 title: SAP Transport Governance Diagnostics
-description: Diagnose SAP transport queue conflicts, dependency order, approval gaps,
-  and parallel changes before adjusting the import sequence.
+description: Diagnose SAP transport problems by separating import failure, sequence dependencies, overlapping changes, emergency fixes, and approval gaps.
 permalink: /atlas/diagnostics/sap-transport-governance-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -41,7 +40,7 @@ sitemap: true
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP transport governance diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for transport queue conflicts, import-order errors, and governance gaps.</p>
+    <p class="note-subtitle">A transport problem is not always an import problem. Sometimes the import only reveals that the change sequence was never under control.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -54,68 +53,61 @@ sitemap: true
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Transport governance keeps multiple change streams from colliding. When imports fail because of queue conflicts, untracked dependencies, or unauthorized changes, the diagnostic goal is to identify the governance gap before fixing the individual transport.</p>
+    <h2>First decide what kind of failure you have</h2>
+    <p>A failed import, a wrong production result, an overwritten object, and an unapproved request in the queue are different problems. They may meet in STMS, but they should not be diagnosed as one generic “transport issue.”</p>
+    <p>The first job is to reconstruct the change path: which request carried which objects, which requests depended on it, where each request was imported, in what order, with which return code, and what the release plan expected.</p>
 
-    <h2>Common symptoms</h2>
-    <ul>
-      <li>Multiple transports for the same object block each other in the import queue.</li>
-      <li>Production import order differs from the order tested in quality assurance.</li>
-      <li>A transport appears in the queue that was not approved for import.</li>
-      <li>Rollback or overwrite is needed because an earlier transport was skipped.</li>
-      <li>Cross-project transports create conflicts during release windows.</li>
-    </ul>
+    <h2>Separate technical import evidence from governance evidence</h2>
+    <div class="decision-table"><table><thead><tr><th>Symptom</th><th>Likely investigation</th><th>Governance question</th></tr></thead><tbody>
+      <tr><td>Import returns an error</td><td>Import logs, object activation, prerequisites, target-system state.</td><td>Was the request tested and was its dependency set complete?</td></tr>
+      <tr><td>Import succeeds but behaviour is wrong</td><td>Compare transported objects, versions, customizing, generated objects, and follow-on steps.</td><td>Did a later or parallel request overwrite part of the tested state?</td></tr>
+      <tr><td>Required request is missing or imported later</td><td>Rebuild the dependency and import sequence.</td><td>How was predecessor/dependency information managed before the release?</td></tr>
+      <tr><td>An unexpected request is in the production queue</td><td>Request owner, content, route, release history, import plan.</td><td>Who approved it and what gate allowed it into the release scope?</td></tr>
+      <tr><td>Emergency fix collides with planned work</td><td>Compare changed objects and target versions in both streams.</td><td>Was the emergency change merged or back-ported into the normal development line?</td></tr>
+    </tbody></table></div>
 
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>Parallel development:</strong> two work streams modify the same object without coordination.</li>
-      <li><strong>Queue skipping:</strong> an earlier transport was bypassed, breaking dependency order.</li>
-      <li><strong>Weak approval gate:</strong> transports enter production without proper review.</li>
-      <li><strong>Untracked dependencies:</strong> a transport relies on a configuration that is not in the same request.</li>
-      <li><strong>Emergency process bypass:</strong> urgent fixes skip normal governance and conflict with scheduled changes.</li>
-    </ul>
-
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li>STMS import queues — compare order across development, quality, and production.</li>
-      <li>SE01 / SE10 — transport ownership, project assignment, and release status.</li>
-      <li>Change approval records — check approval status and any emergency exceptions.</li>
-      <li>Object lock reports — identify overlapping objects across transports.</li>
-      <li>System change log — recent manual or emergency changes outside TMS.</li>
-    </ul>
-
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>E070 / E071</strong> — transport request and object lists.</li>
-      <li><strong>TMSBUFFER</strong> — TMS buffer and queue state.</li>
-      <li><strong>TADIR</strong> — object directory for overlap analysis.</li>
-    </ul>
-
-    <h2>Diagnostic workflow</h2>
+    <h2>A practical diagnostic sequence</h2>
     <ol>
-      <li>Map the import queue state and the intended import order for the release window.</li>
-      <li>Identify transports that modify the same objects or depend on each other.</li>
-      <li>Check whether any transport was skipped or imported out of order.</li>
-      <li>Review approval records for transports in the production queue.</li>
-      <li>Resolve conflicts by adjusting sequence, merging objects, or deferring changes.</li>
-      <li>Document the governance gap and update the change-control checklist.</li>
+      <li><strong>Freeze the story before changing the queue.</strong> Capture the affected system, release window, request numbers, owners, current queue state, return codes, and business symptom.</li>
+      <li><strong>Read the import history and logs.</strong> Establish what actually happened rather than what the release plan says should have happened.</li>
+      <li><strong>Inspect request content.</strong> Check which repository or customizing objects are included and where requests overlap.</li>
+      <li><strong>Rebuild dependencies.</strong> Identify predecessor requests, related customizing, generated objects, notes, manual steps, or other changes needed for the tested result.</li>
+      <li><strong>Compare quality and production sequence.</strong> If production received a different order or subset, that difference is evidence.</li>
+      <li><strong>Check approvals and exceptions.</strong> Emergency or manual imports should still have an owner, reason, scope, and reconciliation plan.</li>
+      <li><strong>Choose recovery with the technical owner.</strong> Re-import, forward correction, sequencing change, object reconciliation, or release deferral have different risks. Do not treat “import again” as the default repair.</li>
     </ol>
 
-    <h2>Typical fixes or next actions</h2>
+    <h2>Useful SAP evidence</h2>
     <ul>
-      <li>Establish object-level coordination when parallel projects touch the same area.</li>
-      <li>Enforce predecessor checks before importing into production.</li>
-      <li>Require documented approval for every transport in the production queue.</li>
-      <li>Add dependency checks to the release-readiness review.</li>
-      <li>Keep emergency fixes in a separate track and merge them back into normal governance.</li>
+      <li><strong>STMS</strong> import queue, import history, and detailed logs.</li>
+      <li><strong>SE01 / SE10</strong> request ownership, tasks, status, and object content.</li>
+      <li><strong>E070 / E071</strong> when table-level request and object analysis is useful.</li>
+      <li>Version or object comparison tools appropriate to the object type and release.</li>
+      <li>Change-management records outside SAP for approvals, planned sequence, emergency path, and release evidence.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Governance tickets are most useful when they show the queue state, the conflicting transport numbers, the intended import order, and the business reason for each change.</p>
+    <h2>Parallel change is where governance becomes real</h2>
+    <p>Two projects can each test successfully and still produce a bad production result if they change the same object or depend on different versions. The dangerous part is not that SAP allows multiple transports. The dangerous part is assuming request numbers automatically express business dependency.</p>
+    <p>For critical releases, object overlap and predecessor information should be visible before the production window. If the team discovers dependencies by reading import errors at midnight, the transport system is merely reporting a planning failure with admirable punctuality.</p>
 
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a governance diagnostic, not a full SAP Solution Manager ChaRM or transport strategy design. It focuses on queue and approval gaps that cause import failures.</p>
+    <h2>Emergency fixes need a return path</h2>
+    <p>An urgent production correction creates a second problem if it never returns to the normal development line. The next planned transport can overwrite the fix or recreate the defect. The emergency process therefore needs both a fast path into production and a controlled reconciliation or back-port path afterwards.</p>
 
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <h2>What a useful transport incident contains</h2>
+    <ul>
+      <li>System and release window.</li>
+      <li>Transport request numbers, owners, and business change references.</li>
+      <li>Relevant object overlap and dependency information.</li>
+      <li>Actual import order in quality and production.</li>
+      <li>Return codes and the relevant import-log error, not only a screenshot of the queue.</li>
+      <li>Any emergency or manual exception.</li>
+      <li>The expected target state and the evidence that will prove recovery.</li>
+    </ul>
+
+    <h2>The governance lesson</h2>
+    <p>A transport request is a technical package. A release is a coordinated business change. Good transport governance connects the two with ownership, dependency, testing, approval, and recovery evidence. Fixing one import without repairing that chain leaves the next release waiting for the same surprise.</p>
+
+    <h2>Boundaries</h2>
+    <p>This page is a diagnostic frame, not a complete transport strategy or SAP Cloud ALM, Solution Manager, ChaRM, gCTS, or third-party release-management design. The exact controls depend on the landscape and delivery model.</p>
   </div>
 </article>

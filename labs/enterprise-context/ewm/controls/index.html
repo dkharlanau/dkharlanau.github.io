@@ -1,0 +1,83 @@
+---
+layout: default
+title: "SAP EWM — Determination & Control Plane"
+description: "A diagnostic map of EWM Warehouse Process Type, storage control, putaway, stock removal, waves, warehouse orders, queues, staging, packing, replenishment and production staging."
+permalink: /labs/enterprise-context/ewm/controls/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+tags: [sap, ewm, determination, configuration, warehousing]
+---
+
+{% assign model = site.data.labs.enterprise_context.ewm.controls %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/ewm/">EWM</a></li><li aria-current="page">Controls</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">EWM / Determination</p>
+      <h1>{{ model.title }}</h1>
+      <p>{{ model.summary }}</p>
+      <a class="research-canvas__button" href="#controls">Trace the decisions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Control coverage">
+      <p>Control plane</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ model.controls | size }}</strong><small>Determinations</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ model.control_layers | size }}</strong><small>Control layers</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ model.impact_traces | size }}</strong><small>Impact traces</small></div>
+      <em>Checked {{ model.verified_at }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">account_tree</span>
+    <p><strong>Runtime memory:</strong> {{ model.runtime_path }}</p>
+    <p><strong>Lead rule:</strong> {{ model.lead_rule }}</p>
+    <p><a href="/labs/enterprise-context/ewm/domains/">Domains</a> · <a href="/labs/enterprise-context/ewm/objects/">Objects</a> · <a href="/labs/enterprise-context/ewm/integrations/">Integrations</a> · <a href="/labs/enterprise-context/data/ewm-controls.json">JSON</a></p>
+  </section>
+
+  <section class="research-canvas__inventory" id="controls" data-reveal>
+    <header><p class="research-canvas__eyebrow">Determinations</p><h2>Find the first wrong decision.</h2><p>The final warehouse task is the result of several control layers. Debug upstream before changing the result.</p></header>
+    <div class="ecg-determination-list">
+      {% for item in model.controls %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{{ forloop.index }}</span><small>control</small></div><h3>{{ item.title }}</h3><p class="ecg-question">{{ item.question }}</p></header>
+        <p>{{ item.purpose }}</p>
+        <div class="ecg-decision-columns">
+          <div><h4>Inputs</h4><ul>{% for value in item.typical_inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Output</h4><ul>{% for value in item.output %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Downstream</h4><ul>{% for value in item.downstream %}<li>{{ value }}</li>{% endfor %}</ul></div>
+        </div>
+        <p><strong>Check first:</strong> {{ item.first_checks | join: " → " }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Control layers</p><h2>Do not mix business demand with execution strategy.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.control_layers %}<article><span>{{ forloop.index }}</span><strong>{{ item.layer }}</strong><small>{{ item.examples | join: ", " }}</small><p>{{ item.question }}</p></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>One control value can move the whole warehouse path.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.impact_traces %}<article><span>TRACE</span><strong>{{ item.title }}</strong><small>{{ item.path }}</small><p>{{ item.lesson }}</p></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Anti-patterns</p><h2>Fast fixes that make the next incident harder.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.lead_anti_patterns %}<article><span>!</span><strong>{{ item }}</strong></article>{% endfor %}
+    </div>
+  </section>
+</div>

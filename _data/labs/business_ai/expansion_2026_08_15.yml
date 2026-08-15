@@ -1,0 +1,435 @@
+patterns:
+  - id: "guided-sales-recommendation"
+    title: "Guided sales recommendations"
+    business_job: "Help a seller choose the next relevant product or action using customer, outlet, product, and market context."
+    good_fit_when:
+      - "The business has enough transaction history to learn useful buying patterns."
+      - "Recommendations can be measured against sales depth, conversion, margin, or repeat purchase."
+    bad_fit_when:
+      - "The model optimizes only click-through while the business cares about margin, availability, or long-term customer value."
+      - "Recommendations ignore stock, channel rules, customer eligibility, or product constraints."
+    architecture_shape:
+      - "customer and transaction data"
+      - "feature or semantic layer"
+      - "ranking or recommendation model"
+      - "seller workflow"
+      - "feedback loop"
+    evaluation:
+      - "conversion or sales depth"
+      - "margin impact"
+      - "recommendation acceptance"
+      - "repeat purchase"
+      - "inventory feasibility"
+    automation_level: "recommend"
+
+  - id: "cross-system-process-copilot"
+    title: "Cross-system process copilot"
+    business_job: "Answer a process question by collecting the right business context across ERP screens and systems instead of making the user navigate them manually."
+    good_fit_when:
+      - "The business question requires several related objects such as customer PO, sales order, purchase order, allocation, or supply status."
+      - "The assistant can read authoritative systems with role-based access and explain where the answer came from."
+    bad_fit_when:
+      - "The assistant has only generic documentation and no current transaction state."
+      - "Natural language is used to hide unclear ownership or broken process integration."
+    architecture_shape:
+      - "user intent"
+      - "role and authorization context"
+      - "business-system reads"
+      - "cross-object orchestration"
+      - "grounded explanation"
+      - "optional approval workflow"
+    evaluation:
+      - "time to answer"
+      - "answer correctness"
+      - "manual navigation steps"
+      - "error rate"
+      - "escalation rate"
+    automation_level: "assist_or_prepare"
+
+  - id: "quote-to-order-intelligence"
+    title: "Quote-to-order intelligence"
+    business_job: "Turn complex customer input into a structured quote or sales order while keeping commercial and technical rules deterministic."
+    good_fit_when:
+      - "Customer input is rich but semi-structured, such as drawings, specifications, text, or configuration requests."
+      - "The resulting materials, quantities, prices, and rules can be validated before order creation."
+    bad_fit_when:
+      - "The generated quote can bypass pricing, availability, product configuration, or approval controls."
+      - "The source material is too ambiguous to produce a safe structured proposal."
+    architecture_shape:
+      - "customer input"
+      - "document or multimodal interpretation"
+      - "structured requirement model"
+      - "commercial and technical rules"
+      - "quote or order draft"
+      - "validation and approval"
+    evaluation:
+      - "quote cycle time"
+      - "order-entry cost"
+      - "quote accuracy"
+      - "manual correction rate"
+      - "conversion rate"
+    automation_level: "prepare_or_execute_with_validation"
+
+  - id: "manufacturing-quality-prediction"
+    title: "Manufacturing quality and predictive maintenance"
+    business_job: "Detect defects or equipment risk early enough to change a production or maintenance decision."
+    good_fit_when:
+      - "Sensor, image, inspection, or machine data can be linked to confirmed quality or maintenance outcomes."
+      - "The process has a clear action after a risk or defect signal."
+    bad_fit_when:
+      - "A model score is produced but no production, quality, or maintenance workflow consumes it."
+      - "False acceptance and false rejection costs are not measured."
+    architecture_shape:
+      - "machine or inspection data"
+      - "quality or failure labels"
+      - "prediction or anomaly model"
+      - "operator context"
+      - "inspection or maintenance action"
+      - "outcome feedback"
+    evaluation:
+      - "defect detection"
+      - "false acceptance"
+      - "false rejection"
+      - "scrap and rework"
+      - "machine utilization"
+      - "unplanned downtime"
+    automation_level: "recommend_or_execute"
+
+  - id: "trusted-master-data-foundation"
+    title: "Trusted master data foundation for AI"
+    business_job: "Give AI and automation stable business identities, attributes, ownership, and duplicate controls before they act on enterprise processes."
+    good_fit_when:
+      - "The same customer, supplier, product, or asset exists across several systems."
+      - "AI results depend on matching business objects correctly across process boundaries."
+    bad_fit_when:
+      - "AI is expected to compensate for uncontrolled duplicates, missing ownership, and conflicting identifiers."
+      - "The organization treats master-data quality as a one-time migration cleanup."
+    architecture_shape:
+      - "source-system master data"
+      - "matching and duplicate detection"
+      - "standardization and enrichment"
+      - "governance workflow"
+      - "golden record and key mapping"
+      - "controlled distribution"
+    evaluation:
+      - "duplicate rate"
+      - "data-quality rule pass rate"
+      - "creation cycle time"
+      - "manual service tickets"
+      - "downstream correction rate"
+    automation_level: "foundation"
+
+cases:
+  - id: "wipro-guided-selling"
+    case_kind: "ai_implementation"
+    title: "Wipro data-driven guided selling"
+    company: "Wipro Enterprises"
+    industry: "Consumer products"
+    process: "Sales execution / product recommendation"
+    pattern: "guided-sales-recommendation"
+    problem: "Sales representatives relied heavily on personal memory to choose products for a very large network of small retail outlets."
+    implementation: "A recommendation engine on Vertex AI analyzes historical sales, local buying patterns, and outlet purchasing power to create a dynamic must-stock list for sales representatives. BigQuery provides the shared data foundation and a sales control tower."
+    technology:
+      vendors: ["Google Cloud", "Accenture", "Ganit"]
+      products: ["Vertex AI", "BigQuery", "Google Maps Platform", "Compute Engine"]
+      models: ["Recommendation models; detailed model family not disclosed"]
+      integration_notes: "The platform consolidates data from distribution systems and ERP. Recommendations are consumed by the sales organization and monitored through a BigQuery-based control tower."
+    reported_results:
+      - metric: "Product lines per retail outlet"
+        value: "15% to 20% increase"
+        claim_type: "customer/provider case study"
+      - metric: "New outlets identified and recruited in one state"
+        value: "15,000"
+        claim_type: "customer/provider case study"
+      - metric: "Repeat purchase rate from newly acquired outlets"
+        value: "30% to 40%"
+        claim_type: "customer/provider case study"
+    evidence_grade: "B"
+    limits:
+      - "The public case does not provide a controlled experiment design or separate the effect of the recommendation model from the wider sales-transformation program."
+    consultant_note: "This is a useful Sales AI pattern because the KPI is not model accuracy. The model changes seller behavior, and the business measures sales depth and repeat purchase."
+    source_ids: ["src-wipro-google"]
+
+  - id: "amd-sales-order-troubleshooter"
+    case_kind: "ai_implementation"
+    title: "AMD GenAI supply-chain troubleshooter"
+    company: "AMD"
+    industry: "Semiconductors"
+    process: "Sales order commitment / supply-chain exception analysis"
+    pattern: "cross-system-process-copilot"
+    problem: "When a customer-facing ship date changed, specialists could perform up to 14 manual checks to understand confirmations, allocations, shortages, dates, and quantities."
+    implementation: "A generative AI troubleshooting application on SAP BTP is integrated with SAP S/4HANA to analyze sales-order commitments and explain likely blockers through a conversational interface."
+    technology:
+      vendors: ["SAP", "Deloitte", "AMD"]
+      products: ["SAP Business Technology Platform", "SAP S/4HANA"]
+      models: ["Generative AI model not disclosed in the public case"]
+      integration_notes: "The SAP AppHaus description states that the solution is integrated with SAP S/4HANA and focuses on sales-order confirmation and supply-shortage analysis."
+    reported_results:
+      - metric: "Root-cause analysis time and cost"
+        value: "90% reduction projected"
+        claim_type: "projected business case"
+      - metric: "Orders expected to be analyzed each year"
+        value: "10,400"
+        claim_type: "projected business case"
+      - metric: "Annual productivity"
+        value: "3,120 hours projected"
+        claim_type: "projected business case"
+    evidence_grade: "C"
+    limits:
+      - "The published quantitative benefits are projections, not reported realized production results."
+      - "The public material does not disclose evaluation accuracy for the generated root-cause explanation."
+    consultant_note: "Strong assessment material for O2C integration: the AI layer does not own ATP, allocation, or confirmation logic. It reads the existing process state and shortens the investigation path."
+    source_ids: ["src-amd-sap-use-case", "src-amd-apphaus"]
+
+  - id: "lc-waikiki-smartbot"
+    case_kind: "ai_implementation"
+    title: "LC Waikiki cross-system procurement SmartBot"
+    company: "LC Waikiki"
+    industry: "Retail / fashion"
+    process: "Procurement and sales-to-procurement traceability"
+    pattern: "cross-system-process-copilot"
+    problem: "A simple procurement question required users to navigate separate sales and procurement screens and manually connect customer POs, sales orders, and purchase orders."
+    implementation: "SAP Joule agents and a SmartBot built with NTT DATA Business Solutions interpret natural-language requests, apply role context, query business data, connect related documents, and integrate results with approval workflows."
+    technology:
+      vendors: ["SAP", "NTT DATA Business Solutions"]
+      products: ["SAP Joule", "Joule Studio", "SAP SmartBot"]
+      models: ["Model details not disclosed"]
+      integration_notes: "The solution connects procurement and sales context and uses role-based personalization. The customer story also describes Microsoft Teams integration for the HR agent."
+    reported_results:
+      - metric: "Procurement query time"
+        value: "from up to 10 minutes to about 3 seconds"
+        claim_type: "customer/vendor case study"
+      - metric: "Manual procurement errors"
+        value: "50% reduction"
+        claim_type: "customer/vendor case study"
+      - metric: "Procurement productivity"
+        value: "70% increase stated as target/impact in SAP material"
+        claim_type: "customer/vendor claim with mixed target wording"
+    evidence_grade: "B"
+    limits:
+      - "SAP pages use slightly different wording for the 70% productivity figure, including target language in the detailed customer story."
+      - "No independent measurement method is published."
+    consultant_note: "The architecture lesson is cross-document context. A useful copilot understands the business chain and authorization context; it is not a prettier search box over help documentation."
+    source_ids: ["src-lc-waikiki-sap"]
+
+  - id: "forvia-ai-demand-planning"
+    case_kind: "ai_implementation"
+    title: "FORVIA AI-driven demand planning"
+    company: "FORVIA SE"
+    industry: "Automotive"
+    process: "Demand planning / S&OP"
+    pattern: "forecast-and-replenish"
+    problem: "Forecasting was fragmented across spreadsheets and needed stronger use of external demand factors, multiple scenarios, and common planning rules."
+    implementation: "SAP IBP for demand uses AI-based outlier correction, extreme gradient boosting, best-fit model selection, and attach-rate planning for variable vehicle features."
+    technology:
+      vendors: ["SAP", "Accenture"]
+      products: ["SAP Integrated Business Planning for Supply Chain", "SAP IBP for demand"]
+      models: ["Extreme gradient boosting", "automated best-fit forecasting"]
+      integration_notes: "The solution extends an integrated planning flow from sales and operations into demand planning and standardizes planning across affiliates."
+    reported_results:
+      - metric: "Forecast accuracy"
+        value: "65% increase on average"
+        claim_type: "customer/vendor case study"
+      - metric: "AI-based outlier correction"
+        value: "reliable across more than 40 weekly forecast cycles"
+        claim_type: "customer/vendor case study"
+      - metric: "Forecast model validation"
+        value: "more than 10 monthly forecast cycles"
+        claim_type: "customer/vendor case study"
+    evidence_grade: "B"
+    limits:
+      - "The public summary does not publish the absolute forecast error before and after the 65% improvement."
+      - "Inventory and service-level impact are not disclosed in the source."
+    consultant_note: "This is stronger forecasting evidence than a generic 'AI improves planning' claim because the source names the algorithms and the number of forecast cycles. The next question is whether the accuracy gain reduced stock or improved service."
+    source_ids: ["src-forvia-sap"]
+
+  - id: "brf-daily-demand-sensing"
+    case_kind: "ai_implementation"
+    title: "BRF daily demand sensing and planning"
+    company: "BRF"
+    industry: "Food and consumer products"
+    process: "Demand planning / supply-chain planning"
+    pattern: "forecast-and-replenish"
+    problem: "A global food network with many production sites, distribution centers, customers, and planners needs demand signals and forecasts quickly enough to adjust production and inventory."
+    implementation: "SAP IBP combines demand planning and sensing, statistical models, time-series analysis, machine learning, embedded analytics, and exception management."
+    technology:
+      vendors: ["SAP"]
+      products: ["SAP Integrated Business Planning for Supply Chain", "SAP S/4HANA Cloud", "SAP Ariba"]
+      models: ["Time-series forecasting", "regression", "predictive modeling", "machine learning"]
+      integration_notes: "The planning platform supports more than 400 planners and a network described by SAP as 44 production units, 103 distribution centers, and more than 500,000 deliveries per month."
+    reported_results:
+      - metric: "Accessing and analyzing demand and forecast data"
+        value: "33% faster"
+        claim_type: "customer/vendor case study"
+      - metric: "Planning adoption scale"
+        value: "more than 400 planners"
+        claim_type: "customer/vendor case study"
+    evidence_grade: "B"
+    limits:
+      - "SAP states that forecast accuracy and inventory improved but the public article does not publish those absolute KPI values."
+      - "The 33% metric measures planning information access and analysis, not total end-to-end planning cycle time."
+    consultant_note: "Useful because it shows AI inside a real planning operating model: daily sensing, statistical forecasting, exceptions, and hundreds of planners. Keep the difference between model accuracy and planner productivity visible."
+    source_ids: ["src-brf-sap-news"]
+
+  - id: "rolls-royce-quality-prediction"
+    case_kind: "ai_implementation"
+    title: "Rolls-Royce AI-assisted turbine inspection and engine health"
+    company: "Rolls-Royce"
+    industry: "Aerospace manufacturing"
+    process: "Manufacturing quality and predictive maintenance"
+    pattern: "manufacturing-quality-prediction"
+    problem: "Manual turbine-blade inspection was a production bottleneck, while unplanned engine maintenance creates high repair cost and customer disruption."
+    implementation: "AI and machine learning support turbine-blade defect prediction and focus inspectors on risky areas. Cloud analytics also monitor engine health using more than 10,000 engine parameters."
+    technology:
+      vendors: ["Microsoft", "Rolls-Royce", "Siemens"]
+      products: ["Microsoft Cloud for Manufacturing", "Azure Databricks", "Signature Analyzer"]
+      models: ["Machine-learning and generative-AI components; detailed models not disclosed"]
+      integration_notes: "The customer story describes a central data foundation spanning design, manufacturing, and engine operations, with AI used inside quality and maintenance workflows."
+    reported_results:
+      - metric: "Machine utilization"
+        value: "30% increase"
+        claim_type: "customer/provider case study"
+      - metric: "Fault resolution"
+        value: "from days to near real time"
+        claim_type: "customer/provider case study"
+      - metric: "Unplanned maintenance events detected and prevented"
+        value: "around 400 per year"
+        claim_type: "customer/provider case study"
+      - metric: "Repair impact"
+        value: "millions in cost avoidance"
+        claim_type: "customer/provider case study"
+    evidence_grade: "B"
+    limits:
+      - "The public story combines several digital and AI initiatives, so not every reported business result can be attributed to one model."
+      - "Detailed defect-classification accuracy and false-rejection rates are not published."
+    consultant_note: "A good manufacturing case keeps the model connected to the physical decision: inspect, scrap, rework, or maintain. Model accuracy alone is not the plant KPI."
+    source_ids: ["src-rolls-royce-microsoft"]
+
+  - id: "adani-master-data-foundation"
+    case_kind: "ai_foundation"
+    title: "Adani centralized master-data foundation"
+    company: "Adani Group"
+    industry: "Conglomerate / infrastructure"
+    process: "Master data governance"
+    pattern: "trusted-master-data-foundation"
+    problem: "Nine ERP environments created inconsistent enterprise master data and made common governance difficult across business units."
+    implementation: "A hub-and-spoke SAP Master Data Governance landscape connects nine ERP instances, with SAP Data Services and SAP Information Steward used for validation, enrichment, and data-quality work across financial, vendor, service, customer, and material objects."
+    technology:
+      vendors: ["SAP", "IBM"]
+      products: ["SAP Master Data Governance on SAP S/4HANA", "SAP Data Services", "SAP Information Steward"]
+      models: ["Not an AI implementation; included as an AI and automation foundation case"]
+      integration_notes: "Master data is governed centrally and distributed to downstream ERP environments with defined ownership and workflow-based approvals."
+    reported_results:
+      - metric: "Records cleaned and enriched"
+        value: "1.6 million"
+        claim_type: "customer/vendor case study"
+      - metric: "Annual master-data service tickets handled by one central team"
+        value: "180,000"
+        claim_type: "customer/vendor case study"
+      - metric: "Central master-data team productivity"
+        value: "15% to 20% improvement"
+        claim_type: "customer/vendor case study"
+    evidence_grade: "B"
+    limits:
+      - "This is intentionally not presented as an AI case. It is included because enterprise AI becomes unreliable when business identities and key mappings are unreliable."
+      - "The public story does not separate productivity gains by individual master-data domain."
+    consultant_note: "For SAP architecture interviews this is an important boundary: do not solve a duplicate Business Partner or material-governance problem with an LLM. Fix identity, quality, ownership, and distribution first; then add AI where uncertainty remains."
+    source_ids: ["src-adani-sap"]
+
+  - id: "dataxstream-quote-order-ai"
+    case_kind: "solution_evidence"
+    title: "DataXstream AI-assisted quote and order creation"
+    company: "DataXstream"
+    industry: "SAP software / order management"
+    process: "Quotation and sales-order creation"
+    pattern: "quote-to-order-intelligence"
+    problem: "Complex order entry and blueprint-based quoting can require significant manual interpretation before materials and quantities are structured for a commercial document."
+    implementation: "The SAP-certified OMS+IA solution uses SAP Business AI on SAP BTP. One published example reads a building blueprint, builds a mathematical representation, applies construction rules, and prepares material requirements for a quote."
+    technology:
+      vendors: ["DataXstream", "SAP"]
+      products: ["OMS+IA", "SAP Business Technology Platform", "SAP Business AI"]
+      models: ["AI model details not disclosed"]
+      integration_notes: "The solution is positioned as an SAP-integrated order-management and point-of-sale application. Public material does not disclose the exact sales-document APIs used."
+    reported_results:
+      - metric: "Order-creation cost"
+        value: "25% to 70% reduction in customer ROI calculations"
+        claim_type: "solution-provider calculation"
+      - metric: "Sales-order creation process"
+        value: "100% digitalized"
+        claim_type: "solution-provider case study"
+      - metric: "Blueprint-to-quote time"
+        value: "under 5 minutes, down from days or weeks"
+        claim_type: "solution-provider case example"
+    evidence_grade: "C"
+    limits:
+      - "The public SAP story is about the solution provider and aggregates ROI calculations across customers rather than naming the end customers behind each metric."
+      - "The source does not publish quote-error or manual-correction rates."
+    consultant_note: "Architecturally interesting for Sales: AI interprets difficult input, but pricing, material validity, configuration, ATP, credit, and approval controls should remain explicit business services."
+    source_ids: ["src-dataxstream-sap"]
+
+source_registry:
+  - id: "src-wipro-google"
+    title: "Wipro Enterprises replaces guesswork with data-driven insights to accelerate growth"
+    publisher: "Google Cloud"
+    source_type: "technology-provider customer case"
+    url: "https://cloud.google.com/customers/wipro-da"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-amd-sap-use-case"
+    title: "Enhance customer support and decision-making using the power of generative AI"
+    publisher: "SAP"
+    source_type: "SAP BTP use case with AMD business case"
+    url: "https://www.sap.com/mena/products/technology-platform/use-cases/generative-ai-operations.html"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-amd-apphaus"
+    title: "Solving Supply Chain Hurdles with Generative AI on SAP BTP"
+    publisher: "SAP AppHaus"
+    source_type: "customer project description"
+    url: "https://apphaus.sap.com/project/solving-supply-chain-hurdles-with-generative-ai-on-sap-btp"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-lc-waikiki-sap"
+    title: "LC Waikiki Manufacturing Companies: Reimagining Enterprise Workflows with Intelligent SAP Joule Agents"
+    publisher: "SAP"
+    source_type: "vendor customer case"
+    url: "https://www.sap.com/canada/about/customer-stories/lc-waikiki.html"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-forvia-sap"
+    title: "FORVIA: Realizing AI-driven demand planning with SAP Integrated Business Planning for demand"
+    publisher: "SAP"
+    source_type: "vendor customer case"
+    url: "https://www.sap.com/documents/2025/11/9ed21497-2c7f-0010-bca6-c68f7e60039b.html"
+    published_at: "2025-11"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-brf-sap-news"
+    title: "Using AI for Transformative Supply Chain Planning from Farm to Table"
+    publisher: "SAP News Center"
+    source_type: "vendor customer feature"
+    url: "https://news.sap.com/2025/08/brf-ai-transformative-supply-chain-planning-farm-to-table/"
+    published_at: "2025-08-18"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-rolls-royce-microsoft"
+    title: "Rolls-Royce saves millions in cost avoidance with Microsoft Cloud for Manufacturing"
+    publisher: "Microsoft"
+    source_type: "technology-provider customer case"
+    url: "https://www.microsoft.com/en/customers/story/23201-rolls-royce-azure-databricks"
+    published_at: "2025-04-01"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-adani-sap"
+    title: "Adani: Increasing productivity and visibility with centralised master data management"
+    publisher: "SAP"
+    source_type: "vendor customer case"
+    url: "https://www.sap.com/india/about/customer-stories/adani.html"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-dataxstream-sap"
+    title: "DataXstream: Accelerating the speed of business by pushing the limits of new technology"
+    publisher: "SAP"
+    source_type: "vendor partner solution case"
+    url: "https://www.sap.com/uk/asset/dynamic/2025/08/7e1e0a07-197f-0010-bca6-c68f7e60039b.html"
+    reviewed_at: "2026-08-15"

@@ -1,0 +1,83 @@
+---
+layout: default
+title: "SAP EWM — Domain & Capability Map"
+description: "A Lead-level map of EWM subdomains, capabilities, objects, controls, integrations and failure signals."
+permalink: /labs/enterprise-context/ewm/domains/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+tags: [sap, ewm, warehousing, capabilities, architecture]
+---
+
+{% assign model = site.data.labs.enterprise_context.ewm.domains %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/ewm/">EWM</a></li><li aria-current="page">Domains</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">EWM / Responsibility map</p>
+      <h1>{{ model.title }}</h1>
+      <p>{{ model.summary }}</p>
+      <a class="research-canvas__button" href="#areas">Explore the areas <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Coverage">
+      <p>Coverage</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ model.subdomains | size }}</strong><small>Subdomains</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ model.cross_domain_patterns | size }}</strong><small>Cross-domain paths</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ model.assessment_lenses | size }}</strong><small>Lead checks</small></div>
+      <em>Checked {{ model.verified_at }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">category</span>
+    <p><strong>Working rule:</strong> {{ model.working_rule }}</p>
+    <p><a href="/labs/enterprise-context/ewm/objects/">Object catalog</a> · <a href="/labs/enterprise-context/ewm/integrations/">Integration map</a> · <a href="/labs/enterprise-context/data/ewm-domains.json">JSON</a></p>
+  </section>
+
+  <section class="research-canvas__inventory" id="areas" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Subdomains</p>
+      <h2>One EWM product, several different responsibilities.</h2>
+      <p>Each area has its own objects and control points. The same warehouse can use all of them, but they should not be diagnosed as one process.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for area in model.subdomains %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{{ forloop.index }}</span><small>EWM area</small></div><h3>{{ area.title }}</h3><p class="ecg-question">{{ area.purpose }}</p></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Capabilities</h4><ul>{% for item in area.capabilities %}<li>{{ item }}</li>{% endfor %}</ul></div>
+          <div><h4>Core objects</h4><ul>{% for item in area.core_objects %}<li>{{ item }}</li>{% endfor %}</ul></div>
+          <div><h4>Controls</h4><ul>{% for item in area.key_controls %}<li>{{ item }}</li>{% endfor %}</ul></div>
+        </div>
+        <div class="ecg-decision-columns">
+          <div><h4>Integrations</h4><ul>{% for item in area.integrations %}<li>{{ item }}</li>{% endfor %}</ul></div>
+          <div><h4>Failure signal</h4><p>{{ area.failure_signal }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Cross-domain paths</p><h2>Real warehouse flows cross several EWM areas.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.cross_domain_patterns %}
+      <article><span>PATH</span><strong>{{ item.title }}</strong><small>{{ item.path }}</small><p>{{ item.lesson }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead lens</p><h2>Five checks before configuration.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.assessment_lenses %}<article><span>{{ forloop.index }}</span><strong>{{ item }}</strong></article>{% endfor %}
+    </div>
+  </section>
+</div>

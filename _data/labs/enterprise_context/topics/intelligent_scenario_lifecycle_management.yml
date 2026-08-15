@@ -1,0 +1,407 @@
+id: TOPIC-SAP-ISLM-AI-LIFECYCLE
+
+type: research_topic
+title: "ISLM — Intelligent Scenario Lifecycle Management"
+summary: >-
+  A practical map of SAP Intelligent Scenario Lifecycle Management (ISLM): how SAP S/4HANA
+  represents AI use cases as intelligent scenarios, how embedded and side-by-side runtimes differ,
+  and how training, deployment, activation, inference, monitoring, and business consumption fit together.
+domain: "AI and Cross-Application Architecture"
+process_family: "AI Scenario Lifecycle and Business Consumption"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+human_view: "/labs/enterprise-context/frameworks/#islm"
+source_reviewed_at: "2026-08-15"
+
+business_question: >-
+  When should an SAP solution use ISLM, which AI runtime should sit behind the intelligent scenario,
+  and how do we separate business use-case ownership from model lifecycle, connectivity, inference,
+  and the application action that follows the prediction or generated result?
+
+maturity:
+  gates_complete: 7
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: done
+
+memory_model:
+  phrase: "Use case → Scenario → Provider → Deploy → Activate → Infer → Consume"
+  short_definition: >-
+    ISLM is the S/4HANA framework that represents a business-specific AI use case as an intelligent scenario
+    and manages lifecycle operations around the connected machine-learning or generative-AI provider.
+  lead_line: >-
+    Treat ISLM as the lifecycle and consumption bridge. The AI runtime builds or serves the model;
+    the business application still owns the decision about what to do with the result.
+
+core_entities:
+  - id: PLT-SAP-ISLM
+    type: platform_component
+    title: "Intelligent Scenario Lifecycle Management"
+    summary: "S/4HANA framework for defining, operating, and consuming embedded and side-by-side AI scenarios."
+    source_refs: [SRC-SAP-ISLM-OVERVIEW]
+
+  - id: OBJ-SAP-INTELLIGENT-SCENARIO
+    type: lifecycle_object
+    title: "Intelligent Scenario"
+    summary: "ABAP representation of a business-specific AI or machine-learning use case."
+    source_refs: [SRC-SAP-ISLM-OVERVIEW]
+
+  - id: RT-SAP-HANA-ML
+    type: runtime
+    title: "SAP HANA Machine Learning"
+    summary: "Embedded runtime using HANA analytics libraries such as PAL or APL."
+    source_refs: [SRC-SAP-ISLM-SCENARIO-TYPES, SRC-SAP-ISLM-EMBEDDED]
+
+  - id: RT-SAP-AI-CORE
+    type: runtime
+    title: "SAP AI Core"
+    summary: "Side-by-side AI runtime on SAP BTP used by ISLM for custom AI and generative-AI scenarios."
+    source_refs: [SRC-SAP-ISLM-AI-CORE]
+
+  - id: SDK-ABAP-AI
+    type: development_tool
+    title: "ABAP AI SDK"
+    summary: "ABAP reuse library that can access generative AI through ISLM-managed connectivity."
+    source_refs: [SRC-SAP-ISLM-GENAI]
+
+  - id: APP-ISLM-INTELLIGENT-SCENARIOS
+    type: application_component
+    title: "Intelligent Scenarios App"
+    summary: "Design-time Fiori app used to create, review, configure, and publish intelligent scenarios."
+    source_refs: [SRC-SAP-ISLM-SIDE-BY-SIDE, SRC-SAP-ISLM-FIORI-APPS]
+
+  - id: APP-ISLM-SCENARIO-MANAGEMENT
+    type: application_component
+    title: "Intelligent Scenario Management App"
+    summary: "Operations app for published scenarios, including deployment, activation, training, inference, and monitoring depending on scenario type."
+    source_refs: [SRC-SAP-ISLM-SIDE-BY-SIDE, SRC-SAP-ISLM-FIORI-APPS]
+
+availability:
+  principle: >-
+    ISLM availability is not only a product-version question. The useful check is three-dimensional:
+    S/4HANA release, scenario type, and supported AI provider or service.
+  timeline:
+    - release: "SAP S/4HANA / ABAP Platform 2025 FPS01"
+      meaning: >-
+        Current documentation supports embedded scenarios with SAP HANA ML and side-by-side scenarios
+        including Generative AI, SAP AI Core, and Data Attribute Recommendation.
+      source_refs: [SRC-SAP-ISLM-OVERVIEW, SRC-SAP-ISLM-SCENARIO-TYPES]
+    - release: "SAP S/4HANA Cloud Public Edition 2608"
+      meaning: >-
+        ISLM is documented as a self-service framework for lifecycle operations such as training,
+        deployment, activation, and inference for intelligent scenarios.
+      source_refs: [SRC-SAP-ISLM-PUBLIC-CLOUD]
+  application_boundary: >-
+    A platform may support ISLM while a specific business application does not expose a ready-made intelligent scenario.
+    Check whether the use case is SAP-delivered, customer-developed, embedded, or side-by-side before designing the integration.
+
+scenario_types:
+  - id: SCN-TYPE-ISLM-EMBEDDED
+    type: scenario_type
+    title: "Embedded scenario"
+    runtime: "SAP HANA ML in the same S/4HANA stack"
+    technologies: ["PAL", "APL", "ABAP", "CDS", "AMDP for PAL custom scenarios"]
+    best_for: >-
+      Predictive use cases that benefit from in-database processing close to S/4HANA data,
+      for example regression, classification, forecasting, or trending.
+    lifecycle: "Create or review → publish → train → activate → infer → monitor"
+    source_refs: [SRC-SAP-ISLM-EMBEDDED, SRC-SAP-ISLM-PAL]
+    lead_boundary: >-
+      Keep training and apply datasets intentional. Embedded does not mean the model is automatically correct,
+      explainable, or safe for an operational decision.
+
+  - id: SCN-TYPE-ISLM-SIDE-BY-SIDE
+    type: scenario_type
+    title: "Side-by-side scenario"
+    runtime: "Remote AI or ML provider, commonly on SAP BTP"
+    technologies: ["SAP AI Core", "Generative AI", "Data Attribute Recommendation", "HTTPS/REST for supported online inference"]
+    best_for: >-
+      AI capabilities that need a separate runtime, larger or specialized models, custom pipelines,
+      document or language processing, or generative AI.
+    lifecycle: "Create → publish → connect provider → train or prepare → deploy → activate → infer → monitor"
+    source_refs: [SRC-SAP-ISLM-SIDE-BY-SIDE, SRC-SAP-ISLM-LIMITATIONS]
+    lead_boundary: >-
+      ISLM bridges S/4HANA and the provider. It does not turn S/4HANA into the remote AI runtime
+      and it does not remove provider-specific model, pipeline, security, or cost concerns.
+
+lifecycle_model:
+  - step: 1
+    title: "Define the business use case"
+    detail: >-
+      Start with the business event, expected result, user or process that consumes the result,
+      and the action that follows. Do not start by shopping for a model.
+  - step: 2
+    title: "Choose scenario type and provider"
+    detail: >-
+      Use embedded HANA ML when in-database predictive processing fits. Use side-by-side when the use case
+      requires services such as SAP AI Core, generative AI, or another supported remote provider.
+    source_refs: [SRC-SAP-ISLM-SCENARIO-TYPES]
+  - step: 3
+    title: "Create or review the intelligent scenario"
+    detail: >-
+      Use Intelligent Scenarios for design-time definition. A custom embedded PAL scenario requires a prepared and tested AMDP class.
+    source_refs: [SRC-SAP-ISLM-EMBEDDED, SRC-SAP-ISLM-PAL]
+  - step: 4
+    title: "Publish the scenario"
+    detail: >-
+      Publication completes the design definition and makes the scenario available to Intelligent Scenario Management.
+    source_refs: [SRC-SAP-ISLM-SIDE-BY-SIDE]
+  - step: 5
+    title: "Configure provider connectivity"
+    detail: >-
+      For side-by-side processing, configure the connection or usage-type connection to the remote machine-learning infrastructure.
+    source_refs: [SRC-SAP-ISLM-CONNECTIONS]
+  - step: 6
+    title: "Train, deploy, and activate"
+    detail: >-
+      The exact operations depend on the scenario. Some SAP-delivered services provide pre-trained models,
+      while custom scenarios can require training and deployment before activation.
+    source_refs: [SRC-SAP-ISLM-OVERVIEW, SRC-SAP-ISLM-DELIVERED-SCENARIOS]
+  - step: 7
+    title: "Consume inference in the application"
+    detail: >-
+      Embedded scenarios can expose generated ABAP Apply CDS views. Side-by-side scenarios call the connected provider
+      and return inference to the business application through the supported integration path.
+    source_refs: [SRC-SAP-ISLM-EMBEDDED-APPLY, SRC-SAP-ISLM-SIDE-BY-SIDE]
+  - step: 8
+    title: "Monitor outcome, model, and business value"
+    detail: >-
+      Monitor operational lifecycle and inference, but also measure whether the result improves the business process.
+      A technically active deployment is not evidence of useful prediction quality.
+
+use_cases:
+  - id: SCN-ISLM-HANA-PREDICTIVE
+    type: scenario
+    title: "Embedded predictive scoring with HANA ML"
+    problem: "A business process needs fast predictive scoring close to S/4HANA transactional data."
+    how_islm_fits: >-
+      Model the use case as an embedded intelligent scenario and use PAL or APL capabilities managed through ISLM.
+      Published embedded scenarios can expose generated Apply views for application consumption.
+    source_refs: [SRC-SAP-ISLM-EMBEDDED, SRC-SAP-ISLM-EMBEDDED-APPLY]
+    lead_boundary: "ISLM manages the scenario lifecycle; the business team still owns features, thresholds, actions, and outcome validation."
+
+  - id: SCN-ISLM-AI-CORE-CUSTOM
+    type: scenario
+    title: "Custom side-by-side model on SAP AI Core"
+    problem: "S/4HANA needs an AI model that should run outside the ABAP/HANA stack."
+    how_islm_fits: >-
+      Create a side-by-side intelligent scenario, configure the SAP AI Core connection,
+      and use ISLM to manage scenario lifecycle and consumption from S/4HANA.
+    source_refs: [SRC-SAP-ISLM-AI-CORE, SRC-SAP-ISLM-CONNECTIONS]
+    lead_boundary: "AI Core owns the remote runtime and model execution. ISLM owns the S/4HANA-side scenario contract and lifecycle integration."
+
+  - id: SCN-ISLM-GENAI-ABAP
+    type: scenario
+    title: "Generative AI in a custom ABAP application"
+    problem: "A custom S/4HANA application needs an LLM capability without hard-coding provider connectivity into business code."
+    how_islm_fits: >-
+      ABAP AI SDK powered by ISLM provides reusable access to generative AI and lets ISLM manage the required connectivity.
+    source_refs: [SRC-SAP-ISLM-GENAI]
+    lead_boundary: >-
+      Keep prompt design, grounding, authorization, output validation, and business action explicit.
+      A lifecycle framework is not a substitute for GenAI risk controls.
+
+  - id: SCN-ISLM-SAP-DELIVERED
+    type: scenario
+    title: "SAP-delivered intelligent scenario"
+    problem: "A business application already provides an SAP-delivered AI use case and needs controlled activation and operation."
+    how_islm_fits: >-
+      Manage the delivered intelligent scenario through the supported ISLM lifecycle instead of rebuilding the AI integration.
+      Current documentation lists delivered GenAI, Data Attribute Recommendation, Document Information Extraction,
+      Personalized Recommendation, and HANA ML scenario families.
+    source_refs: [SRC-SAP-ISLM-DELIVERED-SCENARIOS]
+    lead_boundary: "Check the exact application and release scope. A delivered scenario family does not mean every S/4HANA process uses it."
+
+  - id: SCN-ISLM-LOGISTICS-SYNTHETIC
+    type: scenario
+    title: "Synthetic logistics risk assistant"
+    problem: "A sales or procurement cockpit should highlight orders with a high risk of delay and explain the main drivers."
+    how_islm_fits: >-
+      Use an embedded predictive scenario when the model fits HANA ML and transactional features are sufficient,
+      or a side-by-side scenario when a custom remote model is required. The application consumes the score and explanation.
+    synthetic: true
+    lead_boundary: >-
+      ISLM does not decide whether to block delivery, expedite purchasing, or contact the customer.
+      Those actions belong to business rules, workflow, or user judgment.
+
+design_rules:
+  - id: HEUR-ISLM-BUSINESS-OUTCOME-FIRST
+    type: expert_heuristic
+    context: "AI use-case design"
+    statement: "Define the business decision and measurable outcome before selecting the AI runtime."
+    confidence: high
+    questions:
+      - "Who consumes the result?"
+      - "What action follows a high or low score?"
+      - "What KPI proves that the scenario helps?"
+    anti_patterns:
+      - "Create an AI scenario because a model is available."
+
+  - id: HEUR-ISLM-RUNTIME-BOUNDARY
+    type: expert_heuristic
+    context: "Embedded versus side-by-side"
+    statement: "Choose the runtime from data gravity, model needs, latency, lifecycle, and governance, not from fashion."
+    confidence: high
+    questions:
+      - "Can HANA ML solve the predictive problem close to the data?"
+      - "Does the use case require a remote model or LLM?"
+      - "Where are model operations and costs owned?"
+    anti_patterns:
+      - "Send operational data to a remote model without a clear reason."
+
+  - id: HEUR-ISLM-SCENARIO-CONTRACT
+    type: expert_heuristic
+    context: "Application integration"
+    statement: "Treat the intelligent scenario as a stable business-facing AI contract, not as a direct dependency on one model implementation."
+    confidence: high
+    questions:
+      - "What inputs and outputs does the application really need?"
+      - "Can the provider or model version change without rewriting the business process?"
+      - "How are inference failures handled?"
+    anti_patterns:
+      - "Expose provider-specific implementation details throughout application code."
+
+  - id: HEUR-ISLM-OPERATIONS-ARE-NOT-VALUE
+    type: expert_heuristic
+    context: "AI operations"
+    statement: "Separate model lifecycle health from business outcome quality."
+    confidence: high
+    questions:
+      - "Is the model active but drifting?"
+      - "Are users acting on the result?"
+      - "Does the prediction improve the process KPI?"
+    anti_patterns:
+      - "Report deployment status as business success."
+
+limitations:
+  - "ISLM manages the lifecycle and S/4HANA integration of supported intelligent scenarios; it is not a universal MLOps platform for every enterprise model."
+  - "Supported operations differ by scenario type and provider. Some delivered services use pre-trained models and expose only part of the train/deploy lifecycle."
+  - "For side-by-side scenarios, provider objects created through ISLM should be operated through ISLM rather than changed independently in the remote provider."
+  - "Current side-by-side online inference has protocol and pipeline constraints documented by SAP; do not assume any arbitrary remote endpoint is supported."
+  - "ISLM does not control the dataset used in training and inference calls. Data security and data handling remain responsibilities of application and data-science design."
+  - "Connection changes can invalidate architectural assumptions even when old operational entries remain visible; connectivity must be governed as part of the scenario lifecycle."
+
+synthetic_examples:
+  - id: SCN-ISLM-SYNTHETIC-SALES-DELAY
+    title: "Synthetic sales-order delay risk"
+    synthetic: true
+    business_event: "Sales order enters fulfillment monitoring"
+    inputs: ["Requested date", "confirmed quantity", "plant", "route", "historical delay signals"]
+    scenario_choice: "Embedded HANA ML if the predictive model and data fit PAL/APL"
+    inference: "Delay risk = 0.78"
+    consumer_action: "Fulfillment cockpit highlights the order; a user or separate rule decides the follow-up."
+    lesson: "Prediction is an input to the process, not the process itself."
+
+  - id: SCN-ISLM-SYNTHETIC-SUPPLIER-COPILOT
+    title: "Synthetic supplier exception explanation"
+    synthetic: true
+    business_event: "Buyer reviews a blocked or delayed procurement item"
+    scenario_choice: "Side-by-side GenAI scenario accessed from custom ABAP through ABAP AI SDK and ISLM"
+    inference: "Generate a grounded summary from approved business context"
+    consumer_action: "Buyer reads the explanation and chooses the procurement action."
+    lesson: "Use ISLM for lifecycle/connectivity; keep grounding, authorization, and action control in the application design."
+
+assessment_cards:
+  - question: "What problem does ISLM solve?"
+    answer: >-
+      It gives S/4HANA a standard way to represent and operate business-specific AI use cases as intelligent scenarios.
+      It connects the application to embedded HANA ML or supported side-by-side AI services and manages lifecycle operations around that scenario.
+
+  - question: "What is the difference between embedded and side-by-side ISLM scenarios?"
+    answer: >-
+      Embedded scenarios run with SAP HANA ML in the S/4HANA stack, typically using PAL or APL.
+      Side-by-side scenarios use a separate AI runtime such as SAP AI Core on BTP or supported generative-AI services.
+
+  - question: "What do the two main ISLM apps do?"
+    answer: >-
+      Intelligent Scenarios is the design-time app for creating, reviewing, configuring, and publishing scenarios.
+      Intelligent Scenario Management operates published scenarios, including deployment, activation, training, inference, and monitoring where supported.
+
+  - question: "How does ISLM relate to SAP AI Core?"
+    answer: >-
+      SAP AI Core is the remote AI runtime. ISLM is the S/4HANA-side lifecycle and consumption framework that connects a business scenario to that runtime.
+
+  - question: "How does ISLM relate to GenAI in ABAP?"
+    answer: >-
+      ABAP AI SDK can use ISLM to access generative AI from custom ABAP applications while ISLM manages the required connectivity and scenario lifecycle.
+      The application must still govern grounding, permissions, validation, and the business action.
+
+  - question: "When would you not use ISLM?"
+    answer: >-
+      I would not force it into a use case that has no supported S/4HANA intelligent-scenario integration or where the AI capability belongs entirely outside S/4HANA.
+      ISLM is valuable when S/4HANA is the business consumer and needs a governed scenario lifecycle.
+
+ai_evaluation:
+  grounded_questions:
+    - "A predictive model can run in HANA PAL with all features already in S/4HANA. Why might embedded ISLM be preferable to a remote model?"
+    - "A custom ABAP application needs an LLM. Which parts belong to ISLM, ABAP AI SDK, AI Core, and the business application?"
+    - "An SAP-delivered AI scenario is active, but users ignore its recommendations. Is the ISLM implementation successful?"
+    - "A team wants to change AI Core pipeline objects directly after ISLM created them. What lifecycle risk appears?"
+    - "A logistics team wants the prediction itself to block deliveries automatically. What additional design layer is missing?"
+  expected_reasoning:
+    - "Separate business use case, scenario lifecycle, AI runtime, and business action."
+    - "Prefer embedded processing when model capability and data gravity make it simpler."
+    - "Use side-by-side for remote or specialized AI, but keep provider and security boundaries explicit."
+    - "Measure business adoption and outcome, not only deployment status."
+    - "Use rules, workflow, or application logic for the action that follows inference."
+
+relations:
+  - subject: PLT-SAP-ISLM
+    predicate: manages
+    object: OBJ-SAP-INTELLIGENT-SCENARIO
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-ISLM-OVERVIEW]
+  - subject: OBJ-SAP-INTELLIGENT-SCENARIO
+    predicate: can_use_runtime
+    object: RT-SAP-HANA-ML
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-ISLM-SCENARIO-TYPES]
+  - subject: OBJ-SAP-INTELLIGENT-SCENARIO
+    predicate: can_use_runtime
+    object: RT-SAP-AI-CORE
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-ISLM-AI-CORE]
+  - subject: SDK-ABAP-AI
+    predicate: uses_framework
+    object: PLT-SAP-ISLM
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-ISLM-GENAI]
+  - subject: APP-ISLM-INTELLIGENT-SCENARIOS
+    predicate: defines
+    object: OBJ-SAP-INTELLIGENT-SCENARIO
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-ISLM-SIDE-BY-SIDE]
+  - subject: APP-ISLM-SCENARIO-MANAGEMENT
+    predicate: operates
+    object: OBJ-SAP-INTELLIGENT-SCENARIO
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-ISLM-SIDE-BY-SIDE]
+
+source_refs:
+  - SRC-SAP-ISLM-OVERVIEW
+  - SRC-SAP-ISLM-SCENARIO-TYPES
+  - SRC-SAP-ISLM-EMBEDDED
+  - SRC-SAP-ISLM-EMBEDDED-APPLY
+  - SRC-SAP-ISLM-SIDE-BY-SIDE
+  - SRC-SAP-ISLM-AI-CORE
+  - SRC-SAP-ISLM-GENAI
+  - SRC-SAP-ISLM-CONNECTIONS
+  - SRC-SAP-ISLM-FIORI-APPS
+  - SRC-SAP-ISLM-PAL
+  - SRC-SAP-ISLM-DELIVERED-SCENARIOS
+  - SRC-SAP-ISLM-PUBLIC-CLOUD
+  - SRC-SAP-ISLM-LIMITATIONS

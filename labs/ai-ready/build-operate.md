@@ -20,6 +20,10 @@ tags: [ai, deployment, operations, observability, cicd, reliability]
 
 A local AI demo proves that one path worked once. Production needs repeatable builds, controlled configuration, traces, limits, failure handling, and rollback. AI adds more moving versions, but the basic engineering discipline is pleasantly boring.
 
+## Problem
+
+A demo can appear useful while lacking versioning, observability, budgets, rollback, and operational ownership.
+
 ## Version the whole behavior
 
 The application version is not enough. A result may change because of:

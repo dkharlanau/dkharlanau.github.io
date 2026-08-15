@@ -1,0 +1,295 @@
+id: TOPIC-MDG-ASSESSMENT-REASONING
+type: research_topic
+title: "SAP MDG Assessment Reasoning"
+summary: "Grounded Explain, Compare, Design, and Diagnose cases that test whether MDG concepts can be applied to architecture and logistics problems instead of repeated as product definitions."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/reasoning/"
+source_reviewed_at: "2026-08-15"
+
+business_question: "Can the learner move from facts to a defensible Lead-level decision, trade-off, or diagnostic path?"
+
+maturity:
+  gates_complete: 6
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: in_progress
+
+memory_model:
+  phrase: "Fact → Boundary → Evidence → Decision → Trade-off → Proof"
+  evaluation_rule: "A strong answer names the boundary, explains the causal path, checks evidence, and proves the result in a consuming process."
+
+question_types:
+  - id: TERM-MDG-Q-EXPLAIN
+    type: term
+    title: "Explain"
+    purpose: "Show the mechanism and why it matters."
+    scoring_focus: ["correct concept", "boundary", "causal connection", "business relevance"]
+  - id: TERM-MDG-Q-COMPARE
+    type: term
+    title: "Compare"
+    purpose: "Choose between two patterns using explicit decision criteria."
+    scoring_focus: ["common goal", "different ownership / lifecycle", "trade-offs", "selection rule"]
+  - id: TERM-MDG-Q-DESIGN
+    type: term
+    title: "Design"
+    purpose: "Build a coherent solution from ownership through operations."
+    scoring_focus: ["requirements", "data model", "ownership", "governance", "integration", "operations", "proof"]
+  - id: TERM-MDG-Q-DIAGNOSE
+    type: term
+    title: "Diagnose"
+    purpose: "Trace a symptom back through object state, application extension, integration, and consumer processing."
+    scoring_focus: ["evidence order", "hypothesis control", "cross-layer tracing", "business confirmation"]
+
+answer_contract:
+  strong_answer_sequence:
+    - "State the business problem and object boundary."
+    - "Name the authoritative owner and organizational level."
+    - "Explain the SAP mechanism that matters."
+    - "Separate product fact from architecture choice."
+    - "Describe failure modes or trade-offs."
+    - "Define a business proof, not only a technical success status."
+  weak_patterns:
+    - "Starts with a transaction code or screen."
+    - "Lists features without making a decision."
+    - "Treats Business Partner, Customer, and Supplier as the same ownership scope."
+    - "Treats an active MDG object as proof that every consumer is ready."
+    - "Calls every missing downstream extension an integration problem."
+    - "Uses 'central governance' as a reason for central ownership of every attribute."
+
+cases:
+  - id: TEST-MDG-REASON-01
+    type: test_case
+    mode: explain
+    title: "Why staging exists"
+    prompt: "Why does MDG keep unapproved changes separate from active master data?"
+    facts_to_use:
+      - "Change-request data can be held in staging before activation."
+      - "Active storage can be MDG-managed or a reuse active area depending on the model."
+    reasoning_path:
+      - "Separate proposed state from productive state."
+      - "Allow governance to validate and approve a coherent change."
+      - "Activate only when process controls are satisfied."
+      - "Then distribute or expose the active state to consumers."
+    weak_answer: "Because workflow needs temporary tables."
+    lead_signal: "Connect staging to governance state, activation, active-area design, and downstream consistency."
+    source_refs: [SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025, SRC-SAP-MDG-DESIGN-DATA-MODEL-2025]
+
+  - id: TEST-MDG-REASON-02
+    type: test_case
+    mode: compare
+    title: "MDG active area versus reuse active area"
+    prompt: "How do you decide between MDG active storage and a reuse active area for a custom object?"
+    reasoning_path:
+      - "Identify whether a productive application model already exists."
+      - "Check whether existing business logic must be reused."
+      - "Check where active data must be immediately available."
+      - "Consider activation complexity and replication requirements."
+    weak_answer: "Reuse is old; MDG active area is cleaner."
+    lead_signal: "Choose by active-system ownership and business-logic reuse, not by fashion."
+    source_refs: [SRC-SAP-MDG-DESIGN-DATA-MODEL-2025]
+
+  - id: TEST-MDG-REASON-03
+    type: test_case
+    mode: design
+    title: "New plant-specific Material field"
+    prompt: "A business unit asks for a new plant-specific field that controls hazardous-material storage. How do you design the MDG change?"
+    reasoning_path:
+      - "Confirm the field belongs to Material governance."
+      - "Place it at the plant-specific entity level rather than global basic data."
+      - "Decide attribute versus dependent entity from cardinality and lifecycle."
+      - "Define owner, validation, authorization, replication, migration, and consumer use."
+      - "Prove the value in the warehouse / storage process."
+    weak_answer: "Append the field and add it to the UI."
+    lead_signal: "Treat a field as a data-product change with lifecycle and downstream impact."
+    source_refs: [SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025, SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025]
+
+  - id: TEST-MDG-REASON-04
+    type: test_case
+    mode: diagnose
+    title: "BP exists but Sales cannot use it"
+    prompt: "The Business Partner is active and replicated, but a sales order cannot be created in sales area DE10/10/00. What do you check?"
+    reasoning_path:
+      - "Confirm the BP identity and target-system key."
+      - "Check the Customer role."
+      - "Check the exact sales-area extension."
+      - "Check whether required sales-area fields are complete."
+      - "Only then inspect integration rejection or sales configuration evidence."
+    weak_answer: "Check the DRF message."
+    lead_signal: "Separate core identity readiness from application-data readiness."
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+
+  - id: TEST-MDG-REASON-05
+    type: test_case
+    mode: diagnose
+    title: "Supplier exists but Procurement cannot use it"
+    prompt: "The Supplier BP is active, but a PO cannot be created in purchasing organization DE10. Is replication the first suspect?"
+    reasoning_path:
+      - "Confirm Supplier role and target identity."
+      - "Check DE10 purchasing-organization extension."
+      - "Check purchasing data and partner-function context."
+      - "Check whether the application owner completed its scope."
+      - "Then inspect replication and target processing if the required state should already exist."
+    weak_answer: "Reprocess the interface."
+    lead_signal: "Check business-object completeness before retrying transport."
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025, SRC-SAP-MDG-FEDERATED-WORKING-2025]
+
+  - id: TEST-MDG-REASON-06
+    type: test_case
+    mode: explain
+    title: "Why loading group deserves governance"
+    prompt: "Why is a small field such as Material loading group important in governance?"
+    reasoning_path:
+      - "It is a governed Material attribute."
+      - "It can participate with plant and shipping condition in shipping-point determination."
+      - "A wrong value changes delivery execution defaults."
+      - "Repeated user overrides can hide the defect."
+      - "The proof is the expected shipping point in the sales / delivery flow."
+    weak_answer: "Because it is mandatory in the material master."
+    lead_signal: "Tie the attribute to a determination and business consequence."
+    source_refs: [SRC-SAP-S4-SHIPPING-POINT-DETERMINATION-2025]
+
+  - id: TEST-MDG-REASON-07
+    type: test_case
+    mode: design
+    title: "Federated BP ownership"
+    prompt: "A group wants central BP identity but local Sales and Procurement teams to own their application data. How do you structure the ownership model?"
+    reasoning_path:
+      - "Define the core attribute set and one core authority."
+      - "Define Sales and Procurement application-specific attribute groups."
+      - "Map systems and teams to these scopes."
+      - "Define owner determination, revision / confirmation, conflict rules, and timeouts."
+      - "Define replication and business proofs per consuming application."
+    weak_answer: "Put all approvals in the central MDG workflow."
+    lead_signal: "Workflow follows decision rights; it does not create them."
+    source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025, SRC-SAP-MDG-FEDERATED-PROCESS-2025]
+
+  - id: TEST-MDG-REASON-08
+    type: test_case
+    mode: compare
+    title: "Central ownership versus federated ownership"
+    prompt: "When is one central data team a bad ownership model even if MDG is central?"
+    reasoning_path:
+      - "Separate system centrality from decision centrality."
+      - "Check whether local applications own specialized attributes and context."
+      - "Measure approval latency and local repair."
+      - "Use federation or explicit application ownership when domain knowledge is distributed."
+    weak_answer: "Federated is always more flexible."
+    lead_signal: "Choose the operating model from accountability, process context, control needs, and supported product scope."
+    source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025]
+
+  - id: TEST-MDG-REASON-09
+    type: test_case
+    mode: diagnose
+    title: "Approved material, wrong shipping point"
+    prompt: "A new Material was approved and replicated, but orders propose the wrong shipping point. Trace the problem."
+    reasoning_path:
+      - "Do not equate replication success with process correctness."
+      - "Read delivering plant."
+      - "Read effective shipping condition and its source."
+      - "Read Material loading group."
+      - "Check the determination combination."
+      - "Correct governed data if the defect is in master data, then prove the result in a new order."
+    weak_answer: "Check delivery configuration."
+    lead_signal: "Trace determination inputs before changing configuration."
+    source_refs: [SRC-SAP-S4-SHIPPING-POINT-DETERMINATION-2025]
+
+  - id: TEST-MDG-REASON-10
+    type: test_case
+    mode: design
+    title: "Material governance scope"
+    prompt: "How do you decide which Material attributes deserve strict governance and which can be maintained locally?"
+    reasoning_path:
+      - "Map attributes to process and system consumers."
+      - "Estimate failure cost and cross-system reach."
+      - "Check whether local context is required to make the decision."
+      - "Set stronger control for high-impact, shared, hard-to-reverse attributes."
+      - "Avoid approval steps for low-risk local values without a clear control objective."
+    weak_answer: "Govern all mandatory fields."
+    lead_signal: "Control depth follows business risk, ownership, reach, and reversibility."
+    source_refs: [SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025]
+
+scoring_model:
+  dimensions:
+    - id: boundary
+      weight: 20
+      strong: "Separates object, organizational level, product scope, and application scope."
+    - id: causality
+      weight: 20
+      strong: "Explains how data changes a determination or downstream process."
+    - id: ownership
+      weight: 20
+      strong: "Names decision rights instead of only technical system ownership."
+    - id: evidence
+      weight: 15
+      strong: "Uses observable object state, configuration, message, or transaction evidence in a sensible order."
+    - id: tradeoff
+      weight: 10
+      strong: "Explains why an alternative may be worse under the stated constraints."
+    - id: operations
+      weight: 5
+      strong: "Covers monitoring, exception ownership, and retry / correction where relevant."
+    - id: business_proof
+      weight: 10
+      strong: "Ends with a consuming business transaction or measurable process outcome."
+  interpretation:
+    - range: "85-100"
+      signal: "Lead-ready reasoning: coherent architecture, evidence, and trade-offs."
+    - range: "70-84"
+      signal: "Strong senior answer: correct and practical, but some boundaries or operations may be shallow."
+    - range: "50-69"
+      signal: "Feature knowledge is present, but reasoning is incomplete."
+    - range: "0-49"
+      signal: "Answer is mostly terminology, configuration fragments, or unsupported guessing."
+
+relations:
+  - subject: TOPIC-MDG-ASSESSMENT-REASONING
+    predicate: supported_by
+    object: TOPIC-MDG-DATA-MODEL-ANATOMY
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-ASSESSMENT-REASONING
+    predicate: supported_by
+    object: TOPIC-MDG-ATTRIBUTE-PROCESS-IMPACT
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-ASSESSMENT-REASONING
+    predicate: supported_by
+    object: TOPIC-MDG-OWNERSHIP-FEDERATION
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TEST-MDG-REASON-09
+    predicate: tested_by
+    object: ATTR-MAT-LOADING-GROUP
+    evidence_type: reasoned_interpretation
+    confidence: high
+
+source_refs:
+  - SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025
+  - SRC-SAP-MDG-DESIGN-DATA-MODEL-2025
+  - SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025
+  - SRC-SAP-MDG-FEDERATED-WORKING-2025
+  - SRC-SAP-MDG-FEDERATED-PROCESS-2025
+  - SRC-SAP-S4-SHIPPING-POINT-DETERMINATION-2025
+  - SRC-SAP-S4-MRP-PROCUREMENT-PROPOSAL-2025
+  - SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025
+
+tags:
+  - sap
+  - mdg
+  - assessment
+  - reasoning
+  - design
+  - diagnostics
+  - master-data
+  - ai-evaluation

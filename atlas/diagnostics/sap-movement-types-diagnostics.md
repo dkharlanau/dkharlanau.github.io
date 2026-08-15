@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Movement Types Diagnostics"
-description: "A conservative diagnostic frame for movement type issues in SAP inventory management."
+description: "A practical guide to diagnosing SAP movement-type issues by starting from the business event, reference document, stock effect, and accounting result."
 permalink: /atlas/diagnostics/sap-movement-types-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -43,7 +43,7 @@ sitemap: true
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP movement types diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for finding why a goods movement posts to the wrong stock type, account, or status.</p>
+    <p class="note-subtitle">Do not start by asking which movement type looks similar. Start by defining what physically happened and what stock and accounting result the business expects.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -56,78 +56,58 @@ sitemap: true
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Movement types in SAP define the direction, stock type, and accounting impact of every goods movement. A wrong movement type does not just misclassify stock — it can post to the wrong account, trigger wrong valuation, create incorrect GR/IR records, or leave inventory in an unusable status. The support goal is to identify which movement type was used, whether it matches the business intent, and what correction is needed.</p>
+    <h2>Movement type is the system expression of a business event</h2>
+    <p>A goods receipt, reversal, transfer, issue to production, return, scrapping, or inventory adjustment may all move stock, but they mean different things. The movement type helps SAP control that meaning together with reference documents, stock type, quantity/value update, account determination, field control, and follow-on logic.</p>
+    <p>This is why “use another movement type” is a poor first fix. A technically postable movement can still describe the wrong business event and create a stock or accounting problem that appears later.</p>
 
-    <h2>Common symptoms</h2>
-    <ul>
-      <li>Goods receipt posted stock to quality inspection instead of unrestricted.</li>
-      <li>Transfer posting created an unexpected accounting entry.</li>
-      <li>Return to vendor did not reduce GR/IR or created a wrong reversal.</li>
-      <li>Movement type is not allowed for the material type or plant.</li>
-      <li>Inventory count adjustment posted to a consumption account instead of inventory.</li>
-    </ul>
+    <h2>Start with the expected result</h2>
+    <div class="decision-table"><table><thead><tr><th>Question</th><th>Evidence to collect</th></tr></thead><tbody>
+      <tr><td>What physically happened?</td><td>Receipt, issue, transfer, return, reversal, scrap, adjustment, or another approved event.</td></tr>
+      <tr><td>What is the reference?</td><td>PO, delivery, production order, reservation, material document, physical-inventory document, or no reference where the process allows it.</td></tr>
+      <tr><td>Where should the stock end up?</td><td>Plant, storage location, batch, special-stock context, and stock status such as unrestricted, quality, blocked, or in transit.</td></tr>
+      <tr><td>Should value or accounting change?</td><td>Expected FI/accounting effect, valuation area, and material valuation context.</td></tr>
+      <tr><td>What should happen next?</td><td>PO history update, reservation consumption, production posting, delivery status, invoice matching, or another follow-on result.</td></tr>
+    </tbody></table></div>
 
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>Wrong movement type selected:</strong> user chose 101 instead of 103, or 311 instead of 301, changing stock type or valuation.</li>
-      <li><strong>Movement type not configured for material type:</strong> the material type restricts which movements are allowed.</li>
-      <li><strong>Account modification mismatch:</strong> the movement type posts to a G/L account that does not match the material's valuation class.</li>
-      <li><strong>Stock type confusion:</strong> unrestricted, quality inspection, blocked, or in transit were not distinguished correctly.</li>
-      <li><strong>Custom movement type:</strong> a landscape-specific movement type behaves differently from standard and is not documented.</li>
-    </ul>
-
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li>MIGO — display the material document and check the movement type on each item.</li>
-      <li>MB51 — material documents list, filter by movement type and material.</li>
-      <li>OMJJ — movement type configuration (transaction-dependent, view-only in production).</li>
-      <li>MB52 — stock overview showing stock types per storage location.</li>
-      <li>Material master — check material type and valuation class.</li>
-    </ul>
-
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>T156</strong> — movement types.</li>
-      <li><strong>T156T</strong> — movement type texts.</li>
-      <li><strong>MKPF</strong> — material document header.</li>
-      <li><strong>MSEG</strong> — material document items.</li>
-      <li><strong>MBEW</strong> — material valuation.</li>
-    </ul>
-
-    <h2>Diagnostic workflow</h2>
+    <h2>A clean diagnostic path</h2>
     <ol>
-      <li>Identify the material document number and item from the user report or error.</li>
-      <li>Check MIGO or MB51 for the movement type used and compare with the business intent.</li>
-      <li>Verify the stock type before and after the movement in MB52.</li>
-      <li>Check if the movement type is allowed for the material type and plant.</li>
-      <li>Review the accounting document (FI) to see if the G/L accounts match expectations.</li>
-      <li>Determine if the movement should be reversed and re-posted with the correct type.</li>
+      <li><strong>Capture the original business event.</strong> Do not infer it only from the movement number already posted.</li>
+      <li><strong>Read the reference and material document.</strong> Confirm movement type, quantity/unit, material, plant, storage location, batch/special stock, posting date, and reference.</li>
+      <li><strong>Compare the actual stock effect with the expected one.</strong> Where did quantity move from and to, and in which status?</li>
+      <li><strong>Check the accounting effect where the movement is valuated.</strong> If the financial result is unexpected, follow account determination and valuation evidence instead of assuming the movement type alone is wrong.</li>
+      <li><strong>Check process-specific controls.</strong> Quality, batch, serial, EWM/WM, reservations, production, subcontracting, consignment, or delivery integration can change the valid path.</li>
+      <li><strong>Compare with a working movement for the same business scenario.</strong> This is usually safer than comparing movement codes from memory.</li>
+      <li><strong>Plan the correction through document flow.</strong> Reverse or compensate only after checking what later documents or processes already depend on the original posting.</li>
     </ol>
 
-    <h2>Typical fixes or next actions</h2>
+    <h2>Standard numbers are useful examples, not the diagnosis</h2>
+    <p>Consultants often remember standard movement numbers because they are convenient shorthand. They are not enough to explain a production incident. Customizing, special processes, custom movement types, and the transaction or app that creates the movement can alter the behaviour around them.</p>
+    <p>For support notes, record the movement type actually used and the business event it was meant to represent. That survives release changes better than a list of memorized codes.</p>
+
+    <h2>When stock type looks wrong</h2>
+    <p>Do not correct stock simply because it is not unrestricted. Quality inspection, blocked stock, stock in transfer, consignment, project or sales-order stock, and other categories may be intentional. Check the process rule that selected the stock status before moving quantity again.</p>
+
+    <h2>When accounting looks wrong</h2>
+    <p>The movement type contributes to account determination, but valuation class, transaction/event keys, account modifiers, valuation area, special stock, and process context can also matter. A wrong G/L result therefore needs accounting evidence, not just OMJJ tourism.</p>
+
+    <h2>Reversal is not a universal undo</h2>
+    <p>A reversal may be correct when the original business event was posted incorrectly and the downstream chain permits it. But an old movement may already have affected invoice verification, production, delivery, valuation, or period-end work. Check follow-on documents and periods before reversing and reposting.</p>
+
+    <h2>Useful tools depend on the release</h2>
+    <p>Classic GUI landscapes commonly use material-document and stock displays plus movement-type customizing for analysis. S/4HANA also offers Fiori apps and changed data structures. Use the tools available in the target release, and keep the article focused on the evidence they must show rather than one transaction path.</p>
+
+    <h2>What belongs in the ticket</h2>
     <ul>
-      <li>Reverse the incorrect movement with the reversal movement type and re-post correctly.</li>
-      <li>Update user training or MIGO defaults to prevent repeated wrong selection.</li>
-      <li>If the movement type configuration is wrong, escalate to the configuration team with documented evidence.</li>
-      <li>For stock type issues, perform a transfer posting to move stock to the correct status.</li>
+      <li>Business event and expected stock/accounting result.</li>
+      <li>Material document and item when one exists.</li>
+      <li>Movement type, reference document, material, plant, storage location, quantity/unit, batch or special stock where relevant.</li>
+      <li>Actual stock result and accounting document when valuated.</li>
+      <li>Follow-on documents or processes already created from the posting.</li>
+      <li>A working comparison case if available.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Movement type errors are often user selection issues, not system bugs. Before escalating, collect the material document number, the movement type used, the expected movement type, the material, plant, and storage location. A useful movement type ticket should show the business intent and the system result.</p>
-
-    <h2>Escalation signals</h2>
-    <ul>
-      <li>The same wrong movement type is used repeatedly, suggesting training or process design issues.</li>
-      <li>A correction movement affects inventory valuation, financial accounts, or month-end closing.</li>
-      <li>The movement type behavior differs between plants or clients and configuration review is needed.</li>
-      <li>The issue involves special stock (consignment, subcontracting, pipeline) with accounting implications.</li>
-    </ul>
-
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a diagnostic frame, not a movement type configuration guide. It does not cover custom movement type design, WM movement types, or EWM-specific logic. It does not replace SAP's inventory management documentation.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <h2>The practical end state</h2>
+    <p>A movement-type diagnosis should explain why the posted movement did or did not represent the intended business event. “Wrong movement type” is only the beginning. The useful answer connects physical reality, document reference, stock status, valuation, and downstream process.</p>
   </div>
 
   <section class="atlas-related">
@@ -136,7 +116,7 @@ sitemap: true
       <li><a href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">SAP Goods Receipt Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-material-document-diagnostics/">SAP Material Document Diagnostics</a></li>
       <li><a href="/atlas/diagnostics/sap-batch-determination-diagnostics/">SAP Batch Determination Diagnostics</a></li>
-      <li><a href="/atlas/sap/sap-mm-procurement-overview/">SAP Mm Procurement Overview</a></li>
+      <li><a href="/atlas/sap/sap-mm-procurement-overview/">SAP MM Procurement Overview</a></li>
     </ul>
   </section>
 

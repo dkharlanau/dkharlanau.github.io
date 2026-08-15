@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Material Document Diagnostics"
-description: "A conservative diagnostic frame for material document issues in SAP inventory management."
+description: "A practical way to diagnose SAP material-document issues by tracing the goods movement, reference, stock effect, accounting result, and later document chain."
 permalink: /atlas/diagnostics/sap-material-document-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -43,7 +43,7 @@ sitemap: true
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP material document diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for finding why a goods movement document is missing, incorrect, or cannot be reversed.</p>
+    <p class="note-subtitle">A material document is evidence of a goods movement. Diagnose the event it records, not only the document number.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -56,78 +56,53 @@ sitemap: true
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Every goods movement in SAP creates a material document that records what moved, where, when, and with what accounting impact. When a document is missing, shows wrong quantities, posts to wrong accounts, or cannot be reversed, the support goal is to trace the document chain, identify the mismatch, and determine if a correction movement or reversal is needed.</p>
+    <h2>First ask what should have happened to stock</h2>
+    <p>A material document records a goods movement, but the support problem usually lives one level above it. Perhaps stock should have been received, transferred, issued, returned, or reversed. Perhaps the user expected an accounting document, PO-history update, reservation consumption, or delivery status change.</p>
+    <p>Define that expected business result first. Then use the material document to prove what SAP actually recorded.</p>
 
-    <h2>Common symptoms</h2>
-    <ul>
-      <li>User reports a goods movement was posted but no material document exists.</li>
-      <li>Material document shows wrong quantity, movement type, or storage location.</li>
-      <li>Reversal fails because the original document is already reversed or cleared.</li>
-      <li>Accounting document linked to the material document shows unexpected GL accounts.</li>
-      <li>Goods movement posted in wrong period and period is now closed.</li>
-    </ul>
+    <h2>Separate the common cases</h2>
+    <div class="decision-table"><table><thead><tr><th>Situation</th><th>First evidence</th><th>Question to answer</th></tr></thead><tbody>
+      <tr><td>User says the movement posted, but no document is found</td><td>Posting message, time/user, reference document, PO/delivery/order history, stock change.</td><td>Did a posting commit actually occur, and under which reference?</td></tr>
+      <tr><td>Document exists but quantity/location/status is wrong</td><td>Document item, movement type, material, plant, storage location, batch/special stock, quantity and unit.</td><td>Was the wrong data entered, or did the process determine a different result?</td></tr>
+      <tr><td>Accounting result is unexpected</td><td>Linked accounting document and valuation/account-determination context.</td><td>Is the goods movement correct but the valuation/accounting path wrong?</td></tr>
+      <tr><td>Reversal fails</td><td>Original and reversal history, follow-on documents, posting periods, later stock movements.</td><td>Is the original movement still reversible in the current process state?</td></tr>
+      <tr><td>Document is correct but the next process step is wrong</td><td>Document flow and downstream status.</td><td>Did the movement update the expected PO, delivery, production, quality, or invoice process?</td></tr>
+    </tbody></table></div>
 
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>User error:</strong> wrong quantity, movement type, or storage location entered during posting.</li>
-      <li><strong>Document not saved:</strong> the user thought the document was posted but it was only simulated or an error prevented commit.</li>
-      <li><strong>Already reversed:</strong> the original document was reversed earlier and a second reversal is not allowed.</li>
-      <li><strong>Period closed:</strong> the posting period for MM or FI is closed, preventing new documents or reversals.</li>
-      <li><strong>Valuation mismatch:</strong> the material document triggers a valuation that does not match the material's current valuation class or price.</li>
-    </ul>
-
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li>MIGO — display material document by document number.</li>
-      <li>MB51 — material documents list, filter by material, plant, or movement type.</li>
-      <li>MBST — reversal transaction and error messages.</li>
-      <li>MMRV — allow posting to previous period.</li>
-      <li>FB03 — display accounting document linked to the material document.</li>
-    </ul>
-
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>MKPF</strong> — material document header.</li>
-      <li><strong>MSEG</strong> — material document items.</li>
-      <li><strong>BKPF / BSEG</strong> — accounting documents.</li>
-      <li><strong>MBEW</strong> — material valuation.</li>
-    </ul>
-
-    <h2>Diagnostic workflow</h2>
+    <h2>A diagnostic sequence</h2>
     <ol>
-      <li>Identify the material document number or the expected document that is missing.</li>
-      <li>Check MIGO or MB51 for the document details: material, plant, storage location, movement type, quantity.</li>
-      <li>Verify the accounting document in FB03 to confirm GL accounts and amounts.</li>
-      <li>If reversal is needed, check MBST for the reversal status and any error messages.</li>
-      <li>Check posting period status if the reversal or new posting fails.</li>
-      <li>Determine if the correction should be a reversal, a return movement, or a manual adjustment.</li>
+      <li><strong>Capture one concrete event.</strong> Material, quantity/unit, plant/location, business reference, posting date/time, user or interface, and expected result.</li>
+      <li><strong>Find the material document or prove that none was created.</strong> Search by the business reference and time window when the document number is unknown.</li>
+      <li><strong>Read the item data.</strong> Movement type, stock context, batch/special stock, reference, quantity, and posting date tell you what SAP believed happened.</li>
+      <li><strong>Check the stock result.</strong> Confirm where the quantity ended up and whether later movements already changed it.</li>
+      <li><strong>Check accounting when the movement is valuated.</strong> Follow the linked accounting result rather than guessing from the material document alone.</li>
+      <li><strong>Read the surrounding document chain.</strong> PO history, delivery, reservation, production order, physical inventory, quality, or other reference may explain why reversal or follow-on processing behaves as it does.</li>
+      <li><strong>Choose correction only after the chain is understood.</strong> Reversal, return, transfer, or another approved correction must preserve the real business history.</li>
     </ol>
 
-    <h2>Typical fixes or next actions</h2>
+    <h2>“Missing document” needs proof</h2>
+    <p>Users sometimes remember clicking Post when the transaction actually returned an error, warning, timeout, or lost session. Before assuming database or update failure, check whether stock, PO history, or the reference document changed and whether a success message or document number was recorded.</p>
+    <p>If the evidence suggests a technical update problem, follow the appropriate application, update, dump, or system logs for the exact time window. Do not create a second movement just because the first one is hard to find.</p>
+
+    <h2>Reversal is part of document flow, not a delete operation</h2>
+    <p>A reversal creates new business evidence. It does not erase the original movement. Before reversing, check whether the original movement has already been followed by invoice verification, consumption, transfer, quality processing, delivery, production settlement, or another stock movement.</p>
+    <p>Closed periods make the decision more sensitive. Opening a posting period is a finance/control action, not a support shortcut. The business owner and finance team need to decide the correct posting date and correction method.</p>
+
+    <h2>S/4HANA changes the technical view</h2>
+    <p>Older ECC habits often start with MKPF/MSEG and legacy list transactions. In S/4HANA, inventory data structures and available Fiori apps differ. The stable diagnostic method is to identify the goods-movement document, its item data, stock effect, accounting link, and process references using the tools supported by the target release.</p>
+
+    <h2>What belongs in the ticket</h2>
     <ul>
-      <li>Reverse the incorrect document with MBST if the period is open and the document is not already reversed.</li>
-      <li>Re-post the movement with correct data if the original was wrong.</li>
-      <li>Open the posting period temporarily if the correction is urgent and authorized.</li>
-      <li>If reversal is not possible, use a compensating movement to correct stock or accounting.</li>
-      <li>Document the correction with business justification and approval.</li>
+      <li>Business event and expected result.</li>
+      <li>Material document/item if it exists, or the search evidence if it does not.</li>
+      <li>Material, quantity/unit, movement type, plant/location, batch/special stock and reference document.</li>
+      <li>Posting date/time and user or technical source.</li>
+      <li>Actual stock result and linked accounting result when relevant.</li>
+      <li>Reversal/follow-on history and period constraints for correction cases.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Material document issues are usually user entry or timing problems. A useful ticket should include: material, plant, movement type, expected versus actual quantity, document number if it exists, and the business reason for correction.</p>
-
-    <h2>Escalation signals</h2>
-    <ul>
-      <li>A material document was posted to the wrong material, plant, or storage location and must be reversed.</li>
-      <li>The reversal affects inventory valuation, cost accounting, or a closed accounting period.</li>
-      <li>Multiple documents show the same unexpected movement type or account assignment.</li>
-      <li>The document ties to a production order, sales delivery, or physical inventory adjustment that needs cross-team validation.</li>
-    </ul>
-
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a diagnostic frame, not a material document configuration guide. It does not cover WM transfer orders, EWM goods movements, or period-end closing procedures. It does not replace SAP's inventory management documentation.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <h2>The useful end state</h2>
+    <p>A material-document diagnosis should tell a simple story: what business event occurred, what SAP recorded, where stock and value moved, and which later documents depend on that result. Once that story is clear, the correction is usually much less mysterious and much less dangerous.</p>
   </div>
 
   <section class="atlas-related">

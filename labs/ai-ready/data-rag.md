@@ -20,6 +20,10 @@ tags: [ai, rag, retrieval, embeddings, data, evals]
 
 RAG is not “put documents in a vector database”. It is a controlled way to find evidence at request time and give the model only the useful parts. The architecture begins with source ownership and permissions, not embeddings.
 
+## Problem
+
+A model cannot reliably answer from current or private enterprise knowledge unless retrieval preserves source, permission, and freshness.
+
 ## Start from the fact
 
 For every important answer, define:

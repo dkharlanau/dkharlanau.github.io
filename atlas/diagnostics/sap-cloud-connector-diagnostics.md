@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Cloud Connector Diagnostics"
-description: "Conservative diagnostic frame for SAP BTP Cloud Connector connectivity, tunnel, and destination issues."
+description: "A practical diagnostic for BTP-to-on-premise connectivity across tunnel state, resource exposure, destination setup, identity, and target health."
 permalink: /atlas/diagnostics/sap-cloud-connector-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -13,6 +13,7 @@ status: needs_verification
 verified: false
 level: 1
 last_reviewed: 2026-06-13
+last_modified_at: 2026-08-15
 author: Dzmitryi Kharlanau
 tags:
   - sap-ams
@@ -28,94 +29,68 @@ robots: noindex,follow
 sitemap: false
 ---
 
-<nav class="breadcrumbs" aria-label="Breadcrumb">
-  <ol>
-    <li><a href="/">Home</a></li>
-    <li><a href="/atlas/">Knowledge Atlas</a></li>
-    <li><a href="/atlas/diagnostics/">Diagnostics</a></li>
-    <li aria-current="page">SAP Cloud Connector Diagnostics</li>
-  </ol>
-</nav>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/atlas/">Knowledge Atlas</a></li><li><a href="/atlas/diagnostics/">Diagnostics</a></li><li aria-current="page">SAP Cloud Connector Diagnostics</li></ol></nav>
 
 <article class="section note-detail atlas-page">
-  <header class="note-header">
-    <p class="eyebrow">Atlas Diagnostic</p>
-    <h1>SAP cloud connector diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for SAP BTP Cloud Connector connectivity and tunnel issues.</p>
-    <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
-  </header>
+<header class="note-header">
+  <p class="eyebrow">Atlas Diagnostic</p>
+  <h1>SAP Cloud Connector diagnostics</h1>
+  <p class="note-subtitle">A green tunnel does not prove that an application can reach the right on-premise resource. Trace the complete path.</p>
+  <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
+</header>
 
-  <aside class="atlas-meta-panel">
-    <dl>
-      <div><dt>Process</dt><dd>Integration operations</dd></div>
-      <div><dt>SAP area</dt><dd>Cloud Connector / BTP connectivity</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until claims are verified against public SAP documentation.</dd></div>
-    </dl>
-  </aside>
+<aside class="atlas-meta-panel"><dl><div><dt>Process</dt><dd>Integration operations</dd></div><div><dt>SAP area</dt><dd>Cloud Connector / BTP connectivity</dd></div><div><dt>Indexing</dt><dd>Noindex until product-specific claims are verified.</dd></div></dl></aside>
 
-  <div class="note-body">
-    <h2>Core idea</h2>
-    <p>The SAP BTP Cloud Connector bridges on-premise SAP systems and cloud services. Failures usually sit in the tunnel state, the access-control configuration, the destination, or the on-premise service availability.</p>
+<div class="note-body">
+  <h2>The problem is an end-to-end connectivity break</h2>
+  <p>SAP Cloud Connector is one part of the path between a BTP workload and an on-premise resource. A connection can fail because the subaccount tunnel is unavailable, the resource is not exposed, a location or destination points to the wrong connector, identity propagation is wrong, or the target service itself is unavailable.</p>
+  <p>That means “Cloud Connector is connected” and “the application can use the backend” are different statements. Diagnose the path stage by stage.</p>
 
-    <h2>Common symptoms</h2>
-    <ul>
-      <li>Cloud application cannot reach the on-premise SAP system.</li>
-      <li>Cloud Connector shows a disconnected or unhealthy tunnel.</li>
-      <li>Destination test in BTP fails with connectivity or authorization errors.</li>
-      <li>Some on-premise systems are reachable while others are not.</li>
-      <li>Performance through the Cloud Connector is inconsistent.</li>
-    </ul>
+  <h2>Separate the layers</h2>
+  <div class="decision-table"><table><thead><tr><th>Layer</th><th>Question</th><th>Evidence</th></tr></thead><tbody>
+    <tr><td>BTP application</td><td>Which destination or connectivity configuration is the application actually using?</td><td>Application/subaccount, destination name, region, location context, timestamp.</td></tr>
+    <tr><td>Subaccount tunnel</td><td>Is the expected Cloud Connector connected to the correct subaccount?</td><td>Connector status, subaccount mapping, recent disconnects, certificate/connection events.</td></tr>
+    <tr><td>Resource exposure</td><td>Is the exact internal host, protocol, port, and path/resource allowed?</td><td>Virtual-to-internal mapping and exposed-resource rules.</td></tr>
+    <tr><td>Identity</td><td>Does the target receive the identity or technical credential expected by this scenario?</td><td>Authentication mode, principal propagation context where used, target authorization error.</td></tr>
+    <tr><td>On-premise target</td><td>Is the backend service reachable and healthy from the connector host/network?</td><td>Target service status, DNS/network evidence, backend log and response.</td></tr>
+  </tbody></table></div>
 
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>Tunnel down:</strong> Cloud Connector cannot connect to the BTP subaccount.</li>
-      <li><strong>Missing access control:</strong> the resource is not exposed for the cloud application.</li>
-      <li><strong>Destination misconfiguration:</strong> wrong URL, authentication, or location ID.</li>
-      <li><strong>On-premise service down:</strong> the target RFC/HTTP service is not active.</li>
-      <li><strong>Network or firewall change:</strong> outbound connectivity to BTP is blocked.</li>
-    </ul>
+  <h2>A practical diagnostic workflow</h2>
+  <ol>
+    <li><strong>Start from the failing application call.</strong> Capture the BTP application, subaccount, destination, timestamp, target business service, and exact error.</li>
+    <li><strong>Confirm the intended connector path.</strong> In landscapes with more than one connector or location, verify that the destination resolves through the expected instance rather than a different healthy connector.</li>
+    <li><strong>Check tunnel state around the failure time.</strong> Current green status can hide a short disconnect that occurred during the incident.</li>
+    <li><strong>Check resource exposure precisely.</strong> Compare the requested host, protocol, port, and path with what is exposed. “The system is exposed” is too broad.</li>
+    <li><strong>Check authentication separately from connectivity.</strong> A reachable backend can still reject the propagated or technical identity. Keep network and authorization evidence distinct.</li>
+    <li><strong>Check the backend itself.</strong> Confirm that the target service was available and that its own logs show either the request or the absence of one.</li>
+    <li><strong>Compare with a working route.</strong> Another destination to the same backend or another backend through the same connector can help isolate destination, connector, network, or service ownership.</li>
+  </ol>
 
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li>Cloud Connector admin UI — tunnel state, subaccount connection, and logs.</li>
-      <li>BTP cockpit — destination configuration and connection test.</li>
-      <li>SM59 / SICF — verify the on-premise RFC or HTTP service is active.</li>
-      <li>On-premise network trace — confirm outbound connectivity to BTP endpoints.</li>
-      <li>Application log on BTP and on-premise side for the same time window.</li>
-    </ul>
+  <h2>Do not restart first</h2>
+  <p>Restarting a connector may restore service, but it also removes evidence and can hide a certificate, network, proxy, resource-mapping, or capacity problem that will return. Preserve the failure window and logs first. Restart only when the operational runbook and impact justify it.</p>
 
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>Cloud Connector logs</strong> — tunnel and request logs (file-based, not SAP tables).</li>
-      <li><strong>SM59</strong> — RFC destination test results.</li>
-      <li><strong>SICF</strong> — HTTP service activation.</li>
-    </ul>
+  <h2>Useful next actions</h2>
+  <ul>
+    <li>Correct the destination or location reference when the BTP workload uses the wrong path.</li>
+    <li>Correct resource exposure when the exact backend host or path is outside the allowed mapping.</li>
+    <li>Repair subaccount connectivity, certificates, proxy, or outbound network access when the tunnel itself is unstable.</li>
+    <li>Correct the target authentication or identity propagation setup when connectivity succeeds but authorization fails.</li>
+    <li>Route backend availability or service errors to the owning application/Basis team with connector evidence attached.</li>
+  </ul>
 
-    <h2>Diagnostic workflow</h2>
-    <ol>
-      <li>Confirm the affected subaccount, Cloud Connector instance, and target on-premise system.</li>
-      <li>Check the Cloud Connector tunnel state and admin UI health indicators.</li>
-      <li>Test the destination from BTP and capture the exact error.</li>
-      <li>Verify access-control entries for the target resource.</li>
-      <li>Check the on-premise service (SM59/SICF) and network path.</li>
-      <li>Review both sides' logs for the failure window and correlate timestamps.</li>
-    </ol>
+  <h2>What to capture first</h2>
+  <p>Record the BTP subaccount and region, application, destination, location identifier if used, Cloud Connector instance, virtual and internal target, resource path, authentication mode, failure timestamp, exact error, tunnel state at that time, and whether the backend saw the request.</p>
 
-    <h2>Typical fixes or next actions</h2>
-    <ul>
-      <li>Restart or reconnect the Cloud Connector to the subaccount.</li>
-      <li>Add or correct the access-control entry for the missing resource.</li>
-      <li>Correct destination URL, authentication, or location ID.</li>
-      <li>Activate or fix the on-premise RFC/HTTP service.</li>
-      <li>Update firewall or proxy allow-lists for BTP endpoints.</li>
-    </ul>
+  <h2>Limitations and boundaries</h2>
+  <p>This page is a diagnostic structure, not an installation or security guide. Cloud Connector capabilities and administration details evolve, and identity propagation, certificates, high availability, proxying, and destination behavior depend on the landscape. Verify the current SAP product documentation before changing security-sensitive connectivity configuration.</p>
+</div>
 
-    <h2>Support takeaway</h2>
-    <p>Cloud Connector tickets are useful when they include the subaccount, Cloud Connector version, destination name, target system, and whether the issue is tunnel, access control, or service side.</p>
+<section class="atlas-related"><h2>Related Atlas Pages</h2><ul>
+  <li><a href="/atlas/sap/cloud-connector/">SAP Cloud Connector</a></li>
+  <li><a href="/atlas/diagnostics/sap-rest-api-diagnostics/">SAP REST API Diagnostics</a></li>
+  <li><a href="/atlas/diagnostics/sap-rfc-destination-diagnostics/">SAP RFC Destination Diagnostics</a></li>
+</ul></section>
 
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a diagnostic frame, not a Cloud Connector installation or BTP security configuration guide. It does not cover detailed certificate or SAML setup.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
-  </div>
+{% include atlas/author-block.html %}
+{% include atlas/disclaimer.html %}
 </article>

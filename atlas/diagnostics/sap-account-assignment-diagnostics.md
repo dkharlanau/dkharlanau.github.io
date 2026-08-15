@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Account Assignment Diagnostics"
-description: "A conservative diagnostic frame for account assignment issues in SAP purchasing."
+description: "Diagnose SAP purchasing account assignment by tracing business intent, cost object validity, document history, and accounting result."
 permalink: /atlas/diagnostics/sap-account-assignment-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -40,7 +40,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP account assignment diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for finding why a purchase document posts to the wrong cost object, rejects posting, or creates reconciliation issues.</p>
+    <p class="note-subtitle">The useful question is not only which field is wrong. It is which business object should carry the cost and why the document chain disagrees.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -48,74 +48,59 @@ sitemap: false
     <dl>
       <div><dt>Process</dt><dd>Procure to pay</dd></div>
       <div><dt>SAP area</dt><dd>MM / CO procurement</dd></div>
-      <div><dt>Indexing</dt><dd>Noindex until account assignment behavior claims are verified against public SAP docs.</dd></div>
+      <div><dt>Indexing</dt><dd>Noindex until release-specific behavior claims are verified.</dd></div>
     </dl>
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Account assignment determines which cost object — cost center, WBS element, internal order, asset, or GL account — receives the cost of a procurement transaction. When it is wrong, missing, or inconsistent between documents, posting fails, reconciliation breaks, or budgets are charged incorrectly. The support goal is to identify which account assignment element is mismatched and whether the fix belongs in the document, the master data, or the configuration.</p>
+    <h2>Start with the business intent</h2>
+    <p>Account assignment connects a purchase to the object that should receive or explain the cost: for example a cost center, project/WBS element, internal order, asset, sales-related object, or another controlling context. The exact fields depend on the procurement scenario.</p>
+    <p>When posting fails or costs land in the wrong place, first state the intended accounting result. Without that, support can make a document technically valid while charging the wrong budget or cost object.</p>
 
-    <h2>Common symptoms</h2>
-    <ul>
-      <li>ME21N or MIGO shows 'account assignment not valid' or similar error.</li>
-      <li>Goods receipt posts but the accounting document shows a different cost object than expected.</li>
-      <li>Invoice verification blocks because account assignment differs between GR and invoice.</li>
-      <li>Budget report shows unexpected charges from procurement postings.</li>
-      <li>Asset purchase posts to expense instead of asset under construction.</li>
-    </ul>
+    <h2>Find the first document where intent and data separate</h2>
+    <div class="decision-table"><table><thead><tr><th>Symptom</th><th>First question</th><th>Evidence</th></tr></thead><tbody>
+      <tr><td>PR or PO cannot be saved</td><td>Does the account assignment category require data that is missing or invalid?</td><td>Category, required account-assignment fields, cost object status, organizational validity.</td></tr>
+      <tr><td>PO contains the wrong cost object</td><td>Was it copied from demand, defaulted, or entered manually?</td><td>PR/source document, PO account assignment, change history, user/process origin.</td></tr>
+      <tr><td>GR or invoice cannot post</td><td>Is the downstream document still consistent with the PO and current cost object?</td><td>PO history, account assignment, object status, posting date, invoice/GR error.</td></tr>
+      <tr><td>FI/CO result is unexpected</td><td>Is the problem the cost object, the G/L derivation, or both?</td><td>Accounting document, account assignment, material/valuation context, account determination.</td></tr>
+      <tr><td>Budget is hit incorrectly</td><td>Was the wrong object used, or did a valid object carry an unexpected commitment/actual?</td><td>Document chain plus controlling/project/asset evidence.</td></tr>
+    </tbody></table></div>
 
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>Wrong account assignment category:</strong> the PR or PO uses a category (K, P, A, F) that does not match the business intent.</li>
-      <li><strong>Cost object not open:</strong> the cost center is locked, the WBS element is not released, or the internal order is closed.</li>
-      <li><strong>Document inconsistency:</strong> PR, PO, GR, and invoice have different account assignments because of copy control or manual changes.</li>
-      <li><strong>Material master valuation class mismatch:</strong> the material posts to a different GL account than expected based on its valuation class.</li>
-      <li><strong>Multiple account assignment:</strong> distribution by percentage was entered incorrectly or does not sum to 100.</li>
-    </ul>
-
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li>ME23N — PO account assignment tab.</li>
-      <li>MIGO — material document accounting document (FI).</li>
-      <li>MIRO — invoice account assignment and blocking reasons.</li>
-      <li>KS03 — cost center display.</li>
-      <li>CJ20N — WBS element status.</li>
-    </ul>
-
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>EBKN</strong> — PR account assignment.</li>
-      <li><strong>EKKN</strong> — PO account assignment.</li>
-      <li><strong>BSEG</strong> — accounting document items.</li>
-      <li><strong>CSKS</strong> — cost center master.</li>
-      <li><strong>PRPS</strong> — WBS element master.</li>
-    </ul>
-
-    <h2>Diagnostic workflow</h2>
+    <h2>A practical diagnostic sequence</h2>
     <ol>
-      <li>Identify the document where the account assignment error first appears: PR, PO, GR, or invoice.</li>
-      <li>Check the account assignment category and cost object in the document.</li>
-      <li>Verify the cost object is open and valid for posting (cost center, WBS, order).</li>
-      <li>Compare account assignments across PR, PO, GR, and invoice to find inconsistencies.</li>
-      <li>Check the material master valuation class if the issue is a GL account mismatch.</li>
-      <li>Determine if the fix is a document change, master data update, or configuration adjustment.</li>
+      <li><strong>Describe the intended purchase.</strong> Is it stock, direct consumption, project work, asset acquisition, maintenance, production-related procurement, or another scenario?</li>
+      <li><strong>Locate the first affected document.</strong> Requisition, purchase order, goods receipt, service entry, invoice, or accounting document.</li>
+      <li><strong>Read the account assignment in that document.</strong> Capture category, cost object(s), distribution if multiple objects are used, and any entered G/L account where the process requires one.</li>
+      <li><strong>Validate the receiving object.</strong> Check that it exists, is valid for the posting date and organization, and has a status that permits the intended posting.</li>
+      <li><strong>Compare the document chain.</strong> Identify whether the account assignment changed between demand, PO, receipt/service, and invoice.</li>
+      <li><strong>Separate cost-object logic from account determination.</strong> A correct cost center with an unexpected G/L account is a different problem from a PO that points to the wrong project.</li>
+      <li><strong>Check the accounting result.</strong> If posting already happened, use the accounting document and controlling impact to prove what needs correction before reversing anything.</li>
     </ol>
 
-    <h2>Typical fixes or next actions</h2>
+    <h2>Multiple account assignment needs extra care</h2>
+    <p>When one purchase is split across several objects, percentage, quantity, or value distribution becomes part of the business rule. A total that looks correct can still be wrong by recipient. Compare the split in the purchasing document with what the business approved and with the downstream posting result.</p>
+
+    <h2>Do not “fix” a G/L mismatch by changing unrelated master data</h2>
+    <p>The G/L result can depend on procurement type, material valuation, account assignment, transaction/event logic, and configuration. Changing a material valuation class or a controlling object because one document posted unexpectedly can affect many later transactions. First identify which derivation step produced the account.</p>
+
+    <h2>Reversal is a correction path, not a first response</h2>
+    <p>If a wrong account assignment has already reached receipt, invoice, asset, project, or period-end reporting, the correction must respect the document flow and accounting controls. Check later documents and obtain the responsible finance/controlling approval before reversing or reposting.</p>
+
+    <h2>Useful SAP evidence</h2>
+    <p>Consultants often begin with the purchasing document and its account-assignment view, then follow the PO history and linked accounting document. Cost-center, project/WBS, order, asset, and other object views are used according to the scenario. Exact apps, transactions, and tables vary between releases, so keep the diagnostic anchored to the document chain and object identity.</p>
+
+    <h2>What belongs in the ticket</h2>
     <ul>
-      <li>Correct the account assignment in the PR or PO before downstream documents are created.</li>
-      <li>Open or extend the cost object if it was closed or missing.</li>
-      <li>Reverse and re-post the GR or invoice with the correct account assignment if the error is downstream.</li>
-      <li>Update the material master valuation class if the GL account mapping is wrong.</li>
-      <li>Escalate to CO if the issue involves budget or asset accounting.</li>
+      <li>Document and item where the problem first appears.</li>
+      <li>Business purpose of the purchase and expected cost object.</li>
+      <li>Actual account assignment category, object(s), and distribution.</li>
+      <li>Exact error or accounting result.</li>
+      <li>Comparison across PR, PO, receipt/service, invoice, and FI/CO result where relevant.</li>
+      <li>Whether the cost object is valid/open and whether the issue is isolated or systematic.</li>
     </ul>
 
-    <h2>Support takeaway</h2>
-    <p>Account assignment issues are usually master data or document entry errors. A useful ticket should include: document number, account assignment category, expected cost object, actual cost object, error message, and whether the issue is isolated or recurring.</p>
-
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a diagnostic frame, not an account assignment configuration guide. It does not cover CO allocation, asset accounting, or budget control setup. It does not replace SAP's FI/CO documentation.</p>
+    <h2>Limitations and boundaries</h2>
+    <p>This page does not define account-assignment category configuration, automatic account determination, CO budgeting, Asset Accounting, Project System, or industry-specific procurement rules. Those areas should be reviewed by the relevant process owner once the failed step is identified.</p>
 
     <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
   </div>

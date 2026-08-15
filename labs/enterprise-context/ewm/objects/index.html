@@ -1,0 +1,80 @@
+---
+layout: default
+title: "SAP EWM — Object Catalog"
+description: "A practical catalog of EWM demand, execution, stock, warehouse structure, shipping, quality, VAS and automation objects."
+permalink: /labs/enterprise-context/ewm/objects/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+tags: [sap, ewm, objects, warehousing, architecture]
+---
+
+{% assign model = site.data.labs.enterprise_context.ewm.objects %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/ewm/">EWM</a></li><li aria-current="page">Objects</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">EWM / Object model</p>
+      <h1>{{ model.title }}</h1>
+      <p>{{ model.summary }}</p>
+      <a class="research-canvas__button" href="#catalog">Open the catalog <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Object coverage">
+      <p>Object model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ model.categories | size }}</strong><small>Object groups</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ model.object_relationships | size }}</strong><small>Key chains</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ model.lead_checks | size }}</strong><small>Lead checks</small></div>
+      <em>Checked {{ model.verified_at }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
+    <p><strong>Memory rule:</strong> {{ model.memory_rule }}</p>
+    <p><a href="/labs/enterprise-context/ewm/domains/">Domain map</a> · <a href="/labs/enterprise-context/ewm/integrations/">Integration map</a> · <a href="/labs/enterprise-context/data/ewm-objects.json">JSON</a></p>
+  </section>
+
+  <section class="research-canvas__inventory" id="catalog" data-reveal>
+    <header><p class="research-canvas__eyebrow">Catalog</p><h2>Know what the object means before reading its status.</h2></header>
+    {% for category in model.categories %}
+    <div class="ecg-determination-list">
+      <article class="ecg-determination-detail">
+        <header><div><span>{{ forloop.index }}</span><small>object group</small></div><h3>{{ category.title }}</h3><p class="ecg-question">{{ category.question }}</p></header>
+        <div class="research-route-list">
+          {% for object in category.objects %}
+          <article>
+            <span>OBJ</span><strong>{{ object.title }}</strong>
+            <small>{{ object.role }}</small>
+            <p><b>Created from:</b> {{ object.created_from | join: ", " }}</p>
+            <p><b>Consumed by:</b> {{ object.consumed_by | join: ", " }}</p>
+            <p><b>Check first:</b> {{ object.check_first }}</p>
+          </article>
+          {% endfor %}
+        </div>
+        {% if category.distinction %}<p class="ecg-lead-lens"><strong>Important:</strong> {{ category.distinction }}</p>{% endif %}
+      </article>
+    </div>
+    {% endfor %}
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Object chains</p><h2>Documents become work, work changes stock.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.object_relationships %}<article><span>→</span><strong>{{ item.path }}</strong><small>{{ item.meaning }}</small></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead lens</p><h2>Object mistakes create architecture mistakes.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.lead_checks %}<article><span>{{ forloop.index }}</span><strong>{{ item }}</strong></article>{% endfor %}
+    </div>
+  </section>
+</div>

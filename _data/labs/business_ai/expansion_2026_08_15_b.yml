@@ -1,0 +1,131 @@
+patterns:
+  - id: "embodied-intralogistics-execution"
+    title: "Embodied intralogistics execution"
+    business_job: "Turn warehouse and production context into physical material movement while keeping task state synchronized with the system of record."
+    good_fit_when:
+      - "Material movement is repetitive, physically demanding, and governed by clear warehouse or production priorities."
+      - "Robots can receive current material, location, sequencing, task, and exception context from authoritative systems."
+    bad_fit_when:
+      - "Physical safety, fallback behavior, and exception handling are treated as model decisions without deterministic controls."
+      - "Robotics is added before warehouse master data, task state, and confirmation flows are reliable."
+    architecture_shape:
+      - "warehouse and production state"
+      - "task and priority context"
+      - "AI orchestration"
+      - "robot fleet or embodied agent"
+      - "physical execution"
+      - "ERP or EWM confirmation"
+      - "exception and safety control"
+    evaluation:
+      - "throughput"
+      - "line-feeding accuracy"
+      - "task completion time"
+      - "manual coordination effort"
+      - "safety events"
+      - "exception recovery"
+    automation_level: "physical_execute_with_controls"
+
+cases:
+  - id: "synthomer-agentic-order-intake"
+    case_kind: "ai_implementation"
+    title: "Synthomer agentic sales-order intake"
+    company: "Synthomer plc"
+    industry: "Chemicals"
+    process: "Sales order intake / order-to-cash"
+    pattern: "quote-to-order-intelligence"
+    problem: "Customer orders arrived as emails and multipage PDFs with inconsistent product descriptions, customer and ship-to details, units of measure, and multiple line items."
+    implementation: "SAP Document AI extracts line-level information. AI agents use the material catalog and historical orders to interpret product descriptions, resolve unit-of-measure differences, propose material and partner matches, and present the result in SAP Fiori for employee validation before sales-order creation."
+    technology:
+      vendors: ["SAP", "NTT DATA Business Solutions UK"]
+      products: ["SAP Business Technology Platform", "SAP Document AI", "SAP S/4HANA Cloud Private Edition", "SAP Fiori", "Joule"]
+      models: ["Machine learning and generative AI; detailed model names not disclosed"]
+      integration_notes: "The workflow begins with incoming email and PDF documents, grounds matching in material and historical order data, and keeps a human approval step before the downstream sales order is created."
+    reported_results:
+      - metric: "First-time material match rate in beta tests"
+        value: "98%"
+        claim_type: "customer/vendor beta-test result"
+    evidence_grade: "C"
+    limits:
+      - "The 98% result is from beta tests across multiple product lines and customers, not yet a disclosed long-term production KPI."
+      - "The public page title mentions processing orders 12 times faster, but the accessible case detail does not expose the measurement method or baseline for that figure, so it is not used as a catalog KPI."
+    consultant_note: "This is close to the SAP SD problem we actually care about: turn weak customer input into proposed structured order data, but keep material, partner, unit, pricing, availability, credit, and approval controls outside free-form model behavior."
+    source_ids: ["src-synthomer-sap"]
+
+  - id: "martur-fompak-embodied-intralogistics"
+    case_kind: "ai_implementation"
+    title: "Martur Fompak embodied AI for line feeding"
+    company: "Martur Fompak International"
+    industry: "Automotive"
+    process: "Warehouse execution / production line feeding"
+    pattern: "embodied-intralogistics-execution"
+    problem: "Material flow to production required repetitive physical movement and coordination across warehouse tasks, sequencing, and changing production priorities."
+    implementation: "An autonomous intralogistics model on SAP S/4HANA uses SAP EWM, Joule, SAP Embodied AI, humanoid robots, and autonomous mobile robots. Real-time material, storage-location, sequencing, and production-priority context guides physical execution, and robots confirm task progress back into SAP."
+    technology:
+      vendors: ["SAP", "Humanoid"]
+      products: ["SAP S/4HANA", "SAP Extended Warehouse Management", "Joule", "SAP Embodied AI", "SAP Business Technology Platform"]
+      models: ["Embodied and agentic AI components; detailed model stack not disclosed"]
+      integration_notes: "SAP EWM supplies business context and task state; the Humanoid fleet coordination platform connects AI-driven tasks to robots operating in a live automotive manufacturing environment."
+    reported_results:
+      - metric: "Throughput improvement"
+        value: "up to 5x"
+        claim_type: "customer/vendor early result"
+      - metric: "Daily production line feeds"
+        value: "400"
+        claim_type: "customer/vendor operating scale"
+    evidence_grade: "B"
+    limits:
+      - "The case is recent and the public story does not disclose the baseline period, error rate, or safety-event statistics behind the throughput result."
+      - "Physical automation introduces safety and recovery risks that cannot be evaluated from throughput alone."
+    consultant_note: "This is a useful EWM boundary case: AI may choose and orchestrate work, but warehouse task state, inventory identity, confirmations, safety, and exception recovery still need deterministic ownership."
+    source_ids: ["src-martur-fompak-sap"]
+
+  - id: "pharmaoverseas-joule-operations"
+    case_kind: "ai_implementation"
+    title: "Pharmaoverseas Joule across sales, inventory, and matching workflows"
+    company: "Pharmaoverseas"
+    industry: "Wholesale pharmaceutical distribution"
+    process: "Sales, inventory, procurement matching, and delivery-risk management"
+    pattern: "cross-system-process-copilot"
+    secondary_patterns: ["agentic-exception-management", "quote-to-order-intelligence"]
+    problem: "Manual workflows slowed order processing and decision-making across a distribution network with more than 13,000 products, 44 branches, five major stores, and over 600 vehicles."
+    implementation: "Joule supports PO, invoice, and contract matching; flags discrepancies; monitors lead times for early deliveries; and assists sales-document creation using historical data, product catalogs, and customer preferences."
+    technology:
+      vendors: ["SAP", "Phoenix Consulting and Information"]
+      products: ["SAP Business AI", "Joule"]
+      models: ["Generative AI models configured and trained for the project; detailed model names not disclosed"]
+      integration_notes: "The case spans the customer's SAP solution ecosystem and combines analytical insight, workflow automation, matching, inventory-risk monitoring, and sales-document assistance."
+    reported_results:
+      - metric: "Excess inventory holding costs"
+        value: "5% to 10% reduction"
+        claim_type: "customer/vendor case study"
+      - metric: "Reporting speed"
+        value: "2x faster"
+        claim_type: "customer/vendor case study"
+    evidence_grade: "B"
+    limits:
+      - "This is a broad transformation case, so individual KPI attribution to one Joule workflow is limited."
+      - "The public story does not disclose order-creation accuracy, mismatch precision, or the number of early-delivery interventions."
+    consultant_note: "Useful as a multi-process case, but do not turn it into one giant agent. Separate matching, early-delivery risk, sales-document creation, and reporting into bounded capabilities with their own KPIs and permissions."
+    source_ids: ["src-pharmaoverseas-sap"]
+
+source_registry:
+  - id: "src-synthomer-sap"
+    title: "Synthomer: Understanding customers better and processing orders faster and more accurately with agentic AI"
+    publisher: "SAP"
+    source_type: "vendor customer case"
+    url: "https://www.sap.com/sweden/asset/dynamic/2026/06/26a59d25-567f-0010-bca6-c68f7e60039b.html"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-martur-fompak-sap"
+    title: "Martur Fompak International: Boosting throughput and efficiency with intelligent robotics powered by Joule and SAP Embodied AI"
+    publisher: "SAP"
+    source_type: "vendor customer case"
+    url: "https://www.sap.com/uk/about/customer-stories/martur-fompak.html"
+    reviewed_at: "2026-08-15"
+
+  - id: "src-pharmaoverseas-sap"
+    title: "Pharmaoverseas: Traversing complex finance and logistics workloads through the transformative potential of AI"
+    publisher: "SAP"
+    source_type: "vendor customer case"
+    url: "https://www.sap.com/asset/dynamic/2025/09/34ac7a85-227f-0010-bca6-c68f7e60039b.html"
+    reviewed_at: "2026-08-15"

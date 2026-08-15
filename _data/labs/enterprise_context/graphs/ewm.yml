@@ -1,0 +1,447 @@
+id: GRAPH-EWM-WAREHOUSE-EXECUTION
+type: knowledge_graph
+title: "EWM — Deployment, Warehouse Execution & Integration Map"
+summary: >-
+  A practical map of how SAP Extended Warehouse Management turns inbound, outbound,
+  internal, and production requirements into warehouse work. The model separates
+  deployment, warehouse structure, execution documents, orchestration, integration,
+  automation, and diagnostics so that a warehouse problem can be traced to the first
+  wrong business object or control decision.
+domain: "SAP S/4HANA Extended Warehouse Management"
+process_family: "Receive-to-Store / Warehouse-to-Ship / Production Supply"
+process_step: "Plan and Execute Warehouse Operations"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+
+thesis: >-
+  EWM is not simply Inventory Management with storage bins. Inventory Management owns
+  enterprise stock quantity/value and goods-movement integration; EWM owns detailed
+  warehouse position and execution. I first identify the deployment and document boundary,
+  then trace the warehouse request into tasks, work packages, physical execution, and the
+  final goods movement. Changing a storage strategy before finding the broken layer usually
+  fixes the symptom and leaves the design problem intact.
+
+boundary:
+  included:
+    - "Embedded EWM and decentralized EWM based on SAP S/4HANA"
+    - "warehouse organization and execution objects"
+    - "inbound, outbound, internal and production-supply processes"
+    - "wave, warehouse task and warehouse order orchestration"
+    - "handling-unit and resource execution context"
+    - "replenishment and physical inventory"
+    - "quality-management integration boundary"
+    - "MM-IM, SD/Delivery, PP, QM and TM handoffs"
+    - "RF execution and MFS automation"
+    - "failure modes and Lead-level diagnostic questions"
+  excluded:
+    - "detailed labor-management configuration"
+    - "slotting algorithm configuration in depth"
+    - "yard product implementation in depth"
+    - "full transportation planning and freight settlement"
+    - "customer-specific PLC telegram design"
+
+memory_model:
+  title: "Fourteen questions I use to understand an EWM warehouse"
+  questions:
+    - key: "WHY"
+      question: "Why is this location EWM-managed?"
+      answer: "Name the operational need: bin-level stock, complex putaway/picking, waves, HUs, production supply, automation, or another warehouse-control requirement."
+    - key: "DEPLOY"
+      question: "Embedded or decentralized?"
+      answer: "Treat deployment as an architecture decision about coupling, lifecycle, interfaces, resilience, and operational ownership."
+    - key: "REQUEST"
+      question: "Which warehouse request represents the business demand?"
+      answer: "Find the inbound delivery, outbound delivery order, internal stock-transfer request, or production-related requirement before looking at tasks."
+    - key: "TASK"
+      question: "Which physical or logical movement must happen?"
+      answer: "A warehouse task describes executable movement or stock-change work, including source and destination context."
+    - key: "ORDER"
+      question: "How is work packaged for execution?"
+      answer: "Warehouse-order creation groups tasks into executable work packages; resource and queue logic then influence who performs them."
+    - key: "STOCK"
+      question: "What exactly is where?"
+      answer: "Read product, quantity, stock type, batch where relevant, handling unit, storage type and storage bin together."
+    - key: "STRATEGY"
+      question: "Why did EWM choose this source or destination?"
+      answer: "Trace warehouse process type, putaway or stock-removal strategy, search sequence, activity area and relevant product/warehouse data."
+    - key: "WAVE"
+      question: "Should outbound demand be grouped before work creation?"
+      answer: "Waves synchronize warehouse-request items that should be picked and processed in a similar time window."
+    - key: "INTERNAL"
+      question: "What keeps the warehouse balanced?"
+      answer: "Replenishment, rearrangement, posting changes and ad hoc movements are warehouse processes, not exceptions to be hidden outside the model."
+    - key: "PRODUCTION"
+      question: "How does material reach production?"
+      answer: "Find the production integration type, staging requirement, PSA and destination bin before investigating warehouse execution."
+    - key: "QUALITY"
+      question: "Where is inspection relevance and usage decision owned?"
+      answer: "Embedded and decentralized EWM have different QM integration details, so deployment belongs in the diagnostic context."
+    - key: "INTEGRATE"
+      question: "Which system owns each posting and status?"
+      answer: "Separate ERP delivery/inventory ownership, EWM execution, TM transportation, PP production and QM inspection responsibilities."
+    - key: "AUTOMATE"
+      question: "Who controls physical equipment?"
+      answer: "RF guides people; MFS can connect EWM to PLC-controlled automation; an external WCS creates another system boundary."
+    - key: "MONITOR"
+      question: "Where did the process stop?"
+      answer: "Check the first inconsistent document status, task, queue/message or automation state instead of restarting the whole chain."
+
+deployment_models:
+  - id: DEP-EWM-EMBEDDED
+    type: deployment_model
+    title: "Embedded EWM in SAP S/4HANA"
+    documented_model: >-
+      EWM is part of the same SAP S/4HANA system and can integrate with local ERP storage
+      locations in the same system and client.
+    source_refs: [SRC-SAP-EWM-HELP, SRC-SAP-EWM-EMBEDDED-SCOPE]
+    architecture_reading:
+      strengths:
+        - "fewer cross-system logistics interfaces for the local S/4HANA warehouse"
+        - "shared system lifecycle and simpler master-data consistency for embedded scenarios"
+        - "strong fit when ERP and warehouse availability can share the same system boundary"
+      tradeoffs:
+        - "ERP and warehouse operations share more of the same technical lifecycle and failure domain"
+        - "warehouse sizing, upgrades and operational changes are less isolated from the ERP stack"
+      evidence_type: reasoned_interpretation
+    remember: "Embedded reduces landscape boundaries; it does not remove warehouse-process complexity."
+
+  - id: DEP-EWM-DECENTRALIZED
+    type: deployment_model
+    title: "Decentralized EWM based on SAP S/4HANA"
+    documented_model: >-
+      EWM runs in a separate SAP S/4HANA system and integrates with a remote enterprise
+      management system such as SAP S/4HANA.
+    source_refs: [SRC-SAP-EWM-HELP, SRC-SAP-EWM-DECENTRAL-ASR]
+    architecture_reading:
+      strengths:
+        - "warehouse operations can have a more independent technical and operational boundary"
+        - "warehouse sizing and lifecycle decisions can be separated from the enterprise-management system"
+        - "useful when warehouse automation and availability requirements justify dedicated ownership"
+      tradeoffs:
+        - "more integration contracts, message monitoring and reconciliation"
+        - "master data and transactional state cross a system boundary"
+        - "failure handling must distinguish warehouse execution from replication or interface failure"
+      evidence_type: reasoned_interpretation
+    remember: "Decentralized buys separation by accepting distribution. It is not automatically the right answer for every large warehouse."
+
+deployment_decision_rule: >-
+  I do not choose decentralized EWM from transaction volume alone. I compare operational
+  availability, automation criticality, independent lifecycle needs, network latency,
+  integration complexity, master-data distribution, recovery design, support ownership,
+  and the cost of a wider failure domain in embedded EWM.
+
+execution_object_model:
+  - id: OBJ-EWM-WAREHOUSE-REQUEST
+    type: business_object
+    title: "Warehouse Request"
+    purpose: "Represents work that EWM must plan and execute, for example putaway or stock removal."
+    typical_examples: ["Inbound Delivery", "Outbound Delivery Order", "Internal Stock Transfer"]
+    source_refs: [SRC-SAP-EWM-WAREHOUSE-REQUEST]
+  - id: OBJ-EWM-WAREHOUSE-TASK
+    type: business_object
+    title: "Warehouse Task (WT)"
+    purpose: "Executable logical or physical goods movement or stock change."
+    examples: ["pick", "putaway", "internal movement", "posting change", "goods receipt", "goods issue"]
+    source_refs: [SRC-SAP-EWM-WAREHOUSE-TASK]
+  - id: OBJ-EWM-WAREHOUSE-ORDER
+    type: business_object
+    title: "Warehouse Order (WO)"
+    purpose: "Executable work package grouping warehouse tasks or physical-inventory items."
+    source_refs: [SRC-SAP-EWM-WAREHOUSE-ORDER]
+  - id: OBJ-EWM-WAVE
+    type: business_object
+    title: "Wave"
+    purpose: "Groups or splits warehouse-request items that should be picked and processed at roughly the same time."
+    source_refs: [SRC-SAP-EWM-WAVE]
+  - id: OBJ-EWM-HANDLING-UNIT
+    type: business_object
+    title: "Handling Unit (HU)"
+    purpose: "Physical logistics unit that combines packaging material and contained goods and can be moved, packed, staged or loaded as a unit."
+  - id: OBJ-EWM-RESOURCE
+    type: business_object
+    title: "Resource"
+    purpose: "Execution object representing a worker or equipment context that performs warehouse work."
+  - id: OBJ-EWM-QUEUE
+    type: business_object
+    title: "Queue"
+    purpose: "Operational work channel used to organize and select warehouse orders for resources."
+
+object_chain:
+  path: "BUSINESS DEMAND → WAREHOUSE REQUEST → WAVE (optional) → WAREHOUSE TASK → WAREHOUSE ORDER → RESOURCE → CONFIRMATION → GOODS MOVEMENT / STATUS"
+  note: >-
+    This is a memory model, not a mandatory sequence for every EWM process. Internal movements,
+    synchronous postings, automation scenarios and production integration can use different paths.
+
+warehouse_structure:
+  title: "Map the physical warehouse before tuning strategies"
+  levels:
+    - object: "Warehouse Number"
+      role: "Top-level EWM warehouse organization and execution context."
+    - object: "Storage Type"
+      role: "Groups storage areas with common physical or process behavior."
+    - object: "Storage Section"
+      role: "Optional subdivision used to structure storage-type areas."
+    - object: "Storage Bin"
+      role: "Exact warehouse position where stock or an HU can be located."
+    - object: "Activity Area"
+      role: "Groups bins for warehouse activities and execution sequencing."
+    - object: "Work Center"
+      role: "Operational location for work such as packing, deconsolidation or quality-related processing."
+    - object: "Door / Staging Area"
+      role: "Connects warehouse execution with loading, unloading and shipping/receiving."
+    - object: "Production Supply Area (PSA)"
+      role: "Production-side staging/withdrawal area whose storage-bin mapping guides material staging."
+      source_refs: [SRC-SAP-EWM-PRODUCTION-SUPPLY]
+  lead_lens: >-
+    I separate physical topology from execution grouping. A storage type describes warehouse
+    structure; an activity area organizes work. Treating them as the same dimension makes
+    picking and resource design harder to reason about.
+
+process_families:
+  - id: PROC-EWM-INBOUND
+    type: process
+    title: "Inbound and Putaway"
+    memory_path: "ARRIVE → RECEIVE → INSPECT/DECONSOLIDATE IF NEEDED → PUTAWAY → CONFIRM"
+    trigger_examples: ["purchase-order inbound delivery", "stock transfer", "production receipt"]
+    steps:
+      - "Create or receive the inbound warehouse request"
+      - "Unload / identify handling units where relevant"
+      - "Post or prepare goods receipt according to the process design"
+      - "Run deconsolidation, quality or value-added steps when required"
+      - "Create putaway warehouse tasks"
+      - "Determine destination storage type/section/bin"
+      - "Group tasks into warehouse orders and execute"
+      - "Confirm putaway and reconcile final stock position"
+    source_refs: [SRC-SAP-EWM-WAREHOUSE-REQUEST, SRC-SAP-EWM-WAREHOUSE-TASK]
+    failure_signal: "Goods have physically arrived but the warehouse request, GR state, WT or destination determination does not represent the same reality."
+
+  - id: PROC-EWM-OUTBOUND
+    type: process
+    title: "Outbound Picking and Shipping"
+    memory_path: "DEMAND → WAVE → PICK → PACK → STAGE → LOAD → GI"
+    trigger_examples: ["sales outbound delivery", "stock transfer outbound delivery"]
+    steps:
+      - "Receive or create the outbound delivery order / warehouse request"
+      - "Group demand into a wave when synchronized processing is needed"
+      - "Release the wave or otherwise create stock-removal warehouse tasks"
+      - "Determine source stock and picking bins"
+      - "Create warehouse orders and assign work to resources/queues"
+      - "Pick and confirm"
+      - "Pack into handling units where relevant"
+      - "Stage and load"
+      - "Post goods issue and send completion status to the owning business process"
+    source_refs: [SRC-SAP-EWM-WAREHOUSE-REQUEST, SRC-SAP-EWM-WAVE, SRC-SAP-EWM-WAREHOUSE-TASK, SRC-SAP-EWM-WAREHOUSE-ORDER]
+    failure_signal: "The delivery is due, but no executable pick exists, the wrong stock was selected, work is trapped in an unexpected queue, or GI cannot be posted."
+
+  - id: PROC-EWM-INTERNAL
+    type: process
+    title: "Internal Warehouse Movement"
+    memory_path: "NEED → INTERNAL REQUEST/TASK → MOVE/CHANGE → CONFIRM"
+    scenarios:
+      - "ad hoc movement"
+      - "replenishment"
+      - "rearrangement"
+      - "posting change"
+      - "scrapping"
+    replenishment_note: >-
+      Replenishment fills picking areas from reserve stock using configured strategies and can
+      create warehouse tasks based on demand or minimum/maximum logic.
+    source_refs: [SRC-SAP-EWM-REPLENISHMENT, SRC-SAP-EWM-WAREHOUSE-TASK]
+    failure_signal: "Picking fails repeatedly because reserve stock exists but the warehouse never creates or executes the replenishment requirement."
+
+  - id: PROC-EWM-PRODUCTION-SUPPLY
+    type: process
+    title: "Production Supply"
+    memory_path: "PRODUCTION NEED → STAGING REQUIREMENT → PSA → CONSUMPTION"
+    concepts:
+      - "Production Supply Area (PSA)"
+      - "staging"
+      - "consumption"
+      - "delivery-based or more advanced production-integration variants"
+    source_refs: [SRC-SAP-EWM-PRODUCTION-SUPPLY, SRC-SAP-EWM-PRODUCTION-INTEGRATION]
+    failure_signal: "Components exist in the warehouse but cannot reach the correct PSA/bin or production confirmation cannot reconcile consumption."
+
+  - id: PROC-EWM-PHYSICAL-INVENTORY
+    type: process
+    title: "Physical Inventory"
+    memory_path: "FREEZE/SELECT → COUNT → RECOUNT IF NEEDED → DIFFERENCE → POST"
+    options: ["storage-bin-specific", "product-specific", "periodic", "continuous", "cycle counting"]
+    source_refs: [SRC-SAP-EWM-PHYSICAL-INVENTORY]
+    failure_signal: "Physical stock and EWM stock disagree, but the difference is posted before the document, bin, HU and open-task context is understood."
+
+control_model:
+  - id: EWM-CTRL-WPT
+    title: "Warehouse Process Type"
+    question: "What kind of warehouse work is this and which control behavior follows?"
+    affects: ["warehouse-task behavior", "process category", "follow-on execution context"]
+  - id: EWM-CTRL-PUTAWAY
+    title: "Putaway Strategy"
+    question: "Why did EWM choose this destination storage type and bin?"
+    affects: ["destination search", "capacity/section/bin choice", "putaway path"]
+  - id: EWM-CTRL-STOCK-REMOVAL
+    title: "Stock Removal Strategy"
+    question: "Why did EWM pick this stock, HU, batch or source bin?"
+    affects: ["source search", "stock selection", "picking path"]
+  - id: EWM-CTRL-WAVE
+    title: "Wave Determination and Release"
+    question: "Which outbound items should be processed together and when should work be released?"
+    affects: ["picking workload timing", "WT creation", "cut-off synchronization"]
+    source_refs: [SRC-SAP-EWM-WAVE]
+  - id: EWM-CTRL-WOCR
+    title: "Warehouse Order Creation Rule"
+    question: "How should warehouse tasks become executable work packages?"
+    affects: ["WO size", "task grouping", "resource execution"]
+    source_refs: [SRC-SAP-EWM-WAREHOUSE-ORDER]
+  - id: EWM-CTRL-QUEUE
+    title: "Queue and Resource Selection"
+    question: "Who or what should execute the warehouse order next?"
+    affects: ["work distribution", "RF sequence", "equipment/operator routing"]
+
+quality_integration:
+  embedded:
+    title: "QM with Embedded EWM"
+    model: >-
+      Embedded EWM can integrate with S/4HANA QM for inspection relevance, inspection lots,
+      results and follow-up warehouse actions.
+    source_refs: [SRC-SAP-EWM-QM-EMBEDDED]
+  decentralized:
+    title: "QM with Decentralized EWM"
+    model: >-
+      Decentralized EWM can integrate warehouse inspection processing with QM in the connected
+      enterprise-management system; the distributed document and integration boundary differs
+      from embedded EWM.
+    source_refs: [SRC-SAP-EWM-QM-DECENTRAL]
+  lead_lens: >-
+    Do not copy an embedded QM troubleshooting path into a decentralized landscape. First state
+    where the inspection document/lot and usage decision live, then trace the follow-up action.
+
+integration_boundaries:
+  - system: "MM-IM / Inventory Management"
+    owns: "Enterprise inventory quantity/value and ERP goods-movement/accounting context."
+    ewm_owns: "Detailed warehouse position and warehouse execution."
+    diagnostic_question: "Is the mismatch an ERP stock/accounting problem or an EWM bin/HU/execution problem?"
+  - system: "SD / Delivery Management"
+    owns: "Customer delivery demand and enterprise delivery document context."
+    ewm_owns: "Warehouse request execution: pick, pack, stage, load and warehouse-side GI processing."
+    diagnostic_question: "Did the correct delivery reach EWM and does its status return consistently?"
+  - system: "PP / Manufacturing"
+    owns: "Manufacturing demand, order and consumption/receipt business context."
+    ewm_owns: "Material staging, PSA-side warehouse execution and warehouse receipt flows."
+    diagnostic_question: "Is the wrong requirement coming from production, PSA mapping, or warehouse staging execution?"
+  - system: "QM"
+    owns: "Inspection planning/results/usage-decision context according to the selected integration model."
+    ewm_owns: "Warehouse stock/process follow-up around the inspection."
+    diagnostic_question: "Which quality document and stock status currently block the physical flow?"
+  - system: "TM"
+    owns: "Transportation demand, freight planning and freight-order execution context."
+    ewm_owns: "Warehouse loading/unloading and internal warehouse execution."
+    diagnostic_question: "Is the constraint a vehicle/transportation plan or a warehouse readiness problem?"
+
+rf_and_automation:
+  rf:
+    title: "Radio Frequency"
+    role: "Guides human warehouse execution and can select work by resource/queue context."
+    lead_lens: "RF is an execution channel, not a separate warehouse process model."
+  mfs:
+    title: "Material Flow System (MFS)"
+    role: >-
+      EWM can control material flow through warehouse tasks and communicate with PLCs using
+      communication channels and communication points.
+    objects: ["PLC", "communication channel", "communication point", "conveyor segment", "resource"]
+    source_refs: [SRC-SAP-EWM-MFS]
+    lead_lens: >-
+      Treat automation as a control hierarchy: EWM decides warehouse work; MFS coordinates
+      material-flow stages; PLC logic executes machine-level control between communication points.
+  external_wcs:
+    title: "External Warehouse Control System"
+    role: "Alternative automation boundary when equipment orchestration is delegated to another system."
+    lead_lens: "Define who owns task decomposition, routing, confirmation and recovery. Otherwise both systems try to be the warehouse brain."
+
+failure_modes:
+  - id: FAIL-EWM-NO-WAREHOUSE-REQUEST
+    symptom: "ERP demand exists but no EWM execution document appears."
+    check_first: "Warehouse relevance, system/deployment boundary, document integration and message status."
+  - id: FAIL-EWM-NO-WT
+    symptom: "Warehouse request exists but no warehouse task can be created."
+    check_first: "Process type, stock or destination determination, wave/release status, blocks and required master data."
+  - id: FAIL-EWM-WRONG-BIN
+    symptom: "Putaway or picking selects an unexpected storage type/bin."
+    check_first: "Exact search context, strategy, product/warehouse data, stock attributes and capacity constraints."
+  - id: FAIL-EWM-WO-NOT-EXECUTED
+    symptom: "Warehouse tasks exist but work is not reaching the expected resource."
+    check_first: "Warehouse-order creation, queue, resource type/group and RF selection context."
+  - id: FAIL-EWM-REPLENISHMENT
+    symptom: "Picking area is empty although reserve stock exists."
+    check_first: "Replenishment strategy, min/max or demand trigger, WT creation and source-stock eligibility."
+  - id: FAIL-EWM-STATUS-MISMATCH
+    symptom: "ERP delivery/inventory and EWM show different execution states."
+    check_first: "Find the first document/status that diverged and inspect the integration queue/message instead of manually forcing the final status."
+  - id: FAIL-EWM-QM-BLOCK
+    symptom: "Stock is physically present but cannot continue to normal putaway or picking."
+    check_first: "Inspection relevance, stock type, inspection document/lot, usage decision and follow-up action."
+  - id: FAIL-EWM-AUTOMATION
+    symptom: "Warehouse task exists but conveyor or AS/RS execution stops."
+    check_first: "Separate EWM WT/WO state from MFS communication point, channel, PLC and equipment state."
+
+architecture_tradeoffs:
+  - decision: "MM-IM only vs EWM"
+    lighter_choice: "Use MM-IM when plant/storage-location inventory and ordinary goods movements are enough."
+    stronger_choice: "Add EWM when bin-level execution, task orchestration, waves, HUs, complex warehouse strategies, production warehousing or automation materially improve control."
+  - decision: "Embedded vs Decentralized"
+    lighter_choice: "Prefer embedded when shared lifecycle and lower cross-system integration complexity fit the operational risk model."
+    stronger_choice: "Consider decentralized when warehouse independence, dedicated sizing/lifecycle or automation availability justify a separate system boundary."
+    caution: "This is an architecture heuristic, not a vendor rule. Validate against the exact landscape, release, license and SLA."
+  - decision: "MFS vs External WCS"
+    lighter_choice: "Use MFS when EWM should own material-flow orchestration close to PLCs and the supported automation design fits MFS."
+    stronger_choice: "Use an external WCS when a dedicated automation layer is an explicit enterprise standard or owns equipment-specific optimization that should remain outside EWM."
+    caution: "The important design point is a single clear owner for each control decision and confirmation."
+
+synthetic_case:
+  company: "Global Transformation Industries"
+  warehouse: "DE01 High-Volume Distribution & Production Warehouse"
+  situation: >-
+    Sales orders feed outbound deliveries, production orders require component staging, and
+    automated high-bay storage supplies a manual picking area. A proposed architecture must
+    choose embedded or decentralized EWM and define how ERP, EWM, QM, TM and automation share work.
+  reasoning_path:
+    - "Classify warehouse requirements before choosing deployment."
+    - "Separate enterprise delivery/inventory ownership from EWM execution."
+    - "Map outbound request → wave → WT → WO → resource → confirmation → GI."
+    - "Map production need → staging requirement → PSA → warehouse work → consumption."
+    - "Map automation responsibility between EWM/MFS and PLCs."
+    - "Design message, status and recovery monitoring before go-live."
+  assessment_prompt: "Would you deploy EWM embedded or decentralized here, and which evidence would change your decision?"
+
+assessment_questions:
+  - question: "What is the simplest difference between Warehouse Task and Warehouse Order?"
+    strong_answer: "A WT is the movement or stock-change work. A WO groups tasks into an executable work package for warehouse processing."
+  - question: "When would you consider decentralized EWM?"
+    strong_answer: "When warehouse availability, automation, sizing or lifecycle independence justify a separate system boundary and the organization accepts the additional integration and master-data complexity."
+  - question: "Why is a wave not the same as a warehouse order?"
+    strong_answer: "A wave groups outbound demand by processing time; a warehouse order groups executable warehouse tasks into work for a resource."
+  - question: "Where do you start if an outbound delivery exists but nothing is picked?"
+    strong_answer: "I trace delivery integration, EWM warehouse request, wave/release if used, WT creation, stock-removal determination, WO/queue and resource execution in that order until I find the first missing state."
+  - question: "How do PP and EWM meet?"
+    strong_answer: "Production creates the material need; EWM stages components to the PSA and supports warehouse execution. I verify production-integration type, PSA/bin mapping, staging request and consumption status."
+  - question: "What does MFS add?"
+    strong_answer: "It connects EWM warehouse-task execution to automated material flow and PLC communication. I still separate warehouse decision logic from machine-level control."
+  - question: "How would you explain EWM vs MM-IM to a business lead?"
+    strong_answer: "MM-IM tells the enterprise how much stock exists and its inventory context. EWM tells warehouse operations exactly where it is and what work must happen next."
+
+source_refs:
+  - SRC-SAP-EWM-HELP
+  - SRC-SAP-EWM-EMBEDDED-SCOPE
+  - SRC-SAP-EWM-DECENTRAL-ASR
+  - SRC-SAP-EWM-WAREHOUSE-REQUEST
+  - SRC-SAP-EWM-WAREHOUSE-TASK
+  - SRC-SAP-EWM-WAREHOUSE-ORDER
+  - SRC-SAP-EWM-WAVE
+  - SRC-SAP-EWM-REPLENISHMENT
+  - SRC-SAP-EWM-PRODUCTION-SUPPLY
+  - SRC-SAP-EWM-PRODUCTION-INTEGRATION
+  - SRC-SAP-EWM-MFS
+  - SRC-SAP-EWM-QM-EMBEDDED
+  - SRC-SAP-EWM-QM-DECENTRAL
+  - SRC-SAP-EWM-PHYSICAL-INVENTORY

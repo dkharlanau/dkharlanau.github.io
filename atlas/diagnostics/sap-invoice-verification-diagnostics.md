@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Invoice Verification Diagnostics"
-description: "A conservative diagnostic frame for invoice verification blocks and mismatches in SAP MM."
+description: "A practical way to diagnose SAP invoice verification problems by reconciling the invoice with PO history, goods receipt, tolerances, tax, and approval context."
 permalink: /atlas/diagnostics/sap-invoice-verification-diagnostics/
 atlas_section: diagnostics
 domain: SAP AMS
@@ -31,8 +31,6 @@ robots: index,follow
 sitemap: true
 ---
 
-
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>
@@ -46,7 +44,7 @@ sitemap: true
   <header class="note-header">
     <p class="eyebrow">Atlas Diagnostic</p>
     <h1>SAP invoice verification diagnostics</h1>
-    <p class="note-subtitle">A first-pass structure for separating invoice blocks caused by price, quantity, tax, or reference mismatches.</p>
+    <p class="note-subtitle">A blocked invoice is usually telling you that purchasing, receiving, supplier billing, or tolerance logic disagree. Read that disagreement before releasing anything.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -59,115 +57,70 @@ sitemap: true
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Invoice verification is the control point where the supplier's bill is matched against purchase order and goods receipt evidence. A blocked invoice is usually process evidence, not a system error. The support goal is to identify which mismatch element triggered the block and whether it reflects a real discrepancy or a data timing issue.</p>
-    <p>In practice, most invoice blocks resolve to one of four variance types—price, quantity, tax, or reference—and the fastest path to resolution is comparing the invoice line against PO history before adjusting tolerance or master data.</p>
+    <h2>First distinguish an error from a block</h2>
+    <p>An invoice that cannot be posted is different from an invoice that posts but is blocked for payment. A parked document is different again. These states have different diagnostic paths, so the first useful question is simple: what document exists now, and what exactly prevents the next step?</p>
+    <p>Invoice verification sits in the middle of several truths: the commercial agreement in the PO, the physical event in goods receipt or service entry, the supplier invoice, tax/accounting rules, and configured tolerances. The system is useful precisely because it refuses to pretend these always match.</p>
 
-    <h2>Common symptoms</h2>
-    <ul>
-      <li>Invoice posts with a blocking reason that prevents automatic payment.</li>
-      <li>MIRO shows price, quantity, or tax differences beyond tolerance.</li>
-      <li>Invoice references a purchase order item that has no goods receipt or partial receipt.</li>
-      <li>Multiple invoices for the same PO item create duplicate payment risk.</li>
-      <li>Tax code or tax jurisdiction mismatch prevents posting.</li>
-    </ul>
+    <h2>Read the mismatch as a process signal</h2>
+    <div class="decision-table"><table><thead><tr><th>Difference</th><th>What to compare</th><th>Possible business meaning</th></tr></thead><tbody>
+      <tr><td>Quantity</td><td>Ordered, received/accepted, reversed/returned, and invoiced quantity.</td><td>Partial delivery, early invoice, wrong reference, return not reflected, or duplicate billing.</td></tr>
+      <tr><td>Price or value</td><td>PO conditions, invoice price, quantity basis, currency, planned delivery costs where relevant.</td><td>Supplier price change, wrong PO price, unit/currency issue, or valid commercial variance.</td></tr>
+      <tr><td>Tax or account treatment</td><td>Invoice tax data, PO/account assignment, supplier/company context, local tax rules.</td><td>Wrong tax code, changed tax treatment, or accounting data that needs finance review.</td></tr>
+      <tr><td>Reference</td><td>Supplier, PO/item, delivery/service reference, invoice number/date.</td><td>Wrong PO, consolidated invoice, duplicate document, or supplier reference problem.</td></tr>
+      <tr><td>Timing</td><td>PO release, GR/service acceptance, reversals, invoice posting date and period.</td><td>The documents may be correct individually but arrived in a different sequence.</td></tr>
+    </tbody></table></div>
 
-    <h2>Likely causes</h2>
-    <ul>
-      <li><strong>Price variance:</strong> invoice price differs from PO price beyond the configured tolerance. May be a valid supplier price change or a wrong PO price.</li>
-      <li><strong>Quantity variance:</strong> invoice quantity exceeds GR quantity. May indicate partial delivery, returns not processed, or duplicate invoicing.</li>
-      <li><strong>Reference mismatch:</strong> invoice references wrong PO number, item, or delivery note. Common with consolidated invoices or supplier numbering changes.</li>
-      <li><strong>Tax mismatch:</strong> tax code on invoice differs from PO or supplier master. Often caused by jurisdiction changes or supplier tax registration updates.</li>
-      <li><strong>Timing issue:</strong> GR was posted after invoice was entered, or invoice arrived before PO was released.</li>
-      <li><strong>Master data issue:</strong> supplier not extended to company code, payment terms mismatch, or tax number invalid.</li>
-    </ul>
-
-    <h2>Where to check in SAP</h2>
-    <ul>
-      <li>MIRO / MIR7 — invoice entry and blocking reason display.</li>
-      <li>ME23N — purchase order history showing GR and IR quantities.</li>
-      <li>MIR4 — invoice document display with variance details.</li>
-      <li>MRBR — blocked invoices report and release.</li>
-      <li>FBL1N — supplier line items to see if invoice was posted but blocked.</li>
-      <li>PO history tab — compare ordered, delivered, and invoiced quantities.</li>
-    </ul>
-
-    <h2>Key tables / transactions / objects</h2>
-    <ul>
-      <li><strong>RBKP</strong> — invoice document header.</li>
-      <li><strong>RSEG</strong> — invoice document items.</li>
-      <li><strong>EKBE</strong> — PO history (GR and IR records).</li>
-      <li><strong>LFA1 / LFB1</strong> — supplier master (general and company code).</li>
-      <li><strong>T169</strong> — tolerance groups for invoice verification.</li>
-    </ul>
-
-    <h2>Diagnostic workflow</h2>
+    <h2>A practical diagnostic sequence</h2>
     <ol>
-      <li>Confirm the PO number, item, and supplier on the invoice match the system record.</li>
-      <li>Check PO history (EKBE) for GR quantity and IR quantity. Identify the gap.</li>
-      <li>Review the blocking reason in RBKP, MIR4, or MRBR. Determine if it is price, quantity, tax, or reference.</li>
-      <li>Check tolerance settings to see if the variance is within acceptable limits.</li>
-      <li>If the variance is valid, document the business reason and release. If not, return to supplier or correct master data.</li>
-      <li>Verify that releasing the invoice will not create a duplicate payment.</li>
+      <li><strong>Capture the invoice state.</strong> Supplier, invoice/reference number, PO/item, company code, posting date, amount, currency, and whether the document is parked, posted, blocked, or rejected.</li>
+      <li><strong>Read the PO history.</strong> Reconcile ordered, received or accepted, reversed/returned, and already invoiced quantities and values.</li>
+      <li><strong>Read the actual variance or block reason.</strong> Do not infer it from the user's description. Use the invoice document and the release/blocking information available in the release.</li>
+      <li><strong>Check whether the source document is wrong.</strong> A valid invoice should not be “fixed” by changing tolerance if the PO price, quantity, account assignment, or receipt is simply incorrect.</li>
+      <li><strong>Check whether the supplier invoice is wrong.</strong> A system block can be the correct control when the supplier billed the wrong quantity, price, reference, or tax.</li>
+      <li><strong>Check duplicate risk before any release or reposting.</strong> Use supplier/reference and PO history together; a second payment is a remarkably expensive way to prove that the first ticket was urgent.</li>
+      <li><strong>Route the decision to the right owner.</strong> Procurement owns commercial terms, receiving owns the physical event, finance/tax owns accounting treatment, and support should keep the evidence chain clear.</li>
     </ol>
 
-    <h2>Typical fixes or next actions</h2>
+    <h2>Do not “solve” recurring variance by widening tolerance</h2>
+    <p>Tolerance settings are controls. If many invoices hit the same variance, first understand why. Maybe supplier prices are not updated in POs, receipts are late, units are inconsistent, or a contractual process changed. Raising tolerance can reduce tickets while increasing uncontrolled spend. Dashboard serenity is not the same thing as process health.</p>
+
+    <h2>Release is a business decision</h2>
+    <p>Classic SAP processes may use transactions such as MIR4 and MRBR; S/4HANA landscapes may use different apps and workflow patterns. The exact screen matters less than the rule: release only after the variance is understood, the responsible owner accepts it, and duplicate/tax/control risks are checked.</p>
+    <p>Do not document the solution as “MRBR release”. Document why the invoice was safe to release and what evidence supported that decision.</p>
+
+    <h2>What belongs in the ticket</h2>
     <ul>
-      <li>Release the invoice with documented approval if the variance is within business tolerance.</li>
-      <li>Correct the PO price or quantity if the original document was wrong.</li>
-      <li>Post a subsequent debit or credit memo if the supplier issued a corrected invoice.</li>
-      <li>Update supplier master data (tax code, payment terms) if the mismatch stems from master data.</li>
-      <li>Escalate to procurement if the supplier repeatedly invoices outside agreed terms.</li>
+      <li>Supplier, invoice/reference number, PO/item, company code, amount and currency.</li>
+      <li>Current invoice state and exact variance/block reason.</li>
+      <li>Ordered, received/accepted, reversed/returned, and already invoiced quantity/value.</li>
+      <li>Expected versus actual price, quantity, tax, or reference where relevant.</li>
+      <li>Duplicate check result.</li>
+      <li>Owner and approval for any accepted commercial or accounting variance.</li>
+      <li>Whether the same pattern affects other invoices or suppliers.</li>
     </ul>
 
-    <h2>What to capture first</h2>
-    <p>Before routing the ticket, capture: PO number, invoice number, supplier, variance type (price/quantity/tax/reference), expected versus actual values, and whether the issue is recurring. A blocked invoice should not be released without a documented variance reason and business approval.</p>
+    <h2>When the incident is bigger than one invoice</h2>
+    <p>If the same supplier, purchasing organization, material group, interface, or invoice channel produces repeated blocks, move from invoice correction to problem management. Look for PO condition maintenance, supplier master data, receipt timing, EDI mapping, tax treatment, or governance rules that create the mismatch at scale.</p>
 
-
-    <h2>Escalation signals</h2>
-    <ul>
-      <li>The variance exceeds the buyer's or finance team's delegated authority and needs procurement/finance approval.</li>
-      <li>The same supplier repeatedly invoices outside PO terms, suggesting a contractual or master-data problem.</li>
-      <li>Releasing the invoice would create a duplicate payment or bypass a required tax review.</li>
-      <li>The block involves complex tax jurisdiction, intercompany, or EDI invoicing scenarios outside standard MM support scope.</li>
-    </ul>
-
-    <h2>Boundaries and non-goals</h2>
-    <p>This page is a diagnostic frame, not an invoice verification configuration guide. It does not cover automatic invoice verification setup, EDI invoicing, or complex tax scenarios. It does not replace the judgment of a finance controller or procurement manager.</p>
-
-    <p class="disclaimer">This is not official SAP documentation and not a replacement for system-specific analysis.</p>
+    <h2>The useful end state</h2>
+    <p>Invoice verification is healthy when the PO, receipt/service evidence, supplier invoice, and accounting result can be reconciled. The goal is not to make blocked invoices disappear. It is to make valid invoices flow and invalid differences visible early enough for the right owner to decide.</p>
 
     <h2>Next diagnostic steps</h2>
     <ul>
-      <li><a href="/atlas/maps/procure-to-pay-map/">Procure to Pay Map</a> — use this map to connect invoice blocks to the full procure-to-pay workflow.</li>
-      <li><a href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">SAP Goods Receipt Diagnostics</a> — go here when the invoice block is caused by GR timing or quantity differences.</li>
-      <li><a href="/atlas/diagnostics/sap-three-way-match-diagnostics/">SAP Three-Way Match Diagnostics</a> — check this to reconcile PO, GR, and invoice data.</li>
-      <li><a href="/atlas/diagnostics/sap-purchase-order-creation-diagnostics/">SAP Purchase Order Creation Diagnostics</a> — use this when the invoice references a wrong or blocked PO.</li>
+      <li><a href="/atlas/maps/procure-to-pay-map/">Procure to Pay Map</a> for the wider P2P chain.</li>
+      <li><a href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">SAP Goods Receipt Diagnostics</a> when receipt timing or quantity is the key difference.</li>
+      <li><a href="/atlas/diagnostics/sap-three-way-match-diagnostics/">SAP Three-Way Match Diagnostics</a> for PO, receipt and invoice reconciliation.</li>
+      <li><a href="/atlas/sap/gr-ir-clearing-explained/">GR/IR Clearing Explained</a> for the financial bridge between receipt and invoice.</li>
     </ul>
-
-    <h2>Practical checklist</h2>
-    <div markdown="1">
-- [ ] Collect invoice number, PO number, item, supplier, and blocking reason. **Synthetic example:** invoice 1234567890, PO 9876543210, block "Quantity variance".
-
-- [ ] Check MIRO/MIR4 and PO history (EKBE) for ordered, delivered, and invoiced quantities.
-
-- [ ] Compare invoice price, quantity, and tax code against PO and GR within tolerance (T169).
-
-- [ ] Confirm no duplicate invoice exists for the same PO item before releasing.
-
-- [ ] Document the variance reason and the approver who authorized release.
-
-- [ ] Safety limit: do not release blocked invoices that would cause duplicate payment or exceed tolerance without documented approval.
-</div>
   </div>
 
   <section class="atlas-related">
     <h2>Related Atlas Pages</h2>
     <ul>
-      <li><a href="/atlas/sap/sap-mm-procurement-overview/">SAP Mm Procurement Overview</a></li>
-      <li><a href="/atlas/sap/gr-ir-clearing-explained/">Gr Ir Clearing Explained</a></li>
+      <li><a href="/atlas/sap/sap-mm-procurement-overview/">SAP MM Procurement Overview</a></li>
+      <li><a href="/atlas/sap/gr-ir-clearing-explained/">GR/IR Clearing Explained</a></li>
       <li><a href="/atlas/diagnostics/sap-goods-receipt-diagnostics/">SAP Goods Receipt Diagnostics</a></li>
-      <li><a href="/atlas/diagnostics/sap-three-way-match-diagnostics/">SAP Three Way Match Diagnostics</a></li>
+      <li><a href="/atlas/diagnostics/sap-three-way-match-diagnostics/">SAP Three-Way Match Diagnostics</a></li>
     </ul>
   </section>
 

@@ -2,7 +2,7 @@
 
 layout: default
 title: "SAP Pricing Procedure Debugging"
-description: "A conservative support frame for investigating pricing procedure issues in SAP sales documents."
+description: "A practical way to trace SAP sales pricing from procedure determination to condition records, calculation, copying, and manual changes."
 permalink: /atlas/sap/sap-pricing-procedure-debugging/
 atlas_section: sap
 domain: SAP operations
@@ -39,7 +39,7 @@ sitemap: false
   <header class="note-header">
     <p class="eyebrow">Atlas SAP Note</p>
     <h1>SAP pricing procedure debugging</h1>
-    <p class="note-subtitle">A support-oriented way to narrow pricing issues without pretending every condition technique setup is identical.</p>
+    <p class="note-subtitle">Pricing becomes much easier to debug when you stop asking “why is the price wrong?” and trace the exact condition that produced the result.</p>
     <div class="atlas-pill-row">{% include atlas/status-badge.html %}</div>
   </header>
 
@@ -52,35 +52,59 @@ sitemap: false
   </aside>
 
   <div class="note-body">
-    <h2>Core idea</h2>
-    <p>Pricing issues should be debugged as a chain, not as a guessing exercise. A sales document price is usually the result of procedure determination, condition types, access logic, condition records, dates, master data, manual changes, and calculation rules.</p>
-    <p>The exact objects and transactions depend on the SAP release, configuration, and custom enhancements. This page is intentionally a diagnostic frame, not a configuration manual.</p>
+    <h2>Price is a result, not one setting</h2>
+    <p>A sales document price is built from several decisions. The system selects a pricing procedure, processes its condition types in sequence, searches for condition records where required, applies formulas and exclusions, and may also keep copied or manually entered values.</p>
+    <p>Because of this, “pricing is wrong” is too broad for support. Pick one condition and one document item. Then explain what you expected, what SAP calculated, and where the two paths separate.</p>
 
-    <h2>First-pass diagnostic path</h2>
+    <h2>Read the pricing result from the inside</h2>
+    <div class="decision-table">
+      <table>
+        <thead><tr><th>Question</th><th>If the answer is wrong</th><th>Typical evidence</th></tr></thead>
+        <tbody>
+          <tr><td>Was the expected pricing procedure determined?</td><td>The problem is above the individual condition record.</td><td>Sales area, document pricing context, customer pricing context, selected procedure.</td></tr>
+          <tr><td>Is the expected condition type in the procedure?</td><td>The condition may never be evaluated for this document.</td><td>Procedure step, requirement, statistical/manual settings, exclusion logic.</td></tr>
+          <tr><td>Did the access find the expected record?</td><td>Check keys, validity, date, organizational data, customer/material data, and record maintenance.</td><td>Pricing analysis and access result.</td></tr>
+          <tr><td>Was a value found but calculated differently?</td><td>The issue may be scale, unit, currency, formula, base value, rounding, or condition interaction.</td><td>Rate, base, value, calculation type, units, scales, formulas.</td></tr>
+          <tr><td>Was the result copied or changed later?</td><td>The automatic determination may be correct while document history changes the final value.</td><td>Pricing type during copy, manual condition, change history, redetermination behaviour.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>A practical investigation</h2>
+    <ol>
+      <li><strong>Choose one failing item.</strong> Capture document, item, customer, material, sales area, currency, quantity, pricing date, expected value, and actual value.</li>
+      <li><strong>Open the pricing analysis.</strong> Do not start with condition maintenance. First see which procedure and condition path the document actually used.</li>
+      <li><strong>Find the first unexpected condition.</strong> Is it missing, inactive, zero, duplicated, excluded, or simply calculated with a different base?</li>
+      <li><strong>Follow the access result.</strong> If a record was not found, compare the access keys and validity with the business data in the document.</li>
+      <li><strong>Check calculation context.</strong> Units, currency, scales, condition base values, formulas, taxes, and rounding can make a valid record produce an unexpected result.</li>
+      <li><strong>Check document history.</strong> A quotation, contract, order, delivery, or billing document may copy pricing under rules that differ from a fresh determination.</li>
+      <li><strong>Compare with a working case.</strong> A nearby working document often exposes the relevant difference faster than browsing configuration without a hypothesis.</li>
+    </ol>
+
+    <h2>Three mistakes that waste time</h2>
+    <p><strong>Changing the condition record first.</strong> If the document did not try to read that record, maintaining it only creates another variable.</p>
+    <p><strong>Treating every price difference as SD pricing.</strong> Tax, settlement, external pricing, POS replication, commerce platforms, and custom logic can change the business result outside the classic sales pricing path.</p>
+    <p><strong>Ignoring the pricing date and copy logic.</strong> Two documents with the same customer and material can legitimately use different records because their dates or pricing types differ.</p>
+
+    <h2>When the problem is reported from retail or POS</h2>
+    <p>A store price mismatch should first be split into two questions: did SAP calculate the expected price, and did the downstream store or POS system receive and apply the same price? This avoids debugging an outbound replication delay as if it were a pricing-procedure defect.</p>
+    <p>Useful evidence is the article or material, store, business date, expected and actual price, promotion context, the SAP pricing result, and the last successful price distribution to the affected location. The exact interface and store-assortment logic are landscape-specific.</p>
+
+    <h2>What a strong pricing ticket contains</h2>
     <ul>
-      <li>Confirm the document context: sales area, document type, customer, material, date, currency, and pricing date.</li>
-      <li>Check whether the expected pricing procedure is used for this context.</li>
-      <li>Identify the missing or unexpected condition: base price, discount, surcharge, freight, tax, or statistical value.</li>
-      <li>Review whether the relevant condition record exists, is valid on the pricing date, and matches the access keys used in this landscape.</li>
-      <li>Separate automatic pricing failure from manual override, exclusion, copy-control, or custom enhancement behavior.</li>
+      <li>Document and item, expected price, actual price, and business impact.</li>
+      <li>Pricing date, currency, quantity, customer, material, and sales area.</li>
+      <li>The expected condition type and its actual status in pricing analysis.</li>
+      <li>Access result or condition-record evidence when relevant.</li>
+      <li>Any manual condition, copy/redetermination event, or recent pricing change.</li>
+      <li>A working comparison document when available.</li>
     </ul>
 
-    <h2>Common failure patterns</h2>
-    <p>Many pricing tickets are not caused by one broken setting. They come from mismatched master data, wrong validity dates, copied documents retaining old pricing, access sequences that do not match the business scenario, or manual changes hiding the original automatic result.</p>
+    <h2>Limitations and boundaries</h2>
+    <p>This diagnostic is about classic sales-document pricing logic. It does not prove how a specific S/4HANA release, industry solution, external tax engine, commerce platform, settlement process, or custom pricing routine behaves. Configuration objects, apps, and technical data structures also vary by release. Use pricing analysis to locate the failed step first, then verify the release-specific implementation before changing configuration or condition data.</p>
 
-    <h2>Support takeaway</h2>
-    <p>A useful pricing ticket should include the document number, item, pricing date, expected condition, actual condition result, customer/material context, and a screenshot or extract of the pricing analysis available in that system. Avoid asking a configurator to “fix pricing” without showing which part of the pricing chain failed.</p>
-
-    <h2>Retail-specific: price discrepancy</h2>
-    <p>In retail, price discrepancies often appear at the POS when the selling price in SAP does not match the price expected by the customer or the promotion price advertised.</p>
-    <ul>
-      <li><strong>Check condition record validity:</strong> VK13 or VK14 shows whether the price or discount condition record is valid for the store, article, and date. A record may have expired or not yet started.</li>
-      <li><strong>Check POS price load timing:</strong> in many retail landscapes, prices are loaded to the POS system on a schedule. A price change in SAP may not reach the POS until the next load cycle.</li>
-      <li><strong>Check store assortment inclusion:</strong> a promotion price may be valid only for stores in a specific assortment or cluster. The affected store may not be included.</li>
-      <li><strong>Check tax or jurisdiction:</strong> the store may be in a different tax jurisdiction than expected, causing the final price to differ.</li>
-      <li><strong>Check manual override:</strong> a user may have manually changed the price at the POS or in SAP, bypassing the automatic condition.</li>
-    </ul>
-    <p>A useful price discrepancy ticket should include: article number, store number, expected price, actual price, transaction date, promotion or campaign ID if applicable, and whether the issue affects one store or multiple stores.</p>
+    <h2>The useful end state</h2>
+    <p>Do not close the analysis with “condition record fixed.” State the failed pricing step: for example, the wrong procedure was selected, the access keys did not match, the record was outside validity, a formula changed the base, or copied pricing was not redetermined. That explanation is reusable. A changed number is not.</p>
   </div>
 
   <section class="atlas-related">

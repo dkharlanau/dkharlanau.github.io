@@ -1,0 +1,98 @@
+---
+layout: default
+title: "SAP EWM — Integration Architecture"
+description: "A Lead-level map of EWM integration with S/4HANA, SD, MM, TM, PP, QM, MES, MFS, PLC and external warehouse control systems."
+permalink: /labs/enterprise-context/ewm/integrations/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+tags: [sap, ewm, integration, architecture, logistics]
+---
+
+{% assign model = site.data.labs.enterprise_context.ewm.integrations %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/ewm/">EWM</a></li><li aria-current="page">Integrations</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">EWM / Integration architecture</p>
+      <h1>{{ model.title }}</h1>
+      <p>{{ model.summary }}</p>
+      <a class="research-canvas__button" href="#contracts">Open integration contracts <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Integration coverage">
+      <p>Coverage</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ model.integration_contracts | size }}</strong><small>Integration boundaries</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ model.integration_patterns | size }}</strong><small>End-to-end patterns</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ model.interface_selection_questions | size }}</strong><small>Design questions</small></div>
+      <em>Checked {{ model.verified_at }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <p><strong>Working rule:</strong> {{ model.working_rule }}</p>
+    <p><a href="/labs/enterprise-context/ewm/domains/">Domain map</a> · <a href="/labs/enterprise-context/ewm/objects/">Object catalog</a> · <a href="/labs/enterprise-context/ewm/interfaces/">Technical interfaces</a> · <a href="/labs/enterprise-context/data/ewm-integrations.json">JSON</a></p>
+  </section>
+
+  <section class="research-canvas__inventory" id="contracts" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration contracts</p>
+      <h2>Define ownership before protocol.</h2>
+      <p>Each boundary below states the business responsibility, main objects and first diagnostic path. This is more useful than a flat list of RFCs, IDocs and APIs.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in model.integration_contracts %}
+      <article class="ecg-determination-detail">
+        <header><div><span>INT</span><small>{{ item.counterpart }}</small></div><h3>{{ item.title }}</h3></header>
+        <div class="ecg-decision-columns">
+          <div><h4>Business scope</h4><ul>{% for value in item.business_scope %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Main objects</h4><ul>{% for value in item.main_objects %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Ownership</h4>{% for own in item.ownership %}<p><b>{{ own[0] }}:</b> {{ own[1] }}</p>{% endfor %}</div>
+        </div>
+        {% if item.mechanism %}<p><strong>Mechanism:</strong> {{ item.mechanism }}</p>{% endif %}
+        {% if item.control_points %}<p><strong>Control points:</strong> {{ item.control_points | join: " · " }}</p>{% endif %}
+        {% if item.diagnostic_path %}<p><strong>Diagnostic path:</strong> {{ item.diagnostic_path | join: " → " }}</p>{% endif %}
+        {% if item.diagnostic_question %}<p><strong>Diagnostic:</strong> {{ item.diagnostic_question }}</p>{% endif %}
+        {% if item.design_question %}<p><strong>Design question:</strong> {{ item.design_question }}</p>{% endif %}
+        {% if item.deployment_note %}<p><strong>Deployment note:</strong> {{ item.deployment_note }}</p>{% endif %}
+        {% if item.common_failure %}<p class="ecg-lead-lens"><strong>Failure pattern:</strong> {{ item.common_failure }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Technical view</p><h2>The same business boundary can use different integration technologies.</h2><p>Use the technical catalog when the question moves from ownership into qRFC, ALE/IDoc, OData, released APIs, MFS or WCS communication.</p></header>
+    <div class="research-route-list"><a href="/labs/enterprise-context/ewm/interfaces/"><span>IF</span><strong>Open EWM Technical Interface Catalog</strong><small>Local integration · qRFC/RFC · ALE/IDoc · OData A2X · ABAP APIs · MES · WCU · MFS/PLC</small><i class="material-symbols-outlined" aria-hidden="true">cable</i></a></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Reference patterns</p><h2>Follow the business state through the boundary.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.integration_patterns %}
+      <article><span>PATH</span><strong>{{ item.title }}</strong><small>{{ item.path }}</small><p><b>Watch:</b> {{ item.watch }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Design questions</p><h2>Questions before interface design.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.interface_selection_questions %}<article><span>{{ forloop.index }}</span><strong>{{ item }}</strong></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Anti-patterns</p><h2>Integration mistakes that create operational debt.</h2></header>
+    <div class="research-route-list">
+      {% for item in model.lead_anti_patterns %}<article><span>!</span><strong>{{ item }}</strong></article>{% endfor %}
+    </div>
+  </section>
+</div>

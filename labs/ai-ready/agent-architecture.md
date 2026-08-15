@@ -20,6 +20,10 @@ tags: [ai, agents, workflow, orchestration, tools, approval]
 
 An agent is useful when the next step cannot be fully defined before the request starts. That is the reason to add autonomy. “Agents are modern” is not a reason.
 
+## Problem
+
+Unbounded agents add cost, latency, and risk when a deterministic workflow would be enough.
+
 ## Start with the least autonomous shape
 
 Use this order:

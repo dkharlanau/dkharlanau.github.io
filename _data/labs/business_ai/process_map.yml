@@ -1,0 +1,423 @@
+schema_version: "1.0"
+reviewed_at: "2026-08-15"
+
+principle: "A domain owns capabilities. A process connects work across roles and systems. Business AI should be mapped to a concrete process step, decision, exception, or handoff."
+
+processes:
+  - id: "lead-to-cash"
+    title: "Lead-to-Cash"
+    domains: ["sales-o2c", "customer-service", "finance"]
+    stages:
+      - "lead and opportunity"
+      - "solution and offer"
+      - "quote and pricing"
+      - "order capture"
+      - "availability and promise"
+      - "delivery and fulfillment"
+      - "billing and receivables"
+      - "returns and claims"
+    ai_jobs:
+      - "lead and account research"
+      - "next-best action and recommendation"
+      - "quote and order extraction"
+      - "product and customer matching"
+      - "commitment and exception explanation"
+      - "collections prioritization"
+      - "return and claim triage"
+    pattern_ids:
+      - "guided-sales-recommendation"
+      - "quote-to-order-intelligence"
+      - "cross-system-process-copilot"
+      - "agentic-exception-management"
+    technology_families:
+      - "document-intelligence"
+      - "knowledge-rag-search"
+      - "agent-runtime-orchestration"
+      - "workflow-rpa-process"
+      - "predictive-ml"
+    control_points:
+      - "customer and product identity"
+      - "pricing"
+      - "availability and allocation"
+      - "credit"
+      - "tax and compliance"
+      - "posting and billing"
+
+  - id: "source-to-pay"
+    title: "Source-to-Pay"
+    domains: ["procurement-p2p", "finance", "master-data"]
+    stages:
+      - "demand and requisition"
+      - "supplier discovery"
+      - "sourcing and negotiation"
+      - "contract and catalog"
+      - "purchase order"
+      - "supplier confirmation"
+      - "receipt and service entry"
+      - "invoice"
+      - "payment"
+    ai_jobs:
+      - "supplier and market research"
+      - "document extraction"
+      - "contract comparison"
+      - "confirmation and invoice exception detection"
+      - "buyer and AP copilot"
+      - "supplier risk summarization"
+    pattern_ids:
+      - "document-to-workflow"
+      - "agentic-exception-management"
+      - "cross-system-process-copilot"
+    technology_families:
+      - "document-intelligence"
+      - "knowledge-rag-search"
+      - "agent-runtime-orchestration"
+      - "workflow-rpa-process"
+      - "integration-tools-protocols"
+    control_points:
+      - "supplier identity"
+      - "approval limits"
+      - "price and quantity tolerances"
+      - "duplicate invoice controls"
+      - "segregation of duties"
+      - "payment authorization"
+
+  - id: "forecast-to-fulfill"
+    title: "Forecast-to-Fulfill"
+    domains: ["planning-inventory", "warehouse-logistics", "manufacturing-quality", "sales-o2c"]
+    stages:
+      - "demand sensing"
+      - "forecast"
+      - "supply and capacity plan"
+      - "inventory target"
+      - "production or procurement plan"
+      - "warehouse execution"
+      - "transport execution"
+      - "customer fulfillment"
+    ai_jobs:
+      - "forecasting"
+      - "anomaly and demand sensing"
+      - "inventory risk prediction"
+      - "scenario explanation"
+      - "routing and allocation optimization"
+      - "delivery risk prediction"
+    pattern_ids:
+      - "forecast-and-replenish"
+      - "optimization-under-constraints"
+      - "cross-system-process-copilot"
+    technology_families:
+      - "predictive-ml"
+      - "optimization"
+      - "data-semantic-layer"
+      - "enterprise-copilot-ux"
+      - "eval-observability"
+    control_points:
+      - "planning grain and horizon"
+      - "hard capacity constraints"
+      - "inventory policy"
+      - "planner override"
+      - "service-level target"
+      - "execution confirmation"
+
+  - id: "plan-to-produce"
+    title: "Plan-to-Produce"
+    domains: ["manufacturing-quality", "planning-inventory", "warehouse-logistics"]
+    stages:
+      - "production planning"
+      - "detailed scheduling"
+      - "material staging"
+      - "production execution"
+      - "quality inspection"
+      - "yield and scrap analysis"
+      - "completion and receipt"
+    ai_jobs:
+      - "schedule optimization"
+      - "operator assistance"
+      - "defect prediction"
+      - "visual inspection"
+      - "material and bottleneck risk detection"
+      - "root-cause support"
+    pattern_ids:
+      - "manufacturing-quality-prediction"
+      - "embodied-intralogistics-execution"
+      - "optimization-under-constraints"
+    technology_families:
+      - "predictive-ml"
+      - "optimization"
+      - "document-intelligence"
+      - "embodied-ai"
+      - "knowledge-rag-search"
+    control_points:
+      - "bill of material and routing"
+      - "batch and serial genealogy"
+      - "inspection decision"
+      - "machine safety"
+      - "production confirmation"
+      - "scrap and rework disposition"
+
+  - id: "maintain-to-repair"
+    title: "Maintain-to-Repair"
+    domains: ["manufacturing-quality", "warehouse-logistics"]
+    stages:
+      - "condition monitoring"
+      - "failure prediction"
+      - "notification"
+      - "diagnosis"
+      - "maintenance planning"
+      - "parts and technician scheduling"
+      - "repair execution"
+      - "confirmation and learning"
+    ai_jobs:
+      - "anomaly detection"
+      - "predictive maintenance"
+      - "diagnostic retrieval"
+      - "work-order preparation"
+      - "parts and resource recommendation"
+    pattern_ids:
+      - "manufacturing-quality-prediction"
+      - "cross-system-process-copilot"
+    technology_families:
+      - "predictive-ml"
+      - "knowledge-rag-search"
+      - "agent-runtime-orchestration"
+      - "workflow-rpa-process"
+    control_points:
+      - "asset identity"
+      - "maintenance strategy"
+      - "safety and permit"
+      - "spare-parts availability"
+      - "technician authorization"
+      - "maintenance confirmation"
+
+  - id: "record-to-report"
+    title: "Record-to-Report"
+    domains: ["finance"]
+    stages:
+      - "transaction capture"
+      - "classification and posting"
+      - "reconciliation"
+      - "period close"
+      - "consolidation"
+      - "management reporting"
+      - "variance explanation"
+    ai_jobs:
+      - "transaction classification"
+      - "reconciliation matching"
+      - "anomaly detection"
+      - "close issue triage"
+      - "variance and narrative explanation"
+    pattern_ids:
+      - "cross-system-process-copilot"
+      - "agentic-exception-management"
+    technology_families:
+      - "predictive-ml"
+      - "knowledge-rag-search"
+      - "workflow-rpa-process"
+      - "data-semantic-layer"
+      - "enterprise-copilot-ux"
+    control_points:
+      - "chart of accounts"
+      - "posting rules"
+      - "period status"
+      - "segregation of duties"
+      - "materiality"
+      - "audit trail"
+
+  - id: "hire-to-retire"
+    title: "Hire-to-Retire"
+    domains: ["hr-workforce"]
+    stages:
+      - "workforce demand"
+      - "recruiting"
+      - "screening and selection"
+      - "offer and onboarding"
+      - "learning and performance"
+      - "time and workforce administration"
+      - "mobility and offboarding"
+    ai_jobs:
+      - "candidate and role matching"
+      - "policy assistant"
+      - "onboarding support"
+      - "learning recommendation"
+      - "workforce planning"
+      - "employee service automation"
+    pattern_ids:
+      - "cross-system-process-copilot"
+      - "guided-sales-recommendation"
+    technology_families:
+      - "knowledge-rag-search"
+      - "predictive-ml"
+      - "agent-runtime-orchestration"
+      - "workflow-rpa-process"
+    control_points:
+      - "privacy and sensitive data"
+      - "bias and fairness"
+      - "human hiring decision"
+      - "employee authorization"
+      - "legal retention"
+
+  - id: "case-to-resolution"
+    title: "Case-to-Resolution"
+    domains: ["customer-service", "knowledge-productivity"]
+    stages:
+      - "request intake"
+      - "identity and entitlement"
+      - "classification and priority"
+      - "knowledge search"
+      - "resolution or action"
+      - "escalation"
+      - "closure and follow-up"
+    ai_jobs:
+      - "conversation automation"
+      - "case classification"
+      - "agent assist"
+      - "grounded knowledge answer"
+      - "next-best action"
+      - "case summary"
+    pattern_ids:
+      - "conversation-to-resolution"
+      - "cross-system-process-copilot"
+    technology_families:
+      - "enterprise-copilot-ux"
+      - "knowledge-rag-search"
+      - "agent-runtime-orchestration"
+      - "workflow-rpa-process"
+    control_points:
+      - "customer identity"
+      - "entitlement"
+      - "policy"
+      - "refund or compensation authority"
+      - "escalation"
+      - "privacy"
+
+  - id: "incident-to-resolution"
+    title: "Incident-to-Resolution"
+    domains: ["it-operations", "knowledge-productivity"]
+    stages:
+      - "signal and incident intake"
+      - "triage"
+      - "evidence collection"
+      - "diagnosis"
+      - "remediation proposal"
+      - "approval"
+      - "execution"
+      - "validation and closure"
+    ai_jobs:
+      - "alert and incident summarization"
+      - "log and runbook retrieval"
+      - "root-cause investigation"
+      - "change preparation"
+      - "controlled remediation"
+    pattern_ids:
+      - "cross-system-process-copilot"
+      - "agentic-exception-management"
+    technology_families:
+      - "agent-runtime-orchestration"
+      - "knowledge-rag-search"
+      - "integration-tools-protocols"
+      - "workflow-rpa-process"
+      - "eval-observability"
+    control_points:
+      - "environment and service identity"
+      - "production write access"
+      - "approval"
+      - "rollback"
+      - "evidence sufficiency"
+      - "change audit"
+
+  - id: "contract-to-obligation"
+    title: "Contract-to-Obligation"
+    domains: ["legal-risk-compliance", "procurement-p2p", "sales-o2c"]
+    stages:
+      - "draft or intake"
+      - "clause extraction"
+      - "comparison and negotiation"
+      - "approval and signature"
+      - "obligation registration"
+      - "monitoring"
+      - "renewal or termination"
+    ai_jobs:
+      - "clause and entity extraction"
+      - "deviation detection"
+      - "legal and policy research"
+      - "obligation summarization"
+      - "renewal risk detection"
+    pattern_ids:
+      - "document-to-workflow"
+      - "cross-system-process-copilot"
+    technology_families:
+      - "document-intelligence"
+      - "knowledge-rag-search"
+      - "workflow-rpa-process"
+      - "predictive-ml"
+    control_points:
+      - "approved clause library"
+      - "legal privilege"
+      - "authority and signature"
+      - "jurisdiction"
+      - "obligation ownership"
+
+  - id: "master-data-change"
+    title: "Master Data Create and Change"
+    domains: ["master-data"]
+    stages:
+      - "request"
+      - "search and duplicate check"
+      - "classification and enrichment"
+      - "validation"
+      - "approval"
+      - "activation"
+      - "distribution"
+      - "reconciliation"
+    ai_jobs:
+      - "entity matching"
+      - "duplicate candidate ranking"
+      - "classification"
+      - "description enrichment"
+      - "data-quality explanation"
+    pattern_ids:
+      - "trusted-master-data-foundation"
+    technology_families:
+      - "data-semantic-layer"
+      - "predictive-ml"
+      - "workflow-rpa-process"
+      - "integration-tools-protocols"
+    control_points:
+      - "golden-record ownership"
+      - "key mapping"
+      - "mandatory attributes"
+      - "duplicate policy"
+      - "approval"
+      - "distribution confirmation"
+
+  - id: "knowledge-to-action"
+    title: "Knowledge-to-Action"
+    domains: ["knowledge-productivity", "it-operations", "customer-service", "legal-risk-compliance"]
+    stages:
+      - "question or trigger"
+      - "permission check"
+      - "search and retrieval"
+      - "evidence synthesis"
+      - "recommendation or draft"
+      - "optional tool action"
+      - "review and follow-up"
+    ai_jobs:
+      - "enterprise search"
+      - "research and synthesis"
+      - "meeting and document summary"
+      - "draft preparation"
+      - "cross-system action"
+    pattern_ids:
+      - "cross-system-process-copilot"
+      - "conversation-to-resolution"
+    technology_families:
+      - "knowledge-rag-search"
+      - "enterprise-copilot-ux"
+      - "agent-runtime-orchestration"
+      - "integration-tools-protocols"
+    control_points:
+      - "permission-aware retrieval"
+      - "citation and source quality"
+      - "freshness"
+      - "confidentiality"
+      - "write authorization"
+      - "audit trail"

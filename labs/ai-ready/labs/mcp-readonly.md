@@ -20,6 +20,10 @@ tags: [ai, lab, mcp, tools, resources, integration]
 
 Build a tiny MCP server around synthetic workspace data. The goal is to understand the protocol and tool boundaries without hiding behind a large business system.
 
+## Context
+
+This lab uses a synthetic workspace to show how narrow read tools and resources can be exposed through MCP without write access.
+
 ## Scenario
 
 Create local JSON files for:
