@@ -1,0 +1,149 @@
+---
+layout: default
+title: "SAP Transportation Management — Transport to Settle"
+description: "A Lead-level SAP TM map from transportation demand and Freight Units to planning, Freight Orders, EWM execution, carrier tendering, charges, and freight settlement."
+permalink: /labs/enterprise-context/transportation-management/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap
+  - sap-tm
+  - transportation
+  - logistics
+  - assessment
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.transportation_management %}
+{% assign evidence = site.data.labs.enterprise_context.sources.transportation_management %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Transportation Management</li></ol>
+</nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Enterprise Context / SAP TM</p>
+      <h1>{{ graph.title }}</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#runtime">Trace the process <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="TM mental model">
+      <p>Lead memory path</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Demand</strong><small>OTR / DTR</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Plan</strong><small>Freight Unit → FO / FB</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Settle</strong><small>Charges → FSD → MM</small></div>
+      <em>Primary-source review {{ graph.verified_at }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">route</span>
+    <p><strong>The boundary:</strong> ERP documents explain why goods must move. TM decides how transportation demand becomes a feasible, executable, and settleable freight plan.</p>
+    <p><strong>Do not collapse the objects:</strong> OTR/DTR = demand, Freight Unit = planning unit, Freight Order/Freight Booking = capacity and execution document.</p>
+    <a href="/labs/enterprise-context/shipping/">Compare with SD shipping and scheduling <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Memory model</p><h2>{{ graph.memory_model.path }}</h2><p>{{ graph.thesis }}</p></header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article><span>{{ item.key }}</span><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Object model</p><h2>Every TM document needs one clear job.</h2><p>This is the part worth remembering before transaction codes, apps, or configuration paths start breeding in captivity.</p></header>
+    <div class="research-route-list">
+      {% for item in graph.object_model %}
+      <div class="research-route-list__item"><span>OBJ</span><strong>{{ item.object }}</strong><small><b>{{ item.role }}</b> · {{ item.remember }}</small></div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header><p class="research-canvas__eyebrow">Runtime pipeline</p><h2>Follow the first wrong business state.</h2><p>A Lead-level diagnosis starts before the Freight Order. If demand or Freight Unit Building is wrong, later planning is merely wrong with better graphics.</p></header>
+    <div class="ecg-rail">
+      {% for step in graph.runtime_pipeline %}
+      <article>
+        <span>{{ step.order }}</span><div><h3>{{ step.title }}</h3><p><strong>{{ step.question }}</strong></p><p>Inputs: {{ step.inputs | join: " · " }}</p><p>Output: {{ step.output | join: " · " }}</p><small>Failure signal: {{ step.failure_signal }}</small></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Planning components</p><h2>Planning is a chain of decisions, not one optimizer button.</h2></header>
+    <div class="research-route-list">
+      {% for item in graph.planning_components %}
+      <div class="research-route-list__item"><span>TM</span><strong>{{ item.title }}</strong><small>{{ item.role }} <b>Lead lens:</b> {{ item.lead_lens }}</small></div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Integration boundaries</p><h2>Decide ownership before debugging messages.</h2><p>The most expensive confusion is usually not technical. It is two components both being treated as if they own the same business state.</p></header>
+    <div class="ecg-decision-columns">
+      {% for item in graph.integration_boundaries %}
+      <article><h3>{{ item.boundary }}</h3><p><strong>Ownership:</strong> {{ item.ownership }}</p><p><strong>Handoff:</strong> {{ item.handoff }}</p><p><strong>Ask:</strong> {{ item.diagnostic_question }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Deployment patterns</p><h2>Embedded does not mean boundary-free.</h2></header>
+    <div class="research-route-list">
+      {% for item in graph.deployment_patterns %}
+      <div class="research-route-list__item"><span>DEP</span><strong>{{ item.title }}</strong><small>{{ item.fit }} <b>Caution:</b> {{ item.caution }}</small></div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>What I would check first.</h2></header>
+    <div class="ecg-decision-columns">
+      {% for item in graph.failure_modes %}
+      <article><h3>{{ item.symptom }}</h3><p><strong>First checks:</strong> {{ item.first_checks | join: " · " }}</p><p><strong>Avoid:</strong> {{ item.avoid }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment cards</p><h2>Questions that expose whether the model is understood.</h2></header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.assessment_cards %}
+      <article><span>Q</span><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Synthetic case</p><h2>{{ graph.synthetic_case.title }}</h2><p>{{ graph.synthetic_case.lesson }}</p></header>
+    <div class="research-route-list">
+      {% for step in graph.synthetic_case.steps %}
+      <div class="research-route-list__item"><span>{{ forloop.index }}</span><strong>{{ step }}</strong><small>Synthetic learning path, not a client case.</small></div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Primary evidence</p><h2>Source-backed facts, independently explained.</h2><p>{{ evidence.policy }}</p></header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · {{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">data_object</span>
+    <p><strong>Machine-readable:</strong> the same TM model is available as JSON for retrieval, graph tooling, and assessment experiments.</p>
+    <a href="/labs/enterprise-context/data/transportation-management-graph.json">Open TM graph JSON <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+</div>
