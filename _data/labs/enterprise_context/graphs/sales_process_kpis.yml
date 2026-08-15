@@ -1,0 +1,673 @@
+id: GRAPH-SD-SALES-PROCESS-KPIS
+version: "1.0.0"
+type: process_kpi_model
+status: draft
+verified: false
+updated_at: "2026-08-15"
+title: "SAP Sales Process KPI and Analytics Model"
+summary: >-
+  A business-first measurement model for SAP Sales. It connects outcomes such as service,
+  speed, cash and quality with operational drivers, process families, control mechanisms and
+  diagnostic cases. The formulas are Lab definitions unless a source explicitly marks a KPI as SAP standard.
+memory_path: "OUTCOME → KPI → DRIVER → PROCESS → CONTROL → EVIDENCE → ACTION"
+
+principles:
+  - "Agree the business question before choosing a field or dashboard."
+  - "Keep one formula and one date basis for the same KPI across teams."
+  - "Keep targets local to segment, service promise and operating model. A common formula does not require one global target."
+  - "Every percentage needs an eligible population and explicit exclusions."
+  - "Every cycle-time KPI needs a start event, an end event and a treatment for open cases."
+  - "Use outcome KPIs with operational drivers. A weak result without a driver path is only a warning light."
+  - "Segment before escalating: customer, product, plant, shipping point, route, sales organization, channel and process family often explain more than the total average."
+  - "Use medians and percentiles beside averages when cycle-time distributions are skewed."
+  - "Do not convert correlation into a root cause. Use the diagnostic casebook and document evidence."
+
+common_language:
+  - term: "requested date"
+    definition: "The date requested by the customer. It represents demand, not necessarily the confirmed promise."
+  - term: "confirmed date"
+    definition: "The date SAP confirms after availability and scheduling logic. It represents the operational promise used by many service KPIs."
+  - term: "actual goods issue date"
+    definition: "The date goods issue is posted for the outbound delivery. Use it only when PGI is the agreed fulfillment event."
+  - term: "billing date"
+    definition: "The commercial date used for billing. Do not confuse it with the actual document creation timestamp."
+  - term: "clearing date"
+    definition: "The FI date on which the receivable is cleared. It belongs to the cash part of Order-to-Cash, not to SD alone."
+  - term: "eligible population"
+    definition: "The documents or items that are allowed into a KPI denominator after agreed business exclusions."
+  - term: "first pass"
+    definition: "The first processing attempt before manual rework, resubmission or exception handling."
+  - term: "exception"
+    definition: "A case that breaks an agreed process rule, threshold or expected path and therefore needs review."
+  - term: "lead time"
+    definition: "Elapsed time between two named process events. The event pair must be written next to the metric."
+  - term: "cycle time"
+    definition: "Elapsed time for a whole case or a defined process segment. Open-case handling must be stated."
+  - term: "local target"
+    definition: "A target agreed for a segment, service level or operating model. It is not assumed to be a universal benchmark."
+  - term: "business owner"
+    definition: "The role accountable for the business outcome. It can be different from the SAP configuration owner."
+
+common_dimensions:
+  - "sales organization"
+  - "distribution channel"
+  - "sales document type"
+  - "process family"
+  - "sold-to party"
+  - "ship-to party"
+  - "customer segment"
+  - "product"
+  - "product group"
+  - "delivering plant"
+  - "shipping point"
+  - "route"
+  - "country / region"
+  - "order origin / channel"
+
+analytics_lenses:
+  - id: SDL.ORDER
+    title: "Order intake and confirmation"
+    business_question: "Are we capturing demand cleanly and turning it into a reliable promise without rework?"
+    kpi_refs: ["KPI.SD.ORDER_VALUE", "KPI.SD.CONFIRM_CT", "KPI.SD.FIRST_PASS_CONFIRM", "KPI.SD.BACKORDER", "KPI.SD.INCOMPLETE", "KPI.SD.CHANGE_AFTER_CONFIRM"]
+  - id: SDL.FULFILL
+    title: "Fulfillment reliability"
+    business_question: "Do we execute the customer promise on time and in full, and where does reliability break?"
+    kpi_refs: ["KPI.SD.ORDER_TO_GI", "KPI.SD.OTD", "KPI.SD.OTIF", "KPI.SD.DELIVERY_BLOCK", "KPI.SD.PERFECT_ORDER"]
+  - id: SDL.CASH
+    title: "Billing and cash"
+    business_question: "How quickly and cleanly does physical or service completion become an invoice and then cash?"
+    kpi_refs: ["KPI.SD.BILLING_LEAD", "KPI.SD.BILLING_BLOCK", "KPI.SD.BILL_SPLIT", "KPI.SD.UNBILLED_VALUE", "KPI.SD.CREDIT_BLOCK", "KPI.SD.CREDIT_RELEASE", "KPI.SD.TIME_TO_CASH"]
+  - id: SDL.RETURNS
+    title: "Returns and recovery"
+    business_question: "How much business comes back, why, and how quickly do we close the customer recovery loop?"
+    kpi_refs: ["KPI.SD.RETURN_RATE", "KPI.SD.RETURN_TO_REFUND", "KPI.SD.RETURN_AGING"]
+  - id: SDL.AUTOMATION
+    title: "Exception and automation"
+    business_question: "How much flow is straight-through, and which manual or technical exceptions consume effort?"
+    kpi_refs: ["KPI.SD.MANUAL_PRICE", "KPI.SD.TOUCHLESS_ORDER", "KPI.SD.INTERFACE_FAILURE"]
+  - id: SDL.COMPLEX
+    title: "Complex fulfillment"
+    business_question: "Do industry and cross-application processes stay synchronized when messages, engineering or suppliers become part of the promise?"
+    kpi_refs: ["KPI.SD.JIT_REPLAY", "KPI.SD.JIT_CUM_MISMATCH", "KPI.SD.ETO_LATE_CHANGE", "KPI.SD.TPO_CONFIRM_DELAY"]
+
+kpis:
+  - id: KPI.SD.ORDER_VALUE
+    name: "Incoming Order Value"
+    kind: outcome
+    category: order_intake
+    business_question: "How much billable or delivery-relevant demand entered the order book in the period?"
+    formula: "Sum net value of eligible incoming sales-order items in the selected period."
+    unit: "currency"
+    direction: context_only
+    grain: ["day / week / month", "sales organization", "customer", "product", "order origin"]
+    process_refs: ["SD.SFS", "SD.OTC"]
+    mechanism_refs: ["MEC.SD.PRICE"]
+    data_signals: ["sales order item", "net value", "creation or requested reporting period"]
+    owner: "Sales Operations / Commercial Management"
+    cadence: "daily and monthly trend"
+    target_policy: "Compare with sales plan, forecast or prior periods. Do not treat growth by itself as process quality."
+    caveats: ["Define currency conversion policy.", "Separate order intake from recognized revenue."]
+    source_refs: ["SRC-SAP-INCOMING-SALES", "SRC-SAP-SALES-MONITORING"]
+
+  - id: KPI.SD.CONFIRM_CT
+    name: "Order-to-Confirmation Cycle Time"
+    kind: driver
+    category: order_confirmation
+    business_question: "How long does it take from order capture to a usable customer confirmation?"
+    formula: "Confirmation timestamp minus order creation timestamp for eligible order items."
+    unit: "time"
+    direction: lower_is_better
+    grain: ["order origin", "customer", "product", "plant", "process family"]
+    process_refs: ["SD.SFS", "SD.OTC", "SD.TPO"]
+    mechanism_refs: ["MEC.SD.SLINE", "MEC.SD.SCHED", "MEC.SD.ATP"]
+    data_signals: ["order creation", "schedule-line confirmation", "confirmed quantity", "confirmed date"]
+    owner: "Sales Operations / Availability Planning"
+    cadence: "daily with weekly percentile review"
+    target_policy: "Set by order channel and promise model. Compare like-for-like order origins."
+    caveats: ["Define what counts as a usable confirmation.", "Report median and P90 beside average."]
+    source_refs: ["SRC-SAP-SIGNAVIO-CYCLE", "SRC-SAP-SALES-MONITORING"]
+
+  - id: KPI.SD.FIRST_PASS_CONFIRM
+    name: "First-Pass Confirmation Rate"
+    kind: driver
+    category: order_confirmation
+    business_question: "How often can demand be confirmed without manual rework or a later confirmation correction?"
+    formula: "Eligible order items confirmed on the first processing pass / all eligible order items * 100."
+    unit: "%"
+    direction: higher_is_better
+    grain: ["order origin", "customer", "product", "plant", "process family"]
+    process_refs: ["SD.SFS", "SD.OTC", "SD.TPO"]
+    mechanism_refs: ["MEC.SD.SLINE", "MEC.SD.ATP", "MEC.SD.SCHED"]
+    data_signals: ["initial confirmation", "change history", "manual reprocessing"]
+    owner: "Sales Operations / Supply Planning"
+    cadence: "daily / weekly"
+    target_policy: "Set by process family. Make-to-stock and engineer-to-order should not share one target."
+    caveats: ["Define first pass from event history, not from the current document state."]
+    source_refs: ["SRC-SAP-SIGNAVIO-PPI", "SRC-SAP-SOF-ISSUES"]
+
+  - id: KPI.SD.BACKORDER
+    name: "Backorder Rate"
+    kind: driver
+    category: order_confirmation
+    business_question: "What share of eligible demand is not fully confirmed for the agreed promise window?"
+    formula: "Eligible order items with unconfirmed or delayed quantity / all eligible order items * 100."
+    unit: "%"
+    direction: lower_is_better
+    grain: ["customer", "product", "plant", "sales organization", "process family"]
+    process_refs: ["SD.SFS", "SD.OTC"]
+    mechanism_refs: ["MEC.SD.ATP", "MEC.SD.SCHED", "MEC.SD.PLANT"]
+    data_signals: ["requested quantity", "confirmed quantity", "requested date", "confirmed date"]
+    owner: "Sales Operations / Supply Planning"
+    cadence: "daily"
+    target_policy: "Use segment-specific service policy and an agreed lateness threshold."
+    caveats: ["A late confirmed date and an unconfirmed quantity are different failure modes."]
+    source_refs: ["SRC-SAP-SALES-MONITORING", "SRC-SAP-SOF-ISSUES"]
+
+  - id: KPI.SD.INCOMPLETE
+    name: "Incomplete Order Rate"
+    kind: driver
+    category: order_quality
+    business_question: "How often does missing business data block or endanger follow-on processing?"
+    formula: "Eligible sales documents with relevant incompletion status / all eligible sales documents * 100."
+    unit: "%"
+    direction: lower_is_better
+    grain: ["order origin", "sales document type", "sales organization", "customer", "missing field group"]
+    process_refs: ["SD.SFS", "SD.OTC"]
+    mechanism_refs: ["MEC.SD.INCOMP"]
+    data_signals: ["incompletion log", "document status", "blocked follow-on function"]
+    owner: "Sales Operations / Master Data Governance"
+    cadence: "daily / weekly"
+    target_policy: "Set by channel and mandatory-data policy. Track recurring missing fields as root-cause categories."
+    caveats: ["Not every missing field has the same business impact."]
+    source_refs: ["SRC-SAP-SOF-ISSUES", "SRC-SAP-SIGNAVIO-PPI"]
+
+  - id: KPI.SD.CHANGE_AFTER_CONFIRM
+    name: "Order Change Rate after Confirmation"
+    kind: driver
+    category: order_quality
+    business_question: "How much confirmed demand is reopened after the customer promise was already made?"
+    formula: "Eligible confirmed order items with material business changes after confirmation / all eligible confirmed order items * 100."
+    unit: "%"
+    direction: lower_is_better
+    grain: ["change reason", "order origin", "customer", "product", "plant"]
+    process_refs: ["SD.SFS", "SD.OTC", "SD.SA"]
+    mechanism_refs: ["MEC.SD.ATP", "MEC.SD.SCHED", "MEC.SD.PRICE"]
+    data_signals: ["change documents", "confirmation history", "quantity/date/price changes"]
+    owner: "Sales Operations"
+    cadence: "weekly"
+    target_policy: "Define material changes. Separate customer-requested changes from internal corrections."
+    caveats: ["High change can be normal in scheduling-agreement or engineered business. Segment first."]
+    source_refs: ["SRC-SAP-SIGNAVIO-METRICS"]
+
+  - id: KPI.SD.ORDER_TO_GI
+    name: "Order-to-Goods-Issue Cycle Time"
+    kind: outcome
+    category: fulfillment_speed
+    business_question: "How long does an executable order take to reach physical goods issue?"
+    formula: "Actual goods issue timestamp minus agreed order start timestamp for eligible delivery-relevant items."
+    unit: "time"
+    direction: lower_is_better
+    grain: ["process family", "plant", "shipping point", "route", "customer"]
+    process_refs: ["SD.SFS", "SD.MTO", "SD.TPO"]
+    mechanism_refs: ["MEC.SD.PLANT", "MEC.SD.SHIPPT", "MEC.SD.ROUTE", "MEC.SD.SCHED", "MEC.SD.ATP"]
+    data_signals: ["sales order", "outbound delivery", "goods issue"]
+    owner: "Order Fulfillment / Logistics"
+    cadence: "daily with weekly percentile review"
+    target_policy: "Set by fulfillment model and service level. Do not compare stock, MTO and third-party flows as one population."
+    caveats: ["Define the start event and treatment of partially delivered items."]
+    source_refs: ["SRC-SAP-SIGNAVIO-CYCLE", "SRC-SAP-SALES-MONITORING"]
+
+  - id: KPI.SD.OTD
+    name: "On-Time Delivery Rate"
+    kind: outcome
+    category: fulfillment_reliability
+    business_question: "How often is the agreed delivery milestone met on time?"
+    formula: "Eligible fulfilled items meeting the agreed date rule / all eligible fulfilled items * 100."
+    unit: "%"
+    direction: higher_is_better
+    grain: ["customer", "product", "plant", "shipping point", "route", "process family"]
+    process_refs: ["SD.SFS", "SD.MTO", "SD.TPO", "SD.JIT"]
+    mechanism_refs: ["MEC.SD.SCHED", "MEC.SD.ATP", "MEC.SD.ROUTE", "MEC.SD.SHIPPT"]
+    data_signals: ["requested date", "confirmed date", "actual goods issue or proof-of-delivery milestone"]
+    owner: "Customer Service / Logistics"
+    cadence: "daily / weekly / monthly"
+    target_policy: "Choose requested-date or confirmed-date service policy and publish it next to the KPI."
+    caveats: ["OTD is meaningless if teams use different date bases.", "Define early-delivery tolerance if early delivery is not always good."]
+    source_refs: ["SRC-SAP-SALES-MONITORING"]
+
+  - id: KPI.SD.OTIF
+    name: "On-Time In-Full Delivery Rate"
+    kind: outcome
+    category: fulfillment_reliability
+    business_question: "How often do we deliver the agreed quantity by the agreed date?"
+    formula: "Eligible fulfilled items that meet both on-time and in-full rules / all eligible fulfilled items * 100."
+    unit: "%"
+    direction: higher_is_better
+    grain: ["customer", "product", "plant", "shipping point", "route", "process family"]
+    process_refs: ["SD.SFS", "SD.MTO", "SD.TPO", "SD.JIT"]
+    mechanism_refs: ["MEC.SD.SCHED", "MEC.SD.ATP", "MEC.SD.PLANT", "MEC.SD.SHIPPT"]
+    diagnostic_case_refs: ["SDC.JIT.03", "SDC.TPO.06"]
+    data_signals: ["confirmed quantity", "delivered quantity", "confirmed date", "actual fulfillment milestone"]
+    owner: "Customer Service / Logistics"
+    cadence: "daily / weekly / monthly"
+    target_policy: "Set by customer/service segment. Keep tolerance, partial-delivery and cancellation rules explicit."
+    caveats: ["Publish the date basis, quantity tolerance and denominator exclusions with the KPI."]
+    source_refs: ["SRC-SAP-SALES-MONITORING", "SRC-SAP-SOF-ISSUES"]
+
+  - id: KPI.SD.DELIVERY_BLOCK
+    name: "Delivery Block Rate"
+    kind: driver
+    category: fulfillment_exception
+    business_question: "How much otherwise executable demand is stopped by a delivery block?"
+    formula: "Eligible order or delivery items with an active relevant delivery block / all eligible items * 100."
+    unit: "%"
+    direction: lower_is_better
+    grain: ["block reason", "customer", "sales organization", "process family"]
+    process_refs: ["SD.SFS", "SD.OTC"]
+    mechanism_refs: ["MEC.SD.INCOMP", "MEC.SD.CREDIT"]
+    data_signals: ["delivery block", "status", "block reason", "release timestamp"]
+    owner: "Sales Operations / Order Fulfillment"
+    cadence: "daily"
+    target_policy: "Review both rate and aging. A valid compliance block is not a process defect by itself."
+    caveats: ["Separate intentional controls from accidental blocking."]
+    source_refs: ["SRC-SAP-SOF-ISSUES", "SRC-SAP-SOF-KPI"]
+
+  - id: KPI.SD.PERFECT_ORDER
+    name: "Exception-Free Order Rate"
+    kind: outcome
+    category: fulfillment_quality
+    business_question: "What share of eligible orders completes without defined commercial or fulfillment exceptions?"
+    formula: "Eligible completed orders with none of the agreed exception flags / all eligible completed orders * 100."
+    unit: "%"
+    direction: higher_is_better
+    grain: ["order origin", "customer", "process family", "plant"]
+    process_refs: ["SD.SFS", "SD.OTC"]
+    mechanism_refs: ["MEC.SD.INCOMP", "MEC.SD.ATP", "MEC.SD.CREDIT", "MEC.SD.BILL"]
+    data_signals: ["incompletion", "confirmation", "blocks", "delivery exceptions", "billing exceptions"]
+    owner: "Order-to-Cash Process Owner"
+    cadence: "weekly / monthly"
+    target_policy: "Define the exception set locally and version it. Do not compare rates built from different exception lists."
+    caveats: ["This is a composite Lab KPI, not a universal SAP standard definition."]
+    source_refs: ["SRC-SAP-SOF-ISSUES", "SRC-SAP-SIGNAVIO-PPI"]
+
+  - id: KPI.SD.BILLING_LEAD
+    name: "Completion-to-Billing Lead Time"
+    kind: outcome
+    category: billing_speed
+    business_question: "How quickly does a completed billable event become a billing document?"
+    formula: "Billing-document creation timestamp minus agreed billable completion event timestamp."
+    unit: "time"
+    direction: lower_is_better
+    grain: ["billing type", "sales organization", "customer", "process family"]
+    process_refs: ["SD.SFS", "SD.BILL.COLL", "SD.DP.CLASSIC", "SD.DP.ADV"]
+    mechanism_refs: ["MEC.SD.BILLREL", "MEC.SD.BILLPLAN", "MEC.SD.BILLTYPE", "MEC.SD.BILL"]
+    diagnostic_case_refs: ["SDC.DP.01", "SDC.BILL.02"]
+    data_signals: ["goods issue or service/milestone completion", "billing due status", "billing creation"]
+    owner: "Sales Billing"
+    cadence: "daily / weekly"
+    target_policy: "Set by billing model. Delivery-related, milestone and recurring billing need separate populations."
+    caveats: ["Use the correct billable event. PGI is not the start event for every billing model."]
+    source_refs: ["SRC-SAP-SIGNAVIO-CYCLE", "SRC-SAP-SALES-MONITORING"]
+
+  - id: KPI.SD.BILLING_BLOCK
+    name: "Billing Block Rate"
+    kind: driver
+    category: billing_exception
+    business_question: "How much billable demand is held by billing blocks, and how long does it remain blocked?"
+    formula: "Eligible billable references with an active relevant billing block / all eligible billable references * 100."
+    unit: "%"
+    direction: lower_is_better
+    grain: ["block reason", "billing type", "customer", "sales organization"]
+    process_refs: ["SD.SFS", "SD.DP.CLASSIC", "SD.DP.ADV"]
+    mechanism_refs: ["MEC.SD.BILLREL", "MEC.SD.BILLPLAN"]
+    diagnostic_case_refs: ["SDC.DP.01"]
+    data_signals: ["billing block", "billing date", "due status", "release timestamp"]
+    owner: "Sales Billing"
+    cadence: "daily"
+    target_policy: "Pair rate with aging and reason. Some blocks are deliberate approval controls."
+    caveats: ["A zero block rate is not automatically desirable if controls are required."]
+    source_refs: ["SRC-SAP-SOF-ISSUES", "SRC-SAP-SIGNAVIO-PPI"]
+
+  - id: KPI.SD.BILL_SPLIT
+    name: "Billing Split Rate"
+    kind: driver
+    category: billing_quality
+    business_question: "How often does one intended billing set become several billing documents?"
+    formula: "Eligible billing sets producing more billing documents than the agreed grouping expectation / all eligible billing sets * 100."
+    unit: "%"
+    direction: lower_is_better_when_unplanned
+    grain: ["split reason", "billing type", "customer", "sales organization"]
+    process_refs: ["SD.BILL.COLL", "SD.SFS"]
+    mechanism_refs: ["MEC.SD.BILLSPLIT", "MEC.SD.COPY", "MEC.SD.BILLTYPE", "MEC.SD.BILL"]
+    diagnostic_case_refs: ["SDC.BILL.02"]
+    data_signals: ["source references", "billing documents", "split analysis", "header field differences"]
+    owner: "Sales Billing"
+    cadence: "weekly"
+    target_policy: "Measure unplanned split, not all split. Legitimate business differences must remain separate."
+    caveats: ["Define the expected billing set before calculating the denominator."]
+    source_refs: ["SRC-SAP-SALES-MONITORING"]
+
+  - id: KPI.SD.UNBILLED_VALUE
+    name: "Unbilled Completed Value"
+    kind: outcome
+    category: billing_backlog
+    business_question: "What completed commercial value is still waiting for billing?"
+    formula: "Sum eligible net value for completed billable references that have not produced the expected billing document."
+    unit: "currency"
+    direction: lower_is_better
+    grain: ["aging bucket", "billing type", "customer", "sales organization", "process family"]
+    process_refs: ["SD.SFS", "SD.BILL.COLL", "SD.DP.CLASSIC", "SD.DP.ADV"]
+    mechanism_refs: ["MEC.SD.BILLREL", "MEC.SD.BILLPLAN", "MEC.SD.BILL"]
+    data_signals: ["completion status", "billing due status", "billing status", "net value"]
+    owner: "Sales Billing / Finance"
+    cadence: "daily"
+    target_policy: "Use aging buckets and materiality thresholds. The value is an operational leakage proxy, not recognized revenue."
+    caveats: ["Exclude intentionally future-dated or milestone-not-due items.", "Do not label this amount as revenue leakage without finance validation."]
+    source_refs: ["SRC-SAP-SIGNAVIO-PPI", "SRC-SAP-SOF-ISSUES"]
+
+  - id: KPI.SD.CREDIT_BLOCK
+    name: "Credit Block Rate"
+    kind: driver
+    category: credit_exception
+    business_question: "What share of eligible commercial demand is stopped by credit control?"
+    formula: "Eligible sales documents or items with credit block / all eligible documents or items subject to credit check * 100."
+    unit: "%"
+    direction: context_only
+    grain: ["credit segment", "customer", "risk class", "sales organization"]
+    process_refs: ["SD.SFS", "SD.OTC"]
+    mechanism_refs: ["MEC.SD.CREDIT"]
+    data_signals: ["credit-check result", "credit status", "exposure", "risk class", "credit segment"]
+    owner: "Credit Management / Sales"
+    cadence: "daily"
+    target_policy: "Do not optimize toward zero. The goal is correct risk control with fast handling of valid exceptions."
+    caveats: ["Rate alone cannot tell whether the credit policy is too strict or correctly preventing risk."]
+    source_refs: ["SRC-SAP-SOF-ISSUES", "SRC-SAP-SIGNAVIO-PPI"]
+
+  - id: KPI.SD.CREDIT_RELEASE
+    name: "Credit Release Lead Time"
+    kind: driver
+    category: credit_speed
+    business_question: "How long do valid credit-blocked orders wait for a release decision?"
+    formula: "Credit release or rejection timestamp minus credit block timestamp for eligible credit cases."
+    unit: "time"
+    direction: lower_is_better
+    grain: ["credit segment", "risk class", "customer", "decision outcome"]
+    process_refs: ["SD.SFS", "SD.OTC"]
+    mechanism_refs: ["MEC.SD.CREDIT"]
+    data_signals: ["block timestamp", "release/rejection timestamp", "credit case"]
+    owner: "Credit Management"
+    cadence: "daily with weekly percentile review"
+    target_policy: "Set by risk class and escalation model. Keep rejected cases separate from delayed approvals."
+    caveats: ["A faster wrong credit decision is not improvement."]
+    source_refs: ["SRC-SAP-SIGNAVIO-CYCLE", "SRC-SAP-SOF-ISSUES"]
+
+  - id: KPI.SD.TIME_TO_CASH
+    name: "Order-to-Cash Cycle Time"
+    kind: outcome
+    category: cash
+    business_question: "How long does the end-to-end commercial flow take from agreed order start to cleared receivable?"
+    formula: "Receivable clearing timestamp minus agreed order start timestamp for eligible end-to-end cases."
+    unit: "time"
+    direction: lower_is_better_with_policy
+    grain: ["customer", "payment terms", "sales organization", "process family"]
+    process_refs: ["SD.SFS", "SD.DP.CLASSIC", "SD.DP.ADV"]
+    mechanism_refs: ["MEC.SD.BILLREL", "MEC.SD.BILL", "MEC.SD.CREDIT"]
+    diagnostic_case_refs: ["SDC.DP.01"]
+    data_signals: ["sales order", "billing", "FI receivable", "clearing"]
+    owner: "Order-to-Cash Process Owner / FI-AR"
+    cadence: "weekly / monthly"
+    target_policy: "Segment by payment terms and business model. This is cross-functional and must not be treated as a pure SD KPI."
+    caveats: ["Clearing behavior, disputes and contractual payment terms materially affect the result."]
+    source_refs: ["SRC-SAP-SIGNAVIO-CYCLE", "SRC-SAP-SIGNAVIO-PPI"]
+
+  - id: KPI.SD.RETURN_RATE
+    name: "Return Rate"
+    kind: outcome
+    category: returns
+    business_question: "What share of fulfilled business comes back as a physical return?"
+    formula: "Eligible returned quantity or value / corresponding eligible fulfilled quantity or value * 100."
+    unit: "%"
+    direction: lower_is_better
+    grain: ["return reason", "customer", "product", "plant", "original process family"]
+    process_refs: ["SD.RET", "SD.RET.ARM", "SD.RET.VC", "SD.RET.KIT"]
+    mechanism_refs: ["MEC.SD.COPY", "MEC.SD.ICAT"]
+    diagnostic_case_refs: ["SDC.RETVC.04"]
+    data_signals: ["original sale", "returns order", "returned quantity/value", "reason"]
+    owner: "Customer Service / Quality / Sales"
+    cadence: "weekly / monthly"
+    target_policy: "Set by product and customer segment. Analyze reasons before assigning ownership."
+    caveats: ["Choose quantity or value basis and keep it consistent.", "Claims without physical return belong to a different population."]
+    source_refs: ["SRC-SAP-SIGNAVIO-METRICS"]
+
+  - id: KPI.SD.RETURN_TO_REFUND
+    name: "Return-to-Refund Cycle Time"
+    kind: outcome
+    category: returns_recovery
+    business_question: "How long does a valid customer return take from return initiation to refund or credit completion?"
+    formula: "Refund or credit completion timestamp minus agreed returns start timestamp."
+    unit: "time"
+    direction: lower_is_better
+    grain: ["returns variant", "follow-up activity", "customer", "product", "reason"]
+    process_refs: ["SD.RET.ARM", "SD.RET.VC", "SD.RET.KIT"]
+    mechanism_refs: ["MEC.SD.COPY", "MEC.SD.BILLREL", "MEC.SD.BILL"]
+    diagnostic_case_refs: ["SDC.RETVC.04"]
+    data_signals: ["returns order", "goods receipt", "inspection", "follow-up", "credit/refund"]
+    owner: "Returns Process Owner / Customer Service"
+    cadence: "daily / weekly"
+    target_policy: "Set by return class and inspection need. Do not compare immediate refund and inspection-heavy flows as one cycle."
+    caveats: ["Define whether start is request, authorization or physical receipt."]
+    source_refs: ["SRC-SAP-SIGNAVIO-CYCLE"]
+
+  - id: KPI.SD.RETURN_AGING
+    name: "Open Return Follow-Up Aging"
+    kind: driver
+    category: returns_backlog
+    business_question: "Which accepted returns are waiting too long for inspection, disposition or refund?"
+    formula: "Age of each open eligible return from its current required follow-up milestone; summarize by aging bucket and value."
+    unit: "time and count/value"
+    direction: lower_is_better
+    grain: ["aging bucket", "follow-up activity", "plant", "customer", "product"]
+    process_refs: ["SD.RET.ARM", "SD.RET.VC", "SD.RET.KIT"]
+    mechanism_refs: ["MEC.SD.BILLREL", "MEC.SD.BILL"]
+    diagnostic_case_refs: ["SDC.RETVC.04"]
+    data_signals: ["return status", "inspection status", "follow-up status", "refund status"]
+    owner: "Returns Process Owner"
+    cadence: "daily"
+    target_policy: "Use aging buckets based on operational SLA and return class."
+    caveats: ["The current open stage matters more than total return age for root cause."]
+    source_refs: ["SRC-SAP-SIGNAVIO-PPI"]
+
+  - id: KPI.SD.MANUAL_PRICE
+    name: "Manual Pricing Change Rate"
+    kind: driver
+    category: commercial_exception
+    business_question: "How often do users override or manually add price elements instead of using the intended pricing rule?"
+    formula: "Eligible order items with material manual pricing intervention / all eligible priced order items * 100."
+    unit: "%"
+    direction: lower_is_better_when_unplanned
+    grain: ["condition type", "customer", "product", "sales organization", "user role"]
+    process_refs: ["SD.SFS", "SD.OTC", "SD.MDP"]
+    mechanism_refs: ["MEC.SD.PRICE"]
+    data_signals: ["pricing conditions", "manual indicator", "change history", "reason"]
+    owner: "Commercial Excellence / Sales Pricing"
+    cadence: "weekly"
+    target_policy: "Separate permitted negotiation from correction of bad master data or configuration."
+    caveats: ["Manual does not automatically mean wrong. The reason and condition type matter."]
+    source_refs: ["SRC-SAP-SIGNAVIO-PPI", "SRC-SAP-SALES-MONITORING"]
+
+  - id: KPI.SD.TOUCHLESS_ORDER
+    name: "Touchless Order Rate"
+    kind: outcome
+    category: automation
+    business_question: "What share of eligible orders reaches the agreed milestone without manual intervention?"
+    formula: "Eligible cases reaching the target milestone without defined manual intervention events / all eligible cases * 100."
+    unit: "%"
+    direction: higher_is_better
+    grain: ["order origin", "customer", "process family", "sales organization"]
+    process_refs: ["SD.SFS", "SD.OTC", "SD.SA"]
+    mechanism_refs: ["MEC.SD.INCOMP", "MEC.SD.ATP", "MEC.SD.PRICE", "MEC.SD.CREDIT"]
+    data_signals: ["process event log", "manual changes", "blocks", "reprocessing"]
+    owner: "Order-to-Cash Process Owner / Sales Operations"
+    cadence: "weekly / monthly"
+    target_policy: "Define the target milestone and the manual-event list. Automation is valuable only when outcome quality stays acceptable."
+    caveats: ["Do not count technical background processing as touchless success if users still repair the case later."]
+    source_refs: ["SRC-SAP-SIGNAVIO-PPI", "SRC-SAP-SIGNAVIO-METRICS"]
+
+  - id: KPI.SD.INTERFACE_FAILURE
+    name: "Sales Interface Failure Rate"
+    kind: driver
+    category: integration_exception
+    business_question: "How often does an external business message fail to create or update the intended Sales result?"
+    formula: "Failed or quarantined eligible business messages / all eligible business messages * 100."
+    unit: "%"
+    direction: lower_is_better
+    grain: ["interface", "message type", "business partner", "order origin", "failure class"]
+    process_refs: ["SD.OTC", "SD.SA", "SD.JIT", "SD.TPO"]
+    mechanism_refs: ["MEC.SD.B2BCTX", "MEC.SD.PARTNER"]
+    diagnostic_case_refs: ["SDC.JIT.03", "SDC.TPO.06"]
+    data_signals: ["message status", "business key", "retry/replay", "created business object"]
+    owner: "Integration Operations / Sales Process Owner"
+    cadence: "hourly operational view and weekly trend"
+    target_policy: "Define business success, not only transport success. Separate transient retry from business-data rejection."
+    caveats: ["A technically delivered message can still fail the business contract."]
+    source_refs: ["SRC-SAP-SIGNAVIO-PPI"]
+
+  - id: KPI.SD.JIT_REPLAY
+    name: "JIT Duplicate or Replay Exception Rate"
+    kind: driver
+    category: complex_fulfillment
+    business_question: "How often does a duplicate, replayed or replacement JIT signal require exception handling?"
+    formula: "Eligible JIT signals classified as duplicate/replay/replacement exceptions / all eligible JIT signals * 100."
+    unit: "%"
+    direction: lower_is_better
+    grain: ["customer", "message type", "scheduling agreement", "plant"]
+    process_refs: ["SD.JIT", "SD.SA"]
+    mechanism_refs: ["MEC.SD.B2BCTX", "MEC.SD.PARTNER", "MEC.SD.PLANT"]
+    diagnostic_case_refs: ["SDC.JIT.03"]
+    data_signals: ["business/message ID", "payload hash or business identity", "replacement relation", "processing result"]
+    owner: "JIT / Integration Operations"
+    cadence: "near-real-time operational view and weekly trend"
+    target_policy: "Target near-zero unintended business impact, not zero transport retries."
+    caveats: ["A transport retry is not necessarily duplicate business demand."]
+    source_refs: ["SRC-SAP-SIGNAVIO-PPI"]
+
+  - id: KPI.SD.JIT_CUM_MISMATCH
+    name: "JIT Cumulative Quantity Mismatch Rate"
+    kind: driver
+    category: complex_fulfillment
+    business_question: "How often do customer and supplier cumulative quantities fail to reconcile at the agreed cut-off?"
+    formula: "Eligible reconciliation points with unexplained cumulative delta beyond tolerance / all eligible reconciliation points * 100."
+    unit: "%"
+    direction: lower_is_better
+    grain: ["customer", "scheduling agreement", "material", "plant", "baseline/reset point"]
+    process_refs: ["SD.JIT", "SD.SA"]
+    mechanism_refs: ["MEC.SD.B2BCTX", "MEC.SD.PLANT"]
+    diagnostic_case_refs: ["SDC.JIT.03"]
+    data_signals: ["customer cumulative", "supplier cumulative", "accepted message", "delivery/PGI baseline"]
+    owner: "JIT Process Owner / Customer Logistics"
+    cadence: "per reconciliation cycle"
+    target_policy: "Use contractual tolerance and one shared reset/cut-off rule."
+    caveats: ["Do not compare cumulative quantities until both sides use the same baseline."]
+    source_refs: ["SRC-SAP-SIGNAVIO-METRICS"]
+
+  - id: KPI.SD.ETO_LATE_CHANGE
+    name: "ETO Engineering Change after Release Rate"
+    kind: driver
+    category: complex_fulfillment
+    business_question: "How often does customer-specific engineering change after the agreed production-release boundary?"
+    formula: "Eligible ETO items with material engineering change after release / all eligible released ETO items * 100."
+    unit: "%"
+    direction: lower_is_better
+    grain: ["customer", "product family", "project/order", "change reason"]
+    process_refs: ["SD.ETO", "SD.ETO.CTO+"]
+    mechanism_refs: ["MEC.SD.ICAT", "MEC.SD.ATP"]
+    diagnostic_case_refs: ["SDC.ETO.05"]
+    data_signals: ["sales configuration", "engineering release", "MBOM/routing revision", "production status"]
+    owner: "ETO Process Owner / Engineering"
+    cadence: "weekly / per project"
+    target_policy: "Set by engineering maturity model. Separate customer-requested late change from internal correction."
+    caveats: ["Late changes can be commercially valid; measure reason, cost and schedule impact together."]
+    source_refs: ["SRC-SAP-SIGNAVIO-METRICS"]
+
+  - id: KPI.SD.TPO_CONFIRM_DELAY
+    name: "Third-Party Supplier Confirmation Delay"
+    kind: driver
+    category: complex_fulfillment
+    business_question: "How long does externally sourced demand wait for a usable supplier confirmation?"
+    formula: "Usable supplier confirmation timestamp minus external procurement trigger timestamp for eligible third-party items."
+    unit: "time"
+    direction: lower_is_better
+    grain: ["supplier", "customer", "product", "purchasing organization", "order origin"]
+    process_refs: ["SD.TPO", "SD.TPO.SN", "SD.TPO.NSN", "SD.TPO.VC"]
+    mechanism_refs: ["MEC.SD.ICAT", "MEC.SD.SLINE"]
+    diagnostic_case_refs: ["SDC.TPO.06"]
+    data_signals: ["sales item", "purchase requisition/order", "supplier confirmation", "customer confirmation"]
+    owner: "Sales + Procurement Process Owner"
+    cadence: "daily"
+    target_policy: "Set by supplier/service segment and procurement model."
+    caveats: ["A fast supplier acknowledgement is not enough if it does not provide a usable quantity/date promise."]
+    source_refs: ["SRC-SAP-SIGNAVIO-CYCLE", "SRC-SAP-SIGNAVIO-PPI"]
+
+root_cause_playbook:
+  - trigger: "Service KPI falls"
+    start_with: ["KPI.SD.OTD", "KPI.SD.OTIF"]
+    slice_by: ["plant", "shipping point", "route", "product", "customer", "process family"]
+    drivers: ["KPI.SD.BACKORDER", "KPI.SD.DELIVERY_BLOCK", "KPI.SD.CONFIRM_CT", "KPI.SD.INTERFACE_FAILURE"]
+    next_models: ["sales mechanisms", "sales diagnostic casebook"]
+  - trigger: "Cash conversion slows"
+    start_with: ["KPI.SD.TIME_TO_CASH"]
+    slice_by: ["payment terms", "billing type", "customer", "process family"]
+    drivers: ["KPI.SD.BILLING_LEAD", "KPI.SD.BILLING_BLOCK", "KPI.SD.UNBILLED_VALUE", "KPI.SD.CREDIT_RELEASE"]
+    next_models: ["billing control map", "down-payment diagnostic case"]
+  - trigger: "Manual workload rises"
+    start_with: ["KPI.SD.TOUCHLESS_ORDER"]
+    slice_by: ["order origin", "sales document type", "customer", "process family"]
+    drivers: ["KPI.SD.INCOMPLETE", "KPI.SD.MANUAL_PRICE", "KPI.SD.INTERFACE_FAILURE", "KPI.SD.CHANGE_AFTER_CONFIRM"]
+    next_models: ["sales mechanisms", "integration map"]
+  - trigger: "Returns cost or customer recovery worsens"
+    start_with: ["KPI.SD.RETURN_RATE", "KPI.SD.RETURN_TO_REFUND"]
+    slice_by: ["return reason", "product", "customer", "returns variant"]
+    drivers: ["KPI.SD.RETURN_AGING"]
+    next_models: ["returns process cards", "configurable-return diagnostic case"]
+
+meeting_language:
+  - question: "What moved?"
+    answer_shape: "KPI + trend + segment. Example: OTIF fell in one plant/customer segment, not globally."
+  - question: "Why did it move?"
+    answer_shape: "Driver metric + evidence. Example: late confirmation increased because backorder and supplier-confirmation delay rose."
+  - question: "Who owns the next action?"
+    answer_shape: "Business owner + SAP control owner + evidence package."
+  - question: "How do we know the fix worked?"
+    answer_shape: "Positive case + negative case + KPI trend after enough volume."
+
+agent_contract:
+  retrieve_by: ["kpi id", "business question", "process_refs", "mechanism_refs", "diagnostic_case_refs", "analytics lens"]
+  reasoning_rules:
+    - "Do not recommend a target unless the user supplied a business benchmark or source. Use target_policy instead."
+    - "State numerator, denominator, date basis and exclusions before comparing percentages across teams."
+    - "For cycle time, state start event, end event and open-case treatment."
+    - "When a KPI changes, inspect dimensions and driver KPIs before proposing configuration changes."
+    - "Use process_refs to classify the process, mechanism_refs to locate the control and diagnostic_case_refs for symptom-first proof paths."
+    - "Treat Order-to-Cash and Time-to-Cash as cross-functional measures when FI clearing is part of the formula."
+  minimum_answer_shape: ["business question", "metric definition", "trend/segment", "likely drivers", "evidence", "owner", "next action"]
+
+source_refs:
+  - "SRC-SAP-SALES-MONITORING"
+  - "SRC-SAP-INCOMING-SALES"
+  - "SRC-SAP-SOF-ISSUES"
+  - "SRC-SAP-SOF-KPI"
+  - "SRC-SAP-SIGNAVIO-METRICS"
+  - "SRC-SAP-SIGNAVIO-PPI"
+  - "SRC-SAP-SIGNAVIO-CYCLE"
+
+related_views:
+  - title: "Sales Process Atlas"
+    url: "/labs/enterprise-context/sales-processes/"
+  - title: "Sales Mechanisms"
+    url: "/labs/enterprise-context/sales-processes/mechanisms/"
+  - title: "Sales Diagnostic Casebook"
+    url: "/labs/enterprise-context/sales-diagnostics/"
+  - title: "Sales Integrations"
+    url: "/labs/enterprise-context/sales-processes/integrations/"
+  - title: "Machine KPI model"
+    url: "/labs/enterprise-context/data/sales-process-kpis.json"
