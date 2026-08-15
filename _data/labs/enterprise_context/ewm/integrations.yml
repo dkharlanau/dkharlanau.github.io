@@ -1,0 +1,366 @@
+id: EWM-INTEGRATION-MAP
+title: "EWM Integration Architecture Map"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+summary: >-
+  A map of the main EWM integration boundaries. It separates business ownership, document
+  exchange, execution confirmation, transport integration, production/MES integration,
+  quality, automation, and monitoring. The exact interface depends on deployment and process model.
+
+working_rule: >-
+  I do not start integration design with a protocol. I start with ownership: who creates the
+  business demand, who owns warehouse execution, which event proves completion, and which system
+  must receive the confirmed state. Only then do I choose or inspect qRFC, local integration,
+  delivery replication, PMR/MES messages, TM objects, or automation interfaces.
+
+integration_contracts:
+  - id: INT-EWM-EMBEDDED-S4
+    title: "Embedded EWM ↔ Local SAP S/4HANA"
+    counterpart: "SAP S/4HANA applications in the same system/client"
+    business_scope:
+      - "Inventory Management"
+      - "Delivery Management / SD"
+      - "Purchasing inbound processes"
+      - "production and quality integration"
+    ownership:
+      upstream: "Enterprise demand, inventory/accounting context and business documents."
+      ewm: "Detailed warehouse stock position and execution."
+      completion: "Warehouse confirmation and the resulting local goods-movement/status update."
+    mechanism: >-
+      Embedded EWM is part of the same S/4HANA system. Treat this as a local application boundary,
+      not as the same remote distribution contract used for decentralized EWM.
+    main_objects:
+      - "Inbound Delivery"
+      - "Outbound Delivery / Outbound Delivery Order"
+      - "Goods Receipt / Goods Issue"
+      - "Warehouse Request / WT / WO"
+    diagnostic_path:
+      - "prove warehouse relevance and organizational assignment"
+      - "compare ERP/business-document status with EWM warehouse-request status"
+      - "trace WT/WO execution"
+      - "verify final goods movement and accounting state"
+    common_failure: "Teams search qRFC first in an embedded issue even though the broken state is inside the local application flow."
+    source_refs: [SRC-SAP-EWM-HELP, SRC-SAP-EWM-EMBEDDED-SCOPE]
+
+  - id: INT-EWM-DECENTRAL-S4
+    title: "Decentralized EWM ↔ SAP S/4HANA Enterprise Management"
+    counterpart: "Remote SAP S/4HANA / enterprise-management system"
+    business_scope:
+      - "delivery distribution"
+      - "delivery split confirmation"
+      - "goods receipt / goods issue confirmation"
+      - "status synchronization"
+    ownership:
+      upstream: "Enterprise delivery, inventory and accounting business state."
+      ewm: "Warehouse request and detailed execution in the separate EWM system."
+      completion: "Confirmed EWM execution returned to enterprise management for follow-on business processing."
+    mechanism: "Asynchronous communication using queued RFC (qRFC), including serialized message processing."
+    main_objects:
+      - "Distributed Inbound Delivery"
+      - "Distributed Outbound Delivery"
+      - "qRFC Queue"
+      - "Delivery Confirmation"
+    diagnostic_path:
+      - "find the source document in enterprise management"
+      - "prove distribution to EWM"
+      - "inspect the first blocked qRFC queue/message"
+      - "prove warehouse execution"
+      - "prove confirmation back to enterprise management"
+    common_failure: "A warehouse problem is actually a distribution/serialization problem, or an interface problem is incorrectly repaired by changing warehouse data."
+    source_refs: [SRC-SAP-EWM-ERP-COMM, SRC-SAP-EWM-DECENTRAL-ASR]
+
+  - id: INT-EWM-SD
+    title: "EWM ↔ SD / Delivery Management"
+    counterpart: "Sales and Delivery Management"
+    business_scope:
+      - "outbound delivery demand"
+      - "delivery quantity/status changes"
+      - "picking, packing, staging, loading"
+      - "goods issue confirmation"
+    ownership:
+      upstream: "Customer delivery promise and enterprise delivery context."
+      ewm: "Warehouse execution of the delivery."
+      completion: "GI/readiness status used by billing and downstream processes according to design."
+    main_objects:
+      - "Outbound Delivery"
+      - "Outbound Delivery Order"
+      - "Wave"
+      - "WT / WO"
+      - "HU"
+    control_points:
+      - "warehouse relevance"
+      - "delivery-document integration"
+      - "wave/release"
+      - "stock-removal determination"
+      - "GI status"
+    diagnostic_question: "Did the correct delivery and quantity reach EWM, and which first warehouse or delivery status differs?"
+    source_refs: [SRC-SAP-EWM-WAREHOUSE-REQUEST, SRC-SAP-EWM-ERP-COMM]
+
+  - id: INT-EWM-MM
+    title: "EWM ↔ MM / Inventory Management & Procurement"
+    counterpart: "Inventory Management and procurement execution"
+    business_scope:
+      - "purchase-order inbound flow"
+      - "goods receipt"
+      - "stock transfers"
+      - "inventory and accounting reconciliation"
+    ownership:
+      upstream: "Procurement demand, ERP stock/accounting state and material valuation context."
+      ewm: "Receiving, warehouse stock location and putaway execution."
+      completion: "Goods-movement and stock state reconciled between enterprise inventory and EWM."
+    main_objects:
+      - "PO / Inbound Delivery"
+      - "Inbound Delivery in EWM"
+      - "Stock / Quant"
+      - "WT / WO"
+      - "Goods Receipt"
+    diagnostic_question: "Is the difference a warehouse-position issue or an enterprise inventory/accounting issue?"
+    source_refs: [SRC-SAP-EWM-HELP, SRC-SAP-EWM-WAREHOUSE-REQUEST]
+
+  - id: INT-EWM-TM-CLASSIC
+    title: "EWM ↔ TM / Classic Shipping and Receiving"
+    counterpart: "SAP TM or other transportation planning in classic Shipping and Receiving scenarios"
+    business_scope:
+      - "transportation planning handoff"
+      - "Transportation Units / Vehicles"
+      - "door and staging execution"
+      - "loading and unloading"
+    ownership:
+      transport: "Transportation planning, route/transport execution context."
+      ewm: "Warehouse readiness and warehouse-side loading/unloading."
+      completion: "Transport and warehouse statuses reconciled around arrival, door, loading and departure."
+    main_objects:
+      - "Transportation Unit"
+      - "Vehicle"
+      - "Delivery"
+      - "Door"
+      - "Staging Area"
+    diagnostic_question: "Is the truck/transport object wrong, or is warehouse execution not ready for the planned transport?"
+    source_refs: [SRC-SAP-EWM-SHIPPING-RECEIVING, SRC-SAP-EWM-STAGING-DOOR]
+
+  - id: INT-EWM-TM-ASR
+    title: "EWM ↔ TM / Advanced Shipping and Receiving"
+    counterpart: "SAP Transportation Management"
+    business_scope:
+      - "harmonized shipping and receiving"
+      - "Freight Order based location execution"
+      - "loading point, door and staging integration"
+      - "EWM-managed and IM-managed storage locations in one transport process"
+    ownership:
+      tm: "Freight Order and transportation execution context."
+      ewm: "Warehouse tasks, readiness, loading/unloading and warehouse stock movement."
+      completion: "Freight-order stop and warehouse execution statuses remain aligned."
+    mechanism: >-
+      Advanced Shipping and Receiving uses a harmonized S/4HANA process model. For embedded EWM,
+      the process is based on the TM Freight Order and does not use the classic EWM TU or Vehicle.
+    main_objects:
+      - "Freight Order"
+      - "Loading Point"
+      - "Door"
+      - "Staging Area / Bay"
+      - "Delivery"
+    control_points:
+      - "loading-point master data"
+      - "door assignment"
+      - "staging-area determination"
+      - "ready-for-warehouse-processing status"
+    diagnostic_question: "Which Freight Order stop, loading point, door, delivery or warehouse-readiness state is the first one that differs?"
+    source_refs: [SRC-SAP-EWM-ASR-EMBEDDED, SRC-SAP-EWM-ASR-PREREQ]
+
+  - id: INT-EWM-PP-DELIVERY
+    title: "EWM ↔ PP / Delivery-Based Production Supply"
+    counterpart: "S/4HANA Manufacturing"
+    business_scope:
+      - "component staging"
+      - "PSA supply"
+      - "consumption"
+      - "receipt from production"
+    ownership:
+      pp: "Production/process order demand and manufacturing business state."
+      ewm: "Warehouse staging and PSA-side execution."
+      completion: "Staging/consumption/receipt state returned to the production process according to integration design."
+    mechanism: "Production supply based on delivery documents."
+    main_objects:
+      - "Production / Process Order"
+      - "Delivery"
+      - "PSA"
+      - "WT / WO"
+    diagnostic_question: "Did production create the correct staging requirement and does the PSA/bin mapping lead to executable warehouse work?"
+    source_refs: [SRC-SAP-EWM-PRODUCTION-SUPPLY, SRC-SAP-EWM-PRODUCTION-INTEGRATION]
+
+  - id: INT-EWM-PP-ADVANCED
+    title: "EWM ↔ PP / Advanced Production Integration"
+    counterpart: "S/4HANA Manufacturing"
+    business_scope:
+      - "PMR-driven staging"
+      - "PSA supply"
+      - "consumption"
+      - "receipt from production"
+    ownership:
+      pp: "Manufacturing-order demand."
+      ewm: "PMR-related warehouse staging and warehouse receipt execution."
+      completion: "Material staged/consumed/received with production and warehouse documents aligned."
+    mechanism: "Production Material Request (PMR) based integration."
+    main_objects:
+      - "PMR"
+      - "PSA"
+      - "WT / WO"
+      - "HU"
+    diagnostic_question: "Is the problem in manufacturing demand, PMR content, staging method, PSA determination or WT execution?"
+    source_refs: [SRC-SAP-EWM-PRODUCTION-INTEGRATION]
+
+  - id: INT-EWM-MES-DM
+    title: "EWM ↔ MES / SAP Digital Manufacturing"
+    counterpart: "SAP Digital Manufacturing or MES"
+    business_scope:
+      - "MES-driven staging"
+      - "production consumption"
+      - "receipt of finished/semi-finished goods"
+      - "WIP-related flows in supported scenarios"
+    ownership:
+      mes: "Shop-floor execution request and production confirmation context."
+      ewm: "Warehouse staging, warehouse stock and warehouse receipt execution."
+      completion: "Warehouse and MES/production states reconciled through the selected production integration type."
+    mechanism: >-
+      EWM supports MES-driven production integration scenarios; SAP Digital Manufacturing documents
+      integration with both embedded and decentralized EWM for supported S/4HANA releases.
+    main_objects:
+      - "Staging Request"
+      - "PMR"
+      - "WIP / Inbound Delivery in supported flows"
+      - "HU"
+      - "Warehouse Stock Change"
+    diagnostic_question: "Is the staging request/message correct before looking at EWM task creation?"
+    source_refs: [SRC-SAP-EWM-PRODUCTION-INTEGRATION, SRC-SAP-DM-EWM]
+
+  - id: INT-EWM-QM
+    title: "EWM ↔ Quality Management"
+    counterpart: "SAP S/4HANA Quality Management"
+    business_scope:
+      - "inspection relevance"
+      - "quality inspection"
+      - "usage decision"
+      - "stock-type / follow-up warehouse action"
+    ownership:
+      qm: "Quality planning, results and usage-decision context according to deployment model."
+      ewm: "Warehouse stock state and follow-up movement around inspection."
+      completion: "Inspection decision changes or releases warehouse stock/process state."
+    deployment_note: "Embedded and decentralized EWM have different distributed integration paths; state the deployment before troubleshooting."
+    main_objects:
+      - "Inspection Document"
+      - "Inspection Lot"
+      - "Stock Type"
+      - "Warehouse Task"
+    diagnostic_question: "Which quality object and stock status currently prevents the next warehouse step?"
+    source_refs: [SRC-SAP-EWM-QM-EMBEDDED, SRC-SAP-EWM-QM-DECENTRAL]
+
+  - id: INT-EWM-MFS-PLC
+    title: "EWM MFS ↔ PLC"
+    counterpart: "Programmable Logic Controller / warehouse automation"
+    business_scope:
+      - "automated material flow"
+      - "conveyor segments"
+      - "communication points"
+      - "machine-level execution confirmation"
+    ownership:
+      ewm: "Warehouse-task and material-flow intent."
+      mfs: "Material-flow coordination between EWM warehouse work and automation communication points."
+      plc: "Machine-level control of physical equipment."
+    main_objects:
+      - "WT"
+      - "HU"
+      - "Communication Point"
+      - "Communication Channel"
+      - "PLC"
+    diagnostic_path:
+      - "prove WT/HU state in EWM"
+      - "prove MFS route/communication-point state"
+      - "prove channel/telegram processing"
+      - "prove PLC/equipment state"
+    common_failure: "Support changes warehouse-task data while the stopped state is actually in MFS or PLC communication."
+    source_refs: [SRC-SAP-EWM-MFS, SRC-SAP-EWM-LOSC]
+
+  - id: INT-EWM-WCU
+    title: "EWM ↔ External WCS / WCU / Non-SAP Warehouse System"
+    counterpart: "External warehouse-control or automation system"
+    business_scope:
+      - "warehouse-task transfer"
+      - "task confirmation"
+      - "HU movement"
+      - "cancellation"
+      - "blocking of storage units/aisles"
+    ownership:
+      ewm: "Warehouse-management responsibility unless a deliberate black-box storage-type model delegates more responsibility."
+      external: "Physical control/product-flow functions agreed in the interface contract."
+      completion: "External execution is confirmed back so EWM stock/task state remains authoritative according to the selected ownership model."
+    mechanism: "EWM-WCU interface; SAP documents tRFC-based communication and IDoc-oriented interface descriptions."
+    main_objects:
+      - "WT / transfer order context"
+      - "HU"
+      - "cancellation request"
+      - "confirmation"
+    design_question: "Who owns task decomposition, routing, exception recovery and final confirmation?"
+    common_failure: "EWM and WCS both attempt to optimize or re-route the same move, creating ambiguous ownership."
+    source_refs: [SRC-SAP-EWM-NONSAP-WCU]
+
+  - id: INT-EWM-MONITORING
+    title: "EWM Operations ↔ Monitoring & Support"
+    counterpart: "Warehouse operations / application support"
+    business_scope:
+      - "document monitoring"
+      - "task/order monitoring"
+      - "stock/HU monitoring"
+      - "physical inventory monitoring"
+      - "integration queue/message monitoring"
+      - "alerts and exception handling"
+    ownership:
+      monitor: "Warehouse Management Monitor provides operational visibility and recovery actions."
+      integration: "qRFC/message tools expose cross-system failures."
+      support: "Support identifies the first inconsistent state before applying recovery."
+    main_objects:
+      - "Warehouse Monitor Node"
+      - "Alert"
+      - "qRFC Queue"
+      - "Warehouse Request / WT / WO"
+      - "Stock / HU"
+    diagnostic_question: "What is the first object whose business state differs from the expected process path?"
+    source_refs: [SRC-SAP-EWM-MONITOR, SRC-SAP-EWM-ERP-COMM]
+
+integration_patterns:
+  - id: EWM-PATTERN-INBOUND
+    title: "Procurement → EWM Inbound → Inventory"
+    path: "PO / Inbound Delivery → EWM Inbound Delivery → GR → Putaway WT/WO → Final Bin → ERP Stock/Accounting State"
+    watch: "Do not call the process complete when the truck is unloaded; document, stock and financial state must agree."
+  - id: EWM-PATTERN-OUTBOUND
+    title: "Sales → EWM Outbound → TM / Billing"
+    path: "Sales Delivery Demand → EWM Outbound Delivery Order → Wave/Pick/Pack/Stage → Load → GI → Billing / Transport Follow-On"
+    watch: "Warehouse readiness, transport readiness and billing relevance are separate states."
+  - id: EWM-PATTERN-PRODUCTION
+    title: "Manufacturing / MES → EWM Production Logistics"
+    path: "Order / MES Request → Delivery or PMR → PSA → WT/WO → Consumption → Receipt from Production"
+    watch: "The production integration type defines the document chain. Do not mix delivery-based and PMR/MES-driven diagnostics."
+  - id: EWM-PATTERN-AUTOMATION
+    title: "EWM → Automation → EWM Confirmation"
+    path: "Warehouse Request → WT → MFS or WCS → PLC/Equipment → Confirmation → EWM Stock/Task Update"
+    watch: "One layer should own each routing decision; recovery must preserve message idempotency and physical truth."
+  - id: EWM-PATTERN-ASR
+    title: "TM Freight Order → Loading Point → EWM"
+    path: "Freight Order → Location / Loading Point → Door / Staging → Warehouse Readiness → Load/Unload → Departure"
+    watch: "Do not use the classic TU mental model for embedded Advanced Shipping and Receiving."
+
+interface_selection_questions:
+  - "Is EWM embedded or decentralized?"
+  - "Which application creates the business demand?"
+  - "Which document is the warehouse request?"
+  - "Which event is the legally/business-relevant GR or GI?"
+  - "Is transportation classic Shipping and Receiving or Advanced Shipping and Receiving?"
+  - "Is production delivery-based, PMR-based, MES-driven, JIT or repetitive-manufacturing driven?"
+  - "Does EWM MFS own automation orchestration, or is an external WCS/WCU the owner?"
+  - "Which message/queue/status proves handoff and which monitor is used for recovery?"
+
+lead_anti_patterns:
+  - "Choosing IDoc/qRFC/API before defining business ownership."
+  - "Treating embedded and decentralized integration as the same support model."
+  - "Mixing TU/Vehicle and Freight Order object models in Advanced Shipping and Receiving."
+  - "Letting both EWM and an external WCS own route optimization for the same physical move."
+  - "Manually forcing ERP or EWM status without finding the first failed confirmation."
