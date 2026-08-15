@@ -64,6 +64,9 @@ lead_questions:
   - "Where are freight charges calculated, and how do they reach MM invoice verification?"
 
 entities:
+  - id: DOM-TRANSPORTATION
+    type: application_domain
+    title: "Transportation & Freight"
   - id: PROC-TM-TRANSPORT-TO-SETTLE
     type: process
     title: "Transport to Settle"
@@ -165,9 +168,9 @@ relations:
     evidence_type: documented_fact
     confidence: high
     source_refs: [SRC-SAP-TM-FREIGHT-UNIT]
-  - from: CFG-TM-FUB-RULE
-    type: configured_by
-    to: STEP-TM-FREIGHT-UNIT-BUILDING
+  - from: STEP-TM-FREIGHT-UNIT-BUILDING
+    type: controlled_by
+    to: CFG-TM-FUB-RULE
     evidence_type: documented_fact
     confidence: high
     source_refs: [SRC-SAP-TM-FREIGHT-UNIT]
@@ -191,9 +194,9 @@ relations:
     evidence_type: documented_fact
     confidence: high
     source_refs: [SRC-SAP-TM-PLANNING]
-  - from: CFG-TM-PLANNING-PROFILE
-    type: configured_by
-    to: STEP-TM-TRANSPORT-PLANNING
+  - from: STEP-TM-TRANSPORT-PLANNING
+    type: controlled_by
+    to: CFG-TM-PLANNING-PROFILE
     evidence_type: documented_fact
     confidence: high
     source_refs: [SRC-SAP-TM-PLANNING-PROFILE]
