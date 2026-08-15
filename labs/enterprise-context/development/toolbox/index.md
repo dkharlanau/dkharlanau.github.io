@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-15
 hide_global_cta: true
 tags:
   - sap
@@ -48,6 +48,18 @@ tags:
     <p><strong>Tooling rule:</strong> automate repetitive work and quality checks first. A tool should reduce delivery cost, not become another architecture layer.</p>
     <p><strong>Support matters:</strong> SAP-supported products, SAP open-source projects and community tools are deliberately separated in the model.</p>
     <a href="/labs/enterprise-context/data/development-toolbox.json">Open the AI-readable toolbox <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">ABAP application toolkit</p>
+      <h2>Logs, lists and UI choices deserve their own decision map.</h2>
+      <p>Use BAL for support-relevant process history, SALV or ALV for justified SAP GUI scenarios, and RAP plus Fiori for modern business applications. The useful question is not which acronym is newer; it is which layer owns the job.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/development/toolbox/abap-runtime-ui/"><span>ABAP</span><strong>ABAP Runtime and UI Toolkit</strong><small>BAL · SLG1 · SALV · ALV Grid · SALV IDA · SAT/ST05/ST22 · RAP · Fiori elements · freestyle SAPUI5</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/data/abap-runtime-ui-toolkit.json"><span>DATA</span><strong>AI-readable decision graph</strong><small>Decision matrix, graph edges, logistics examples, anti-patterns and Lead assessment answers.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
