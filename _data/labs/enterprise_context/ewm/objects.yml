@@ -1,0 +1,316 @@
+id: EWM-OBJECT-CATALOG
+title: "EWM Object Catalog"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+summary: >-
+  A practical catalog of the main objects a Lead consultant should recognize in EWM.
+  The goal is not to memorize tables. The goal is to know what each object represents,
+  who creates it, which process consumes it, and which adjacent system may own the upstream
+  or downstream business state.
+
+memory_rule: >-
+  I separate demand objects, execution objects, stock/packaging objects, master data,
+  shipping objects, production/quality objects, and automation objects. Two objects with
+  similar names can have completely different ownership and lifecycle.
+
+categories:
+  - id: EWM-OBJCAT-DEMAND
+    title: "Demand & Warehouse Request Objects"
+    question: "What business requirement entered the warehouse?"
+    objects:
+      - id: OBJ-EWM-INBOUND-DELIVERY
+        title: "Inbound Delivery"
+        role: "Warehouse request for expected or received inbound goods."
+        created_from: ["purchase/inbound logistics", "stock transfer", "production receipt or manual EWM scenario depending on design"]
+        consumed_by: ["goods receipt", "unloading", "quality", "putaway"]
+        check_first: "Reference document, warehouse relevance, quantities, dates, partner/product data and integration status."
+        source_refs: [SRC-SAP-EWM-WAREHOUSE-REQUEST]
+      - id: OBJ-EWM-OUTBOUND-DELIVERY-ORDER
+        title: "Outbound Delivery Order"
+        role: "Warehouse request that drives stock removal and outbound execution."
+        created_from: ["enterprise outbound delivery demand"]
+        consumed_by: ["wave", "picking", "packing", "staging", "loading", "goods issue"]
+        check_first: "Warehouse relevance, item status, stock-removal context and release/wave state."
+        source_refs: [SRC-SAP-EWM-WAREHOUSE-REQUEST]
+      - id: OBJ-EWM-INTERNAL-REQUEST
+        title: "Internal Stock-Transfer / Posting Requirement"
+        role: "Warehouse-internal need to move or change stock without a customer or supplier delivery."
+        created_from: ["replenishment", "ad hoc movement", "posting change", "rearrangement"]
+        consumed_by: ["warehouse-task creation"]
+        check_first: "Process type, source stock, destination logic and stock status."
+        source_refs: [SRC-SAP-EWM-REPLENISHMENT, SRC-SAP-EWM-POSTING-CHANGE]
+      - id: OBJ-EWM-PMR
+        title: "Production Material Request (PMR)"
+        role: "Production-oriented warehouse demand used by advanced production integration."
+        created_from: ["production integration"]
+        consumed_by: ["staging", "PSA supply", "consumption"]
+        check_first: "Production integration type, PSA mapping, staging method and open quantities."
+        source_refs: [SRC-SAP-EWM-PRODUCTION-INTEGRATION]
+      - id: OBJ-EWM-STAGING-REQUEST
+        title: "MES Staging Request"
+        role: "Demand from an MES for warehouse staging in MES-driven production scenarios."
+        created_from: ["MES / SAP Digital Manufacturing"]
+        consumed_by: ["EWM staging execution"]
+        check_first: "Interface message, PMR/reference context, PSA and requested quantity."
+        source_refs: [SRC-SAP-EWM-PRODUCTION-INTEGRATION, SRC-SAP-DM-EWM]
+
+  - id: EWM-OBJCAT-EXECUTION
+    title: "Warehouse Execution Objects"
+    question: "What work must physically happen and how is it packaged?"
+    objects:
+      - id: OBJ-EWM-WAREHOUSE-TASK
+        title: "Warehouse Task (WT)"
+        role: "Executable logical or physical goods movement or stock change."
+        created_from: ["warehouse request", "internal process", "replenishment", "physical-inventory context"]
+        consumed_by: ["warehouse-order creation", "RF", "MFS/WCS", "confirmation"]
+        check_first: "Source, destination, stock/HU, WPT, activity and status."
+        source_refs: [SRC-SAP-EWM-WAREHOUSE-TASK]
+      - id: OBJ-EWM-WAREHOUSE-ORDER
+        title: "Warehouse Order (WO)"
+        role: "Executable work package that groups warehouse tasks or physical-inventory work."
+        created_from: ["Warehouse Order Creation Rule"]
+        consumed_by: ["resource", "queue", "RF execution", "Labor Management"]
+        check_first: "WOCR, queue, activity area, resource compatibility and status."
+        source_refs: [SRC-SAP-EWM-WAREHOUSE-ORDER]
+      - id: OBJ-EWM-WAVE
+        title: "Wave"
+        role: "Time-oriented grouping of outbound warehouse-request items before or around warehouse-task creation."
+        created_from: ["outbound demand", "wave determination"]
+        consumed_by: ["wave release", "picking workload"]
+        check_first: "Wave assignment, release time, cutoff and release status."
+        source_refs: [SRC-SAP-EWM-WAVE]
+      - id: OBJ-EWM-RESOURCE
+        title: "Resource"
+        role: "Worker or equipment execution context that performs warehouse work."
+        created_from: ["warehouse master data"]
+        consumed_by: ["RF", "queue selection", "warehouse-order processing"]
+        check_first: "Resource type/group, queue assignment, activity-area fit and current work."
+      - id: OBJ-EWM-QUEUE
+        title: "Queue"
+        role: "Operational channel that organizes warehouse orders for resources."
+        created_from: ["warehouse execution design"]
+        consumed_by: ["resource work selection"]
+        check_first: "Queue determination and resource access."
+
+  - id: EWM-OBJCAT-STOCK
+    title: "Stock, HU & Packaging Objects"
+    question: "What exactly is stored, in which status, and in which physical/logistical unit?"
+    objects:
+      - id: OBJ-EWM-STOCK-QUANT
+        title: "Stock / Quant"
+        role: "Warehouse stock identity at a detailed stock-key and location context."
+        created_from: ["goods receipt", "putaway", "posting change", "internal movement"]
+        consumed_by: ["stock removal", "inventory", "quality", "production supply"]
+        check_first: "Product, quantity, stock type, owner/entitled party where relevant, batch, HU and bin."
+        source_refs: [SRC-SAP-EWM-POSTING-CHANGE]
+      - id: OBJ-EWM-HU
+        title: "Handling Unit (HU)"
+        role: "Physical logistics unit that combines packaging material and contained goods."
+        created_from: ["supplier ASN/inbound", "packing", "production receipt", "cartonization/package building"]
+        consumed_by: ["putaway", "picking", "packing", "staging", "loading", "MFS"]
+        check_first: "HU content, hierarchy, location, status and linked delivery/task."
+      - id: OBJ-EWM-PACK-SPEC
+        title: "Packaging Specification"
+        role: "Master data defining packing levels, quantities, packaging materials and work instructions."
+        created_from: ["packaging master-data design"]
+        consumed_by: ["putaway task split", "packing", "VAS", "package building"]
+        check_first: "Determination condition, validity, packing level and target quantity."
+        source_refs: [SRC-SAP-EWM-PACKAGING-SPEC]
+      - id: OBJ-EWM-PSHU
+        title: "Planned Shipping Handling Unit (PSHU)"
+        role: "Planned package structure for outbound execution before final physical packing."
+        created_from: ["cartonization/package building"]
+        consumed_by: ["packing and outbound execution"]
+        check_first: "Document/wave reference, package-building result and conversion to physical HUs."
+
+  - id: EWM-OBJCAT-STRUCTURE
+    title: "Warehouse Structure & Master Data Objects"
+    question: "How is the physical warehouse represented?"
+    objects:
+      - id: ORG-EWM-WAREHOUSE-NUMBER
+        title: "Warehouse Number"
+        role: "Top-level EWM warehouse organization representing one warehouse complex."
+        created_from: ["warehouse architecture"]
+        consumed_by: ["all EWM processes"]
+        check_first: "Organizational assignment, units, time zone and warehouse-wide settings."
+        source_refs: [SRC-SAP-EWM-WAREHOUSE-NUMBER]
+      - id: OBJ-EWM-STORAGE-TYPE
+        title: "Storage Type"
+        role: "Warehouse area with common physical or process behavior."
+        created_from: ["warehouse layout design"]
+        consumed_by: ["putaway", "stock removal", "storage control", "inventory"]
+        check_first: "Role, capacity rules, search sequence and process relevance."
+      - id: OBJ-EWM-STORAGE-SECTION
+        title: "Storage Section"
+        role: "Optional subdivision inside a storage type."
+        created_from: ["warehouse layout design"]
+        consumed_by: ["putaway section search"]
+        check_first: "Section search and product/stock fit."
+      - id: OBJ-EWM-STORAGE-BIN
+        title: "Storage Bin"
+        role: "Exact warehouse position for stock or handling units."
+        created_from: ["warehouse layout"]
+        consumed_by: ["warehouse tasks", "inventory", "activity-area sorting"]
+        check_first: "Bin type, capacity, activity-area assignment, block and current stock."
+      - id: OBJ-EWM-ACTIVITY-AREA
+        title: "Activity Area"
+        role: "Logical grouping of bins for a warehouse activity such as picking, putaway or inventory."
+        created_from: ["execution design"]
+        consumed_by: ["bin sorting", "warehouse-order creation", "labor analysis"]
+        check_first: "Activity assignment and generated bin sorting."
+        source_refs: [SRC-SAP-EWM-ACTIVITY-AREA]
+      - id: OBJ-EWM-WORK-CENTER
+        title: "Work Center"
+        role: "Physical location for activities such as packing, deconsolidation or quality inspection."
+        created_from: ["warehouse process design"]
+        consumed_by: ["packing", "deconsolidation", "VAS", "quality"]
+        check_first: "Warehouse/storage type/bin assignment and transaction type."
+        source_refs: [SRC-SAP-EWM-WORK-CENTER]
+      - id: OBJ-EWM-DOOR
+        title: "Warehouse Door"
+        role: "Warehouse interface point for loading and unloading."
+        created_from: ["shipping/receiving design"]
+        consumed_by: ["staging-area determination", "loading/unloading", "ASR"]
+        check_first: "Staging-area assignment, loading point and determination rule."
+        source_refs: [SRC-SAP-EWM-STAGING-DOOR]
+      - id: OBJ-EWM-STAGING-AREA
+        title: "Staging Area / Staging Bay"
+        role: "Interim area close to doors for received or outbound-staged goods."
+        created_from: ["shipping/receiving design"]
+        consumed_by: ["loading/unloading", "staging planning"]
+        check_first: "Purpose, door assignment, capacity/time-slot context and determination."
+        source_refs: [SRC-SAP-EWM-STAGING-DOOR]
+      - id: OBJ-EWM-LOADING-POINT
+        title: "Loading Point"
+        role: "Shipping/receiving location that can group multiple warehouse doors in Advanced Shipping and Receiving."
+        created_from: ["ASR location design"]
+        consumed_by: ["Freight Order execution", "door assignment"]
+        check_first: "Supply-chain-unit attribute, assigned doors and TM context."
+        source_refs: [SRC-SAP-EWM-ASR-PREREQ]
+      - id: OBJ-EWM-PSA
+        title: "Production Supply Area (PSA)"
+        role: "Production-side staging/withdrawal area for components."
+        created_from: ["PP/EWM production design"]
+        consumed_by: ["staging", "consumption"]
+        check_first: "PSA/product/bin assignment and production integration type."
+        source_refs: [SRC-SAP-EWM-PRODUCTION-SUPPLY]
+
+  - id: EWM-OBJCAT-SHIPPING
+    title: "Shipping & Transportation Objects"
+    question: "Which transport-side object owns arrival, loading and departure?"
+    objects:
+      - id: OBJ-EWM-TU
+        title: "Transportation Unit (TU)"
+        role: "Classic EWM Shipping and Receiving object representing a transport unit such as a trailer or container."
+        created_from: ["EWM shipping/receiving or external transportation planning"]
+        consumed_by: ["check-in", "door assignment", "loading/unloading", "departure"]
+        check_first: "Assigned deliveries, activity, door/staging context and planned times."
+        source_refs: [SRC-SAP-EWM-SHIPPING-RECEIVING]
+      - id: OBJ-EWM-VEHICLE
+        title: "Vehicle"
+        role: "Classic Shipping and Receiving object that can group transportation units."
+        created_from: ["shipping/receiving"]
+        consumed_by: ["yard and door execution"]
+        check_first: "TU assignment and status."
+        source_refs: [SRC-SAP-EWM-SHIPPING-RECEIVING]
+      - id: OBJ-TM-FREIGHT-ORDER
+        title: "Freight Order"
+        role: "TM transport execution object used as the main transportation object in Advanced Shipping and Receiving."
+        created_from: ["TM"]
+        consumed_by: ["ASR loading/unloading and location execution"]
+        check_first: "Stops, loading point, deliveries, readiness and execution status."
+        source_refs: [SRC-SAP-EWM-ASR-EMBEDDED]
+    distinction: >-
+      Do not mix classic TU/Vehicle shipping with Advanced Shipping and Receiving. In embedded
+      ASR, the process is based on the TM Freight Order and does not use the EWM TU or Vehicle.
+
+  - id: EWM-OBJCAT-QUALITY
+    title: "Quality & Inventory-Control Objects"
+    question: "Which object controls whether stock may continue through the warehouse?"
+    objects:
+      - id: OBJ-EWM-INSPECTION
+        title: "Inspection Document / Inspection Lot"
+        role: "Quality-control context for inspection relevance, results, usage decision and warehouse follow-up."
+        created_from: ["QM/EWM integration"]
+        consumed_by: ["quality work center", "stock-type change", "putaway/release"]
+        check_first: "Deployment model, inspection status, usage decision and follow-up action."
+        source_refs: [SRC-SAP-EWM-QM-EMBEDDED, SRC-SAP-EWM-QM-DECENTRAL]
+      - id: OBJ-EWM-PI-DOCUMENT
+        title: "Physical Inventory Document"
+        role: "Controls counting, recount and difference processing."
+        created_from: ["physical inventory procedure"]
+        consumed_by: ["counting", "difference posting"]
+        check_first: "Procedure, count status, open tasks and difference state."
+        source_refs: [SRC-SAP-EWM-PHYSICAL-INVENTORY, SRC-SAP-EWM-CYCLE-COUNT]
+
+  - id: EWM-OBJCAT-VAS
+    title: "VAS & Work-Service Objects"
+    question: "What non-movement work changes or prepares the goods?"
+    objects:
+      - id: OBJ-EWM-VAS-ORDER
+        title: "VAS Order"
+        role: "Documents warehouse value-added work such as labeling, packing, assembly or kitting."
+        created_from: ["warehouse request and VAS relevance"]
+        consumed_by: ["work-center processing", "Labor Management"]
+        check_first: "Relevance, packaging specification, work-center/process step and status."
+        source_refs: [SRC-SAP-EWM-VAS]
+      - id: OBJ-EWM-LABOR-WORKLOAD
+        title: "Planned / Executed Workload"
+        role: "Labor Management object for expected and completed warehouse effort."
+        created_from: ["warehouse order, WT, PI, VAS or other LM-relevant work"]
+        consumed_by: ["workload planning", "utilization analysis"]
+        check_first: "LM activation, labor activity and duration basis."
+        source_refs: [SRC-SAP-EWM-LABOR]
+
+  - id: EWM-OBJCAT-AUTOMATION
+    title: "Automation & Integration Objects"
+    question: "Which technical object carries or confirms machine-executed work?"
+    objects:
+      - id: OBJ-EWM-MFS-COMM-POINT
+        title: "MFS Communication Point"
+        role: "Logical material-flow point used to coordinate automated warehouse movement."
+        created_from: ["MFS design"]
+        consumed_by: ["telegram/material-flow processing"]
+        check_first: "HU position, route/state and PLC communication."
+        source_refs: [SRC-SAP-EWM-MFS]
+      - id: OBJ-EWM-MFS-CHANNEL
+        title: "MFS Communication Channel"
+        role: "Communication context between EWM MFS and automation controls."
+        created_from: ["MFS technical design"]
+        consumed_by: ["PLC communication"]
+        check_first: "Connection/channel state and telegram flow."
+        source_refs: [SRC-SAP-EWM-MFS]
+      - id: OBJ-EWM-WCU-MESSAGE
+        title: "EWM-WCU Interface Message"
+        role: "Task/confirmation communication with an external warehouse control unit or non-SAP automation system."
+        created_from: ["EWM or external WCU"]
+        consumed_by: ["external warehouse control", "EWM confirmation"]
+        check_first: "Ownership of task creation, confirmation, cancellation and retry."
+        source_refs: [SRC-SAP-EWM-NONSAP-WCU]
+      - id: OBJ-EWM-QRFC-QUEUE
+        title: "qRFC Queue"
+        role: "Serialized asynchronous communication context for decentralized EWM and SAP S/4HANA integration."
+        created_from: ["delivery/status integration"]
+        consumed_by: ["S/4HANA ↔ EWM message processing"]
+        check_first: "First blocked queue/message, serialization dependency and application error."
+        source_refs: [SRC-SAP-EWM-ERP-COMM]
+
+object_relationships:
+  - path: "Inbound Delivery → Warehouse Task → Warehouse Order → Resource → Confirmation"
+    meaning: "Inbound demand becomes executable work."
+  - path: "Outbound Delivery Order → Wave → Warehouse Task → Warehouse Order → HU → Stage / Load → GI"
+    meaning: "Outbound demand is grouped, executed and physically prepared for transport."
+  - path: "PMR / Staging Request → Warehouse Task → PSA → Consumption"
+    meaning: "Production need becomes warehouse staging."
+  - path: "Packaging Specification → HU / VAS Order → Work Center"
+    meaning: "Packing master data drives physical handling work."
+  - path: "Freight Order → Loading Point / Door → Delivery Readiness"
+    meaning: "ASR connects transportation execution with warehouse execution."
+  - path: "WT → MFS/WCU → PLC / External Control → Confirmation"
+    meaning: "Warehouse intent becomes automated movement."
+
+lead_checks:
+  - "Never ask only for the document number. Ask which object type it is and who owns it."
+  - "A status mismatch is often an object-boundary mismatch, not a warehouse-task defect."
+  - "A physical object such as an HU can participate in several document lifecycles at the same time."
+  - "Classic Shipping and Receiving and Advanced Shipping and Receiving use different transportation object models."
