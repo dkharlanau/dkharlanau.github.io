@@ -1,123 +1,169 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "title": "AI Ready Architecture Catalog",
   "reviewed_at": "2026-08-15",
+  "human_index": "/labs/ai-ready/deep-dives/",
   "current_protocols": {
     "mcp": {
       "revision": "2026-07-28",
       "maturity": "evolving",
-      "note": "The 2026-07-28 revision uses a stateless protocol core. Check the official specification before implementation because MCP is changing quickly."
+      "note": "The 2026-07-28 revision uses a stateless protocol core, header-based routing, cache hints, Multi Round-Trip Requests, and an extensions model. Check the official specification before implementation because MCP is evolving quickly."
     }
   },
   "tracks": [
     {
       "id": "foundations",
-      "title": "Foundations",
-      "goal": "Understand what the model can do, what the application must do, and where deterministic software is still the better tool.",
-      "topics": ["tokens and context", "instruction layers", "structured output", "embeddings", "tool calling", "workflow vs agent", "state vs memory"]
+      "title": "System Boundaries",
+      "page": "/labs/ai-ready/system-boundaries/",
+      "goal": "Separate model decisions from deterministic application logic, data, state, authorization, and transaction control.",
+      "topics": ["context budget", "instruction layers", "structured output", "state vs memory", "workflow vs agent", "application boundary"]
     },
     {
       "id": "data-retrieval",
-      "title": "Data and Retrieval",
-      "goal": "Make fresh or private knowledge usable without hiding data quality problems behind a chatbot.",
-      "topics": ["source of truth", "chunking", "metadata", "lexical search", "vector search", "hybrid search", "reranking", "citations", "provenance", "dataset versioning"]
+      "title": "Data and RAG",
+      "page": "/labs/ai-ready/data-rag/",
+      "goal": "Use current or private evidence with explicit source ownership, permissions, retrieval tests, and provenance.",
+      "topics": ["source of truth", "chunking", "metadata", "lexical search", "vector search", "hybrid search", "reranking", "citations", "provenance", "retrieval evals"]
     },
     {
       "id": "tools-mcp",
       "title": "Tools and MCP",
-      "goal": "Connect models to systems with explicit contracts, permissions, and failure behavior.",
-      "topics": ["function tools", "MCP", "tools", "resources", "prompts", "stdio", "Streamable HTTP", "authorization", "approval", "idempotency"]
+      "page": "/labs/ai-ready/tools-mcp/",
+      "goal": "Connect models to external systems through small contracts, clear permissions, safe retries, and reusable MCP interfaces only where reuse creates value.",
+      "topics": ["function tools", "MCP 2026-07-28", "tools", "resources", "prompts", "Streamable HTTP", "authorization", "approval", "idempotency", "read write separation"]
     },
     {
       "id": "agents",
       "title": "Agent Architecture",
-      "goal": "Use adaptive loops only when a fixed workflow is not enough.",
-      "topics": ["tool loop", "router", "planner and executor", "orchestrator and workers", "supervisor", "human approval", "budget limits", "termination rules"]
+      "page": "/labs/ai-ready/agent-architecture/",
+      "goal": "Use adaptive loops only when changing evidence makes a fixed workflow insufficient.",
+      "topics": ["workflow first", "router", "bounded tool loop", "orchestrator and workers", "human approval", "budget limits", "termination rules", "trajectory evaluation"]
     },
     {
       "id": "evals-reliability",
       "title": "Evals and Reliability",
-      "goal": "Turn quality into tests instead of opinions.",
-      "topics": ["golden datasets", "deterministic graders", "model graders", "regression tests", "tracing", "latency", "cost", "retries", "fallbacks"]
+      "page": "/labs/ai-ready/evals-reliability/",
+      "goal": "Turn retrieval, model, tool, agent, safety, latency, and cost quality into regression tests and release gates.",
+      "topics": ["golden datasets", "deterministic graders", "model graders", "retrieval evals", "trajectory evals", "regression gates", "latency", "cost"]
     },
     {
       "id": "security-governance",
       "title": "Security and Governance",
-      "goal": "Treat model input and retrieved content as untrusted data, and keep tool permissions narrow.",
-      "topics": ["prompt injection", "data exfiltration", "least privilege", "secret handling", "sandboxing", "approval gates", "audit logs", "PII classification"]
+      "page": "/labs/ai-ready/security-governance/",
+      "goal": "Treat external content as untrusted data and keep identity, permissions, secrets, approvals, and lifecycle governance outside model control.",
+      "topics": ["prompt injection", "data exfiltration", "least privilege", "secret handling", "approval records", "audit", "PII classification", "lifecycle governance"]
     },
     {
-      "id": "build-deploy",
-      "title": "Build and Deploy",
-      "goal": "Move from a local demo to an observable, versioned service.",
-      "topics": ["local and test environments", "containers", "serverless", "configuration", "secrets", "CI/CD", "observability", "rate limits", "caching", "rollback"]
+      "id": "build-operate",
+      "title": "Build and Operate",
+      "page": "/labs/ai-ready/build-operate/",
+      "goal": "Move from a demo to a versioned, observable, budgeted, recoverable service.",
+      "topics": ["environments", "deployment metadata", "CI eval gates", "tracing", "retry policy", "capacity", "degraded mode", "rollback"]
     }
   ],
   "decision_matrix": [
     {
       "need": "Fresh or private knowledge",
       "default_choice": "retrieval",
-      "rule": "Use RAG or direct retrieval before fine-tuning. Keep source links and metadata."
+      "rule": "Use RAG or direct retrieval before fine-tuning. Keep source IDs, validity metadata, permissions, and citations."
+    },
+    {
+      "need": "Exact current fact from an external system",
+      "default_choice": "read_tool",
+      "rule": "Use a typed read tool instead of asking the model to remember or infer the fact."
     },
     {
       "need": "Deterministic action in an external system",
       "default_choice": "tool_call",
-      "rule": "Use a typed tool contract. Validate input and output outside the model."
+      "rule": "Use a typed tool contract. Validate input, output, authorization, and business preconditions outside the model."
     },
     {
       "need": "Reusable integration across AI clients",
       "default_choice": "mcp",
-      "rule": "Use MCP when a standard discovery and tool/resource interface creates real reuse. Do not wrap every internal API just because MCP exists."
+      "rule": "Use MCP when shared discovery, contracts, governance, and observability create real reuse. Do not wrap every API only because MCP exists."
     },
     {
       "need": "Stable repeated multi-step process",
       "default_choice": "workflow",
-      "rule": "Start deterministic. Add model decisions only where variation creates value."
+      "rule": "Start deterministic. Add model decisions only at uncertain steps."
     },
     {
-      "need": "Adaptive multi-step work with uncertain next actions",
-      "default_choice": "agent",
-      "rule": "Use an agent loop with tool allowlists, budgets, termination rules, tracing, and approval for risky writes."
+      "need": "Known set of possible workflows but messy input",
+      "default_choice": "router",
+      "rule": "Use one model decision to route to a known path, with a fallback for uncertain routing."
+    },
+    {
+      "need": "Adaptive multi-step investigation",
+      "default_choice": "bounded_agent",
+      "rule": "Use an agent loop with read-tool allowlists, budgets, explicit stop states, tracing, and escalation."
+    },
+    {
+      "need": "High-impact write proposed by AI",
+      "default_choice": "prepared_change_approval",
+      "rule": "Separate investigation, prepared change, validation, approval, and idempotent execution."
     },
     {
       "need": "Change style, format, or simple behavior",
-      "default_choice": "prompt_first",
-      "rule": "Improve instructions and examples first. Fine-tune only after eval evidence shows a stable gap."
+      "default_choice": "prompt_schema_eval_first",
+      "rule": "Improve instructions, examples, schemas, and evals before considering fine-tuning."
+    },
+    {
+      "need": "Release a model, prompt, retrieval, or tool change",
+      "default_choice": "eval_gate",
+      "rule": "Run critical golden cases and operational budgets before production rollout."
     }
   ],
   "production_rules": [
     "Separate model reasoning from authorization decisions.",
     "Read-only tools are the default; write tools need narrower scopes and stronger controls.",
-    "Never treat retrieved text as trusted instructions.",
+    "Never treat retrieved or tool-returned text as trusted instructions.",
     "Make write operations idempotent where possible and use business keys or request IDs.",
-    "Log tool name, sanitized arguments, result status, latency, model, prompt version, and trace ID.",
-    "Test failure paths: timeout, partial result, duplicate request, stale data, denied permission, and malformed output.",
-    "Version prompts, tool schemas, retrieval configuration, datasets, and evals together with the application.",
-    "Define quality, latency, and cost budgets before production rollout."
+    "Bind approval to the exact prepared action, target object, evidence, precondition, approver, and expiry.",
+    "Log trace ID, model and prompt version, tool name, sanitized arguments, evidence IDs, result status, latency, and stop reason.",
+    "Test timeouts, partial results, duplicate requests, stale data, denied permission, malformed output, prompt injection, and budget exhaustion.",
+    "Version prompts, tool schemas, retrieval configuration, datasets, evals, and policy with the application.",
+    "Define quality, latency, cost, step, and concurrency budgets before production rollout.",
+    "Plan degraded behavior and rollback for model, prompt, retrieval, tool server, and policy changes."
+  ],
+  "data_artifacts": [
+    {
+      "id": "architecture-patterns",
+      "path": "/labs/ai-ready/data/architecture-patterns.json",
+      "purpose": "Reusable architecture patterns with use conditions, controls, failure modes, and graph links."
+    },
+    {
+      "id": "eval-sample",
+      "path": "/labs/ai-ready/data/eval-sample.jsonl",
+      "purpose": "Architecture decision and failure-path cases for regression testing and learning."
+    }
   ],
   "hands_on_labs": [
     {
       "id": "lab-01-mcp-readonly",
-      "title": "Read-only MCP server",
-      "build": "Expose synthetic materials, sales orders, and stock through small read-only tools and resources.",
-      "learn": ["tool schema design", "resource boundaries", "local vs remote transport", "authorization boundary", "observability"]
+      "title": "SAP Diagnostics MCP",
+      "page": "/mcp/sap-diagnostics-mcp/",
+      "build": "Inspect and extend synthetic read-only SAP-like tools and resources.",
+      "learn": ["tool schema design", "resource boundaries", "MCP transport", "authorization boundary", "observability"]
     },
     {
       "id": "lab-02-rag-evals",
-      "title": "RAG with an eval set",
-      "build": "Index a small policy corpus, answer with citations, and test retrieval and answer quality against a golden dataset.",
-      "learn": ["chunking", "metadata", "hybrid retrieval", "reranking", "grounding", "regression testing"]
+      "title": "RAG with Evals",
+      "page": "/labs/ai-ready/labs/rag-evals/",
+      "build": "Index a synthetic policy corpus, answer with citations, compare retrieval methods, and test against a golden dataset.",
+      "learn": ["source metadata", "lexical baseline", "hybrid retrieval", "reranking", "grounding", "regression testing"]
     },
     {
       "id": "lab-03-agent-approval",
-      "title": "Agent with approval",
-      "build": "Create an operations assistant that can investigate with read tools and prepare a change, but cannot execute a risky write without approval.",
-      "learn": ["agent loop", "tool permissions", "human in the loop", "idempotency", "audit trail"]
+      "title": "Agent with Approval",
+      "page": "/labs/ai-ready/labs/agent-approval/",
+      "build": "Create an operations assistant that investigates with read tools and can execute a prepared change only after approval.",
+      "learn": ["bounded agent loop", "tool permissions", "approval state", "idempotency", "audit trail", "trajectory evals"]
     },
     {
       "id": "lab-04-production",
-      "title": "Production readiness",
-      "build": "Add traces, eval gates, retry policy, cost and latency budgets, rate limits, secrets, deployment pipeline, and rollback.",
+      "title": "Production Readiness",
+      "page": "/labs/ai-ready/labs/production-readiness/",
+      "build": "Add version metadata, traces, eval gates, failure policy, secrets, budgets, degraded modes, and rollback.",
       "learn": ["SLO thinking", "observability", "CI/CD", "security", "capacity", "operations"]
     }
   ],
@@ -130,30 +176,30 @@
       "reviewed_at": "2026-08-15"
     },
     {
-      "id": "mcp-docs",
-      "title": "Model Context Protocol documentation",
-      "url": "https://modelcontextprotocol.io/",
+      "id": "mcp-ts-sdk-v2",
+      "title": "MCP TypeScript SDK v2",
+      "url": "https://ts.sdk.modelcontextprotocol.io/v2/api/%40modelcontextprotocol/server/",
       "type": "official",
       "reviewed_at": "2026-08-15"
     },
     {
-      "id": "openai-api",
-      "title": "OpenAI API documentation",
-      "url": "https://platform.openai.com/docs/",
+      "id": "openai-api-tools",
+      "title": "OpenAI API developer quickstart and tools",
+      "url": "https://platform.openai.com/docs/quickstart/make-your-first-api-request",
+      "type": "official_example",
+      "reviewed_at": "2026-08-15"
+    },
+    {
+      "id": "nist-genai-profile",
+      "title": "NIST AI RMF: Generative AI Profile",
+      "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
       "type": "official",
       "reviewed_at": "2026-08-15"
     },
     {
-      "id": "nist-ai-rmf",
-      "title": "NIST AI Risk Management Framework",
-      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
-      "type": "official",
-      "reviewed_at": "2026-08-15"
-    },
-    {
-      "id": "owasp-genai",
-      "title": "OWASP GenAI Security Project",
-      "url": "https://genai.owasp.org/",
+      "id": "owasp-prompt-injection",
+      "title": "OWASP LLM01:2025 Prompt Injection",
+      "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
       "type": "official",
       "reviewed_at": "2026-08-15"
     }

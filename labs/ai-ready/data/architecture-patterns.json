@@ -1,0 +1,238 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-08-15",
+  "description": "Reusable AI architecture patterns for decision support, retrieval, and eval generation.",
+  "patterns": [
+    {
+      "id": "context-budget",
+      "layer": "foundations",
+      "name": "Context Budget",
+      "problem": "Too much irrelevant context reduces control, increases latency, and makes evidence harder to trace.",
+      "use_when": ["selecting documents or history for a model call"],
+      "avoid_when": ["using context as a replacement for durable storage"],
+      "controls": ["context selection", "provenance", "token budget", "deduplication"],
+      "failure_modes": ["context dumping", "conflicting versions", "lost source boundaries"],
+      "connects_to": ["retrieval-pipeline", "trace-request"]
+    },
+    {
+      "id": "structured-output",
+      "layer": "foundations",
+      "name": "Structured Output Contract",
+      "problem": "Software needs predictable fields, not prose that happens to look structured.",
+      "use_when": ["another component consumes model output", "tool arguments are produced"],
+      "avoid_when": ["the output is only free-form human explanation"],
+      "controls": ["schema", "enum validation", "range validation", "null policy"],
+      "failure_modes": ["missing fields", "invented identifiers", "schema-valid but business-invalid output"],
+      "connects_to": ["tool-contract", "eval-deterministic"]
+    },
+    {
+      "id": "retrieval-pipeline",
+      "layer": "data-retrieval",
+      "name": "Retrieval Pipeline",
+      "problem": "The model needs current or private evidence that should not come from model memory.",
+      "use_when": ["knowledge changes", "knowledge is private", "answers need source references"],
+      "avoid_when": ["the answer is a deterministic API fact better served by a tool"],
+      "controls": ["source ownership", "metadata", "permissions", "ranking", "citations"],
+      "failure_modes": ["stale source", "permission leak", "wrong version", "answer without evidence"],
+      "connects_to": ["lexical-baseline", "hybrid-retrieval", "retrieval-eval"]
+    },
+    {
+      "id": "lexical-baseline",
+      "layer": "data-retrieval",
+      "name": "Lexical Baseline",
+      "problem": "Exact identifiers and domain terms often need exact matching.",
+      "use_when": ["IDs", "error codes", "transaction codes", "product names", "legal phrases"],
+      "avoid_when": ["semantic paraphrase is the only useful signal"],
+      "controls": ["tokenization", "field weighting", "metadata filters"],
+      "failure_modes": ["semantic miss", "poor handling of synonyms"],
+      "connects_to": ["hybrid-retrieval", "retrieval-eval"]
+    },
+    {
+      "id": "hybrid-retrieval",
+      "layer": "data-retrieval",
+      "name": "Hybrid Retrieval",
+      "problem": "Enterprise questions mix exact identifiers with semantic language.",
+      "use_when": ["lexical and vector methods solve different eval cases"],
+      "avoid_when": ["one simpler method already meets the quality target"],
+      "controls": ["score fusion", "metadata filters", "reranking"],
+      "failure_modes": ["complexity with no measured gain", "one method dominates incorrectly"],
+      "connects_to": ["lexical-baseline", "retrieval-pipeline", "retrieval-eval"]
+    },
+    {
+      "id": "tool-contract",
+      "layer": "tools-mcp",
+      "name": "Typed Tool Contract",
+      "problem": "Models need controlled access to current facts and external actions.",
+      "use_when": ["reading an external system", "calling deterministic logic", "preparing an action"],
+      "avoid_when": ["using a generic free-text action endpoint"],
+      "controls": ["typed input", "typed output", "authorization", "risk class", "error contract"],
+      "failure_modes": ["vague tool selection", "over-broad permissions", "malformed backend result"],
+      "connects_to": ["mcp-reuse", "read-write-separation", "idempotent-write"]
+    },
+    {
+      "id": "mcp-reuse",
+      "layer": "tools-mcp",
+      "name": "MCP Reuse Layer",
+      "problem": "Several AI clients need the same governed capabilities and discovery contract.",
+      "use_when": ["multiple clients or runtimes share tools/resources", "central governance adds value"],
+      "avoid_when": ["one small application has one stable integration"],
+      "controls": ["versioning", "authorization boundary", "tool catalog", "gateway policy", "observability"],
+      "failure_modes": ["protocol added with no reuse", "MCP treated as authorization", "large generic tool catalog"],
+      "connects_to": ["tool-contract", "least-privilege", "trace-request"]
+    },
+    {
+      "id": "read-write-separation",
+      "layer": "tools-mcp",
+      "name": "Read / Write Separation",
+      "problem": "Investigation needs broad reads but correction should have a smaller risk surface.",
+      "use_when": ["agents investigate before changing enterprise data"],
+      "avoid_when": ["one generic update tool is easier but unsafe"],
+      "controls": ["separate credentials", "separate tool sets", "approval", "preconditions"],
+      "failure_modes": ["write used as read", "investigation agent can mutate data"],
+      "connects_to": ["approval-gate", "idempotent-write", "agent-loop"]
+    },
+    {
+      "id": "workflow-first",
+      "layer": "agents",
+      "name": "Workflow First",
+      "problem": "A stable process is made less reliable by unnecessary autonomous choices.",
+      "use_when": ["the next steps are known"],
+      "avoid_when": ["the next useful action truly depends on changing evidence"],
+      "controls": ["explicit states", "error paths", "model only at uncertain steps"],
+      "failure_modes": ["agent skips mandatory step", "unneeded loops", "higher cost and latency"],
+      "connects_to": ["router", "agent-loop"]
+    },
+    {
+      "id": "router",
+      "layer": "agents",
+      "name": "Router",
+      "problem": "The correct workflow is unknown until messy input is interpreted.",
+      "use_when": ["the set of paths is known", "one classification can select a specialist flow"],
+      "avoid_when": ["the problem needs open-ended planning after each step"],
+      "controls": ["known route set", "fallback route", "routing evals"],
+      "failure_modes": ["wrong route", "no fallback", "router performs the whole task"],
+      "connects_to": ["workflow-first", "eval-deterministic"]
+    },
+    {
+      "id": "agent-loop",
+      "layer": "agents",
+      "name": "Bounded Agent Loop",
+      "problem": "The next useful diagnostic action depends on evidence found during the request.",
+      "use_when": ["adaptive investigation", "tool choice changes after each result"],
+      "avoid_when": ["a fixed workflow can express the process"],
+      "controls": ["tool allowlist", "step budget", "time budget", "stop states", "trace"],
+      "failure_modes": ["infinite loop", "repeated calls", "unsupported conclusion", "budget explosion"],
+      "connects_to": ["approval-gate", "trace-request", "agent-trajectory-eval"]
+    },
+    {
+      "id": "approval-gate",
+      "layer": "agents-security",
+      "name": "Prepared Change + Approval Gate",
+      "problem": "The model can identify a useful change but should not execute a high-impact action directly.",
+      "use_when": ["writes affect business objects, money, access, customer data, or operational status"],
+      "avoid_when": ["approval exists only as conversation text"],
+      "controls": ["prepared change record", "approver identity", "expiry", "precondition", "audit"],
+      "failure_modes": ["approval not bound to exact action", "stale approval", "approval bypass"],
+      "connects_to": ["read-write-separation", "idempotent-write", "least-privilege"]
+    },
+    {
+      "id": "idempotent-write",
+      "layer": "tools-security",
+      "name": "Idempotent Write",
+      "problem": "Retries can repeat external side effects.",
+      "use_when": ["network failure can occur after backend commit", "agent/tool retries exist"],
+      "avoid_when": ["blindly retrying non-idempotent writes"],
+      "controls": ["request ID", "business key", "precondition", "commit result lookup"],
+      "failure_modes": ["duplicate order", "duplicate delivery", "double notification"],
+      "connects_to": ["approval-gate", "tool-contract", "retry-policy"]
+    },
+    {
+      "id": "retrieval-eval",
+      "layer": "evals",
+      "name": "Retrieval Eval",
+      "problem": "A final answer score cannot show whether retrieval found the correct evidence.",
+      "use_when": ["RAG or search configuration changes"],
+      "avoid_when": ["judging retrieval only from final prose"],
+      "controls": ["expected source IDs", "forbidden source IDs", "top-K checks", "stale-version cases"],
+      "failure_modes": ["good prose hides bad source", "obsolete source ranks first"],
+      "connects_to": ["retrieval-pipeline", "eval-deterministic"]
+    },
+    {
+      "id": "eval-deterministic",
+      "layer": "evals",
+      "name": "Deterministic Grader",
+      "problem": "Exact requirements should not depend on another probabilistic judgment.",
+      "use_when": ["schema", "IDs", "tool selection", "permissions", "budgets", "latency"],
+      "avoid_when": ["quality cannot be expressed reliably in code"],
+      "controls": ["assertions", "schema validation", "thresholds"],
+      "failure_modes": ["model grader used for exact facts", "weak assertions"],
+      "connects_to": ["retrieval-eval", "agent-trajectory-eval"]
+    },
+    {
+      "id": "agent-trajectory-eval",
+      "layer": "evals",
+      "name": "Agent Trajectory Eval",
+      "problem": "The final answer can look correct even when the agent took unsafe or wasteful steps.",
+      "use_when": ["tool loops", "routers", "multi-step agents"],
+      "avoid_when": ["evaluating only final text"],
+      "controls": ["expected tools", "forbidden tools", "max steps", "stop reason", "approval checks"],
+      "failure_modes": ["repeated calls", "write before approval", "wrong stop state"],
+      "connects_to": ["agent-loop", "eval-deterministic", "trace-request"]
+    },
+    {
+      "id": "least-privilege",
+      "layer": "security",
+      "name": "Least Privilege",
+      "problem": "Prompt injection or model error becomes dangerous when tools have broad permissions.",
+      "use_when": ["any external tool or data access exists"],
+      "avoid_when": ["one broad credential is shared across all tools"],
+      "controls": ["narrow scopes", "tenant/domain filters", "separate read/write identity", "authorization outside model"],
+      "failure_modes": ["data exfiltration", "unauthorized write", "cross-tenant access"],
+      "connects_to": ["prompt-injection-boundary", "approval-gate", "mcp-reuse"]
+    },
+    {
+      "id": "prompt-injection-boundary",
+      "layer": "security",
+      "name": "Untrusted Content Boundary",
+      "problem": "User or retrieved text may contain instructions that try to change system behavior.",
+      "use_when": ["files", "web", "RAG", "email", "tickets", "tool results"],
+      "avoid_when": ["treating retrieved instructions as policy"],
+      "controls": ["system/application policy", "least privilege", "secret isolation", "tool allowlist", "security evals"],
+      "failure_modes": ["permission change from content", "secret disclosure", "unrelated tool call"],
+      "connects_to": ["least-privilege", "approval-gate"]
+    },
+    {
+      "id": "trace-request",
+      "layer": "operations",
+      "name": "End-to-End Trace",
+      "problem": "AI behavior cannot be explained when retrieval, model, tool, and approval events are disconnected.",
+      "use_when": ["production and eval runs"],
+      "avoid_when": ["logging secrets or unnecessary personal data"],
+      "controls": ["trace ID", "version metadata", "sanitized arguments", "evidence IDs", "latency"],
+      "failure_modes": ["unreproducible result", "logs without correlation", "sensitive trace data"],
+      "connects_to": ["deployment-gate", "agent-trajectory-eval", "retry-policy"]
+    },
+    {
+      "id": "retry-policy",
+      "layer": "operations",
+      "name": "Explicit Retry Policy",
+      "problem": "Transient failures need recovery, while business or permission failures should not be retried blindly.",
+      "use_when": ["network calls", "rate limits", "temporary dependencies"],
+      "avoid_when": ["permission denied", "validation failure", "unsafe request", "non-idempotent write without protection"],
+      "controls": ["backoff", "retry limit", "total time budget", "idempotency"],
+      "failure_modes": ["retry storm", "duplicate side effect", "hidden permanent failure"],
+      "connects_to": ["idempotent-write", "trace-request"]
+    },
+    {
+      "id": "deployment-gate",
+      "layer": "operations",
+      "name": "Eval-Gated Deployment",
+      "problem": "A model, prompt, retrieval, or tool change can regress behavior without code errors.",
+      "use_when": ["releasing any behavior-affecting change"],
+      "avoid_when": ["manual spot check as the only release test"],
+      "controls": ["golden set", "critical-case hard gates", "latency budget", "cost budget", "rollback"],
+      "failure_modes": ["silent regression", "average score hides critical failure", "no rollback metadata"],
+      "connects_to": ["trace-request", "eval-deterministic", "retrieval-eval"]
+    }
+  ]
+}
