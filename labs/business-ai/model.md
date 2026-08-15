@@ -25,7 +25,7 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Business AI / graph model</p>
       <h1>A case is a node.<br />The useful part is the edges.</h1>
-      <p>The catalog is designed as a small knowledge graph. A company is linked to a case, the case to a business process and reusable pattern, the pattern to a system shape, and each reported result back to its evidence source.</p>
+      <p>The catalog is designed as a small knowledge graph. A company is linked to a case, the case to a business process and reusable patterns, and each reported result back to its evidence source.</p>
       <a class="research-canvas__button" href="#node-types">Open the model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal">
@@ -51,9 +51,22 @@ tags:
       <p>Case kind is a controlled property, not another graph node. It prevents an AI implementation, a data foundation, and a vendor solution example from being presented as equivalent proof.</p>
     </header>
     <div class="research-route-list">
-      <a href="/labs/business-ai/cases/"><span>AI</span><strong>ai_implementation</strong><small>A company is using AI, ML, optimization, document AI, or agentic logic inside a real business process.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      <a href="/labs/business-ai/cases/#adani-master-data-foundation"><span>DATA</span><strong>ai_foundation</strong><small>A business capability such as governed master data is not AI by itself, but it is a prerequisite for reliable AI decisions and automation.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <a href="/labs/business-ai/cases/"><span>AI</span><strong>ai_implementation</strong><small>A company is using AI, ML, optimization, document AI, robotics, or agentic logic inside a real business process.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/business-ai/cases/#adani-master-data-foundation"><span>DATA</span><strong>ai_foundation</strong><small>A capability such as governed master data is not AI by itself, but it is a prerequisite for reliable AI decisions and automation.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
       <a href="/labs/business-ai/cases/#dataxstream-quote-order-ai"><span>SOL</span><strong>solution_evidence</strong><small>A product or partner example shows a useful architecture shape, but the public evidence is weaker than a named end-customer implementation.</small><i class="material-symbols-outlined" aria-hidden="true">extension</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="pattern-role" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Pattern role</p>
+      <h2>One primary pattern, optional secondary patterns.</h2>
+      <p>The primary pattern describes the main business decision shape. Secondary patterns are allowed when one implementation combines several bounded capabilities. They do not mean one giant agent owns the whole process.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/business-ai/patterns/"><span>PAT</span><strong>Primary pattern</strong><small>The main shape used to classify and compare the case.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/business-ai/cases/#pharmaoverseas-joule-operations"><span>PAT+</span><strong>Secondary patterns</strong><small>Optional additional shapes for clearly separate capabilities inside the same program.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/business-ai/domains/"><span>DOM</span><strong>Domain view</strong><small>A case may appear in several domain views because one implementation can cross Sales, Procurement, Inventory, Logistics, or other ownership boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">domain</i></a>
     </div>
   </section>
 
@@ -70,7 +83,7 @@ tags:
       <a href="/labs/enterprise-context/"><span>PROC</span><strong>BusinessProcess</strong><small>The operational flow changed by the use case, such as supplier-invoice processing or customer service.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       <a href="#node-types"><span>ORG</span><strong>Company</strong><small>The organization that reports or operates the implementation.</small><i class="material-symbols-outlined" aria-hidden="true">business</i></a>
       <a href="#node-types"><span>IND</span><strong>Industry</strong><small>Industry context used to test transferability.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
-      <a href="/labs/ai-ready/"><span>TECH</span><strong>Technology</strong><small>Models, platforms, ERP applications, optimization engines, document AI, integration components, and runtime services.</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
+      <a href="/labs/ai-ready/"><span>TECH</span><strong>Technology</strong><small>Models, platforms, ERP applications, optimization engines, document AI, integration components, robotics, and runtime services.</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
       <a href="#node-types"><span>KPI</span><strong>Metric</strong><small>A measured or reported result with claim type and baseline context where available.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
       <a href="#node-types"><span>SRC</span><strong>EvidenceSource</strong><small>The public source supporting a case, technology statement, or metric.</small><i class="material-symbols-outlined" aria-hidden="true">source</i></a>
       <a href="#node-types"><span>!</span><strong>Limitation</strong><small>A missing measurement, undisclosed stack detail, evidence weakness, or transferability risk.</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
@@ -85,7 +98,7 @@ tags:
     </header>
     <div class="research-route-list">
       <a href="#edge-types"><span>→</span><strong>Company IMPLEMENTS Case</strong><small>Who operates or publishes the implementation context.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="#edge-types"><span>→</span><strong>Case IMPLEMENTS_PATTERN Pattern</strong><small>The reusable decision and system shape behind the implementation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="#edge-types"><span>→</span><strong>Case IMPLEMENTS_PATTERN Pattern</strong><small>One primary edge and optional secondary edges connect the case to reusable decision shapes.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="#edge-types"><span>→</span><strong>Case APPLIES_TO_PROCESS BusinessProcess</strong><small>The process where work or decisions changed.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="#edge-types"><span>→</span><strong>BusinessProcess BELONGS_TO BusinessDomain</strong><small>Connects the case back to Enterprise Context ownership.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="#edge-types"><span>→</span><strong>Case OCCURS_IN Industry</strong><small>Keeps industry context explicit without treating one industry result as universal.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
