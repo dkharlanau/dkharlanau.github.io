@@ -1,0 +1,109 @@
+id: GRAPH-SD-SALES-ANALYTICS-ARCHITECTURE
+version: "1.0.0"
+type: analytics_architecture
+status: draft
+verified: false
+updated_at: "2026-08-15"
+title: "SAP Sales Analytics Architecture"
+summary: >-
+  A practical map for deciding where a Sales question should be answered: inside S/4HANA for operational action,
+  through governed analytical queries for reusable semantics, in SAC/Datasphere for management views, or in
+  process intelligence for event-based flow analysis. The KPI model remains the shared business language.
+
+layers:
+  - id: ANA.SD.OPERATIONAL
+    title: "Operational embedded analytics"
+    business_job: "See current Sales execution and act on an issue without leaving the transactional context."
+    best_for: ["fulfillment issues", "backorders", "delivery performance", "current order status", "operational drill-down"]
+    typical_capabilities: ["analytical Fiori apps", "multidimensional reports", "Manage KPIs and Reports", "Query Browser", "insight-to-action navigation"]
+    data_pattern: "Current S/4HANA transactional data through CDS/VDM and the analytical engine."
+    strengths: ["current business state", "close to transaction", "authorization follows operational context", "fast drill-down to action"]
+    limits: ["not the default place for broad cross-system history", "historical or archived data needs separate design", "local operational semantics can still differ by KPI definition"]
+    kpi_examples: ["KPI.SD.BACKORDER", "KPI.SD.DELIVERY_BLOCK", "KPI.SD.BILLING_BLOCK", "KPI.SD.CREDIT_BLOCK"]
+    source_refs: ["SRC-SAP-S4-EMBEDDED-ANALYTICS", "SRC-SAP-SALES-MONITORING"]
+
+  - id: ANA.SD.SEMANTIC
+    title: "Governed analytical query layer"
+    business_job: "Define a reusable metric view with controlled dimensions, measures and authorizations."
+    best_for: ["stable KPI semantics", "multidimensional analysis", "reusable SAC consumption", "approved custom measures"]
+    typical_capabilities: ["released CDS views", "analytical queries", "Custom Analytical Queries", "analytical engine"]
+    data_pattern: "CDS-based analytical models and queries expose business semantics instead of raw tables."
+    strengths: ["shared dimensions and measures", "reusable consumption", "less duplication of KPI logic"]
+    limits: ["query design is a governed development activity", "visible dimensions can expand data exposure", "not every metric belongs in one giant analytical query"]
+    kpi_examples: ["KPI.SD.ORDER_VALUE", "KPI.SD.OTD", "KPI.SD.OTIF", "KPI.SD.RETURN_RATE"]
+    source_refs: ["SRC-SAP-S4-EMBEDDED-ANALYTICS", "SRC-SAP-CUSTOM-ANALYTICAL-QUERIES"]
+
+  - id: ANA.SD.MANAGEMENT
+    title: "Management analytics"
+    business_job: "Compare trends, periods, customer/product segments and commercial performance in a management view."
+    best_for: ["sales volume", "profitability", "incoming orders", "returns trends", "period comparison", "executive dashboards"]
+    typical_capabilities: ["SAP Analytics Cloud stories", "S/4HANA live analytical queries", "SAP Datasphere-backed Sales content"]
+    data_pattern: "Consume governed S/4HANA analytical semantics live or through a data layer designed for broader analytical history."
+    strengths: ["management storytelling", "trend and comparison", "cross-view navigation", "planning and actual comparison"]
+    limits: ["a dashboard does not fix weak KPI semantics", "refresh and historical design depend on the connection pattern", "business authorization remains part of architecture"]
+    kpi_examples: ["KPI.SD.ORDER_VALUE", "KPI.SD.TIME_TO_CASH", "KPI.SD.RETURN_RATE", "KPI.SD.PERFECT_ORDER"]
+    source_refs: ["SRC-SAP-SAC-S4-LIVE", "SRC-SAP-SAC-SALES-CONTENT"]
+
+  - id: ANA.SD.PROCESS_INTELLIGENCE
+    title: "Process intelligence"
+    business_job: "Understand flow behavior over time: cycle time, rework, backlog, exceptions and variants."
+    best_for: ["cycle-time analysis", "process variants", "manual rework", "backlog", "exception patterns", "root-cause segmentation"]
+    typical_capabilities: ["event-based metrics", "performance indicators", "process flows", "root-cause analysis", "benchmarks and trends"]
+    data_pattern: "Build case/event semantics with explicit process events and timestamps rather than reading only the current document state."
+    strengths: ["whole-flow visibility", "event boundaries", "variant comparison", "rework and exception analysis"]
+    limits: ["event model quality determines analysis quality", "similar KPI names can hide different event logic", "correlation still needs business evidence"]
+    kpi_examples: ["KPI.SD.CONFIRM_CT", "KPI.SD.ORDER_TO_GI", "KPI.SD.BILLING_LEAD", "KPI.SD.RETURN_TO_REFUND", "KPI.SD.TOUCHLESS_ORDER"]
+    source_refs: ["SRC-SAP-SIGNAVIO-METRICS", "SRC-SAP-SIGNAVIO-PPI", "SRC-SAP-SIGNAVIO-CYCLE"]
+
+  - id: ANA.SD.AGENT
+    title: "Agent reasoning layer"
+    business_job: "Give an agent stable KPI meaning and a path from a moved metric to process, control and evidence."
+    best_for: ["assessment preparation", "diagnostic assistance", "metric definition lookup", "root-cause routing", "cross-model retrieval"]
+    typical_capabilities: ["KPI IDs", "process refs", "mechanism refs", "diagnostic case refs", "source refs", "target policy"]
+    data_pattern: "Consume the Lab machine endpoints as a semantic routing layer; do not query raw business data through this public model."
+    strengths: ["stable vocabulary", "explicit negative semantics", "evidence-first routing", "no invented universal targets"]
+    limits: ["not a production telemetry platform", "contains no customer data", "does not replace authorization-aware analytical execution"]
+    kpi_examples: ["KPI.SD.OTIF", "KPI.SD.TIME_TO_CASH", "KPI.SD.INTERFACE_FAILURE"]
+    source_refs: []
+
+selection_rules:
+  - question: "What is wrong right now and what document needs action?"
+    choose: "ANA.SD.OPERATIONAL"
+    reason: "Use current transactional context and insight-to-action first."
+  - question: "How do we define one reusable KPI for several consumers?"
+    choose: "ANA.SD.SEMANTIC"
+    reason: "Put reusable dimensions and measures into a governed analytical semantic layer."
+  - question: "How is Sales performance changing by period, customer or product?"
+    choose: "ANA.SD.MANAGEMENT"
+    reason: "Use management analytics for trend, comparison and planning views."
+  - question: "Where does the process wait, loop or require rework?"
+    choose: "ANA.SD.PROCESS_INTELLIGENCE"
+    reason: "Use event-based analysis with explicit start/end events and process variants."
+  - question: "How should an AI agent explain a moved KPI?"
+    choose: "ANA.SD.AGENT"
+    reason: "Start from the shared KPI contract, then route to process, mechanism, casebook and evidence."
+
+anti_patterns:
+  - "Building one executive dashboard before agreeing the KPI date basis and denominator."
+  - "Using raw table fields as a semantic model when a released analytical view or query is available."
+  - "Using process mining to prove a root cause without checking business rules and master data."
+  - "Treating a transport-success metric as proof that the business message succeeded."
+  - "Copying the same KPI calculation into S/4, SAC and a data warehouse with slightly different filters."
+  - "Giving an AI agent raw operational data without a stable metric definition and authorization boundary."
+
+lead_talking_points:
+  - "Operational analytics answers what needs action now; management analytics answers how performance is moving."
+  - "The semantic layer matters more than the chart. If two teams calculate OTIF differently, a better dashboard only makes the disagreement prettier."
+  - "Process intelligence is strongest when we need event flow, waiting time, rework and variants, not just the current status."
+  - "For a custom KPI, first decide whether it belongs in S/4 analytical semantics, a broader analytical model, or only in a process-intelligence event model."
+  - "The same business KPI may be presented in several tools, but its definition should remain governed and traceable."
+
+source_refs:
+  - "SRC-SAP-S4-EMBEDDED-ANALYTICS"
+  - "SRC-SAP-SAC-S4-LIVE"
+  - "SRC-SAP-SAC-SALES-CONTENT"
+  - "SRC-SAP-CUSTOM-ANALYTICAL-QUERIES"
+  - "SRC-SAP-SALES-MONITORING"
+  - "SRC-SAP-SIGNAVIO-METRICS"
+  - "SRC-SAP-SIGNAVIO-PPI"
+  - "SRC-SAP-SIGNAVIO-CYCLE"
