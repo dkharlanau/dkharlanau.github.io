@@ -1,0 +1,624 @@
+id: GRAPH-ENTERPRISE-AGENT-ARCHITECTURE
+type: knowledge_graph
+title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
+domain: "Enterprise AI Architecture"
+process_family: "Cross-enterprise / agentic business processes"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+
+summary: >-
+  An enterprise agent is not a chatbot with more permissions. It is a governed
+  software actor that receives a goal, uses business context, chooses allowed
+  capabilities, acts through explicit contracts, and leaves enough evidence to
+  explain what happened.
+
+architecture_thesis:
+  - "Use deterministic automation when the path is known. Add an agent only when planning or adaptation creates real value."
+  - "A tool gives an agent capability. It does not give the agent business authority."
+  - "MCP standardizes agent-to-tool access. A2A standardizes agent-to-agent collaboration. Normal APIs and events still remain valid integration patterns."
+  - "MCP gives access, not business meaning. Semantic grounding, validation, and authorization remain separate responsibilities."
+  - "A production agent needs its own identity, bounded permissions, action limits, human control, audit, and evaluation."
+  - "Read actions and write actions have different risk. A useful demo is not the same thing as a safe transactional agent."
+  - "Technical success is not business success. Observe process outcome, policy compliance, cost, and human escalations."
+  - "Split agents by business responsibility only when the responsibilities are genuinely independent. Do not create five LLM agents where four deterministic tools are enough."
+
+memory_model:
+  path: "GOAL → CONTEXT → PLAN → TOOL → AUTHORIZE → ACT → VERIFY → OBSERVE"
+  questions:
+    - key: GOAL
+      question: "What business outcome is the agent responsible for?"
+      answer: "Define the outcome before choosing model, framework, or SAP product."
+    - key: CONTEXT
+      question: "What business facts and semantics may the agent use?"
+      answer: "Use current, authorized context from systems of record, semantic models, knowledge graphs, documents, or governed retrieval."
+    - key: PLAN
+      question: "Does the task need dynamic planning?"
+      answer: "If the path is fixed, prefer a rule, workflow, or skill. Use an agent when the path may change with context."
+    - key: TOOL
+      question: "Which capability can read or change the business system?"
+      answer: "Expose narrow tools with clear inputs, outputs, side effects, errors, and ownership."
+    - key: AUTHORIZE
+      question: "May this user-agent-tool combination perform the action?"
+      answer: "Evaluate user rights, agent identity, tool permission, business policy, and action limits."
+    - key: ACT
+      question: "What side effect will happen?"
+      answer: "Classify the action risk before execution. Financial or irreversible actions need stronger controls."
+    - key: VERIFY
+      question: "How do we prove the result is correct?"
+      answer: "Re-read the authoritative state, validate business rules, and reconcile the created or changed object."
+    - key: OBSERVE
+      question: "Did the agent improve the business process?"
+      answer: "Measure behavior, cost, policy deviations, process KPIs, and human escalations, not only HTTP 200 responses."
+
+automation_boundary:
+  title: "Rule, Workflow, Skill or Agent?"
+  sequence:
+    - id: TERM-AI-RULE
+      title: "Rule"
+      use_when: "The decision is deterministic: if X, then Y."
+      memory: "Known decision."
+    - id: TERM-AI-WORKFLOW
+      title: "Workflow"
+      use_when: "The steps and approvals are known, even if several systems participate."
+      memory: "Known path."
+    - id: TERM-AI-SKILL
+      title: "Skill"
+      use_when: "One bounded capability has a stable input/output contract."
+      memory: "Known action."
+    - id: AI-ENTERPRISE-AGENT
+      title: "Enterprise Agent"
+      use_when: "The goal is known but the sequence of steps or tools may change with context."
+      memory: "Dynamic path."
+  lead_rule: "Do not use an agent when a rule, workflow, API call, or skill already solves the requirement with less uncertainty."
+
+agent_anatomy:
+  - part: "Goal"
+    question: "What outcome is the agent trying to reach?"
+    failure_if_missing: "The agent optimizes a vague instruction instead of a business result."
+  - part: "Instructions"
+    question: "Which operating rules and boundaries apply?"
+    failure_if_missing: "Behavior changes with wording and model interpretation."
+  - part: "Model"
+    question: "Which reasoning and language capability is needed?"
+    failure_if_missing: "The team chooses a large model before defining the task."
+  - part: "Context"
+    question: "Which current business facts are available for this execution?"
+    failure_if_missing: "The agent reasons from stale or incomplete information."
+  - part: "Memory"
+    question: "What state may survive across steps or conversations?"
+    failure_if_missing: "The agent either forgets useful state or retains data that should not persist."
+  - part: "Planner"
+    question: "How are next actions selected?"
+    failure_if_missing: "A workflow is called an agent although no adaptive planning exists."
+  - part: "Tools"
+    question: "Which external capabilities can the agent call?"
+    failure_if_missing: "The model can advise but cannot safely act."
+  - part: "Identity"
+    question: "Which digital principal represents the agent?"
+    failure_if_missing: "Audit and authorization collapse into a shared service credential."
+  - part: "Authorization"
+    question: "What may this agent do for this user and context?"
+    failure_if_missing: "Capability becomes accidental authority."
+  - part: "Guardrails"
+    question: "What must be blocked or escalated?"
+    failure_if_missing: "Risk is handled only by prompt wording."
+  - part: "Human control"
+    question: "Where is approval, review, or override required?"
+    failure_if_missing: "High-impact actions become autonomous by default."
+  - part: "Telemetry"
+    question: "What did the agent decide, call, change, and cost?"
+    failure_if_missing: "Production behavior cannot be reconstructed."
+
+interoperability:
+  - id: INT-AI-API
+    title: "API"
+    direction: "Application → Application or Agent → Application"
+    use_for: "Stable business capability with an explicit service contract."
+    not_for: "It does not provide agent discovery by itself."
+    remember: "Call a known capability."
+  - id: INT-AI-MCP
+    title: "Model Context Protocol (MCP)"
+    direction: "Agent → Tool"
+    use_for: "Discover and invoke tools through a standard agent-facing contract."
+    not_for: "MCP alone does not provide SAP business semantics, authorization design, or correctness."
+    remember: "Agent uses a tool."
+    source_refs: [SRC-SAP-ARCH-AGENT-A2A-MCP, SRC-SAP-ARCH-AGENT-MCP-ACCESS]
+  - id: INT-AI-A2A
+    title: "Agent2Agent (A2A)"
+    direction: "Agent → Agent"
+    use_for: "Delegate work to an independent agent and exchange task context or results."
+    not_for: "Do not introduce another agent when a normal tool or API is sufficient."
+    remember: "Agent delegates to agent."
+    source_refs: [SRC-SAP-ARCH-AGENT-A2A-MCP]
+  - id: INT-AI-EVENT
+    title: "Business Event"
+    direction: "Producer → interested consumers"
+    use_for: "Publish that something happened without requiring a known synchronous receiver."
+    not_for: "It is not a replacement for tool invocation or task delegation."
+    remember: "Publish a fact."
+
+mcp_reality:
+  formula:
+    - "MCP gives ACCESS."
+    - "Ontology and semantics give MEANING."
+    - "Identity gives a PRINCIPAL."
+    - "Authorization and policy give PERMISSION."
+    - "Evaluation gives CONFIDENCE."
+  warning: >-
+    A raw transactional API exposed through MCP can still be a bad agent tool.
+    The tool description, business keys, field meaning, authorization, validation,
+    idempotency, and error handling still need deliberate design.
+  source_refs: [SRC-SAP-ARCH-AGENT-MCP-ACCESS]
+
+identity_model:
+  principle: "An agent is a first-class software actor. Keep user identity and agent identity visible instead of hiding both behind one shared technical user."
+  effective_permission: "USER RIGHTS ∩ AGENT RIGHTS ∩ TOOL RIGHTS ∩ BUSINESS POLICY"
+  controls:
+    - "Authenticate the user when the action is user-delegated."
+    - "Authenticate the agent as its own principal."
+    - "Limit the agent to explicit tools and scopes."
+    - "Keep business-system authorization checks in the target system."
+    - "Preserve attribution: who requested, which agent acted, which tool executed, and which object changed."
+    - "Reject unauthorized requests before they reach expensive reasoning or backend processing where possible."
+  source_refs: [SRC-SAP-ARCH-AGENT-IDENTITY]
+
+tool_contract:
+  title: "Agent Tool Contract"
+  rule: "A business tool should be narrow enough to understand and strong enough to validate."
+  fields:
+    - "purpose"
+    - "business owner"
+    - "input schema"
+    - "output schema"
+    - "business keys"
+    - "read or write classification"
+    - "side effects"
+    - "authorization scope"
+    - "validation rules"
+    - "idempotency behavior"
+    - "timeout and retry behavior"
+    - "error model"
+    - "action risk"
+    - "human approval rule"
+    - "audit fields"
+  example:
+    id: TOOL-CREATE-PURCHASE-REQUISITION
+    title: "Create Purchase Requisition"
+    purpose: "Create a bounded purchase requisition request."
+    inputs: ["material or service", "quantity", "plant", "delivery date", "account assignment when required"]
+    output: ["purchase requisition number", "created status"]
+    side_effect: true
+    idempotency: required
+    action_risk: reversible_write
+    human_approval: "Apply before execution when policy or value threshold requires it."
+    verify_after: "Read the created requisition and compare key fields with the approved request."
+
+action_risk:
+  - level: read_only
+    meaning: "Read business data without changing the source system."
+    default_control: "Authorization, data minimization, audit."
+  - level: recommendation
+    meaning: "Suggest a business action but do not execute it."
+    default_control: "Grounding, explanation, confidence, human decision."
+  - level: reversible_write
+    meaning: "Create or change data that can be safely corrected or reversed."
+    default_control: "Strong validation, idempotency, audit, bounded autonomous execution where justified."
+  - level: financial_commitment
+    meaning: "Create an approval, order, release, payment, contract, or other financial commitment."
+    default_control: "Explicit business limits and human approval unless a controlled policy permits autonomy."
+  - level: irreversible_action
+    meaning: "Action is difficult to reverse or has legal, safety, or material operational impact."
+    default_control: "Human authorization and a deterministic execution gate."
+
+autonomy_levels:
+  - level: L0
+    title: "Answer"
+    behavior: "Explain or summarize. No business action."
+  - level: L1
+    title: "Recommend"
+    behavior: "Propose an action. Human decides."
+  - level: L2
+    title: "Prepare"
+    behavior: "Prepare the transaction or change. Human confirms execution."
+  - level: L3
+    title: "Execute Bounded"
+    behavior: "Execute within explicit limits, policies, and tool scopes."
+  - level: L4
+    title: "Autonomous"
+    behavior: "Plan and execute within a governed business domain with continuous controls."
+autonomy_lead_rule: "Autonomy is a business-risk decision, not a model feature."
+
+build_models:
+  - id: DEC-AI-AGENT-LOW-CODE
+    title: "Managed / Low-Code Agent"
+    prefer_when:
+      - "The process is well understood."
+      - "Standard SAP APIs, workflows, rules, and tools cover most needs."
+      - "The team benefits from managed lifecycle and runtime."
+      - "Fast controlled delivery is more important than framework freedom."
+    sap_fit: "Joule Studio is SAP's main low-code path for custom Joule Skills and AI Agents."
+    source_refs: [SRC-SAP-ARCH-AGENT-LOW-CODE, SRC-SAP-ARCH-AGENT-GOLDEN-PATH]
+  - id: DEC-AI-AGENT-PRO-CODE
+    title: "Pro-Code Agent"
+    prefer_when:
+      - "Planning or state management needs custom program logic."
+      - "The agent needs non-standard integrations or libraries."
+      - "A specific agent framework is required."
+      - "Performance, model routing, caching, or orchestration needs deeper control."
+    sap_fit: "SAP documents pro-code agents on BTP with SAP Cloud SDK for AI, CAP, and common agent frameworks."
+    source_refs: [SRC-SAP-ARCH-AGENT-PRO-CODE, SRC-SAP-ARCH-AGENT-GOLDEN-PATH]
+
+multi_agent_model:
+  pattern: "ORCHESTRATOR → SPECIALIST AGENT or DETERMINISTIC TOOL"
+  rule: "Delegate by independent business responsibility, not by diagram fashion."
+  example:
+    request: "Can we accept a customer request for 500 units next Friday?"
+    possible_capabilities:
+      - "Sales context"
+      - "ATP check"
+      - "Inventory read"
+      - "Production constraint read"
+      - "Procurement lead-time read"
+    architect_note: "ATP, inventory, production, and procurement checks may be deterministic tools. They do not each need an LLM agent."
+
+lifecycle:
+  - stage: DISCOVER
+    question: "Is an agent the right solution?"
+    evidence: "Compare rule, workflow, skill, API, and agent options."
+  - stage: DESIGN
+    question: "What is the goal, scope, risk, identity, tool set, and autonomy level?"
+    evidence: "Architecture decision and tool contracts."
+  - stage: BUILD
+    question: "How are instructions, grounding, planning, tools, and runtime implemented?"
+    evidence: "Versioned configuration and code."
+  - stage: EVALUATE
+    question: "Does the agent behave correctly across normal, edge, and adversarial cases?"
+    evidence: "Evaluation set, deterministic tests, policy tests, and business acceptance criteria."
+  - stage: APPROVE
+    question: "Who accepts business, security, data, and operational risk?"
+    evidence: "Named owners and release decision."
+  - stage: DEPLOY
+    question: "Which version is active and which permissions are enabled?"
+    evidence: "Deployment record and identity/tool scopes."
+  - stage: OBSERVE
+    question: "What does the agent actually do in production?"
+    evidence: "Traces, tool calls, policy decisions, cost, and business KPIs."
+  - stage: IMPROVE
+    question: "Did the model, prompt, tool contract, context, or policy cause the result?"
+    evidence: "Version comparison and regression tests."
+  - stage: RETIRE
+    question: "How are the agent, credentials, permissions, tools, and data access removed?"
+    evidence: "Decommission record and revoked access."
+
+observability:
+  principle: "Observe the decision path and the business effect, not only infrastructure health."
+  metrics:
+    - "execution count"
+    - "completion rate"
+    - "tool calls and tool failures"
+    - "authorization denials"
+    - "human approvals and escalations"
+    - "policy violations"
+    - "latency"
+    - "model and token cost"
+    - "retries and repeated tool calls"
+    - "process conformance"
+    - "business KPI impact"
+    - "regression by agent version"
+  formula:
+    - "Technical success ≠ agent success."
+    - "Agent success ≠ business success."
+  sap_forward_looking_note: >-
+    SAP's Agent Behavior Mining architecture describes a planned Joule Studio 2.0
+    mining model using OpenTelemetry and SAP Signavio Process Intelligence. SAP marks
+    that implementation as forward-looking and not yet generally available. The
+    observability concepts above are intentionally vendor-neutral.
+  source_refs: [SRC-SAP-ARCH-AGENT-BEHAVIOR-MINING]
+
+structured_data_patterns:
+  - id: SCN-AI-SALES-DELIVERY-RISK
+    title: "Sales delivery risk analysis"
+    mode: analytical_agent
+    user_question: "Which orders are likely to miss the requested delivery date, and why?"
+    tools: ["sales order read", "ATP result read", "delivery status read", "inventory and supply context"]
+    autonomy: L1
+    risk: recommendation
+  - id: SCN-AI-PROC-SUPPLIER-DELAY
+    title: "Supplier delay analysis"
+    mode: analytical_agent
+    user_question: "Which suppliers caused the largest delivery delays this month?"
+    tools: ["purchase order history", "goods receipt history", "supplier master context"]
+    autonomy: L1
+    risk: recommendation
+  - id: SCN-AI-PROC-PR-DRAFT
+    title: "Purchase requisition preparation"
+    mode: transactional_agent
+    user_question: "Prepare a requisition for the approved shortage."
+    tools: ["material and plant read", "shortage evidence", "create purchase requisition"]
+    autonomy: L2
+    risk: reversible_write
+  - id: SCN-AI-MDG-DATA-QUALITY
+    title: "Material data quality analysis"
+    mode: analytical_agent
+    user_question: "Which material records have inconsistent logistics attributes?"
+    tools: ["material master read", "data-quality rules", "MDG context"]
+    autonomy: L1
+    risk: recommendation
+  - id: SCN-AI-SALES-ORDER-CREATE
+    title: "Sales order creation"
+    mode: transactional_agent
+    user_question: "Create the order from the approved customer request."
+    tools: ["customer and product read", "pricing simulation", "ATP check", "create sales order"]
+    autonomy: L2
+    risk: financial_commitment
+structured_data_source_refs: [SRC-SAP-ARCH-AGENT-STRUCTURED-DATA]
+
+agentic_engineering:
+  purpose: "Use agents to build software without letting generated output define its own correctness."
+  flow: "SPECIFY → GROUND → GENERATE → VERIFY → REVIEW → LEARN"
+  rules:
+    - "Start with a testable specification and acceptance criteria."
+    - "Ground coding agents in current authoritative APIs, project rules, and architecture constraints."
+    - "Treat generated code as untrusted until deterministic checks pass."
+    - "Use tests, static analysis, security checks, and code review as the authority."
+    - "Turn recurring review findings into reusable tests, rules, or skills."
+  source_refs: [SRC-SAP-ARCH-AGENTIC-ENGINEERING]
+
+failure_modes:
+  - id: FAIL-AI-AGENT-WRONG-SOLUTION
+    symptom: "A simple deterministic task became a slow and expensive agent workflow."
+    likely_causes: ["agent selected before process analysis", "workflow and rule options ignored", "architecture driven by product fashion"]
+    first_checks: ["Can the task be expressed as a rule?", "Is the path fixed?", "Would one API call or skill solve it?"]
+  - id: FAIL-AI-AGENT-RAW-MCP
+    symptom: "The agent selects the wrong SAP object or writes incorrect fields through an MCP tool."
+    likely_causes: ["raw transactional API exposed without semantic enrichment", "poor tool description", "business keys unclear", "missing validation"]
+    first_checks: ["tool contract", "semantic context", "input schema", "business-key resolution", "write validation"]
+  - id: FAIL-AI-AGENT-OVERPRIVILEGED
+    symptom: "The agent can perform actions beyond the intended business scope."
+    likely_causes: ["shared technical user", "user token forwarded without agent-level scope", "tool permission too broad", "missing policy gate"]
+    first_checks: ["agent identity", "effective permission intersection", "tool scope", "backend authorization", "business policy"]
+  - id: FAIL-AI-AGENT-DUPLICATE-WRITE
+    symptom: "Retry creates duplicate requisitions, orders, or updates."
+    likely_causes: ["non-idempotent write tool", "timeout after backend commit", "retry policy ignores business key"]
+    first_checks: ["idempotency key", "business correlation ID", "backend commit state", "retry policy"]
+  - id: FAIL-AI-AGENT-BUSINESS-FAILURE
+    symptom: "Agent executions are technically successful but business KPI becomes worse."
+    likely_causes: ["wrong objective", "local optimization", "missing process KPI", "no conformance monitoring"]
+    first_checks: ["business outcome metric", "process comparison", "human override rate", "policy deviations", "version regression"]
+
+synthetic_cases:
+  - id: CASE-AI-PR-SHORTAGE
+    title: "Shortage assistant prepares a purchase requisition"
+    synthetic: true
+    scenario: >-
+      A planner asks an agent to prepare a purchase requisition for a confirmed
+      material shortage at plant DE01.
+    lead_path:
+      - "Read shortage and planning evidence."
+      - "Confirm material, plant, quantity, and required date."
+      - "Use a narrow create-PR tool with idempotency."
+      - "Keep autonomy at L2: prepare first, human confirms."
+      - "Read the created requisition back and verify key fields."
+      - "Store user, agent, tool, correlation ID, and created PR number in the audit trail."
+    lesson: "The agent may choose the steps, but the write contract and approval boundary stay deterministic."
+  - id: CASE-AI-ORDER-PROMISE
+    title: "Customer promise uses tools, not five chatbots"
+    synthetic: true
+    scenario: >-
+      A sales user asks whether 500 units can be promised next Friday and what
+      alternative should be offered if the request cannot be met.
+    lead_path:
+      - "Use the sales agent as the coordinator."
+      - "Call deterministic ATP and inventory capabilities first."
+      - "Read production or procurement constraints only when required."
+      - "Return an explanation and recommendation at L1."
+      - "Do not create or change the sales order until the user approves the proposal."
+    lesson: "Multi-step reasoning does not require a multi-agent architecture for every dependency."
+
+assessment_drills:
+  - question: "Agent or workflow?"
+    strong_answer: "If the path and decisions are known, I prefer workflow and rules. I use an agent when the goal is stable but the next step depends on changing context."
+  - question: "MCP or A2A?"
+    strong_answer: "MCP is mainly agent-to-tool. A2A is agent-to-agent delegation. I still use normal APIs when the consumer already knows the business service contract."
+  - question: "Why is MCP not enough for SAP writes?"
+    strong_answer: "MCP standardizes access. I still need business semantics, narrow tool contracts, authorization, validation, idempotency, audit, and post-action verification."
+  - question: "How do you authorize an enterprise agent?"
+    strong_answer: "I keep user and agent identities visible and evaluate the intersection of user rights, agent scope, tool rights, and business policy. The backend still enforces its own authorization."
+  - question: "How do you choose agent autonomy?"
+    strong_answer: "By action risk and business policy, not by model capability. Read and recommendation scenarios can be more autonomous than financial commitments or irreversible actions."
+  - question: "Low-code or pro-code agent?"
+    strong_answer: "I prefer managed low-code when standard tools and orchestration fit. I use pro-code when I need custom planning, state, frameworks, non-standard integrations, or deeper runtime control."
+  - question: "How do you know an agent is successful?"
+    strong_answer: "I separate technical completion, agent behavior, and business outcome. I measure tool failures, policy events, human escalations, cost, process conformance, and the KPI the agent was introduced to improve."
+  - question: "Would every logistics domain get its own agent?"
+    strong_answer: "No. I split by real business responsibility. ATP, inventory, pricing, or source determination may be better exposed as deterministic tools behind one coordinating agent."
+
+entities:
+  - id: AI-ENTERPRISE-AGENT
+    type: ai_asset
+    title: "Enterprise Agent"
+    summary: "A governed software actor that can plan and use allowed tools to reach a business goal."
+  - id: AI-AGENT-ORCHESTRATOR
+    type: ai_asset
+    title: "Orchestrator Agent"
+    summary: "An agent that coordinates tools or specialist agents for a broader goal."
+  - id: AI-AGENT-SPECIALIST
+    type: ai_asset
+    title: "Specialist Agent"
+    summary: "An agent with a bounded business responsibility."
+  - id: TERM-AI-RULE
+    type: term
+    title: "Deterministic Rule"
+    summary: "A known decision expressed without agent reasoning."
+  - id: TERM-AI-WORKFLOW
+    type: term
+    title: "Deterministic Workflow"
+    summary: "A known sequence of tasks, system steps, and approvals."
+  - id: TERM-AI-SKILL
+    type: term
+    title: "Agent Skill"
+    summary: "A bounded capability with a known contract."
+  - id: TERM-AI-TOOL-CONTRACT
+    type: term
+    title: "Agent Tool Contract"
+    summary: "The explicit business and technical contract for a tool an agent may call."
+  - id: INT-AI-API
+    type: integration
+    title: "Business API"
+    summary: "A stable service contract for a known business capability."
+  - id: INT-AI-MCP
+    type: integration
+    title: "Model Context Protocol (MCP)"
+    summary: "A standard for agent-facing tool discovery and invocation."
+  - id: INT-AI-A2A
+    type: integration
+    title: "Agent2Agent (A2A)"
+    summary: "A standard for communication and task delegation between independent agents."
+  - id: INT-AI-EVENT
+    type: integration
+    title: "Business Event"
+    summary: "An asynchronous fact published for interested consumers."
+  - id: CTRL-AI-AGENT-IDENTITY
+    type: control
+    title: "Agent Identity"
+    summary: "A distinct digital identity used to authenticate, authorize, and audit an agent."
+  - id: CTRL-AI-ACTION-RISK
+    type: control
+    title: "Agent Action Risk"
+    summary: "Risk classification that controls approval and execution boundaries."
+  - id: CTRL-AI-HUMAN-CONTROL
+    type: control
+    title: "Human Control"
+    summary: "Human review, approval, override, or escalation for agent actions."
+  - id: CTRL-AI-AGENT-GUARDRAILS
+    type: control
+    title: "Agent Guardrails"
+    summary: "Deterministic boundaries that block or constrain unsafe agent behavior."
+  - id: CTRL-AI-AGENT-OBSERVABILITY
+    type: control
+    title: "Agent Observability"
+    summary: "Tracing and measurement of agent decisions, tool calls, cost, and process effect."
+  - id: CTRL-AI-AGENT-EVALUATION
+    type: control
+    title: "Agent Evaluation"
+    summary: "Repeatable checks of correctness, safety, policy compliance, and business usefulness."
+  - id: DEC-AI-AGENT-LOW-CODE
+    type: configuration_decision
+    title: "Managed / Low-Code Agent"
+    summary: "Choose a managed low-code implementation when standard tools and orchestration fit."
+  - id: DEC-AI-AGENT-PRO-CODE
+    type: configuration_decision
+    title: "Pro-Code Agent"
+    summary: "Choose code when the agent needs custom planning, state, integration, or framework control."
+  - id: AI-JOULE-AGENTS
+    type: ai_asset
+    title: "Joule Agents"
+  - id: PLT-JOULE-STUDIO
+    type: platform_component
+    title: "Joule Studio"
+  - id: PLT-SAP-AI-CORE
+    type: platform_component
+    title: "SAP AI Core"
+  - id: PLT-GENERATIVE-AI-HUB
+    type: platform_component
+    title: "Generative AI Hub"
+  - id: PLT-SAP-KNOWLEDGE-GRAPH
+    type: platform_component
+    title: "SAP Knowledge Graph"
+  - id: PLT-SAP-AI-AGENT-HUB
+    type: platform_component
+    title: "SAP AI Agent Hub"
+
+relations:
+  - from: AI-ENTERPRISE-AGENT
+    type: integrated_via
+    to: INT-AI-MCP
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "MCP is one standard option for an agent to consume tools; direct APIs can also remain valid."
+    source_refs: [SRC-SAP-ARCH-AGENT-A2A-MCP]
+  - from: AI-AGENT-ORCHESTRATOR
+    type: integrated_via
+    to: INT-AI-A2A
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "A2A is designed for communication and task delegation between independent agents."
+    source_refs: [SRC-SAP-ARCH-AGENT-A2A-MCP]
+  - from: AI-ENTERPRISE-AGENT
+    type: controlled_by
+    to: CTRL-AI-AGENT-IDENTITY
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "A production agent requires a distinct identity and authorization boundary."
+    source_refs: [SRC-SAP-ARCH-AGENT-IDENTITY]
+  - from: AI-ENTERPRISE-AGENT
+    type: controlled_by
+    to: CTRL-AI-ACTION-RISK
+    evidence_type: expert_heuristic
+    confidence: high
+    rationale: "Action risk determines how much autonomous execution is acceptable."
+  - from: AI-ENTERPRISE-AGENT
+    type: controlled_by
+    to: CTRL-AI-HUMAN-CONTROL
+    evidence_type: expert_heuristic
+    confidence: high
+    rationale: "High-impact or uncertain actions need an explicit human decision boundary."
+  - from: AI-ENTERPRISE-AGENT
+    type: controlled_by
+    to: CTRL-AI-AGENT-GUARDRAILS
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "Prompt instructions alone are not a sufficient enterprise control."
+    source_refs: [SRC-SAP-ARCH-AI-NORTH-STAR]
+  - from: AI-ENTERPRISE-AGENT
+    type: controlled_by
+    to: CTRL-AI-AGENT-OBSERVABILITY
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "Production behavior must be traceable and measurable."
+    source_refs: [SRC-SAP-ARCH-AGENT-BEHAVIOR-MINING, SRC-SAP-ARCH-AI-NORTH-STAR]
+  - from: AI-ENTERPRISE-AGENT
+    type: evaluated_by
+    to: CTRL-AI-AGENT-EVALUATION
+    evidence_type: expert_heuristic
+    confidence: high
+    rationale: "Agent quality requires repeatable evaluation outside the model's own reasoning."
+  - from: PLT-SAP-KNOWLEDGE-GRAPH
+    type: grounds
+    to: AI-JOULE-AGENTS
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-ARCH-AGENT-A2A-MCP, SRC-SAP-ARCH-AGENT-PRO-CODE]
+  - from: AI-JOULE-AGENTS
+    type: runs_on
+    to: PLT-SAP-AI-CORE
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-ARCH-AGENT-LOW-CODE]
+  - from: AI-JOULE-AGENTS
+    type: provided_by
+    to: PLT-JOULE-STUDIO
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-ARCH-AGENT-LOW-CODE]
+  - from: PLT-SAP-AI-AGENT-HUB
+    type: governs
+    to: AI-JOULE-AGENTS
+    evidence_type: reasoned_interpretation
+    confidence: medium
+    rationale: "SAP positions its agent hub as part of the cross-platform governance layer; availability and packaging remain time-sensitive."
+    source_refs: [SRC-SAP-ARCH-AGENT-IDENTITY]
+
+source_refs:
+  - SRC-SAP-ARCH-AGENT-A2A-MCP
+  - SRC-SAP-ARCH-AGENT-IDENTITY
+  - SRC-SAP-ARCH-AGENT-LOW-CODE
+  - SRC-SAP-ARCH-AGENT-PRO-CODE
+  - SRC-SAP-ARCH-AGENT-STRUCTURED-DATA
+  - SRC-SAP-ARCH-AGENT-MCP-ACCESS
+  - SRC-SAP-ARCH-AGENT-BEHAVIOR-MINING
+  - SRC-SAP-ARCH-AGENTIC-ENGINEERING
+  - SRC-SAP-ARCH-AI-NORTH-STAR
+  - SRC-SAP-ARCH-AGENT-GOLDEN-PATH

@@ -1,0 +1,733 @@
+id: GRAPH-ENTERPRISE-AGENT-TERMINOLOGY
+type: knowledge_graph
+title: "Agent Terminology and Design Patterns"
+domain: "Enterprise AI Architecture"
+process_family: "Cross-enterprise / agentic business processes"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+
+summary: >-
+  A working vocabulary for enterprise agents. Each term is explained through
+  meaning, contrast, use case, failure boundary, and a short Lead-level memory
+  line rather than as a dictionary definition.
+
+learning_model:
+  path: "TERM → DISTINCTION → PATTERN → DECISION → EXAMPLE → LEAD LANGUAGE"
+  rules:
+    - "Know what problem the term solves."
+    - "Know what simpler option may solve the same problem."
+    - "Know what the term does not guarantee."
+    - "Connect the term to business risk and operating model."
+    - "Use examples from logistics, not abstract chatbot demos."
+
+term_categories:
+  - id: core
+    title: "Core agent structure"
+    question: "Who decides, who acts, and what state is carried?"
+  - id: context
+    title: "Context, grounding, retrieval, and memory"
+    question: "What does the agent know now, where did it come from, and what may persist?"
+  - id: orchestration
+    title: "Orchestration and collaboration"
+    question: "How are steps, tools, and specialist agents coordinated?"
+  - id: control
+    title: "Control and autonomy"
+    question: "What may the agent do and where must deterministic control remain?"
+  - id: reliability
+    title: "Reliability and observability"
+    question: "How does the workflow survive failures and how can we reconstruct what happened?"
+  - id: interoperability
+    title: "Protocols and interfaces"
+    question: "How does an agent reach a tool or another agent?"
+
+terms:
+  - id: TERM-AGENTIC-WORKFLOW
+    title: "Agentic Workflow"
+    category: core
+    meaning: "A workflow where one or more steps use model-based decisions, tool selection, or adaptive planning."
+    not_same_as: "A fully autonomous agent. An agentic workflow may still have a mostly fixed process and strong deterministic gates."
+    use_when: "Some steps need interpretation or adaptive choice, but the business process still needs a visible structure."
+    lead_memory: "Agentic does not mean autonomous."
+
+  - id: TERM-AGENT-TOOL-CALLING
+    title: "Tool Calling / Function Calling"
+    category: core
+    meaning: "The model selects a defined function or tool and provides structured arguments for it."
+    not_same_as: "MCP. Tool calling is a behavior; MCP is one protocol that can expose tools and other context."
+    use_when: "The agent needs a narrow capability such as read ATP, simulate price, or create a purchase requisition."
+    lead_memory: "The model chooses a tool. The tool contract owns the side effect."
+
+  - id: TERM-AGENT-PLANNER
+    title: "Planner"
+    category: core
+    meaning: "The component that decides which steps or capabilities should be used to reach a goal."
+    not_same_as: "A workflow engine. A planner can change the next step from context; a workflow engine normally follows defined transitions."
+    use_when: "The route cannot be fully known before execution."
+    lead_memory: "Planner chooses the path."
+
+  - id: TERM-AGENT-EXECUTOR
+    title: "Executor"
+    category: core
+    meaning: "The component that performs the selected step, tool call, or delegated action."
+    not_same_as: "Planner. Choosing and executing are separate responsibilities even when implemented in one runtime."
+    use_when: "You want a clear boundary between deciding an action and performing it."
+    lead_memory: "Executor performs the path."
+
+  - id: TERM-AGENT-ROUTER
+    title: "Router"
+    category: orchestration
+    meaning: "A component that classifies a request and sends it to the right tool, workflow, model, or specialist."
+    not_same_as: "Orchestrator. A router mainly chooses a destination; an orchestrator coordinates a broader multi-step result."
+    use_when: "Requests fall into distinct categories with different handlers."
+    lead_memory: "Router chooses where."
+
+  - id: TERM-AGENT-SUPERVISOR
+    title: "Supervisor Agent"
+    category: orchestration
+    meaning: "An agent that reviews, directs, or coordinates the work of other agents and may decide who acts next."
+    not_same_as: "Orchestrator by definition. Supervisor usually implies oversight of other agents; orchestrator may coordinate tools as well."
+    use_when: "Several genuinely independent agents need shared control and task allocation."
+    lead_memory: "Supervisor manages agents, not every API call."
+
+  - id: TERM-AGENT-DELEGATION
+    title: "Delegation"
+    category: orchestration
+    meaning: "One agent gives a bounded task to another agent and expects a result back."
+    not_same_as: "Handoff. In delegation, the original agent normally remains responsible for the overall result."
+    use_when: "A specialist owns a clear sub-problem."
+    lead_memory: "Delegate a task, keep the parent goal."
+
+  - id: TERM-AGENT-HANDOFF
+    title: "Handoff"
+    category: orchestration
+    meaning: "Responsibility for the active conversation or task moves from one agent to another."
+    not_same_as: "Delegation. A handoff changes who owns the next interaction."
+    use_when: "A different specialist should take over because scope or responsibility changed."
+    lead_memory: "Handoff changes the active owner."
+
+  - id: TERM-AGENT-STATE
+    title: "Agent State"
+    category: core
+    meaning: "The working execution state needed to continue a task, such as current step, selected tools, intermediate results, and approvals."
+    not_same_as: "Long-term memory or SAP business state."
+    use_when: "A task spans several steps, retries, pauses, or approvals."
+    lead_memory: "State tells the runtime where the task is."
+
+  - id: TERM-AGENT-CONTEXT
+    title: "Context"
+    category: context
+    meaning: "Information available to the model for the current decision."
+    not_same_as: "Memory. Context can be assembled fresh from user input, tools, retrieval, policies, and current system data."
+    use_when: "Every model decision needs the right facts, instructions, and boundaries at that moment."
+    lead_memory: "Context is what the model can see now."
+
+  - id: TERM-AGENT-SHORT-MEMORY
+    title: "Short-Term Memory"
+    category: context
+    meaning: "Temporary information retained across nearby steps or turns."
+    not_same_as: "A permanent knowledge base or authoritative business record."
+    use_when: "The agent needs recent conversation or intermediate task information."
+    lead_memory: "Short memory helps continuity, not truth."
+
+  - id: TERM-AGENT-LONG-MEMORY
+    title: "Long-Term Memory"
+    category: context
+    meaning: "Information retained across sessions or tasks for later reuse."
+    not_same_as: "A system of record. Long-term memory can be incomplete, stale, or intentionally limited."
+    use_when: "A repeated interaction benefits from durable preferences, learned facts, or prior task summaries and policy permits retention."
+    lead_memory: "Persist only what has a reason to survive."
+
+  - id: TERM-AGENT-BUSINESS-STATE
+    title: "Business State"
+    category: context
+    meaning: "The authoritative state of a business object or process in systems of record."
+    not_same_as: "Agent memory. A sales order status belongs to the business system, not to the agent's memory."
+    use_when: "A decision depends on current document, stock, approval, delivery, or master-data status."
+    lead_memory: "Re-read business state before important actions."
+
+  - id: TERM-AGENT-GROUNDING
+    title: "Grounding"
+    category: context
+    meaning: "Providing the model with relevant external facts, rules, semantics, or sources so the decision is tied to known context."
+    not_same_as: "RAG only. Grounding may come from APIs, knowledge graphs, documents, structured data, or policies."
+    use_when: "The model must reason from enterprise facts rather than rely on model memory."
+    lead_memory: "Grounding connects reasoning to evidence."
+
+  - id: TERM-AGENT-RAG
+    title: "Retrieval-Augmented Generation (RAG)"
+    category: context
+    meaning: "A pattern that retrieves external knowledge and provides it to a generative model for the response."
+    not_same_as: "Agent memory or tool orchestration. Basic RAG can be one retrieval step followed by generation."
+    use_when: "The answer depends on documents or knowledge outside model parameters."
+    lead_memory: "Retrieve evidence, then generate."
+    source_refs: [SRC-RESEARCH-RAG]
+
+  - id: TERM-AGENT-AGENTIC-RAG
+    title: "Agentic RAG"
+    category: context
+    meaning: "A practical pattern where an agent can decide when, where, or how often to retrieve and can adapt the retrieval path from intermediate results."
+    not_same_as: "Basic one-shot RAG."
+    use_when: "The information need changes during investigation or several sources must be selected dynamically."
+    lead_memory: "The agent controls retrieval, not only the final answer."
+    evidence_type: reasoned_interpretation
+    source_refs: [SRC-RESEARCH-RAG]
+
+  - id: TERM-AGENT-SEMANTIC-GROUNDING
+    title: "Semantic Grounding"
+    category: context
+    meaning: "Grounding that also explains business meaning, relationships, identifiers, and constraints rather than supplying raw fields only."
+    not_same_as: "More text in the prompt."
+    use_when: "The agent must distinguish SAP objects, keys, statuses, or process relationships correctly."
+    lead_memory: "Access gives data. Semantics give meaning."
+
+  - id: TERM-AGENT-STRUCTURED-OUTPUT
+    title: "Structured Output"
+    category: core
+    meaning: "Model output constrained to a defined schema such as JSON fields or a typed result."
+    not_same_as: "Business correctness. A perfectly valid JSON object can still contain a wrong material, plant, date, or decision."
+    use_when: "Downstream code needs machine-readable results with predictable fields."
+    lead_memory: "Schema validity is not business validity."
+
+  - id: TERM-AGENT-POLICY
+    title: "Agent Policy"
+    category: control
+    meaning: "Explicit business or security rules that determine what an agent may do under defined conditions."
+    not_same_as: "Prompt advice. A policy should be enforceable outside free-form model reasoning where risk matters."
+    use_when: "Actions depend on value limits, roles, data classes, countries, process status, or risk."
+    lead_memory: "Policy decides allowed behavior."
+
+  - id: TERM-AGENT-HITL
+    title: "Human-in-the-Loop (HITL)"
+    category: control
+    meaning: "A human must review, approve, correct, or provide input before the workflow can continue at a defined point."
+    not_same_as: "A human merely watching dashboards."
+    use_when: "Risk, ambiguity, legal impact, or business policy requires an explicit human decision."
+    lead_memory: "Human approval is a process step."
+
+  - id: TERM-AGENT-HOTL
+    title: "Human-on-the-Loop (HOTL)"
+    category: control
+    meaning: "The agent can act within limits while a human supervises outcomes and can intervene or stop the process."
+    not_same_as: "Fully autonomous operation without oversight."
+    use_when: "Bounded repetitive actions are allowed but operational oversight remains necessary."
+    lead_memory: "The human supervises the system, not every step."
+
+  - id: TERM-AGENT-DETERMINISTIC-GATE
+    title: "Deterministic Gate"
+    category: control
+    meaning: "A non-LLM rule or validation that must pass before an action can proceed."
+    not_same_as: "A stronger prompt."
+    use_when: "A critical condition such as amount, authorization, object status, or required field must never depend on probabilistic reasoning."
+    lead_memory: "Reasoning may propose. The gate decides."
+
+  - id: TERM-AGENT-AUTONOMY
+    title: "Autonomy"
+    category: control
+    meaning: "How far an agent may plan and execute without a new human decision."
+    not_same_as: "Authority. A capable autonomous agent still needs bounded permissions."
+    use_when: "You define operating limits from action risk and business policy."
+    lead_memory: "Autonomy is freedom to act within authority."
+
+  - id: TERM-AGENT-AUTHORITY
+    title: "Authority"
+    category: control
+    meaning: "The business and technical permission to perform an action."
+    not_same_as: "Autonomy or model capability."
+    use_when: "You decide which objects, values, actions, and scopes the user-agent-tool combination may access."
+    lead_memory: "Capability is not authority."
+
+  - id: TERM-AGENT-TRACE
+    title: "Trace"
+    category: reliability
+    meaning: "An end-to-end record of one logical execution across its operations."
+    not_same_as: "A single log message."
+    use_when: "You need to reconstruct the path from user request through model calls, tools, policies, and downstream systems."
+    lead_memory: "Trace shows the whole journey."
+    source_refs: [SRC-OTEL-TRACING-CONCEPTS]
+
+  - id: TERM-AGENT-SPAN
+    title: "Span"
+    category: reliability
+    meaning: "One operation or unit of work inside a trace."
+    not_same_as: "The full workflow."
+    use_when: "You want timing, status, attributes, and parent-child context for a model call, tool call, policy check, or backend request."
+    lead_memory: "Span is one step in the trace."
+    source_refs: [SRC-OTEL-TRACING-CONCEPTS]
+
+  - id: TERM-AGENT-CHECKPOINT
+    title: "Checkpoint"
+    category: reliability
+    meaning: "A persisted execution point from which a long-running workflow can safely continue."
+    not_same_as: "Long-term memory."
+    use_when: "The process can pause for approval, wait for an external event, or recover after a runtime failure."
+    lead_memory: "Checkpoint lets the task resume."
+
+  - id: TERM-AGENT-DURABLE-EXECUTION
+    title: "Durable Execution"
+    category: reliability
+    meaning: "Execution designed to survive process restarts, long waits, retries, and external interruptions without losing the business workflow."
+    not_same_as: "Keeping one server process alive."
+    use_when: "Agent work spans minutes or hours, includes human approval, or depends on asynchronous systems."
+    lead_memory: "Long-running business work must survive runtime failure."
+
+  - id: TERM-AGENT-IDEMPOTENCY
+    title: "Idempotency"
+    category: reliability
+    meaning: "A repeated request does not create an unintended second business effect."
+    not_same_as: "Retry. Retry repeats an attempt; idempotency makes repetition safe where possible."
+    use_when: "A write tool may be retried after timeout or uncertain network outcome."
+    lead_memory: "Retry safely, do not duplicate the business action."
+
+  - id: TERM-AGENT-COMPENSATING-ACTION
+    title: "Compensating Action"
+    category: reliability
+    meaning: "A defined business action that reverses or offsets an earlier side effect when a distributed process cannot be rolled back technically."
+    not_same_as: "Database rollback."
+    use_when: "A multi-system workflow commits one step and a later step fails."
+    lead_memory: "Undo the business effect when technical rollback is gone."
+
+  - id: TERM-AGENT-RETRY
+    title: "Retry"
+    category: reliability
+    meaning: "Repeating a failed or uncertain operation according to a controlled policy."
+    not_same_as: "Recovery by itself. Blind retries can create duplicates or overload a failing dependency."
+    use_when: "Failures are transient and the operation is safe to repeat or protected by idempotency."
+    lead_memory: "Retry only when repetition is safe."
+
+  - id: TERM-AGENT-CIRCUIT-BREAKER
+    title: "Circuit Breaker"
+    category: reliability
+    meaning: "A control that stops repeated calls to an unhealthy dependency for a period and allows recovery before more traffic is sent."
+    not_same_as: "Retry."
+    use_when: "A downstream API or tool is failing repeatedly and continued calls would make the situation worse."
+    lead_memory: "Stop calling a dependency that is already failing."
+
+  - id: TERM-AGENT-SIDE-EFFECT
+    title: "Side Effect"
+    category: reliability
+    meaning: "A change outside the model response, such as creating an order, updating a date, releasing a document, sending a message, or reserving stock."
+    not_same_as: "A recommendation in text."
+    use_when: "You classify tool risk and define verification, approval, idempotency, and compensation."
+    lead_memory: "Writes change the world."
+
+  - id: TERM-AGENT-CORRELATION-ID
+    title: "Correlation ID"
+    category: reliability
+    meaning: "A stable identifier used to connect one business request across agent, integration, and backend traces."
+    not_same_as: "A business document number, although the two may be linked."
+    use_when: "A request crosses several services or creates a document after asynchronous processing."
+    lead_memory: "One request, one traceable identity across systems."
+
+  - id: TERM-AGENT-CARD
+    title: "Agent Card"
+    category: interoperability
+    meaning: "A2A metadata that describes an agent, its capabilities, endpoints, interaction modes, and security information for discovery."
+    not_same_as: "MCP tool metadata."
+    use_when: "Independent agents need to discover and understand how to communicate with another A2A agent."
+    lead_memory: "Agent Card describes an agent to other agents."
+    source_refs: [SRC-A2A-SPEC-1-0-0]
+
+patterns:
+  - id: TERM-AGENT-PATTERN-REACT
+    title: "ReAct"
+    flow: "REASON → ACT → OBSERVE → REASON → ..."
+    meaning: "Reasoning and actions are interleaved so the next step can depend on the result of the previous action."
+    use_when: ["Investigation is open-ended.", "Tool results change the next diagnostic step.", "The agent must gather evidence before deciding."]
+    avoid_when: ["The process has a fixed sequence.", "Every transition must be predetermined.", "Repeated model calls add cost without changing the path."]
+    logistics_example: "Investigate why a sales order cannot be delivered: read order, inspect ATP, check delivery block, inspect credit status, then explain the first relevant cause."
+    lead_memory: "ReAct is useful for adaptive investigation, not as a replacement for a deterministic workflow."
+    source_refs: [SRC-RESEARCH-REACT]
+
+  - id: TERM-AGENT-PATTERN-PLAN-EXECUTE
+    title: "Plan-and-Execute"
+    flow: "PLAN → EXECUTE STEPS → REPLAN WHEN NEEDED → VERIFY"
+    meaning: "Create a higher-level plan first, then execute steps and update the plan only when evidence requires it."
+    use_when: ["The task has several meaningful stages.", "A visible plan helps approval, cost control, or audit."]
+    avoid_when: ["The task is one or two tool calls.", "The environment changes so quickly that a detailed upfront plan becomes stale."]
+    logistics_example: "Prepare a shortage response: confirm shortage, inspect supply options, choose approved action, prepare PR, wait for approval, then execute and verify."
+    lead_memory: "Plan first when the business wants to see the route before execution."
+
+  - id: TERM-AGENT-PATTERN-ROUTER
+    title: "Router Pattern"
+    flow: "REQUEST → CLASSIFY → ROUTE → HANDLER"
+    meaning: "Classify the request and select one handler, toolset, model, or workflow."
+    use_when: ["Requests belong to clear categories.", "Different domains need different rules or tools."]
+    avoid_when: ["One agent already handles the small scope well.", "Classification is harder than the task itself."]
+    logistics_example: "Route an exception to Sales, Procurement, Warehouse, or Master Data handling based on the business object and symptom."
+    lead_memory: "Router chooses the destination."
+
+  - id: TERM-AGENT-PATTERN-SEQUENTIAL
+    title: "Sequential Pattern"
+    flow: "STEP A → STEP B → STEP C"
+    meaning: "Each step depends on the result or completion of the previous step."
+    use_when: ["Order matters.", "Later steps need earlier outputs."]
+    avoid_when: ["Independent work can safely run in parallel."]
+    logistics_example: "Read approved request, validate partner and material, simulate price, check ATP, then prepare the sales order."
+    lead_memory: "Use sequence when dependency is real."
+
+  - id: TERM-AGENT-PATTERN-PARALLEL
+    title: "Parallel Fan-Out / Fan-In"
+    flow: "REQUEST → [CHECK A | CHECK B | CHECK C] → COMBINE"
+    meaning: "Independent checks run in parallel and their results are combined."
+    use_when: ["Checks are independent.", "Latency matters.", "The final answer needs several views of the same question."]
+    avoid_when: ["One check changes the inputs of another.", "Parallel calls create rate or consistency problems."]
+    logistics_example: "For a delivery-promise analysis, read inventory, production constraints, and supplier lead-time context in parallel before combining the recommendation."
+    lead_memory: "Parallelize independent evidence, not dependent decisions."
+
+  - id: TERM-AGENT-PATTERN-ORCHESTRATOR-WORKER
+    title: "Orchestrator-Worker"
+    flow: "GOAL → ORCHESTRATOR → TOOLS / WORKERS → COMBINE"
+    meaning: "A coordinator breaks a goal into bounded tasks, sends them to tools or workers, and combines the result."
+    use_when: ["One request spans several independent capabilities.", "The coordinator must keep the overall business goal."]
+    avoid_when: ["A single deterministic service already provides the result.", "Workers have no independent responsibility."]
+    logistics_example: "A sales coordinator uses deterministic ATP and pricing tools and only delegates to a procurement specialist when an external supply alternative must be evaluated."
+    lead_memory: "The orchestrator owns the goal; workers own bounded tasks."
+
+  - id: TERM-AGENT-PATTERN-SUPERVISOR
+    title: "Supervisor-Specialist"
+    flow: "SUPERVISOR ↔ SPECIALIST AGENTS"
+    meaning: "A supervisor chooses among specialist agents, reviews progress, and decides which specialist should act next."
+    use_when: ["Specialists are independent agents with separate responsibilities or lifecycles.", "Oversight across several agents is a real requirement."]
+    avoid_when: ["The specialists are only deterministic tools.", "The multi-agent structure exists only to make the diagram more impressive."]
+    logistics_example: "A supply-chain supervisor coordinates independent Sales and Procurement agents for a cross-company exception, while ATP remains a tool."
+    lead_memory: "Use a supervisor for real agent responsibilities, not for ordinary services."
+
+  - id: TERM-AGENT-PATTERN-HANDOFF
+    title: "Handoff Pattern"
+    flow: "AGENT A → TRANSFER CONTEXT → AGENT B OWNS NEXT TURN"
+    meaning: "The active responsibility moves to another specialist and the relevant context moves with it."
+    use_when: ["The user or task has clearly moved into another domain.", "The receiving specialist should own the next interaction."]
+    avoid_when: ["The parent agent only needs one answer from a specialist."]
+    logistics_example: "A sales assistant detects that the issue is a material-governance correction and hands the case to an MDG specialist instead of pretending to own the process."
+    lead_memory: "Handoff changes ownership; delegation does not."
+
+  - id: TERM-AGENT-PATTERN-REFLECTION
+    title: "Reflection / Critique"
+    flow: "DRAFT → CRITIQUE → REVISE → VERIFY"
+    meaning: "A model reviews an intermediate answer or plan and tries to improve it before final acceptance."
+    use_when: ["The output is complex and a second reasoning pass can expose omissions.", "The critique is followed by deterministic validation."]
+    avoid_when: ["The model is asked to certify its own correctness.", "A business rule or test can decide the issue directly."]
+    logistics_example: "Review a proposed root-cause explanation for missing delivery before presenting it, while document status and rule checks remain deterministic."
+    lead_memory: "Critique can improve reasoning; it cannot replace validation."
+
+  - id: TERM-AGENT-PATTERN-VERIFY-WRITE
+    title: "Verify-After-Write"
+    flow: "PROPOSE → AUTHORIZE → WRITE → READ BACK → COMPARE"
+    meaning: "After a business write, re-read authoritative state and compare it with the approved intent."
+    use_when: ["The tool creates or changes SAP business data.", "Timeouts or mapping errors can make the final state uncertain."]
+    avoid_when: ["The action is read-only."]
+    logistics_example: "After creating a purchase requisition, read it back and compare material, plant, quantity, date, account assignment, and created status."
+    lead_memory: "A successful write call is not proof of the business result."
+
+  - id: TERM-AGENT-PATTERN-HUMAN-GATE
+    title: "Human Approval Gate"
+    flow: "PREPARE → HUMAN DECISION → EXECUTE"
+    meaning: "The agent may prepare a recommendation or transaction, but a named human decision is required before the side effect."
+    use_when: ["Financial, legal, safety, or policy impact is material.", "The organization wants L2 prepare-before-execute autonomy."]
+    avoid_when: ["Every low-risk action is forced through approval and the control adds no value."]
+    logistics_example: "The agent prepares a supplier change or high-value purchase action, but a responsible user approves before execution."
+    lead_memory: "Put the human at the risk boundary, not randomly in the workflow."
+
+  - id: TERM-AGENT-PATTERN-EVENT-DRIVEN
+    title: "Event-Driven Agent"
+    flow: "BUSINESS EVENT → FILTER / POLICY → AGENT TASK → ACTION OR ESCALATION"
+    meaning: "A business event starts agent work without a user opening a conversation."
+    use_when: ["Exceptions or changes must be handled when they happen.", "The event is a reliable trigger with clear scope."]
+    avoid_when: ["Polling or a scheduled deterministic job already solves the requirement.", "Events can trigger duplicate high-risk actions without correlation and idempotency."]
+    logistics_example: "A delivery-block event starts an exception analysis and creates a recommendation, but does not release the order automatically."
+    lead_memory: "Events trigger work; they do not remove the control model."
+
+  - id: TERM-AGENT-PATTERN-RETRIEVAL-FIRST
+    title: "Retrieval-First Investigation"
+    flow: "QUESTION → RETRIEVE EVIDENCE → REASON → RETRIEVE AGAIN IF NEEDED → ANSWER"
+    meaning: "The agent gathers evidence before making a conclusion and may retrieve again when the evidence is incomplete."
+    use_when: ["The answer depends on policies, documents, notes, or distributed knowledge.", "Evidence should be visible before a recommendation."]
+    avoid_when: ["The required state is already available from one authoritative API."]
+    logistics_example: "Before explaining a tax or delivery-rule exception, retrieve the applicable configuration note and current business object state."
+    lead_memory: "Get evidence before explanation."
+
+  - id: TERM-AGENT-PATTERN-BOUNDED-TRANSACTION
+    title: "Bounded Transaction Agent"
+    flow: "GOAL → PLAN → POLICY → APPROVAL IF REQUIRED → NARROW TOOL → VERIFY → AUDIT"
+    meaning: "An agent can execute a transaction only inside explicit tool, value, object, policy, and autonomy limits."
+    use_when: ["The business case justifies write autonomy.", "The tool contract and recovery model are mature."]
+    avoid_when: ["Permissions are broad.", "The business object cannot be verified after the action.", "Recovery and audit are undefined."]
+    logistics_example: "Create a low-risk approved PR only for a permitted plant and material scope, with idempotency, post-write verification, and traceable attribution."
+    lead_memory: "Autonomy belongs inside a bounded transaction contract."
+
+distinctions:
+  - left: "Agent"
+    right: "Workflow"
+    answer: "Agent chooses a changing path. Workflow follows defined transitions. A workflow may still contain agentic steps."
+  - left: "Skill"
+    right: "Tool"
+    answer: "A skill describes a bounded capability or reusable behavior. A tool is an invokable operation that reads or changes something."
+  - left: "Tool Calling"
+    right: "MCP"
+    answer: "Tool calling is the model behavior of selecting a function. MCP is a protocol for exposing tools, resources, prompts, and related capabilities."
+  - left: "MCP"
+    right: "API"
+    answer: "MCP is agent-facing interoperability. A normal API remains the better choice when the consumer already knows the service contract and dynamic discovery adds no value."
+  - left: "MCP"
+    right: "A2A"
+    answer: "MCP connects an AI application to tools and context. A2A connects independent agents for discovery, tasks, messages, and collaboration."
+  - left: "RAG"
+    right: "Memory"
+    answer: "RAG retrieves external knowledge for a task. Memory retains information across steps or sessions."
+  - left: "RAG"
+    right: "Agentic RAG"
+    answer: "Basic RAG can retrieve once. Agentic RAG lets the agent control the retrieval route and repeat it when needed."
+  - left: "Context"
+    right: "Memory"
+    answer: "Context is what the model sees now. Memory is one possible source used to build future context."
+  - left: "Memory"
+    right: "Business State"
+    answer: "Memory helps the agent continue work. Business state is authoritative in the system of record and should be re-read for important decisions."
+  - left: "Router"
+    right: "Orchestrator"
+    answer: "Router chooses a destination. Orchestrator coordinates several steps or capabilities to produce one result."
+  - left: "Orchestrator"
+    right: "Supervisor"
+    answer: "Orchestrator can coordinate tools and workers. Supervisor is mainly useful when several independent agents themselves need oversight."
+  - left: "Delegation"
+    right: "Handoff"
+    answer: "Delegation sends out a sub-task while the parent keeps the goal. Handoff transfers active ownership."
+  - left: "Guardrail"
+    right: "Authorization"
+    answer: "Guardrails constrain behavior. Authorization decides whether a principal may access an action or resource. One does not replace the other."
+  - left: "Autonomy"
+    right: "Authority"
+    answer: "Autonomy is how independently the agent acts. Authority is what it is allowed to do."
+  - left: "Retry"
+    right: "Idempotency"
+    answer: "Retry repeats an operation. Idempotency makes repetition safe from unintended duplicate effects."
+  - left: "Retry"
+    right: "Compensation"
+    answer: "Retry tries the operation again. Compensation offsets a business effect that already happened."
+  - left: "Structured Output"
+    right: "Correct Output"
+    answer: "Structured output proves schema shape, not business truth."
+  - left: "Technical Success"
+    right: "Business Success"
+    answer: "The API can return success while the agent still changed the wrong object, violated policy, or worsened the business KPI."
+
+decision_guide:
+  - question: "Is the path and decision logic fixed?"
+    prefer: "Rule or workflow"
+  - question: "Is there one known business service?"
+    prefer: "Direct API or narrow tool"
+  - question: "Does the next step depend on tool results?"
+    prefer: "Agent with ReAct-style or adaptive execution"
+  - question: "Should one request be sent to one of several handlers?"
+    prefer: "Router"
+  - question: "Do independent checks contribute to one answer?"
+    prefer: "Parallel fan-out / fan-in"
+  - question: "Does a broader goal need several tools or bounded workers?"
+    prefer: "Orchestrator-worker"
+  - question: "Are there several independent agent responsibilities?"
+    prefer: "Supervisor or A2A delegation only when independence is real"
+  - question: "Does the task need external documents or knowledge?"
+    prefer: "Grounding / RAG"
+  - question: "Does retrieval need to change during investigation?"
+    prefer: "Agentic RAG"
+  - question: "Can a write be repeated after a timeout?"
+    prefer: "Idempotency plus controlled retry"
+  - question: "Can a committed distributed action need reversal?"
+    prefer: "Compensating action"
+  - question: "Can the task pause for minutes or hours?"
+    prefer: "Checkpoint and durable execution"
+  - question: "Is the action financially or operationally material?"
+    prefer: "Deterministic gate and human approval at the risk boundary"
+  - question: "Does another independent agent need discovery and task exchange?"
+    prefer: "A2A"
+  - question: "Does an AI application need standard access to tools and context?"
+    prefer: "MCP where dynamic agent-facing interoperability adds value"
+
+logistics_examples:
+  - id: SCN-AI-TERM-SALES-DIAGNOSIS
+    title: "Sales order delivery diagnosis"
+    business_question: "Why can this order not be delivered?"
+    pattern: "ReAct + retrieval-first investigation"
+    deterministic_tools: ["sales order read", "ATP read", "delivery block read", "credit status read"]
+    autonomy: "L1 recommend"
+    lesson: "Adaptive diagnosis is useful; changing the order is a different risk boundary."
+  - id: SCN-AI-TERM-PR-PREPARE
+    title: "Purchase requisition preparation"
+    business_question: "Prepare a PR for an approved shortage."
+    pattern: "Plan-and-execute + human approval gate + verify-after-write"
+    deterministic_tools: ["shortage read", "material/plant read", "create PR", "read PR"]
+    autonomy: "L2 prepare"
+    lesson: "Planning can be agentic while write approval and verification remain deterministic."
+  - id: SCN-AI-TERM-DELIVERY-PROMISE
+    title: "Delivery promise analysis"
+    business_question: "Can we promise 500 units next Friday?"
+    pattern: "Orchestrator-worker + parallel fan-out"
+    deterministic_tools: ["ATP", "inventory", "production constraints", "supplier lead time"]
+    autonomy: "L1 recommend"
+    lesson: "Several capabilities do not automatically mean several LLM agents."
+  - id: SCN-AI-TERM-MDG-ROUTER
+    title: "Master-data exception routing"
+    business_question: "Which team should own this data issue?"
+    pattern: "Router"
+    deterministic_tools: ["business object classification", "domain rules", "ownership map"]
+    autonomy: "L1 recommend"
+    lesson: "Routing is enough when the hard problem is ownership selection, not multi-step reasoning."
+  - id: SCN-AI-TERM-EVENT-EXCEPTION
+    title: "Event-driven warehouse exception"
+    business_question: "A warehouse exception occurred. What should happen next?"
+    pattern: "Event-driven agent + policy gate"
+    deterministic_tools: ["event payload validation", "warehouse object read", "exception rule", "notification"]
+    autonomy: "L1 or bounded L3"
+    lesson: "The event starts the task; policy decides whether the agent may act or only escalate."
+  - id: SCN-AI-TERM-SALES-WRITE
+    title: "Bounded sales-order creation"
+    business_question: "Create an order from an approved customer request."
+    pattern: "Bounded transaction agent + verify-after-write"
+    deterministic_tools: ["customer/product read", "pricing simulation", "ATP", "create sales order", "read sales order"]
+    autonomy: "L2 by default"
+    lesson: "Financial commitment needs narrow tools, authority, idempotency, verification, and audit."
+
+assessment_drills:
+  - question: "What does agentic mean?"
+    strong_answer: "It means some decisions or steps are adaptive and model-driven. It does not automatically mean the whole process is autonomous."
+  - question: "What is ReAct?"
+    strong_answer: "It interleaves reasoning, action, and observation so the next step can depend on tool results. I use it for adaptive investigation, not for a fixed workflow."
+  - question: "What is the difference between RAG and agentic RAG?"
+    strong_answer: "RAG retrieves knowledge for generation. In agentic RAG the agent can control the retrieval path, choose sources, and retrieve again when evidence is incomplete."
+  - question: "Memory or business state?"
+    strong_answer: "Memory helps continuity. Business state is authoritative in SAP or another system of record, so I re-read it before important decisions and writes."
+  - question: "Router, orchestrator, or supervisor?"
+    strong_answer: "Router chooses one destination. Orchestrator coordinates a broader result across tools or workers. Supervisor is useful when several independent agents themselves need oversight."
+  - question: "Delegation or handoff?"
+    strong_answer: "Delegation sends a sub-task while the parent keeps responsibility. Handoff transfers active ownership to another agent."
+  - question: "MCP or tool calling?"
+    strong_answer: "Tool calling is the model choosing an operation. MCP is one protocol for exposing tools and context to AI applications."
+  - question: "MCP or A2A?"
+    strong_answer: "MCP is mainly for an AI application to consume tools and context. A2A is for independent agents to discover each other and exchange tasks and messages."
+  - question: "What is durable execution?"
+    strong_answer: "The business task survives runtime restarts, long waits, approvals, and retries. I use checkpoints instead of assuming one process stays alive."
+  - question: "Retry, idempotency, or compensation?"
+    strong_answer: "Retry repeats. Idempotency prevents unintended duplicate effects. Compensation offsets an effect that already committed and cannot be rolled back technically."
+  - question: "Why is structured output not enough?"
+    strong_answer: "A JSON schema can be valid while the business values are wrong. I still validate business keys, authorization, rules, and post-action state."
+  - question: "What is the Lead-level rule for agent patterns?"
+    strong_answer: "I start from the business decision, state, risk, and recovery model. Then I choose the simplest pattern that handles the uncertainty."
+
+entities:
+  - {id: TERM-AGENTIC-WORKFLOW, type: term, title: "Agentic Workflow", summary: "A workflow with one or more adaptive model-driven decisions or actions."}
+  - {id: TERM-AGENT-TOOL-CALLING, type: term, title: "Tool Calling / Function Calling", summary: "Model-driven selection of a defined tool with structured arguments."}
+  - {id: TERM-AGENT-PLANNER, type: term, title: "Planner", summary: "A component that selects the steps or capabilities needed to reach a goal."}
+  - {id: TERM-AGENT-EXECUTOR, type: term, title: "Executor", summary: "A component that performs a selected step or action."}
+  - {id: TERM-AGENT-ROUTER, type: term, title: "Router", summary: "A component that classifies a request and selects a handler."}
+  - {id: TERM-AGENT-SUPERVISOR, type: term, title: "Supervisor Agent", summary: "An agent that oversees or coordinates other independent agents."}
+  - {id: TERM-AGENT-DELEGATION, type: term, title: "Delegation", summary: "Sending a bounded sub-task to another agent while retaining the parent goal."}
+  - {id: TERM-AGENT-HANDOFF, type: term, title: "Handoff", summary: "Transfer of active task or conversation ownership to another agent."}
+  - {id: TERM-AGENT-STATE, type: term, title: "Agent State", summary: "Working execution state needed to continue a task."}
+  - {id: TERM-AGENT-CONTEXT, type: term, title: "Context", summary: "Information visible to the model for the current decision."}
+  - {id: TERM-AGENT-SHORT-MEMORY, type: term, title: "Short-Term Memory", summary: "Temporary information retained across nearby steps or turns."}
+  - {id: TERM-AGENT-LONG-MEMORY, type: term, title: "Long-Term Memory", summary: "Information retained across sessions or tasks for later reuse."}
+  - {id: TERM-AGENT-BUSINESS-STATE, type: term, title: "Business State", summary: "Authoritative state of a business object or process in systems of record."}
+  - {id: TERM-AGENT-GROUNDING, type: term, title: "Grounding", summary: "Providing external facts, rules, semantics, or evidence to model reasoning."}
+  - {id: TERM-AGENT-RAG, type: term, title: "Retrieval-Augmented Generation (RAG)", summary: "Retrieval of external knowledge for use by a generative model."}
+  - {id: TERM-AGENT-AGENTIC-RAG, type: term, title: "Agentic RAG", summary: "Retrieval where an agent controls source selection or repeated retrieval."}
+  - {id: TERM-AGENT-SEMANTIC-GROUNDING, type: term, title: "Semantic Grounding", summary: "Grounding that includes business meaning, relationships, and constraints."}
+  - {id: TERM-AGENT-STRUCTURED-OUTPUT, type: term, title: "Structured Output", summary: "Model output constrained to a defined machine-readable schema."}
+  - {id: TERM-AGENT-POLICY, type: term, title: "Agent Policy", summary: "Explicit enforceable conditions governing allowed agent behavior."}
+  - {id: TERM-AGENT-HITL, type: term, title: "Human-in-the-Loop (HITL)", summary: "A human decision is required at a defined workflow point."}
+  - {id: TERM-AGENT-HOTL, type: term, title: "Human-on-the-Loop (HOTL)", summary: "A human supervises bounded autonomous operation and can intervene."}
+  - {id: TERM-AGENT-DETERMINISTIC-GATE, type: term, title: "Deterministic Gate", summary: "A non-LLM validation or rule that must pass before execution."}
+  - {id: TERM-AGENT-AUTONOMY, type: term, title: "Autonomy", summary: "How independently an agent may plan and execute within defined limits."}
+  - {id: TERM-AGENT-AUTHORITY, type: term, title: "Authority", summary: "The business and technical permission to perform an action."}
+  - {id: TERM-AGENT-TRACE, type: term, title: "Trace", summary: "An end-to-end execution record across related operations."}
+  - {id: TERM-AGENT-SPAN, type: term, title: "Span", summary: "One operation or unit of work inside a trace."}
+  - {id: TERM-AGENT-CHECKPOINT, type: term, title: "Checkpoint", summary: "A persisted execution point used to resume a task safely."}
+  - {id: TERM-AGENT-DURABLE-EXECUTION, type: term, title: "Durable Execution", summary: "Execution that survives runtime restarts, waits, retries, and interruptions."}
+  - {id: TERM-AGENT-IDEMPOTENCY, type: term, title: "Idempotency", summary: "Protection against unintended duplicate business effects from repeated requests."}
+  - {id: TERM-AGENT-COMPENSATING-ACTION, type: term, title: "Compensating Action", summary: "A business action that offsets an earlier committed side effect."}
+  - {id: TERM-AGENT-RETRY, type: term, title: "Retry", summary: "Controlled repetition of a failed or uncertain operation."}
+  - {id: TERM-AGENT-CIRCUIT-BREAKER, type: term, title: "Circuit Breaker", summary: "A control that temporarily stops calls to an unhealthy dependency."}
+  - {id: TERM-AGENT-SIDE-EFFECT, type: term, title: "Side Effect", summary: "A change outside the model response that affects business or system state."}
+  - {id: TERM-AGENT-CORRELATION-ID, type: term, title: "Correlation ID", summary: "A stable identifier linking one request across systems and traces."}
+  - {id: TERM-AGENT-CARD, type: term, title: "Agent Card", summary: "A2A metadata describing an agent and how other agents can interact with it."}
+  - {id: TERM-AGENT-PATTERN-REACT, type: term, title: "ReAct Pattern", summary: "Interleaved reasoning, action, and observation for adaptive execution."}
+  - {id: TERM-AGENT-PATTERN-PLAN-EXECUTE, type: term, title: "Plan-and-Execute Pattern", summary: "Plan meaningful stages before execution and replan only when evidence requires it."}
+  - {id: TERM-AGENT-PATTERN-PARALLEL, type: term, title: "Parallel Fan-Out / Fan-In Pattern", summary: "Run independent checks in parallel and combine their results."}
+  - {id: TERM-AGENT-PATTERN-VERIFY-WRITE, type: term, title: "Verify-After-Write Pattern", summary: "Re-read authoritative state after a write and compare it with approved intent."}
+  - {id: TERM-AGENT-PATTERN-EVENT-DRIVEN, type: term, title: "Event-Driven Agent Pattern", summary: "Start bounded agent work from a business event."}
+  - {id: TERM-AGENT-PATTERN-BOUNDED-TRANSACTION, type: term, title: "Bounded Transaction Agent Pattern", summary: "Transactional autonomy constrained by tool, authority, policy, risk, verification, and audit."}
+
+relations:
+  - {from: AI-ENTERPRISE-AGENT, type: requires, to: TERM-AGENT-CONTEXT, evidence_type: expert_heuristic, confidence: high, rationale: "An agent needs explicit current context to make a bounded business decision."}
+  - {from: AI-ENTERPRISE-AGENT, type: requires, to: TERM-AGENT-STATE, evidence_type: expert_heuristic, confidence: high, rationale: "Multi-step tasks need explicit working state rather than hidden conversational assumptions."}
+  - {from: AI-ENTERPRISE-AGENT, type: requires, to: TERM-AGENT-AUTHORITY, evidence_type: expert_heuristic, confidence: high, rationale: "Planning capability does not imply permission to execute business actions."}
+  - {from: AI-ENTERPRISE-AGENT, type: evaluated_by, to: CTRL-AI-AGENT-EVALUATION, evidence_type: expert_heuristic, confidence: high, rationale: "Agent behavior needs repeatable evaluation outside the model's own judgment."}
+  - {from: AI-ENTERPRISE-AGENT, type: controlled_by, to: TERM-AGENT-DETERMINISTIC-GATE, evidence_type: expert_heuristic, confidence: high, rationale: "Critical business conditions should be enforced deterministically."}
+  - {from: AI-ENTERPRISE-AGENT, type: controlled_by, to: TERM-AGENT-POLICY, evidence_type: expert_heuristic, confidence: high, rationale: "Business and security policy constrains allowed actions."}
+  - from: TERM-AGENT-PATTERN-REACT
+    type: requires
+    to: TERM-AGENT-TOOL-CALLING
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "The practical enterprise form of ReAct interleaves reasoning with external actions and observations."
+    source_refs: [SRC-RESEARCH-REACT]
+  - from: TERM-AGENT-RAG
+    type: provides_context_to
+    to: AI-ENTERPRISE-AGENT
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "Retrieved knowledge can be supplied as context for agent reasoning."
+    source_refs: [SRC-RESEARCH-RAG]
+  - from: TERM-AGENT-AGENTIC-RAG
+    type: specializes
+    to: TERM-AGENT-RAG
+    evidence_type: reasoned_interpretation
+    confidence: medium
+    rationale: "Agentic RAG is used here as a practical extension where the agent controls retrieval behavior."
+    source_refs: [SRC-RESEARCH-RAG]
+  - {from: TERM-AGENT-DURABLE-EXECUTION, type: requires, to: TERM-AGENT-CHECKPOINT, evidence_type: expert_heuristic, confidence: high, rationale: "Long-running work needs persisted progress or equivalent durable state."}
+  - {from: TERM-AGENT-RETRY, type: requires, to: TERM-AGENT-IDEMPOTENCY, evidence_type: expert_heuristic, confidence: medium, rationale: "For side-effecting writes, retry safety normally requires idempotency or an equivalent duplicate-prevention design."}
+  - {from: TERM-AGENT-COMPENSATING-ACTION, type: applies_to, to: TERM-AGENT-SIDE-EFFECT, evidence_type: expert_heuristic, confidence: high, rationale: "Compensation is relevant after an external business effect has already committed."}
+  - from: TERM-AGENT-TRACE
+    type: contains
+    to: TERM-AGENT-SPAN
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-OTEL-TRACING-CONCEPTS]
+  - {from: AI-AGENT-ORCHESTRATOR, type: orchestrates, to: AI-AGENT-SPECIALIST, evidence_type: expert_heuristic, confidence: high, rationale: "A coordinator may delegate bounded work to specialist agents when their responsibilities are genuinely independent."}
+  - from: TERM-AGENT-CARD
+    type: provides_context_to
+    to: AI-AGENT-ORCHESTRATOR
+    evidence_type: reasoned_interpretation
+    confidence: medium
+    rationale: "A2A Agent Cards provide discovery metadata that can help a coordinating agent understand a remote agent's capabilities."
+    source_refs: [SRC-A2A-SPEC-1-0-0]
+  - from: AI-AGENT-ORCHESTRATOR
+    type: integrated_via
+    to: INT-AI-A2A
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "A2A is appropriate when the coordinator delegates work to an independent remote agent."
+    source_refs: [SRC-A2A-SPEC-1-0-0, SRC-SAP-ARCH-AGENT-A2A-MCP]
+  - from: AI-ENTERPRISE-AGENT
+    type: integrated_via
+    to: INT-AI-MCP
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "MCP is one standard way for AI applications to access tools and context."
+    source_refs: [SRC-MCP-SPEC-2026-07-28, SRC-SAP-ARCH-AGENT-MCP-ACCESS]
+  - {from: TERM-AGENT-PATTERN-VERIFY-WRITE, type: applies_to, to: TERM-AGENT-SIDE-EFFECT, evidence_type: expert_heuristic, confidence: high, rationale: "Post-action verification is most important where a tool changes authoritative state."}
+  - {from: TERM-AGENT-HITL, type: specializes, to: CTRL-AI-HUMAN-CONTROL, evidence_type: reasoned_interpretation, confidence: high, rationale: "HITL is one concrete form of human control where progress waits for a human decision."}
+  - {from: TERM-AGENT-HOTL, type: specializes, to: CTRL-AI-HUMAN-CONTROL, evidence_type: reasoned_interpretation, confidence: high, rationale: "HOTL is one concrete form of human control where bounded execution continues under supervision."}
+
+source_refs:
+  - SRC-RESEARCH-REACT
+  - SRC-RESEARCH-RAG
+  - SRC-MCP-SPEC-2026-07-28
+  - SRC-A2A-SPEC-1-0-0
+  - SRC-OTEL-TRACING-CONCEPTS
+  - SRC-SAP-ARCH-AGENT-A2A-MCP
+  - SRC-SAP-ARCH-AGENT-MCP-ACCESS
+  - SRC-SAP-ARCH-AGENT-IDENTITY
+  - SRC-SAP-ARCH-AGENTIC-ENGINEERING
