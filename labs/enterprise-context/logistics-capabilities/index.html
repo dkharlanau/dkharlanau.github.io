@@ -1,0 +1,203 @@
+---
+layout: default
+title: "Cross-Process Logistics Capabilities — Enterprise Context Lab"
+description: "A practical SAP S/4HANA map of Batch Management, Handling Units, serial numbers, classification, split valuation, and stock determination across logistics processes."
+permalink: /labs/enterprise-context/logistics-capabilities/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - logistics
+  - batch-management
+  - handling-unit
+  - serial-number
+  - classification
+  - split-valuation
+  - stock-determination
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.logistics_cross_process %}
+{% assign evidence = site.data.labs.enterprise_context.sources.logistics_cross_process %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Logistics capabilities</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Cross-process logistics / Shared control layer</p>
+      <h1>Start with the identity<br />the business must preserve.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#identity-model">Use the six-question model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Cross-process logistics inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.capabilities | size }}</strong><small>Core capabilities</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.nested_capabilities | size }}</strong><small>Nested capabilities</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Reviewed 15 Aug 2026 · SAP primary sources</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <p><strong>Working rule:</strong> do not ask which module owns the feature first. Ask whether the process must preserve a lot, a package, an individual unit, a set of attributes, a separate value, or a preferred stock source.</p>
+    <a href="/labs/enterprise-context/data/logistics-cross-process-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="identity-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>LOT → PACKAGE → UNIT → ATTRIBUTES → VALUE → SOURCE</h2>
+      <p>These six questions separate capabilities that are often mixed together because they appear in the same material, delivery, or warehouse process.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article class="ecg-memory-card">
+        <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+        <strong>{{ item.key }}</strong>
+        <h3>{{ item.question }}</h3>
+        <p>{{ item.capability }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="capabilities" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Capability map</p>
+      <h2>Six shared logistics controls, six different questions.</h2>
+      <p>Each capability below shows purpose, process reach, configuration entry points, and the point where an optional feature becomes mandatory by design.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for capability in graph.capabilities %}
+      <article class="ecg-determination-detail" id="{{ capability.id | downcase }}">
+        <header>
+          <div><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><small>{{ capability.group }}</small></div>
+          <h3>{{ capability.title }}</h3>
+          <p class="ecg-question">Identity: {{ capability.business_identity }}</p>
+        </header>
+        <p>{{ capability.purpose }}</p>
+        <div class="ecg-decision-columns">
+          <div>
+            <h4>Where it appears</h4>
+            <ul>{% for item in capability.process_coverage %}<li>{{ item }}</li>{% endfor %}</ul>
+          </div>
+          <div>
+            <h4>Configuration frame</h4>
+            <ul>{% for item in capability.activation_and_configuration %}<li>{{ item }}</li>{% endfor %}</ul>
+          </div>
+          <div>
+            <h4>Optional or mandatory?</h4>
+            <p>{{ capability.mandatory_logic }}</p>
+          </div>
+        </div>
+        {% if capability.key_subcapabilities %}
+        <div class="research-route-list">
+          {% for item in capability.key_subcapabilities %}
+          <a href="#{{ capability.id | downcase }}"><span>SUB</span><strong>{{ item.title }}</strong><small>{{ item.role }}</small><i class="material-symbols-outlined" aria-hidden="true">subdirectory_arrow_right</i></a>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <p class="ecg-lead-lens"><strong>Lead lens:</strong> {{ capability.lead_lens }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="process-matrix" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Process reach</p>
+      <h2>The same capability crosses several process owners.</h2>
+      <p>The matrix is an architecture reading for assessment preparation. It shows where a capability commonly matters, not a license or mandatory-scope statement.</p>
+    </header>
+    <div class="table-scroll" role="region" aria-label="Cross-process logistics capability matrix" tabindex="0">
+      <table>
+        <thead><tr><th>Capability</th>{% for column in graph.process_matrix.columns %}<th>{{ column }}</th>{% endfor %}</tr></thead>
+        <tbody>
+          {% for row in graph.process_matrix.rows %}
+          <tr><th>{{ row.capability }}</th>{% for value in row.coverage %}<td>{{ value }}</td>{% endfor %}</tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="ecg-caption">{{ graph.process_matrix.note }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="selection-guide" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Decision guide</p>
+      <h2>Choose the control from the business signal.</h2>
+      <p>A Lead answer should explain why the capability exists, not only name the transaction or Customizing node.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.selection_guide %}
+      <a href="#capabilities"><span>→</span><strong>{{ item.signal }}</strong><small>{{ item.choose }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="boundaries" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architecture boundaries</p>
+      <h2>Similar screen fields do not mean the same responsibility.</h2>
+      <p>Most design mistakes here come from using one mechanism as a substitute for another because both happen to touch stock.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for item in graph.architecture_boundaries %}
+      <article><span>BOUNDARY</span><p>{{ item }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failure-modes" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure modes</p>
+      <h2>Diagnose the control before repairing the transaction.</h2>
+      <p>Each symptom below starts in a different layer. A quantity can be correct while lot identity, package identity, serial identity, valuation, or stock-source selection is wrong.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for failure in graph.failure_modes %}
+      <article class="ecg-determination-detail">
+        <header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header>
+        <div class="ecg-decision-columns"><div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="assessment" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Short answers that expose the architecture boundary.</h2>
+      <p>The useful answer is usually a distinction: lot versus unit, package versus warehouse, value versus traceability, confirmation versus stock selection.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for drill in graph.assessment_drills %}
+      <article class="ecg-determination-detail">
+        <header><div><span>Q</span><small>assessment</small></div><h3>{{ drill.question }}</h3></header>
+        <p>{{ drill.strong_answer }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Primary SAP documentation behind the model.</h2>
+      <p>The explanations on this page are independently written. Product behavior and configuration claims are checked against the SAP Help sources below.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · reviewed {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+</div>
