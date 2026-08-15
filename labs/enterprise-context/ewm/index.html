@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP EWM — Deployment & Warehouse Execution Map"
-description: "A Lead-level map of Embedded and Decentralized SAP EWM, warehouse domains, objects, processes, production, automation and integration boundaries."
+description: "A Lead-level map of Embedded and Decentralized SAP EWM, warehouse domains, objects, determinations, processes, production, automation and integration boundaries."
 permalink: /labs/enterprise-context/ewm/
 status: draft
 verified: false
@@ -52,12 +52,13 @@ tags:
   <section class="research-canvas__inventory" id="deep-maps" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Deep architecture maps</p>
-      <h2>Separate responsibilities, objects and integrations.</h2>
+      <h2>Separate responsibilities, objects, decisions and integrations.</h2>
       <p>The main page gives the execution logic. These maps go deeper without turning EWM into one endless feature catalogue.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/ewm/domains/"><span>DOM</span><strong>EWM Domain & Capability Map</strong><small>Warehouse foundation, inbound, outbound, internal logistics, production, shipping, cross-docking, VAS, optimization, labor, inventory, automation and monitoring.</small><i class="material-symbols-outlined" aria-hidden="true">category</i></a>
       <a href="/labs/enterprise-context/ewm/objects/"><span>OBJ</span><strong>EWM Object Catalog</strong><small>Demand objects, WT/WO/waves, stock and HUs, warehouse structure, shipping objects, quality, VAS, labor and automation objects.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/enterprise-context/ewm/controls/"><span>DET</span><strong>EWM Determination & Control Plane</strong><small>WPT, storage control, putaway, stock removal, wave, WOCR/queue, staging and door, packing, replenishment and PSA decisions.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/enterprise-context/ewm/integrations/"><span>INT</span><strong>EWM Integration Architecture</strong><small>Embedded and decentralized S/4HANA, SD, MM, TM, PP, QM, MES/Digital Manufacturing, MFS/PLC, WCS/WCU and monitoring boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
     </div>
   </section>
@@ -154,6 +155,7 @@ tags:
       <article><span>CTRL</span><strong>{{ control.title }}</strong><small>{{ control.question }} Consequence: {{ control.affects | join: ", " }}.</small></article>
       {% endfor %}
     </div>
+    <p><a href="/labs/enterprise-context/ewm/controls/">Open the full determination map →</a></p>
   </section>
 
   <section class="research-canvas__inventory" id="integration" data-reveal>
@@ -260,6 +262,6 @@ tags:
       <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
-    <p><a href="/labs/enterprise-context/data/ewm-graph.json">Core graph JSON</a> · <a href="/labs/enterprise-context/data/ewm-domains.json">Domain map JSON</a> · <a href="/labs/enterprise-context/data/ewm-objects.json">Object catalog JSON</a> · <a href="/labs/enterprise-context/data/ewm-integrations.json">Integration map JSON</a> · <a href="/labs/enterprise-context/data/ewm-sources.json">Source registry</a></p>
+    <p><a href="/labs/enterprise-context/data/ewm-graph.json">Core graph JSON</a> · <a href="/labs/enterprise-context/data/ewm-domains.json">Domain map JSON</a> · <a href="/labs/enterprise-context/data/ewm-objects.json">Object catalog JSON</a> · <a href="/labs/enterprise-context/data/ewm-controls.json">Control plane JSON</a> · <a href="/labs/enterprise-context/data/ewm-integrations.json">Integration map JSON</a> · <a href="/labs/enterprise-context/data/ewm-sources.json">Source registry</a></p>
   </section>
 </div>
