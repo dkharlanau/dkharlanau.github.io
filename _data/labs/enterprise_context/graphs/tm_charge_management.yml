@@ -1,0 +1,148 @@
+id: GRAPH-TM-CHARGE-MANAGEMENT
+type: knowledge_graph
+title: "SAP TM — Charge Management"
+domain: "SAP S/4HANA Transportation Management"
+process_family: "Transportation Charge Calculation"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: "2026-08-15"
+
+summary: >-
+  Decision map for transportation charge calculation. It connects Freight Orders and Freight
+  Bookings to freight agreements, organizational and carrier context, calculation sheets,
+  charge types, rate tables, scales, rates, calculated amounts, and freight settlement.
+
+thesis: >-
+  A wrong freight amount is rarely one field. Trace the commercial decision chain in order:
+  agreement → calculation sheet → charge type → rate table → scale → rate → calculation base.
+
+memory_model:
+  path: "DOCUMENT → AGREEMENT → CALCULATION SHEET → CHARGE TYPE → RATE TABLE → SCALE/RATE → AMOUNT → FSD"
+  questions:
+    - key: "DOCUMENT"
+      question: "Which freight document and stage data provide the calculation context?"
+    - key: "AGREEMENT"
+      question: "Which carrier and purchasing organization agreement is valid?"
+    - key: "SHEET"
+      question: "Which charge types and calculation sequence are allowed?"
+    - key: "RATE"
+      question: "Which rate table, dimensions, scales, validity, and currency select the price?"
+    - key: "BASE"
+      question: "Which quantity, distance, weight, duration, or other base multiplies or selects the rate?"
+    - key: "SETTLE"
+      question: "Is the calculated amount ready to become the settlement basis sent to MM?"
+
+commercial_objects:
+  - object: "Freight Agreement"
+    role: "Carrier-side commercial contract context"
+    controls: "Validity, carrier, purchasing organization, and calculation basis relationship."
+  - object: "Calculation Sheet"
+    role: "Hierarchical charge-calculation procedure"
+    controls: "Which charge types are calculated and in which sequence."
+  - object: "Charge Type"
+    role: "Semantic cost component"
+    controls: "Examples include base freight, fuel surcharge, handling, waiting, or other configured charges."
+  - object: "Rate Table"
+    role: "Price lookup structure"
+    controls: "Links dimensions/scales to transportation rate values and validities."
+  - object: "Scale"
+    role: "Rate dimension"
+    controls: "Defines breakpoints or dimensions such as weight, distance, zone, or another calculation base."
+  - object: "Rate"
+    role: "Monetary or percentage value"
+    controls: "The selected price used in the charge calculation."
+
+runtime_trace:
+  - order: 1
+    step: "Start charge calculation"
+    input: "Freight Order / Freight Booking plus logistical values"
+    output: "Charge calculation context"
+  - order: 2
+    step: "Determine agreement"
+    input: "Carrier, purchasing organization/hierarchy, validity, document context"
+    output: "Freight agreement or applicable template/context"
+  - order: 3
+    step: "Determine calculation sheet"
+    input: "Agreement and determination settings"
+    output: "Calculation sheet with charge lines"
+  - order: 4
+    step: "Evaluate charge type calculation rule"
+    input: "Calculation sheet item and business document attributes"
+    output: "Calculation base and rate lookup requirement"
+  - order: 5
+    step: "Determine rate"
+    input: "Rate table, scale dimensions, validity, document values"
+    output: "Rate amount or percentage"
+  - order: 6
+    step: "Calculate charge amount"
+    input: "Rate, base, currency, quantity and configured rules"
+    output: "Calculated charge line and total"
+  - order: 7
+    step: "Use amount for settlement"
+    input: "Settlement-relevant charge result"
+    output: "Freight Settlement Document basis"
+
+rate_dimensions:
+  - dimension: "Weight / quantity"
+    example: "Price changes when shipment weight crosses a scale breakpoint."
+  - dimension: "Distance"
+    example: "Rate can depend on route distance or distance band."
+  - dimension: "Location / zone"
+    example: "Origin and destination zones can select a lane-specific price."
+  - dimension: "Service / charge type"
+    example: "Fuel, handling, waiting, priority, or another service can have a separate calculation."
+  - dimension: "Validity"
+    example: "The same lane can use another price after an agreement or rate validity change."
+
+failure_modes:
+  - symptom: "No charges"
+    first_checks: ["charge calculation relevance", "valid freight agreement", "calculation sheet", "charge type", "rate availability"]
+    avoid: "Entering a manual amount before proving why standard determination found nothing."
+  - symptom: "Wrong carrier price"
+    first_checks: ["agreement determined", "purchasing organization", "validity", "carrier BP", "rate table"]
+    avoid: "Starting with the final total. Prove the selected agreement first."
+  - symptom: "Correct rate table, wrong amount"
+    first_checks: ["scale values", "calculation base", "weight/distance/UoM", "currency", "calculation rule"]
+    avoid: "Changing the rate when the system selected it correctly but multiplied it by the wrong base."
+  - symptom: "Invoice differs from TM"
+    first_checks: ["TM calculated charges", "manual charge changes", "FSD amount", "MM follow-on", "carrier invoice basis"]
+    avoid: "Debugging invoice verification before reconciling the amount TM actually settled."
+
+lead_decisions:
+  - decision: "Central vs local rate structures"
+    lens: "Reuse shared rate structures when governance is real. Do not create one giant rate table merely because reuse sounds elegant."
+  - decision: "Manual charge override"
+    lens: "Permit overrides only with ownership and audit logic. Otherwise configuration defects quietly become operational behavior."
+  - decision: "Rate-table granularity"
+    lens: "Enough dimensions to represent the contract, but not so many that rates become impossible to maintain or explain."
+
+assessment_cards:
+  - question: "What is the difference between calculation sheet and rate table?"
+    answer: "The calculation sheet defines which charge types are calculated and their sequence. The rate table provides price values using dimensions and scales."
+  - question: "Where do you start when the freight cost is wrong?"
+    answer: "Start with agreement determination, then calculation sheet, charge type, rate table, scale/rate, and finally the calculation base."
+  - question: "Can charge calculation run before final settlement?"
+    answer: "Yes. Charge calculation can be triggered from several TM components. Settlement later uses the relevant calculated charge context."
+  - question: "Why is master data part of pricing?"
+    answer: "Carrier, organization, locations, distance, weight, units, agreement validity, and rate dimensions all influence the commercial result."
+
+synthetic_case:
+  title: "Correct rate, wrong cost"
+  situation: "A carrier agreement contains 1.20 EUR/km and the system selects the expected rate table, but the total is too high."
+  reasoning:
+    - "Agreement determination is correct."
+    - "Calculation sheet and charge type are correct."
+    - "Rate table returns 1.20 EUR/km."
+    - "The distance basis is 620 km instead of the expected 480 km because the network distance was derived differently."
+    - "The defect is therefore in the calculation base / distance context, not in the rate."
+  lesson: "A pricing defect can originate in logistics master data. Trace the whole calculation chain."
+
+source_refs:
+  - SRC-SAP-TM-CHARGE-CALCULATION
+  - SRC-SAP-TM-AGREEMENT-CALC-SHEET
+  - SRC-SAP-TM-RATE-DEFINITION
+  - SRC-SAP-TM-RATE-DETERMINATION
+  - SRC-SAP-TM-CALCULATION-SHEET
+  - SRC-SAP-TM-FREIGHT-SETTLEMENT
+  - SRC-SAP-TM-FSD

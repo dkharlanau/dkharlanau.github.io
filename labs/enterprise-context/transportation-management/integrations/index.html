@@ -1,0 +1,44 @@
+---
+layout: default
+title: "SAP TM — Integration Contracts, APIs & Events"
+description: "A Lead-level SAP TM integration map for ERP demand, OData APIs, SOAP B2B messages, execution events, communication scenarios, and Event Mesh patterns."
+permalink: /labs/enterprise-context/transportation-management/integrations/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags: [sap, sap-tm, integration, api, events, assessment]
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.tm_integrations %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/transportation-management/">SAP TM</a></li><li aria-current="page">Integrations</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">SAP TM / Deep Dive</p><h1>{{ graph.title }}</h1><p>{{ graph.summary }}</p><a class="research-canvas__button" href="#contracts">Choose a contract <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></div><div class="research-canvas__signal" aria-label="Integration model"><p>Do not mix</p><div class="research-canvas__signal-line"><span>01</span><strong>API</strong><small>Object interaction</small></div><div class="research-canvas__signal-line"><span>02</span><strong>Message</strong><small>Business conversation</small></div><div class="research-canvas__signal-line"><span>03</span><strong>Event</strong><small>Fact / notification</small></div><em>Reviewed {{ graph.verified_at }}</em></div></header>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">hub</span><p><strong>Lead rule:</strong> {{ graph.thesis }}</p><p><strong>Architecture test:</strong> define the authoritative writer and business phase before choosing protocol.</p></section>
+
+  <section class="research-canvas__inventory" id="contracts" data-reveal><header><p class="research-canvas__eyebrow">Contract model</p><h2>Same object name, different interaction semantics.</h2></header><div class="ecg-decision-columns">{% for item in graph.contract_model %}<article><h3>{{ item.contract }}</h3><p><strong>{{ item.pattern }}</strong>{% if item.technology %} · {{ item.technology }}{% endif %}</p><p>{{ item.use_for }}</p><p><strong>Avoid:</strong> {{ item.avoid }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Communication scenarios</p><h2>Release-specific contracts matter.</h2><p>Do not turn SAP_COM numbers into trivia. Use them to make ownership and supported interaction explicit.</p></header><div class="ecg-decision-columns">{% for item in graph.communication_scenarios %}<article><h3>{{ item.id }} · {{ item.title }}</h3><p><strong>{{ item.role }}</strong></p><p>{{ item.key_point }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Business lifecycle</p><h2>Integration follows the transportation phase.</h2></header><div class="ecg-rail">{% for item in graph.message_lifecycle %}<article><span>{{ forloop.index }}</span><div><h3>{{ item.phase }}</h3><p>{{ item.messages | join: " · " }}</p><small>{{ item.ownership_question }}</small></div></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Selection guide</p><h2>Choose by intent, not fashion.</h2></header><div class="ecg-decision-columns">{% for item in graph.api_selection_guide %}<article><h3>{{ item.need }}</h3><p><strong>Prefer:</strong> {{ item.prefer }}</p><p>{{ item.reason }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Execution events</p><h2>Status is a consequence of business events.</h2></header><div class="ecg-decision-columns"><article><h3>Event source</h3><p>{{ graph.execution_event_model.source }}</p></article><article><h3>Event profile</h3><p>{{ graph.execution_event_model.event_profile_role }}</p></article><article><h3>Status rule</h3><p>{{ graph.execution_event_model.status_rule }}</p></article><article><h3>Common events</h3><p>{{ graph.execution_event_model.common_events | join: " · " }}</p></article></div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Failure modes</p><h2>Successful HTTP is not successful logistics.</h2></header><div class="ecg-decision-columns">{% for item in graph.integration_failure_modes %}<article><h3>{{ item.symptom }}</h3><p><strong>Check:</strong> {{ item.check_first | join: " → " }}</p><p><strong>Anti-pattern:</strong> {{ item.anti_pattern }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Lead principles</p><h2>Integration design rules worth keeping.</h2></header><div class="research-route-list">{% for item in graph.lead_principles %}<div class="research-route-list__item"><span>{{ forloop.index }}</span><strong>{{ item }}</strong><small>Architecture rule</small></div>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Assessment cards</p><h2>Protocol names are the easy part.</h2></header><div class="ecg-memory-grid">{% for item in graph.assessment_cards %}<article><span>Q</span><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Synthetic case</p><h2>{{ graph.synthetic_case.title }}</h2><p>{{ graph.synthetic_case.lesson }}</p></header><div class="ecg-rail">{% for item in graph.synthetic_case.path %}<article><span>{{ forloop.index }}</span><div><h3>{{ item }}</h3></div></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">data_object</span><p><strong>Machine-readable:</strong> integration-contract model.</p><a href="/labs/enterprise-context/data/tm-integrations-graph.json">Open integration graph JSON <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+</div>

@@ -1,0 +1,40 @@
+---
+layout: default
+title: "SAP TM — Charge Management"
+description: "A Lead-level SAP TM charge calculation map from freight agreement and calculation sheet to rate table, scales, rates, amounts, and settlement."
+permalink: /labs/enterprise-context/transportation-management/charges/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-15
+hide_global_cta: true
+enterprise_context_graph: true
+tags: [sap, sap-tm, transportation, charges, settlement, assessment]
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.tm_charge_management %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/transportation-management/">SAP TM</a></li><li aria-current="page">Charge Management</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">SAP TM / Deep Dive</p><h1>{{ graph.title }}</h1><p>{{ graph.summary }}</p><a class="research-canvas__button" href="#trace">Trace a charge <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></div><div class="research-canvas__signal" aria-label="Charge model"><p>Memory path</p><div class="research-canvas__signal-line"><span>01</span><strong>Agreement</strong><small>Carrier + organization</small></div><div class="research-canvas__signal-line"><span>02</span><strong>Rate</strong><small>Sheet + table + scale</small></div><div class="research-canvas__signal-line"><span>03</span><strong>Settlement</strong><small>Amount → FSD</small></div><em>Reviewed {{ graph.verified_at }}</em></div></header>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">payments</span><p><strong>Lead rule:</strong> {{ graph.thesis }}</p><p><strong>Remember:</strong> {{ graph.memory_model.path }}</p></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Commercial object model</p><h2>Each pricing object has one job.</h2></header><div class="ecg-decision-columns">{% for item in graph.commercial_objects %}<article><h3>{{ item.object }}</h3><p><strong>{{ item.role }}</strong></p><p>{{ item.controls }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" id="trace" data-reveal><header><p class="research-canvas__eyebrow">Runtime trace</p><h2>Do not debug the final number first.</h2></header><div class="ecg-rail">{% for item in graph.runtime_trace %}<article><span>{{ item.order }}</span><div><h3>{{ item.step }}</h3><p><strong>Input:</strong> {{ item.input }}</p><small>Output: {{ item.output }}</small></div></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Rate dimensions</p><h2>Why the same carrier can have many valid prices.</h2></header><div class="ecg-decision-columns">{% for item in graph.rate_dimensions %}<article><h3>{{ item.dimension }}</h3><p>{{ item.example }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Failure modes</p><h2>Trace the first wrong commercial decision.</h2></header><div class="ecg-decision-columns">{% for item in graph.failure_modes %}<article><h3>{{ item.symptom }}</h3><p><strong>First checks:</strong> {{ item.first_checks | join: " → " }}</p><p><strong>Avoid:</strong> {{ item.avoid }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Lead decisions</p><h2>Maintainable pricing beats clever pricing.</h2></header><div class="ecg-decision-columns">{% for item in graph.lead_decisions %}<article><h3>{{ item.decision }}</h3><p>{{ item.lens }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Assessment cards</p><h2>Questions that separate pricing logic from rate maintenance.</h2></header><div class="ecg-memory-grid">{% for item in graph.assessment_cards %}<article><span>Q</span><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>{% endfor %}</div></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Synthetic case</p><h2>{{ graph.synthetic_case.title }}</h2><p>{{ graph.synthetic_case.situation }}</p></header><div class="ecg-rail">{% for item in graph.synthetic_case.reasoning %}<article><span>{{ forloop.index }}</span><div><h3>{{ item }}</h3></div></article>{% endfor %}</div><p><strong>Lesson:</strong> {{ graph.synthetic_case.lesson }}</p></section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">data_object</span><p><strong>Machine-readable:</strong> charge-management decision model.</p><a href="/labs/enterprise-context/data/tm-charge-management-graph.json">Open charge graph JSON <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></section>
+</div>
