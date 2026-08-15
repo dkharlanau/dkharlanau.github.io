@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP EWM — Deployment & Warehouse Execution Map"
-description: "A Lead-level map of Embedded and Decentralized SAP EWM, warehouse documents, inbound, outbound, internal processes, production supply, automation and integration boundaries."
+description: "A Lead-level map of Embedded and Decentralized SAP EWM, warehouse domains, objects, processes, production, automation and integration boundaries."
 permalink: /labs/enterprise-context/ewm/
 status: draft
 verified: false
@@ -32,13 +32,13 @@ tags:
       <p class="research-canvas__eyebrow">Enterprise Context / Warehousing</p>
       <h1>{{ graph.title }}</h1>
       <p>{{ graph.summary }}</p>
-      <a class="research-canvas__button" href="#deployment">Start with deployment <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#deep-maps">Open the architecture maps <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Research status">
       <p>Working model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.deployment_models | size }}</strong><small>Deployment models</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.process_families | size }}</strong><small>Process families</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure paths</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.process_families | size }}</strong><small>Core process families</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary references</small></div>
       <em>Source checked {{ graph.verified_at }}</em>
     </div>
   </header>
@@ -46,7 +46,20 @@ tags:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">warehouse</span>
     <p><strong>Working thesis:</strong> {{ graph.thesis }}</p>
-    <p><strong>Boundary:</strong> EWM owns detailed warehouse position and execution. ERP Inventory Management remains the enterprise inventory and accounting context. The useful question is not “Which transaction?” but “Which system and document owns the next decision?”</p>
+    <p><strong>Boundary:</strong> EWM owns detailed warehouse position and execution. ERP Inventory Management remains the enterprise inventory and accounting context. The useful question is not “Which transaction?” but “Which system and object owns the next decision?”</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="deep-maps" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Deep architecture maps</p>
+      <h2>Separate responsibilities, objects and integrations.</h2>
+      <p>The main page gives the execution logic. These maps go deeper without turning EWM into one endless feature catalogue.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/ewm/domains/"><span>DOM</span><strong>EWM Domain & Capability Map</strong><small>Warehouse foundation, inbound, outbound, internal logistics, production, shipping, cross-docking, VAS, optimization, labor, inventory, automation and monitoring.</small><i class="material-symbols-outlined" aria-hidden="true">category</i></a>
+      <a href="/labs/enterprise-context/ewm/objects/"><span>OBJ</span><strong>EWM Object Catalog</strong><small>Demand objects, WT/WO/waves, stock and HUs, warehouse structure, shipping objects, quality, VAS, labor and automation objects.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/enterprise-context/ewm/integrations/"><span>INT</span><strong>EWM Integration Architecture</strong><small>Embedded and decentralized S/4HANA, SD, MM, TM, PP, QM, MES/Digital Manufacturing, MFS/PLC, WCS/WCU and monitoring boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="deployment" data-reveal>
@@ -95,6 +108,7 @@ tags:
       <article><span>OBJ</span><strong>{{ object.title }}</strong><small>{{ object.purpose }}{% if object.examples %} Examples: {{ object.examples | join: ", " }}.{% endif %}</small></article>
       {% endfor %}
     </div>
+    <p><a href="/labs/enterprise-context/ewm/objects/">Open the full object catalog →</a></p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -126,6 +140,7 @@ tags:
       <p><strong>Failure signal:</strong> {{ process.failure_signal }}</p>
     </div>
     {% endfor %}
+    <p><a href="/labs/enterprise-context/ewm/domains/">Open all EWM subdomains →</a></p>
   </section>
 
   <section class="research-canvas__inventory" id="controls" data-reveal>
@@ -156,6 +171,7 @@ tags:
       </article>
       {% endfor %}
     </div>
+    <p><a href="/labs/enterprise-context/ewm/integrations/">Open the full integration architecture →</a></p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -244,6 +260,6 @@ tags:
       <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
-    <p><a href="/labs/enterprise-context/data/ewm-graph.json">Machine-readable graph</a> · <a href="/labs/enterprise-context/data/ewm-sources.json">Source registry</a></p>
+    <p><a href="/labs/enterprise-context/data/ewm-graph.json">Core graph JSON</a> · <a href="/labs/enterprise-context/data/ewm-domains.json">Domain map JSON</a> · <a href="/labs/enterprise-context/data/ewm-objects.json">Object catalog JSON</a> · <a href="/labs/enterprise-context/data/ewm-integrations.json">Integration map JSON</a> · <a href="/labs/enterprise-context/data/ewm-sources.json">Source registry</a></p>
   </section>
 </div>
