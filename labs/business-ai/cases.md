@@ -22,8 +22,9 @@ tags:
 
 {% assign catalog = site.data.labs.business_ai.catalog %}
 {% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
-{% assign all_cases = catalog.cases | concat: expansion.cases %}
-{% assign all_sources = catalog.source_registry | concat: expansion.source_registry %}
+{% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
+{% assign all_cases = catalog.cases | concat: expansion.cases | concat: expansion_b.cases %}
+{% assign all_sources = catalog.source_registry | concat: expansion.source_registry | concat: expansion_b.source_registry %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/business-ai/">Business AI</a></li><li aria-current="page">Cases</li></ol>
@@ -57,7 +58,7 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Case index</p>
       <h2>From sales and procurement to planning, manufacturing, and master data.</h2>
-      <p>The set deliberately mixes generative AI, document AI, forecasting, recommendation, optimization, and data foundations. The business job decides the method, not the conference agenda.</p>
+      <p>The set deliberately mixes generative AI, document AI, forecasting, recommendation, optimization, embodied execution, and data foundations. The business job decides the method, not the conference agenda.</p>
     </header>
     <div class="research-route-list">
       {% for item in all_cases %}
@@ -75,7 +76,10 @@ tags:
     </header>
 
     <div class="research-route-list">
-      <a href="/labs/business-ai/patterns/#{{ item.pattern }}"><span>PAT</span><strong>Pattern</strong><small>{{ item.pattern }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/business-ai/patterns/#{{ item.pattern }}"><span>PAT</span><strong>Primary pattern</strong><small>{{ item.pattern }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      {% if item.secondary_patterns %}
+      <a href="#{{ item.id }}"><span>PAT+</span><strong>Secondary patterns</strong><small>{{ item.secondary_patterns | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      {% endif %}
       <a href="#{{ item.id }}"><span>SYS</span><strong>Implementation</strong><small>{{ item.implementation }}</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
       <a href="#{{ item.id }}"><span>TECH</span><strong>Technology</strong><small>{{ item.technology.vendors | join: ", " }} · {{ item.technology.products | join: ", " }} · Models: {{ item.technology.models | join: ", " }}</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
       <a href="#{{ item.id }}"><span>INT</span><strong>Integration note</strong><small>{{ item.technology.integration_notes }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
