@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "BRFplus and AIF — Decision and Exception Frameworks"
-description: "A practical SAP map for BRFplus business rules and AIF exception handling, monitoring, correction, and reprocessing."
+title: "BRFplus, AIF and ISLM — Decision, Recovery and AI Lifecycle"
+description: "SAP map for BRFplus rules, AIF exception handling, and ISLM intelligent-scenario lifecycle."
 permalink: /labs/enterprise-context/frameworks/
 status: draft
 verified: false
@@ -13,15 +13,20 @@ tags:
   - sap
   - brfplus
   - aif
+  - islm
   - business-rules
   - exception-handling
   - integration
+  - machine-learning
+  - generative-ai
+  - ai-lifecycle
   - mdg
   - output-management
 ---
 
 {% assign brf = site.data.labs.enterprise_context.topics.brfplus_rule_framework %}
 {% assign aif = site.data.labs.enterprise_context.topics.application_interface_framework %}
+{% assign islm = site.data.labs.enterprise_context.topics.intelligent_scenario_lifecycle_management %}
 {% assign registry = site.data.labs.enterprise_context.sources.cross_application_frameworks_registry %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -32,23 +37,24 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Enterprise Context Lab / Cross-Application Frameworks</p>
-      <h1>BRFplus decides.<br />AIF recovers.</h1>
-      <p>Two reusable SAP frameworks solve very different problems. BRFplus externalizes selected business decisions. AIF makes interface processing, errors, ownership, correction, and reprocessing visible close to the application.</p>
+      <h1>BRFplus decides.<br />AIF recovers.<br />ISLM operationalizes AI.</h1>
+      <p>Three reusable SAP frameworks solve different problems. BRFplus externalizes selected business decisions. AIF makes interface failures understandable and recoverable. ISLM manages the lifecycle that connects S/4HANA business use cases to embedded or side-by-side AI.</p>
       <a class="research-canvas__button" href="#brfplus">Start with BRFplus <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Framework research status">
       <p>Research scope</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ brf.maturity.gates_complete }}/{{ brf.maturity.gates_total }}</strong><small>BRFplus gates</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ aif.maturity.gates_complete }}/{{ aif.maturity.gates_total }}</strong><small>AIF gates</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ registry.sources | size }}</strong><small>Primary sources</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ islm.maturity.gates_complete }}/{{ islm.maturity.gates_total }}</strong><small>ISLM gates</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong>{{ registry.sources | size }}</strong><small>Primary sources</small></div>
       <em>Sources checked {{ registry.source_checked_at }}</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-    <p><strong>Do not merge the responsibilities.</strong> A rule engine is not a workflow engine, output engine, middleware runtime, or monitoring platform. An exception monitor is not middleware and is not business reconciliation.</p>
-    <p><strong>Memory line:</strong> {{ brf.memory_model.phrase }} · {{ aif.memory_model.phrase }}.</p>
+    <p><strong>Do not merge the responsibilities.</strong> A rule engine is not a workflow engine. An exception monitor is not middleware. An AI lifecycle framework is not the model runtime and does not own the business action after inference.</p>
+    <p><strong>Memory line:</strong> {{ brf.memory_model.phrase }} · {{ aif.memory_model.phrase }} · {{ islm.memory_model.phrase }}.</p>
     <a href="/labs/enterprise-context/data/brfplus.json">Open BRFplus structured data <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
@@ -193,6 +199,81 @@ tags:
     </div>
   </section>
 
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">model_training</span>
+    <p><strong>Now add AI:</strong> a model is useful only when a business application can define the scenario, connect the right runtime, operate the lifecycle, consume inference, and decide what action follows.</p>
+    <a href="#islm">Open ISLM AI lifecycle <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="islm" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">ISLM / AI scenario lifecycle</p>
+      <h2>{{ islm.title }}</h2>
+      <p>{{ islm.memory_model.short_definition }} <strong>Lead view:</strong> {{ islm.memory_model.lead_line }}</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in islm.availability.timeline %}
+      <a href="#islm-types"><span>VER</span><strong>{{ item.release }}</strong><small>{{ item.meaning }}</small><i class="material-symbols-outlined" aria-hidden="true">history</i></a>
+      {% endfor %}
+      <a href="/labs/enterprise-context/data/islm.json"><span>DATA</span><strong>Open structured ISLM topic</strong><small>Scenario types, lifecycle, use cases, heuristics, limits, relations, and assessment cards.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="islm-types" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Embedded or side-by-side</p>
+      <h2>The business scenario stays in S/4HANA. The AI runtime can be local or remote.</h2>
+      <p>Runtime choice should follow the data, model, latency, lifecycle, and governance needs. “BTP because AI” is not an architecture principle.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in islm.scenario_types %}
+      <a href="/labs/enterprise-context/data/islm.json"><span>TYPE</span><strong>{{ item.title }}</strong><small><b>Runtime:</b> {{ item.runtime }} <b>Best for:</b> {{ item.best_for }} <b>Boundary:</b> {{ item.lead_boundary }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="islm-lifecycle" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">ISLM lifecycle</p>
+      <h2>Define the business contract before training or calling a model.</h2>
+      <p>The lifecycle is more than deploy and activate. It begins with the business event and ends with a measured process outcome.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in islm.lifecycle_model %}
+      <a href="/labs/enterprise-context/data/islm.json"><span>{{ item.step }}</span><strong>{{ item.title }}</strong><small>{{ item.detail }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_downward</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="islm-use" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Where ISLM fits</p>
+      <h2>One lifecycle framework, several AI consumption patterns.</h2>
+      <p>Use ISLM when S/4HANA is the business consumer and the AI capability needs a governed scenario contract and lifecycle.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in islm.use_cases %}
+      <a href="/labs/enterprise-context/data/islm.json"><span>USE</span><strong>{{ item.title }}</strong><small>{{ item.problem }} <b>ISLM:</b> {{ item.how_islm_fits }} <b>Boundary:</b> {{ item.lead_boundary }}</small><i class="material-symbols-outlined" aria-hidden="true">neurology</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="islm-design" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">ISLM design review</p>
+      <h2>Model lifecycle health is not business value.</h2>
+      <p>An active model can still be inaccurate, ignored, expensive, unsafe, or attached to the wrong business action. Green status remains a surprisingly weak strategy.</p>
+    </header>
+    <div class="research-route-list">
+      {% for rule in islm.design_rules %}
+      <a href="/labs/enterprise-context/data/islm.json"><span>RULE</span><strong>{{ rule.statement }}</strong><small>{{ rule.questions | join: " · " }}</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      {% endfor %}
+      {% for item in islm.limitations %}
+      <a href="/labs/enterprise-context/data/islm.json"><span>!</span><strong>Boundary</strong><small>{{ item }}</small><i class="material-symbols-outlined" aria-hidden="true">warning</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Synthetic cases</p>
@@ -204,6 +285,9 @@ tags:
       <a href="/labs/enterprise-context/data/brfplus.json"><span>BRF</span><strong>{{ item.title }}</strong><small>{{ item.lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
       {% endfor %}
       <a href="/labs/enterprise-context/data/aif.json"><span>AIF</span><strong>{{ aif.synthetic_example.title }}</strong><small>{{ aif.synthetic_example.lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
+      {% for item in islm.synthetic_examples %}
+      <a href="/labs/enterprise-context/data/islm.json"><span>AI</span><strong>{{ item.title }}</strong><small>{{ item.lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
+      {% endfor %}
     </div>
   </section>
 
@@ -211,7 +295,7 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Lead assessment</p>
       <h2>Explain ownership and boundaries, not transaction codes.</h2>
-      <p>The strongest answer usually separates decision, execution, transport, monitoring, recovery, and business reconciliation.</p>
+      <p>The strongest answer separates decision, execution, transport, monitoring, recovery, AI runtime, inference, and business action.</p>
     </header>
     <div class="research-route-list">
       {% for item in brf.assessment_cards %}
@@ -219,6 +303,9 @@ tags:
       {% endfor %}
       {% for item in aif.assessment_cards %}
       <a href="/labs/enterprise-context/data/aif.json"><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
+      {% endfor %}
+      {% for item in islm.assessment_cards %}
+      <a href="/labs/enterprise-context/data/islm.json"><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
       {% endfor %}
     </div>
   </section>
