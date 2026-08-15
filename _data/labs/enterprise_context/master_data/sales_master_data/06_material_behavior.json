@@ -1,7 +1,7 @@
 {
   "id": "MD.SD.BEHAVIOR",
   "title": "Material Behavior in Sales",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "updated_at": "2026-08-15",
   "purpose": "Explain how product and master-data choices change Sales execution without pretending that every behavior is a separate business process.",
   "lead_rule": "Do not stop at material type. Ask which master-data setting changes item behavior, ATP, delivery, procurement, production, billing, warehouse execution, or traceability.",
@@ -20,22 +20,10 @@
       "memory_hook": "The warehouse-fulfilled baseline.",
       "business_question": "Is the item fulfilled from available or planned own stock?",
       "master_nodes": ["MD.SD.PRODUCT"],
-      "activation_data": [
-        "Sales views and item category group",
-        "Delivering plant and shipping data",
-        "Availability check and requirements settings"
-      ],
-      "sales_effects": [
-        "Normal item-category and schedule-line logic can make the item ATP and delivery relevant.",
-        "Plant and stock situation influence the promise date and fulfillment path.",
-        "Billing normally follows the configured order or delivery flow."
-      ],
+      "activation_data": ["Sales views and item category group", "Delivering plant and shipping data", "Availability check and requirements settings"],
+      "sales_effects": ["Normal item-category and schedule-line logic can make the item ATP and delivery relevant.", "Plant and stock situation influence the promise date and fulfillment path.", "Billing normally follows the configured order or delivery flow."],
       "cross_process_links": ["Item category determination", "ATP", "Delivery", "EWM / warehouse execution", "Billing"],
-      "lead_questions": [
-        "Which product field changes the item category or schedule line?",
-        "Is the item really stock fulfilled, or does procurement or production create supply?",
-        "Which plant and ATP scope own the promise?"
-      ]
+      "lead_questions": ["Which product field changes the item category or schedule line?", "Is supply really from stock, or does procurement or production create it?", "Which plant and ATP scope own the promise?"]
     },
     {
       "id": "BEH.SD.SERVICE",
@@ -43,22 +31,10 @@
       "memory_hook": "Sell value without pretending every line must leave a warehouse.",
       "business_question": "Is the commercial item a service or non-stock item, and where is execution recorded?",
       "master_nodes": ["MD.SD.PRODUCT"],
-      "activation_data": [
-        "Service product or service material setup",
-        "Item category group such as DIEN in classic scenarios",
-        "Item-category and schedule-line configuration"
-      ],
-      "sales_effects": [
-        "The item can be priced and billed without normal stock fulfillment.",
-        "Physical delivery and stock ATP can be absent depending on the item design.",
-        "Execution may be owned by Sales, Service, or procurement depending on the solution scope."
-      ],
+      "activation_data": ["Service product or service material setup", "Item category group such as DIEN in classic scenarios", "Item-category and schedule-line configuration"],
+      "sales_effects": ["The item can be priced and billed without normal stock fulfillment.", "Physical delivery and stock ATP can be absent depending on item design.", "Execution may be owned by Sales, Service, or procurement depending on solution scope."],
       "cross_process_links": ["Sales", "Service execution", "External service / procurement", "Billing"],
-      "lead_questions": [
-        "Are we selling a commercial service line or managing service execution in SAP Service?",
-        "What is the billing trigger: order, confirmation, time and material, milestone, or another rule?",
-        "Do external resources or purchased services create a procurement dependency?"
-      ],
+      "lead_questions": ["Are we selling a commercial service line or managing service execution in SAP Service?", "What is the billing trigger?", "Do external resources or purchased services create a procurement dependency?"],
       "source_refs": ["SRC-SDMB-SERVICE"]
     },
     {
@@ -68,22 +44,10 @@
       "business_question": "Does the commercial structure behave at main-item level or component level?",
       "master_nodes": ["MD.SD.BOM"],
       "process_links": ["SD.BOM"],
-      "activation_data": [
-        "Sales-relevant BOM",
-        "ERLA or LUMF processing model",
-        "Item-category determination for main item and subitems"
-      ],
-      "sales_effects": [
-        "Main-item versus component ownership changes pricing, ATP, delivery, and document structure.",
-        "Higher-level and subitem categories become part of the runtime control model.",
-        "Make-to-order can connect the sold structure to production, but that is a separate supply decision."
-      ],
+      "activation_data": ["Sales-relevant BOM", "ERLA or LUMF processing model", "Item-category determination for main item and subitems"],
+      "sales_effects": ["Main-item versus component ownership changes pricing, ATP, delivery, and document structure.", "Higher-level and subitem categories become part of runtime control.", "Make-to-order can connect the sold structure to production, but that is a separate supply decision."],
       "cross_process_links": ["Item category determination", "ATP", "Delivery", "MTO / Production"],
-      "lead_questions": [
-        "Is pricing controlled by the kit or by its components?",
-        "Must all components be available before the kit can be promised or delivered?",
-        "Is this only a commercial structure, or does production consume the structure too?"
-      ],
+      "lead_questions": ["Is pricing controlled by the kit or its components?", "Must all components be available before the kit can be promised?", "Is this only a commercial structure, or does production consume it too?"],
       "source_refs": ["SRC-SDMD-SALES-BOM"]
     },
     {
@@ -92,23 +56,10 @@
       "memory_hook": "The sales order can carry the choices that shape what gets built.",
       "business_question": "Does customer configuration influence components, routing, price, or production?",
       "master_nodes": ["MD.SD.VC", "MD.SD.PRODUCT"],
-      "activation_data": [
-        "Configurable product / material",
-        "Class and characteristics",
-        "Configuration profile and dependencies",
-        "BOM and routing where production follows"
-      ],
-      "sales_effects": [
-        "The order captures characteristic values and a configuration result.",
-        "Configuration can select components and production data.",
-        "Pricing and availability can depend on the selected characteristics or components."
-      ],
+      "activation_data": ["Configurable product / material", "Class and characteristics", "Configuration profile and dependencies", "BOM and routing where production follows"],
+      "sales_effects": ["The order captures characteristic values and a configuration result.", "Configuration can select components and production data.", "Pricing and availability can depend on selected characteristics or components."],
       "cross_process_links": ["Sales", "Variant Configuration", "ATP", "MRP", "Production"],
-      "lead_questions": [
-        "Which choices are commercial and which choices change engineering or production?",
-        "When is the configuration fixed, and what happens after a later change?",
-        "Which BOM and routing are selected for the configured result?"
-      ],
+      "lead_questions": ["Which choices are commercial and which change engineering or production?", "When is the configuration fixed?", "Which BOM and routing are selected for the result?"],
       "source_refs": ["SRC-SDMD-VC-OVERVIEW"]
     },
     {
@@ -117,22 +68,10 @@
       "memory_hook": "The box or pallet becomes part of logistics execution, not decoration around the product.",
       "business_question": "Does fulfillment need an explicit packing object that groups goods with packaging material?",
       "master_nodes": ["MD.SD.PRODUCT"],
-      "activation_data": [
-        "Packaging material master data",
-        "Packing rules or packaging specifications where used",
-        "Handling Unit and warehouse integration settings"
-      ],
-      "sales_effects": [
-        "Delivery quantities can be packed into Handling Units.",
-        "The packing hierarchy becomes relevant for picking, loading, warehouse, and transport execution.",
-        "Packaging identity is different from ownership of returnable packaging stock."
-      ],
+      "activation_data": ["Packaging material master data", "Packing rules or packaging specifications where used", "Handling Unit and warehouse integration settings"],
+      "sales_effects": ["Delivery quantities can be packed into Handling Units.", "The packing hierarchy becomes relevant for picking, loading, warehouse, and transport execution.", "Packaging identity is different from ownership of returnable packaging stock."],
       "cross_process_links": ["Delivery", "Handling Unit", "EWM", "TM / transport execution"],
-      "lead_questions": [
-        "Is packaging consumed, tracked, returned, or charged?",
-        "Where is packing decided: delivery, EWM, packing instruction, or another rule?",
-        "Which downstream system needs the HU identity and hierarchy?"
-      ],
+      "lead_questions": ["Is packaging consumed, tracked, returned, or charged?", "Where is packing decided?", "Which downstream system needs the HU identity and hierarchy?"],
       "source_refs": ["SRC-SDMB-HU"]
     },
     {
@@ -142,23 +81,10 @@
       "business_question": "Do reusable pallets, crates, or containers remain company-owned while held by the customer?",
       "master_nodes": ["MD.SD.PRODUCT"],
       "process_links": ["SD.RTNBL"],
-      "activation_data": [
-        "Returnable packaging material",
-        "Customer and plant context",
-        "Customer special-stock handling",
-        "Return, charge, or settlement rules where required"
-      ],
-      "sales_effects": [
-        "Customer-held packaging is reconciled separately from normal sold goods.",
-        "Return or pickup reduces the open customer-held quantity.",
-        "Charging for missing or retained packaging is a separate commercial decision."
-      ],
+      "activation_data": ["Returnable packaging material", "Customer and plant context", "Customer special-stock handling", "Return, charge, or settlement rules where required"],
+      "sales_effects": ["Customer-held packaging is reconciled separately from normal sold goods.", "Return or pickup reduces the open customer-held quantity.", "Charging for missing or retained packaging is a separate commercial decision."],
       "cross_process_links": ["Delivery", "Inventory Management", "Customer special stock", "Billing", "Packaging / HU"],
-      "lead_questions": [
-        "Who owns the packaging at every step?",
-        "How do we reconcile the customer-held balance and aging?",
-        "When do we request return and when do we charge the customer?"
-      ],
+      "lead_questions": ["Who owns the packaging at every step?", "How do we reconcile customer-held balance and aging?", "When do we request return and when do we charge the customer?"],
       "source_refs": ["SRC-SAP-RETURNABLES"]
     },
     {
@@ -167,22 +93,10 @@
       "memory_hook": "Quantity is not enough; batch identity matters.",
       "business_question": "Must Sales and fulfillment distinguish stock by batch attributes, status, or shelf life?",
       "master_nodes": ["MD.SD.BATCH", "MD.SD.PRODUCT"],
-      "activation_data": [
-        "Batch-management indicator",
-        "Batch determination or selection strategy where used",
-        "Classification, status, shelf-life, and selection rules where relevant"
-      ],
-      "sales_effects": [
-        "Delivery execution can require selection or determination of a valid batch.",
-        "Traceability continues through delivery, warehouse, returns, and quality processes.",
-        "Physically existing stock may still be unusable because its batch attributes do not satisfy the requirement."
-      ],
+      "activation_data": ["Batch-management indicator", "Batch determination or selection strategy where used", "Classification, status, shelf-life, and selection rules where relevant"],
+      "sales_effects": ["Delivery execution can require selection or determination of a valid batch.", "Traceability continues through delivery, warehouse, returns, and quality processes.", "Physically existing stock may still be unusable because its batch attributes do not satisfy the requirement."],
       "cross_process_links": ["ATP", "Delivery", "EWM", "QM", "Returns / traceability"],
-      "lead_questions": [
-        "Is the batch selected in the order, delivery, or warehouse?",
-        "Which attributes can make an available batch unacceptable?",
-        "How are batch substitutions and returns traced?"
-      ],
+      "lead_questions": ["Is the batch selected in the order, delivery, or warehouse?", "Which attributes can make an available batch unacceptable?", "How are substitutions and returns traced?"],
       "source_refs": ["SRC-SDMD-BATCH-DETERMINATION"]
     },
     {
@@ -191,23 +105,10 @@
       "memory_hook": "Each physical unit can need its own identity.",
       "business_question": "Does the process need to know the exact physical unit that was delivered, returned, or serviced?",
       "master_nodes": ["MD.SD.PRODUCT"],
-      "process_links": ["SD.SERPROD"],
-      "activation_data": [
-        "Serial-number profile",
-        "Serialization and goods-movement rules",
-        "Equipment or service integration where relevant"
-      ],
-      "sales_effects": [
-        "Execution can require serial-number assignment before goods issue.",
-        "Returns and service can identify the exact sold unit rather than only product and quantity.",
-        "Serialization mainly changes logistics and after-sales traceability, not the commercial price by itself."
-      ],
+      "activation_data": ["Serial-number profile", "Serialization and goods-movement rules", "Equipment or service integration where relevant"],
+      "sales_effects": ["Execution can require serial-number assignment before goods issue.", "Returns and service can identify the exact sold unit rather than only product and quantity.", "Serialization mainly changes logistics and after-sales traceability, not commercial pricing by itself."],
       "cross_process_links": ["Delivery", "EWM", "Service", "Returns", "Traceability"],
-      "lead_questions": [
-        "At which process step is serial assignment mandatory?",
-        "Does the serial number create or connect to equipment or an installed base?",
-        "How is the exact returned unit matched to the original delivery?"
-      ],
+      "lead_questions": ["At which process step is serial assignment mandatory?", "Does the serial number connect to equipment or an installed base?", "How is the returned unit matched to the original delivery?"],
       "source_refs": ["SRC-SDMD-SERIAL"]
     }
   ],
@@ -222,11 +123,6 @@
     {"behavior": "Serial-managed", "stock_identity": "Product + serial number", "physical_delivery": "Yes", "production_link": "Can receive serials in production", "after_sales_identity": "Exact unit trace"}
   ],
   "industry_extensions": [
-    {
-      "id": "BEH.SD.EMPTIES",
-      "title": "Empties / Full Products",
-      "use_when": "Beverage or deposit-driven logistics models full goods and reusable empties as linked products.",
-      "why_not_core": "Useful, but industry-specific. Keep it below the universal material-behavior layer."
-    }
+    {"id": "BEH.SD.EMPTIES", "title": "Empties / Full Products", "use_when": "Beverage or deposit-driven logistics models full goods and reusable empties as linked products.", "why_not_core": "Useful, but industry-specific. Keep it below the universal material-behavior layer."}
   ]
 }
