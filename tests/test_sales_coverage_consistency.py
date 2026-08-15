@@ -9,6 +9,8 @@ ATLAS_ROOT = ROOT / "processes" / "sales_process_atlas"
 MECHANISM_ROOT = ROOT / "mechanisms" / "sales_mechanisms"
 CASEBOOK_PATH = ROOT / "graphs" / "sales_diagnostic_casebook.yml"
 ENDPOINT_PATH = Path("labs/enterprise-context/data/sales-process-coverage.json")
+INTEGRATION_ENDPOINT_PATH = Path("labs/enterprise-context/data/sales-order-integration-map.json")
+INTEGRATION_PAGE_PATH = Path("labs/enterprise-context/sales-processes/integrations/index.html")
 
 
 def load_json(path: Path):
@@ -54,3 +56,23 @@ def test_sales_coverage_endpoint_exposes_reasoning_layers():
     assert '"process_mechanism_map"' in endpoint
     assert '"diagnostic_casebook"' in endpoint
     assert "sales_complex_variants_registry" in endpoint
+
+
+def test_numeric_sales_atlas_keys_use_liquid_bracket_access():
+    coverage_endpoint = ENDPOINT_PATH.read_text(encoding="utf-8")
+    integration_endpoint = INTEGRATION_ENDPOINT_PATH.read_text(encoding="utf-8")
+    integration_page = INTEGRATION_PAGE_PATH.read_text(encoding="utf-8")
+
+    for numeric_key in (
+        "07_after_sales",
+        "08_commercial_extensions",
+        "09_industry_variants",
+        "10_billing_lifecycle",
+        "11_cross_application_execution",
+    ):
+        assert f"sales_process_atlas.{numeric_key}" not in coverage_endpoint
+        assert f'sales_atlas["{numeric_key}"]' in coverage_endpoint
+
+    assert "sales_process_atlas.11_cross_application_execution" not in integration_endpoint
+    assert 'sales_atlas["11_cross_application_execution"]' in integration_endpoint
+    assert "sales_process_atlas.11_cross_application_execution" not in integration_page
