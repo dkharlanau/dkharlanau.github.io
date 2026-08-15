@@ -109,3 +109,17 @@ def test_sales_derivation_layers_have_stable_unique_ids_and_sources():
         assert row["mechanism"] in codes, f"Procedure matrix references unknown mechanism {row['mechanism']}"
         for source_ref in row.get("source_refs", []):
             assert source_ref in sources, f"{row['mechanism']} has unknown matrix source ref {source_ref}"
+
+    playbook = load_json(MECHANISM_ROOT / "derivation_playbook.json")
+    layer_ids = [layer["id"] for layer in playbook["layers"]]
+    case_ids = [case["id"] for case in playbook["cases"]]
+    assert len(layer_ids) == len(set(layer_ids)), "Diagnostic layer IDs must be unique"
+    assert len(case_ids) == len(set(case_ids)), "Diagnostic case IDs must be unique"
+    for layer in playbook["layers"]:
+        for mechanism_ref in layer.get("mechanism_refs", []):
+            assert mechanism_ref in codes, f"{layer['id']} has unknown mechanism ref {mechanism_ref}"
+    for case in playbook["cases"]:
+        for mechanism_ref in case.get("mechanism_refs", []):
+            assert mechanism_ref in codes, f"{case['id']} has unknown mechanism ref {mechanism_ref}"
+        for source_ref in case.get("source_refs", []):
+            assert source_ref in sources, f"{case['id']} has unknown source ref {source_ref}"
