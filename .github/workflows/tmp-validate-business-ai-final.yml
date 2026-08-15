@@ -1,0 +1,100 @@
+name: Validate final Business AI snapshot
+
+on:
+  push:
+    branches:
+      - agent/business-ai-catalog
+    paths:
+      - ".github/workflows/tmp-validate-business-ai-final.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/business-ai-catalog
+          fetch-depth: 0
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.4"
+          bundler-cache: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: python3 -m pip install pytest pyyaml
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check public repo hygiene
+        run: python3 scripts/check_public_repo.py
+
+      - name: Check generated artifacts
+        run: python3 scripts/generate_atlas_artifacts.py --check
+
+      - name: Run Python tests
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
+
+      - name: Generate DAMA pages
+        run: node scripts/generate_dama_pages.js
+
+      - name: Build Jekyll site
+        run: bundle exec jekyll build --trace
+
+      - name: Check changed content quality
+        run: python3 scripts/content_quality.py check --site-dir _site --changed-from origin/main
+
+      - name: Check local links
+        run: python3 scripts/check_links.py _site
+
+      - name: Check SEO metadata
+        run: python3 scripts/check_seo.py _site
+
+      - name: Check indexing policy
+        run: python3 scripts/check_indexing_policy.py --site-dir _site --fail-on-critical
+
+      - name: Check sitemap policy
+        run: python3 scripts/check_sitemap_policy.py --site-dir _site --repo-dir . --fail-on-critical
+
+      - name: Check date consistency
+        run: python3 scripts/check_date_consistency.py --site-dir _site --repo-dir . --fail-on-critical
+
+      - name: Check content quality
+        run: python3 scripts/check_content_quality.py --fail-on-critical
+
+      - name: Audit indexability
+        run: python3 scripts/audit_indexability.py --site-dir _site --fail-on-critical
+
+      - name: Audit internal links
+        run: python3 scripts/audit_internal_links.py --site-dir _site
+
+      - name: Audit accessibility and semantic HTML
+        run: python3 scripts/accessibility_audit.py --site-dir _site --fail-on-critical
+
+      - name: Validate AI-readable endpoints
+        run: python3 scripts/validate_ai_endpoints.py _site
+
+      - name: Remove temporary validation workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/tmp-validate-business-ai-final.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "remove temporary Business AI validation workflow"
+          git push origin HEAD:agent/business-ai-catalog
