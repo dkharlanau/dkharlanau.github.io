@@ -6,6 +6,11 @@
 
 <head>
   {% include head.html %}
+  {% if page.ddd_framework %}
+  <link rel="stylesheet" href="{{ '/assets/ddd-framework.css' | relative_url }}" />
+  <link rel="describedby" type="application/json" href="{{ '/ddd/framework.json' | absolute_url }}" title="DDD for Acting Systems machine-readable framework" />
+  <link rel="alternate" type="text/markdown" href="{{ '/ddd/agent-context.md' | absolute_url }}" title="DDD for Acting Systems agent context" />
+  {% endif %}
   {% if page.url contains '/labs/' %}
   <link rel="stylesheet" href="{{ '/assets/research-canvas.css' | relative_url }}" />
   {% endif %}
