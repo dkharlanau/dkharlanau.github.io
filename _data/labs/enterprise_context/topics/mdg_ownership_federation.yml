@@ -1,0 +1,308 @@
+id: TOPIC-MDG-OWNERSHIP-FEDERATION
+type: research_topic
+title: "MDG Ownership and Federation"
+summary: "A decision model for separating core master-data ownership from application-specific ownership, with current federated MDG boundaries, owner determination, orchestration, and logistics examples."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-15"
+updated_at: "2026-08-15"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/ownership/"
+source_reviewed_at: "2026-08-15"
+
+business_question: "Who has the right to decide each part of a shared master-data object, and how do central and application owners coordinate without creating duplicate truth?"
+
+maturity:
+  gates_complete: 5
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: planned
+
+memory_model:
+  phrase: "Core Identity → Owner Determination → Application Enrichment → Confirmation → Central State → Consumers"
+  design_rule: "Central governance does not mean central ownership of every attribute. Decide ownership at attribute-group level before designing workflow."
+
+concepts:
+  - id: TERM-MDG-CORE-DATA-OWNER
+    type: term
+    title: "Core Data Owner"
+    definition: "In federated MDG, the system that owns the core attributes of the master-data domain and orchestrates the federation process."
+    current_boundary: "SAP documents one core data owner in the federated process."
+    responsibilities:
+      - "Own the core attribute set."
+      - "Determine and contact relevant application data owners."
+      - "Orchestrate and monitor the federation process."
+      - "Keep the required central state and replicate it to related systems."
+    source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025]
+  - id: TERM-MDG-APPLICATION-DATA-OWNER
+    type: term
+    title: "Application Data Owner"
+    definition: "In federated MDG, a system that owns selected application-specific attributes and returns its revision or confirmation to the core data owner."
+    responsibilities:
+      - "Maintain the application-specific attributes it owns."
+      - "Review or enrich changes requested by the core process."
+      - "Return updated data or confirmation to the core data owner."
+    source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025]
+  - id: STEP-MDG-OWNER-DETERMINATION
+    type: process_step
+    title: "Owner Determination"
+    definition: "A federated-process step used after validation to determine which additional data owners must participate."
+    source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025]
+
+current_product_boundary:
+  documented_scope: "Federated MDG is part of cloud-ready mode. Current SAP documentation describes Business Partner federation and requires the data-ownership configuration for the participating systems."
+  process_families:
+    - "Single Processing"
+    - "Mass Processing"
+    - "Consolidation"
+    - "Decentralized maintenance"
+  architecture_warning: "Use federation as a product pattern only where the documented release supports it. The ownership model itself is still useful as an architecture technique for other master-data domains, but that does not make those domains product-supported federated MDG scenarios."
+  source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025, SRC-SAP-MDG-FEDERATED-PROCESS-2025]
+
+ownership_layers:
+  - layer: "Core identity"
+    question: "Which attributes must mean the same thing everywhere?"
+    examples:
+      - "Legal / business name"
+      - "Core address and communication identity"
+      - "Tax or registration identifiers according to policy"
+      - "Global Business Partner identity"
+    owner_pattern: "Core data owner"
+  - layer: "Application-specific extension"
+    question: "Which attributes exist because one application process needs them?"
+    examples:
+      - "Customer sales-area data"
+      - "Supplier purchasing-organization data"
+      - "Company-code-specific accounting data"
+      - "Local operational settings"
+    owner_pattern: "Relevant application data owner"
+  - layer: "Reference and policy data"
+    question: "Which values constrain all owners?"
+    examples:
+      - "Country / region codes"
+      - "Organizational structures"
+      - "Allowed role or classification values"
+    owner_pattern: "Enterprise reference-data or configuration owner"
+  - layer: "Derived / observed data"
+    question: "Is the value a governance decision or a system result?"
+    examples:
+      - "Calculated score"
+      - "Usage statistic"
+      - "Transactional status"
+    owner_pattern: "Source application or calculation service; do not govern as manual master data by default"
+
+bp_ownership_example:
+  object: MD-BP-BUSINESS-PARTNER
+  core_owner:
+    title: "Enterprise BP Core Owner"
+    attribute_groups:
+      - "Global identity"
+      - "Name"
+      - "Core addresses"
+      - "Core tax / registration identity according to enterprise policy"
+  sales_owner:
+    title: "Sales Application Data Owner"
+    object_extension: MD-BP-CUSTOMER
+    attribute_groups:
+      - "Sales-area extension"
+      - "Shipping conditions"
+      - "Delivery priority"
+      - "Sales partner / commercial settings"
+    business_proof: "Customer can be used in the intended sales area."
+  procurement_owner:
+    title: "Procurement Application Data Owner"
+    object_extension: MD-BP-SUPPLIER
+    attribute_groups:
+      - "Purchasing-organization extension"
+      - "Order currency / purchasing terms where applicable"
+      - "Partner functions"
+      - "Purchasing controls"
+    business_proof: "Supplier can be used in the intended purchasing organization."
+  finance_owner:
+    title: "Finance Application Data Owner"
+    attribute_groups:
+      - "Company-code-specific accounting data"
+      - "Payment and reconciliation settings according to business design"
+    business_proof: "The partner supports the intended posting, billing, invoice, or payment process."
+  evidence_note: "The exact enterprise ownership split is a design decision. SAP documentation verifies that customer sales data and supplier purchasing data are application-specific organizational layers and that federated MDG distinguishes core and application data owners."
+  source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025, SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+
+federation_flow:
+  - order: 1
+    id: STEP-MDG-FED-REQUEST
+    title: "Create or change core data"
+    owner: "Core Data Owner or initiating system according to the selected process"
+    result: "A governed BP change enters the process."
+  - order: 2
+    id: STEP-MDG-FED-VALIDATE
+    title: "Validate core state"
+    owner: "Core Data Owner"
+    result: "The process is ready to determine additional owners."
+  - order: 3
+    id: STEP-MDG-OWNER-DETERMINATION
+    title: "Determine application owners"
+    owner: "Core Data Owner"
+    result: "Relevant application data owners are selected from configured ownership rules."
+  - order: 4
+    id: STEP-MDG-FED-REVISE
+    title: "Revise application-owned data"
+    owner: "Application Data Owner(s)"
+    result: "Each owner enriches or confirms the attributes in its scope."
+  - order: 5
+    id: STEP-MDG-FED-CONSOLIDATE
+    title: "Collect confirmations and continue governance"
+    owner: "Core Data Owner"
+    result: "The core process receives the owner responses and continues to its final controlled state."
+  - order: 6
+    id: STEP-MDG-FED-REPLICATE
+    title: "Replicate and monitor"
+    owner: "Core / integration operations according to architecture"
+    result: "Related systems receive the approved state and exceptions are monitored."
+  source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025, SRC-SAP-MDG-FEDERATED-PROCESS-2025]
+
+ownership_decision_matrix:
+  - question: "Does the value identify the object across applications?"
+    if_yes: "Candidate for core ownership."
+    if_no: "Continue to application-purpose check."
+  - question: "Does the value exist only because one business application or organizational level needs it?"
+    if_yes: "Candidate for application data ownership."
+    if_no: "Check whether it is enterprise reference data, derived data, or another shared domain."
+  - question: "Would a central team understand the business context well enough to approve the value?"
+    if_yes: "Central ownership may be practical."
+    if_no: "Keep decision rights with the application domain and orchestrate the shared object."
+  - question: "Can two owners update the same attribute?"
+    if_yes: "The ownership model is ambiguous. Define authority, conflict rules, and system of record before workflow."
+    if_no: "Proceed with the explicit owner boundary."
+  - question: "What happens if an application owner is unavailable or rejects the change?"
+    if_yes: "Define timeout, escalation, rejection, and compensation behavior."
+    if_no: "The operating model is incomplete."
+
+anti_patterns:
+  - id: FAIL-MDG-ONE-TEAM-OWNS-EVERYTHING
+    type: failure_mode
+    title: "One central team owns every field"
+    symptom: "Central stewards approve application-specific values they do not use or understand."
+    consequence: "Slow cycle time, weak accountability, and local repair after activation."
+    correction: "Separate core identity from application-specific decision rights."
+  - id: FAIL-MDG-MULTIPLE-TRUTHS
+    type: failure_mode
+    title: "Multiple systems claim authority for the same attribute"
+    symptom: "Values oscillate after replication or local updates overwrite central changes."
+    consequence: "No stable source of truth and repeated reconciliation incidents."
+    correction: "Define one authoritative owner and an explicit synchronization pattern."
+  - id: FAIL-MDG-WORKFLOW-BEFORE-OWNERSHIP
+    type: failure_mode
+    title: "Workflow designed before ownership"
+    symptom: "Approval steps follow the organization chart instead of attribute decision rights."
+    consequence: "Approval maze with unclear accountability."
+    correction: "Map attribute groups to owners first, then derive process steps."
+  - id: FAIL-MDG-CORE-EQUALS-COMPLETE
+    type: failure_mode
+    title: "Core BP is treated as complete Customer or Supplier"
+    symptom: "BP exists centrally but Sales or Procurement still cannot transact."
+    consequence: "Teams blame integration while the application extension is missing."
+    correction: "Track business readiness separately for core and application-specific data."
+
+synthetic_case:
+  id: SCN-MDG-GTI-FEDERATED-SUPPLIER
+  type: scenario
+  title: "GTI: federated onboarding of a German supplier"
+  synthetic: true
+  product_boundary: "Conceptual learning case based on current Business Partner federation."
+  business_goal: "Create one trusted BP identity and let Procurement and Finance own their application-specific data without duplicating the core record."
+  flow:
+    - "Core owner creates legal identity, name, address, and enterprise identifiers."
+    - "Owner determination identifies Procurement and Finance as required application owners."
+    - "Procurement enriches purchasing-organization data for DE10."
+    - "Finance enriches company-code data for DE10."
+    - "The core process collects confirmations and completes the controlled state."
+    - "Replication sends the required state to consumers."
+    - "Business proof creates a purchase order and processes an accounting-relevant supplier transaction."
+  injected_failure:
+    symptom: "BP is active, but Purchase Order creation fails for purchasing organization DE10."
+    likely_branch: "Check whether the Procurement application-data-owner step supplied and confirmed the DE10 purchasing extension before treating it as a replication outage."
+
+assessment_cases:
+  - id: TEST-MDG-OWN-EXPLAIN
+    type: test_case
+    level: explain
+    prompt: "What is the difference between a core data owner and an application data owner?"
+    answer_shape: ["core attributes", "application-specific attributes", "orchestration", "confirmation / revision", "single authority per attribute"]
+  - id: TEST-MDG-OWN-DESIGN
+    type: test_case
+    level: design
+    prompt: "A group has central BP governance, Salesforce for Sales, and two S/4HANA systems for Procurement and Finance. How do you start the ownership design?"
+    answer_shape: ["attribute groups", "core versus application-specific", "system authority", "owner determination", "replication", "conflict rules", "business proof"]
+  - id: TEST-MDG-OWN-DIAGNOSE
+    type: test_case
+    level: diagnose
+    prompt: "The core BP is approved, but the supplier cannot be used in purchasing organization DE10. Is this automatically an integration failure?"
+    answer_shape: ["no", "application owner / supplier extension", "process state", "target completeness", "then integration evidence"]
+  - id: TEST-MDG-OWN-COMPARE
+    type: test_case
+    level: compare
+    prompt: "Central governance versus federated ownership: what changes?"
+    answer_shape: ["decision rights", "attribute boundary", "orchestration", "application accountability", "operating complexity", "product scope"]
+
+relations:
+  - subject: TERM-MDG-CORE-DATA-OWNER
+    predicate: orchestrates
+    object: STEP-MDG-OWNER-DETERMINATION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-MDG-FEDERATED-WORKING-2025]
+  - subject: TERM-MDG-APPLICATION-DATA-OWNER
+    predicate: owned_by
+    object: "Application domain"
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: MD-BP-CUSTOMER
+    predicate: owned_by
+    object: "Sales application data owner"
+    evidence_type: synthetic_assumption
+    confidence: medium
+  - subject: MD-BP-SUPPLIER
+    predicate: owned_by
+    object: "Procurement application data owner"
+    evidence_type: synthetic_assumption
+    confidence: medium
+  - subject: ATTR-CUST-SALES-AREA
+    predicate: owned_by
+    object: "Sales application data owner"
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+  - subject: ATTR-SUPP-PURCH-ORG
+    predicate: owned_by
+    object: "Procurement application data owner"
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025]
+  - subject: SCN-MDG-GTI-FEDERATED-SUPPLIER
+    predicate: applies_to
+    object: MD-BP-SUPPLIER
+    evidence_type: synthetic_example
+    confidence: high
+
+source_refs:
+  - SRC-SAP-MDG-FEDERATED-WORKING-2025
+  - SRC-SAP-MDG-FEDERATED-PROCESS-2025
+  - SRC-SAP-S4-BP-MASTER-DATA-STRUCTURE-2025
+
+tags:
+  - sap
+  - mdg
+  - ownership
+  - federated-mdg
+  - business-partner
+  - customer
+  - supplier
+  - governance
+  - operating-model
