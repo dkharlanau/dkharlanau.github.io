@@ -1,0 +1,39 @@
+---
+layout: default
+title: "Handling Units, Packing & Labels — EWM Decision Map"
+description: "A practical SAP EWM map for handling units, nested packaging, packaging specifications, packing work centers, labels, repacking and reconciliation."
+permalink: /labs/enterprise-context/ewm/handling-units-packing/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+enterprise_context_graph: true
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, ewm, handling-unit, packing, packaging, labels, sscc]
+---
+{% assign map = site.data.labs.enterprise_context.ewm.handling_units_packing %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/ewm/">EWM</a></li><li aria-current="page">Handling Units & Packing</li></ol></nav>
+
+<div class="research-canvas context-graph">
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Enterprise Context / Physical Logistics Unit</p><h1>{{ map.title }}</h1><p>{{ map.summary }}</p><a class="research-canvas__button" href="#hu-anatomy">Open the HU map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></div><div class="research-canvas__signal"><p>Execution map</p><div class="research-canvas__signal-line"><span>01</span><strong>{{ map.hu_anatomy | size }}</strong><small>HU dimensions</small></div><div class="research-canvas__signal-line"><span>02</span><strong>{{ map.packing_components | size }}</strong><small>Packing components</small></div><div class="research-canvas__signal-line"><span>03</span><strong>{{ map.failure_modes | size }}</strong><small>Failure patterns</small></div><em>Source checked {{ map.verified_at }}</em></div></header>
+
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span><p><strong>Lead rule:</strong> {{ map.lead_rule }}</p><p><strong>Memory path:</strong> {{ map.memory_path }}</p></section>
+
+<section class="research-canvas__inventory" id="hu-anatomy" data-reveal><header><p class="research-canvas__eyebrow">HU anatomy</p><h2>An HU is more than a scannable number.</h2><p>Think about the package as one warehouse object with physical and digital meaning.</p></header><div class="research-route-list">{% for item in map.hu_anatomy %}<article><span>HU</span><strong>{{ item.part }}</strong><small>{{ item.meaning }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Packing model</p><h2>Separate packing rules from packing execution.</h2></header><div class="research-route-list">{% for item in map.packing_components %}<article><span>PACK</span><strong>{{ item.title }}</strong><small>{{ item.role }}</small><p><b>Decision:</b> {{ item.decision }}</p></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Identity</p><h2>External HU, internal HU, nested HU and reprint are different decisions.</h2></header><div class="research-route-list">{% for item in map.identity_patterns %}<article><span>ID</span><strong>{{ item.title }}</strong><small>{{ item.question }}</small><p><b>Rule:</b> {{ item.rule }}</p></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Lifecycle</p><h2>Keep physical packaging and EWM state together.</h2></header><div class="research-route-list">{% for item in map.lifecycle %}<article><span>{{ item.step }}</span><strong>{{ item.control }}</strong></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Diagnostics</p><h2>A readable label can still describe the wrong package.</h2></header><div class="research-route-list">{% for item in map.failure_modes %}<article><span>!</span><strong>{{ item.symptom }}</strong><small><b>Check first:</b> {{ item.check_first }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Operations</p><h2>Measure packing quality, not only packing speed.</h2></header><div class="research-route-list">{% for item in map.kpis %}<article><span>KPI</span><strong>{{ item.title }}</strong><small>{{ item.meaning }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Assessment lens</p><h2>Explain identity, rule and execution separately.</h2></header><div class="research-route-list">{% for item in map.assessment_cards %}<article><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.answer }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Connected maps</p><h2>HU state connects scanning, packing and automation.</h2></header><div class="research-route-list">{% for item in map.related %}<a href="{{ item.url }}"><span>→</span><strong>{{ item.title }}</strong></a>{% endfor %}</div><p><a href="/labs/enterprise-context/data/topics.json">Machine-readable topic graph →</a></p></section>
+</div>
