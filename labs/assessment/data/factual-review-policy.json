@@ -1,8 +1,9 @@
 {
   "id": "sap-lead-factual-review-policy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
-  "purpose": "Review release-sensitive SAP claims against primary sources before a draft page can be recommended for human verification or publication.",
+  "purpose": "Review externally checkable claims with the right primary-source class before a draft page can be recommended for human verification or publication.",
+  "evidence_profile": "/labs/assessment/data/evidence-profile.json",
   "review_states": [
     "not_reviewed",
     "source_supported",
@@ -10,9 +11,18 @@
     "release_scope_unclear",
     "needs_human_judgement"
   ],
+  "evidence_classes": [
+    "sap_product_primary",
+    "standard_or_spec_primary",
+    "research_primary",
+    "author_heuristic"
+  ],
   "rules": [
     "Use SAP primary sources for SAP product behavior and release-sensitive statements.",
+    "Use the owning specification or standards body for protocol and interoperability claims.",
+    "Use original research for empirical or scientific claims where research evidence is material.",
     "Keep documented facts separate from consultant heuristics, design guidance, and synthetic examples.",
+    "Author heuristics are allowed when clearly presented as judgement; they are not counted as source-supported facts.",
     "Record product and release scope when the behavior can differ by deployment or release.",
     "A source-supported claim is not the same as a human-verified page.",
     "Do not change verified, robots, sitemap, or publication status from this review alone.",
@@ -25,6 +35,7 @@
       "route",
       "claim",
       "claim_type",
+      "evidence_class",
       "status",
       "source_refs",
       "product_scope",
@@ -40,5 +51,5 @@
       "operating_heuristic"
     ]
   },
-  "promotion_boundary": "This layer can prove that a claim is supported by a current primary source. It cannot declare the complete page verified or public."
+  "promotion_boundary": "This layer can prove that an externally checkable claim is supported by an appropriate primary source. It cannot declare the complete page verified or public."
 }
