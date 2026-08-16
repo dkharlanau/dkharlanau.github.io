@@ -1,6 +1,6 @@
 {
   "id": "sap-lead-candidate-generation-seeds",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "updated_at": "2026-08-16",
   "purpose": "Whitelist graph failure modes, their evidence class, and primary-source references for deterministic assessment-question candidate generation.",
   "graphs": [
@@ -39,7 +39,8 @@
           "SRC-SAP-BIL-PROCESSING"
         ]
       },
-      "evidence_class": "sap_product_primary"
+      "evidence_class": "sap_product_primary",
+      "failure_prefix": "FAIL-SD-BILLING-"
     },
     {
       "path": "_data/labs/enterprise_context/graphs/integration_operations.yml",
@@ -77,11 +78,38 @@
           "SRC-SAP-INTOPS-ERROR-DESIGN"
         ]
       },
-      "evidence_class": "sap_product_primary"
+      "evidence_class": "sap_product_primary",
+      "failure_prefix": "INTOPS-FAIL-"
+    },
+    {
+      "path": "_data/labs/enterprise_context/graphs/production.yml",
+      "human_ref": "/labs/enterprise-context/production/",
+      "track": "procurement-logistics",
+      "level": "diagnose",
+      "candidate_prefix": "CAND-PP",
+      "failure_prefix": "PP-FAIL-",
+      "failure_sources": {
+        "PP-FAIL-WRONG-QUANTITY": [
+          "SRC-SAP-PP-PLANNING"
+        ],
+        "PP-FAIL-WRONG-DATES": [
+          "SRC-SAP-PP-PLANNING"
+        ],
+        "PP-FAIL-GR": [
+          "SRC-SAP-PP-GR"
+        ],
+        "PP-FAIL-COST": [
+          "SRC-SAP-PP-SETTLEMENT",
+          "SRC-SAP-PP-SETTLEMENT-RULE"
+        ]
+      },
+      "evidence_class": "sap_product_primary",
+      "selection_reason": "These failure paths add planning, receipt, and financial-close reasoning not already represented by the existing Production structure and staging cases."
     }
   ],
   "dedup_threshold": 0.55,
   "dedup_rule": "Exact graph-ref overlap is a duplicate across all tracks. Lexical similarity is evaluated only against published cases in the same normalized assessment track.",
   "publication_rule": "Generated records never enter case-sets.json automatically. Only a separately reviewed and promoted case can become part of the published assessment dataset.",
-  "evidence_gate_rule": "A seed graph is eligible only when its evidence class is allowed by the route profile, required factual review is source-supported, and every referenced source is source_verified."
+  "evidence_gate_rule": "A seed graph is eligible only when its evidence class is allowed by the route profile, required factual review is source-supported, and every referenced source is source_verified.",
+  "seed_selection_rule": "Add a graph only when its route passes the evidence gate and at least one selected failure path adds a new diagnostic signal. Prefer explicit failure-level source references or a primary source whose scope directly supports the selected failure path."
 }

@@ -99,12 +99,10 @@ def failure_by_id(graph: dict[str, Any], failure_id: str) -> dict[str, Any]:
     raise ValueError(f"Failure mode {failure_id} not found in graph {graph.get('id')}")
 
 
-def candidate_id(prefix: str, failure_id: str) -> str:
+def candidate_id(prefix: str, failure_id: str, failure_prefix: str | None = None) -> str:
     suffix = failure_id
-    for marker in ("FAIL-SD-BILLING-", "INTOPS-FAIL-"):
-        if suffix.startswith(marker):
-            suffix = suffix[len(marker):]
-            break
+    if failure_prefix and suffix.startswith(failure_prefix):
+        suffix = suffix[len(failure_prefix):]
     suffix = re.sub(r"[^A-Z0-9]+", "-", suffix.upper()).strip("-")
     return f"{prefix}-{suffix}"
 
@@ -202,7 +200,7 @@ def build_candidate(
     expected = build_expected_points(failure)
     max_similarity, matches = existing_case_similarity(symptom, failure_id, seed["track"], cases, threshold)
     status = "rejected_duplicate" if matches else "candidate"
-    cid = candidate_id(seed["candidate_prefix"], failure_id)
+    cid = candidate_id(seed["candidate_prefix"], failure_id, seed.get("failure_prefix"))
     title = symptom.rstrip(".")
     if len(title) > 92:
         title = title[:89].rstrip() + "..."
@@ -279,7 +277,7 @@ def generate() -> dict[str, Any]:
 
     return {
         "id": "sap-lead-question-candidate-inventory",
-        "version": "1.1.0",
+        "version": "1.2.0",
         "updated_at": seeds["updated_at"],
         "published_case_count": len(cases),
         "publication_boundary": "Candidate inventory is review-stage only and is not referenced by case-sets.json.",

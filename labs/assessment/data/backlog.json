@@ -397,12 +397,24 @@
         "scripts/generate_assessment_human_review_queue.py"
       ],
       "working_rule": "Use source-supported Promotion Readiness routes to order page-level human review. Never change verified, status, robots, sitemap, or publication state automatically."
+    },
+    {
+      "id": "LOOP-028",
+      "priority": "P1",
+      "title": "Evidence-gated Production candidate expansion",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/data/candidate-generation-seeds.json",
+        "/labs/assessment/data/question-candidates.json",
+        "scripts/generate_assessment_candidates.py"
+      ],
+      "working_rule": "Expand question generation only where a source-supported graph adds a new diagnostic signal. Duplicate rejection and human promotion remain mandatory."
     }
   ],
   "next_iteration_themes": [
-    "complete the first core human-review wave and capture page-level findings separately from factual-review claims",
-    "remove brittle practice-count assertions before expanding the graph-backed candidate corpus",
-    "extend candidate generation into evidence-complete gaps with aggressive duplicate rejection",
-    "use real feedback to influence practice selection without changing factual truth"
+    "review new Production candidates and promote only clearly non-duplicate Lead cases through an explicit human-reviewed repository change",
+    "complete the first core human-review wave and record page-level findings separately from factual-review claims",
+    "inspect Procurement, ATP, EWM, and MDG graphs for the next evidence-complete candidate gaps",
+    "use real assessment feedback to influence practice selection without changing factual truth"
   ]
 }

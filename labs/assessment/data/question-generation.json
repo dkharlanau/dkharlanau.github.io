@@ -1,6 +1,6 @@
 {
   "id": "sap-lead-question-generation",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "updated_at": "2026-08-16",
   "purpose": "Generate review-stage practice candidates from existing graph relationships and failure modes without inventing SAP behavior or silently expanding the published case set.",
   "candidate_schema": "/labs/assessment/data/candidate-question-schema.json",
@@ -87,7 +87,8 @@
     "Avoid cases where the answer is one product name or one transaction code.",
     "Prefer a clear first wrong decision over a long list of unrelated checks.",
     "A rejected duplicate remains visible in the generated inventory so the generator's negative decision is reviewable.",
-    "Do not generate from a graph whose route fails its evidence profile or whose referenced sources are not source_verified."
+    "Do not generate from a graph whose route fails its evidence profile or whose referenced sources are not source_verified.",
+    "Seed expansion must add a new reasoning signal, not only another wording of an already published symptom."
   ],
   "deduplication": {
     "exact_rule": "An exact failure-mode graph reference already present in a published case is a duplicate regardless of track.",
@@ -100,7 +101,7 @@
     "Promotion requires an explicit human-reviewed repository change that creates or updates a published case and its manifest count.",
     "The published case count must remain unchanged during candidate generation and review."
   ],
-  "current_scope": "The first deterministic generator pass uses whitelisted Billing and Integration Operations failure modes to prove the evidence, deduplication, and review pipeline before adding more graphs.",
+  "current_scope": "Deterministic candidate generation now covers Billing, Integration Operations, and selected Production failure modes. Production expansion is limited to MRP quantity/date reasoning, manufacturing-order goods receipt, and financial settlement where source support is explicit.",
   "evidence_gate": {
     "profile_contract": "/labs/assessment/data/evidence-profile.json",
     "factual_review_contract": "/labs/assessment/data/factual-review.json",

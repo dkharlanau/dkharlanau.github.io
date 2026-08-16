@@ -1,18 +1,18 @@
 {
   "id": "sap-lead-question-candidate-inventory",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "updated_at": "2026-08-16",
   "published_case_count": 59,
   "publication_boundary": "Candidate inventory is review-stage only and is not referenced by case-sets.json.",
   "evidence_gate": {
     "policy": "/labs/assessment/data/evidence-profile.json",
     "factual_review": "/labs/assessment/data/factual-review.json",
-    "eligible_seed_graphs": 2,
+    "eligible_seed_graphs": 3,
     "blocked_seed_graphs": 0,
     "all_emitted_candidates_evidence_eligible": true
   },
-  "candidate_count": 2,
-  "rejected_duplicate_count": 12,
+  "candidate_count": 5,
+  "rejected_duplicate_count": 13,
   "items": [
     {
       "id": "CAND-BIL-CORRECTION",
@@ -1469,6 +1469,403 @@
         "matching_case_ids": [
           "ASSESS-INTOPS-004"
         ]
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-PP-COST",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "procurement-logistics",
+      "level": "diagnose",
+      "title": "Physically completed order still carries unexpected cost, variance, WIP, or settlement ba...",
+      "prompt": "Synthetic assessment candidate. Physically completed order still carries unexpected cost, variance, WIP, or settlement balance. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: actual component and activity postings, goods-receipt credits, order status.",
+        "Continue the hypothesis tree with: settlement rule and receiver, variance/WIP and period-end sequence.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not treat technical completion as proof of financial completion.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-PP-PRODUCTION-PLANNING-EXECUTION",
+        "PP-FAIL-COST"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/production/"
+      ],
+      "source_refs": [
+        "SRC-SAP-PP-SETTLEMENT",
+        "SRC-SAP-PP-SETTLEMENT-RULE"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.PP-FAIL-COST.symptom",
+          "source_refs": [
+            "SRC-SAP-PP-SETTLEMENT",
+            "SRC-SAP-PP-SETTLEMENT-RULE"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.PP-FAIL-COST.first_checks",
+          "source_refs": [
+            "SRC-SAP-PP-SETTLEMENT",
+            "SRC-SAP-PP-SETTLEMENT-RULE"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.PP-FAIL-COST.first_checks",
+          "source_refs": [
+            "SRC-SAP-PP-SETTLEMENT",
+            "SRC-SAP-PP-SETTLEMENT-RULE"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-PP-SETTLEMENT",
+            "SRC-SAP-PP-SETTLEMENT-RULE"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-PP-SETTLEMENT",
+            "SRC-SAP-PP-SETTLEMENT-RULE"
+          ]
+        }
+      ],
+      "evidence_gate": {
+        "eligible": true,
+        "route": "/labs/enterprise-context/production/",
+        "evidence_class": "sap_product_primary",
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_required": true,
+        "route_review_status": "source_supported",
+        "route_reviewed_claims": 2,
+        "route_reviewed_at": "2026-08-16",
+        "verified_source_count": 4,
+        "source_status": "source_verified"
+      },
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "05abccd0b11ea92340dbbbf4",
+      "dedup": {
+        "max_similarity": 0.4141,
+        "threshold": 0.55,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-PP-GR",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "procurement-logistics",
+      "level": "diagnose",
+      "title": "Production is finished but stock or warehouse receipt is missing or wrong",
+      "prompt": "Synthetic assessment candidate. Production is finished but stock or warehouse receipt is missing or wrong. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: order and delivery-completed status, goods-receipt relevance, quantity and UoM.",
+        "Continue the hypothesis tree with: storage/batch/quality context, automatic versus manual GR, EWM inbound flow where used.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not mark the order complete while the inventory event remains unexplained.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-PP-PRODUCTION-PLANNING-EXECUTION",
+        "PP-FAIL-GR"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/production/"
+      ],
+      "source_refs": [
+        "SRC-SAP-PP-GR"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.PP-FAIL-GR.symptom",
+          "source_refs": [
+            "SRC-SAP-PP-GR"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.PP-FAIL-GR.first_checks",
+          "source_refs": [
+            "SRC-SAP-PP-GR"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.PP-FAIL-GR.first_checks",
+          "source_refs": [
+            "SRC-SAP-PP-GR"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-PP-GR"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-PP-GR"
+          ]
+        }
+      ],
+      "evidence_gate": {
+        "eligible": true,
+        "route": "/labs/enterprise-context/production/",
+        "evidence_class": "sap_product_primary",
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_required": true,
+        "route_review_status": "source_supported",
+        "route_reviewed_claims": 2,
+        "route_reviewed_at": "2026-08-16",
+        "verified_source_count": 4,
+        "source_status": "source_verified"
+      },
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "9ee06f6391112d7e94744d31",
+      "dedup": {
+        "max_similarity": 0.4571,
+        "threshold": 0.55,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-PP-WRONG-DATES",
+      "status": "rejected_duplicate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "procurement-logistics",
+      "level": "diagnose",
+      "title": "Production proposal or order dates do not match the business need",
+      "prompt": "Synthetic assessment candidate. Production proposal or order dates do not match the business need. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: requirement date, in-house production time, scheduling parameters.",
+        "Continue the hypothesis tree with: routing times, factory calendar, capacity/scheduling boundary.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not manually move dates until basic-date and operation-scheduling inputs are separated.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-PP-PRODUCTION-PLANNING-EXECUTION",
+        "PP-FAIL-WRONG-DATES"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/production/"
+      ],
+      "source_refs": [
+        "SRC-SAP-PP-PLANNING"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.PP-FAIL-WRONG-DATES.symptom",
+          "source_refs": [
+            "SRC-SAP-PP-PLANNING"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.PP-FAIL-WRONG-DATES.first_checks",
+          "source_refs": [
+            "SRC-SAP-PP-PLANNING"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.PP-FAIL-WRONG-DATES.first_checks",
+          "source_refs": [
+            "SRC-SAP-PP-PLANNING"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-PP-PLANNING"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-PP-PLANNING"
+          ]
+        }
+      ],
+      "evidence_gate": {
+        "eligible": true,
+        "route": "/labs/enterprise-context/production/",
+        "evidence_class": "sap_product_primary",
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_required": true,
+        "route_review_status": "source_supported",
+        "route_reviewed_claims": 2,
+        "route_reviewed_at": "2026-08-16",
+        "verified_source_count": 4,
+        "source_status": "source_verified"
+      },
+      "generation_reason": "Rejected before review because the failure symptom overlaps published case(s): ASSESS-FIN-005, ASSESS-PP-002.",
+      "dedup_signature": "d4f91f7fe2b3b1d3d0e86b02",
+      "dedup": {
+        "max_similarity": 0.5778,
+        "threshold": 0.55,
+        "matching_case_ids": [
+          "ASSESS-FIN-005",
+          "ASSESS-PP-002"
+        ]
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-PP-WRONG-QUANTITY",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "procurement-logistics",
+      "level": "diagnose",
+      "title": "MRP creates too much, too little, or repeated production supply",
+      "prompt": "Synthetic assessment candidate. MRP creates too much, too little, or repeated production supply. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: requirement quantity and date, stock and existing receipts, planning strategy.",
+        "Continue the hypothesis tree with: lot sizing, safety stock or planning parameters, procurement type.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not resize the planned order before reconstructing the net requirement.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-PP-PRODUCTION-PLANNING-EXECUTION",
+        "PP-FAIL-WRONG-QUANTITY"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/production/"
+      ],
+      "source_refs": [
+        "SRC-SAP-PP-PLANNING"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.PP-FAIL-WRONG-QUANTITY.symptom",
+          "source_refs": [
+            "SRC-SAP-PP-PLANNING"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.PP-FAIL-WRONG-QUANTITY.first_checks",
+          "source_refs": [
+            "SRC-SAP-PP-PLANNING"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.PP-FAIL-WRONG-QUANTITY.first_checks",
+          "source_refs": [
+            "SRC-SAP-PP-PLANNING"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-PP-PLANNING"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-PP-PLANNING"
+          ]
+        }
+      ],
+      "evidence_gate": {
+        "eligible": true,
+        "route": "/labs/enterprise-context/production/",
+        "evidence_class": "sap_product_primary",
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_required": true,
+        "route_review_status": "source_supported",
+        "route_reviewed_claims": 2,
+        "route_reviewed_at": "2026-08-16",
+        "verified_source_count": 4,
+        "source_status": "source_verified"
+      },
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "7ded166a8076e17efb3b6181",
+      "dedup": {
+        "max_similarity": 0.4651,
+        "threshold": 0.55,
+        "matching_case_ids": []
       },
       "review": {
         "reviewer_note": "",
