@@ -1,0 +1,153 @@
+id: TOPIC-MDG-BRFPLUS-RULE-CATALOG
+type: research_topic
+title: "SAP MDG BRFplus Rule Catalog and Decision Design"
+summary: "A rule catalog that separates workflow routing decisions from data validation and derivation, with ownership, evidence, tests and change control for each rule."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/governance-engine/brfplus-rules/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "How should MDG rules be cataloged so workflow routing, data validation and value derivation remain explainable, testable and owned?"
+
+memory_model:
+  phrase: "Rule Intent → Inputs → Decision → Owner → Evidence → Tests → Change Control"
+  principle: "BRFplus can drive workflow decisions, but not every business rule belongs in the workflow decision table."
+
+rule_classes:
+  workflow_routing:
+    purpose: "Determine status, next step and expected agent(s) for rule-based workflow."
+    typical_inputs: [current-step, last-action, priority, rejection-reason, change-request-context]
+    outputs: [change-request-status, next-step, expected-agent]
+    owner: "Governance process owner"
+    test_focus: [happy-path, rejection, revision, parallel-step, activation-error]
+  validation:
+    purpose: "Reject or warn about an invalid business state."
+    typical_inputs: [field-values, entity-context, organizational-grain, cross-entity-values]
+    outputs: [message, severity, pass-fail]
+    owner: "Business rule owner"
+    test_focus: [valid-boundary, invalid-boundary, missing-data, conflicting-data]
+  derivation:
+    purpose: "Calculate a value from trusted inputs."
+    typical_inputs: [source-fields, organizational-context, reference-data]
+    outputs: [derived-value, provenance]
+    owner: "Business rule owner"
+    test_focus: [precedence, overwrite-policy, null-input, conflicting-source]
+  authorization_or_scope:
+    purpose: "Restrict who may change which object or grain."
+    typical_inputs: [role, organization, entity, action, sensitivity]
+    outputs: [allow-deny, scope]
+    owner: "Data owner and security owner"
+    test_focus: [positive-access, negative-access, cross-org-access]
+  duplicate_or_identity:
+    purpose: "Detect likely duplicate identity before creation or consolidation."
+    typical_inputs: [name, address, identifiers, tax-data, external-keys]
+    outputs: [candidate-set, score-or-decision]
+    owner: "Identity governance owner"
+    test_focus: [true-positive, false-positive, false-negative, ambiguous-candidate]
+
+catalog_fields:
+  required:
+    - rule-id
+    - business-statement
+    - rule-class
+    - domain
+    - grain
+    - change-request-types
+    - input-entities
+    - input-fields
+    - output-or-message
+    - execution-point
+    - severity
+    - business-owner
+    - technical-owner
+    - source-of-authority
+    - positive-test
+    - negative-test
+    - monitoring-signal
+    - change-history
+  optional:
+    - derived-field
+    - fallback
+    - emergency-override
+    - dependency-rule-ids
+    - consumer-impact
+
+example_rules:
+  - rule_id: MAT-PLANT-MRP-001
+    business_statement: "Plant MRP parameters must be complete before a planning-relevant Material extension can activate."
+    rule_class: validation
+    grain: "Material + Plant"
+    execution_point: "before final check / activation"
+    owner: "Plant planning data owner"
+    proof: "negative test with missing planning parameter; positive test with complete plant slice"
+  - rule_id: BP-SUP-BANK-002
+    business_statement: "A supplier bank-detail change requires a high-risk approval path."
+    rule_class: workflow_routing
+    grain: "Business Partner / Supplier"
+    execution_point: "after request classification"
+    owner: "Supplier governance process owner"
+    proof: "routing test proves sensitive change enters the expected approval step"
+  - rule_id: BP-SALES-DERIVE-003
+    business_statement: "A local sales attribute may be derived only when its source values and precedence are deterministic."
+    rule_class: derivation
+    grain: "Customer + Sales Area"
+    execution_point: "during data processing before final validation"
+    owner: "Sales master-data owner"
+    proof: "test precedence and no-overwrite case"
+
+workflow_decision_contract:
+  source_fact: "SAP rule-based workflow uses BRFplus decision tables to determine change-request status, next step and expected agents."
+  inputs_to_keep_visible:
+    - current-step
+    - last-action
+    - change-request-priority
+    - rejection-reason-where-used
+    - process-context
+  controls:
+    - "Every reachable step has an owner."
+    - "Every rejection/revision path terminates or returns to a defined step."
+    - "Activation error has a technical recovery path."
+    - "Parallel branches do not silently overwrite the same governed attributes."
+    - "No rule depends on undocumented magic values."
+
+change_management:
+  - "Treat rule changes as production behavior changes, not only Customizing edits."
+  - "Require before/after examples for high-impact decision-table changes."
+  - "Regression-test all affected CR types and paths."
+  - "Record owner, reason, effective date and rollback option."
+  - "Observe post-release routing, validation and exception rates for unexpected drift."
+
+anti_patterns:
+  - "A single BRFplus table mixes workflow routing, data validation and derived values."
+  - "Agent determination depends on individual usernames rather than durable responsibility."
+  - "Warnings are used where activation must be blocked."
+  - "The same rule is reimplemented in UI, backend and replication mapping with different semantics."
+  - "A rule has no business owner because IT configured it."
+
+assessment_cards:
+  - prompt: "What does BRFplus do in MDG rule-based workflow?"
+    answer: "It can determine the change-request status, next step and expected agents using workflow context. I keep this separate from data validation and derivation rules."
+  - prompt: "How do you make a decision table supportable?"
+    answer: "Give each rule a business statement, explicit inputs and outputs, owner, source of authority, positive and negative tests, and change history."
+  - prompt: "When is a warning wrong?"
+    answer: "When the business state is not allowed to become active. Then the control must block at a deterministic boundary."
+
+source_refs:
+  - SRC-SAP-MDG-RULE-WORKFLOW-2025
+  - SRC-SAP-MDG-RULE-WORKFLOW-TECH-2025
+  - SRC-SAP-MDG-CHANGE-REQUEST-CONFIG-2025
+relations:
+  - subject: TOPIC-MDG-BRFPLUS-RULE-CATALOG
+    predicate: requires
+    object: TOPIC-MDG-GOVERNANCE-PROCESS-ENGINE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-BRFPLUS-RULE-CATALOG
+    predicate: provides_context_to
+    object: TOPIC-MDG-CHANGE-REQUEST-DESIGN
+    evidence_type: reasoned_interpretation
+    confidence: high
