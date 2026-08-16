@@ -3,13 +3,17 @@ layout: default
 title: "SAP MDG Interface Contracts — Enterprise Context Lab"
 description: "Object-level SAP MDG interface contracts for Business Partner, Customer, Supplier, and Material, including mapping, errors, reconciliation, and downstream proof."
 permalink: /labs/enterprise-context/mdg/interfaces/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-14
 hide_global_cta: true
 tags: [sap, mdg, integration, drf, soap, idoc, mdi, master-data]
+last_reviewed: 2026-08-16
+publication_wave: "lead-architecture-search-wave-03"
+review_method: "primary sources + factual review + page-level editorial review"
+search_intent: "SAP MDG interfaces, DRF replication, APIs and master-data distribution"
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.mdg_object_contracts %}

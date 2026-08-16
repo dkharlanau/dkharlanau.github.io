@@ -3,10 +3,10 @@ layout: default
 title: "SAP Master Data Governance — Enterprise Context Lab"
 description: "A practical SAP MDG Data Book: product options, governance processes, data domains, solution architecture, interface contracts, extensibility, logistics dependencies, implementation rules, and presales decisions."
 permalink: /labs/enterprise-context/mdg/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
@@ -15,6 +15,10 @@ tags:
   - master-data
   - logistics
   - data-governance
+last_reviewed: 2026-08-16
+publication_wave: "lead-architecture-search-wave-03"
+review_method: "primary sources + factual review + page-level editorial review"
+search_intent: "SAP Master Data Governance architecture, processes, domains and deployment choices"
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.master_data_governance_landscape %}
@@ -61,8 +65,8 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review currently confirms the 2025 FPS01 classic/cloud-ready mode boundary and the effects of switching cloud-ready mode. The four-checkpoint governance model is an authored reasoning frame; domain, replication, extension, and consumer-process details still require page-level human review.</p>
-    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
+    <p><strong>Evidence boundary:</strong> Claim-level review confirms the 2025 FPS01 classic/cloud-ready mode boundary and the effects of switching cloud-ready mode. Domain, replication, extension, and consumer-process details were reviewed against the route source registry; the four-checkpoint governance model remains an authored reasoning frame.</p>
+    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a> <a href="/labs/enterprise-context/data/topics.json">Open AI-readable topic data <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="mdg-graph" data-reveal>

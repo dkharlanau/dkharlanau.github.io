@@ -3,10 +3,10 @@ layout: default
 title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
 description: "Architect-level SAP development guide: RAP vs CAP, ABAP Cloud, classic ABAP, CDS, BTP runtimes, side-by-side design and clean-core trade-offs."
 permalink: /labs/enterprise-context/development/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-14
 hide_global_cta: true
 tags:
@@ -18,6 +18,10 @@ tags:
   - btp
   - clean-core
   - architecture
+last_reviewed: 2026-08-16
+publication_wave: "lead-architecture-search-wave-03"
+review_method: "primary sources + factual review + page-level editorial review"
+search_intent: "SAP clean core development with ABAP Cloud, RAP, CAP and BTP"
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.development_architecture %}

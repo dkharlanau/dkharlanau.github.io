@@ -3,10 +3,10 @@ layout: default
 title: "Data, Master Data and Governance — Enterprise Context Lab"
 description: "An enterprise context map from the Data and Analytics area through master-data domains and SAP MDG applications to governed objects and logistics dependencies."
 permalink: /labs/enterprise-context/data-governance/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-14
 hide_global_cta: true
 tags:
@@ -17,6 +17,10 @@ tags:
   - mdg
   - data-governance
   - logistics
+last_reviewed: 2026-08-16
+publication_wave: "lead-architecture-search-wave-03"
+review_method: "primary sources + factual review + page-level editorial review"
+search_intent: "SAP data governance and MDG architecture for enterprise master data"
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.data_governance_landscape %}

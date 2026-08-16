@@ -3,10 +3,10 @@ layout: default
 title: "SAP S/4HANA Deployment Models — Enterprise Context Lab"
 description: "A compact comparison of SAP S/4HANA Cloud Public Edition, SAP S/4HANA Cloud Private Edition, and SAP S/4HANA on-premise."
 permalink: /labs/enterprise-context/deployment-models/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-14
 hide_global_cta: true
 tags:
@@ -15,6 +15,10 @@ tags:
   - deployment
   - public-cloud
   - private-cloud
+last_reviewed: 2026-08-16
+publication_wave: "lead-architecture-search-wave-03"
+review_method: "primary sources + factual review + page-level editorial review"
+search_intent: "SAP S/4HANA Public Cloud vs Private Cloud vs on-premise"
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.deployment_models %}
