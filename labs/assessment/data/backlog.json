@@ -17,10 +17,11 @@
     {"id":"LOOP-011","priority":"P1","title":"Focused review queue","status":"done","outputs":["/labs/assessment/review/","/labs/assessment/data/review-map.json"],"working_rule":"Review one weak signal, then repeat a related case."},
     {"id":"LOOP-012","priority":"P1","title":"Balanced mock assessment session","status":"done","outputs":["/labs/assessment/mock/","/labs/assessment/data/mock-session.json"],"working_rule":"Cover all four tracks, higher reasoning levels, and cross-process cases before using weak-signal weighting."},
     {"id":"LOOP-013","priority":"P1","title":"Progress and portable local history","status":"done","outputs":["/labs/assessment/progress/","/labs/assessment/data/history-portability.json"],"working_rule":"Attempts are the durable record. Profiles and recommendations are derived from attempts after import."},
-    {"id":"LOOP-014","priority":"P1","title":"Feedback and calibration evidence","status":"done","outputs":["/labs/assessment/feedback/","/labs/assessment/data/feedback-schema.json","/labs/assessment/data/calibration-policy.json"],"working_rule":"Keep provenance explicit. Feedback can suggest a calibration change but cannot silently modify the scoring model."}
+    {"id":"LOOP-014","priority":"P1","title":"Feedback and calibration evidence","status":"done","outputs":["/labs/assessment/feedback/","/labs/assessment/data/feedback-schema.json","/labs/assessment/data/calibration-policy.json"],"working_rule":"Keep provenance explicit. Feedback can suggest a calibration change but cannot silently modify the scoring model."},
+    {"id":"LOOP-015","priority":"P1","title":"Graph-backed question candidate review","status":"done","outputs":["/labs/assessment/question-review/","/labs/assessment/data/candidate-question-schema.json","/labs/assessment/data/candidate-generation-seeds.json","/labs/assessment/data/question-candidates.json","scripts/generate_assessment_candidates.py"],"working_rule":"Generate only from whitelisted graph evidence. Reject duplicates before review. Human review still does not publish a case automatically."}
   ],
   "next_iteration_themes": [
-    "generate candidate questions from graph relations and failure modes with human approval before publication",
+    "extend candidate generation to another graph only when source references and failure-mode structure are strong enough",
     "review and promote mature draft/noindex Lab pages",
     "connect real feedback observations to review priorities without treating feedback as automatic scoring truth",
     "create explicit human-reviewed calibration decisions when enough real evidence exists"
