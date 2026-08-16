@@ -1,0 +1,107 @@
+---
+layout: default
+title: "Reusable Data Procedures — Catalog"
+description: "A catalog and registry model for finding, governing and reusing data procedures by domain, task, source, trust, ownership and dependencies."
+permalink: /reusable-data-procedures/catalog/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Catalog</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Detail / Catalog & registry</p>
+    <h1>A folder stores procedures. A catalog makes them reusable.</h1>
+    <p>Once procedures become useful, the next problem is finding the right one, knowing whether it is trusted, and understanding what will break if it changes. The catalog is the control plane for that problem.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/framework/">Framework</a><a href="/reusable-data-procedures/techniques/">Techniques</a><a href="/reusable-data-procedures/catalog/" aria-current="page">Catalog</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Catalog record</p><h2>Every procedure needs a stable identity and enough context to judge it.</h2></div>
+    <div class="rdp__model-grid">
+      <article class="rdp__model-card"><span>ID</span><strong>Stable identity</strong><p>A human-readable ID does not change when the title changes. Example: <code>sales.order-material-reconciliation</code>.</p></article>
+      <article class="rdp__model-card"><span>OWN</span><strong>Owner and steward</strong><p>The owner is accountable for business use. A technical steward may maintain the procedure implementation.</p></article>
+      <article class="rdp__model-card"><span>USE</span><strong>Purpose and consumers</strong><p>What decision or output does this procedure support, and who depends on it?</p></article>
+      <article class="rdp__model-card"><span>VER</span><strong>Version and lifecycle</strong><p>Current version, status, review date, deprecation date and replacement procedure.</p></article>
+      <article class="rdp__model-card"><span>DEP</span><strong>Dependencies</strong><p>Reusable blocks, reference datasets, other procedures, schemas and external systems.</p></article>
+      <article class="rdp__model-card"><span>TRUST</span><strong>Trust evidence</strong><p>Tests, approvals, recent run health, drift history and review freshness. Trust is evidence, not a decorative green badge.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Classification</p><h2>Use several simple axes instead of one giant folder tree.</h2><p>A procedure often belongs to several views at once. The catalog should index metadata rather than force everything into one hierarchy.</p></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Facet</th><th>Examples</th><th>Why it helps</th></tr></thead>
+      <tbody>
+        <tr><td>Domain</td><td>sales, procurement, material, finance, cross-domain</td><td>Business ownership and discovery.</td></tr>
+        <tr><td>Job family</td><td>clean, enrich, reconcile, compare, consolidate, validate, migrate, publish</td><td>Find a procedure by the work to be done.</td></tr>
+        <tr><td>Data concept</td><td>material, customer, order, supplier, price, stock</td><td>Find reusable logic across systems.</td></tr>
+        <tr><td>Source family</td><td>SAP export, supplier file, SharePoint workbook, API, database</td><td>Technical compatibility and adapter reuse.</td></tr>
+        <tr><td>Maturity</td><td>idea, draft, pilot, approved, deprecated</td><td>Shows lifecycle, not quality by itself.</td></tr>
+        <tr><td>Trust</td><td>experimental, tested, reviewed, production-proven</td><td>Shows what evidence exists before reuse.</td></tr>
+        <tr><td>Sensitivity</td><td>public, internal, confidential, restricted</td><td>Controls storage, logging and AI usage.</td></tr>
+        <tr><td>Criticality</td><td>ad-hoc, operational, business-critical</td><td>Controls validation, approval and support expectations.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Search</p><h2>The catalog should answer capability questions.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>By task</strong><p>“Show approved reconciliation procedures for SAP sales exports.”</p></article>
+      <article><strong>By concept</strong><p>“Which procedures already normalize Material IDs or Customer numbers?”</p></article>
+      <article><strong>By dependency</strong><p>“What will be affected if reference dataset <code>customer-aliases</code> changes?”</p></article>
+      <article><strong>By trust</strong><p>“Which procedures have regression fixtures, owner approval and successful recent runs?”</p></article>
+      <article><strong>By policy</strong><p>“Which procedures may run locally and never send data to an AI endpoint?”</p></article>
+      <article><strong>By similarity</strong><p>“Find procedures with similar source contracts, fields or mappings to this new task.”</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Registry structure</p><h2>Keep definitions, reusable components and run evidence separate.</h2></div>
+    <pre class="rdp__code-note"><code>registry/
+  procedures/
+    sales/order-material-reconciliation/
+      procedure.json
+      README.md
+      fixtures/
+  blocks/
+    locator/
+    cleaner/
+    validator/
+    publisher/
+  reference/
+    material-aliases/
+    customer-mapping/
+  packs/
+    sap-sales-reconciliation/
+  catalog/
+    index.jsonl
+    dependency-graph.json
+
+runs/
+  2026-08-16/run-.../run-report.json</code></pre>
+    <div class="rdp__callout"><strong>Rule:</strong> run history is not the catalog. The catalog describes reusable assets. Run evidence describes what happened when one version was executed.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Collections</p><h2>Introduce packs before the catalog becomes flat and noisy.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Procedure</strong><p>One end-to-end reusable task with sources, transforms, validations and outputs.</p></article>
+      <article><strong>Block</strong><p>A smaller typed component such as an Excel locator, SAP identifier cleaner or cardinality validator.</p></article>
+      <article><strong>Pattern</strong><p>A recommended arrangement of blocks for a repeated problem, for example lookup enrichment with exception routing.</p></article>
+      <article><strong>Pack</strong><p>A curated group of procedures, blocks, references and examples for a domain such as SAP Sales or migration checks.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Impact graph</p><h2>Dependencies should be queryable before changes are approved.</h2><p>A catalog becomes much more useful when it can answer “who uses this?”. Each procedure should expose consumed blocks, reference data, upstream procedures and downstream consumers.</p></div>
+    <div class="rdp__rerun"><strong>Example:</strong> <code>normalize-material-id@2</code> → used by 14 procedures → 5 operational → 2 business-critical. A breaking change now has an impact radius before somebody discovers it in Monday's spreadsheet.</div>
+  </section>
+</div>
