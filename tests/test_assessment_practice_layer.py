@@ -175,6 +175,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "reasoning-coverage": ASSESSMENT / "reasoning-coverage" / "index.html",
         "reasoning-gaps": ASSESSMENT / "reasoning-gaps" / "index.html",
         "promotion-review": ASSESSMENT / "promotion-review" / "index.html",
+        "promotion-decision": ASSESSMENT / "promotion-review" / "decision" / "index.html",
         "human-review": ASSESSMENT / "human-review" / "index.html",
         "human-review-findings": ASSESSMENT / "human-review" / "findings" / "index.html",
         "human-review-secondary": ASSESSMENT / "human-review" / "secondary" / "index.html",
@@ -204,6 +205,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
     assert authoring["reasoning-coverage"]["route"] == "/labs/assessment/reasoning-coverage/"
     assert authoring["reasoning-gap-review"]["route"] == "/labs/assessment/reasoning-gaps/"
     assert authoring["promotion-review"]["route"] == "/labs/assessment/promotion-review/"
+    assert authoring["promotion-decision"]["route"] == "/labs/assessment/promotion-review/decision/"
     assert authoring["human-review"]["route"] == "/labs/assessment/human-review/"
     assert authoring["core-study"]["route"] == "/labs/assessment/core/"
 
@@ -212,7 +214,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044", "LOOP-045", "LOOP-046", "LOOP-047", "LOOP-048"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044", "LOOP-045", "LOOP-046", "LOOP-047", "LOOP-048", "LOOP-049"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -681,6 +683,25 @@ def test_promotion_review_packet_contains_only_semantic_survivors_and_zero_appro
 
     result = subprocess.run(
         [sys.executable, "scripts/validate_assessment_promotion_review_packet.py"],
+        cwd=ROOT, text=True, capture_output=True, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_promotion_decision_record_is_human_explicit_and_non_publishing() -> None:
+    schema = load_json("promotion-decision-schema.json")
+    effects = schema["properties"]["publication_effect"]["properties"]
+    assert effects["case_manifest_changed"]["const"] is False
+    assert effects["case_published"]["const"] is False
+    assert effects["calibration_changed"]["const"] is False
+    assert schema["properties"]["review_checks"]["minItems"] == 6
+    assert schema["properties"]["review_checks"]["maxItems"] == 6
+    assert set(schema["properties"]["decision"]["enum"]) == {
+        "approve_for_separate_repository_change", "revise_before_promotion", "reject_candidate"
+    }
+
+    result = subprocess.run(
+        [sys.executable, "scripts/validate_assessment_promotion_decision_recorder.py"],
         cwd=ROOT, text=True, capture_output=True, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr

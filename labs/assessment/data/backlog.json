@@ -672,11 +672,23 @@
         "scripts/validate_assessment_promotion_review_packet.py"
       ],
       "working_rule": "Combine every semantic-surviving candidate in one read-only human review packet. Keep every human decision pending and require a separate explicit reviewed change before any candidate enters the published case manifest."
+    },
+    {
+      "id": "LOOP-049",
+      "priority": "P1",
+      "title": "Export-only human promotion decision record",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/promotion-review/decision/",
+        "/labs/assessment/data/promotion-decision-schema.json",
+        "scripts/validate_assessment_promotion_decision_recorder.py"
+      ],
+      "working_rule": "A human may explicitly approve a candidate only for a separate reviewed repository change. The decision recorder exports evidence and structurally forbids case-manifest, publication, or calibration changes."
     }
   ],
   "next_iteration_themes": [
-    "add an export-only human promotion decision record for approve, revise, or reject without writing the published manifest automatically",
-    "record true human page-review findings separately from automated editorial improvement",
-    "select secondary P1 pages by cross-track assessment value instead of processing all routes mechanically"
+    "use real exported human promotion decisions as evidence for future reviewed repository changes; never infer approval from the packet itself",
+    "use real Board Mode and assessment attempt history to decide whether reasoning-pressure thresholds need calibration",
+    "continue page-level human review only where the current queue still contains unverified source-supported routes"
   ]
 }
