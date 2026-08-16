@@ -1,0 +1,253 @@
+---
+layout: default
+title: "Warehouse Scanners & Auto-ID — SAP Solution Map"
+description: "A practical SAP warehouse scanning map covering devices, GS1 identifiers, EWM RF, mobile apps, custom integration, RFID, UX, failure modes and assessment reasoning."
+permalink: /labs/enterprise-context/ewm/scanners/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+enterprise_context_graph: true
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags:
+  - sap
+  - ewm
+  - warehouse
+  - scanners
+  - barcode
+  - gs1
+  - rfid
+  - mobile
+  - integration
+---
+
+{% assign map = site.data.labs.enterprise_context.ewm.scanners %}
+{% assign evidence = site.data.labs.enterprise_context.sources.warehouse_scanning %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/labs/">Labs</a></li>
+    <li><a href="/labs/enterprise-context/">Enterprise Context</a></li>
+    <li><a href="/labs/enterprise-context/ewm/">EWM</a></li>
+    <li aria-current="page">Scanners & Auto-ID</li>
+  </ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Enterprise Context / Warehouse Execution</p>
+      <h1>{{ map.title }}</h1>
+      <p>{{ map.summary }}</p>
+      <a class="research-canvas__button" href="#decision-map">Open the decision map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Solution map status">
+      <p>Solution map</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ map.device_classes | size }}</strong><small>Device classes</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ map.sap_execution_paths | size }}</strong><small>SAP execution paths</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ map.process_scenarios | size }}</strong><small>Warehouse scenarios</small></div>
+      <em>Source checked {{ map.verified_at }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">barcode_scanner</span>
+    <p><strong>Lead rule:</strong> {{ map.lead_rule }}</p>
+    <p><strong>Memory path:</strong> {{ map.memory_path }}</p>
+    <p>A scanner does not know SAP. It produces an identifier. The design has to decide what that identifier means, which business object it should verify, and which process is allowed to confirm the result.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="decision-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architecture decision</p>
+      <h2>Choose by process and physical work, not by scanner brand.</h2>
+      <p>Six questions usually narrow the design before hardware procurement begins.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in map.decision_dimensions %}
+      <article><span>{{ item.key }}</span><strong>{{ item.question }}</strong><small>{{ item.examples | join: ", " }}</small></article>
+      {% endfor %}
+    </div>
+    <div class="research-route-list">
+      {% for item in map.decision_map %}
+      <article><span>→</span><strong>{{ item.need }}</strong><small><b>{{ item.choose }}</b> · {{ item.why }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="devices" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Physical layer</p>
+      <h2>The warehouse environment decides the device class.</h2>
+      <p>Scan frequency, distance, gloves, movement, cold storage, forklift use and network behavior matter more than a glossy device specification.</p>
+    </header>
+    <div class="research-route-list">
+      {% for device in map.device_classes %}
+      <article>
+        <span>DEV</span><strong>{{ device.title }}</strong>
+        <small><b>Best for:</b> {{ device.best_for }} <b>Interaction:</b> {{ device.interaction }}</small>
+        <p><b>Strengths:</b> {{ device.strengths | join: " · " }}</p>
+        <p><b>Caution:</b> {{ device.caution }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="identifiers" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Data contract</p>
+      <h2>Barcode format and business identity are different decisions.</h2>
+      <p>SSCC, GTIN, batch, serial number and a storage bin are not interchangeable strings. Parsing must preserve the business meaning.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in map.identification_map %}
+      <article>
+        <span>ID</span><strong>{{ item.title }}</strong>
+        <small><b>Use:</b> {{ item.use_for }} <b>SAP:</b> {{ item.sap_mapping }}</small>
+        <p>{{ item.standard_note }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sap-paths" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP execution</p>
+      <h2>Standard RF, native mobile, custom app, or machine event?</h2>
+      <p>The important boundary is who owns warehouse execution. A custom scanner UI should not silently become a second warehouse management system.</p>
+    </header>
+    <div class="research-route-list">
+      {% for path in map.sap_execution_paths %}
+      <article>
+        <span>PATH</span><strong>{{ path.title }}</strong>
+        <small><b>Choose when:</b> {{ path.choose_when }}</small>
+        <p><b>Flow:</b> {{ path.flow }}</p>
+        {% if path.good_fit %}<p><b>Good fit:</b> {{ path.good_fit | join: ", " }}</p>{% endif %}
+        {% if path.configure %}<p><b>Configure:</b> {{ path.configure | join: " · " }}</p>{% endif %}
+        <p><b>Result:</b> {{ path.result }}</p>
+        {% if path.caution %}<p><b>Caution:</b> {{ path.caution }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="device-integration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Device integration</p>
+      <h2>There are several clean ways to move a scan into an application.</h2>
+      <p>Keyboard emulation is often enough. Programmatic events become useful when the application needs scan metadata, structured parsing or stronger control. Fixed readers need a different event model again.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in map.device_integration_patterns %}
+      <article>
+        <span>INT</span><strong>{{ item.title }}</strong>
+        <small><b>Use when:</b> {{ item.use_when }}</small>
+        <p><b>Flow:</b> {{ item.flow }}</p>
+        <p><b>Strengths:</b> {{ item.strengths | join: " · " }}</p>
+        <p><b>Risks:</b> {{ item.risks | join: " · " }}</p>
+        {% if item.evidence %}<p>{{ item.evidence }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="configuration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Implementation path</p>
+      <h2>Configure meaning before configuring hardware.</h2>
+      <p>This sequence keeps scanner settings, SAP configuration, labels and user experience tied to one business contract.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in map.configuration_path %}
+      <article><span>{{ item.step }}</span><strong>{{ item.title }}</strong><small>{{ item.detail }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="scenarios" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Warehouse scenarios</p>
+      <h2>A scan should prove something useful in the process.</h2>
+      <p>The same scanner can be used in many steps, but the verification and SAP object are different.</p>
+    </header>
+    <div class="research-route-list">
+      {% for scenario in map.process_scenarios %}
+      <article>
+        <span>SCN</span><strong>{{ scenario.title }}</strong>
+        <small><b>Scan:</b> {{ scenario.scan }}</small>
+        <p><b>SAP action:</b> {{ scenario.sap_action }}</p>
+        <p><b>Best path:</b> {{ scenario.best_path }}</p>
+        <p><b>Result:</b> {{ scenario.result }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ux" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Warehouse UX</p>
+      <h2>Scan-first, short, and recoverable.</h2>
+      <p>Warehouse users work while moving, carrying, wearing gloves or driving equipment. A good UI respects that inconvenient physical reality.</p>
+    </header>
+    <div class="research-route-list">
+      {% for rule in map.ui_rules %}
+      <article><span>UX</span><strong>{{ rule }}</strong></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failures" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Diagnostics</p>
+      <h2>Find the first wrong assumption between label and business state.</h2>
+      <p>A successful decode proves only that light became data. It does not prove that the data is the correct SAP identifier or that the action is safe to repeat.</p>
+    </header>
+    <div class="research-route-list">
+      {% for failure in map.failure_modes %}
+      <article><span>!</span><strong>{{ failure.symptom }}</strong><small><b>Check first:</b> {{ failure.check_first }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="field-patterns" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Observed implementation patterns</p>
+      <h2>Useful examples without pretending every partner product is SAP standard.</h2>
+      <p>These references show how the same problem is solved with different boundaries: device middleware, mobile extensions, RFID, or a lighter ERP warehouse.</p>
+    </header>
+    <div class="research-route-list">
+      {% for pattern in map.real_world_patterns %}
+      <article>
+        <span>CASE</span><strong>{{ pattern.title }}</strong>
+        <small>{{ pattern.type }} · {{ pattern.observation }}</small>
+        <p><b>Architecture lesson:</b> {{ pattern.lesson }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" id="assessment" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">psychology</span>
+    <p><strong>Assessment answer:</strong> {{ map.assessment_answer }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Primary standards, SAP documentation and clearly marked implementation examples.</h2>
+      <p>Product behavior is checked against current SAP documentation. GS1 verifies label semantics. Device-vendor and SAP partner listings are used as implementation examples, not as universal recommendations.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener">
+        <span>SRC</span><strong>{{ source.title }}</strong>
+        <small>{{ source.publisher }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %}{% if source.product_scope %} · {{ source.product_scope }}{% endif %}</small>
+        <i class="material-symbols-outlined" aria-hidden="true">open_in_new</i>
+      </a>
+      {% endfor %}
+    </div>
+    <p><a href="/labs/enterprise-context/data/topics.json">Machine-readable topic graph →</a></p>
+  </section>
+</div>
