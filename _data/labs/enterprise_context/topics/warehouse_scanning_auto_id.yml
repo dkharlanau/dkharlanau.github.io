@@ -3,8 +3,9 @@ type: research_topic
 title: "Warehouse Scanners & Auto-ID"
 summary: >-
   A Lead-level map of barcode and RFID capture in SAP warehouse execution:
-  identifiers, scanner classes, EWM RF, native mobile, custom applications,
-  fixed-reader events, user experience, integration choices, failure modes and tests.
+  identifiers, GS1 parsing, label lifecycle, scanner classes, EWM RF, native mobile,
+  custom applications, connectivity, security, fixed-reader events, operational KPIs,
+  failure modes and warehouse-floor tests.
 domain: "SAP S/4HANA Logistics / Warehousing"
 process_family: "Warehouse Execution and Auto-ID"
 status: researching
@@ -14,22 +15,23 @@ verified_at: "2026-08-16"
 page_url: "/labs/enterprise-context/ewm/scanners/"
 
 business_question: >-
-  How should a warehouse scanning solution identify the right physical object,
+  How should a warehouse scanning solution create and interpret physical identity,
   capture data with the right device, verify the correct SAP business context,
-  and confirm work with the smallest reliable architecture?
+  survive real warehouse connectivity, and confirm work with the smallest reliable architecture?
 
 scope:
   include:
     - "Rugged handheld, wearable, vehicle-mounted, fixed and camera-based scanners"
-    - "Barcode semantics: SSCC, GTIN, GS1-128 and warehouse-local identifiers"
+    - "Barcode semantics: SSCC, GTIN, GS1-128 and common GS1 Application Identifiers"
+    - "Label generation, printing, application, scanning and controlled reprint"
     - "SAP EWM RF and SAP Warehouse Logistics mobile execution"
     - "Keyboard wedge, programmatic scanner event, custom API and edge-event patterns"
     - "RFID as a different capture pattern with event filtering"
-    - "Inbound, putaway, picking, loading, inventory and production scenarios"
-    - "UI, exception handling, duplicate protection, monitoring and warehouse-floor testing"
+    - "Wi-Fi roaming, retry, offline limits, device identity and fleet configuration"
+    - "Operational KPIs, exception handling, duplicate protection and warehouse-floor testing"
   exclude_for_now:
-    - "Detailed label-printing platform comparison"
-    - "RF spectrum engineering"
+    - "Printer vendor and model comparison"
+    - "Detailed RF spectrum engineering"
     - "Full RFID EPCIS architecture"
     - "Vendor hardware procurement matrix by model and price"
 
@@ -46,10 +48,10 @@ maturity:
     ai_evaluation: in_progress
 
 memory_model:
-  phrase: "Identify → Capture → Parse → Verify → Execute → Confirm → Monitor"
+  phrase: "Identify → Label → Capture → Parse → Verify → Execute → Confirm → Monitor"
   lead_line: >-
-    The scanner is only the capture device. The architecture starts with what the code means,
-    what SAP object it must verify, and which process owns the confirmation.
+    The scanner is only the capture device. The architecture starts with who owns physical identity,
+    how the label encodes it, what the application parser means by it, and which process owns confirmation.
 
 core_entities:
   - id: CAP-WH-AUTO-ID
@@ -60,6 +62,14 @@ core_entities:
     type: capability
     title: "Scan-Based Warehouse Verification"
     summary: "Verify bin, product, HU, batch, serial or document context before a warehouse action is confirmed."
+  - id: CAP-WH-LABEL-LIFECYCLE
+    type: capability
+    title: "Warehouse Label Lifecycle"
+    summary: "Control identifier generation, label printing, physical application, scan use and reprint without losing business identity."
+  - id: CAP-WH-GS1-PARSING
+    type: capability
+    title: "GS1 Element Parsing"
+    summary: "Interpret GS1 Application Identifiers and map decoded values to the correct warehouse business objects."
   - id: APP-SAP-EWM-RF
     type: application_component
     title: "SAP EWM Radio Frequency Framework"
@@ -77,12 +87,12 @@ core_entities:
   - id: TERM-GS1-SSCC
     type: term
     title: "Serial Shipping Container Code (SSCC)"
-    summary: "Unique GS1 identifier for a logistic unit."
+    summary: "Unique GS1 identifier for a logistic unit, commonly carried with Application Identifier 00."
     source_refs: [SRC-GS1-LOGISTIC-LABEL]
   - id: TERM-GS1-GTIN
     type: term
     title: "Global Trade Item Number (GTIN)"
-    summary: "GS1 identifier for a trade item or product."
+    summary: "GS1 identifier for a trade item or product, commonly carried with Application Identifier 01."
     source_refs: [SRC-GS1-LOGISTIC-LABEL]
   - id: TERM-GS1-128
     type: term
@@ -103,6 +113,54 @@ core_entities:
     type: integration
     title: "Fixed Reader / Edge Event Integration"
     summary: "Convert repeated machine reads into a validated and deduplicated warehouse business event."
+  - id: CTRL-WH-DUPLICATE-SCAN
+    type: control
+    title: "Duplicate Scan Protection"
+    summary: "Prevent repeated device reads or retries from creating a duplicate business effect."
+  - id: CTRL-WH-OFFLINE-REPLAY
+    type: control
+    title: "Offline Replay Control"
+    summary: "Define queue expiry, ordering, idempotency, state conflict handling and reconciliation before replaying offline work."
+  - id: CTRL-WH-DEVICE-IDENTITY
+    type: control
+    title: "Managed Device Identity"
+    summary: "Separate worker identity, managed device identity and application authentication for traceable shared-device operation."
+  - id: CTRL-WH-LABEL-REPRINT
+    type: control
+    title: "Controlled Label Reprint"
+    summary: "Reproduce a valid label without accidentally generating a new business identity or reusing stale identity."
+  - id: FAIL-WH-SCAN-SEMANTICS
+    type: failure_mode
+    title: "Correct Decode, Wrong Business Meaning"
+    summary: "The scanner reads a valid value but the application treats an SSCC, GTIN, HU, material, batch or bin as the wrong business identifier."
+  - id: FAIL-WH-OFFLINE-STALE-CONTEXT
+    type: failure_mode
+    title: "Offline Action with Stale Warehouse Context"
+    summary: "A queued scan action is replayed after WT, HU, stock or bin state has changed in SAP."
+  - id: FAIL-WH-LABEL-IDENTITY-MISMATCH
+    type: failure_mode
+    title: "Label Identity Does Not Match Physical Object"
+    summary: "A syntactically correct label is attached to or reused for the wrong HU, pallet, carton or product."
+  - id: HEUR-WH-STANDARD-BEFORE-CUSTOM
+    type: expert_heuristic
+    title: "Standard Execution Before Custom Scanner UI"
+    summary: "Use standard SAP warehouse execution when it fits; create a custom scanner app only for a real workflow or integration gap."
+  - id: HEUR-WH-CUSTOM-UI-NOT-WMS
+    type: expert_heuristic
+    title: "Custom UI Is Not a Second WMS"
+    summary: "A mobile extension may change interaction, but warehouse allocation, stock, queue and execution ownership should remain in the owning business system."
+  - id: KPI-WH-FIRST-SCAN-SUCCESS
+    type: kpi
+    title: "First-Scan Success Rate"
+    summary: "Share of intended scans accepted without rescan or manual correction."
+  - id: KPI-WH-MANUAL-ENTRY-FALLBACK
+    type: kpi
+    title: "Manual Entry Fallback Rate"
+    summary: "Share of warehouse steps completed by typing or search instead of the designed scan path."
+  - id: KPI-WH-SCAN-RESPONSE-LATENCY
+    type: kpi
+    title: "Scan-to-Response Latency"
+    summary: "Time from capture to clear accepted or rejected application feedback."
   - id: SCN-WH-INBOUND-HU-SCAN
     type: scenario
     title: "Inbound HU Scanning"
@@ -117,36 +175,138 @@ core_entities:
     title: "Loading HU Scan Verification"
     summary: "Scan shipping context and HUs before confirming load or unload execution."
     source_refs: [SRC-SAP-EWM-RF-LOAD]
-  - id: CTRL-WH-DUPLICATE-SCAN
-    type: control
-    title: "Duplicate Scan Protection"
-    summary: "Prevent repeated device reads or retries from creating a duplicate business effect."
-  - id: FAIL-WH-SCAN-SEMANTICS
-    type: failure_mode
-    title: "Correct Decode, Wrong Business Meaning"
-    summary: "The scanner reads a valid value but the application treats an SSCC, GTIN, HU, material, batch or bin as the wrong business identifier."
-  - id: HEUR-WH-STANDARD-BEFORE-CUSTOM
-    type: expert_heuristic
-    title: "Standard Execution Before Custom Scanner UI"
-    summary: "Use standard SAP warehouse execution when it fits; create a custom scanner app only for a real workflow or integration gap."
   - id: TEST-WH-REAL-FLOOR-SCAN
     type: test_case
     title: "Real Warehouse Scanner Test"
-    summary: "Test labels, distance, lighting, gloves, Wi-Fi roaming, duplicates, errors and recovery in the physical warehouse."
+    summary: "Test labels, distance, lighting, gloves, Wi-Fi roaming, duplicates, authentication, offline recovery and physical exceptions in the warehouse."
 
-decision_rules:
-  - need: "Standard high-frequency EWM work"
-    choice: "SAP EWM RF"
-    reasoning: "Keep EWM resource, queue, exception and warehouse-task logic in its standard execution channel."
-  - need: "Modern mobile experience in SAP Logistics Management"
-    choice: "SAP Warehouse Logistics"
-    reasoning: "Use the standard native app when its process scope matches the requirement."
-  - need: "Special cross-process workflow"
-    choice: "Custom mobile/Fiori/native app with released SAP APIs"
-    reasoning: "Custom should simplify a genuinely different user journey, not only restyle standard RF."
-  - need: "Fixed gate, conveyor or RFID capture"
-    choice: "Edge/WCS/MFS/integration event pattern"
-    reasoning: "Machine reads need filtering, correlation and duplicate protection before the SAP business action."
+common_gs1_elements:
+  - ai: "00"
+    meaning: "SSCC"
+    business_object: "Logistic unit / HU"
+    design_note: "Do not resolve a pallet identity as a product identity."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - ai: "01"
+    meaning: "GTIN"
+    business_object: "Trade item / product"
+    design_note: "Resolve through the agreed product identifier mapping."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - ai: "10"
+    meaning: "Batch / lot"
+    business_object: "Batch-managed stock"
+    design_note: "Variable-length parsing must preserve the boundary to the next element."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - ai: "17"
+    meaning: "Expiration date"
+    business_object: "Shelf-life / batch context"
+    design_note: "The encoded date still requires business validation in the target process."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - ai: "21"
+    meaning: "Serial number"
+    business_object: "Serialized unit"
+    design_note: "Resolve with the relevant product and process context."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+
+label_lifecycle:
+  - stage: "Design"
+    question: "Which object and identity should the label represent?"
+    control: "Agree identifier semantics and required encoded/human-readable data."
+  - stage: "Generate"
+    question: "Who creates and owns the identifier?"
+    control: "Generate identity in the owning business process rather than in an isolated printer."
+  - stage: "Print"
+    question: "Which approved template and printer are used?"
+    control: "Control template version, output routing and print retry."
+  - stage: "Apply"
+    question: "How is the label bound to the correct physical object?"
+    control: "Make label application an explicit process checkpoint where mislabeling matters."
+  - stage: "Scan"
+    question: "What does the label prove at this step?"
+    control: "Parse and validate against current SAP context."
+  - stage: "Reprint"
+    question: "Can a damaged label be replaced without changing identity?"
+    control: "Distinguish reprint from new identifier generation and prevent stale-label reuse."
+
+reference_architectures:
+  - id: "ARCH-SCAN-WEDGE"
+    title: "Thin Input Adapter"
+    flow: "Scanner → keyboard wedge/HID → standard UI → SAP validation"
+    use_when: "The scanner only replaces typing and the standard application owns the process."
+  - id: "ARCH-SCAN-MOBILE"
+    title: "Purpose-Built Mobile Extension"
+    flow: "Scanner SDK/Intent → mobile UI → parser → released API → SAP business object"
+    use_when: "The workflow or device interaction is genuinely different from standard RF."
+  - id: "ARCH-SCAN-FIXED"
+    title: "Machine Event Boundary"
+    flow: "Fixed reader/RFID → edge/WCS/MFS → contextualized event → SAP action → reconciliation"
+    use_when: "Repeated automatic reads must become one warehouse business event."
+
+connectivity_controls:
+  - area: "Wi-Fi and roaming"
+    rule: "Test coverage and access-point handover on real worker and forklift routes."
+  - area: "Retry"
+    rule: "Treat timeout as unknown outcome until business status is checked; retry must be duplicate-safe."
+  - area: "Offline work"
+    rule: "Allow offline only when stale business context can be detected, expired or reconciled."
+  - area: "Store and forward"
+    rule: "Define event identity, order, expiry and replay before queueing business actions."
+  - area: "Authentication"
+    rule: "Test session and token behavior during roaming, reconnect and shared-device handover."
+
+security_controls:
+  - area: "Worker identity"
+    rule: "Keep business accountability tied to the authenticated worker."
+  - area: "Device identity"
+    rule: "Keep a managed device identifier for fleet support and event tracing."
+  - area: "Shared devices"
+    rule: "Define explicit user handover and avoid inherited sessions."
+  - area: "Credentials"
+    rule: "Avoid hard-coded credentials and make access revocable."
+  - area: "Fleet lifecycle"
+    rule: "Manage scanner profiles, application versions, certificates, battery/replacement and support ownership."
+
+operational_kpis:
+  - id: KPI-WH-FIRST-SCAN-SUCCESS
+    definition: "Accepted on the first intended scan without rescan or manual correction."
+  - id: KPI-WH-MANUAL-ENTRY-FALLBACK
+    definition: "Warehouse step completed by typing/search instead of the intended scan."
+  - id: KPI-WH-SCAN-RESPONSE-LATENCY
+    definition: "Capture-to-feedback time visible to the worker."
+  - id: "KPI-WH-WRONG-OBJECT-SCAN"
+    definition: "Rejected scan because the object does not match expected business context."
+  - id: "KPI-WH-DUPLICATE-EVENT"
+    definition: "Repeated read or retry rejected by duplicate controls."
+
+when_not_to_use_scanner:
+  - situation: "High-volume portal with many tagged objects"
+    alternative: "RFID / fixed Auto-ID"
+    reason: "Manual aiming is the bottleneck."
+  - situation: "Sub-second conveyor or machine control"
+    alternative: "PLC / MFS / WCS"
+    reason: "Deterministic equipment control should not depend on an operator scan transaction."
+  - situation: "Visual defect or recognition"
+    alternative: "Industrial camera / machine vision"
+    reason: "The business signal is quality or recognition, not barcode identity."
+  - situation: "Continuous indoor location"
+    alternative: "RTLS / UWB / BLE location layer"
+    reason: "Continuous position is a location-event problem."
+  - situation: "Very low scan volume"
+    alternative: "Phone camera or manual lookup"
+    reason: "A dedicated scanner fleet may cost more to support than it saves."
+
+failure_modes:
+  - symptom: "Scanner reads correctly but SAP rejects the value."
+    check_first: "Barcode semantics and SAP object mapping: SSCC vs GTIN vs HU vs material vs bin."
+  - symptom: "One GS1 barcode is read, but batch or serial is missing."
+    check_first: "Application Identifier parsing and variable-length element boundaries."
+  - symptom: "Same pallet is confirmed twice."
+    check_first: "Duplicate-read suppression, idempotency key and current business status before retry."
+  - symptom: "Offline event is accepted after warehouse state changed."
+    check_first: "Queue expiry, business-state validation, replay rule and reconciliation."
+  - symptom: "A correct label is on the wrong pallet."
+    check_first: "Label generation/application ownership and HU-to-label checkpoint."
+  - symptom: "Workers bypass scanning and type values manually."
+    check_first: "Ergonomics, label quality, response latency and exception flow."
 
 synthetic_example:
   id: SCN-WH-SYNTHETIC-OUTBOUND
@@ -155,28 +315,36 @@ synthetic_example:
   synthetic: true
   situation: >-
     A distribution warehouse picks cartons with handheld scanners, moves full pallets by forklift,
-    and validates outbound pallets at a dock gate.
+    prints pallet labels at packing and validates outbound pallets at a dock gate.
   reasoning_path:
     - "Use rugged RF for normal pick confirmation."
     - "Use a vehicle-mounted terminal with long-range capture for forklift moves."
-    - "Encode pallet identity with SSCC and map it to HU identity."
+    - "Generate pallet identity in the business process and encode it as SSCC."
+    - "Control label application and reprint so physical and digital HU identity stay aligned."
+    - "Parse GS1 data in the application instead of treating the whole string as one SAP identifier."
     - "Use a fixed dock reader only if the gate can identify one clear business checkpoint."
     - "Deduplicate repeated gate reads before load confirmation."
+    - "If Wi-Fi drops, do not blindly replay load confirmation after the shipment state changes."
     - "Keep manual exception recovery for damaged or missing labels."
   expected_result: >-
-    Human work stays guided by the warehouse process while the dock event becomes automatic without turning raw scanner reads into uncontrolled SAP postings.
+    Human work stays guided by the warehouse process while labels, mobile capture and automatic dock events
+    remain traceable to one business identity and can recover safely from physical or network exceptions.
 
 assessment_cards:
   - question: "Where do you start when selecting warehouse scanners?"
-    answer: "I start with the process, scan frequency, physical environment and identifier. Only then do I choose handheld, wearable, vehicle-mounted, camera, fixed reader or RFID."
+    answer: "I start with the process, identifier, scan frequency, physical environment and criticality. Only then do I choose the device class."
+  - question: "What does the scanner do with a GS1-128 barcode?"
+    answer: "The scanner decodes the symbol. The application parser interprets the Application Identifiers and maps SSCC, GTIN, batch, expiry or serial data to SAP context."
+  - question: "What is the difference between reprint and new label generation?"
+    answer: "A reprint normally preserves a valid business identity. New generation creates a new identifier. Mixing them can create duplicate or stale physical identity."
   - question: "When would you build a custom scanner app?"
-    answer: "When standard RF or a standard mobile app cannot support the required user journey, device interaction or cross-system process. I keep SAP as system of record and use released APIs."
-  - question: "What is the difference between SSCC and GTIN?"
-    answer: "SSCC identifies a logistic unit such as a pallet. GTIN identifies a trade item. Mixing them in parsing logic is a common integration error."
-  - question: "How do you integrate a fixed scanner?"
-    answer: "I do not post each raw read directly into SAP. I use an edge or control layer to filter duplicates, correlate the read with the expected process state, then call the warehouse business action once."
-  - question: "What is the main UI rule?"
-    answer: "Scan-first and exception-aware. The worker should see only the information needed for the current step, with immediate feedback and a clear recovery path."
+    answer: "When standard RF or a standard mobile app cannot support the user journey, device interaction or cross-system process. Custom UI should not become a second WMS."
+  - question: "Can warehouse confirmations work offline?"
+    answer: "Only with explicit limits. Stock, HU or WT state may change while offline, so I define event identity, expiry, conflict detection, replay and reconciliation before allowing it."
+  - question: "How do you secure shared warehouse devices?"
+    answer: "I separate worker identity, device identity and application authentication, and define session handover, credential revocation and managed fleet configuration."
+  - question: "When is a scanner the wrong tool?"
+    answer: "For continuous location, machine control, visual quality, bulk non-line-of-sight capture or very low scan volume, I consider RTLS, PLC/WCS, vision, RFID or a simpler phone workflow."
 
 relations:
   - subject: APP-SAP-EWM-RF
@@ -196,6 +364,22 @@ relations:
     object: CAP-WH-SCAN-VERIFY
     evidence_type: reasoned_interpretation
     confidence: high
+  - subject: CAP-WH-AUTO-ID
+    predicate: contains
+    object: CAP-WH-LABEL-LIFECYCLE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: CAP-WH-AUTO-ID
+    predicate: contains
+    object: CAP-WH-GS1-PARSING
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TERM-GS1-128
+    predicate: applies_to
+    object: CAP-WH-GS1-PARSING
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
   - subject: PLT-WH-SCANNER-DEVICE-LAYER
     predicate: integrated_via
     object: INT-WH-KEYSTROKE-SCAN
@@ -225,14 +409,59 @@ relations:
     object: CTRL-WH-DUPLICATE-SCAN
     evidence_type: expert_heuristic
     confidence: high
+  - subject: CAP-WH-LABEL-LIFECYCLE
+    predicate: controlled_by
+    object: CTRL-WH-LABEL-REPRINT
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-SCAN-VERIFY
+    predicate: controlled_by
+    object: CTRL-WH-OFFLINE-REPLAY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-SCAN-VERIFY
+    predicate: controlled_by
+    object: CTRL-WH-DEVICE-IDENTITY
+    evidence_type: expert_heuristic
+    confidence: medium
   - subject: INT-WH-FIXED-READER-EVENT
     predicate: can_fail_as
     object: FAIL-WH-SCAN-SEMANTICS
     evidence_type: reasoned_inference
     confidence: high
+  - subject: FAIL-WH-OFFLINE-STALE-CONTEXT
+    predicate: impacts
+    object: CAP-WH-SCAN-VERIFY
+    evidence_type: reasoned_inference
+    confidence: high
+  - subject: FAIL-WH-LABEL-IDENTITY-MISMATCH
+    predicate: impacts
+    object: CAP-WH-LABEL-LIFECYCLE
+    evidence_type: reasoned_inference
+    confidence: high
   - subject: HEUR-WH-STANDARD-BEFORE-CUSTOM
     predicate: applies_to
     object: CAP-WH-SCAN-VERIFY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: HEUR-WH-CUSTOM-UI-NOT-WMS
+    predicate: applies_to
+    object: CAP-WH-SCAN-VERIFY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-SCAN-VERIFY
+    predicate: measured_by
+    object: KPI-WH-FIRST-SCAN-SUCCESS
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-SCAN-VERIFY
+    predicate: measured_by
+    object: KPI-WH-MANUAL-ENTRY-FALLBACK
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-SCAN-VERIFY
+    predicate: measured_by
+    object: KPI-WH-SCAN-RESPONSE-LATENCY
     evidence_type: expert_heuristic
     confidence: high
   - subject: CAP-WH-SCAN-VERIFY
@@ -263,8 +492,12 @@ tags:
   - barcode
   - gs1
   - sscc
+  - labels
   - mobile
   - rfid
   - integration
+  - offline
+  - security
+  - kpi
   - ux
   - assessment
