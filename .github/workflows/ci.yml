@@ -94,6 +94,9 @@ jobs:
       - name: Audit Lab search intent ownership
         run: python3 scripts/audit_lab_search_intents.py
 
+      - name: Build Lab internal link gap queue
+        run: python3 scripts/lab_link_gap_loop.py
+
       - name: Enforce Lab publication gate
         run: python3 scripts/check_lab_publication_gate.py
 
@@ -109,6 +112,8 @@ jobs:
             reports/seo/lab-promotion-queue.md
             reports/seo/lab-search-intents.json
             reports/seo/lab-search-intents.md
+            reports/seo/lab-link-gaps.csv
+            reports/seo/lab-link-gaps.md
           if-no-files-found: ignore
 
       - name: Check sitemap policy
