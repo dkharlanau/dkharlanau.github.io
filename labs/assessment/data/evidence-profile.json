@@ -1,0 +1,71 @@
+{
+  "id": "sap-lead-evidence-profile",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Define what kind of evidence each assessment route should use so product facts, standards or research, and consultant heuristics are not collapsed into one verification signal.",
+  "evidence_classes": [
+    {
+      "id": "sap_product_primary",
+      "label": "SAP product primary",
+      "meaning": "Release-sensitive SAP product behavior supported by SAP Help, SAP-owned documentation, or another primary SAP source."
+    },
+    {
+      "id": "standard_or_spec_primary",
+      "label": "Standard or specification primary",
+      "meaning": "Protocol, interoperability, security, or architecture behavior supported by the owning standards body or specification publisher."
+    },
+    {
+      "id": "research_primary",
+      "label": "Primary research",
+      "meaning": "Empirical or scientific claim supported by the original research paper or first-party evaluation artifact."
+    },
+    {
+      "id": "author_heuristic",
+      "label": "Author heuristic",
+      "meaning": "Consulting judgement, design rule, diagnostic habit, or synthetic pattern that is explicitly presented as guidance rather than external fact."
+    }
+  ],
+  "defaults": {
+    "enterprise_context": {
+      "expected_evidence_classes": ["sap_product_primary", "author_heuristic"],
+      "external_review_mode": "required_for_load_bearing_product_claims",
+      "counts_as_source_review_debt": true
+    }
+  },
+  "route_overrides": {
+    "/labs/ai-ready/": {
+      "expected_evidence_classes": ["standard_or_spec_primary", "research_primary", "author_heuristic"],
+      "external_review_mode": "selective_for_external_claims",
+      "counts_as_source_review_debt": false,
+      "reason": "The route is mainly an architecture and evaluation framework. Author heuristics should be labelled, while external technical claims use standards or primary research instead of SAP Help."
+    },
+    "/labs/business-ai/": {
+      "expected_evidence_classes": ["research_primary", "sap_product_primary", "author_heuristic"],
+      "external_review_mode": "selective_for_examples_and_outcome_claims",
+      "counts_as_source_review_debt": false,
+      "reason": "The route is process-first consulting analysis. Patterns are author guidance; named products, implementations, and measured outcomes need external evidence."
+    },
+    "/labs/enterprise-context/business-ai/": {
+      "expected_evidence_classes": ["sap_product_primary", "author_heuristic"],
+      "external_review_mode": "required_for_load_bearing_product_claims",
+      "counts_as_source_review_debt": true
+    },
+    "/labs/enterprise-context/data-governance/": {
+      "expected_evidence_classes": ["sap_product_primary", "standard_or_spec_primary", "author_heuristic"],
+      "external_review_mode": "required_for_named_product_or_standard_claims",
+      "counts_as_source_review_debt": true
+    },
+    "/labs/enterprise-context/mdg/": {
+      "expected_evidence_classes": ["sap_product_primary", "author_heuristic"],
+      "external_review_mode": "required_for_load_bearing_product_claims",
+      "counts_as_source_review_debt": true
+    }
+  },
+  "rules": [
+    "Do not use an SAP product source to validate a generic architecture heuristic merely because the page is about SAP.",
+    "Do not count author heuristics as source-supported facts.",
+    "A mixed route can be evidence-complete for its product claims while still containing explicitly labelled author judgement.",
+    "Source-review debt applies only where the route profile says external evidence is required.",
+    "Page-level human verification remains separate from all evidence classes."
+  ]
+}
