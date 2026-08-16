@@ -41,8 +41,12 @@ def test_mdg_domain_sources_are_official_sap_help():
         required.update(load(TOPICS / filename)["source_refs"])
     assert required <= set(sources)
     for source_id in required:
-        assert sources[source_id]["publisher"] == "SAP"
-        assert sources[source_id]["url"].startswith("https://help.sap.com/")
+        source = sources[source_id]
+        assert source["publisher"] == "SAP"
+        assert source["source_type"] == "official_help"
+        assert source["status"] == "source_verified"
+        assert source["accessed_at"] == "2026-08-16"
+        assert source["url"].startswith("https://help.sap.com/")
 
 
 def test_mdg_domain_relations_use_enterprise_graph_contract():
