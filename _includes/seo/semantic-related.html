@@ -1,0 +1,14 @@
+{% comment %}
+Semantic relationship block generated from page.semantic_links.
+The labels describe why a relationship exists instead of emitting generic related-post links.
+{% endcomment %}
+{% if page.url != '/' and page.semantic_links and page.semantic_links.size > 0 %}
+<nav class="semantic-related" aria-label="Knowledge relationships">
+  <p class="semantic-related__label">Knowledge relationships</p>
+  <ul>
+    {% for relation in page.semantic_links %}
+      <li><span>{{ relation.type | default: 'Related' }}</span><a href="{{ relation.url | relative_url }}">{{ relation.title }}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endif %}
