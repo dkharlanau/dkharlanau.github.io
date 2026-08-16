@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Skill → Template Contract"
-description: "A practical model for turning repeatable consulting work into executable skills and reusable evidence templates."
+description: "A practical model for turning repeatable consulting and operational work into executable skills and reusable evidence templates."
 permalink: /skill-hub/skill-template-contract/
 last_modified_at: 2026-08-16
 status: needs_verification
@@ -31,6 +31,19 @@ sitemap: false
   </section>
 
   <section>
+    <h2>Core skill and domain adapter</h2>
+    <p>The reusable reasoning should be product-neutral whenever possible. Product or platform details belong in a domain adapter.</p>
+    <pre><code>Evidence-Driven Troubleshooting
+├─ Web / SaaS adapter
+├─ API / Integration adapter
+├─ Data / File adapter
+├─ Cloud / Platform adapter
+└─ SAP adapter
+</code></pre>
+    <p>The core method defines how to reproduce, isolate, test, decide, and validate. The adapter adds specific logs, transactions, APIs, traces, tools, and system boundaries. This prevents the same reasoning from being rewritten once for every product.</p>
+  </section>
+
+  <section>
     <h2>Skill contract</h2>
     <p>Every operational Skill should define the same core fields:</p>
     <ul>
@@ -39,7 +52,7 @@ sitemap: false
       <li><strong>Required inputs</strong> — what must be known before useful work starts.</li>
       <li><strong>Workflow</strong> — ordered steps, not a random list of tools.</li>
       <li><strong>Decision points</strong> — conditions that change the path.</li>
-      <li><strong>Tools</strong> — transactions, apps, logs, browser tools, APIs, reports, or queries used by the method.</li>
+      <li><strong>Tools</strong> — applications, logs, browser tools, APIs, reports, queries, files, traces, or product-specific utilities.</li>
       <li><strong>Evidence</strong> — what must be captured before changing the system.</li>
       <li><strong>Stop conditions</strong> — when to pause, escalate, or switch to another Skill.</li>
       <li><strong>Output</strong> — the artifact produced by a successful run.</li>
@@ -63,22 +76,22 @@ sitemap: false
       <li>Validation evidence and business result.</li>
       <li>Reusable lesson or follow-up Skill.</li>
     </ul>
-    <p>Generic templates such as RCA, Incident Triage, Change Impact, or Decision Record stay reusable across domains. A technical Skill can either use one of them or add a smaller domain-specific template.</p>
+    <p>Generic templates such as RCA, Incident Triage, Change Impact, Decision Record, Data Reconciliation, or Run Record stay reusable across domains. A technical Skill can either use one of them or add a smaller domain-specific template.</p>
   </section>
 
   <section>
     <h2>Composition instead of duplication</h2>
     <p>A complex Skill should call smaller Skills or templates instead of copying their logic.</p>
-    <p>Example:</p>
-    <pre><code>Fiori App Troubleshooting
-├─ Incident Triage           → classify impact
-├─ Browser Evidence Capture  → console + network
-├─ OData / Gateway Check     → request + error log
-├─ Authorization Check       → SU53 / trace when relevant
-├─ Root Cause Analysis       → only if the cause is not obvious
-└─ Fiori Troubleshooting Record → case template
+    <pre><code>Technical Incident
+├─ Evidence-Driven Troubleshooting
+│  ├─ Data mismatch → Data Reconciliation
+│  ├─ Wrong business route → Process Deviation Analysis
+│  ├─ Product-specific branch → Domain Adapter
+│  └─ Repeating recovery → Procedure / Runbook Design
+├─ Root Cause Analysis
+└─ Operational Knowledge Capture
 </code></pre>
-    <p>This creates a graph of reusable methods. A new Skill can reuse existing reasoning instead of becoming another 80-line checklist with slightly different wording.</p>
+    <p>This creates a graph of reusable methods. A new Skill can reuse existing reasoning instead of becoming another long checklist with slightly different wording.</p>
   </section>
 
   <section>
@@ -104,30 +117,40 @@ sitemap: false
   </section>
 
   <section>
-    <h2>Good candidates for SAP technical Skills</h2>
+    <h2>Good cross-domain Skill candidates</h2>
     <ul>
-      <li>Fiori app troubleshooting.</li>
-      <li>OData / Gateway request tracing.</li>
-      <li>IDoc failure analysis and safe reprocessing.</li>
-      <li>Authorization failure analysis.</li>
-      <li>Sales order determination analysis.</li>
-      <li>Pricing issue analysis.</li>
-      <li>ATP / confirmation issue analysis.</li>
-      <li>Delivery and shipping issue analysis.</li>
-      <li>Purchase order and goods receipt process deviation analysis.</li>
-      <li>Output / form / message determination analysis.</li>
-      <li>Background job and queue troubleshooting.</li>
+      <li>Evidence-driven troubleshooting.</li>
+      <li>Data reconciliation and migration validation.</li>
+      <li>Process deviation analysis.</li>
+      <li>Procedure and runbook design.</li>
+      <li>Root cause analysis.</li>
+      <li>Change impact analysis.</li>
+      <li>Incident triage and ownership routing.</li>
       <li>Integration end-to-end trace.</li>
+      <li>API contract and payload diagnostics.</li>
+      <li>Authorization and identity failure analysis.</li>
+      <li>Batch, queue, and scheduler diagnostics.</li>
+      <li>Release and deployment readiness.</li>
+      <li>Operational knowledge capture.</li>
+      <li>TRIZ digital problem solving.</li>
+      <li>AI output validation and bounded-agent review.</li>
     </ul>
+  </section>
+
+  <section>
+    <h2>Domain-specific adapters</h2>
+    <p>Domain Skills add depth where generic reasoning is not enough. Examples include SAP Fiori troubleshooting, OData tracing, IDoc diagnostics, Salesforce flow analysis, ServiceNow workflow diagnosis, cloud deployment analysis, database performance isolation, and product-specific authorization checks.</p>
   </section>
 
   <section>
     <h2>Related material</h2>
     <ul>
+      <li><a href="/skill-hub/problem-solving-operations/">Problem Solving &amp; Operations</a> — cross-domain operational Skill group.</li>
       <li><a href="/labs/templates/">Operational Templates</a> — generic case protocols.</li>
-      <li><a href="/skill-hub/sap-ams/fiori-app-troubleshooting-working-skill/">Fiori App Troubleshooting</a> — first technical Skill using this contract.</li>
-      <li><a href="/skill-hub/sap-ams/root-cause-analysis-working-skill/">Root Cause Analysis</a> — reusable reasoning Skill.</li>
-      <li><a href="/skill-hub/sap-ams/incident-triage-working-skill/">Incident Triage</a> — reusable entry Skill.</li>
+      <li><a href="/skill-hub/problem-solving-operations/evidence-driven-troubleshooting-working-skill/">Evidence-Driven Troubleshooting</a> — generic diagnostic core.</li>
+      <li><a href="/skill-hub/problem-solving-operations/data-reconciliation-working-skill/">Data Reconciliation</a> — generic data-control skill.</li>
+      <li><a href="/skill-hub/problem-solving-operations/procedure-design-working-skill/">Procedure / Runbook Design</a> — reusable operational design.</li>
+      <li><a href="/skill-hub/sap-ams/fiori-app-troubleshooting-working-skill/">Fiori App Troubleshooting</a> — SAP domain adapter example.</li>
     </ul>
   </section>
 </article>
