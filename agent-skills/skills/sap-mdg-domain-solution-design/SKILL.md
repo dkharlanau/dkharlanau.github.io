@@ -2,6 +2,7 @@
 name: sap-mdg-domain-solution-design
 title: SAP MDG Domain Solution Design
 category: sap-data-governance
+description: Use when an SAP MDG Material, Business Partner, Customer, or Supplier solution needs domain design across identity, organizational grain, ownership, rules, change requests, workflow, activation, DRF distribution, consolidation, migration, and downstream logistics proof. Use for Lead or Architect assessment cases and solution reviews, not for a single already-isolated lineage incident.
 ---
 
 ## Purpose
