@@ -49,6 +49,7 @@ def test_practice_contracts_share_one_scoring_model() -> None:
     profile = load_json("profile-schema.json")
     adaptive = load_json("adaptive-selection.json")
     mock = load_json("mock-session.json")
+    portability = load_json("history-portability.json")
 
     scoring_dimensions = {item["id"] for item in scoring["dimensions"]}
     assert scoring_dimensions == DIMENSIONS
@@ -59,6 +60,7 @@ def test_practice_contracts_share_one_scoring_model() -> None:
     assert mock["scoring_contract"] == "/labs/assessment/data/scoring.json"
     assert mock["attempt_contract"] == "/labs/assessment/data/attempt-schema.json"
     assert adaptive["attempt_contract"] == "/labs/assessment/data/attempt-schema.json"
+    assert portability["attempt_contract"] == "/labs/assessment/data/attempt-schema.json"
     assert "dimension_signals" in profile["properties"]
 
 
@@ -85,11 +87,22 @@ def test_review_map_covers_every_scoring_dimension_and_track() -> None:
             assert route["url"].startswith("/labs/")
 
 
+def test_history_portability_keeps_attempts_as_source_of_truth() -> None:
+    portability = load_json("history-portability.json")
+
+    assert portability["storage_key"] == "sapLeadAssessmentAttemptsV1"
+    assert portability["export_format"]["root"]["format"] == "sap-lead-assessment-history"
+    assert set(portability["merge_modes"]) == {"merge", "replace"}
+    assert "derived" in portability["profile_rule"].lower()
+    assert "server" in portability["privacy"].lower()
+
+
 def test_human_practice_routes_and_catalog_are_registered() -> None:
     expected_pages = {
         "practice-engine": ASSESSMENT / "practice-engine" / "index.html",
         "mock": ASSESSMENT / "mock" / "index.html",
         "review": ASSESSMENT / "review" / "index.html",
+        "progress": ASSESSMENT / "progress" / "index.html",
         "cross-process": ASSESSMENT / "cross-process" / "index.html",
     }
     for name, path in expected_pages.items():
@@ -97,16 +110,17 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
 
     catalog = load_json("catalog.json")
     modes = {item["id"]: item for item in catalog["practice_modes"]}
-    assert set(modes) == {"adaptive", "mock", "review", "cross-process"}
+    assert set(modes) == {"adaptive", "mock", "review", "progress", "cross-process"}
     assert modes["adaptive"]["route"] == "/labs/assessment/practice-engine/"
     assert modes["mock"]["route"] == "/labs/assessment/mock/"
     assert modes["review"]["route"] == "/labs/assessment/review/"
+    assert modes["progress"]["route"] == "/labs/assessment/progress/"
 
 
 def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
