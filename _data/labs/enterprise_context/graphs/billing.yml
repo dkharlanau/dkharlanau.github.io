@@ -1,0 +1,470 @@
+id: GRAPH-SD-BILLING-REVENUE-HANDOFF
+type: knowledge_graph
+title: "Sales Billing — Due to Revenue Handoff"
+domain: "SAP S/4HANA Sales Billing"
+process_family: "Order-to-Cash"
+process_step: "From billable reference to billing document, accounting handoff, correction, and external invoice evidence"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+
+summary: >-
+  A Lead-level map of Sales Billing. It connects billing relevance, the billing due list,
+  reference documents, copying control, billing type, split/convergence, pricing transfer,
+  tax context, revenue account determination, FI posting, output/eDocument boundaries,
+  cancellation, credit/debit corrections, and proof of business completion.
+
+thesis: >-
+  Billing is not just document creation. It is the point where fulfillment or another billable event
+  becomes a customer charge and usually a financial posting. A wrong invoice should be traced to the
+  first wrong decision: billability, reference data, copy logic, split logic, pricing/tax, or accounting handoff.
+
+boundary:
+  includes:
+    - "Order-related, delivery-related, and billing-document-request billing context"
+    - "Billing due list and billable readiness"
+    - "Billing document type and copying control"
+    - "Billing split and convergence"
+    - "Pricing transfer or redetermination boundary"
+    - "Revenue account determination and FI transfer boundary"
+    - "Credit memo, debit memo, and cancellation flows"
+    - "Output and electronic-invoice source-document boundary"
+    - "Failure diagnosis and reconciliation"
+  excludes_for_later_deep_dives:
+    - "Full pricing-engine configuration already modeled in the Pricing vertical"
+    - "Detailed tax determination already modeled in the Tax vertical"
+    - "Full FI/CO architecture and Universal Journal design"
+    - "Country-specific e-invoice legal formats and localization configuration"
+    - "Revenue Accounting and Reporting recognition scenarios"
+    - "Full Condition Contract Management settlement logic"
+
+memory_model:
+  path: "DUE → REFERENCE → COPY → SPLIT → VALUE → POST → ISSUE → CORRECT → PROVE"
+  questions:
+    - key: DUE
+      question: "Why is this item billable now?"
+      answer: "Start with billing relevance, billing status, billing date/plan, blocks, completion, and the due-list entry."
+    - key: REFERENCE
+      question: "Which business object is the commercial source?"
+      answer: "The source can be a sales order, delivery, billing document request, credit/debit memo request, or another supported billable reference."
+    - key: COPY
+      question: "How should data and quantity move into billing?"
+      answer: "Copying control decides allowed source/target combinations, requirements, data transfer behavior, billing quantity, and pricing type."
+    - key: SPLIT
+      question: "Should references converge into one invoice or split?"
+      answer: "Compare split-relevant header and derived billing fields before changing custom logic."
+    - key: VALUE
+      question: "Which commercial values are copied and which are recalculated?"
+      answer: "Pricing type controls price transfer/redetermination; tax is part of the commercial value but remains a separate determination domain."
+    - key: POST
+      question: "What financial posting should billing create?"
+      answer: "Revenue account determination and FI integration translate billing amounts into receivable, revenue, deduction, and tax postings as configured."
+    - key: ISSUE
+      question: "How is the customer-facing invoice issued?"
+      answer: "Output and electronic-document processes consume the billing document, but transmission/legal format can have their own status and ownership."
+    - key: CORRECT
+      question: "Is the original billing event wrong, or is a commercial adjustment needed?"
+      answer: "Choose controlled cancellation or credit/debit correction based on business and legal context instead of overwriting history."
+    - key: PROVE
+      question: "How do we prove completion?"
+      answer: "Reconcile reference document flow, billing status, FI posting, output/eDocument state, and correction chain."
+
+canonical_entities:
+  - id: OBJ-SD-BILLING-DOCUMENT
+    type: business_object
+    title: "Billing Document"
+    summary: "Customer-facing commercial document such as invoice, credit memo, debit memo, pro forma invoice, or cancellation document."
+  - id: OBJ-SD-BILLING-DUE-ITEM
+    type: lifecycle_object
+    title: "Billing Due List Item"
+    summary: "Billable reference item that is ready, fully or partially, for billing processing."
+  - id: CFG-SD-BILLING-TYPE
+    type: configuration_object
+    title: "Billing Document Type"
+    summary: "Controls important whole-document billing behavior, including cancellation, FI transfer status, account determination procedure, and output context."
+  - id: CFG-SD-BILLING-COPY-CONTROL
+    type: configuration_object
+    title: "Billing Copying Control"
+    summary: "Controls source-to-target billing transfer, requirements, field transfer, quantity basis, document flow, and pricing type."
+  - id: DET-SD-BILLING-SPLIT
+    type: determination
+    title: "Billing Split / Convergence Decision"
+    summary: "Determines which billable items can share one billing-document header and which differences force separation."
+  - id: DET-SD-BILLING-PRICING-TRANSFER
+    type: determination
+    title: "Billing Pricing Transfer / Redetermination"
+    summary: "Controls whether price elements are copied, updated, or redetermined during billing."
+  - id: DET-SD-REVENUE-ACCOUNT
+    type: determination
+    title: "Revenue Account Determination"
+    summary: "Determines revenue and related accounts when billing transfers values to Financial Accounting."
+  - id: OBJ-FI-ACCOUNTING-DOCUMENT
+    type: business_object
+    title: "Accounting Document"
+    summary: "Financial evidence created from value-relevant billing transfer."
+  - id: OBJ-SD-CREDIT-MEMO
+    type: business_object
+    title: "Credit Memo"
+    summary: "Billing document that reduces customer receivables in the standard correction flow."
+  - id: OBJ-SD-DEBIT-MEMO
+    type: business_object
+    title: "Debit Memo"
+    summary: "Billing document that increases customer receivables in the standard correction flow."
+  - id: OBJ-SD-BILLING-CANCELLATION
+    type: business_object
+    title: "Billing Cancellation Document"
+    summary: "Document created to cancel an existing billing document while preserving traceable history."
+  - id: INT-SD-EDOCUMENT
+    type: integration
+    title: "Billing to Electronic Document"
+    summary: "Localization-dependent handoff from source billing/accounting documents into electronic-document processing."
+
+control_layers:
+  - id: BIL-CTRL-BILLABILITY
+    title: "Billability and Due State"
+    purpose: "Decides whether a source item is ready to enter billing processing."
+    diagnostic_question: "Why does this source appear, or not appear, in the billing due list now?"
+    source_refs: [SRC-SAP-BIL-PROCESSING, SRC-SAP-BIL-DUE-LIST]
+  - id: BIL-CTRL-TYPE
+    title: "Billing Document Type"
+    purpose: "Defines whole-document behavior such as cancellation relation, FI transfer status, account-determination procedure, and output context."
+    diagnostic_question: "Is the target billing type correct for the business transaction and downstream posting?"
+    source_refs: [SRC-SAP-BIL-TYPE]
+  - id: BIL-CTRL-COPY
+    title: "Copying Control"
+    purpose: "Defines which references may create which billing type and how data, quantity, document flow, and pricing behavior are transferred."
+    diagnostic_question: "Which exact source type, target billing type, and source item category control this transfer?"
+    source_refs: [SRC-SAP-BIL-COPYING-CONTROL]
+  - id: BIL-CTRL-SPLIT
+    title: "Split and Convergence"
+    purpose: "Controls whether multiple billable items can share one billing header."
+    diagnostic_question: "Which differing split-relevant value prevents convergence?"
+    source_refs: [SRC-SAP-BIL-SPLIT, SRC-SAP-BIL-SPLIT-ANALYSIS]
+  - id: BIL-CTRL-PRICING
+    title: "Pricing Transfer"
+    purpose: "Controls whether existing price elements are copied or pricing is recalculated during billing."
+    diagnostic_question: "Which pricing type was applied, and is the difference expected or accidental?"
+    source_refs: [SRC-SAP-BIL-PRICING]
+  - id: BIL-CTRL-ACCOUNT
+    title: "Revenue Account Determination"
+    purpose: "Maps billing values to Financial Accounting accounts."
+    diagnostic_question: "Which billing/master/pricing attributes produced the revenue account result?"
+    source_refs: [SRC-SAP-BIL-ACCOUNT-DETERMINATION]
+
+runtime_pipeline:
+  - order: 1
+    id: BIL-RUNTIME-DUE
+    title: "Establish billable readiness"
+    question: "Why is the business event ready for billing?"
+    inputs: ["billing relevance", "billing status", "billing date or plan", "billing block", "reference completion", "process-specific prerequisites"]
+    output: ["billing due list item or explicit reason why it is not due"]
+    failure_signal: "Users try to create an invoice manually while the real problem is an upstream block, date, status, or billing relevance."
+    source_refs: [SRC-SAP-BIL-DUE-LIST]
+  - order: 2
+    id: BIL-RUNTIME-REFERENCE
+    title: "Resolve the billing reference"
+    question: "Which document and quantity are being billed?"
+    inputs: ["sales order", "outbound delivery", "billing document request", "credit/debit memo request", "billing plan", "already billed quantity"]
+    output: ["source document, source item, billable quantity, commercial context"]
+    failure_signal: "The invoice looks wrong because the wrong reference, quantity basis, or already-billed state was used."
+    source_refs: [SRC-SAP-BIL-PROCESSING]
+  - order: 3
+    id: BIL-RUNTIME-COPY
+    title: "Apply billing type and copying control"
+    question: "How does source state become billing state?"
+    inputs: ["source document type", "source item category", "target billing type", "copying requirements", "data transfer rules", "quantity rule", "pricing type"]
+    output: ["candidate billing header/item data and document-flow update"]
+    failure_signal: "A technically valid invoice inherits the wrong field, quantity, partner/reference value, or pricing behavior."
+    source_refs: [SRC-SAP-BIL-TYPE, SRC-SAP-BIL-COPYING-CONTROL]
+  - order: 4
+    id: BIL-RUNTIME-SPLIT
+    title: "Evaluate split and convergence"
+    question: "Which items may share one billing document?"
+    inputs: ["sold-to/bill-to/payer context", "billing date", "billing type", "sales organization", "currency", "payment terms", "tax/localization fields", "other split-relevant header values"]
+    output: ["one or more billing-document groups"]
+    failure_signal: "Expected collective billing produces multiple invoices, or forced convergence would mix incompatible header values."
+    source_refs: [SRC-SAP-BIL-SPLIT, SRC-SAP-BIL-SPLIT-ANALYSIS]
+  - order: 5
+    id: BIL-RUNTIME-VALUE
+    title: "Establish billing value"
+    question: "Which values are copied and which are redetermined?"
+    inputs: ["source pricing", "billing pricing type", "manual conditions", "scales", "tax context", "freight/intercompany conditions where relevant"]
+    output: ["billing price elements, net value, tax value, gross/customer charge context"]
+    failure_signal: "Sales order and invoice have different values and the team treats every difference as a pricing defect without checking the pricing type."
+    source_refs: [SRC-SAP-BIL-PRICING]
+  - order: 6
+    id: BIL-RUNTIME-CREATE
+    title: "Create and save billing document"
+    question: "What commercial document now represents the charge?"
+    inputs: ["grouped billable references", "billing type", "copied values", "pricing/tax result", "partners", "dates"]
+    output: ["billing document", "updated document flow", "billing statuses"]
+    failure_signal: "Billing creation succeeds but the document is blocked or not transferred downstream."
+    source_refs: [SRC-SAP-BIL-PROCESSING, SRC-SAP-BIL-TYPE]
+  - order: 7
+    id: BIL-RUNTIME-POST
+    title: "Transfer to Financial Accounting"
+    question: "What receivable and revenue posting should be created?"
+    inputs: ["billing values", "company code/chart of accounts", "sales organization", "customer/material account assignment groups", "account key", "tax code and additional billing fields"]
+    output: ["FI accounting document or transfer error/block"]
+    failure_signal: "Invoice exists but accounting transfer is blocked, missing, or posts to an unexpected account."
+    source_refs: [SRC-SAP-BIL-ACCOUNT-DETERMINATION, SRC-SAP-BIL-TYPE]
+  - order: 8
+    id: BIL-RUNTIME-ISSUE
+    title: "Issue customer-facing evidence"
+    question: "How is the invoice communicated and externally tracked?"
+    inputs: ["billing output", "customer communication requirement", "country/localization rule", "eDocument type mapping where applicable"]
+    output: ["print/email/output evidence and/or electronic-document instance/status"]
+    failure_signal: "Billing and FI are correct but the customer or authority never receives an acceptable invoice."
+    source_refs: [SRC-SAP-BIL-PROCESSING, SRC-SAP-BIL-EDOCUMENT]
+  - order: 9
+    id: BIL-RUNTIME-CORRECT
+    title: "Correct without destroying history"
+    question: "Should we cancel, credit, debit, or rebill?"
+    inputs: ["error type", "financial posting state", "customer receipt state", "legal/localization constraints", "reference document", "desired correction amount"]
+    output: ["cancellation document, credit memo, debit memo, rebilling path, or controlled follow-up"]
+    failure_signal: "A manual workaround fixes the amount but breaks document flow, accounting traceability, or external invoice status."
+    source_refs: [SRC-SAP-BIL-CREDIT-DEBIT, SRC-SAP-BIL-CANCEL-API]
+  - order: 10
+    id: BIL-RUNTIME-PROVE
+    title: "Reconcile business completion"
+    question: "Can we prove that the commercial and financial event is complete?"
+    inputs: ["source document flow", "billing status", "billing document", "FI document", "output/eDocument status", "cancellation/correction chain"]
+    output: ["explained and auditable billing state"]
+    failure_signal: "One application is green while the customer, FI, or external compliance channel still sees an incomplete state."
+
+billing_type_model:
+  principle: "Billing type is a business control object, not merely a two-character label. Diagnose the intended transaction before comparing type codes."
+  common_examples:
+    - code: "F2"
+      reading: "Standard invoice context; exact order/delivery relevance depends on configured copying scenario."
+      source_refs: [SRC-SAP-BIL-TYPE]
+    - code: "G2"
+      reading: "Credit memo."
+      source_refs: [SRC-SAP-BIL-TYPE, SRC-SAP-BIL-CREDIT-DEBIT]
+    - code: "L2"
+      reading: "Debit memo."
+      source_refs: [SRC-SAP-BIL-TYPE, SRC-SAP-BIL-CREDIT-DEBIT]
+    - code: "S1"
+      reading: "Invoice/debit-memo cancellation context in standard delivery."
+      source_refs: [SRC-SAP-BIL-TYPE]
+  lead_rule: "Remember business purpose and controls first; standard codes are examples, not architecture."
+
+split_model:
+  principle: >-
+    Collective billing is a convergence problem. One invoice requires compatible header state.
+    Different split-relevant values create separate billing documents even when the business user expected one PDF.
+  check_first:
+    - "Bill-to and payer"
+    - "Sales organization and billing type"
+    - "Billing date"
+    - "Currency"
+    - "Payment terms and payment method"
+    - "Tax destination/departure and VAT registration context"
+    - "Customer reference and other split-relevant header values"
+    - "Custom data-transfer logic and custom split fields"
+  proof_tool: "Use split analysis before inventing a custom merge rule."
+  source_refs: [SRC-SAP-BIL-SPLIT, SRC-SAP-BIL-SPLIT-ANALYSIS]
+
+pricing_handoff:
+  principle: >-
+    Order pricing and billing pricing are related but not identical runtime decisions.
+    Copying control can preserve, update, or redetermine price elements. Compare the applied pricing type before debugging condition records.
+  examples:
+    - pricing_type: "B"
+      reading: "New pricing."
+    - pricing_type: "C"
+      reading: "Copy manual price elements and redetermine remaining elements, including tax redetermination in the documented standard behavior."
+    - pricing_type: "D"
+      reading: "Copy pricing elements unchanged in the documented behavior."
+  source_refs: [SRC-SAP-BIL-PRICING]
+
+accounting_handoff:
+  path: "BILLING VALUE → ACCOUNT KEY / MASTER CONTEXT → ACCOUNT DETERMINATION → FI DOCUMENT"
+  diagnostic_questions:
+    - "Was the billing document transferred to FI or is it blocked/not transferred?"
+    - "Which account key came from pricing?"
+    - "Which customer and material account-assignment groups apply?"
+    - "Which chart of accounts, sales organization, tax code, company-code context, or additional billing field participates?"
+    - "Is the unexpected G/L result a billing value problem or an account-determination problem?"
+  lead_rule: "Do not change pricing to repair a wrong revenue account if the commercial value is already correct."
+  source_refs: [SRC-SAP-BIL-ACCOUNT-DETERMINATION]
+
+correction_model:
+  principle: "Preserve the audit trail. Decide whether you are reversing the original billing event or creating a commercial adjustment."
+  paths:
+    - id: BIL-CORR-CANCEL
+      title: "Cancel and Rebill"
+      use_when: "The original billing document itself should be reversed and a corrected billing event created."
+      evidence: ["original billing document", "cancellation document", "reversed/offset FI effect where applicable", "new billing document if rebilled"]
+      source_refs: [SRC-SAP-BIL-PROCESSING, SRC-SAP-BIL-CANCEL-API]
+    - id: BIL-CORR-CREDIT
+      title: "Credit Memo"
+      use_when: "The customer receivable should be reduced through a controlled correction."
+      evidence: ["credit memo request where process requires it", "credit memo", "FI receivable reduction"]
+      source_refs: [SRC-SAP-BIL-CREDIT-DEBIT]
+    - id: BIL-CORR-DEBIT
+      title: "Debit Memo"
+      use_when: "The customer receivable should be increased through a controlled correction."
+      evidence: ["debit memo request where process requires it", "debit memo", "FI receivable increase"]
+      source_refs: [SRC-SAP-BIL-CREDIT-DEBIT]
+  localization_warning: >-
+    Electronic-invoice correction and cancellation rules depend on country and process.
+    Treat source billing correction and external eDocument/legal status as connected but separate responsibilities.
+
+integration_boundaries:
+  - boundary: "Sales Order / Delivery → Billing"
+    ownership: "The preceding process owns the fulfilled or billable business event; Billing decides how that reference becomes a charge."
+    question: "Is the wrong invoice caused by incorrect upstream business data or by billing transfer logic?"
+  - boundary: "Pricing → Billing"
+    ownership: "Pricing owns commercial calculation logic; Billing owns how pricing is copied or redetermined at invoice creation."
+    question: "Is the value difference caused by source pricing, billing pricing type, date/context change, or manual condition behavior?"
+    source_refs: [SRC-SAP-BIL-PRICING]
+  - boundary: "Tax → Billing"
+    ownership: "Tax determination owns tax logic; Billing carries the tax result in the customer charge and can trigger redetermination depending on pricing/copy context."
+    question: "Is the tax wrong because billing changed the pricing/date/context, or because tax determination itself is wrong?"
+  - boundary: "Billing → Financial Accounting"
+    ownership: "Billing owns the commercial document and values; FI owns accounting state after transfer. Revenue account determination connects the two."
+    question: "Did the invoice fail to post, or did it post with the wrong account assignment?"
+    source_refs: [SRC-SAP-BIL-ACCOUNT-DETERMINATION]
+  - boundary: "Billing → Output / eDocument"
+    ownership: "Billing is the source commercial document; output and electronic-document processing own transmission, formatting, external status, and localization-specific compliance flow."
+    question: "Is the invoice wrong, or is the external representation/transmission wrong?"
+    source_refs: [SRC-SAP-BIL-EDOCUMENT]
+
+failure_modes:
+  - id: FAIL-SD-BILLING-NOT-DUE
+    symptom: "Order or delivery is expected to invoice but does not appear as billable."
+    first_checks: ["billing relevance", "billing status", "billing block", "billing date or billing plan", "document completion", "already billed quantity", "due-list filters"]
+    avoid: "Do not bypass the due-state problem by forcing a manual billing document."
+  - id: FAIL-SD-BILLING-WRONG-REFERENCE
+    symptom: "Invoice quantity or source relationship is wrong."
+    first_checks: ["reference document and item", "copying control", "billing quantity rule", "partial billing history", "document flow"]
+    avoid: "Do not correct the invoice amount before proving which quantity is actually billable."
+  - id: FAIL-SD-BILLING-SPLIT
+    symptom: "Several invoices are created where the business expected one."
+    first_checks: ["split analysis", "payer/bill-to", "currency", "payment terms", "billing date", "sales organization", "tax/VAT fields", "custom split logic"]
+    avoid: "Do not remove split criteria only to satisfy a layout preference; some differences represent real legal or accounting boundaries."
+  - id: FAIL-SD-BILLING-PRICE
+    symptom: "Invoice price differs from sales order or expected agreement."
+    first_checks: ["billing pricing type", "source pricing", "billing date", "manual conditions", "scales", "tax redetermination", "copying control"]
+    avoid: "Do not assume billing must always equal the sales-order pricing snapshot."
+  - id: FAIL-SD-BILLING-FI
+    symptom: "Billing document exists but FI transfer is blocked, missing, or posts to unexpected accounts."
+    first_checks: ["billing posting status", "account key", "revenue account determination", "customer/material account assignment groups", "company code/chart of accounts", "tax code", "FI configuration"]
+    avoid: "Do not change commercial pricing when the defect is only account determination."
+  - id: FAIL-SD-BILLING-EXTERNAL
+    symptom: "Billing and FI are correct but customer/authority invoice delivery or eDocument status is wrong."
+    first_checks: ["billing output status", "eDocument type mapping", "country process", "submission status", "external response", "source-document correction state"]
+    avoid: "Do not cancel a correct commercial invoice only because a transmission channel failed."
+  - id: FAIL-SD-BILLING-CORRECTION
+    symptom: "Correction fixes money but leaves confusing document flow or external/legal status."
+    first_checks: ["business reason", "original billing/FI state", "customer receipt state", "cancellation relation", "credit/debit memo reference", "eDocument/legal constraints"]
+    avoid: "Do not use compensating documents without a clear correction model and reconciliation rule."
+
+impact_traces:
+  - id: BIL-TRACE-SPLIT
+    start: "Payment terms differ between billable references"
+    path: ["split-relevant header state differs", "collective billing cannot converge", "multiple billing documents created", "customer receives more invoices", "AR and output workload increase"]
+    lead_question: "Is the difference intentional business policy or bad upstream data?"
+  - id: BIL-TRACE-PRICING
+    start: "Billing pricing type changes expected behavior"
+    path: ["price elements copied/redetermined differently", "billing net/tax value changes", "customer receivable changes", "revenue/tax posting changes", "credit/debit correction risk increases"]
+    lead_question: "Which pricing state is contractually correct at billing time?"
+  - id: BIL-TRACE-ACCOUNT
+    start: "Wrong account determination input"
+    path: ["billing value is commercially correct", "revenue account search returns wrong/no G/L", "FI posting wrong or blocked", "financial reporting/reconciliation affected"]
+    lead_question: "Which input selected the account and who owns correcting it?"
+  - id: BIL-TRACE-EDOC
+    start: "Billing document posts correctly but eDocument mapping/transmission fails"
+    path: ["source invoice remains valid", "electronic representation not accepted/sent", "customer or authority lacks valid external evidence", "collection/compliance process can stop"]
+    lead_question: "Can we retry or repair external processing without changing the source commercial event?"
+
+lead_lens:
+  what_i_ask_first:
+    - "What is the billable business event: order, delivery, milestone, external request, or correction?"
+    - "What exactly is wrong: due state, quantity/reference, split, value, FI posting, or external invoice status?"
+    - "Which document owns the first incorrect value?"
+  what_owns_the_decision: "Billing owns billable conversion and invoice state; copying control, pricing, tax, FI, and eDocument each own specific adjacent decisions."
+  main_trade_off: "Preserve business/legal traceability while allowing operationally efficient collective billing and controlled correction."
+  typical_failure: "Teams repair the final invoice instead of tracing the first wrong input or ownership boundary."
+  how_i_prove_the_cause: "Use document flow, due-list state, copy-control context, split analysis, pricing comparison, FI posting status/account determination, and external-output status."
+  integration_impact: "Billing bridges Sales to AR/revenue accounting and often to external customer/compliance channels."
+  data_impact: "Partner, organizational, pricing, payment, tax, and account-assignment data can all become invoice/FI behavior."
+  sixty_second_explanation: >-
+    I read billing as a controlled conversion from a billable reference into a customer charge.
+    First I prove why the item is due and which reference/quantity is being billed. Then I check billing type and copying control,
+    because they define how data and pricing move. If several references are involved, I check split analysis before custom logic.
+    After value is correct, I separate revenue account determination and FI transfer from commercial pricing.
+    Finally I verify output or eDocument state and use cancellation or credit/debit correction without destroying the document trail.
+
+assessment_prompts:
+  - "A delivery is complete but does not appear in the billing due list. Build a hypothesis tree."
+  - "Two deliveries for one customer create two invoices. Explain how you prove the split reason before changing configuration."
+  - "The sales order shows 100 EUR, the invoice shows 105 EUR. Explain when this can be expected and what you inspect first."
+  - "The invoice value is correct but revenue posts to the wrong G/L account. Separate Pricing from account-determination diagnosis."
+  - "The billing document and FI document are correct, but the e-invoice was rejected. Define ownership and a safe recovery path."
+  - "An invoice must be corrected after posting. Compare cancellation/rebill with credit/debit correction and explain the audit-trail impact."
+
+relations:
+  - from: OBJ-SD-BILLING-DUE-ITEM
+    type: produces
+    to: OBJ-SD-BILLING-DOCUMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-BIL-DUE-LIST, SRC-SAP-BIL-PROCESSING]
+  - from: CFG-SD-BILLING-TYPE
+    type: controls
+    to: OBJ-SD-BILLING-DOCUMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-BIL-TYPE]
+  - from: CFG-SD-BILLING-COPY-CONTROL
+    type: determines
+    to: OBJ-SD-BILLING-DOCUMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-BIL-COPYING-CONTROL]
+  - from: DET-SD-BILLING-SPLIT
+    type: determines
+    to: OBJ-SD-BILLING-DOCUMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-BIL-SPLIT]
+  - from: DET-SD-BILLING-PRICING-TRANSFER
+    type: influences
+    to: OBJ-SD-BILLING-DOCUMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-BIL-PRICING]
+  - from: OBJ-SD-BILLING-DOCUMENT
+    type: triggers
+    to: DET-SD-REVENUE-ACCOUNT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-BIL-ACCOUNT-DETERMINATION]
+  - from: DET-SD-REVENUE-ACCOUNT
+    type: determines
+    to: OBJ-FI-ACCOUNTING-DOCUMENT
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-BIL-ACCOUNT-DETERMINATION]
+  - from: OBJ-SD-BILLING-DOCUMENT
+    type: integrated_via
+    to: INT-SD-EDOCUMENT
+    evidence_type: documented_fact
+    confidence: medium
+    source_refs: [SRC-SAP-BIL-EDOCUMENT]
+    scope: "Where electronic customer invoice localization/process is configured"
+  - from: OBJ-SD-BILLING-DOCUMENT
+    type: can_fail_as
+    to: FAIL-SD-BILLING-FI
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "A correct billing document can still fail at the accounting-transfer boundary."
+  - from: OBJ-SD-BILLING-DOCUMENT
+    type: can_fail_as
+    to: FAIL-SD-BILLING-SPLIT
+    evidence_type: reasoned_interpretation
+    confidence: high
+    rationale: "Split behavior is a common observable billing failure mode even when each document is individually valid."
