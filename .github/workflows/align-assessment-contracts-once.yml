@@ -1,0 +1,77 @@
+name: Align Assessment Contracts Once
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/align-assessment-contracts-once.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Align browser practice contracts
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          practice = Path('labs/assessment/practice-engine/index.html')
+          text = practice.read_text(encoding='utf-8')
+          old = """  $('pe-export').addEventListener('click',() => {\n    const blob = new Blob([JSON.stringify(history(),null,2)],{type:'application/json'});\n    const url = URL.createObjectURL(blob);\n    const link = document.createElement('a');\n    link.href = url;\n    link.download = 'sap-lead-assessment-attempts.json';\n    link.click();\n    URL.revokeObjectURL(url);\n  });"""
+          new = """  $('pe-export').addEventListener('click',() => {\n    const payload = {\n      format:'sap-lead-assessment-history',\n      version:'1.0.0',\n      exported_at:new Date().toISOString(),\n      attempts:history()\n    };\n    const blob = new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});\n    const url = URL.createObjectURL(blob);\n    const link = document.createElement('a');\n    link.href = url;\n    link.download = 'sap-lead-assessment-history.json';\n    link.click();\n    URL.revokeObjectURL(url);\n  });"""
+          if old not in text:
+              raise SystemExit('Practice export anchor not found')
+          practice.write_text(text.replace(old,new,1),encoding='utf-8')
+
+          mock = Path('labs/assessment/mock/index.html')
+          text = mock.read_text(encoding='utf-8')
+          replacements = [
+              (
+                  "  let cases = [];\n  let session = null;",
+                  "  let cases = [];\n  let session = null;\n  let thresholds = null;"
+              ),
+              (
+                  "      lead_signal:total >= 18,",
+                  "      lead_signal:total >= thresholds.case_total_lead_minimum,"
+              ),
+              (
+                  """  async function loadCases() {\n    const indexResponse = await fetch('/labs/assessment/data/case-sets.json',{cache:'no-store'});\n    if (!indexResponse.ok) throw new Error(`Case-set index HTTP ${indexResponse.status}`);\n    const index = await indexResponse.json();""",
+                  """  async function loadCases() {\n    const [indexResponse,scoringResponse] = await Promise.all([\n      fetch('/labs/assessment/data/case-sets.json',{cache:'no-store'}),\n      fetch('/labs/assessment/data/scoring.json',{cache:'no-store'})\n    ]);\n    if (!indexResponse.ok) throw new Error(`Case-set index HTTP ${indexResponse.status}`);\n    if (!scoringResponse.ok) throw new Error(`Scoring contract HTTP ${scoringResponse.status}`);\n    const index = await indexResponse.json();\n    const scoring = await scoringResponse.json();\n    thresholds = scoring.weak_signal_thresholds;"""
+              )
+          ]
+          for old,new in replacements:
+              if old not in text:
+                  raise SystemExit(f'Mock alignment anchor not found: {old[:80]}')
+              text = text.replace(old,new,1)
+          mock.write_text(text,encoding='utf-8')
+          PY
+      - name: Extend assessment contract tests
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('tests/test_assessment_practice_layer.py')
+          text = path.read_text(encoding='utf-8')
+          addition = '''\n\ndef test_browser_modes_use_shared_portability_and_lead_threshold() -> None:\n    practice = (ASSESSMENT / "practice-engine" / "index.html").read_text(encoding="utf-8")\n    mock = (ASSESSMENT / "mock" / "index.html").read_text(encoding="utf-8")\n\n    assert "format:'sap-lead-assessment-history'" in practice\n    assert "sap-lead-assessment-history.json" in practice\n    assert "lead_signal:total >= 18" not in mock\n    assert "thresholds.case_total_lead_minimum" in mock\n    assert "fetch('/labs/assessment/data/scoring.json'" in mock\n'''
+          if 'test_browser_modes_use_shared_portability_and_lead_threshold' not in text:
+              path.write_text(text.rstrip() + addition + '\n',encoding='utf-8')
+          PY
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add labs/assessment/practice-engine/index.html labs/assessment/mock/index.html tests/test_assessment_practice_layer.py
+          git commit -m "fix: align assessment browser contracts"
+          git push origin HEAD:main
