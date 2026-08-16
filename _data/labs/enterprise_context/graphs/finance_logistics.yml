@@ -1,0 +1,302 @@
+id: GRAPH-FI-CO-LOGISTICS-BRIDGE
+type: knowledge_graph
+title: "FI/CO for Logistics — Event to Reconciliation"
+domain: "SAP S/4HANA Finance and Logistics Integration"
+process_family: "Cross-Process Logistics"
+process_step: "From logistics business event to value posting, account or cost object, clearing, settlement, and reconciliation"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+
+summary: >-
+  A Lead-level bridge between logistics and FI/CO. It focuses on what a logistics consultant must explain:
+  which physical or commercial event creates value, which account or cost object receives it, which clearing or settlement
+  relationship remains open, and which evidence proves that logistics and finance describe the same business event.
+
+thesis: >-
+  Logistics creates business events; Finance records their value consequences. A Lead should not memorize debit/credit pairs in isolation.
+  Start with the business event, identify valuation and account-assignment context, follow the journal or cost-object effect,
+  then reconcile the finance state back to the logistics document chain. Specialized recognition and valuation scenarios can change timing or destination.
+
+boundary:
+  includes:
+    - "Outbound goods issue and cost-of-goods-sold baseline"
+    - "Procurement goods receipt, inventory/consumption valuation, and GR/IR"
+    - "Supplier invoice and GR/IR clearing/variance boundary"
+    - "Sales billing to accounts receivable, revenue, and tax handoff"
+    - "Production order consumption, receipt, and settlement boundary"
+    - "TM freight settlement into MM service procurement and invoice verification"
+    - "Automatic account determination and account-assignment ownership"
+    - "Cross-functional reconciliation evidence"
+  excludes_for_later_deep_dives:
+    - "Full General Ledger and Universal Journal design"
+    - "Material Ledger and actual costing design"
+    - "Full Margin Analysis / CO-PA design"
+    - "IFRS 15 / Revenue Accounting implementation"
+    - "Detailed asset accounting"
+    - "Full tax configuration and country localization"
+    - "Chart-of-accounts and closing-process design"
+
+memory_model:
+  path: "EVENT → VALUE → ACCOUNT → OBJECT → JOURNAL → CLEAR / SETTLE → RECONCILE"
+  questions:
+    - key: EVENT
+      question: "Which logistics event happened?"
+      answer: "Start with PGI, goods receipt, invoice receipt, billing, production consumption/output, freight settlement, or reversal."
+    - key: VALUE
+      question: "Why is this event value-relevant?"
+      answer: "Determine whether quantity, inventory value, consumption, revenue, receivable, accrual, variance, or cost needs to change."
+    - key: ACCOUNT
+      question: "Which G/L logic should receive the value?"
+      answer: "Trace transaction/event context, valuation, account keys, account-assignment groups, and automatic account determination rather than guessing a G/L number."
+    - key: OBJECT
+      question: "Which management object owns the cost or revenue context?"
+      answer: "The receiver may be stock, cost center, production order, sales-order item, project/WBS, profitability context, customer receivable, or another supported object."
+    - key: JOURNAL
+      question: "Which accounting evidence was created?"
+      answer: "Read the accounting document or journal entry together with its logistics reference and posting status."
+    - key: CLEAR
+      question: "What remains open until another event arrives?"
+      answer: "GR/IR, freight accrual/service-procurement chains, production-order balances, or other temporary states require a matching event or settlement."
+    - key: RECONCILE
+      question: "How do we prove Logistics and Finance agree?"
+      answer: "Follow document flow, quantities, values, accounting references, open items, cost-object balances, reversals, and period-end exception evidence."
+
+baseline_event_map:
+  - id: FINLOG-EVENT-PGI
+    event: "Post Goods Issue for customer delivery"
+    baseline_value_effect: "Inventory is reduced and cost is typically posted to COGS."
+    typical_posting_reading: "Dr COGS / Cr Inventory"
+    ownership_boundary: "Shipping/Inventory creates the logistics event; account determination and Finance own the accounting destination and journal state."
+    caveat: "Revenue-recognition or valuated-stock-in-transit scenarios can change cost-recognition timing."
+    source_refs: [SRC-SAP-FINLOG-PGI-COGS, SRC-SAP-FINLOG-STOCK-IN-TRANSIT-RR, SRC-SAP-FINLOG-EBRR]
+  - id: FINLOG-EVENT-GR
+    event: "Goods Receipt for purchase order"
+    baseline_value_effect: "Stock or consumption/cost object is debited; GR/IR is the offsetting bridge for standard valuated procurement."
+    typical_posting_reading: "Dr Inventory or Consumption / Cr GR/IR, with price-variance behavior depending on valuation and sequence."
+    ownership_boundary: "Procurement/Inventory owns receipt state; valuation and automatic account determination create the financial effect."
+    caveat: "Standard-price, moving-average-price, account-assigned, delivery-cost, and other variants differ."
+    source_refs: [SRC-SAP-FINLOG-GR-IR-POSTINGS, SRC-SAP-FINLOG-GR-VALUATION]
+  - id: FINLOG-EVENT-IR
+    event: "Supplier Invoice Receipt"
+    baseline_value_effect: "Vendor liability is created and GR/IR is cleared for the matched receipt/order value, with differences handled by valuation/variance logic."
+    typical_posting_reading: "Dr GR/IR and/or expense/variance/tax / Cr Vendor, depending on scenario."
+    ownership_boundary: "Invoice Verification owns supplier-invoice matching; FI owns liability and journal state."
+    caveat: "Invoice-before-GR, price differences, quantity differences, account assignment, tax, and delivery costs change the detailed posting."
+    source_refs: [SRC-SAP-FINLOG-PO-INVOICE, SRC-SAP-FINLOG-GR-IR-POSTINGS]
+  - id: FINLOG-EVENT-BILLING
+    event: "Customer Billing"
+    baseline_value_effect: "Customer receivable and billed revenue/tax are posted when billing transfers to FI."
+    typical_posting_reading: "Dr Accounts Receivable / Cr Revenue and tax-related accounts according to the billing/account-determination context."
+    ownership_boundary: "Billing owns commercial values; revenue account determination maps them into FI; Finance owns the posted journal/receivable state."
+    caveat: "Revenue-recognition solutions may add recognition/deferral postings beyond the baseline billing journal."
+    source_refs: [SRC-SAP-FINLOG-PGI-COGS, SRC-SAP-BIL-ACCOUNT-DETERMINATION, SRC-SAP-FINLOG-EBRR]
+  - id: FINLOG-EVENT-PROD-CONSUME
+    event: "Production component consumption"
+    baseline_value_effect: "Material value moves out of inventory and becomes actual cost on the production cost object according to the goods-issue/account-assignment context."
+    typical_posting_reading: "Inventory credit with production-order/cost-object debit context."
+    ownership_boundary: "Production owns component demand and order; Inventory posts the material event; CO/product costing owns cost-object accumulation."
+    caveat: "Backflush, activity allocation, overhead, subcontracting, Material Ledger, and settlement design are separate layers."
+  - id: FINLOG-EVENT-PROD-OUTPUT
+    event: "Production Goods Receipt and Settlement"
+    baseline_value_effect: "Finished/semi-finished inventory is received; production order is credited for delivered output and remaining/actual costs are resolved through settlement and variance logic."
+    typical_posting_reading: "Material stock and production-order/cost-object values are linked; final settlement depends on receiver and costing design."
+    ownership_boundary: "Production/Inventory owns output receipt; Product Cost Controlling owns cost accumulation, variance, and settlement."
+    caveat: "Receiver can be material, sales order, or another cost object depending on scenario."
+    source_refs: [SRC-SAP-FINLOG-PRODUCTION-SETTLEMENT]
+  - id: FINLOG-EVENT-FREIGHT
+    event: "TM Freight Settlement"
+    baseline_value_effect: "Freight cost accrual/service-procurement documents are created so carrier invoice verification can be completed in MM."
+    typical_posting_reading: "TM charge result → FSD → service PO/SES/accrual financial entries → supplier invoice verification."
+    ownership_boundary: "TM owns charge calculation and FSD; MM owns service procurement/invoice-verification objects; Finance owns posted cost/accrual/liability state."
+    caveat: "Inbound freight can affect material valuation in some designs; outbound freight is often expensed or assigned differently."
+    source_refs: [SRC-SAP-FINLOG-FREIGHT-SETTLEMENT, SRC-SAP-FINLOG-FREIGHT-IV-PREP]
+
+control_layers:
+  - id: FINLOG-CTRL-EVENT
+    title: "Business Event"
+    purpose: "Defines what happened physically or commercially and therefore which value transition is expected."
+    diagnostic_question: "Which logistics document and posting event created the financial state?"
+  - id: FINLOG-CTRL-VALUATION
+    title: "Valuation Context"
+    purpose: "Defines how stock or receipt/issue quantity receives value, including price-control and valuation context."
+    diagnostic_question: "Which material valuation and price-control assumptions apply?"
+    source_refs: [SRC-SAP-FINLOG-GR-VALUATION]
+  - id: FINLOG-CTRL-ACCOUNT-DETERMINATION
+    title: "Automatic Account Determination"
+    purpose: "Maps logistics transaction and valuation/commercial attributes to G/L accounts."
+    diagnostic_question: "Which transaction/account key and master/configuration inputs selected this account?"
+    source_refs: [SRC-SAP-IM-ACCOUNT-DETERMINATION, SRC-SAP-BIL-ACCOUNT-DETERMINATION]
+  - id: FINLOG-CTRL-ACCOUNT-ASSIGNMENT
+    title: "Cost / Revenue Object"
+    purpose: "Assigns costs or revenues to the relevant management object when the process is not simple valuated stock."
+    diagnostic_question: "Which cost center, order, WBS, sales-order item, asset, or profitability object should own the value?"
+  - id: FINLOG-CTRL-CLEARING
+    title: "Clearing and Settlement"
+    purpose: "Connects temporary balances to the future matching event or receiver."
+    diagnostic_question: "What should clear or settle this balance, and is that follow-on event missing or different?"
+    source_refs: [SRC-SAP-FINLOG-GRIR-CLEAR, SRC-SAP-FINLOG-PRODUCTION-SETTLEMENT]
+  - id: FINLOG-CTRL-RECOGNITION
+    title: "Recognition Boundary"
+    purpose: "Separates operational billing/COGS events from specialized revenue/cost recognition logic."
+    diagnostic_question: "Does Event-Based/Revenue Accounting alter timing or add adjustment postings in this scenario?"
+    source_refs: [SRC-SAP-FINLOG-EBRR, SRC-SAP-FINLOG-STOCK-IN-TRANSIT-RR]
+
+runtime_pipeline:
+  - order: 1
+    id: FINLOG-RUNTIME-EVENT
+    title: "Identify the logistics event"
+    question: "What happened in the business?"
+    inputs: ["material document", "delivery/PGI", "purchase order and GR", "supplier invoice", "billing document", "production order", "freight settlement document"]
+    output: ["expected quantity/commercial state change"]
+    failure_signal: "The team starts from a G/L account without first proving the logistics event that created it."
+  - order: 2
+    id: FINLOG-RUNTIME-VALUE
+    title: "Establish value relevance"
+    question: "What value should move because of this event?"
+    inputs: ["quantity", "material valuation", "purchase/order price", "billing value", "freight charges", "cost-object actuals"]
+    output: ["expected inventory, expense, COGS, revenue, receivable, liability, accrual, or variance effect"]
+    failure_signal: "Quantity is correct but value is wrong because valuation or price context was assumed."
+  - order: 3
+    id: FINLOG-RUNTIME-ACCOUNT
+    title: "Resolve G/L account logic"
+    question: "Which account-determination inputs should select the G/L account?"
+    inputs: ["transaction/account key", "valuation class/account grouping", "chart of accounts", "sales organization", "customer/material account assignment groups", "tax and other scenario context"]
+    output: ["expected G/L account or mapping failure"]
+    failure_signal: "Commercial or stock values are changed to compensate for a pure account-determination defect."
+  - order: 4
+    id: FINLOG-RUNTIME-OBJECT
+    title: "Resolve cost/revenue object"
+    question: "Which management object owns this value?"
+    inputs: ["cost center", "production/internal order", "WBS", "sales order", "asset", "profitability/profit-center context", "material stock"]
+    output: ["financial receiver/assignment context"]
+    failure_signal: "The G/L is correct but the cost is charged to the wrong object, plant/company/profit context, or no receiver at all."
+  - order: 5
+    id: FINLOG-RUNTIME-JOURNAL
+    title: "Read the journal evidence"
+    question: "Which accounting document was actually posted?"
+    inputs: ["logistics reference", "posting status", "journal line items", "amount/currency", "G/L", "account assignment", "tax"]
+    output: ["explained journal entry or explicit posting error"]
+    failure_signal: "A logistics document is treated as complete even though its accounting transfer failed or posted differently."
+  - order: 6
+    id: FINLOG-RUNTIME-CLEAR
+    title: "Clear or settle temporary state"
+    question: "Which later event should remove the temporary balance?"
+    inputs: ["GR/IR open balance", "production-order balance", "freight accrual/service PO/SES", "invoice match", "settlement receiver"]
+    output: ["cleared, settled, or intentionally open state"]
+    failure_signal: "A balance is manually cleared without proving whether the missing logistics/invoice/settlement event should still arrive."
+  - order: 7
+    id: FINLOG-RUNTIME-RECONCILE
+    title: "Reconcile end to end"
+    question: "Do logistics and finance describe the same event?"
+    inputs: ["document flow", "material/quantity history", "PO history", "billing/FI link", "GR/IR state", "production cost balance", "FSD/PO/SES/invoice chain", "reversal chain"]
+    output: ["business-complete, explained exception, or owned remediation"]
+    failure_signal: "One module is green while another still holds an open value, mismatch, or unposted follow-on event."
+
+process_bridges:
+  - id: FINLOG-BRIDGE-O2C
+    title: "Order-to-Cash"
+    path: "Delivery / PGI → Inventory & COGS → Billing → AR / Revenue / Tax → Payment / recognition outside this bridge"
+    lead_checks: ["PGI accounting document", "COGS/inventory", "billing posting status", "revenue account determination", "AR value", "revenue-recognition exception if active"]
+  - id: FINLOG-BRIDGE-P2P
+    title: "Procure-to-Pay"
+    path: "PO → GR → Inventory/Consumption + GR/IR → Supplier Invoice → Vendor Liability + GR/IR clearing → Payment outside this bridge"
+    lead_checks: ["PO account assignment", "material valuation", "GR accounting document", "invoice match", "price/quantity variance", "open GR/IR"]
+  - id: FINLOG-BRIDGE-PRODUCTION
+    title: "Production"
+    path: "Component GI / activities → Production Order Actual Cost → Finished Goods GR → Variance / Settlement → Material or other receiver"
+    lead_checks: ["component/value postings", "order actuals", "output receipt value", "variance", "settlement rule/receiver", "remaining order balance"]
+  - id: FINLOG-BRIDGE-FREIGHT
+    title: "Transportation Settlement"
+    path: "Freight Charges → FSD → Service PO + SES / Accrual → Carrier Invoice Verification → Cost / Liability reconciliation"
+    lead_checks: ["TM charge result", "FSD status", "MM follow-on documents", "financial accrual/cost", "carrier invoice match", "cancellation/reversal chain"]
+
+reconciliation_models:
+  - id: FINLOG-REC-GRIR
+    title: "GR/IR"
+    question: "Why does receipt value not yet match invoice value?"
+    expected_end_state: "Matching GR and IR values/quantities clear as designed; unexplained residuals become owned exceptions."
+    causes: ["missing GR", "missing invoice", "quantity mismatch", "price mismatch", "wrong PO price", "delivery costs on wrong account", "process still legitimately open"]
+    evidence: ["PO history", "GR material/accounting documents", "invoice document", "GR/IR open items", "expected future receipt/invoice"]
+    source_refs: [SRC-SAP-FINLOG-GRIR-RECONCILE, SRC-SAP-FINLOG-GRIR-CLEAR]
+  - id: FINLOG-REC-PROD
+    title: "Production Order Balance"
+    question: "Why does actual production cost remain on the order?"
+    expected_end_state: "Expected actual costs, delivered output credits, variances, and settlement agree with the order lifecycle and receiver."
+    causes: ["missing component/activity posting", "wrong output receipt", "price/quantity variance", "incorrect settlement rule", "order not ready for settlement", "legitimate WIP/period timing"]
+    evidence: ["order actual cost", "material documents", "goods receipt", "variance", "settlement rule", "settlement document"]
+    source_refs: [SRC-SAP-FINLOG-PRODUCTION-SETTLEMENT]
+  - id: FINLOG-REC-FREIGHT
+    title: "Freight Cost Chain"
+    question: "Why do TM charges, accruals, and carrier invoice not agree?"
+    expected_end_state: "Freight calculation, FSD, MM follow-on documents, financial accrual/cost, and carrier invoice represent the same agreed service."
+    causes: ["wrong charge calculation", "FSD not posted", "service PO/SES failure", "invoice variance", "cancellation not propagated", "wrong cost allocation"]
+    evidence: ["freight order/booking", "charge calculation", "FSD", "service PO", "SES", "accounting document", "carrier invoice"]
+    source_refs: [SRC-SAP-FINLOG-FREIGHT-SETTLEMENT, SRC-SAP-FINLOG-FREIGHT-IV-PREP]
+
+failure_modes:
+  - id: FINLOG-FAIL-PGI-COGS
+    symptom: "PGI is posted but COGS/inventory value is unexpected."
+    first_checks: ["delivery/material/quantity", "material valuation", "account determination", "COGS split", "special stock/transit scenario", "revenue-recognition scenario"]
+    avoid: "Do not assume every sales goods issue recognizes COGS at the same moment in every specialized scenario."
+  - id: FINLOG-FAIL-GR-VALUE
+    symptom: "Goods receipt quantity is correct but inventory/consumption value or variance is unexpected."
+    first_checks: ["PO price", "material price control", "standard/moving average context", "account assignment", "valuation class", "price difference", "invoice-before-GR state"]
+    avoid: "Do not treat the material document quantity as proof that financial valuation is correct."
+  - id: FINLOG-FAIL-GRIR
+    symptom: "GR/IR remains open after the business believes procurement is complete."
+    first_checks: ["PO history", "received vs invoiced quantity", "received vs invoiced value", "price differences", "delivery costs", "missing future event", "reversals"]
+    avoid: "Do not clear GR/IR manually before proving that no legitimate GR or invoice should still arrive."
+  - id: FINLOG-FAIL-BILLING-ACCOUNT
+    symptom: "Billing value is correct but revenue/receivable posting is wrong or blocked."
+    first_checks: ["billing posting status", "account key", "revenue account determination", "master account-assignment groups", "company/chart/sales context", "tax"]
+    avoid: "Do not repair a G/L mapping defect by changing the commercial price."
+  - id: FINLOG-FAIL-PROD-BALANCE
+    symptom: "Production order is operationally complete but financial balance/variance/settlement is not."
+    first_checks: ["component and activity actuals", "finished goods receipt", "order status", "variance", "settlement rule", "receiver", "period timing"]
+    avoid: "Do not close the financial problem by a manual journal before understanding the production-order cost flow."
+  - id: FINLOG-FAIL-FREIGHT
+    symptom: "TM freight charges are approved but MM/FI accrual, service documents, or carrier invoice state does not match."
+    first_checks: ["charge calculation", "FSD status", "service PO/SES", "accounting entry", "invoice verification", "cancellation chain", "cost allocation"]
+    avoid: "Do not treat TM settlement completion as proof that the supplier-invoice and Finance chain is complete."
+
+impact_traces:
+  - id: FINLOG-TRACE-GRIR
+    start: "Goods received, supplier invoice missing"
+    path: ["inventory/consumption value posted", "GR/IR carries offset", "period-end open item remains", "procurement/warehouse/supplier context needed", "closing/reconciliation workload increases"]
+    lead_question: "Is the balance an error or a legitimate timing difference?"
+  - id: FINLOG-TRACE-ACCOUNT
+    start: "Wrong valuation/account-determination input"
+    path: ["correct physical event", "wrong G/L or cost object", "financial reporting distorted", "manual corrections risk breaking traceability"]
+    lead_question: "Which logistics/master/configuration input selected the financial destination?"
+  - id: FINLOG-TRACE-FREIGHT
+    start: "FSD posted with wrong charge/cost allocation"
+    path: ["service procurement/accrual inherits value", "carrier invoice verification compares against wrong basis", "logistics margin/inventory/expense can be distorted", "reversal chain spans TM, MM and FI"]
+    lead_question: "Where is the first wrong value: charge calculation, allocation, FSD, or invoice?"
+
+lead_lens:
+  what_i_ask_first:
+    - "Which logistics event created the value?"
+    - "What should change: stock, expense, COGS, revenue, receivable, liability, accrual, or cost object?"
+    - "Is the problem amount, G/L account, cost object, clearing status, settlement, or recognition timing?"
+  decision_owner: "Logistics owns the business event and source attributes; account determination/valuation translate it; FI/CO owns the resulting journal, cost-object, clearing, settlement, and financial reporting state."
+  main_trade_off: "Keep process automation and automatic postings while preserving explainable financial ownership and reconciliation across module boundaries."
+  typical_failure: "A team repairs the journal line manually while the source logistics event, valuation, or account-assignment input remains wrong."
+  proof_of_cause: "Join the logistics reference, material/billing/invoice/FSD document, accounting document, account-determination inputs, cost-object state, open clearing balance, and reversal/settlement chain."
+  integration_impact: "O2C, P2P, Production and TM all cross into FI/CO through different posting and settlement contracts."
+  data_impact: "Material valuation, organizational context, account assignment, pricing account keys, customer/material groups, cost objects, and charge allocation shape financial outcome."
+  sixty_second_explanation: >-
+    I do not start FI/CO integration with debit and credit memorization. I start with the logistics event.
+    Then I ask what value should change, which account-determination and account-assignment inputs apply, and which journal or cost object should receive the result.
+    For procurement I follow GR/IR until receipt and supplier invoice match. For sales I separate PGI/COGS from Billing/AR/revenue.
+    For production I follow actual cost, output receipt, variance and settlement. For freight I follow FSD into MM service procurement and invoice verification.
+    Finally I reconcile the financial document back to the logistics chain and check whether a specialized recognition or valuation scenario changes the baseline.
+
+assessment_prompts:
+  - "PGI posted successfully but COGS is unexpected. Explain the evidence chain and important exceptions."
+  - "GR quantity is correct but the stock value and price variance surprise the business. Build the diagnosis."
+  - "A PO is operationally complete but GR/IR still has a balance. Decide whether this is timing, data, or an error."
+  - "The billing amount is correct but the revenue account is wrong. Explain ownership between SD and FI."
+  - "A production order is technically complete but still carries a financial balance. Trace the cost flow."
+  - "TM charges are correct but the carrier invoice cannot be reconciled. Trace FSD through MM and FI."
