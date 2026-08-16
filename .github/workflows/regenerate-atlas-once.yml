@@ -28,9 +28,10 @@ jobs:
       - name: Regenerate Atlas artifacts
         run: python3 scripts/generate_atlas_artifacts.py
 
-      - name: Commit expected generated files
+      - name: Commit generated artifact set
         run: |
-          unexpected=$(git diff --name-only | grep -v -E '^(ai/expert-promotion-inventory.json|ai/markdown-clusters.json)$' || true)
+          expected='^(atlas/manifest.json|llms-full.txt|ai/rag/related.json|ai/atlas-compact-index.json|ai/verified-pages.json|ai/expert-promotion-inventory.json|ai/markdown-clusters.json)$'
+          unexpected=$(git diff --name-only | grep -v -E "$expected" || true)
           if [ -n "$unexpected" ]; then
             echo "Unexpected generated changes:"
             echo "$unexpected"
@@ -38,7 +39,7 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          git add atlas/manifest.json llms-full.txt ai/rag/related.json ai/atlas-compact-index.json ai/verified-pages.json ai/expert-promotion-inventory.json ai/markdown-clusters.json
           if git diff --cached --quiet; then
             echo "No generated changes to commit."
             exit 0
