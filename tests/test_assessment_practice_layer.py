@@ -173,6 +173,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",
         "human-review": ASSESSMENT / "human-review" / "index.html",
         "core-study": ASSESSMENT / "core" / "index.html",
+        "core-boundaries": ASSESSMENT / "core-boundaries" / "index.html",
         "cross-process": ASSESSMENT / "cross-process" / "index.html",
     }
     for name, path in expected_pages.items():
@@ -199,7 +200,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -400,6 +401,37 @@ def test_core_study_map_is_reproducible_and_non_publishing() -> None:
 
     result = subprocess.run(
         [sys.executable, "scripts/generate_assessment_core_study_map.py", "--check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_core_boundary_drills_cross_supported_routes_without_publishing() -> None:
+    drills = load_json("core-boundary-drills.json")
+    core = load_json("core-study-map.json")
+    manifest = load_json("case-sets.json")
+    core_by_route = {item["route"]: item for item in core["items"]}
+
+    assert len(drills["drills"]) >= 8
+    assert len({item["id"] for item in drills["drills"]}) == len(drills["drills"])
+    for drill in drills["drills"]:
+        assert len(drill["routes"]) >= 2
+        assert len(drill["expected_reasoning"]) >= 5
+        assert len(drill["red_flags"]) >= 2
+        for route in drill["routes"]:
+            assert route in core_by_route
+            assert core_by_route[route]["evidence"]["review_status"] == "primary_source_review_complete"
+            assert core_by_route[route]["evidence"]["page_verified"] is False
+
+    serialized_manifest = json.dumps(manifest)
+    assert "CORE-X-" not in serialized_manifest
+    assert "core-boundary-drills" not in serialized_manifest
+
+    result = subprocess.run(
+        [sys.executable, "scripts/validate_assessment_core_boundary_drills.py", "--check"],
         cwd=ROOT,
         text=True,
         capture_output=True,
