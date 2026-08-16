@@ -1,0 +1,74 @@
+name: Agent Fix Publication Content Quality
+
+on:
+  push:
+    branches:
+      - agent/site-trust-connectivity-20260816
+    paths:
+      - '.github/workflows/agent-fix-content-quality.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/site-trust-connectivity-20260816
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install pyyaml
+      - name: Patch content quality findings
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path('datasets/incident-lab/index.md'): [
+                  ('## How I use it', '## Usage'),
+                  ('## Trust boundary', '## Update policy\n\nThe dataset is updated only when a case, field, or validation rule changes. Each update should keep the JSON Schema and examples aligned, and the page review date records when the public contract was checked.\n\n## Trust boundary'),
+              ],
+              Path('labs/enterprise-context/mdg/index.md'): [
+                  ('description: "A practical SAP MDG Data Book: product options, governance processes, data domains, solution architecture, interface contracts, extensibility, logistics dependencies, implementation rules, and presales decisions."',
+                   'description: "SAP MDG Data Book covering governance processes, data domains, architecture, interfaces, extensibility, logistics dependencies, and deployment choices."'),
+              ],
+              Path('labs/enterprise-context/mdg/interfaces/index.md'): [
+                  ('description: "Object-level SAP MDG interface contracts for Business Partner, Customer, Supplier, and Material, including mapping, errors, reconciliation, and downstream proof."',
+                   'description: "Object-level SAP MDG interface contracts for Business Partner, Customer, Supplier and Material, covering mappings, errors, reconciliation and downstream proof."'),
+                  ('    <p><strong>Boundary:</strong> a successful message is not the business outcome. The target still has to identify the object, map codes, accept the data, and use it in a transaction.</p>',
+                   '    <p><strong>Problem:</strong> transport success can hide a master-data failure. The consumer may receive a message but still reject, misidentify, or fail to use the governed object.</p>\n    <p><strong>Boundary:</strong> a successful message is not the business outcome. The target still has to identify the object, map codes, accept the data, and use it in a transaction.</p>'),
+              ],
+          }
+
+          for path, edits in replacements.items():
+              text = path.read_text(encoding='utf-8')
+              for old, new in edits:
+                  if text.count(old) != 1:
+                      raise SystemExit(f'{path}: expected one match, found {text.count(old)} for {old[:80]!r}')
+                  text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+          PY
+      - name: Synchronize publication sidecars
+        run: python3 scripts/knowledge_publication_loop.py
+      - name: Validate publication model
+        run: |
+          python3 scripts/normalize_publication_schema.py --check
+          python3 scripts/knowledge_publication_loop.py --check
+          python3 scripts/check_knowledge_publication_contract.py
+      - name: Protect homepage source content
+        run: |
+          git diff --exit-code origin/main -- index.html _data/home.yml _data/home || {
+            echo 'Homepage protection failed'; exit 1;
+          }
+      - name: Commit quality fixes
+        run: |
+          git config user.name 'dkharlanau'
+          git config user.email 'dkharlanau@gmail.com'
+          git add datasets/incident-lab/index.md labs/enterprise-context/mdg/index.md labs/enterprise-context/mdg/interfaces/index.md ai/pages ai/page-knowledge-index.json
+          git commit -m 'Resolve changed-content publication warnings'
+          git push origin HEAD:agent/site-trust-connectivity-20260816
