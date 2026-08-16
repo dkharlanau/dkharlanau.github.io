@@ -1,0 +1,115 @@
+id: EWM-HU-PACKING-MAP
+title: "Handling Units, Packing & Labels — EWM Decision Map"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+summary: >-
+  A practical map of the EWM handling-unit lifecycle: package identity, packaging material,
+  nested HUs, packing rules, work-center execution, labels, repacking and reconciliation.
+lead_rule: >-
+  Treat the HU as the warehouse representation of the physical logistics unit. The label identifies it;
+  the printer and scanner do not own its lifecycle.
+memory_path: "CREATE → PACK → IDENTIFY → MOVE → REPACK → SHIP → RECONCILE"
+
+hu_anatomy:
+  - part: "Packaging material"
+    meaning: "The pallet, carton, container or other load carrier used to create the HU."
+  - part: "Contents"
+    meaning: "Products, quantities and relevant stock context such as batch information."
+  - part: "Hierarchy"
+    meaning: "An HU may contain lower-level HUs, for example cartons packed on a pallet."
+  - part: "Identity"
+    meaning: "Unique scannable identification such as an agreed external HU number or SSCC."
+  - part: "Location and status"
+    meaning: "Where the HU is and what warehouse processing state it is in."
+
+packing_components:
+  - title: "Packaging Specification"
+    role: "Defines repeatable packing levels, quantities, packaging materials and instructions."
+    decision: "Use when packing should be determined consistently instead of invented during execution."
+  - title: "Packing Work Center"
+    role: "Execution point for packing, unpacking and repacking products and HUs."
+    decision: "Use when physical package state changes must be controlled in the warehouse process."
+  - title: "Deconsolidation"
+    role: "Splits mixed inbound handling units into process-appropriate HUs."
+    decision: "Use when inbound packing does not match downstream putaway or process needs."
+  - title: "Package Building"
+    role: "Creates packing proposals for supported warehouse process steps."
+    decision: "Use when the system should propose package structures from packing master data."
+
+identity_patterns:
+  - title: "Supplier / external HU"
+    question: "Can the incoming identity be trusted and kept unique in the receiving scope?"
+    rule: "Validate the external identity before accepting it as the physical HU reference."
+  - title: "Internal HU"
+    question: "Where is the identity generated and who owns it?"
+    rule: "Generate the HU identity in the owning warehouse process, not in an isolated printer."
+  - title: "Nested HU"
+    question: "Which child HUs belong to which parent HU?"
+    rule: "Preserve hierarchy through repacking, staging and loading."
+  - title: "Reprint"
+    question: "Is this the same HU or a new logistics unit?"
+    rule: "Reprint reproduces identity; creation produces a new business object. Do not mix them."
+
+lifecycle:
+  - step: "CREATE"
+    control: "Decide external or internal HU identity and packaging material."
+  - step: "PACK"
+    control: "Record physical contents and hierarchy in EWM."
+  - step: "IDENTIFY"
+    control: "Print/apply the correct label and verify the scan resolves to this HU."
+  - step: "MOVE"
+    control: "Move the HU through warehouse tasks while keeping location and status consistent."
+  - step: "REPACK"
+    control: "Change contents or parent/child structure at a controlled execution point."
+  - step: "SHIP"
+    control: "Validate final package structure before staging/loading/GI."
+  - step: "RECONCILE"
+    control: "After exceptions, compare physical package, label, content and EWM state."
+
+failure_modes:
+  - symptom: "Two physical pallets show the same external HU identity."
+    check_first: "External-ID creation/reuse, active HU lookup and supplier/integration process."
+  - symptom: "Correct products are on a pallet but EWM shows another parent-child structure."
+    check_first: "Last repack/deconsolidation action and interrupted work-center processing."
+  - symptom: "Label scans successfully but opens the wrong HU."
+    check_first: "Reprint history, label application and physical package identity."
+  - symptom: "Warehouse worker repacked physically but not digitally."
+    check_first: "Work-center process, manual bypass and exception recovery."
+  - symptom: "Packing proposal is wrong."
+    check_first: "Packaging specification determination, validity, packing level, target quantity and product master data."
+
+kpis:
+  - title: "Packing rework rate"
+    meaning: "How often completed packages need correction or repacking."
+  - title: "HU identity exception rate"
+    meaning: "Duplicate, unknown or mismatched HU identifiers detected in execution."
+  - title: "Physical/digital HU mismatch"
+    meaning: "Exceptions where package content or hierarchy differs from EWM."
+  - title: "Manual packing override rate"
+    meaning: "How often standard proposal/rule is bypassed and why."
+
+assessment_cards:
+  - question: "Is an HU just a pallet number?"
+    answer: "No. It represents the physical logistics unit with packaging material, contents, hierarchy, identity, location and status."
+  - question: "Packaging Specification versus Work Center?"
+    answer: "The packaging specification is master data that describes how to pack. The work center is an execution location where packing, unpacking or repacking happens."
+  - question: "What is the main reprint rule?"
+    answer: "A reprint should reproduce the identity of the same HU. It must not silently generate another HU or reuse an identity on another physical package."
+  - question: "What do you do after physical repacking outside the normal flow?"
+    answer: "I reconcile contents, hierarchy and identity with EWM before the HU continues."
+
+related:
+  - title: "Warehouse Scanners & Auto-ID"
+    url: "/labs/enterprise-context/ewm/scanners/"
+  - title: "EWM Automation & MFS"
+    url: "/labs/enterprise-context/ewm/automation/"
+  - title: "EWM Object Catalog"
+    url: "/labs/enterprise-context/ewm/objects/"
+
+source_refs:
+  - SRC-SAP-EWM-HANDLING-UNIT
+  - SRC-SAP-EWM-PACK-WORK-CENTER
+  - SRC-SAP-EWM-PACKAGING-SPEC
+  - SRC-SAP-EWM-UNIFIED-PACKAGE-BUILDING
+  - SRC-SAP-EWM-WORK-CENTER
+  - SRC-GS1-LOGISTIC-LABEL
