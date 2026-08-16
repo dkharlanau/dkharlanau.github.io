@@ -1,0 +1,371 @@
+id: GRAPH-MM-INVENTORY-MANAGEMENT
+type: knowledge_graph
+title: "Inventory Management — Event to Reconciliation"
+domain: "SAP S/4HANA Inventory Management"
+process_family: "Materials Management / Inventory Management"
+process_step: "From business event to goods movement, stock state, value, warehouse handoff, and reconciliation"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+
+summary: >-
+  A Lead-level map of Inventory Management. It explains goods movements as business-state changes rather than a list of movement-type numbers.
+  The model connects reference documents, movement semantics, stock type, ownership, valuation, reservations, physical inventory,
+  special stock, EWM boundaries, accounting impact, reversal, and reconciliation.
+
+thesis: >-
+  A material document is evidence of a stock event. The important question is what business state changed:
+  quantity, location, stock type, ownership, valuation, consumption, or transit status. Movement type controls that behavior,
+  but diagnosing the number without the business event is backwards.
+
+boundary:
+  includes:
+    - "Goods receipts, goods issues, transfer postings, and stock transfers"
+    - "Material document and movement type control"
+    - "Plant, storage location, stock type, batch, valuation type, and special-stock context"
+    - "Reservations and planned goods movements"
+    - "Physical inventory and difference posting"
+    - "Automatic accounting boundary"
+    - "IM versus EWM ownership and goods-movement communication"
+    - "Reversal and reconciliation logic"
+  excludes_for_later_deep_dives:
+    - "Full movement-type configuration catalog"
+    - "Detailed valuation and Material Ledger design"
+    - "Detailed automatic account-determination configuration"
+    - "Detailed batch, serial, and handling-unit configuration"
+    - "Full Stock Transport Order process variants"
+    - "Detailed EWM warehouse-task execution"
+
+memory_model:
+  path: "EVENT → REFERENCE → MOVEMENT → STOCK → VALUE → WAREHOUSE → RECONCILE"
+  questions:
+    - key: EVENT
+      question: "What business event happened physically or logically?"
+      answer: "Start with receipt, issue, consumption, transfer, stock-status change, inventory difference, or reversal."
+    - key: REFERENCE
+      question: "Which business object authorizes or explains the movement?"
+      answer: "A purchase order, production order, delivery, reservation, physical inventory document, or manual business reason can provide the reference context."
+    - key: MOVEMENT
+      question: "Which movement semantics should represent the event?"
+      answer: "Movement type controls important quantity, stock, valuation, consumption, field, and follow-on behavior. Use the business purpose to select or diagnose it."
+    - key: STOCK
+      question: "Which stock state changes?"
+      answer: "Trace material, plant, storage location, stock type, batch, valuation type, special-stock owner, and transit state before and after posting."
+    - key: VALUE
+      question: "Does the movement create a financial effect?"
+      answer: "Some movements change only quantity or location; others also change inventory value, consumption, or automatic FI postings."
+    - key: WAREHOUSE
+      question: "Who owns the physical warehouse execution?"
+      answer: "MM-IM manages ERP quantity/value stock. Where EWM owns the warehouse, physical bin-level execution and ERP goods-movement synchronization must be separated."
+    - key: RECONCILE
+      question: "How do we prove the event is complete and reversible?"
+      answer: "Read the material document, accounting document where relevant, reference history, stock state, EWM state, reversal chain, and physical-inventory evidence."
+
+control_layers:
+  - id: IM-CTRL-MOVEMENT
+    title: "Movement Type"
+    purpose: "Represents the business purpose of the goods movement and controls quantity, stock, valuation, consumption, fields, and follow-on behavior."
+    diagnostic_question: "Does this movement type match the intended business event and reference?"
+    source_refs: [SRC-SAP-IM-MOVEMENT-TYPE]
+  - id: IM-CTRL-STOCK
+    title: "Stock State"
+    purpose: "Defines where and in which usable or restricted state the quantity is managed."
+    diagnostic_question: "Which stock separator changed: plant, storage location, stock type, batch, valuation type, or special stock?"
+    source_refs: [SRC-SAP-IM-STOCKS, SRC-SAP-IM-DOCUMENT-ITEM]
+  - id: IM-CTRL-REFERENCE
+    title: "Reference Object"
+    purpose: "Connects the goods movement to the process that requested or authorized it."
+    diagnostic_question: "Is the posting a consequence of procurement, production, sales, reservation, physical inventory, or an ad-hoc decision?"
+  - id: IM-CTRL-VALUE
+    title: "Valuation and Account Determination"
+    purpose: "Separates physical quantity movement from financial posting behavior."
+    diagnostic_question: "Should this event change inventory value or create consumption/accounting entries, and to which accounts?"
+    source_refs: [SRC-SAP-IM-ACCOUNT-DETERMINATION]
+  - id: IM-CTRL-WAREHOUSE
+    title: "Warehouse Ownership"
+    purpose: "Separates ERP stock state from detailed physical warehouse execution."
+    diagnostic_question: "Is MM-IM the execution layer, or does EWM own the bin-level movement and communicate the goods movement back to ERP?"
+    source_refs: [SRC-SAP-IM-EWM, SRC-SAP-IM-EWM-COMMUNICATION]
+
+movement_families:
+  - id: IM-MOVE-GR
+    title: "Goods Receipt"
+    business_reading: "Increases a receiving stock or records a receipt event with reference such as purchase or production."
+    lead_question: "What receipt is being recognized, which stock state receives it, and what valuation/accounting should follow?"
+  - id: IM-MOVE-GI
+    title: "Goods Issue / Consumption"
+    business_reading: "Reduces stock for delivery, production, cost object, scrap, or another consumption purpose."
+    lead_question: "Who consumes the material, which reference authorizes it, and what cost object or account receives the value?"
+  - id: IM-MOVE-TRANSFER-POSTING
+    title: "Transfer Posting"
+    business_reading: "Changes stock identity or status without necessarily representing a physical move, for example stock type, batch, or material number."
+    lead_question: "Is this a logical stock-state change or a real transport between locations?"
+    source_refs: [SRC-SAP-IM-TRANSFER]
+  - id: IM-MOVE-STOCK-TRANSFER
+    title: "Stock Transfer"
+    business_reading: "Represents stock movement between storage locations or plants, in one or two steps depending on process design."
+    lead_question: "Do we need transit visibility, planning impact, valuation change, delivery/STO control, or only an internal location move?"
+    source_refs: [SRC-SAP-IM-TRANSFER]
+  - id: IM-MOVE-INVENTORY-DIFFERENCE
+    title: "Physical Inventory Difference"
+    business_reading: "Aligns book stock with counted physical stock and can create an accounting impact."
+    lead_question: "What caused the difference, which stock unit was counted, and how will the adjustment be controlled and explained?"
+    source_refs: [SRC-SAP-IM-PHYSICAL-INVENTORY, SRC-SAP-IM-INVENTORY-DIFFERENCE]
+
+stock_model:
+  principle: "Quantity alone is not an inventory state. Read every quantity together with its organizational, usability, ownership, and valuation separators."
+  dimensions:
+    - dimension: "Plant"
+      question: "Which planning and valuation context owns the stock?"
+    - dimension: "Storage Location"
+      question: "At which ERP inventory location is the stock managed?"
+    - dimension: "Stock Type"
+      examples: ["unrestricted-use", "quality inspection", "blocked"]
+      question: "Can the quantity be used for the intended business purpose now?"
+      source_refs: [SRC-SAP-IM-STOCKS]
+    - dimension: "Batch"
+      question: "Does the quantity belong to the correct batch identity and status?"
+    - dimension: "Valuation Type"
+      question: "Is split valuation separating this quantity financially?"
+    - dimension: "Special Stock"
+      examples: ["vendor consignment", "sales-order stock", "project stock", "customer-related stock contexts"]
+      question: "Who owns or reserves this quantity, and which business object restricts its use?"
+      source_refs: [SRC-SAP-IM-SPECIAL-STOCK, SRC-SAP-IM-DOCUMENT-ITEM]
+
+runtime_pipeline:
+  - order: 1
+    id: IM-RUNTIME-EVENT
+    title: "Identify the business event"
+    question: "What actually happened or should happen to the material?"
+    inputs: ["receipt", "issue", "consumption", "transfer", "status change", "physical count difference", "reversal request"]
+    output: ["intended inventory state transition"]
+    failure_signal: "A user chooses a familiar movement type before the business event and ownership are understood."
+  - order: 2
+    id: IM-RUNTIME-REFERENCE
+    title: "Resolve the reference and authority"
+    question: "Which process object owns this movement?"
+    inputs: ["purchase order", "production order", "delivery", "reservation", "physical inventory document", "manual reason"]
+    output: ["reference object, quantity, account assignment, and process context"]
+    failure_signal: "Stock is corrected manually although an upstream document or dependent reservation is wrong."
+  - order: 3
+    id: IM-RUNTIME-MOVEMENT
+    title: "Apply movement semantics"
+    question: "Which movement type correctly represents the event?"
+    inputs: ["business purpose", "reference", "source and destination stock", "consumption/account assignment", "reversal relationship"]
+    output: ["controlled posting behavior and required fields"]
+    failure_signal: "The posting succeeds technically but updates the wrong stock, account, consumption, or follow-on object."
+    source_refs: [SRC-SAP-IM-MOVEMENT-TYPE]
+  - order: 4
+    id: IM-RUNTIME-STOCK
+    title: "Update stock state"
+    question: "Which quantity is reduced and which quantity is increased?"
+    inputs: ["material", "plant", "storage location", "stock type", "batch", "valuation type", "special stock"]
+    output: ["new ERP stock state and material document"]
+    failure_signal: "Total quantity looks plausible, but material is in the wrong location, stock type, batch, special-stock segment, or transit state."
+    source_refs: [SRC-SAP-IM-STOCKS, SRC-SAP-IM-DOCUMENT-ITEM]
+  - order: 5
+    id: IM-RUNTIME-VALUE
+    title: "Apply valuation and accounting"
+    question: "What financial state changes with the movement?"
+    inputs: ["movement/account grouping", "valuation context", "material value", "consumption object", "company-code/plant context"]
+    output: ["accounting document where relevant, inventory value and/or consumption effect"]
+    failure_signal: "Quantity is correct but the posting hits an unexpected G/L account, cost object, or value."
+    source_refs: [SRC-SAP-IM-ACCOUNT-DETERMINATION]
+  - order: 6
+    id: IM-RUNTIME-WAREHOUSE
+    title: "Execute or synchronize warehouse movement"
+    question: "Does detailed warehouse execution belong to MM-IM or EWM?"
+    inputs: ["warehouse-managed location", "delivery or goods-movement communication", "EWM stock and task state", "ERP material document"]
+    output: ["aligned ERP inventory and warehouse execution state"]
+    failure_signal: "ERP and EWM show different completion states, or a direct IM posting bypasses the intended warehouse process."
+    source_refs: [SRC-SAP-IM-EWM, SRC-SAP-IM-EWM-COMMUNICATION]
+  - order: 7
+    id: IM-RUNTIME-RECONCILE
+    title: "Reconcile and reverse when needed"
+    question: "Can we prove the final state and the complete document chain?"
+    inputs: ["material document", "accounting document", "reference history", "stock overview", "EWM state", "reversal/cancellation chain"]
+    output: ["explained inventory state or controlled reversal"]
+    failure_signal: "A compensating posting hides the original error and leaves reference history or accounting inconsistent."
+
+reservation_model:
+  principle: "A reservation is a planned stock requirement, not physical stock movement. It protects intent and can influence MRP before issue."
+  types:
+    - title: "Manual Reservation"
+      reading: "A user or department plans a later goods issue, receipt, or stock-transfer requirement with a purpose and requirement date."
+    - title: "Dependent Reservation"
+      reading: "An upstream order or project creates the requirement automatically; correct the owning object instead of editing the reservation directly."
+  diagnostic_questions:
+    - "Which object created the reservation?"
+    - "Is the requirement date still valid?"
+    - "Was the quantity already withdrawn or finally issued?"
+    - "Is MRP reading this requirement as intended?"
+    - "Is the reservation a cause, or only a reflection of an upstream production/project component?"
+  source_refs: [SRC-SAP-IM-RESERVATIONS]
+
+physical_inventory_model:
+  path: "SCOPE → DOCUMENT → COUNT → DIFFERENCE → APPROVE → POST → EXPLAIN"
+  stages:
+    - title: "Scope"
+      reading: "Define the stock management units and stock categories that are being inventoried."
+    - title: "Physical Inventory Document"
+      reading: "Freeze the count scope and create the control object for count and difference processing."
+    - title: "Count"
+      reading: "Record the physical observation independently from book quantity where the procedure requires it."
+    - title: "Difference"
+      reading: "Compare counted quantity with book stock and investigate material differences before posting."
+    - title: "Post"
+      reading: "Adjust book stock to counted quantity and create the corresponding inventory/accounting effect."
+    - title: "Explain"
+      reading: "Classify root cause such as timing, unposted movement, wrong location, picking/staging error, unit issue, theft/damage, or master-data/process error."
+  lead_lens: >-
+    Posting a physical inventory difference fixes book stock. It does not explain why the difference existed.
+    A Lead separates statutory/control completion from process root-cause elimination.
+  source_refs: [SRC-SAP-IM-PHYSICAL-INVENTORY, SRC-SAP-IM-INVENTORY-DIFFERENCE]
+
+integration_boundaries:
+  - boundary: "Procurement → Inventory Management"
+    ownership: "Purchasing owns the commercial order; IM records receipt, stock, valuation, and material-document state."
+    question: "Did the correct PO item produce the intended receipt quantity, stock type, and accounting effect?"
+  - boundary: "Production → Inventory Management"
+    ownership: "Production owns component demand and output; IM records component issues and finished-product receipts."
+    question: "Do reservation, consumption, confirmation, and material documents describe the same physical event?"
+  - boundary: "Quality Management → Inventory Management"
+    ownership: "QM owns quality disposition; IM records the resulting stock-state change."
+    question: "Does the stock posting match the usage decision?"
+  - boundary: "Sales/Shipping → Inventory Management"
+    ownership: "Delivery owns customer fulfillment execution; IM records the inventory consequence of goods issue or return."
+    question: "Did the delivery event create the intended stock and accounting state?"
+  - boundary: "Inventory Management → EWM"
+    ownership: "MM-IM is the ERP quantity/value layer; EWM owns detailed warehouse execution and bin-level stock where deployed."
+    question: "Which system is leading for this physical movement, and how is completion communicated?"
+    source_refs: [SRC-SAP-IM-EWM, SRC-SAP-IM-EWM-COMMUNICATION]
+  - boundary: "Inventory Management → FI/CO"
+    ownership: "IM creates the logistics event; automatic account determination and account assignment create the financial effect."
+    question: "Should this movement be value-relevant, and which account/cost object should receive the posting?"
+    source_refs: [SRC-SAP-IM-ACCOUNT-DETERMINATION]
+
+failure_modes:
+  - id: IM-FAIL-WRONG-MOVEMENT
+    symptom: "Material document posts successfully but business stock or accounting is wrong."
+    first_checks: ["business event", "movement type and reversal pair", "reference object", "source/destination stock", "account assignment", "material document items"]
+    avoid: "Do not memorize another movement number before proving the intended state transition."
+  - id: IM-FAIL-WRONG-STOCK
+    symptom: "Quantity exists but cannot be used by the next process."
+    first_checks: ["plant", "storage location", "stock type", "special stock", "batch/status", "reservation/requirement", "EWM location where relevant"]
+    avoid: "Do not use total plant stock as proof that the required quantity is usable."
+  - id: IM-FAIL-TRANSFER-IN-TRANSIT
+    symptom: "Issuing stock decreased but receiving stock is not yet usable."
+    first_checks: ["one-step versus two-step design", "stock in transfer/transit", "issuing and receiving documents", "receiving location", "delivery/STO involvement if applicable"]
+    avoid: "Do not post a second independent receipt before tracing the transfer chain."
+  - id: IM-FAIL-ACCOUNT
+    symptom: "Quantity is correct but G/L or cost-object posting is wrong."
+    first_checks: ["movement business purpose", "valuation context", "account assignment", "automatic account determination", "material value", "accounting document"]
+    avoid: "Do not correct FI manually while leaving the logistics posting unexplained."
+  - id: IM-FAIL-RESERVATION
+    symptom: "Stock appears reserved or MRP demand looks wrong."
+    first_checks: ["reservation type", "owning order/project", "requirement date", "open quantity", "final issue/deletion state", "upstream component requirement"]
+    avoid: "Do not edit a dependent reservation instead of correcting its owning object."
+  - id: IM-FAIL-PI-DIFFERENCE
+    symptom: "Repeated physical inventory differences appear for the same material/location."
+    first_checks: ["count history", "posting timestamps", "open/unposted warehouse movements", "unit/batch/serial context", "EWM reconciliation", "process pattern by shift/location"]
+    avoid: "Do not treat every difference posting as closure of the root cause."
+  - id: IM-FAIL-EWM-MISMATCH
+    symptom: "ERP stock and warehouse execution disagree."
+    first_checks: ["ownership of movement", "ERP material document", "EWM document/task status", "delivery or synchronous goods-movement communication", "queue/error state", "reversal sequence"]
+    avoid: "Do not post manual stock corrections independently in both systems."
+
+impact_traces:
+  - title: "Movement type → business and accounting state"
+    path: "Business Event → Movement Type → Stock Update → Valuation/Consumption → Material + Accounting Documents"
+    lesson: "The same material quantity can create very different process and financial consequences depending on movement semantics."
+  - title: "Quality decision → usable inventory"
+    path: "QM Usage Decision → Transfer Posting / Stock Posting → Inventory Stock Type → ATP/Production Usability"
+    lesson: "A quality result becomes a logistics consequence through stock state."
+  - title: "Production component → reservation → issue"
+    path: "Production Order Component → Dependent Reservation → MRP/Availability → Goods Issue → Production Actuals"
+    lesson: "A reservation can be a downstream reflection of production master data, not the root object to repair."
+  - title: "Count difference → financial impact"
+    path: "Physical Count → Inventory Difference → Stock Adjustment → Inventory Account + Difference Account"
+    lesson: "Physical inventory is both a control process and a financial event."
+  - title: "ERP event → warehouse execution"
+    path: "Business Document → IM/EWM Handoff → Warehouse Task/Posting → EWM Stock → ERP Material Document/Reconciliation"
+    lesson: "In EWM scenarios, stock quantity and bin-level execution have different owners but must converge."
+
+lead_lens:
+  what_i_ask_first: "What physical or logical event should the stock posting represent, and which state is wrong after it?"
+  decision_owner: "Separate upstream process authority, IM stock/value state, EWM physical execution, QM disposition, and FI/CO financial consequence."
+  main_trade_off: "Direct IM postings are simple, but warehouse-managed scenarios need stronger process ownership and synchronization rather than convenient manual corrections."
+  typical_failure: "Teams diagnose movement-type numbers in isolation or correct stock manually while the reference process, ownership, or warehouse state remains wrong."
+  proof_of_cause: "Reconstruct before/after stock dimensions, reference object, movement semantics, material document, accounting document, and EWM state using the same timestamp and quantity."
+  integration_impact: "Inventory Management is the quantity/value junction between Procurement, Production, QM, Sales, EWM, and Finance."
+  data_impact: "Material, plant, storage location, stock type, batch, valuation type, special-stock identity, reference document, and account assignment must describe one coherent event."
+  sixty_second_explanation: >-
+    I do not start Inventory Management with movement-type numbers. I start with the business event and reference, then explain which stock state changes,
+    whether value or consumption changes, and who owns warehouse execution. The material document is my evidence. If the result is wrong,
+    I compare before and after stock dimensions, accounting, reference history, and EWM state, then reverse the original event instead of hiding it with compensating postings.
+
+practitioner_heuristics:
+  - "I translate a movement type into a business-state sentence before troubleshooting it."
+  - "I compare stock by plant, storage location, stock type, special stock, batch, and valuation context, not only total quantity."
+  - "I distinguish transfer posting from stock transfer: logical state change and physical location movement are different questions."
+  - "I trace dependent reservations back to their order or project."
+  - "I use physical inventory differences as control evidence and then look for repeatable process causes."
+  - "I reconcile ERP and EWM states instead of correcting both sides independently."
+  - "I prefer reversal of the wrong business event over a compensating posting when the process allows it."
+
+anti_patterns:
+  - "Memorize movement codes without business semantics."
+  - "Use total stock as proof of availability."
+  - "Post a transfer movement to fix a quality, reservation, or EWM problem without tracing ownership."
+  - "Edit dependent reservations instead of the owning order."
+  - "Close physical inventory differences without root-cause analysis."
+  - "Correct FI separately from the inventory event that created the wrong accounting."
+  - "Post manual corrections in ERP and EWM independently."
+
+synthetic_cases:
+  - id: IM-CASE-WRONG-STOCK-TYPE
+    title: "Receipt exists but production cannot use it"
+    synthetic: true
+    scenario: "A material receipt is visible in plant stock, but a production order still sees no usable quantity."
+    lead_path: ["Confirm material, plant, requirement date, and production context.", "Break the stock down by storage location, stock type, special stock, and batch.", "Trace the material document that created the quantity.", "Check QM or EWM ownership if the stock is inspection-controlled or warehouse-managed.", "Correct the owning state transition instead of moving stock blindly."]
+    lesson: "Existing quantity and usable quantity are different states."
+  - id: IM-CASE-TRANSFER
+    title: "Stock left one location but did not arrive"
+    synthetic: true
+    scenario: "A user reports that stock disappeared during an internal transfer. The issuing location is reduced and the receiving location is not unrestricted."
+    lead_path: ["Identify one-step or two-step transfer design.", "Trace stock in transfer/transit and material documents.", "Check receiving location and expected second posting.", "Check EWM or delivery/STO context if used.", "Complete or reverse the original transfer chain instead of creating an unrelated receipt."]
+    lesson: "Transit stock is a process state, not missing stock."
+  - id: IM-CASE-PI
+    title: "The same storage location has inventory differences every month"
+    synthetic: true
+    scenario: "Physical inventory repeatedly produces negative differences for the same fast-moving material and location."
+    lead_path: ["Compare count and posting timestamps.", "Check open goods movements and warehouse execution around count time.", "Segment differences by shift, process, unit, batch, and user/location.", "Reconcile EWM if used.", "Post the controlled difference, but open a process fix for the recurring cause."]
+    lesson: "A difference posting restores book stock; it does not repair the operation that creates the difference."
+
+assessment_drills:
+  - question: "What does a movement type control beyond the number?"
+    strong_answer: "It represents the business purpose of a goods movement and influences quantity, stock, valuation, consumption, fields and follow-on behavior. I diagnose it from the intended state transition."
+  - question: "Transfer posting versus stock transfer?"
+    strong_answer: "A transfer posting usually changes stock identity or status without a physical move, while a stock transfer represents movement between locations or plants. I then choose one-step, two-step or document-driven control based on transit, planning, valuation and execution needs."
+  - question: "Why can stock exist but still be unusable?"
+    strong_answer: "Because quantity must be read with stock type, storage location, special-stock ownership, batch/status, reservations and warehouse state. Total stock is not the same as usable stock."
+  - question: "What is a reservation?"
+    strong_answer: "It is a planned material movement or requirement, not a physical movement. Dependent reservations belong to their creating order or project and can affect MRP and availability."
+  - question: "Physical inventory difference posted. Are we done?"
+    strong_answer: "The book stock is corrected, but I still explain the cause of the difference and its accounting impact, especially if it repeats."
+  - question: "IM versus EWM in one sentence?"
+    strong_answer: "MM-IM owns ERP quantity/value inventory state; EWM adds detailed warehouse execution and bin-level stock control, with integration keeping the two views consistent."
+
+source_refs:
+  - SRC-SAP-IM-MOVEMENT-TYPE
+  - SRC-SAP-IM-STOCKS
+  - SRC-SAP-IM-DOCUMENT-ITEM
+  - SRC-SAP-IM-TRANSFER
+  - SRC-SAP-IM-RESERVATIONS
+  - SRC-SAP-IM-PHYSICAL-INVENTORY
+  - SRC-SAP-IM-INVENTORY-DIFFERENCE
+  - SRC-SAP-IM-SPECIAL-STOCK
+  - SRC-SAP-IM-ACCOUNT-DETERMINATION
+  - SRC-SAP-IM-EWM
+  - SRC-SAP-IM-EWM-COMMUNICATION
