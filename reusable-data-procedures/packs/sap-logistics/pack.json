@@ -16,7 +16,7 @@
   ],
   "assets": {
     "procedureBlueprints": [
-      {"id": "sales.order-material-reconciliation", "module": "sales", "state": "blueprint", "required": true},
+      {"id": "sales.order-material-reconciliation", "module": "sales", "state": "candidate", "required": true, "note": "Proven by the first synthetic reference case across golden, drift, review and replay paths."},
       {"id": "sales.customer-reference-enrichment", "module": "sales", "state": "blueprint", "required": false},
       {"id": "sales.order-control-check", "module": "sales", "state": "blueprint", "required": false},
       {"id": "procurement.po-material-reconciliation", "module": "procurement", "state": "blueprint", "required": true},
@@ -25,7 +25,10 @@
       {"id": "logistics.master-data-coverage", "module": "cross-process", "state": "blueprint", "required": false},
       {"id": "logistics.cross-source-key-audit", "module": "cross-process", "state": "blueprint", "required": false}
     ],
-    "procedures": [],
+    "procedures": [
+      {"id": "sales.order-material-reconciliation", "version": "0.1.0", "module": "sales", "required": true},
+      {"id": "sales.order-material-reconciliation", "version": "0.1.1", "module": "sales", "required": true}
+    ],
     "semanticConcepts": [
       {"id": "sap.material-id", "module": "shared", "state": "candidate", "required": true},
       {"id": "sap.business-partner-id", "module": "shared", "state": "candidate", "required": true},
@@ -36,14 +39,17 @@
       {"id": "sap.purchasing-document-item", "module": "procurement", "state": "blueprint", "required": true, "note": "Candidate concept discovered by the pack; prove against real Procurement cases before promotion to the shared registry."}
     ],
     "referenceContracts": [
-      {"id": "sap.material-aliases", "module": "shared", "state": "blueprint", "required": false},
+      {"id": "sap.material-aliases", "module": "shared", "state": "candidate", "required": true, "note": "Used by the Sales Order Material Reconciliation reference case."},
       {"id": "sap.business-partner-aliases", "module": "shared", "state": "blueprint", "required": false},
       {"id": "sap.plant-crosswalk", "module": "shared", "state": "blueprint", "required": false},
       {"id": "sap.supplier-material-cross-reference", "module": "procurement", "state": "blueprint", "required": false},
       {"id": "sap.unit-of-measure-map", "module": "shared", "state": "blueprint", "required": false},
       {"id": "sap.document-status-policy", "module": "cross-process", "state": "blueprint", "required": false}
     ],
-    "referenceReleases": [],
+    "referenceReleases": [
+      {"id": "sap.material-aliases", "version": "2026.08.1", "module": "shared", "required": true},
+      {"id": "sap.material-aliases", "version": "2026.08.2", "module": "shared", "required": true}
+    ],
     "blockRequirements": [
       {"id": "excel.locate-table-by-header-set", "module": "shared", "state": "blueprint", "required": true},
       {"id": "sap.normalize-material-id", "module": "shared", "state": "blueprint", "required": true},
@@ -76,7 +82,7 @@
       "control-total-drift",
       "missing-document-item-key"
     ],
-    "testSuiteRefs": [],
+    "testSuiteRefs": ["/reusable-data-procedures/cases/sales-order-material-reconciliation/tests.json"],
     "minimumEvidence": ["source-lineage", "row-counts", "cardinality-result", "coverage-result", "exception-reasons", "publication-decision"]
   },
   "reviewDefaults": {
@@ -97,10 +103,13 @@
   "releaseNotes": [
     "Initial blueprint with Shared, Sales, Procurement and Cross-process modules.",
     "Introduces purchasing-document-item as a concept candidate to prove with real Procurement cases.",
-    "Defines review and test expectations before procedure promotion."
+    "Defines review and test expectations before procedure promotion.",
+    "Connects Sales Order Material Reconciliation procedure versions 0.1.0 and 0.1.1 plus material alias reference releases to the first end-to-end reference case."
   ],
   "provenance": {
     "createdAt": "2026-08-16T12:45:00Z",
-    "createdBy": "framework-author"
+    "createdBy": "framework-author",
+    "reviewedAt": "2026-08-16T13:58:00Z",
+    "reviewedBy": "reference-case"
   }
 }
