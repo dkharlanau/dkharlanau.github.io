@@ -1,0 +1,47 @@
+name: Regenerate Atlas Artifacts Once
+
+on:
+  push:
+    paths:
+      - .github/workflows/regenerate-atlas-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install generator dependency
+        run: python3 -m pip install pyyaml
+
+      - name: Regenerate Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Commit expected generated files
+        run: |
+          unexpected=$(git diff --name-only | grep -v -E '^(ai/expert-promotion-inventory.json|ai/markdown-clusters.json)$' || true)
+          if [ -n "$unexpected" ]; then
+            echo "Unexpected generated changes:"
+            echo "$unexpected"
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: refresh Atlas artifacts"
+          git push
