@@ -1,0 +1,38 @@
+{
+  "id": "sap-lead-adaptive-selection",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Choose the next assessment case from observed weak signals instead of random repetition.",
+  "inputs": ["all active case sets", "attempt history", "optional track filter", "optional reasoning-level filter"],
+  "dimensions": ["business_goal", "owner", "process_flow", "decision_logic", "boundary", "failure_and_evidence", "trade_off"],
+  "weights": {
+    "weak_dimension": 0.30,
+    "weak_track_or_topic": 0.25,
+    "coverage_gap": 0.20,
+    "reasoning_level_gap": 0.10,
+    "recency_penalty": 0.10,
+    "diversity_bonus": 0.05
+  },
+  "rules": [
+    "Prefer cases linked to dimensions with the lowest rolling average score.",
+    "Prefer tracks and topics with fewer attempts or lower recent scores.",
+    "Do not repeat one of the last three cases unless the user explicitly filters to it.",
+    "After a score below 12/21, select a related case at the same or lower reasoning level before increasing difficulty.",
+    "After three consecutive scores of 18/21 or higher in the same track, prefer a harder reasoning level or a cross-process case.",
+    "Cross-process cases receive a diversity bonus when several single-domain cases were attempted recently.",
+    "A manual track or reasoning-level filter is a hard constraint; weighting applies only inside the filtered pool."
+  ],
+  "weak_signal_thresholds": {
+    "dimension_average_weak": 1.75,
+    "dimension_average_watch": 2.25,
+    "case_total_weak": 12,
+    "case_total_lead": 18,
+    "minimum_attempts_for_stable_signal": 3
+  },
+  "selection_output": {
+    "case_id": "selected case ID",
+    "selection_reason": "human-readable explanation based on weak dimensions, track coverage, level, and recency",
+    "focus_dimensions": "one to three dimensions to watch in the answer"
+  },
+  "privacy": "The browser implementation stores attempt history in localStorage only. No answer text or scoring history is sent to the site owner."
+}
