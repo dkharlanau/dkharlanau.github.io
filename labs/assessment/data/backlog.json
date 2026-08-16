@@ -2,27 +2,229 @@
   "id": "sap-lead-assessment-backlog",
   "updated_at": "2026-08-16",
   "selection_rule": "Take the highest-priority queued item that closes a material Lead-assessment gap. Extend existing contracts before creating a new model. Prefer practice that improves explanation, diagnosis, design, and challenge skills over adding another broad topic list.",
-  "done_definition": ["business boundary is explicit","human page is useful without machine data","machine-readable contract exists","important ownership and integration boundaries are represented","failure modes and diagnostic questions are included","at least one assessment case points to the material","content remains draft/noindex until human review","repository validation is checked"],
+  "done_definition": [
+    "business boundary is explicit",
+    "human page is useful without machine data",
+    "machine-readable contract exists",
+    "important ownership and integration boundaries are represented",
+    "failure modes and diagnostic questions are included",
+    "at least one assessment case points to the material",
+    "content remains draft/noindex until human review",
+    "repository validation is checked"
+  ],
   "items": [
-    {"id":"LOOP-001","priority":"P0","title":"SAP Lead assessment route","status":"done","outputs":["/labs/assessment/","/labs/assessment/data/catalog.json","/labs/assessment/data/cases.jsonl","/labs/assessment/data/case-schema.json","/labs/assessment/data/scoring.json"]},
-    {"id":"LOOP-002","priority":"P0","title":"Production Planning and Execution vertical","status":"done","outputs":["/labs/enterprise-context/production/","/labs/enterprise-context/data/production-graph.json","_data/labs/enterprise_context/graphs/production.yml","_data/labs/enterprise_context/sources/production.yml","/labs/assessment/data/cases.jsonl"]},
-    {"id":"LOOP-003","priority":"P0","title":"Quality Management vertical","status":"done","outputs":["/labs/enterprise-context/quality-management/","/labs/enterprise-context/data/quality-management-graph.json","_data/labs/enterprise_context/graphs/quality_management.yml","_data/labs/enterprise_context/sources/quality_management.yml","/labs/assessment/data/qm-cases.jsonl"]},
-    {"id":"LOOP-004","priority":"P0","title":"Inventory Management vertical","status":"done","outputs":["/labs/enterprise-context/inventory-management/","/labs/enterprise-context/data/inventory-management-graph.json","_data/labs/enterprise_context/graphs/inventory_management.yml","_data/labs/enterprise_context/sources/inventory_management.yml","/labs/assessment/data/inventory-cases.jsonl"]},
-    {"id":"LOOP-005","priority":"P0","title":"Billing and revenue handoff vertical","status":"done","outputs":["/labs/enterprise-context/billing/","/labs/enterprise-context/data/billing-graph.json","_data/labs/enterprise_context/graphs/billing.yml","_data/labs/enterprise_context/sources/billing.yml","/labs/assessment/data/billing-cases.jsonl"]},
-    {"id":"LOOP-006","priority":"P1","title":"FI/CO touchpoints for logistics","status":"done","outputs":["/labs/enterprise-context/finance-logistics/","/labs/enterprise-context/data/finance-logistics-graph.json","_data/labs/enterprise_context/graphs/finance_logistics.yml","_data/labs/enterprise_context/sources/finance_logistics.yml","/labs/assessment/data/finance-logistics-cases.jsonl"]},
-    {"id":"LOOP-007","priority":"P1","title":"Automotive JIT and JIS vertical","status":"done","outputs":["/labs/enterprise-context/automotive-jit/","/labs/enterprise-context/data/automotive-jit-graph.json","_data/labs/enterprise_context/graphs/automotive_jit.yml","_data/labs/enterprise_context/sources/automotive_jit.yml","/labs/assessment/data/automotive-jit-cases.jsonl"]},
-    {"id":"LOOP-008","priority":"P1","title":"Integration operations and recovery","status":"done","outputs":["/labs/enterprise-context/integration-operations/","/labs/enterprise-context/data/integration-operations-graph.json","_data/labs/enterprise_context/graphs/integration_operations.yml","_data/labs/enterprise_context/sources/integration_operations.yml","/labs/assessment/data/integration-operations-cases.jsonl"]},
-    {"id":"LOOP-009","priority":"P1","title":"Cross-process Lead cases","status":"done","outputs":["/labs/assessment/cross-process/","/labs/assessment/data/cross-process-cases.jsonl"],"target_scope":["standard O2C","third-party sales","intercompany","stock transfer","make-to-order","subcontracting","returns and claims"]},
-    {"id":"LOOP-010","priority":"P1","title":"Adaptive practice engine and weak-signal profile","status":"done","outputs":["/labs/assessment/practice-engine/","/labs/assessment/data/attempt-schema.json","/labs/assessment/data/profile-schema.json","/labs/assessment/data/adaptive-selection.json","/labs/assessment/data/question-generation.json"]},
-    {"id":"LOOP-011","priority":"P1","title":"Focused review queue","status":"done","outputs":["/labs/assessment/review/","/labs/assessment/data/review-map.json"],"working_rule":"Review one weak signal, then repeat a related case."},
-    {"id":"LOOP-012","priority":"P1","title":"Balanced mock assessment session","status":"done","outputs":["/labs/assessment/mock/","/labs/assessment/data/mock-session.json"],"working_rule":"Cover all four tracks, higher reasoning levels, and cross-process cases before using weak-signal weighting."},
-    {"id":"LOOP-013","priority":"P1","title":"Progress and portable local history","status":"done","outputs":["/labs/assessment/progress/","/labs/assessment/data/history-portability.json"],"working_rule":"Attempts are the durable record. Profiles and recommendations are derived from attempts after import."},
-    {"id":"LOOP-014","priority":"P1","title":"Feedback and calibration evidence","status":"done","outputs":["/labs/assessment/feedback/","/labs/assessment/data/feedback-schema.json","/labs/assessment/data/calibration-policy.json"],"working_rule":"Keep provenance explicit. Feedback can suggest a calibration change but cannot silently modify the scoring model."},
-    {"id":"LOOP-015","priority":"P1","title":"Graph-backed question candidate review","status":"done","outputs":["/labs/assessment/question-review/","/labs/assessment/data/candidate-question-schema.json","/labs/assessment/data/candidate-generation-seeds.json","/labs/assessment/data/question-candidates.json","scripts/generate_assessment_candidates.py"],"working_rule":"Generate only from whitelisted graph evidence. Reject duplicates before review. Human review still does not publish a case automatically."}
+    {
+      "id": "LOOP-001",
+      "priority": "P0",
+      "title": "SAP Lead assessment route",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/",
+        "/labs/assessment/data/catalog.json",
+        "/labs/assessment/data/cases.jsonl",
+        "/labs/assessment/data/case-schema.json",
+        "/labs/assessment/data/scoring.json"
+      ]
+    },
+    {
+      "id": "LOOP-002",
+      "priority": "P0",
+      "title": "Production Planning and Execution vertical",
+      "status": "done",
+      "outputs": [
+        "/labs/enterprise-context/production/",
+        "/labs/enterprise-context/data/production-graph.json",
+        "_data/labs/enterprise_context/graphs/production.yml",
+        "_data/labs/enterprise_context/sources/production.yml",
+        "/labs/assessment/data/cases.jsonl"
+      ]
+    },
+    {
+      "id": "LOOP-003",
+      "priority": "P0",
+      "title": "Quality Management vertical",
+      "status": "done",
+      "outputs": [
+        "/labs/enterprise-context/quality-management/",
+        "/labs/enterprise-context/data/quality-management-graph.json",
+        "_data/labs/enterprise_context/graphs/quality_management.yml",
+        "_data/labs/enterprise_context/sources/quality_management.yml",
+        "/labs/assessment/data/qm-cases.jsonl"
+      ]
+    },
+    {
+      "id": "LOOP-004",
+      "priority": "P0",
+      "title": "Inventory Management vertical",
+      "status": "done",
+      "outputs": [
+        "/labs/enterprise-context/inventory-management/",
+        "/labs/enterprise-context/data/inventory-management-graph.json",
+        "_data/labs/enterprise_context/graphs/inventory_management.yml",
+        "_data/labs/enterprise_context/sources/inventory_management.yml",
+        "/labs/assessment/data/inventory-cases.jsonl"
+      ]
+    },
+    {
+      "id": "LOOP-005",
+      "priority": "P0",
+      "title": "Billing and revenue handoff vertical",
+      "status": "done",
+      "outputs": [
+        "/labs/enterprise-context/billing/",
+        "/labs/enterprise-context/data/billing-graph.json",
+        "_data/labs/enterprise_context/graphs/billing.yml",
+        "_data/labs/enterprise_context/sources/billing.yml",
+        "/labs/assessment/data/billing-cases.jsonl"
+      ]
+    },
+    {
+      "id": "LOOP-006",
+      "priority": "P1",
+      "title": "FI/CO touchpoints for logistics",
+      "status": "done",
+      "outputs": [
+        "/labs/enterprise-context/finance-logistics/",
+        "/labs/enterprise-context/data/finance-logistics-graph.json",
+        "_data/labs/enterprise_context/graphs/finance_logistics.yml",
+        "_data/labs/enterprise_context/sources/finance_logistics.yml",
+        "/labs/assessment/data/finance-logistics-cases.jsonl"
+      ]
+    },
+    {
+      "id": "LOOP-007",
+      "priority": "P1",
+      "title": "Automotive JIT and JIS vertical",
+      "status": "done",
+      "outputs": [
+        "/labs/enterprise-context/automotive-jit/",
+        "/labs/enterprise-context/data/automotive-jit-graph.json",
+        "_data/labs/enterprise_context/graphs/automotive_jit.yml",
+        "_data/labs/enterprise_context/sources/automotive_jit.yml",
+        "/labs/assessment/data/automotive-jit-cases.jsonl"
+      ]
+    },
+    {
+      "id": "LOOP-008",
+      "priority": "P1",
+      "title": "Integration operations and recovery",
+      "status": "done",
+      "outputs": [
+        "/labs/enterprise-context/integration-operations/",
+        "/labs/enterprise-context/data/integration-operations-graph.json",
+        "_data/labs/enterprise_context/graphs/integration_operations.yml",
+        "_data/labs/enterprise_context/sources/integration_operations.yml",
+        "/labs/assessment/data/integration-operations-cases.jsonl"
+      ]
+    },
+    {
+      "id": "LOOP-009",
+      "priority": "P1",
+      "title": "Cross-process Lead cases",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/cross-process/",
+        "/labs/assessment/data/cross-process-cases.jsonl"
+      ],
+      "target_scope": [
+        "standard O2C",
+        "third-party sales",
+        "intercompany",
+        "stock transfer",
+        "make-to-order",
+        "subcontracting",
+        "returns and claims"
+      ]
+    },
+    {
+      "id": "LOOP-010",
+      "priority": "P1",
+      "title": "Adaptive practice engine and weak-signal profile",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/practice-engine/",
+        "/labs/assessment/data/attempt-schema.json",
+        "/labs/assessment/data/profile-schema.json",
+        "/labs/assessment/data/adaptive-selection.json",
+        "/labs/assessment/data/question-generation.json"
+      ]
+    },
+    {
+      "id": "LOOP-011",
+      "priority": "P1",
+      "title": "Focused review queue",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/review/",
+        "/labs/assessment/data/review-map.json"
+      ],
+      "working_rule": "Review one weak signal, then repeat a related case."
+    },
+    {
+      "id": "LOOP-012",
+      "priority": "P1",
+      "title": "Balanced mock assessment session",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/mock/",
+        "/labs/assessment/data/mock-session.json"
+      ],
+      "working_rule": "Cover all four tracks, higher reasoning levels, and cross-process cases before using weak-signal weighting."
+    },
+    {
+      "id": "LOOP-013",
+      "priority": "P1",
+      "title": "Progress and portable local history",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/progress/",
+        "/labs/assessment/data/history-portability.json"
+      ],
+      "working_rule": "Attempts are the durable record. Profiles and recommendations are derived from attempts after import."
+    },
+    {
+      "id": "LOOP-014",
+      "priority": "P1",
+      "title": "Feedback and calibration evidence",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/feedback/",
+        "/labs/assessment/data/feedback-schema.json",
+        "/labs/assessment/data/calibration-policy.json"
+      ],
+      "working_rule": "Keep provenance explicit. Feedback can suggest a calibration change but cannot silently modify the scoring model."
+    },
+    {
+      "id": "LOOP-015",
+      "priority": "P1",
+      "title": "Graph-backed question candidate review",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/question-review/",
+        "/labs/assessment/data/candidate-question-schema.json",
+        "/labs/assessment/data/candidate-generation-seeds.json",
+        "/labs/assessment/data/question-candidates.json",
+        "scripts/generate_assessment_candidates.py"
+      ],
+      "working_rule": "Generate only from whitelisted graph evidence. Reject duplicates before review. Human review still does not publish a case automatically."
+    },
+    {
+      "id": "LOOP-016",
+      "priority": "P1",
+      "title": "Assessment-linked Lab promotion readiness audit",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/promotion-readiness/",
+        "/labs/assessment/data/promotion-readiness-policy.json",
+        "/labs/assessment/data/promotion-readiness.json",
+        "scripts/audit_assessment_promotion_readiness.py"
+      ],
+      "working_rule": "Structural readiness does not imply verified or public. Factual, source, release-sensitivity, and index-policy review remain explicit human decisions."
+    }
   ],
   "next_iteration_themes": [
+    "perform factual and primary-source review of structurally mature assessment-linked Lab pages",
     "extend candidate generation to another graph only when source references and failure-mode structure are strong enough",
-    "review and promote mature draft/noindex Lab pages",
     "connect real feedback observations to review priorities without treating feedback as automatic scoring truth",
     "create explicit human-reviewed calibration decisions when enough real evidence exists"
   ]

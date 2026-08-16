@@ -1,71 +1,287 @@
 {
   "id": "sap-lead-assessment-lab",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "updated_at": "2026-08-16",
   "status": "draft",
-  "purpose": "Turn the Lab into a structured SAP Lead assessment practice route across process knowledge, diagnostics, architecture, integration, data, AI, adaptive practice, focused review, portable local progress, provenance-aware feedback, and evidence-backed question authoring.",
+  "purpose": "Turn the Lab into a structured SAP Lead assessment practice route across process knowledge, diagnostics, architecture, integration, data, AI, adaptive practice, focused review, portable local progress, provenance-aware feedback, evidence-backed question authoring, and controlled content-promotion review.",
   "reasoning_levels": [
-    {"id":"explain","label":"Explain","goal":"Describe business purpose, process flow, key objects, and system boundary in clear language."},
-    {"id":"trace","label":"Trace","goal":"Follow one requirement through master data, configuration, documents, integrations, and business impact."},
-    {"id":"diagnose","label":"Diagnose","goal":"Start from a symptom, build hypotheses, find the first wrong decision, and define proof of fix."},
-    {"id":"design","label":"Design","goal":"Choose ownership, component boundaries, integration style, controls, and extension approach."},
-    {"id":"challenge","label":"Challenge","goal":"Explain trade-offs, limits, failure modes, alternatives, and decision-changing conditions."}
+    {
+      "id": "explain",
+      "label": "Explain",
+      "goal": "Describe business purpose, process flow, key objects, and system boundary in clear language."
+    },
+    {
+      "id": "trace",
+      "label": "Trace",
+      "goal": "Follow one requirement through master data, configuration, documents, integrations, and business impact."
+    },
+    {
+      "id": "diagnose",
+      "label": "Diagnose",
+      "goal": "Start from a symptom, build hypotheses, find the first wrong decision, and define proof of fix."
+    },
+    {
+      "id": "design",
+      "label": "Design",
+      "goal": "Choose ownership, component boundaries, integration style, controls, and extension approach."
+    },
+    {
+      "id": "challenge",
+      "label": "Challenge",
+      "goal": "Explain trade-offs, limits, failure modes, alternatives, and decision-changing conditions."
+    }
   ],
   "tracks": [
-    {"id":"sales","label":"Sales","focus":["sales process variants","sales order decisions","pricing","ATP and aATP","credit management","shipping and scheduling","billing and revenue handoff","tax","FI/CO logistics touchpoints","automotive customer scheduling and JIT/JIS","cross-process O2C and special sales cases","diagnostics"],"entry_points":["/labs/enterprise-context/sales-processes/","/labs/enterprise-context/sales-order/","/labs/enterprise-context/pricing/","/labs/enterprise-context/atp/","/labs/enterprise-context/credit/","/labs/enterprise-context/shipping/","/labs/enterprise-context/billing/","/labs/enterprise-context/finance-logistics/","/labs/enterprise-context/automotive-jit/","/labs/enterprise-context/sales-diagnostics/","/labs/assessment/cross-process/"]},
-    {"id":"procurement-logistics","label":"Procurement and Logistics","focus":["procure-to-pay","source determination","production planning and execution","quality management","inventory management","FI/CO logistics touchpoints","automotive JIT/JIS","warehouse execution","EWM","transportation management","cross-process stock transfer, MTO, subcontracting and returns"],"entry_points":["/labs/enterprise-context/procurement/","/labs/enterprise-context/production/","/labs/enterprise-context/quality-management/","/labs/enterprise-context/inventory-management/","/labs/enterprise-context/finance-logistics/","/labs/enterprise-context/automotive-jit/","/labs/enterprise-context/ewm/","/labs/enterprise-context/transportation-management/","/labs/enterprise-context/logistics-capabilities/","/labs/assessment/cross-process/"]},
-    {"id":"integration-architecture","label":"Integration and Architecture","focus":["integration style","system ownership","message contracts","events","message identity and idempotency","ordering","retry and recovery","AIF, IDoc and RFC operations","Integration Suite operations","business reconciliation","automotive call identity and supplier forwarding","master-data distribution","deployment models","clean-core extensions","SAP development choices"],"entry_points":["/labs/enterprise-context/integrations/","/labs/enterprise-context/integration-operations/","/labs/enterprise-context/automotive-jit/","/labs/enterprise-context/sales-processes/integrations/","/labs/enterprise-context/transportation-management/integrations/","/labs/enterprise-context/mdg/interfaces/","/labs/enterprise-context/deployment-models/","/labs/enterprise-context/development/","/labs/assessment/cross-process/"]},
-    {"id":"ai-data","label":"AI and Data","focus":["Business AI patterns","AI system boundaries","RAG","tools and MCP","agents","evaluations","data governance","master data governance"],"entry_points":["/labs/business-ai/","/labs/ai-ready/","/labs/enterprise-context/business-ai/","/labs/enterprise-context/mdg/","/labs/enterprise-context/data-governance/"]}
+    {
+      "id": "sales",
+      "label": "Sales",
+      "focus": [
+        "sales process variants",
+        "sales order decisions",
+        "pricing",
+        "ATP and aATP",
+        "credit management",
+        "shipping and scheduling",
+        "billing and revenue handoff",
+        "tax",
+        "FI/CO logistics touchpoints",
+        "automotive customer scheduling and JIT/JIS",
+        "cross-process O2C and special sales cases",
+        "diagnostics"
+      ],
+      "entry_points": [
+        "/labs/enterprise-context/sales-processes/",
+        "/labs/enterprise-context/sales-order/",
+        "/labs/enterprise-context/pricing/",
+        "/labs/enterprise-context/atp/",
+        "/labs/enterprise-context/credit/",
+        "/labs/enterprise-context/shipping/",
+        "/labs/enterprise-context/billing/",
+        "/labs/enterprise-context/finance-logistics/",
+        "/labs/enterprise-context/automotive-jit/",
+        "/labs/enterprise-context/sales-diagnostics/",
+        "/labs/assessment/cross-process/"
+      ]
+    },
+    {
+      "id": "procurement-logistics",
+      "label": "Procurement and Logistics",
+      "focus": [
+        "procure-to-pay",
+        "source determination",
+        "production planning and execution",
+        "quality management",
+        "inventory management",
+        "FI/CO logistics touchpoints",
+        "automotive JIT/JIS",
+        "warehouse execution",
+        "EWM",
+        "transportation management",
+        "cross-process stock transfer, MTO, subcontracting and returns"
+      ],
+      "entry_points": [
+        "/labs/enterprise-context/procurement/",
+        "/labs/enterprise-context/production/",
+        "/labs/enterprise-context/quality-management/",
+        "/labs/enterprise-context/inventory-management/",
+        "/labs/enterprise-context/finance-logistics/",
+        "/labs/enterprise-context/automotive-jit/",
+        "/labs/enterprise-context/ewm/",
+        "/labs/enterprise-context/transportation-management/",
+        "/labs/enterprise-context/logistics-capabilities/",
+        "/labs/assessment/cross-process/"
+      ]
+    },
+    {
+      "id": "integration-architecture",
+      "label": "Integration and Architecture",
+      "focus": [
+        "integration style",
+        "system ownership",
+        "message contracts",
+        "events",
+        "message identity and idempotency",
+        "ordering",
+        "retry and recovery",
+        "AIF, IDoc and RFC operations",
+        "Integration Suite operations",
+        "business reconciliation",
+        "automotive call identity and supplier forwarding",
+        "master-data distribution",
+        "deployment models",
+        "clean-core extensions",
+        "SAP development choices"
+      ],
+      "entry_points": [
+        "/labs/enterprise-context/integrations/",
+        "/labs/enterprise-context/integration-operations/",
+        "/labs/enterprise-context/automotive-jit/",
+        "/labs/enterprise-context/sales-processes/integrations/",
+        "/labs/enterprise-context/transportation-management/integrations/",
+        "/labs/enterprise-context/mdg/interfaces/",
+        "/labs/enterprise-context/deployment-models/",
+        "/labs/enterprise-context/development/",
+        "/labs/assessment/cross-process/"
+      ]
+    },
+    {
+      "id": "ai-data",
+      "label": "AI and Data",
+      "focus": [
+        "Business AI patterns",
+        "AI system boundaries",
+        "RAG",
+        "tools and MCP",
+        "agents",
+        "evaluations",
+        "data governance",
+        "master data governance"
+      ],
+      "entry_points": [
+        "/labs/business-ai/",
+        "/labs/ai-ready/",
+        "/labs/enterprise-context/business-ai/",
+        "/labs/enterprise-context/mdg/",
+        "/labs/enterprise-context/data-governance/"
+      ]
+    }
   ],
-  "answer_shape": ["business_goal","owner","process_flow","decision_logic","boundary","failure_and_evidence","trade_off"],
-  "scoring": {"dimensions":7,"maximum_score":21,"lead_signal_minimum":18,"contract":"/labs/assessment/data/scoring.json"},
+  "answer_shape": [
+    "business_goal",
+    "owner",
+    "process_flow",
+    "decision_logic",
+    "boundary",
+    "failure_and_evidence",
+    "trade_off"
+  ],
+  "scoring": {
+    "dimensions": 7,
+    "maximum_score": 21,
+    "lead_signal_minimum": 18,
+    "contract": "/labs/assessment/data/scoring.json"
+  },
   "practice_modes": [
-    {"id":"adaptive","label":"Adaptive Practice Engine","route":"/labs/assessment/practice-engine/","purpose":"Select one case from weak signals, coverage gaps, reasoning level, and recent history."},
-    {"id":"mock","label":"Mock Assessment","route":"/labs/assessment/mock/","purpose":"Build a balanced multi-case session across all four assessment tracks."},
-    {"id":"review","label":"Review Queue","route":"/labs/assessment/review/","purpose":"Turn weak dimensions and weak tracks into focused review routes, then repeat practice."},
-    {"id":"progress","label":"Progress & Portability","route":"/labs/assessment/progress/","purpose":"Inspect local progress and move canonical attempt history between browsers without a server profile."},
-    {"id":"feedback","label":"Feedback & Calibration Evidence","route":"/labs/assessment/feedback/","purpose":"Record real self, peer, manager, interviewer, or formal assessment observations with explicit provenance."},
-    {"id":"cross-process","label":"Cross-Process Lead Cases","route":"/labs/assessment/cross-process/","purpose":"Practice ownership and evidence where the visible symptom crosses several SAP domains."}
+    {
+      "id": "adaptive",
+      "label": "Adaptive Practice Engine",
+      "route": "/labs/assessment/practice-engine/",
+      "purpose": "Select one case from weak signals, coverage gaps, reasoning level, and recent history."
+    },
+    {
+      "id": "mock",
+      "label": "Mock Assessment",
+      "route": "/labs/assessment/mock/",
+      "purpose": "Build a balanced multi-case session across all four assessment tracks."
+    },
+    {
+      "id": "review",
+      "label": "Review Queue",
+      "route": "/labs/assessment/review/",
+      "purpose": "Turn weak dimensions and weak tracks into focused review routes, then repeat practice."
+    },
+    {
+      "id": "progress",
+      "label": "Progress & Portability",
+      "route": "/labs/assessment/progress/",
+      "purpose": "Inspect local progress and move canonical attempt history between browsers without a server profile."
+    },
+    {
+      "id": "feedback",
+      "label": "Feedback & Calibration Evidence",
+      "route": "/labs/assessment/feedback/",
+      "purpose": "Record real self, peer, manager, interviewer, or formal assessment observations with explicit provenance."
+    },
+    {
+      "id": "cross-process",
+      "label": "Cross-Process Lead Cases",
+      "route": "/labs/assessment/cross-process/",
+      "purpose": "Practice ownership and evidence where the visible symptom crosses several SAP domains."
+    }
   ],
   "authoring_tools": [
-    {"id":"question-review","label":"Question Candidate Review","route":"/labs/assessment/question-review/","purpose":"Review graph-backed generated candidates, evidence maps, and duplicate rejections before any case promotion."}
+    {
+      "id": "promotion-readiness",
+      "label": "Promotion Readiness",
+      "route": "/labs/assessment/promotion-readiness/",
+      "purpose": "Review structurally mature draft/noindex Lab pages while keeping factual verification and publication policy separate."
+    },
+    {
+      "id": "question-review",
+      "label": "Question Candidate Review",
+      "route": "/labs/assessment/question-review/",
+      "purpose": "Review graph-backed generated candidates, evidence maps, and duplicate rejections before any case promotion."
+    }
   ],
   "coverage": {
-    "strong_now": ["Sales processes and decision engines","Billing and revenue handoff","FI/CO touchpoints for logistics","Procurement","Production Planning and Execution","Quality Management","Inventory Management","Automotive JIT and JIS","EWM","Transportation Management","Integration architecture","Integration operations and recovery","Cross-process Lead cases","MDG","SAP development and deployment choices","Business AI and AI system architecture","Weak-signal tracking","Adaptive case selection","Mock assessment sessions","Focused review queue","Progress and portable local history","Provenance-aware feedback capture and calibration policy","Graph-backed candidate question generation with duplicate rejection and human review boundary"],
+    "strong_now": [
+      "Sales processes and decision engines",
+      "Billing and revenue handoff",
+      "FI/CO touchpoints for logistics",
+      "Procurement",
+      "Production Planning and Execution",
+      "Quality Management",
+      "Inventory Management",
+      "Automotive JIT and JIS",
+      "EWM",
+      "Transportation Management",
+      "Integration architecture",
+      "Integration operations and recovery",
+      "Cross-process Lead cases",
+      "MDG",
+      "SAP development and deployment choices",
+      "Business AI and AI system architecture",
+      "Weak-signal tracking",
+      "Adaptive case selection",
+      "Mock assessment sessions",
+      "Focused review queue",
+      "Progress and portable local history",
+      "Provenance-aware feedback capture and calibration policy",
+      "Graph-backed candidate question generation with duplicate rejection and human review boundary",
+      "Assessment-linked Lab promotion readiness audit separating structural maturity from factual verification"
+    ],
     "next_verticals": [],
-    "next_practice_layers": ["extend candidate generation only to graphs with strong failure-mode evidence","review and promote mature draft/noindex Lab pages","connect real feedback observations to review priorities without treating feedback as automatic scoring truth","create explicit human-reviewed calibration decisions when enough real evidence exists"]
+    "next_practice_layers": [
+      "perform factual and primary-source review of structurally mature draft/noindex pages before any promotion",
+      "extend candidate generation only to graphs with strong failure-mode evidence",
+      "connect real feedback observations to review priorities without treating feedback as automatic scoring truth",
+      "create explicit human-reviewed calibration decisions when enough real evidence exists"
+    ]
   },
   "endpoints": {
-    "human_route":"/labs/assessment/",
-    "practice_engine_route":"/labs/assessment/practice-engine/",
-    "mock_route":"/labs/assessment/mock/",
-    "review_route":"/labs/assessment/review/",
-    "progress_route":"/labs/assessment/progress/",
-    "feedback_route":"/labs/assessment/feedback/",
-    "question_review_route":"/labs/assessment/question-review/",
-    "cross_process_route":"/labs/assessment/cross-process/",
-    "core_cases":"/labs/assessment/data/cases.jsonl",
-    "billing_cases":"/labs/assessment/data/billing-cases.jsonl",
-    "finance_logistics_cases":"/labs/assessment/data/finance-logistics-cases.jsonl",
-    "automotive_jit_cases":"/labs/assessment/data/automotive-jit-cases.jsonl",
-    "integration_operations_cases":"/labs/assessment/data/integration-operations-cases.jsonl",
-    "cross_process_cases":"/labs/assessment/data/cross-process-cases.jsonl",
-    "case_sets":"/labs/assessment/data/case-sets.json",
-    "case_schema":"/labs/assessment/data/case-schema.json",
-    "attempt_schema":"/labs/assessment/data/attempt-schema.json",
-    "profile_schema":"/labs/assessment/data/profile-schema.json",
-    "scoring":"/labs/assessment/data/scoring.json",
-    "adaptive_selection":"/labs/assessment/data/adaptive-selection.json",
-    "question_generation":"/labs/assessment/data/question-generation.json",
-    "candidate_question_schema":"/labs/assessment/data/candidate-question-schema.json",
-    "candidate_generation_seeds":"/labs/assessment/data/candidate-generation-seeds.json",
-    "question_candidates":"/labs/assessment/data/question-candidates.json",
-    "review_map":"/labs/assessment/data/review-map.json",
-    "mock_session":"/labs/assessment/data/mock-session.json",
-    "history_portability":"/labs/assessment/data/history-portability.json",
-    "feedback_schema":"/labs/assessment/data/feedback-schema.json",
-    "calibration_policy":"/labs/assessment/data/calibration-policy.json",
-    "backlog":"/labs/assessment/data/backlog.json",
-    "catalog":"/labs/assessment/data/catalog.json"
+    "human_route": "/labs/assessment/",
+    "practice_engine_route": "/labs/assessment/practice-engine/",
+    "mock_route": "/labs/assessment/mock/",
+    "review_route": "/labs/assessment/review/",
+    "progress_route": "/labs/assessment/progress/",
+    "feedback_route": "/labs/assessment/feedback/",
+    "question_review_route": "/labs/assessment/question-review/",
+    "cross_process_route": "/labs/assessment/cross-process/",
+    "core_cases": "/labs/assessment/data/cases.jsonl",
+    "billing_cases": "/labs/assessment/data/billing-cases.jsonl",
+    "finance_logistics_cases": "/labs/assessment/data/finance-logistics-cases.jsonl",
+    "automotive_jit_cases": "/labs/assessment/data/automotive-jit-cases.jsonl",
+    "integration_operations_cases": "/labs/assessment/data/integration-operations-cases.jsonl",
+    "cross_process_cases": "/labs/assessment/data/cross-process-cases.jsonl",
+    "case_sets": "/labs/assessment/data/case-sets.json",
+    "case_schema": "/labs/assessment/data/case-schema.json",
+    "attempt_schema": "/labs/assessment/data/attempt-schema.json",
+    "profile_schema": "/labs/assessment/data/profile-schema.json",
+    "scoring": "/labs/assessment/data/scoring.json",
+    "adaptive_selection": "/labs/assessment/data/adaptive-selection.json",
+    "question_generation": "/labs/assessment/data/question-generation.json",
+    "candidate_question_schema": "/labs/assessment/data/candidate-question-schema.json",
+    "candidate_generation_seeds": "/labs/assessment/data/candidate-generation-seeds.json",
+    "question_candidates": "/labs/assessment/data/question-candidates.json",
+    "review_map": "/labs/assessment/data/review-map.json",
+    "mock_session": "/labs/assessment/data/mock-session.json",
+    "history_portability": "/labs/assessment/data/history-portability.json",
+    "feedback_schema": "/labs/assessment/data/feedback-schema.json",
+    "calibration_policy": "/labs/assessment/data/calibration-policy.json",
+    "backlog": "/labs/assessment/data/backlog.json",
+    "catalog": "/labs/assessment/data/catalog.json",
+    "promotion_readiness_route": "/labs/assessment/promotion-readiness/",
+    "promotion_readiness_policy": "/labs/assessment/data/promotion-readiness-policy.json",
+    "promotion_readiness": "/labs/assessment/data/promotion-readiness.json"
   }
 }
