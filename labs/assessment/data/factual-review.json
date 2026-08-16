@@ -1,0 +1,192 @@
+{
+  "id": "sap-lead-factual-review",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "policy": "/labs/assessment/data/factual-review-policy.json",
+  "review_boundary": "Claims below were checked against current SAP primary sources. This does not change page-level verified, robots, sitemap, or publication status.",
+  "summary": {
+    "routes_reviewed": 2,
+    "claims_reviewed": 11,
+    "source_supported": 11,
+    "source_conflict": 0,
+    "human_verification_required": 11
+  },
+  "routes": [
+    {
+      "route": "/labs/enterprise-context/integration-operations/",
+      "title": "Integration Operations & Recovery",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-INTOPS-001",
+        "FACT-INTOPS-002",
+        "FACT-INTOPS-003",
+        "FACT-INTOPS-004",
+        "FACT-INTOPS-005",
+        "FACT-INTOPS-006"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/billing/",
+      "title": "Billing & Revenue Handoff",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-BIL-001",
+        "FACT-BIL-002",
+        "FACT-BIL-003",
+        "FACT-BIL-004",
+        "FACT-BIL-005"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "FACT-INTOPS-001",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "Guaranteed delivery can redeliver a message. End-to-end exactly-once behavior therefore needs duplicate handling or an idempotent receiver in addition to retry-capable delivery.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-INTOPS-EXACTLY-ONCE"],
+      "official_evidence": ["https://help.sap.com/docs/integration-suite/sap-integration-suite/quality-of-service-exactly-once"],
+      "product_scope": "SAP Integration Suite",
+      "release_scope": "Cloud service documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-002",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "An exception subprocess that ends with a message end event can leave message monitoring in Completed status even though an exception occurred.",
+      "claim_type": "monitoring_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-INTOPS-ERROR-DESIGN"],
+      "official_evidence": ["https://help.sap.com/docs/integration-suite/sap-integration-suite/handle-errors-gracefully"],
+      "product_scope": "SAP Integration Suite, Cloud Integration",
+      "release_scope": "Cloud service documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-003",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "qRFC administration uses SMQ1 and SMQ2 for outbound and inbound queue monitoring and SMQS and SMQR for scheduler administration.",
+      "claim_type": "monitoring_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-INTOPS-QRFC"],
+      "official_evidence": ["https://help.sap.com/docs/ABAP_PLATFORM_NEW/753088fc00704d0a80e7fbd6803c8adb/489c43f42ab0062fe10000000a42189d.html"],
+      "product_scope": "ABAP Platform Connectivity",
+      "release_scope": "ABAP Platform 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-004",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "bgRFC units can be transactional or queued; queued units use FIFO processing and are monitored with SBGRFCMON.",
+      "claim_type": "monitoring_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-INTOPS-BGRFC"],
+      "official_evidence": ["https://help.sap.com/docs/ABAP_PLATFORM_NEW/753088fc00704d0a80e7fbd6803c8adb/48927c5caa6b17cee10000000a421937.html"],
+      "product_scope": "ABAP Platform Connectivity",
+      "release_scope": "ABAP Platform 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-005",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "WE02 can inspect IDoc data and status records, while BD87 can trace and reprocess selected IDocs after the underlying error is resolved.",
+      "claim_type": "monitoring_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-INTOPS-IDOC"],
+      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9c4986bda35f4840ae438960ffbef64d/086439eaf4e049e6be3487ca76e7ad48.html"],
+      "product_scope": "SAP S/4HANA IDoc monitoring",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-006",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "SAP AIF supports error correction followed by restart or reprocessing for supported interfaces; the operational decision still depends on interface design and business ownership.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-INTOPS-AIF-ERROR"],
+      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_ONPREMISE/26c2d5e366bc44c1a98f2a9212a0c49d/c15d15baa025488faef8f7d49613276c.html"],
+      "product_scope": "SAP Application Interface Framework",
+      "release_scope": "SAP S/4HANA 2025 FPS01 documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-BIL-001",
+      "route": "/labs/enterprise-context/billing/",
+      "claim": "Sales Billing can create, change, and cancel billing documents, post them to Financial Accounting, and output them through multiple channels.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-BIL-PROCESSING"],
+      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/946fb6535fe6b74ce10000000a174cb4.html"],
+      "product_scope": "SAP S/4HANA Sales Billing",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-BIL-002",
+      "route": "/labs/enterprise-context/billing/",
+      "claim": "Copying control governs which reference documents can create which billing documents, copying requirements, billing quantity, field transfer, and whether pricing is copied or redetermined.",
+      "claim_type": "configuration_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-BIL-COPYING-CONTROL"],
+      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/dc6fb6535fe6b74ce10000000a174cb4.html"],
+      "product_scope": "SAP S/4HANA Cloud Public Edition Sales Billing",
+      "release_scope": "2608 Latest documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-BIL-003",
+      "route": "/labs/enterprise-context/billing/",
+      "claim": "Billing pricing can copy prices from the sales document or perform pricing again; the pricing type is controlled in copying control.",
+      "claim_type": "configuration_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-BIL-PRICING"],
+      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/e86fb6535fe6b74ce10000000a174cb4.html"],
+      "product_scope": "SAP S/4HANA Cloud Public Edition Sales Billing",
+      "release_scope": "2608 Latest documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-BIL-004",
+      "route": "/labs/enterprise-context/billing/",
+      "claim": "When collective billing is requested, the system tries to combine selected due items according to split criteria rather than blindly producing one invoice.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-BIL-DUE-LIST", "SRC-SAP-BIL-SPLIT"],
+      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/0270b6535fe6b74ce10000000a174cb4.html"],
+      "product_scope": "SAP S/4HANA Sales Billing",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-BIL-005",
+      "route": "/labs/enterprise-context/billing/",
+      "claim": "Split analysis can compare two billing documents and show differing header fields and partners that explain why the documents were split.",
+      "claim_type": "monitoring_behavior",
+      "status": "source_supported",
+      "source_refs": ["SRC-SAP-BIL-SPLIT-ANALYSIS"],
+      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_ONPREMISE/7b24a64d9d0941bda1afa753263d9e39/f41dc55398dd1f4be10000000a174cb4.html"],
+      "product_scope": "SAP S/4HANA Sales Billing",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    }
+  ]
+}
