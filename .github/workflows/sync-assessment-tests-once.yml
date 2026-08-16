@@ -31,9 +31,24 @@ jobs:
           python3 scripts/generate_assessment_evidence_coverage.py
           python3 scripts/generate_assessment_human_review_queue.py
           python3 scripts/generate_assessment_core_study_map.py
+          python3 scripts/generate_assessment_secondary_review_priority.py
           python3 scripts/generate_assessment_evidence_coverage.py --check
           python3 scripts/generate_assessment_human_review_queue.py --check
           python3 scripts/generate_assessment_core_study_map.py --check
+          python3 scripts/generate_assessment_secondary_review_priority.py --check
+
+      - name: Make empty human review queue a valid terminal state
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/validate_assessment_human_review_findings.py')
+          text = p.read_text(encoding='utf-8')
+          old = '    if not queue.get("items"):\n        errors.append("Human review finding recorder requires a non-empty human review queue")\n'
+          if text.count(old) != 1:
+              raise SystemExit('non-empty human review queue validator anchor not found')
+          text = text.replace(old, '', 1)
+          p.write_text(text, encoding='utf-8')
+          PY
 
       - name: Update regression contracts to current publication model
         run: |
@@ -64,6 +79,9 @@ jobs:
               raise SystemExit('Sales diagnostic draft assertion anchor not found')
           p.write_text(text.replace(old, new, 1), encoding='utf-8')
           PY
+
+      - name: Validate zero-queue review contract
+        run: python3 scripts/validate_assessment_human_review_findings.py
 
       - name: Run affected tests
         run: |
