@@ -27,15 +27,8 @@ jobs:
           from pathlib import Path
           path = Path('scripts/ai_search_trust_loop.py')
           text = path.read_text(encoding='utf-8')
-          old = '''    write_or_check(REPORT_JSON, report_json, args.check, changed)
-    write_or_check(REPORT_MD, "\\n".join(report_md), args.check, changed)
-'''
-          new = '''    # Reports are ephemeral run artifacts and are ignored by Git. A clean checkout
-    # must be able to use --check without failing because reports/seo is absent.
-    if not args.check:
-        write_or_check(REPORT_JSON, report_json, False, changed)
-        write_or_check(REPORT_MD, "\\n".join(report_md), False, changed)
-'''
+          old = '    write_or_check(REPORT_JSON, report_json, args.check, changed)\n    write_or_check(REPORT_MD, "\\n".join(report_md), args.check, changed)\n'
+          new = '    # Reports are ephemeral run artifacts and are ignored by Git. A clean checkout\n    # must be able to use --check without failing because reports/seo is absent.\n    if not args.check:\n        write_or_check(REPORT_JSON, report_json, False, changed)\n        write_or_check(REPORT_MD, "\\n".join(report_md), False, changed)\n'
           if text.count(old) != 1:
               raise SystemExit(f'expected one report check block, found {text.count(old)}')
           path.write_text(text.replace(old, new, 1), encoding='utf-8')
@@ -45,7 +38,7 @@ jobs:
         run: python3 scripts/ai_search_trust_loop.py --check
 
       - name: Prove no tracked page drift
-        run: git diff --exit-code
+        run: git diff --exit-code -- . ':!scripts/ai_search_trust_loop.py'
 
       - name: Remove one-shot workflow
         run: rm .github/workflows/trust-loop-check-finalize-once.yml
