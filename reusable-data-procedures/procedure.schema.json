@@ -2,80 +2,170 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://dkharlanau.github.io/reusable-data-procedures/procedure.schema.json",
   "title": "Reusable Data Procedure",
-  "description": "Portable definition of approved spreadsheet source signatures, field mappings, and validation policy. Uploaded business rows are not part of the procedure.",
+  "description": "Draft portable definition of source contracts, mappings, deterministic transforms, validations, outputs and provenance. Run data is stored separately.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["kind", "version", "id", "name", "createdAt", "sources", "mappings", "validationPolicy", "dataStored"],
+  "required": ["kind", "specVersion", "id", "name", "purpose", "sources", "transforms", "validations", "outputs", "provenance"],
   "properties": {
     "kind": { "const": "reusable-data-procedure" },
-    "version": { "type": "string", "const": "1.0" },
-    "id": { "type": "string", "minLength": 1 },
-    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
-    "purpose": { "type": "string", "maxLength": 300 },
-    "createdAt": { "type": "string", "format": "date-time" },
+    "specVersion": { "type": "string", "const": "0.2" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "purpose": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "domain": { "type": "string" },
+    "procedureVersion": { "type": "string", "default": "0.1.0" },
+    "status": { "enum": ["draft", "review", "approved", "deprecated"] },
+    "owner": { "type": "string" },
     "sources": {
       "type": "array",
       "minItems": 1,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["id", "fileName", "fileStem", "sheetName", "expectedColumns"],
-        "properties": {
-          "id": { "type": "string", "minLength": 1 },
-          "fileName": { "type": "string" },
-          "fileStem": { "type": "string" },
-          "sheetName": { "type": "string" },
-          "expectedColumns": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["name", "type", "likelyKey"],
-              "properties": {
-                "name": { "type": "string", "minLength": 1 },
-                "type": { "enum": ["text", "number", "date", "boolean", "empty"] },
-                "likelyKey": { "type": "boolean" }
-              }
-            }
-          }
-        }
-      }
+      "items": { "$ref": "#/$defs/sourceContract" }
     },
     "mappings": {
       "type": "array",
+      "default": [],
+      "items": { "$ref": "#/$defs/mapping" }
+    },
+    "transforms": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/transform" }
+    },
+    "validations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/validation" }
+    },
+    "outputs": {
+      "type": "array",
       "minItems": 1,
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["fromSource", "fromColumn", "toSource", "toColumn", "direction", "evidenceAtSave"],
-        "properties": {
-          "fromSource": { "type": "string", "minLength": 1 },
-          "fromColumn": { "type": "string", "minLength": 1 },
-          "toSource": { "type": "string", "minLength": 1 },
-          "toColumn": { "type": "string", "minLength": 1 },
-          "direction": { "const": "lookup" },
-          "evidenceAtSave": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["confidence", "valueOverlap"],
-            "properties": {
-              "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
-              "valueOverlap": { "type": "number", "minimum": 0, "maximum": 1 }
-            }
+      "items": { "$ref": "#/$defs/output" }
+    },
+    "runtimePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowCustomCode": { "type": "boolean", "default": false },
+        "onBreakingDrift": { "enum": ["stop", "manual-review"], "default": "stop" },
+        "onValidationFailure": { "enum": ["stop", "produce-exceptions", "manual-review"], "default": "stop" }
+      }
+    },
+    "provenance": { "$ref": "#/$defs/provenance" }
+  },
+  "$defs": {
+    "fieldContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "required"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "required": { "type": "boolean" },
+        "type": { "enum": ["string", "integer", "number", "boolean", "date", "datetime", "unknown"] },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "role": { "enum": ["key", "attribute", "measure", "date", "status", "unknown"] },
+        "nullable": { "type": "boolean" }
+      }
+    },
+    "sourceContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "requiredFields"],
+      "properties": {
+        "role": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" },
+        "description": { "type": "string" },
+        "acceptedFormats": { "type": "array", "items": { "enum": ["csv", "tsv", "xlsx", "xlsm", "parquet", "json", "database", "api"] } },
+        "filePattern": { "type": "string" },
+        "sheetPattern": { "type": "string" },
+        "requiredFields": { "type": "array", "items": { "$ref": "#/$defs/fieldContract" } },
+        "optionalFields": { "type": "array", "items": { "$ref": "#/$defs/fieldContract" } },
+        "fingerprintPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "useColumnNames": { "type": "boolean", "default": true },
+            "useTypes": { "type": "boolean", "default": true },
+            "useValuePatterns": { "type": "boolean", "default": true }
           }
         }
       }
     },
-    "validationPolicy": {
+    "mappingEvidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["requireSameColumns", "minimumCoverage", "targetKeyPreference"],
       "properties": {
-        "requireSameColumns": { "type": "boolean" },
-        "minimumCoverage": { "type": "number", "minimum": 0, "maximum": 1 },
-        "targetKeyPreference": { "enum": ["unique-or-review"] }
+        "headerSimilarity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "valueOverlap": { "type": "number", "minimum": 0, "maximum": 1 },
+        "typeCompatibility": { "type": "number", "minimum": 0, "maximum": 1 },
+        "dictionaryMatch": { "type": "boolean" },
+        "previousApproval": { "type": "boolean" },
+        "semanticConfidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "approvedBy": { "type": "string" },
+        "approvedAt": { "type": "string", "format": "date-time" },
+        "note": { "type": "string" }
       }
     },
-    "dataStored": { "const": false }
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from", "to", "cardinality", "evidence"],
+      "properties": {
+        "id": { "type": "string" },
+        "from": { "type": "string", "description": "Source role and field, for example sales.Material" },
+        "to": { "type": "string", "description": "Target role and field, for example material.Material" },
+        "cardinality": { "enum": ["one-to-one", "one-to-many", "many-to-one", "many-to-many", "unknown"] },
+        "normalization": { "type": "array", "items": { "type": "string" } },
+        "evidence": { "$ref": "#/$defs/mappingEvidence" }
+      }
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "op"],
+      "properties": {
+        "id": { "type": "string" },
+        "op": { "enum": ["select", "rename", "cast", "normalize", "filter", "lookup", "derive", "aggregate", "deduplicate", "sort", "route-exceptions", "custom"] },
+        "input": { "type": ["string", "array"], "items": { "type": "string" } },
+        "output": { "type": "string" },
+        "params": { "type": "object" },
+        "mappingRef": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "rule", "severity"],
+      "properties": {
+        "id": { "type": "string" },
+        "rule": { "enum": ["schema-compatible", "not-null", "unique", "referential-integrity", "mapping-coverage", "row-count", "value-domain", "expression", "custom"] },
+        "target": { "type": "string" },
+        "severity": { "enum": ["info", "warning", "error", "block"] },
+        "params": { "type": "object" },
+        "description": { "type": "string" }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "format": { "enum": ["csv", "xlsx", "parquet", "json", "table", "none"] },
+        "fields": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["createdAt"],
+      "properties": {
+        "createdAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string" },
+        "basedOnProcedureVersion": { "type": "string" },
+        "changeReason": { "type": "string" },
+        "sourceRunId": { "type": "string" },
+        "reviewedAt": { "type": "string", "format": "date-time" },
+        "reviewedBy": { "type": "string" }
+      }
+    }
   }
 }
