@@ -1,0 +1,306 @@
+id: GRAPH-QM-QUALITY-MANAGEMENT
+ type: knowledge_graph
+title: "Quality Management — Trigger to Disposition"
+domain: "SAP S/4HANA Quality Management"
+process_family: "Quality Planning / Inspection / Improvement"
+process_step: "From quality-relevant business event to inspection, decision, stock consequence, and follow-up"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+
+summary: >-
+  A Lead-level map of Quality Management across procurement, production, inventory, and sales.
+  It separates the business event that triggers inspection from inspection planning, results, defects,
+  usage decision, stock disposition, notification, and customer-facing quality evidence.
+
+thesis: >-
+  Quality is not a final yes/no flag. In SAP, one business event can create an inspection lot,
+  apply an inspection specification, collect results and defects, produce a usage decision,
+  change stock usability, create follow-up work, and affect delivery or customer evidence.
+
+boundary:
+  includes:
+    - "Inspection lot origin and inspection type as inspection-control context"
+    - "Inspection lot and inspection specification"
+    - "Inspection plan and inspection characteristics at architecture level"
+    - "Results recording, valuation, defects, and usage decision"
+    - "Stock posting and disposition consequences"
+    - "Quality notification boundary"
+    - "Procurement, production, inventory, warehouse, and sales integration"
+    - "Quality certificate boundary"
+  excludes_for_later_deep_dives:
+    - "Detailed QM Customizing for every inspection type"
+    - "Sampling procedure and dynamic modification configuration"
+    - "Detailed calibration and test-equipment management"
+    - "Audit management"
+    - "Detailed quality-cost accounting"
+    - "Full complaint-management configuration"
+
+memory_model:
+  path: "EVENT → LOT → SPEC → INSPECT → RECORD → DECIDE → DISPOSE → FOLLOW-UP → PROVE"
+  questions:
+    - key: EVENT
+      question: "Which business event made quality relevant?"
+      answer: "Start with goods receipt, production, goods receipt from production, stock transfer, delivery, return, or another inspection origin."
+    - key: LOT
+      question: "Why was this inspection lot created, or why was it not created?"
+      answer: "Inspection lot origin and inspection type define the creation and processing context together with material and process settings."
+    - key: SPEC
+      question: "What exactly should be inspected?"
+      answer: "Trace the inspection specification, task list or inspection plan, operations, characteristics, methods, and limits that apply to this lot."
+    - key: INSPECT
+      question: "What sample, point, batch, or quantity is actually inspected?"
+      answer: "Separate the inspected subset and sampling logic from the full logistics quantity."
+    - key: RECORD
+      question: "What evidence was measured or observed?"
+      answer: "Results recording captures quantitative or qualitative characteristic results and their valuation."
+    - key: DECIDE
+      question: "Who accepts or rejects the inspected material?"
+      answer: "The usage decision completes the inspection decision and can trigger follow-up actions."
+    - key: DISPOSE
+      question: "What happens to the physical stock or process after the decision?"
+      answer: "For stock-relevant lots, disposition can post quantities to unrestricted, blocked, scrap, or another allowed stock destination."
+    - key: FOLLOW-UP
+      question: "Does the problem require corrective action beyond the lot?"
+      answer: "Defects and quality notifications can carry problem, cause, task, responsibility, and follow-up work beyond the inspection itself."
+    - key: PROVE
+      question: "What quality evidence must travel downstream?"
+      answer: "Customer delivery controls, batch data, inspection results, and quality certificates can become part of the sales or compliance handoff."
+
+control_layers:
+  - id: QM-CTRL-TRIGGER
+    title: "Inspection Trigger"
+    purpose: "Defines which business event can create the inspection requirement."
+    diagnostic_question: "Did the right event create the right inspection context?"
+    source_refs: [SRC-SAP-QM-LOT-ORIGIN]
+  - id: QM-CTRL-SPEC
+    title: "Inspection Specification"
+    purpose: "Defines what characteristics, operations, methods, and acceptance criteria must be checked."
+    diagnostic_question: "Is the lot using the intended inspection specification for this material and process?"
+  - id: QM-CTRL-RESULT
+    title: "Result and Valuation"
+    purpose: "Separates measured or observed evidence from acceptance of each characteristic or sample."
+    diagnostic_question: "Is the evidence complete and correctly valuated?"
+    source_refs: [SRC-SAP-QM-RESULTS]
+  - id: QM-CTRL-UD
+    title: "Usage Decision"
+    purpose: "Completes the inspection decision and can trigger follow-up actions."
+    diagnostic_question: "Has the inspection been completed with the correct decision code and authority?"
+    source_refs: [SRC-SAP-QM-USAGE-DECISION]
+  - id: QM-CTRL-STOCK
+    title: "Stock Disposition"
+    purpose: "Controls what happens to stock after a quality decision for stock-relevant inspection lots."
+    diagnostic_question: "Is the material accepted but still in the wrong stock state, or was the disposition itself wrong?"
+    source_refs: [SRC-SAP-QM-LOT-COMPLETION]
+
+runtime_pipeline:
+  - order: 1
+    id: QM-RUNTIME-EVENT
+    title: "Receive a quality-relevant event"
+    question: "What business event should trigger quality control?"
+    inputs: ["procurement goods receipt", "production event", "goods receipt from production", "stock movement", "delivery", "return", "material quality settings"]
+    output: ["inspection requirement context"]
+    failure_signal: "The business event completes, but no expected inspection starts or an unexpected inspection blocks the process."
+    source_refs: [SRC-SAP-QM-LOT-ORIGIN, SRC-SAP-QM-GR]
+  - order: 2
+    id: QM-RUNTIME-LOT
+    title: "Create and release inspection lot"
+    question: "Which quantity and object belong to this inspection?"
+    inputs: ["inspection lot origin", "inspection type", "material/process context", "quantity", "batch or document reference where relevant"]
+    output: ["inspection lot with origin, status, quantity, and reference context"]
+    failure_signal: "Lot exists but has the wrong origin, quantity, reference, status, or processing behavior."
+    source_refs: [SRC-SAP-QM-INSPECTION-LOT, SRC-SAP-QM-LOT-ORIGIN]
+  - order: 3
+    id: QM-RUNTIME-SPEC
+    title: "Assign inspection specification"
+    question: "Which checks and limits should apply?"
+    inputs: ["material", "plant", "inspection type", "inspection plan or task list", "characteristics", "validity and usage context"]
+    output: ["operations and inspection characteristics for execution"]
+    failure_signal: "Lot exists but expected characteristics are missing, obsolete, or based on the wrong specification."
+  - order: 4
+    id: QM-RUNTIME-RESULTS
+    title: "Record and valuate results"
+    question: "What did the inspection actually find?"
+    inputs: ["samples or inspection points", "characteristics", "measured values or attribute codes", "tolerances and valuation rules"]
+    output: ["recorded and valuated inspection evidence"]
+    failure_signal: "Usage decision is blocked because required characteristics, samples, or valuations are incomplete."
+    source_refs: [SRC-SAP-QM-RESULTS]
+  - order: 5
+    id: QM-RUNTIME-DEFECT
+    title: "Record defects where needed"
+    question: "Is there a quality problem that must be classified and followed?"
+    inputs: ["inspection result", "defect code", "location/cause context", "severity", "reference object"]
+    output: ["structured defect evidence and possible notification trigger"]
+    failure_signal: "Material is rejected, but the organization loses the reason, cause, or follow-up context in free text."
+  - order: 6
+    id: QM-RUNTIME-UD
+    title: "Make usage decision"
+    question: "Is the inspected material accepted, rejected, or conditionally handled?"
+    inputs: ["completed results", "sample/characteristic valuation", "defects", "usage-decision code", "authorization"]
+    output: ["completed quality decision and follow-up actions according to code/design"]
+    failure_signal: "Inspection evidence is complete but business use remains blocked because no valid usage decision exists."
+    source_refs: [SRC-SAP-QM-USAGE-DECISION]
+  - order: 7
+    id: QM-RUNTIME-DISPOSITION
+    title: "Apply stock or process disposition"
+    question: "What physical state follows the quality decision?"
+    inputs: ["usage decision", "stock-relevant inspection lot", "inspection stock quantity", "allowed stock postings"]
+    output: ["usable, blocked, scrap, sample, or other configured stock disposition"]
+    failure_signal: "Usage decision says accepted but inventory is still unavailable, or stock moved to an unintended destination."
+    source_refs: [SRC-SAP-QM-LOT-COMPLETION]
+  - order: 8
+    id: QM-RUNTIME-FOLLOWUP
+    title: "Run corrective follow-up"
+    question: "Does this event require action beyond stock disposition?"
+    inputs: ["defect", "quality notification", "responsible role", "tasks", "supplier/production/customer context"]
+    output: ["tracked corrective or preventive action"]
+    failure_signal: "The lot is technically closed, but the recurring business problem has no owner or corrective-action record."
+  - order: 9
+    id: QM-RUNTIME-PROVE
+    title: "Provide downstream quality evidence"
+    question: "What proof must the next business partner or process receive?"
+    inputs: ["delivery", "customer/material context", "batch", "inspection results", "certificate profile and recipient"]
+    output: ["quality certificate or other downstream quality evidence where required"]
+    failure_signal: "Product is acceptable but delivery cannot complete the required quality-evidence handoff."
+    source_refs: [SRC-SAP-QM-SALES, SRC-SAP-QM-CERTIFICATE]
+
+integration_boundaries:
+  - boundary: "Procurement → QM"
+    ownership: "Procurement owns the purchase and supplier relationship; QM owns inspection evidence and quality disposition where inspection is required."
+    question: "Did goods receipt create the intended inspection lot, stock state, and certificate requirement?"
+    source_refs: [SRC-SAP-QM-GR]
+  - boundary: "Production → QM"
+    ownership: "Production owns manufacturing execution; QM can inspect during production or at receipt from production."
+    question: "Is the issue an execution defect, an inspection result, or a stock disposition problem?"
+    source_refs: [SRC-SAP-QM-PRODUCTION]
+  - boundary: "QM → Inventory Management"
+    ownership: "QM owns the quality decision; Inventory Management records the resulting stock state and goods movement."
+    question: "Does the physical stock status reflect the usage decision?"
+    source_refs: [SRC-SAP-QM-LOT-COMPLETION]
+  - boundary: "QM → EWM"
+    ownership: "QM defines quality-relevant state and decisions; EWM can own physical warehouse execution and inspection-related logistics depending on architecture."
+    question: "Is material blocked because quality is incomplete or because warehouse execution has not reflected the decision?"
+  - boundary: "QM → Sales"
+    ownership: "Sales owns customer delivery; QM can control delivery inspection and quality evidence."
+    question: "Can goods issue proceed, and is the correct quality certificate or customer-specific quality control available?"
+    source_refs: [SRC-SAP-QM-SALES, SRC-SAP-QM-CERTIFICATE]
+
+failure_modes:
+  - id: QM-FAIL-NO-LOT
+    symptom: "Goods receipt or production event occurs, but no expected inspection lot is created."
+    first_checks: ["inspection lot origin", "active inspection type", "material/plant quality settings", "business event and movement context", "lot-creation status"]
+    avoid: "Do not create a manual inspection lot before proving why the automatic trigger did not apply."
+  - id: QM-FAIL-WRONG-LOT
+    symptom: "Inspection lot exists but uses the wrong processing or reference context."
+    first_checks: ["lot origin", "inspection type", "material and plant", "reference document", "quantity and batch", "status"]
+    avoid: "Do not treat all inspection lots as interchangeable because they share the same material."
+  - id: QM-FAIL-WRONG-SPEC
+    symptom: "Expected inspection characteristics are missing or wrong."
+    first_checks: ["inspection plan/task-list selection", "usage and status", "validity date", "material/plant assignment", "characteristics and methods"]
+    avoid: "Do not add ad-hoc characteristics to each lot before fixing specification selection."
+  - id: QM-FAIL-RESULTS-INCOMPLETE
+    symptom: "Usage decision cannot be made although inspection work appears finished."
+    first_checks: ["required characteristics", "sample valuation", "open operations", "recording completeness", "inspection-lot status"]
+    avoid: "Do not bypass missing inspection evidence only to release stock faster."
+    source_refs: [SRC-SAP-QM-RESULTS, SRC-SAP-QM-USAGE-DECISION]
+  - id: QM-FAIL-STOCK-BLOCKED
+    symptom: "Usage decision is accepted, but material remains unavailable for use."
+    first_checks: ["stock-relevant lot", "usage-decision stock posting", "inspection stock balance", "material document", "EWM/warehouse state where relevant"]
+    avoid: "Do not post an unrelated manual transfer before reconciling the quality disposition."
+    source_refs: [SRC-SAP-QM-LOT-COMPLETION]
+  - id: QM-FAIL-NOTIFICATION-GAP
+    symptom: "Repeated defects occur but each inspection lot closes independently with no corrective ownership."
+    first_checks: ["defect records", "notification creation rule", "problem/cause coding", "responsible role", "task and completion status"]
+    avoid: "Do not use the usage-decision text as the only problem-management record."
+  - id: QM-FAIL-DELIVERY
+    symptom: "Delivery is ready, but quality control or certificate requirement prevents the intended customer handoff."
+    first_checks: ["delivery inspection context", "customer/material quality control", "usage decision", "batch/result availability", "certificate profile", "recipient/output status"]
+    avoid: "Do not remove the customer quality requirement just to unblock shipment."
+    source_refs: [SRC-SAP-QM-SALES, SRC-SAP-QM-CERTIFICATE]
+
+impact_traces:
+  - title: "Goods receipt → stock usability"
+    path: "Goods Receipt → Inspection Lot → Results → Usage Decision → Stock Posting → Available/Blocked/Scrap"
+    lesson: "A successful goods receipt does not prove the material is usable."
+  - title: "Production defect → corrective action"
+    path: "Production Inspection → Result → Defect → Notification → Cause/Task → Follow-up"
+    lesson: "Closing an inspection does not remove the underlying process problem."
+  - title: "Quality result → customer delivery"
+    path: "Inspection/Batch Result → Delivery Quality Control → Usage Decision → Certificate → Goods Issue/Customer Evidence"
+    lesson: "Quality data can become part of the customer fulfillment contract."
+  - title: "Specification change → inspection outcome"
+    path: "Inspection Plan/Characteristic → Lot Specification → Result Valuation → Usage Decision → Stock/Delivery"
+    lesson: "A master-data change can alter both operational release and customer impact."
+
+lead_lens:
+  what_i_ask_first: "Which business event created the quality requirement, and what state is actually wrong: inspection, evidence, decision, stock, corrective action, or customer proof?"
+  decision_owner: "Separate logistics trigger, QM inspection authority, inventory stock state, warehouse execution, production responsibility, and sales/customer evidence."
+  main_trade_off: "More inspection control can reduce quality risk, but unnecessary or badly designed inspections add stock delay, manual effort, and false blocks."
+  typical_failure: "Teams treat blocked stock as an inventory problem although the real cause is an incomplete or incorrect quality decision."
+  proof_of_cause: "Trace event → lot origin/type → specification → results → usage decision → stock posting or follow-up, using the exact material, plant, date, batch, and reference document."
+  integration_impact: "QM can change whether purchased, produced, stored, or delivered material is usable, so it sits directly on logistics execution boundaries."
+  data_impact: "Inspection types, plans, characteristics, codes, material quality settings, batch data, and customer/supplier quality controls must align."
+  sixty_second_explanation: >-
+    I read QM as event, inspection lot, specification, results, decision, and consequence. First I prove why the inspection exists.
+    Then I check what specification and evidence it uses. The usage decision closes the quality judgment, but I still verify stock disposition,
+    corrective follow-up, and customer-facing evidence. That keeps quality logic separate from the inventory or delivery symptom it creates.
+
+practitioner_heuristics:
+  - "I start with inspection-lot origin and business event before changing quality master data."
+  - "I separate measured results from the usage decision; evidence and business disposition are different controls."
+  - "I never use unrestricted stock as proof that the inspection process was correct."
+  - "I trace blocked stock back through usage decision and inspection status before asking MM to move it manually."
+  - "I separate one failed lot from a recurring defect that needs notification and corrective ownership."
+  - "For customer quality issues, I check delivery control and certificate evidence, not only the inspection lot."
+
+anti_patterns:
+  - "Disable inspection because goods receipt is blocked."
+  - "Create manual lots whenever automatic lot creation is unclear."
+  - "Add characteristics directly to individual lots instead of fixing inspection specification."
+  - "Force a usage decision with incomplete required results."
+  - "Move inspection stock manually without reconciling the usage decision."
+  - "Close repeated defects as isolated inspection events without corrective-action ownership."
+
+synthetic_cases:
+  - id: QM-CASE-GR-NO-LOT
+    title: "Supplier receipt bypasses expected inspection"
+    synthetic: true
+    scenario: "Material RM-Q1 is received from a supplier at plant DE01. The business expects quality inspection, but the receipt is immediately usable and no inspection lot appears."
+    lead_path: ["Confirm the exact goods-receipt event and material/plant.", "Check the intended inspection-lot origin and active inspection type.", "Check material quality settings and relevant process control.", "Verify whether the business event should create a lot automatically.", "Correct the trigger or master-data cause and retest with a clean receipt."]
+    lesson: "The missing lot is a trigger/control problem before it is a stock problem."
+  - id: QM-CASE-ACCEPTED-BLOCKED
+    title: "Accepted lot, unavailable stock"
+    synthetic: true
+    scenario: "Inspection results are accepted and a usage decision exists, but production still cannot use the material."
+    lead_path: ["Check the usage-decision code and lot status.", "Inspect stock posting and remaining inspection-stock quantity.", "Read the material document and stock state.", "If EWM is involved, separate ERP quality state from warehouse execution state.", "Prove the final usable stock at the required production context."]
+    lesson: "Quality acceptance and physical stock availability are related but different states."
+  - id: QM-CASE-CUSTOMER-CERT
+    title: "Shipment ready, certificate missing"
+    synthetic: true
+    scenario: "The product is accepted and delivery is ready, but the customer requires a quality certificate that is not created."
+    lead_path: ["Confirm customer/material quality requirement.", "Check delivery and batch/result context.", "Check certificate profile determination and validity.", "Check recipient and output processing.", "Do not remove the requirement; prove the quality-evidence handoff."]
+    lesson: "Customer fulfillment can depend on quality evidence even when the product itself is acceptable."
+
+assessment_drills:
+  - question: "What is an inspection lot in your architecture model?"
+    strong_answer: "It is the managed object that carries one inspection request and its processing context. I first ask which business event and inspection origin created it."
+  - question: "Results versus usage decision?"
+    strong_answer: "Results are inspection evidence and characteristic valuation. The usage decision is the business quality decision that completes the lot and can trigger follow-up or stock disposition."
+  - question: "Usage decision accepted, stock still blocked. Diagnose."
+    strong_answer: "I trace the stock-relevant lot, usage-decision code, stock posting, inspection-stock balance and warehouse state before posting a manual transfer."
+  - question: "How does QM integrate with production?"
+    strong_answer: "Production creates execution events; QM can inspect during production or at receipt from production. I separate production progress, inspection evidence, usage decision and resulting stock state."
+  - question: "How does QM affect sales?"
+    strong_answer: "Delivery inspection, customer/material quality controls, batch results and quality certificates can influence whether goods issue and customer evidence are complete."
+
+source_refs:
+  - SRC-SAP-QM-INSPECTION-LOT
+  - SRC-SAP-QM-LOT-ORIGIN
+  - SRC-SAP-QM-RESULTS
+  - SRC-SAP-QM-USAGE-DECISION
+  - SRC-SAP-QM-LOT-COMPLETION
+  - SRC-SAP-QM-GR
+  - SRC-SAP-QM-PRODUCTION
+  - SRC-SAP-QM-SALES
+  - SRC-SAP-QM-CERTIFICATE
