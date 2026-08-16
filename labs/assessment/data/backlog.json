@@ -541,10 +541,23 @@
         "scripts/validate_assessment_human_review_findings.py"
       ],
       "working_rule": "Record true reviewer evidence through all seven page-review gates. Never infer human verification from automation, and never alter verified, indexing, status, or publication state from the finding recorder."
+    },
+    {
+      "id": "LOOP-040",
+      "priority": "P1",
+      "title": "Secondary human-review priority map",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/human-review/secondary/",
+        "/labs/assessment/data/secondary-review-priority.json",
+        "scripts/generate_assessment_secondary_review_priority.py",
+        "scripts/validate_assessment_secondary_review_priority.py"
+      ],
+      "working_rule": "After the Core 12 wave, rank source-supported secondary pages by direct published-case reuse and cross-track assessment value. Priority orders review work only and never changes verification or publication state."
     }
   ],
   "next_iteration_themes": [
-    "rank secondary P1 human-review routes by cross-track assessment value and direct published-case reuse",
+    "use the secondary review ranking to select the next high-reuse editorial consistency pass without pretending it is human verification",
     "record true human page-review findings separately from automated editorial improvement",
     "select secondary P1 pages by cross-track assessment value instead of processing all routes mechanically"
   ]

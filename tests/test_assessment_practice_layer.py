@@ -174,6 +174,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",
         "human-review": ASSESSMENT / "human-review" / "index.html",
         "human-review-findings": ASSESSMENT / "human-review" / "findings" / "index.html",
+        "human-review-secondary": ASSESSMENT / "human-review" / "secondary" / "index.html",
         "core-study": ASSESSMENT / "core" / "index.html",
         "core-boundaries": ASSESSMENT / "core-boundaries" / "index.html",
         "board": ASSESSMENT / "board" / "index.html",
@@ -205,7 +206,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -512,6 +513,28 @@ def test_human_review_finding_contract_never_changes_publication_state() -> None
 
     result = subprocess.run(
         [sys.executable, "scripts/validate_assessment_human_review_findings.py"],
+        cwd=ROOT, text=True, capture_output=True, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_secondary_human_review_priority_ranks_only_source_supported_non_core_routes() -> None:
+    priority = load_json("secondary-review-priority.json")
+    queue = load_json("human-review-queue.json")
+    core = load_json("core-study-map.json")
+    secondary = {item["route"] for item in queue["items"] if item["wave"] == "secondary"}
+    core_routes = {item["route"] for item in core["items"]}
+    ranked = {item["route"] for item in priority["items"]}
+
+    assert ranked == secondary
+    assert not ranked & core_routes
+    assert priority["summary"]["all_source_supported"] is True
+    assert priority["summary"]["all_unverified"] is True
+    assert priority["summary"]["secondary_routes"] == len(priority["items"])
+    assert all(item["page_verified"] is False for item in priority["items"])
+
+    result = subprocess.run(
+        [sys.executable, "scripts/validate_assessment_secondary_review_priority.py"],
         cwd=ROOT, text=True, capture_output=True, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
