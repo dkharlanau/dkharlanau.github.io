@@ -1,0 +1,104 @@
+<div class="rdp" data-rdp-app>
+  <header class="rdp__hero">
+    <div class="rdp__hero-copy">
+      <p class="rdp__eyebrow">Data workbench / reusable logic</p>
+      <h1>Do the spreadsheet reasoning once.<br />Keep the procedure.</h1>
+      <p class="rdp__lead">Upload several Excel or CSV exports. The workbench studies their structure, finds possible keys and related fields, proposes mappings, tests them against the loaded rows, and saves the approved logic for the next run.</p>
+      <div class="rdp__flow" aria-label="Procedure flow">
+        <span>Files</span><i>→</i><span>Discover</span><i>→</i><span>Map</span><i>→</i><span>Validate</span><i>→</i><span>Result</span><i>→</i><span>Save Procedure</span>
+      </div>
+    </div>
+    <aside class="rdp__hero-note">
+      <span class="material-symbols-outlined" aria-hidden="true">shield_lock</span>
+      <div><strong>Browser-side prototype</strong><p>The files are parsed in your browser. This page has no upload API. Saved procedures stay in local browser storage unless you export them as JSON.</p></div>
+    </aside>
+  </header>
+
+  <section class="rdp__why" aria-label="Use cases">
+    <div><strong>SAP exports</strong><span>Orders, materials, partners, pricing, stock, migration extracts.</span></div>
+    <div><strong>Corporate files</strong><span>Vendor lists, finance extracts, operational reports, master-data checks.</span></div>
+    <div><strong>Repeatable control</strong><span>Keep field mappings and data checks instead of rebuilding them every month.</span></div>
+  </section>
+
+  <nav class="rdp__steps" aria-label="Procedure steps">
+    <button type="button" class="is-active" data-rdp-step="files"><span>01</span>Files</button>
+    <button type="button" data-rdp-step="discover"><span>02</span>Discover</button>
+    <button type="button" data-rdp-step="map"><span>03</span>Map</button>
+    <button type="button" data-rdp-step="validate"><span>04</span>Validate</button>
+    <button type="button" data-rdp-step="result"><span>05</span>Result</button>
+    <button type="button" data-rdp-step="save"><span>06</span>Save Procedure</button>
+  </nav>
+
+  <div class="rdp__status" role="status" aria-live="polite" data-rdp-status>Start with two or more related files. One file also works for structure discovery.</div>
+
+  <section class="rdp__panel is-active" data-rdp-panel="files">
+    <div class="rdp__panel-heading">
+      <div><p class="rdp__eyebrow">Step 01 / Files</p><h2>Bring the raw exports.</h2><p>Use CSV, XLSX, XLS, XLSB, or other spreadsheet formats supported by the parser. Every worksheet becomes a separate table candidate.</p></div>
+      <button type="button" class="rdp__button rdp__button--quiet" data-rdp-load-demo>Load demo data</button>
+    </div>
+    <label class="rdp__dropzone" data-rdp-dropzone>
+      <input type="file" multiple accept=".csv,.tsv,.txt,.xlsx,.xls,.xlsb,.ods" data-rdp-files />
+      <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
+      <strong>Drop files here or choose files</strong>
+      <small>Nothing is sent to a server by this prototype.</small>
+    </label>
+    <div class="rdp__file-list" data-rdp-file-list>
+      <p class="rdp__empty">No files loaded yet.</p>
+    </div>
+    <div class="rdp__actions"><button type="button" class="rdp__button" data-rdp-next="discover" disabled>Discover structure <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button></div>
+  </section>
+
+  <section class="rdp__panel" data-rdp-panel="discover" hidden>
+    <div class="rdp__panel-heading"><div><p class="rdp__eyebrow">Step 02 / Discover</p><h2>Profile before mapping.</h2><p>The workbench looks at headers and actual values. It estimates data types, completeness, uniqueness, likely keys, and possible links between tables.</p></div><div class="rdp__metric" data-rdp-discovery-summary><strong>0</strong><span>tables</span></div></div>
+    <div class="rdp__table-grid" data-rdp-discovery></div>
+    <div class="rdp__actions"><button type="button" class="rdp__button rdp__button--quiet" data-rdp-back="files">Back</button><button type="button" class="rdp__button" data-rdp-next="map">Review mappings <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button></div>
+  </section>
+
+  <section class="rdp__panel" data-rdp-panel="map" hidden>
+    <div class="rdp__panel-heading"><div><p class="rdp__eyebrow">Step 03 / Map</p><h2>Suggestions are hypotheses.</h2><p>A similar column name is not enough. Suggestions combine header similarity, value overlap, and type compatibility. Accept only the links that make business sense.</p></div><button type="button" class="rdp__button rdp__button--quiet" data-rdp-add-mapping>Add manual mapping</button></div>
+    <div class="rdp__mapping-list" data-rdp-mappings></div>
+    <div class="rdp__actions"><button type="button" class="rdp__button rdp__button--quiet" data-rdp-back="discover">Back</button><button type="button" class="rdp__button" data-rdp-next="validate">Validate selected mappings <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button></div>
+  </section>
+
+  <section class="rdp__panel" data-rdp-panel="validate" hidden>
+    <div class="rdp__panel-heading"><div><p class="rdp__eyebrow">Step 04 / Validate</p><h2>Test the join on the data you actually have.</h2><p>For every selected mapping, check source coverage, nulls, duplicates, and unmatched values. A mapping can look correct and still fail on the actual data.</p></div><div class="rdp__metric" data-rdp-validation-score><strong>—</strong><span>overall</span></div></div>
+    <div class="rdp__validation-list" data-rdp-validation></div>
+    <div class="rdp__actions"><button type="button" class="rdp__button rdp__button--quiet" data-rdp-back="map">Back</button><button type="button" class="rdp__button" data-rdp-next="result">Build result <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button></div>
+  </section>
+
+  <section class="rdp__panel" data-rdp-panel="result" hidden>
+    <div class="rdp__panel-heading"><div><p class="rdp__eyebrow">Step 05 / Result</p><h2>Preview the combined data.</h2><p>The first mapped source table becomes the base. Matching target rows are attached with clear table prefixes. This keeps the transformation logic visible and easy to review.</p></div><button type="button" class="rdp__button rdp__button--quiet" data-rdp-export-csv disabled>Export result CSV</button></div>
+    <div class="rdp__result-summary" data-rdp-result-summary></div>
+    <div class="rdp__table-wrap"><table class="rdp__result-table" data-rdp-result-table><tbody><tr><td>No result yet.</td></tr></tbody></table></div>
+    <div class="rdp__actions"><button type="button" class="rdp__button rdp__button--quiet" data-rdp-back="validate">Back</button><button type="button" class="rdp__button" data-rdp-next="save">Save procedure <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button></div>
+  </section>
+
+  <section class="rdp__panel" data-rdp-panel="save" hidden>
+    <div class="rdp__panel-heading"><div><p class="rdp__eyebrow">Step 06 / Save Procedure</p><h2>Keep the approved logic.</h2><p>A procedure stores source signatures, accepted mappings, and validation rules. It does not store the uploaded business data.</p></div></div>
+    <div class="rdp__save-grid">
+      <form class="rdp__save-form" data-rdp-save-form>
+        <label><span>Procedure name</span><input type="text" name="name" required maxlength="80" placeholder="Monthly sales export reconciliation" /></label>
+        <label><span>Purpose</span><textarea name="purpose" rows="3" maxlength="300" placeholder="Join the sales export to material attributes and flag missing references."></textarea></label>
+        <div class="rdp__save-options"><label><input type="checkbox" name="strict" checked /> Require the same column names</label><label><input type="checkbox" name="minCoverage" checked /> Require at least 90% mapping coverage</label></div>
+        <button type="submit" class="rdp__button">Save in this browser</button>
+      </form>
+      <div class="rdp__saved">
+        <div class="rdp__saved-heading"><h3>Saved procedures</h3><button type="button" class="rdp__text-button" data-rdp-import-trigger>Import JSON</button><input type="file" accept="application/json,.json" data-rdp-import hidden /></div>
+        <div data-rdp-saved-list><p class="rdp__empty">No saved procedures yet.</p></div>
+      </div>
+    </div>
+    <div class="rdp__actions"><button type="button" class="rdp__button rdp__button--quiet" data-rdp-back="result">Back</button></div>
+  </section>
+
+  <section class="rdp__model" aria-labelledby="rdp-model-title">
+    <p class="rdp__eyebrow">Procedure contract</p>
+    <h2 id="rdp-model-title">What gets reused?</h2>
+    <div class="rdp__contract-grid">
+      <div><span>01</span><strong>Source signature</strong><p>File/sheet identity, expected columns, inferred types, and optional strictness.</p></div>
+      <div><span>02</span><strong>Mappings</strong><p>Approved table and field relations, direction, confidence evidence, and enabled state.</p></div>
+      <div><span>03</span><strong>Validation policy</strong><p>Coverage threshold, uniqueness expectations, null tolerance, and structural checks.</p></div>
+      <div><span>04</span><strong>Run result</strong><p>Current validation evidence and transformed preview stay separate from the reusable definition.</p></div>
+    </div>
+    <p class="rdp__machine-links">Machine-readable: <a href="/reusable-data-procedures/model.json">model.json</a> · <a href="/reusable-data-procedures/procedure.schema.json">procedure.schema.json</a></p>
+  </section>
+</div>
