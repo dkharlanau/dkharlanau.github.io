@@ -1,0 +1,69 @@
+{
+  "id": "GRAPH-FI-CO-LOGISTICS-BRIDGE",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "status": "researching",
+  "domain": "SAP S/4HANA Finance and Logistics Integration",
+  "human_route": "/labs/enterprise-context/finance-logistics/",
+  "source_registry": "_data/labs/enterprise_context/sources/finance_logistics.yml",
+  "thesis": "Start with the logistics event, then trace value, account determination, cost or revenue object, journal evidence, clearing or settlement, and reconciliation.",
+  "memory_path": ["EVENT", "VALUE", "ACCOUNT", "OBJECT", "JOURNAL", "CLEAR_OR_SETTLE", "RECONCILE"],
+  "event_map": [
+    {"id":"pgi","event":"Post Goods Issue","baseline":"Inventory reduction and typically COGS posting","posting_reading":"Dr COGS / Cr Inventory","caveat":"Specialized revenue-recognition or valuated-stock-in-transit scenarios can change timing."},
+    {"id":"gr","event":"Purchase Order Goods Receipt","baseline":"Inventory or consumption value against GR/IR for standard valuated procurement","posting_reading":"Dr Inventory or Consumption / Cr GR/IR with valuation and variance rules","caveat":"Price control, account assignment, invoice-before-GR and delivery-cost scenarios differ."},
+    {"id":"ir","event":"Supplier Invoice Receipt","baseline":"Vendor liability plus GR/IR clearing and variances/tax as applicable","posting_reading":"Dr GR/IR and/or expense/variance/tax / Cr Vendor","caveat":"Quantity, price, account-assignment and sequence differences affect details."},
+    {"id":"billing","event":"Customer Billing","baseline":"Accounts receivable plus revenue/tax posting on FI transfer","posting_reading":"Dr AR / Cr Revenue and tax-related accounts","caveat":"Revenue-recognition solutions can add recognition and deferral postings."},
+    {"id":"production","event":"Production Consumption, Output and Settlement","baseline":"Actual costs accumulate on the production cost object; output receipt and settlement move value to receivers","posting_reading":"Inventory and production-order/cost-object values are linked","caveat":"Receiver, valuation, variance and settlement logic depend on production costing design."},
+    {"id":"freight","event":"TM Freight Settlement","baseline":"FSD drives MM service procurement/accrual and invoice-verification follow-on","posting_reading":"TM charges → FSD → service PO/SES/accrual → carrier invoice verification","caveat":"Cost allocation to valuation or expense depends on process design."}
+  ],
+  "runtime": [
+    {"order":1,"id":"FINLOG-RUNTIME-EVENT","question":"Which logistics event created the financial state?","checks":["material document","delivery/PGI","PO/GR","supplier invoice","billing document","production order","FSD"]},
+    {"order":2,"id":"FINLOG-RUNTIME-VALUE","question":"What value should move?","checks":["quantity","material valuation","PO/invoice price","billing value","freight charge","cost-object actuals"]},
+    {"order":3,"id":"FINLOG-RUNTIME-ACCOUNT","question":"Which account-determination logic selects the G/L?","checks":["transaction/account key","valuation/account grouping","chart of accounts","sales and customer/material account-assignment context","tax/scenario inputs"]},
+    {"order":4,"id":"FINLOG-RUNTIME-OBJECT","question":"Which object owns the cost or revenue context?","checks":["stock","cost center","order","WBS","sales-order item","asset","profitability/profit-center context"]},
+    {"order":5,"id":"FINLOG-RUNTIME-JOURNAL","question":"Which journal entry was actually posted?","checks":["posting status","amount/currency","G/L","account assignment","tax","logistics reference"]},
+    {"order":6,"id":"FINLOG-RUNTIME-CLEAR","question":"What should clear or settle the temporary balance?","checks":["GR/IR","production order balance","freight accrual/service chain","invoice match","settlement receiver"]},
+    {"order":7,"id":"FINLOG-RUNTIME-RECONCILE","question":"Do Logistics and Finance describe the same business event?","checks":["document flow","quantity/value history","open items","cost-object balance","reversal/settlement chain"]}
+  ],
+  "process_bridges": [
+    {"id":"o2c","path":"Delivery/PGI → Inventory & COGS → Billing → AR / Revenue / Tax","lead_checks":["PGI accounting","COGS/inventory","billing FI status","revenue account","AR value","recognition exception"]},
+    {"id":"p2p","path":"PO → GR → Inventory/Consumption + GR/IR → Supplier Invoice → Vendor Liability + GR/IR clearing","lead_checks":["PO assignment","valuation","GR accounting","invoice match","variance","open GR/IR"]},
+    {"id":"production","path":"Component GI / activities → Production Order Actual Cost → Finished Goods GR → Variance / Settlement → Receiver","lead_checks":["actuals","output value","variance","settlement rule","receiver","remaining balance"]},
+    {"id":"freight","path":"Freight Charges → FSD → Service PO + SES / Accrual → Carrier Invoice Verification","lead_checks":["charge result","FSD","MM follow-on","accrual/cost","invoice match","reversal"]}
+  ],
+  "failure_modes": [
+    {"id":"FINLOG-FAIL-PGI-COGS","symptom":"PGI posted but COGS/inventory value is unexpected.","check_first":["material/quantity","valuation","account determination","COGS split","special stock/transit","recognition scenario"]},
+    {"id":"FINLOG-FAIL-GR-VALUE","symptom":"GR quantity is correct but value/variance is unexpected.","check_first":["PO price","price control","account assignment","valuation class","price difference","invoice-before-GR"]},
+    {"id":"FINLOG-FAIL-GRIR","symptom":"GR/IR remains open although procurement is believed complete.","check_first":["PO history","received/invoiced quantity","received/invoiced value","delivery costs","future events","reversals"]},
+    {"id":"FINLOG-FAIL-BILLING-ACCOUNT","symptom":"Billing value is correct but revenue/receivable posting is wrong or blocked.","check_first":["FI posting status","account key","revenue account determination","account-assignment groups","organization/chart context","tax"]},
+    {"id":"FINLOG-FAIL-PROD-BALANCE","symptom":"Production is technically complete but financial balance/variance/settlement remains.","check_first":["actual consumption/activity","output GR","order status","variance","settlement rule","receiver","period timing"]},
+    {"id":"FINLOG-FAIL-FREIGHT","symptom":"TM freight charges are approved but MM/FI or carrier invoice state does not match.","check_first":["charges","FSD","service PO/SES","accounting","invoice verification","cancellation","allocation"]}
+  ],
+  "reconciliation": [
+    {"id":"grir","question":"Why does receipt value not yet match invoice value?","evidence":["PO history","GR material/accounting docs","supplier invoice","GR/IR open items","expected future event"]},
+    {"id":"production","question":"Why does actual production cost remain on the order?","evidence":["order actuals","material documents","output GR","variance","settlement rule","settlement document"]},
+    {"id":"freight","question":"Why do TM charges, accruals and carrier invoice not agree?","evidence":["freight document","charges","FSD","service PO","SES","accounting","carrier invoice"]}
+  ],
+  "lead_lens": {
+    "what_i_ask_first": ["Which logistics event created the value?","What should change: stock, expense, COGS, revenue, receivable, liability, accrual, or cost object?","Is the problem amount, G/L, cost object, clearing, settlement, or recognition timing?"],
+    "main_trade_off": "Keep automatic cross-module posting while making financial ownership and reconciliation explainable.",
+    "typical_failure": "Manual journal repair hides a wrong source logistics event, valuation, or account-assignment input.",
+    "proof": ["source logistics document","accounting document","account-determination inputs","cost-object state","open clearing balance","reversal/settlement chain"]
+  },
+  "source_ids": [
+    "SRC-SAP-FINLOG-PGI-COGS",
+    "SRC-SAP-FINLOG-COGS-SPLIT",
+    "SRC-SAP-FINLOG-EBRR",
+    "SRC-SAP-FINLOG-STOCK-IN-TRANSIT-RR",
+    "SRC-SAP-FINLOG-GR-IR-POSTINGS",
+    "SRC-SAP-FINLOG-PO-INVOICE",
+    "SRC-SAP-FINLOG-GR-VALUATION",
+    "SRC-SAP-FINLOG-GRIR-CLEAR",
+    "SRC-SAP-FINLOG-PRODUCTION-SETTLEMENT",
+    "SRC-SAP-FINLOG-FREIGHT-SETTLEMENT",
+    "SRC-SAP-FINLOG-FREIGHT-IV-PREP",
+    "SRC-SAP-FINLOG-GRIR-RECONCILE",
+    "SRC-SAP-IM-ACCOUNT-DETERMINATION",
+    "SRC-SAP-BIL-ACCOUNT-DETERMINATION"
+  ]
+}
