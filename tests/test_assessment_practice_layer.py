@@ -97,12 +97,35 @@ def test_history_portability_keeps_attempts_as_source_of_truth() -> None:
     assert "server" in portability["privacy"].lower()
 
 
+def test_feedback_schema_and_calibration_policy_preserve_provenance() -> None:
+    schema = load_json("feedback-schema.json")
+    policy = load_json("calibration-policy.json")
+
+    source_values = set(schema["properties"]["source_type"]["enum"])
+    assert source_values == {
+        "self_reflection",
+        "peer_review",
+        "manager_feedback",
+        "interviewer_feedback",
+        "formal_assessment_result",
+    }
+
+    observation = schema["properties"]["observations"]["items"]["properties"]
+    assert set(observation["dimension_id"]["enum"]) == DIMENSIONS | {None}
+    assert set(observation["track"]["enum"]) == TRACKS | {None}
+    assert policy["feedback_contract"] == "/labs/assessment/data/feedback-schema.json"
+    assert policy["scoring_contract"] == "/labs/assessment/data/scoring.json"
+    assert "explicit human-reviewed accepted decision" in policy["calibration_decision"]["acceptance_rule"]
+    assert any("Do not create external feedback records" in rule for rule in policy["principles"])
+
+
 def test_human_practice_routes_and_catalog_are_registered() -> None:
     expected_pages = {
         "practice-engine": ASSESSMENT / "practice-engine" / "index.html",
         "mock": ASSESSMENT / "mock" / "index.html",
         "review": ASSESSMENT / "review" / "index.html",
         "progress": ASSESSMENT / "progress" / "index.html",
+        "feedback": ASSESSMENT / "feedback" / "index.html",
         "cross-process": ASSESSMENT / "cross-process" / "index.html",
     }
     for name, path in expected_pages.items():
@@ -110,20 +133,22 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
 
     catalog = load_json("catalog.json")
     modes = {item["id"]: item for item in catalog["practice_modes"]}
-    assert set(modes) == {"adaptive", "mock", "review", "progress", "cross-process"}
+    assert set(modes) == {"adaptive", "mock", "review", "progress", "feedback", "cross-process"}
     assert modes["adaptive"]["route"] == "/labs/assessment/practice-engine/"
     assert modes["mock"]["route"] == "/labs/assessment/mock/"
     assert modes["review"]["route"] == "/labs/assessment/review/"
     assert modes["progress"]["route"] == "/labs/assessment/progress/"
+    assert modes["feedback"]["route"] == "/labs/assessment/feedback/"
 
 
 def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
+
 
 def test_browser_modes_use_shared_portability_and_lead_threshold() -> None:
     practice = (ASSESSMENT / "practice-engine" / "index.html").read_text(encoding="utf-8")
@@ -134,4 +159,3 @@ def test_browser_modes_use_shared_portability_and_lead_threshold() -> None:
     assert "lead_signal:total >= 18" not in mock
     assert "thresholds.case_total_lead_minimum" in mock
     assert "fetch('/labs/assessment/data/scoring.json'" in mock
-
