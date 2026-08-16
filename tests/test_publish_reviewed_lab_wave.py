@@ -73,8 +73,8 @@ def test_update_page_refuses_replacement_drift(tmp_path: Path, monkeypatch):
         publisher.update_page("/labs/example/", cfg, "example-wave", "2026-08-16")
 
 
-def test_validate_wave_requires_human_review_candidate():
-    wave = {
+def wave_fixture() -> dict:
+    return {
         "reviewed_at": "2026-08-16",
         "min_structural_score": 5,
         "required_factual_status": "source_supported",
@@ -85,18 +85,41 @@ def test_validate_wave_requires_human_review_candidate():
             }
         },
     }
-    readiness = {
+
+
+def readiness_fixture(*, state="human_review_candidate", score=5, verified=False, status="draft") -> dict:
+    return {
         "/labs/example/": {
             "route": "/labs/example/",
             "source_path": "labs/example/index.html",
-            "state": "public_or_indexable",
+            "state": state,
             "priority": "P1",
-            "structural_score": 5,
-            "verified": True,
-            "status": "reviewed",
+            "structural_score": score,
+            "verified": verified,
+            "status": status,
             "factual_review": {"status": "source_supported"},
         }
     }
 
+
+def test_validate_wave_requires_human_review_candidate():
     with pytest.raises(RuntimeError, match="human_review_candidate"):
-        publisher.validate_wave("example-wave", wave, readiness)
+        publisher.validate_wave(
+            "example-wave",
+            wave_fixture(),
+            readiness_fixture(state="public_or_indexable", verified=True, status="reviewed"),
+        )
+
+
+def test_preflight_can_defer_structure_but_full_gate_cannot():
+    wave = wave_fixture()
+    readiness = readiness_fixture(score=4)
+
+    publisher.validate_wave(
+        "example-wave", wave, readiness, require_structure=False
+    )
+
+    with pytest.raises(RuntimeError, match="structural score below 5"):
+        publisher.validate_wave(
+            "example-wave", wave, readiness, require_structure=True
+        )
