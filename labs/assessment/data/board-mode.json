@@ -1,0 +1,37 @@
+{
+  "id": "sap-lead-board-mode",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Run short oral SAP Lead practice from Core 12 boundary drills using the same seven-dimension scoring model as the rest of the assessment Lab.",
+  "drill_source": "/labs/assessment/data/core-boundary-drills.json",
+  "core_study_source": "/labs/assessment/data/core-study-map.json",
+  "scoring_contract": "/labs/assessment/data/scoring.json",
+  "default_session": {
+    "rounds": 4,
+    "seconds_per_round": 360,
+    "selection": "shuffle without replacement from the boundary-drill set",
+    "answer_sequence": [
+      "State the expected business outcome and current symptom.",
+      "Name the two or three ownership domains involved.",
+      "Trace the shortest evidence path to the first divergence.",
+      "Explain why the downstream symptom may be owned upstream.",
+      "Define proof of cause and proof of end-to-end completion.",
+      "Add one trade-off or condition that would change the diagnosis or design."
+    ]
+  },
+  "reveal_policy": {
+    "scenario_and_prompt": "visible at round start",
+    "boundary_question": "hidden until the learner chooses to reveal it",
+    "expected_reasoning": "hidden until the learner finishes the oral answer",
+    "red_flags": "shown with expected reasoning"
+  },
+  "scoring": {
+    "dimensions": ["business_goal", "owner", "process_flow", "decision_logic", "boundary", "failure_and_evidence", "trade_off"],
+    "scale": "0 to 3 per dimension from scoring.json",
+    "maximum_score": 21,
+    "lead_signal_minimum": 18,
+    "rule": "Score demonstrated reasoning, ownership, evidence, and trade-offs. Do not reward the number of SAP terms mentioned."
+  },
+  "session_boundary": "Board Mode is browser-only oral practice. It does not publish cases, approve candidates, change factual-review state, or write assessment history automatically.",
+  "future_history_rule": "If Board Mode is later connected to persistent assessment history, it must write through the existing attempt schema instead of creating a second history format."
+}
