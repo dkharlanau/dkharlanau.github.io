@@ -12,6 +12,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 ASSESSMENT_DATA = ROOT / "labs" / "assessment" / "data"
 CATALOG_PATH = ASSESSMENT_DATA / "catalog.json"
+FACTUAL_REVIEW_PATH = ASSESSMENT_DATA / "factual-review.json"
 OUTPUT_PATH = ASSESSMENT_DATA / "promotion-readiness.json"
 
 PLACEHOLDER_RE = re.compile(r"\b(?:TODO|TBD|placeholder|lorem ipsum|coming soon)\b", re.IGNORECASE)
@@ -46,11 +47,7 @@ def page_sources() -> dict[str, dict[str, Any]]:
         permalink = frontmatter.get("permalink")
         if not isinstance(permalink, str) or not permalink.startswith("/labs/"):
             continue
-        routes[permalink] = {
-            "path": path,
-            "frontmatter": frontmatter,
-            "body": body,
-        }
+        routes[permalink] = {"path": path, "frontmatter": frontmatter, "body": body}
     return routes
 
 
@@ -76,6 +73,42 @@ def all_catalog_routes() -> list[str]:
     return sorted(result)
 
 
+def factual_review_index() -> dict[str, dict[str, Any]]:
+    if not FACTUAL_REVIEW_PATH.exists():
+        return {}
+    payload = load_json(FACTUAL_REVIEW_PATH)
+    claims = payload.get("claims", [])
+    routes = payload.get("routes", [])
+    claims_by_id = {str(item.get("id")): item for item in claims if item.get("id")}
+    result: dict[str, dict[str, Any]] = {}
+    for route in routes:
+        route_id = str(route.get("route", ""))
+        if not route_id:
+            continue
+        route_claims = [claims_by_id[item] for item in route.get("claim_ids", []) if item in claims_by_id]
+        conflicts = [item for item in route_claims if item.get("status") == "source_conflict"]
+        unclear = [item for item in route_claims if item.get("status") == "release_scope_unclear"]
+        supported = [item for item in route_claims if item.get("status") == "source_supported"]
+        if conflicts:
+            status = "source_conflict"
+        elif unclear:
+            status = "release_scope_unclear"
+        elif route_claims and len(supported) == len(route_claims):
+            status = "source_supported"
+        else:
+            status = "needs_source_review"
+        result[route_id] = {
+            "status": status,
+            "claim_count": len(route_claims),
+            "source_supported_count": len(supported),
+            "source_conflict_count": len(conflicts),
+            "release_scope_unclear_count": len(unclear),
+            "reviewed_at": route.get("reviewed_at"),
+            "human_verification_required": bool(route.get("human_verification_required", True)),
+        }
+    return result
+
+
 def boolish(value: Any) -> bool:
     if isinstance(value, bool):
         return value
@@ -96,10 +129,7 @@ def structural_checks(frontmatter: dict[str, Any], body: str) -> dict[str, bool]
     links = internal_links(body)
     tags = frontmatter.get("tags")
     tags_present = isinstance(tags, list) and len(tags) >= 1
-    required_frontmatter = all(
-        bool(frontmatter.get(key))
-        for key in ("title", "description", "permalink", "last_modified_at")
-    ) and tags_present
+    required_frontmatter = all(bool(frontmatter.get(key)) for key in ("title", "description", "permalink", "last_modified_at")) and tags_present
     return {
         "frontmatter_complete": required_frontmatter,
         "substantive_body": len(body.strip()) >= 1500,
@@ -122,22 +152,44 @@ def readiness_state(frontmatter: dict[str, Any], checks: dict[str, bool]) -> str
     return "needs_structure"
 
 
-def review_priority(frontmatter: dict[str, Any], checks: dict[str, bool], state: str) -> str:
+def evidence_applicable(route: str) -> bool:
+    return route.startswith("/labs/enterprise-context/") or route in {"/labs/ai-ready/", "/labs/business-ai/"}
+
+
+def review_priority(route: str, checks: dict[str, bool], state: str, factual: dict[str, Any]) -> tuple[str, str]:
     if state != "human_review_candidate":
-        return "P2"
+        return "P2", "Structure or publication state must be resolved before promotion review."
     score = sum(checks.values())
-    verified = boolish(frontmatter.get("verified", False))
-    if score == 5 and verified:
-        return "P0"
+    if evidence_applicable(route):
+        factual_status = factual.get("status", "not_reviewed")
+        if factual_status in {"source_conflict", "release_scope_unclear"}:
+            return "P0", "Evidence has a conflict or unclear release scope that needs resolution."
+        if factual_status in {"not_reviewed", "needs_source_review"}:
+            return "P0", "Structure is mature but load-bearing factual claims have not completed primary-source review."
+        if factual_status == "source_supported":
+            return "P1", "Primary-source review exists; human page-level verification is the next gate."
     if score == 5:
-        return "P1"
-    return "P2"
+        return "P2", "Assessment or authoring route is structurally mature; factual SAP review is not the primary gate."
+    return "P2", "Structural review remains the next action."
 
 
 def audit() -> dict[str, Any]:
     pages = page_sources()
+    factual_index = factual_review_index()
     items: list[dict[str, Any]] = []
     for route in all_catalog_routes():
+        factual = factual_index.get(
+            route,
+            {
+                "status": "not_reviewed",
+                "claim_count": 0,
+                "source_supported_count": 0,
+                "source_conflict_count": 0,
+                "release_scope_unclear_count": 0,
+                "reviewed_at": None,
+                "human_verification_required": True,
+            },
+        )
         page = pages.get(route)
         if page is None:
             items.append(
@@ -146,8 +198,10 @@ def audit() -> dict[str, Any]:
                     "source_path": None,
                     "state": "missing_source",
                     "priority": "P2",
+                    "review_reason": "Catalog route cannot be resolved to a Lab source file.",
                     "structural_score": 0,
                     "checks": {},
+                    "factual_review": factual,
                     "verified": False,
                     "status": None,
                     "robots": None,
@@ -165,14 +219,17 @@ def audit() -> dict[str, Any]:
         checks = structural_checks(frontmatter, body)
         links = internal_links(body)
         state = readiness_state(frontmatter, checks)
+        priority, review_reason = review_priority(route, checks, state, factual)
         items.append(
             {
                 "route": route,
                 "source_path": str(path.relative_to(ROOT)).replace("\\", "/"),
                 "state": state,
-                "priority": review_priority(frontmatter, checks, state),
+                "priority": priority,
+                "review_reason": review_reason,
                 "structural_score": sum(checks.values()),
                 "checks": checks,
+                "factual_review": factual,
                 "verified": boolish(frontmatter.get("verified", False)),
                 "status": frontmatter.get("status"),
                 "robots": frontmatter.get("robots"),
@@ -185,18 +242,35 @@ def audit() -> dict[str, Any]:
 
     state_order = {"human_review_candidate": 0, "needs_structure": 1, "public_or_indexable": 2, "missing_source": 3}
     priority_order = {"P0": 0, "P1": 1, "P2": 2}
-    items.sort(key=lambda item: (state_order[item["state"]], priority_order[item["priority"]], -item["structural_score"], item["route"]))
+    factual_order = {"source_conflict": 0, "release_scope_unclear": 1, "not_reviewed": 2, "needs_source_review": 3, "source_supported": 4}
+    items.sort(
+        key=lambda item: (
+            state_order[item["state"]],
+            priority_order[item["priority"]],
+            factual_order.get(item["factual_review"]["status"], 9),
+            -item["structural_score"],
+            item["route"],
+        )
+    )
     counts: dict[str, int] = {}
+    factual_counts: dict[str, int] = {}
+    priority_counts: dict[str, int] = {}
     for item in items:
         counts[item["state"]] = counts.get(item["state"], 0) + 1
+        factual_status = item["factual_review"]["status"]
+        factual_counts[factual_status] = factual_counts.get(factual_status, 0) + 1
+        priority_counts[item["priority"]] = priority_counts.get(item["priority"], 0) + 1
 
     return {
         "id": "assessment-linked-lab-promotion-readiness",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "updated_at": "2026-08-16",
         "policy": "/labs/assessment/data/promotion-readiness-policy.json",
+        "factual_review_registry": "/labs/assessment/data/factual-review.json",
         "scope_route_count": len(items),
         "counts": counts,
+        "factual_review_counts": factual_counts,
+        "priority_counts": priority_counts,
         "promotion_boundary": "This generated audit does not change status, verified, robots, or sitemap. Human review is required for promotion.",
         "items": items,
     }
@@ -207,7 +281,7 @@ def serialize(payload: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Audit promotion readiness for Lab pages referenced by the assessment catalog.")
+    parser = argparse.ArgumentParser(description="Audit evidence-aware promotion readiness for Lab pages referenced by the assessment catalog.")
     parser.add_argument("--check", action="store_true", help="Verify committed readiness inventory is current.")
     args = parser.parse_args()
 
@@ -225,7 +299,7 @@ def main() -> int:
             "Promotion readiness inventory is current: "
             f"{payload['scope_route_count']} routes, "
             f"{counts.get('human_review_candidate', 0)} human-review candidate(s), "
-            f"{counts.get('needs_structure', 0)} needing structure."
+            f"{payload['factual_review_counts'].get('source_supported', 0)} source-reviewed route(s)."
         )
         return 0
 
@@ -235,7 +309,7 @@ def main() -> int:
         f"Generated {OUTPUT_PATH.relative_to(ROOT)}: "
         f"{payload['scope_route_count']} routes, "
         f"{counts.get('human_review_candidate', 0)} human-review candidate(s), "
-        f"{counts.get('needs_structure', 0)} needing structure."
+        f"{payload['factual_review_counts'].get('source_supported', 0)} source-reviewed route(s)."
     )
     return 0
 
