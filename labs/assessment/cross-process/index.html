@@ -1,0 +1,82 @@
+---
+layout: default
+title: "Cross-Process SAP Lead Cases — Assessment Lab"
+description: "Seven synthetic SAP Lead cases that force reasoning across Sales, Procurement, Production, Inventory, Quality, EWM, TM, Billing, Finance, and integration boundaries."
+permalink: /labs/assessment/cross-process/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags:
+  - sap
+  - assessment
+  - sap-lead
+  - end-to-end
+  - logistics
+  - diagnostics
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Cross-Process Cases</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Cross-process</p>
+      <h1>One symptom.<br />Several modules.</h1>
+      <p>These cases are synthetic on purpose. They test whether you can follow ownership and evidence across module boundaries instead of solving every problem inside the screen where it became visible.</p>
+      <a class="research-canvas__button" href="#cases">Open the cases <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Cross-process case set">
+      <p>Practice set</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>7</strong><small>End-to-end scenarios</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>7</strong><small>Answer dimensions</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Rule: first wrong decision</small></div>
+      <em>Synthetic scenarios. Use them to practice reasoning, not memorization.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">hub</span>
+    <p><strong>Working rule:</strong> the module where a symptom appears is not automatically the module that owns the cause. Start with the business event, then trace data, decisions, documents, integration, value, and proof.</p>
+    <a href="/labs/assessment/data/cross-process-cases.jsonl">Open case JSONL <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__method" data-reveal>
+    <div><p class="research-canvas__eyebrow">Answer frame</p><h2>Use seven moves.</h2></div>
+    <ol>
+      <li><span>01</span><strong>Business goal</strong><p>What outcome is actually required?</p></li>
+      <li><span>02</span><strong>Owner</strong><p>Which domain owns the first important decision?</p></li>
+      <li><span>03</span><strong>Flow</strong><p>Which documents and events connect the domains?</p></li>
+      <li><span>04</span><strong>Decision logic</strong><p>Which master data, configuration, or rule shapes the next state?</p></li>
+      <li><span>05</span><strong>Boundary</strong><p>Where does responsibility cross module, company, or system?</p></li>
+      <li><span>06</span><strong>Evidence</strong><p>How do you prove the first wrong state?</p></li>
+      <li><span>07</span><strong>Trade-off</strong><p>What does your fix protect, and what can it break?</p></li>
+    </ol>
+  </section>
+
+  <section class="research-canvas__inventory" id="cases" data-reveal>
+    <header><p class="research-canvas__eyebrow">Seven cases</p><h2>Practice the boundaries that make a Lead answer different.</h2><p>Each case links to the detailed verticals that contain the diagnostic material.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/billing/"><span>01</span><strong>Standard O2C</strong><small>Delivery and COGS are complete, but Billing and AR are missing. Trace Shipping → Billing → FI.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+      <a href="/labs/enterprise-context/procurement/"><span>02</span><strong>Third-Party Sales</strong><small>Customer promise depends on an external supplier. Connect Sales commitment, procurement confirmation, integration, and billing.</small><i class="material-symbols-outlined" aria-hidden="true">partner_exchange</i></a>
+      <a href="/labs/enterprise-context/finance-logistics/"><span>03</span><strong>Intercompany</strong><small>External customer billing is correct while internal company settlement is inconsistent. Separate the two financial perspectives.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
+      <a href="/labs/enterprise-context/inventory-management/"><span>04</span><strong>Stock Transfer</strong><small>Source goods issue exists, destination stock does not. Trace IM, stock in transit, EWM, TM, and integration state.</small><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
+      <a href="/labs/enterprise-context/production/"><span>05</span><strong>Make-to-Order</strong><small>Production is technically correct but customer-specific stock or cost ownership is wrong. Connect Sales demand to PP, IM, and CO.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/labs/enterprise-context/procurement/"><span>06</span><strong>Subcontracting</strong><small>Components are at supplier, output is short, consumption does not reconcile. Trace special stock, receipt, consumption, and GR/IR.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
+      <a href="/labs/enterprise-context/sales-processes/returns-claims/"><span>07</span><strong>Returns & Claims</strong><small>Physical return, inspection result, stock, and customer credit disagree. Connect Sales, QM, IM/EWM, Billing, and FI.</small><i class="material-symbols-outlined" aria-hidden="true">assignment_return</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">What good looks like</p><h2>Do not solve the last document first.</h2><p>A Lead answer should explain where the process first became inconsistent and how the correction preserves downstream traceability.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Strong signal</h4><ul><li>Starts from business outcome</li><li>Names system/domain ownership</li><li>Builds a hypothesis tree</li><li>Uses document and value evidence</li><li>Checks integration and financial consequences</li></ul></div>
+      <div><h4>Weak signal</h4><ul><li>Lists transaction codes</li><li>Repairs the final document manually</li><li>Assumes the visible module owns the cause</li><li>Calls a green interface "complete"</li><li>Ignores reversals and reconciliation</li></ul></div>
+      <div><h4>Lead challenge</h4><p>Explain what changes your decision. A design without conditions and trade-offs is just a confident default.</p></div>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
