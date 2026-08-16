@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """Apply one owner-approved Lab publication wave without bypassing quality gates.
 
-The approval ledger owns the routes, search intents, review date, and exact visible
-text replacements. Review replacements are applied first while pages are still draft,
-the generated readiness inventory is refreshed, and only pages that then pass the
-structural gate are marked reviewed/verified. This script never opens robots or sitemap;
-the search promotion loop must still pass separately.
+The approval ledger owns the routes, search intents, review date, evidence mode, and
+exact visible text replacements. Review replacements are applied first while pages are
+still draft, the generated readiness inventory is refreshed, and only pages that then
+pass the structural and evidence-policy gates are marked reviewed/verified.
+
+Product-primary waves require source-supported factual review. Selective/heuristic waves
+keep factual status separate: they are allowed only for explicitly public frameworks
+whose evidence profile says primary-source debt is not the publication gate. This script
+never opens robots or sitemap; the search promotion loop must still pass separately.
 """
 
 from __future__ import annotations
@@ -24,7 +28,11 @@ ROOT = Path(__file__).resolve().parents[1]
 APPROVALS = ROOT / "_data" / "labs" / "publication_reviews.yml"
 READINESS = ROOT / "labs" / "assessment" / "data" / "promotion-readiness.json"
 FACTUAL_REVIEW = ROOT / "labs" / "assessment" / "data" / "factual-review.json"
+SEARCH_PUBLICATION_POLICY = ROOT / "_data" / "labs" / "search_publication_policy.yml"
 READINESS_GENERATOR = ROOT / "scripts" / "audit_assessment_promotion_readiness.py"
+
+PRODUCT_PRIMARY = "product_primary"
+SELECTIVE_OR_HEURISTIC = "selective_or_heuristic"
 
 STALE_REVIEW_MARKERS = (
     "human review still required",
@@ -78,22 +86,69 @@ def refresh_readiness() -> None:
     subprocess.run([sys.executable, str(READINESS_GENERATOR)], cwd=ROOT, check=True)
 
 
+def review_mode(wave: dict[str, Any]) -> str:
+    mode = str(wave.get("review_mode") or PRODUCT_PRIMARY).strip().lower()
+    if mode not in {PRODUCT_PRIMARY, SELECTIVE_OR_HEURISTIC}:
+        raise RuntimeError(f"Unsupported review_mode: {mode}")
+    return mode
+
+
+def public_framework_routes() -> set[str]:
+    if not SEARCH_PUBLICATION_POLICY.exists():
+        return set()
+    policy = load_yaml(SEARCH_PUBLICATION_POLICY)
+    public = policy.get("public_frameworks") or {}
+    return set(public) if isinstance(public, dict) else set()
+
+
+def validate_evidence_gate(
+    route: str,
+    wave: dict[str, Any],
+    item: dict[str, Any],
+    public_frameworks: set[str],
+) -> None:
+    mode = review_mode(wave)
+    factual = item.get("factual_review") or {}
+    profile = item.get("evidence_profile") or {}
+    factual_status = str(factual.get("status") or "not_reviewed")
+
+    if factual_status in {"source_conflict", "release_scope_unclear"}:
+        raise RuntimeError(f"{route}: factual status blocks publication: {factual_status}")
+
+    if mode == PRODUCT_PRIMARY:
+        required_status = str(wave.get("required_factual_status") or "source_supported")
+        if item.get("priority") != "P1":
+            raise RuntimeError(f"{route}: expected P1, got {item.get('priority')}")
+        if factual_status != required_status:
+            raise RuntimeError(f"{route}: factual status is {factual_status}")
+        return
+
+    if item.get("priority") != "P2":
+        raise RuntimeError(f"{route}: selective/heuristic review expects P2, got {item.get('priority')}")
+    if route not in public_frameworks:
+        raise RuntimeError(f"{route}: selective/heuristic route is not an explicit public framework")
+    source_debt = bool(profile.get("counts_as_source_review_debt", False))
+    if source_debt and factual_status != "source_supported":
+        raise RuntimeError(f"{route}: required primary-source review debt is still open")
+
+
 def validate_wave(
     wave_id: str,
     wave: dict[str, Any],
     readiness: dict[str, dict[str, Any]],
     *,
     require_structure: bool = True,
+    public_frameworks: set[str] | None = None,
 ) -> None:
     routes = wave.get("routes")
     if not isinstance(routes, dict) or not routes:
         raise RuntimeError(f"Publication wave has no routes: {wave_id}")
 
-    required_status = str(wave.get("required_factual_status") or "source_supported")
     min_score = int(wave.get("min_structural_score") or 5)
     review_date = str(wave.get("reviewed_at") or "").strip()
     if not review_date:
         raise RuntimeError(f"{wave_id}: reviewed_at is required")
+    frameworks = public_frameworks if public_frameworks is not None else public_framework_routes()
 
     for route, cfg in routes.items():
         if not isinstance(cfg, dict):
@@ -101,13 +156,9 @@ def validate_wave(
         item = readiness.get(route)
         if not item:
             raise RuntimeError(f"No promotion-readiness item for {route}")
-        factual = item.get("factual_review") or {}
         if item.get("state") != "human_review_candidate":
             raise RuntimeError(f"{route}: expected human_review_candidate, got {item.get('state')}")
-        if item.get("priority") != "P1":
-            raise RuntimeError(f"{route}: expected P1, got {item.get('priority')}")
-        if factual.get("status") != required_status:
-            raise RuntimeError(f"{route}: factual status is {factual.get('status')}")
+        validate_evidence_gate(route, wave, item, frameworks)
         if require_structure and int(item.get("structural_score") or 0) < min_score:
             raise RuntimeError(f"{route}: structural score below {min_score}")
         if item.get("verified") is not False or str(item.get("status") or "").lower() != "draft":
@@ -153,7 +204,19 @@ def apply_review_replacements(route: str, cfg: dict[str, Any]) -> str:
     return str(path.relative_to(ROOT)).replace("\\", "/")
 
 
-def finalize_page(route: str, cfg: dict[str, Any], wave_id: str, review_date: str) -> str:
+def review_method_text(mode: str) -> str:
+    if mode == PRODUCT_PRIMARY:
+        return "primary sources + factual review + page-level editorial review"
+    return "selective external evidence + page-level editorial review + authored heuristic boundary"
+
+
+def finalize_page(
+    route: str,
+    cfg: dict[str, Any],
+    wave_id: str,
+    review_date: str,
+    mode: str = PRODUCT_PRIMARY,
+) -> str:
     path = ROOT / str(cfg["source_path"])
     text = path.read_text(encoding="utf-8")
 
@@ -162,11 +225,8 @@ def finalize_page(route: str, cfg: dict[str, Any], wave_id: str, review_date: st
     text = set_frontmatter_scalar(text, "verified", "true")
     text = set_frontmatter_scalar(text, "last_reviewed", review_date)
     text = set_frontmatter_scalar(text, "publication_wave", quoted(wave_id))
-    text = set_frontmatter_scalar(
-        text,
-        "review_method",
-        quoted("primary sources + factual review + page-level editorial review"),
-    )
+    text = set_frontmatter_scalar(text, "review_method", quoted(review_method_text(mode)))
+    text = set_frontmatter_scalar(text, "evidence_review_mode", quoted(mode))
     text = set_frontmatter_scalar(text, "search_intent", quoted(str(cfg["search_intent"])))
 
     lowered = text.lower()
@@ -178,10 +238,16 @@ def finalize_page(route: str, cfg: dict[str, Any], wave_id: str, review_date: st
     return str(path.relative_to(ROOT)).replace("\\", "/")
 
 
-def update_page(route: str, cfg: dict[str, Any], wave_id: str, review_date: str) -> str:
+def update_page(
+    route: str,
+    cfg: dict[str, Any],
+    wave_id: str,
+    review_date: str,
+    mode: str = PRODUCT_PRIMARY,
+) -> str:
     """Compatibility helper for unit tests and direct single-page review updates."""
     apply_review_replacements(route, cfg)
-    return finalize_page(route, cfg, wave_id, review_date)
+    return finalize_page(route, cfg, wave_id, review_date, mode)
 
 
 def update_factual_review(routes: set[str], wave_id: str, review_date: str) -> None:
@@ -213,31 +279,51 @@ def main() -> int:
     wave = (approvals.get("waves") or {}).get(wave_id)
     if not isinstance(wave, dict):
         raise RuntimeError(f"Publication wave not found: {wave_id}")
+    mode = review_mode(wave)
+    frameworks = public_framework_routes()
 
-    # Phase 1: prove the candidate/factual pre-state without weakening the structure gate.
+    # Phase 1: prove the candidate/evidence pre-state without weakening the structure gate.
     readiness = readiness_index()
-    validate_wave(wave_id, wave, readiness, require_structure=False)
+    validate_wave(
+        wave_id,
+        wave,
+        readiness,
+        require_structure=False,
+        public_frameworks=frameworks,
+    )
 
     # Phase 2: apply only exact, ledger-owned review edits while pages remain draft.
-    prepared: list[str] = []
     for route, cfg in wave["routes"].items():
-        prepared.append(apply_review_replacements(route, cfg))
+        apply_review_replacements(route, cfg)
 
     # Phase 3: regenerate structure facts from the reviewed source and enforce the full gate.
     refresh_readiness()
     readiness = readiness_index()
-    validate_wave(wave_id, wave, readiness, require_structure=True)
+    validate_wave(
+        wave_id,
+        wave,
+        readiness,
+        require_structure=True,
+        public_frameworks=frameworks,
+    )
 
     # Phase 4: only now mark the page reviewed/verified. Search stays closed until promotion.
     changed: list[str] = []
     review_date = str(wave["reviewed_at"])
     for route, cfg in wave["routes"].items():
-        changed.append(finalize_page(route, cfg, wave_id, review_date))
-    update_factual_review(set(wave["routes"]), wave_id, review_date)
-    changed.append(str(FACTUAL_REVIEW.relative_to(ROOT)))
+        changed.append(finalize_page(route, cfg, wave_id, review_date, mode))
+
+    # Product-primary routes record completion in the claim registry. Selective/heuristic
+    # routes intentionally leave factual status unchanged because editorial verification is a
+    # separate axis and must not manufacture source-supported claims.
+    if mode == PRODUCT_PRIMARY:
+        update_factual_review(set(wave["routes"]), wave_id, review_date)
+        changed.append(str(FACTUAL_REVIEW.relative_to(ROOT)))
+
     changed.append(str(READINESS.relative_to(ROOT)))
 
     print(f"Reviewed publication wave: {wave_id}")
+    print(f"  Review mode: {mode}")
     if any(configured_replacements(route, cfg) for route, cfg in wave["routes"].items()):
         print("  Review edits applied before structural validation.")
     for path in changed:
