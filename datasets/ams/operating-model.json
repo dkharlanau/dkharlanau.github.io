@@ -1,0 +1,54 @@
+{
+  "schema": "dkharlanau.ams.operating_model",
+  "schema_version": "2.0",
+  "id": "ams-next-gen",
+  "name": "AMS Next Gen: SAP Operations Decision System",
+  "updated": "2026-08-16",
+  "thesis": "Signals become decisions, verified actions, reusable knowledge, and less future work.",
+  "unit_of_value": "A verified decision that leaves the system easier to operate next time.",
+  "operating_loop": ["signal", "diagnose", "decide", "execute", "verify", "learn", "automate", "measure"],
+  "clusters": [
+    {"id": "run-recover", "label": "Run & Recover", "purpose": "Restore business flow with evidence, control, and clean verification.", "lead_question": "What is happening, what is the impact, and what is the safest recovery path?"},
+    {"id": "prevent-learn", "label": "Prevent & Learn", "purpose": "Turn repeated pain into knowledge, prevention, and reusable assets.", "lead_question": "Why did this happen again, and what will make the next occurrence cheaper or impossible?"},
+    {"id": "change-improve", "label": "Change & Improve", "purpose": "Move from request queues to evidence-based improvement decisions.", "lead_question": "Is this change worth doing, how risky is it, and how will we prove the outcome?"},
+    {"id": "architecture-automation", "label": "Architecture & Automation", "purpose": "Reduce operational load through clean boundaries, observability, and automation.", "lead_question": "What should remain in SAP, what can move out, and what can become an executable procedure?"},
+    {"id": "control-govern", "label": "Control & Govern", "purpose": "Make ownership, risk, contracts, security, and vendor boundaries explicit.", "lead_question": "Who decides, what evidence is required, and where is the human approval boundary?"},
+    {"id": "value-strategy", "label": "Value & Strategy", "purpose": "Connect AMS work to cost, trust, maturity, product direction, and business decisions.", "lead_question": "What value does this operating model create, and what should stop consuming capacity?"}
+  ],
+  "maturity": [
+    {"level": 1, "label": "Firefighting", "state": "We react. Knowledge and control depend on people."},
+    {"level": 2, "label": "Controlled Operations", "state": "Evidence, ownership, recovery, and change gates are explicit."},
+    {"level": 3, "label": "Preventive AMS", "state": "Repeats become Problems. Knowledge and prevention reduce demand."},
+    {"level": 4, "label": "Automated Operations", "state": "Known work becomes procedures, controls, observability, and safe automation."},
+    {"level": 5, "label": "Decision Platform", "state": "Operations evidence improves architecture, investment, and business decisions."}
+  ],
+  "decision_record": {
+    "required_fields": ["business_impact", "known_facts", "missing_evidence", "hypotheses", "owner", "decision", "approved_action", "verification", "prevention_or_learning"],
+    "rule": "Do not collapse evidence, hypothesis, decision, and action into one field. They are different things."
+  },
+  "ai_role": {
+    "position": "cross-cutting capability, not a separate support tower",
+    "good_uses": ["extract evidence", "classify symptoms", "suggest hypotheses", "challenge a decision", "generate diagnostic checks", "compare incidents", "draft communication", "convert a proven fix into a reusable procedure"],
+    "human_boundary": ["risky production actions", "business decisions", "data corrections", "configuration changes", "code changes", "access changes", "message reprocessing or sequencing changes"]
+  },
+  "knowledge_stack": [
+    {"system": "Incident Lab", "url": "/datasets/incident-lab/", "role": "situations and evidence practice"},
+    {"system": "Atlas Diagnostics", "url": "/atlas/diagnostics/", "role": "technical diagnostic knowledge"},
+    {"system": "Skill Hub", "url": "/skill-hub/", "role": "reusable working skills"},
+    {"system": "Enterprise Lab", "url": "/lab/", "role": "SAP process, object, integration, and configuration context"},
+    {"system": "Reusable Data Procedures", "url": "/reusable-data-procedures/", "role": "executable repeated data work"}
+  ],
+  "source_layers": {
+    "bytes": "/datasets/ams/",
+    "taxonomy": "/_data/ams_taxonomy.yml",
+    "human_view": "/notes/ams/"
+  },
+  "agent_guidance": [
+    "Start from the situation and business impact, not from a module label.",
+    "Ask for evidence before proposing a production action.",
+    "Use SAP domain knowledge as context, not as a substitute for evidence.",
+    "After recovery, check whether the issue should become a Problem, control, knowledge asset, procedure, or architecture improvement.",
+    "Prefer reversible decisions and explicit verification.",
+    "Measure removed future demand, not only ticket closure speed."
+  ]
+}
