@@ -1,0 +1,59 @@
+{
+  "id": "sap-lead-mock-assessment-session",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Build a balanced mock SAP Lead session from the existing assessment case sets without creating a second case database.",
+  "case_source": "/labs/assessment/data/case-sets.json",
+  "scoring_contract": "/labs/assessment/data/scoring.json",
+  "attempt_contract": "/labs/assessment/data/attempt-schema.json",
+  "storage_key": "sapLeadAssessmentAttemptsV1",
+  "session_storage_key": "sapLeadMockSessionV1",
+  "default_session": {
+    "case_count": 8,
+    "suggested_minutes": 55,
+    "track_targets": {
+      "sales": 2,
+      "procurement-logistics": 2,
+      "integration-architecture": 2,
+      "ai-data": 2
+    },
+    "level_targets": {
+      "explain": 1,
+      "trace": 1,
+      "diagnose": 2,
+      "design": 2,
+      "challenge": 2
+    },
+    "cross_process_minimum": 2,
+    "recent_case_exclusion": 5
+  },
+  "short_session": {
+    "case_count": 4,
+    "suggested_minutes": 30,
+    "rule": "Select one case from each assessment track. Prefer Diagnose, Design, or Challenge unless a lower reasoning level is currently weak."
+  },
+  "extended_session": {
+    "case_count": 12,
+    "suggested_minutes": 80,
+    "rule": "Cover every assessment track at least twice, include at least three cross-process cases, and keep at least half of the session at Diagnose, Design, or Challenge level."
+  },
+  "selection_order": [
+    "apply requested session size",
+    "exclude recently answered cases where the pool allows it",
+    "satisfy minimum track coverage",
+    "satisfy reasoning-level coverage",
+    "add cross-process cases",
+    "prefer weak tracks and weak dimensions from local history",
+    "avoid duplicate titles and near-identical scenarios",
+    "shuffle only among equally suitable candidates"
+  ],
+  "session_rules": [
+    "Do not reveal expected points before the user chooses to review the answer.",
+    "Score every answered case with the same seven dimensions used by the Practice Engine.",
+    "Persist scored attempts to the shared local attempt history so mock sessions improve adaptive selection later.",
+    "A skipped case does not count as a scored attempt.",
+    "A session summary must show track coverage, reasoning-level coverage, average score, Lead-level attempts, weakest dimensions, and recommended review routes.",
+    "The browser page must work without a backend and must not send local notes or scores to a server."
+  ],
+  "completion_rule": "A mock session is complete when all selected cases are answered or explicitly skipped and the user has a summary that points to the next review action."
+}
