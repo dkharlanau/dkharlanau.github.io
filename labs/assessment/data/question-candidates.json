@@ -1,0 +1,1237 @@
+{
+  "id": "sap-lead-question-candidate-inventory",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "published_case_count": 59,
+  "publication_boundary": "Candidate inventory is review-stage only and is not referenced by case-sets.json.",
+  "candidate_count": 14,
+  "rejected_duplicate_count": 0,
+  "items": [
+    {
+      "id": "CAND-BIL-CORRECTION",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "sales",
+      "level": "diagnose",
+      "title": "Correction fixes money but leaves confusing document flow or external/legal status",
+      "prompt": "Synthetic assessment candidate. Correction fixes money but leaves confusing document flow or external/legal status. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: business reason, original billing/FI state, customer receipt state.",
+        "Continue the hypothesis tree with: cancellation relation, credit/debit memo reference, eDocument/legal constraints.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not use compensating documents without a clear correction model and reconciliation rule.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-SD-BILLING-REVENUE-HANDOFF",
+        "FAIL-SD-BILLING-CORRECTION"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/billing/"
+      ],
+      "source_refs": [
+        "SRC-SAP-BIL-CREDIT-DEBIT",
+        "SRC-SAP-BIL-CANCEL-API",
+        "SRC-SAP-BIL-PROCESSING"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-CORRECTION.symptom",
+          "source_refs": [
+            "SRC-SAP-BIL-CREDIT-DEBIT",
+            "SRC-SAP-BIL-CANCEL-API",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-CORRECTION.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-CREDIT-DEBIT",
+            "SRC-SAP-BIL-CANCEL-API",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-CORRECTION.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-CREDIT-DEBIT",
+            "SRC-SAP-BIL-CANCEL-API",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-CREDIT-DEBIT",
+            "SRC-SAP-BIL-CANCEL-API",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-CREDIT-DEBIT",
+            "SRC-SAP-BIL-CANCEL-API",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "2a43cfdcfd7ff878099148c8",
+      "dedup": {
+        "max_similarity": 0.3294,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-BIL-EXTERNAL",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "sales",
+      "level": "diagnose",
+      "title": "Billing and FI are correct but customer/authority invoice delivery or eDocument status is...",
+      "prompt": "Synthetic assessment candidate. Billing and FI are correct but customer/authority invoice delivery or eDocument status is wrong. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: billing output status, eDocument type mapping, country process.",
+        "Continue the hypothesis tree with: submission status, external response, source-document correction state.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not cancel a correct commercial invoice only because a transmission channel failed.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-SD-BILLING-REVENUE-HANDOFF",
+        "FAIL-SD-BILLING-EXTERNAL"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/billing/"
+      ],
+      "source_refs": [
+        "SRC-SAP-BIL-EDOCUMENT"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-EXTERNAL.symptom",
+          "source_refs": [
+            "SRC-SAP-BIL-EDOCUMENT"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-EXTERNAL.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-EDOCUMENT"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-EXTERNAL.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-EDOCUMENT"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-EDOCUMENT"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-EDOCUMENT"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "b48823c3f9f81e5d9fac7fa0",
+      "dedup": {
+        "max_similarity": 0.3882,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-BIL-FI",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "sales",
+      "level": "diagnose",
+      "title": "Billing document exists but FI transfer is blocked, missing, or posts to unexpected accounts",
+      "prompt": "Synthetic assessment candidate. Billing document exists but FI transfer is blocked, missing, or posts to unexpected accounts. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: billing posting status, account key, revenue account determination.",
+        "Continue the hypothesis tree with: customer/material account assignment groups, company code/chart of accounts, tax code.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not change commercial pricing when the defect is only account determination.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-SD-BILLING-REVENUE-HANDOFF",
+        "FAIL-SD-BILLING-FI"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/billing/"
+      ],
+      "source_refs": [
+        "SRC-SAP-BIL-ACCOUNT-DETERMINATION",
+        "SRC-SAP-BIL-TYPE"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-FI.symptom",
+          "source_refs": [
+            "SRC-SAP-BIL-ACCOUNT-DETERMINATION",
+            "SRC-SAP-BIL-TYPE"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-FI.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-ACCOUNT-DETERMINATION",
+            "SRC-SAP-BIL-TYPE"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-FI.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-ACCOUNT-DETERMINATION",
+            "SRC-SAP-BIL-TYPE"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-ACCOUNT-DETERMINATION",
+            "SRC-SAP-BIL-TYPE"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-ACCOUNT-DETERMINATION",
+            "SRC-SAP-BIL-TYPE"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "fef9198a97819f1a0c19fbf2",
+      "dedup": {
+        "max_similarity": 0.3373,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-BIL-NOT-DUE",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "sales",
+      "level": "diagnose",
+      "title": "Order or delivery is expected to invoice but does not appear as billable",
+      "prompt": "Synthetic assessment candidate. Order or delivery is expected to invoice but does not appear as billable. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: billing relevance, billing status, billing block.",
+        "Continue the hypothesis tree with: billing date or billing plan, document completion, already billed quantity.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not bypass the due-state problem by forcing a manual billing document.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-SD-BILLING-REVENUE-HANDOFF",
+        "FAIL-SD-BILLING-NOT-DUE"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/billing/"
+      ],
+      "source_refs": [
+        "SRC-SAP-BIL-DUE-LIST",
+        "SRC-SAP-BIL-PROCESSING"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-NOT-DUE.symptom",
+          "source_refs": [
+            "SRC-SAP-BIL-DUE-LIST",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-NOT-DUE.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-DUE-LIST",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-NOT-DUE.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-DUE-LIST",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-DUE-LIST",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-DUE-LIST",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "b1318504de820ff6ca379334",
+      "dedup": {
+        "max_similarity": 0.3709,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-BIL-PRICE",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "sales",
+      "level": "diagnose",
+      "title": "Invoice price differs from sales order or expected agreement",
+      "prompt": "Synthetic assessment candidate. Invoice price differs from sales order or expected agreement. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: billing pricing type, source pricing, billing date.",
+        "Continue the hypothesis tree with: manual conditions, scales, tax redetermination.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not assume billing must always equal the sales-order pricing snapshot.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-SD-BILLING-REVENUE-HANDOFF",
+        "FAIL-SD-BILLING-PRICE"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/billing/"
+      ],
+      "source_refs": [
+        "SRC-SAP-BIL-PRICING"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-PRICE.symptom",
+          "source_refs": [
+            "SRC-SAP-BIL-PRICING"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-PRICE.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-PRICING"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-PRICE.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-PRICING"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-PRICING"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-PRICING"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "91a5f905710ad078dc96a086",
+      "dedup": {
+        "max_similarity": 0.381,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-BIL-SPLIT",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "sales",
+      "level": "diagnose",
+      "title": "Several invoices are created where the business expected one",
+      "prompt": "Synthetic assessment candidate. Several invoices are created where the business expected one. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: split analysis, payer/bill-to, currency.",
+        "Continue the hypothesis tree with: payment terms, billing date, sales organization.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not remove split criteria only to satisfy a layout preference; some differences represent real legal or accounting boundaries.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-SD-BILLING-REVENUE-HANDOFF",
+        "FAIL-SD-BILLING-SPLIT"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/billing/"
+      ],
+      "source_refs": [
+        "SRC-SAP-BIL-SPLIT",
+        "SRC-SAP-BIL-SPLIT-ANALYSIS"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-SPLIT.symptom",
+          "source_refs": [
+            "SRC-SAP-BIL-SPLIT",
+            "SRC-SAP-BIL-SPLIT-ANALYSIS"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-SPLIT.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-SPLIT",
+            "SRC-SAP-BIL-SPLIT-ANALYSIS"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-SPLIT.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-SPLIT",
+            "SRC-SAP-BIL-SPLIT-ANALYSIS"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-SPLIT",
+            "SRC-SAP-BIL-SPLIT-ANALYSIS"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-SPLIT",
+            "SRC-SAP-BIL-SPLIT-ANALYSIS"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "6a4289c3ff830f17d67b3d3e",
+      "dedup": {
+        "max_similarity": 0.3333,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-BIL-WRONG-REFERENCE",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "sales",
+      "level": "diagnose",
+      "title": "Invoice quantity or source relationship is wrong",
+      "prompt": "Synthetic assessment candidate. Invoice quantity or source relationship is wrong. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: reference document and item, copying control, billing quantity rule.",
+        "Continue the hypothesis tree with: partial billing history, document flow.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not correct the invoice amount before proving which quantity is actually billable.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-SD-BILLING-REVENUE-HANDOFF",
+        "FAIL-SD-BILLING-WRONG-REFERENCE"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/billing/"
+      ],
+      "source_refs": [
+        "SRC-SAP-BIL-COPYING-CONTROL",
+        "SRC-SAP-BIL-PROCESSING"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-WRONG-REFERENCE.symptom",
+          "source_refs": [
+            "SRC-SAP-BIL-COPYING-CONTROL",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-WRONG-REFERENCE.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-COPYING-CONTROL",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.FAIL-SD-BILLING-WRONG-REFERENCE.first_checks",
+          "source_refs": [
+            "SRC-SAP-BIL-COPYING-CONTROL",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-COPYING-CONTROL",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-BIL-COPYING-CONTROL",
+            "SRC-SAP-BIL-PROCESSING"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "260b40645068d2ab37f514f0",
+      "dedup": {
+        "max_similarity": 0.2949,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-INTOPS-DUPLICATE",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "integration-architecture",
+      "level": "diagnose",
+      "title": "Retry creates duplicate order, invoice, delivery, or posting",
+      "prompt": "Synthetic assessment candidate. Retry creates duplicate order, invoice, delivery, or posting. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: message/business ID, previous commit state, receiver idempotency.",
+        "Continue the hypothesis tree with: deduplication retention, source replay identity.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not generate a fresh message ID for the same semantic event just to bypass duplicate protection.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-INTEGRATION-OPERATIONS-RECOVERY",
+        "INTOPS-FAIL-DUPLICATE"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/integration-operations/"
+      ],
+      "source_refs": [
+        "SRC-SAP-INTOPS-EXACTLY-ONCE",
+        "SRC-SAP-INTOPS-QUEUES"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.INTOPS-FAIL-DUPLICATE.symptom",
+          "source_refs": [
+            "SRC-SAP-INTOPS-EXACTLY-ONCE",
+            "SRC-SAP-INTOPS-QUEUES"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.INTOPS-FAIL-DUPLICATE.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-EXACTLY-ONCE",
+            "SRC-SAP-INTOPS-QUEUES"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.INTOPS-FAIL-DUPLICATE.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-EXACTLY-ONCE",
+            "SRC-SAP-INTOPS-QUEUES"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-EXACTLY-ONCE",
+            "SRC-SAP-INTOPS-QUEUES"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-EXACTLY-ONCE",
+            "SRC-SAP-INTOPS-QUEUES"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "dd5b0b8dbaf3c07f3c60313d",
+      "dedup": {
+        "max_similarity": 0.4231,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-INTOPS-GREEN-NO-BUSINESS",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "integration-architecture",
+      "level": "diagnose",
+      "title": "Middleware shows completed/green but target business document or update is missing",
+      "prompt": "Synthetic assessment candidate. Middleware shows completed/green but target business document or update is missing. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: target application log, receiver acknowledgement semantics, handled exception flow.",
+        "Continue the hypothesis tree with: follow-on commit, business key search, correlation.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not close incident based on middleware completion alone.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-INTEGRATION-OPERATIONS-RECOVERY",
+        "INTOPS-FAIL-GREEN-NO-BUSINESS"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/integration-operations/"
+      ],
+      "source_refs": [
+        "SRC-SAP-INTOPS-CI-MONITOR",
+        "SRC-SAP-INTOPS-ERROR-DESIGN"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.INTOPS-FAIL-GREEN-NO-BUSINESS.symptom",
+          "source_refs": [
+            "SRC-SAP-INTOPS-CI-MONITOR",
+            "SRC-SAP-INTOPS-ERROR-DESIGN"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.INTOPS-FAIL-GREEN-NO-BUSINESS.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-CI-MONITOR",
+            "SRC-SAP-INTOPS-ERROR-DESIGN"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.INTOPS-FAIL-GREEN-NO-BUSINESS.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-CI-MONITOR",
+            "SRC-SAP-INTOPS-ERROR-DESIGN"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-CI-MONITOR",
+            "SRC-SAP-INTOPS-ERROR-DESIGN"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-CI-MONITOR",
+            "SRC-SAP-INTOPS-ERROR-DESIGN"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "fbb38c7c1b66cc0475e0126a",
+      "dedup": {
+        "max_similarity": 0.3535,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-INTOPS-ORDER",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "integration-architecture",
+      "level": "diagnose",
+      "title": "Later change/cancel is processed before create or earlier update",
+      "prompt": "Synthetic assessment candidate. Later change/cancel is processed before create or earlier update. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: queue/partition key, predecessor state, parallel processing.",
+        "Continue the hypothesis tree with: business sequence, blocked queue, manual activation history.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not maximize parallelism for stateful event streams without a business ordering rule.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-INTEGRATION-OPERATIONS-RECOVERY",
+        "INTOPS-FAIL-ORDER"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/integration-operations/"
+      ],
+      "source_refs": [
+        "SRC-SAP-INTOPS-QRFC",
+        "SRC-SAP-INTOPS-BGRFC"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.INTOPS-FAIL-ORDER.symptom",
+          "source_refs": [
+            "SRC-SAP-INTOPS-QRFC",
+            "SRC-SAP-INTOPS-BGRFC"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.INTOPS-FAIL-ORDER.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-QRFC",
+            "SRC-SAP-INTOPS-BGRFC"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.INTOPS-FAIL-ORDER.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-QRFC",
+            "SRC-SAP-INTOPS-BGRFC"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-QRFC",
+            "SRC-SAP-INTOPS-BGRFC"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-QRFC",
+            "SRC-SAP-INTOPS-BGRFC"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "3774081a0166845349176ddd",
+      "dedup": {
+        "max_similarity": 0.3704,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-INTOPS-OWNERSHIP",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "integration-architecture",
+      "level": "diagnose",
+      "title": "Error is visible but no team owns correction or business confirmation",
+      "prompt": "Synthetic assessment candidate. Error is visible but no team owns correction or business confirmation. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: interface recipient, business owner, technical owner.",
+        "Continue the hypothesis tree with: master-data/config owner, severity/SLA, runbook escalation.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not make middleware operations the default owner for every receiver application error.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-INTEGRATION-OPERATIONS-RECOVERY",
+        "INTOPS-FAIL-OWNERSHIP"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/integration-operations/"
+      ],
+      "source_refs": [
+        "SRC-SAP-INTOPS-AIF-ERROR",
+        "SRC-SAP-INTOPS-ERROR-DESIGN"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.INTOPS-FAIL-OWNERSHIP.symptom",
+          "source_refs": [
+            "SRC-SAP-INTOPS-AIF-ERROR",
+            "SRC-SAP-INTOPS-ERROR-DESIGN"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.INTOPS-FAIL-OWNERSHIP.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-AIF-ERROR",
+            "SRC-SAP-INTOPS-ERROR-DESIGN"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.INTOPS-FAIL-OWNERSHIP.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-AIF-ERROR",
+            "SRC-SAP-INTOPS-ERROR-DESIGN"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-AIF-ERROR",
+            "SRC-SAP-INTOPS-ERROR-DESIGN"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-AIF-ERROR",
+            "SRC-SAP-INTOPS-ERROR-DESIGN"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "8cd266eef0f49780e5c9c656",
+      "dedup": {
+        "max_similarity": 0.2949,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-INTOPS-PARTIAL-COMMIT",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "integration-architecture",
+      "level": "diagnose",
+      "title": "Message failed but some target side effects already exist",
+      "prompt": "Synthetic assessment candidate. Message failed but some target side effects already exist. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: target object search, child messages, transaction boundary.",
+        "Continue the hypothesis tree with: application log, downstream side effects, compensation process.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not replay until partial commit is understood.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-INTEGRATION-OPERATIONS-RECOVERY",
+        "INTOPS-FAIL-PARTIAL-COMMIT"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/integration-operations/"
+      ],
+      "source_refs": [
+        "SRC-SAP-INTOPS-EXACTLY-ONCE",
+        "SRC-SAP-INTOPS-AIF-ERROR"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.INTOPS-FAIL-PARTIAL-COMMIT.symptom",
+          "source_refs": [
+            "SRC-SAP-INTOPS-EXACTLY-ONCE",
+            "SRC-SAP-INTOPS-AIF-ERROR"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.INTOPS-FAIL-PARTIAL-COMMIT.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-EXACTLY-ONCE",
+            "SRC-SAP-INTOPS-AIF-ERROR"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.INTOPS-FAIL-PARTIAL-COMMIT.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-EXACTLY-ONCE",
+            "SRC-SAP-INTOPS-AIF-ERROR"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-EXACTLY-ONCE",
+            "SRC-SAP-INTOPS-AIF-ERROR"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-EXACTLY-ONCE",
+            "SRC-SAP-INTOPS-AIF-ERROR"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "a857efe9ec4d4398d8acef44",
+      "dedup": {
+        "max_similarity": 0.3357,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-INTOPS-QUEUE-BLOCK",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "integration-architecture",
+      "level": "diagnose",
+      "title": "One failed message blocks many valid successors",
+      "prompt": "Synthetic assessment candidate. One failed message blocks many valid successors. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: queue status, business dependency, first LUW/message.",
+        "Continue the hypothesis tree with: application cause, safe isolation option, successor semantics.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not skip predecessor solely for throughput if successor state depends on it.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-INTEGRATION-OPERATIONS-RECOVERY",
+        "INTOPS-FAIL-QUEUE-BLOCK"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/integration-operations/"
+      ],
+      "source_refs": [
+        "SRC-SAP-INTOPS-QRFC",
+        "SRC-SAP-INTOPS-QRFC-STATUS"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.INTOPS-FAIL-QUEUE-BLOCK.symptom",
+          "source_refs": [
+            "SRC-SAP-INTOPS-QRFC",
+            "SRC-SAP-INTOPS-QRFC-STATUS"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.INTOPS-FAIL-QUEUE-BLOCK.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-QRFC",
+            "SRC-SAP-INTOPS-QRFC-STATUS"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.INTOPS-FAIL-QUEUE-BLOCK.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-QRFC",
+            "SRC-SAP-INTOPS-QRFC-STATUS"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-QRFC",
+            "SRC-SAP-INTOPS-QRFC-STATUS"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-QRFC",
+            "SRC-SAP-INTOPS-QRFC-STATUS"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "379fa30e91d720f207a8aa98",
+      "dedup": {
+        "max_similarity": 0.2759,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    },
+    {
+      "id": "CAND-INTOPS-RETRY-STORM",
+      "status": "candidate",
+      "generation_pattern": "symptom_to_root_cause",
+      "track": "integration-architecture",
+      "level": "diagnose",
+      "title": "Deterministic application error is retried repeatedly and fills queues/alerts",
+      "prompt": "Synthetic assessment candidate. Deterministic application error is retried repeatedly and fills queues/alerts. Build a Lead-level diagnosis. Find the first wrong layer, explain ownership, and define evidence that proves the cause before correction.",
+      "expected_points": [
+        "Start from the documented symptom and define the expected business state before changing downstream data or documents.",
+        "Use the first evidence checks before correction: error class, retry policy, backoff.",
+        "Continue the hypothesis tree with: poison-message pattern, owner notification, dead-letter/quarantine.",
+        "Name the owner of the first wrong layer and separate that responsibility from teams that only see the downstream symptom.",
+        "Define proof of cause and proof of business completion before closing the case."
+      ],
+      "follow_up_questions": [
+        "Which check would most quickly separate the root cause from a downstream symptom?",
+        "What evidence would prove the business process is complete after the fix?"
+      ],
+      "red_flags": [
+        "Do not treat every error as transient.",
+        "Repairs the downstream symptom before proving the first wrong state."
+      ],
+      "graph_refs": [
+        "GRAPH-INTEGRATION-OPERATIONS-RECOVERY",
+        "INTOPS-FAIL-RETRY-STORM"
+      ],
+      "human_refs": [
+        "/labs/enterprise-context/integration-operations/"
+      ],
+      "source_refs": [
+        "SRC-SAP-INTOPS-ERROR-DESIGN",
+        "SRC-SAP-INTOPS-QUEUES"
+      ],
+      "evidence_map": [
+        {
+          "expected_point_index": 0,
+          "graph_path": "failure_modes.INTOPS-FAIL-RETRY-STORM.symptom",
+          "source_refs": [
+            "SRC-SAP-INTOPS-ERROR-DESIGN",
+            "SRC-SAP-INTOPS-QUEUES"
+          ]
+        },
+        {
+          "expected_point_index": 1,
+          "graph_path": "failure_modes.INTOPS-FAIL-RETRY-STORM.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-ERROR-DESIGN",
+            "SRC-SAP-INTOPS-QUEUES"
+          ]
+        },
+        {
+          "expected_point_index": 2,
+          "graph_path": "failure_modes.INTOPS-FAIL-RETRY-STORM.first_checks",
+          "source_refs": [
+            "SRC-SAP-INTOPS-ERROR-DESIGN",
+            "SRC-SAP-INTOPS-QUEUES"
+          ]
+        },
+        {
+          "expected_point_index": 3,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-ERROR-DESIGN",
+            "SRC-SAP-INTOPS-QUEUES"
+          ]
+        },
+        {
+          "expected_point_index": 4,
+          "graph_path": "lead_lens",
+          "source_refs": [
+            "SRC-SAP-INTOPS-ERROR-DESIGN",
+            "SRC-SAP-INTOPS-QUEUES"
+          ]
+        }
+      ],
+      "generation_reason": "New review-stage candidate from a whitelisted graph failure mode with explicit primary-source references.",
+      "dedup_signature": "14c68c24908f1c7b3a530c06",
+      "dedup": {
+        "max_similarity": 0.3333,
+        "threshold": 0.46,
+        "matching_case_ids": []
+      },
+      "review": {
+        "reviewer_note": "",
+        "reviewed_at": null
+      }
+    }
+  ]
+}
