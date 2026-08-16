@@ -1,0 +1,74 @@
+---
+layout: default
+title: "Reusable Data Procedures — Approach"
+description: "How repeated spreadsheet work becomes a reusable procedure: discovery, mapping evidence, validation, drift detection and human decisions."
+permalink: /reusable-data-procedures/approach/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Approach</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Detail 01 / Approach</p>
+    <h1>Capture the reasoning, not the clicks.</h1>
+    <p>A reusable procedure should describe what the data means operationally: which sources are expected, how they are related, what transformations are allowed, what must be true, and what to do when a new file no longer fits.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages">
+      <a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/approach/" aria-current="page">Approach</a><a href="/reusable-data-procedures/procedure-model/">Procedure Model</a><a href="/reusable-data-procedures/architecture/">Architecture</a><a href="/reusable-data-procedures/roadmap/">Roadmap</a>
+    </nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">First run</p><h2>Discovery creates hypotheses.</h2><p>The system should not jump from uploaded files to a final join. It should build evidence in layers.</p></div>
+    <div class="rdp__sequence">
+      <article><h3>Identify the source</h3><p>File name is weak identity. Use sheet names, expected columns, column types, value patterns, row shape and optional business labels to build a source fingerprint.</p></article>
+      <article><h3>Profile the columns</h3><p>Measure type candidates, null rate, distinct values, uniqueness, common formats, value length, ranges and representative samples. A likely key is an observation, not a fact.</p></article>
+      <article><h3>Generate relation candidates</h3><p>Compare field names, normalized values, overlap, uniqueness, cardinality and known enterprise vocabulary. A good relation has several independent signals.</p></article>
+      <article><h3>Ask for business confirmation</h3><p>The user confirms that MATNR and Material are the same concept, or rejects the suggestion. This decision becomes part of the procedure provenance.</p></article>
+      <article><h3>Turn actions into explicit transforms</h3><p>Leading-zero normalization, date parsing, filters, lookups, derived fields and exception handling become named steps with parameters.</p></article>
+      <article><h3>Validate before save</h3><p>Test coverage, uniqueness, null tolerance, row-count expectations and business rules. Save the procedure only with the evidence used to accept it.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Mapping evidence</p><h2>One similarity score is not enough.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Signal</th><th>What it tells us</th><th>Typical weakness</th></tr></thead>
+      <tbody>
+        <tr><td>Header similarity</td><td>Names such as Material, Material_ID and MATNR may describe the same field.</td><td>Different business concepts often use similar words.</td></tr>
+        <tr><td>Value overlap</td><td>Real values can show whether two fields share the same identifier domain.</td><td>Small samples and dirty values can mislead.</td></tr>
+        <tr><td>Type compatibility</td><td>Text-to-text or date-to-date relations are more plausible than random type pairs.</td><td>Enterprise IDs are often stored as numbers in one export and text in another.</td></tr>
+        <tr><td>Cardinality</td><td>One-to-one, many-to-one and many-to-many patterns help classify the relation.</td><td>Duplicates may be valid business behavior rather than bad data.</td></tr>
+        <tr><td>Known semantics</td><td>A dictionary or approved previous mapping can strongly improve matching.</td><td>Semantics drift across systems, countries and projects.</td></tr>
+        <tr><td>Human approval</td><td>A domain expert confirms that the relation is operationally correct.</td><td>Approval without stored evidence becomes another undocumented rule.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Repeat run</p><h2>Drift handling is the real product.</h2><p>The interesting question is not whether the first run works. It is what happens next month when the export changes.</p></div>
+    <div class="rdp__cards">
+      <article><strong>Compatible drift</strong><p>A new optional column appears. The saved procedure still runs and records the difference.</p></article>
+      <article><strong>Resolvable drift</strong><p>A column is renamed but structure and values strongly match the previous source. The system proposes a repair and asks for confirmation.</p></article>
+      <article><strong>Breaking drift</strong><p>A required key disappears, type changes radically, or cardinality becomes unsafe. Execution stops before producing a misleading result.</p></article>
+      <article><strong>Business drift</strong><p>The file still looks technically valid, but business meaning changed. This is why critical rules need owner, description, provenance and review dates.</p></article>
+    </div>
+    <div class="rdp__callout"><strong>Important distinction:</strong> schema compatibility and business correctness are different checks. A technically compatible file can still be wrong.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Role of AI</p><h2>Useful where uncertainty exists.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Good use</strong><p>Explain unfamiliar columns, rank mapping candidates, compare metadata, suggest validation rules, summarize drift and retrieve similar approved procedures.</p></article>
+      <article><strong>Bad use</strong><p>Let a model silently decide joins, transformations or exception handling on every run. That removes repeatability exactly where the project is trying to create it.</p></article>
+      <article><strong>Better pattern</strong><p>AI produces a proposal with evidence. A deterministic compiler turns approved choices into an execution plan.</p></article>
+      <article><strong>Enterprise boundary</strong><p>Raw values may contain personal or confidential data. Semantic analysis needs masking, local models, approved endpoints or metadata-only modes depending on policy.</p></article>
+    </div>
+  </section>
+</div>
