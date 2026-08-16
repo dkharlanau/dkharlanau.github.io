@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Reusable Data Procedures — Roadmap"
-description: "A staged roadmap for developing the reusable data procedure concept from specification and CLI to governed enterprise service and AI-assisted discovery."
+description: "A staged roadmap for developing the reusable data procedure framework from contracts and test corpus to governed execution and AI-assisted discovery."
 permalink: /reusable-data-procedures/roadmap/
 status: draft
 verified: false
@@ -16,86 +16,94 @@ hide_global_cta: true
 
 <div class="rdp">
   <header class="rdp__detail-hero">
-    <p class="rdp__eyebrow">Detail 04 / Roadmap</p>
-    <h1>Prove the procedure before building the platform.</h1>
-    <p>The main risk is not technical. It is creating a flexible data tool without a clear reusable object. Development should therefore start with the procedure contract, cases and deterministic runtime.</p>
-    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages">
-      <a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/approach/">Approach</a><a href="/reusable-data-procedures/procedure-model/">Procedure Model</a><a href="/reusable-data-procedures/architecture/">Architecture</a><a href="/reusable-data-procedures/roadmap/" aria-current="page">Roadmap</a>
-    </nav>
+    <p class="rdp__eyebrow">Roadmap</p>
+    <h1>Prove the contracts before building the platform.</h1>
+    <p>The main risk is not choosing the wrong web framework. It is mixing procedure logic, deployment settings and run history until no one can tell what changed. Development should prove the object model and ugly cases first.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/framework/">Framework</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/execution-model/">Deployment & Run</a><a href="/reusable-data-procedures/testing/">Testing</a><a href="/reusable-data-procedures/roadmap/" aria-current="page">Roadmap</a></nav>
   </header>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 0</p><h2>Build the language first.</h2><p>Before a UI, collect repeated data-work cases and force them into one procedure model.</p></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 0</p><h2>Stabilize the language and boundaries.</h2></div>
     <div class="rdp__roadmap-grid">
-      <article class="rdp__roadmap-card"><span>Deliverable</span><h3>Procedure spec v0.2</h3><p>Sources, mappings, transforms, validations, outputs, provenance, versioning and run-report separation.</p></article>
-      <article class="rdp__roadmap-card"><span>Deliverable</span><h3>Case library</h3><p>10–20 realistic examples: SAP exports, master-data reconciliation, vendor lists, migration extracts and recurring operational reports.</p></article>
-      <article class="rdp__roadmap-card"><span>Test</span><h3>Can the model express the work?</h3><p>If a case immediately requires arbitrary code, decide whether the model is missing an operation or the case should use an explicit extension.</p></article>
-      <article class="rdp__roadmap-card"><span>Exit</span><h3>Stable vocabulary</h3><p>Different cases can be discussed using the same source-contract, mapping, transform, validation and drift concepts.</p></article>
+      <article class="rdp__roadmap-card"><span>Contracts</span><h3>Procedure + Deployment + Run</h3><p>Define what belongs to reusable business logic, operating configuration and execution evidence.</p></article>
+      <article class="rdp__roadmap-card"><span>Catalog</span><h3>Asset vocabulary</h3><p>Primitive, block, pattern, procedure, pack, reference dataset, deployment and run all get clear identities and relations.</p></article>
+      <article class="rdp__roadmap-card"><span>Cases</span><h3>Real problem library</h3><p>Collect 10–20 repeated cases from SAP exports, reconciliation, master data, migration and operational reporting.</p></article>
+      <article class="rdp__roadmap-card"><span>Exit</span><h3>No hidden category errors</h3><p>A schedule change is not a procedure change. A run failure is not a catalog status. The model makes these differences explicit.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 1</p><h2>Make it run locally.</h2></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 1</p><h2>Build the test corpus before the clever discovery engine.</h2></div>
     <div class="rdp__roadmap-grid">
-      <article class="rdp__roadmap-card"><span>Core</span><h3>Python package</h3><p>Procedure parser, source resolution, transform compiler, validation engine and run-report generator.</p></article>
-      <article class="rdp__roadmap-card"><span>Interface</span><h3>CLI</h3><p><code>discover</code>, <code>validate-procedure</code>, <code>run</code>, <code>compare-source</code> and <code>explain-run</code>. No web server required.</p></article>
-      <article class="rdp__roadmap-card"><span>Quality</span><h3>Golden cases</h3><p>Small synthetic fixtures with expected outputs, failures and drift scenarios. Every procedure feature gets regression evidence.</p></article>
-      <article class="rdp__roadmap-card"><span>Exit</span><h3>Repeatability</h3><p>The same inputs and procedure version produce the same outputs and run evidence.</p></article>
+      <article class="rdp__roadmap-card"><span>Golden</span><h3>Expected results</h3><p>Small synthetic source bundles with expected outputs, exceptions, validations and locator decisions.</p></article>
+      <article class="rdp__roadmap-card"><span>Drift</span><h3>Mutation library</h3><p>Move headers, rename sheets, change locale, duplicate keys and insert footers to test recovery and blocking behavior.</p></article>
+      <article class="rdp__roadmap-card"><span>Replay</span><h3>Historical evidence</h3><p>Where policy allows, replay approved old run packages to compare procedure and engine versions.</p></article>
+      <article class="rdp__roadmap-card"><span>Exit</span><h3>Release confidence</h3><p>The framework can show which assumptions are protected by tests instead of merely claiming that a procedure is reusable.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 2</p><h2>Add discovery and repair.</h2></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 2</p><h2>Make deterministic local execution boring.</h2></div>
     <div class="rdp__roadmap-grid">
-      <article class="rdp__roadmap-card"><span>Discovery</span><h3>Profiling and key candidates</h3><p>Structural fingerprints, uniqueness, nulls, value patterns, safe samples and source-role matching.</p></article>
-      <article class="rdp__roadmap-card"><span>Mapping</span><h3>Evidence scoring</h3><p>Header similarity, overlap, type compatibility, cardinality and approved dictionary matches remain separate signals.</p></article>
-      <article class="rdp__roadmap-card"><span>Drift</span><h3>Compatibility engine</h3><p>Classify changes as compatible, resolvable or breaking. Generate a proposed revision rather than silently modifying the saved procedure.</p></article>
-      <article class="rdp__roadmap-card"><span>Exit</span><h3>Less manual work on run two</h3><p>The system reuses known structure and only asks about meaningful changes.</p></article>
+      <article class="rdp__roadmap-card"><span>Core</span><h3>Python engine</h3><p>Procedure parser, source resolver, locator, transform compiler, validation engine and atomic output writer.</p></article>
+      <article class="rdp__roadmap-card"><span>Interface</span><h3>CLI</h3><p><code>inspect</code>, <code>validate-procedure</code>, <code>run</code>, <code>compare-run</code>, <code>explain-run</code> and <code>test</code>.</p></article>
+      <article class="rdp__roadmap-card"><span>Evidence</span><h3>Run contract</h3><p>Input hashes, resolved dependencies, plan hash, drift, validations, exceptions and output hashes.</p></article>
+      <article class="rdp__roadmap-card"><span>Exit</span><h3>Repeatability</h3><p>The same inputs, pinned dependencies and procedure version produce the same business result.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 3</p><h2>Build the service around the engine.</h2></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 3</p><h2>Add discovery, catalog and composition.</h2></div>
     <div class="rdp__roadmap-grid">
-      <article class="rdp__roadmap-card"><span>Registry</span><h3>Procedure lifecycle</h3><p>Draft, review, approved, deprecated. Add owners, tags, versions, change notes and dependency references.</p></article>
-      <article class="rdp__roadmap-card"><span>API</span><h3>Run and discovery resources</h3><p>Expose procedures, discovery sessions, source profiles, runs, reports and approvals through a stable service contract.</p></article>
-      <article class="rdp__roadmap-card"><span>UI</span><h3>Review, do not hide</h3><p>The interface should make mappings, evidence, drift and exceptions easy to inspect. A big green Run button is not a governance model.</p></article>
-      <article class="rdp__roadmap-card"><span>Exit</span><h3>Shared use</h3><p>Several users can reuse the same approved procedure with controlled versions and audit history.</p></article>
+      <article class="rdp__roadmap-card"><span>Discovery</span><h3>Structure and mapping evidence</h3><p>Workbook inspection, source-role matching, key candidates, mapping evidence and drift classification.</p></article>
+      <article class="rdp__roadmap-card"><span>Catalog</span><h3>Search by capability</h3><p>Find procedures and blocks by domain, task, source family, owner, trust, policy and dependencies.</p></article>
+      <article class="rdp__roadmap-card"><span>Composition</span><h3>Shared blocks and packs</h3><p>Promote stable locators, cleaners, parsers and validators into versioned reusable assets.</p></article>
+      <article class="rdp__roadmap-card"><span>Exit</span><h3>Reuse before invention</h3><p>New work starts by searching existing capabilities and patterns instead of creating another private script.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 4</p><h2>Add enterprise controls.</h2></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 4</p><h2>Add deployments and unattended operation.</h2></div>
     <div class="rdp__roadmap-grid">
-      <article class="rdp__roadmap-card"><span>Security</span><h3>Deployment profiles</h3><p>Local-only, internal service and hybrid execution. Define data retention, encryption, access, secrets and AI endpoint policy.</p></article>
-      <article class="rdp__roadmap-card"><span>Operations</span><h3>Observability</h3><p>Run status, duration, input size, validation trends, drift frequency, failure categories and output lineage.</p></article>
-      <article class="rdp__roadmap-card"><span>Integration</span><h3>Enterprise sources</h3><p>Object storage, SFTP, APIs, database queries and later SAP-specific adapters without changing the core procedure contract.</p></article>
-      <article class="rdp__roadmap-card"><span>Exit</span><h3>Governed runtime</h3><p>The tool can be operated, audited and supported instead of living as a clever consultant utility.</p></article>
+      <article class="rdp__roadmap-card"><span>Trigger</span><h3>Manual, schedule, inbox, API, event</h3><p>All triggers create the same run request and pass through the same gates.</p></article>
+      <article class="rdp__roadmap-card"><span>Safety</span><h3>Idempotency and concurrency</h3><p>Prevent duplicate publication, define queue or overlap policy, and separate retryable infrastructure failures from business failures.</p></article>
+      <article class="rdp__roadmap-card"><span>Policy</span><h3>Deployment profiles</h3><p>Local-safe, team-standard, production-critical and restricted-data profiles reuse known control bundles.</p></article>
+      <article class="rdp__roadmap-card"><span>Exit</span><h3>Unattended but explainable</h3><p>Scheduled execution can run safely without hiding why it published, stopped or requested review.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 5</p><h2>Use AI where it reduces uncertainty.</h2></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 5</p><h2>Build the shared service and governance layer.</h2></div>
     <div class="rdp__roadmap-grid">
-      <article class="rdp__roadmap-card"><span>Semantic</span><h3>Column and source meaning</h3><p>Explain unfamiliar fields using metadata, enterprise dictionaries and controlled samples.</p></article>
-      <article class="rdp__roadmap-card"><span>Retrieval</span><h3>Find similar procedures</h3><p>Search approved procedures, mappings and validation patterns before proposing something new.</p></article>
-      <article class="rdp__roadmap-card"><span>Assist</span><h3>Suggest rules</h3><p>Propose mappings, transforms or validations with visible evidence and confidence decomposition.</p></article>
-      <article class="rdp__roadmap-card"><span>Boundary</span><h3>No hidden execution</h3><p>Once accepted, a suggestion becomes normal procedure logic. Repeated runs do not depend on free-form model reasoning.</p></article>
+      <article class="rdp__roadmap-card"><span>Service</span><h3>Registry + run API</h3><p>Procedures, deployments, run requests, evidence, reviews and dependency queries become stable resources.</p></article>
+      <article class="rdp__roadmap-card"><span>Operations</span><h3>Observability</h3><p>Run duration, queue time, input size, drift rate, exception trend, failure category, publication status and consumer lineage.</p></article>
+      <article class="rdp__roadmap-card"><span>Governance</span><h3>Promotion and rollback</h3><p>Policy profiles, review freshness, impact analysis, deprecation and rollback operate on explicit assets.</p></article>
+      <article class="rdp__roadmap-card"><span>Exit</span><h3>Supportable service</h3><p>The framework can be operated by a team instead of depending on the consultant who remembers where the clever part lives.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Evaluation</p><h2>Measure whether reuse actually improves work.</h2></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Phase 6</p><h2>Use AI where uncertainty remains.</h2></div>
+    <div class="rdp__roadmap-grid">
+      <article class="rdp__roadmap-card"><span>Semantic</span><h3>Explain unfamiliar structures</h3><p>Use metadata, dictionaries and approved samples to suggest source roles, aliases and field meaning.</p></article>
+      <article class="rdp__roadmap-card"><span>Retrieval</span><h3>Find similar assets first</h3><p>Search approved procedures, blocks, mappings and test cases before proposing new logic.</p></article>
+      <article class="rdp__roadmap-card"><span>Assist</span><h3>Suggest repairs and tests</h3><p>Propose drift repair, validation rules and mutation cases with visible evidence.</p></article>
+      <article class="rdp__roadmap-card"><span>Boundary</span><h3>No hidden execution</h3><p>Accepted suggestions become explicit contracts, blocks or procedure revisions. Production runs stay deterministic.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Evaluation</p><h2>Measure whether the framework removes work without removing control.</h2></div>
     <table class="rdp__decision-table">
       <thead><tr><th>Metric</th><th>Question</th></tr></thead>
       <tbody>
-        <tr><td>Time to first procedure</td><td>How much work is needed to turn an unfamiliar file bundle into an approved definition?</td></tr>
-        <tr><td>Time to repeat run</td><td>Does the second run require materially less human effort?</td></tr>
-        <tr><td>Mapping precision</td><td>How often are top relation candidates accepted by a domain user?</td></tr>
-        <tr><td>Drift detection recall</td><td>Does the system catch changes that would alter output meaning?</td></tr>
-        <tr><td>False blocking rate</td><td>How often does harmless drift stop a valid run?</td></tr>
-        <tr><td>Procedure portability</td><td>Can the same definition run through CLI, service and scheduled execution?</td></tr>
-        <tr><td>Audit completeness</td><td>Can a reviewer explain which inputs, rules and procedure version produced an output?</td></tr>
+        <tr><td>Time to repeat run</td><td>Does a known procedure remove most repeated manual work?</td></tr>
+        <tr><td>Manual touch rate</td><td>How often does an approved deployment still need intervention?</td></tr>
+        <tr><td>Mutation detection rate</td><td>Do tests catch deliberate changes to critical assumptions?</td></tr>
+        <tr><td>Duplicate publication rate</td><td>Does idempotency prevent repeated outputs from retries or duplicate triggers?</td></tr>
+        <tr><td>Drift classification accuracy</td><td>Does the system separate harmless movement from breaking semantic change?</td></tr>
+        <tr><td>Catalog reuse rate</td><td>How often does new work reuse existing procedures, blocks or patterns?</td></tr>
+        <tr><td>Run explainability</td><td>Can a reviewer reconstruct which inputs, versions, controls and decisions produced an output?</td></tr>
       </tbody>
     </table>
   </section>
