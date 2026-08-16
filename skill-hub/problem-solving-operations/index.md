@@ -2,7 +2,7 @@
 author: "Dzmitryi Kharlanau"
 layout: default
 title: "Problem Solving & Operations Skills"
-description: "Cross-domain working skills for troubleshooting, evidence collection, process deviations, data reconciliation, procedures, incidents, root cause analysis, and operational improvement."
+description: "Cross-domain working skills for troubleshooting, API contracts, identity, asynchronous processing, process deviations, data reconciliation, procedures, release readiness, root cause analysis, and operational improvement."
 permalink: /skill-hub/problem-solving-operations/
 last_modified_at: 2026-08-16
 status: needs_verification
@@ -24,12 +24,13 @@ sitemap: false
   <p><strong>Situation → Skill → Evidence → Decision → Action → Validation → Reuse</strong></p>
   <p>The core Skill should be product-neutral. A domain adapter can add specific tools, logs, transactions, APIs, or checks. This keeps the reasoning reusable while still allowing deep technical work.</p>
   <pre><code>Evidence-Driven Troubleshooting
-├─ Browser / UI adapter
-├─ API / Integration adapter
-├─ Database adapter
+├─ API contract branch
+├─ Identity / authorization branch
+├─ Batch / queue branch
+├─ Data / reconciliation branch
+├─ Process deviation branch
 ├─ SAP adapter
-├─ Cloud / Platform adapter
-└─ File / Data adapter
+└─ Cloud / platform adapter
 </code></pre>
 </section>
 
@@ -37,24 +38,40 @@ sitemap: false
   <header class="section-heading"><h2>Core skills</h2></header>
   <div class="topic-grid">
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/evidence-driven-troubleshooting-working-skill/">Evidence-Driven Troubleshooting</a></h3><p>Reproduce a problem, identify the first failing layer, test hypotheses, and avoid random changes.</p></div>
+    <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/api-contract-troubleshooting-working-skill/">API Contract Troubleshooting</a></h3><p>Trace caller, identity, route, schema, provider logic, dependencies, and consumer handling to find the first broken contract.</p></div>
+    <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/authorization-identity-diagnosis-working-skill/">Authorization &amp; Identity Diagnosis</a></h3><p>Separate authentication, effective identity, propagation, resource scope, and action authorization before changing access.</p></div>
+    <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/batch-queue-troubleshooting-working-skill/">Batch &amp; Queue Troubleshooting</a></h3><p>Trace scheduled and asynchronous work through states, retries, locks, acknowledgement, backlog, and throughput.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/data-reconciliation-working-skill/">Data Reconciliation</a></h3><p>Compare two or more datasets, explain differences, classify exceptions, and produce a controlled reconciliation result.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/process-deviation-analysis-working-skill/">Process Deviation Analysis</a></h3><p>Find the first point where an actual process diverged from expected behavior and explain why.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/procedure-design-working-skill/">Procedure / Runbook Design</a></h3><p>Turn repeated operational work into an executable procedure with evidence, decision points, stop conditions, rollback, and ownership.</p></div>
+    <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/release-readiness-working-skill/">Release Readiness</a></h3><p>Make a go/no-go decision from risk, evidence, dependencies, recovery, monitoring, ownership, and business readiness.</p></div>
   </div>
 </section>
 
 <section class="section">
   <header class="section-heading"><h2>How skills compose</h2></header>
   <p>Skills should call each other instead of copying the same reasoning.</p>
-  <pre><code>Incident
+  <pre><code>Incident or change
   ↓
 Evidence-Driven Troubleshooting
-  ├─ Data problem → Data Reconciliation
-  ├─ Wrong business route → Process Deviation Analysis
-  ├─ Recurring cause → Root Cause Analysis
-  └─ Repeated recovery → Procedure / Runbook Design
+  ├─ HTTP / contract issue → API Contract Troubleshooting
+  │                         ├─ access issue → Authorization & Identity Diagnosis
+  │                         └─ async handoff → Batch & Queue Troubleshooting
+  ├─ data mismatch → Data Reconciliation
+  ├─ wrong business route → Process Deviation Analysis
+  └─ recurring cause → Root Cause Analysis
+                         ↓
+                Procedure / Runbook Design
                          ↓
                  Operational Knowledge Capture
+
+Planned production change
+  ↓
+Change Impact Analysis
+  ↓
+Release Readiness
+  ↓
+Production validation
 </code></pre>
 </section>
 
