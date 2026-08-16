@@ -1,0 +1,53 @@
+name: Extend Factual Review Batch Three Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/extend-factual-review-batch-three-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  extend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml pytest
+      - name: Apply factual review batch three
+        run: python3 scripts/_extend_factual_review_batch_three_once.py
+      - name: Refresh evidence-aware promotion inventory
+        run: python3 scripts/audit_assessment_promotion_readiness.py
+      - name: Refresh Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Run assessment tests
+        run: python3 -m pytest tests/test_assessment_practice_layer.py
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add labs/assessment/data/factual-review.json labs/assessment/factual-review/index.html labs/assessment/data/catalog.json labs/assessment/data/backlog.json labs/assessment/index.md tests/test_assessment_practice_layer.py labs/assessment/data/promotion-readiness.json ai/markdown-clusters.json
+          git commit -m "feat: expand factual review across core logistics"
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            git fetch origin main
+            git rebase origin/main
+            python3 scripts/audit_assessment_promotion_readiness.py
+            python3 scripts/generate_atlas_artifacts.py
+            git add labs/assessment/data/promotion-readiness.json ai/markdown-clusters.json
+            if ! git diff --cached --quiet; then
+              git commit --amend --no-edit
+            fi
+          done
+          exit 1
