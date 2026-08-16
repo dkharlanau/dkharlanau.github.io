@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/reusable-data-procedures/run.schema.json",
+  "title": "Reusable Data Procedure Run Evidence",
+  "description": "Draft immutable evidence contract for one execution of a reusable data procedure deployment.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "specVersion", "runId", "deployment", "procedure", "status", "startedAt", "inputs", "validationSummary", "outputs"],
+  "properties": {
+    "kind": {"const": "reusable-data-procedure-run"},
+    "specVersion": {"const": "0.1"},
+    "runId": {"type": "string"},
+    "deployment": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {"id": {"type": "string"}, "version": {"type": "string"}}
+    },
+    "procedure": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {"id": {"type": "string"}, "version": {"type": "string"}, "planHash": {"type": "string"}}
+    },
+    "engineVersion": {"type": "string"},
+    "trigger": {"type": "string"},
+    "actor": {"type": "string"},
+    "status": {"enum": ["started", "succeeded", "failed", "review-required", "quarantined", "published", "skipped-duplicate"]},
+    "startedAt": {"type": "string", "format": "date-time"},
+    "finishedAt": {"type": "string", "format": "date-time"},
+    "idempotencyKey": {"type": "string"},
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "resource", "hash"],
+        "properties": {
+          "role": {"type": "string"},
+          "resource": {"type": "string"},
+          "hash": {"type": "string"},
+          "fingerprint": {"type": "string"},
+          "selectedRegion": {"type": "string"},
+          "rowCount": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "resolvedDependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "id", "version"],
+        "properties": {
+          "kind": {"enum": ["block", "reference-dataset", "procedure"]},
+          "id": {"type": "string"},
+          "version": {"type": "string"}
+        }
+      }
+    },
+    "drift": {
+      "type": "object",
+      "properties": {
+        "classification": {"enum": ["none", "compatible", "resolvable", "breaking", "business"]},
+        "findings": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "validationSummary": {
+      "type": "object",
+      "required": ["passed", "warnings", "errors", "blocking"],
+      "properties": {
+        "passed": {"type": "integer", "minimum": 0},
+        "warnings": {"type": "integer", "minimum": 0},
+        "errors": {"type": "integer", "minimum": 0},
+        "blocking": {"type": "integer", "minimum": 0}
+      }
+    },
+    "exceptions": {
+      "type": "object",
+      "properties": {
+        "count": {"type": "integer", "minimum": 0},
+        "byReason": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "artifact": {"type": "string"}
+      }
+    },
+    "controlTotals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status"],
+        "properties": {
+          "name": {"type": "string"},
+          "expected": {},
+          "actual": {},
+          "status": {"enum": ["pass", "warning", "fail"]}
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "status"],
+        "properties": {
+          "name": {"type": "string"},
+          "status": {"enum": ["prepared", "published", "withheld", "failed"]},
+          "resource": {"type": "string"},
+          "hash": {"type": "string"},
+          "rowCount": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "publicationDecision": {"enum": ["publish", "withhold", "manual-review", "quarantine"]},
+    "metrics": {"type": "object", "additionalProperties": {"type": ["number", "integer", "string", "boolean"]}}
+  }
+}
