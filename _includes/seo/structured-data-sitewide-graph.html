@@ -1,0 +1,54 @@
+{% comment %}
+Site-wide knowledge graph augmentation for indexable reviewed pages.
+This include adds semantic relationships without replacing the existing rich-result dispatcher.
+It intentionally emits no visible homepage content.
+{% endcomment %}
+
+{% assign robots_directive = page.robots | default: '' %}
+{% assign graph_indexable = true %}
+{% if robots_directive contains 'noindex' %}{% assign graph_indexable = false %}{% endif %}
+{% assign graph_reviewed = false %}
+{% if page.status == 'reviewed' and page.verified == true %}{% assign graph_reviewed = true %}{% endif %}
+{% assign graph_url = page.url | absolute_url %}
+{% assign graph_author_id = '/' | absolute_url | append: '#dkharlanau' %}
+{% assign graph_entities = site.data.knowledge_entities.entities | default: empty %}
+{% assign graph_primary_key = page.primary_topic | default: page.primary_entity %}
+{% assign graph_primary = graph_entities[graph_primary_key] %}
+{% assign graph_modified = page.last_reviewed | default: page.last_modified_at | default: page.updated %}
+
+{% if graph_indexable and graph_reviewed and page.url != '/' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "{{ graph_url }}#knowledge-page",
+      "url": "{{ graph_url }}",
+      "name": {{ page.title | jsonify }},
+      "description": {{ page.description | default: page.summary | strip_html | normalize_whitespace | truncate: 300, '' | jsonify }},
+      "author": {"@id": "{{ graph_author_id }}"},
+      "creator": {"@id": "{{ graph_author_id }}"},
+      "isPartOf": {"@id": "{{ '/' | absolute_url }}#website"}{% if graph_modified %},
+      "dateModified": "{{ graph_modified | date_to_xmlschema }}"{% endif %}{% if graph_primary %},
+      "about": {"@id": "{{ graph_primary.id | absolute_url }}#entity"}{% endif %}{% if page.entity_mentions and page.entity_mentions.size > 0 %},
+      "mentions": [
+        {% for entity_key in page.entity_mentions %}
+        {% assign entity = graph_entities[entity_key] %}
+        {% if entity %}{"@id": "{{ entity.id | absolute_url }}#entity"}{% else %}{"@type":"Thing","name":{{ entity_key | replace: '-', ' ' | jsonify }}}{% endif %}{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]{% endif %}{% if page.ai_sidecar %},
+      "subjectOf": {"@type":"DataDownload","contentUrl":"{{ page.ai_sidecar | absolute_url }}","encodingFormat":"application/json"}{% endif %}
+    }{% if graph_primary %},
+    {
+      "@type": {{ graph_primary.type | default: 'Thing' | jsonify }},
+      "@id": "{{ graph_primary.id | absolute_url }}#entity",
+      "name": {{ graph_primary.name | jsonify }},
+      "url": "{{ graph_primary.id | absolute_url }}"{% if graph_primary.description %},
+      "description": {{ graph_primary.description | jsonify }}{% endif %}{% if graph_primary.same_as and graph_primary.same_as.size > 0 %},
+      "sameAs": {{ graph_primary.same_as | jsonify }}{% endif %}
+    }{% endif %}
+  ]
+}
+</script>
+{% endif %}
