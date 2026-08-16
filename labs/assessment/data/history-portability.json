@@ -1,0 +1,34 @@
+{
+  "id": "sap-lead-assessment-history-portability",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Move local SAP Lead assessment history between browsers without adding a server-side user profile.",
+  "storage_key": "sapLeadAssessmentAttemptsV1",
+  "attempt_contract": "/labs/assessment/data/attempt-schema.json",
+  "export_format": {
+    "media_type": "application/json",
+    "file_name": "sap-lead-assessment-history.json",
+    "root": {
+      "format": "sap-lead-assessment-history",
+      "version": "1.0.0",
+      "exported_at": "ISO-8601 timestamp",
+      "attempts": "array of objects valid against attempt-schema.json"
+    }
+  },
+  "import_rules": [
+    "Accept only JSON documents with format sap-lead-assessment-history and a supported version.",
+    "Every attempt must contain the seven canonical score dimensions and a total score equal to their sum.",
+    "Every dimension score must be an integer from 0 to 3 and total_score must be from 0 to 21.",
+    "lead_signal must equal total_score >= the Lead threshold from scoring.json.",
+    "Attempt IDs are deduplicated. When an incoming attempt ID already exists, keep the local attempt unless replace mode is explicitly chosen.",
+    "Unknown fields may be ignored by the browser importer, but the canonical exported format should follow attempt-schema.json.",
+    "Notes remain local after import. Import does not upload them or send them to a server.",
+    "Reject the complete import when the file is not valid JSON or does not use the supported root format. Reject individual invalid attempts and report their count."
+  ],
+  "merge_modes": {
+    "merge": "Keep local attempts and add valid incoming attempts with new IDs.",
+    "replace": "Replace local history with valid incoming attempts after explicit user action."
+  },
+  "profile_rule": "Profiles, weak signals, mock selection, and review queues are derived after import from the merged attempt history. Do not export a second authoritative profile state.",
+  "privacy": "All parsing, validation, merge, and export operations run in the browser. The site does not require a user account or a server-side history store."
+}
