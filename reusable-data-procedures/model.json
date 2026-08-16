@@ -1,13 +1,14 @@
 {
   "id": "reusable-data-procedures",
   "title": "Reusable Data Procedures",
-  "version": "0.3",
+  "version": "0.4",
   "status": "concept",
   "updated": "2026-08-16",
-  "purpose": "Turn repeated spreadsheet and corporate-export work into explicit, testable, versioned procedures that can be reused when source files change.",
-  "thesis": "Discovery may use heuristics and AI assistance; approved procedures execute deterministically and preserve evidence.",
+  "purpose": "Turn repeated spreadsheet and corporate-export work into explicit, testable, versioned procedures that can be found, composed, governed and reused when source files change.",
+  "thesis": "Discovery may use heuristics and AI assistance; approved procedures execute deterministically, preserve evidence and remain discoverable through a governed catalog.",
   "simple_flow": ["files", "discover", "map", "validate", "result", "save-procedure"],
   "operating_flow": ["intake", "inspect", "locate", "extract", "clean", "relate", "transform", "validate", "publish", "learn"],
+  "reuse_ladder": ["primitive", "block", "pattern", "procedure", "pack"],
   "workspace_contract": {
     "principle": "Workspace responsibilities are stable even when folders are implemented as SharePoint locations, object-storage prefixes or service resources.",
     "areas": {
@@ -39,7 +40,7 @@
     {"stage": "transform", "purpose": "Apply deterministic business transformations.", "gate": "Transformation graph completes without unhandled errors."},
     {"stage": "validate", "purpose": "Check schema, data quality, relations, reconciliation controls and business invariants.", "gate": "Validation severity is within publication policy."},
     {"stage": "publish", "purpose": "Produce result, exceptions and evidence artifacts.", "gate": "Publication contract is satisfied."},
-    {"stage": "learn", "purpose": "Turn confirmed manual fixes into rules, references, aliases or a proposed procedure revision.", "gate": "Approved versions are never silently mutated."}
+    {"stage": "learn", "purpose": "Turn confirmed manual fixes into rules, references, aliases, reusable blocks or a proposed procedure revision.", "gate": "Approved versions are never silently mutated."}
   ],
   "design_principles": [
     "Capture intent and data logic rather than recorded UI actions.",
@@ -50,38 +51,138 @@
     "Model drift, quarantine and repair as normal lifecycle behavior.",
     "Keep procedure definitions portable across CLI, API, UI and agent clients.",
     "Version behavior-changing procedure edits and preserve provenance.",
-    "Treat exceptions as first-class output data rather than console noise."
+    "Treat exceptions as first-class output data rather than console noise.",
+    "Catalog reusable capabilities by metadata instead of relying on folder names.",
+    "Promote repeated logic into typed versioned blocks.",
+    "Scale governance with criticality and data risk."
   ],
+  "catalog": {
+    "purpose": "Make procedures and reusable assets findable, comparable, trustworthy and impact-aware.",
+    "record_fields": [
+      "stable_id",
+      "name",
+      "purpose",
+      "domain",
+      "job_family",
+      "data_concepts",
+      "source_families",
+      "owner",
+      "technical_steward",
+      "version",
+      "maturity",
+      "trust_evidence",
+      "sensitivity",
+      "criticality",
+      "execution_modes",
+      "dependencies",
+      "consumers",
+      "last_reviewed_at",
+      "review_due_at",
+      "replacement"
+    ],
+    "facets": {
+      "domain": ["sales", "procurement", "material", "finance", "cross-domain"],
+      "job_family": ["clean", "enrich", "reconcile", "compare", "consolidate", "validate", "migrate", "publish"],
+      "maturity": ["idea", "draft", "pilot", "approved", "deprecated"],
+      "trust": ["experimental", "regression-tested", "owner-reviewed", "production-proven", "fresh-review", "policy-cleared"],
+      "sensitivity": ["public", "internal", "confidential", "restricted"],
+      "criticality": ["ad-hoc", "operational", "business-critical"]
+    },
+    "search_examples": [
+      "approved SAP sales reconciliation procedures",
+      "procedures that normalize material identifiers",
+      "procedures affected by a reference dataset change",
+      "procedures allowed to run without AI or external network access",
+      "procedures with similar source contracts and mappings"
+    ],
+    "rule": "Run history is not the catalog. The catalog describes reusable assets; run evidence describes executions."
+  },
+  "composition": {
+    "asset_types": {
+      "primitive": "Small deterministic operation.",
+      "block": "Typed reusable capability with parameters, tests, owner and version.",
+      "pattern": "Recommended arrangement of blocks for a common problem.",
+      "procedure": "End-to-end business task with source and output contracts.",
+      "pack": "Curated domain bundle of procedures, blocks, references, fixtures and guidance."
+    },
+    "block_families": [
+      "locator",
+      "extractor",
+      "cleaner",
+      "parser",
+      "matcher",
+      "validator",
+      "publisher",
+      "exception_policy"
+    ],
+    "block_contract": [
+      "id",
+      "version",
+      "family",
+      "input_contract",
+      "output_contract",
+      "parameters",
+      "behavior_properties",
+      "tests",
+      "owner",
+      "risk",
+      "side_effects"
+    ],
+    "rules": [
+      "Approved procedures pin compatible block versions instead of resolving latest at runtime.",
+      "Prefer deterministic and side-effect-free blocks where practical.",
+      "Declare filesystem, network, reference-data and external-service side effects.",
+      "Custom code is an explicit escape hatch with tests, ownership and risk classification.",
+      "Review repeated implementation for promotion into a shared block, but avoid trivial over-fragmentation."
+    ],
+    "patterns": [
+      "lookup_enrichment_with_exception_routing",
+      "workbook_region_extraction",
+      "monthly_reconciliation",
+      "migration_quality_gate"
+    ]
+  },
+  "governance": {
+    "principle": "Govern reusable assets according to impact, criticality and data risk rather than applying the same process to every task.",
+    "lifecycle": ["idea", "draft", "pilot", "approved", "deprecated"],
+    "execution_environments": ["sandbox", "team", "production"],
+    "roles": ["author", "business_owner", "technical_steward", "data_steward", "reviewer"],
+    "trust_evidence": [
+      "regression_tested",
+      "owner_reviewed",
+      "production_proven",
+      "fresh_review",
+      "policy_cleared",
+      "drift_behavior_observed"
+    ],
+    "change_rules": {
+      "patch": "Non-behavioral metadata change.",
+      "minor": "Compatible alias, optional field or non-breaking validation with regression tests.",
+      "major": "Required source, key, mapping cardinality, business transform, output contract or incompatible shared-block change."
+    },
+    "promotion_rules": [
+      "Production execution uses approved procedure versions and pinned dependencies.",
+      "Promotion moves definitions and approved dependencies, not uncontrolled raw input data.",
+      "Major shared dependency changes require catalog impact analysis.",
+      "New custom code, external endpoints or AI data modes trigger policy review according to classification."
+    ],
+    "expiry_and_deprecation": [
+      "Set review dates based on criticality.",
+      "Mark stale trust evidence without deleting historical catalog records.",
+      "Deprecated procedures point to a replacement when one exists.",
+      "Keep approved previous versions addressable for rollback and audit."
+    ]
+  },
+  "dependency_graph": {
+    "nodes": ["procedure", "block", "pattern", "pack", "reference_dataset", "source_system", "output_consumer"],
+    "edges": ["uses", "depends_on", "produces_for", "replaces", "contains", "derived_from"],
+    "uses": ["change_impact", "reuse_discovery", "deprecation_planning", "critical_dependency_detection", "ownership_navigation"]
+  },
   "excel_discovery": {
     "locator_precedence": ["excel_table", "named_range", "semantic_anchor_set", "header_scoring", "region_geometry", "fixed_coordinates"],
-    "header_signals": [
-      "required_header_alias_matches",
-      "optional_header_alias_matches",
-      "text_density",
-      "label_uniqueness",
-      "stable_rows_below",
-      "historical_position_similarity",
-      "duplicate_header_penalty",
-      "narrative_text_penalty"
-    ],
-    "region_signals": [
-      "rectangular_density",
-      "stable_column_count",
-      "blank_boundaries",
-      "data_type_consistency",
-      "repeated_header_detection",
-      "footer_or_total_detection"
-    ],
-    "workbook_features_to_record": [
-      "sheet_names",
-      "hidden_sheets",
-      "hidden_rows_and_columns",
-      "excel_tables",
-      "named_ranges",
-      "merged_cells",
-      "formulas",
-      "used_dimensions"
-    ],
+    "header_signals": ["required_header_alias_matches", "optional_header_alias_matches", "text_density", "label_uniqueness", "stable_rows_below", "historical_position_similarity", "duplicate_header_penalty", "narrative_text_penalty"],
+    "region_signals": ["rectangular_density", "stable_column_count", "blank_boundaries", "data_type_consistency", "repeated_header_detection", "footer_or_total_detection"],
+    "workbook_features_to_record": ["sheet_names", "hidden_sheets", "hidden_rows_and_columns", "excel_tables", "named_ranges", "merged_cells", "formulas", "used_dimensions"],
     "rule": "Store locator strategy, evidence and fallbacks, not only the coordinates found in one run."
   },
   "cleaning_model": {
@@ -90,34 +191,12 @@
       "canonical": "Stable representation used for comparison, parsing and joins.",
       "business": "Value changed by an explicit approved business rule."
     },
-    "safe_operations": [
-      "trim_outer_whitespace",
-      "normalize_known_non_breaking_spaces",
-      "classify_null_tokens",
-      "parse_with_explicit_locale",
-      "build_comparison_key",
-      "casefold_for_comparison"
-    ],
-    "controlled_operations": [
-      "leading_zero_conversion",
-      "code_mapping",
-      "unit_conversion",
-      "fill_down",
-      "unicode_normalization",
-      "deduplication",
-      "business_defaulting"
-    ],
-    "rules": [
-      "Classify identifiers before numeric casting.",
-      "Never treat zero as null without an explicit rule.",
-      "Do not invent precision or digits already lost in the source.",
-      "Keep failed parse values as exceptions with raw value and rule ID.",
-      "Use symmetric normalization on both sides of joins.",
-      "Safe cleanup should normally be idempotent."
-    ]
+    "safe_operations": ["trim_outer_whitespace", "normalize_known_non_breaking_spaces", "classify_null_tokens", "parse_with_explicit_locale", "build_comparison_key", "casefold_for_comparison"],
+    "controlled_operations": ["leading_zero_conversion", "code_mapping", "unit_conversion", "fill_down", "unicode_normalization", "deduplication", "business_defaulting"],
+    "rules": ["Classify identifiers before numeric casting.", "Never treat zero as null without an explicit rule.", "Do not invent precision or digits already lost in the source.", "Keep failed parse values as exceptions with raw value and rule ID.", "Use symmetric normalization on both sides of joins.", "Safe cleanup should normally be idempotent."]
   },
   "procedure": {
-    "parts": ["identity", "workspace_policy", "source_contracts", "locators", "extraction", "mappings", "transforms", "validations", "outputs", "provenance"],
+    "parts": ["identity", "catalog_metadata", "lifecycle", "dependencies", "workspace_policy", "source_contracts", "locators", "extraction", "mappings", "transforms", "validations", "outputs", "runtime_policy", "provenance"],
     "separate_artifacts": ["run_report", "run_manifest", "exception_dataset", "synthetic_test_fixtures", "enterprise_mapping_dictionary"],
     "does_not_store_by_default": ["uploaded_business_rows", "production_result_rows", "secrets"]
   },
@@ -154,12 +233,12 @@
     "Use cheap canary checks before expensive transformations.",
     "Measure manual-touch rate and repeated exception rate.",
     "Separate warnings from blocking failures.",
-    "Promote repeated manual fixes into rules or reference data.",
+    "Promote repeated manual fixes into rules, reference data or reusable blocks.",
     "Report mapping coverage together with business impact where possible."
   ],
   "architecture": {
-    "layers": ["source_adapters", "profiler", "locator_and_extractor", "discovery_engine", "procedure_editor_and_compiler", "deterministic_execution_engine", "validation_engine", "registry_and_provenance", "interfaces"],
-    "recommended_start": "Python package plus CLI plus JSON procedure schema",
+    "layers": ["source_adapters", "profiler", "locator_and_extractor", "discovery_engine", "procedure_editor_and_compiler", "deterministic_execution_engine", "validation_engine", "catalog_and_registry", "dependency_graph", "governance_and_policy", "provenance", "interfaces"],
+    "recommended_start": "Python package plus CLI plus JSON procedure schema and Git-backed catalog metadata",
     "later_interfaces": ["service_api", "web_ui", "scheduled_runs", "agent_tools"],
     "execution_models": ["local_python", "python_service", "browser_wasm", "hybrid"]
   },
@@ -177,24 +256,29 @@
     "registry_options": ["Git", "SQLite", "PostgreSQL", "object storage"]
   },
   "ai_assistance": {
-    "allowed_jobs": ["explain_unknown_columns", "rank_mapping_candidates", "suggest_header_aliases", "suggest_validation_rules", "summarize_drift", "retrieve_similar_approved_procedures"],
+    "allowed_jobs": ["explain_unknown_columns", "rank_mapping_candidates", "suggest_header_aliases", "suggest_validation_rules", "summarize_drift", "retrieve_similar_approved_procedures", "recommend_reusable_blocks", "explain_dependency_impact"],
     "data_modes": ["metadata_only", "masked_samples", "approved_raw_samples"],
     "boundary": "Accepted AI suggestions are compiled into explicit normal procedure logic. Repeated execution does not depend on free-form model reasoning."
   },
-  "enterprise_concerns": ["data_classification", "retention_and_deletion", "encryption", "rbac", "secrets", "approved_ai_endpoints", "dependency_review", "audit_history", "lineage", "run_observability", "source_and_output_hashes", "scaling_limits"],
+  "enterprise_concerns": ["data_classification", "retention_and_deletion", "encryption", "rbac", "secrets", "approved_ai_endpoints", "dependency_review", "audit_history", "lineage", "run_observability", "source_and_output_hashes", "scaling_limits", "catalog_ownership", "review_freshness", "deprecation", "rollback"],
   "roadmap": [
-    {"phase": 0, "name": "framework-and-cases", "goal": "Stabilize workspace, pipeline, locator, cleaning, validation and procedure vocabulary against realistic repeated data-work cases."},
-    {"phase": 1, "name": "local-runtime", "goal": "Implement deterministic Python runtime, Inbox workflow, CLI, run reports and regression fixtures."},
+    {"phase": 0, "name": "framework-and-cases", "goal": "Stabilize workspace, pipeline, locator, cleaning, validation, catalog and procedure vocabulary against realistic repeated data-work cases."},
+    {"phase": 1, "name": "local-runtime", "goal": "Implement deterministic Python runtime, Inbox workflow, CLI, run reports, registry metadata and regression fixtures."},
     {"phase": 2, "name": "discovery-and-drift", "goal": "Add workbook inspection, region location, profiling, mapping evidence, source matching and controlled repair."},
-    {"phase": 3, "name": "shared-service", "goal": "Add registry, API and review-oriented UI around the same core engine."},
-    {"phase": 4, "name": "enterprise-controls", "goal": "Add security profiles, audit, observability and enterprise source adapters."},
-    {"phase": 5, "name": "ai-assistance", "goal": "Add controlled semantic assistance and retrieval of approved mappings and procedures."}
+    {"phase": 3, "name": "catalog-and-composition", "goal": "Add reusable block library, dependency graph, search facets, packs and impact analysis."},
+    {"phase": 4, "name": "shared-service", "goal": "Add registry API, review-oriented UI, scheduling and team environments around the same core engine."},
+    {"phase": 5, "name": "enterprise-controls", "goal": "Add security profiles, approval policy, audit, observability, deprecation and enterprise source adapters."},
+    {"phase": 6, "name": "ai-assistance", "goal": "Add controlled semantic assistance and retrieval of approved mappings, blocks and procedures."
+    }
   ],
-  "evaluation_metrics": ["time_to_first_procedure", "time_to_repeat_run", "manual_touch_rate", "repeat_exception_rate", "locator_precision", "mapping_candidate_precision", "drift_detection_recall", "false_blocking_rate", "procedure_portability", "audit_completeness"],
+  "evaluation_metrics": ["time_to_first_procedure", "time_to_repeat_run", "manual_touch_rate", "repeat_exception_rate", "locator_precision", "mapping_candidate_precision", "drift_detection_recall", "false_blocking_rate", "procedure_portability", "catalog_reuse_rate", "shared_block_reuse", "stale_procedure_rate", "dependency_coverage", "audit_completeness"],
   "detail_pages": {
     "overview": "/reusable-data-procedures/",
     "framework": "/reusable-data-procedures/framework/",
     "techniques": "/reusable-data-procedures/techniques/",
+    "catalog": "/reusable-data-procedures/catalog/",
+    "building_blocks": "/reusable-data-procedures/building-blocks/",
+    "governance": "/reusable-data-procedures/governance/",
     "approach": "/reusable-data-procedures/approach/",
     "procedure_model": "/reusable-data-procedures/procedure-model/",
     "architecture": "/reusable-data-procedures/architecture/",
