@@ -77,7 +77,7 @@ tags:
     </ol>
   </section>
 
-  <section class="research-canvas__inventory" id="root-cause-analysis" data-reveal>
+  <section class="research-canvas__inventory" id="root-cause-analysis" data-reveal markdown="1">
     <header><p class="research-canvas__eyebrow">Template / RCA</p><h2>Root Cause Analysis</h2><p>Use when a problem is important, recurring, or not explained by the first fix.</p></header>
 
 ### Case
@@ -138,7 +138,7 @@ Use 5 Whys only when each answer is supported by evidence. Stop when the cause b
 - Closure needs a business result, not only a green technical status.
   </section>
 
-  <section class="research-canvas__inventory" id="incident-triage" data-reveal>
+  <section class="research-canvas__inventory" id="incident-triage" data-reveal markdown="1">
     <header><p class="research-canvas__eyebrow">Template / Incident</p><h2>Incident Triage</h2><p>Use during an active issue. The goal is safe recovery without destroying diagnostic evidence.</p></header>
 
 ### Intake
@@ -178,7 +178,7 @@ Check only what is relevant, but do it in a clear order:
 - RCA required? Yes / No, and why:
   </section>
 
-  <section class="research-canvas__inventory" id="integration-failure" data-reveal>
+  <section class="research-canvas__inventory" id="integration-failure" data-reveal markdown="1">
     <header><p class="research-canvas__eyebrow">Template / Integration</p><h2>Integration Failure Analysis</h2><p>Use for APIs, IDocs, RFC, events, queues, files, EDI, middleware, or external services.</p></header>
 
 ### Flow identity
@@ -211,7 +211,7 @@ Check only what is relevant, but do it in a clear order:
 - Test case that proves the fix:
   </section>
 
-  <section class="research-canvas__inventory" id="process-deviation" data-reveal>
+  <section class="research-canvas__inventory" id="process-deviation" data-reveal markdown="1">
     <header><p class="research-canvas__eyebrow">Template / Process</p><h2>Process Deviation Analysis</h2><p>Use when a business document exists, but the process took the wrong route or produced the wrong result.</p></header>
 
 ### Process trace
@@ -249,7 +249,7 @@ Check only what is relevant, but do it in a clear order:
 - Reusable rule or diagnostic note:
   </section>
 
-  <section class="research-canvas__inventory" id="runbook" data-reveal>
+  <section class="research-canvas__inventory" id="runbook" data-reveal markdown="1">
     <header><p class="research-canvas__eyebrow">Template / SOP</p><h2>Procedure / Runbook</h2><p>Use for repeated work where execution quality should not depend on memory.</p></header>
 
 ### Definition
@@ -280,7 +280,7 @@ For each step record:
 - Change history:
   </section>
 
-  <section class="research-canvas__inventory" id="change-impact" data-reveal>
+  <section class="research-canvas__inventory" id="change-impact" data-reveal markdown="1">
     <header><p class="research-canvas__eyebrow">Template / Change</p><h2>Change Impact Review</h2><p>Use before a change moves from “small request” to the traditional enterprise surprise.</p></header>
 
 ### Change
@@ -313,7 +313,7 @@ Check dependencies across:
 - Business owner acceptance:
   </section>
 
-  <section class="research-canvas__inventory" id="decision-record" data-reveal>
+  <section class="research-canvas__inventory" id="decision-record" data-reveal markdown="1">
     <header><p class="research-canvas__eyebrow">Template / Decision</p><h2>Decision Record</h2><p>Use for architecture and process choices that somebody will question six months later, usually after everyone forgot why they were made.</p></header>
 
 ### Decision
@@ -332,7 +332,7 @@ Check dependencies across:
 - Review date:
   </section>
 
-  <section class="research-canvas__inventory" id="cutover-hypercare" data-reveal>
+  <section class="research-canvas__inventory" id="cutover-hypercare" data-reveal markdown="1">
     <header><p class="research-canvas__eyebrow">Template / Cutover</p><h2>Cutover / Hypercare Control</h2><p>Use for go-live, migration, major release, or a process activation with many dependencies.</p></header>
 
 ### Readiness
