@@ -1,0 +1,140 @@
+id: TOPIC-MDG-MATERIAL-ENTITY-REFERENCE
+type: research_topic
+title: "SAP MDG Material Technical Entity Reference"
+summary: "A Lead-level bridge between MDG-M technical entity names and business grains so design discussions can move from field lists to ownership, lifecycle and process impact."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/domains/material/entity-map/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "How do SAP MDG-M entity types map to business grains without confusing technical persistence with business ownership?"
+
+memory_model:
+  phrase: "Technical Entity → Business Grain → Meaning → Owner → Rule → Consumer"
+  principle: "An MDG entity name tells us how data is modeled technically. It does not decide who owns the business meaning."
+
+technical_reference:
+  type_1_entities:
+    - entity: MATERIAL
+      meaning: "Material basic/root data"
+      design_role: "Primary material identity and root context"
+    - entity: MKALBASIC
+      meaning: "Production-version-related basic entity in the delivered MM model"
+      design_role: "Separate lifecycle object inside the delivered model; do not flatten into the Material root"
+    - entity: DRADBASIC
+      meaning: "Basic data for document link"
+      design_role: "Document-link context with its own technical entity"
+    - entity: MATCHGMNG
+      meaning: "Matching-related entity in the delivered MM model"
+      design_role: "Technical matching context, not a business product identity"
+  selected_type_4_entities:
+    global_and_text:
+      - {entity: BSCDATTXT, meaning: "Basic Data Text"}
+      - {entity: MARASALES, meaning: "Material Sales Data"}
+      - {entity: MARAPURCH, meaning: "Material Purchasing Data"}
+      - {entity: MARAQTMNG, meaning: "Material Quality Data"}
+      - {entity: UNITOFMSR, meaning: "Units of Measure for Material"}
+      - {entity: MEAN_GTIN, meaning: "International Article Numbers / GTIN context"}
+      - {entity: CLASSASGN, meaning: "Class Assignment"}
+      - {entity: VALUATION, meaning: "Characteristic Valuation"}
+    plant:
+      - {entity: MARCBASIC, meaning: "Plant Data Basic Data"}
+      - {entity: MARCATP, meaning: "Plant Data ATP"}
+      - {entity: MARCPURCH, meaning: "Plant Data Purchasing"}
+      - {entity: MARCSALES, meaning: "Plant Data Sales"}
+      - {entity: MARCQTMNG, meaning: "Plant Data Quality Management"}
+      - {entity: MARCWRKSD, meaning: "Plant Data Work Scheduling"}
+      - {entity: MARCMRPSP, meaning: "Plant Data MRP Stock Planning"}
+      - {entity: MARCMRPPP, meaning: "Plant Data MRP Production Planning"}
+      - {entity: MARCMRPMI, meaning: "Plant Data MRP Miscellaneous"}
+      - {entity: MARCMRPLS, meaning: "Plant Data MRP Lot Size"}
+      - {entity: MARCMRPFC, meaning: "Plant Data MRP Forecast"}
+      - {entity: MARCCSTNG, meaning: "Plant Data Costing"}
+      - {entity: MARCSTORE, meaning: "Plant Data Storage"}
+    storage_location:
+      - {entity: MARDSTOR, meaning: "Storage Location General Data for Material"}
+      - {entity: MARDMRP, meaning: "Storage Location MRP Data for Material"}
+    sales_area:
+      - {entity: MVKESALES, meaning: "Sales Data"}
+      - {entity: MVKEGRPNG, meaning: "Sales Grouping"}
+      - {entity: SALESTXT, meaning: "Material Sales Text"}
+      - {entity: MLANSALES, meaning: "Tax Classification for Sales"}
+    purchasing:
+      - {entity: PURCHTXT, meaning: "Material Purchasing Text"}
+      - {entity: MLANPURCH, meaning: "Tax Classification for Purchasing"}
+    valuation_and_accounting:
+      - {entity: MBEWACTNG, meaning: "Material Accounting Data"}
+      - {entity: MBEWVALUA, meaning: "Material Valuation Data"}
+      - {entity: MBEWCSTNG, meaning: "Material Costing Data"}
+      - {entity: MBEWMLAC, meaning: "Material Ledger Prices"}
+      - {entity: MBEWMLVAL, meaning: "Material Ledger Period Totals Records Values"}
+    warehouse:
+      - {entity: MLGNSTOR, meaning: "Material Warehouse Management Data"}
+      - {entity: MLGTSTOR, meaning: "Material Storage Type Data"}
+    quality_and_planning:
+      - {entity: QMATBASIC, meaning: "Parameters for Inspection Type"}
+      - {entity: QINSPTXT, meaning: "Material Quality Inspection Text"}
+      - {entity: MDMABASIC, meaning: "MRP Area Basic Data"}
+      - {entity: MRPTXT, meaning: "Material MRP Text"}
+
+business_grain_map:
+  - grain: "Material"
+    representative_entities: [MATERIAL, BSCDATTXT, UNITOFMSR, MEAN_GTIN, CLASSASGN, VALUATION]
+    decision: "Enterprise identity and global product meaning"
+  - grain: "Material + Plant"
+    representative_entities: [MARCBASIC, MARCATP, MARCPURCH, MARCSALES, MARCQTMNG, MARCWRKSD, MARCMRPSP, MARCMRPPP, MARCMRPMI, MARCMRPLS]
+    decision: "Plant planning, procurement, ATP, quality and execution meaning"
+  - grain: "Material + Storage Location"
+    representative_entities: [MARDSTOR, MARDMRP]
+    decision: "Storage-location-specific execution or planning context"
+  - grain: "Material + Sales Organization + Distribution Channel"
+    representative_entities: [MVKESALES, MVKEGRPNG, SALESTXT]
+    decision: "Commercial material behavior by distribution chain"
+  - grain: "Material + Valuation Area"
+    representative_entities: [MBEWACTNG, MBEWVALUA, MBEWCSTNG, MBEWMLAC, MBEWMLVAL]
+    decision: "Accounting, valuation and costing context"
+  - grain: "Material + Warehouse context"
+    representative_entities: [MLGNSTOR, MLGTSTOR]
+    decision: "Warehouse-specific product execution context where the architecture uses these entities"
+
+field_to_entity_protocol:
+  - "Start from business meaning and required grain."
+  - "Locate the delivered entity that represents that meaning."
+  - "Check whether governance scope includes the entity and attribute in the selected release and mode."
+  - "Assign business owner and technical owner separately."
+  - "Define validation/derivation at the narrowest reliable grain."
+  - "Define downstream consumers before approving an extension."
+  - "Test one positive and one negative scenario per critical field group."
+
+design_boundaries:
+  - "Do not use the entity list as a substitute for governance scope."
+  - "Do not infer business ownership from a MARA/MARC/MVKE-style technical grouping alone."
+  - "Do not extend the MM model to own routing, pricing conditions or source list only because they reference Material."
+  - "Treat the delivered model as release-specific; verify exact scope before implementation."
+
+assessment_cards:
+  - prompt: "What is MARCBASIC useful for in an architecture discussion?"
+    answer: "It is a technical signal that plant-dependent data is a separate modeled segment. The Lead decision is then which plant attributes are governed, who owns them and which process proves them."
+  - prompt: "Would you design workflow directly from the entity list?"
+    answer: "No. First group entities by business change, risk and ownership. Several entities can move through one CR pattern, and one entity can contain attributes with different decision rights."
+  - prompt: "Why keep technical entities and business grains separate?"
+    answer: "Because technical modeling explains where data sits, while grain and ownership explain what the value means and who can decide it."
+
+source_refs:
+  - SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025
+  - SRC-SAP-MATERIAL-MASTER-STRUCTURE-2025
+relations:
+  - subject: TOPIC-MDG-MATERIAL-ENTITY-REFERENCE
+    predicate: requires
+    object: TOPIC-MDG-MATERIAL-DOMAIN
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-MATERIAL-ENTITY-REFERENCE
+    predicate: provides_context_to
+    object: TOPIC-MDG-GOVERNANCE-PROCESS-ENGINE
+    evidence_type: reasoned_interpretation
+    confidence: high
