@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
   - business-ai
@@ -20,8 +20,23 @@ publication_wave: "public-framework-search-wave-04"
 review_method: "selective external evidence + page-level editorial review + authored heuristic boundary"
 evidence_review_mode: "selective_or_heuristic"
 search_intent: "enterprise Business AI patterns, technologies, controls and implementation evidence"
+# ai-discovery-managed:start
+structured_data:
+  type: TechArticle
+primary_topic: "business-ai"
+ai_sidecar: "/ai/pages/labs--business-ai.json"
+semantic_links:
+  - type: "Related topic"
+    title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
+    url: "/labs/enterprise-context/business-ai/"
+  - type: "Related topic"
+    title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
+    url: "/labs/enterprise-context/business-ai/agents/"
+  - type: "Related topic"
+    title: "AI Ready — Practical AI Architecture Lab"
+    url: "/labs/ai-ready/"
+# ai-discovery-managed:end
 ---
-
 {% assign catalog = site.data.labs.business_ai.catalog %}
 {% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
 {% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}

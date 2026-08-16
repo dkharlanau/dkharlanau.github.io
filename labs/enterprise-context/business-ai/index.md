@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
   - sap
@@ -19,8 +19,34 @@ last_reviewed: 2026-08-16
 publication_wave: "lead-architecture-search-wave-03"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP Business AI architecture with Joule, agents and SAP data grounding"
+# ai-discovery-managed:start
+structured_data:
+  type: TechArticle
+primary_topic: "sap-business-ai"
+ai_sidecar: "/ai/pages/labs--enterprise-context--business-ai.json"
+entity_mentions:
+  - "business-ai"
+semantic_links:
+  - type: "Deep dive"
+    title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
+    url: "/labs/enterprise-context/business-ai/agents/"
+  - type: "Related topic"
+    title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
+    url: "/labs/enterprise-context/development/"
+  - type: "Related topic"
+    title: "SAP EWM — Deployment & Warehouse Execution Map"
+    url: "/labs/enterprise-context/ewm/"
+  - type: "Related topic"
+    title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
+    url: "/labs/business-ai/"
+  - type: "Integration view"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "Integration view"
+    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
+    url: "/labs/enterprise-context/sales-processes/integrations/"
+# ai-discovery-managed:end
 ---
-
 {% assign topic = site.data.labs.enterprise_context.topics.business_ai_platform_landscape %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

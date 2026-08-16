@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
   - sap
@@ -22,8 +22,32 @@ last_reviewed: 2026-08-16
 publication_wave: "lead-architecture-search-wave-03"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP clean core development with ABAP Cloud, RAP, CAP and BTP"
+# ai-discovery-managed:start
+structured_data:
+  type: TechArticle
+primary_topic: "sap-s4hana"
+ai_sidecar: "/ai/pages/labs--enterprise-context--development.json"
+semantic_links:
+  - type: "Related topic"
+    title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
+    url: "/labs/enterprise-context/business-ai/"
+  - type: "Same domain"
+    title: "SAP S/4HANA Deployment Models — Enterprise Context Lab"
+    url: "/labs/enterprise-context/deployment-models/"
+  - type: "Related topic"
+    title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
+    url: "/labs/enterprise-context/business-ai/agents/"
+  - type: "Related topic"
+    title: "SAP EWM — Deployment & Warehouse Execution Map"
+    url: "/labs/enterprise-context/ewm/"
+  - type: "Same domain"
+    title: "FI/CO for Logistics — Enterprise Context Lab"
+    url: "/labs/enterprise-context/finance-logistics/"
+  - type: "Same domain"
+    title: "Cross-Process Logistics Capabilities — Enterprise Context Lab"
+    url: "/labs/enterprise-context/logistics-capabilities/"
+# ai-discovery-managed:end
 ---
-
 {% assign topic = site.data.labs.enterprise_context.topics.development_architecture %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

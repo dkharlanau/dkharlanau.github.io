@@ -19,8 +19,57 @@ last_reviewed: 2026-08-16
 publication_wave: "logistics-search-wave-01"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP integration architecture with IDoc, API, events, Event Mesh and Kafka"
+# ai-discovery-managed:start
+structured_data:
+  type: TechArticle
+primary_topic: "sap-integration"
+ai_sidecar: "/ai/pages/labs--enterprise-context--integrations.json"
+semantic_links:
+  - type: "Integration view"
+    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
+    url: "/labs/enterprise-context/sales-processes/integrations/"
+  - type: "Related topic"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "Related topic"
+    title: "SAP EWM — Deployment & Warehouse Execution Map"
+    url: "/labs/enterprise-context/ewm/"
+  - type: "Related topic"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "Integration view"
+    title: "Integration Operations & Recovery — Enterprise Context Lab"
+    url: "/labs/enterprise-context/integration-operations/"
+  - type: "Integration view"
+    title: "SAP TM — Integration Contracts, APIs & Events"
+    url: "/labs/enterprise-context/transportation-management/integrations/"
+source_links:
+  - title: "What Is SAP Integration Suite?"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/decide-on-integration-technology"
+  - title: "Connectivity Options"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/connectivity-options"
+  - title: "Understanding the Basic Concepts"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/understanding-basic-concepts-a81309fbdc4446b98e138a328bf1776c"
+  - title: "Trading Partner Management"
+    url: "https://help.sap.com/docs/SAP_INTEGRATION_SUITE/sap-integration-suite/trading-partner-management"
+  - title: "IDoc Adapter"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/idoc-adapter"
+  - title: "Kafka Adapter"
+    url: "https://help.sap.com/docs/SAP_INTEGRATION_SUITE/sap-integration-suite/kafka-adapter"
+  - title: "What Is SAP Event Mesh?"
+    url: "https://help.sap.com/docs/SAP_EM/bf82e6b26456494cbdd197057c09979f/what-is-sap-event-mesh"
+  - title: "Event Mesh"
+    url: "https://help.sap.com/docs/SAP_INTEGRATION_SUITE/sap-integration-suite/event-mesh"
+  - title: "What Is SAP Integration Suite, Advanced Event Mesh?"
+    url: "https://help.sap.com/docs/sap-integration-suite/advanced-event-mesh"
+  - title: "Event Mesh Bridge"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/event-mesh-bridge"
+  - title: "Synchronization of Master Data"
+    url: "https://help.sap.com/docs/master-data-integration/sap-master-data-integration-prod/synchronization-of-master-data"
+  - title: "Integration Models"
+    url: "https://help.sap.com/docs/master-data-integration/sap-master-data-integration-prod/integration-models"
+# ai-discovery-managed:end
 ---
-
 {% assign topic = site.data.labs.enterprise_context.topics.integration_architecture_landscape %}
 {% assign language = site.data.labs.enterprise_context.topics.integration_architecture_language %}
 {% assign registry = site.data.labs.enterprise_context.sources.integration_registry %}

@@ -7,15 +7,41 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags: [sap, mdg, integration, drf, soap, idoc, mdi, master-data]
 last_reviewed: 2026-08-16
 publication_wave: "lead-architecture-search-wave-03"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP MDG interfaces, DRF replication, APIs and master-data distribution"
+# ai-discovery-managed:start
+structured_data:
+  type: TechArticle
+primary_topic: "sap-mdg"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--interfaces.json"
+entity_mentions:
+  - "sap-integration"
+semantic_links:
+  - type: "Parent context"
+    title: "SAP Master Data Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/"
+  - type: "Same domain"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "Integration view"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "Integration view"
+    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
+    url: "/labs/enterprise-context/sales-processes/integrations/"
+  - type: "Related topic"
+    title: "SAP EWM — Deployment & Warehouse Execution Map"
+    url: "/labs/enterprise-context/ewm/"
+  - type: "Integration view"
+    title: "SAP TM — Integration Contracts, APIs & Events"
+    url: "/labs/enterprise-context/transportation-management/integrations/"
+# ai-discovery-managed:end
 ---
-
 {% assign topic = site.data.labs.enterprise_context.topics.mdg_object_contracts %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

@@ -6,6 +6,8 @@
 
 <head>
   {% include head.html %}
+  {% include seo/page-machine-links.html %}
+  {% unless page.url == '/' %}<link rel="stylesheet" href="{{ '/assets/knowledge-trust.css' | relative_url }}" />{% endunless %}
   {% if page.ddd_framework %}
   <link rel="stylesheet" href="{{ '/assets/ddd-framework.css' | relative_url }}" />
   <link rel="stylesheet" href="{{ '/assets/ddd-framework-v03.css' | relative_url }}" />
@@ -100,6 +102,8 @@
   {% include header.html %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
     {{ content }}
+    {% include seo/trust-strip.html %}
+    {% include seo/semantic-related.html %}
     {% if page.sales_master_data_graph %}
     {% include labs/sales-master-document-consumption.html %}
     {% endif %}
@@ -148,6 +152,7 @@
   </footer>
   {% include seo/structured-data.html %}
   {% include seo/lab-breadcrumb-data.html %}
+  {% include seo/structured-data-sitewide-graph.html %}
 </body>
 
 </html>

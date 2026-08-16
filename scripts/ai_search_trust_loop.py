@@ -438,6 +438,9 @@ def patch_sitemap(text: str) -> str:
         "post.last_modified_at | default: post.date | default: post.updated | default: nil",
         "post.last_reviewed | default: post.last_modified_at | default: post.date | default: post.updated | default: nil",
     )
+    text = text.replace("page.last_reviewed | default: page.last_reviewed | default:", "page.last_reviewed | default:")
+    text = text.replace("doc.last_reviewed | default: doc.last_reviewed | default:", "doc.last_reviewed | default:")
+    text = text.replace("post.last_reviewed | default: post.last_reviewed | default:", "post.last_reviewed | default:")
     return text
 
 
@@ -638,7 +641,6 @@ def main() -> int:
         "sidecars": len(expected_sidecars),
         "entity_registry_size": len(entities),
         "errors": errors,
-        "changed_paths": sorted(set(changed)),
         "pages": [
             {
                 "route": r["route"],

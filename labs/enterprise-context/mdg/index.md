@@ -19,8 +19,32 @@ last_reviewed: 2026-08-16
 publication_wave: "lead-architecture-search-wave-03"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP Master Data Governance architecture, processes, domains and deployment choices"
+# ai-discovery-managed:start
+structured_data:
+  type: TechArticle
+primary_topic: "sap-mdg"
+ai_sidecar: "/ai/pages/labs--enterprise-context--mdg.json"
+semantic_links:
+  - type: "Same domain"
+    title: "Data, Master Data and Governance — Enterprise Context Lab"
+    url: "/labs/enterprise-context/data-governance/"
+  - type: "Deep dive"
+    title: "SAP MDG Interface Contracts — Enterprise Context Lab"
+    url: "/labs/enterprise-context/mdg/interfaces/"
+  - type: "Integration view"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "Related topic"
+    title: "SAP EWM — Deployment & Warehouse Execution Map"
+    url: "/labs/enterprise-context/ewm/"
+  - type: "Related topic"
+    title: "SAP Transportation Management — Transport to Settle"
+    url: "/labs/enterprise-context/transportation-management/"
+  - type: "Related topic"
+    title: "Automotive JIT / JIS — Enterprise Context Lab"
+    url: "/labs/enterprise-context/automotive-jit/"
+# ai-discovery-managed:end
 ---
-
 {% assign topic = site.data.labs.enterprise_context.topics.master_data_governance_landscape %}
 {% assign contracts = site.data.labs.enterprise_context.topics.mdg_object_contracts %}
 

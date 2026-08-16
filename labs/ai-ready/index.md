@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags: [ai, architecture, mcp, agents, rag, evals, security, automation]
 last_reviewed: 2026-08-16
@@ -15,8 +15,23 @@ publication_wave: "public-framework-search-wave-04"
 review_method: "selective external evidence + page-level editorial review + authored heuristic boundary"
 evidence_review_mode: "selective_or_heuristic"
 search_intent: "practical AI architecture for RAG, tools, MCP, agents, evals and security"
+# ai-discovery-managed:start
+structured_data:
+  type: TechArticle
+primary_topic: "ai-architecture"
+ai_sidecar: "/ai/pages/labs--ai-ready.json"
+semantic_links:
+  - type: "Related topic"
+    title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
+    url: "/labs/enterprise-context/business-ai/agents/"
+  - type: "Related topic"
+    title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
+    url: "/labs/business-ai/"
+  - type: "Related topic"
+    title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
+    url: "/labs/enterprise-context/business-ai/"
+# ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">AI Ready</li></ol>
 </nav>

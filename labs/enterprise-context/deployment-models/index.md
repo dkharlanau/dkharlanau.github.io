@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
   - sap
@@ -19,8 +19,32 @@ last_reviewed: 2026-08-16
 publication_wave: "lead-architecture-search-wave-03"
 review_method: "primary sources + factual review + page-level editorial review"
 search_intent: "SAP S/4HANA Public Cloud vs Private Cloud vs on-premise"
+# ai-discovery-managed:start
+structured_data:
+  type: TechArticle
+primary_topic: "sap-s4hana"
+ai_sidecar: "/ai/pages/labs--enterprise-context--deployment-models.json"
+semantic_links:
+  - type: "Same domain"
+    title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
+    url: "/labs/enterprise-context/development/"
+  - type: "Same domain"
+    title: "FI/CO for Logistics — Enterprise Context Lab"
+    url: "/labs/enterprise-context/finance-logistics/"
+  - type: "Same domain"
+    title: "Cross-Process Logistics Capabilities — Enterprise Context Lab"
+    url: "/labs/enterprise-context/logistics-capabilities/"
+  - type: "Related topic"
+    title: "SAP Sales Process Atlas — Standard, Special and Cross-Process Variants"
+    url: "/labs/enterprise-context/sales-processes/"
+  - type: "Integration view"
+    title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
+    url: "/labs/enterprise-context/sales-processes/integrations/"
+  - type: "Related topic"
+    title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
+    url: "/labs/enterprise-context/business-ai/"
+# ai-discovery-managed:end
 ---
-
 {% assign topic = site.data.labs.enterprise_context.topics.deployment_models %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
