@@ -1,0 +1,158 @@
+{
+  "id": "sap-lead-core-study-contract",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Turn the twelve highest-value SAP Lead assessment routes into a repeatable study sequence built around ownership, first-wrong-decision diagnosis, evidence, and completion proof.",
+  "study_rule": "Do not study the route as a product catalog. Be able to explain the business goal, decision owner, runtime path, first wrong layer, integration boundary, evidence, and trade-off in a short answer.",
+  "waves": [
+    {
+      "id": "decisions",
+      "label": "Decision Chain",
+      "goal": "Explain how commercial and logistics decisions are created before execution starts."
+    },
+    {
+      "id": "execution-state",
+      "label": "Execution & State",
+      "goal": "Trace execution, ownership changes, recovery, physical state, and completion proof."
+    },
+    {
+      "id": "governance-value",
+      "label": "Governance & Value",
+      "goal": "Connect controlled master data and financial truth back to operational processes."
+    }
+  ],
+  "routes": [
+    {
+      "id": "core-sales-order",
+      "order": 1,
+      "wave": "decisions",
+      "label": "Sales Order Decisions",
+      "route": "/labs/enterprise-context/sales-order/",
+      "track": "sales",
+      "assessment_question": "A sales-order value is wrong. How do you find the first wrong decision without starting from configuration?",
+      "ownership_boundary": "Document inputs and determination logic create values that Pricing, ATP, Shipping, Credit, Tax, Delivery, and Billing consume.",
+      "answer_path": ["Expected business behavior", "Header / item / schedule-line level", "Runtime inputs", "Determination", "First divergence", "Downstream blast radius", "Proof of correction"]
+    },
+    {
+      "id": "core-pricing",
+      "order": 2,
+      "wave": "decisions",
+      "label": "Sales Pricing",
+      "route": "/labs/enterprise-context/pricing/",
+      "track": "sales",
+      "assessment_question": "The condition record exists but the price is wrong. What do you prove before changing the record?",
+      "ownership_boundary": "Pricing procedure, condition eligibility, access, runtime key, record, and calculation are separate control layers; billing can be a separate pricing context.",
+      "answer_path": ["Commercial expectation", "Pricing procedure", "Condition eligibility", "Access and runtime key", "Record and validity", "Rate / base / formula", "Order-billing parity", "Proof"]
+    },
+    {
+      "id": "core-procurement",
+      "order": 3,
+      "wave": "decisions",
+      "label": "Procurement",
+      "route": "/labs/enterprise-context/procurement/",
+      "track": "procurement-logistics",
+      "assessment_question": "A PO has the wrong supplier or account assignment. Where can the first wrong decision exist?",
+      "ownership_boundary": "Demand, source determination, item control, account assignment, approval, receipt, invoice, and GR/IR belong to different decisions even when they appear in one document flow.",
+      "answer_path": ["Original requirement", "Source of supply", "Price", "Item category", "Account assignment", "Approval / output", "Receipt and invoice", "GR/IR reconciliation"]
+    },
+    {
+      "id": "core-atp",
+      "order": 4,
+      "wave": "decisions",
+      "label": "ATP / aATP",
+      "route": "/labs/enterprise-context/atp/",
+      "track": "sales",
+      "assessment_question": "Stock exists but the requested quantity or date is not confirmed. How do you reconstruct the promise?",
+      "ownership_boundary": "ATP evaluates a requirement against supply-demand scope and business policy; Shipping and scheduling build important dates and execution context upstream or downstream of that promise.",
+      "answer_path": ["ATP relevance and quantity", "Plant", "Material availability date", "Scope and supply-demand", "PAC result", "PAL / Supply Protection / alternatives / BOP", "Downstream feasibility", "Proof of promise"]
+    },
+    {
+      "id": "core-shipping",
+      "order": 5,
+      "wave": "decisions",
+      "label": "Shipping & Scheduling",
+      "route": "/labs/enterprise-context/shipping/",
+      "track": "sales",
+      "assessment_question": "The delivery date is wrong. How do you prove whether the cause is plant, shipping, route, scheduling, ATP, or downstream execution?",
+      "ownership_boundary": "Delivering plant, shipping point, route, calendars, and scheduling build the logistics context; ATP evaluates confirmation and EWM/TM own later execution decisions.",
+      "answer_path": ["Delivering plant", "Shipping point", "Route", "Pick-pack / loading / transit", "Calendars", "Backward / forward dates", "ATP handoff", "EWM / TM execution", "Proof"]
+    },
+    {
+      "id": "core-production",
+      "order": 6,
+      "wave": "execution-state",
+      "label": "Production Planning & Execution",
+      "route": "/labs/enterprise-context/production/",
+      "track": "procurement-logistics",
+      "assessment_question": "A production order looks complete. How do you prove planning, execution, stock receipt, and financial close are all correct?",
+      "ownership_boundary": "Demand and MRP create the plan, production master data selects the method, execution records shop-floor reality, Inventory/EWM owns stock state, and CO settlement owns financial close.",
+      "answer_path": ["Demand", "MRP", "Production method", "Order", "Components / capacity / staging", "Confirmation", "Goods receipt", "Settlement", "Cross-layer reconciliation"]
+    },
+    {
+      "id": "core-integration-operations",
+      "order": 7,
+      "wave": "execution-state",
+      "label": "Integration Operations & Recovery",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "track": "integration-architecture",
+      "assessment_question": "The middleware message is green but the business result is wrong. What do you prove before retrying or closing the incident?",
+      "ownership_boundary": "Transport delivery, receiver application commit, and business reconciliation are different completion layers with different recovery risks.",
+      "answer_path": ["Message identity", "First failed hop", "Delivery semantics", "Ordering", "Receiver commit", "Duplicate protection", "Recovery action", "Business reconciliation"]
+    },
+    {
+      "id": "core-inventory",
+      "order": 8,
+      "wave": "execution-state",
+      "label": "Inventory Management",
+      "route": "/labs/enterprise-context/inventory-management/",
+      "track": "procurement-logistics",
+      "assessment_question": "Stock is wrong. How do you explain the business event and find which state view is actually inconsistent?",
+      "ownership_boundary": "Inventory Management records enterprise stock events; warehouse execution, physical reality, valuation, accounting, and the source process can each own a different part of the inconsistency.",
+      "answer_path": ["Business event", "Movement semantics", "Reference", "Book stock dimensions", "Warehouse / physical state", "Valuation / accounting", "Before-after evidence", "Reconciliation"]
+    },
+    {
+      "id": "core-qm",
+      "order": 9,
+      "wave": "execution-state",
+      "label": "Quality Management",
+      "route": "/labs/enterprise-context/quality-management/",
+      "track": "procurement-logistics",
+      "assessment_question": "Material is blocked or unusable. How do you separate the quality decision from the logistics symptom?",
+      "ownership_boundary": "The inspection trigger and evidence support a quality disposition; logistics processes consume the resulting stock or process consequence but should not replace the quality decision.",
+      "answer_path": ["Inspection trigger", "Inspection context", "Results / defects", "Usage decision", "Follow-up action", "Stock disposition", "Logistics consumer", "Proof"]
+    },
+    {
+      "id": "core-ewm",
+      "order": 10,
+      "wave": "execution-state",
+      "label": "Extended Warehouse Management",
+      "route": "/labs/enterprise-context/ewm/",
+      "track": "procurement-logistics",
+      "assessment_question": "There is no warehouse task, the bin is wrong, or ERP stock does not match. How do you identify the ownership layer?",
+      "ownership_boundary": "Upstream processes own business demand, EWM owns detailed warehouse execution, and ERP Inventory Management remains the enterprise inventory/accounting context.",
+      "answer_path": ["Business demand", "Warehouse request", "Warehouse task", "Determination", "Warehouse order / queue", "Execution confirmation", "EWM stock", "ERP / IM reconciliation"]
+    },
+    {
+      "id": "core-mdg",
+      "order": 11,
+      "wave": "governance-value",
+      "label": "Master Data Governance",
+      "route": "/labs/enterprise-context/mdg/",
+      "track": "ai-data",
+      "assessment_question": "A change request is approved but the business process is still wrong. What does governance completion actually require?",
+      "ownership_boundary": "Governance decides and activates authoritative master data; replication delivers it; consuming processes prove that the governed object is usable without local repair.",
+      "answer_path": ["Business reason", "Ownership", "Governance process", "Validation and approval", "Active record", "Replication / mapping", "Consumer reconciliation", "Business proof"]
+    },
+    {
+      "id": "core-finance-logistics",
+      "order": 12,
+      "wave": "governance-value",
+      "label": "FI/CO Logistics Bridge",
+      "route": "/labs/enterprise-context/finance-logistics/",
+      "track": "procurement-logistics",
+      "assessment_question": "A logistics document is complete but Finance still shows an open or unexpected value. How do you trace the boundary?",
+      "ownership_boundary": "Logistics creates the business event; valuation and account/object logic create the financial consequence; later clearing, matching, settlement, and reconciliation prove financial completion.",
+      "answer_path": ["Logistics event", "Expected value change", "Valuation", "G/L and cost/revenue object", "Journal", "Clearing / matching / settlement", "Exception", "Reconciliation proof"]
+    }
+  ]
+}
