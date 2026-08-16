@@ -1,0 +1,242 @@
+id: TOPIC-EWM-AUTOMATION-MFS
+type: research_topic
+title: "EWM Automation & Material Flow"
+summary: >-
+  A Lead-level map of the boundary between EWM warehouse intent, MFS or external WCS coordination,
+  PLC real-time control, machine messages, recovery and operational monitoring.
+domain: "SAP S/4HANA Logistics / Warehousing"
+process_family: "Automated Warehouse Execution"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+page_url: "/labs/enterprise-context/ewm/automation/"
+
+business_question: >-
+  How should automated warehouse movement be split between EWM, MFS or WCS, PLCs and equipment
+  so that business state, physical state and recovery remain consistent?
+
+scope:
+  include:
+    - "EWM MFS architecture: PLC, communication channel, communication point, conveyor segment and resource"
+    - "MFS versus external WCS/WCU decision"
+    - "Warehouse task and handling-unit context"
+    - "Telegram sequencing, acknowledgment, retry and duplicate protection"
+    - "Blocked route, stuck HU, channel failure and reconciliation"
+    - "Automated storage/retrieval, conveyors, sorters and goods-to-person patterns"
+  exclude_for_now:
+    - "Customer-specific PLC code or telegram layouts"
+    - "Electrical and machine-safety engineering"
+    - "Vendor-specific conveyor configuration"
+
+maturity:
+  gates_complete: 6
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: in_progress
+
+memory_model:
+  phrase: "Intent → Route → Control → Telegram → Confirm → Recover → Monitor"
+  lead_line: >-
+    EWM owns warehouse intent and business state. MFS or WCS coordinates material flow.
+    PLCs and equipment own real-time physical control and safety.
+
+reuse_object_ids:
+  - OBJ-EWM-WAREHOUSE-TASK
+  - OBJ-EWM-HU
+  - OBJ-EWM-MFS-COMM-POINT
+  - OBJ-EWM-MFS-CHANNEL
+  - OBJ-EWM-WCU-MESSAGE
+
+core_entities:
+  - id: CAP-EWM-AUTOMATED-FLOW
+    type: capability
+    title: "Automated Warehouse Material Flow"
+    summary: "Turn warehouse movement intent into controlled automated movement and reconcile the result with EWM state."
+  - id: APP-EWM-MFS
+    type: application_component
+    title: "EWM Material Flow System"
+    summary: "EWM component that coordinates automated material flow with PLCs through material-flow objects and telegram communication."
+    source_refs: [SRC-SAP-EWM-MFS, SRC-SAP-EWM-MFS-COMM-POINT]
+  - id: PLT-EWM-PLC
+    type: platform_component
+    title: "Programmable Logic Controller"
+    summary: "Automation control layer that regulates physical movement between material-flow decision points."
+    source_refs: [SRC-SAP-EWM-MFS]
+  - id: PLT-EWM-EXTERNAL-WCS
+    type: platform_component
+    title: "External WCS / WCU"
+    summary: "External warehouse-control layer used when detailed material-flow coordination belongs outside EWM."
+    source_refs: [SRC-SAP-EWM-NONSAP-WCU]
+  - id: INT-EWM-MFS-PLC
+    type: integration
+    title: "MFS to PLC Communication"
+    summary: "Sequential telegram communication through configured communication channels and communication points."
+    source_refs: [SRC-SAP-EWM-MFS-COMM-CHANNEL, SRC-SAP-EWM-MFS-COMM-POINT]
+  - id: INT-EWM-WCU
+    type: integration
+    title: "EWM to External WCS/WCU Boundary"
+    summary: "Transfer execution context to an external warehouse-control system and receive movement confirmations or exceptions."
+    source_refs: [SRC-SAP-EWM-NONSAP-WCU]
+  - id: CTRL-EWM-AUTO-IDEMPOTENCY
+    type: control
+    title: "Automation Idempotency"
+    summary: "A retry or repeated machine message must not create a second warehouse business effect."
+  - id: CTRL-EWM-AUTO-SEQUENCE
+    type: control
+    title: "Message Sequence and Acknowledgment"
+    summary: "Preserve required order, acknowledgment and timeout behavior across machine communication."
+  - id: CTRL-EWM-PHYSICAL-RECONCILIATION
+    type: control
+    title: "Physical-to-Digital Reconciliation"
+    summary: "Compare actual HU/equipment position with EWM business state after exceptions or recovery."
+  - id: FAIL-EWM-AUTO-STUCK-HU
+    type: failure_mode
+    title: "Stuck Handling Unit"
+    summary: "The HU cannot continue because physical route, equipment state or digital route context is blocked."
+  - id: FAIL-EWM-AUTO-LOST-CONFIRMATION
+    type: failure_mode
+    title: "Lost or Ambiguous Confirmation"
+    summary: "Physical movement may have completed but EWM does not have a trusted confirmation."
+  - id: FAIL-EWM-AUTO-CHANNEL-DOWN
+    type: failure_mode
+    title: "PLC Communication Channel Down"
+    summary: "The MFS communication path cannot exchange the expected machine messages."
+  - id: KPI-EWM-AUTO-AVAILABILITY
+    type: kpi
+    title: "Automation Availability"
+    summary: "Share of planned operating time where the automated execution path is available."
+  - id: KPI-EWM-AUTO-RECOVERY
+    type: kpi
+    title: "Automation Recovery Time"
+    summary: "Time from detected material-flow exception to controlled recovery and reconciled state."
+  - id: HEUR-EWM-CONTROL-BOUNDARY
+    type: expert_heuristic
+    title: "Keep Sub-Second Control Near Equipment"
+    summary: "Do not place motor, interlock or safety control in ERP business logic."
+  - id: SCN-EWM-ASRS
+    type: scenario
+    title: "Automated High-Rack Storage"
+    summary: "EWM creates warehouse intent, material-flow logic routes an HU, and PLC/equipment executes the physical travel."
+  - id: TEST-EWM-AUTO-RECOVERY
+    type: test_case
+    title: "Automation Recovery Test"
+    summary: "Test duplicate telegrams, missing acknowledgment, blocked route, channel restart, unknown HU and physical/digital mismatch."
+
+decision_rules:
+  - need: "EWM should directly coordinate material flow and the automation topology fits MFS"
+    choice: "EWM MFS"
+    reasoning: "Keep warehouse task and route decisions close to EWM while PLCs execute the physical movement."
+  - need: "A mature external platform coordinates several automation subsystems or owns detailed material flow"
+    choice: "External WCS/WCU"
+    reasoning: "Keep EWM as warehouse management owner and integrate at an explicit execution boundary."
+  - need: "Sub-second machine movement, interlock or safety decision"
+    choice: "PLC / equipment controller"
+    reasoning: "This belongs to industrial control, not ERP transaction logic."
+
+assessment_cards:
+  - question: "What is the boundary between EWM MFS and a PLC?"
+    answer: "EWM MFS decides relevant material-flow steps and exchanges telegrams at communication points. The PLC regulates the physical steps between these decision points."
+  - question: "When would you prefer an external WCS?"
+    answer: "When a separate automation platform already owns detailed multi-system flow, optimization or equipment orchestration. I keep EWM ownership of warehouse demand and business state explicit."
+  - question: "What do you check when a pallet is physically moved but EWM is not confirmed?"
+    answer: "I stop blind retries, check the last trusted message and business status, identify the physical HU position, then reconcile before resuming automation."
+  - question: "What is a communication point?"
+    answer: "A material-flow decision point where EWM and a PLC exchange information. It is not every meter of conveyor."
+
+relations:
+  - subject: APP-EWM-MFS
+    predicate: provides_capability
+    object: CAP-EWM-AUTOMATED-FLOW
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-EWM-MFS]
+  - subject: APP-EWM-MFS
+    predicate: integrated_via
+    object: INT-EWM-MFS-PLC
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-EWM-MFS-COMM-CHANNEL]
+  - subject: INT-EWM-MFS-PLC
+    predicate: integrates_with
+    object: PLT-EWM-PLC
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-EWM-MFS]
+  - subject: PLT-EWM-EXTERNAL-WCS
+    predicate: integrated_via
+    object: INT-EWM-WCU
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-EWM-NONSAP-WCU]
+  - subject: CAP-EWM-AUTOMATED-FLOW
+    predicate: controlled_by
+    object: CTRL-EWM-AUTO-IDEMPOTENCY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-EWM-AUTOMATED-FLOW
+    predicate: controlled_by
+    object: CTRL-EWM-AUTO-SEQUENCE
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-SAP-EWM-MFS-COMM-CHANNEL]
+  - subject: CAP-EWM-AUTOMATED-FLOW
+    predicate: controlled_by
+    object: CTRL-EWM-PHYSICAL-RECONCILIATION
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-EWM-AUTOMATED-FLOW
+    predicate: can_fail_as
+    object: FAIL-EWM-AUTO-STUCK-HU
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-EWM-AUTOMATED-FLOW
+    predicate: can_fail_as
+    object: FAIL-EWM-AUTO-LOST-CONFIRMATION
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: INT-EWM-MFS-PLC
+    predicate: can_fail_as
+    object: FAIL-EWM-AUTO-CHANNEL-DOWN
+    evidence_type: reasoned_inference
+    confidence: high
+  - subject: CAP-EWM-AUTOMATED-FLOW
+    predicate: measured_by
+    object: KPI-EWM-AUTO-AVAILABILITY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-EWM-AUTOMATED-FLOW
+    predicate: measured_by
+    object: KPI-EWM-AUTO-RECOVERY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: HEUR-EWM-CONTROL-BOUNDARY
+    predicate: applies_to
+    object: CAP-EWM-AUTOMATED-FLOW
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: SCN-EWM-ASRS
+    predicate: supported_by
+    object: CAP-EWM-AUTOMATED-FLOW
+    evidence_type: synthetic_example
+    confidence: high
+  - subject: CAP-EWM-AUTOMATED-FLOW
+    predicate: tested_by
+    object: TEST-EWM-AUTO-RECOVERY
+    evidence_type: expert_heuristic
+    confidence: high
+
+source_refs:
+  - SRC-SAP-EWM-MFS
+  - SRC-SAP-EWM-MFS-COMM-CHANNEL
+  - SRC-SAP-EWM-MFS-COMM-POINT
+  - SRC-SAP-EWM-NONSAP-WCU
+  - SRC-SAP-EWM-MONITOR
+
+tags: [sap, ewm, mfs, wcs, wcu, plc, automation, warehouse, integration, assessment]
