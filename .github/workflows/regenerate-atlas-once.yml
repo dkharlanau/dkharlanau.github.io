@@ -1,0 +1,57 @@
+name: Regenerate Atlas Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/regenerate-atlas-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate official Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Guard generator output scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          allowed='^(atlas/manifest\.json|llms-full\.txt|ai/rag/related\.json|ai/atlas-compact-index\.json|ai/verified-pages\.json|ai/expert-promotion-inventory\.json|ai/markdown-clusters\.json)$'
+          unexpected=$(git status --porcelain | sed -E 's/^.. //' | grep -Ev "$allowed" || true)
+          if [ -n "$unexpected" ]; then
+            echo "Unexpected generator output:"
+            echo "$unexpected"
+            exit 1
+          fi
+      - name: Commit and push with retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Assessment Agent"
+          git config user.email "assessment-agent@users.noreply.github.com"
+          git add atlas/manifest.json llms-full.txt ai/rag/related.json ai/atlas-compact-index.json ai/verified-pages.json ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          if git diff --cached --quiet; then
+            echo "Atlas artifacts already current"
+            exit 0
+          fi
+          git commit -m "chore: refresh Atlas generated artifacts"
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git fetch origin main
+            git rebase origin/main
+            python3 scripts/generate_atlas_artifacts.py
+            git add atlas/manifest.json llms-full.txt ai/rag/related.json ai/atlas-compact-index.json ai/verified-pages.json ai/expert-promotion-inventory.json ai/markdown-clusters.json
+            if ! git diff --cached --quiet; then
+              git commit --amend --no-edit
+            fi
+          done
+          git push origin HEAD:main
