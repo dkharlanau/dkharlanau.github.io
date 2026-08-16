@@ -1,112 +1,186 @@
 {
   "id": "reusable-data-procedures",
   "title": "Reusable Data Procedures",
-  "version": "1.0",
-  "status": "prototype",
-  "purpose": "Turn repeated spreadsheet and corporate-export analysis into explicit, testable procedures that can be reused on later file sets.",
-  "workflow": [
+  "version": "0.2",
+  "status": "concept",
+  "updated": "2026-08-16",
+  "purpose": "Turn repeated spreadsheet and corporate-export work into explicit, testable, versioned procedures that can be reused when the source files change.",
+  "thesis": "AI may propose structure, semantics and mappings; approved procedures execute deterministically.",
+  "primary_flow": ["files", "discover", "map", "validate", "result", "save-procedure"],
+  "repeat_flow": ["resolve-new-sources", "compare-fingerprints", "classify-drift", "reuse-compatible-logic", "review-changes", "run-approved-version"],
+  "design_principles": [
+    "Capture intent and data logic rather than recorded UI actions.",
+    "Separate probabilistic discovery from deterministic execution.",
+    "Treat mapping suggestions as hypotheses with decomposed evidence.",
+    "Keep raw corporate rows out of the reusable procedure definition by default.",
+    "Model drift and repair as first-class lifecycle behavior.",
+    "Keep procedure definitions portable across CLI, API, UI and agent clients.",
+    "Version behavior-changing procedure edits and preserve provenance."
+  ],
+  "procedure": {
+    "parts": [
+      "identity",
+      "source_contracts",
+      "mappings",
+      "transforms",
+      "validations",
+      "outputs",
+      "provenance"
+    ],
+    "separate_artifacts": [
+      "run_report",
+      "synthetic_test_fixtures",
+      "enterprise_mapping_dictionary"
+    ],
+    "does_not_store_by_default": [
+      "uploaded_business_rows",
+      "production_result_rows",
+      "secrets"
+    ]
+  },
+  "source_contract": {
+    "identity_signals": [
+      "logical_role",
+      "file_pattern",
+      "sheet_pattern",
+      "required_columns",
+      "optional_columns",
+      "type_expectations",
+      "structural_fingerprint"
+    ],
+    "profile_signals": [
+      "column_type_candidates",
+      "null_rate",
+      "distinct_count",
+      "uniqueness",
+      "value_length",
+      "format_patterns",
+      "safe_samples"
+    ]
+  },
+  "mapping_evidence": [
+    "header_similarity",
+    "value_overlap",
+    "type_compatibility",
+    "cardinality",
+    "enterprise_dictionary_match",
+    "previous_approved_mapping",
+    "semantic_model_judgement",
+    "human_approval"
+  ],
+  "drift": {
+    "classes": {
+      "compatible": "The procedure can continue and records the difference.",
+      "resolvable": "A likely repair can be proposed but requires controlled confirmation.",
+      "breaking": "Execution stops because a required structural or semantic assumption is no longer safe.",
+      "business": "Technical structure may still match while the business meaning has changed."
+    },
+    "rule": "A repair creates a proposed procedure revision; it does not silently mutate an approved version."
+  },
+  "architecture": {
+    "layers": [
+      "source_adapters",
+      "profiler",
+      "discovery_engine",
+      "procedure_editor_and_compiler",
+      "deterministic_execution_engine",
+      "validation_engine",
+      "registry_and_provenance",
+      "interfaces"
+    ],
+    "recommended_start": "Python package plus CLI plus JSON procedure schema",
+    "later_interfaces": ["service_api", "web_ui", "scheduled_runs", "agent_tools"],
+    "execution_models": ["local_python", "python_service", "browser_wasm", "hybrid"]
+  },
+  "candidate_technology": {
+    "python_dataframe_runtime": ["Polars"],
+    "embedded_sql": ["DuckDB"],
+    "columnar_interchange": ["Apache Arrow", "PyArrow", "Parquet"],
+    "excel_python_adapter": ["openpyxl"],
+    "browser_spreadsheet_adapter": ["SheetJS Community Edition"],
+    "fuzzy_name_matching": ["RapidFuzz"],
+    "code_centric_validation": ["Pandera"],
+    "governed_data_quality": ["Great Expectations"],
+    "contracts": ["Pydantic", "JSON Schema"],
+    "service_boundary": ["FastAPI"],
+    "registry_options": ["Git", "SQLite", "PostgreSQL", "object storage"]
+  },
+  "ai_assistance": {
+    "allowed_jobs": [
+      "explain_unknown_columns",
+      "rank_mapping_candidates",
+      "suggest_validation_rules",
+      "summarize_drift",
+      "retrieve_similar_approved_procedures"
+    ],
+    "data_modes": [
+      "metadata_only",
+      "masked_samples",
+      "approved_raw_samples"
+    ],
+    "boundary": "Accepted AI suggestions are compiled into explicit normal procedure logic. Repeated execution does not depend on free-form model reasoning."
+  },
+  "enterprise_concerns": [
+    "data_classification",
+    "retention_and_deletion",
+    "encryption",
+    "rbac",
+    "secrets",
+    "approved_ai_endpoints",
+    "dependency_review",
+    "audit_history",
+    "lineage",
+    "run_observability",
+    "source_and_output_hashes",
+    "scaling_limits"
+  ],
+  "roadmap": [
     {
-      "step": 1,
-      "id": "files",
-      "input": ["csv", "xlsx", "xls", "xlsb", "ods", "tsv"],
-      "output": "parsed_tables",
-      "responsibility": "Load one or more files and expose worksheets as table candidates."
+      "phase": 0,
+      "name": "spec-and-cases",
+      "goal": "Stabilize procedure vocabulary and model against realistic repeated data-work cases."
     },
     {
-      "step": 2,
-      "id": "discover",
-      "input": "parsed_tables",
-      "output": "profiles_and_key_candidates",
-      "responsibility": "Infer column types, completeness, uniqueness, likely keys, and value samples."
+      "phase": 1,
+      "name": "local-runtime",
+      "goal": "Implement deterministic Python runtime, CLI, run reports and regression fixtures."
     },
     {
-      "step": 3,
-      "id": "map",
-      "input": "profiles_and_key_candidates",
-      "output": "mapping_hypotheses",
-      "responsibility": "Rank cross-table field relations using header similarity, value overlap, and type compatibility. Human approval remains explicit."
+      "phase": 2,
+      "name": "discovery-and-drift",
+      "goal": "Add profiling, mapping evidence, source matching and controlled repair."
     },
     {
-      "step": 4,
-      "id": "validate",
-      "input": "approved_mappings",
-      "output": "validation_evidence",
-      "responsibility": "Measure source coverage, source nulls, target duplicates, and unmatched values against the current rows."
+      "phase": 3,
+      "name": "shared-service",
+      "goal": "Add registry, API and review-oriented UI around the same core engine."
     },
     {
-      "step": 5,
-      "id": "result",
-      "input": ["parsed_tables", "approved_mappings"],
-      "output": "joined_preview",
-      "responsibility": "Build an inspectable lookup result and keep the transformation direction visible."
+      "phase": 4,
+      "name": "enterprise-controls",
+      "goal": "Add security profiles, audit, observability and enterprise source adapters."
     },
     {
-      "step": 6,
-      "id": "save-procedure",
-      "input": ["source_signatures", "approved_mappings", "validation_policy"],
-      "output": "reusable_procedure",
-      "responsibility": "Store logic and structural expectations without storing uploaded business data."
+      "phase": 5,
+      "name": "ai-assistance",
+      "goal": "Add controlled semantic assistance and retrieval of approved mappings and procedures."
     }
   ],
-  "entities": {
-    "source_signature": {
-      "identity": ["fileStem", "sheetName"],
-      "structure": ["expectedColumns.name", "expectedColumns.type", "expectedColumns.likelyKey"],
-      "note": "A later run resolves a saved source against newly uploaded tables by structural similarity, not only by an exact file name."
-    },
-    "column_profile": {
-      "attributes": ["name", "type", "completeness", "uniqueness", "likelyKey", "samples"]
-    },
-    "mapping": {
-      "direction": "source field -> lookup target field",
-      "evidence": ["header_similarity", "value_overlap", "type_compatibility"],
-      "approval": "explicit_human_selection"
-    },
-    "validation": {
-      "metrics": ["coverage", "source_null_rate", "target_duplicate_rate", "unmatched_examples"],
-      "states": ["strong", "review", "weak"]
-    },
-    "procedure": {
-      "stores": ["source_signatures", "mappings", "validation_policy", "purpose", "timestamps"],
-      "does_not_store": ["uploaded_rows", "business_values", "result_rows"]
-    }
-  },
-  "mapping_scoring": {
-    "header_similarity_weight": 0.45,
-    "value_overlap_weight": 0.45,
-    "type_compatibility_weight": 0.1,
-    "automatic_enable_rule": "score >= 0.62 or value overlap >= 0.80",
-    "interpretation": "A suggestion is a hypothesis, not a semantic truth. Business meaning must be confirmed before reuse."
-  },
-  "validation_defaults": {
-    "minimum_coverage": 0.9,
-    "target_key_preference": "unique-or-review",
-    "strict_column_names": true
-  },
-  "runtime": {
-    "location": "browser",
-    "server_upload_api": false,
-    "procedure_storage": "localStorage",
-    "procedure_export": "json",
-    "result_export": "csv",
-    "spreadsheet_parser": "SheetJS Community Edition standalone browser build"
-  },
-  "use_cases": [
-    "SAP transactional exports joined to master data",
-    "master-data reconciliation across source systems",
-    "vendor or customer file normalization",
-    "monthly operational report enrichment",
-    "migration extract checks",
-    "repeatable data-quality controls"
+  "evaluation_metrics": [
+    "time_to_first_procedure",
+    "time_to_repeat_run",
+    "mapping_candidate_precision",
+    "drift_detection_recall",
+    "false_blocking_rate",
+    "procedure_portability",
+    "audit_completeness"
   ],
-  "boundaries": [
-    "The prototype does not infer business semantics beyond observable structure and values.",
-    "Duplicate target keys require review because the result preview uses the first matching row.",
-    "Procedures saved in localStorage are browser-local until exported as JSON.",
-    "Production use with sensitive data requires an approved dependency, security, privacy, and deployment model."
-  ],
-  "machine_endpoints": {
-    "procedure_schema": "/reusable-data-procedures/procedure.schema.json",
-    "workbench": "/reusable-data-procedures/"
+  "detail_pages": {
+    "overview": "/reusable-data-procedures/",
+    "approach": "/reusable-data-procedures/approach/",
+    "procedure_model": "/reusable-data-procedures/procedure-model/",
+    "architecture": "/reusable-data-procedures/architecture/",
+    "roadmap": "/reusable-data-procedures/roadmap/",
+    "procedure_schema": "/reusable-data-procedures/procedure.schema.json"
   }
 }
