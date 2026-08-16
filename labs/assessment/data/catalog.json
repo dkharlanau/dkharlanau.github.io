@@ -1,56 +1,28 @@
 {
   "id": "sap-lead-assessment-lab",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "updated_at": "2026-08-16",
   "status": "draft",
   "purpose": "Turn the existing Lab into a structured SAP Lead assessment practice route across process knowledge, diagnostics, architecture, integration, data, and AI.",
   "reasoning_levels": [
-    {"id": "explain", "label": "Explain", "goal": "Describe business purpose, process flow, key objects, and system boundary in clear language."},
-    {"id": "trace", "label": "Trace", "goal": "Follow one requirement through master data, configuration, documents, integrations, and business impact."},
-    {"id": "diagnose", "label": "Diagnose", "goal": "Start from a symptom, build hypotheses, find the first wrong decision, and define proof of fix."},
-    {"id": "design", "label": "Design", "goal": "Choose ownership, component boundaries, integration style, controls, and extension approach."},
-    {"id": "challenge", "label": "Challenge", "goal": "Explain trade-offs, limits, failure modes, alternatives, and decision-changing conditions."}
+    {"id":"explain","label":"Explain","goal":"Describe business purpose, process flow, key objects, and system boundary in clear language."},
+    {"id":"trace","label":"Trace","goal":"Follow one requirement through master data, configuration, documents, integrations, and business impact."},
+    {"id":"diagnose","label":"Diagnose","goal":"Start from a symptom, build hypotheses, find the first wrong decision, and define proof of fix."},
+    {"id":"design","label":"Design","goal":"Choose ownership, component boundaries, integration style, controls, and extension approach."},
+    {"id":"challenge","label":"Challenge","goal":"Explain trade-offs, limits, failure modes, alternatives, and decision-changing conditions."}
   ],
   "tracks": [
-    {
-      "id": "sales",
-      "label": "Sales",
-      "focus": ["sales process variants", "sales order decisions", "pricing", "ATP and aATP", "credit management", "shipping and scheduling", "tax", "diagnostics"],
-      "entry_points": ["/labs/enterprise-context/sales-processes/", "/labs/enterprise-context/sales-order/", "/labs/enterprise-context/pricing/", "/labs/enterprise-context/atp/", "/labs/enterprise-context/credit/", "/labs/enterprise-context/shipping/", "/labs/enterprise-context/sales-diagnostics/"]
-    },
-    {
-      "id": "procurement-logistics",
-      "label": "Procurement and Logistics",
-      "focus": ["procure-to-pay", "source determination", "production planning and execution", "quality management", "inventory and warehouse execution", "goods receipt and invoice verification", "EWM", "transportation management", "cross-process logistics capabilities"],
-      "entry_points": ["/labs/enterprise-context/procurement/", "/labs/enterprise-context/production/", "/labs/enterprise-context/quality-management/", "/labs/enterprise-context/ewm/", "/labs/enterprise-context/transportation-management/", "/labs/enterprise-context/logistics-capabilities/"]
-    },
-    {
-      "id": "integration-architecture",
-      "label": "Integration and Architecture",
-      "focus": ["integration style", "system ownership", "message contracts", "events", "master-data distribution", "deployment models", "clean-core extensions", "SAP development choices"],
-      "entry_points": ["/labs/enterprise-context/integrations/", "/labs/enterprise-context/sales-processes/integrations/", "/labs/enterprise-context/transportation-management/integrations/", "/labs/enterprise-context/mdg/interfaces/", "/labs/enterprise-context/deployment-models/", "/labs/enterprise-context/development/"]
-    },
-    {
-      "id": "ai-data",
-      "label": "AI and Data",
-      "focus": ["Business AI patterns", "AI system boundaries", "RAG", "tools and MCP", "agents", "evaluations", "data governance", "master data governance"],
-      "entry_points": ["/labs/business-ai/", "/labs/ai-ready/", "/labs/enterprise-context/business-ai/", "/labs/enterprise-context/mdg/", "/labs/enterprise-context/data-governance/"]
-    }
+    {"id":"sales","label":"Sales","focus":["sales process variants","sales order decisions","pricing","ATP and aATP","credit management","shipping and scheduling","tax","diagnostics"],"entry_points":["/labs/enterprise-context/sales-processes/","/labs/enterprise-context/sales-order/","/labs/enterprise-context/pricing/","/labs/enterprise-context/atp/","/labs/enterprise-context/credit/","/labs/enterprise-context/shipping/","/labs/enterprise-context/sales-diagnostics/"]},
+    {"id":"procurement-logistics","label":"Procurement and Logistics","focus":["procure-to-pay","source determination","production planning and execution","quality management","inventory management","warehouse execution","EWM","transportation management"],"entry_points":["/labs/enterprise-context/procurement/","/labs/enterprise-context/production/","/labs/enterprise-context/quality-management/","/labs/enterprise-context/inventory-management/","/labs/enterprise-context/ewm/","/labs/enterprise-context/transportation-management/","/labs/enterprise-context/logistics-capabilities/"]},
+    {"id":"integration-architecture","label":"Integration and Architecture","focus":["integration style","system ownership","message contracts","events","master-data distribution","deployment models","clean-core extensions","SAP development choices"],"entry_points":["/labs/enterprise-context/integrations/","/labs/enterprise-context/sales-processes/integrations/","/labs/enterprise-context/transportation-management/integrations/","/labs/enterprise-context/mdg/interfaces/","/labs/enterprise-context/deployment-models/","/labs/enterprise-context/development/"]},
+    {"id":"ai-data","label":"AI and Data","focus":["Business AI patterns","AI system boundaries","RAG","tools and MCP","agents","evaluations","data governance","master data governance"],"entry_points":["/labs/business-ai/","/labs/ai-ready/","/labs/enterprise-context/business-ai/","/labs/enterprise-context/mdg/","/labs/enterprise-context/data-governance/"]}
   ],
-  "answer_shape": ["business_goal", "owner", "process_flow", "decision_logic", "boundary", "failure_and_evidence", "trade_off"],
-  "scoring": {"dimensions": 7, "maximum_score": 21, "lead_signal_minimum": 18, "contract": "/labs/assessment/data/scoring.json"},
+  "answer_shape": ["business_goal","owner","process_flow","decision_logic","boundary","failure_and_evidence","trade_off"],
+  "scoring": {"dimensions":7,"maximum_score":21,"lead_signal_minimum":18,"contract":"/labs/assessment/data/scoring.json"},
   "coverage": {
-    "strong_now": ["Sales processes and decision engines", "Procurement", "Production Planning and Execution", "Quality Management", "EWM", "Transportation Management", "Integration architecture", "MDG", "SAP development and deployment choices", "Business AI and AI system architecture"],
-    "next_verticals": ["Inventory Management", "Billing and revenue handoff", "FI/CO touchpoints for logistics", "Automotive JIT and JIS"],
-    "next_practice_layers": ["cross-process end-to-end cases", "integration operations and recovery", "weak-signal tracking", "question generation from graph relationships", "adaptive case selection from scoring history"]
+    "strong_now": ["Sales processes and decision engines","Procurement","Production Planning and Execution","Quality Management","Inventory Management","EWM","Transportation Management","Integration architecture","MDG","SAP development and deployment choices","Business AI and AI system architecture"],
+    "next_verticals": ["Billing and revenue handoff","FI/CO touchpoints for logistics","Automotive JIT and JIS"],
+    "next_practice_layers": ["cross-process end-to-end cases","integration operations and recovery","weak-signal tracking","question generation from graph relationships","adaptive case selection from scoring history"]
   },
-  "endpoints": {
-    "human_route": "/labs/assessment/",
-    "core_cases": "/labs/assessment/data/cases.jsonl",
-    "case_sets": "/labs/assessment/data/case-sets.json",
-    "case_schema": "/labs/assessment/data/case-schema.json",
-    "scoring": "/labs/assessment/data/scoring.json",
-    "backlog": "/labs/assessment/data/backlog.json",
-    "catalog": "/labs/assessment/data/catalog.json"
-  }
+  "endpoints": {"human_route":"/labs/assessment/","core_cases":"/labs/assessment/data/cases.jsonl","case_sets":"/labs/assessment/data/case-sets.json","case_schema":"/labs/assessment/data/case-schema.json","scoring":"/labs/assessment/data/scoring.json","backlog":"/labs/assessment/data/backlog.json","catalog":"/labs/assessment/data/catalog.json"}
 }
