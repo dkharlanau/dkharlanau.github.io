@@ -1,0 +1,165 @@
+id: TOPIC-MDG-DRF-OPERATIONS-CONTROL
+type: research_topic
+title: "SAP MDG DRF Operations, Replay and Error Control"
+summary: "An operational control model for MDG distribution from active source and DRF selection through transport, target acceptance, replay, reconciliation and business completion."
+domain: "Integration"
+process_family: "Master Data Distribution"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/replication/operations/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "How do we operate MDG replication safely when messages fail, targets reject data, filters change or replay is required?"
+
+memory_model:
+  phrase: "Select → Build → Send → Accept → Persist → Reconcile → Replay → Prove"
+  principle: "Replay is a business operation, not just a technical resend. Before replay, know the source state, target state and duplicate behavior."
+
+operating_contract:
+  source_truth:
+    checks:
+      - "Expected value is active, not only staged or approved."
+      - "Activation timestamp/version is known."
+      - "Object identity and relevant organizational slice are stable."
+  drf_selection:
+    checks:
+      - "Correct replication model is active."
+      - "Correct outbound implementation is assigned."
+      - "Receiving business system is assigned."
+      - "Filters include the intended population."
+      - "Initialization/delta mode is known."
+  payload:
+    checks:
+      - "Expected object/version was serialized."
+      - "Mandatory target data is present."
+      - "Key mapping and source-system identity are consistent."
+  transport:
+    checks:
+      - "Message/service correlation identity is captured."
+      - "Timeout, retry and delivery result are distinguishable."
+      - "Middleware success is not treated as target business success."
+  target:
+    checks:
+      - "Target validation result is known."
+      - "Persistence/commit is proven."
+      - "Target object ID or mapping is known."
+      - "Local follow-on processing is observed where relevant."
+  business_completion:
+    checks:
+      - "Consumer process reads the new value."
+      - "No local correction is masking central data defects."
+
+error_classes:
+  - class: "Not selected"
+    examples: [filter-exclusion, wrong-model, wrong-target-assignment]
+    evidence: "DRF selection population and filter values"
+    response: "Correct configuration/population and re-evaluate impact before resend"
+  - class: "Payload construction"
+    examples: [missing-field, mapping-error, unsupported-extension]
+    evidence: "Outbound payload and mapping trace"
+    response: "Fix source/mapping; regenerate payload"
+  - class: "Transport failure"
+    examples: [endpoint-down, authentication, timeout, middleware-error]
+    evidence: "Correlation ID and technical delivery log"
+    response: "Restore transport; decide safe retry from business idempotency"
+  - class: "Target semantic rejection"
+    examples: [mandatory-local-field, invalid-code, incompatible-customizing, target-validation]
+    evidence: "Target application error, rejected payload and local rule"
+    response: "Resolve semantic contract; do not keep resending unchanged payload"
+  - class: "Identity mapping failure"
+    examples: [missing-key-map, duplicate-map, wrong-source-system]
+    evidence: "Source key, target key and mapping state"
+    response: "Repair identity governance/mapping, then replay with collision check"
+  - class: "Persisted but not consumed"
+    examples: [cache, local-derivation, process-specific-completeness, delayed-follow-on]
+    evidence: "Target record plus consumer trace"
+    response: "Move diagnosis beyond DRF into consuming process"
+
+replay_decision:
+  questions:
+    - "Is the source object still in the state represented by the failed message?"
+    - "Did the target receive or partially persist the previous attempt?"
+    - "Is create/update processing idempotent for this object and interface?"
+    - "Can replay overwrite a newer target value?"
+    - "Does ordering matter relative to later changes?"
+    - "Should we replay one object, one batch, one target or rebuild the whole population?"
+  outcomes:
+    safe_replay: "Target has no conflicting state and the operation is idempotent or duplicate-safe."
+    rebuild_from_current_truth: "Old payload is stale; generate from current active source instead of replaying historical content."
+    manual_resolution: "Identity collision, semantic conflict or irreversible target side effect requires controlled correction."
+    stop_and_reconcile: "Population-level uncertainty exists; pause bulk replay until counts and boundaries are understood."
+
+initial_load_delta_control:
+  baseline:
+    - "Define population and cut-off timestamp/watermark."
+    - "Reconcile source selected, sent, accepted and persisted counts."
+    - "Record source-to-target identity coverage."
+  handover_to_delta:
+    - "Prove no gap between baseline cut-off and first delta."
+    - "Define treatment of late changes."
+    - "Define duplicate overlap behavior."
+    - "Advance operational watermark only after reconciliation."
+
+monitoring_model:
+  metrics:
+    - selected_objects
+    - payloads_built
+    - sent_successfully
+    - target_accepted
+    - target_rejected
+    - mapping_failures
+    - replayed_objects
+    - unresolved_age
+    - source_target_reconciliation_gap
+  alerts:
+    - "Failure rate exceeds normal baseline."
+    - "Oldest unresolved object exceeds SLA."
+    - "Target acceptance falls while transport remains green."
+    - "Filter/configuration change causes unexpected population shift."
+    - "Replay volume grows faster than root-cause closure."
+
+runbook_sequence:
+  - "Freeze one object identity, source version and target."
+  - "Prove active source state."
+  - "Prove DRF model, outbound implementation and filter selection."
+  - "Capture payload and correlation identity."
+  - "Inspect transport outcome."
+  - "Inspect target validation and persistence."
+  - "Check identity/key mapping."
+  - "Decide replay versus rebuild from current truth."
+  - "Reconcile target and prove business consumption."
+  - "Record root cause and population impact."
+
+anti_patterns:
+  - "Replay everything because the queue is red."
+  - "Treat HTTP 200 or middleware delivery as business acceptance."
+  - "Repair a missing key map manually without checking duplicate identity."
+  - "Change DRF filters in production without before/after population analysis."
+  - "Replay an old update after a newer valid change has already reached the target."
+  - "Close the incident when DRF is green but the consumer still uses stale data."
+
+assessment_cards:
+  - prompt: "When is replay unsafe?"
+    answer: "When target state is uncertain, the operation is not duplicate-safe, ordering matters, or the historical payload can overwrite newer truth."
+  - prompt: "What do you reconcile after an initial load?"
+    answer: "Selected source population, sent objects, target acceptance/persistence, key mappings and the cut-off to ongoing delta."
+  - prompt: "What if transport is green but the target is wrong?"
+    answer: "Continue into target semantic validation, identity mapping, persistence and consumer behavior. Transport success is only one boundary."
+
+source_refs:
+  - SRC-SAP-MDG-DRF-2025
+  - SRC-SAP-MDG-REPLICATION-GUI-2025
+  - SRC-SAP-DRF-KEY-MAPPING-2025
+relations:
+  - subject: TOPIC-MDG-DRF-OPERATIONS-CONTROL
+    predicate: requires
+    object: TOPIC-MDG-REPLICATION-DISTRIBUTION
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-DRF-OPERATIONS-CONTROL
+    predicate: provides_context_to
+    object: TOPIC-MDG-LINEAGE
+    evidence_type: reasoned_interpretation
+    confidence: high
