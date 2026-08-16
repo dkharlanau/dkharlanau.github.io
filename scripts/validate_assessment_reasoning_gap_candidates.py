@@ -8,20 +8,16 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "labs" / "assessment" / "data"
 PAGE = ROOT / "labs" / "assessment" / "reasoning-gaps" / "index.html"
 
-
 def load(name: str):
     return json.loads((DATA / name).read_text(encoding="utf-8"))
 
-
 def load_jsonl(path: Path):
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-
 
 def main() -> int:
     gaps = load("reasoning-gap-candidates.json")
     coverage = load("reasoning-pressure-coverage.json")
     factual = load("factual-review.json")
-    semantic = load("candidate-semantic-review.json")
     manifest = load("case-sets.json")
     page = PAGE.read_text(encoding="utf-8")
     errors: list[str] = []
@@ -33,6 +29,15 @@ def main() -> int:
     for key, item in plan.items():
         if item["published_count"] != coverage_gaps[key]["count"]:
             errors.append(f"Published count mismatch for reasoning gap {key}")
+
+    candidate_ids = {item["id"] for item in gaps["candidates"]}
+    planned_signals = {item.get("review_stage_signal") for item in gaps["gap_plan"]}
+    if not candidate_ids <= planned_signals:
+        errors.append("Every authored reasoning-gap candidate must correspond to a current gap-plan signal")
+    if gaps["summary"]["new_review_candidates"] != len(gaps["candidates"]):
+        errors.append("Reasoning-gap candidate summary count mismatch")
+    if gaps["summary"]["thin_cells_with_review_stage_signal"] != len(gaps["gap_plan"]):
+        errors.append("Reasoning-gap thin-cell summary count mismatch")
 
     factual_routes = {item["route"]: item for item in factual["routes"]}
     for candidate in gaps["candidates"]:
@@ -59,39 +64,28 @@ def main() -> int:
     published_ids = set()
     for case_set in manifest["sets"]:
         published_ids.update(item["id"] for item in load_jsonl(ROOT / case_set["url"].lstrip("/")))
-    for candidate in gaps["candidates"]:
-        if candidate["id"] in published_ids:
-            errors.append(f"Review-stage reasoning candidate entered published manifest: {candidate['id']}")
+    if published_ids & candidate_ids:
+        errors.append("Review-stage reasoning candidate entered published manifest")
     if gaps["summary"]["published_cases_changed"] != 0:
         errors.append("Reasoning-gap candidates must not change published cases")
 
-    semantic_decisions = {item["candidate_id"]: item for item in semantic["decisions"]}
-    raw = semantic_decisions.get("CAND-AIAG-RAW-MCP")
-    if not raw or raw.get("recommendation") != "retain_for_human_promotion_review":
-        errors.append("AI/Data Diagnose thin cell must reuse the retained RAW-MCP semantic signal")
+    for pattern in ("design", "challenge"):
+        if len(gaps.get("pattern_contract", {}).get(pattern, [])) < 6:
+            errors.append(f"{pattern.title()} pattern contract must define at least six reasoning moves")
 
-    design_contract = gaps.get("pattern_contract", {}).get("design", [])
-    challenge_contract = gaps.get("pattern_contract", {}).get("challenge", [])
-    if len(design_contract) < 6 or len(challenge_contract) < 6:
-        errors.append("Design and Challenge pattern contracts must each define at least six reasoning moves")
-
-    for token in (
-        "verified: false",
-        "robots: noindex,follow",
-        "/labs/assessment/data/reasoning-gap-candidates.json",
-        "RCAND-SALES-DESIGN-SUPPLY-MODEL",
-        "RCAND-AI-CHALLENGE-AUTONOMY",
-    ):
+    for token in ("verified: false", "robots: noindex,follow", "/labs/assessment/data/reasoning-gap-candidates.json"):
         if token not in page:
             errors.append(f"Reasoning-gap page missing token: {token}")
+    for candidate_id in candidate_ids:
+        if candidate_id not in page:
+            errors.append(f"Reasoning-gap page missing active candidate: {candidate_id}")
 
     if errors:
         for error in errors:
             print(f"ERROR: {error}")
         return 2
-    print("Reasoning-gap candidates valid: 3 thin cells covered by review-stage signals, 2 new non-diagnostic candidates, published cases unchanged.")
+    print(f"Reasoning-gap candidates valid: {len(gaps['gap_plan'])} current thin cells, {len(gaps['candidates'])} authored review candidates, published cases unchanged.")
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

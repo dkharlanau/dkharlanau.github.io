@@ -20,18 +20,17 @@
     "Decide approve, revise, or reject explicitly; no missing decision is treated as approval."
   ],
   "summary": {
-    "published_case_count": 59,
-    "pending_candidates": 7,
+    "published_case_count": 63,
+    "pending_candidates": 6,
     "generated_candidates": 5,
-    "reasoning_gap_candidates": 2,
+    "reasoning_gap_candidates": 1,
     "track_counts": {
-      "ai-data": 2,
+      "ai-data": 1,
       "integration-architecture": 1,
       "procurement-logistics": 2,
       "sales": 2
     },
     "level_counts": {
-      "challenge": 1,
       "design": 1,
       "diagnose": 5
     },
@@ -39,68 +38,6 @@
     "approved_candidates": 0
   },
   "items": [
-    {
-      "candidate_id": "RCAND-AI-CHALLENGE-AUTONOMY",
-      "candidate_source": "reasoning_gap_candidate",
-      "track": "ai-data",
-      "level": "challenge",
-      "title": "Challenge an autonomous-agent proposal for a mostly deterministic SAP process",
-      "prompt": "A team proposes an autonomous agent for an SAP exception process. Most steps are deterministic, but a minority require reading unstructured context and choosing among controlled actions. Challenge the proposal. Compare deterministic workflow, a bounded agent, and a more open-ended agent, then define the architecture you would accept.",
-      "expected_points": [
-        "Separate deterministic process control from the small part that actually needs probabilistic reasoning.",
-        "Compare workflow, bounded-agent, and broader-agent options by task variability, side-effect risk, latency, auditability, and recovery needs.",
-        "Keep business authority, user/agent identity, backend authorization, tool scope, and final transactional state outside model discretion.",
-        "Prefer a mixed architecture when deterministic controls can own approvals, writes, and recovery while the agent handles interpretation or option generation.",
-        "Define trajectory and business-outcome evaluation, observability, fallback, and post-action verification before increasing autonomy.",
-        "State what evidence or change in process variability would justify moving to a more autonomous design."
-      ],
-      "follow_up_questions": [
-        "Which failure cost would make you reduce autonomy even if task success is high?",
-        "When is an agent unnecessary even if the model can technically perform the task?"
-      ],
-      "red_flags": [
-        "Calls agents more modern and treats that as an architecture argument.",
-        "Moves deterministic approvals or authorization into prompt instructions.",
-        "Evaluates only the final answer and ignores trajectory, side effects, and business state."
-      ],
-      "graph_refs": [],
-      "human_refs": [
-        "/labs/enterprise-context/business-ai/agents/",
-        "/labs/enterprise-context/business-ai/"
-      ],
-      "source_refs": [],
-      "evidence_gate": {
-        "eligible": true,
-        "route_model": "multiple_source_supported_routes",
-        "evidence_routes": [
-          "/labs/enterprise-context/business-ai/agents/",
-          "/labs/enterprise-context/business-ai/"
-        ],
-        "evidence_class": "mixed_source_supported_and_author_heuristic"
-      },
-      "semantic_review": {
-        "recommendation": "retain_for_human_promotion_review",
-        "reason": "The current AI/Data Challenge case compares retrieval with fine-tuning, while the Design and Diagnose cases cover controlled AI recommendations and risky agent trajectories. This candidate challenges the autonomy level itself and requires comparison of deterministic workflow, bounded agent, and broader agent designs with explicit authority, failure, recovery, observability, and acceptance conditions. That challenge signal is not currently published.",
-        "novel_signal": "Challenge whether an agent is justified at all, and choose the minimum autonomy that the operating model can govern, observe, and recover.",
-        "closest_published_cases": [
-          "ASSESS-AI-002",
-          "ASSESS-AI-001",
-          "ASSESS-AI-003"
-        ],
-        "review_checks": [
-          "Keep deterministic workflow as a real alternative, not a straw man.",
-          "Require the answer to separate probabilistic reasoning from deterministic authorization, approvals, writes, and recovery.",
-          "Require conditions under which broader autonomy becomes acceptable.",
-          "Reject a rewrite that becomes only a permissions diagnosis or generic AI-governance explanation."
-        ]
-      },
-      "human_decision": {
-        "status": "pending_human_review",
-        "decision": null,
-        "reviewed_at": null,
-        "reviewer_note": ""
-      }
-    },
     {
       "candidate_id": "CAND-AIAG-RAW-MCP",
       "candidate_source": "generated_failure_candidate",
