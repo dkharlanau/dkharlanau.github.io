@@ -1,0 +1,27 @@
+{
+  "pack": "sap-logistics-starter@0.1.0",
+  "testManifestVersion": "0.1",
+  "cases": [
+    {"id": "sap-id-001", "type": "mutation", "area": "shared", "change": "material identifier changes from text to numeric representation", "expected": "detect representation risk; do not silently drop leading zeros"},
+    {"id": "sap-id-002", "type": "boundary", "area": "shared", "change": "identifier contains whitespace or non-breaking space around a valid value", "expected": "canonical comparison may normalize approved whitespace while raw value remains available"},
+    {"id": "sap-xl-001", "type": "drift", "area": "sales", "change": "Sales table moves from row 8 to row 12 with the same semantic headers", "expected": "semantic locator succeeds and records location drift"},
+    {"id": "sap-xl-002", "type": "failure", "area": "sales", "change": "second similar table appears on the same worksheet", "expected": "locator ambiguity creates a review item instead of choosing by position"},
+    {"id": "sap-ref-001", "type": "failure", "area": "shared", "change": "material reference contains duplicate target key", "expected": "many-to-one assumption fails before join"},
+    {"id": "sap-ref-002", "type": "drift", "area": "procurement", "change": "new supplier material value has no released cross-reference", "expected": "row is routed as reference gap with source lineage"},
+    {"id": "sap-loc-001", "type": "mutation", "area": "procurement", "change": "decimal format changes from 1.234,56 to 1,234.56", "expected": "explicit locale policy blocks or reviews the unapproved format change"},
+    {"id": "sap-loc-002", "type": "mutation", "area": "shared", "change": "ambiguous date 03/04/2026 appears after locale drift", "expected": "procedure does not guess date meaning"},
+    {"id": "sap-rel-001", "type": "failure", "area": "sales", "change": "customer enrichment join increases Sales fact rows", "expected": "join ledger detects row multiplication and blocks publication"},
+    {"id": "sap-rel-002", "type": "failure", "area": "procurement", "change": "supplier plus external material is not unique in reference data", "expected": "cardinality gate fails and creates high-impact review"},
+    {"id": "sap-key-001", "type": "failure", "area": "sales", "change": "Sales document item key is missing from source", "expected": "breaking drift; no automatic reconstruction"},
+    {"id": "sap-key-002", "type": "failure", "area": "procurement", "change": "Purchasing document item becomes non-unique in recurring extract", "expected": "key gate fails before reconciliation"},
+    {"id": "sap-status-001", "type": "drift", "area": "sales", "change": "previously unseen business status appears", "expected": "business-rule review; do not infer inclusion or exclusion"},
+    {"id": "sap-ctl-001", "type": "failure", "area": "sales", "change": "structure is valid but selected control total changes unexpectedly after transformation", "expected": "publication blocks and evidence shows before/after totals"},
+    {"id": "sap-ctl-002", "type": "mutation", "area": "shared", "change": "filter drops rows without a declared reason code", "expected": "row-loss ledger fails the test"},
+    {"id": "sap-review-001", "type": "historical-replay", "area": "shared", "change": "previously rejected semantic mapping is proposed again", "expected": "decision memory surfaces negative evidence before review"}
+  ],
+  "releaseMinimums": {
+    "blueprint": ["case-defined"],
+    "candidate": ["golden-case", "at-least-two-drift-cases", "at-least-one-failure-case"],
+    "ready": ["all-blocking-cases-pass", "historical-replay-reviewed", "reference-cardinality-cases-pass", "review-path-tested"]
+  }
+}
