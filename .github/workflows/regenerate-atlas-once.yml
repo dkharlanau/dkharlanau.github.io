@@ -1,0 +1,53 @@
+name: Regenerate Atlas Artifacts Once
+
+on:
+  push:
+    paths:
+      - .github/workflows/regenerate-atlas-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install generator dependency
+        run: python3 -m pip install pyyaml
+      - name: Refresh and push generated artifacts
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          expected='^(atlas/manifest.json|llms-full.txt|ai/rag/related.json|ai/atlas-compact-index.json|ai/verified-pages.json|ai/expert-promotion-inventory.json|ai/markdown-clusters.json)$'
+          for attempt in 1 2 3 4; do
+            echo "Artifact refresh attempt $attempt"
+            git fetch origin main
+            git reset --hard origin/main
+            python3 scripts/generate_atlas_artifacts.py
+            unexpected=$(git diff --name-only | grep -v -E "$expected" || true)
+            if [ -n "$unexpected" ]; then
+              echo "Unexpected generated changes:"
+              echo "$unexpected"
+              exit 1
+            fi
+            git add atlas/manifest.json llms-full.txt ai/rag/related.json ai/atlas-compact-index.json ai/verified-pages.json ai/expert-promotion-inventory.json ai/markdown-clusters.json
+            if git diff --cached --quiet; then
+              echo "Generated artifacts are already current."
+              exit 0
+            fi
+            git commit -m "chore: refresh Atlas artifacts"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Main moved during refresh; retrying."
+          done
+          exit 1
