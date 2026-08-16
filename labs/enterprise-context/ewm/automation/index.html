@@ -1,0 +1,41 @@
+---
+layout: default
+title: "EWM Automation & MFS — Control Boundary Map"
+description: "A practical SAP EWM automation map for MFS, WCS/WCU, PLC control, material-flow messages, recovery and monitoring."
+permalink: /labs/enterprise-context/ewm/automation/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+enterprise_context_graph: true
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, ewm, mfs, wcs, plc, automation, warehouse]
+---
+{% assign map = site.data.labs.enterprise_context.ewm.automation %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/ewm/">EWM</a></li><li aria-current="page">Automation & MFS</li></ol></nav>
+
+<div class="research-canvas context-graph">
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Enterprise Context / Automated Warehouse</p><h1>{{ map.title }}</h1><p>{{ map.summary }}</p><a class="research-canvas__button" href="#boundary">Open control boundary <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></div><div class="research-canvas__signal"><p>Architecture map</p><div class="research-canvas__signal-line"><span>01</span><strong>{{ map.layers | size }}</strong><small>Control layers</small></div><div class="research-canvas__signal-line"><span>02</span><strong>{{ map.mfs_objects | size }}</strong><small>MFS objects</small></div><div class="research-canvas__signal-line"><span>03</span><strong>{{ map.failure_modes | size }}</strong><small>Failure patterns</small></div><em>Source checked {{ map.verified_at }}</em></div></header>
+
+<section class="research-canvas__boundary" id="boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</span><p><strong>Lead rule:</strong> {{ map.lead_rule }}</p><p><strong>Memory path:</strong> {{ map.memory_path }}</p></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Ownership</p><h2>Separate business intent, flow coordination and machine control.</h2><p>The design becomes much easier when every layer has one clear job.</p></header><div class="research-route-list">{% for item in map.layers %}<article><span>LAYER</span><strong>{{ item.title }}</strong><small><b>Owns:</b> {{ item.owns }}</small><p><b>Does not own:</b> {{ item.does_not_own }}</p></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Architecture choice</p><h2>MFS, WCS/WCU, or PLC?</h2></header><div class="research-route-list">{% for item in map.decision_map %}<article><span>→</span><strong>{{ item.need }}</strong><small><b>{{ item.choose }}</b></small><p>{{ item.why }}</p></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">MFS model</p><h2>Five objects explain most of the material-flow topology.</h2></header><div class="research-route-list">{% for item in map.mfs_objects %}<article><span>MFS</span><strong>{{ item.title }}</strong><small>{{ item.purpose }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Runtime contract</p><h2>Automation needs a recovery contract, not only a happy-path telegram.</h2></header><div class="research-route-list">{% for item in map.runtime_contract %}<article><span>{{ item.key }}</span><strong>{{ item.rule }}</strong></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Diagnostics</p><h2>Reconcile the physical HU before restarting the digital flow.</h2></header><div class="research-route-list">{% for item in map.failure_modes %}<article><span>!</span><strong>{{ item.symptom }}</strong><small><b>Check first:</b> {{ item.check_first }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Operations</p><h2>Measure whether automation can recover, not only whether it can move.</h2></header><div class="research-route-list">{% for item in map.kpis %}<article><span>KPI</span><strong>{{ item.title }}</strong><small>{{ item.meaning }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Patterns</p><h2>Common automated warehouse shapes.</h2></header><div class="research-route-list">{% for item in map.scenarios %}<article><span>SCN</span><strong>{{ item.title }}</strong><small>{{ item.flow }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Assessment lens</p><h2>Short answers with a clear ownership boundary.</h2></header><div class="research-route-list">{% for item in map.assessment_cards %}<article><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.answer }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Connected maps</p><h2>Automation sits between warehouse objects and the physical world.</h2></header><div class="research-route-list">{% for item in map.related %}<a href="{{ item.url }}"><span>→</span><strong>{{ item.title }}</strong></a>{% endfor %}</div><p><a href="/labs/enterprise-context/data/topics.json">Machine-readable topic graph →</a></p></section>
+</div>
