@@ -53,31 +53,22 @@ reuse_object_ids:
   - OBJ-EWM-QUEUE
   - OBJ-EWM-WAREHOUSE-ORDER
   - OBJ-EWM-WAREHOUSE-TASK
+reuse_entity_ids:
+  - APP-SAP-EWM-RF
+  - APP-SAP-WAREHOUSE-LOGISTICS
+  - PLT-WH-SCANNER-DEVICE-LAYER
+  - INT-WH-KEYSTROKE-SCAN
+  - INT-WH-PROGRAMMATIC-SCAN
 
 core_entities:
   - id: CAP-WH-MOBILE-EXECUTION
     type: capability
     title: "Mobile Warehouse Execution"
     summary: "Guide warehouse workers through executable tasks on mobile or wearable devices with controlled validation and confirmation."
-  - id: APP-EWM-RF-MOBILITY
-    type: application_component
-    title: "SAP EWM RF Framework"
-    summary: "Standard EWM RF execution framework that separates business logic from physical presentation on supported device forms."
-    source_refs: [SRC-SAP-EWM-RF-FRAMEWORK, SRC-SAP-EWM-RF-RESOURCE]
-  - id: APP-WH-LOGISTICS-MOBILE
-    type: application_component
-    title: "SAP Warehouse Logistics Mobile App"
-    summary: "Standard native mobile warehouse execution option for supported SAP Logistics Management scope."
-    source_refs: [SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE]
   - id: APP-WH-CUSTOM-MOBILE
     type: application_component
     title: "Custom Warehouse Mobile App"
     summary: "Purpose-built mobile or browser application for a real workflow, integration or device-interaction gap."
-  - id: PLT-WH-DEVICE-MIDDLEWARE
-    type: platform_component
-    title: "Enterprise Device Capture Layer"
-    summary: "Device service or SDK that sends scans and metadata to the target application."
-    source_refs: [SRC-ZEBRA-DATAWEDGE-HOWTO, SRC-ZEBRA-DATAWEDGE-INTENT]
   - id: CTRL-WH-MOBILE-SESSION
     type: control
     title: "Mobile Session Recovery"
@@ -148,13 +139,13 @@ assessment_cards:
     answer: "The real warehouse route: Wi-Fi roaming, scanner behavior, gloves, latency, reconnect, duplicate retry, authentication timeout and exception recovery."
 
 relations:
-  - subject: APP-EWM-RF-MOBILITY
+  - subject: APP-SAP-EWM-RF
     predicate: provides_capability
     object: CAP-WH-MOBILE-EXECUTION
     evidence_type: documented_fact
     confidence: high
     source_refs: [SRC-SAP-EWM-RF-FRAMEWORK]
-  - subject: APP-WH-LOGISTICS-MOBILE
+  - subject: APP-SAP-WAREHOUSE-LOGISTICS
     predicate: provides_capability
     object: CAP-WH-MOBILE-EXECUTION
     evidence_type: documented_fact
@@ -165,7 +156,7 @@ relations:
     object: CAP-WH-MOBILE-EXECUTION
     evidence_type: reasoned_interpretation
     confidence: high
-  - subject: PLT-WH-DEVICE-MIDDLEWARE
+  - subject: PLT-WH-SCANNER-DEVICE-LAYER
     predicate: provides_context_to
     object: APP-WH-CUSTOM-MOBILE
     evidence_type: documented_fact
