@@ -207,11 +207,16 @@ def desired_files() -> dict[Path, str]:
     }
 
 
+def strip_liquid_comments(text: str) -> str:
+    return re.sub(r"{%\s*comment\s*%}.*?{%\s*endcomment\s*%}", "", text, flags=re.S)
+
+
 def validate_invariants(contents: dict[Path, str]) -> list[str]:
     errors: list[str] = []
     structured = contents[STRUCTURED]
     head = contents[HEAD]
     augmentation = contents[AUGMENTATION]
+    augmentation_exec = strip_liquid_comments(augmentation)
     if "page.updated | default: page.last_reviewed" in structured:
         errors.append("structured-data.html still uses review date as modification fallback")
     if "'/labs/enterprise-context/'" not in structured or "page_type = 'TechArticle'" not in structured:
@@ -221,9 +226,9 @@ def validate_invariants(contents: dict[Path, str]) -> list[str]:
     if CANONICAL_MODIFIED not in head:
         errors.append("head.html article:modified_time does not use canonical modification precedence")
     for forbidden in ('"@type": "Person"', '"@type": "WebSite"', '"dateModified"', '"headline"', '#article'):
-        if forbidden in augmentation:
+        if forbidden in augmentation_exec:
             errors.append(f"sitewide graph must not redefine Article/core node property {forbidden}")
-    if "graph_is_article == false" not in augmentation:
+    if "graph_is_article == false" not in augmentation_exec:
         errors.append("sitewide graph must be explicitly disabled for Article/TechArticle nodes")
     return errors
 
