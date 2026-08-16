@@ -14,6 +14,7 @@ CORE = DATA / "core-study-map.json"
 CASE_SETS = DATA / "case-sets.json"
 
 ALLOWED_LEVELS = {"trace", "diagnose", "design", "challenge"}
+ALLOWED_PUBLICATION_STATES = {"human_review_candidate", "needs_structure", "public_or_indexable", "missing_source", "unknown"}
 
 
 def load_json(path: Path) -> Any:
@@ -86,8 +87,9 @@ def validate() -> list[str]:
             evidence = core_item.get("evidence", {})
             if evidence.get("review_status") != "primary_source_review_complete":
                 errors.append(f"{prefix}: route is not source-supported: {route}")
-            if evidence.get("page_verified") is not False:
-                errors.append(f"{prefix}: route page_verified must remain false: {route}")
+            publication = core_item.get("publication", {})
+            if publication.get("state", "unknown") not in ALLOWED_PUBLICATION_STATES:
+                errors.append(f"{prefix}: unsupported publication state for route {route}: {publication.get('state')!r}")
 
         for field in ("title", "scenario", "prompt", "boundary_question"):
             value = drill.get(field)
