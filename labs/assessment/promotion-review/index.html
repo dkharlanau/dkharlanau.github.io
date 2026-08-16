@@ -1,0 +1,88 @@
+---
+layout: default
+title: "Candidate Promotion Review — SAP Lead Assessment Lab"
+description: "One human review packet for every semantic-surviving SAP Lead assessment candidate before any published-case change."
+permalink: /labs/assessment/promotion-review/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, question-review, promotion, governance]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li><a href="/labs/assessment/question-review/">Question Review</a></li><li aria-current="page">Promotion Review</li></ol></nav>
+
+<div class="research-canvas" id="promotion-review">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Human promotion gate</p>
+      <h1>Seven candidates.<br />Zero automatic approvals.</h1>
+      <p>This packet contains every current candidate that survived evidence and semantic review. It is the handoff for a real human promotion decision, not a creative way for the generator to approve its own work.</p>
+      <a class="research-canvas__button" href="#promotion-list">Open review packet <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Promotion review state">
+      <p>Review state</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong id="pr-pending">7</strong><small>Pending candidates</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong id="pr-published">59</strong><small>Published cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>0</strong><small>Automatic approvals</small></div>
+      <em>Evidence + semantic review complete · human decision pending</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+    <p><strong>Promotion boundary:</strong> every packet item starts as <code>pending_human_review</code>. Packet generation does not edit <code>case-sets.json</code>, assign a published case ID, or treat a missing human decision as approval.</p>
+    <a href="/labs/assessment/data/promotion-review-packet.json">Open promotion packet JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Review rule</p><h2>Approve a reasoning signal, not a topic.</h2><p>Each candidate must survive six checks before a separate repository change can publish it.</p></header>
+    <div class="ecg-decision-columns" id="pr-rules"></div>
+  </section>
+
+  <section class="research-canvas__inventory" id="promotion-list" data-reveal>
+    <header><p class="research-canvas__eyebrow">Pending candidates</p><h2>One queue across generated and reasoning-gap candidates.</h2><p>Generated Diagnose candidates and authored Design/Challenge candidates use different creation paths, but they share the same promotion boundary.</p></header>
+    <p id="pr-status">Loading promotion packet…</p>
+    <div id="pr-items"></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+    <p><strong>What this page does not do:</strong> no approval buttons, no case-manifest writes, no automatic calibration, and no publication-state changes. Human decisions need their own explicit evidence record.</p>
+    <a href="/labs/assessment/reasoning-coverage/">Return to reasoning coverage <span class="material-symbols-outlined" aria-hidden="true">grid_view</span></a>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<script>
+(async function () {
+  const status=document.getElementById('pr-status');
+  const items=document.getElementById('pr-items');
+  const rules=document.getElementById('pr-rules');
+  try {
+    const response=await fetch('/labs/assessment/data/promotion-review-packet.json',{cache:'no-store'});
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data=await response.json();
+    document.getElementById('pr-pending').textContent=String(data.summary.pending_candidates);
+    document.getElementById('pr-published').textContent=String(data.summary.published_case_count);
+    rules.replaceChildren();
+    data.review_rule.forEach((rule,index)=>{const card=document.createElement('article');const title=document.createElement('h4');title.textContent=`0${index+1}`;const copy=document.createElement('p');copy.textContent=rule;card.append(title,copy);rules.appendChild(card);});
+    status.textContent=`${data.summary.pending_candidates} candidates are pending explicit human review. ${data.summary.semantic_duplicates_excluded} semantic duplicate(s) were excluded before this packet.`;
+    items.replaceChildren();
+    data.items.forEach(item=>{
+      const section=document.createElement('section');section.className='research-canvas__inventory';
+      const header=document.createElement('header');const eyebrow=document.createElement('p');eyebrow.className='research-canvas__eyebrow';eyebrow.textContent=`${item.track} / ${item.level} / ${item.candidate_source.replaceAll('_',' ')}`;const title=document.createElement('h3');title.textContent=item.title;const prompt=document.createElement('p');prompt.textContent=item.prompt;header.append(eyebrow,title,prompt);
+      const grid=document.createElement('div');grid.className='ecg-decision-columns';
+      const novelty=document.createElement('div');novelty.innerHTML='<h4>Novel signal</h4>';const noveltyCopy=document.createElement('p');noveltyCopy.textContent=item.semantic_review.novel_signal;novelty.appendChild(noveltyCopy);
+      const closest=document.createElement('div');closest.innerHTML='<h4>Closest published cases</h4>';const closestCopy=document.createElement('p');closestCopy.textContent=item.semantic_review.closest_published_cases.join(' · ') || 'None';closest.appendChild(closestCopy);
+      const state=document.createElement('div');state.innerHTML='<h4>Human decision</h4>';const stateCopy=document.createElement('p');stateCopy.textContent=item.human_decision.status;state.appendChild(stateCopy);
+      grid.append(novelty,closest,state);
+      const checks=document.createElement('ul');item.semantic_review.review_checks.forEach(check=>{const li=document.createElement('li');li.textContent=check;checks.appendChild(li);});
+      section.append(header,grid,checks);items.appendChild(section);
+    });
+  } catch(error) {status.textContent=`Promotion packet could not be loaded: ${error.message}`;}
+}());
+</script>
