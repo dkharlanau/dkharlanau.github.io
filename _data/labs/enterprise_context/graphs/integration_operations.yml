@@ -1,0 +1,315 @@
+id: GRAPH-INTEGRATION-OPERATIONS-RECOVERY
+type: knowledge_graph
+title: "Integration Operations — Message to Business Completion"
+domain: "SAP Integration Operations"
+process_family: "Cross-Application Integration"
+process_step: "From message identity and technical delivery through ordering, retry, exception handling, reconciliation, and business completion"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+
+summary: >-
+  A Lead-level operating model for SAP integrations. It connects message identity, delivery semantics,
+  ordering, retries, duplicate protection, AIF/IDoc/RFC/Integration Suite monitors, ownership,
+  reconciliation, and proof that the business transaction completed rather than only the middleware step.
+
+thesis: >-
+  A green message status is not the same as a completed business process. Recovery must preserve identity,
+  ordering, idempotency, source/target ownership, and business meaning. Before replaying anything, prove whether
+  the message failed before the target, inside the target, after a partial commit, or only in the monitoring layer.
+
+boundary:
+  includes:
+    - "Message and business-event identity"
+    - "At-least-once delivery and idempotent receiver concepts"
+    - "Ordering and serialization"
+    - "Retry, reprocessing, replay, and cancellation"
+    - "AIF monitoring and error correction"
+    - "IDoc status and reprocessing"
+    - "tRFC/qRFC/bgRFC monitoring boundaries"
+    - "SAP Integration Suite message and queue monitoring"
+    - "Dead-letter and quarantine concepts"
+    - "Business reconciliation and completion evidence"
+    - "Operational ownership, alerting, and runbook logic"
+  excludes_for_later_deep_dives:
+    - "Full interface design catalogue already covered in Integration Architecture"
+    - "Detailed adapter configuration for every protocol"
+    - "Full SAP Cloud ALM / Solution Manager monitoring architecture"
+    - "SIEM and enterprise observability platform implementation"
+    - "Partner-specific B2B mappings"
+
+memory_model:
+  path: "IDENTITY → DELIVERY → ORDER → COMMIT → RETRY → EXCEPTION → RECONCILE → COMPLETE"
+  questions:
+    - key: IDENTITY
+      question: "What makes this message or business event unique?"
+      answer: "Keep technical message ID, business key, source event ID, correlation ID, and target object identity distinct but traceable."
+    - key: DELIVERY
+      question: "What delivery guarantee does each hop actually provide?"
+      answer: "Guaranteed delivery can produce redelivery; exactly-once end to end usually requires duplicate handling or an idempotent receiver as well as transport guarantees."
+    - key: ORDER
+      question: "Does processing order matter?"
+      answer: "Use queues or business sequence only where earlier events must commit before later events; parallelism without ordering rules can create a logically invalid target state."
+    - key: COMMIT
+      question: "Did the target commit the business effect?"
+      answer: "Differentiate transport acceptance, application processing, database commit, and follow-on business object creation."
+    - key: RETRY
+      question: "Is replay safe?"
+      answer: "Retry only after proving whether the previous attempt committed partially or fully and whether duplicate protection is reliable."
+    - key: EXCEPTION
+      question: "Who owns correction and what is changeable?"
+      answer: "AIF, IDoc, RFC and middleware monitors expose different correction/restart capabilities; ownership should follow the first wrong layer."
+    - key: RECONCILE
+      question: "How do source and target prove they agree?"
+      answer: "Compare business keys, counts, values, lifecycle status, timestamps, document references, and exception/reversal state, not only technical message counts."
+    - key: COMPLETE
+      question: "What proves business completion?"
+      answer: "Define an explicit terminal business state and evidence, for example target document posted, stock updated, invoice created, acknowledgement accepted, or controlled exception owned."
+
+control_layers:
+  - id: INTOPS-CTRL-IDENTITY
+    title: "Identity and Correlation"
+    purpose: "Prevents duplicate side effects and keeps retries traceable across systems."
+    diagnostic_question: "Which technical and business IDs identify the same event across sender, middleware, receiver, and follow-on documents?"
+  - id: INTOPS-CTRL-QOS
+    title: "Delivery Semantics"
+    purpose: "Defines where retry occurs and what duplicate behavior is possible."
+    diagnostic_question: "Which hop is at-most-once, at-least-once, or designed for exactly-once effect, and where is idempotency implemented?"
+    source_refs: [SRC-SAP-INTOPS-EXACTLY-ONCE]
+  - id: INTOPS-CTRL-ORDERING
+    title: "Ordering and Serialization"
+    purpose: "Protects chronological dependencies where one event must finish before the next."
+    diagnostic_question: "Can messages be processed in parallel, or does the business object require FIFO/sequence control?"
+    source_refs: [SRC-SAP-INTOPS-QRFC, SRC-SAP-INTOPS-BGRFC]
+  - id: INTOPS-CTRL-RETRY
+    title: "Retry and Replay"
+    purpose: "Recovers transient failures without creating duplicate business effects."
+    diagnostic_question: "Was the previous attempt definitely not committed, or will the receiver safely deduplicate a replay?"
+    source_refs: [SRC-SAP-INTOPS-QUEUES, SRC-SAP-INTOPS-XI-RETRY]
+  - id: INTOPS-CTRL-ERROR
+    title: "Error Handling and Correction"
+    purpose: "Routes application and technical exceptions to the right owner with enough context to fix the root cause."
+    diagnostic_question: "Is the error transport, mapping, master data, configuration, application validation, authorization, or downstream processing?"
+    source_refs: [SRC-SAP-INTOPS-AIF-ERROR, SRC-SAP-INTOPS-ERROR-DESIGN]
+  - id: INTOPS-CTRL-RECONCILIATION
+    title: "Business Reconciliation"
+    purpose: "Proves end-to-end business state after asynchronous processing and recovery."
+    diagnostic_question: "Which source requirement and target result should match, and what would count as a controlled exception?"
+
+runtime_pipeline:
+  - order: 1
+    id: INTOPS-RUNTIME-IDENTIFY
+    title: "Identify message and business event"
+    question: "What exact event are we tracing?"
+    inputs: ["technical message ID", "business document/key", "correlation ID", "source timestamp/version", "partner/interface", "target object if created"]
+    output: ["one traceable event chain"]
+    failure_signal: "Operations reprocesses the wrong duplicate or cannot prove which target object belongs to which source event."
+  - order: 2
+    id: INTOPS-RUNTIME-LOCATE
+    title: "Locate the first failing hop"
+    question: "Where did processing stop?"
+    inputs: ["sender log", "middleware monitor", "queue/RFC status", "receiver monitor", "AIF/IDoc status", "application log", "target document"]
+    output: ["first failed or ambiguous processing boundary"]
+    failure_signal: "A middleware green status is treated as proof that the receiver committed successfully."
+  - order: 3
+    id: INTOPS-RUNTIME-CLASSIFY
+    title: "Classify failure and ownership"
+    question: "What kind of failure is this?"
+    inputs: ["network/transport", "authentication", "serialization/order", "mapping", "master data", "application validation", "configuration", "resource/system failure"]
+    output: ["owner, severity, recovery class, expected correction"]
+    failure_signal: "Integration team keeps retrying an application/master-data error that will deterministically fail again."
+  - order: 4
+    id: INTOPS-RUNTIME-COMMIT
+    title: "Determine commit state"
+    question: "Did the target create any durable side effect?"
+    inputs: ["target document", "database/application status", "acknowledgement", "application log", "partial child messages", "follow-on objects"]
+    output: ["not committed, committed, partially committed, or unknown"]
+    failure_signal: "Replay is started while commit state is unknown, creating duplicate or contradictory business objects."
+  - order: 5
+    id: INTOPS-RUNTIME-RECOVER
+    title: "Choose recovery pattern"
+    question: "Retry, edit and restart, compensate, cancel, or escalate?"
+    inputs: ["failure class", "commit state", "idempotency", "ordering dependency", "changeable fields", "business deadline"]
+    output: ["safe recovery action with owner and evidence"]
+    failure_signal: "Generic restart changes state without preserving order or business identity."
+  - order: 6
+    id: INTOPS-RUNTIME-ORDER
+    title: "Protect sequence and dependencies"
+    question: "Can later messages proceed?"
+    inputs: ["queue status", "business sequence", "predecessor/successor events", "parallel partitions", "locks", "scheduler state"]
+    output: ["release, hold, reorder prohibition, or controlled parallel execution"]
+    failure_signal: "A later update overtakes a blocked predecessor and target state becomes chronologically wrong."
+  - order: 7
+    id: INTOPS-RUNTIME-RECONCILE
+    title: "Reconcile source and target"
+    question: "Did recovery create the intended business result exactly once?"
+    inputs: ["source event", "target document", "quantities/values", "status", "correlation", "reversal/cancellation", "downstream acknowledgement"]
+    output: ["matched, duplicate, missing, inconsistent, or controlled exception"]
+    failure_signal: "All technical monitors are green but a business document is missing, duplicated, stale, or financially inconsistent."
+  - order: 8
+    id: INTOPS-RUNTIME-CLOSE
+    title: "Close with business proof"
+    question: "What evidence allows the incident to close?"
+    inputs: ["business terminal state", "monitor status", "reconciliation result", "owner confirmation", "alert/runbook record", "root-cause/fix"]
+    output: ["business-complete incident closure or follow-up problem record"]
+    failure_signal: "Incident closes when a message leaves the error queue, even though downstream business completion was never verified."
+
+technology_runbooks:
+  - id: INTOPS-RUNBOOK-AIF
+    title: "AIF / Message Monitoring"
+    monitor: "/AIF/IFMON, /AIF/ERR, Message Dashboard / Message Monitoring apps depending on deployment"
+    use_for: "Business-aware message monitoring, recipient ownership, application error analysis, selected edit/restart/cancel capabilities."
+    recovery_rule: "Correct known application/mapping/master-data error with ownership, then restart only the affected message and verify target business state."
+    source_refs: [SRC-SAP-INTOPS-AIF-MONITOR, SRC-SAP-INTOPS-AIF-ERROR, SRC-SAP-INTOPS-AIF-CLOUD]
+  - id: INTOPS-RUNBOOK-IDOC
+    title: "IDoc"
+    monitor: "WE02/WE05 for status/data inspection; BD87 for status monitor and selected reprocessing"
+    use_for: "Structured asynchronous ALE/IDoc exchange where status records describe technical/application processing."
+    recovery_rule: "Read status history and payload, fix the deterministic cause, then reprocess the existing IDoc where appropriate instead of creating an unrelated duplicate."
+    source_refs: [SRC-SAP-INTOPS-IDOC]
+  - id: INTOPS-RUNBOOK-QRFC
+    title: "tRFC / qRFC"
+    monitor: "SM58 for failed tRFC, SMQ1 outbound qRFC, SMQ2 inbound qRFC; scheduler context SMQS/SMQR"
+    use_for: "Asynchronous RFC delivery and serialized queues where predecessor order matters."
+    recovery_rule: "Interpret queue status before activation. Do not reset serious application states blindly; reactivation can execute a LUW more than once if target processing is still active."
+    source_refs: [SRC-SAP-INTOPS-QRFC, SRC-SAP-INTOPS-QRFC-STATUS]
+  - id: INTOPS-RUNBOOK-BGRFC
+    title: "bgRFC"
+    monitor: "SBGRFCMON"
+    use_for: "Transactional or queued bgRFC units; queued units can provide FIFO processing."
+    recovery_rule: "Trace unit/queue state and only restart stuck units after understanding technical versus application failure and ordering dependencies."
+    source_refs: [SRC-SAP-INTOPS-BGRFC]
+  - id: INTOPS-RUNBOOK-CLOUD-INTEGRATION
+    title: "SAP Integration Suite / Cloud Integration"
+    monitor: "Monitor integrations and message processing; queue/data-store monitors for persistent retry patterns"
+    use_for: "Cloud integration flows, adapters, persistent queues, exception subprocesses, retries and message processing logs."
+    recovery_rule: "Design retry and exception behavior explicitly. A Completed monitor status can still represent a handled exception depending on the flow; interpret business result, not color alone."
+    source_refs: [SRC-SAP-INTOPS-CI-MONITOR, SRC-SAP-INTOPS-ERROR-DESIGN, SRC-SAP-INTOPS-QUEUES]
+
+recovery_patterns:
+  - id: INTOPS-REC-TRANSIENT-RETRY
+    title: "Transient retry"
+    use_when: "Receiver/network/resource failure is temporary and no unsafe partial commit occurred."
+    controls: ["bounded retry", "backoff", "idempotency", "deadline", "alert after threshold"]
+  - id: INTOPS-REC-CORRECT-RESTART
+    title: "Correct and restart"
+    use_when: "Message failed deterministically due to correctable mapping/master-data/configuration/application validation and target did not create an incompatible commit."
+    controls: ["auditable correction", "same message/business identity", "owner approval if business data changes", "post-restart reconciliation"]
+  - id: INTOPS-REC-REPLAY
+    title: "Replay from source"
+    use_when: "Source can regenerate the same business event safely and receiver/middleware deduplication contract is known."
+    controls: ["same business identity", "deduplication", "ordering", "avoid creating a new semantic event"]
+  - id: INTOPS-REC-COMPENSATE
+    title: "Compensate"
+    use_when: "Previous attempt committed a business effect that cannot be safely rolled back by transport retry."
+    controls: ["explicit reversal/correction business process", "reference original object", "downstream propagation", "audit trail"]
+  - id: INTOPS-REC-QUARANTINE
+    title: "Quarantine / dead-letter"
+    use_when: "Repeated deterministic or poison-message failure would block throughput or exhaust retry resources."
+    controls: ["retain identity/payload metadata", "alert owner", "stop endless retry", "manual disposition", "reconciliation backlog"]
+
+ordering_model:
+  principle: >-
+    Ordering is a business property, not a middleware superstition. Serialize events only when the target state depends on chronology,
+    but never release a blocked predecessor simply to clear a monitor without understanding the successor impact.
+  examples:
+    - "Create customer before dependent order"
+    - "Create/change/cancel events for the same object"
+    - "Inventory movements for one serialized stock context"
+    - "JIT/JIS change after original call"
+    - "Master-data version followed by transactional use"
+  source_refs: [SRC-SAP-INTOPS-QRFC, SRC-SAP-INTOPS-BGRFC]
+
+idempotency_model:
+  principle: >-
+    Guaranteed delivery can redeliver. End-to-end exactly-once effect requires a stable identity and duplicate handling somewhere in the path.
+    Do not assume a queue or middleware QoS alone prevents receiver-side duplicate business effects.
+  questions:
+    - "Which ID survives a retry?"
+    - "Who stores the processed ID or detects duplicate business keys?"
+    - "What is the retention window for deduplication?"
+    - "Does a replay use the same semantic event ID or accidentally look like a new event?"
+    - "What happens after deduplication history expires?"
+  source_refs: [SRC-SAP-INTOPS-EXACTLY-ONCE, SRC-SAP-INTOPS-QUEUES]
+
+observability_model:
+  dimensions:
+    - "Technical status: sent, queued, failed, completed, canceled"
+    - "Latency: source event to target commit"
+    - "Backlog: queued/failed messages by age and business priority"
+    - "Retry count and retry age"
+    - "Duplicate or deduplication count"
+    - "Business reconciliation: missing/duplicate/inconsistent target outcomes"
+    - "Ownership: unresolved exception with named recipient/team"
+  lead_rule: "Alert on business risk and age, not only raw error count. Ten old blocked orders can matter more than ten thousand successful master-data messages."
+
+failure_modes:
+  - id: INTOPS-FAIL-GREEN-NO-BUSINESS
+    symptom: "Middleware shows completed/green but target business document or update is missing."
+    first_checks: ["target application log", "receiver acknowledgement semantics", "handled exception flow", "follow-on commit", "business key search", "correlation"]
+    avoid: "Do not close incident based on middleware completion alone."
+  - id: INTOPS-FAIL-DUPLICATE
+    symptom: "Retry creates duplicate order, invoice, delivery, or posting."
+    first_checks: ["message/business ID", "previous commit state", "receiver idempotency", "deduplication retention", "source replay identity"]
+    avoid: "Do not generate a fresh message ID for the same semantic event just to bypass duplicate protection."
+  - id: INTOPS-FAIL-ORDER
+    symptom: "Later change/cancel is processed before create or earlier update."
+    first_checks: ["queue/partition key", "predecessor state", "parallel processing", "business sequence", "blocked queue", "manual activation history"]
+    avoid: "Do not maximize parallelism for stateful event streams without a business ordering rule."
+  - id: INTOPS-FAIL-RETRY-STORM
+    symptom: "Deterministic application error is retried repeatedly and fills queues/alerts."
+    first_checks: ["error class", "retry policy", "backoff", "poison-message pattern", "owner notification", "dead-letter/quarantine"]
+    avoid: "Do not treat every error as transient."
+  - id: INTOPS-FAIL-PARTIAL-COMMIT
+    symptom: "Message failed but some target side effects already exist."
+    first_checks: ["target object search", "child messages", "transaction boundary", "application log", "downstream side effects", "compensation process"]
+    avoid: "Do not replay until partial commit is understood."
+  - id: INTOPS-FAIL-QUEUE-BLOCK
+    symptom: "One failed message blocks many valid successors."
+    first_checks: ["queue status", "business dependency", "first LUW/message", "application cause", "safe isolation option", "successor semantics"]
+    avoid: "Do not skip predecessor solely for throughput if successor state depends on it."
+  - id: INTOPS-FAIL-OWNERSHIP
+    symptom: "Error is visible but no team owns correction or business confirmation."
+    first_checks: ["interface recipient", "business owner", "technical owner", "master-data/config owner", "severity/SLA", "runbook escalation"]
+    avoid: "Do not make middleware operations the default owner for every receiver application error."
+
+impact_traces:
+  - id: INTOPS-TRACE-DUPLICATE
+    start: "Transient timeout after target committed"
+    path: ["sender sees no success", "retry occurs", "receiver lacks idempotency", "duplicate business document/posts", "downstream reconciliation and financial correction required"]
+    lead_question: "Which stable event ID should have prevented the second effect?"
+  - id: INTOPS-TRACE-ORDER
+    start: "Create event blocked, change event released"
+    path: ["successor overtakes predecessor", "receiver cannot find or creates inconsistent object", "later retries become nondeterministic", "manual repair grows"]
+    lead_question: "Which business key requires serialization and where should ordering be enforced?"
+  - id: INTOPS-TRACE-GREEN
+    start: "Integration flow catches exception and ends Completed"
+    path: ["middleware dashboard appears green", "receiver business effect absent", "incident not raised", "business process silently stalls"]
+    lead_question: "What business completion signal should be monitored beyond technical status?"
+
+lead_lens:
+  what_i_ask_first:
+    - "What exact business event and business key are we tracing?"
+    - "Where is the first failed or ambiguous hop, and did the target commit anything?"
+    - "Is ordering required, and is retry safe/idempotent?"
+    - "What business state proves completion?"
+  decision_owner: "Integration operations owns transport visibility and recovery coordination; application/domain owners own business validation and commit semantics; source/target product owners jointly own reconciliation contracts."
+  main_trade_off: "Recover quickly without duplicating, reordering, or silently losing business effects."
+  typical_failure: "Operations optimizes for a green monitor rather than a correct business state."
+  proof_of_cause: "Correlate source event, middleware message, queue/RFC/AIF/IDoc status, target application log, durable business object, downstream effects, and reconciliation result."
+  integration_impact: "Every asynchronous logistics flow can fail after technical delivery but before business completion; recovery design is part of architecture, not an operations afterthought."
+  data_impact: "Message IDs, business keys, versions, timestamps, ordering keys, payload hashes, target references, and retry history become operational data."
+  sixty_second_explanation: >-
+    I start with the business event and stable identity, then locate the first failed hop and determine whether the target committed anything.
+    Only after that do I choose retry, restart, replay, compensation, or quarantine. Guaranteed delivery can cause redelivery, so exactly-once business effect needs idempotency or duplicate detection.
+    If events are stateful, I protect ordering instead of releasing a blocked queue blindly. AIF, IDoc, qRFC/bgRFC, and Integration Suite each provide different technical recovery tools,
+    but incident closure requires source-to-target reconciliation and proof of the final business state. Green middleware alone is not completion.
+
+assessment_prompts:
+  - "Cloud Integration shows Completed but no sales order exists in S/4HANA. Build the investigation."
+  - "A timeout occurs after the receiver may have committed. Decide whether retry is safe."
+  - "One qRFC LUW blocks 5,000 successors. Explain when you can and cannot release/restart the queue."
+  - "A deterministic master-data validation error is retried every few minutes. Design a better recovery pattern."
+  - "An IDoc was reprocessed and created a duplicate business document. Explain the missing idempotency contract."
+  - "Define operational KPIs that measure business integration health rather than only technical message success."
