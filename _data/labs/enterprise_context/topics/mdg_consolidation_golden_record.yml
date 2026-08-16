@@ -1,0 +1,71 @@
+id: TOPIC-MDG-CONSOLIDATION-GOLDEN-RECORD
+type: research_topic
+title: "SAP MDG Consolidation, Matching and Golden Record Design"
+summary: "A decision model for standardization, matching, match review, best record calculation, validation, duplicate strategy, activation and provenance."
+domain: "Data and Analytics"
+process_family: "Master Data Consolidation"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/consolidation/"
+source_reviewed_at: "2026-08-16"
+
+memory_model:
+  phrase: "Source Records → Standardize → Match → Review → Best Record → Validate → Duplicate Strategy → Activate → Map → Distribute"
+  principle: "A golden record is a governed result of evidence and rules. It is not simply the row with the most populated fields."
+
+match_design:
+  identity_features: [name, address, tax-id, registration-id, bank, product-identifiers, domain-specific-keys]
+  decisions:
+    - "Which fields are strong identity evidence?"
+    - "Which fields are noisy and should only support a match?"
+    - "Which thresholds create automatic match, possible match and non-match?"
+    - "Which false-positive risk is acceptable?"
+    - "Who reviews ambiguous groups?"
+
+best_record_policy:
+  rule_types:
+    - "Source priority: trusted system wins for selected fields or tables."
+    - "Recency: newest trusted value wins where time is meaningful."
+    - "Completeness: populated value can win when source quality is comparable."
+    - "Business rule: domain-specific precedence decides the value."
+  required_evidence:
+    - source-record-id
+    - source-system
+    - selected-value
+    - winning-rule
+    - rejected-alternatives
+    - manual-override-if-any
+    - reviewer
+
+active_duplicate_strategies:
+  remove_duplicates: "Keep best record, redirect identity mapping and retire duplicate according to supported process."
+  improve_best_record: "Enrich the selected best record while leaving duplicates unchanged."
+  improve_all_records: "Align duplicates with the best record where this strategy is deliberately chosen."
+
+quality_gates:
+  - "Match group has explainable evidence."
+  - "Best-record policy is deterministic where possible."
+  - "Manual override records why the rule was overridden."
+  - "Validation happens before activation."
+  - "Identity mappings point to the intended surviving object."
+  - "Downstream systems receive the identity change safely."
+
+assessment_cards:
+  - prompt: "How do you choose a golden record?"
+    answer: "Per field or table using explicit trust, recency, completeness and domain rules, then validate the result and preserve provenance."
+  - prompt: "What is the biggest risk in matching?"
+    answer: "A false positive can merge different real-world objects. Thresholds and review policy must reflect business risk, not only algorithm score."
+  - prompt: "Why is key mapping part of consolidation?"
+    answer: "Because duplicate source identities must continue to resolve to the surviving governed identity across systems."
+
+source_refs:
+  - SRC-SAP-MDG-BEST-RECORD-2025
+  - SRC-SAP-MDG-CONSOLIDATE-ACTIVE-2025
+relations:
+  - subject: TOPIC-MDG-CONSOLIDATION-GOLDEN-RECORD
+    predicate: provides_context_to
+    object: TOPIC-MDG-LINEAGE
+    evidence_type: reasoned_interpretation
+    confidence: high

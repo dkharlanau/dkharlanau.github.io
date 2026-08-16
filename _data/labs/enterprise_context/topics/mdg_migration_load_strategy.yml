@@ -1,0 +1,74 @@
+id: TOPIC-MDG-MIGRATION-LOAD-STRATEGY
+type: research_topic
+title: "SAP MDG Migration and Load Strategy"
+summary: "How to load legacy master data into an MDG operating model without bypassing identity, quality, governance, reconciliation and delta controls."
+domain: "Data and Analytics"
+process_family: "Master Data Migration"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/migration/"
+source_reviewed_at: "2026-08-16"
+
+memory_model:
+  phrase: "Discover → Profile → Map → Clean → Match → Load → Validate → Activate → Reconcile → Delta → Cutover → Operate"
+  principle: "Migration is not finished when records are loaded. It is finished when governed identity and business usability are proven."
+
+migration_workstreams:
+  population:
+    questions: [which-objects, which-organizational-slices, history-or-current-state, active-or-obsolete]
+  identity:
+    questions: [source-key, target-key, duplicate-policy, number-range, key-mapping]
+  mapping:
+    questions: [field-map, code-map, default, derivation, rejected-values, mandatory-target-fields]
+  quality:
+    questions: [profiling, nulls, invalid-codes, duplicate-rate, referential-integrity, business-rules]
+  load:
+    questions: [load-mechanism, package-size, ordering, restartability, application-log]
+  reconciliation:
+    questions: [source-count, target-count, key-match, control-totals, rejected-records, business-sample]
+  delta:
+    questions: [cutoff, watermark, late-arrivals, overlap, duplicate-policy, freeze]
+  cutover:
+    questions: [stop-go, rollback, ownership, smoke-tests, hypercare]
+
+load_paths:
+  file_upload:
+    use_when: "Supported entity and controlled file-based change/load fits the domain and volume."
+    caution: "A technically accepted file still needs semantic validation and reconciliation."
+  consolidation_import:
+    use_when: "Source data needs matching, best-record calculation and controlled activation."
+    caution: "Do not activate before match quality and identity decisions are accepted."
+  mass_processing:
+    use_when: "Existing governed records need controlled bulk change."
+    caution: "Bulk change increases blast radius; use checkpoints and regression controls."
+  integration_or_custom_load:
+    use_when: "Standard load paths do not fit volume, source architecture or required orchestration."
+    caution: "Keep governance, validation, audit and restartability explicit."
+
+acceptance_gates:
+  - "100% of in-scope source keys are classified: loaded, intentionally excluded or rejected with owner."
+  - "No unexplained target-only identities exist."
+  - "Duplicate and key-mapping decisions are complete."
+  - "Mandatory organizational slices are present."
+  - "Critical field mappings pass business-rule validation."
+  - "Delta window has no unowned gap."
+  - "O2C/P2P/MRP/EWM or other target-process smoke tests pass for representative records."
+
+assessment_cards:
+  - prompt: "Would you load legacy data directly into active tables?"
+    answer: "Only through a supported and controlled architecture. The design must preserve validation, identity, audit, reconciliation and restartability."
+  - prompt: "What is the most dangerous migration metric?"
+    answer: "Loaded record count without key-level reconciliation and business usability. A count can be correct while the wrong records or wrong organizational slices were loaded."
+
+source_refs:
+  - SRC-SAP-MDG-FILE-UPLOAD-2025
+  - SRC-SAP-MDG-BP-IMPORT-2025
+  - SRC-SAP-MDG-MASS-PROCESSING-2025
+relations:
+  - subject: TOPIC-MDG-MIGRATION-LOAD-STRATEGY
+    predicate: requires
+    object: TOPIC-MDG-DATA-MODEL-ENGINEERING
+    evidence_type: reasoned_interpretation
+    confidence: high

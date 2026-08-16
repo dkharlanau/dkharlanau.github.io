@@ -1,0 +1,87 @@
+id: TOPIC-MDG-LOGISTICS-END-TO-END-CASES
+type: research_topic
+title: "SAP MDG End-to-End Logistics Cases"
+summary: "Assessment-ready traces from governed master data into Sales, Procurement, Planning, Quality and EWM business outcomes."
+domain: "Logistics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/logistics/cases/"
+source_reviewed_at: "2026-08-16"
+
+case_method:
+  phrase: "Business Symptom → Required Master Grain → Governed Value → Activation → Distribution → Consumer Determination → Document Evidence"
+  rule: "Do not stop at master-data correctness. Prove the value influenced the intended business document or execution step."
+
+cases:
+  - id: CASE-MDG-O2C-NEW-MATERIAL
+    title: "New Material for Order-to-Cash"
+    business_goal: "Sell and deliver an existing enterprise product in a new sales/plant context."
+    required_grains: [Material, Material+Plant, Material+SalesArea, Material+ValuationArea]
+    mdg_controls: [identity, sales-and-plant-completeness, units, tax/classification-as-required, approval]
+    distribution_checks: [target-system, sales-slice, plant-slice, identity-mapping]
+    business_proof: [sales-order-item-accepted, plant-determined, ATP-or-scheduling-usable, delivery-created, goods-issue-postable]
+    first_failure_examples:
+      - "Global material active, sales-area slice missing"
+      - "Sales data replicated, plant data missing"
+      - "Target has material but local sales determination uses incompatible value"
+  - id: CASE-MDG-P2P-NEW-SUPPLIER
+    title: "New Supplier for Procure-to-Pay"
+    business_goal: "Create a supplier that can be ordered from and paid in the required organizations."
+    required_grains: [BusinessPartner, Supplier, Supplier+CompanyCode, Supplier+PurchasingOrganization]
+    mdg_controls: [duplicate-check, tax-and-bank-ownership, purchasing-completeness, payment-control, approval]
+    distribution_checks: [bp-identity, supplier-role, organizational-slices, target-acceptance]
+    business_proof: [purchase-order-created, goods-receipt-usable, invoice-verification-usable, payment-context-valid]
+  - id: CASE-MDG-MRP-PLANT-EXTENSION
+    title: "Material Plant Extension for MRP"
+    business_goal: "Plan an existing material in a new plant."
+    required_grains: [Material, Material+Plant]
+    mdg_controls: [mrp-parameters, procurement-type, lot-sizing/scheduling-as-required, ownership]
+    distribution_checks: [plant-data-present, target-planning-system-compatible]
+    business_proof: [mrp-run-consumes-material, planning-result-is-plausible, exception-message-explainable]
+  - id: CASE-MDG-EWM-PRODUCT
+    title: "Governed Product into EWM"
+    business_goal: "Make the product executable in warehouse inbound/outbound processes."
+    required_grains: [Material, Material+Plant, warehouse-relevant-product-data]
+    mdg_controls: [units, dimensions/weight-as-required, warehouse-relevant-attributes, identity]
+    distribution_checks: [product-replication, local-identity, warehouse-attributes, error-monitoring]
+    business_proof: [inbound-or-outbound-document-consumes-product, warehouse-task-creation, confirmation]
+  - id: CASE-MDG-QM-MATERIAL
+    title: "Quality-Relevant Material Change"
+    business_goal: "Change quality-relevant master data without breaking inspection execution."
+    required_grains: [Material, Material+Plant, quality-related-material-data]
+    mdg_controls: [rule-owner, effective-change-scope, approval, regression]
+    distribution_checks: [quality-data-present, plant-context-correct]
+    business_proof: [inspection-process-uses-expected-settings, no-unintended-plant-impact]
+
+lead_questions:
+  - "Which master-data grain actually drives the failed determination?"
+  - "Who had authority to change that grain?"
+  - "Was the value entered, derived or mapped?"
+  - "Was it activated?"
+  - "Was it replicated to this consumer?"
+  - "Did the consumer accept the semantic value?"
+  - "Which document proves business use?"
+
+source_refs:
+  - SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025
+  - SRC-SAP-MDG-BP-DATA-MODELS-2025
+  - SRC-SAP-MDG-DRF-2025
+relations:
+  - subject: TOPIC-MDG-LOGISTICS-END-TO-END-CASES
+    predicate: requires
+    object: TOPIC-MDG-MATERIAL-DOMAIN
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-LOGISTICS-END-TO-END-CASES
+    predicate: requires
+    object: TOPIC-MDG-BUSINESS-PARTNER-DOMAIN
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-LOGISTICS-END-TO-END-CASES
+    predicate: requires
+    object: TOPIC-MDG-REPLICATION-DISTRIBUTION
+    evidence_type: reasoned_interpretation
+    confidence: high

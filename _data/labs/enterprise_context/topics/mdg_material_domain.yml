@@ -1,0 +1,125 @@
+id: TOPIC-MDG-MATERIAL-DOMAIN
+type: research_topic
+title: "SAP MDG Material Domain Model"
+summary: "A Lead-level model of Material governance from global identity through plant, sales, purchasing, valuation, warehouse and quality grains to downstream logistics proof."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/domains/material/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "How should Material master data be split into governed grains so that one product can be created once and safely extended into planning, procurement, sales, warehouse, quality and finance contexts?"
+
+memory_model:
+  phrase: "Identity → Global Data → Plant → Sales Area → Purchasing → Storage/Warehouse → Valuation → Classification → Consumer"
+  principle: "A Material is one business identity with many organizational slices. Do not model an organizational extension as a second product."
+
+grain_map:
+  - grain: "Material"
+    meaning: "Enterprise identity and global attributes."
+    examples: [material-type, base-unit, description, general-weight-volume, classification]
+    common_owner: "Enterprise product/material governance"
+  - grain: "Material + Plant"
+    meaning: "Location-dependent planning and execution data."
+    examples: [mrp, procurement-type, scheduling, availability-relevant settings, quality and work-scheduling data]
+    common_owner: "Plant planning / operations with central governance controls"
+  - grain: "Material + Sales Organization + Distribution Channel"
+    meaning: "Commercial sales context."
+    examples: [sales-unit, delivering-plant context, sales texts, commercial groupings]
+    common_owner: "Sales master-data ownership"
+  - grain: "Material + Purchasing context"
+    meaning: "Procurement-relevant material attributes and texts."
+    examples: [purchasing-text, ordering controls, purchasing-relevant units]
+    common_owner: "Procurement master-data ownership"
+  - grain: "Material + Storage Location"
+    meaning: "Storage-location-specific execution context."
+    examples: [storage, location-MRP data where applicable]
+    common_owner: "Plant / inventory operations"
+  - grain: "Material + Valuation Area"
+    meaning: "Financial valuation context."
+    examples: [valuation-class, price-control context, costing/valuation data]
+    common_owner: "Finance / controlling with material governance"
+  - grain: "Material + Warehouse / Storage Type"
+    meaning: "Warehouse execution context where the selected architecture requires these attributes."
+    examples: [warehouse-management and storage-type data]
+    common_owner: "Warehouse operations"
+
+model_boundaries:
+  included_in_mdg_m_examples:
+    - "Basic material data"
+    - "Plant-specific data"
+    - "Sales data"
+    - "Purchasing data"
+    - "Storage-location data"
+    - "Valuation/accounting data"
+    - "Units of measure"
+    - "Classification"
+    - "Quality-related material data"
+  explicitly_not_the_same_object:
+    - "Pricing conditions"
+    - "Source list"
+    - "Routing"
+    - "Other process-control objects with their own lifecycle"
+  design_rule: "Do not stretch the Material model to own every object that merely references a material."
+
+build_sequence:
+  - step: 1
+    action: "Define business identity and number strategy."
+    evidence: "Material key strategy and duplicate policy"
+  - step: 2
+    action: "Map every required field to a grain before discussing screens."
+    evidence: "Field-to-grain matrix"
+  - step: 3
+    action: "Assign business owner and data steward per grain."
+    evidence: "Ownership map"
+  - step: 4
+    action: "Select governance scope and change-request patterns."
+    evidence: "CR type / scope matrix"
+  - step: 5
+    action: "Define validations and derivations at the earliest reliable boundary."
+    evidence: "Rule catalog with owner and test cases"
+  - step: 6
+    action: "Design activation and replication by consumer."
+    evidence: "Target contract and DRF design"
+  - step: 7
+    action: "Load and reconcile existing data by grain, not only by material count."
+    evidence: "Migration control totals"
+  - step: 8
+    action: "Prove use in real logistics processes."
+    evidence: "O2C/P2P/MRP/EWM/QM smoke evidence"
+
+failure_patterns:
+  - symptom: "Material exists but sales order fails."
+    trace: "Material → sales-area slice → plant/shipping dependencies → replication → local consumer rules"
+  - symptom: "Material exists but PO cannot be created correctly."
+    trace: "Material → purchasing/plant slice → unit data → supplier relation/source object → replication"
+  - symptom: "Material is active but EWM cannot execute it."
+    trace: "Material → warehouse-relevant slice → distribution → local product mapping → warehouse business proof"
+  - symptom: "MRP ignores or plans the product incorrectly."
+    trace: "Material → plant/MRP grain → planning parameters → activation → plant consumer"
+
+assessment_cards:
+  - prompt: "Would you put a plant-specific field on the Material root?"
+    answer: "No by default. First prove the business meaning is global. If meaning changes by plant, the grain must carry the plant qualifier."
+  - prompt: "Why is a successful Material creation not enough?"
+    answer: "Because business usability is proven only when required organizational slices are active, distributed and consumed by the intended process."
+  - prompt: "How do you extend Material into a new plant?"
+    answer: "Extend the existing identity with plant-grain data, validate planning/execution fields, activate, replicate if required, and test the real plant process."
+
+source_refs:
+  - SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025
+  - SRC-SAP-MDG-REPLICATION-CONFIG-2025
+relations:
+  - subject: TOPIC-MDG-MATERIAL-DOMAIN
+    predicate: requires
+    object: TOPIC-MDG-DATA-MODEL-ENGINEERING
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-MATERIAL-DOMAIN
+    predicate: provides_context_to
+    object: TOPIC-MDG-LINEAGE
+    evidence_type: reasoned_interpretation
+    confidence: high
