@@ -174,6 +174,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",
         "reasoning-coverage": ASSESSMENT / "reasoning-coverage" / "index.html",
         "reasoning-gaps": ASSESSMENT / "reasoning-gaps" / "index.html",
+        "promotion-review": ASSESSMENT / "promotion-review" / "index.html",
         "human-review": ASSESSMENT / "human-review" / "index.html",
         "human-review-findings": ASSESSMENT / "human-review" / "findings" / "index.html",
         "human-review-secondary": ASSESSMENT / "human-review" / "secondary" / "index.html",
@@ -202,6 +203,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
     assert authoring["promotion-readiness"]["route"] == "/labs/assessment/promotion-readiness/"
     assert authoring["reasoning-coverage"]["route"] == "/labs/assessment/reasoning-coverage/"
     assert authoring["reasoning-gap-review"]["route"] == "/labs/assessment/reasoning-gaps/"
+    assert authoring["promotion-review"]["route"] == "/labs/assessment/promotion-review/"
     assert authoring["human-review"]["route"] == "/labs/assessment/human-review/"
     assert authoring["core-study"]["route"] == "/labs/assessment/core/"
 
@@ -210,7 +212,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044", "LOOP-045", "LOOP-046", "LOOP-047"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044", "LOOP-045", "LOOP-046", "LOOP-047", "LOOP-048"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -663,3 +665,22 @@ def test_every_active_generated_candidate_has_one_semantic_decision() -> None:
     assert decisions == active
     assert review["summary"]["retain_for_human_promotion_review"] == 5
     assert review["summary"]["reject_semantic_duplicate"] == 2
+
+
+def test_promotion_review_packet_contains_only_semantic_survivors_and_zero_approvals() -> None:
+    packet = load_json("promotion-review-packet.json")
+    generated_review = load_json("candidate-semantic-review.json")
+    gap_review = load_json("reasoning-gap-semantic-review.json")
+    expected = {item["candidate_id"] for item in generated_review["decisions"] if item["recommendation"] == "retain_for_human_promotion_review"}
+    expected |= {item["candidate_id"] for item in gap_review["decisions"] if item["recommendation"] == "retain_for_human_promotion_review"}
+    assert {item["candidate_id"] for item in packet["items"]} == expected
+    assert packet["summary"]["pending_candidates"] == len(expected)
+    assert packet["summary"]["approved_candidates"] == 0
+    assert all(item["human_decision"]["status"] == "pending_human_review" for item in packet["items"])
+    assert all(item["human_decision"]["decision"] is None for item in packet["items"])
+
+    result = subprocess.run(
+        [sys.executable, "scripts/validate_assessment_promotion_review_packet.py"],
+        cwd=ROOT, text=True, capture_output=True, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr

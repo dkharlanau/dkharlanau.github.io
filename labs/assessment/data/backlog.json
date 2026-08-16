@@ -659,11 +659,23 @@
         "scripts/validate_assessment_candidate_semantic_review.py"
       ],
       "working_rule": "Require exactly one semantic decision for every active generated candidate. Retain the billing-reference and integration-ownership signals, and prevent future generator output from bypassing semantic review."
+    },
+    {
+      "id": "LOOP-048",
+      "priority": "P1",
+      "title": "Unified candidate promotion review packet",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/promotion-review/",
+        "/labs/assessment/data/promotion-review-packet.json",
+        "scripts/generate_assessment_promotion_review_packet.py",
+        "scripts/validate_assessment_promotion_review_packet.py"
+      ],
+      "working_rule": "Combine every semantic-surviving candidate in one read-only human review packet. Keep every human decision pending and require a separate explicit reviewed change before any candidate enters the published case manifest."
     }
   ],
   "next_iteration_themes": [
-    "build one human promotion review packet from every semantic-surviving generated and non-diagnostic candidate without publishing any case",
-    "prepare one human promotion review packet for the surviving reasoning-gap signals without publishing them automatically",
+    "add an export-only human promotion decision record for approve, revise, or reject without writing the published manifest automatically",
     "record true human page-review findings separately from automated editorial improvement",
     "select secondary P1 pages by cross-track assessment value instead of processing all routes mechanically"
   ]
