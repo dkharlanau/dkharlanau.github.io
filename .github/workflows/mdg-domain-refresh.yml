@@ -1,0 +1,32 @@
+name: Refresh MDG domain artifacts once
+
+on:
+  push:
+    branches:
+      - agent/mdg-domain-deep-dive
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/mdg-domain-deep-dive
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate Atlas discovery artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Commit generated files and remove one-shot workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          git rm .github/workflows/mdg-domain-refresh.yml
+          git commit -m "Refresh MDG domain discovery artifacts"
+          git push origin HEAD:agent/mdg-domain-deep-dive
