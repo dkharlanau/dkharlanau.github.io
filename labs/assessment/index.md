@@ -51,6 +51,14 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Authoring control</p><h2>New questions enter through evidence and review.</h2><p>The generator currently reads whitelisted Billing and Integration Operations failure modes. It found two review candidates and rejected twelve duplicate patterns. Published practice remains at 59 cases.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/question-review/"><span>AUTHOR</span><strong>Question Candidate Review</strong><small>Inspect graph evidence, source refs, duplicate checks, and local review decisions before any case promotion.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/data/question-candidates.json"><span>2</span><strong>Generated Candidate Inventory</strong><small>Two review candidates, twelve duplicate rejections, and a hard publication boundary.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Reasoning levels</p><h2>Move from knowledge to ownership.</h2><p>The same SAP topic can be tested at five levels.</p></header>
     <div class="research-route-list">
       <a href="#assessment-tracks"><span>01</span><strong>Explain</strong><small>Business purpose, objects, process flow, and boundary.</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
@@ -130,7 +138,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
     <div class="ecg-decision-columns">
       <div><h4>Knowledge base</h4><ul><li>Sales, Shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory</li><li>FI/CO touchpoints, Automotive JIT/JIS, EWM and TM</li><li>Integration architecture and recovery operations</li><li>MDG, SAP development/deployment, Business AI and AI architecture</li></ul></div>
       <div><h4>Practice layer</h4><ul><li>59 structured cases</li><li>Adaptive single-case selection</li><li>Balanced mock sessions</li><li>Weak-signal review queue</li><li>Shared seven-dimension scoring history</li><li>Portable local history import and export</li><li>Provenance-aware feedback evidence</li></ul></div>
-      <div><h4>Next iteration</h4><ul><li>Calibrate scoring with real assessment feedback</li><li>Generate candidate questions from graph evidence</li><li>Human review and promotion of mature pages</li><li>Generate graph-backed candidate questions with human review</li></ul></div>
+      <div><h4>Next iteration</h4><ul><li>Extend candidate generation only to graphs with strong failure evidence</li><li>Human review and promotion of mature draft pages</li><li>Connect real feedback to review priorities without automatic scoring changes</li><li>Create reviewed calibration decisions when enough evidence exists</li></ul></div>
     </div>
   </section>
 
@@ -153,7 +161,10 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/data/history-portability.json"><span>HISTORY</span><strong>History Portability Contract</strong><small>Versioned browser-only export, validation, merge, and replace rules.</small><i class="material-symbols-outlined" aria-hidden="true">move_up</i></a>
       <a href="/labs/assessment/data/feedback-schema.json"><span>FB</span><strong>Feedback Evidence Schema</strong><small>Provenance, outcome, observations, remembered questions, and actions.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
       <a href="/labs/assessment/data/calibration-policy.json"><span>CAL</span><strong>Calibration Policy</strong><small>Human-reviewed scoring changes with anti-overfit checks and explicit evidence.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
-      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-014 are complete; next work focuses on calibration and review quality.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
+      <a href="/labs/assessment/data/candidate-question-schema.json"><span>CAND</span><strong>Candidate Question Schema</strong><small>Evidence map, graph/source refs, dedup result, and review-stage status.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/assessment/data/candidate-generation-seeds.json"><span>SEED</span><strong>Candidate Generation Seeds</strong><small>Whitelisted graph failure modes and approved source references.</small><i class="material-symbols-outlined" aria-hidden="true">filter_alt</i></a>
+      <a href="/labs/assessment/data/question-candidates.json"><span>2</span><strong>Question Candidate Inventory</strong><small>Two review candidates and twelve duplicate rejections; not part of the 59 published cases.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-015 are complete; next work focuses on evidence quality and controlled promotion.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
   </section>
 
