@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP MDG Interface Contracts — Enterprise Context Lab"
-description: "Object-level SAP MDG interface contracts for Business Partner, Customer, Supplier, and Material, including mapping, errors, reconciliation, and downstream proof."
+description: "Object-level SAP MDG interface contracts for Business Partner, Customer, Supplier and Material, covering mappings, errors, reconciliation and downstream proof."
 permalink: /labs/enterprise-context/mdg/interfaces/
 status: reviewed
 verified: true
@@ -92,6 +92,7 @@ source_links:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
+    <p><strong>Problem:</strong> transport success can hide a master-data failure. The consumer may receive a message but still reject, misidentify, or fail to use the governed object.</p>
     <p><strong>Boundary:</strong> a successful message is not the business outcome. The target still has to identify the object, map codes, accept the data, and use it in a transaction.</p>
     <p><strong>Material warning:</strong> one business object can require several technical messages. MATMAS alone must not be assumed to cover classification, revision, quality, or every dependent data set.</p>
     <a href="/labs/enterprise-context/mdg/extensions/">Choose an extension path <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>

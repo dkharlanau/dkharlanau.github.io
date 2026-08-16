@@ -41,13 +41,17 @@ The cases are synthetic. They do not contain production data, customer names, sy
 
 The cases can be used to practise five things: separating symptoms from causes, asking for evidence, finding the correct owner, choosing a safe recovery path, and defining how the result will be verified.
 
-## How I use it
+## Usage
 
 A useful incident review should not start with a transaction code. Start with business impact and observable facts. Then move through the chain:
 
 **Impact → Evidence → Ownership → Hypothesis → Safe action → Verification → Prevention**
 
 The dataset supports this flow without pretending that a short case can reproduce a real SAP landscape. The point is decision quality, not theatre.
+
+## Update policy
+
+The dataset is updated only when a case, field, or validation rule changes. Each update should keep the JSON Schema and examples aligned, and the page review date records when the public contract was checked.
 
 ## Trust boundary
 
