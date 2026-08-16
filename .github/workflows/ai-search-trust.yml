@@ -1,0 +1,90 @@
+name: AI Search Trust
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'labs/**'
+      - 'entities/**'
+      - 'ai/pages/**'
+      - '_data/knowledge_entities.yml'
+      - '_data/labs/**'
+      - '_data/resume.yml'
+      - '_includes/seo/**'
+      - '_layouts/default.html'
+      - 'sitemap-pages.xml'
+      - 'scripts/ai_search_trust_loop.py'
+      - 'scripts/check_lab_publication_gate.py'
+      - 'scripts/audit_lab_search_intents.py'
+      - '.github/workflows/ai-search-trust.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-search-trust-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install pyyaml
+
+      - name: Check generated knowledge metadata
+        run: python3 scripts/ai_search_trust_loop.py --check
+
+      - name: Check publication and intent policy
+        run: |
+          python3 scripts/check_lab_publication_gate.py
+          python3 scripts/audit_lab_search_intents.py
+
+      - name: Check canonical entity registry
+        run: |
+          python3 - <<'PY'
+          import json
+          import yaml
+          from pathlib import Path
+
+          data = yaml.safe_load(Path('_data/knowledge_entities.yml').read_text(encoding='utf-8'))
+          entities = data['entities']
+          assert entities, 'knowledge entity registry is empty'
+          assert Path('entities/index.md').exists(), 'canonical /entities/ page is missing'
+          for key, entity in entities.items():
+              assert entity['id'] == f'/entities/#{key}', (key, entity['id'])
+              assert entity.get('name'), key
+              assert entity.get('description'), key
+
+          sidecars = sorted(Path('ai/pages').glob('*.json'))
+          assert sidecars, 'AI page sidecars are missing'
+          for path in sidecars:
+              page = json.loads(path.read_text(encoding='utf-8'))
+              entity_id = page['primary_entity']['id']
+              assert entity_id.startswith('https://dkharlanau.github.io/entities/#'), (path, entity_id)
+              assert page['search']['canonical'] == page['url'], path
+              assert len(page.get('relationships', [])) >= 2, path
+          print(f'Validated {len(entities)} entities and {len(sidecars)} sidecars')
+          PY
+
+      - name: Check homepage content protection contract
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          script = Path('scripts/ai_search_trust_loop.py').read_text(encoding='utf-8')
+          assert 'if route == "/"' in script, 'generator must explicitly exclude homepage'
+          layout = Path('_layouts/default.html').read_text(encoding='utf-8')
+          assert "{% unless page.url == '/' %}" in layout, 'knowledge CSS must remain excluded from homepage'
+          graph = Path('_includes/seo/structured-data-sitewide-graph.html').read_text(encoding='utf-8')
+          assert "page.url != '/'" in graph, 'knowledge graph must remain excluded from homepage'
+          print('Homepage content protection contract is present')
+          PY
