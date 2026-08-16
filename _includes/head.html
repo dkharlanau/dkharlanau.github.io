@@ -114,7 +114,7 @@ normalize_whitespace %}
 <meta name="twitter:title" content="{{ social_title | strip_html | normalize_whitespace }}" />
 <meta name="twitter:description" content="{{ meta_description | truncate: 200, '' }}" />
 <meta name="twitter:image" content="{{ og_image }}" />
-{% assign modified_raw = page.last_modified_at | default: page.updated %}
+{% assign modified_raw = page.significant_lastmod | default: page.content_updated_at | default: page.schema_updated_at | default: page.last_modified_at | default: page.updated %}
 {% assign modified_test = modified_raw | date: '%s' %}
 {% if modified_test != modified_raw %}
 <meta property="article:modified_time" content="{{ modified_raw | date_to_xmlschema }}" />

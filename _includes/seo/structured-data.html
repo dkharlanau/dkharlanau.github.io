@@ -40,7 +40,7 @@ Rules:
 {% if page.home_locale %}
 {% assign page_title = localized_home.meta.title | default: page_title | strip_html | normalize_whitespace %}
 {% endif %}
-{% assign page_modified = page.last_modified_at | default: page.updated | default: page.last_reviewed %}
+{% assign page_modified = page.significant_lastmod | default: page.content_updated_at | default: page.schema_updated_at | default: page.last_modified_at | default: page.updated %}
 {% assign page_modified_test = page_modified | date: '%s' %}
 {% assign robots_directive = page.robots | default: '' %}
 {% assign allow_indexing = true %}
@@ -48,7 +48,7 @@ Rules:
 
 {% assign article_published = page.date | default: page.published %}
 {% assign article_published_test = article_published | date: '%s' %}
-{% assign article_modified = page.last_modified_at | default: page.updated | default: page.last_reviewed %}
+{% assign article_modified = page.significant_lastmod | default: page.content_updated_at | default: page.schema_updated_at | default: page.last_modified_at | default: page.updated %}
 {% assign article_modified_test = article_modified | date: '%s' %}
 
 {% assign datasets = site.data.datasets | default: empty %}
@@ -56,6 +56,7 @@ Rules:
 {% assign catalog_id = 'https://dkharlanau.github.io/ai/catalog.json#catalog' %}
 {% assign catalog_url = 'https://dkharlanau.github.io/ai/catalog.json' %}
 {% assign url_parts = page.url | split: '/' %}
+{% assign knowledge_entities = site.data.knowledge_entities.entities | default: empty %}
 
 {% comment %} Determine the primary structured data type for this page. {% endcomment %}
 {% assign page_type = '' %}
@@ -69,6 +70,10 @@ Rules:
   {% assign page_type = 'CollectionPage' %}
 {% elsif page.url contains '/skill-hub/' and url_parts.size == 3 and page.verified == true and page.status == 'reviewed' %}
   {% assign page_type = 'CollectionPage' %}
+{% elsif page.url == '/labs/' or page.url == '/labs/enterprise-context/' %}
+  {% assign page_type = 'CollectionPage' %}
+{% elsif page.url contains '/labs/' and page.verified == true and page.status == 'reviewed' %}
+  {% assign page_type = 'TechArticle' %}
 {% elsif page.url contains '/datasets/' %}
   {% assign page_type = 'WebPage' %}
 {% elsif page.collection == 'notes' or page.collection == 'blog' or page.collection == 'news' or page.collection == 'radar' %}
@@ -123,6 +128,14 @@ Rules:
   {% assign article_section_path = '/skill-hub/' | append: url_parts[2] | append: '/' %}
   {% assign article_section_url = article_section_path | absolute_url %}
   {% assign article_section_name = url_parts[2] | replace: '-', ' ' | capitalize %}
+{% endif %}
+
+{% if page.url contains '/labs/enterprise-context/' and page.url != '/labs/enterprise-context/' %}
+  {% assign article_section_url = '/labs/enterprise-context/' | absolute_url %}
+  {% assign article_section_name = 'Enterprise Context Lab' %}
+{% elsif page.url contains '/labs/' and page.url != '/labs/' %}
+  {% assign article_section_url = '/labs/' | absolute_url %}
+  {% assign article_section_name = 'Labs' %}
 {% endif %}
 
 {% comment %} DefinedTerm / DefinedTermSet — machine-readable glossary markup. {% endcomment %}
@@ -255,20 +268,8 @@ Rules:
   "@id": "{{ canonical_url }}#article",
   "headline": {{ page_title | jsonify }},
   "description": {{ page_description | truncate: 160, '' | jsonify }},
-  "author": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": "{{ author_profile_url }}",
-    "sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"]
-  },
-  "publisher": {
-    "@type": "Person",
-    "@id": "{{ author_id }}",
-    "name": {{ resume.name | jsonify }},
-    "url": "{{ author_profile_url }}",
-    "sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"]
-  },
+  "author": {"@id": "{{ author_id }}"},
+  "publisher": {"@id": "{{ author_id }}"},
   "inLanguage": "{{ structured_language }}",
   "isAccessibleForFree": true,
   "isPartOf": [
@@ -294,14 +295,24 @@ Rules:
     "@id": "{{ canonical_url }}#breadcrumb"
   },
   "url": "{{ canonical_url }}"
-  {% if page.domain or page.sap_area or page.business_process %},
-  "about": {
-    "@type": "Thing",
-    "name": {{ page.domain | default: page.sap_area | default: page.business_process | jsonify }}
-  }{% endif %}
-  {% if page.tags %},
+  {% if page.ai_sidecar %},
+  "subjectOf": {"@type":"DataDownload","contentUrl":"{{ page.ai_sidecar | absolute_url }}","encodingFormat":"application/json"}{% endif %}
+  {% assign primary_entity_key = page.primary_topic | default: page.primary_entity %}
+  {% assign primary_entity = knowledge_entities[primary_entity_key] %}
+  {% if primary_entity %},
+  "about": {"@id": "{{ primary_entity.id | absolute_url }}"}{% elsif page.domain or page.sap_area or page.business_process %},
+  "about": {"@type":"Thing","name":{{ page.domain | default: page.sap_area | default: page.business_process | jsonify }}}{% endif %}
+  {% if page.entity_mentions and page.entity_mentions.size > 0 %},
+  "mentions": [
+    {% for entity_key in page.entity_mentions %}
+    {% assign entity = knowledge_entities[entity_key] %}
+    {% if entity %}{"@id":"{{ entity.id | absolute_url }}"}{% else %}{"@type":"Thing","name":{{ entity_key | replace: '-', ' ' | jsonify }}}{% endif %}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]{% elsif page.tags %},
   "mentions": {{ page.tags | jsonify }}{% endif %}
-  {% if page.related %},
+  {% if page.semantic_links and page.semantic_links.size > 0 %},
+  "relatedLink": [{% for relation in page.semantic_links %}{{ relation.url | absolute_url | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}]
+  {% elsif page.related %},
   "relatedLink": [
     {% assign first_eligible_related = true %}
     {% for related_url in page.related %}
@@ -322,7 +333,13 @@ Rules:
     {% if page.dependencies %},
   "dependencies": {{ page.dependencies | jsonify }}{% endif %}
   {% endif %}
-  {% if page.sources %},
+  {% if page.source_links and page.source_links.size > 0 %},
+  "citation": [
+    {% for source in page.source_links %}
+    {"@type":"WebPage","name":{{ source.title | default: source.url | jsonify }},"url":{{ source.url | jsonify }}}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+  {% elsif page.sources %},
   "citation": [
     {% for source in page.sources %}
     {
