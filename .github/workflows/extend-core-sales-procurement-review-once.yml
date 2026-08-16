@@ -23,28 +23,8 @@ jobs:
         run: python3 -m pip install pyyaml pytest
       - name: Apply core factual review batch
         run: python3 scripts/_extend_core_sales_procurement_review_once.py
-      - name: Make evidence debt assertion route-agnostic
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('tests/test_assessment_practice_layer.py')
-          text = path.read_text(encoding='utf-8')
-          old = '''    assert by_route["/labs/enterprise-context/pricing/"]["factual_review"]["status"] == "not_reviewed"
-    assert by_route["/labs/enterprise-context/pricing/"]["priority"] == "P0"
-    assert "primary-source review" in by_route["/labs/enterprise-context/pricing/"]["review_reason"]'''
-          new = '''    required_unreviewed = [
-        item for item in inventory["items"]
-        if item.get("evidence_profile", {}).get("counts_as_source_review_debt")
-        and item.get("factual_review", {}).get("status") in {"not_reviewed", "needs_source_review"}
-    ]
-    for item in required_unreviewed:
-        assert item["priority"] == "P0"
-        assert "primary-source review" in item["review_reason"]'''
-          if old not in text:
-              raise SystemExit('Hardcoded pricing evidence-debt assertion not found')
-          path.write_text(text.replace(old, new, 1), encoding='utf-8')
-          PY
+      - name: Fix route-agnostic evidence debt invariant
+        run: python3 scripts/_fix_evidence_debt_test_once.py
       - name: Refresh promotion readiness
         run: python3 scripts/audit_assessment_promotion_readiness.py
       - name: Refresh evidence coverage
