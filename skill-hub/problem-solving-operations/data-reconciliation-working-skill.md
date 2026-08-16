@@ -49,5 +49,5 @@ sitemap: false
 <ul><li>Both datasets have a documented business grain.</li><li>Key quality is measured before matching.</li><li>Filters and time windows are identical or differences are explained.</li><li>Exceptions are classified, not stored as one unexplained bucket.</li><li>Material differences can be traced from source to target.</li><li>The same checks can be rerun after correction.</li></ul>
 
 <h2>Related skills</h2>
-<ul><li><a href="/labs/reusable-data-procedures/">Reusable Data Procedures</a></li><li><a href="/skill-hub/dama-dmbok/data-quality-root-cause-working-skill/">Data Quality Root Cause</a></li><li><a href="/skill-hub/problem-solving-operations/evidence-driven-troubleshooting-working-skill/">Evidence-Driven Troubleshooting</a></li></ul>
+<ul><li><a href="/labs/">Labs</a> — reusable data procedures and experimental work.</li><li><a href="/skill-hub/dama-dmbok/data-quality-root-cause-working-skill/">Data Quality Root Cause</a></li><li><a href="/skill-hub/problem-solving-operations/evidence-driven-troubleshooting-working-skill/">Evidence-Driven Troubleshooting</a></li></ul>
 </article>
