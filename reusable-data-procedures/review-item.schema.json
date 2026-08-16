@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/reusable-data-procedures/review-item.schema.json",
+  "title": "Reusable Data Procedure Review Item",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "specVersion", "id", "type", "status", "severity", "question", "context", "evidence", "createdAt"],
+  "properties": {
+    "kind": {"const": "rdp-review-item"},
+    "specVersion": {"const": "0.1"},
+    "id": {"type": "string", "pattern": "^[a-zA-Z0-9._:-]+$"},
+    "type": {"enum": ["ambiguous-locator", "semantic-binding", "mapping-candidate", "reference-gap", "breaking-drift", "validation-override", "business-rule-question", "duplicate-source", "other"]},
+    "status": {"enum": ["open", "triaged", "in-review", "decided", "change-proposed", "applied", "closed", "superseded"]},
+    "severity": {"enum": ["info", "warning", "blocking", "critical"]},
+    "queue": {"type": "string"},
+    "assignee": {"type": "string"},
+    "question": {"type": "string", "minLength": 1},
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "procedureId": {"type": "string"},
+        "procedureVersion": {"type": "string"},
+        "deploymentId": {"type": "string"},
+        "runId": {"type": "string"},
+        "sourceRole": {"type": "string"},
+        "semanticConcept": {"type": "string"},
+        "referenceDataset": {"type": "string"},
+        "ruleId": {"type": "string"},
+        "affectedConsumers": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reasonCode": {"type": "string"},
+        "facts": {"type": "array", "items": {"type": "string"}},
+        "metrics": {"type": "object", "additionalProperties": {"type": ["number", "integer", "string", "boolean", "null"]}},
+        "safeSamples": {"type": "array", "items": {"type": "string"}},
+        "evidenceRefs": {"type": "array", "items": {"type": "string"}},
+        "confidenceComponents": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}}
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "action"],
+        "properties": {
+          "id": {"type": "string"},
+          "action": {"type": "string"},
+          "expectedEffect": {"type": "string"},
+          "risk": {"enum": ["low", "medium", "high"]},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "businessImpact": {"type": "string"},
+    "dueAt": {"type": "string", "format": "date-time"},
+    "decisionId": {"type": "string"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  }
+}
