@@ -1,9 +1,10 @@
 {
   "id": "assessment-linked-lab-promotion-readiness",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "updated_at": "2026-08-16",
   "policy": "/labs/assessment/data/promotion-readiness-policy.json",
   "factual_review_registry": "/labs/assessment/data/factual-review.json",
+  "evidence_profile": "/labs/assessment/data/evidence-profile.json",
   "scope_route_count": 40,
   "counts": {
     "human_review_candidate": 40
@@ -13,80 +14,22 @@
     "source_supported": 12
   },
   "priority_counts": {
-    "P0": 17,
+    "P0": 15,
     "P1": 12,
-    "P2": 11
+    "P2": 13
+  },
+  "evidence_profile_counts": {
+    "source_review_debt_applicable": 27,
+    "selective_or_heuristic": 13
   },
   "promotion_boundary": "This generated audit does not change status, verified, robots, or sitemap. Human review is required for promotion.",
   "items": [
-    {
-      "route": "/labs/ai-ready/",
-      "source_path": "labs/ai-ready/index.md",
-      "state": "human_review_candidate",
-      "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
-      "structural_score": 5,
-      "checks": {
-        "frontmatter_complete": true,
-        "substantive_body": true,
-        "internal_navigation": true,
-        "machine_readable_link": true,
-        "no_placeholder_markers": true
-      },
-      "factual_review": {
-        "status": "not_reviewed",
-        "claim_count": 0,
-        "source_supported_count": 0,
-        "source_conflict_count": 0,
-        "release_scope_unclear_count": 0,
-        "reviewed_at": null,
-        "human_verification_required": true
-      },
-      "verified": false,
-      "status": "draft",
-      "robots": "noindex,follow",
-      "sitemap": false,
-      "body_characters": 12746,
-      "internal_link_count": 23,
-      "machine_link_count": 3
-    },
-    {
-      "route": "/labs/business-ai/",
-      "source_path": "labs/business-ai/index.md",
-      "state": "human_review_candidate",
-      "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
-      "structural_score": 5,
-      "checks": {
-        "frontmatter_complete": true,
-        "substantive_body": true,
-        "internal_navigation": true,
-        "machine_readable_link": true,
-        "no_placeholder_markers": true
-      },
-      "factual_review": {
-        "status": "not_reviewed",
-        "claim_count": 0,
-        "source_supported_count": 0,
-        "source_conflict_count": 0,
-        "release_scope_unclear_count": 0,
-        "reviewed_at": null,
-        "human_verification_required": true
-      },
-      "verified": false,
-      "status": "draft",
-      "robots": "noindex,follow",
-      "sitemap": false,
-      "body_characters": 10893,
-      "internal_link_count": 18,
-      "machine_link_count": 6
-    },
     {
       "route": "/labs/enterprise-context/business-ai/",
       "source_path": "labs/enterprise-context/business-ai/index.md",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -95,12 +38,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -117,7 +69,7 @@
       "source_path": "labs/enterprise-context/data-governance/index.md",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -126,12 +78,22 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "standard_or_spec_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_named_product_or_standard_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -148,7 +110,7 @@
       "source_path": "labs/enterprise-context/development/index.md",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -157,12 +119,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -179,7 +150,7 @@
       "source_path": "labs/enterprise-context/integrations/index.md",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -188,12 +159,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -210,7 +190,7 @@
       "source_path": "labs/enterprise-context/logistics-capabilities/index.html",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -219,12 +199,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -241,7 +230,7 @@
       "source_path": "labs/enterprise-context/mdg/interfaces/index.md",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -250,12 +239,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -272,7 +270,7 @@
       "source_path": "labs/enterprise-context/pricing/index.html",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -281,12 +279,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -303,7 +310,7 @@
       "source_path": "labs/enterprise-context/procurement/index.html",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -312,12 +319,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -334,7 +350,7 @@
       "source_path": "labs/enterprise-context/sales-diagnostics/index.html",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -343,12 +359,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -365,7 +390,7 @@
       "source_path": "labs/enterprise-context/sales-order/index.html",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -374,12 +399,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -396,7 +430,7 @@
       "source_path": "labs/enterprise-context/sales-processes/index.html",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -405,12 +439,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -427,7 +470,7 @@
       "source_path": "labs/enterprise-context/sales-processes/integrations/index.html",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -436,12 +479,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -458,7 +510,7 @@
       "source_path": "labs/enterprise-context/shipping/index.html",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -467,12 +519,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -489,7 +550,7 @@
       "source_path": "labs/enterprise-context/transportation-management/integrations/index.html",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -498,12 +559,21 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -520,7 +590,7 @@
       "source_path": "labs/enterprise-context/mdg/index.md",
       "state": "human_review_candidate",
       "priority": "P0",
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review.",
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review.",
       "structural_score": 4,
       "checks": {
         "frontmatter_complete": true,
@@ -529,12 +599,21 @@
         "machine_readable_link": false,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -560,12 +639,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 3,
         "source_supported_count": 3,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -591,12 +681,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 2,
         "source_supported_count": 2,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -622,12 +723,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 5,
         "source_supported_count": 5,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -653,12 +765,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 3,
         "source_supported_count": 3,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -684,12 +807,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 3,
         "source_supported_count": 3,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -715,12 +849,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 3,
         "source_supported_count": 3,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -746,12 +891,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 2,
         "source_supported_count": 2,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -777,12 +933,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 6,
         "source_supported_count": 6,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -808,12 +975,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 2,
         "source_supported_count": 2,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -839,12 +1017,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 2,
         "source_supported_count": 2,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -870,12 +1059,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 2,
         "source_supported_count": 2,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -901,12 +1101,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "required_for_load_bearing_product_claims",
+        "counts_as_source_review_debt": true
+      },
       "factual_review": {
         "status": "source_supported",
         "claim_count": 2,
         "source_supported_count": 2,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [
+          "sap_product_primary"
+        ],
         "reviewed_at": "2026-08-16",
         "human_verification_required": true
       },
@@ -919,11 +1130,11 @@
       "machine_link_count": 1
     },
     {
-      "route": "/labs/assessment/",
-      "source_path": "labs/assessment/index.md",
+      "route": "/labs/ai-ready/",
+      "source_path": "labs/ai-ready/index.md",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Assessment or authoring route is structurally mature; factual SAP review is not the primary gate.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -932,12 +1143,23 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "standard_or_spec_primary",
+          "research_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "selective_for_external_claims",
+        "counts_as_source_review_debt": false,
+        "reason": "The route is mainly an architecture and evaluation framework. Author heuristics should be labelled, while external technical claims use standards or primary research instead of SAP Help."
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -945,16 +1167,16 @@
       "status": "draft",
       "robots": "noindex,follow",
       "sitemap": false,
-      "body_characters": 26931,
-      "internal_link_count": 61,
-      "machine_link_count": 25
+      "body_characters": 12746,
+      "internal_link_count": 23,
+      "machine_link_count": 3
     },
     {
-      "route": "/labs/assessment/cross-process/",
-      "source_path": "labs/assessment/cross-process/index.html",
+      "route": "/labs/assessment/",
+      "source_path": "labs/assessment/index.md",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Assessment or authoring route is structurally mature; factual SAP review is not the primary gate.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -963,12 +1185,59 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
+        "reviewed_at": null,
+        "human_verification_required": true
+      },
+      "verified": false,
+      "status": "draft",
+      "robots": "noindex,follow",
+      "sitemap": false,
+      "body_characters": 27238,
+      "internal_link_count": 62,
+      "machine_link_count": 26
+    },
+    {
+      "route": "/labs/assessment/cross-process/",
+      "source_path": "labs/assessment/cross-process/index.html",
+      "state": "human_review_candidate",
+      "priority": "P2",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
+      "structural_score": 5,
+      "checks": {
+        "frontmatter_complete": true,
+        "substantive_body": true,
+        "internal_navigation": true,
+        "machine_readable_link": true,
+        "no_placeholder_markers": true
+      },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
+      "factual_review": {
+        "status": "not_reviewed",
+        "claim_count": 0,
+        "source_supported_count": 0,
+        "source_conflict_count": 0,
+        "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -985,7 +1254,7 @@
       "source_path": "labs/assessment/evidence-coverage/index.html",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Assessment or authoring route is structurally mature; factual SAP review is not the primary gate.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -994,12 +1263,20 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -1007,7 +1284,7 @@
       "status": "draft",
       "robots": "noindex,follow",
       "sitemap": false,
-      "body_characters": 8397,
+      "body_characters": 8691,
       "internal_link_count": 5,
       "machine_link_count": 1
     },
@@ -1016,7 +1293,7 @@
       "source_path": "labs/assessment/factual-review/index.html",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Assessment or authoring route is structurally mature; factual SAP review is not the primary gate.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -1025,12 +1302,20 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -1047,7 +1332,7 @@
       "source_path": "labs/assessment/progress/index.html",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Assessment or authoring route is structurally mature; factual SAP review is not the primary gate.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -1056,12 +1341,20 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -1078,7 +1371,7 @@
       "source_path": "labs/assessment/promotion-readiness/index.html",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Assessment or authoring route is structurally mature; factual SAP review is not the primary gate.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -1087,12 +1380,20 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -1109,7 +1410,7 @@
       "source_path": "labs/assessment/question-review/index.html",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Assessment or authoring route is structurally mature; factual SAP review is not the primary gate.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -1118,12 +1419,20 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -1140,7 +1449,7 @@
       "source_path": "labs/assessment/review/index.html",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Assessment or authoring route is structurally mature; factual SAP review is not the primary gate.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 5,
       "checks": {
         "frontmatter_complete": true,
@@ -1149,12 +1458,20 @@
         "machine_readable_link": true,
         "no_placeholder_markers": true
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -1167,11 +1484,53 @@
       "machine_link_count": 1
     },
     {
+      "route": "/labs/business-ai/",
+      "source_path": "labs/business-ai/index.md",
+      "state": "human_review_candidate",
+      "priority": "P2",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
+      "structural_score": 5,
+      "checks": {
+        "frontmatter_complete": true,
+        "substantive_body": true,
+        "internal_navigation": true,
+        "machine_readable_link": true,
+        "no_placeholder_markers": true
+      },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "research_primary",
+          "sap_product_primary",
+          "author_heuristic"
+        ],
+        "external_review_mode": "selective_for_examples_and_outcome_claims",
+        "counts_as_source_review_debt": false,
+        "reason": "The route is process-first consulting analysis. Patterns are author guidance; named products, implementations, and measured outcomes need external evidence."
+      },
+      "factual_review": {
+        "status": "not_reviewed",
+        "claim_count": 0,
+        "source_supported_count": 0,
+        "source_conflict_count": 0,
+        "release_scope_unclear_count": 0,
+        "evidence_classes": [],
+        "reviewed_at": null,
+        "human_verification_required": true
+      },
+      "verified": false,
+      "status": "draft",
+      "robots": "noindex,follow",
+      "sitemap": false,
+      "body_characters": 10893,
+      "internal_link_count": 18,
+      "machine_link_count": 6
+    },
+    {
       "route": "/labs/assessment/feedback/",
       "source_path": "labs/assessment/feedback/index.html",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Structural review remains the next action.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 4,
       "checks": {
         "frontmatter_complete": true,
@@ -1180,12 +1539,20 @@
         "machine_readable_link": true,
         "no_placeholder_markers": false
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -1202,7 +1569,7 @@
       "source_path": "labs/assessment/mock/index.html",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Structural review remains the next action.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 4,
       "checks": {
         "frontmatter_complete": true,
@@ -1211,12 +1578,20 @@
         "machine_readable_link": true,
         "no_placeholder_markers": false
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },
@@ -1233,7 +1608,7 @@
       "source_path": "labs/assessment/practice-engine/index.html",
       "state": "human_review_candidate",
       "priority": "P2",
-      "review_reason": "Structural review remains the next action.",
+      "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate.",
       "structural_score": 4,
       "checks": {
         "frontmatter_complete": true,
@@ -1242,12 +1617,20 @@
         "machine_readable_link": true,
         "no_placeholder_markers": false
       },
+      "evidence_profile": {
+        "expected_evidence_classes": [
+          "author_heuristic"
+        ],
+        "external_review_mode": "not_primary_gate",
+        "counts_as_source_review_debt": false
+      },
       "factual_review": {
         "status": "not_reviewed",
         "claim_count": 0,
         "source_supported_count": 0,
         "source_conflict_count": 0,
         "release_scope_unclear_count": 0,
+        "evidence_classes": [],
         "reviewed_at": null,
         "human_verification_required": true
       },

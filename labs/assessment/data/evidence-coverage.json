@@ -1,27 +1,32 @@
 {
   "id": "sap-lead-assessment-evidence-coverage",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
-  "purpose": "Show primary-source review coverage and evidence debt across SAP Lead assessment tracks so the next review batch is selected from data rather than intuition.",
+  "purpose": "Show primary-source review coverage and evidence debt across SAP Lead assessment tracks while distinguishing routes that mainly use standards, research, or explicit author heuristics.",
   "source_contracts": {
     "catalog": "/labs/assessment/data/catalog.json",
     "promotion_readiness": "/labs/assessment/data/promotion-readiness.json",
-    "factual_review": "/labs/assessment/data/factual-review.json"
+    "factual_review": "/labs/assessment/data/factual-review.json",
+    "evidence_profile": "/labs/assessment/data/evidence-profile.json"
   },
-  "boundary": "Evidence coverage measures claim-level source review, not page-level verification, learner knowledge, or publication readiness by itself.",
+  "boundary": "Coverage counts only routes whose evidence profile requires external source review. Selective or heuristic routes are shown separately and are not treated as missing SAP product evidence.",
   "summary": {
-    "unique_evidence_applicable_routes": 29,
+    "unique_profiled_routes": 29,
+    "unique_externally_review_required_routes": 27,
+    "unique_selective_or_heuristic_routes": 2,
     "unique_source_reviewed_routes": 12,
-    "unique_p0_evidence_debt_routes": 17,
+    "unique_p0_evidence_debt_routes": 15,
     "unique_p1_page_review_ready_routes": 12,
     "source_supported_claims": 35,
-    "coverage_percent": 41.4
+    "coverage_percent": 44.4
   },
   "tracks": [
     {
       "id": "sales",
       "label": "Sales",
-      "evidence_applicable_routes": 10,
+      "evidence_profile_routes": 10,
+      "externally_review_required_routes": 10,
+      "selective_or_heuristic_routes": 0,
       "source_reviewed_routes": 5,
       "evidence_debt_routes": 5,
       "page_review_ready_routes": 5,
@@ -34,8 +39,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/sales-diagnostics/",
@@ -43,8 +54,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/sales-order/",
@@ -52,8 +69,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/sales-processes/",
@@ -61,8 +84,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/shipping/",
@@ -70,8 +99,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/atp/",
@@ -79,6 +114,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 3,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -88,6 +129,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -97,6 +144,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 5,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -106,6 +159,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 3,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -115,6 +174,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         }
@@ -123,7 +188,9 @@
     {
       "id": "procurement-logistics",
       "label": "Procurement and Logistics",
-      "evidence_applicable_routes": 9,
+      "evidence_profile_routes": 9,
+      "externally_review_required_routes": 9,
+      "selective_or_heuristic_routes": 0,
       "source_reviewed_routes": 7,
       "evidence_debt_routes": 2,
       "page_review_ready_routes": 7,
@@ -136,8 +203,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/procurement/",
@@ -145,8 +218,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/automotive-jit/",
@@ -154,6 +233,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -163,6 +248,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 3,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -172,6 +263,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -181,6 +278,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -190,6 +293,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -199,6 +308,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -208,6 +323,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         }
@@ -216,7 +337,9 @@
     {
       "id": "integration-architecture",
       "label": "Integration and Architecture",
-      "evidence_applicable_routes": 8,
+      "evidence_profile_routes": 8,
+      "externally_review_required_routes": 8,
+      "selective_or_heuristic_routes": 0,
       "source_reviewed_routes": 3,
       "evidence_debt_routes": 5,
       "page_review_ready_routes": 3,
@@ -229,8 +352,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/integrations/",
@@ -238,8 +367,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/mdg/interfaces/",
@@ -247,8 +382,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/sales-processes/integrations/",
@@ -256,8 +397,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/transportation-management/integrations/",
@@ -265,8 +412,14 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/automotive-jit/",
@@ -274,6 +427,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -283,6 +442,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 3,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
@@ -292,6 +457,12 @@
           "priority": "P1",
           "evidence_status": "source_supported",
           "reviewed_claims": 6,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         }
@@ -300,39 +471,29 @@
     {
       "id": "ai-data",
       "label": "AI and Data",
-      "evidence_applicable_routes": 5,
+      "evidence_profile_routes": 5,
+      "externally_review_required_routes": 3,
+      "selective_or_heuristic_routes": 2,
       "source_reviewed_routes": 0,
-      "evidence_debt_routes": 5,
+      "evidence_debt_routes": 3,
       "page_review_ready_routes": 0,
       "reviewed_claims": 0,
       "coverage_percent": 0.0,
       "routes": [
-        {
-          "route": "/labs/ai-ready/",
-          "state": "human_review_candidate",
-          "priority": "P0",
-          "evidence_status": "not_reviewed",
-          "reviewed_claims": 0,
-          "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
-        },
-        {
-          "route": "/labs/business-ai/",
-          "state": "human_review_candidate",
-          "priority": "P0",
-          "evidence_status": "not_reviewed",
-          "reviewed_claims": 0,
-          "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
-        },
         {
           "route": "/labs/enterprise-context/business-ai/",
           "state": "human_review_candidate",
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/data-governance/",
@@ -340,8 +501,15 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_named_product_or_standard_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "standard_or_spec_primary",
+            "author_heuristic"
+          ],
           "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
         },
         {
           "route": "/labs/enterprise-context/mdg/",
@@ -349,148 +517,253 @@
           "priority": "P0",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
           "structural_score": 4,
-          "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
+        },
+        {
+          "route": "/labs/ai-ready/",
+          "state": "human_review_candidate",
+          "priority": "P2",
+          "evidence_status": "not_reviewed",
+          "reviewed_claims": 0,
+          "external_review_required": false,
+          "external_review_mode": "selective_for_external_claims",
+          "expected_evidence_classes": [
+            "standard_or_spec_primary",
+            "research_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate."
+        },
+        {
+          "route": "/labs/business-ai/",
+          "state": "human_review_candidate",
+          "priority": "P2",
+          "evidence_status": "not_reviewed",
+          "reviewed_claims": 0,
+          "external_review_required": false,
+          "external_review_mode": "selective_for_examples_and_outcome_claims",
+          "expected_evidence_classes": [
+            "research_primary",
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate."
         }
       ]
     }
   ],
   "next_focus": [
     {
-      "route": "/labs/ai-ready/",
-      "assessment_track_count": 1,
-      "priority": "P0",
-      "evidence_status": "not_reviewed",
-      "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
-    },
-    {
-      "route": "/labs/business-ai/",
-      "assessment_track_count": 1,
-      "priority": "P0",
-      "evidence_status": "not_reviewed",
-      "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
-    },
-    {
       "route": "/labs/enterprise-context/business-ai/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/data-governance/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "standard_or_spec_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/development/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/integrations/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/logistics-capabilities/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/mdg/interfaces/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/pricing/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/procurement/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/sales-diagnostics/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/sales-order/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/sales-processes/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/sales-processes/integrations/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/shipping/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/transportation-management/integrations/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
     },
     {
       "route": "/labs/enterprise-context/mdg/",
       "assessment_track_count": 1,
       "priority": "P0",
       "evidence_status": "not_reviewed",
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "structural_score": 4,
-      "review_reason": "Structure is mature but load-bearing factual claims have not completed primary-source review."
+      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
+    }
+  ],
+  "evidence_classes": [
+    {
+      "id": "sap_product_primary",
+      "label": "SAP product primary",
+      "meaning": "Release-sensitive SAP product behavior supported by SAP Help, SAP-owned documentation, or another primary SAP source."
+    },
+    {
+      "id": "standard_or_spec_primary",
+      "label": "Standard or specification primary",
+      "meaning": "Protocol, interoperability, security, or architecture behavior supported by the owning standards body or specification publisher."
+    },
+    {
+      "id": "research_primary",
+      "label": "Primary research",
+      "meaning": "Empirical or scientific claim supported by the original research paper or first-party evaluation artifact."
+    },
+    {
+      "id": "author_heuristic",
+      "label": "Author heuristic",
+      "meaning": "Consulting judgement, design rule, diagnostic habit, or synthetic pattern that is explicitly presented as guidance rather than external fact."
     }
   ]
 }

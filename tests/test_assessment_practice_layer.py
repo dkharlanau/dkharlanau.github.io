@@ -194,7 +194,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -247,6 +247,8 @@ def test_factual_review_keeps_source_support_separate_from_page_verification() -
     assert all(claim["status"] == "source_supported" for claim in review["claims"])
     assert all(claim["human_verification_required"] is True for claim in review["claims"])
     assert all(claim["source_refs"] for claim in review["claims"])
+    assert all(claim["evidence_class"] == "sap_product_primary" for claim in review["claims"])
+    assert "author_heuristic" in policy["evidence_classes"]
     assert all(all(url.startswith("https://help.sap.com/") for url in claim["official_evidence"]) for claim in review["claims"])
     promotion_by_route = {item["route"]: item for item in promotion["items"]}
     for route in review["routes"]:
@@ -277,11 +279,13 @@ def test_evidence_coverage_is_reproducible_and_tracks_review_debt() -> None:
     factual = load_json("factual-review.json")
 
     assert coverage["source_contracts"]["factual_review"] == "/labs/assessment/data/factual-review.json"
+    assert coverage["source_contracts"]["evidence_profile"] == "/labs/assessment/data/evidence-profile.json"
     assert len(coverage["tracks"]) == 4
     assert coverage["summary"]["unique_source_reviewed_routes"] >= 12
     assert coverage["summary"]["source_supported_claims"] >= 35
-    assert coverage["summary"]["unique_source_reviewed_routes"] <= coverage["summary"]["unique_evidence_applicable_routes"]
-    assert all(track["source_reviewed_routes"] <= track["evidence_applicable_routes"] for track in coverage["tracks"])
+    assert coverage["summary"]["unique_source_reviewed_routes"] <= coverage["summary"]["unique_externally_review_required_routes"]
+    assert coverage["summary"]["unique_selective_or_heuristic_routes"] >= 2
+    assert all(track["source_reviewed_routes"] <= track["externally_review_required_routes"] for track in coverage["tracks"])
     assert all(item["priority"] == "P0" for item in coverage["next_focus"])
     assert coverage["summary"]["source_supported_claims"] == sum(1 for claim in factual["claims"] if claim["status"] == "source_supported")
 
@@ -294,4 +298,16 @@ def test_evidence_coverage_is_reproducible_and_tracks_review_debt() -> None:
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Evidence coverage is current" in result.stdout
+
+def test_evidence_profiles_do_not_force_sap_product_proof_for_author_heuristics() -> None:
+    profile = load_json("evidence-profile.json")
+    readiness = load_json("promotion-readiness.json")
+    by_route = {item["route"]: item for item in readiness["items"]}
+
+    assert profile["route_overrides"]["/labs/ai-ready/"]["counts_as_source_review_debt"] is False
+    assert profile["route_overrides"]["/labs/business-ai/"]["counts_as_source_review_debt"] is False
+    assert "author_heuristic" in profile["route_overrides"]["/labs/ai-ready/"]["expected_evidence_classes"]
+    assert by_route["/labs/ai-ready/"]["priority"] == "P2"
+    assert by_route["/labs/business-ai/"]["priority"] == "P2"
+    assert by_route["/labs/enterprise-context/business-ai/"]["priority"] == "P0"
 

@@ -19,7 +19,7 @@ tags: [sap, assessment, evidence, coverage, review]
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Assessment / Evidence debt</p>
       <h1>Review what matters next.<br />Not what is easiest next.</h1>
-      <p>This view connects the four assessment tracks with factual-review coverage. It shows which routes already have primary-source support and which mature routes still carry evidence debt.</p>
+      <p>This view connects the four assessment tracks with factual-review coverage and route evidence profiles. Product-heavy routes carry source-review debt; selective architecture routes can instead use standards, primary research, and explicit author heuristics.</p>
       <a class="research-canvas__button" href="#track-coverage">Open track coverage <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Evidence coverage status">
@@ -28,7 +28,7 @@ tags: [sap, assessment, evidence, coverage, review]
       <div class="research-canvas__signal-line"><span>02</span><strong id="ec-total">—</strong><small>Assessment routes in scope</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong id="ec-debt">—</strong><small>P0 evidence-debt routes</small></div>
       <div class="research-canvas__signal-line"><span>04</span><strong id="ec-claims">—</strong><small>Source-supported claims</small></div>
-      <em>Coverage is a planning signal. It is not a verified-page count.</em>
+      <em>Coverage counts routes where external source review is a required gate. Selective or heuristic routes are shown separately.</em>
     </div>
   </header>
 
@@ -72,7 +72,7 @@ tags: [sap, assessment, evidence, coverage, review]
   function trackCard(track){
     const article=document.createElement('article');article.className='ec-coverage-card';
     const title=document.createElement('h3');title.textContent=track.label;
-    const coverage=document.createElement('p');coverage.textContent=`${track.coverage_percent}% source-reviewed across ${track.evidence_applicable_routes} evidence-applicable route(s).`;
+    const coverage=document.createElement('p');coverage.textContent=`${track.coverage_percent}% source-reviewed across ${track.externally_review_required_routes} required route(s); ${track.selective_or_heuristic_routes} selective/heuristic route(s).`;
     const metrics=document.createElement('div');metrics.className='ec-coverage-metrics';
     [[track.source_reviewed_routes,'Reviewed'],[track.evidence_debt_routes,'P0 debt'],[track.page_review_ready_routes,'Page-review ready'],[track.reviewed_claims,'Claims']].forEach(([value,label])=>{const box=document.createElement('div');const strong=document.createElement('strong');strong.textContent=value;const small=document.createElement('small');small.textContent=label;box.append(strong,small);metrics.appendChild(box)});
     const debt=document.createElement('ul');debt.className='ec-debt-list';
@@ -89,8 +89,8 @@ tags: [sap, assessment, evidence, coverage, review]
     a.append(rank,strong,small,icon);return a;
   }
   fetch('/labs/assessment/data/evidence-coverage.json',{credentials:'same-origin'}).then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json()}).then(data=>{
-    const s=data.summary;$('ec-reviewed').textContent=s.unique_source_reviewed_routes;$('ec-total').textContent=s.unique_evidence_applicable_routes;$('ec-debt').textContent=s.unique_p0_evidence_debt_routes;$('ec-claims').textContent=s.source_supported_claims;
-    $('ec-status').textContent=`${s.coverage_percent}% of unique evidence-applicable assessment routes have claim-level primary-source review.`;
+    const s=data.summary;$('ec-reviewed').textContent=s.unique_source_reviewed_routes;$('ec-total').textContent=s.unique_externally_review_required_routes;$('ec-debt').textContent=s.unique_p0_evidence_debt_routes;$('ec-claims').textContent=s.source_supported_claims;
+    $('ec-status').textContent=`${s.coverage_percent}% of routes that require external review have claim-level primary-source support; ${s.unique_selective_or_heuristic_routes} route(s) use selective or heuristic evidence profiles.`;
     const tracks=$('ec-tracks');data.tracks.forEach(track=>tracks.appendChild(trackCard(track)));
     const focus=$('ec-focus');data.next_focus.slice(0,12).forEach((item,index)=>focus.appendChild(focusRow(item,index)));
     if(!data.next_focus.length){focus.textContent='No P0 evidence debt remains in the current assessment catalog.';}

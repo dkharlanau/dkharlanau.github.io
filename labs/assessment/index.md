@@ -172,7 +172,8 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/data/factual-review-policy.json"><span>FACT</span><strong>Factual Review Policy</strong><small>Claim states, primary-source rules, release scope, and the human-verification boundary.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
       <a href="/labs/assessment/data/factual-review.json"><span>35</span><strong>Factual Review Registry</strong><small>Thirty-five source-supported claims across twelve release-sensitive SAP routes; page verification remains unchanged.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/labs/assessment/data/evidence-coverage.json"><span>COVER</span><strong>Evidence Coverage Dataset</strong><small>Track-level source-review coverage, cross-track P0 debt, and data-driven next-focus ranking.</small><i class="material-symbols-outlined" aria-hidden="true">analytics</i></a>
-      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-021 are complete; next factual review is selected from cross-track evidence debt.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
+      <a href="/labs/assessment/data/evidence-profile.json"><span>CLASS</span><strong>Evidence Profile</strong><small>Route-level expectations for SAP product sources, standards, research, and explicit author heuristics.</small><i class="material-symbols-outlined" aria-hidden="true">category</i></a>
+      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-022 are complete; evidence debt now respects the evidence class expected by each route.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
   </section>
 
