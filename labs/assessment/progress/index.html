@@ -1,0 +1,317 @@
+---
+layout: default
+title: "Progress & Portability — SAP Lead Assessment Lab"
+description: "A local SAP Lead assessment progress view with weak-signal trends, recent attempts, and browser-only history import and export."
+permalink: /labs/assessment/progress/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags:
+  - sap
+  - assessment
+  - sap-lead
+  - progress
+  - portability
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Progress & Portability</li></ol></nav>
+
+<div class="research-canvas assessment-progress" id="assessment-progress">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Progress</p>
+      <h1>Keep the history.<br />Rebuild the profile.</h1>
+      <p>Practice history is the durable local record. Weak-signal profiles, review priorities, and adaptive case choices are derived from it. Export the history when you want to move it to another browser.</p>
+      <a class="research-canvas__button" href="#progress-summary">Open progress <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Progress model">
+      <p>Local model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>7</strong><small>Reasoning dimensions</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>4</strong><small>Assessment tracks</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Durable record: attempts</small></div>
+      <em>No account or server profile is required.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+    <p><strong>Privacy:</strong> this page reads and writes browser localStorage only. Imported notes and scores stay in the browser. Export creates a local JSON file.</p>
+    <a href="/labs/assessment/data/history-portability.json">Open portability contract <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="progress-summary" data-reveal>
+    <header><p class="research-canvas__eyebrow">Progress summary</p><h2>Use several attempts before calling something a weakness.</h2><p>The same scoring thresholds are used by Adaptive Practice, Review Queue, Mock Assessment, and this progress view.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Attempts</h4><p class="ap-metric" id="ap-attempts">0</p></div>
+      <div><h4>Average score</h4><p class="ap-metric" id="ap-average">—</p></div>
+      <div><h4>Lead-level attempts</h4><p class="ap-metric" id="ap-lead">0</p></div>
+    </div>
+    <p class="ap-status" id="ap-status" aria-live="polite">Loading local history…</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Reasoning dimensions</p><h2>See which part of the answer needs work.</h2><p>A strong total score can still hide a weak dimension. Track the structure of the answer, not only the total.</p></header>
+    <div class="ap-table-wrap"><table class="ap-table"><thead><tr><th>Dimension</th><th>Average</th><th>Attempts</th><th>Signal</th></tr></thead><tbody id="ap-dimensions"></tbody></table></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Track coverage</p><h2>Range matters at Lead level.</h2><p>Low coverage is different from low performance. A track with one good answer still needs more evidence before you treat it as stable.</p></header>
+    <div class="ap-table-wrap"><table class="ap-table"><thead><tr><th>Track</th><th>Average</th><th>Attempts</th><th>Lead cases</th></tr></thead><tbody id="ap-tracks"></tbody></table></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Recent attempts</p><h2>Keep the evidence visible.</h2><p>The last attempts show what you practised, how it scored, and which dimensions were weak.</p></header>
+    <div id="ap-recent" class="ap-recent"></div>
+  </section>
+
+  <section class="research-canvas__inventory" id="portability" data-reveal>
+    <header><p class="research-canvas__eyebrow">Portability</p><h2>Move the history without creating an account.</h2><p>Export creates one versioned JSON document. Import validates every attempt before it changes local history.</p></header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h4>Export</h4>
+        <p>Download the canonical attempt history. Derived profiles are not exported because they can be rebuilt.</p>
+        <button type="button" id="ap-export">Export history</button>
+      </div>
+      <div>
+        <h4>Merge import</h4>
+        <p>Keep local attempts and add valid incoming attempts that use new attempt IDs.</p>
+        <label class="ap-file">Choose history file<input type="file" id="ap-import-merge" accept="application/json,.json" /></label>
+      </div>
+      <div>
+        <h4>Replace import</h4>
+        <p>Replace local history with valid attempts from the selected file. The file must pass the same validation.</p>
+        <label class="ap-file">Choose replacement file<input type="file" id="ap-import-replace" accept="application/json,.json" /></label>
+      </div>
+    </div>
+    <div class="ap-actions"><button type="button" id="ap-clear">Clear local history</button></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Next action</p><h2>Use progress to change practice.</h2><p>A dashboard is useful only when it changes the next case or review action.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/review/"><span>REVIEW</span><strong>Review Queue</strong><small>Turn weak dimensions and weak tracks into focused study routes.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>
+      <a href="/labs/assessment/practice-engine/"><span>ADAPT</span><strong>Adaptive Practice</strong><small>Select one new case using weak signals and coverage gaps.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
+      <a href="/labs/assessment/mock/"><span>MOCK</span><strong>Mock Assessment</strong><small>Test whether the improvement holds across a balanced session.</small><i class="material-symbols-outlined" aria-hidden="true">assignment</i></a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<style>
+.ap-metric{font-size:2rem;font-weight:800;margin:.4rem 0}.ap-status{margin:1rem 0}.ap-table-wrap{overflow-x:auto}.ap-table{width:100%;border-collapse:collapse}.ap-table th,.ap-table td{text-align:left;padding:.65rem;border-bottom:1px solid var(--border-color,#ddd)}.ap-recent{display:grid;gap:.8rem}.ap-attempt{border:1px solid var(--border-color,#ddd);padding:.85rem}.ap-attempt__meta{display:flex;flex-wrap:wrap;gap:.45rem}.ap-attempt__meta span{border:1px solid var(--border-color,#ddd);border-radius:999px;padding:.18rem .5rem;font-size:.8rem}.ap-file{display:flex;flex-direction:column;gap:.5rem;font-weight:700}.ap-file input{font:inherit}.ap-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}.assessment-progress button{font:inherit;padding:.65rem .85rem;cursor:pointer}
+</style>
+
+<script>
+(() => {
+  'use strict';
+  const STORAGE_KEY = 'sapLeadAssessmentAttemptsV1';
+  const FORMAT = 'sap-lead-assessment-history';
+  const VERSION = '1.0.0';
+  const DIMENSIONS = [
+    ['business_goal','Business goal'],['owner','Owner'],['process_flow','Process flow'],['decision_logic','Decision logic'],['boundary','Boundary'],['failure_and_evidence','Failure & evidence'],['trade_off','Trade-off']
+  ];
+  const LEVELS = new Set(['explain','trace','diagnose','design','challenge']);
+  const TRACK_LABELS = {'sales':'Sales','procurement-logistics':'Procurement & Logistics','integration-architecture':'Integration & Architecture','ai-data':'AI & Data'};
+  const $ = id => document.getElementById(id);
+  const mean = values => values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
+  let thresholds = null;
+
+  function normalizeTrack(track) {
+    if (track === 'procurement' || track === 'logistics' || track === 'production') return 'procurement-logistics';
+    if (track === 'integration') return 'integration-architecture';
+    if (track === 'data' || track === 'ai') return 'ai-data';
+    return track;
+  }
+
+  function history() {
+    try {
+      const rows = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      return Array.isArray(rows) ? rows : [];
+    } catch (_) { return []; }
+  }
+
+  function saveHistory(rows) { localStorage.setItem(STORAGE_KEY,JSON.stringify(rows)); }
+
+  function dimensionSignal(avg) {
+    if (avg == null) return 'no data';
+    if (avg < thresholds.dimension_average_weak_below) return 'weak';
+    if (avg < thresholds.dimension_average_watch_below) return 'watch';
+    return 'solid';
+  }
+
+  function validateAttempt(row) {
+    if (!row || typeof row !== 'object' || Array.isArray(row)) return false;
+    if (typeof row.id !== 'string' || !row.id || typeof row.case_id !== 'string' || !row.case_id) return false;
+    if (typeof row.attempted_at !== 'string' || Number.isNaN(Date.parse(row.attempted_at))) return false;
+    if (typeof row.track !== 'string' || !LEVELS.has(row.level)) return false;
+    if (!row.scores || typeof row.scores !== 'object' || Array.isArray(row.scores)) return false;
+    let total = 0;
+    for (const [id] of DIMENSIONS) {
+      const value = row.scores[id];
+      if (!Number.isInteger(value) || value < 0 || value > 3) return false;
+      total += value;
+    }
+    if (!Number.isInteger(row.total_score) || row.total_score !== total) return false;
+    if (row.total_score < 0 || row.total_score > 21) return false;
+    if (typeof row.lead_signal !== 'boolean' || row.lead_signal !== (row.total_score >= thresholds.case_total_lead_minimum)) return false;
+    if (row.confidence != null && (!Number.isInteger(row.confidence) || row.confidence < 1 || row.confidence > 5)) return false;
+    if (row.notes != null && (typeof row.notes !== 'string' || row.notes.length > 4000)) return false;
+    return true;
+  }
+
+  function canonicalAttempt(row) {
+    return {
+      id:row.id,
+      case_id:row.case_id,
+      attempted_at:row.attempted_at,
+      track:normalizeTrack(row.track),
+      level:row.level,
+      scores:Object.fromEntries(DIMENSIONS.map(([id])=>[id,row.scores[id]])),
+      total_score:row.total_score,
+      lead_signal:row.lead_signal,
+      ...(row.confidence != null ? {confidence:row.confidence} : {}),
+      ...(typeof row.notes === 'string' ? {notes:row.notes} : {}),
+      ...(Array.isArray(row.weak_signals) ? {weak_signals:[...new Set(row.weak_signals.filter(value=>typeof value==='string'))]} : {}),
+      ...(Array.isArray(row.graph_refs) ? {graph_refs:row.graph_refs.filter(value=>typeof value==='string')} : {}),
+      ...(Array.isArray(row.human_refs) ? {human_refs:row.human_refs.filter(value=>typeof value==='string')} : {})
+    };
+  }
+
+  function profile(rows) {
+    const dims = Object.fromEntries(DIMENSIONS.map(([id])=>[id,[]]));
+    const tracks = {};
+    rows.forEach(row => {
+      DIMENSIONS.forEach(([id]) => {
+        const value = row.scores && row.scores[id];
+        if (Number.isFinite(value)) dims[id].push(value);
+      });
+      const track = normalizeTrack(row.track);
+      if (track && Number.isFinite(row.total_score)) (tracks[track] ||= []).push(row);
+    });
+    return {dims,tracks};
+  }
+
+  function cell(value) {
+    const td = document.createElement('td');
+    td.textContent = value;
+    return td;
+  }
+
+  function render() {
+    const rows = history().filter(validateAttempt);
+    const totals = rows.map(row=>row.total_score);
+    $('ap-attempts').textContent = rows.length;
+    $('ap-average').textContent = totals.length ? `${mean(totals).toFixed(1)} / 21` : '—';
+    $('ap-lead').textContent = rows.filter(row=>row.lead_signal).length;
+    $('ap-status').textContent = rows.length < thresholds.minimum_attempts_for_stable_signal ? `Early signal: ${rows.length} valid attempts. Use at least ${thresholds.minimum_attempts_for_stable_signal} before treating a pattern as stable.` : `${rows.length} valid attempts available for adaptive selection and review.`;
+
+    const p = profile(rows);
+    const dimBody = $('ap-dimensions');
+    dimBody.replaceChildren();
+    DIMENSIONS.forEach(([id,label]) => {
+      const values = p.dims[id];
+      const avg = mean(values);
+      const tr = document.createElement('tr');
+      tr.append(cell(label),cell(avg == null ? '—' : `${avg.toFixed(2)} / 3`),cell(String(values.length)),cell(dimensionSignal(avg)));
+      dimBody.appendChild(tr);
+    });
+
+    const trackBody = $('ap-tracks');
+    trackBody.replaceChildren();
+    Object.keys(TRACK_LABELS).forEach(track => {
+      const items = p.tracks[track] || [];
+      const avg = mean(items.map(row=>row.total_score));
+      const tr = document.createElement('tr');
+      tr.append(cell(TRACK_LABELS[track]),cell(avg == null ? '—' : `${avg.toFixed(1)} / 21`),cell(String(items.length)),cell(String(items.filter(row=>row.lead_signal).length)));
+      trackBody.appendChild(tr);
+    });
+
+    const recent = $('ap-recent');
+    recent.replaceChildren();
+    if (!rows.length) {
+      const empty = document.createElement('p');
+      empty.textContent = 'No valid scored attempts yet.';
+      recent.appendChild(empty);
+    } else {
+      rows.slice().sort((a,b)=>Date.parse(b.attempted_at)-Date.parse(a.attempted_at)).slice(0,10).forEach(row => {
+        const card = document.createElement('article');
+        card.className = 'ap-attempt';
+        const meta = document.createElement('div');
+        meta.className = 'ap-attempt__meta';
+        [row.case_id,TRACK_LABELS[normalizeTrack(row.track)] || row.track,row.level,`${row.total_score} / 21`].forEach(value => {
+          const chip = document.createElement('span'); chip.textContent = value; meta.appendChild(chip);
+        });
+        const date = document.createElement('p');
+        date.textContent = new Date(row.attempted_at).toLocaleString();
+        const weak = document.createElement('p');
+        const weakIds = Object.entries(row.scores).filter(([,value])=>value<2).map(([id])=>DIMENSIONS.find(([key])=>key===id)?.[1] || id);
+        weak.textContent = weakIds.length ? `Weak dimensions: ${weakIds.join(', ')}` : 'No dimension scored below 2.';
+        card.append(meta,date,weak);
+        recent.appendChild(card);
+      });
+    }
+  }
+
+  function exportHistory() {
+    const rows = history().filter(validateAttempt).map(canonicalAttempt);
+    const payload = {format:FORMAT,version:VERSION,exported_at:new Date().toISOString(),attempts:rows};
+    const blob = new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'sap-lead-assessment-history.json';
+    link.click();
+    URL.revokeObjectURL(url);
+    $('ap-status').textContent = `${rows.length} valid attempts exported.`;
+  }
+
+  async function importFile(file,mode) {
+    if (!file) return;
+    try {
+      const payload = JSON.parse(await file.text());
+      if (!payload || payload.format !== FORMAT || payload.version !== VERSION || !Array.isArray(payload.attempts)) throw new Error('Unsupported history format or version.');
+      const valid = [];
+      let rejected = 0;
+      payload.attempts.forEach(row => {
+        if (validateAttempt(row)) valid.push(canonicalAttempt(row)); else rejected += 1;
+      });
+      if (mode === 'replace') {
+        saveHistory(valid);
+        $('ap-status').textContent = `History replaced with ${valid.length} valid attempts. ${rejected} invalid attempts rejected.`;
+      } else {
+        const local = history().filter(validateAttempt).map(canonicalAttempt);
+        const ids = new Set(local.map(row=>row.id));
+        const additions = valid.filter(row=>!ids.has(row.id));
+        saveHistory([...local,...additions]);
+        $('ap-status').textContent = `${additions.length} attempts added. ${valid.length-additions.length} duplicate IDs kept from local history. ${rejected} invalid attempts rejected.`;
+      }
+      render();
+    } catch (error) {
+      $('ap-status').textContent = `Import failed: ${error.message}`;
+    }
+  }
+
+  $('ap-export').addEventListener('click',exportHistory);
+  $('ap-import-merge').addEventListener('change',event=>{importFile(event.target.files?.[0],'merge'); event.target.value='';});
+  $('ap-import-replace').addEventListener('change',event=>{importFile(event.target.files?.[0],'replace'); event.target.value='';});
+  $('ap-clear').addEventListener('click',() => {
+    localStorage.removeItem(STORAGE_KEY);
+    $('ap-status').textContent = 'Local assessment history cleared.';
+    render();
+  });
+
+  fetch('/labs/assessment/data/scoring.json',{cache:'no-store'}).then(response => {
+    if (!response.ok) throw new Error(`Scoring contract HTTP ${response.status}`);
+    return response.json();
+  }).then(scoring => {
+    thresholds = scoring.weak_signal_thresholds;
+    render();
+  }).catch(error => {
+    $('ap-status').textContent = `Progress view could not load the scoring contract: ${error.message}`;
+  });
+})();
+</script>
