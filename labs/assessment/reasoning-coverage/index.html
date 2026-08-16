@@ -1,0 +1,100 @@
+---
+layout: default
+title: "Reasoning Coverage — SAP Lead Assessment Lab"
+description: "Published SAP Lead case coverage by assessment track and reasoning level, with explicit Diagnose, Design, and Challenge authoring gaps."
+permalink: /labs/assessment/reasoning-coverage/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, practice, coverage, diagnostics]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Reasoning Coverage</li></ol></nav>
+
+<div class="research-canvas" id="reasoning-coverage">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Practice pressure</p>
+      <h1>Count reasoning pressure.<br />Not pages.</h1>
+      <p>A broad knowledge base can still produce a weak assessment if most questions ask for explanation. This view measures published cases by track and reasoning level so the next authoring loop targets Diagnose, Design, and Challenge gaps.</p>
+      <a class="research-canvas__button" href="#coverage-matrix">Open coverage matrix <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Reasoning coverage status">
+      <p>Published corpus</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong id="rc-cases">59</strong><small>Cases</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong id="rc-pressure">—</strong><small>Lead-pressure cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong id="rc-gaps">—</strong><small>Thin / missing cells</small></div>
+      <em>Exact case metadata · authored threshold</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">grid_view</span>
+    <p><strong>Coverage rule:</strong> Diagnose, Design, and Challenge are treated as Lead-pressure levels. A cell with fewer than two published cases is flagged for authoring review. The threshold is a practice-design heuristic, not an SAP fact and not a scoring change.</p>
+    <a href="/labs/assessment/data/reasoning-pressure-coverage.json">Open coverage dataset <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="coverage-matrix" data-reveal>
+    <header><p class="research-canvas__eyebrow">Track × level</p><h2>Where can the assessment actually apply pressure?</h2><p>Each card shows the exact number of published cases at one reasoning level. Missing and thin Lead-pressure cells become the next authoring candidates.</p></header>
+    <p id="rc-status">Loading reasoning coverage…</p>
+    <div id="rc-tracks"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Authoring gaps</p><h2>New questions need a reason to exist.</h2><p>These are structural gaps in the current published corpus. A gap does not automatically justify a new case; the next step still needs evidence, semantic novelty, and human promotion review.</p></header>
+    <div class="research-route-list" id="rc-gap-list"></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+    <p><strong>Boundary:</strong> this coverage view reads published case metadata only. It never changes scoring, promotes candidates, changes factual review, or edits publication state.</p>
+    <a href="/labs/assessment/question-review/">Open question authoring review <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span></a>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<script>
+(async function () {
+  const status=document.getElementById('rc-status');
+  const tracks=document.getElementById('rc-tracks');
+  const gaps=document.getElementById('rc-gap-list');
+  try {
+    const response=await fetch('/labs/assessment/data/reasoning-pressure-coverage.json',{cache:'no-store'});
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data=await response.json();
+    document.getElementById('rc-cases').textContent=String(data.summary.published_cases);
+    document.getElementById('rc-pressure').textContent=String(data.summary.lead_pressure_cases);
+    document.getElementById('rc-gaps').textContent=String(data.authoring_gaps.length);
+    status.textContent=`${data.summary.published_cases} published cases across ${data.summary.tracks} tracks and ${data.summary.levels} reasoning levels.`;
+    tracks.replaceChildren();
+    data.tracks.forEach(track=>{
+      const section=document.createElement('section');section.className='research-canvas__inventory';
+      const heading=document.createElement('h3');heading.textContent=`${track.track} · ${track.total_cases} cases · ${(track.lead_pressure_share*100).toFixed(0)}% Lead pressure`;
+      const grid=document.createElement('div');grid.className='ecg-decision-columns';
+      track.levels.forEach(level=>{
+        const card=document.createElement('article');
+        const title=document.createElement('h4');title.textContent=level.level;
+        const count=document.createElement('p');count.innerHTML=`<strong>${level.count}</strong> published case(s) · ${level.pressure_state}`;
+        const ids=document.createElement('small');ids.textContent=level.case_ids.length ? level.case_ids.join(' · ') : 'No published cases';
+        card.append(title,count,ids);grid.appendChild(card);
+      });
+      section.append(heading,grid);tracks.appendChild(section);
+    });
+    gaps.replaceChildren();
+    data.authoring_gaps.forEach(item=>{
+      const link=document.createElement('a');link.href='/labs/assessment/question-review/';
+      const state=document.createElement('span');state.textContent=item.state.toUpperCase();
+      const title=document.createElement('strong');title.textContent=`${item.track} · ${item.level}`;
+      const detail=document.createElement('small');detail.textContent=item.authoring_need;
+      const icon=document.createElement('i');icon.className='material-symbols-outlined';icon.setAttribute('aria-hidden','true');icon.textContent='add_task';
+      link.append(state,title,detail,icon);gaps.appendChild(link);
+    });
+  } catch(error) {
+    status.textContent=`Reasoning coverage could not be loaded: ${error.message}`;
+  }
+}());
+</script>
