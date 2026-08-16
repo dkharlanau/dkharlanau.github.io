@@ -4,7 +4,7 @@ layout: default
 title: "Skill Hub — Practical Working Skills for Enterprise Consultants and AI Agents"
 description: "A library of practical working skills for enterprise consultants, business analysts, data consultants, solution architects, integration architects, SAP AMS consultants, and AI agents. Not a glossary. Not a framework encyclopedia. Usable work skills."
 permalink: /skill-hub/
-last_modified_at: 2026-06-13
+last_modified_at: 2026-08-16
 status: reviewed
 verified: true
 ---
@@ -21,7 +21,8 @@ verified: true
   <h1>Working methods for enterprise delivery.</h1>
   <p class="lead">Methods, decision rules, checklists, and artifact templates for consultants, analysts, architects, and AI agents.</p>
   <div class="atlas-hero__actions">
-    <a class="button button--primary" href="/skill-hub/dama-dmbok/">Data &amp; DAMA skills</a>
+    <a class="button button--primary" href="/skill-hub/problem-solving-operations/">Problem solving &amp; operations</a>
+    <a class="button" href="/skill-hub/dama-dmbok/">Data &amp; DAMA skills</a>
     <a class="button" href="/skill-hub/business-analysis/">Business analysis skills</a>
     <a class="button" href="/skill-hub/testing-quality-delivery/">Testing &amp; QA skills</a>
     <a class="button" href="/skill-hub/architecture/">Architecture skills</a>
@@ -50,6 +51,7 @@ verified: true
     <li><strong>Data consultants</strong> who diagnose data quality failures and build governance that sticks.</li>
     <li><strong>Solution architects</strong> who map capabilities, review designs, and record decisions with context.</li>
     <li><strong>Integration architects</strong> who decide between APIs and events, define contracts, and handle failures.</li>
+    <li><strong>Operations and support specialists</strong> who troubleshoot applications, reconcile data, analyze process deviations, and turn repeated work into controlled procedures.</li>
     <li><strong>SAP AMS consultants</strong> who triage incidents, perform root cause analysis, and capture operational knowledge.</li>
     <li><strong>AI agents</strong> that need structured instructions to produce useful enterprise artifacts instead of generic explanations.</li>
   </ul>
@@ -93,6 +95,10 @@ verified: true
     <h2>Major skill groups</h2>
   </header>
   <div class="topic-grid">
+    <div class="topic-card">
+      <h3><a href="/skill-hub/problem-solving-operations/">Problem Solving &amp; Operations</a></h3>
+      <p>Evidence-driven troubleshooting, data reconciliation, process deviation analysis, procedure and runbook design. Product-neutral core skills with domain adapters for SaaS, APIs, data, cloud, and SAP.</p>
+    </div>
     <div class="topic-card">
       <h3><a href="/skill-hub/dama-dmbok/">DAMA / Data</a></h3>
       <p>Data governance, quality root cause, metadata, master data, lineage, reference data, integration and interoperability.</p>
@@ -174,6 +180,16 @@ verified: true
   <header class="section-heading">
     <h2>Recommended paths</h2>
   </header>
+
+  <h3>Enterprise Operations path</h3>
+  <ol>
+    <li><a href="/skill-hub/problem-solving-operations/evidence-driven-troubleshooting-working-skill/">Evidence-Driven Troubleshooting</a></li>
+    <li><a href="/skill-hub/problem-solving-operations/process-deviation-analysis-working-skill/">Process Deviation Analysis</a></li>
+    <li><a href="/skill-hub/problem-solving-operations/data-reconciliation-working-skill/">Data Reconciliation</a></li>
+    <li><a href="/skill-hub/sap-ams/root-cause-analysis-working-skill/">Root Cause Analysis</a></li>
+    <li><a href="/skill-hub/problem-solving-operations/procedure-design-working-skill/">Procedure / Runbook Design</a></li>
+    <li><a href="/skill-hub/sap-ams/operational-knowledge-capture-working-skill/">Operational Knowledge Capture</a></li>
+  </ol>
 
   <h3>Business Analyst path</h3>
   <ol>
@@ -303,6 +319,7 @@ verified: true
     <h2>Foundation pages</h2>
   </header>
   <ul>
+    <li><a href="/skill-hub/skill-template-contract/">Skill → Template Contract</a> — How reusable methods connect to execution records and evidence.</li>
     <li><a href="/skill-hub/agent-usage-guide/">Agent Usage Guide</a> — How AI agents should use Skill Hub.</li>
     <li><a href="/skill-hub/skill-page-template/">Skill Page Template</a> — The standard structure for every skill page.</li>
     <li><a href="/skill-hub/artifact-templates/">Artifact Templates</a> — Reusable templates that skills reference.</li>
