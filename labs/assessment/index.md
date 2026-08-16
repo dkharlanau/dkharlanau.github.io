@@ -57,7 +57,8 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/factual-review/"><span>FACT</span><strong>Factual Review</strong><small>Check release-sensitive SAP claims against primary sources and record product and release scope.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
       <a href="/labs/assessment/evidence-coverage/"><span>COVER</span><strong>Evidence Coverage</strong><small>Compare source-review coverage and P0 evidence debt across all four assessment tracks.</small><i class="material-symbols-outlined" aria-hidden="true">analytics</i></a>
       <a href="/labs/assessment/promotion-readiness/"><span>CONTENT</span><strong>Promotion Readiness</strong><small>Review structurally mature draft pages while factual verification and publication policy remain separate decisions.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
-      <a href="/labs/assessment/data/question-candidates.json"><span>2</span><strong>Generated Candidate Inventory</strong><small>Two review candidates, twelve duplicate rejections, and a hard publication boundary.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/human-review/"><span>HUMAN</span><strong>Human Review Queue</strong><small>Read source-supported P1 pages end to end before any verification or publication decision.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="/labs/assessment/data/question-candidates.json"><span>GEN</span><strong>Generated Candidate Inventory</strong><small>Review-stage candidates and duplicate rejections stay outside the published case manifest.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
     </div>
   </section>
 

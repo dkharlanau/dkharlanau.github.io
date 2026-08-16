@@ -86,7 +86,7 @@ def generate() -> dict[str, Any]:
             continue
         if factual_state.get("status") != "source_supported":
             continue
-        if not evidence_profile.get("external_review_required", False):
+        if not evidence_profile.get("counts_as_source_review_debt", False):
             continue
 
         reviewed = factual_routes.get(route, {})

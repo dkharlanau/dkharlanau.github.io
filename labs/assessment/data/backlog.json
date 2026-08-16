@@ -384,12 +384,25 @@
         "/labs/assessment/data/question-candidates.json"
       ],
       "working_rule": "Fail candidate generation before question construction when the route evidence profile, factual-review state, or source verification is incomplete. Evidence eligibility never publishes a case automatically."
+    },
+    {
+      "id": "LOOP-027",
+      "priority": "P1",
+      "title": "Source-supported human page-review queue",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/human-review/",
+        "/labs/assessment/data/human-review-policy.json",
+        "/labs/assessment/data/human-review-queue.json",
+        "scripts/generate_assessment_human_review_queue.py"
+      ],
+      "working_rule": "Use source-supported Promotion Readiness routes to order page-level human review. Never change verified, status, robots, sitemap, or publication state automatically."
     }
   ],
   "next_iteration_themes": [
-    "extend graph-backed candidate generation into evidence-complete gaps and keep aggressive duplicate rejection",
-    "start page-level human review of source-supported P1 routes",
-    "use real feedback to influence practice selection without changing factual truth",
-    "add standards or primary research to selective routes only for externally checkable claims"
+    "complete the first core human-review wave and capture page-level findings separately from factual-review claims",
+    "remove brittle practice-count assertions before expanding the graph-backed candidate corpus",
+    "extend candidate generation into evidence-complete gaps with aggressive duplicate rejection",
+    "use real feedback to influence practice selection without changing factual truth"
   ]
 }

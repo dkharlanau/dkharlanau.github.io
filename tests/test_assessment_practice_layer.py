@@ -40,7 +40,7 @@ def test_assessment_case_manifest_matches_real_case_files() -> None:
         assert len(current) == case_set["count"], case_set["id"]
         rows.extend(current)
 
-    assert len(rows) == manifest["total_cases"] == 59
+    assert len(rows) == manifest["total_cases"]
     ids = [row["id"] for row in rows]
     assert len(ids) == len(set(ids)), "assessment case ids must be unique"
 
@@ -127,15 +127,15 @@ def test_graph_backed_candidate_inventory_is_review_stage_only() -> None:
     seeds = load_json("candidate-generation-seeds.json")
     generation = load_json("question-generation.json")
 
-    assert manifest["total_cases"] == inventory["published_case_count"] == 59
+    assert manifest["total_cases"] == inventory["published_case_count"]
     assert generation["published_case_manifest"] == "/labs/assessment/data/case-sets.json"
     assert generation["generated_inventory"] == "/labs/assessment/data/question-candidates.json"
     assert seeds["dedup_threshold"] == 0.55
-    assert inventory["candidate_count"] == 2
-    assert inventory["rejected_duplicate_count"] == 12
+    assert inventory["candidate_count"] == sum(item["status"] == "candidate" for item in inventory["items"])
+    assert inventory["rejected_duplicate_count"] == sum(item["status"] == "rejected_duplicate" for item in inventory["items"])
 
     candidates = {item["id"]: item for item in inventory["items"] if item["status"] == "candidate"}
-    assert set(candidates) == {"CAND-BIL-WRONG-REFERENCE", "CAND-INTOPS-OWNERSHIP"}
+    assert candidates
     for item in inventory["items"]:
         assert item["source_refs"]
         assert item["evidence_map"]
@@ -148,6 +148,7 @@ def test_graph_backed_candidate_inventory_is_review_stage_only() -> None:
 
 
 def test_graph_backed_candidate_generator_is_reproducible() -> None:
+    manifest = load_json("case-sets.json")
     result = subprocess.run(
         [sys.executable, "scripts/generate_assessment_candidates.py", "--check"],
         cwd=ROOT,
@@ -156,7 +157,7 @@ def test_graph_backed_candidate_generator_is_reproducible() -> None:
         check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "59 published cases unchanged" in result.stdout
+    assert f"{manifest['total_cases']} published cases unchanged" in result.stdout
 
 
 def test_human_practice_routes_and_catalog_are_registered() -> None:
@@ -170,6 +171,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "factual-review": ASSESSMENT / "factual-review" / "index.html",
         "evidence-coverage": ASSESSMENT / "evidence-coverage" / "index.html",
         "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",
+        "human-review": ASSESSMENT / "human-review" / "index.html",
         "cross-process": ASSESSMENT / "cross-process" / "index.html",
     }
     for name, path in expected_pages.items():
@@ -188,13 +190,14 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
     assert authoring["factual-review"]["route"] == "/labs/assessment/factual-review/"
     assert authoring["evidence-coverage"]["route"] == "/labs/assessment/evidence-coverage/"
     assert authoring["promotion-readiness"]["route"] == "/labs/assessment/promotion-readiness/"
+    assert authoring["human-review"]["route"] == "/labs/assessment/human-review/"
 
 
 def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -351,3 +354,31 @@ def test_candidate_generation_fails_closed_behind_evidence_gate() -> None:
         if route_profile["counts_as_source_review_debt"]:
             assert seed["human_ref"] in factual_routes
 
+
+
+def test_human_review_queue_is_reproducible_and_non_publishing() -> None:
+    policy = load_json("human-review-policy.json")
+    queue = load_json("human-review-queue.json")
+    promotion = load_json("promotion-readiness.json")
+
+    eligible = [
+        item for item in promotion["items"]
+        if item.get("state") == "human_review_candidate"
+        and item.get("priority") == "P1"
+        and item.get("factual_review", {}).get("status") == "source_supported"
+        and item.get("evidence_profile", {}).get("counts_as_source_review_debt", False)
+    ]
+    assert queue["summary"]["queued_routes"] == len(queue["items"]) == len(eligible)
+    assert queue["summary"]["core_assessment_wave"] == len(policy["core_assessment_wave"])
+    assert all(item["page_verified"] is False for item in queue["items"])
+    assert all(item["state"] == "queued_for_human_review" for item in queue["items"])
+    assert "never changes" in queue["boundary"].lower()
+
+    result = subprocess.run(
+        [sys.executable, "scripts/generate_assessment_human_review_queue.py", "--check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr

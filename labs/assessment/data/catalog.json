@@ -1,9 +1,9 @@
 {
   "id": "sap-lead-assessment-lab",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "updated_at": "2026-08-16",
   "status": "draft",
-  "purpose": "Turn the Lab into a structured SAP Lead assessment route across process knowledge, diagnostics, architecture, integration, data, AI, adaptive practice, feedback, evidence-backed question authoring, promotion readiness, and claim-level primary-source review.",
+  "purpose": "Turn the Lab into a structured SAP Lead assessment route across process knowledge, diagnostics, architecture, integration, data, AI, adaptive practice, feedback, evidence-backed question authoring, promotion readiness, claim-level primary-source review, and explicit human page review.",
   "reasoning_levels": [
     {
       "id": "explain",
@@ -223,6 +223,12 @@
       "label": "Question Candidate Review",
       "route": "/labs/assessment/question-review/",
       "purpose": "Review graph-backed generated candidates, evidence maps, and duplicate rejections before any case promotion."
+    },
+    {
+      "id": "human-review",
+      "label": "Human Review Queue",
+      "route": "/labs/assessment/human-review/",
+      "purpose": "Order source-supported SAP pages for page-level human review without changing verification, indexing, or publication state automatically."
     }
   ],
   "coverage": {
@@ -260,12 +266,13 @@
       "Product-primary factual review covers SAP Business AI, MDG, Integration architecture, and Development in addition to core logistics",
       "Product-primary review now covers Pricing, Sales Order, Shipping, Procurement, and MDG replication boundaries",
       "Broad required evidence coverage is complete; authored diagnostics and generic AI frameworks use selective evidence profiles instead of forced SAP-product verification",
-      "Assessment candidate generation fails closed when route evidence profiles or source verification are incomplete"
+      "Assessment candidate generation fails closed when route evidence profiles or source verification are incomplete",
+      "Source-supported P1 routes are now ordered through an explicit human page-review queue with a non-publishing boundary"
     ],
     "next_verticals": [],
     "next_practice_layers": [
+      "complete the core human-review wave and record page-level findings without auto-publishing",
       "extend candidate seeds only into evidence-complete graphs where the new reasoning signal is not already covered",
-      "start page-level human review on source-supported P1 routes without auto-publishing",
       "connect real assessment feedback to practice priority while factual truth remains source-based",
       "add standards or original research to selective routes only when an external claim actually needs it"
     ]
@@ -310,6 +317,9 @@
     "factual_review": "/labs/assessment/data/factual-review.json",
     "evidence_coverage_route": "/labs/assessment/evidence-coverage/",
     "evidence_coverage": "/labs/assessment/data/evidence-coverage.json",
-    "evidence_profile": "/labs/assessment/data/evidence-profile.json"
+    "evidence_profile": "/labs/assessment/data/evidence-profile.json",
+    "human_review_route": "/labs/assessment/human-review/",
+    "human_review_policy": "/labs/assessment/data/human-review-policy.json",
+    "human_review_queue": "/labs/assessment/data/human-review-queue.json"
   }
 }
