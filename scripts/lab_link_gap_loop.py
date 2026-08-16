@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Find internal-link gaps between Lab search-intent routes.
 
-The loop uses existing source links, route hierarchy, tags and explicit search intents.
-It produces contextual link suggestions but never edits article prose automatically.
+The loop uses existing source links, generated semantic relationships, route hierarchy,
+tags and explicit search intents. It produces contextual link suggestions but never
+edits article prose automatically.
 """
 
 from __future__ import annotations
@@ -40,6 +41,18 @@ def local_links(body: str) -> set[str]:
     return set(HTML_LINK_RE.findall(body) + MD_LINK_RE.findall(body))
 
 
+def semantic_links(frontmatter: dict) -> set[str]:
+    """Return front-matter relationships that are rendered by semantic-related.html."""
+    links: set[str] = set()
+    for relation in frontmatter.get("semantic_links") or []:
+        if not isinstance(relation, dict):
+            continue
+        target = relation.get("url")
+        if isinstance(target, str) and target.startswith("/labs/"):
+            links.add(target.split("#", 1)[0].split("?", 1)[0])
+    return links
+
+
 def tokens(text: str) -> set[str]:
     return {word for word in WORD_RE.findall(text.lower()) if word not in STOP and len(word) > 1}
 
@@ -73,7 +86,9 @@ def main() -> int:
         path = repo / record.source_path
         fm = parse_frontmatter(path) or {}
         body = source_body(path)
-        links = local_links(body)
+        # semantic-related.html renders page.semantic_links as normal anchors, so they
+        # are part of the public internal-link graph and must be counted by this audit.
+        links = local_links(body) | semantic_links(fm)
         for target in links:
             if target in registry:
                 inbound[target].add(route)
@@ -127,7 +142,7 @@ def main() -> int:
     lines = [
         "# Lab Internal Link Gap Queue",
         "",
-        "Suggestions use search intent, topic tags and route hierarchy. They are review hints, not automatic prose edits.",
+        "Suggestions use search intent, topic tags and route hierarchy. Existing links include both source-body links and semantic relationships rendered by the shared layout.",
         "",
         f"- Intent-mapped routes: **{len(rows)}**",
         f"- High-priority link gaps: **{len(high)}**",
