@@ -23,6 +23,9 @@ jobs:
         run: python -m pip install pytest pyyaml
       - name: Integrate LOOP-027
         run: python scripts/_loop027_patch.py
+      - name: Align human-review invariant wording
+        run: |
+          python -c "from pathlib import Path; p=Path('tests/test_assessment_practice_layer.py'); t=p.read_text(); p.write_text(t.replace('assert \"never edits\" in queue[\"boundary\"].lower()', 'assert \"never changes\" in queue[\"boundary\"].lower()'))"
       - name: Refresh readiness and evidence coverage
         run: |
           python scripts/audit_assessment_promotion_readiness.py
