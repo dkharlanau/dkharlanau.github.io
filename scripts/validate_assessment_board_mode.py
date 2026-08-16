@@ -9,6 +9,7 @@ DATA = ROOT / "labs" / "assessment" / "data"
 CONTRACT = DATA / "board-mode.json"
 DRILLS = DATA / "core-boundary-drills.json"
 SCORING = DATA / "scoring.json"
+REVIEW_MAP = DATA / "review-map.json"
 PAGE = ROOT / "labs" / "assessment" / "board" / "index.html"
 
 
@@ -21,6 +22,7 @@ def validate() -> list[str]:
     contract = load(CONTRACT)
     drills = load(DRILLS)
     scoring = load(SCORING)
+    review_map = load(REVIEW_MAP)
     page = PAGE.read_text(encoding="utf-8")
 
     scoring_dimensions = [item["id"] for item in scoring["dimensions"]]
@@ -41,6 +43,16 @@ def validate() -> list[str]:
     if len(default.get("answer_sequence", [])) < 5:
         errors.append("Board Mode answer sequence must contain at least five reasoning steps")
 
+    handoff = contract.get("review_handoff", {})
+    if contract.get("review_map_contract") != "/labs/assessment/data/review-map.json":
+        errors.append("Board Mode must reference the shared review-map contract")
+    if handoff.get("history_write") is not False:
+        errors.append("Board Mode review handoff must not write persistent history")
+    if set(review_map.get("dimension_routes", {})) != set(scoring_dimensions):
+        errors.append("Review map must cover every Board Mode scoring dimension")
+    if "lowest average" not in str(handoff.get("selection", "")).lower():
+        errors.append("Board Mode review handoff must rank weak dimensions from session averages")
+
     boundary = str(contract.get("session_boundary", "")).lower()
     for token in ("does not publish", "write assessment history automatically"):
         if token not in boundary:
@@ -52,9 +64,13 @@ def validate() -> list[str]:
         "/labs/assessment/data/core-boundary-drills.json",
         "/labs/assessment/data/scoring.json",
         "/labs/assessment/data/board-mode.json",
+        "/labs/assessment/data/review-map.json",
     ):
         if endpoint not in page:
             errors.append(f"Board Mode page is missing endpoint: {endpoint}")
+    for token in ("board-review-handoff", "dimensionScores", "renderReviewHandoff"):
+        if token not in page:
+            errors.append(f"Board Mode review handoff implementation is missing token: {token}")
     if "localStorage" in page or ".setItem(" in page:
         errors.append("Board Mode must not create a second persistent history implementation")
 
@@ -72,7 +88,7 @@ def main() -> int:
         "Board Mode valid: "
         f"{contract['default_session']['rounds']} rounds, "
         f"{contract['default_session']['seconds_per_round']} seconds each, "
-        f"shared {contract['scoring']['maximum_score']}-point scoring contract."
+        f"shared {contract['scoring']['maximum_score']}-point scoring and targeted review handoff."
     )
     return 0
 
