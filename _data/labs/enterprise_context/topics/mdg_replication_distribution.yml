@@ -1,0 +1,85 @@
+id: TOPIC-MDG-REPLICATION-DISTRIBUTION
+type: research_topic
+title: "SAP MDG Replication and Distribution Architecture"
+summary: "A contract-based view of DRF, outbound implementations, filters, target systems, key mapping, active-data boundaries, monitoring and downstream acceptance."
+domain: "Integration"
+process_family: "Master Data Distribution"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/replication/"
+source_reviewed_at: "2026-08-16"
+
+memory_model:
+  phrase: "Active Object → Replication Model → Outbound Implementation → Filter → Target → Message/API → Identity Mapping → Target Persistence → Consumer Proof"
+  principle: "Activation creates governed truth. Distribution proves that consumers received a compatible version of that truth."
+
+replication_contract:
+  source:
+    questions: [which-active-area, which-object-type, which-change-trigger, initial-or-delta]
+  model:
+    questions: [replication-model, outbound-implementation, target-system, filter, output-mode]
+  transport:
+    questions: [service-or-message, endpoint, authentication, retry, ordering, batch-size]
+  identity:
+    questions: [harmonized-key-or-mapping, source-system-id, target-key, duplicate-policy]
+  target:
+    questions: [accepted-schema, local-validation, persistence, acknowledgement, local-ownership]
+  operations:
+    questions: [monitoring, application-log, replay, dead-letter-or-error-handling, reconciliation]
+
+execution_modes:
+  initialization:
+    purpose: "Establish a target baseline from the current active state."
+    control: "Reconcile population and key mapping before declaring success."
+  delta_or_change:
+    purpose: "Distribute relevant changes after the baseline."
+    control: "Prove no gap between baseline cut-off and ongoing change distribution."
+  manual_replay:
+    purpose: "Recover selected failures without duplicating business side effects."
+    control: "Know idempotency and target state before replay."
+
+diagnostic_layers:
+  - layer: "Active source"
+    question: "Is the expected value active, or only staged/approved?"
+  - layer: "DRF selection"
+    question: "Was the object selected by the replication model and filters?"
+  - layer: "Outbound implementation"
+    question: "Did the correct implementation build the expected payload?"
+  - layer: "Transport"
+    question: "Was the message/service delivered with a stable correlation ID?"
+  - layer: "Identity mapping"
+    question: "Could the target resolve the source object to the correct local identity?"
+  - layer: "Target validation"
+    question: "Did the target accept the semantics, not only the HTTP/message transport?"
+  - layer: "Persistence"
+    question: "Was the expected target record committed?"
+  - layer: "Business consumer"
+    question: "Did the downstream process use the replicated value?"
+
+anti_patterns:
+  - "DRFOUT green means replication is complete."
+  - "A sent message is treated as target acceptance."
+  - "Filters are changed in production without population impact analysis."
+  - "Key mapping is repaired manually without fixing identity governance."
+  - "Initialization and delta cut-off are designed by different teams with no shared watermark."
+  - "Target-specific mandatory fields are discovered only after go-live."
+
+assessment_cards:
+  - prompt: "What is the DRF replication model?"
+    answer: "It is the distribution configuration that connects outbound implementations and receiving business systems, with filters and technical settings defining what goes where."
+  - prompt: "What is the first check when target data is missing?"
+    answer: "First prove the source value is active. Then trace DRF selection, outbound payload, transport, identity mapping, target acceptance and persistence."
+  - prompt: "How do you handle different object IDs across systems?"
+    answer: "Use an explicit identity/key-mapping strategy and treat mapping as governed integration data, not as an afterthought."
+
+source_refs:
+  - SRC-SAP-MDG-DRF-2025
+  - SRC-SAP-MDG-REPLICATION-CONFIG-2025
+relations:
+  - subject: TOPIC-MDG-REPLICATION-DISTRIBUTION
+    predicate: requires
+    object: TOPIC-MDG-LINEAGE
+    evidence_type: reasoned_interpretation
+    confidence: high

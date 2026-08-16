@@ -1,0 +1,106 @@
+id: TOPIC-MDG-BUSINESS-PARTNER-DOMAIN
+type: research_topic
+title: "SAP MDG Business Partner, Customer and Supplier Domain Model"
+summary: "A domain model that separates shared Business Partner identity from customer, supplier, company-code, sales-area and purchasing-organization responsibilities."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/domains/business-partner/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "How do we govern one real-world party while keeping Business Partner identity, customer behavior and supplier behavior explicit and consistent?"
+
+memory_model:
+  phrase: "Party → BP Core → Role → Customer/Supplier Extension → Organizational Slice → CVI/Activation → Distribution → Process"
+  principle: "The same party can play several business roles. Shared identity and application-specific behavior need different ownership."
+
+identity_layers:
+  - layer: "Business Partner core"
+    grain: "Business Partner"
+    examples: [name, category, addresses, communication, bank-details, identification, tax-numbers, relationships]
+    question: "What describes the party independent of a sales or purchasing organization?"
+  - layer: "Customer general"
+    grain: "Business Partner / Customer"
+    examples: [customer-general behavior and application extension]
+    question: "What makes this BP usable as a customer?"
+  - layer: "Customer company code"
+    grain: "Customer + Company Code"
+    examples: [accounting and payment controls]
+    question: "What finance behavior is local to one company code?"
+  - layer: "Customer sales area"
+    grain: "Customer + Sales Organization + Distribution Channel + Division"
+    examples: [sales, shipping and billing-relevant customer controls]
+    question: "What commercial behavior belongs to one sales area?"
+  - layer: "Supplier general"
+    grain: "Business Partner / Supplier"
+    examples: [supplier-general data]
+    question: "What makes this BP usable as a supplier?"
+  - layer: "Supplier company code"
+    grain: "Supplier + Company Code"
+    examples: [accounting, payment and withholding-tax context]
+    question: "What finance behavior belongs to one legal/accounting context?"
+  - layer: "Supplier purchasing organization"
+    grain: "Supplier + Purchasing Organization"
+    examples: [order currency, terms, acknowledgement and invoice-verification controls]
+    question: "What procurement behavior is local to one purchasing organization?"
+
+ownership_rules:
+  - "Core identity should have one accountable enterprise owner even when local roles enrich it."
+  - "Customer and supplier extensions must not silently overwrite shared BP identity."
+  - "Organizational attributes need an owner from the organization that understands the business rule."
+  - "CVI or synchronization is a technical mechanism, not a substitute for semantic ownership."
+  - "A globally clean BP can still be unusable in O2C or P2P when the required application slice is missing."
+
+build_sequence:
+  - "Define party identity, duplicate policy and number strategy."
+  - "Define BP category and mandatory core attributes."
+  - "Define roles and allowed role combinations."
+  - "Separate global, company-code, sales-area and purchasing-organization grains."
+  - "Assign ownership and approval authority to every grain."
+  - "Model validation/derivation rules, including cross-grain consistency."
+  - "Define activation/CVI boundary for the selected deployment."
+  - "Define replication, key mapping and target-system expectations."
+  - "Test customer usability in O2C and supplier usability in P2P."
+
+cross_role_checks:
+  - check: "Same party as customer and supplier"
+    risk: "Duplicate identities or conflicting shared addresses/tax data"
+    control: "Single identity policy plus explicit role-specific extensions"
+  - check: "Address change"
+    risk: "A local commercial request changes enterprise identity unexpectedly"
+    control: "Attribute-level ownership and approval authority"
+  - check: "Company-code extension"
+    risk: "BP appears complete but cannot post"
+    control: "Finance-specific completeness and process test"
+  - check: "Sales-area extension"
+    risk: "Customer exists but order/delivery behavior is incomplete"
+    control: "Sales-area completeness plus O2C proof"
+  - check: "Purchasing-organization extension"
+    risk: "Supplier exists but procurement execution is incomplete"
+    control: "Purchasing completeness plus P2P proof"
+
+assessment_cards:
+  - prompt: "Is Business Partner the same thing as Customer or Supplier?"
+    answer: "No. BP is the shared party identity. Customer and supplier capabilities add application and organizational behavior to that identity."
+  - prompt: "Where should payment terms live?"
+    answer: "First define which process and organizational grain owns them. A field name alone is not enough because similar concepts can exist in different contexts."
+  - prompt: "What proves a governed BP is usable?"
+    answer: "The required role and organizational slices are active, synchronized to the target and successfully used in a real business transaction."
+
+source_refs:
+  - SRC-SAP-MDG-BP-DATA-MODELS-2025
+  - SRC-SAP-BP-STRUCTURE-2025
+relations:
+  - subject: TOPIC-MDG-BUSINESS-PARTNER-DOMAIN
+    predicate: requires
+    object: TOPIC-MDG-DATA-MODEL-ENGINEERING
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-BUSINESS-PARTNER-DOMAIN
+    predicate: provides_context_to
+    object: TOPIC-MDG-LINEAGE
+    evidence_type: reasoned_interpretation
+    confidence: high

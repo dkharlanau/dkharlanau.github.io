@@ -1,0 +1,87 @@
+id: TOPIC-MDG-GOVERNANCE-PROCESS-ENGINE
+type: research_topic
+title: "SAP MDG Change Request, Workflow and Rule Engine"
+summary: "How change-request types, steps, BRFplus decisions, validations, derivations, authority and activation combine into a controlled governance process."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/governance-engine/"
+source_reviewed_at: "2026-08-16"
+
+memory_model:
+  phrase: "Intent → CR Type → Scope → Validate/Derive → Step → Agent → Decision → Final Check → Activation → Evidence"
+  principle: "Workflow decides authority and movement. Validation decides whether data is acceptable. Derivation calculates data. Do not mix the three."
+
+contracts:
+  change_request:
+    defines: [business-purpose, allowed-object-scope, process-pattern, lifecycle-context]
+    asks: [why-is-data-changing, which-domain, which-authority-model, which-final-check]
+  workflow:
+    defines: [current-step, allowed-actions, next-step, expected-agent, status-transition]
+    implementation_note: "Rule-based workflow can use BRFplus decision tables to determine status, next step and expected agents."
+  validation:
+    defines: [condition, error-or-warning, execution-point, message, owner]
+    rule: "Reject an invalid business state; do not use workflow routing as a data-quality check."
+  derivation:
+    defines: [inputs, calculated-output, precedence, overwrite-policy, owner]
+    rule: "A derived value needs provenance and deterministic test cases."
+  activation:
+    defines: [final-check, write-to-active-area, activation-error-handling, audit-evidence]
+
+workflow_design_questions:
+  - "Which decision requires business authority and which is deterministic?"
+  - "Can two approvals run in parallel without creating contradictory edits?"
+  - "What happens after rejection: return, revise, cancel or branch?"
+  - "Which step owns final completeness?"
+  - "What happens when activation fails after approval?"
+  - "Which agent determination rule is explainable and supportable?"
+  - "How do emergency and mass-change paths differ from normal governance?"
+
+rule_catalog_fields:
+  - rule-id
+  - business-statement
+  - domain-and-grain
+  - rule-type
+  - input-fields
+  - output-or-message
+  - execution-point
+  - severity
+  - business-owner
+  - technical-owner
+  - evidence
+  - positive-test
+  - negative-test
+  - change-history
+
+anti_patterns:
+  - "One workflow for every change because it is easier to configure."
+  - "One approval per department even when nobody has a real decision right."
+  - "Derivation logic duplicated in UI, backend and replication mapping."
+  - "Warnings used for conditions that should block activation."
+  - "Final approver expected to discover data-quality defects manually."
+  - "Activation errors treated as user rejection."
+
+assessment_cards:
+  - prompt: "What is the difference between validation and workflow?"
+    answer: "Validation checks whether the data state is allowed. Workflow controls who can decide and where the change goes next."
+  - prompt: "Why use several change-request types?"
+    answer: "When business purpose, scope, risk, authority or lifecycle differs enough to require a different governance contract."
+  - prompt: "Where do you put derivation?"
+    answer: "At the earliest reliable boundary where inputs are available and ownership is clear, with deterministic tests and visible provenance."
+
+source_refs:
+  - SRC-SAP-MDG-RULE-WORKFLOW-2025
+relations:
+  - subject: TOPIC-MDG-GOVERNANCE-PROCESS-ENGINE
+    predicate: requires
+    object: TOPIC-MDG-DATA-MODEL-ENGINEERING
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-GOVERNANCE-PROCESS-ENGINE
+    predicate: provides_context_to
+    object: TOPIC-MDG-LINEAGE
+    evidence_type: reasoned_interpretation
+    confidence: high
