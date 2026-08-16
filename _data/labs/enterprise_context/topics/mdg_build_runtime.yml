@@ -1,0 +1,186 @@
+id: TOPIC-MDG-BUILD-RUNTIME
+type: research_topic
+title: "SAP MDG Build and Runtime Anatomy"
+summary: "A Lead-level build map that separates design-time configuration from the runtime path of one governed master-data change."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/build-runtime/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "What must be designed before an MDG process works, and what actually happens when one value moves from request to approved, active and consumed data?"
+
+memory_model:
+  phrase: "Scope → Model → Rules → Authority → Stage → Validate → Approve → Activate → Replicate → Reconcile → Prove"
+  principle: "Separate design-time artifacts from runtime evidence. A configuration object explains what should happen; a runtime trace proves what did happen."
+
+design_time_layers:
+  - order: 1
+    id: MDG-BUILD-SCOPE
+    title: "Governance scope and ownership"
+    question: "Which domain, object, organizational slices and attributes are centrally governed?"
+    outputs: ["object boundary", "attribute ownership", "consumer inventory", "risk classes"]
+  - order: 2
+    id: MDG-BUILD-MODEL
+    title: "Data model"
+    question: "What are the root, dependent entities, attributes, keys, relationships and cardinalities?"
+    outputs: ["entity model", "key model", "relationship model", "storage/use decisions"]
+    source_refs: [SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025-R2]
+  - order: 3
+    id: MDG-BUILD-PERSISTENCE
+    title: "Staging and active-area strategy"
+    question: "Where do inactive changes live and where does approved active data live?"
+    outputs: ["staging semantics", "MDG active or reuse active-area decision", "activation contract"]
+    source_refs: [SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025-R2]
+  - order: 4
+    id: MDG-BUILD-ENTRY
+    title: "Entry and service exposure"
+    question: "How do requesters, stewards, imports or applications create the governed change?"
+    outputs: ["persona entry points", "upload/API boundaries", "field exposure"]
+  - order: 5
+    id: MDG-BUILD-RULES
+    title: "Validation and derivation"
+    question: "Which rules reject, default, calculate or enrich data, and when are they executed?"
+    outputs: ["rule inventory", "rule owner", "trigger", "error severity", "derivation provenance"]
+    source_refs: [SRC-SAP-MDG-VALIDATION-DERIVATION-2025, SRC-SAP-MDG-BRFPLUS-RULES-2025]
+  - order: 6
+    id: MDG-BUILD-WORKFLOW
+    title: "Change request and workflow"
+    question: "Which change request type, steps, actions, statuses and agents implement accountability?"
+    outputs: ["change-request types", "workflow steps", "agent rules", "approval boundaries"]
+    source_refs: [SRC-SAP-MDG-RULE-WORKFLOW-2025-R2]
+  - order: 7
+    id: MDG-BUILD-SECURITY
+    title: "Authorization and segregation"
+    question: "Who may propose, enrich, approve, activate, replicate and audit?"
+    outputs: ["role matrix", "SoD conflicts", "technical identities"]
+  - order: 8
+    id: MDG-BUILD-ACTIVATION
+    title: "Activation and audit"
+    question: "What must be true before staging becomes active data, and what evidence is written?"
+    outputs: ["activation conditions", "change-document evidence", "error path"]
+    source_refs: [SRC-SAP-MDG-CHANGE-DOCUMENTS-2025]
+  - order: 9
+    id: MDG-BUILD-DISTRIBUTION
+    title: "Distribution contract"
+    question: "Which targets receive which object slices, through which services, filters and schedules?"
+    outputs: ["replication model", "target filters", "message contracts", "retry rules"]
+  - order: 10
+    id: MDG-BUILD-IDENTITY
+    title: "Cross-system identity and value semantics"
+    question: "How are global/local IDs and code values reconciled across systems?"
+    outputs: ["key mappings", "value mappings", "mapping ownership", "confirmation path"]
+    source_refs: [SRC-SAP-MDG-KEY-MAPPING-2025-R2]
+  - order: 11
+    id: MDG-BUILD-QUALITY
+    title: "Data quality operating loop"
+    question: "How are quality rules evaluated, monitored, corrected and improved?"
+    outputs: ["validation-rule catalog", "quality KPIs", "correction loop", "rule lifecycle"]
+    source_refs: [SRC-SAP-MDG-DQM-2025]
+  - order: 12
+    id: MDG-BUILD-OPERATIONS
+    title: "Operations and reconciliation"
+    question: "How do we prove governance, activation, distribution and consumer usability after go-live?"
+    outputs: ["monitoring signals", "reconciliation controls", "runbooks", "business proof tests"]
+
+runtime_chain:
+  - stage: 1
+    id: MDG-RUN-SOURCE
+    title: "Source intent"
+    state: "A business request, inbound record, mass process or consolidation result proposes a change."
+    evidence: ["request reason", "source system", "requester", "source record/reference"]
+  - stage: 2
+    id: MDG-RUN-IDENTIFY
+    title: "Identify the governed object"
+    state: "Resolve object identity, domain, entity path and organizational scope."
+    evidence: ["business key", "entity key", "organizational qualifiers", "key mapping when relevant"]
+  - stage: 3
+    id: MDG-RUN-CR
+    title: "Open governance context"
+    state: "The change is placed in the intended change-request or governed process context."
+    evidence: ["change request ID/type", "process ID", "workflow context"]
+  - stage: 4
+    id: MDG-RUN-STAGE
+    title: "Stage inactive data"
+    state: "Proposed values are held as governed, not-yet-active data."
+    evidence: ["staging state", "before/after values", "entity instance"]
+    source_refs: [SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025-R2]
+  - stage: 5
+    id: MDG-RUN-RULE
+    title: "Validate and derive"
+    state: "Rules check consistency and may derive values according to the domain design."
+    evidence: ["rule ID", "input values", "result/error", "derived value origin"]
+    source_refs: [SRC-SAP-MDG-VALIDATION-DERIVATION-2025]
+  - stage: 6
+    id: MDG-RUN-DECIDE
+    title: "Route and decide"
+    state: "Workflow determines the next step and responsible agent; accountable users approve, revise or reject."
+    evidence: ["step", "action", "agent", "status", "decision time"]
+    source_refs: [SRC-SAP-MDG-RULE-WORKFLOW-2025-R2]
+  - stage: 7
+    id: MDG-RUN-AUDIT
+    title: "Record governed changes"
+    state: "MDG records change documents during change-request processing."
+    evidence: ["USMD change document", "user", "old value", "new value", "processing step"]
+    source_refs: [SRC-SAP-MDG-CHANGE-DOCUMENTS-2025]
+  - stage: 8
+    id: MDG-RUN-ACTIVATE
+    title: "Activate"
+    state: "Approved data is written to the active area according to the model design."
+    evidence: ["activation result", "USMD_ACT evidence", "active-area record", "activation errors"]
+    source_refs: [SRC-SAP-MDG-CHANGE-DOCUMENTS-2025]
+  - stage: 9
+    id: MDG-RUN-PUBLISH
+    title: "Publish or replicate"
+    state: "The approved object/version is distributed to required consumers."
+    evidence: ["replication target", "message/service ID", "filter result", "send status"]
+  - stage: 10
+    id: MDG-RUN-MAP
+    title: "Resolve target identity"
+    state: "Global and local object IDs are reconciled when systems do not use the same key."
+    evidence: ["source ID", "target ID", "mapping record", "confirmation"]
+    source_refs: [SRC-SAP-MDG-KEY-MAPPING-2025-R2]
+  - stage: 11
+    id: MDG-RUN-ACCEPT
+    title: "Target accepts and persists"
+    state: "The target processes the message and stores the required object slice."
+    evidence: ["target processing status", "application log", "target record", "reject reason"]
+  - stage: 12
+    id: MDG-RUN-PROVE
+    title: "Business process proves use"
+    state: "A real downstream process consumes the intended value without local repair."
+    evidence: ["sales/procurement/planning/warehouse/finance document", "determination result", "reconciliation result"]
+
+control_points:
+  - control: "Model boundary"
+    failure_if_missing: "The value is governed at the wrong organizational level or duplicated across entities."
+  - control: "Rule ownership"
+    failure_if_missing: "A validation blocks data but nobody owns the business meaning or lifecycle of the rule."
+  - control: "Approval authority"
+    failure_if_missing: "Workflow routes tasks, but responsibility for the decision is unclear."
+  - control: "Activation evidence"
+    failure_if_missing: "Approval exists, but there is no proof of the value written active."
+  - control: "Replication reconciliation"
+    failure_if_missing: "MDG is green while a target is missing or rejecting the record."
+  - control: "Consumer proof"
+    failure_if_missing: "Technical delivery is treated as business success without testing use in the real process."
+
+build_review_questions:
+  - "Can every important field be assigned to one entity, organizational scope and business owner?"
+  - "Can we explain where an unapproved value lives and what activation changes?"
+  - "Can we name the validation or derivation that changed a value and its owner?"
+  - "Can we prove who approved the change and which change-request step produced that decision?"
+  - "Can we trace the active value to every required target system and local key?"
+  - "Can we prove that the target process actually used the governed value?"
+
+source_refs:
+  - SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025-R2
+  - SRC-SAP-MDG-VALIDATION-DERIVATION-2025
+  - SRC-SAP-MDG-BRFPLUS-RULES-2025
+  - SRC-SAP-MDG-RULE-WORKFLOW-2025-R2
+  - SRC-SAP-MDG-CHANGE-DOCUMENTS-2025
+  - SRC-SAP-MDG-KEY-MAPPING-2025-R2
+  - SRC-SAP-MDG-DQM-2025

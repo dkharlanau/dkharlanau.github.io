@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "SAP MDG Solution Architecture — Enterprise Context Lab"
-description: "How an SAP MDG solution is built: application layers, interfaces, extensibility, security, monitoring, and practical design decisions."
+description: "How an SAP MDG solution is built: application layers, data-model engineering, runtime governance, lineage, interfaces, extensibility, security, monitoring, and practical design decisions."
 permalink: /labs/enterprise-context/mdg/architecture/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
   - sap
@@ -15,6 +15,8 @@ tags:
   - architecture
   - integration
   - extensibility
+  - lineage
+  - data-model
   - rap
   - abap-cloud
 ---
@@ -47,6 +49,19 @@ tags:
     <p><strong>Memory line:</strong> {{ topic.memory_model.phrase }}.</p>
     <p><strong>Design rule:</strong> {{ topic.memory_model.principle }}</p>
     <a href="/labs/enterprise-context/mdg/implementation/">Move from architecture to implementation <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Engineering deep dives</p>
+      <h2>The architecture becomes real when model, runtime, and evidence meet.</h2>
+      <p>These three routes go below the component diagram. They explain where a field belongs, what happens to one concrete change at runtime, and how to prove the value from origin to business use.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/mdg/data-model/engineering/"><span>MODEL</span><strong>Data Model Engineering</strong><small>Business grain, root and dependent entities, keys, cardinality, staging, active-area strategy, field impact, and model evolution.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/enterprise-context/mdg/build-runtime/"><span>RUN</span><strong>Build &amp; Runtime Anatomy</strong><small>Separate design-time artifacts from the runtime chain: source → staging → rules → authority → activation → replication → consumer proof.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/mdg/lineage/"><span>LIN</span><strong>Lineage &amp; Provenance</strong><small>Trace who or what supplied a value, what changed it, who approved it, what became active, where it was distributed, and where business used it.</small><i class="material-symbols-outlined" aria-hidden="true">timeline</i></a>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="build-map" data-reveal>

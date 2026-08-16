@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
   - sap
@@ -42,6 +42,19 @@ tags:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">schema</span>
     <p><strong>Design rule:</strong> {{ topic.memory_model.design_rule }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Engineering layer</p>
+      <h2>Move from anatomy to an executable model.</h2>
+      <p>The anatomy page answers what the model contains. The deeper engineering views answer how grain, persistence, rules, workflow, activation and lineage fit together at runtime.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/mdg/data-model/engineering/"><span>MODEL</span><strong>Data Model Engineering</strong><small>Grain, entity boundaries, keys, cardinality, active-area strategy, field impact and model smells.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/mdg/build-runtime/"><span>RUN</span><strong>Build & Runtime Anatomy</strong><small>Design-time layers and the runtime path from source intent to business proof.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/labs/enterprise-context/mdg/lineage/"><span>LIN</span><strong>Lineage & Provenance</strong><small>Trace source, rule, approval, activation, replication, mapping and downstream consumption evidence.</small><i class="material-symbols-outlined" aria-hidden="true">timeline</i></a>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" id="layers" data-reveal>
