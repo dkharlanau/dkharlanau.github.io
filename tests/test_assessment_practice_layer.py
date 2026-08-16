@@ -192,7 +192,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -234,13 +234,13 @@ def test_factual_review_keeps_source_support_separate_from_page_verification() -
     promotion = load_json("promotion-readiness.json")
 
     assert review["policy"] == "/labs/assessment/data/factual-review-policy.json"
-    assert review["summary"] == {
-        "routes_reviewed": 2,
-        "claims_reviewed": 11,
-        "source_supported": 11,
-        "source_conflict": 0,
-        "human_verification_required": 11,
-    }
+    assert review["summary"]["routes_reviewed"] == len(review["routes"])
+    assert review["summary"]["claims_reviewed"] == len(review["claims"])
+    assert review["summary"]["source_supported"] == sum(1 for claim in review["claims"] if claim["status"] == "source_supported")
+    assert review["summary"]["source_conflict"] == sum(1 for claim in review["claims"] if claim["status"] == "source_conflict")
+    assert review["summary"]["human_verification_required"] == sum(1 for claim in review["claims"] if claim["human_verification_required"])
+    assert review["summary"]["routes_reviewed"] == 6
+    assert review["summary"]["claims_reviewed"] == 23
     assert all(item["page_verified"] is False for item in review["routes"])
     assert all(claim["status"] == "source_supported" for claim in review["claims"])
     assert all(claim["human_verification_required"] is True for claim in review["claims"])

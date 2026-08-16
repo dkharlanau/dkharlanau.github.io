@@ -1,31 +1,28 @@
 {
   "id": "sap-lead-factual-review",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
   "policy": "/labs/assessment/data/factual-review-policy.json",
   "review_boundary": "Claims below were checked against current SAP primary sources. This does not change page-level verified, robots, sitemap, or publication status.",
   "summary": {
-    "routes_reviewed": 2,
-    "claims_reviewed": 11,
-    "source_supported": 11,
+    "routes_reviewed": 6,
+    "claims_reviewed": 23,
+    "source_supported": 23,
     "source_conflict": 0,
-    "human_verification_required": 11
+    "human_verification_required": 23
   },
   "routes": [
     {
-      "route": "/labs/enterprise-context/integration-operations/",
-      "title": "Integration Operations & Recovery",
+      "route": "/labs/enterprise-context/atp/",
+      "title": "ATP / aATP",
       "review_status": "primary_source_review_complete",
       "reviewed_at": "2026-08-16",
       "page_verified": false,
       "human_verification_required": true,
       "claim_ids": [
-        "FACT-INTOPS-001",
-        "FACT-INTOPS-002",
-        "FACT-INTOPS-003",
-        "FACT-INTOPS-004",
-        "FACT-INTOPS-005",
-        "FACT-INTOPS-006"
+        "FACT-ATP-001",
+        "FACT-ATP-002",
+        "FACT-ATP-003"
       ]
     },
     {
@@ -42,84 +39,115 @@
         "FACT-BIL-004",
         "FACT-BIL-005"
       ]
+    },
+    {
+      "route": "/labs/enterprise-context/credit/",
+      "title": "Credit Management",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-CREDIT-001",
+        "FACT-CREDIT-002",
+        "FACT-CREDIT-003"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/deployment-models/",
+      "title": "SAP S/4HANA Deployment Models",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-DEPLOY-001",
+        "FACT-DEPLOY-002",
+        "FACT-DEPLOY-003"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/ewm/",
+      "title": "Extended Warehouse Management",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-EWM-001",
+        "FACT-EWM-002",
+        "FACT-EWM-003"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/integration-operations/",
+      "title": "Integration Operations & Recovery",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-INTOPS-001",
+        "FACT-INTOPS-002",
+        "FACT-INTOPS-003",
+        "FACT-INTOPS-004",
+        "FACT-INTOPS-005",
+        "FACT-INTOPS-006"
+      ]
     }
   ],
   "claims": [
     {
-      "id": "FACT-INTOPS-001",
-      "route": "/labs/enterprise-context/integration-operations/",
-      "claim": "Guaranteed delivery can redeliver a message. End-to-end exactly-once behavior therefore needs duplicate handling or an idempotent receiver in addition to retry-capable delivery.",
+      "id": "FACT-ATP-001",
+      "route": "/labs/enterprise-context/atp/",
+      "claim": "The Advanced ATP Check API performs a simulated aATP check without creating an order or a persisting reservation. Current 2025 documentation lists PAC, PAL, SUP, BPS, and ABC among the supported important methods.",
       "claim_type": "documented_behavior",
       "status": "source_supported",
-      "source_refs": ["SRC-SAP-INTOPS-EXACTLY-ONCE"],
-      "official_evidence": ["https://help.sap.com/docs/integration-suite/sap-integration-suite/quality-of-service-exactly-once"],
-      "product_scope": "SAP Integration Suite",
-      "release_scope": "Cloud service documentation checked 2026-08-16",
-      "reviewed_at": "2026-08-16",
-      "human_verification_required": true
-    },
-    {
-      "id": "FACT-INTOPS-002",
-      "route": "/labs/enterprise-context/integration-operations/",
-      "claim": "An exception subprocess that ends with a message end event can leave message monitoring in Completed status even though an exception occurred.",
-      "claim_type": "monitoring_behavior",
-      "status": "source_supported",
-      "source_refs": ["SRC-SAP-INTOPS-ERROR-DESIGN"],
-      "official_evidence": ["https://help.sap.com/docs/integration-suite/sap-integration-suite/handle-errors-gracefully"],
-      "product_scope": "SAP Integration Suite, Cloud Integration",
-      "release_scope": "Cloud service documentation checked 2026-08-16",
-      "reviewed_at": "2026-08-16",
-      "human_verification_required": true
-    },
-    {
-      "id": "FACT-INTOPS-003",
-      "route": "/labs/enterprise-context/integration-operations/",
-      "claim": "qRFC administration uses SMQ1 and SMQ2 for outbound and inbound queue monitoring and SMQS and SMQR for scheduler administration.",
-      "claim_type": "monitoring_behavior",
-      "status": "source_supported",
-      "source_refs": ["SRC-SAP-INTOPS-QRFC"],
-      "official_evidence": ["https://help.sap.com/docs/ABAP_PLATFORM_NEW/753088fc00704d0a80e7fbd6803c8adb/489c43f42ab0062fe10000000a42189d.html"],
-      "product_scope": "ABAP Platform Connectivity",
-      "release_scope": "ABAP Platform 2025 FPS01",
-      "reviewed_at": "2026-08-16",
-      "human_verification_required": true
-    },
-    {
-      "id": "FACT-INTOPS-004",
-      "route": "/labs/enterprise-context/integration-operations/",
-      "claim": "bgRFC units can be transactional or queued; queued units use FIFO processing and are monitored with SBGRFCMON.",
-      "claim_type": "monitoring_behavior",
-      "status": "source_supported",
-      "source_refs": ["SRC-SAP-INTOPS-BGRFC"],
-      "official_evidence": ["https://help.sap.com/docs/ABAP_PLATFORM_NEW/753088fc00704d0a80e7fbd6803c8adb/48927c5caa6b17cee10000000a421937.html"],
-      "product_scope": "ABAP Platform Connectivity",
-      "release_scope": "ABAP Platform 2025 FPS01",
-      "reviewed_at": "2026-08-16",
-      "human_verification_required": true
-    },
-    {
-      "id": "FACT-INTOPS-005",
-      "route": "/labs/enterprise-context/integration-operations/",
-      "claim": "WE02 can inspect IDoc data and status records, while BD87 can trace and reprocess selected IDocs after the underlying error is resolved.",
-      "claim_type": "monitoring_behavior",
-      "status": "source_supported",
-      "source_refs": ["SRC-SAP-INTOPS-IDOC"],
-      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9c4986bda35f4840ae438960ffbef64d/086439eaf4e049e6be3487ca76e7ad48.html"],
-      "product_scope": "SAP S/4HANA IDoc monitoring",
+      "source_refs": [
+        "SRC-SAP-AATP-API"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f5d3e1005efd4e86acf9a65abf428082/e2b6448e88ce4f32b34a512f92c183bf.html"
+      ],
+      "product_scope": "SAP S/4HANA Advanced Available-to-Promise API",
       "release_scope": "SAP S/4HANA 2025 FPS01",
       "reviewed_at": "2026-08-16",
       "human_verification_required": true
     },
     {
-      "id": "FACT-INTOPS-006",
-      "route": "/labs/enterprise-context/integration-operations/",
-      "claim": "SAP AIF supports error correction followed by restart or reprocessing for supported interfaces; the operational decision still depends on interface design and business ownership.",
+      "id": "FACT-ATP-002",
+      "route": "/labs/enterprise-context/atp/",
+      "claim": "Supply Protection protects quantities for defined demand groups. In the availability check it can restrict quantities available to other groups, so a sales order can be partly confirmed or not confirmed.",
       "claim_type": "documented_behavior",
       "status": "source_supported",
-      "source_refs": ["SRC-SAP-INTOPS-AIF-ERROR"],
-      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_ONPREMISE/26c2d5e366bc44c1a98f2a9212a0c49d/c15d15baa025488faef8f7d49613276c.html"],
-      "product_scope": "SAP Application Interface Framework",
-      "release_scope": "SAP S/4HANA 2025 FPS01 documentation checked 2026-08-16",
+      "source_refs": [
+        "SRC-SAP-AATP-SUP"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/c4b704762cbd4611a3ee2dc00c7a7277.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/e24f9f08ee5a4022a3086226edab15d9.html"
+      ],
+      "product_scope": "SAP S/4HANA advanced Available-to-Promise, Supply Protection",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-ATP-003",
+      "route": "/labs/enterprise-context/atp/",
+      "claim": "Product Allocation and Supply Protection are complementary aATP controls: PAL defines an upper allocation limit while Supply Protection protects minimum quantities. Poorly aligned characteristic groups can cause the controls to restrict each other.",
+      "claim_type": "configuration_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-AATP-SUP-PAL",
+        "SRC-SAP-AATP-PAL",
+        "SRC-SAP-AATP-SUP"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/e9861099432c4fd9a569f129f2d4ceb1.html"
+      ],
+      "product_scope": "SAP S/4HANA advanced Available-to-Promise, PAL and SUP",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
       "reviewed_at": "2026-08-16",
       "human_verification_required": true
     },
@@ -129,8 +157,12 @@
       "claim": "Sales Billing can create, change, and cancel billing documents, post them to Financial Accounting, and output them through multiple channels.",
       "claim_type": "documented_behavior",
       "status": "source_supported",
-      "source_refs": ["SRC-SAP-BIL-PROCESSING"],
-      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/946fb6535fe6b74ce10000000a174cb4.html"],
+      "source_refs": [
+        "SRC-SAP-BIL-PROCESSING"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/946fb6535fe6b74ce10000000a174cb4.html"
+      ],
       "product_scope": "SAP S/4HANA Sales Billing",
       "release_scope": "SAP S/4HANA 2025 FPS01",
       "reviewed_at": "2026-08-16",
@@ -142,8 +174,12 @@
       "claim": "Copying control governs which reference documents can create which billing documents, copying requirements, billing quantity, field transfer, and whether pricing is copied or redetermined.",
       "claim_type": "configuration_behavior",
       "status": "source_supported",
-      "source_refs": ["SRC-SAP-BIL-COPYING-CONTROL"],
-      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/dc6fb6535fe6b74ce10000000a174cb4.html"],
+      "source_refs": [
+        "SRC-SAP-BIL-COPYING-CONTROL"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/dc6fb6535fe6b74ce10000000a174cb4.html"
+      ],
       "product_scope": "SAP S/4HANA Cloud Public Edition Sales Billing",
       "release_scope": "2608 Latest documentation checked 2026-08-16",
       "reviewed_at": "2026-08-16",
@@ -155,8 +191,12 @@
       "claim": "Billing pricing can copy prices from the sales document or perform pricing again; the pricing type is controlled in copying control.",
       "claim_type": "configuration_behavior",
       "status": "source_supported",
-      "source_refs": ["SRC-SAP-BIL-PRICING"],
-      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/e86fb6535fe6b74ce10000000a174cb4.html"],
+      "source_refs": [
+        "SRC-SAP-BIL-PRICING"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/e86fb6535fe6b74ce10000000a174cb4.html"
+      ],
       "product_scope": "SAP S/4HANA Cloud Public Edition Sales Billing",
       "release_scope": "2608 Latest documentation checked 2026-08-16",
       "reviewed_at": "2026-08-16",
@@ -168,8 +208,13 @@
       "claim": "When collective billing is requested, the system tries to combine selected due items according to split criteria rather than blindly producing one invoice.",
       "claim_type": "documented_behavior",
       "status": "source_supported",
-      "source_refs": ["SRC-SAP-BIL-DUE-LIST", "SRC-SAP-BIL-SPLIT"],
-      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/0270b6535fe6b74ce10000000a174cb4.html"],
+      "source_refs": [
+        "SRC-SAP-BIL-DUE-LIST",
+        "SRC-SAP-BIL-SPLIT"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/0270b6535fe6b74ce10000000a174cb4.html"
+      ],
       "product_scope": "SAP S/4HANA Sales Billing",
       "release_scope": "SAP S/4HANA 2025 FPS01",
       "reviewed_at": "2026-08-16",
@@ -181,10 +226,277 @@
       "claim": "Split analysis can compare two billing documents and show differing header fields and partners that explain why the documents were split.",
       "claim_type": "monitoring_behavior",
       "status": "source_supported",
-      "source_refs": ["SRC-SAP-BIL-SPLIT-ANALYSIS"],
-      "official_evidence": ["https://help.sap.com/docs/SAP_S4HANA_ONPREMISE/7b24a64d9d0941bda1afa753263d9e39/f41dc55398dd1f4be10000000a174cb4.html"],
+      "source_refs": [
+        "SRC-SAP-BIL-SPLIT-ANALYSIS"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ONPREMISE/7b24a64d9d0941bda1afa753263d9e39/f41dc55398dd1f4be10000000a174cb4.html"
+      ],
       "product_scope": "SAP S/4HANA Sales Billing",
       "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-CREDIT-001",
+      "route": "/labs/enterprise-context/credit/",
+      "claim": "Credit checks can run at different points from sales order processing through delivery. The check applies a check rule and its assigned steps, and a negative result can block the order or delivery.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-CREDIT-PROCESS",
+        "SRC-SAP-CREDIT-CHECK-STEPS"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/4e63bf186cc943be821bc0b8be3557a6.html"
+      ],
+      "product_scope": "SAP S/4HANA Sales and SAP Credit Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-CREDIT-002",
+      "route": "/labs/enterprise-context/credit/",
+      "claim": "A check rule is assigned to the business partner credit profile and contains one or more check steps. Check steps can evaluate values such as credit limit utilization, credit exposure, dunning level, or oldest open item.",
+      "claim_type": "configuration_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-CREDIT-CHECK-RULE",
+        "SRC-SAP-CREDIT-CHECK-STEPS",
+        "SRC-SAP-CREDIT-BP"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/811174d486d74c709469ef3d36f9b7bb.html"
+      ],
+      "product_scope": "SAP Credit Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-CREDIT-003",
+      "route": "/labs/enterprise-context/credit/",
+      "claim": "Credit exposure for SD documents represents the credit amount of outstanding documents and is used in static and dynamic checks. Completed documents are not included even when an undelivered quantity remains.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-CREDIT-EXPOSURE-SD"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/655cc418447e49218afbca8700a442e5.html"
+      ],
+      "product_scope": "SAP S/4HANA Sales credit exposure",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-DEPLOY-001",
+      "route": "/labs/enterprise-context/deployment-models/",
+      "claim": "SAP S/4HANA Cloud Public Edition is operated and maintained by SAP, uses a more standardized configurable functional scope, and SAP manages its software upgrades.",
+      "claim_type": "release_scope",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-S4-OFFERING-COMPARISON"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/b89b8b9026e1456bb2a1df7c0d59c937/1485d139460246d2a4b936c0bb0ca272.html"
+      ],
+      "product_scope": "SAP S/4HANA Cloud Public Edition",
+      "release_scope": "Current SAP offering comparison checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-DEPLOY-002",
+      "route": "/labs/enterprise-context/deployment-models/",
+      "claim": "SAP S/4HANA Cloud Private Edition has a functional scope and upgrade flexibility comparable to SAP S/4HANA. SAP publishes a new software version every two years and installs upgrades at the customer request within the maintenance obligations.",
+      "claim_type": "release_scope",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-S4-OFFERING-COMPARISON",
+        "SRC-SAP-S4-PRIVATE-EDITION"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/b89b8b9026e1456bb2a1df7c0d59c937/1485d139460246d2a4b936c0bb0ca272.html"
+      ],
+      "product_scope": "SAP S/4HANA Cloud Private Edition",
+      "release_scope": "Current SAP offering comparison checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-DEPLOY-003",
+      "route": "/labs/enterprise-context/deployment-models/",
+      "claim": "For SAP S/4HANA on-premise, the customer manages software and hardware updates and decides whether and when to upgrade. Its software release cycle is parallel to SAP S/4HANA Cloud Private Edition.",
+      "claim_type": "release_scope",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-S4-OFFERING-COMPARISON",
+        "SRC-SAP-S4-ONPREM-PRIVATE-DOC"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_CLOUD_PE/b89b8b9026e1456bb2a1df7c0d59c937/1485d139460246d2a4b936c0bb0ca272.html"
+      ],
+      "product_scope": "SAP S/4HANA on-premise",
+      "release_scope": "Current SAP offering comparison checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-EWM-001",
+      "route": "/labs/enterprise-context/ewm/",
+      "claim": "A warehouse task is the EWM execution document for goods movements or stock changes such as picking, putaway, internal movements, posting changes, goods receipt, or goods issue. It can reference a warehouse request or exist without one for some internal movements.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-EWM-WAREHOUSE-TASK"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/8fcccb53ad377114e10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Extended Warehouse Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-EWM-002",
+      "route": "/labs/enterprise-context/ewm/",
+      "claim": "A warehouse order is an executable work package that groups warehouse tasks or physical inventory items. Warehouse order creation rules control how tasks are grouped for warehouse execution.",
+      "claim_type": "configuration_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-EWM-WAREHOUSE-ORDER"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/65cccb53ad377114e10000000a174cb4.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/48890776d2b21b5ae10000000a42189c.html"
+      ],
+      "product_scope": "SAP S/4HANA Extended Warehouse Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-EWM-003",
+      "route": "/labs/enterprise-context/ewm/",
+      "claim": "Releasing a wave can create warehouse tasks for stock removal or internal movements. EWM then creates warehouse orders from those tasks to form work packages, and task creation updates the referenced warehouse request and document flow.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-EWM-WAVE",
+        "SRC-SAP-EWM-WAREHOUSE-ORDER",
+        "SRC-SAP-EWM-WAREHOUSE-REQUEST"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/7fcccb53ad377114e10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Extended Warehouse Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-001",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "Guaranteed delivery can redeliver a message. End-to-end exactly-once behavior therefore needs duplicate handling or an idempotent receiver in addition to retry-capable delivery.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-INTOPS-EXACTLY-ONCE"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/integration-suite/sap-integration-suite/quality-of-service-exactly-once"
+      ],
+      "product_scope": "SAP Integration Suite",
+      "release_scope": "Cloud service documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-002",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "An exception subprocess that ends with a message end event can leave message monitoring in Completed status even though an exception occurred.",
+      "claim_type": "monitoring_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-INTOPS-ERROR-DESIGN"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/integration-suite/sap-integration-suite/handle-errors-gracefully"
+      ],
+      "product_scope": "SAP Integration Suite, Cloud Integration",
+      "release_scope": "Cloud service documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-003",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "qRFC administration uses SMQ1 and SMQ2 for outbound and inbound queue monitoring and SMQS and SMQR for scheduler administration.",
+      "claim_type": "monitoring_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-INTOPS-QRFC"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/ABAP_PLATFORM_NEW/753088fc00704d0a80e7fbd6803c8adb/489c43f42ab0062fe10000000a42189d.html"
+      ],
+      "product_scope": "ABAP Platform Connectivity",
+      "release_scope": "ABAP Platform 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-004",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "bgRFC units can be transactional or queued; queued units use FIFO processing and are monitored with SBGRFCMON.",
+      "claim_type": "monitoring_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-INTOPS-BGRFC"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/ABAP_PLATFORM_NEW/753088fc00704d0a80e7fbd6803c8adb/48927c5caa6b17cee10000000a421937.html"
+      ],
+      "product_scope": "ABAP Platform Connectivity",
+      "release_scope": "ABAP Platform 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-005",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "WE02 can inspect IDoc data and status records, while BD87 can trace and reprocess selected IDocs after the underlying error is resolved.",
+      "claim_type": "monitoring_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-INTOPS-IDOC"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9c4986bda35f4840ae438960ffbef64d/086439eaf4e049e6be3487ca76e7ad48.html"
+      ],
+      "product_scope": "SAP S/4HANA IDoc monitoring",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INTOPS-006",
+      "route": "/labs/enterprise-context/integration-operations/",
+      "claim": "SAP AIF supports error correction followed by restart or reprocessing for supported interfaces; the operational decision still depends on interface design and business ownership.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-INTOPS-AIF-ERROR"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ONPREMISE/26c2d5e366bc44c1a98f2a9212a0c49d/c15d15baa025488faef8f7d49613276c.html"
+      ],
+      "product_scope": "SAP Application Interface Framework",
+      "release_scope": "SAP S/4HANA 2025 FPS01 documentation checked 2026-08-16",
       "reviewed_at": "2026-08-16",
       "human_verification_required": true
     }
