@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Reusable Data Procedures"
-description: "A browser-side workbench for repeated Excel, CSV, and corporate export tasks: discover structures, map related fields, validate on real rows, and save approved logic as a reusable procedure."
+description: "A project concept for turning repeated Excel, CSV, and corporate export work into versioned, testable and reusable data procedures."
 permalink: /reusable-data-procedures/
 status: draft
 verified: false
@@ -21,10 +21,84 @@ tags:
 <link rel="describedby" type="application/schema+json" href="/reusable-data-procedures/procedure.schema.json" title="Reusable procedure JSON Schema" />
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
-  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Reusable Data Procedures</li></ol>
+  <ol><li><a href="/">Home</a></li><li aria-current="page">Reusable Data Procedures</li></ol>
 </nav>
 
-{% include reusable-data-procedures-workbench.html %}
+<div class="rdp">
+  <header class="rdp__hero">
+    <div>
+      <p class="rdp__eyebrow">Project concept / data work</p>
+      <h1>Turn repeated spreadsheet work into a procedure.</h1>
+      <p class="rdp__lead">Corporate data work is full of small tasks that repeat every week or month: open several exports, understand their columns, find keys, join them, clean values, check exceptions, and produce a result. The files change. The reasoning often does not.</p>
+      <p class="rdp__lead rdp__lead--strong">Reusable Data Procedures is an idea for capturing that reasoning as a versioned, testable object instead of rebuilding it inside another spreadsheet.</p>
+    </div>
+    <aside class="rdp__thesis">
+      <span>Core thesis</span>
+      <strong>AI can propose. The procedure must execute deterministically.</strong>
+      <p>Discovery can be probabilistic. Production transformations, validations and outputs should be explicit, reviewable and repeatable.</p>
+    </aside>
+  </header>
 
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="/assets/reusable-data-procedures.js"></script>
+  <section class="rdp__flow-section" aria-labelledby="rdp-flow-title">
+    <div class="rdp__section-head">
+      <p class="rdp__eyebrow">The loop</p>
+      <h2 id="rdp-flow-title">Files → Discover → Map → Validate → Result → Save Procedure</h2>
+      <p>The first run is exploratory. The second run should be boring. That is the point.</p>
+    </div>
+    <ol class="rdp__flow">
+      <li><span>01</span><strong>Files</strong><p>Bring a bundle of Excel, CSV or corporate extracts. Capture source identity and context.</p></li>
+      <li><span>02</span><strong>Discover</strong><p>Profile schemas, types, nulls, value patterns, uniqueness and candidate keys.</p></li>
+      <li><span>03</span><strong>Map</strong><p>Suggest relations from names, values, known semantics and previous procedures. Keep evidence with every suggestion.</p></li>
+      <li><span>04</span><strong>Validate</strong><p>Test mappings and business rules on real data before they become reusable logic.</p></li>
+      <li><span>05</span><strong>Result</strong><p>Execute an explicit transformation plan and expose exceptions, not only a final file.</p></li>
+      <li><span>06</span><strong>Save Procedure</strong><p>Store source contracts, mappings, transforms, validations, outputs and provenance as one versioned definition.</p></li>
+    </ol>
+    <div class="rdp__rerun"><strong>Next run:</strong> match new files to the saved source contracts → detect drift → reuse what is still valid → ask only about what changed.</div>
+  </section>
+
+  <section class="rdp__problem-grid" aria-label="Why this exists">
+    <article><span>Today</span><h3>Knowledge hides in actions.</h3><p>A person knows that column A in one export is the same business key as column F in another. The rule exists only in memory, formulas or a one-off script.</p></article>
+    <article><span>Problem</span><h3>Automation starts too late.</h3><p>Teams automate a finished spreadsheet, but they rarely capture how the structure was discovered, why a mapping was accepted, or what should happen when the source changes.</p></article>
+    <article><span>Target</span><h3>Make the reasoning reusable.</h3><p>The reusable asset is not an Excel macro. It is a small data contract plus transformation graph, tests and evidence.</p></article>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Design principles</p><h2>What I would protect from the beginning.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Procedure, not recording</strong><p>Do not replay mouse clicks. Save intent, source contracts, mappings, transformations and checks.</p></article>
+      <article><strong>Structure before semantics</strong><p>Start with observable evidence: columns, types, values, uniqueness and relationships. Add business meaning on top.</p></article>
+      <article><strong>AI is advisory</strong><p>Use AI for semantic hints, mapping candidates and explanation. Do not make an LLM the hidden execution engine.</p></article>
+      <article><strong>Drift is normal</strong><p>Files will gain columns, rename fields and change formats. A procedure needs compatibility checks and a controlled repair path.</p></article>
+      <article><strong>Evidence travels with logic</strong><p>Keep why a mapping exists, when it was approved, what data supported it and which tests protect it.</p></article>
+      <article><strong>Raw data is not the procedure</strong><p>The reusable definition should normally store metadata and logic, not the corporate rows used to discover it.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__example">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Example / SAP logistics</p><h2>A monthly sales reconciliation should become an asset.</h2></div>
+    <div class="rdp__example-grid">
+      <div><strong>Inputs</strong><p>Sales order export, material attributes, customer mapping and a manually maintained exception list.</p></div>
+      <div><strong>Discovered relations</strong><p>Sales material → material master; sold-to → customer mapping; sales document + item → row identity.</p></div>
+      <div><strong>Rules</strong><p>Normalize leading zeros, reject ambiguous customer mappings, flag missing material references, keep blocked orders separate.</p></div>
+      <div><strong>Reusable result</strong><p>A procedure that can run against next month's files, report source drift and produce the same controlled output.</p></div>
+    </div>
+  </section>
+
+  <section class="rdp__routes" aria-labelledby="rdp-details-title">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Project notes</p><h2 id="rdp-details-title">Go deeper.</h2><p>The landing keeps the idea simple. The detail pages hold the design decisions, because dumping an architecture document onto a landing page is how good ideas become scroll endurance tests.</p></div>
+    <div class="rdp__route-list">
+      <a href="/reusable-data-procedures/approach/"><span>01</span><strong>Approach</strong><small>Discovery, mapping evidence, validation, drift and the human decision points.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/reusable-data-procedures/procedure-model/"><span>02</span><strong>Procedure Model</strong><small>The reusable object: sources, mappings, transforms, tests, output contract and provenance.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/reusable-data-procedures/architecture/"><span>03</span><strong>Architecture & Libraries</strong><small>Runtime boundaries, candidate components, Python/browser options and enterprise deployment.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/reusable-data-procedures/roadmap/"><span>04</span><strong>Roadmap</strong><small>How to develop the idea from a specification and CLI into a governed enterprise service.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/reusable-data-procedures/model.json"><span>JSON</span><strong>Machine-readable model</strong><small>Project concepts, lifecycle, components, risks and candidate technology choices.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/reusable-data-procedures/procedure.schema.json"><span>SPEC</span><strong>Procedure schema</strong><small>A draft JSON contract for a portable reusable procedure definition.</small><i class="material-symbols-outlined" aria-hidden="true">code</i></a>
+    </div>
+  </section>
+
+  <section class="rdp__boundary">
+    <p class="rdp__eyebrow">Boundary</p>
+    <h2>This is a project direction, not a finished product.</h2>
+    <p>The useful work now is to make the procedure model strong, collect realistic file patterns, define drift and validation behavior, and prove the approach with small deterministic runs. A polished upload screen can wait. Humanity has survived this long without another drag-and-drop box.</p>
+  </section>
+</div>

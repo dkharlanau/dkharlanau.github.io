@@ -1,0 +1,104 @@
+---
+layout: default
+title: "Reusable Data Procedures — Architecture & Libraries"
+description: "Candidate architecture and libraries for a reusable data procedure engine: ingestion, profiling, mapping, deterministic execution, validation, provenance and enterprise deployment."
+permalink: /reusable-data-procedures/architecture/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Architecture</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Detail 03 / Architecture & libraries</p>
+    <h1>Separate discovery from execution.</h1>
+    <p>The architecture should allow experimental matching and AI assistance without making the execution path unpredictable. The safest split is simple: discovery proposes a procedure; the runtime executes an approved procedure.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages">
+      <a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/approach/">Approach</a><a href="/reusable-data-procedures/procedure-model/">Procedure Model</a><a href="/reusable-data-procedures/architecture/" aria-current="page">Architecture</a><a href="/reusable-data-procedures/roadmap/">Roadmap</a>
+    </nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Logical layers</p><h2>One engine, several replaceable parts.</h2></div>
+    <div class="rdp__sequence">
+      <article><h3>Source adapters</h3><p>Read Excel, CSV, Parquet and later enterprise sources. Convert them into a common tabular representation while keeping source metadata.</p></article>
+      <article><h3>Profiler</h3><p>Build structural fingerprints: schema, types, nulls, uniqueness, patterns, cardinality and safe samples.</p></article>
+      <article><h3>Discovery engine</h3><p>Generate candidate keys, mappings and source-role matches. Combine deterministic signals with optional semantic or AI signals.</p></article>
+      <article><h3>Procedure editor / compiler</h3><p>Turn approved choices into a valid procedure definition and then into a deterministic execution plan.</p></article>
+      <article><h3>Execution engine</h3><p>Apply joins, filters, conversions, derived fields, aggregations and exception routing without depending on an LLM.</p></article>
+      <article><h3>Validation engine</h3><p>Run structural, relational and business checks before and after transformations. Produce machine-readable evidence.</p></article>
+      <article><h3>Registry and provenance</h3><p>Version procedures, source contracts, mapping dictionaries, owners, approvals and run reports.</p></article>
+      <article><h3>Interfaces</h3><p>CLI first, then API and UI. Agents can become another client of the same procedure service instead of receiving a private execution path.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Candidate stack</p><h2>Choose libraries by responsibility.</h2><p>This is a working shortlist, not a dependency lock file. The project should keep adapters thin enough to replace a library when requirements change.</p></div>
+    <div class="rdp__stack-grid">
+      <article class="rdp__stack-card"><strong>Polars</strong><p>Strong candidate for the main Python dataframe runtime, especially for columnar operations and lazy execution. Useful when the procedure should compile into an optimized transformation plan.</p></article>
+      <article class="rdp__stack-card"><strong>DuckDB</strong><p>Good embedded SQL engine for joins, aggregations, CSV/Parquet work and analytical steps. It also gives a future browser option through DuckDB-Wasm, with browser memory and threading limits to respect.</p></article>
+      <article class="rdp__stack-card"><strong>Apache Arrow / PyArrow</strong><p>Useful common in-memory and interchange layer. Parquet is a good internal artifact format for larger intermediate data and test fixtures.</p></article>
+      <article class="rdp__stack-card"><strong>openpyxl</strong><p>Python adapter when workbook-level XLSX details matter. Keep it at the boundary; the core procedure model should not depend on Excel cell objects.</p></article>
+      <article class="rdp__stack-card"><strong>SheetJS CE</strong><p>Candidate for a future browser client that needs local spreadsheet reading or preview. It is a UI/input adapter, not the procedure engine.</p></article>
+      <article class="rdp__stack-card"><strong>RapidFuzz</strong><p>Useful for field-name similarity and alias matching. Treat fuzzy text similarity as one mapping signal, never as proof of semantic equality.</p></article>
+      <article class="rdp__stack-card"><strong>Pandera</strong><p>Good fit for code-centric dataframe schema checks close to the Python runtime. It can represent typed contracts and collect multiple validation errors.</p></article>
+      <article class="rdp__stack-card"><strong>Great Expectations</strong><p>Consider when validation becomes a larger governed capability with reusable suites, persisted validation results and human-readable data-quality evidence.</p></article>
+      <article class="rdp__stack-card"><strong>Pydantic + JSON Schema</strong><p>Use for the procedure and run-report contracts, API validation and migrations between spec versions. JSON Schema keeps the contract portable outside Python.</p></article>
+      <article class="rdp__stack-card"><strong>FastAPI</strong><p>A reasonable service boundary later: procedures, discovery sessions, runs and reports become explicit API resources while the engine stays a normal Python package.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Runtime choice</p><h2>Start Python-first. Keep browser execution optional.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Model</th><th>Good for</th><th>Trade-off</th></tr></thead>
+      <tbody>
+        <tr><td>Local Python CLI</td><td>Fast development, sensitive local files, repeatable tests, scheduled desktop/server jobs.</td><td>Distribution and environment management need work.</td></tr>
+        <tr><td>Python service</td><td>Central registry, controlled dependencies, audit, RBAC, larger files and enterprise connectors.</td><td>Files leave the user's browser and need an approved security model.</td></tr>
+        <tr><td>Browser / WASM</td><td>Local-first discovery, privacy-friendly previews and lightweight runs without server upload.</td><td>Memory, browser APIs and library compatibility limit the workload.</td></tr>
+        <tr><td>Hybrid</td><td>Profile locally, send only metadata for semantic assistance, execute approved jobs in a governed runtime.</td><td>More moving parts, but often the strongest enterprise boundary.</td></tr>
+      </tbody>
+    </table>
+    <div class="rdp__callout"><strong>My starting point:</strong> Python package + CLI + JSON procedure spec. Add a service only after the procedure model and regression cases are stable. UI should consume the model, not define it.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">AI layer</p><h2>Make semantic help a plug-in.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Metadata-only mode</strong><p>Send column names, types, descriptions and statistics without row values. Useful when data sensitivity is high.</p></article>
+      <article><strong>Masked sample mode</strong><p>Use carefully selected or masked examples when values are necessary to understand a field.</p></article>
+      <article><strong>Enterprise dictionary</strong><p>Retrieve approved aliases, SAP field concepts, previous mappings and project vocabulary before asking a general model.</p></article>
+      <article><strong>Confidence decomposition</strong><p>Store which signals created a suggestion: name similarity, overlap, dictionary match, model judgement and previous approval.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Enterprise concerns</p><h2>The boring parts decide whether this can be used.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Security</strong><p>File classification, encryption, temporary storage, deletion policy, secrets, approved AI endpoints and dependency review.</p></article>
+      <article><strong>Audit</strong><p>Procedure version, user decisions, run ID, source fingerprints, validations, exceptions and output hashes.</p></article>
+      <article><strong>Scale</strong><p>Streaming or lazy scans, column pruning, Parquet intermediates, bounded samples and limits on expensive pairwise discovery.</p></article>
+      <article><strong>Extensibility</strong><p>Source adapter, transform operation, validation rule and semantic provider should be plugin boundaries rather than branches in one giant function.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Primary references / checked 2026-08-16</p><h2>Library notes are grounded in their own documentation.</h2></div>
+    <ul class="rdp__sources">
+      <li><a href="https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.lazy.html">Polars: lazy execution</a></li>
+      <li><a href="https://duckdb.org/docs/stable/clients/wasm/overview">DuckDB-Wasm overview and browser limits</a></li>
+      <li><a href="https://arrow.apache.org/docs/python/index.html">Apache Arrow / PyArrow</a></li>
+      <li><a href="https://openpyxl.readthedocs.io/en/stable/index.html">openpyxl</a></li>
+      <li><a href="https://docs.sheetjs.com/docs/">SheetJS Community Edition</a></li>
+      <li><a href="https://rapidfuzz.github.io/RapidFuzz/">RapidFuzz</a></li>
+      <li><a href="https://pandera.readthedocs.io/en/stable/">Pandera</a></li>
+      <li><a href="https://docs.greatexpectations.io/docs/reference/learn/data_quality_use_cases/schema/">Great Expectations: schema validation</a></li>
+    </ul>
+  </section>
+</div>
