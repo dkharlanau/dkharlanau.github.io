@@ -1,0 +1,71 @@
+name: Surface Assessment Feedback Once
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/surface-assessment-feedback-once.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Patch assessment navigation
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          index = Path('labs/assessment/index.md')
+          text = index.read_text(encoding='utf-8')
+          replacements = [
+              (
+                  '      <a href="/labs/assessment/progress/"><span>PROGRESS</span><strong>Progress & Portability</strong><small>Inspect local scoring history and move canonical attempts between browsers without a server profile.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>\n      <a href="/labs/assessment/cross-process/">',
+                  '      <a href="/labs/assessment/progress/"><span>PROGRESS</span><strong>Progress & Portability</strong><small>Inspect local scoring history and move canonical attempts between browsers without a server profile.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>\n      <a href="/labs/assessment/feedback/"><span>FEEDBACK</span><strong>Feedback & Calibration Evidence</strong><small>Record real self, peer, manager, interviewer, or formal assessment observations with explicit provenance.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>\n      <a href="/labs/assessment/cross-process/">'
+              ),
+              (
+                  '<li>Portable local history import and export</li>',
+                  '<li>Portable local history import and export</li><li>Provenance-aware feedback evidence</li>'
+              ),
+              (
+                  '      <a href="/labs/assessment/data/history-portability.json"><span>HISTORY</span><strong>History Portability Contract</strong><small>Versioned browser-only export, validation, merge, and replace rules.</small><i class="material-symbols-outlined" aria-hidden="true">move_up</i></a>\n      <a href="/labs/assessment/data/backlog.json">',
+                  '      <a href="/labs/assessment/data/history-portability.json"><span>HISTORY</span><strong>History Portability Contract</strong><small>Versioned browser-only export, validation, merge, and replace rules.</small><i class="material-symbols-outlined" aria-hidden="true">move_up</i></a>\n      <a href="/labs/assessment/data/feedback-schema.json"><span>FB</span><strong>Feedback Evidence Schema</strong><small>Provenance, outcome, observations, remembered questions, and actions.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>\n      <a href="/labs/assessment/data/calibration-policy.json"><span>CAL</span><strong>Calibration Policy</strong><small>Human-reviewed scoring changes with anti-overfit checks and explicit evidence.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>\n      <a href="/labs/assessment/data/backlog.json">'
+              ),
+              ('LOOP-001 through LOOP-013 are complete','LOOP-001 through LOOP-014 are complete'),
+              ('<li>Capture real assessment feedback for scoring calibration</li>','<li>Generate graph-backed candidate questions with human review</li>'),
+          ]
+          for old,new in replacements:
+              if old not in text:
+                  raise SystemExit(f'Assessment feedback anchor not found: {old[:100]}')
+              text = text.replace(old,new,1)
+          index.write_text(text,encoding='utf-8')
+
+          progress = Path('labs/assessment/progress/index.html')
+          text = progress.read_text(encoding='utf-8')
+          old = '      <a href="/labs/assessment/review/"><span>REVIEW</span><strong>Review Queue</strong><small>Turn weak dimensions and weak tracks into focused study routes.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>\n      <a href="/labs/assessment/practice-engine/">'
+          new = '      <a href="/labs/assessment/review/"><span>REVIEW</span><strong>Review Queue</strong><small>Turn weak dimensions and weak tracks into focused study routes.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>\n      <a href="/labs/assessment/feedback/"><span>FEEDBACK</span><strong>Feedback & Calibration Evidence</strong><small>Compare real observed feedback with practice trends before changing the rubric.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>\n      <a href="/labs/assessment/practice-engine/">'
+          if old not in text:
+              raise SystemExit('Progress feedback anchor not found')
+          progress.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Install generator dependencies
+        run: python3 -m pip install pyyaml
+      - name: Refresh Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add labs/assessment/index.md labs/assessment/progress/index.html ai/markdown-clusters.json
+          git commit -m "feat: surface assessment feedback evidence"
+          git push origin HEAD:main
