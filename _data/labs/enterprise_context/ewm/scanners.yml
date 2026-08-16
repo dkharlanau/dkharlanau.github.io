@@ -3,17 +3,17 @@ title: "Warehouse Scanners & Auto-ID — SAP Solution Map"
 updated_at: "2026-08-16"
 verified_at: "2026-08-16"
 summary: >-
-  A practical decision map from a physical scan to a verified SAP warehouse action.
-  It separates barcode meaning, device choice, user experience, SAP execution channel,
-  custom integration, fixed automation, and operational controls.
+  A practical decision map from a physical label or scan to a verified SAP warehouse action.
+  It separates identifier semantics, label lifecycle, device choice, user experience, SAP execution,
+  custom integration, connectivity, security, fixed automation, operational controls and performance.
 
 lead_rule: >-
   Start with the warehouse decision that must be verified, not with the scanner model.
   If standard SAP execution already supports the process, keep the process standard.
   Add custom mobile logic only when the required user experience, device behavior,
-  cross-system flow, or automation boundary is genuinely different.
+  cross-system flow, offline behavior or automation boundary is genuinely different.
 
-memory_path: "IDENTIFY → CAPTURE → PARSE → VERIFY → EXECUTE → CONFIRM → MONITOR"
+memory_path: "IDENTIFY → LABEL → CAPTURE → PARSE → VERIFY → EXECUTE → CONFIRM → MONITOR"
 
 decision_dimensions:
   - key: "PROCESS"
@@ -34,6 +34,9 @@ decision_dimensions:
   - key: "CONNECTIVITY"
     question: "Must the action work online, offline, or through an edge layer?"
     examples: ["real-time SAP", "temporary offline queue", "edge filtering", "WCS / automation"]
+  - key: "CRITICALITY"
+    question: "What happens if the scan is wrong or replayed twice?"
+    examples: ["simple lookup", "WT confirmation", "goods movement", "loading decision", "regulated traceability"]
 
 device_classes:
   - id: "rugged-handheld"
@@ -45,7 +48,7 @@ device_classes:
   - id: "wearable"
     title: "Wearable / Ring Scanner"
     best_for: "Very high scan frequency where both hands should stay free."
-    interaction: "Ring scanner with wrist/voice/mobile terminal."
+    interaction: "Ring scanner with wrist, voice or mobile terminal."
     strengths: ["hands-free work", "short scan cycle"]
     caution: "The UX must minimize screen touches; a desktop-style form defeats the device."
   - id: "vehicle-mounted"
@@ -78,13 +81,13 @@ identification_map:
     title: "SSCC"
     use_for: "Unique logistic unit such as pallet or shipping unit."
     sap_mapping: "Often maps naturally to an HU or external HU identification."
-    standard_note: "GS1 defines SSCC as the mandatory identifier on the GS1 Logistic Label."
+    standard_note: "GS1 identifies SSCC with Application Identifier 00 and uses it as the logistic-unit identifier on a GS1 Logistic Label."
     source_refs: [SRC-GS1-LOGISTIC-LABEL]
   - id: "gtin"
     title: "GTIN"
     use_for: "Trade item / product identification."
     sap_mapping: "Resolve to product/material through maintained identifiers."
-    standard_note: "A product code is not the same thing as an HU identifier."
+    standard_note: "GTIN is commonly encoded with Application Identifier 01 in GS1 element strings. A product code is not the same thing as an HU identifier."
     source_refs: [SRC-GS1-LOGISTIC-LABEL]
   - id: "gs1-128"
     title: "GS1-128"
@@ -96,12 +99,69 @@ identification_map:
     title: "2D Codes"
     use_for: "More data in limited label space or mobile-oriented scenarios."
     sap_mapping: "Depends on the agreed payload contract and parser."
-    standard_note: "A QR/DataMatrix image is only a carrier. The important design is the encoded data contract."
+    standard_note: "A QR or DataMatrix image is only a carrier. The important design is the encoded data contract."
   - id: "internal"
     title: "Internal Bin / Resource / Process Code"
     use_for: "Warehouse-local verification and navigation."
     sap_mapping: "Storage bin, door, resource, work center or custom process identifier."
-    standard_note: "Keep local codes stable enough for labels and operational support."
+    standard_note: "Keep local codes stable enough for labels, scanning configuration and operational support."
+
+gs1_application_identifiers:
+  - ai: "00"
+    meaning: "SSCC"
+    typical_business_object: "Logistic unit / HU"
+    parsing_note: "Fixed-length identifier. Do not resolve it as a product number."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - ai: "01"
+    meaning: "GTIN"
+    typical_business_object: "Trade item / product"
+    parsing_note: "Fixed-length identifier. Resolve it through the agreed product-identification mapping."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - ai: "10"
+    meaning: "Batch / lot"
+    typical_business_object: "Batch-managed stock"
+    parsing_note: "Variable-length element. The parser must recognize where the value ends before reading the next element."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - ai: "17"
+    meaning: "Expiration date"
+    typical_business_object: "Shelf-life / batch context"
+    parsing_note: "Treat the encoded date as business data that still requires SAP validation and date rules."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - ai: "21"
+    meaning: "Serial number"
+    typical_business_object: "Serialized product / unit"
+    parsing_note: "Variable-length element. Resolve it together with the relevant product and process context."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+
+label_lifecycle:
+  - step: "DESIGN"
+    owner_question: "Which business object and identifier must the label represent?"
+    control: "Agree SSCC, GTIN, batch, serial and human-readable content before choosing the printer template."
+  - step: "GENERATE"
+    owner_question: "Who creates the identifier and guarantees uniqueness?"
+    control: "Generate identifiers in the owning business process; do not let independent printers invent business identity."
+  - step: "PRINT"
+    owner_question: "Which output process and printer receives the approved label?"
+    control: "Control template version, printer selection, retry and print status."
+  - step: "APPLY"
+    owner_question: "How do we know the label is attached to the correct physical object?"
+    control: "Bind label application to the HU, pallet, carton, product or process checkpoint."
+  - step: "SCAN"
+    owner_question: "What does the code prove at this warehouse step?"
+    control: "Parse the identifier and verify it against current SAP context."
+  - step: "REPRINT"
+    owner_question: "Can a damaged or lost label be replaced without creating a second identity?"
+    control: "Reprint the same valid identity when appropriate; avoid accidental duplicate SSCC or stale label reuse."
+
+label_failure_modes:
+  - symptom: "Correct label format, wrong physical object"
+    check_first: "Label-application checkpoint and HU/product association."
+  - symptom: "Reprint creates a new business identity"
+    check_first: "Difference between reprint and new-label generation."
+  - symptom: "Old template is still used"
+    check_first: "Template version, output rule and printer/workstation configuration."
+  - symptom: "Barcode is readable but missing required business data"
+    check_first: "Identifier contract, GS1 element set and receiving process requirement."
 
 sap_execution_paths:
   - id: "standard-ewm-rf"
@@ -129,9 +189,9 @@ sap_execution_paths:
     title: "Custom Mobile / SAPUI5 / Native App"
     choose_when: "The user journey crosses SAP processes, needs a special scanner interaction, or standard RF screens create unnecessary steps."
     flow: "Scanner SDK / keyboard wedge / intent → custom UI → parser + validation → released SAP API → business result"
-    good_fit: ["cross-process workbench", "special packaging flow", "supplier/3PL mobile flow", "custom quality capture", "offline-capable extension"]
+    good_fit: ["cross-process workbench", "special packaging flow", "supplier/3PL mobile flow", "custom quality capture", "controlled offline extension"]
     result: "Purpose-built UX while SAP remains the business system of record."
-    caution: "Prefer released APIs and explicit business ownership. Do not update SAP tables directly."
+    caution: "Prefer released APIs and explicit business ownership. Do not copy warehouse allocation, queue or stock rules into the mobile app."
 
   - id: "fixed-automation"
     title: "Fixed Scanner / Automation Event"
@@ -190,13 +250,67 @@ device_integration_patterns:
     strengths: ["filters device noise", "decouples hardware from SAP", "supports monitoring and retries"]
     risks: ["more components", "event ownership and sequencing must be explicit"]
 
+custom_reference_architectures:
+  - id: "ARCH-SCAN-WEDGE"
+    title: "Thin Input Adapter"
+    flow: "Scanner → keyboard wedge/HID → browser or RF field → standard SAP validation"
+    best_when: "The scanner only replaces typing and the standard application already owns the process."
+    clean_core_rule: "Do not add custom business logic when the device can stay a simple input peripheral."
+  - id: "ARCH-SCAN-MOBILE"
+    title: "Purpose-Built Mobile Extension"
+    flow: "Scanner SDK/Intent → native or web mobile UI → GS1 parser → released API → SAP business object"
+    best_when: "The user journey, device interaction or cross-process flow is genuinely different from standard RF."
+    clean_core_rule: "Custom UI may simplify interaction, but warehouse allocation, stock and process rules stay in SAP or the owning execution service."
+  - id: "ARCH-SCAN-FIXED"
+    title: "Machine Event Boundary"
+    flow: "Fixed reader/RFID → edge or WCS → deduplicate/contextualize → SAP business event/API → reconciliation"
+    best_when: "The checkpoint is automatic and repeated physical reads must become one business event."
+    clean_core_rule: "Keep device payloads and reader timing outside the ERP contract."
+
+connectivity_and_offline:
+  - topic: "Wi-Fi coverage"
+    lead_rule: "Validate coverage where the worker actually scans, not only in an office survey."
+    test: "Cold store, loading yard, high rack, dock doors, forklift routes and handover between access points."
+  - topic: "Roaming and sessions"
+    lead_rule: "A successful roam is not enough if the application session or token expires during the move."
+    test: "Scan before, during and after access-point handover with an active warehouse task."
+  - topic: "Retry"
+    lead_rule: "Retry must be business-safe. A timeout after posting may look like failure to the device even when SAP committed the action."
+    test: "Simulate lost response after confirmation and verify duplicate protection."
+  - topic: "Offline capture"
+    lead_rule: "Offline is safe only when the business context cannot become stale or when conflict detection is explicit."
+    test: "Change WT, HU, stock or bin state in SAP while the device is offline, then reconnect."
+  - topic: "Store and forward"
+    lead_rule: "Queue only operations with defined ordering, expiry, idempotency and reconciliation."
+    test: "Replay queued events after network recovery in the expected business sequence."
+
+security_and_device_management:
+  - control: "Worker identity"
+    question: "Who performed the warehouse action?"
+    rule: "Keep SAP authorization and business accountability separate from the physical device identity."
+  - control: "Device identity"
+    question: "Which managed scanner or terminal sent the request?"
+    rule: "Maintain inventory, ownership and a supportable device identifier for operational tracing."
+  - control: "Shared-device session"
+    question: "How does one worker hand the device to another?"
+    rule: "Use explicit sign-in/sign-out or controlled session switching; do not leave another worker's business session active."
+  - control: "Credentials and tokens"
+    question: "Where are secrets stored and how are they renewed?"
+    rule: "Avoid hard-coded credentials. Use managed application authentication and short-lived or revocable access where the platform allows it."
+  - control: "Lost or stolen device"
+    question: "Can access be removed without touching SAP configuration manually?"
+    rule: "Use central device/app management, remote lock/wipe where supported and rapid credential revocation."
+  - control: "Configuration lifecycle"
+    question: "Who owns scanner profiles, decoder settings, certificates and app versions?"
+    rule: "Treat device configuration as a managed release artifact, not as a technician's local memory."
+
 configuration_path:
   - step: 1
     title: "Define the business verification"
     detail: "State exactly what the scan proves: correct bin, correct HU, correct product, correct batch, load confirmation, or another decision."
   - step: 2
     title: "Define the label and identifier contract"
-    detail: "Choose the identifier, barcode carrier, GS1 Application Identifiers where relevant, label owner and printing point."
+    detail: "Choose the identifier, barcode carrier, GS1 Application Identifiers where relevant, label owner, generation rule, printing point and reprint rule."
   - step: 3
     title: "Map identifiers to SAP objects"
     detail: "Define how SSCC, GTIN, batch, serial number, bin and internal codes resolve to SAP master or transaction objects."
@@ -204,17 +318,20 @@ configuration_path:
     title: "Choose the SAP execution channel"
     detail: "Prefer standard EWM RF or a standard mobile app when it covers the flow; otherwise define the custom API boundary."
   - step: 5
-    title: "Configure the device"
-    detail: "Select decoders, scan profile, keyboard/intent/SDK output, suffixes and target application. Keep settings version-controlled where the device platform supports it."
+    title: "Configure and manage the device"
+    detail: "Select decoders, scan profile, keyboard/intent/SDK output, suffixes and target application. Define device enrollment, update and support ownership."
   - step: 6
     title: "Design scan parsing and validation"
-    detail: "Separate decode, parse, lookup and business validation. Show expected versus scanned values when a mismatch matters."
+    detail: "Separate decode, GS1 parsing, lookup and business validation. Show expected versus scanned values when a mismatch matters."
   - step: 7
-    title: "Design exceptions before go-live"
-    detail: "Cover unreadable label, wrong object, duplicate scan, missing master data, quantity difference, no network and partial execution."
+    title: "Design connectivity and retry"
+    detail: "Define online requirement, timeout, idempotency, reconnect behavior, offline limits and reconciliation before allowing automatic retry."
   - step: 8
+    title: "Design exceptions before go-live"
+    detail: "Cover unreadable label, wrong object, duplicate scan, stale offline context, missing master data, quantity difference, no network and partial execution."
+  - step: 9
     title: "Test in the real warehouse"
-    detail: "Test damaged labels, long distance, gloves, cold storage, forklift use, lighting, Wi-Fi roaming, duplicate reads and recovery."
+    detail: "Test damaged labels, long distance, gloves, cold storage, forklift use, lighting, Wi-Fi roaming, duplicate reads, authentication timeout and recovery."
 
 ui_rules:
   - "Keep one main action per step. Warehouse screens are tools, not mini ERP desktops."
@@ -292,9 +409,61 @@ decision_map:
     choose: "RFID + edge filtering"
     why: "Use RFID only when repeated line-of-sight barcode scanning is the real bottleneck."
 
+when_not_to_use_scanner:
+  - situation: "High-volume gate or portal with many tagged objects"
+    better_choice: "RFID or fixed Auto-ID"
+    reason: "Manual aiming becomes the bottleneck; the event still needs filtering and context."
+  - situation: "Sub-second conveyor routing or machine interlock"
+    better_choice: "PLC / MFS / WCS automation"
+    reason: "This is deterministic equipment control, not an operator scan transaction."
+  - situation: "Hands-busy repetitive picking"
+    better_choice: "Wearable, voice or pick-by-light depending process"
+    reason: "The worker interaction is the constraint; a handheld may add motion instead of removing it."
+  - situation: "Visual defect or object-recognition task"
+    better_choice: "Industrial camera / vision system"
+    reason: "The business question is quality or recognition, not barcode identity."
+  - situation: "Occasional low-volume lookup"
+    better_choice: "Phone camera or manual search"
+    reason: "A dedicated rugged scanner fleet may add more support cost than business value."
+  - situation: "Indoor continuous position tracking"
+    better_choice: "RTLS / UWB / BLE location layer"
+    reason: "Repeated manual scans are a poor substitute for a location event model."
+
+operational_kpis:
+  - id: "first-scan-success"
+    title: "First-Scan Success Rate"
+    meaning: "Share of intended scans accepted without a rescan or manual correction."
+    diagnostic_value: "Separates label/device/UX friction from normal warehouse processing."
+  - id: "scan-retry-rate"
+    title: "Scan Retry Rate"
+    meaning: "Repeated scan attempts before one accepted result."
+    diagnostic_value: "Useful for label quality, distance, decoder and ergonomic problems."
+  - id: "wrong-object-rate"
+    title: "Wrong-Object Scan Rate"
+    meaning: "Scans rejected because the object does not match expected bin, HU, product, batch or process context."
+    diagnostic_value: "Measures process error prevention, not scanner hardware quality."
+  - id: "manual-fallback-rate"
+    title: "Manual Entry Fallback Rate"
+    meaning: "Share of steps completed by typing or search instead of scan."
+    diagnostic_value: "A rising value often points to poor labels, weak UX or broken device configuration."
+  - id: "response-latency"
+    title: "Scan-to-Response Latency"
+    meaning: "Time from capture to clear accepted/rejected feedback."
+    diagnostic_value: "Shows whether network, application or SAP response delays are hurting execution."
+  - id: "device-disconnect-rate"
+    title: "Device Disconnect / Session Failure Rate"
+    meaning: "Operational sessions interrupted by connectivity, authentication or device problems."
+    diagnostic_value: "Separates process exceptions from platform reliability."
+  - id: "duplicate-event-rate"
+    title: "Duplicate Event Rate"
+    meaning: "Repeated reads or retries rejected by duplicate controls."
+    diagnostic_value: "Important for fixed readers, RFID and unreliable network paths."
+
 failure_modes:
   - symptom: "Scanner reads correctly but SAP rejects the value."
     check_first: "Barcode semantics and SAP object mapping: SSCC vs GTIN vs HU vs material vs bin."
+  - symptom: "One GS1 barcode is read, but batch or serial is missing."
+    check_first: "Application Identifier parsing, variable-length element termination and parser configuration."
   - symptom: "Scan goes into the wrong field."
     check_first: "Keyboard-wedge focus, suffix and UI state."
   - symptom: "Same pallet is confirmed twice."
@@ -303,10 +472,14 @@ failure_modes:
     check_first: "Resource, resource group, queue, WO status and warehouse context."
   - symptom: "Custom mobile app works in test but fails in the warehouse."
     check_first: "Wi-Fi roaming, device profile, decoder configuration, label quality and authentication timeout."
+  - symptom: "Offline event is accepted after the warehouse state changed."
+    check_first: "Queue expiry, business-state version/check, replay rule and reconciliation."
   - symptom: "RFID creates too many events."
     check_first: "Reader zone, dwell/filter rules, tag population and event aggregation before SAP."
   - symptom: "Workers bypass scanning and type values manually."
     check_first: "Ergonomics, label quality and exception flow before adding stricter validation."
+  - symptom: "A replacement device behaves differently from the rest of the fleet."
+    check_first: "Managed scanner profile, app version, decoder settings and configuration ownership."
 
 real_world_patterns:
   - title: "Zebra Picking Plus with SAP EWM"
@@ -335,13 +508,34 @@ real_world_patterns:
     lesson: "Not every warehouse needs EWM-class complexity; the device pattern can also support lighter ERP warehouse execution."
     source_refs: [SRC-SAP-BYD-JUNGHANS]
 
+assessment_cards:
+  - question: "Where do you start when selecting warehouse scanners?"
+    answer: "I start with the process, scan frequency, physical environment and identifier. Only then do I choose the device class."
+  - question: "What does the scanner do with a GS1-128 barcode?"
+    answer: "The device decodes the symbol. The application parser must interpret the Application Identifiers and map SSCC, GTIN, batch, expiry or serial data to the correct SAP context."
+  - question: "What is the difference between reprint and new label generation?"
+    answer: "A reprint normally preserves the valid business identity. New generation creates a new identifier. Mixing the two can create duplicate or stale physical identity."
+  - question: "When would you build a custom scanner app?"
+    answer: "When standard RF or a standard mobile app cannot support the required user journey, device interaction or cross-system process. I keep SAP as system of record and use released APIs."
+  - question: "Can warehouse confirmations work offline?"
+    answer: "Only with care. A queued action can become stale while stock, HU or warehouse-task state changes. I define expiry, idempotency, conflict detection and reconciliation before allowing replay."
+  - question: "How do you secure shared warehouse devices?"
+    answer: "I separate worker identity, managed device identity and application authentication. I also define session handover, credential revocation and fleet configuration ownership."
+  - question: "When is a scanner the wrong tool?"
+    answer: "When the real problem is continuous location, machine control, visual quality, bulk non-line-of-sight capture or a very low scan volume. Then I choose RTLS, PLC/WCS, vision, RFID or a simpler phone workflow."
+
+related_architecture:
+  - title: "IoT Devices Around ERP"
+    url: "/labs/enterprise-context/iot-devices/"
+    relation: "Use for device/edge/OT ownership, event pipelines, security, buffering and physical-to-digital architecture beyond scanners."
+
 assessment_answer: >-
-  I start with the warehouse step, scan frequency, environment and identifier. Then I choose the
-  label standard and device class. If standard EWM RF covers the process, I keep it standard.
-  If the user journey is different, I use a mobile or custom application with a released SAP API.
-  For fixed scanners or RFID, I separate raw device reads from the SAP business event with an
-  edge or integration layer, duplicate protection and monitoring. I design verification and
-  exception handling before the happy path, then test the solution in the real warehouse.
+  I start with the warehouse step, business identifier, scan frequency, physical environment and criticality.
+  Then I define the label lifecycle and parsing contract before choosing the device. If standard EWM RF covers
+  the process, I keep it standard. For a special user journey, I use a mobile extension with released SAP APIs
+  but keep warehouse logic in the owning application. For fixed readers or RFID, I separate raw reads from the
+  SAP business event with edge filtering and duplicate protection. I design Wi-Fi, retry, offline limits, device
+  identity, reprint rules, monitoring and reconciliation before go-live, then measure the solution with operational KPIs.
 
 source_refs:
   - SRC-SAP-EWM-RF-STANDARD
