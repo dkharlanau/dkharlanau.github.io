@@ -11,15 +11,6 @@ Evaluate whether an answer shows Lead-level system thinking rather than only pro
 
 The drill uses synthetic cases and one stable rubric. A candidate does not need to choose the same technology as the reference case. Reward reasoning quality, ownership, evidence, trade-offs, and communication.
 
-## Canonical data
-
-- `/datasets/triz-digital-framework/drill-cases.json` — synthetic assessment cases.
-- `/datasets/triz-digital-framework/lead-rubric.json` — six scoring dimensions, bands, hard-fail signals, and answer spine.
-- `/datasets/triz-digital-framework/catalog.json` — TRIZ Digital method, operators, resources, authority chain, and risk tiers.
-- `/datasets/triz-digital-framework/patterns.json` — reusable system transformation patterns.
-- `/triz/drill/` — browser practice interface.
-- `/triz/workbench/` — deeper contradiction workbench.
-
 ## Use when
 
 - The user wants a mock SAP Lead assessment question.
@@ -34,89 +25,46 @@ The drill uses synthetic cases and one stable rubric. A candidate does not need 
 - The case contains real client-confidential information that should not be processed or published in the public project.
 - The answer depends on current SAP product behavior that has not been verified from current primary sources.
 
-## Evaluation workflow
+## Required inputs
 
-1. **Read the case and candidate answer.**
-   - Keep supplied facts separate from candidate assumptions.
-   - Do not assume missing configuration, policy, ownership, thresholds, or landscape details.
-2. **Identify the useful function.**
-   - What outcome must remain true even if the current mechanism changes?
-3. **Identify the contradiction.**
-   - Which useful property is being improved?
-   - Which other useful property may become worse?
-4. **Check for separation thinking.**
-   - time;
-   - condition;
-   - context;
-   - system level;
-   - authority;
-   - representation.
-5. **Check system-shape distance.**
-   - Did the answer consider more than one real design shape?
-   - Different vendors implementing the same architecture do not count as different options.
-6. **Check technology allocation.**
-   - exact rules and hard constraints → deterministic;
-   - known sequence → workflow/state machine;
-   - non-blocking reaction → event/queue;
-   - fresh/private facts → retrieval/read tool;
-   - interpretation → model;
-   - unknown next useful step → bounded agent;
-   - value conflict/high-impact approval → explicit policy or accountable human.
-7. **Check authority.**
-   - read;
-   - propose;
-   - validate;
-   - approve;
-   - execute.
-   These may belong to different actors or mechanisms.
-8. **Check evidence and experiment.**
-   - evidence requested;
-   - primary metric;
-   - counter-metric;
-   - bounded scope;
-   - failure condition;
-   - rollback or recovery when relevant.
-9. **Score all six rubric dimensions from 0 to 4.**
-   - Use the anchor text in `lead-rubric.json`.
-   - Give one short evidence statement for every score.
-10. **Check hard-fail signals.**
-   - vendor-first;
-   - single-option thinking;
-   - authority gap;
-   - AI capability treated as authorization;
-   - no counter-metric;
-   - invented system facts.
-11. **Produce an improved 60-90 second answer.**
-   - English B2.
-   - Clear, semi-formal, consultant style.
-   - No generic AI phrases.
-   - No invented SAP facts.
-   - Prefer architecture and business language over a list of acronyms.
-12. **Ask two interviewer follow-ups.**
-   - Base them on missing evidence, ownership, risk, or a weak trade-off in the candidate answer.
+- The assessment case or interviewer question.
+- The candidate answer, or an explicit request to generate a practice answer.
+- Any facts supplied by the case that must be treated as fixed.
+- The scoring rubric from `/datasets/triz-digital-framework/lead-rubric.json`.
+- Current primary-source evidence when the answer depends on current SAP product behavior.
 
-## Scoring rules
+## Canonical data
 
-Use the rubric as written. Do not convert it into keyword matching.
+- `/datasets/triz-digital-framework/drill-cases.json` — synthetic assessment cases.
+- `/datasets/triz-digital-framework/lead-rubric.json` — six scoring dimensions, bands, hard-fail signals, and answer spine.
+- `/datasets/triz-digital-framework/catalog.json` — TRIZ Digital method, operators, resources, authority chain, and risk tiers.
+- `/datasets/triz-digital-framework/patterns.json` — reusable system transformation patterns.
+- `/triz/drill/` — browser practice interface.
+- `/triz/workbench/` — deeper contradiction workbench.
 
-A technically different answer can score highly when it:
+## Workflow
 
-- frames the useful function correctly;
-- makes the contradiction explicit;
-- creates real system-shape alternatives;
-- allocates authority deliberately;
-- asks for the evidence that would decide;
-- gives a falsifiable experiment;
-- communicates clearly.
+1. Read the case and candidate answer. Keep supplied facts separate from candidate assumptions.
+2. Identify the useful function and business outcome.
+3. Identify the contradiction or important trade-off.
+4. Check separation thinking across time, condition, context, system level, authority, and representation.
+5. Check whether the answer considers materially different system shapes rather than vendor variants.
+6. Check technology allocation between deterministic rules, workflow, events, retrieval, models, bounded agents, and accountable human decisions.
+7. Check authority across read, propose, validate, approve, and execute.
+8. Check evidence, metrics, counter-metrics, bounded scope, failure condition, and rollback or recovery.
+9. Score all six rubric dimensions from 0 to 4 using the rubric anchors.
+10. Check hard-fail signals such as vendor-first thinking, one-option thinking, authority gaps, AI capability treated as authorization, missing counter-metrics, and invented system facts.
+11. Produce an improved 60–90 second answer in English B2 with clear consultant language and no invented SAP facts.
+12. Produce two interviewer follow-up questions based on missing evidence, ownership, risk, or a weak trade-off.
 
-A technically fashionable answer should score poorly when it:
+## Decision rules
 
-- starts with a preferred product;
-- hides ownership;
-- uses AI for deterministic policy;
-- gives broad write access without risk reasoning;
-- proposes only one architecture;
-- optimizes one metric and ignores the counter-effect.
+- Do not reward a technology merely because it matches a reference case.
+- Do not penalize a different architecture when the reasoning, evidence, authority, and trade-offs are stronger.
+- Missing evidence is not a factual error unless the candidate invents the missing fact.
+- A fashionable AI or platform answer should score poorly when deterministic controls, ownership, or authority are ignored.
+- Prefer a clear, defendable 60–90 second answer over an acronym-heavy inventory.
+- When current SAP behavior matters, verify it from current primary sources before treating it as fact.
 
 ## Output format
 
@@ -160,6 +108,12 @@ A technically fashionable answer should score poorly when it:
 - [ ] The improved answer does not add unverified SAP configuration or product facts.
 - [ ] The improved answer can be spoken in roughly 60-90 seconds.
 - [ ] Two follow-up questions target genuine weak points or unknowns.
+
+## References
+
+- `references/method.md` — Scoring method and Lead-level reasoning model.
+- `references/templates.md` — Evaluation and practice-answer templates.
+- `references/examples.md` — Examples of Senior-level and Lead-level answer patterns.
 
 ## Safety and publication
 
