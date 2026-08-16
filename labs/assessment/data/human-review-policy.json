@@ -1,8 +1,10 @@
 {
   "id": "sap-lead-human-review-policy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
   "purpose": "Turn source-supported assessment routes into an explicit human page-review queue without changing verification or publication state automatically.",
+  "finding_contract": "/labs/assessment/data/human-review-finding-schema.json",
+  "findings_route": "/labs/assessment/human-review/findings/",
   "eligibility": [
     "The route is a Promotion Readiness human-review candidate.",
     "The route has source-supported factual review for load-bearing product claims.",
@@ -20,7 +22,7 @@
   ],
   "completion_rule": "A reviewer may record that the page review is complete only after all review gates are checked. Completion does not automatically set verified:true, remove noindex, or change publication status.",
   "priority_rule": "Review core assessment routes first, then secondary source-supported routes. Priority reflects assessment value and cross-process reuse, not page age.",
-  "publication_boundary": "Human review evidence and publication decisions remain separate. The queue generator never edits page frontmatter or indexing policy.",
+  "publication_boundary": "Human review evidence and publication decisions remain separate. The queue generator and finding recorder never edit page frontmatter or indexing policy.",
   "core_assessment_wave": [
     "/labs/enterprise-context/sales-order/",
     "/labs/enterprise-context/pricing/",
