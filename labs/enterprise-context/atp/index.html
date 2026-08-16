@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-16
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -51,6 +51,35 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
     <p><strong>My working rule:</strong> if ATP looks wrong, I first reconstruct the promise: requirement, plant, material availability date, scope, supply/demand, and policy restrictions.</p>
     <a href="/labs/enterprise-context/data/atp-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead answer frame</p>
+      <h2>Separate promise logic from the stock number.</h2>
+      <p>A good ATP answer explains why a requirement could or could not be confirmed on a date. It does not stop at “stock exists” or “ATP is zero”.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h4>1. Build the requirement</h4>
+        <ul><li>Confirm ATP relevance and the actual requirement quantity.</li><li>Check plant and material availability date before reading supply.</li><li>Separate a scheduling-date problem from an availability problem.</li></ul>
+      </div>
+      <div>
+        <h4>2. Build the promise</h4>
+        <ul><li>Check scope and the supply-demand picture used by the availability check.</li><li>Explain the PAC result before adding advanced policy controls.</li><li>Then inspect PAL, Supply Protection, alternatives, or BOP when they are active.</li></ul>
+      </div>
+      <div>
+        <h4>3. Prove the owner</h4>
+        <ul><li>Show whether the first divergence is date, supply, scope, or business policy.</li><li>Trace alternative plant/product decisions into Shipping, EWM, TM, tax, or margin impact.</li><li>Close with proof of confirmation and downstream business feasibility.</li></ul>
+      </div>
+    </div>
+    <p class="ecg-caption"><strong>Boundary with Shipping:</strong> ATP answers what can be promised. Shipping and scheduling explain how the logistics dates and execution context are built. A wrong upstream date can make a correct availability check look wrong.</p>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Evidence boundary:</strong> claim-level review currently confirms the advanced ATP simulation API scope, Supply Protection behavior, and the complementary PAL/Supply Protection model. The wider page also covers classic ATP controls, BOP, alternatives, and integrations, so page-level human review is still required.</p>
+    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="atp-memory" data-reveal>

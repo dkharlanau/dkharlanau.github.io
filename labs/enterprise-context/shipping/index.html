@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-16
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -50,6 +50,35 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
     <p><strong>My working rule:</strong> I find the first wrong shipping input or calculated date. I do not change transit time until the final delivery date looks acceptable.</p>
     <a href="/labs/enterprise-context/data/shipping-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead answer frame</p>
+      <h2>Trace the date back to the first logistics decision.</h2>
+      <p>A final delivery date is a downstream result. The Lead-level task is to identify which plant, shipping, route, calendar, or scheduling decision first moved away from the expected business path.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div>
+        <h4>1. Execution context</h4>
+        <ul><li>Confirm the delivering plant before debugging Shipping.</li><li>Trace plant + shipping condition + loading group into shipping point.</li><li>Trace origin, destination, shipping policy, and transportation group into route.</li></ul>
+      </div>
+      <div>
+        <h4>2. Date construction</h4>
+        <ul><li>Separate route/transit data from pick-pack, loading, and calendar effects.</li><li>Trace requested delivery date backward to material availability, loading, GI, and transportation dates.</li><li>Check whether ATP is consuming the date you actually intended.</li></ul>
+      </div>
+      <div>
+        <h4>3. Execute and prove</h4>
+        <ul><li>Distinguish delivery-due state from warehouse or transport execution.</li><li>Identify the handoff to EWM or TM instead of changing SD to repair their downstream state.</li><li>Prove the corrected dates and the executable delivery path end to end.</li></ul>
+      </div>
+    </div>
+    <p class="ecg-caption"><strong>Boundary with ATP:</strong> Shipping builds important logistics dates and execution context. ATP evaluates the promise against its requirement date, supply-demand scope, and policy controls. Diagnose the first wrong owner before changing lead times or confirmations.</p>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Evidence boundary:</strong> claim-level review currently confirms the shipping-point input model and the classic route-determination context, including the role of route data in scheduling. The wider execution and EWM/TM boundary still requires page-level human review.</p>
+    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="shipping-memory" data-reveal>
