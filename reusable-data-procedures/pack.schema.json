@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/reusable-data-procedures/pack.schema.json",
+  "title": "Reusable Data Procedures Domain Pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "specVersion", "id", "name", "version", "state", "purpose", "modules", "assets", "tests", "provenance"],
+  "properties": {
+    "kind": {"const": "rdp-domain-pack"},
+    "specVersion": {"const": "0.1"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$"},
+    "name": {"type": "string", "minLength": 1},
+    "version": {"type": "string"},
+    "state": {"enum": ["blueprint", "candidate", "ready", "deprecated"]},
+    "purpose": {"type": "string", "minLength": 1},
+    "domains": {"type": "array", "items": {"type": "string"}},
+    "owner": {"type": "string"},
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "purpose"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "purpose": {"type": "string"},
+          "optional": {"type": "boolean", "default": false}
+        }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["procedureBlueprints", "semanticConcepts", "referenceContracts", "blockRequirements"],
+      "properties": {
+        "procedureBlueprints": {"type": "array", "items": {"$ref": "#/$defs/assetRef"}},
+        "procedures": {"type": "array", "items": {"$ref": "#/$defs/versionedAssetRef"}},
+        "semanticConcepts": {"type": "array", "items": {"$ref": "#/$defs/assetRef"}},
+        "referenceContracts": {"type": "array", "items": {"$ref": "#/$defs/assetRef"}},
+        "referenceReleases": {"type": "array", "items": {"$ref": "#/$defs/versionedAssetRef"}},
+        "blockRequirements": {"type": "array", "items": {"$ref": "#/$defs/assetRef"}},
+        "blocks": {"type": "array", "items": {"$ref": "#/$defs/versionedAssetRef"}},
+        "policyProfiles": {"type": "array", "items": {"$ref": "#/$defs/assetRef"}}
+      }
+    },
+    "tests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requiredScenarios"],
+      "properties": {
+        "requiredScenarios": {"type": "array", "items": {"type": "string"}},
+        "testSuiteRefs": {"type": "array", "items": {"type": "string"}},
+        "minimumEvidence": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "reviewDefaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reviewItemTypes": {"type": "array", "items": {"type": "string"}},
+        "blockingSignals": {"type": "array", "items": {"type": "string"}},
+        "promotionSignals": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "coreModel": {"type": "string"},
+        "semanticExtension": {"type": "string"},
+        "humanLoopExtension": {"type": "string"},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "releaseNotes": {"type": "array", "items": {"type": "string"}},
+    "replacementPack": {"type": "string"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["createdAt"],
+      "properties": {
+        "createdAt": {"type": "string", "format": "date-time"},
+        "createdBy": {"type": "string"},
+        "reviewedAt": {"type": "string", "format": "date-time"},
+        "reviewedBy": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "assetRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "state"],
+      "properties": {
+        "id": {"type": "string"},
+        "module": {"type": "string"},
+        "state": {"enum": ["blueprint", "candidate", "ready", "deprecated"]},
+        "required": {"type": "boolean", "default": true},
+        "note": {"type": "string"}
+      }
+    },
+    "versionedAssetRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string"},
+        "version": {"type": "string"},
+        "module": {"type": "string"},
+        "required": {"type": "boolean", "default": true}
+      }
+    }
+  }
+}
