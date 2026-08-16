@@ -23,7 +23,9 @@ jobs:
       - name: Install test dependencies
         run: pip install pytest pyyaml
       - name: Apply LOOP-046
-        run: python3 scripts/_loop046_reasoning_gap_semantic_integration.py
+        run: |
+          python3 scripts/_loop046_reasoning_gap_semantic_integration.py
+          python3 scripts/_loop046_boundary_lifecycle_fix.py
       - name: Refresh assessment inventories
         run: |
           python3 scripts/audit_assessment_promotion_readiness.py
@@ -36,6 +38,7 @@ jobs:
         run: |
           python3 scripts/validate_assessment_reasoning_gap_candidates.py
           python3 scripts/validate_assessment_reasoning_gap_semantic_review.py
+          python3 scripts/validate_assessment_core_boundary_drills.py --check
           pytest -q tests/test_assessment_practice_layer.py
       - name: Refresh Atlas artifacts
         run: python3 scripts/generate_atlas_artifacts.py
@@ -43,6 +46,7 @@ jobs:
         run: |
           python3 scripts/validate_assessment_reasoning_gap_candidates.py
           python3 scripts/validate_assessment_reasoning_gap_semantic_review.py
+          python3 scripts/validate_assessment_core_boundary_drills.py --check
           python3 scripts/audit_assessment_promotion_readiness.py --check
           python3 scripts/generate_assessment_evidence_coverage.py --check
           python3 scripts/generate_assessment_human_review_queue.py --check
