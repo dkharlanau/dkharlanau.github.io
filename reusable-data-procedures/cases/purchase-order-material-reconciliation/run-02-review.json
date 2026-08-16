@@ -1,0 +1,33 @@
+{
+  "kind": "reusable-data-procedure-run",
+  "specVersion": "0.1",
+  "runId": "case-po-material-run-02",
+  "deployment": {"id": "case.manual-local", "version": "0.1"},
+  "procedure": {"id": "procurement.po-material-reconciliation", "version": "0.1.0", "planHash": "case-po-plan-v1"},
+  "engineVersion": "reference-case",
+  "trigger": "manual",
+  "actor": "case-runner",
+  "status": "review-required",
+  "startedAt": "2026-08-16T14:22:00Z",
+  "finishedAt": "2026-08-16T14:22:02Z",
+  "inputs": [
+    {"role": "purchase_orders", "resource": "fixtures.json#sourceRuns/run-02", "hash": "sha256:synthetic-po-run-02", "fingerprint": "po-v2-ten-fields-aliases", "selectedRegion": "PO Export!A11:J15", "rowCount": 4}
+  ],
+  "resolvedDependencies": [
+    {"kind": "reference-dataset", "id": "sap.supplier-material-cross-reference", "version": "2026.08.1"}
+  ],
+  "drift": {"classification": "business", "findings": ["table moved from row 7 to row 11", "approved header aliases used", "new supplier-material pair SUP-2000 + VEND-Q9 is outside the pinned reference release"]},
+  "validationSummary": {"passed": 3, "warnings": 0, "errors": 0, "blocking": 1},
+  "exceptions": {"count": 1, "byReason": {"SUPPLIER_MATERIAL_NOT_FOUND": 1}, "artifact": "synthetic://case/po/run-02/exceptions"},
+  "controlTotals": [
+    {"name": "order-quantity", "expected": 72, "actual": 72, "status": "pass"},
+    {"name": "supplier-material-coverage", "expected": 1.0, "actual": 0.75, "status": "fail"},
+    {"name": "material-agreement-resolved-rows", "expected": 3, "actual": 3, "status": "pass"}
+  ],
+  "outputs": [
+    {"name": "po_material_reconciliation", "status": "withheld", "resource": "synthetic://case/po/run-02/result", "hash": "sha256:synthetic-po-result-withheld", "rowCount": 4},
+    {"name": "po_material_exceptions", "status": "prepared", "resource": "synthetic://case/po/run-02/exceptions", "hash": "sha256:synthetic-po-exception-q9", "rowCount": 1}
+  ],
+  "publicationDecision": "manual-review",
+  "metrics": {"locatorConfidence": 0.94, "mappingCoverage": 0.75, "sourceQuantity": 72, "resultQuantity": 72, "manualDecisionCount": 1}
+}
