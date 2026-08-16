@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 """Rank Lab pages for search publication and safely promote reviewed pages.
 
-The loop separates two decisions that should not be confused:
-- factual/editorial review: status=reviewed + verified=true
-- search publication: robots=index,follow + sitemap=true
+The loop combines three independent signals:
+- factual readiness from labs/assessment/data/promotion-readiness.json
+- search-intent ownership from _data/labs/search_intents.yml
+- source-level search quality (metadata, body, links, evidence, H1, freshness)
 
-Draft pages are ranked for human review but are never marked verified by this tool.
-With --apply, only reviewed+verified pages that pass the quality threshold are
-changed from noindex to indexable.
+It never marks a draft page verified. With --apply, only pages already marked
+status=reviewed and verified=true can be changed from noindex to indexable.
 """
 
 from __future__ import annotations
 
 import argparse
 import csv
+import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -42,6 +43,9 @@ class PromotionCandidate:
     title: str
     search_intent: str
     publication_state: str
+    assessment_priority: str
+    factual_status: str
+    human_verification_required: bool
     score: int
     word_count: int
     internal_links: int
@@ -49,6 +53,27 @@ class PromotionCandidate:
     evidence_urls: int
     h1_count: int
     reasons: list[str]
+
+
+def load_search_intents(repo: Path) -> dict[str, dict]:
+    path = repo / "_data" / "labs" / "search_intents.yml"
+    if not path.exists():
+        return {}
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    routes = data.get("routes") if isinstance(data, dict) else {}
+    return routes if isinstance(routes, dict) else {}
+
+
+def load_assessment_readiness(repo: Path) -> dict[str, dict]:
+    path = repo / "labs" / "assessment" / "data" / "promotion-readiness.json"
+    if not path.exists():
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return {
+        str(item.get("route")): item
+        for item in payload.get("items", [])
+        if item.get("route")
+    }
 
 
 def read_source(repo: Path, record: PageRecord) -> tuple[str, dict, str]:
@@ -112,7 +137,12 @@ def evidence_urls(repo: Path, body: str) -> set[str]:
     return urls
 
 
-def quality_score(repo: Path, record: PageRecord) -> PromotionCandidate:
+def quality_score(
+    repo: Path,
+    record: PageRecord,
+    intents: dict[str, dict],
+    readiness: dict[str, dict],
+) -> PromotionCandidate:
     _text, fm, body = read_source(repo, record)
     words = text_word_count(body)
     internal, external = link_counts(body)
@@ -120,6 +150,16 @@ def quality_score(repo: Path, record: PageRecord) -> PromotionCandidate:
     evidence = evidence_urls(repo, body)
     score = 0
     reasons: list[str] = []
+
+    intent_entry = intents.get(record.route) or {}
+    explicit_intent = str(fm.get("search_intent") or intent_entry.get("primary") or "").strip()
+    search_intent = explicit_intent or record.search_intent or record.title
+
+    assessment = readiness.get(record.route) or {}
+    factual = assessment.get("factual_review") or {}
+    assessment_priority = str(assessment.get("priority") or "")
+    factual_status = str(factual.get("status") or "not_reviewed")
+    human_required = bool(factual.get("human_verification_required", False))
 
     title_len = len(record.title)
     if 30 <= title_len <= 80:
@@ -139,10 +179,10 @@ def quality_score(repo: Path, record: PageRecord) -> PromotionCandidate:
     else:
         reasons.append("missing description")
 
-    if fm.get("search_intent"):
+    if explicit_intent:
         score += 5
     else:
-        reasons.append("search_intent is inferred from title")
+        reasons.append("search intent is inferred from title")
 
     if words >= 900:
         score += 18
@@ -194,10 +234,14 @@ def quality_score(repo: Path, record: PageRecord) -> PromotionCandidate:
         score = max(0, score - 15)
         reasons.append("contains draft placeholder marker")
 
+    score = min(score, 100)
+
     if record.classification == "REVIEW_TO_INDEX":
         state = "READY_TO_PROMOTE" if score >= 70 else "PROMOTE_BLOCKED"
     elif record.classification == "KEEP_NOINDEX":
-        if score >= 80:
+        if factual_status == "source_supported" and assessment_priority == "P1" and score >= 70:
+            state = "HUMAN_VERIFY_NEXT"
+        elif score >= 80:
             state = "REVIEW_NEXT"
         elif score >= 65:
             state = "REVIEW_LATER"
@@ -206,13 +250,21 @@ def quality_score(repo: Path, record: PageRecord) -> PromotionCandidate:
     else:
         state = record.classification
 
+    if factual_status == "source_supported":
+        reasons.append("load-bearing reviewed claims are source-supported")
+    elif assessment_priority == "P0":
+        reasons.append("assessment evidence review has a P0 blocker")
+
     return PromotionCandidate(
         route=record.route,
         source_path=record.source_path,
         title=record.title,
-        search_intent=record.search_intent,
+        search_intent=search_intent,
         publication_state=state,
-        score=min(score, 100),
+        assessment_priority=assessment_priority,
+        factual_status=factual_status,
+        human_verification_required=human_required,
+        score=score,
         word_count=words,
         internal_links=internal,
         external_links=external,
@@ -261,8 +313,9 @@ def write_reports(repo: Path, candidates: list[PromotionCandidate], output_dir: 
     md_path = out / "lab-promotion-queue.md"
 
     fields = [
-        "route", "source_path", "publication_state", "score", "title", "search_intent",
-        "word_count", "internal_links", "external_links", "evidence_urls", "h1_count", "reasons",
+        "route", "source_path", "publication_state", "assessment_priority", "factual_status",
+        "human_verification_required", "score", "title", "search_intent", "word_count",
+        "internal_links", "external_links", "evidence_urls", "h1_count", "reasons",
     ]
     with csv_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
@@ -275,16 +328,16 @@ def write_reports(repo: Path, candidates: list[PromotionCandidate], output_dir: 
     lines = [
         "# Lab Search Promotion Queue",
         "",
-        "The score prioritizes review. It does not replace factual verification.",
+        "The score prioritizes review. It does not replace human verification.",
         "",
-        "| Priority | Score | Route | Evidence | Internal links | Words | Search intent |",
-        "|---|---:|---|---:|---:|---:|---|",
+        "| State | Assessment | Facts | Score | Route | Evidence | Links | Search intent |",
+        "|---|---|---|---:|---|---:|---:|---|",
     ]
     for candidate in candidates:
         lines.append(
-            f"| {candidate.publication_state} | {candidate.score} | `{candidate.route}` | "
-            f"{candidate.evidence_urls} | {candidate.internal_links} | {candidate.word_count} | "
-            f"{candidate.search_intent or candidate.title} |"
+            f"| {candidate.publication_state} | {candidate.assessment_priority or '—'} | "
+            f"{candidate.factual_status} | {candidate.score} | `{candidate.route}` | "
+            f"{candidate.evidence_urls} | {candidate.internal_links} | {candidate.search_intent or candidate.title} |"
         )
     md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -297,18 +350,31 @@ def main() -> int:
     args = parser.parse_args()
 
     repo = Path(args.repo_dir).resolve()
+    intents = load_search_intents(repo)
+    readiness = load_assessment_readiness(repo)
     records = [record for record in build_records(repo) if record.route.startswith("/labs/")]
-    candidates = [quality_score(repo, record) for record in records]
-    candidates.sort(key=lambda item: (-item.score, item.route))
+    candidates = [quality_score(repo, record, intents, readiness) for record in records]
+    state_order = {
+        "READY_TO_PROMOTE": 0,
+        "HUMAN_VERIFY_NEXT": 1,
+        "PROMOTE_BLOCKED": 2,
+        "REVIEW_NEXT": 3,
+        "REVIEW_LATER": 4,
+        "WORKING": 5,
+    }
+    candidates.sort(key=lambda item: (state_order.get(item.publication_state, 9), -item.score, item.route))
     write_reports(repo, candidates, args.output_dir)
 
     ready = [item for item in candidates if item.publication_state == "READY_TO_PROMOTE"]
-    review_next = [item for item in candidates if item.publication_state == "REVIEW_NEXT"]
+    human_next = [item for item in candidates if item.publication_state == "HUMAN_VERIFY_NEXT"]
     print(f"Lab promotion loop: {len(candidates)} routes")
     print(f"  Ready to promote: {len(ready)}")
-    print(f"  Review next: {len(review_next)}")
-    for item in candidates[:20]:
-        print(f"  {item.score:3d} {item.publication_state:18s} {item.route}")
+    print(f"  Human verify next: {len(human_next)}")
+    for item in candidates[:25]:
+        print(
+            f"  {item.score:3d} {item.publication_state:18s} "
+            f"{item.assessment_priority or '-':2s} {item.factual_status:18s} {item.route}"
+        )
 
     if args.apply:
         changed = apply_promotions(repo, candidates)
