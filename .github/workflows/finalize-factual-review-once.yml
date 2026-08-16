@@ -1,0 +1,163 @@
+name: Finalize Factual Review Once
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/finalize-factual-review-once.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml pytest
+      - name: Register factual review layer
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from __future__ import annotations
+          import json
+          from pathlib import Path
+
+          root = Path('.')
+
+          catalog_path = root / 'labs/assessment/data/catalog.json'
+          catalog = json.loads(catalog_path.read_text(encoding='utf-8'))
+          catalog['version'] = '1.6.0'
+          catalog['purpose'] = (
+              'Turn the Lab into a structured SAP Lead assessment route across process knowledge, diagnostics, architecture, '
+              'integration, data, AI, adaptive practice, feedback, evidence-backed question authoring, promotion readiness, '
+              'and claim-level primary-source review.'
+          )
+          authoring = {item['id']: item for item in catalog.get('authoring_tools', [])}
+          authoring['factual-review'] = {
+              'id': 'factual-review',
+              'label': 'Factual Review',
+              'route': '/labs/assessment/factual-review/',
+              'purpose': 'Review release-sensitive SAP claims against primary sources while keeping page verification and publication as separate human decisions.'
+          }
+          catalog['authoring_tools'] = [authoring[key] for key in sorted(authoring)]
+          strong = catalog.setdefault('coverage', {}).setdefault('strong_now', [])
+          marker = 'Claim-level SAP primary-source review with explicit release scope and human-verification boundary'
+          if marker not in strong:
+              strong.append(marker)
+          catalog['coverage']['next_practice_layers'] = [
+              'continue factual review with ATP, Credit, EWM, deployment models, and other release-sensitive routes',
+              'extend candidate generation only to graphs with strong failure-mode evidence',
+              'connect real feedback observations to review priorities without treating feedback as automatic scoring truth',
+              'create explicit human-reviewed calibration decisions when enough real evidence exists'
+          ]
+          endpoints = catalog.setdefault('endpoints', {})
+          endpoints['factual_review_route'] = '/labs/assessment/factual-review/'
+          endpoints['factual_review_policy'] = '/labs/assessment/data/factual-review-policy.json'
+          endpoints['factual_review'] = '/labs/assessment/data/factual-review.json'
+          catalog_path.write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+          backlog_path = root / 'labs/assessment/data/backlog.json'
+          backlog = json.loads(backlog_path.read_text(encoding='utf-8'))
+          items = {item['id']: item for item in backlog['items']}
+          items['LOOP-017'] = {
+              'id': 'LOOP-017',
+              'priority': 'P1',
+              'title': 'Claim-level factual and primary-source review',
+              'status': 'done',
+              'outputs': [
+                  '/labs/assessment/factual-review/',
+                  '/labs/assessment/data/factual-review-policy.json',
+                  '/labs/assessment/data/factual-review.json'
+              ],
+              'reviewed_routes': [
+                  '/labs/enterprise-context/integration-operations/',
+                  '/labs/enterprise-context/billing/'
+              ],
+              'working_rule': 'Source-supported claims remain separate from page-level human verification and publication policy.'
+          }
+          backlog['items'] = [items[key] for key in sorted(items)]
+          backlog['next_iteration_themes'] = [
+              'continue primary-source review with ATP, Credit, EWM, and deployment-sensitive architecture pages',
+              'extend candidate generation to another graph only when source references and failure-mode structure are strong enough',
+              'connect real feedback observations to review priorities without treating feedback as automatic scoring truth',
+              'create explicit human-reviewed calibration decisions when enough real evidence exists'
+          ]
+          backlog_path.write_text(json.dumps(backlog, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+          index_path = root / 'labs/assessment/index.md'
+          text = index_path.read_text(encoding='utf-8')
+          old_header = '<header><p class="research-canvas__eyebrow">Authoring control</p><h2>New questions enter through evidence and review.</h2><p>The generator currently reads whitelisted Billing and Integration Operations failure modes. It found two review candidates and rejected twelve duplicate patterns. Published practice remains at 59 cases.</p></header>'
+          new_header = '<header><p class="research-canvas__eyebrow">Authoring control</p><h2>Claims and questions enter through evidence and review.</h2><p>Question candidates are generated from whitelisted graph evidence. Release-sensitive SAP claims now have a separate primary-source review layer before any page-level verification or publication decision.</p></header>'
+          if old_header not in text:
+              raise SystemExit('Authoring header anchor not found')
+          text = text.replace(old_header, new_header, 1)
+          old_links = '      <a href="/labs/assessment/question-review/"><span>AUTHOR</span><strong>Question Candidate Review</strong><small>Inspect graph evidence, source refs, duplicate checks, and local review decisions before any case promotion.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>\n      <a href="/labs/assessment/promotion-readiness/"><span>CONTENT</span><strong>Promotion Readiness</strong><small>Review structurally mature draft pages while factual verification and publication policy remain separate decisions.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>'
+          new_links = '      <a href="/labs/assessment/question-review/"><span>AUTHOR</span><strong>Question Candidate Review</strong><small>Inspect graph evidence, source refs, duplicate checks, and local review decisions before any case promotion.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>\n      <a href="/labs/assessment/factual-review/"><span>FACT</span><strong>Factual Review</strong><small>Check release-sensitive SAP claims against primary sources and record product and release scope.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>\n      <a href="/labs/assessment/promotion-readiness/"><span>CONTENT</span><strong>Promotion Readiness</strong><small>Review structurally mature draft pages while factual verification and publication policy remain separate decisions.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>'
+          if old_links not in text:
+              raise SystemExit('Authoring links anchor not found')
+          text = text.replace(old_links, new_links, 1)
+          text = text.replace(
+              '<li>Factual and primary-source review of structurally mature draft routes before any promotion</li>',
+              '<li>Continue claim-level factual review for ATP, Credit, EWM, and deployment-sensitive architecture routes</li>',
+              1,
+          )
+          old_machine = '      <a href="/labs/assessment/data/promotion-readiness.json"><span>38</span><strong>Promotion Readiness Inventory</strong><small>Assessment-linked human routes queued for factual and publication-policy review without automatic promotion.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>\n      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-016 are complete; next work focuses on factual review and controlled promotion.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>'
+          new_machine = '      <a href="/labs/assessment/data/promotion-readiness.json"><span>38</span><strong>Promotion Readiness Inventory</strong><small>Assessment-linked human routes queued for factual and publication-policy review without automatic promotion.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>\n      <a href="/labs/assessment/data/factual-review-policy.json"><span>FACT</span><strong>Factual Review Policy</strong><small>Claim states, primary-source rules, release scope, and the human-verification boundary.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>\n      <a href="/labs/assessment/data/factual-review.json"><span>11</span><strong>Factual Review Registry</strong><small>Eleven source-supported claims across Integration Operations and Billing; page verification remains unchanged.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>\n      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-017 are complete; next work expands factual review to other release-sensitive routes.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>'
+          if old_machine not in text:
+              raise SystemExit('Machine-readable anchor not found')
+          text = text.replace(old_machine, new_machine, 1)
+          index_path.write_text(text, encoding='utf-8')
+
+          tests_path = root / 'tests/test_assessment_practice_layer.py'
+          tests = tests_path.read_text(encoding='utf-8')
+          old_page = '        "question-review": ASSESSMENT / "question-review" / "index.html",\n        "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",'
+          new_page = '        "question-review": ASSESSMENT / "question-review" / "index.html",\n        "factual-review": ASSESSMENT / "factual-review" / "index.html",\n        "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",'
+          if old_page not in tests:
+              raise SystemExit('Expected pages anchor not found')
+          tests = tests.replace(old_page, new_page, 1)
+          old_assert = '    assert authoring["question-review"]["route"] == "/labs/assessment/question-review/"\n    assert authoring["promotion-readiness"]["route"] == "/labs/assessment/promotion-readiness/"'
+          new_assert = '    assert authoring["question-review"]["route"] == "/labs/assessment/question-review/"\n    assert authoring["factual-review"]["route"] == "/labs/assessment/factual-review/"\n    assert authoring["promotion-readiness"]["route"] == "/labs/assessment/promotion-readiness/"'
+          if old_assert not in tests:
+              raise SystemExit('Authoring assertion anchor not found')
+          tests = tests.replace(old_assert, new_assert, 1)
+          old_loops = '("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016")'
+          new_loops = '("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017")'
+          if old_loops not in tests:
+              raise SystemExit('Loop assertion anchor not found')
+          tests = tests.replace(old_loops, new_loops, 1)
+          factual_test = '''\n\ndef test_factual_review_keeps_source_support_separate_from_page_verification() -> None:\n    policy = load_json("factual-review-policy.json")\n    review = load_json("factual-review.json")\n    promotion = load_json("promotion-readiness.json")\n\n    assert review["policy"] == "/labs/assessment/data/factual-review-policy.json"\n    assert review["summary"] == {\n        "routes_reviewed": 2,\n        "claims_reviewed": 11,\n        "source_supported": 11,\n        "source_conflict": 0,\n        "human_verification_required": 11,\n    }\n    assert all(item["page_verified"] is False for item in review["routes"])\n    assert all(claim["status"] == "source_supported" for claim in review["claims"])\n    assert all(claim["human_verification_required"] is True for claim in review["claims"])\n    assert all(claim["source_refs"] for claim in review["claims"])\n    assert all(all(url.startswith("https://help.sap.com/") for url in claim["official_evidence"]) for claim in review["claims"])\n    promotion_by_route = {item["route"]: item for item in promotion["items"]}\n    for route in review["routes"]:\n        assert promotion_by_route[route["route"]]["verified"] is False\n    assert "cannot declare the complete page verified" in policy["promotion_boundary"].lower()\n'''
+          if 'test_factual_review_keeps_source_support_separate_from_page_verification' not in tests:
+              tests = tests.rstrip() + factual_test + '\n'
+          tests_path.write_text(tests, encoding='utf-8')
+          PY
+      - name: Refresh Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Run assessment tests
+        run: python3 -m pytest tests/test_assessment_practice_layer.py
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add labs/assessment/data/catalog.json labs/assessment/data/backlog.json labs/assessment/index.md tests/test_assessment_practice_layer.py ai/markdown-clusters.json
+          if git diff --cached --quiet; then
+            echo "Factual review layer already registered."
+            exit 0
+          fi
+          git commit -m "feat: register claim-level SAP factual review"
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git fetch origin main
+            git rebase origin/main
+            python3 scripts/generate_atlas_artifacts.py
+            git add ai/markdown-clusters.json
+            if ! git diff --cached --quiet; then git commit --amend --no-edit; fi
+          done
+          exit 1
