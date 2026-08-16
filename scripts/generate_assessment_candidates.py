@@ -149,15 +149,26 @@ def dedup_signature(graph_id: str, failure_id: str, symptom: str) -> str:
     return hashlib.sha256(raw).hexdigest()[:24]
 
 
+def normalize_track(track: str) -> str:
+    if track in {"procurement", "logistics", "production"}:
+        return "procurement-logistics"
+    if track == "integration":
+        return "integration-architecture"
+    if track in {"data", "ai"}:
+        return "ai-data"
+    return track
+
+
 def existing_case_similarity(
-    symptom: str, failure_id: str, cases: list[dict[str, Any]], threshold: float
+    symptom: str, failure_id: str, candidate_track: str, cases: list[dict[str, Any]], threshold: float
 ) -> tuple[float, list[str]]:
     scores: list[tuple[str, float]] = []
+    normalized_candidate_track = normalize_track(candidate_track)
     for case in cases:
         graph_refs = set(case.get("graph_refs", []))
         if failure_id in graph_refs:
             score = 1.0
-        else:
+        elif normalize_track(str(case.get("track", ""))) == normalized_candidate_track:
             title = str(case.get("title", ""))
             prompt = str(case.get("prompt", ""))
             score = max(
@@ -165,6 +176,8 @@ def existing_case_similarity(
                 similarity(symptom, prompt),
                 similarity(symptom, f"{title} {prompt}"),
             )
+        else:
+            score = 0.0
         scores.append((case["id"], score))
     scores.sort(key=lambda item: item[1], reverse=True)
     max_score = scores[0][1] if scores else 0.0
@@ -184,7 +197,7 @@ def build_candidate(
     symptom = str(failure["symptom"]).strip()
     avoid = str(failure.get("avoid", "Do not repair the final symptom before proving the root cause.")).strip()
     expected = build_expected_points(failure)
-    max_similarity, matches = existing_case_similarity(symptom, failure_id, cases, threshold)
+    max_similarity, matches = existing_case_similarity(symptom, failure_id, seed["track"], cases, threshold)
     status = "rejected_duplicate" if matches else "candidate"
     cid = candidate_id(seed["candidate_prefix"], failure_id)
     title = symptom.rstrip(".")
