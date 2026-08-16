@@ -622,11 +622,23 @@
         "/labs/assessment/data/candidate-semantic-review.json"
       ],
       "working_rule": "Reject evidence-backed candidates that repeat an existing Lead reasoning signal. Retain RAW-MCP for human promotion review and reject over-privileged-agent diagnosis as a semantic duplicate of ASSESS-AI-003."
+    },
+    {
+      "id": "LOOP-045",
+      "priority": "P1",
+      "title": "Non-diagnostic reasoning-gap authoring contract",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/reasoning-gaps/",
+        "/labs/assessment/data/reasoning-gap-candidates.json",
+        "scripts/validate_assessment_reasoning_gap_candidates.py"
+      ],
+      "working_rule": "Do not force Design and Challenge gaps through a symptom-to-root-cause generator. Require explicit alternatives, ownership, trade-offs, decision-changing conditions, and source-supported evidence routes while keeping all candidates outside the published manifest."
     }
   ],
   "next_iteration_themes": [
-    "design explicit non-diagnostic authoring contracts for the thin Sales Design and AI/Data Challenge cells",
-    "design separate evidence-backed authoring patterns for Sales Design and AI/Data Challenge instead of relabelling them as Diagnose",
+    "run semantic novelty review on the two new Design and Challenge reasoning-gap candidates before any promotion decision",
+    "prepare one human promotion review packet for the surviving reasoning-gap signals without publishing them automatically",
     "record true human page-review findings separately from automated editorial improvement",
     "select secondary P1 pages by cross-track assessment value instead of processing all routes mechanically"
   ]

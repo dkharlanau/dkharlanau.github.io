@@ -173,6 +173,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "evidence-coverage": ASSESSMENT / "evidence-coverage" / "index.html",
         "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",
         "reasoning-coverage": ASSESSMENT / "reasoning-coverage" / "index.html",
+        "reasoning-gaps": ASSESSMENT / "reasoning-gaps" / "index.html",
         "human-review": ASSESSMENT / "human-review" / "index.html",
         "human-review-findings": ASSESSMENT / "human-review" / "findings" / "index.html",
         "human-review-secondary": ASSESSMENT / "human-review" / "secondary" / "index.html",
@@ -200,6 +201,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
     assert authoring["evidence-coverage"]["route"] == "/labs/assessment/evidence-coverage/"
     assert authoring["promotion-readiness"]["route"] == "/labs/assessment/promotion-readiness/"
     assert authoring["reasoning-coverage"]["route"] == "/labs/assessment/reasoning-coverage/"
+    assert authoring["reasoning-gap-review"]["route"] == "/labs/assessment/reasoning-gaps/"
     assert authoring["human-review"]["route"] == "/labs/assessment/human-review/"
     assert authoring["core-study"]["route"] == "/labs/assessment/core/"
 
@@ -208,7 +210,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044", "LOOP-045"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -597,6 +599,29 @@ def test_ai_agent_diagnose_seed_has_claim_level_primary_evidence() -> None:
 
     result = subprocess.run(
         [sys.executable, "scripts/generate_assessment_candidates.py", "--check"],
+        cwd=ROOT, text=True, capture_output=True, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_non_diagnostic_reasoning_gap_candidates_match_thin_cells_and_stay_unpublished() -> None:
+    gaps = load_json("reasoning-gap-candidates.json")
+    coverage = load_json("reasoning-pressure-coverage.json")
+    manifest = load_json("case-sets.json")
+
+    expected = {(item["track"], item["level"]) for item in coverage["authoring_gaps"]}
+    actual = {(item["track"], item["level"]) for item in gaps["gap_plan"]}
+    assert actual == expected
+    assert gaps["summary"]["published_cases_changed"] == 0
+    assert gaps["summary"]["new_review_candidates"] == 2
+    assert {item["level"] for item in gaps["candidates"]} == {"design", "challenge"}
+    published_ids = set()
+    for case_set in manifest["sets"]:
+        published_ids.update(item["id"] for item in load_jsonl(ROOT / case_set["url"].lstrip("/")))
+    assert not published_ids & {item["id"] for item in gaps["candidates"]}
+
+    result = subprocess.run(
+        [sys.executable, "scripts/validate_assessment_reasoning_gap_candidates.py"],
         cwd=ROOT, text=True, capture_output=True, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
