@@ -1,0 +1,195 @@
+---
+layout: default
+title: "IoT Devices Around ERP — Physical Signal to Business Action"
+description: "A practical Enterprise Context map of scales, sensors, RFID, telematics, PLCs, smart tools, cameras, meters, robots and industrial output devices around SAP."
+permalink: /labs/enterprise-context/iot-devices/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+enterprise_context_graph: true
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags:
+  - sap
+  - iot
+  - logistics
+  - manufacturing
+  - asset-management
+  - integration
+---
+
+{% assign topic = site.data.labs.enterprise_context.topics.iot_devices_erp_integration %}
+{% assign evidence = site.data.labs.enterprise_context.sources.iot_devices %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">IoT Devices</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Enterprise Context / Physical Operations</p>
+      <h1>{{ topic.title }}</h1>
+      <p>{{ topic.summary }}</p>
+      <a class="research-canvas__button" href="#device-map">Open the device map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Research status">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ topic.device_families | size }}</strong><small>Device families</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ topic.integration_patterns | size }}</strong><small>Integration patterns</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary references</small></div>
+      <em>Source checked {{ topic.verified_at }}</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">sensors</span>
+    <p><strong>Working thesis:</strong> {{ topic.thesis }}</p>
+    <p><strong>Memory model:</strong> {{ topic.memory_model.phrase }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Related map</p>
+      <h2>Scanners are one device family inside a larger physical-integration landscape.</h2>
+      <p>The scanner map goes deeper into barcodes, RF, mobile UI and warehouse execution. This page covers the wider device landscape.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/ewm/scanners/"><span>SCAN</span><strong>Warehouse Scanners & Auto-ID</strong><small>Handheld, wearable, fixed scanning, RFID, barcode standards, RF/mobile UI and EWM execution patterns.</small><i class="material-symbols-outlined" aria-hidden="true">qr_code_scanner</i></a>
+      <a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Warehouse Execution</strong><small>Warehouse requests, tasks, orders, resources, automation and integration ownership.</small><i class="material-symbols-outlined" aria-hidden="true">warehouse</i></a>
+      <a href="/labs/enterprise-context/data/iot-devices.json"><span>JSON</span><strong>Machine-readable topic</strong><small>The same device map as structured data for retrieval and agent use.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="memory-model" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead memory model</p>
+      <h2>{{ topic.memory_model.phrase }}</h2>
+      <p>A device should not jump directly from a voltage, tag or coordinate into an ERP posting. Each stage has a different responsibility.</p>
+    </header>
+    <div class="research-route-list">
+      {% for step in topic.memory_model.steps %}
+      <article><span>{{ step.key }}</span><strong>{{ step.question }}</strong><small>{{ step.answer }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Signal classes</p>
+      <h2>Start with the physical fact, not the hardware model.</h2>
+      <p>A camera, scanner and RFID gate can all produce identity. A scale and torque tool both produce measurements. This keeps architecture reusable when hardware changes.</p>
+    </header>
+    <div class="research-route-list">
+      {% for signal in topic.signal_classes %}
+      <article><span>SIG</span><strong>{{ signal.title }}</strong><small>{{ signal.business_meaning }} Examples: {{ signal.examples | join: ", " }}.</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="device-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Device map</p>
+      <h2>Useful IoT devices around ERP and operational SAP processes.</h2>
+      <p>Each device is mapped to its signals, SAP objects, best-fit scenarios, integration options and one design caution.</p>
+    </header>
+    <div class="research-route-list">
+      {% for device in topic.device_families %}
+      <article>
+        <span>DEV</span><strong>{{ device.title }}</strong>
+        <small><b>Signals:</b> {{ device.signals | join: ", " }}. <b>SAP context:</b> {{ device.sap_objects | join: ", " }}.</small>
+        <p><b>Best fit:</b> {{ device.best_fit | join: " · " }}</p>
+        <p><b>Connect:</b> {{ device.integration_options | join: " · " }}</p>
+        <p><b>Design note:</b> {{ device.design_note }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="integration" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration patterns</p>
+      <h2>Seven recurring ways to connect the physical world.</h2>
+      <p>The right pattern depends on frequency, latency, ownership, safety, resilience and how much device-specific behavior SAP should see.</p>
+    </header>
+    <div class="research-route-list">
+      {% for pattern in topic.integration_patterns %}
+      <article><span>INT</span><strong>{{ pattern.title }}</strong><small>{{ pattern.path }}</small><p><b>Use when:</b> {{ pattern.use_when }}</p>{% if pattern.examples %}<p><b>Examples:</b> {{ pattern.examples | join: ", " }}</p>{% endif %}</article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Architecture decision</p>
+      <h2>Choose the lightest boundary that still protects the process.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.decision_guide %}
+      <article><span>→</span><strong>{{ item.need }}</strong><small><b>{{ item.choice }}</b> · {{ item.reason }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Design rules</p>
+      <h2>Most IoT failures start at the boundary between telemetry and business state.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for rule in topic.design_rules %}
+      <article><span>RULE</span><strong>{{ rule.statement }}</strong><small>{{ rule.context }} · Confidence: {{ rule.confidence }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure map</p>
+      <h2>Find the first state where physics and software stopped agreeing.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for failure in topic.failure_modes %}
+      <article><span>!</span><strong>{{ failure.symptom }}</strong><small><b>Check first:</b> {{ failure.check_first }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Synthetic scenarios</p>
+      <h2>Short patterns to remember the architecture.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for scenario in topic.synthetic_scenarios %}
+      <article><span>SCN</span><strong>{{ scenario.title }}</strong><small>{{ scenario.flow }}</small><p><b>Result:</b> {{ scenario.result }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="assessment" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment lens</p>
+      <h2>Lead answers should explain ownership, not only protocols.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for card in topic.assessment_cards %}
+      <article><span>Q</span><strong>{{ card.question }}</strong><small>{{ card.answer }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="sources" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Evidence</p>
+      <h2>Primary references and lifecycle notes.</h2>
+      <p>Current SAP Help verifies Digital Manufacturing Edge, S/4HANA/EWM, Asset Management, APM, TM, Global Track and Trace and Utilities. Older SAP IoT and Auto-ID material is kept only where it explains a still-useful integration pattern.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }}{% if source.release_scope %} · {{ source.release_scope }}{% endif %}{% if source.notes %} · {{ source.notes }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+</div>
