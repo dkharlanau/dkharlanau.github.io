@@ -1,0 +1,90 @@
+---
+layout: default
+title: "Reusable Data Procedures — Building Blocks"
+description: "A composition model for reusable locators, cleaners, parsers, matchers, validators, publishers and exception policies."
+permalink: /reusable-data-procedures/building-blocks/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Building Blocks</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Detail / Composition</p>
+    <h1>Do not copy a good rule into twenty procedures.</h1>
+    <p>Some logic belongs to one procedure. Other logic is a reusable capability: find an Excel table, normalize a SAP identifier, parse a German decimal, assert many-to-one cardinality, or route invalid rows. Those capabilities should become versioned blocks.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/building-blocks/" aria-current="page">Blocks</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Reuse ladder</p><h2>Reuse at the right level.</h2></div>
+    <div class="rdp__model-grid">
+      <article class="rdp__model-card"><span>L1</span><strong>Primitive</strong><p>A small deterministic operation such as trim, cast, compare or hash.</p></article>
+      <article class="rdp__model-card"><span>L2</span><strong>Block</strong><p>A typed reusable capability with parameters, tests and a version.</p></article>
+      <article class="rdp__model-card"><span>L3</span><strong>Pattern</strong><p>A recommended arrangement of blocks for a common data problem.</p></article>
+      <article class="rdp__model-card"><span>L4</span><strong>Procedure</strong><p>An end-to-end business task with explicit source and output contracts.</p></article>
+      <article class="rdp__model-card"><span>L5</span><strong>Pack</strong><p>A curated domain bundle with procedures, blocks, references, fixtures and guidance.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Block families</p><h2>Build a small standard library before allowing endless custom code.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Family</th><th>Examples</th><th>Design concern</th></tr></thead>
+      <tbody>
+        <tr><td>Locator</td><td><code>excel.find-table-by-headers</code>, <code>excel.named-range</code></td><td>Returns evidence and confidence, not only coordinates.</td></tr>
+        <tr><td>Extractor</td><td>region-to-table, repeated-header removal, footer exclusion</td><td>Preserve source coordinates.</td></tr>
+        <tr><td>Cleaner</td><td>trim spaces, null token classifier, identifier canonicalizer</td><td>Keep cleanup separate from business-value changes.</td></tr>
+        <tr><td>Parser</td><td><code>date.parse.de</code>, <code>decimal.parse.eu</code></td><td>Locale and failure policy are explicit.</td></tr>
+        <tr><td>Matcher</td><td>exact key, alias map, fuzzy candidate ranker</td><td>Candidate generation and accepted mapping are separate.</td></tr>
+        <tr><td>Validator</td><td>unique, many-to-one, mapping coverage, control total</td><td>Severity and publication impact are parameters.</td></tr>
+        <tr><td>Publisher</td><td>Excel result, CSV exception file, evidence JSON</td><td>Output contract is stable and testable.</td></tr>
+        <tr><td>Exception policy</td><td>quarantine row, warn, block run, allow with reason</td><td>Failure behavior is reusable too.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Block contract</p><h2>A reusable block needs more than a function name.</h2></div>
+    <pre class="rdp__code-note"><code>{
+  "id": "sap.normalize-material-id",
+  "version": "2.1.0",
+  "family": "cleaner",
+  "input": {"type": "string"},
+  "output": {"type": "string"},
+  "parameters": {"length": 18, "preserveRaw": true},
+  "properties": ["deterministic", "idempotent"],
+  "tests": ["already-normalized", "leading-zeros", "null", "invalid-length"],
+  "owner": "data-platform",
+  "risk": "medium"
+}</code></pre>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Composition rules</p><h2>Make the graph explainable.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Pin versions</strong><p>An approved procedure references a specific compatible block version. “Latest” is convenient until latest changes on Friday afternoon.</p></article>
+      <article><strong>Prefer pure blocks</strong><p>A block should normally transform input to output without hidden filesystem, network or global-state effects.</p></article>
+      <article><strong>Declare side effects</strong><p>If a block writes a file, calls an API or reads reference data, this belongs in its contract.</p></article>
+      <article><strong>Test properties</strong><p>For cleaners, idempotence is valuable. For joins, cardinality invariants matter. Test the property, not only three sample values.</p></article>
+      <article><strong>Keep custom code visible</strong><p>Custom Python is allowed as an escape hatch, but it gets an owner, tests, risk classification and dependency review.</p></article>
+      <article><strong>Promote repeated logic</strong><p>If the same implementation appears in three procedures, review whether it should become a block. Not every two-line expression deserves a tiny kingdom.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Patterns</p><h2>Capture proven arrangements, not only atoms.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Lookup enrichment</strong><p>Locate → canonicalize key → assert target uniqueness → join → coverage validation → route unmatched rows.</p></article>
+      <article><strong>Workbook extraction</strong><p>Inspect workbook → score candidate sheet → locate header → detect region → remove repeated headers → preserve coordinates.</p></article>
+      <article><strong>Monthly reconciliation</strong><p>Resolve current inputs → normalize IDs → aggregate controls → compare → classify differences → publish result and evidence.</p></article>
+      <article><strong>Migration quality gate</strong><p>Schema contract → mandatory fields → domains → references → duplicates → reconciliation → blocking decision.</p></article>
+    </div>
+  </section>
+</div>
