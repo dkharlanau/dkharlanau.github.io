@@ -15,6 +15,10 @@ It intentionally emits no visible homepage content.
 {% assign graph_primary_key = page.primary_topic | default: page.primary_entity %}
 {% assign graph_primary = graph_entities[graph_primary_key] %}
 {% assign graph_modified = page.last_reviewed | default: page.last_modified_at | default: page.updated %}
+{% assign graph_type = page.structured_data.type | default: 'WebPage' %}
+{% if page.url contains '/labs/' and graph_type == 'WebPage' %}{% assign graph_type = 'TechArticle' %}{% endif %}
+{% assign graph_node_suffix = 'knowledge-page' %}
+{% if graph_type == 'TechArticle' or graph_type == 'Article' %}{% assign graph_node_suffix = 'knowledge-article' %}{% endif %}
 
 {% if graph_indexable and graph_reviewed and page.url != '/' %}
 <script type="application/ld+json">
@@ -22,15 +26,17 @@ It intentionally emits no visible homepage content.
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebPage",
-      "@id": "{{ graph_url }}#knowledge-page",
+      "@type": {{ graph_type | jsonify }},
+      "@id": "{{ graph_url }}#{{ graph_node_suffix }}",
       "url": "{{ graph_url }}",
-      "name": {{ page.title | jsonify }},
+      {% if graph_type == 'TechArticle' or graph_type == 'Article' %}"headline": {{ page.title | jsonify }},{% else %}"name": {{ page.title | jsonify }},{% endif %}
       "description": {{ page.description | default: page.summary | strip_html | normalize_whitespace | truncate: 300, '' | jsonify }},
       "author": {"@id": "{{ graph_author_id }}"},
       "creator": {"@id": "{{ graph_author_id }}"},
+      "mainEntityOfPage": {"@id": "{{ graph_url }}#webpage"},
       "isPartOf": {"@id": "{{ '/' | absolute_url }}#website"}{% if graph_modified %},
-      "dateModified": "{{ graph_modified | date_to_xmlschema }}"{% endif %}{% if graph_primary %},
+      "dateModified": "{{ graph_modified | date_to_xmlschema }}"{% endif %}{% if page.last_reviewed %},
+      "reviewedBy": {"@id": "{{ graph_author_id }}"}{% endif %}{% if graph_primary %},
       "about": {"@id": "{{ graph_primary.id | absolute_url }}#entity"}{% endif %}{% if page.entity_mentions and page.entity_mentions.size > 0 %},
       "mentions": [
         {% for entity_key in page.entity_mentions %}
@@ -38,7 +44,11 @@ It intentionally emits no visible homepage content.
         {% if entity %}{"@id": "{{ entity.id | absolute_url }}#entity"}{% else %}{"@type":"Thing","name":{{ entity_key | replace: '-', ' ' | jsonify }}}{% endif %}{% unless forloop.last %},{% endunless %}
         {% endfor %}
       ]{% endif %}{% if page.ai_sidecar %},
-      "subjectOf": {"@type":"DataDownload","contentUrl":"{{ page.ai_sidecar | absolute_url }}","encodingFormat":"application/json"}{% endif %}
+      "subjectOf": {"@type":"DataDownload","contentUrl":"{{ page.ai_sidecar | absolute_url }}","encodingFormat":"application/json"}{% endif %}{% if page.source_links and page.source_links.size > 0 %},
+      "citation": [
+        {% for source in page.source_links %}{"@type":"WebPage","name":{{ source.title | default: source.url | jsonify }},"url":{{ source.url | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}
+      ]{% endif %}{% if page.semantic_links and page.semantic_links.size > 0 %},
+      "relatedLink": [{% for relation in page.semantic_links %}{{ relation.url | absolute_url | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}]{% endif %}
     }{% if graph_primary %},
     {
       "@type": {{ graph_primary.type | default: 'Thing' | jsonify }},
