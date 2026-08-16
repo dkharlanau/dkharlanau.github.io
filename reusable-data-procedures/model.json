@@ -1,0 +1,112 @@
+{
+  "id": "reusable-data-procedures",
+  "title": "Reusable Data Procedures",
+  "version": "1.0",
+  "status": "prototype",
+  "purpose": "Turn repeated spreadsheet and corporate-export analysis into explicit, testable procedures that can be reused on later file sets.",
+  "workflow": [
+    {
+      "step": 1,
+      "id": "files",
+      "input": ["csv", "xlsx", "xls", "xlsb", "ods", "tsv"],
+      "output": "parsed_tables",
+      "responsibility": "Load one or more files and expose worksheets as table candidates."
+    },
+    {
+      "step": 2,
+      "id": "discover",
+      "input": "parsed_tables",
+      "output": "profiles_and_key_candidates",
+      "responsibility": "Infer column types, completeness, uniqueness, likely keys, and value samples."
+    },
+    {
+      "step": 3,
+      "id": "map",
+      "input": "profiles_and_key_candidates",
+      "output": "mapping_hypotheses",
+      "responsibility": "Rank cross-table field relations using header similarity, value overlap, and type compatibility. Human approval remains explicit."
+    },
+    {
+      "step": 4,
+      "id": "validate",
+      "input": "approved_mappings",
+      "output": "validation_evidence",
+      "responsibility": "Measure source coverage, source nulls, target duplicates, and unmatched values against the current rows."
+    },
+    {
+      "step": 5,
+      "id": "result",
+      "input": ["parsed_tables", "approved_mappings"],
+      "output": "joined_preview",
+      "responsibility": "Build an inspectable lookup result and keep the transformation direction visible."
+    },
+    {
+      "step": 6,
+      "id": "save-procedure",
+      "input": ["source_signatures", "approved_mappings", "validation_policy"],
+      "output": "reusable_procedure",
+      "responsibility": "Store logic and structural expectations without storing uploaded business data."
+    }
+  ],
+  "entities": {
+    "source_signature": {
+      "identity": ["fileStem", "sheetName"],
+      "structure": ["expectedColumns.name", "expectedColumns.type", "expectedColumns.likelyKey"],
+      "note": "A later run resolves a saved source against newly uploaded tables by structural similarity, not only by an exact file name."
+    },
+    "column_profile": {
+      "attributes": ["name", "type", "completeness", "uniqueness", "likelyKey", "samples"]
+    },
+    "mapping": {
+      "direction": "source field -> lookup target field",
+      "evidence": ["header_similarity", "value_overlap", "type_compatibility"],
+      "approval": "explicit_human_selection"
+    },
+    "validation": {
+      "metrics": ["coverage", "source_null_rate", "target_duplicate_rate", "unmatched_examples"],
+      "states": ["strong", "review", "weak"]
+    },
+    "procedure": {
+      "stores": ["source_signatures", "mappings", "validation_policy", "purpose", "timestamps"],
+      "does_not_store": ["uploaded_rows", "business_values", "result_rows"]
+    }
+  },
+  "mapping_scoring": {
+    "header_similarity_weight": 0.45,
+    "value_overlap_weight": 0.45,
+    "type_compatibility_weight": 0.1,
+    "automatic_enable_rule": "score >= 0.62 or value overlap >= 0.80",
+    "interpretation": "A suggestion is a hypothesis, not a semantic truth. Business meaning must be confirmed before reuse."
+  },
+  "validation_defaults": {
+    "minimum_coverage": 0.9,
+    "target_key_preference": "unique-or-review",
+    "strict_column_names": true
+  },
+  "runtime": {
+    "location": "browser",
+    "server_upload_api": false,
+    "procedure_storage": "localStorage",
+    "procedure_export": "json",
+    "result_export": "csv",
+    "spreadsheet_parser": "SheetJS Community Edition standalone browser build"
+  },
+  "use_cases": [
+    "SAP transactional exports joined to master data",
+    "master-data reconciliation across source systems",
+    "vendor or customer file normalization",
+    "monthly operational report enrichment",
+    "migration extract checks",
+    "repeatable data-quality controls"
+  ],
+  "boundaries": [
+    "The prototype does not infer business semantics beyond observable structure and values.",
+    "Duplicate target keys require review because the result preview uses the first matching row.",
+    "Procedures saved in localStorage are browser-local until exported as JSON.",
+    "Production use with sensitive data requires an approved dependency, security, privacy, and deployment model."
+  ],
+  "machine_endpoints": {
+    "procedure_schema": "/reusable-data-procedures/procedure.schema.json",
+    "workbench": "/reusable-data-procedures/"
+  }
+}
