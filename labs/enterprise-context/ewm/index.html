@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP EWM — Deployment & Warehouse Execution Map"
-description: "A Lead-level map of Embedded and Decentralized SAP EWM, warehouse domains, objects, determinations, processes, production, automation and integration boundaries."
+description: "A Lead-level map of Embedded and Decentralized SAP EWM, warehouse domains, objects, determinations, processes, production, automation, mobility, handling units and integration boundaries."
 permalink: /labs/enterprise-context/ewm/
 status: reviewed
 verified: true
@@ -29,6 +29,18 @@ ai_sidecar: "/ai/pages/labs--enterprise-context--ewm.json"
 entity_mentions:
   - "sap-integration"
 semantic_links:
+  - type: "Deep dive"
+    title: "EWM Automation & MFS — Control Boundary Map"
+    url: "/labs/enterprise-context/ewm/automation/"
+  - type: "Deep dive"
+    title: "Handling Units, Packing & Labels — EWM Decision Map"
+    url: "/labs/enterprise-context/ewm/handling-units-packing/"
+  - type: "Deep dive"
+    title: "Warehouse Mobility — Execution Channel Map"
+    url: "/labs/enterprise-context/ewm/mobility/"
+  - type: "Deep dive"
+    title: "Warehouse Scanners & Auto-ID — SAP Solution Map"
+    url: "/labs/enterprise-context/ewm/scanners/"
   - type: "Related topic"
     title: "Automotive JIT / JIS — Enterprise Context Lab"
     url: "/labs/enterprise-context/automotive-jit/"
@@ -131,6 +143,10 @@ source_links:
       <a href="/labs/enterprise-context/ewm/objects/"><span>OBJ</span><strong>EWM Object Catalog</strong><small>Demand objects, WT/WO/waves, stock and HUs, warehouse structure, shipping objects, quality, VAS, labor and automation objects.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/labs/enterprise-context/ewm/controls/"><span>DET</span><strong>EWM Determination & Control Plane</strong><small>WPT, storage control, putaway, stock removal, wave, WOCR/queue, staging and door, packing, replenishment and PSA decisions.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/enterprise-context/ewm/integrations/"><span>INT</span><strong>EWM Integration Architecture</strong><small>Embedded and decentralized S/4HANA, SD, MM, TM, PP, QM, MES/Digital Manufacturing, MFS/PLC, WCS/WCU and monitoring boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/enterprise-context/ewm/automation/"><span>AUTO</span><strong>EWM Automation & MFS</strong><small>MFS, WCS/WCU, PLC ownership, communication points, telegram controls, recovery and automation KPIs.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/labs/enterprise-context/ewm/handling-units-packing/"><span>HU</span><strong>Handling Units, Packing & Labels</strong><small>HU identity and hierarchy, packaging specifications, work-center packing, reprint and physical/digital reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/labs/enterprise-context/ewm/mobility/"><span>MOB</span><strong>Warehouse Mobility</strong><small>EWM RF, standard mobile, custom mobile, shared devices, connectivity, offline limits and fleet controls.</small><i class="material-symbols-outlined" aria-hidden="true">devices</i></a>
+      <a href="/labs/enterprise-context/ewm/scanners/"><span>SCAN</span><strong>Warehouse Scanners & Auto-ID</strong><small>Device choice, GS1 parsing, label lifecycle, scanner integration, UX, connectivity and operational KPIs.</small><i class="material-symbols-outlined" aria-hidden="true">barcode_scanner</i></a>
     </div>
   </section>
 
@@ -269,6 +285,7 @@ source_links:
       <article><span>MFS</span><strong>{{ graph.rf_and_automation.mfs.title }}</strong><small>{{ graph.rf_and_automation.mfs.role }} Objects: {{ graph.rf_and_automation.mfs.objects | join: ", " }}. {{ graph.rf_and_automation.mfs.lead_lens }}</small></article>
       <article><span>WCS</span><strong>{{ graph.rf_and_automation.external_wcs.title }}</strong><small>{{ graph.rf_and_automation.external_wcs.role }} {{ graph.rf_and_automation.external_wcs.lead_lens }}</small></article>
     </div>
+    <p><a href="/labs/enterprise-context/ewm/automation/">Open Automation & MFS →</a> · <a href="/labs/enterprise-context/ewm/mobility/">Open Warehouse Mobility →</a></p>
   </section>
 
   <section class="research-canvas__inventory" id="failures" data-reveal>
@@ -333,6 +350,6 @@ source_links:
       <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SRC</span><strong>{{ source.title }}</strong><small>{{ source.product_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       {% endfor %}
     </div>
-    <p><a href="/labs/enterprise-context/data/ewm-graph.json">Core graph JSON</a> · <a href="/labs/enterprise-context/data/ewm-domains.json">Domain map JSON</a> · <a href="/labs/enterprise-context/data/ewm-objects.json">Object catalog JSON</a> · <a href="/labs/enterprise-context/data/ewm-controls.json">Control plane JSON</a> · <a href="/labs/enterprise-context/data/ewm-integrations.json">Integration map JSON</a> · <a href="/labs/enterprise-context/data/ewm-sources.json">Source registry</a></p>
+    <p><a href="/labs/enterprise-context/data/ewm-graph.json">Core graph JSON</a> · <a href="/labs/enterprise-context/data/ewm-domains.json">Domain map JSON</a> · <a href="/labs/enterprise-context/data/ewm-objects.json">Object catalog JSON</a> · <a href="/labs/enterprise-context/data/ewm-controls.json">Control plane JSON</a> · <a href="/labs/enterprise-context/data/ewm-integrations.json">Integration map JSON</a> · <a href="/labs/enterprise-context/data/ewm-sources.json">Source registry</a> · <a href="/labs/enterprise-context/data/topics.json">Research topics JSON</a></p>
   </section>
 </div>
