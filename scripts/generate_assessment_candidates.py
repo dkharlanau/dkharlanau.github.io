@@ -11,6 +11,8 @@ from typing import Any
 
 import yaml
 
+from assessment_candidate_evidence import validate_seed_evidence_contract
+
 ROOT = Path(__file__).resolve().parents[1]
 ASSESSMENT_DATA = ROOT / "labs" / "assessment" / "data"
 SEEDS_PATH = ASSESSMENT_DATA / "candidate-generation-seeds.json"
@@ -191,6 +193,7 @@ def build_candidate(
     failure_id: str,
     source_refs: list[str],
     cases: list[dict[str, Any]],
+    evidence_gate: dict[str, Any],
     threshold: float,
 ) -> dict[str, Any]:
     failure = failure_by_id(graph, failure_id)
@@ -228,6 +231,7 @@ def build_candidate(
         "human_refs": [seed["human_ref"]],
         "source_refs": source_refs,
         "evidence_map": build_evidence_map(failure_id, source_refs, len(expected)),
+        "evidence_gate": evidence_gate,
         "generation_reason": (
             f"Rejected before review because the failure symptom overlaps published case(s): {', '.join(matches)}."
             if matches
@@ -248,9 +252,11 @@ def generate() -> dict[str, Any]:
     cases = existing_cases()
     sources = known_source_ids()
     threshold = float(seeds["dedup_threshold"])
+    evidence_gates = validate_seed_evidence_contract(ROOT, seeds)
     candidates: list[dict[str, Any]] = []
 
     for seed in seeds["graphs"]:
+        seed_gate = evidence_gates[seed["path"]]
         graph_path = ROOT / seed["path"]
         graph = load_yaml(graph_path)
         if not isinstance(graph, dict) or not graph.get("id"):
@@ -259,7 +265,7 @@ def generate() -> dict[str, Any]:
             missing_sources = sorted(set(source_refs) - sources)
             if missing_sources:
                 raise ValueError(f"Unknown source refs for {failure_id}: {missing_sources}")
-            candidate = build_candidate(graph, seed, failure_id, list(source_refs), cases, threshold)
+            candidate = build_candidate(graph, seed, failure_id, list(source_refs), cases, seed_gate, threshold)
             candidates.append(candidate)
 
     candidates.sort(key=lambda item: item["id"])
@@ -273,10 +279,17 @@ def generate() -> dict[str, Any]:
 
     return {
         "id": "sap-lead-question-candidate-inventory",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "updated_at": seeds["updated_at"],
         "published_case_count": len(cases),
         "publication_boundary": "Candidate inventory is review-stage only and is not referenced by case-sets.json.",
+        "evidence_gate": {
+            "policy": "/labs/assessment/data/evidence-profile.json",
+            "factual_review": "/labs/assessment/data/factual-review.json",
+            "eligible_seed_graphs": len(evidence_gates),
+            "blocked_seed_graphs": 0,
+            "all_emitted_candidates_evidence_eligible": True,
+        },
         "candidate_count": sum(item["status"] == "candidate" for item in candidates),
         "rejected_duplicate_count": sum(item["status"] == "rejected_duplicate" for item in candidates),
         "items": candidates,

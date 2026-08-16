@@ -194,7 +194,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -328,4 +328,26 @@ def test_broad_required_evidence_debt_is_closed_without_forcing_authored_diagnos
     assert profile["route_overrides"]["/labs/enterprise-context/sales-diagnostics/"]["counts_as_source_review_debt"] is False
     assert by_route["/labs/enterprise-context/sales-diagnostics/"]["priority"] == "P2"
     assert by_route["/labs/enterprise-context/data-governance/"]["factual_review"]["status"] == "source_supported"
+
+def test_candidate_generation_fails_closed_behind_evidence_gate() -> None:
+    inventory = load_json("question-candidates.json")
+    seeds = load_json("candidate-generation-seeds.json")
+    profile = load_json("evidence-profile.json")
+    factual = load_json("factual-review.json")
+
+    assert inventory["evidence_gate"]["all_emitted_candidates_evidence_eligible"] is True
+    assert inventory["evidence_gate"]["blocked_seed_graphs"] == 0
+    assert inventory["evidence_gate"]["eligible_seed_graphs"] == len(seeds["graphs"])
+    assert all(item["evidence_gate"]["eligible"] is True for item in inventory["items"])
+    assert all(item["evidence_gate"]["source_status"] == "source_verified" for item in inventory["items"])
+    assert all(item["evidence_gate"]["verified_source_count"] > 0 for item in inventory["items"])
+
+    factual_routes = {item["route"]: item for item in factual["routes"]}
+    for seed in seeds["graphs"]:
+        evidence_class = seed["evidence_class"]
+        override = profile["route_overrides"].get(seed["human_ref"])
+        route_profile = override or profile["defaults"]["enterprise_context"]
+        assert evidence_class in route_profile["expected_evidence_classes"]
+        if route_profile["counts_as_source_review_debt"]:
+            assert seed["human_ref"] in factual_routes
 

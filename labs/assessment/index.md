@@ -51,7 +51,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Authoring control</p><h2>Claims and questions enter through evidence and review.</h2><p>Question candidates are generated from whitelisted graph evidence. Release-sensitive SAP claims now have a separate primary-source review layer before any page-level verification or publication decision.</p></header>
+    <header><p class="research-canvas__eyebrow">Authoring control</p><h2>Claims and questions enter through evidence and review.</h2><p>Question candidates are generated only from whitelisted graph evidence that passes the route evidence profile, factual-review state, and source-verification gate. Release-sensitive SAP claims remain separate from page-level verification or publication decisions.</p></header>
     <div class="research-route-list">
       <a href="/labs/assessment/question-review/"><span>AUTHOR</span><strong>Question Candidate Review</strong><small>Inspect graph evidence, source refs, duplicate checks, and local review decisions before any case promotion.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/assessment/factual-review/"><span>FACT</span><strong>Factual Review</strong><small>Check release-sensitive SAP claims against primary sources and record product and release scope.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
@@ -173,7 +173,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/data/factual-review.json"><span>63</span><strong>Factual Review Registry</strong><small>Sixty-three source-supported product claims across twenty-six SAP routes; page verification remains unchanged.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/labs/assessment/data/evidence-coverage.json"><span>COVER</span><strong>Evidence Coverage Dataset</strong><small>Track-level source-review coverage, cross-track P0 debt, and data-driven next-focus ranking.</small><i class="material-symbols-outlined" aria-hidden="true">analytics</i></a>
       <a href="/labs/assessment/data/evidence-profile.json"><span>CLASS</span><strong>Evidence Profile</strong><small>Route-level expectations for SAP product sources, standards, research, and explicit author heuristics.</small><i class="material-symbols-outlined" aria-hidden="true">category</i></a>
-      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-025 are complete; broad required evidence debt is closed and the next gate is page-level human review.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
+      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-026 are complete; broad evidence debt is closed and candidate generation now fails closed on incomplete evidence.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
   </section>
 

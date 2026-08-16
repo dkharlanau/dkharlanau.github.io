@@ -369,12 +369,27 @@
         "/labs/enterprise-context/sales-diagnostics/"
       ],
       "working_rule": "Complete source review where product evidence is a required gate, and explicitly classify authored diagnostic reasoning instead of forcing it into a product-fact model."
+    },
+    {
+      "id": "LOOP-026",
+      "priority": "P1",
+      "title": "Evidence-gated assessment candidate generation",
+      "status": "done",
+      "outputs": [
+        "scripts/assessment_candidate_evidence.py",
+        "scripts/generate_assessment_candidates.py",
+        "/labs/assessment/data/candidate-generation-seeds.json",
+        "/labs/assessment/data/candidate-question-schema.json",
+        "/labs/assessment/data/question-generation.json",
+        "/labs/assessment/data/question-candidates.json"
+      ],
+      "working_rule": "Fail candidate generation before question construction when the route evidence profile, factual-review state, or source verification is incomplete. Evidence eligibility never publishes a case automatically."
     }
   ],
   "next_iteration_themes": [
-    "start page-level human review on source-supported P1 routes without auto-publishing",
-    "prioritize human review by assessment importance, release sensitivity, and feedback signals",
-    "add standards or original research to selective routes only when an external claim actually needs it",
-    "use evidence-class completeness as a quality gate for question generation and publication recommendations"
+    "extend graph-backed candidate generation into evidence-complete gaps and keep aggressive duplicate rejection",
+    "start page-level human review of source-supported P1 routes",
+    "use real feedback to influence practice selection without changing factual truth",
+    "add standards or primary research to selective routes only for externally checkable claims"
   ]
 }

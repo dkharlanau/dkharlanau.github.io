@@ -1,8 +1,8 @@
 {
   "id": "sap-lead-candidate-generation-seeds",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
-  "purpose": "Whitelist graph failure modes and their primary-source evidence for deterministic assessment-question candidate generation.",
+  "purpose": "Whitelist graph failure modes, their evidence class, and primary-source references for deterministic assessment-question candidate generation.",
   "graphs": [
     {
       "path": "_data/labs/enterprise_context/graphs/billing.yml",
@@ -11,14 +11,35 @@
       "level": "diagnose",
       "candidate_prefix": "CAND-BIL",
       "failure_sources": {
-        "FAIL-SD-BILLING-NOT-DUE": ["SRC-SAP-BIL-DUE-LIST", "SRC-SAP-BIL-PROCESSING"],
-        "FAIL-SD-BILLING-WRONG-REFERENCE": ["SRC-SAP-BIL-COPYING-CONTROL", "SRC-SAP-BIL-PROCESSING"],
-        "FAIL-SD-BILLING-SPLIT": ["SRC-SAP-BIL-SPLIT", "SRC-SAP-BIL-SPLIT-ANALYSIS"],
-        "FAIL-SD-BILLING-PRICE": ["SRC-SAP-BIL-PRICING"],
-        "FAIL-SD-BILLING-FI": ["SRC-SAP-BIL-ACCOUNT-DETERMINATION", "SRC-SAP-BIL-TYPE"],
-        "FAIL-SD-BILLING-EXTERNAL": ["SRC-SAP-BIL-EDOCUMENT"],
-        "FAIL-SD-BILLING-CORRECTION": ["SRC-SAP-BIL-CREDIT-DEBIT", "SRC-SAP-BIL-CANCEL-API", "SRC-SAP-BIL-PROCESSING"]
-      }
+        "FAIL-SD-BILLING-NOT-DUE": [
+          "SRC-SAP-BIL-DUE-LIST",
+          "SRC-SAP-BIL-PROCESSING"
+        ],
+        "FAIL-SD-BILLING-WRONG-REFERENCE": [
+          "SRC-SAP-BIL-COPYING-CONTROL",
+          "SRC-SAP-BIL-PROCESSING"
+        ],
+        "FAIL-SD-BILLING-SPLIT": [
+          "SRC-SAP-BIL-SPLIT",
+          "SRC-SAP-BIL-SPLIT-ANALYSIS"
+        ],
+        "FAIL-SD-BILLING-PRICE": [
+          "SRC-SAP-BIL-PRICING"
+        ],
+        "FAIL-SD-BILLING-FI": [
+          "SRC-SAP-BIL-ACCOUNT-DETERMINATION",
+          "SRC-SAP-BIL-TYPE"
+        ],
+        "FAIL-SD-BILLING-EXTERNAL": [
+          "SRC-SAP-BIL-EDOCUMENT"
+        ],
+        "FAIL-SD-BILLING-CORRECTION": [
+          "SRC-SAP-BIL-CREDIT-DEBIT",
+          "SRC-SAP-BIL-CANCEL-API",
+          "SRC-SAP-BIL-PROCESSING"
+        ]
+      },
+      "evidence_class": "sap_product_primary"
     },
     {
       "path": "_data/labs/enterprise_context/graphs/integration_operations.yml",
@@ -27,17 +48,40 @@
       "level": "diagnose",
       "candidate_prefix": "CAND-INTOPS",
       "failure_sources": {
-        "INTOPS-FAIL-GREEN-NO-BUSINESS": ["SRC-SAP-INTOPS-CI-MONITOR", "SRC-SAP-INTOPS-ERROR-DESIGN"],
-        "INTOPS-FAIL-DUPLICATE": ["SRC-SAP-INTOPS-EXACTLY-ONCE", "SRC-SAP-INTOPS-QUEUES"],
-        "INTOPS-FAIL-ORDER": ["SRC-SAP-INTOPS-QRFC", "SRC-SAP-INTOPS-BGRFC"],
-        "INTOPS-FAIL-RETRY-STORM": ["SRC-SAP-INTOPS-ERROR-DESIGN", "SRC-SAP-INTOPS-QUEUES"],
-        "INTOPS-FAIL-PARTIAL-COMMIT": ["SRC-SAP-INTOPS-EXACTLY-ONCE", "SRC-SAP-INTOPS-AIF-ERROR"],
-        "INTOPS-FAIL-QUEUE-BLOCK": ["SRC-SAP-INTOPS-QRFC", "SRC-SAP-INTOPS-QRFC-STATUS"],
-        "INTOPS-FAIL-OWNERSHIP": ["SRC-SAP-INTOPS-AIF-ERROR", "SRC-SAP-INTOPS-ERROR-DESIGN"]
-      }
+        "INTOPS-FAIL-GREEN-NO-BUSINESS": [
+          "SRC-SAP-INTOPS-CI-MONITOR",
+          "SRC-SAP-INTOPS-ERROR-DESIGN"
+        ],
+        "INTOPS-FAIL-DUPLICATE": [
+          "SRC-SAP-INTOPS-EXACTLY-ONCE",
+          "SRC-SAP-INTOPS-QUEUES"
+        ],
+        "INTOPS-FAIL-ORDER": [
+          "SRC-SAP-INTOPS-QRFC",
+          "SRC-SAP-INTOPS-BGRFC"
+        ],
+        "INTOPS-FAIL-RETRY-STORM": [
+          "SRC-SAP-INTOPS-ERROR-DESIGN",
+          "SRC-SAP-INTOPS-QUEUES"
+        ],
+        "INTOPS-FAIL-PARTIAL-COMMIT": [
+          "SRC-SAP-INTOPS-EXACTLY-ONCE",
+          "SRC-SAP-INTOPS-AIF-ERROR"
+        ],
+        "INTOPS-FAIL-QUEUE-BLOCK": [
+          "SRC-SAP-INTOPS-QRFC",
+          "SRC-SAP-INTOPS-QRFC-STATUS"
+        ],
+        "INTOPS-FAIL-OWNERSHIP": [
+          "SRC-SAP-INTOPS-AIF-ERROR",
+          "SRC-SAP-INTOPS-ERROR-DESIGN"
+        ]
+      },
+      "evidence_class": "sap_product_primary"
     }
   ],
   "dedup_threshold": 0.55,
   "dedup_rule": "Exact graph-ref overlap is a duplicate across all tracks. Lexical similarity is evaluated only against published cases in the same normalized assessment track.",
-  "publication_rule": "Generated records never enter case-sets.json automatically. Only a separately reviewed and promoted case can become part of the published assessment dataset."
+  "publication_rule": "Generated records never enter case-sets.json automatically. Only a separately reviewed and promoted case can become part of the published assessment dataset.",
+  "evidence_gate_rule": "A seed graph is eligible only when its evidence class is allowed by the route profile, required factual review is source-supported, and every referenced source is source_verified."
 }
