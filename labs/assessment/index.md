@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Assessment Lab — Reasoning Routes"
-description: "A practical assessment route for SAP Lead preparation across Sales, Procurement, Production, Quality, Logistics, Integration, AI, data, diagnostics, and architecture decisions."
+description: "A practical assessment route for SAP Lead preparation across Sales, Procurement, Production, Quality, Inventory, Logistics, Integration, AI, data, diagnostics, and architecture decisions."
 permalink: /labs/assessment/
 status: draft
 verified: false
@@ -26,7 +26,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <p>Current practice model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Assessment tracks</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>5</strong><small>Reasoning levels</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>24</strong><small>Structured practice cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>28</strong><small>Structured practice cases</small></div>
       <em>Draft route. Missing coverage stays visible instead of hiding behind a long topic list.</em>
     </div>
   </header>
@@ -68,6 +68,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/enterprise-context/procurement/"><span>P2P</span><strong>Procurement Decision Map</strong><small>Demand, source, item behavior, account assignment, price, approval, receipt, invoice, and GR/IR.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
       <a href="/labs/enterprise-context/production/"><span>PP</span><strong>Production Planning & Execution</strong><small>Demand, MRP, production method, order, staging, confirmation, goods receipt, and settlement.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
       <a href="/labs/enterprise-context/quality-management/"><span>QM</span><strong>Quality Management</strong><small>Inspection trigger, lot, specification, results, usage decision, stock disposition, follow-up, and certificate boundary.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Inventory Management</strong><small>Business event, movement semantics, stock state, valuation, reservations, physical inventory, EWM handoff, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
       <a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Extended Warehouse Management</strong><small>Warehouse domains, execution objects, controls, interfaces, and ownership boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">warehouse</i></a>
       <a href="/labs/enterprise-context/transportation-management/"><span>TM</span><strong>Transportation Management</strong><small>Demand, freight units, planning, freight orders, execution, charges, and settlement.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
       <a href="/labs/enterprise-context/logistics-capabilities/"><span>X</span><strong>Cross-Process Logistics Capabilities</strong><small>Batch, handling units, serials, packaging, and shared logistics ownership.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
@@ -111,8 +112,8 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Coverage</p><h2>Strong areas and the next gaps.</h2><p>A visible backlog is more useful than a suspiciously perfect competence matrix.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Strong now</h4><ul><li>Sales processes and decision engines</li><li>Procurement, Production Planning and Quality Management</li><li>EWM, TM and cross-process logistics</li><li>Integration, development and deployment choices</li><li>MDG, Business AI and AI architecture</li></ul></div>
-      <div><h4>Next P0</h4><ul><li>Inventory Management</li><li>Billing and revenue handoff</li></ul></div>
+      <div><h4>Strong now</h4><ul><li>Sales processes and decision engines</li><li>Procurement, Production Planning, Quality and Inventory Management</li><li>EWM, TM and cross-process logistics</li><li>Integration, development and deployment choices</li><li>MDG, Business AI and AI architecture</li></ul></div>
+      <div><h4>Next P0</h4><ul><li>Billing and revenue handoff</li></ul></div>
       <div><h4>Next P1</h4><ul><li>FI/CO touchpoints for logisticians</li><li>Automotive JIT and JIS</li><li>Integration operations and recovery</li><li>Cross-process Lead cases</li></ul></div>
     </div>
   </section>
@@ -120,9 +121,10 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Machine-readable practice</p><h2>The same route can be used by a person or an assessment agent.</h2><p>Case sets carry expected points, follow-ups, red flags, graph references, and human references.</p></header>
     <div class="research-route-list">
-      <a href="/labs/assessment/data/case-sets.json"><span>SET</span><strong>Case set manifest</strong><small>24 cases across core and Quality Management datasets.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/data/case-sets.json"><span>SET</span><strong>Case set manifest</strong><small>28 cases across core, Quality Management, and Inventory Management datasets.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/labs/assessment/data/cases.jsonl"><span>JSONL</span><strong>Core assessment cases</strong><small>Sales, Procurement, Production, Logistics, Integration, Data and AI.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/assessment/data/qm-cases.jsonl"><span>QM</span><strong>Quality Management cases</strong><small>Inspection trigger, disposition, stock, and customer-evidence scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/data/inventory-cases.jsonl"><span>IM</span><strong>Inventory Management cases</strong><small>Movement semantics, stock state, transfer, physical inventory, and EWM-boundary scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/assessment/data/scoring.json"><span>SCORE</span><strong>Scoring contract</strong><small>Seven dimensions, 21 points maximum, and Lead-level signals.</small><i class="material-symbols-outlined" aria-hidden="true">score</i></a>
       <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development backlog</strong><small>Prioritized gaps and done definitions for the next Lab iterations.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
