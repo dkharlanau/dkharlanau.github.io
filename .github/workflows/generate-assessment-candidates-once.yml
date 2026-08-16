@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Strengthen structural duplicate detection
+      - name: Scope lexical duplicate detection by track
         shell: bash
         run: |
           python3 - <<'PY'
@@ -26,15 +26,15 @@ jobs:
 
           path = Path('scripts/generate_assessment_candidates.py')
           text = path.read_text(encoding='utf-8')
-          old = '''def existing_case_similarity(symptom: str, cases: list[dict[str, Any]], threshold: float) -> tuple[float, list[str]]:\n    scores: list[tuple[str, float]] = []\n    for case in cases:\n        comparison = f"{case.get('title', '')} {case.get('prompt', '')}"\n        score = similarity(symptom, comparison)\n        scores.append((case["id"], score))\n    scores.sort(key=lambda item: item[1], reverse=True)\n    max_score = scores[0][1] if scores else 0.0\n    matches = [case_id for case_id, score in scores if score >= threshold]\n    return max_score, matches\n'''
-          new = '''def existing_case_similarity(\n    symptom: str, failure_id: str, cases: list[dict[str, Any]], threshold: float\n) -> tuple[float, list[str]]:\n    scores: list[tuple[str, float]] = []\n    for case in cases:\n        graph_refs = set(case.get("graph_refs", []))\n        if failure_id in graph_refs:\n            score = 1.0\n        else:\n            title = str(case.get("title", ""))\n            prompt = str(case.get("prompt", ""))\n            score = max(\n                similarity(symptom, title),\n                similarity(symptom, prompt),\n                similarity(symptom, f"{title} {prompt}"),\n            )\n        scores.append((case["id"], score))\n    scores.sort(key=lambda item: item[1], reverse=True)\n    max_score = scores[0][1] if scores else 0.0\n    matches = [case_id for case_id, score in scores if score >= threshold]\n    return max_score, matches\n'''
+          old = '''def existing_case_similarity(\n    symptom: str, failure_id: str, cases: list[dict[str, Any]], threshold: float\n) -> tuple[float, list[str]]:\n    scores: list[tuple[str, float]] = []\n    for case in cases:\n        graph_refs = set(case.get("graph_refs", []))\n        if failure_id in graph_refs:\n            score = 1.0\n        else:\n            title = str(case.get("title", ""))\n            prompt = str(case.get("prompt", ""))\n            score = max(\n                similarity(symptom, title),\n                similarity(symptom, prompt),\n                similarity(symptom, f"{title} {prompt}"),\n            )\n        scores.append((case["id"], score))\n    scores.sort(key=lambda item: item[1], reverse=True)\n    max_score = scores[0][1] if scores else 0.0\n    matches = [case_id for case_id, score in scores if score >= threshold]\n    return max_score, matches\n'''
+          new = '''def normalize_track(track: str) -> str:\n    if track in {"procurement", "logistics", "production"}:\n        return "procurement-logistics"\n    if track == "integration":\n        return "integration-architecture"\n    if track in {"data", "ai"}:\n        return "ai-data"\n    return track\n\n\ndef existing_case_similarity(\n    symptom: str, failure_id: str, candidate_track: str, cases: list[dict[str, Any]], threshold: float\n) -> tuple[float, list[str]]:\n    scores: list[tuple[str, float]] = []\n    normalized_candidate_track = normalize_track(candidate_track)\n    for case in cases:\n        graph_refs = set(case.get("graph_refs", []))\n        if failure_id in graph_refs:\n            score = 1.0\n        elif normalize_track(str(case.get("track", ""))) == normalized_candidate_track:\n            title = str(case.get("title", ""))\n            prompt = str(case.get("prompt", ""))\n            score = max(\n                similarity(symptom, title),\n                similarity(symptom, prompt),\n                similarity(symptom, f"{title} {prompt}"),\n            )\n        else:\n            score = 0.0\n        scores.append((case["id"], score))\n    scores.sort(key=lambda item: item[1], reverse=True)\n    max_score = scores[0][1] if scores else 0.0\n    matches = [case_id for case_id, score in scores if score >= threshold]\n    return max_score, matches\n'''
           if old not in text:
-              raise SystemExit('Old duplicate detection function not found')
+              raise SystemExit('Current duplicate detection function not found')
           text = text.replace(old, new, 1)
-          old_call = 'max_similarity, matches = existing_case_similarity(symptom, cases, threshold)'
-          new_call = 'max_similarity, matches = existing_case_similarity(symptom, failure_id, cases, threshold)'
+          old_call = 'max_similarity, matches = existing_case_similarity(symptom, failure_id, cases, threshold)'
+          new_call = 'max_similarity, matches = existing_case_similarity(symptom, failure_id, seed["track"], cases, threshold)'
           if old_call not in text:
-              raise SystemExit('Duplicate detection call not found')
+              raise SystemExit('Current duplicate detection call not found')
           text = text.replace(old_call, new_call, 1)
           path.write_text(text, encoding='utf-8')
           PY
@@ -53,5 +53,5 @@ jobs:
             echo "Candidate generator and inventory already current."
             exit 0
           fi
-          git commit -m "fix: reject structurally duplicate assessment candidates"
+          git commit -m "fix: scope assessment candidate dedup by track"
           git push origin HEAD:main
