@@ -1,0 +1,37 @@
+---
+layout: default
+title: "Warehouse Mobility — Execution Channel Map"
+description: "A practical SAP warehouse mobility map for EWM RF, standard mobile, custom mobile, wearables, shared devices, connectivity, offline behavior and support."
+permalink: /labs/enterprise-context/ewm/mobility/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+enterprise_context_graph: true
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, ewm, mobility, rf, mobile, scanner, warehouse]
+---
+{% assign map = site.data.labs.enterprise_context.ewm.mobility %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/ewm/">EWM</a></li><li aria-current="page">Warehouse Mobility</li></ol></nav>
+
+<div class="research-canvas context-graph">
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Enterprise Context / Mobile Execution</p><h1>{{ map.title }}</h1><p>{{ map.summary }}</p><a class="research-canvas__button" href="#choice">Open execution channels <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></div><div class="research-canvas__signal"><p>Mobility map</p><div class="research-canvas__signal-line"><span>01</span><strong>{{ map.execution_channels | size }}</strong><small>Execution channels</small></div><div class="research-canvas__signal-line"><span>02</span><strong>{{ map.runtime_controls | size }}</strong><small>Runtime controls</small></div><div class="research-canvas__signal-line"><span>03</span><strong>{{ map.failure_modes | size }}</strong><small>Failure patterns</small></div><em>Source checked {{ map.verified_at }}</em></div></header>
+
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">devices</span><p><strong>Lead rule:</strong> {{ map.lead_rule }}</p><p><strong>Memory path:</strong> {{ map.memory_path }}</p></section>
+
+<section class="research-canvas__inventory" id="choice" data-reveal><header><p class="research-canvas__eyebrow">Decision dimensions</p><h2>Choose from the work pattern, not from the mobile framework.</h2></header><div class="research-route-list">{% for item in map.decision_dimensions %}<article><span>{{ item.key }}</span><strong>{{ item.question }}</strong></article>{% endfor %}</div><div class="research-route-list">{% for item in map.decision_map %}<article><span>→</span><strong>{{ item.need }}</strong><small><b>{{ item.choose }}</b></small><p>{{ item.why }}</p></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Execution channels</p><h2>Standard RF, standard mobile, custom, or hands-free.</h2></header><div class="research-route-list">{% for item in map.execution_channels %}<article><span>PATH</span><strong>{{ item.title }}</strong><small><b>Flow:</b> {{ item.flow }}</small><p><b>Best for:</b> {{ item.best_for }}</p><p><b>Caution:</b> {{ item.caution }}</p></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Runtime controls</p><h2>A device fleet is an operational platform, not a bag of scanners.</h2></header><div class="research-route-list">{% for item in map.runtime_controls %}<article><span>CTRL</span><strong>{{ item.title }}</strong><small>{{ item.rule }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Diagnostics</p><h2>Network and session failures can look like SAP business failures.</h2></header><div class="research-route-list">{% for item in map.failure_modes %}<article><span>!</span><strong>{{ item.symptom }}</strong><small><b>Check first:</b> {{ item.check_first }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Operations</p><h2>Measure worker experience and technical reliability together.</h2></header><div class="research-route-list">{% for item in map.kpis %}<article><span>KPI</span><strong>{{ item.title }}</strong><small>{{ item.meaning }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Assessment lens</p><h2>Start with ownership, then choose the client.</h2></header><div class="research-route-list">{% for item in map.assessment_cards %}<article><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.answer }}</small></article>{% endfor %}</div></section>
+
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Connected maps</p><h2>Mobility joins device capture to warehouse execution.</h2></header><div class="research-route-list">{% for item in map.related %}<a href="{{ item.url }}"><span>→</span><strong>{{ item.title }}</strong></a>{% endfor %}</div><p><a href="/labs/enterprise-context/data/topics.json">Machine-readable topic graph →</a></p></section>
+</div>
