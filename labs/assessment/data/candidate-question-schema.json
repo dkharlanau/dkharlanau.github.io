@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "/labs/assessment/data/candidate-question-schema.json",
+  "title": "Graph-Backed SAP Lead Question Candidate",
+  "description": "A review-stage assessment question generated from explicit graph evidence. Candidate records are not part of the published case set until manually promoted.",
+  "type": "object",
+  "required": ["id","status","generation_pattern","track","level","title","prompt","expected_points","follow_up_questions","red_flags","graph_refs","human_refs","source_refs","evidence_map","generation_reason","dedup"],
+  "properties": {
+    "id": {"type":"string","pattern":"^CAND-[A-Z0-9-]+$"},
+    "status": {"type":"string","enum":["candidate","rejected_duplicate","approved","rejected","superseded"]},
+    "generation_pattern": {"type":"string","enum":["symptom_to_root_cause","boundary_conflict","late_stage_symptom","trade_off_variant","cross_process_chain"]},
+    "track": {"type":"string","enum":["sales","procurement-logistics","integration-architecture","ai-data"]},
+    "level": {"type":"string","enum":["explain","trace","diagnose","design","challenge"]},
+    "title": {"type":"string","minLength":1},
+    "prompt": {"type":"string","minLength":1},
+    "expected_points": {"type":"array","minItems":3,"items":{"type":"string","minLength":1}},
+    "follow_up_questions": {"type":"array","minItems":1,"items":{"type":"string","minLength":1}},
+    "red_flags": {"type":"array","minItems":1,"items":{"type":"string","minLength":1}},
+    "graph_refs": {"type":"array","minItems":2,"items":{"type":"string","minLength":1},"uniqueItems":true},
+    "human_refs": {"type":"array","minItems":1,"items":{"type":"string","pattern":"^/labs/"},"uniqueItems":true},
+    "source_refs": {"type":"array","minItems":1,"items":{"type":"string","pattern":"^SRC-"},"uniqueItems":true},
+    "evidence_map": {
+      "type":"array",
+      "minItems":3,
+      "items": {
+        "type":"object",
+        "required":["expected_point_index","graph_path","source_refs"],
+        "properties": {
+          "expected_point_index":{"type":"integer","minimum":0},
+          "graph_path":{"type":"string","minLength":1},
+          "source_refs":{"type":"array","minItems":1,"items":{"type":"string","pattern":"^SRC-"},"uniqueItems":true}
+        },
+        "additionalProperties":false
+      }
+    },
+    "generation_reason":{"type":"string","minLength":1},
+    "dedup_signature":{"type":"string","minLength":12},
+    "dedup": {
+      "type":"object",
+      "required":["max_similarity","threshold","matching_case_ids"],
+      "properties": {
+        "max_similarity":{"type":"number","minimum":0,"maximum":1},
+        "threshold":{"type":"number","minimum":0,"maximum":1},
+        "matching_case_ids":{"type":"array","items":{"type":"string"},"uniqueItems":true}
+      },
+      "additionalProperties":false
+    },
+    "review": {
+      "type":"object",
+      "properties": {
+        "reviewer_note":{"type":"string","maxLength":2000},
+        "reviewed_at":{"type":["string","null"],"format":"date-time"}
+      },
+      "additionalProperties":false
+    }
+  },
+  "additionalProperties":false
+}
