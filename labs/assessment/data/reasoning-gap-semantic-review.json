@@ -1,6 +1,6 @@
 {
   "id": "sap-lead-reasoning-gap-semantic-review",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
   "purpose": "Decide whether non-diagnostic reasoning-gap candidates add a materially new Lead signal after published-case comparison and before any human promotion decision.",
   "candidate_source": "/labs/assessment/data/reasoning-gap-candidates.json",
@@ -19,25 +19,13 @@
         "Require ownership and downstream ATP, inventory, billing, production/procurement, and finance consequences.",
         "Reject a rewrite that becomes a third-party troubleshooting case or a pure MTO explanation."
       ]
-    },
-    {
-      "candidate_id": "RCAND-AI-CHALLENGE-AUTONOMY",
-      "recommendation": "retain_for_human_promotion_review",
-      "closest_published_cases": ["ASSESS-AI-002", "ASSESS-AI-001", "ASSESS-AI-003"],
-      "reason": "The current AI/Data Challenge case compares retrieval with fine-tuning, while the Design and Diagnose cases cover controlled AI recommendations and risky agent trajectories. This candidate challenges the autonomy level itself and requires comparison of deterministic workflow, bounded agent, and broader agent designs with explicit authority, failure, recovery, observability, and acceptance conditions. That challenge signal is not currently published.",
-      "novel_signal": "Challenge whether an agent is justified at all, and choose the minimum autonomy that the operating model can govern, observe, and recover.",
-      "review_checks": [
-        "Keep deterministic workflow as a real alternative, not a straw man.",
-        "Require the answer to separate probabilistic reasoning from deterministic authorization, approvals, writes, and recovery.",
-        "Require conditions under which broader autonomy becomes acceptable.",
-        "Reject a rewrite that becomes only a permissions diagnosis or generic AI-governance explanation."
-      ]
     }
   ],
   "summary": {
-    "reviewed_candidates": 2,
-    "retain_for_human_promotion_review": 2,
+    "reviewed_candidates": 1,
+    "retain_for_human_promotion_review": 1,
     "reject_semantic_duplicate": 0,
-    "published_case_change": 0
+    "published_case_change": 0,
+    "retired_after_coverage_change": ["RCAND-AI-CHALLENGE-AUTONOMY"]
   }
 }
