@@ -1,0 +1,299 @@
+{
+  "id": "sap-lead-reasoning-pressure-coverage",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Measure exact published-case coverage by assessment track and reasoning level so authoring work targets missing Lead-pressure cells instead of raw topic volume.",
+  "inputs": {
+    "case_manifest": "/labs/assessment/data/case-sets.json",
+    "catalog": "/labs/assessment/data/catalog.json"
+  },
+  "policy": {
+    "levels": [
+      "explain",
+      "trace",
+      "diagnose",
+      "design",
+      "challenge"
+    ],
+    "lead_pressure_levels": [
+      "diagnose",
+      "design",
+      "challenge"
+    ],
+    "minimum_published_cases_per_lead_pressure_level": 2,
+    "state_rule": {
+      "missing": "zero published cases in a Lead-pressure cell",
+      "thin": "one published case or otherwise fewer than 2 cases in a Lead-pressure cell",
+      "covered": "at least 2 published cases, or a non-Lead-pressure level"
+    },
+    "boundary": "The threshold is an authored practice-design heuristic. It does not change scoring, candidate approval, factual review, or publication state."
+  },
+  "summary": {
+    "published_cases": 59,
+    "tracks": 4,
+    "levels": 5,
+    "lead_pressure_cases": 48,
+    "lead_pressure_share": 0.814,
+    "missing_lead_pressure_cells": 0,
+    "thin_lead_pressure_cells": 3,
+    "level_counts": {
+      "explain": 5,
+      "trace": 6,
+      "diagnose": 25,
+      "design": 11,
+      "challenge": 12
+    }
+  },
+  "tracks": [
+    {
+      "track": "sales",
+      "total_cases": 15,
+      "lead_pressure_cases": 12,
+      "lead_pressure_share": 0.8,
+      "levels": [
+        {
+          "level": "explain",
+          "count": 1,
+          "case_ids": [
+            "ASSESS-SALES-001"
+          ],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "trace",
+          "count": 2,
+          "case_ids": [
+            "ASSESS-BIL-003",
+            "ASSESS-FIN-004"
+          ],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "diagnose",
+          "count": 7,
+          "case_ids": [
+            "ASSESS-BIL-001",
+            "ASSESS-BIL-002",
+            "ASSESS-BIL-004",
+            "ASSESS-FIN-001",
+            "ASSESS-SALES-002",
+            "ASSESS-SALES-003",
+            "ASSESS-XPROC-001"
+          ],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "design",
+          "count": 1,
+          "case_ids": [
+            "ASSESS-XPROC-002"
+          ],
+          "pressure_state": "thin"
+        },
+        {
+          "level": "challenge",
+          "count": 4,
+          "case_ids": [
+            "ASSESS-BIL-006",
+            "ASSESS-SALES-004",
+            "ASSESS-XPROC-003",
+            "ASSESS-XPROC-007"
+          ],
+          "pressure_state": "covered"
+        }
+      ]
+    },
+    {
+      "track": "procurement-logistics",
+      "total_cases": 28,
+      "lead_pressure_cases": 20,
+      "lead_pressure_share": 0.714,
+      "levels": [
+        {
+          "level": "explain",
+          "count": 4,
+          "case_ids": [
+            "ASSESS-IM-001",
+            "ASSESS-PP-001",
+            "ASSESS-PROC-001",
+            "ASSESS-QM-001"
+          ],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "trace",
+          "count": 4,
+          "case_ids": [
+            "ASSESS-FIN-006",
+            "ASSESS-IM-003",
+            "ASSESS-QM-004",
+            "ASSESS-TM-001"
+          ],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "diagnose",
+          "count": 12,
+          "case_ids": [
+            "ASSESS-AUTO-003",
+            "ASSESS-FIN-002",
+            "ASSESS-FIN-005",
+            "ASSESS-IM-002",
+            "ASSESS-PP-002",
+            "ASSESS-PP-003",
+            "ASSESS-PROC-002",
+            "ASSESS-PROC-003",
+            "ASSESS-QM-002",
+            "ASSESS-QM-003",
+            "ASSESS-XPROC-004",
+            "ASSESS-XPROC-006"
+          ],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "design",
+          "count": 3,
+          "case_ids": [
+            "ASSESS-AUTO-005",
+            "ASSESS-LOG-001",
+            "ASSESS-XPROC-005"
+          ],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "challenge",
+          "count": 5,
+          "case_ids": [
+            "ASSESS-AUTO-001",
+            "ASSESS-AUTO-004",
+            "ASSESS-FIN-003",
+            "ASSESS-IM-004",
+            "ASSESS-PP-004"
+          ],
+          "pressure_state": "covered"
+        }
+      ]
+    },
+    {
+      "track": "integration-architecture",
+      "total_cases": 12,
+      "lead_pressure_cases": 12,
+      "lead_pressure_share": 1.0,
+      "levels": [
+        {
+          "level": "explain",
+          "count": 0,
+          "case_ids": [],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "trace",
+          "count": 0,
+          "case_ids": [],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "diagnose",
+          "count": 5,
+          "case_ids": [
+            "ASSESS-AUTO-002",
+            "ASSESS-INT-002",
+            "ASSESS-INTOPS-001",
+            "ASSESS-INTOPS-003",
+            "ASSESS-INTOPS-005"
+          ],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "design",
+          "count": 5,
+          "case_ids": [
+            "ASSESS-AUTO-006",
+            "ASSESS-BIL-005",
+            "ASSESS-INT-001",
+            "ASSESS-INTOPS-004",
+            "ASSESS-INTOPS-006"
+          ],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "challenge",
+          "count": 2,
+          "case_ids": [
+            "ASSESS-INT-003",
+            "ASSESS-INTOPS-002"
+          ],
+          "pressure_state": "covered"
+        }
+      ]
+    },
+    {
+      "track": "ai-data",
+      "total_cases": 4,
+      "lead_pressure_cases": 4,
+      "lead_pressure_share": 1.0,
+      "levels": [
+        {
+          "level": "explain",
+          "count": 0,
+          "case_ids": [],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "trace",
+          "count": 0,
+          "case_ids": [],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "diagnose",
+          "count": 1,
+          "case_ids": [
+            "ASSESS-AI-003"
+          ],
+          "pressure_state": "thin"
+        },
+        {
+          "level": "design",
+          "count": 2,
+          "case_ids": [
+            "ASSESS-AI-001",
+            "ASSESS-DATA-001"
+          ],
+          "pressure_state": "covered"
+        },
+        {
+          "level": "challenge",
+          "count": 1,
+          "case_ids": [
+            "ASSESS-AI-002"
+          ],
+          "pressure_state": "thin"
+        }
+      ]
+    }
+  ],
+  "authoring_gaps": [
+    {
+      "track": "ai-data",
+      "level": "challenge",
+      "count": 1,
+      "state": "thin",
+      "authoring_need": "Add or promote a materially distinct challenge case for ai-data; current published count is 1."
+    },
+    {
+      "track": "ai-data",
+      "level": "diagnose",
+      "count": 1,
+      "state": "thin",
+      "authoring_need": "Add or promote a materially distinct diagnose case for ai-data; current published count is 1."
+    },
+    {
+      "track": "sales",
+      "level": "design",
+      "count": 1,
+      "state": "thin",
+      "authoring_need": "Add or promote a materially distinct design case for sales; current published count is 1."
+    }
+  ]
+}

@@ -585,10 +585,23 @@
         ]
       },
       "working_rule": "Use the secondary review ranking to inspect high-reuse pages, but edit only real assessment gaps. Add domain-specific answer frames and evidence boundaries without changing verification or publication state."
+    },
+    {
+      "id": "LOOP-042",
+      "priority": "P1",
+      "title": "Published-case reasoning pressure coverage",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/reasoning-coverage/",
+        "/labs/assessment/data/reasoning-pressure-coverage.json",
+        "scripts/generate_assessment_reasoning_coverage.py",
+        "scripts/validate_assessment_reasoning_coverage.py"
+      ],
+      "working_rule": "Use exact case track and reasoning-level metadata to identify thin Diagnose, Design, and Challenge cells. Treat the two-case threshold as an explicit authoring heuristic, not a scoring or factual claim."
     }
   ],
   "next_iteration_themes": [
-    "measure published-case reasoning coverage by scoring dimension so new cases target weak signals instead of raw topic count",
+    "use reasoning-pressure gaps to select evidence-backed candidate seeds only where the corpus is thin and the case adds semantic novelty",
     "record true human page-review findings separately from automated editorial improvement",
     "select secondary P1 pages by cross-track assessment value instead of processing all routes mechanically"
   ]
