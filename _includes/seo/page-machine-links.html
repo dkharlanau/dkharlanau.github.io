@@ -1,0 +1,13 @@
+{% comment %}
+Per-page machine-readable discovery links.
+No visible content is emitted. Homepage rendered text remains unchanged.
+{% endcomment %}
+{% if page.ai_sidecar %}
+<link rel="alternate" type="application/json" href="{{ page.ai_sidecar | absolute_url }}" title="Machine-readable page data" />
+<link rel="describedby" type="application/json" href="{{ page.ai_sidecar | absolute_url }}" title="Page knowledge sidecar" />
+{% endif %}
+{% if page.machine_readable %}
+  {% for machine_url in page.machine_readable %}
+<link rel="alternate" type="application/json" href="{{ machine_url | absolute_url }}" />
+  {% endfor %}
+{% endif %}
