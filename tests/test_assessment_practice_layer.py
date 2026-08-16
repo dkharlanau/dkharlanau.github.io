@@ -167,6 +167,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "progress": ASSESSMENT / "progress" / "index.html",
         "feedback": ASSESSMENT / "feedback" / "index.html",
         "question-review": ASSESSMENT / "question-review" / "index.html",
+        "factual-review": ASSESSMENT / "factual-review" / "index.html",
         "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",
         "cross-process": ASSESSMENT / "cross-process" / "index.html",
     }
@@ -183,6 +184,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
     assert modes["feedback"]["route"] == "/labs/assessment/feedback/"
     authoring = {item["id"]: item for item in catalog["authoring_tools"]}
     assert authoring["question-review"]["route"] == "/labs/assessment/question-review/"
+    assert authoring["factual-review"]["route"] == "/labs/assessment/factual-review/"
     assert authoring["promotion-readiness"]["route"] == "/labs/assessment/promotion-readiness/"
 
 
@@ -190,7 +192,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -210,8 +212,8 @@ def test_promotion_readiness_audit_is_reproducible_and_non_publishing() -> None:
     inventory = load_json("promotion-readiness.json")
 
     assert inventory["policy"] == "/labs/assessment/data/promotion-readiness-policy.json"
-    assert inventory["scope_route_count"] == 38
-    assert inventory["counts"] == {"human_review_candidate": 38}
+    assert inventory["scope_route_count"] == len(inventory["items"])
+    assert inventory["counts"].get("human_review_candidate") == len(inventory["items"])
     assert all(item["structural_score"] >= 4 for item in inventory["items"])
     assert all(item["verified"] is False for item in inventory["items"])
     assert "never changes status" in policy["promotion_rule"].lower()
@@ -224,5 +226,28 @@ def test_promotion_readiness_audit_is_reproducible_and_non_publishing() -> None:
         check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "38 routes" in result.stdout
+    assert f'{inventory["scope_route_count"]} routes' in result.stdout
+
+def test_factual_review_keeps_source_support_separate_from_page_verification() -> None:
+    policy = load_json("factual-review-policy.json")
+    review = load_json("factual-review.json")
+    promotion = load_json("promotion-readiness.json")
+
+    assert review["policy"] == "/labs/assessment/data/factual-review-policy.json"
+    assert review["summary"] == {
+        "routes_reviewed": 2,
+        "claims_reviewed": 11,
+        "source_supported": 11,
+        "source_conflict": 0,
+        "human_verification_required": 11,
+    }
+    assert all(item["page_verified"] is False for item in review["routes"])
+    assert all(claim["status"] == "source_supported" for claim in review["claims"])
+    assert all(claim["human_verification_required"] is True for claim in review["claims"])
+    assert all(claim["source_refs"] for claim in review["claims"])
+    assert all(all(url.startswith("https://help.sap.com/") for url in claim["official_evidence"]) for claim in review["claims"])
+    promotion_by_route = {item["route"]: item for item in promotion["items"]}
+    for route in review["routes"]:
+        assert promotion_by_route[route["route"]]["verified"] is False
+    assert "cannot declare the complete page verified" in policy["promotion_boundary"].lower()
 

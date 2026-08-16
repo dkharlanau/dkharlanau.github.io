@@ -51,9 +51,10 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Authoring control</p><h2>New questions enter through evidence and review.</h2><p>The generator currently reads whitelisted Billing and Integration Operations failure modes. It found two review candidates and rejected twelve duplicate patterns. Published practice remains at 59 cases.</p></header>
+    <header><p class="research-canvas__eyebrow">Authoring control</p><h2>Claims and questions enter through evidence and review.</h2><p>Question candidates are generated from whitelisted graph evidence. Release-sensitive SAP claims now have a separate primary-source review layer before any page-level verification or publication decision.</p></header>
     <div class="research-route-list">
       <a href="/labs/assessment/question-review/"><span>AUTHOR</span><strong>Question Candidate Review</strong><small>Inspect graph evidence, source refs, duplicate checks, and local review decisions before any case promotion.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/factual-review/"><span>FACT</span><strong>Factual Review</strong><small>Check release-sensitive SAP claims against primary sources and record product and release scope.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
       <a href="/labs/assessment/promotion-readiness/"><span>CONTENT</span><strong>Promotion Readiness</strong><small>Review structurally mature draft pages while factual verification and publication policy remain separate decisions.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
       <a href="/labs/assessment/data/question-candidates.json"><span>2</span><strong>Generated Candidate Inventory</strong><small>Two review candidates, twelve duplicate rejections, and a hard publication boundary.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
     </div>
@@ -139,7 +140,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
     <div class="ecg-decision-columns">
       <div><h4>Knowledge base</h4><ul><li>Sales, Shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory</li><li>FI/CO touchpoints, Automotive JIT/JIS, EWM and TM</li><li>Integration architecture and recovery operations</li><li>MDG, SAP development/deployment, Business AI and AI architecture</li></ul></div>
       <div><h4>Practice layer</h4><ul><li>59 structured cases</li><li>Adaptive single-case selection</li><li>Balanced mock sessions</li><li>Weak-signal review queue</li><li>Shared seven-dimension scoring history</li><li>Portable local history import and export</li><li>Provenance-aware feedback evidence</li></ul></div>
-      <div><h4>Next iteration</h4><ul><li>Extend candidate generation only to graphs with strong failure evidence</li><li>Factual and primary-source review of structurally mature draft routes before any promotion</li><li>Connect real feedback to review priorities without automatic scoring changes</li><li>Create reviewed calibration decisions when enough evidence exists</li></ul></div>
+      <div><h4>Next iteration</h4><ul><li>Extend candidate generation only to graphs with strong failure evidence</li><li>Continue claim-level factual review for ATP, Credit, EWM, and deployment-sensitive architecture routes</li><li>Connect real feedback to review priorities without automatic scoring changes</li><li>Create reviewed calibration decisions when enough evidence exists</li></ul></div>
     </div>
   </section>
 
@@ -166,8 +167,10 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/data/candidate-generation-seeds.json"><span>SEED</span><strong>Candidate Generation Seeds</strong><small>Whitelisted graph failure modes and approved source references.</small><i class="material-symbols-outlined" aria-hidden="true">filter_alt</i></a>
       <a href="/labs/assessment/data/question-candidates.json"><span>2</span><strong>Question Candidate Inventory</strong><small>Two review candidates and twelve duplicate rejections; not part of the 59 published cases.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/labs/assessment/data/promotion-readiness-policy.json"><span>POLICY</span><strong>Promotion Readiness Policy</strong><small>Structural checks, evidence boundary, review states, and anti-shortcut rules.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
-      <a href="/labs/assessment/data/promotion-readiness.json"><span>38</span><strong>Promotion Readiness Inventory</strong><small>Assessment-linked human routes queued for factual and publication-policy review without automatic promotion.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
-      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-016 are complete; next work focuses on factual review and controlled promotion.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
+      <a href="/labs/assessment/data/promotion-readiness.json"><span>39</span><strong>Promotion Readiness Inventory</strong><small>Assessment-linked human routes queued for factual and publication-policy review without automatic promotion.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/data/factual-review-policy.json"><span>FACT</span><strong>Factual Review Policy</strong><small>Claim states, primary-source rules, release scope, and the human-verification boundary.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
+      <a href="/labs/assessment/data/factual-review.json"><span>11</span><strong>Factual Review Registry</strong><small>Eleven source-supported claims across Integration Operations and Billing; page verification remains unchanged.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-017 are complete; next work expands factual review to other release-sensitive routes.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
   </section>
 
