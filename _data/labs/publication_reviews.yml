@@ -135,3 +135,44 @@ waves:
         review_replacements:
           - from: "<p>Working inventory</p>"
             to: "<p>Reviewed inventory</p>"
+
+  lead-architecture-search-wave-03:
+    reviewed_at: 2026-08-16
+    review_basis: "primary source registries + factual review + page-level editorial review"
+    min_structural_score: 5
+    required_factual_status: source_supported
+    routes:
+      /labs/enterprise-context/business-ai/:
+        source_path: labs/enterprise-context/business-ai/index.md
+        search_intent: "SAP Business AI architecture with Joule, agents and SAP data grounding"
+      /labs/enterprise-context/business-ai/agents/:
+        source_path: labs/enterprise-context/business-ai/agents/index.html
+        search_intent: "enterprise AI agent architecture with tools, MCP, A2A, identity and governance"
+      /labs/enterprise-context/data-governance/:
+        source_path: labs/enterprise-context/data-governance/index.md
+        search_intent: "SAP data governance and MDG architecture for enterprise master data"
+      /labs/enterprise-context/deployment-models/:
+        source_path: labs/enterprise-context/deployment-models/index.md
+        search_intent: "SAP S/4HANA Public Cloud vs Private Cloud vs on-premise"
+      /labs/enterprise-context/development/:
+        source_path: labs/enterprise-context/development/index.md
+        search_intent: "SAP clean core development with ABAP Cloud, RAP, CAP and BTP"
+      /labs/enterprise-context/mdg/interfaces/:
+        source_path: labs/enterprise-context/mdg/interfaces/index.md
+        search_intent: "SAP MDG interfaces, DRF replication, APIs and master-data distribution"
+      /labs/enterprise-context/sales-processes/integrations/:
+        source_path: labs/enterprise-context/sales-processes/integrations/index.html
+        search_intent: "SAP sales integration with IDoc, API, EDI and events"
+      /labs/enterprise-context/transportation-management/integrations/:
+        source_path: labs/enterprise-context/transportation-management/integrations/index.html
+        search_intent: "SAP TM integration with S/4HANA, EWM, carriers and events"
+      /labs/enterprise-context/mdg/:
+        source_path: labs/enterprise-context/mdg/index.md
+        search_intent: "SAP Master Data Governance architecture, processes, domains and deployment choices"
+        review_replacements:
+          - from: >-
+              claim-level review currently confirms the 2025 FPS01 classic/cloud-ready mode boundary and the effects of switching cloud-ready mode. The four-checkpoint governance model is an authored reasoning frame; domain, replication, extension, and consumer-process details still require page-level human review.
+            to: >-
+              Claim-level review confirms the 2025 FPS01 classic/cloud-ready mode boundary and the effects of switching cloud-ready mode. Domain, replication, extension, and consumer-process details were reviewed against the route source registry; the four-checkpoint governance model remains an authored reasoning frame.
+          - from: '<a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>'
+            to: '<a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a> <a href="/labs/enterprise-context/data/topics.json">Open AI-readable topic data <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>'
