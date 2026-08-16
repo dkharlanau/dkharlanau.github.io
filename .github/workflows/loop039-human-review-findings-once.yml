@@ -1,0 +1,64 @@
+name: LOOP039 Human Review Findings Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/loop039-human-review-findings-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        run: pip install pytest pyyaml
+      - name: Apply LOOP-039
+        run: python3 scripts/_loop039_human_review_findings.py
+      - name: Refresh assessment inventories
+        run: |
+          python3 scripts/audit_assessment_promotion_readiness.py
+          python3 scripts/generate_assessment_evidence_coverage.py
+          python3 scripts/generate_assessment_human_review_queue.py
+          python3 scripts/generate_assessment_core_study_map.py
+      - name: Validate human review findings
+        run: |
+          python3 scripts/validate_assessment_human_review_findings.py
+          pytest -q tests/test_assessment_practice_layer.py
+      - name: Refresh Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Revalidate after generation
+        run: |
+          python3 scripts/validate_assessment_human_review_findings.py
+          python3 scripts/audit_assessment_promotion_readiness.py --check
+          python3 scripts/generate_assessment_evidence_coverage.py --check
+          python3 scripts/generate_assessment_human_review_queue.py --check
+          python3 scripts/generate_assessment_core_study_map.py --check
+          pytest -q tests/test_assessment_practice_layer.py
+      - name: Commit and push with retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Assessment Agent"
+          git config user.email "assessment-agent@users.noreply.github.com"
+          git add labs/assessment scripts tests ai atlas llms-full.txt 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "feat: add human page review findings contract"
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            echo "Push race on attempt ${attempt}; rebasing"
+            git fetch origin main
+            git rebase origin/main
+          done
+          git push origin HEAD:main
