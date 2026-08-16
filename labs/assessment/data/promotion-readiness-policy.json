@@ -1,35 +1,52 @@
 {
   "id": "lab-promotion-readiness-policy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
-  "purpose": "Identify mature draft/noindex Lab pages for human review without automatically publishing or claiming factual verification.",
+  "purpose": "Prioritize mature draft/noindex Lab pages for human review using both structural readiness and claim-level factual-review coverage without automatically publishing or verifying a page.",
   "scope": "Human routes referenced by the SAP Lead assessment catalog and assessment authoring tools.",
   "structural_checks": [
-    {"id":"frontmatter_complete","rule":"title, description, permalink, last_modified_at, and tags are present"},
-    {"id":"substantive_body","rule":"source body contains at least 1500 non-frontmatter characters"},
-    {"id":"internal_navigation","rule":"source contains at least two internal /labs/ links"},
-    {"id":"machine_readable_link","rule":"source links to at least one /data/ or machine-readable assessment contract"},
-    {"id":"no_placeholder_markers","rule":"source does not contain TODO, TBD, placeholder, lorem ipsum, or coming soon markers"}
+    {
+      "id": "frontmatter_complete",
+      "rule": "title, description, permalink, last_modified_at, and tags are present"
+    },
+    {
+      "id": "substantive_body",
+      "rule": "source body contains at least 1500 non-frontmatter characters"
+    },
+    {
+      "id": "internal_navigation",
+      "rule": "source contains at least two internal /labs/ links"
+    },
+    {
+      "id": "machine_readable_link",
+      "rule": "source links to at least one /data/ or machine-readable assessment contract"
+    },
+    {
+      "id": "no_placeholder_markers",
+      "rule": "source does not contain TODO, TBD, placeholder, lorem ipsum, or coming soon markers"
+    }
   ],
   "evidence_checks": [
-    "verified frontmatter is reported separately from structural readiness",
-    "verified:false never becomes verified through this audit",
-    "a structurally mature page can be a human_review_candidate while still requiring factual/source review",
-    "release-sensitive claims require dated primary-source verification before promotion"
+    "claim-level factual review is read from /labs/assessment/data/factual-review.json",
+    "source conflicts and unclear release scope are higher priority than normal unreviewed content",
+    "mature enterprise knowledge without factual review is prioritized before already source-supported routes",
+    "source-supported routes still require page-level human verification",
+    "verified:false never becomes verified through this audit"
   ],
   "readiness_states": {
-    "human_review_candidate":"At least four structural checks pass and the page is still draft/noindex. Human review is the next action.",
-    "needs_structure":"Fewer than four structural checks pass. Improve the page before factual promotion review.",
-    "public_or_indexable":"The page is already outside the draft/noindex boundary. Audit only reports it; it does not change policy.",
-    "missing_source":"The catalog points to a human route that cannot be resolved to a Lab source file."
+    "human_review_candidate": "At least four structural checks pass and the page is still draft/noindex. Human review is the next action.",
+    "needs_structure": "Fewer than four structural checks pass. Improve the page before factual promotion review.",
+    "public_or_indexable": "The page is already outside the draft/noindex boundary. Audit only reports it; it does not change policy.",
+    "missing_source": "The catalog points to a human route that cannot be resolved to a Lab source file."
   },
   "promotion_rule": "This audit never changes status, robots, sitemap, or verified frontmatter. Promotion requires an explicit human-reviewed repository change.",
-  "priority_rule": "Pages with five structural checks and verified:true are reviewed first, then five-check unverified pages, then four-check pages. Lower structural scores stay in content work.",
+  "priority_rule": "For human-review candidates, enterprise knowledge with source conflicts, unclear release scope, or no factual review is P0. Source-supported enterprise knowledge is P1. Assessment and authoring routes are P2 unless another policy explicitly raises them.",
   "anti_shortcut_rules": [
     "Do not treat page length as factual quality.",
     "Do not promote a page because CI is green.",
     "Do not infer verified:true from the presence of source links.",
     "Do not remove noindex from assessment or research pages merely to improve discoverability metrics.",
-    "Keep machine-readable data and human presentation aligned before promotion."
+    "Keep machine-readable data and human presentation aligned before promotion.",
+    "Do not treat source-supported claims as page-level verification."
   ]
 }

@@ -192,7 +192,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -250,4 +250,23 @@ def test_factual_review_keeps_source_support_separate_from_page_verification() -
     for route in review["routes"]:
         assert promotion_by_route[route["route"]]["verified"] is False
     assert "cannot declare the complete page verified" in policy["promotion_boundary"].lower()
+
+def test_promotion_readiness_uses_factual_review_coverage_for_priority() -> None:
+    inventory = load_json("promotion-readiness.json")
+    review = load_json("factual-review.json")
+    reviewed_routes = {item["route"] for item in review["routes"]}
+    by_route = {item["route"]: item for item in inventory["items"]}
+
+    assert inventory["factual_review_registry"] == "/labs/assessment/data/factual-review.json"
+    assert inventory["factual_review_counts"]["source_supported"] == len(reviewed_routes) == 6
+    assert sum(inventory["priority_counts"].values()) == inventory["scope_route_count"]
+    for route in reviewed_routes:
+        assert by_route[route]["factual_review"]["status"] == "source_supported"
+        assert by_route[route]["factual_review"]["claim_count"] > 0
+        assert by_route[route]["priority"] == "P1"
+        assert "human page-level verification" in by_route[route]["review_reason"]
+
+    assert by_route["/labs/enterprise-context/pricing/"]["factual_review"]["status"] == "not_reviewed"
+    assert by_route["/labs/enterprise-context/pricing/"]["priority"] == "P0"
+    assert "primary-source review" in by_route["/labs/enterprise-context/pricing/"]["review_reason"]
 

@@ -140,7 +140,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
     <div class="ecg-decision-columns">
       <div><h4>Knowledge base</h4><ul><li>Sales, Shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory</li><li>FI/CO touchpoints, Automotive JIT/JIS, EWM and TM</li><li>Integration architecture and recovery operations</li><li>MDG, SAP development/deployment, Business AI and AI architecture</li></ul></div>
       <div><h4>Practice layer</h4><ul><li>59 structured cases</li><li>Adaptive single-case selection</li><li>Balanced mock sessions</li><li>Weak-signal review queue</li><li>Shared seven-dimension scoring history</li><li>Portable local history import and export</li><li>Provenance-aware feedback evidence</li></ul></div>
-      <div><h4>Next iteration</h4><ul><li>Extend candidate generation only to graphs with strong failure evidence</li><li>Integrate factual-review coverage into promotion prioritization</li><li>Connect real feedback to review priorities without automatic scoring changes</li><li>Create reviewed calibration decisions when enough evidence exists</li></ul></div>
+      <div><h4>Next iteration</h4><ul><li>Extend candidate generation only to graphs with strong failure evidence</li><li>Continue factual review across remaining logistics verticals</li><li>Connect real feedback to review priorities without automatic scoring changes</li><li>Create reviewed calibration decisions when enough evidence exists</li></ul></div>
     </div>
   </section>
 
@@ -170,7 +170,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/data/promotion-readiness.json"><span>39</span><strong>Promotion Readiness Inventory</strong><small>Assessment-linked human routes queued for factual and publication-policy review without automatic promotion.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/labs/assessment/data/factual-review-policy.json"><span>FACT</span><strong>Factual Review Policy</strong><small>Claim states, primary-source rules, release scope, and the human-verification boundary.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
       <a href="/labs/assessment/data/factual-review.json"><span>23</span><strong>Factual Review Registry</strong><small>Twenty-three source-supported claims across six release-sensitive SAP routes; page verification remains unchanged.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
-      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-018 are complete; next work connects factual coverage to promotion priority.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
+      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-019 are complete; promotion priority now uses factual-review coverage.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
   </section>
 

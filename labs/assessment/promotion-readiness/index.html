@@ -24,14 +24,15 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Assessment / Content governance</p>
       <h1>Structure can be ready.<br />Evidence can still need review.</h1>
-      <p>The audit checks page structure, navigation, machine-readable links, and placeholder markers. It reports factual verification separately. A mature draft becomes a human-review candidate, not an automatically public page.</p>
+      <p>The audit checks page structure and claim-level evidence coverage. Mature enterprise pages without primary-source review move ahead of already source-supported routes, but no page becomes verified or public automatically.</p>
       <a class="research-canvas__button" href="#readiness-queue">Open review queue <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Promotion readiness status">
       <p>Current scope</p>
       <div class="research-canvas__signal-line"><span>01</span><strong id="pr-routes">—</strong><small>Assessment-linked routes</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong id="pr-review">—</strong><small>Human-review candidates</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong id="pr-verified">—</strong><small>verified:true</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong id="pr-evidence">—</strong><small>Source-reviewed routes</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong id="pr-verified">—</strong><small>verified:true</small></div>
       <em>No status, robots, sitemap, or verified flag is changed here.</em>
     </div>
   </header>
@@ -43,13 +44,16 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" id="readiness-queue" data-reveal>
-    <header><p class="research-canvas__eyebrow">Review queue</p><h2>Start with evidence, not more formatting.</h2><p>The current assessment-linked routes already pass the structural bar. The next useful action is to review factual claims and decide whether a page should remain research-only or become indexable.</p></header>
+    <header><p class="research-canvas__eyebrow">Review queue</p><h2>Start with evidence, not more formatting.</h2><p>The queue now separates structural maturity from factual-review coverage. For enterprise knowledge, missing or conflicting evidence comes first; source-supported pages move to page-level human review.</p></header>
     <div class="pr-controls">
       <label>Route group
         <select id="pr-group"><option value="all">All routes</option><option value="assessment">Assessment UX</option><option value="knowledge">Enterprise knowledge</option><option value="ai">AI workstreams</option></select>
       </label>
       <label>Local review state
         <select id="pr-local-filter"><option value="all">All local states</option><option value="unreviewed">Unreviewed</option><option value="needs_factual_review">Needs factual review</option><option value="keep_draft">Keep draft</option><option value="recommend_promotion">Recommend promotion</option></select>
+      </label>
+      <label>Evidence state
+        <select id="pr-evidence-filter"><option value="all">All evidence states</option><option value="not_reviewed">Not source-reviewed</option><option value="source_supported">Source-supported</option><option value="source_conflict">Source conflict</option><option value="release_scope_unclear">Release scope unclear</option></select>
       </label>
     </div>
     <p class="pr-status" id="pr-status" aria-live="polite">Loading readiness inventory…</p>
@@ -64,8 +68,9 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Machine-readable control</p><h2>The audit is reproducible.</h2><p>The generated inventory is built from the current assessment catalog and page frontmatter. It can be checked in CI without changing publication policy.</p></header>
     <div class="research-route-list">
-      <a href="/labs/assessment/data/promotion-readiness.json"><span>AUDIT</span><strong>Promotion Readiness Inventory</strong><small>Current routes, structural checks, verification state, and review priority.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/data/promotion-readiness.json"><span>AUDIT</span><strong>Promotion Readiness Inventory</strong><small>Current routes, structural checks, factual-review coverage, review reason, and priority.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/labs/assessment/data/promotion-readiness-policy.json"><span>POLICY</span><strong>Readiness Policy</strong><small>Structural checks, evidence boundary, anti-shortcut rules, and promotion rule.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
+      <a href="/labs/assessment/factual-review/"><span>FACT</span><strong>Factual Review</strong><small>Inspect the claim-level evidence registry that now feeds promotion priority.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
       <a href="/labs/assessment/question-review/"><span>AUTHOR</span><strong>Question Candidate Review</strong><small>The same principle applied to generated assessment questions: evidence first, promotion second.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
     </div>
   </section>
@@ -89,12 +94,12 @@ tags:
   function group(route){if(route.startsWith('/labs/assessment/'))return 'assessment';if(route.startsWith('/labs/ai-ready/')||route.startsWith('/labs/business-ai/'))return 'ai';return 'knowledge';}
 
   function card(item){
-    const root=document.createElement('article');root.className='pr-card';root.dataset.group=group(item.route);root.dataset.local=(reviews()[item.route]?.decision)||'unreviewed';
+    const root=document.createElement('article');root.className='pr-card';root.dataset.group=group(item.route);root.dataset.local=(reviews()[item.route]?.decision)||'unreviewed';root.dataset.evidence=item.factual_review?.status||'not_reviewed';
     const meta=document.createElement('div');meta.className='pr-meta';
-    [item.route,item.state,item.priority,`structure ${item.structural_score}/5`,item.verified?'verified:true':'verified:false'].forEach(value=>{const chip=document.createElement('span');chip.textContent=value;meta.appendChild(chip)});
-    const path=document.createElement('p');path.textContent=item.source_path||'No source file resolved.';
+    [item.route,item.state,item.priority,`structure ${item.structural_score}/5`,`evidence ${item.factual_review?.status||'not_reviewed'}`,`${item.factual_review?.claim_count||0} reviewed claim(s)`,item.verified?'verified:true':'verified:false'].forEach(value=>{const chip=document.createElement('span');chip.textContent=value;meta.appendChild(chip)});
+    const path=document.createElement('p');path.textContent=item.source_path||'No source file resolved.';const reason=document.createElement('p');reason.textContent=item.review_reason||'';
     const checks=document.createElement('div');checks.className='pr-checks';Object.entries(item.checks||{}).forEach(([key,value])=>{const span=document.createElement('span');span.textContent=`${value?'✓':'×'} ${key.replaceAll('_',' ')}`;checks.appendChild(span)});
-    root.append(meta,path,checks);
+    root.append(meta,path,reason,checks);
     if(item.source_path){
       const review=document.createElement('div');review.className='pr-review';
       const selectLabel=document.createElement('label');selectLabel.textContent='Local review decision';const select=document.createElement('select');
@@ -107,11 +112,11 @@ tags:
     return root;
   }
 
-  function applyFilters(){const wantedGroup=$('pr-group').value;const wantedLocal=$('pr-local-filter').value;let visible=0;document.querySelectorAll('.pr-card').forEach(card=>{const show=(wantedGroup==='all'||card.dataset.group===wantedGroup)&&(wantedLocal==='all'||card.dataset.local===wantedLocal);card.hidden=!show;if(show)visible+=1});if(inventory)$('pr-status').textContent=`${visible} route(s) shown. ${inventory.counts.human_review_candidate||0} total human-review candidates; ${inventory.items.filter(item=>item.verified).length} verified:true.`;}
+  function applyFilters(){const wantedGroup=$('pr-group').value;const wantedLocal=$('pr-local-filter').value;const wantedEvidence=$('pr-evidence-filter').value;let visible=0;document.querySelectorAll('.pr-card').forEach(card=>{const show=(wantedGroup==='all'||card.dataset.group===wantedGroup)&&(wantedLocal==='all'||card.dataset.local===wantedLocal)&&(wantedEvidence==='all'||card.dataset.evidence===wantedEvidence);card.hidden=!show;if(show)visible+=1});if(inventory)$('pr-status').textContent=`${visible} route(s) shown. ${inventory.counts.human_review_candidate||0} human-review candidates; ${inventory.factual_review_counts?.source_supported||0} source-reviewed; ${inventory.priority_counts?.P0||0} P0 evidence-review routes.`;}
 
-  function render(data){inventory=data;$('pr-routes').textContent=data.scope_route_count;$('pr-review').textContent=data.counts.human_review_candidate||0;$('pr-verified').textContent=data.items.filter(item=>item.verified).length;const root=$('pr-items');root.replaceChildren();data.items.forEach(item=>root.appendChild(card(item)));applyFilters();}
+  function render(data){inventory=data;$('pr-routes').textContent=data.scope_route_count;$('pr-review').textContent=data.counts.human_review_candidate||0;$('pr-evidence').textContent=data.factual_review_counts?.source_supported||0;$('pr-verified').textContent=data.items.filter(item=>item.verified).length;const root=$('pr-items');root.replaceChildren();data.items.forEach(item=>root.appendChild(card(item)));applyFilters();}
 
-  $('pr-group').addEventListener('change',applyFilters);$('pr-local-filter').addEventListener('change',applyFilters);
+  $('pr-group').addEventListener('change',applyFilters);$('pr-local-filter').addEventListener('change',applyFilters);$('pr-evidence-filter').addEventListener('change',applyFilters);
   $('pr-export').addEventListener('click',()=>{const payload={format:'lab-promotion-readiness-reviews',version:'1.0.0',exported_at:new Date().toISOString(),reviews:Object.values(reviews())};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='lab-promotion-readiness-reviews.json';link.click();URL.revokeObjectURL(url)});
   $('pr-clear').addEventListener('click',()=>{localStorage.removeItem(STORAGE_KEY);if(inventory)render(inventory);$('pr-status').textContent='Local readiness review decisions cleared. Repository publication state was not changed.';});
   fetch('/labs/assessment/data/promotion-readiness.json',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error(`Readiness inventory HTTP ${response.status}`);return response.json()}).then(render).catch(error=>{$('pr-status').textContent=`Readiness inventory could not be loaded: ${error.message}`});
