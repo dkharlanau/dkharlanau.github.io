@@ -1,0 +1,104 @@
+id: TOPIC-MDG-BP-ENTITY-REFERENCE
+type: research_topic
+title: "SAP MDG Business Partner Technical Entity Reference"
+summary: "A technical-to-business map for core Business Partner, customer and supplier entities, with ownership and organizational grain separated from entity naming."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/domains/business-partner/entity-map/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "How do BP technical entities relate to shared party identity, customer behavior, supplier behavior and organizational ownership?"
+
+memory_model:
+  phrase: "BP_HEADER → Core Segments → Role → Customer/Supplier Extension → Organizational Slice → Consumer"
+  principle: "One party can have many roles and organizational slices. Technical entities must not become accidental ownership boundaries."
+
+technical_reference:
+  core_business_partner:
+    - {entity: BP_HEADER, meaning: "Business Partner Header Segment", design_role: "Root identity, grouping and BP category context"}
+    - {entity: BP_CENTRL, meaning: "Central Data", design_role: "General party attributes such as core organization/person data"}
+    - {entity: BP_ADDR, meaning: "Addresses", design_role: "Address instances belonging to the BP"}
+    - {entity: BP_ADDUSG, meaning: "Address Usages", design_role: "Purpose/context of BP addresses"}
+    - {entity: BP_BKDTL, meaning: "Bank Details", design_role: "One or more bank-detail records for the party"}
+    - {entity: BP_IDNUM, meaning: "Identification Numbers", design_role: "External or legal identity evidence"}
+    - {entity: BP_INDSTR, meaning: "Industry Sectors", design_role: "Industry classification context"}
+    - {entity: BP_TAXNUM, meaning: "Tax Numbers", design_role: "Tax-number context by category"}
+    - {entity: BP_ROLE, meaning: "Business Partner Roles", design_role: "Capabilities/roles attached to the same BP identity"}
+  supplier:
+    - {entity: BP_VENGEN, meaning: "Supplier/Vendor General Data", design_role: "Supplier data independent of company code and purchasing organization"}
+    - {entity: BP_CMPNY, meaning: "Company Code Data", design_role: "Company-code-dependent accounting, payment and invoice-verification context"}
+    - {entity: BP_PORG, meaning: "Purchasing Organization Data", design_role: "Purchasing-organization-dependent procurement behavior"}
+  customer_selected:
+    - {entity: BP_SALES, meaning: "Customer Sales Area Data", design_role: "Sales-area-dependent customer behavior reflected from KNVV"}
+    - {entity: BP_CSALAD, meaning: "Address-dependent Sales Area Data", design_role: "Address-specific sales-area context where used"}
+
+business_grain_map:
+  - grain: "Business Partner"
+    representative_entities: [BP_HEADER, BP_CENTRL, BP_ADDR, BP_ADDUSG, BP_BKDTL, BP_IDNUM, BP_INDSTR, BP_TAXNUM, BP_ROLE]
+    owner_question: "Who owns the shared identity independently of a sales or purchasing organization?"
+  - grain: "Business Partner + Supplier role"
+    representative_entities: [BP_VENGEN]
+    owner_question: "Who can make the party usable as a supplier?"
+  - grain: "Supplier + Company Code"
+    representative_entities: [BP_CMPNY]
+    owner_question: "Who owns finance-specific supplier behavior in this company code?"
+  - grain: "Supplier + Purchasing Organization"
+    representative_entities: [BP_PORG]
+    owner_question: "Who owns procurement behavior in this purchasing organization?"
+  - grain: "Customer + Sales Area"
+    representative_entities: [BP_SALES]
+    owner_question: "Who owns sales, shipping and billing behavior for this sales area?"
+  - grain: "Customer + Sales Area + Address"
+    representative_entities: [BP_CSALAD]
+    owner_question: "Does address-dependent commercial meaning need separate authority from shared BP address ownership?"
+
+ownership_collision_patterns:
+  - change: "Shared legal name or tax identifier"
+    risk: "A local commercial team changes an enterprise identity attribute with finance, compliance or integration impact"
+    design_response: "Central/shared attribute ownership plus explicit evidence and approval"
+  - change: "Supplier payment behavior"
+    risk: "Global BP steward becomes the accidental owner of company-code finance policy"
+    design_response: "Company-code grain, finance decision right, central orchestration"
+  - change: "Sales-area shipping behavior"
+    risk: "Customer appears globally complete but order/delivery execution fails in one sales area"
+    design_response: "Sales-area completeness and O2C proof"
+  - change: "Same party is customer and supplier"
+    risk: "Duplicate enterprise identities or contradictory core attributes"
+    design_response: "Single identity policy with explicit role and organizational extensions"
+
+entity_review_protocol:
+  - "Identify whether the change affects shared identity, role capability or organizational behavior."
+  - "Select the technical entity only after the business grain is clear."
+  - "Check whether a local role can propose a shared change or is allowed to approve it."
+  - "Define duplicate and identity evidence before creating a new BP_HEADER."
+  - "Trace CVI/activation and distribution separately from governance authority."
+  - "Prove customer or supplier usability with a real O2C/P2P transaction."
+
+assessment_cards:
+  - prompt: "Why is BP_HEADER not the whole customer or supplier?"
+    answer: "It is the root BP identity context. Customer and supplier behavior is represented by dependent role and organizational segments."
+  - prompt: "What does BP_PORG tell you?"
+    answer: "That supplier procurement behavior is purchasing-organization dependent. The architecture still needs an explicit business owner and governance rule for those attributes."
+  - prompt: "Can Sales own a BP address?"
+    answer: "Only if the business has explicitly defined that address as Sales-owned. A shared BP address can be consumed by many domains, so proposal rights and approval rights must be separated."
+
+source_refs:
+  - SRC-SAP-MDG-BP-DATA-MODELS-2025
+  - SRC-SAP-BP-STRUCTURE-2025
+  - SRC-SAP-MDG-SUPPLIER-DATA-MODEL-2025
+  - SRC-SAP-MDG-CUSTOMER-ENTITY-EXTENSIONS-2025
+relations:
+  - subject: TOPIC-MDG-BP-ENTITY-REFERENCE
+    predicate: requires
+    object: TOPIC-MDG-BUSINESS-PARTNER-DOMAIN
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-BP-ENTITY-REFERENCE
+    predicate: provides_context_to
+    object: TOPIC-MDG-GOVERNANCE-PROCESS-ENGINE
+    evidence_type: reasoned_interpretation
+    confidence: high

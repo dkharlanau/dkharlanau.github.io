@@ -1,6 +1,6 @@
 {
   "id": "sap-lead-reasoning-gap-candidates",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
   "purpose": "Create review-stage Design and Challenge candidates only for thin published reasoning cells, using source-supported routes without forcing them through the Diagnose failure-mode generator.",
   "inputs": {
@@ -30,25 +30,10 @@
   },
   "gap_plan": [
     {
-      "track": "ai-data",
-      "level": "diagnose",
-      "published_count": 1,
-      "review_stage_signal": "CAND-AIAG-RAW-MCP",
-      "status": "covered_by_existing_review_candidate",
-      "note": "The evidence-backed RAW-MCP candidate survived semantic review. No second Diagnose candidate is needed until the first human promotion decision is made."
-    },
-    {
       "track": "sales",
       "level": "design",
       "published_count": 1,
       "review_stage_signal": "RCAND-SALES-DESIGN-SUPPLY-MODEL",
-      "status": "new_review_candidate"
-    },
-    {
-      "track": "ai-data",
-      "level": "challenge",
-      "published_count": 1,
-      "review_stage_signal": "RCAND-AI-CHALLENGE-AUTONOMY",
       "status": "new_review_candidate"
     }
   ],
@@ -84,43 +69,17 @@
       ],
       "evidence_class": "mixed_source_supported_and_author_heuristic",
       "novelty_note": "Published Sales Design practice currently focuses on ownership in a third-party delay. This candidate instead tests deliberate selection among competing sales-to-supply operating models."
-    },
-    {
-      "id": "RCAND-AI-CHALLENGE-AUTONOMY",
-      "track": "ai-data",
-      "level": "challenge",
-      "status": "review_candidate",
-      "title": "Challenge an autonomous-agent proposal for a mostly deterministic SAP process",
-      "prompt": "A team proposes an autonomous agent for an SAP exception process. Most steps are deterministic, but a minority require reading unstructured context and choosing among controlled actions. Challenge the proposal. Compare deterministic workflow, a bounded agent, and a more open-ended agent, then define the architecture you would accept.",
-      "expected_points": [
-        "Separate deterministic process control from the small part that actually needs probabilistic reasoning.",
-        "Compare workflow, bounded-agent, and broader-agent options by task variability, side-effect risk, latency, auditability, and recovery needs.",
-        "Keep business authority, user/agent identity, backend authorization, tool scope, and final transactional state outside model discretion.",
-        "Prefer a mixed architecture when deterministic controls can own approvals, writes, and recovery while the agent handles interpretation or option generation.",
-        "Define trajectory and business-outcome evaluation, observability, fallback, and post-action verification before increasing autonomy.",
-        "State what evidence or change in process variability would justify moving to a more autonomous design."
-      ],
-      "follow_up_questions": [
-        "Which failure cost would make you reduce autonomy even if task success is high?",
-        "When is an agent unnecessary even if the model can technically perform the task?"
-      ],
-      "red_flags": [
-        "Calls agents more modern and treats that as an architecture argument.",
-        "Moves deterministic approvals or authorization into prompt instructions.",
-        "Evaluates only the final answer and ignores trajectory, side effects, and business state."
-      ],
-      "evidence_routes": [
-        "/labs/enterprise-context/business-ai/agents/",
-        "/labs/enterprise-context/business-ai/"
-      ],
-      "evidence_class": "mixed_source_supported_and_author_heuristic",
-      "novelty_note": "Published AI/Data Challenge practice compares retrieval with fine-tuning. This candidate challenges autonomy level and deterministic-versus-agent control boundaries instead."
     }
   ],
   "summary": {
     "published_cases_changed": 0,
-    "existing_review_signal_reused": 1,
-    "new_review_candidates": 2,
-    "thin_cells_with_review_stage_signal": 3
+    "existing_review_signal_reused": 0,
+    "new_review_candidates": 1,
+    "thin_cells_with_review_stage_signal": 1,
+    "retired_gap_signals": [
+      "CAND-AIAG-RAW-MCP",
+      "RCAND-AI-CHALLENGE-AUTONOMY"
+    ],
+    "retirement_reason": "The MDG Lead case set raises published ai-data Diagnose and Challenge coverage to the configured minimum, so those signals are no longer needed as reasoning-gap fillers."
   }
 }

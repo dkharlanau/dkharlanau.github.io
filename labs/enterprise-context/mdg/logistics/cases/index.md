@@ -88,3 +88,9 @@ Trace the changed quality-related value by plant, rule owner, approval, activati
 5. Was it distributed to this consumer?
 6. Did the target accept the semantic value?
 7. Which document proves business use?
+
+## Practice at Lead depth
+
+The [MDG Lead Assessment Drills](/labs/enterprise-context/mdg/assessment/) add four larger cases: a 12-plant automotive rollout, an incomplete plant extension, duplicate-supplier consolidation and DRF recovery after a target outage.
+
+Use the [Material entity map](/labs/enterprise-context/mdg/domains/material/entity-map/), [BP entity map](/labs/enterprise-context/mdg/domains/business-partner/entity-map/), [Change Request Type Matrix](/labs/enterprise-context/mdg/governance-engine/change-request-matrix/) and [DRF Operations & Replay](/labs/enterprise-context/mdg/replication/operations/) as evidence maps while answering them.

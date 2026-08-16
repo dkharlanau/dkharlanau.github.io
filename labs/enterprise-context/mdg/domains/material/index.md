@@ -69,3 +69,10 @@ Identity → Grain → Ownership → Rules → CR → Activation → DRF → Rec
 ```
 
 Then I would give one plant-extension example and show exactly where MRP, purchasing, sales or warehouse behavior consumes the governed value.
+
+## Go deeper
+
+- [Technical entity map](/labs/enterprise-context/mdg/domains/material/entity-map/) — connect `MATERIAL`, plant, sales, valuation, storage and warehouse entities to business grains.
+- [Change Request Type Matrix](/labs/enterprise-context/mdg/governance-engine/change-request-matrix/) — decide when create, extension, sensitive change and mass change need different governance contracts.
+- [DRF Operations & Replay](/labs/enterprise-context/mdg/replication/operations/) — operate target distribution and recovery safely.
+- [MDG Lead Assessment Drills](/labs/enterprise-context/mdg/assessment/) — practice the multi-plant design and broken-plant diagnostic cases.

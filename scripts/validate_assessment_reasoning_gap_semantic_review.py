@@ -7,14 +7,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "labs" / "assessment" / "data"
 
-
 def load(name: str):
     return json.loads((DATA / name).read_text(encoding="utf-8"))
 
-
 def load_jsonl(path: Path):
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-
 
 def main() -> int:
     review = load("reasoning-gap-semantic-review.json")
@@ -28,19 +25,26 @@ def main() -> int:
         for row in load_jsonl(ROOT / case_set["url"].lstrip("/")):
             published[row["id"]] = row
 
-    if review["summary"]["reviewed_candidates"] != len(review["decisions"]):
+    decisions = review["decisions"]
+    if review["summary"]["reviewed_candidates"] != len(decisions):
         errors.append("Reasoning-gap semantic review count mismatch")
     if review["summary"]["published_case_change"] != 0:
         errors.append("Semantic review must not change the published case set")
-    if set(item["candidate_id"] for item in review["decisions"]) != set(candidate_by_id):
-        errors.append("Semantic review must cover every non-diagnostic reasoning-gap candidate exactly once")
+    if {item["candidate_id"] for item in decisions} != set(candidate_by_id):
+        errors.append("Semantic review must cover every current reasoning-gap candidate exactly once")
 
-    for item in review["decisions"]:
+    retained = 0
+    rejected = 0
+    for item in decisions:
         cid = item["candidate_id"]
         candidate = candidate_by_id.get(cid)
         if not candidate:
             continue
-        if item["recommendation"] not in {"retain_for_human_promotion_review", "reject_semantic_duplicate"}:
+        if item["recommendation"] == "retain_for_human_promotion_review":
+            retained += 1
+        elif item["recommendation"] == "reject_semantic_duplicate":
+            rejected += 1
+        else:
             errors.append(f"Unsupported semantic recommendation: {cid}")
         if not item.get("reason") or not item.get("novel_signal"):
             errors.append(f"Semantic review requires reason and novel signal: {cid}")
@@ -52,18 +56,17 @@ def main() -> int:
         if cid in published:
             errors.append(f"Review-stage candidate unexpectedly published: {cid}")
 
-    if review["summary"]["retain_for_human_promotion_review"] != 2:
-        errors.append("Both current Design/Challenge gap candidates should remain in human promotion review")
-    if review["summary"]["reject_semantic_duplicate"] != 0:
-        errors.append("Current Design/Challenge gap review should have zero semantic duplicates")
+    if review["summary"]["retain_for_human_promotion_review"] != retained:
+        errors.append("Retained-candidate summary count mismatch")
+    if review["summary"]["reject_semantic_duplicate"] != rejected:
+        errors.append("Rejected-candidate summary count mismatch")
 
     if errors:
         for error in errors:
             print(f"ERROR: {error}")
         return 2
-    print("Reasoning-gap semantic review valid: 2 retained for human promotion review, published cases unchanged.")
+    print(f"Reasoning-gap semantic review valid: {retained} retained, {rejected} rejected, published cases unchanged.")
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

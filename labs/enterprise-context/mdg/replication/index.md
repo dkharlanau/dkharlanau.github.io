@@ -73,3 +73,9 @@ An initial distribution creates a baseline. Ongoing changes create the delta str
 - retry creates duplicate side effects;
 - local repair hides a central mapping defect;
 - monitoring checks transport but not business acceptance.
+
+## Operations deep dive
+
+For failures and recovery, continue with [DRF Operations & Replay](/labs/enterprise-context/mdg/replication/operations/). It adds error classes, replay-versus-rebuild decisions, initial-load/delta controls, operational metrics and a runbook that ends with business-consumer proof.
+
+Use the [MDG Lead Assessment Drills](/labs/enterprise-context/mdg/assessment/) to practice the target-outage recovery case.

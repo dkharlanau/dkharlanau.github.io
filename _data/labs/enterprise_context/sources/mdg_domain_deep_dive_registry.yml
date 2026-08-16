@@ -1,6 +1,6 @@
 updated_at: "2026-08-16"
 source_checked_at: "2026-08-16"
-policy_note: "Primary SAP Help Portal sources used to verify MDG Material, Business Partner, workflow, replication, consolidation, migration, and mass-processing boundaries. Lab domain/grain models and assessment reasoning are authored interpretation built on these product facts."
+policy_note: "Primary SAP Help Portal sources used to verify MDG Material, Business Partner, workflow, replication, consolidation, migration, mass-processing, technical entity, matching and operating boundaries. Lab design matrices, ownership models, replay controls, survivorship policies and assessment reasoning are authored interpretation built on these product facts."
 
 sources:
   - id: SRC-SAP-MDG-MATERIAL-DATA-MODEL-2025
@@ -12,7 +12,7 @@ sources:
     accessed_at: "2026-08-16"
     reviewed_at: "2026-08-16"
     status: source_verified
-    supports: [material-model, entity-grain, classification, model-scope]
+    supports: [material-model, entity-grain, classification, model-scope, technical-entity-names]
   - id: SRC-SAP-MDG-BP-DATA-MODELS-2025
     title: "Data Models for Manage Business Partners"
     publisher: SAP
@@ -113,3 +113,114 @@ sources:
     reviewed_at: "2026-08-16"
     status: source_verified
     supports: [material, business-partner, mass-processing, validation, activation]
+
+  - id: SRC-SAP-MATERIAL-MASTER-STRUCTURE-2025
+    title: "Data Structure of the Material Master Record"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/078bc95360267214e10000000a174cb4.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [material-general-data, sales-org-distribution-channel, plant-data, material-grain]
+  - id: SRC-SAP-MDG-SUPPLIER-DATA-MODEL-2025
+    title: "Data Model for Supplier"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP MDG supplier data-model reference; entity names cross-checked with SAP S/4HANA 2025 feature documentation"
+    url: "https://help.sap.com/docs/SAP_MASTER_DATA_GOVERNANCE/f16db93627294eefac9cd74aa84445af/797e912fe1a342e1a9de5be63dab7155.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [bp-header, bp-central, bp-address, bp-role, supplier-general, company-code, purchasing-organization]
+  - id: SRC-SAP-MDG-CUSTOMER-ENTITY-EXTENSIONS-2025
+    title: "Master Data Governance for Customer 2023"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP S/4HANA 2025 FPS01 documentation for customer business-function capabilities"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7113856e409647838af7891e1429b807/ee8700a51ea1430c802e0bc38c0c6460.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [bp-central, customer-sales-area, bp-sales, address-dependent-sales-area]
+  - id: SRC-SAP-MDG-CHANGE-REQUEST-CONFIG-2025
+    title: "Configuration of the Change Request Process"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/0e88c0547489476e8e572c429289f59c.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [change-request-type, data-model, entity-scope, process-flow, workflow]
+  - id: SRC-SAP-MDG-RULE-WORKFLOW-TECH-2025
+    title: "Rule-Based Workflow: Technical Details"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/4c672c7db2f34785a0b7538af41bfe99.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [generic-workflow-template, change-request-type, parallel-processing, brfplus-application]
+  - id: SRC-SAP-MDG-BP-CR-SETTINGS-2025
+    title: "Configure Change Request Settings"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP MDG Business Partner standard change-request reference"
+    url: "https://help.sap.com/docs/SAP_MASTER_DATA_GOVERNANCE/9514b7ff387a43fbaed7c99db391fad5/87cf7c52b6f6856ae10000000a423f68.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [bp-create, bp-process, bp-block, bp-delete, initial-load, mass-maintenance]
+  - id: SRC-SAP-MDG-REPLICATION-GUI-2025
+    title: "Configuring Data Replication (SAP GUI)"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/9f25ede5722044c89b9de99f54d5b69b.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [replication-model, outbound-implementation, receiving-system, filter, technical-settings]
+  - id: SRC-SAP-DRF-KEY-MAPPING-2025
+    title: "Data Replication Framework"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/d9750bd3d7834e068edee1153e444f4c.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [drf, key-mapping, source-target-identities]
+  - id: SRC-SAP-MDG-MATCHING-2025
+    title: "Configure Matching"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/e0c1ce6bfa1e4f2aa23393217e94b4c6.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [matching, match-configuration, product, business-partner]
+  - id: SRC-SAP-MDG-MATCH-REVIEW-2025
+    title: "Match Review"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5cb861909ee642388d828a9d1759901c.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [match-group, approval-score, open-review, approve-reject]
+  - id: SRC-SAP-MDG-BEST-RECORD-REVIEW-2025
+    title: "Best Record Calculation Review"
+    publisher: SAP
+    source_type: official_help
+    product_version: "SAP S/4HANA 2025 FPS01"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/5f48fa56a8cf104ce10000000a4450e5.html"
+    accessed_at: "2026-08-16"
+    reviewed_at: "2026-08-16"
+    status: source_verified
+    supports: [best-record-review, table-level-review, manual-adjustment, rollback]

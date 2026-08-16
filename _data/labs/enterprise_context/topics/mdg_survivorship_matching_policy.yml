@@ -1,0 +1,169 @@
+id: TOPIC-MDG-SURVIVORSHIP-MATCHING-POLICY
+type: research_topic
+title: "SAP MDG Matching, Survivorship and Duplicate Decision Policy"
+summary: "A decision policy for matching thresholds, match review, best-record calculation, source precedence, manual override, duplicate strategy and identity continuity."
+domain: "Data and Analytics"
+process_family: "Master Data Consolidation"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/consolidation/survivorship/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "How should MDG decide which records match, which value survives, when humans review the result and what happens to duplicate identities afterward?"
+
+memory_model:
+  phrase: "Evidence → Match Group → Review → Survivorship Rule → Best Record → Duplicate Strategy → Identity Continuity"
+  principle: "A high matching score is evidence, not authority to merge two real-world objects."
+
+matching_policy:
+  inputs:
+    strong_identity_evidence:
+      - legal-or-registration-id
+      - tax-id-where-stable
+      - governed-external-identifier
+      - trusted-source-key-map
+    supporting_evidence:
+      - normalized-name
+      - postal-address
+      - communication-data
+      - bank-data-with-risk-controls
+      - product-identifiers-for-material
+    noisy_evidence:
+      - free-text-description
+      - unverified-local-alias
+      - stale-contact-data
+  thresholds:
+    automatic_match:
+      design_rule: "Use only when false-positive risk is acceptable and evidence is strong enough for the domain."
+      outcome: "Match group can proceed without human match review if policy permits."
+    review_band:
+      design_rule: "Ambiguous score, multiple active candidates or high-impact identity must require review."
+      outcome: "Open match group reviewed and approved/rejected by an authorized steward."
+    non_match:
+      design_rule: "Evidence below policy threshold remains separate identity unless new evidence appears."
+      outcome: "No merge action."
+  controls:
+    - "Measure false positives and false negatives on a reviewed sample."
+    - "Use different thresholds when business impact differs by domain or population."
+    - "Treat multiple active candidates as a higher-risk case."
+    - "Record why a human overrode an automatic or suggested decision."
+
+survivorship_policy:
+  table_level_rules:
+    source_system:
+      meaning: "A trusted source can win for a complete table/segment where authority is clear."
+      question: "Is the source authoritative for this table, not merely convenient?"
+    recency:
+      meaning: "A more recent record can win where timestamp reflects meaningful business freshness."
+      question: "Does newer really mean better for this attribute group?"
+  field_level_rules:
+    completeness:
+      meaning: "A populated field can enrich the preliminary best record when completeness is the selected priority."
+      question: "Is the populated value trustworthy, or merely non-empty?"
+    domain_rule:
+      meaning: "A business-specific precedence rule can decide values where generic source/recency/completeness is not enough."
+      question: "Which owner defines and approves the precedence?"
+  manual_override:
+    required_evidence:
+      - match-group-id
+      - table-or-field
+      - calculated-winner
+      - selected-override
+      - reason
+      - reviewer
+      - timestamp
+      - downstream-impact
+
+best_record_provenance:
+  required_per_selected_value:
+    - source-record-id
+    - source-system
+    - source-value
+    - selected-value
+    - winning-rule
+    - rule-priority
+    - manual-override-flag
+    - reviewer-if-manual
+  purpose: "Explain how the golden record was constructed and make later disputes auditable."
+
+duplicate_strategy:
+  remove_duplicates:
+    product_fact: "SAP can mark duplicates for deletion and direct key mapping to the best record in consolidation of active records."
+    design_question: "Can downstream systems and transactional history safely continue through the surviving identity?"
+    controls: [replacement-relationship, key-mapping, downstream-merge-policy, archive-or-retention]
+  improve_best_record:
+    product_fact: "Duplicates remain unchanged while the best record is improved; key mapping remains unchanged."
+    design_question: "Is the objective enrichment without changing duplicate lifecycle?"
+    controls: [duplicate-awareness, future-match-policy, consumer-selection]
+  improve_all_records:
+    product_fact: "Duplicates are kept but can become copies of the best record; key mapping remains unchanged."
+    design_question: "Can multiple identities remain intentionally while values are aligned?"
+    controls: [identity-ambiguity, downstream-behavior, future-maintenance]
+
+review_queue_design:
+  priority_factors:
+    - business-impact
+    - false-positive-risk
+    - number-of-active-candidates
+    - sensitive-identity-data
+    - downstream-system-count
+    - existing-transaction-history
+  reviewer_evidence:
+    - normalized-values
+    - identifiers
+    - source-system
+    - previous-match-decisions
+    - current-key-mapping
+    - downstream-usage
+  closure_states:
+    - approved-match
+    - rejected-match
+    - deferred-for-more-evidence
+    - escalated-to-owner
+
+quality_metrics:
+  - automatic_match_rate
+  - human_review_rate
+  - review_override_rate
+  - false_positive_rate_sampled
+  - false_negative_rate_sampled
+  - unresolved_match_group_age
+  - manual_survivorship_override_rate
+  - duplicate_strategy_by_domain
+  - key_mapping_reconciliation_errors
+
+anti_patterns:
+  - "Choose the row with the most non-empty fields as golden record."
+  - "Use one matching threshold for every country, domain and risk class."
+  - "Allow a match score to merge high-risk identities without an authority policy."
+  - "Use recency where timestamps reflect technical reload rather than business freshness."
+  - "Remove duplicates without a downstream identity-continuity plan."
+  - "Manually edit the best record without recording provenance or reason."
+
+assessment_cards:
+  - prompt: "What is survivorship?"
+    answer: "It is the policy that decides which source/table/field value becomes part of the best record after a match group is accepted. Matching decides identity similarity; survivorship decides value precedence."
+  - prompt: "When should matching require human review?"
+    answer: "When evidence is ambiguous, several active candidates exist, the false-positive cost is high or the domain policy explicitly requires authority before merging identities."
+  - prompt: "Why is source priority not enough?"
+    answer: "Authority can differ by table or field. One source may be trusted for legal identity while another is trusted for sales or procurement attributes."
+
+source_refs:
+  - SRC-SAP-MDG-MATCHING-2025
+  - SRC-SAP-MDG-MATCH-REVIEW-2025
+  - SRC-SAP-MDG-BEST-RECORD-2025
+  - SRC-SAP-MDG-BEST-RECORD-REVIEW-2025
+  - SRC-SAP-MDG-CONSOLIDATE-ACTIVE-2025
+relations:
+  - subject: TOPIC-MDG-SURVIVORSHIP-MATCHING-POLICY
+    predicate: requires
+    object: TOPIC-MDG-CONSOLIDATION-GOLDEN-RECORD
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-SURVIVORSHIP-MATCHING-POLICY
+    predicate: provides_context_to
+    object: TOPIC-MDG-BUSINESS-PARTNER-DOMAIN
+    evidence_type: reasoned_interpretation
+    confidence: high
