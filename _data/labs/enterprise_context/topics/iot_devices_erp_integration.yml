@@ -1,0 +1,562 @@
+id: TOPIC-IOT-ERP-DEVICE-INTEGRATION
+type: research_topic
+title: "IoT Devices Around ERP — From Physical Signal to Business Action"
+summary: >-
+  A practical map of devices that can feed or receive operational signals around SAP ERP and logistics:
+  scales, environmental sensors, RFID gates, GPS trackers, PLCs, machine sensors, smart tools,
+  cameras, meters, robots, printers and industrial indicators. The model focuses on the path from
+  physical signal to business object, decision and result rather than on hardware brands.
+domain: "Enterprise IoT / Logistics / Manufacturing / Asset Management"
+process_family: "Physical-to-Digital Integration"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+page_url: "/labs/enterprise-context/iot-devices/"
+
+business_question: >-
+  Which physical device should create which business signal, where should raw device data be interpreted,
+  and which SAP process or object should receive the final business event?
+
+thesis: >-
+  I do not integrate every sensor directly with ERP. The device produces a physical signal. An edge,
+  OT, mobile or integration layer gives that signal context, filters noise and turns it into a stable
+  business event. SAP should receive the smallest business-relevant fact needed to update a warehouse,
+  production, maintenance, transport, quality or utility process.
+
+memory_model:
+  phrase: "Sense → Context → Decide → Post → Prove"
+  steps:
+    - key: "SENSE"
+      question: "What physical fact is observed?"
+      answer: "Identity, weight, location, temperature, vibration, machine state, quality result, energy reading or operator/device action."
+    - key: "CONTEXT"
+      question: "Which business object does the signal belong to?"
+      answer: "Resolve HU, material, batch, serial number, equipment, production order, SFC, freight object, bin, resource or meter."
+    - key: "DECIDE"
+      question: "Where is raw telemetry converted into a business decision?"
+      answer: "Usually in device software, edge/OT, MES/WCS, APM, middleware or a controlled application service rather than in core ERP code."
+    - key: "POST"
+      question: "What SAP action is required?"
+      answer: "Confirm work, create a measurement, update status, trigger goods movement, create notification, record quality result or publish a tracking event."
+    - key: "PROVE"
+      question: "How do we know the physical and SAP states still agree?"
+      answer: "Use acknowledgement, idempotency, reconciliation, exception monitoring and an auditable link from device event to business object."
+
+core_entities:
+  - id: CAP-IOT-PHYSICAL-DIGITAL-BRIDGE
+    type: capability
+    title: "Physical-to-Digital Business Integration"
+    summary: "Convert device signals into controlled enterprise business events."
+  - id: PLT-IOT-EDGE-GATEWAY
+    type: platform_component
+    title: "Industrial Edge / Gateway Layer"
+    summary: "Local layer for protocol conversion, buffering, filtering, device security and contextualization."
+  - id: PLT-IOT-OPC-UA
+    type: platform_component
+    title: "OPC UA"
+    summary: "Industrial interoperability protocol commonly used for machine and shop-floor connectivity."
+  - id: PLT-IOT-MQTT
+    type: platform_component
+    title: "MQTT / Event Broker Pattern"
+    summary: "Lightweight publish-subscribe pattern for device and machine events when the landscape uses an MQTT-capable broker or gateway."
+  - id: INT-IOT-ERP-EVENT-PIPELINE
+    type: integration
+    title: "Device Event to ERP Business Event Pipeline"
+    summary: "Normalizes device telemetry into an idempotent business event or API call."
+  - id: APP-SAP-DIGITAL-MANUFACTURING
+    type: application_component
+    title: "SAP Digital Manufacturing"
+    summary: "Manufacturing execution and shop-floor integration context."
+  - id: APP-SAP-S4-EAM
+    type: application_component
+    title: "SAP S/4HANA Asset Management"
+    summary: "Enterprise maintenance context for equipment, measuring points, measurement documents and maintenance notifications."
+  - id: APP-SAP-APM
+    type: application_component
+    title: "SAP Asset Performance Management"
+    summary: "Asset health, time-series indicators and rule-driven maintenance insight."
+  - id: APP-SAP-EWM
+    type: application_component
+    title: "SAP Extended Warehouse Management"
+    summary: "Warehouse execution context for HUs, tasks, resources, goods movement and automation."
+  - id: APP-SAP-TM
+    type: application_component
+    title: "SAP Transportation Management"
+    summary: "Transportation planning and execution context."
+  - id: APP-SAP-GTT
+    type: application_component
+    title: "SAP Business Network Global Track and Trace"
+    summary: "Cross-party tracking and process visibility context."
+  - id: APP-SAP-S4-UTILITIES
+    type: application_component
+    title: "SAP S/4HANA Utilities"
+    summary: "Utility device, meter and consumption-related business context."
+
+signal_classes:
+  - id: TERM-IOT-IDENTITY-SIGNAL
+    type: term
+    title: "Identity Signal"
+    examples: ["barcode", "RFID EPC", "NFC", "BLE beacon identifier", "serial number"]
+    business_meaning: "Which physical object is this?"
+  - id: TERM-IOT-MEASUREMENT-SIGNAL
+    type: term
+    title: "Measurement Signal"
+    examples: ["weight", "temperature", "humidity", "pressure", "torque", "energy", "counter reading"]
+    business_meaning: "What measurable state does the object have?"
+  - id: TERM-IOT-LOCATION-SIGNAL
+    type: term
+    title: "Location Signal"
+    examples: ["GPS", "geofence", "UWB position", "BLE proximity", "gate passage"]
+    business_meaning: "Where is the object or resource?"
+  - id: TERM-IOT-CONDITION-SIGNAL
+    type: term
+    title: "Condition Signal"
+    examples: ["vibration", "shock", "temperature excursion", "machine alarm", "battery state"]
+    business_meaning: "Is the asset, shipment or product still within an acceptable condition?"
+  - id: TERM-IOT-MACHINE-STATE-SIGNAL
+    type: term
+    title: "Machine State Signal"
+    examples: ["running", "stopped", "cycle complete", "fault", "piece counter", "PLC tag"]
+    business_meaning: "What is the machine doing now?"
+  - id: TERM-IOT-QUALITY-SIGNAL
+    type: term
+    title: "Quality Signal"
+    examples: ["vision result", "torque curve", "test bench result", "dimension", "pass/fail"]
+    business_meaning: "Does the produced or received object meet the required condition?"
+  - id: TERM-IOT-ACTUATION-SIGNAL
+    type: term
+    title: "Actuation / Output Signal"
+    examples: ["print label", "switch light", "open gate", "robot command", "Andon display"]
+    business_meaning: "What should a physical device do after the business decision?"
+
+device_families:
+  - id: TERM-IOT-INDUSTRIAL-SCALE
+    type: term
+    title: "Industrial Scale / Checkweigher"
+    signals: ["weight", "stable-weight flag", "tare", "over/under tolerance"]
+    sap_objects: ["Handling Unit", "delivery item", "catch weight quantity", "quality result", "goods receipt"]
+    best_fit:
+      - "catch-weight products"
+      - "packing and shipping weight verification"
+      - "receiving or production checks"
+    integration_options:
+      - "serial/USB/TCP through workstation or edge software"
+      - "OPC UA through industrial gateway where the scale/controller exposes it"
+      - "custom mobile/work-center application calling a released SAP interface"
+    design_note: "Capture a stable business weight, not every fluctuating millisecond from the load cell."
+    source_refs: [SRC-SAP-EWM-CATCH-WEIGHT]
+
+  - id: TERM-IOT-ENVIRONMENT-SENSOR
+    type: term
+    title: "Temperature / Humidity / Shock Sensor"
+    signals: ["temperature", "humidity", "shock", "tilt", "vibration"]
+    sap_objects: ["HU", "delivery", "batch", "equipment", "quality notification", "maintenance notification"]
+    best_fit:
+      - "cold chain"
+      - "sensitive inbound or outbound goods"
+      - "equipment condition monitoring"
+    integration_options:
+      - "BLE/cellular sensor → gateway/cloud → event integration"
+      - "edge rules → alert or threshold business event"
+    design_note: "Store high-frequency telemetry outside ERP when possible; send threshold events and relevant measurements into the business process."
+    source_refs: [SRC-SAP-APM-TIMESERIES, SRC-SAP-IOT-INTEGRATION-SCENARIOS]
+
+  - id: TERM-IOT-RFID-GATE
+    type: term
+    title: "RFID Gate / Fixed Reader"
+    signals: ["EPC read", "reader zone", "timestamp", "read strength", "direction inference"]
+    sap_objects: ["HU", "product", "asset", "delivery", "warehouse task"]
+    best_fit:
+      - "hands-free gate confirmation"
+      - "high-throughput pallet or asset identification"
+      - "yard or dock transitions"
+    integration_options:
+      - "reader → edge/RFID middleware → business event"
+      - "WCS/WCU or Auto-ID layer → EWM"
+    design_note: "RFID creates many noisy reads. Deduplicate and infer one physical transition before posting to SAP."
+    source_refs: [SRC-SAP-EWM-AII-RFID]
+
+  - id: TERM-IOT-GPS-TRACKER
+    type: term
+    title: "GPS / Vehicle Telematics Device"
+    signals: ["latitude", "longitude", "speed", "geofence", "ignition", "ETA-related event"]
+    sap_objects: ["freight order", "transportation unit", "shipment tracking process", "resource"]
+    best_fit:
+      - "transport visibility"
+      - "arrival/departure detection"
+      - "exception and delay management"
+    integration_options:
+      - "telematics provider → tracking platform → SAP Business Network Global Track and Trace / TM"
+      - "event API through integration layer"
+    design_note: "ERP usually needs milestones and exceptions, not a new database row every five seconds of a truck journey."
+    source_refs: [SRC-SAP-GTT-OVERVIEW, SRC-SAP-TM-TRACKING]
+
+  - id: TERM-IOT-PLC-MACHINE-SENSOR
+    type: term
+    title: "PLC / Machine Sensor / Counter"
+    signals: ["PLC tags", "machine status", "cycle count", "alarm", "process value"]
+    sap_objects: ["SFC", "operation", "production order context", "equipment", "measuring point"]
+    best_fit:
+      - "automatic production start/complete"
+      - "machine-state visibility"
+      - "automated counters and production parameters"
+    integration_options:
+      - "OPC UA → SAP Digital Manufacturing Production Connector on Edge"
+      - "industrial gateway → event/API integration"
+    design_note: "Keep deterministic machine control in OT. ERP/MES should receive production meaning, not replace PLC safety logic."
+    source_refs: [SRC-SAP-DM-EDGE-OPCUA, SRC-SAP-DM-EDGE-DEVICE]
+
+  - id: TERM-IOT-SMART-TOOL
+    type: term
+    title: "Smart Tool / Test Bench"
+    signals: ["torque", "angle", "dimension", "test result", "tool identity", "calibration state"]
+    sap_objects: ["SFC", "operation", "inspection characteristic", "quality result", "equipment"]
+    best_fit:
+      - "assembly verification"
+      - "quality data collection"
+      - "traceable production evidence"
+    integration_options:
+      - "OPC UA or shop-floor connector"
+      - "REST/event integration from test software"
+    design_note: "Link the result to the exact unit, operation and tool calibration context. A detached measurement is merely a very precise mystery."
+    source_refs: [SRC-SAP-DM-EDGE-OPCUA, SRC-SAP-INTEGRATION-THING-TO-THING]
+
+  - id: TERM-IOT-INDUSTRIAL-CAMERA
+    type: term
+    title: "Industrial Camera / Vision System"
+    signals: ["barcode/OCR result", "defect class", "dimension", "presence check", "image-derived pass/fail"]
+    sap_objects: ["material", "serial number", "inspection result", "warehouse object", "production unit"]
+    best_fit:
+      - "visual quality inspection"
+      - "hands-free identification"
+      - "loading/packing verification"
+    integration_options:
+      - "vision controller → edge/API → SAP business event"
+      - "camera inside supported mobile application for scanning workflows"
+    design_note: "Normally send extracted result, confidence and evidence reference. Do not push every raw image into ERP."
+
+  - id: TERM-IOT-SMART-METER
+    type: term
+    title: "Smart Meter / Energy Meter"
+    signals: ["meter reading", "consumption interval", "power", "device status"]
+    sap_objects: ["utility device", "register", "meter reading", "equipment/energy KPI"]
+    best_fit:
+      - "utilities billing and metering"
+      - "plant energy monitoring"
+      - "consumption-based maintenance or sustainability analytics"
+    integration_options:
+      - "smart meter gateway / MDM → SAP S/4HANA Utilities web-service integration"
+      - "industrial energy meter → edge/time-series platform → analytics or maintenance context"
+    design_note: "Utilities metering has a specialized regulated integration model; plant energy telemetry is a different architecture problem."
+    source_refs: [SRC-SAP-UTILITIES-SMART-METER]
+
+  - id: TERM-IOT-ROBOT-AMR-AGV
+    type: term
+    title: "Robot / AMR / AGV"
+    signals: ["task accepted", "position", "arrival", "load state", "fault", "task complete"]
+    sap_objects: ["warehouse task", "warehouse order", "resource", "production staging requirement"]
+    best_fit:
+      - "automated internal transport"
+      - "warehouse movement"
+      - "line-side replenishment"
+    integration_options:
+      - "EWM → MFS/WCS/fleet manager → robot"
+      - "MES/edge orchestration for production-side moves"
+    design_note: "The robot is an executor. Decide whether EWM, WCS or fleet manager owns routing and recovery before connecting anything."
+    source_refs: [SRC-SAP-EWM-NONSAP-WCU]
+
+  - id: TERM-IOT-PRINTER-APPLICATOR
+    type: term
+    title: "Industrial Printer / Label Applicator"
+    signals: ["print request", "print complete", "printer error", "label applied"]
+    sap_objects: ["HU label", "shipping label", "product label", "warehouse work context"]
+    best_fit:
+      - "HU and shipping labeling"
+      - "production labeling"
+      - "print-and-apply automation"
+    integration_options:
+      - "SAP spool/output management → printer"
+      - "WCS/workstation/edge → print-and-apply device"
+    design_note: "Printing is an output device pattern. The business control is whether the right label version reached the right physical object."
+
+  - id: TERM-IOT-PICK-LIGHT-ANDON
+    type: term
+    title: "Pick-by-Light / Andon / Electronic Indicator"
+    signals: ["display command", "light state", "button confirmation", "operator acknowledgement"]
+    sap_objects: ["warehouse task", "production operation", "exception/andon event"]
+    best_fit:
+      - "high-frequency picking"
+      - "line-side guidance"
+      - "visual exception signaling"
+    integration_options:
+      - "WCS/MES/edge controller rather than direct ERP device control"
+    design_note: "Use ERP for work intent and status. Use the execution layer for sub-second lights and buttons."
+
+integration_patterns:
+  - id: "PAT-IOT-PERIPHERAL"
+    title: "Local Peripheral"
+    path: "Device → USB/Bluetooth/HID/vendor SDK → RF/mobile/work-center UI → SAP action"
+    use_when: "One operator owns the interaction and the device behaves like a local input/output peripheral."
+    examples: ["scanner", "scale", "camera", "mobile printer"]
+  - id: "PAT-IOT-EDGE-OT"
+    title: "Industrial Edge / OT"
+    path: "Sensor/PLC/tool → OPC UA or industrial protocol → Edge → MES/DM/service → SAP business action"
+    use_when: "Signals are high-frequency, machines need local resilience, or protocol conversion belongs near the shop floor."
+    source_refs: [SRC-SAP-DM-EDGE-OPCUA]
+  - id: "PAT-IOT-EVENT"
+    title: "Event / Broker"
+    path: "Device/Gateway → MQTT or event broker → integration service → context/rules → SAP API/event"
+    use_when: "Many devices publish asynchronous events and consumers should be decoupled."
+    source_refs: [SRC-SAP-INTEGRATION-THING-TO-THING]
+  - id: "PAT-IOT-WCS-MFS"
+    title: "Warehouse Control Boundary"
+    path: "EWM work → MFS/WCS/fleet manager → PLC/robot/device → confirmation → EWM"
+    use_when: "Equipment executes warehouse work and another layer owns routing, sequencing or machine control."
+    source_refs: [SRC-SAP-EWM-NONSAP-WCU]
+  - id: "PAT-IOT-ASSET-TIMESERIES"
+    title: "Asset Time-Series"
+    path: "Sensor → time-series ingestion → asset indicator/rule → maintenance notification / S/4 measurement"
+    use_when: "The business value is condition monitoring, predictive maintenance or counter-based maintenance."
+    source_refs: [SRC-SAP-APM-TIMESERIES, SRC-SAP-APM-IOT-SCOPE, SRC-SAP-ASSET-MEASUREMENT-DOC]
+  - id: "PAT-IOT-TRACKING"
+    title: "Logistics Tracking"
+    path: "Telematics/gateway/provider → tracking events → GTT/TM → milestone, ETA or exception"
+    use_when: "Location and event visibility cross organizational or carrier boundaries."
+    source_refs: [SRC-SAP-GTT-OVERVIEW, SRC-SAP-TM-TRACKING]
+  - id: "PAT-IOT-INDUSTRY-GATEWAY"
+    title: "Industry Gateway"
+    path: "Device → regulated/specialized gateway → domain platform → S/4HANA"
+    use_when: "Industry regulation or domain technology defines a dedicated integration chain, such as intelligent metering."
+    source_refs: [SRC-SAP-UTILITIES-SMART-METER]
+
+design_rules:
+  - id: HEUR-IOT-BUSINESS-EVENT-FIRST
+    type: expert_heuristic
+    context: "IoT integration design"
+    statement: "Define the SAP business event before choosing the device protocol."
+    confidence: high
+    questions:
+      - "Which SAP object changes because of this signal?"
+      - "Is the required action a measurement, status, confirmation, exception or posting?"
+  - id: HEUR-IOT-EDGE-NOISE
+    type: expert_heuristic
+    context: "High-frequency telemetry"
+    statement: "Filter noise and derive stable events before ERP whenever raw frequency is higher than business frequency."
+    confidence: high
+    questions:
+      - "How many device samples represent one business event?"
+      - "What happens if connectivity is lost for ten minutes?"
+  - id: HEUR-IOT-IDEMPOTENCY
+    type: expert_heuristic
+    context: "Device-triggered business posting"
+    statement: "Every automatic posting needs an idempotency key or equivalent duplicate-control design."
+    confidence: high
+    questions:
+      - "Can the same sensor event arrive twice?"
+      - "Can retry create a second goods movement or confirmation?"
+  - id: HEUR-IOT-OT-ERP-BOUNDARY
+    type: expert_heuristic
+    context: "Machine control"
+    statement: "Keep safety-critical and sub-second control in OT; send business intent and confirmed state across the ERP boundary."
+    confidence: high
+  - id: HEUR-IOT-RECONCILE-PHYSICAL
+    type: expert_heuristic
+    context: "Operations"
+    statement: "A successful API call is not proof that the physical world followed the command. Reconcile the final physical and business state."
+    confidence: high
+
+decision_guide:
+  - need: "One worker scans or weighs one object"
+    choice: "Local peripheral + standard RF/mobile UI"
+    reason: "Lowest architecture weight; keep human confirmation visible."
+  - need: "Machine data at high frequency"
+    choice: "Industrial edge / OPC UA / MES"
+    reason: "Local buffering and protocol handling belong near equipment."
+  - need: "Many asynchronous devices"
+    choice: "Gateway + event broker + integration layer"
+    reason: "Decouple device protocols from SAP APIs and business services."
+  - need: "Automated warehouse equipment"
+    choice: "EWM + MFS/WCS/fleet-management boundary"
+    reason: "Warehouse work and machine routing need explicit ownership."
+  - need: "Asset condition and predictive maintenance"
+    choice: "Time-series / APM + S/4 Asset Management"
+    reason: "Keep telemetry history and rules outside transactional maintenance documents while posting business-relevant outcomes."
+  - need: "Vehicle and shipment visibility"
+    choice: "Telematics provider + GTT/TM tracking"
+    reason: "Turn GPS streams into transportation milestones and exceptions."
+  - need: "Regulated smart-meter process"
+    choice: "Industry meter gateway / MDM + S/4HANA Utilities"
+    reason: "Use the domain-specific device and market integration model."
+
+failure_modes:
+  - symptom: "Duplicate goods movement or confirmation"
+    check_first: "Device-event ID, retry path, idempotency store and posting acknowledgement."
+  - symptom: "Sensor shows an alarm but SAP is green"
+    check_first: "Gateway buffer, event routing, context mapping, threshold rule and target business object."
+  - symptom: "ERP receives thousands of meaningless records"
+    check_first: "Sampling frequency, edge aggregation and business-event definition."
+  - symptom: "RFID gate posts the wrong pallet transition"
+    check_first: "Reader zone, duplicate reads, direction inference, EPC-to-HU mapping and event window."
+  - symptom: "Machine stopped but production still appears active"
+    check_first: "PLC/OPC tag, edge subscription, MES state mapping and last acknowledged business event."
+  - symptom: "GPS data exists but no useful transport alert"
+    check_first: "Business milestone model, geofence/event conversion and freight-object correlation."
+
+synthetic_scenarios:
+  - title: "Cold-chain inbound"
+    flow: "Temperature logger → gateway → threshold event → inbound delivery/HU context → quality hold or alert"
+    result: "Damaged or suspect stock is identified before normal use."
+  - title: "Automatic line counter"
+    flow: "PLC piece counter → OPC UA → Digital Manufacturing Edge → production context → confirmation/analytics"
+    result: "Production progress reflects machine evidence without sending every PLC tag to ERP."
+  - title: "Predictive maintenance"
+    flow: "Vibration sensor → time-series → APM rule → S/4HANA maintenance notification"
+    result: "Asset health signal becomes owned maintenance work."
+  - title: "RFID dock door"
+    flow: "RFID reads → edge deduplication → HU transition → EWM/TM event"
+    result: "Hands-free physical transition is recorded once with evidence."
+  - title: "Smart weighing at packing"
+    flow: "Scale → workstation → HU context → tolerance check → update weight / block exception"
+    result: "Shipping data and physical package weight agree before loading."
+
+assessment_cards:
+  - question: "Would you connect a temperature sensor directly to S/4HANA?"
+    answer: >-
+      Normally no. I first decide which business event matters. High-frequency sensor data belongs in a device,
+      edge or time-series layer. S/4HANA should receive a relevant measurement, threshold exception or business action.
+  - question: "Where does OPC UA fit?"
+    answer: >-
+      It is an industrial connectivity protocol between shop-floor systems and an edge or MES layer.
+      For SAP Digital Manufacturing, the Production Connector on Edge can connect to an OPC UA server,
+      subscribe to tag changes and use them in production processes.
+  - question: "What is the biggest IoT integration risk?"
+    answer: >-
+      Treating a noisy physical signal as a business transaction. I separate signal, context and business event,
+      then design duplicate protection, buffering, ownership and reconciliation.
+  - question: "When does MQTT make sense?"
+    answer: >-
+      When many devices or gateways publish asynchronous events and we want to decouple producers from consumers.
+      I still keep device topics and payloads outside the ERP contract and translate them into stable business events.
+  - question: "How do you integrate robots or AGVs with EWM?"
+    answer: >-
+      I define whether EWM, MFS, WCS or fleet manager owns work decomposition, routing and recovery.
+      The robot executes physical work; it should not become a second warehouse-management brain by accident.
+
+relations:
+  - subject: CAP-IOT-PHYSICAL-DIGITAL-BRIDGE
+    predicate: uses_framework
+    object: PLT-IOT-EDGE-GATEWAY
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: PLT-IOT-EDGE-GATEWAY
+    predicate: provides_capability
+    object: CAP-IOT-PHYSICAL-DIGITAL-BRIDGE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: PLT-IOT-OPC-UA
+    predicate: integrated_via
+    object: PLT-IOT-EDGE-GATEWAY
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-DM-EDGE-OPCUA]
+  - subject: PLT-IOT-MQTT
+    predicate: supports_domain
+    object: CAP-IOT-PHYSICAL-DIGITAL-BRIDGE
+    evidence_type: documented_fact
+    confidence: medium
+    source_refs: [SRC-SAP-INTEGRATION-THING-TO-THING]
+    rationale: "SAP integration guidance models MQTT as an industrial machine-to-machine pattern; exact runtime product depends on landscape."
+  - subject: INT-IOT-ERP-EVENT-PIPELINE
+    predicate: integrates_with
+    object: APP-SAP-DIGITAL-MANUFACTURING
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: INT-IOT-ERP-EVENT-PIPELINE
+    predicate: integrates_with
+    object: APP-SAP-S4-EAM
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: INT-IOT-ERP-EVENT-PIPELINE
+    predicate: integrates_with
+    object: APP-SAP-EWM
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: INT-IOT-ERP-EVENT-PIPELINE
+    predicate: integrates_with
+    object: APP-SAP-TM
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: INT-IOT-ERP-EVENT-PIPELINE
+    predicate: integrates_with
+    object: APP-SAP-S4-UTILITIES
+    evidence_type: reasoned_interpretation
+    confidence: medium
+  - subject: APP-SAP-APM
+    predicate: integrates_with
+    object: APP-SAP-S4-EAM
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-APM-IOT-SCOPE]
+  - subject: APP-SAP-GTT
+    predicate: integrates_with
+    object: APP-SAP-TM
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-GTT-OVERVIEW]
+  - subject: TERM-IOT-PLC-MACHINE-SENSOR
+    predicate: integrated_via
+    object: PLT-IOT-OPC-UA
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TERM-IOT-ENVIRONMENT-SENSOR
+    predicate: provides_context_to
+    object: APP-SAP-APM
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TERM-IOT-GPS-TRACKER
+    predicate: provides_context_to
+    object: APP-SAP-GTT
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TERM-IOT-RFID-GATE
+    predicate: provides_context_to
+    object: APP-SAP-EWM
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TERM-IOT-SMART-METER
+    predicate: provides_context_to
+    object: APP-SAP-S4-UTILITIES
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-UTILITIES-SMART-METER]
+
+source_refs:
+  - SRC-SAP-IOT-INTEGRATION-SCENARIOS
+  - SRC-SAP-DM-EDGE-OPCUA
+  - SRC-SAP-DM-EDGE-DEVICE
+  - SRC-SAP-INTEGRATION-THING-TO-THING
+  - SRC-SAP-EWM-CATCH-WEIGHT
+  - SRC-SAP-EWM-NONSAP-WCU
+  - SRC-SAP-EWM-AII-RFID
+  - SRC-SAP-ASSET-MEASUREMENT-DOC
+  - SRC-SAP-APM-IOT-SCOPE
+  - SRC-SAP-APM-TIMESERIES
+  - SRC-SAP-GTT-OVERVIEW
+  - SRC-SAP-TM-TRACKING
+  - SRC-SAP-UTILITIES-SMART-METER
+
+tags:
+  - iot
+  - devices
+  - logistics
+  - warehouse
+  - manufacturing
+  - asset-management
+  - transportation
+  - utilities
+  - opc-ua
+  - mqtt
+  - edge
+  - integration
+  - assessment
