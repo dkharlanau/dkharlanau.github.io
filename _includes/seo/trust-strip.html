@@ -1,13 +1,20 @@
 {% comment %}
 Visible trust/provenance strip for reviewed knowledge pages.
-Excluded from the homepage and intentionally compact.
+Excluded from the homepage and limited to pages managed by the AI discovery graph.
 {% endcomment %}
 {% assign trust_robots = page.robots | default: '' %}
-{% if page.url != '/' and page.status == 'reviewed' and page.verified == true and trust_robots contains 'noindex' == false %}
+{% assign show_trust_strip = false %}
+{% if page.url != '/' and page.status == 'reviewed' and page.verified == true and page.ai_sidecar %}
+  {% assign show_trust_strip = true %}
+{% endif %}
+{% if trust_robots contains 'noindex' %}
+  {% assign show_trust_strip = false %}
+{% endif %}
+{% if show_trust_strip %}
 <div class="knowledge-trust-strip" role="note" aria-label="Content review and evidence">
   <span><strong>Author:</strong> Dzmitryi Kharlanau</span>
   {% if page.last_reviewed %}<span><strong>Reviewed:</strong> {{ page.last_reviewed | date: '%d %b %Y' }}</span>{% endif %}
   {% if page.evidence_review_mode %}<span><strong>Evidence:</strong> {{ page.evidence_review_mode | replace: '_', ' ' }}</span>{% endif %}
-  {% if page.ai_sidecar %}<a href="{{ page.ai_sidecar | relative_url }}">Machine-readable data</a>{% endif %}
+  <a href="{{ page.ai_sidecar | relative_url }}">Machine-readable data</a>
 </div>
 {% endif %}
