@@ -1,0 +1,41 @@
+{
+  "kind": "rdp-review-item",
+  "specVersion": "0.1",
+  "id": "review.sales.ext-q9.2026-08",
+  "type": "reference-gap",
+  "status": "decided",
+  "severity": "blocking",
+  "queue": "sales-reference-gaps",
+  "question": "Should source material EXT-Q9 map to canonical material MAT-471103 for the SAP Sales export source family?",
+  "context": {
+    "procedureId": "sales.order-material-reconciliation",
+    "procedureVersion": "0.1.0",
+    "runId": "case-sales-material-run-02-review",
+    "sourceRole": "sales_orders",
+    "semanticConcept": "sap.material-id",
+    "referenceDataset": "sap.material-aliases",
+    "ruleId": "material-coverage",
+    "affectedConsumers": ["sales-reconciliation-output"]
+  },
+  "evidence": {
+    "reasonCode": "LOOKUP_NOT_FOUND",
+    "facts": [
+      "EXT-Q9 occurs once in the August Sales source.",
+      "The pinned reference release 2026.08.1 has no row for EXT-Q9.",
+      "Sales Document + Item remains unique.",
+      "The quantity control remains 24 before publication is withheld."
+    ],
+    "metrics": {"materialCoverage": 0.75, "unmatchedRows": 1, "locatorConfidence": 0.93},
+    "safeSamples": ["EXT-Q9", "MAT-471103"],
+    "evidenceRefs": ["run-02-review.json", "fixtures.json#sourceRuns/run-02"],
+    "confidenceComponents": {"sourceEvidence": 1.0, "existingReferenceEvidence": 0.0, "businessCandidateEvidence": 0.9}
+  },
+  "candidates": [
+    {"id": "approve-ext-q9", "action": "Add EXT-Q9 -> MAT-471103 to a new sap.material-aliases release.", "expectedEffect": "Material coverage becomes 100% for the blocked run.", "risk": "medium", "evidence": ["Business reference confirms the candidate target."]},
+    {"id": "reject-ext-q9", "action": "Keep EXT-Q9 unmatched and request upstream correction.", "expectedEffect": "Publication remains blocked until the source or reference authority changes.", "risk": "low", "evidence": ["No mapping is safer than an unconfirmed mapping."]}
+  ],
+  "businessImpact": "One Sales order item cannot be published to the downstream reconciliation output until the material identity is confirmed.",
+  "decisionId": "decision.sales.ext-q9.2026-08",
+  "createdAt": "2026-08-16T13:51:03Z",
+  "updatedAt": "2026-08-16T13:54:00Z"
+}
