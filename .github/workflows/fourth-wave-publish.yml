@@ -1,9 +1,9 @@
+# Retry with wave 04 nested correctly under the publication ledger's waves mapping.
 name: Publish Reviewed Lab Wave 04
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - ".github/workflows/fourth-wave-publish.yml"
 
@@ -38,35 +38,31 @@ jobs:
           from pathlib import Path
           import sys
           sys.path.insert(0, str(Path('scripts').resolve()))
-          from lab_p2_publication_triage import (
-              build_triage,
-              PUBLIC_REVIEW_NEXT,
-              POLICY_ERROR,
-              NEEDS_POLICY_DECISION,
-          )
+          from lab_p2_publication_triage import build_triage, PUBLIC_REVIEW_NEXT, POLICY_ERROR, NEEDS_POLICY_DECISION
+
           payload = build_triage(Path('.').resolve())
           counts = payload['counts']
-          errors = []
-          if counts.get(PUBLIC_REVIEW_NEXT, 0) != 3:
-              errors.append(f"PUBLIC_REVIEW_NEXT={counts.get(PUBLIC_REVIEW_NEXT, 0)}")
-          if counts.get(POLICY_ERROR, 0) != 0:
-              errors.append(f"POLICY_ERROR={counts.get(POLICY_ERROR, 0)}")
-          if counts.get(NEEDS_POLICY_DECISION, 0) != 0:
-              errors.append(f"NEEDS_POLICY_DECISION={counts.get(NEEDS_POLICY_DECISION, 0)}")
-          if errors:
-              raise SystemExit('Unexpected P2 triage before wave 04: ' + ', '.join(errors))
-          routes = [row['route'] for row in payload['rows'] if row['decision'] == PUBLIC_REVIEW_NEXT]
           expected = [
               '/labs/ai-ready/',
               '/labs/business-ai/',
               '/labs/enterprise-context/sales-diagnostics/',
           ]
+          routes = [row['route'] for row in payload['rows'] if row['decision'] == PUBLIC_REVIEW_NEXT]
+          errors = []
+          if counts.get(PUBLIC_REVIEW_NEXT, 0) != 3:
+              errors.append(f"PUBLIC_REVIEW_NEXT={counts.get(PUBLIC_REVIEW_NEXT, 0)}")
+          if counts.get(POLICY_ERROR, 0):
+              errors.append(f"POLICY_ERROR={counts.get(POLICY_ERROR, 0)}")
+          if counts.get(NEEDS_POLICY_DECISION, 0):
+              errors.append(f"NEEDS_POLICY_DECISION={counts.get(NEEDS_POLICY_DECISION, 0)}")
           if routes != expected:
-              raise SystemExit(f'Unexpected public framework routes: {routes}')
+              errors.append(f"routes={routes}")
+          if errors:
+              raise SystemExit('Unexpected P2 triage before wave 04: ' + ', '.join(errors))
           print('P2 triage approved exactly three public frameworks.')
           PY
 
-      - name: Register publication wave
+      - name: Register publication wave under waves mapping
         run: |
           if grep -q '^  public-framework-search-wave-04:' _data/labs/publication_reviews.yml; then
             echo 'Wave already registered.'
@@ -90,6 +86,16 @@ jobs:
                 search_intent: "SAP Sales diagnostic cases and symptom-first troubleshooting for Lead consultants"
           YAML
           fi
+          python3 - <<'PY'
+          import yaml
+          from pathlib import Path
+          p = Path('_data/labs/publication_reviews.yml')
+          data = yaml.safe_load(p.read_text())
+          wave = (data.get('waves') or {}).get('public-framework-search-wave-04')
+          if not wave or len(wave.get('routes', {})) != 3:
+              raise SystemExit('Wave 04 is not nested under waves with three routes.')
+          print('Wave 04 registry nesting verified.')
+          PY
 
       - name: Apply selective editorial review
         run: python3 scripts/publish_reviewed_lab_wave.py --wave public-framework-search-wave-04
@@ -103,16 +109,13 @@ jobs:
       - name: Open search only through promotion gate
         run: python3 scripts/lab_search_promotion_loop.py --apply
 
-      - name: Verify post-wave P2 policy
-        run: python3 scripts/lab_p2_publication_triage.py --fail-on-unclassified
+      - name: Verify policy, intents and publication gate
+        run: |
+          python3 scripts/lab_p2_publication_triage.py --fail-on-unclassified
+          python3 scripts/audit_lab_search_intents.py
+          python3 scripts/check_lab_publication_gate.py
 
-      - name: Audit search intent ownership
-        run: python3 scripts/audit_lab_search_intents.py
-
-      - name: Enforce Lab publication policy
-        run: python3 scripts/check_lab_publication_gate.py
-
-      - name: Verify framework publication state without factual relabelling
+      - name: Verify framework state without factual relabelling
         run: |
           python3 - <<'PY'
           import json
@@ -133,30 +136,30 @@ jobs:
               text = (root / source_path).read_text(encoding='utf-8')
               end = text.find('\n---', 4)
               fm = yaml.safe_load(text[4:end])
-              if fm.get('status') != 'reviewed':
-                  errors.append(f'{route}: status={fm.get("status")}')
-              if fm.get('verified') is not True:
-                  errors.append(f'{route}: verified={fm.get("verified")}')
+              expected = {
+                  'status': 'reviewed',
+                  'verified': True,
+                  'sitemap': True,
+                  'publication_wave': wave_id,
+                  'evidence_review_mode': 'selective_or_heuristic',
+              }
+              for key, value in expected.items():
+                  if fm.get(key) != value:
+                      errors.append(f'{route}: {key}={fm.get(key)}')
               if 'noindex' in str(fm.get('robots', '')).lower():
                   errors.append(f'{route}: robots={fm.get("robots")}')
-              if fm.get('sitemap') is not True:
-                  errors.append(f'{route}: sitemap={fm.get("sitemap")}')
-              if fm.get('publication_wave') != wave_id:
-                  errors.append(f'{route}: publication_wave={fm.get("publication_wave")}')
-              if fm.get('evidence_review_mode') != 'selective_or_heuristic':
-                  errors.append(f'{route}: evidence_review_mode={fm.get("evidence_review_mode")}')
               item = by_route.get(route)
               if not item or item.get('state') != 'public_or_indexable':
                   errors.append(f'{route}: readiness_state={None if not item else item.get("state")}')
-              factual_status = ((item or {}).get('factual_review') or {}).get('status')
-              if factual_status != 'not_reviewed':
-                  errors.append(f'{route}: factual_status={factual_status}')
+              factual = ((item or {}).get('factual_review') or {}).get('status')
+              if factual != 'not_reviewed':
+                  errors.append(f'{route}: factual_status={factual}')
           if errors:
               raise SystemExit('Wave 04 publication mismatch:\n' + '\n'.join(errors))
-          print('All three public frameworks are indexable with factual status left unchanged.')
+          print('Three public frameworks are indexable; factual status remains not_reviewed.')
           PY
 
-      - name: Run publication and triage safety tests
+      - name: Run publication safety tests
         run: |
           PYTHONDONTWRITEBYTECODE=1 python3 -m pytest \
             tests/test_publish_reviewed_lab_wave.py \
@@ -164,11 +167,10 @@ jobs:
             tests/test_search_discoverability_inventory.py \
             tests/test_lab_search_promotion_loop.py
 
-      - name: Check readiness is current
-        run: python3 scripts/audit_assessment_promotion_readiness.py --check
-
-      - name: Check patch whitespace
-        run: git diff --check
+      - name: Check readiness and whitespace
+        run: |
+          python3 scripts/audit_assessment_promotion_readiness.py --check
+          git diff --check
 
       - name: Remove one-shot workflow
         run: rm .github/workflows/fourth-wave-publish.yml
