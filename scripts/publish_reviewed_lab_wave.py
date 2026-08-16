@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Apply an owner-approved Lab publication wave without bypassing quality gates.
+"""Apply one owner-approved Lab publication wave without bypassing quality gates.
 
-This script does not open robots or sitemap by itself. It marks the approved pages as
-reviewed/verified, records the page-level review in the factual-review registry, and
-updates visible review language. `lab_search_promotion_loop.py --apply` must still pass
-before a route becomes indexable.
+The approval ledger owns the routes, search intents, review date, and any exact visible
+text replacements. This script marks approved pages reviewed/verified and updates the
+factual-review registry. It never opens robots or sitemap; the search promotion loop
+must still pass separately.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
 from pathlib import Path
@@ -20,68 +21,19 @@ ROOT = Path(__file__).resolve().parents[1]
 APPROVALS = ROOT / "_data" / "labs" / "publication_reviews.yml"
 READINESS = ROOT / "labs" / "assessment" / "data" / "promotion-readiness.json"
 FACTUAL_REVIEW = ROOT / "labs" / "assessment" / "data" / "factual-review.json"
-WAVE_ID = "logistics-search-wave-01"
-REVIEW_DATE = "2026-08-16"
 
-VISIBLE_REPLACEMENTS: dict[str, list[tuple[str, str]]] = {
-    "/labs/enterprise-context/sales-order/": [
-        ("<p>Working map</p>", "<p>Reviewed map</p>"),
-        ("<em>Draft research · no client data · human review still required</em>", "<em>Reviewed model · source-tracked · no client data</em>"),
-        (
-            "the assessment factual-review layer currently confirms two load-bearing controls on this route: item-category determination and schedule-line-category behavior. The wider decision map keeps its own source registry, but the page still requires end-to-end human review before any verification or publication decision.",
-            "the assessment factual-review layer confirms the load-bearing item-category and schedule-line controls on this route. The wider decision map was reviewed against its SAP source registry; authored diagnostic heuristics remain separated from documented product behavior.",
-        ),
-    ],
-    "/labs/enterprise-context/pricing/": [
-        ("<p>Working model</p>", "<p>Reviewed model</p>"),
-        ("<em>Draft research · practical reasoning · no client data</em>", "<em>Reviewed model · source-tracked · no client data</em>"),
-        (
-            "claim-level review currently confirms the condition-technique search model and pricing-procedure determination inputs. The wider page includes extensions, billing parity, and practitioner heuristics from its source registry, but it still needs page-level human review before any verification or publication decision.",
-            "claim-level review confirms the condition-technique search model and pricing-procedure determination inputs. Extensions and billing behavior were reviewed against the source registry; practitioner heuristics remain explicitly identified as authored reasoning.",
-        ),
-    ],
-    "/labs/enterprise-context/atp/": [
-        ("<p>Working model</p>", "<p>Reviewed model</p>"),
-        ("<em>Draft research · practical reasoning · no client data</em>", "<em>Reviewed model · source-tracked · no client data</em>"),
-        (
-            "claim-level review currently confirms the advanced ATP simulation API scope, Supply Protection behavior, and the complementary PAL/Supply Protection model. The wider page also covers classic ATP controls, BOP, alternatives, and integrations, so page-level human review is still required.",
-            "claim-level review confirms the advanced ATP simulation API scope, Supply Protection behavior, and the complementary PAL/Supply Protection model. Classic ATP controls, BOP, alternatives, and integration boundaries were reviewed against the route source registry; authored diagnostic framing remains explicitly separate.",
-        ),
-    ],
-    "/labs/enterprise-context/shipping/": [
-        ("<p>Working model</p>", "<p>Reviewed model</p>"),
-        ("<em>Draft research · practical reasoning · no client data</em>", "<em>Reviewed model · source-tracked · no client data</em>"),
-        (
-            "claim-level review currently confirms the shipping-point input model and the classic route-determination context, including the role of route data in scheduling. The wider execution and EWM/TM boundary still requires page-level human review.",
-            "claim-level review confirms the shipping-point input model and the classic route-determination context, including the role of route data in scheduling. The wider execution and EWM/TM boundary was reviewed as an authored integration model and remains separated from release-specific SAP behavior.",
-        ),
-    ],
-    "/labs/enterprise-context/procurement/": [
-        ("<p>Working model</p>", "<p>Reviewed model</p>"),
-        ("<em>Draft research · practical reasoning · no client data</em>", "<em>Reviewed model · source-tracked · no client data</em>"),
-        (
-            "claim-level review currently confirms source-of-supply behavior and the distinction between item category and account-assignment category. The end-to-end map covers more decisions and integrations, so page-level human review is still required before any verification or publication decision.",
-            "claim-level review confirms source-of-supply behavior and the distinction between item category and account-assignment category. The end-to-end map was reviewed against its SAP source registry; cross-process diagnostic framing remains authored reasoning.",
-        ),
-    ],
-    "/labs/enterprise-context/ewm/": [
-        ("<p>Working model</p>", "<p>Reviewed model</p>"),
-        (
-            "claim-level review currently confirms warehouse-task semantics, warehouse-order grouping, and wave-to-task/order behavior. The ownership model above is an authored diagnostic frame; deployment, production, QM, automation, and cross-system completion still require page-level human review.",
-            "claim-level review confirms warehouse-task semantics, warehouse-order grouping, and wave-to-task/order behavior. Deployment, production, QM, automation, and cross-system boundaries were reviewed against the route source registry; the ownership model remains an authored diagnostic frame.",
-        ),
-    ],
-    "/labs/enterprise-context/integrations/": [
-        ("<p>Research status</p>", "<p>Reviewed architecture</p>"),
-        (
-            "reviewed SAP product claims support selected platform and interface behavior. The architecture stack, selection sequence, and design heuristics are authored reasoning and remain subject to page-level human review.",
-            "reviewed product documentation supports the named platform and interface behavior. The architecture stack, selection sequence, and design heuristics were reviewed as authored reasoning and are intentionally kept separate from vendor product facts.",
-        ),
-    ],
-    "/labs/enterprise-context/automotive-jit/": [
-        ("<p>Working model</p>", "<p>Reviewed model</p>"),
-    ],
-}
+STALE_REVIEW_MARKERS = (
+    "human review still required",
+    "page-level human review",
+    "still needs page-level human review",
+    "still requires page-level human review",
+    "requires page-level human review",
+    "remains draft until human review",
+    "stays draft until human review",
+    "<em>draft research",
+    "<p>working model</p>",
+    "<p>working inventory</p>",
+)
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -116,53 +68,93 @@ def readiness_index() -> dict[str, dict[str, Any]]:
     return {str(item["route"]): item for item in payload.get("items", []) if item.get("route")}
 
 
-def validate_wave(wave: dict[str, Any], readiness: dict[str, dict[str, Any]]) -> None:
+def validate_wave(wave_id: str, wave: dict[str, Any], readiness: dict[str, dict[str, Any]]) -> None:
+    routes = wave.get("routes")
+    if not isinstance(routes, dict) or not routes:
+        raise RuntimeError(f"Publication wave has no routes: {wave_id}")
+
     required_status = str(wave.get("required_factual_status") or "source_supported")
     min_score = int(wave.get("min_structural_score") or 5)
-    for route, cfg in wave["routes"].items():
+    review_date = str(wave.get("reviewed_at") or "").strip()
+    if not review_date:
+        raise RuntimeError(f"{wave_id}: reviewed_at is required")
+
+    for route, cfg in routes.items():
+        if not isinstance(cfg, dict):
+            raise RuntimeError(f"{route}: route config must be a mapping")
         item = readiness.get(route)
         if not item:
             raise RuntimeError(f"No promotion-readiness item for {route}")
         factual = item.get("factual_review") or {}
+        if item.get("state") != "human_review_candidate":
+            raise RuntimeError(f"{route}: expected human_review_candidate, got {item.get('state')}")
         if item.get("priority") != "P1":
             raise RuntimeError(f"{route}: expected P1, got {item.get('priority')}")
         if factual.get("status") != required_status:
             raise RuntimeError(f"{route}: factual status is {factual.get('status')}")
         if int(item.get("structural_score") or 0) < min_score:
             raise RuntimeError(f"{route}: structural score below {min_score}")
+        if item.get("verified") is not False or str(item.get("status") or "").lower() != "draft":
+            raise RuntimeError(
+                f"{route}: expected draft/unverified pre-state, got "
+                f"status={item.get('status')} verified={item.get('verified')}"
+            )
         expected_path = str(cfg.get("source_path") or "")
+        if not expected_path:
+            raise RuntimeError(f"{route}: source_path is required")
         if item.get("source_path") != expected_path:
             raise RuntimeError(f"{route}: source path drift: {item.get('source_path')} != {expected_path}")
+        if not str(cfg.get("search_intent") or "").strip():
+            raise RuntimeError(f"{route}: search_intent is required")
 
 
-def update_page(route: str, cfg: dict[str, Any]) -> str:
+def configured_replacements(route: str, cfg: dict[str, Any]) -> list[tuple[str, str]]:
+    raw = cfg.get("review_replacements") or []
+    if not isinstance(raw, list):
+        raise RuntimeError(f"{route}: review_replacements must be a list")
+    replacements: list[tuple[str, str]] = []
+    for idx, item in enumerate(raw, start=1):
+        if not isinstance(item, dict):
+            raise RuntimeError(f"{route}: replacement {idx} must be a mapping")
+        old = str(item.get("from") or "")
+        new = str(item.get("to") or "")
+        if not old or not new:
+            raise RuntimeError(f"{route}: replacement {idx} requires from/to text")
+        replacements.append((old, new))
+    return replacements
+
+
+def update_page(route: str, cfg: dict[str, Any], wave_id: str, review_date: str) -> str:
     path = ROOT / str(cfg["source_path"])
     text = path.read_text(encoding="utf-8")
+
+    for old, new in configured_replacements(route, cfg):
+        if old not in text:
+            raise RuntimeError(f"{route}: expected review marker not found: {old[:100]}")
+        text = text.replace(old, new, 1)
 
     # Editorial state. Search visibility is intentionally left untouched here.
     text = set_frontmatter_scalar(text, "status", "reviewed")
     text = set_frontmatter_scalar(text, "verified", "true")
-    text = set_frontmatter_scalar(text, "last_reviewed", REVIEW_DATE)
-    text = set_frontmatter_scalar(text, "publication_wave", quoted(WAVE_ID))
-    text = set_frontmatter_scalar(text, "review_method", quoted("primary sources + factual review + page-level editorial review"))
+    text = set_frontmatter_scalar(text, "last_reviewed", review_date)
+    text = set_frontmatter_scalar(text, "publication_wave", quoted(wave_id))
+    text = set_frontmatter_scalar(
+        text,
+        "review_method",
+        quoted("primary sources + factual review + page-level editorial review"),
+    )
     text = set_frontmatter_scalar(text, "search_intent", quoted(str(cfg["search_intent"])))
 
-    for old, new in VISIBLE_REPLACEMENTS.get(route, []):
-        if old not in text:
-            raise RuntimeError(f"{route}: expected review marker not found: {old[:90]}")
-        text = text.replace(old, new, 1)
-
-    # A reviewed page in this wave must not still tell the reader that human review is pending.
     lowered = text.lower()
-    for forbidden in ("human review still required", "page-level human review", "still needs page-level human review"):
+    for forbidden in STALE_REVIEW_MARKERS:
         if forbidden in lowered:
-            raise RuntimeError(f"{route}: stale pending-review language remains: {forbidden}")
+            raise RuntimeError(f"{route}: stale review language remains: {forbidden}")
 
     path.write_text(text, encoding="utf-8")
     return str(path.relative_to(ROOT)).replace("\\", "/")
 
 
-def update_factual_review(routes: set[str]) -> None:
+def update_factual_review(routes: set[str], wave_id: str, review_date: str) -> None:
     payload = json.loads(FACTUAL_REVIEW.read_text(encoding="utf-8"))
     found: set[str] = set()
     for item in payload.get("routes", []):
@@ -171,32 +163,38 @@ def update_factual_review(routes: set[str]) -> None:
             continue
         item["human_verification_required"] = False
         item["page_review_status"] = "reviewed"
-        item["page_reviewed_at"] = REVIEW_DATE
-        item["publication_wave"] = WAVE_ID
+        item["page_reviewed_at"] = review_date
+        item["publication_wave"] = wave_id
         found.add(route)
     missing = routes - found
     if missing:
         raise RuntimeError(f"Missing factual-review route records: {sorted(missing)}")
-    payload["updated_at"] = REVIEW_DATE
+    payload["updated_at"] = review_date
     FACTUAL_REVIEW.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--wave", required=True, help="Wave id from _data/labs/publication_reviews.yml")
+    args = parser.parse_args()
+
     approvals = load_yaml(APPROVALS)
-    wave = (approvals.get("waves") or {}).get(WAVE_ID)
-    if not isinstance(wave, dict) or not isinstance(wave.get("routes"), dict):
-        raise RuntimeError(f"Publication wave not found: {WAVE_ID}")
+    wave_id = args.wave.strip()
+    wave = (approvals.get("waves") or {}).get(wave_id)
+    if not isinstance(wave, dict):
+        raise RuntimeError(f"Publication wave not found: {wave_id}")
 
     readiness = readiness_index()
-    validate_wave(wave, readiness)
+    validate_wave(wave_id, wave, readiness)
+    review_date = str(wave["reviewed_at"])
 
     changed: list[str] = []
     for route, cfg in wave["routes"].items():
-        changed.append(update_page(route, cfg))
-    update_factual_review(set(wave["routes"]))
+        changed.append(update_page(route, cfg, wave_id, review_date))
+    update_factual_review(set(wave["routes"]), wave_id, review_date)
     changed.append(str(FACTUAL_REVIEW.relative_to(ROOT)))
 
-    print(f"Reviewed publication wave: {WAVE_ID}")
+    print(f"Reviewed publication wave: {wave_id}")
     for path in changed:
         print(f"  - {path}")
     print("Search visibility remains closed until the promotion loop passes with --apply.")
