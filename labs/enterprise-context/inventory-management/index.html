@@ -1,0 +1,162 @@
+---
+layout: default
+title: "Inventory Management — Enterprise Context Lab"
+description: "A practical SAP S/4HANA Inventory Management map from business event and movement semantics through stock state, valuation, reservations, physical inventory, EWM handoff, and reconciliation."
+permalink: /labs/enterprise-context/inventory-management/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-mm
+  - inventory-management
+  - goods-movement
+  - stock
+  - physical-inventory
+  - ewm
+  - troubleshooting
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.inventory_management %}
+{% assign evidence = site.data.labs.enterprise_context.sources.inventory_management %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Inventory Management</li></ol></nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Inventory Management</p>
+      <h1>Start with the stock event.<br />Then read the movement type.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#runtime">Trace event to reconciliation <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Inventory Management inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Draft research · synthetic cases · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+    <p><strong>Working rule:</strong> a material document is evidence of a stock event. Explain what changed in quantity, location, stock type, ownership, valuation, consumption, or transit state before discussing a movement-type number.</p>
+    <a href="/labs/enterprise-context/data/inventory-management-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Memory model</p><h2>Seven questions from event to proof.</h2><p>This path separates process authority, inventory state, financial effect, and warehouse execution.</p></header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article class="ecg-memory-card"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item.key }}</strong><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong> Use the movement type as control evidence inside this chain, not as the starting point.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Movement families</p><h2>Translate every posting into a business-state sentence.</h2><p>Receipt, issue, transfer posting, stock transfer, and inventory difference solve different problems even when they all create material documents.</p></header>
+    <div class="ecg-input-grid">
+      {% for item in graph.movement_families %}
+      <article><span>MOVE</span><h3>{{ item.title }}</h3><p>{{ item.business_reading }}</p><p><strong>Lead question:</strong> {{ item.lead_question }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Stock model</p><h2>Quantity without stock context is a weak answer.</h2><p>{{ graph.stock_model.principle }}</p></header>
+    <div class="ecg-input-grid">
+      {% for item in graph.stock_model.dimensions %}
+      <article><span>STOCK</span><h3>{{ item.dimension }}</h3>{% if item.examples %}<p>{{ item.examples | join: " · " }}</p>{% endif %}<p><strong>Ask:</strong> {{ item.question }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header><p class="research-canvas__eyebrow">Runtime</p><h2>One posting can cross logistics, warehouse, and accounting boundaries.</h2><p>Follow the reference and before/after state instead of reading only the final stock overview.</p></header>
+    <div class="ecg-determination-list">
+      {% for stage in graph.runtime_pipeline %}
+      <article class="ecg-determination-detail">
+        <header><div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>inventory stage</small></div><h3>{{ stage.title }}</h3><p class="ecg-question">{{ stage.question }}</p></header>
+        <div class="ecg-decision-columns"><div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Reservations</p><h2>A reservation is intent, not physical stock movement.</h2><p>{{ graph.reservation_model.principle }}</p></header>
+    <div class="ecg-input-grid">
+      {% for item in graph.reservation_model.types %}<article><span>RES</span><h3>{{ item.title }}</h3><p>{{ item.reading }}</p></article>{% endfor %}
+    </div>
+    <div class="ecg-lead-lens"><strong>Diagnostic questions:</strong><ul>{% for item in graph.reservation_model.diagnostic_questions %}<li>{{ item }}</li>{% endfor %}</ul></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Physical inventory</p><h2>Posting the difference fixes the book. It does not explain the operation.</h2><p>{{ graph.physical_inventory_model.lead_lens }}</p></header>
+    <div class="research-route-list">
+      {% for item in graph.physical_inventory_model.stages %}<a href="#failures"><span>{{ forloop.index }}</span><strong>{{ item.title }}</strong><small>{{ item.reading }}</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Integration boundaries</p><h2>Inventory is the quantity/value junction of logistics.</h2><p>Procurement, production, quality, sales, EWM, and finance can all own different parts of one stock event.</p></header>
+    <div class="research-route-list">
+      {% for item in graph.integration_boundaries %}<a href="#failures"><span>INT</span><strong>{{ item.boundary }}</strong><small>{{ item.ownership }} {{ item.question }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failures" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>Do not repair stock before you know which state is wrong.</h2><p>Most expensive inventory incidents become confusing when a compensating posting hides the original reference, warehouse state, or accounting effect.</p></header>
+    <div class="ecg-determination-list">
+      {% for failure in graph.failure_modes %}<article class="ecg-determination-detail"><header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header><div class="ecg-decision-columns"><div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div></div></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>Trace one stock event into planning, warehouse, or finance.</h2><p>This is where Inventory Management becomes an architecture topic instead of a posting screen.</p></header>
+    <div class="research-route-list">
+      {% for item in graph.impact_traces %}<a href="#lead-lens"><span>TRACE</span><strong>{{ item.title }}</strong><small>{{ item.path }} · {{ item.lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="lead-lens" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead lens</p><h2>Explain the state transition and prove it.</h2><p>The strongest answer names the event, owner, stock dimensions, financial impact, warehouse boundary, and evidence chain.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>ASK</span><h3>What I ask first</h3><p>{{ graph.lead_lens.what_i_ask_first }}</p></article>
+      <article><span>OWN</span><h3>Decision ownership</h3><p>{{ graph.lead_lens.decision_owner }}</p></article>
+      <article><span>TRADE</span><h3>Main trade-off</h3><p>{{ graph.lead_lens.main_trade_off }}</p></article>
+      <article><span>FAIL</span><h3>Typical failure</h3><p>{{ graph.lead_lens.typical_failure }}</p></article>
+      <article><span>PROVE</span><h3>Proof of cause</h3><p>{{ graph.lead_lens.proof_of_cause }}</p></article>
+      <article><span>60S</span><h3>60-second explanation</h3><p>{{ graph.lead_lens.sixty_second_explanation }}</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Synthetic cases</p><h2>Practice before/after state, not screen navigation.</h2><p>These examples are fictional and safe for assessment practice.</p></header>
+    <div class="ecg-determination-list">
+      {% for item in graph.synthetic_cases %}<article class="ecg-determination-detail"><header><div><span>CASE</span><small>synthetic</small></div><h3>{{ item.title }}</h3><p>{{ item.scenario }}</p></header><div class="ecg-decision-columns"><div><h4>Lead path</h4><ol>{% for step in item.lead_path %}<li>{{ step }}</li>{% endfor %}</ol></div><div><h4>Lesson</h4><p>{{ item.lesson }}</p></div></div></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment drills</p><h2>Short questions, state-based answers.</h2><p>Use the answer as a coverage check, not something to recite.</p></header>
+    <div class="research-route-list">
+      {% for item in graph.assessment_drills %}<a href="/labs/assessment/"><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.strong_answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Sources</p><h2>Primary documentation checks the behavior.</h2><p>The explanatory model remains independently written. This page stays draft until human review.</p></header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>{% endfor %}
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
