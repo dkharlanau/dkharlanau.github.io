@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/reusable-data-procedures/procedure.schema.json",
+  "title": "Reusable Data Procedure",
+  "description": "Portable definition of approved spreadsheet source signatures, field mappings, and validation policy. Uploaded business rows are not part of the procedure.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "version", "id", "name", "createdAt", "sources", "mappings", "validationPolicy", "dataStored"],
+  "properties": {
+    "kind": { "const": "reusable-data-procedure" },
+    "version": { "type": "string", "const": "1.0" },
+    "id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "purpose": { "type": "string", "maxLength": 300 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "fileName", "fileStem", "sheetName", "expectedColumns"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "fileName": { "type": "string" },
+          "fileStem": { "type": "string" },
+          "sheetName": { "type": "string" },
+          "expectedColumns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "type", "likelyKey"],
+              "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "type": { "enum": ["text", "number", "date", "boolean", "empty"] },
+                "likelyKey": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "mappings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["fromSource", "fromColumn", "toSource", "toColumn", "direction", "evidenceAtSave"],
+        "properties": {
+          "fromSource": { "type": "string", "minLength": 1 },
+          "fromColumn": { "type": "string", "minLength": 1 },
+          "toSource": { "type": "string", "minLength": 1 },
+          "toColumn": { "type": "string", "minLength": 1 },
+          "direction": { "const": "lookup" },
+          "evidenceAtSave": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["confidence", "valueOverlap"],
+            "properties": {
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+              "valueOverlap": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        }
+      }
+    },
+    "validationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requireSameColumns", "minimumCoverage", "targetKeyPreference"],
+      "properties": {
+        "requireSameColumns": { "type": "boolean" },
+        "minimumCoverage": { "type": "number", "minimum": 0, "maximum": 1 },
+        "targetKeyPreference": { "enum": ["unique-or-review"] }
+      }
+    },
+    "dataStored": { "const": false }
+  }
+}
