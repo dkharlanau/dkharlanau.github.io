@@ -1,0 +1,22 @@
+{
+  "kind": "reference-dataset",
+  "specVersion": "0.1",
+  "id": "sap.material-aliases",
+  "version": "2026.08.1",
+  "family": "alias-dictionary",
+  "purpose": "Resolve source material representations to the controlled canonical material used by the reference case.",
+  "owner": "material-data-owner",
+  "steward": "sales-data-steward",
+  "sensitivity": "internal",
+  "key": ["source_material"],
+  "cardinality": "many-to-one",
+  "columns": [
+    {"name": "source_material", "type": "string", "concept": "sap.material-id", "required": true, "description": "Material value as represented by the source family."},
+    {"name": "canonical_material", "type": "string", "concept": "sap.material-id", "required": true, "description": "Controlled target representation for downstream reconciliation."}
+  ],
+  "qualityPolicy": {"requireUniqueKey": true, "onUnknownTarget": "block", "onUnmatched": "block", "onAmbiguous": "block", "minCoverage": 1.0},
+  "source": {"system": "synthetic-reference-case", "locationRef": "fixtures.json#referenceReleases/2026.08.1", "authority": "material-data-owner"},
+  "consumers": ["sales.order-material-reconciliation@0.1.0"],
+  "lifecycle": {"status": "approved", "effectiveFrom": "2026-08-01T00:00:00Z", "approvedBy": "material-data-owner", "approvedAt": "2026-08-01T00:00:00Z"},
+  "provenance": {"createdAt": "2026-08-01T00:00:00Z", "createdBy": "reference-case", "changeReason": "Golden synthetic reference release."}
+}
