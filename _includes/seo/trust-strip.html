@@ -15,7 +15,16 @@ used by JSON-LD and page sidecars and is never rendered on the homepage.
   <span><strong>Written by:</strong> Dzmitryi Kharlanau</span>
   {% if trust_reviewed %}<span><strong>Last reviewed:</strong> {{ trust_reviewed | date: '%d %b %Y' }}</span>{% endif %}
   {% if trust_evidence %}<span><strong>Evidence:</strong> {{ trust_evidence | replace: '_', ' ' }}</span>{% endif %}
-  {% if page.source_links and page.source_links.size > 0 %}<span><strong>Sources:</strong> {{ page.source_links | size }} referenced</span>{% endif %}
   <a href="{{ page.ai_sidecar | relative_url }}">Machine-readable data</a>
+  {% if page.source_links and page.source_links.size > 0 %}
+  <details class="knowledge-trust-sources">
+    <summary>Sources ({{ page.source_links | size }})</summary>
+    <ul>
+      {% for source in page.source_links %}
+      <li><a href="{{ source.url }}" rel="external noopener">{{ source.title | default: source.url }}</a></li>
+      {% endfor %}
+    </ul>
+  </details>
+  {% endif %}
 </div>
 {% endif %}

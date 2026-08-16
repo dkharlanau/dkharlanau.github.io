@@ -74,6 +74,20 @@ def load_json_no_duplicates(path: Path):
     return data, duplicates
 
 
+def validate_lastmod_semantics(errors: list[str]):
+    for name in ("sitemap-pages.xml", "sitemap-atlas.xml"):
+        path = ROOT / name
+        text = path.read_text(encoding="utf-8") if path.exists() else ""
+        if "last_reviewed" in text:
+            errors.append(f"{name}: review date must not drive sitemap lastmod")
+        if "significant_lastmod" not in text:
+            errors.append(f"{name}: missing significant_lastmod precedence")
+    graph = ROOT / "_includes" / "seo" / "structured-data-sitewide-graph.html"
+    graph_text = graph.read_text(encoding="utf-8") if graph.exists() else ""
+    if "graph_modified = page.last_reviewed" in graph_text:
+        errors.append("structured-data-sitewide-graph.html: review date must not drive dateModified")
+
+
 def main() -> int:
     entities_doc = load_yaml(ROOT / "_data" / "knowledge_entities.yml") or {}
     entities = entities_doc.get("entities", {}) if isinstance(entities_doc, dict) else {}
@@ -159,6 +173,8 @@ def main() -> int:
         for path in root.rglob("*.html"):
             if META_KEYWORDS_RE.search(path.read_text(encoding="utf-8", errors="ignore")):
                 errors.append(f"{path.relative_to(ROOT)}: meta keywords are not allowed")
+
+    validate_lastmod_semantics(errors)
 
     if errors:
         print(f"Knowledge publication contract failed with {len(errors)} issue(s):")
