@@ -1,6 +1,6 @@
 {
   "id": "sap-lead-assessment-lab",
-  "version": "1.9.0",
+  "version": "2.0.0",
   "updated_at": "2026-08-16",
   "status": "draft",
   "purpose": "Turn the Lab into a structured SAP Lead assessment route across process knowledge, diagnostics, architecture, integration, data, AI, adaptive practice, feedback, evidence-backed question authoring, promotion readiness, and claim-level primary-source review.",
@@ -201,6 +201,12 @@
   ],
   "authoring_tools": [
     {
+      "id": "evidence-coverage",
+      "label": "Evidence Coverage",
+      "route": "/labs/assessment/evidence-coverage/",
+      "purpose": "Measure primary-source review coverage and evidence debt across the four SAP Lead assessment tracks so factual-review work is selected from data."
+    },
+    {
       "id": "factual-review",
       "label": "Factual Review",
       "route": "/labs/assessment/factual-review/",
@@ -248,14 +254,15 @@
       "Claim-level SAP primary-source review with explicit release scope and human-verification boundary",
       "Primary-source factual review across Integration Operations, Billing, ATP, Credit, EWM, and deployment models",
       "Evidence-aware promotion prioritization using factual-review coverage and explicit review reasons",
-      "Primary-source factual review across twelve core SAP assessment routes and thirty-five load-bearing claims"
+      "Primary-source factual review across twelve core SAP assessment routes and thirty-five load-bearing claims",
+      "Assessment-track evidence coverage and P0 evidence-debt ranking derived from catalog, factual review, and promotion readiness"
     ],
     "next_verticals": [],
     "next_practice_layers": [
-      "create evidence-coverage summaries by assessment track and domain",
-      "continue factual review for Pricing, Shipping, Procurement, MDG, Development, Tax, and other P0 evidence-debt routes",
+      "use evidence-coverage ranking to review the highest cross-track P0 routes",
+      "continue factual review for Pricing, Shipping, Procurement, MDG, Development, Tax, and other evidence-debt routes",
       "connect real assessment feedback to review priority without converting feedback into factual truth",
-      "extend graph-backed question generation only where factual evidence coverage is sufficient"
+      "use evidence coverage as a gate for future graph-backed question generation"
     ]
   },
   "endpoints": {
@@ -295,6 +302,8 @@
     "promotion_readiness": "/labs/assessment/data/promotion-readiness.json",
     "factual_review_route": "/labs/assessment/factual-review/",
     "factual_review_policy": "/labs/assessment/data/factual-review-policy.json",
-    "factual_review": "/labs/assessment/data/factual-review.json"
+    "factual_review": "/labs/assessment/data/factual-review.json",
+    "evidence_coverage_route": "/labs/assessment/evidence-coverage/",
+    "evidence_coverage": "/labs/assessment/data/evidence-coverage.json"
   }
 }

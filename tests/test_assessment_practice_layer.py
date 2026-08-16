@@ -168,6 +168,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "feedback": ASSESSMENT / "feedback" / "index.html",
         "question-review": ASSESSMENT / "question-review" / "index.html",
         "factual-review": ASSESSMENT / "factual-review" / "index.html",
+        "evidence-coverage": ASSESSMENT / "evidence-coverage" / "index.html",
         "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",
         "cross-process": ASSESSMENT / "cross-process" / "index.html",
     }
@@ -185,6 +186,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
     authoring = {item["id"]: item for item in catalog["authoring_tools"]}
     assert authoring["question-review"]["route"] == "/labs/assessment/question-review/"
     assert authoring["factual-review"]["route"] == "/labs/assessment/factual-review/"
+    assert authoring["evidence-coverage"]["route"] == "/labs/assessment/evidence-coverage/"
     assert authoring["promotion-readiness"]["route"] == "/labs/assessment/promotion-readiness/"
 
 
@@ -192,7 +194,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -269,4 +271,27 @@ def test_promotion_readiness_uses_factual_review_coverage_for_priority() -> None
     assert by_route["/labs/enterprise-context/pricing/"]["factual_review"]["status"] == "not_reviewed"
     assert by_route["/labs/enterprise-context/pricing/"]["priority"] == "P0"
     assert "primary-source review" in by_route["/labs/enterprise-context/pricing/"]["review_reason"]
+
+def test_evidence_coverage_is_reproducible_and_tracks_review_debt() -> None:
+    coverage = load_json("evidence-coverage.json")
+    factual = load_json("factual-review.json")
+
+    assert coverage["source_contracts"]["factual_review"] == "/labs/assessment/data/factual-review.json"
+    assert len(coverage["tracks"]) == 4
+    assert coverage["summary"]["unique_source_reviewed_routes"] >= 12
+    assert coverage["summary"]["source_supported_claims"] >= 35
+    assert coverage["summary"]["unique_source_reviewed_routes"] <= coverage["summary"]["unique_evidence_applicable_routes"]
+    assert all(track["source_reviewed_routes"] <= track["evidence_applicable_routes"] for track in coverage["tracks"])
+    assert all(item["priority"] == "P0" for item in coverage["next_focus"])
+    assert coverage["summary"]["source_supported_claims"] == sum(1 for claim in factual["claims"] if claim["status"] == "source_supported")
+
+    result = subprocess.run(
+        [sys.executable, "scripts/generate_assessment_evidence_coverage.py", "--check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "Evidence coverage is current" in result.stdout
 

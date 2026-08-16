@@ -284,12 +284,24 @@
         "/labs/enterprise-context/transportation-management/"
       ],
       "working_rule": "Review only load-bearing claims that change process ownership, diagnosis, execution, or financial completion. Keep source support separate from page verification."
+    },
+    {
+      "id": "LOOP-021",
+      "priority": "P1",
+      "title": "Assessment-track evidence coverage matrix",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/evidence-coverage/",
+        "/labs/assessment/data/evidence-coverage.json",
+        "scripts/generate_assessment_evidence_coverage.py"
+      ],
+      "working_rule": "Select the next factual-review batch from cross-track P0 evidence debt, not from page count or editing convenience."
     }
   ],
   "next_iteration_themes": [
-    "create assessment-track evidence coverage and evidence-debt views",
-    "continue factual review for remaining P0 enterprise routes",
-    "connect feedback observations to review priority without changing factual truth",
-    "use evidence coverage as a gate for future graph-backed question generation"
+    "review the highest-ranked cross-track P0 evidence-debt routes from evidence-coverage.json",
+    "expand factual review until every assessment track has balanced primary-source coverage",
+    "connect assessment feedback to practice priority while keeping factual truth source-based",
+    "use evidence coverage as a publication and question-generation quality gate"
   ]
 }
