@@ -38,35 +38,11 @@ jobs:
           path = Path('scripts/ai_search_trust_loop.py')
           text = path.read_text(encoding='utf-8')
           text = text.replace('        "changed_paths": sorted(set(changed)),\n', '')
-          needle = '''    text = text.replace(
-        "post.last_modified_at | default: post.date | default: post.updated | default: nil",
-        "post.last_reviewed | default: post.last_modified_at | default: post.date | default: post.updated | default: nil",
-    )
-    return text
-'''
-          replacement = '''    text = text.replace(
-        "post.last_modified_at | default: post.date | default: post.updated | default: nil",
-        "post.last_reviewed | default: post.last_modified_at | default: post.date | default: post.updated | default: nil",
-    )
-    # The old fragment remains a substring of the upgraded expression. Normalize any
-    # duplicate review prefix so repeated runs are byte-for-byte stable.
-    text = text.replace(
-        "page.last_reviewed | default: page.last_reviewed | default:",
-        "page.last_reviewed | default:",
-    )
-    text = text.replace(
-        "doc.last_reviewed | default: doc.last_reviewed | default:",
-        "doc.last_reviewed | default:",
-    )
-    text = text.replace(
-        "post.last_reviewed | default: post.last_reviewed | default:",
-        "post.last_reviewed | default:",
-    )
-    return text
-'''
-          if needle not in text:
-              raise SystemExit('patch_sitemap anchor not found')
-          text = text.replace(needle, replacement, 1)
+          marker = '    return text\n\n\ndef sidecar_payload'
+          normalizer = '    text = text.replace("page.last_reviewed | default: page.last_reviewed | default:", "page.last_reviewed | default:")\n    text = text.replace("doc.last_reviewed | default: doc.last_reviewed | default:", "doc.last_reviewed | default:")\n    text = text.replace("post.last_reviewed | default: post.last_reviewed | default:", "post.last_reviewed | default:")\n    return text\n\n\ndef sidecar_payload'
+          if marker not in text:
+              raise SystemExit('patch_sitemap return anchor not found')
+          text = text.replace(marker, normalizer, 1)
           path.write_text(text, encoding='utf-8')
           PY
 
