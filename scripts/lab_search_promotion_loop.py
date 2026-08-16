@@ -38,6 +38,7 @@ MD_H1_RE = re.compile(r"^#\s+", re.MULTILINE)
 URL_RE = re.compile(r"https?://[^\s\]\[()<>{}\"']+")
 SOURCE_DATA_RE = re.compile(r"site\.data\.labs\.enterprise_context\.sources\.([A-Za-z0-9_]+)")
 DRAFT_MARKERS = ("TODO", "FIXME", "TBD", "lorem ipsum")
+FACTUAL_SOURCE_REVIEW_BONUS = 15
 
 
 @dataclass
@@ -141,6 +142,11 @@ def evidence_urls(repo: Path, body: str) -> set[str]:
     return urls
 
 
+def factual_review_score(status: str) -> int:
+    """Reward an independently audited source registry without replacing page evidence."""
+    return FACTUAL_SOURCE_REVIEW_BONUS if status == "source_supported" else 0
+
+
 def quality_score(
     repo: Path,
     record: PageRecord,
@@ -219,7 +225,14 @@ def quality_score(
     elif evidence_count >= 1:
         score += 9
     else:
-        reasons.append("no resolvable evidence URLs")
+        reasons.append("no resolvable evidence URLs in page/source-data references")
+
+    factual_bonus = factual_review_score(factual_status)
+    if factual_bonus:
+        score += factual_bonus
+        reasons.append("load-bearing reviewed claims are source-supported")
+    elif assessment_priority == "P0":
+        reasons.append("assessment evidence review has a P0 blocker")
 
     if fm.get("last_modified_at") or fm.get("last_reviewed") or fm.get("updated"):
         score += 5
@@ -253,11 +266,6 @@ def quality_score(
             state = "WORKING"
     else:
         state = record.classification
-
-    if factual_status == "source_supported":
-        reasons.append("load-bearing reviewed claims are source-supported")
-    elif assessment_priority == "P0":
-        reasons.append("assessment evidence review has a P0 blocker")
 
     return PromotionCandidate(
         route=record.route,
@@ -386,6 +394,8 @@ def main() -> int:
             f"  {item.score:3d} {item.publication_state:18s} "
             f"{item.assessment_priority or '-':2s} {item.factual_status:18s} {item.route}"
         )
+        if item.assessment_priority == "P1" and item.reasons:
+            print(f"      {'; '.join(item.reasons)}")
 
     if args.apply:
         changed = apply_promotions(repo, candidates)
