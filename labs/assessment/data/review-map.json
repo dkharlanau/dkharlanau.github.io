@@ -1,0 +1,95 @@
+{
+  "id": "sap-lead-assessment-review-map",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Map weak assessment signals to focused review routes. The queue should recommend evidence and reasoning practice, not generic reading.",
+  "dimension_routes": {
+    "business_goal": {
+      "label": "Business goal",
+      "review_question": "Can you state the business outcome before SAP detail?",
+      "routes": [
+        {"label":"Sales Process Atlas","url":"/labs/enterprise-context/sales-processes/","why":"Practice business variants before configuration detail."},
+        {"label":"Procurement Decision Map","url":"/labs/enterprise-context/procurement/","why":"Connect demand, sourcing, receipt, invoice, and settlement to business intent."},
+        {"label":"Business AI","url":"/labs/business-ai/","why":"Start AI discussion from a defined business job and measurable outcome."}
+      ]
+    },
+    "owner": {
+      "label": "Owner",
+      "review_question": "Can you name which component or team owns the decision and durable state?",
+      "routes": [
+        {"label":"Integration Architecture","url":"/labs/enterprise-context/integrations/","why":"Separate source-of-truth ownership from transport technology."},
+        {"label":"Master Data Governance","url":"/labs/enterprise-context/mdg/","why":"Review governance ownership, change process, and distribution responsibility."},
+        {"label":"Deployment Models","url":"/labs/enterprise-context/deployment-models/","why":"Practice how deployment choice changes ownership and extension boundaries."}
+      ]
+    },
+    "process_flow": {
+      "label": "Process flow",
+      "review_question": "Can you trace the requirement through the main documents, events, and states?",
+      "routes": [
+        {"label":"Sales Process Atlas","url":"/labs/enterprise-context/sales-processes/","why":"Compare end-to-end O2C and special process branches."},
+        {"label":"Production Planning & Execution","url":"/labs/enterprise-context/production/","why":"Trace demand through MRP, order execution, goods receipt, and settlement."},
+        {"label":"Transportation Management","url":"/labs/enterprise-context/transportation-management/","why":"Trace transport demand, planning, execution, charges, and settlement."}
+      ]
+    },
+    "decision_logic": {
+      "label": "Decision logic",
+      "review_question": "Can you identify the master data, configuration, determination, or control that creates the state?",
+      "routes": [
+        {"label":"Sales Order Decision Map","url":"/labs/enterprise-context/sales-order/","why":"Review determination and order control layers."},
+        {"label":"Pricing","url":"/labs/enterprise-context/pricing/","why":"Practice condition technique, calculation, and diagnostic ownership."},
+        {"label":"Inventory Management","url":"/labs/enterprise-context/inventory-management/","why":"Review movement semantics, stock state, valuation, and account impact."}
+      ]
+    },
+    "boundary": {
+      "label": "Boundary",
+      "review_question": "Can you explain where responsibility crosses module, system, company, or execution layer?",
+      "routes": [
+        {"label":"Integration Operations & Recovery","url":"/labs/enterprise-context/integration-operations/","why":"Practice message identity, commit state, retry, replay, and reconciliation boundaries."},
+        {"label":"Extended Warehouse Management","url":"/labs/enterprise-context/ewm/","why":"Separate ERP inventory ownership from warehouse execution."},
+        {"label":"MDG Interfaces","url":"/labs/enterprise-context/mdg/interfaces/","why":"Review governance and downstream distribution boundaries."}
+      ]
+    },
+    "failure_and_evidence": {
+      "label": "Failure and evidence",
+      "review_question": "Can you prove the first wrong decision instead of repairing the final symptom?",
+      "routes": [
+        {"label":"Sales Diagnostic Casebook","url":"/labs/enterprise-context/sales-diagnostics/","why":"Practice symptom-first hypotheses and proof of fix."},
+        {"label":"Integration Operations & Recovery","url":"/labs/enterprise-context/integration-operations/","why":"Separate technical delivery status from business completion."},
+        {"label":"Cross-Process Lead Cases","url":"/labs/assessment/cross-process/","why":"Practice evidence across several SAP domains."}
+      ]
+    },
+    "trade_off": {
+      "label": "Trade-off",
+      "review_question": "Can you explain why this design is suitable, what it costs, and what condition would change it?",
+      "routes": [
+        {"label":"SAP Development Choices","url":"/labs/enterprise-context/development/","why":"Compare clean-core, ABAP, RAP, CAP, and side-by-side choices."},
+        {"label":"Deployment Models","url":"/labs/enterprise-context/deployment-models/","why":"Practice design limits across Public Cloud, Private Cloud, and On-Premise."},
+        {"label":"AI Ready Architecture","url":"/labs/ai-ready/","why":"Review authority, reliability, security, and operating-model trade-offs."}
+      ]
+    }
+  },
+  "track_routes": {
+    "sales": [
+      {"label":"Sales Process Atlas","url":"/labs/enterprise-context/sales-processes/"},
+      {"label":"Billing & Revenue Handoff","url":"/labs/enterprise-context/billing/"},
+      {"label":"Sales Diagnostic Casebook","url":"/labs/enterprise-context/sales-diagnostics/"}
+    ],
+    "procurement-logistics": [
+      {"label":"Procurement Decision Map","url":"/labs/enterprise-context/procurement/"},
+      {"label":"Inventory Management","url":"/labs/enterprise-context/inventory-management/"},
+      {"label":"Production Planning & Execution","url":"/labs/enterprise-context/production/"},
+      {"label":"EWM","url":"/labs/enterprise-context/ewm/"}
+    ],
+    "integration-architecture": [
+      {"label":"Integration Architecture","url":"/labs/enterprise-context/integrations/"},
+      {"label":"Integration Operations & Recovery","url":"/labs/enterprise-context/integration-operations/"},
+      {"label":"SAP Development Choices","url":"/labs/enterprise-context/development/"}
+    ],
+    "ai-data": [
+      {"label":"Business AI","url":"/labs/business-ai/"},
+      {"label":"AI Ready Architecture","url":"/labs/ai-ready/"},
+      {"label":"Master Data Governance","url":"/labs/enterprise-context/mdg/"}
+    ]
+  },
+  "queue_rule": "Rank weak reasoning dimensions first, then weak tracks. Prefer one focused route with a clear review question over a long reading list. Re-run a related assessment case after review."
+}
