@@ -21,13 +21,13 @@ structured_data:
 primary_topic: "ai-architecture"
 ai_sidecar: "/ai/pages/labs--ai-ready.json"
 semantic_links:
-  - type: "Related topic"
+  - type: "related_topic"
     title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
     url: "/labs/enterprise-context/business-ai/agents/"
-  - type: "Related topic"
+  - type: "related_topic"
     title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
     url: "/labs/business-ai/"
-  - type: "Related topic"
+  - type: "related_topic"
     title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
     url: "/labs/enterprise-context/business-ai/"
 # ai-discovery-managed:end
