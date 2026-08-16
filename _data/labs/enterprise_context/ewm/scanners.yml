@@ -1,0 +1,358 @@
+id: EWM-WAREHOUSE-SCANNING-MAP
+title: "Warehouse Scanners & Auto-ID — SAP Solution Map"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+summary: >-
+  A practical decision map from a physical scan to a verified SAP warehouse action.
+  It separates barcode meaning, device choice, user experience, SAP execution channel,
+  custom integration, fixed automation, and operational controls.
+
+lead_rule: >-
+  Start with the warehouse decision that must be verified, not with the scanner model.
+  If standard SAP execution already supports the process, keep the process standard.
+  Add custom mobile logic only when the required user experience, device behavior,
+  cross-system flow, or automation boundary is genuinely different.
+
+memory_path: "IDENTIFY → CAPTURE → PARSE → VERIFY → EXECUTE → CONFIRM → MONITOR"
+
+decision_dimensions:
+  - key: "PROCESS"
+    question: "What warehouse action follows the scan?"
+    examples: ["receive HU", "verify bin", "pick product", "confirm batch", "load pallet", "count stock"]
+  - key: "FREQUENCY"
+    question: "How often does the user scan?"
+    examples: ["occasional", "every task", "continuous high-volume"]
+  - key: "ENVIRONMENT"
+    question: "Where is the device used?"
+    examples: ["packing desk", "cold store", "forklift", "high rack", "loading gate", "outdoor yard"]
+  - key: "IDENTITY"
+    question: "What does the code identify?"
+    examples: ["product", "HU / pallet", "bin", "batch", "serial number", "delivery", "door"]
+  - key: "INTERACTION"
+    question: "Does a person decide, or is the event automatic?"
+    examples: ["guided worker", "hands-free worker", "fixed reader", "RFID portal"]
+  - key: "CONNECTIVITY"
+    question: "Must the action work online, offline, or through an edge layer?"
+    examples: ["real-time SAP", "temporary offline queue", "edge filtering", "WCS / automation"]
+
+device_classes:
+  - id: "rugged-handheld"
+    title: "Rugged Handheld Mobile Computer"
+    best_for: "High-frequency picking, putaway, counting and loading."
+    interaction: "Screen + trigger scanner; usually Wi-Fi."
+    strengths: ["fast aiming", "one-hand operation", "industrial durability"]
+    caution: "Do not buy hardware before testing labels, distance, gloves, Wi-Fi and the target SAP UI."
+  - id: "wearable"
+    title: "Wearable / Ring Scanner"
+    best_for: "Very high scan frequency where both hands should stay free."
+    interaction: "Ring scanner with wrist/voice/mobile terminal."
+    strengths: ["hands-free work", "short scan cycle"]
+    caution: "The UX must minimize screen touches; a desktop-style form defeats the device."
+  - id: "vehicle-mounted"
+    title: "Forklift / Vehicle-Mounted Terminal"
+    best_for: "Forklift putaway, replenishment and high-rack work."
+    interaction: "Mounted screen with long-range or wireless scanner."
+    strengths: ["stable workstation", "longer scan distance", "suited to vehicle workflow"]
+    caution: "Design for large targets and short interactions; the operator should not type while driving."
+  - id: "fixed-reader"
+    title: "Fixed Barcode Reader"
+    best_for: "Conveyors, gates, dock doors and repeatable automated checkpoints."
+    interaction: "Reader event through edge software, WCS, MFS or integration layer."
+    strengths: ["no manual trigger", "high throughput", "repeatable capture point"]
+    caution: "A raw read is not yet a business confirmation. Deduplicate and validate the event before SAP posting."
+  - id: "smartphone"
+    title: "Smartphone / Tablet Camera"
+    best_for: "Lower-volume tasks, supervisors, exception work and modern mobile apps."
+    interaction: "Camera or paired external scanner."
+    strengths: ["low hardware barrier", "rich UI", "easy deployment for selected roles"]
+    caution: "Camera scanning is not automatically the best choice for thousands of scans per shift."
+  - id: "rfid"
+    title: "RFID Reader"
+    best_for: "Bulk or non-line-of-sight identification where the tag economics and process justify it."
+    interaction: "Handheld or fixed reader; usually requires event filtering."
+    strengths: ["multiple tags can be read", "no direct line of sight"]
+    caution: "Do not send every raw tag read to SAP. Filter, aggregate and define the business event first."
+
+identification_map:
+  - id: "sscc"
+    title: "SSCC"
+    use_for: "Unique logistic unit such as pallet or shipping unit."
+    sap_mapping: "Often maps naturally to an HU or external HU identification."
+    standard_note: "GS1 defines SSCC as the mandatory identifier on the GS1 Logistic Label."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - id: "gtin"
+    title: "GTIN"
+    use_for: "Trade item / product identification."
+    sap_mapping: "Resolve to product/material through maintained identifiers."
+    standard_note: "A product code is not the same thing as an HU identifier."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - id: "gs1-128"
+    title: "GS1-128"
+    use_for: "Structured logistics data using GS1 Application Identifiers."
+    sap_mapping: "Can carry SSCC, GTIN, batch, dates, quantity and other structured elements."
+    standard_note: "Parse the Application Identifiers; do not treat the complete string as one material number."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - id: "2d"
+    title: "2D Codes"
+    use_for: "More data in limited label space or mobile-oriented scenarios."
+    sap_mapping: "Depends on the agreed payload contract and parser."
+    standard_note: "A QR/DataMatrix image is only a carrier. The important design is the encoded data contract."
+  - id: "internal"
+    title: "Internal Bin / Resource / Process Code"
+    use_for: "Warehouse-local verification and navigation."
+    sap_mapping: "Storage bin, door, resource, work center or custom process identifier."
+    standard_note: "Keep local codes stable enough for labels and operational support."
+
+sap_execution_paths:
+  - id: "standard-ewm-rf"
+    title: "Standard EWM RF"
+    choose_when: "The process is standard EWM warehouse execution and workers scan frequently."
+    flow: "Scanner → RF field → EWM verification → WT/WO/HU action → confirmation"
+    configure:
+      - "Warehouse, resource and presentation device"
+      - "Resource group / queue when system-guided work is used"
+      - "Barcode specification and verification logic"
+      - "RF menu, screen flow and exception codes where required"
+    good_fit: ["inbound HU receipt", "putaway", "picking", "packing", "loading", "physical inventory", "internal movements"]
+    result: "Fast guided execution with standard warehouse objects and support model."
+    source_refs: [SRC-SAP-EWM-RF-STANDARD, SRC-SAP-EWM-RF-RESOURCE, SRC-SAP-EWM-RF-HU-RECEIPT, SRC-SAP-EWM-RF-LOAD]
+
+  - id: "warehouse-logistics-mobile"
+    title: "SAP Warehouse Logistics Mobile App"
+    choose_when: "SAP Logistics Management is the target product and a modern native mobile experience fits the process."
+    flow: "Camera / external Android scanner → native app → task validation → warehouse confirmation"
+    good_fit: ["picking", "putaway", "move stock", "bin/product/batch validation", "warehouse lookup"]
+    result: "Modern guided mobile execution without building a scanner UI from zero."
+    source_refs: [SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE]
+
+  - id: "custom-mobile"
+    title: "Custom Mobile / SAPUI5 / Native App"
+    choose_when: "The user journey crosses SAP processes, needs a special scanner interaction, or standard RF screens create unnecessary steps."
+    flow: "Scanner SDK / keyboard wedge / intent → custom UI → parser + validation → released SAP API → business result"
+    good_fit: ["cross-process workbench", "special packaging flow", "supplier/3PL mobile flow", "custom quality capture", "offline-capable extension"]
+    result: "Purpose-built UX while SAP remains the business system of record."
+    caution: "Prefer released APIs and explicit business ownership. Do not update SAP tables directly."
+
+  - id: "fixed-automation"
+    title: "Fixed Scanner / Automation Event"
+    choose_when: "The scan comes from a conveyor, gate or automated checkpoint rather than a human RF step."
+    flow: "Reader → edge/WCS/MFS/integration → deduplicate + correlate → EWM business action → monitored confirmation"
+    good_fit: ["conveyor identification", "dock gate validation", "automatic HU routing", "automated load checkpoint"]
+    result: "Physical movement can create a controlled digital event without manual confirmation."
+    caution: "Define idempotency, sequence, timeout and recovery. Re-reading the same pallet must not post twice."
+
+  - id: "rfid-event"
+    title: "RFID Event Pattern"
+    choose_when: "Line-of-sight scanning is the bottleneck and many tagged items must be identified quickly."
+    flow: "RFID reads → edge filter → business event → SAP API/process → reconciliation"
+    good_fit: ["bulk capture", "portal/gate detection", "asset or container tracking"]
+    result: "Higher capture automation where tag and infrastructure cost are justified."
+    caution: "RFID solves capture, not process design. False positives and repeated reads need an event model."
+
+device_integration_patterns:
+  - id: "keyboard-wedge"
+    title: "Keyboard Wedge / HID"
+    use_when: "The scanner only needs to fill the active input field."
+    flow: "Decode → text → focused field → optional Enter/Tab"
+    strengths: ["simple", "little or no app code", "works with many web/mobile screens"]
+    risks: ["wrong focus", "limited metadata", "harder control of multiple scan types"]
+    evidence: "Zebra DataWedge documents keystroke output as a no-code delivery option."
+    source_refs: [SRC-ZEBRA-DATAWEDGE-HOWTO]
+
+  - id: "intent-sdk"
+    title: "Programmatic Scanner Event"
+    use_when: "The app must know scan source, symbology, raw data or structured GS1 tokens."
+    flow: "Device service/SDK → app event → parser → business validation"
+    strengths: ["strong UX control", "scan metadata", "secure app targeting can be configured"]
+    risks: ["device/vendor coupling", "mobile lifecycle and device-management work"]
+    evidence: "Zebra DataWedge Intent Output can deliver decoded data programmatically to Android apps."
+    source_refs: [SRC-ZEBRA-DATAWEDGE-INTENT]
+
+  - id: "camera"
+    title: "Camera Scan"
+    use_when: "A phone/tablet is acceptable and scan frequency is moderate."
+    flow: "Camera → app decoder → validation"
+    strengths: ["no dedicated scanner required", "good for occasional work"]
+    risks: ["slower aiming", "lighting dependence", "less ergonomic for repetitive work"]
+    source_refs: [SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE]
+
+  - id: "api"
+    title: "Released SAP API"
+    use_when: "A custom app must confirm or read warehouse business objects."
+    flow: "Custom app → API/authentication → EWM/warehouse object → response"
+    strengths: ["clear system boundary", "clean extension path"]
+    risks: ["API scope differs by product/release", "custom app must handle retries and reconciliation"]
+
+  - id: "edge-event"
+    title: "Edge / Middleware Event"
+    use_when: "A fixed reader or RFID infrastructure produces repeated machine events."
+    flow: "Reader → edge rules → integration/event layer → SAP"
+    strengths: ["filters device noise", "decouples hardware from SAP", "supports monitoring and retries"]
+    risks: ["more components", "event ownership and sequencing must be explicit"]
+
+configuration_path:
+  - step: 1
+    title: "Define the business verification"
+    detail: "State exactly what the scan proves: correct bin, correct HU, correct product, correct batch, load confirmation, or another decision."
+  - step: 2
+    title: "Define the label and identifier contract"
+    detail: "Choose the identifier, barcode carrier, GS1 Application Identifiers where relevant, label owner and printing point."
+  - step: 3
+    title: "Map identifiers to SAP objects"
+    detail: "Define how SSCC, GTIN, batch, serial number, bin and internal codes resolve to SAP master or transaction objects."
+  - step: 4
+    title: "Choose the SAP execution channel"
+    detail: "Prefer standard EWM RF or a standard mobile app when it covers the flow; otherwise define the custom API boundary."
+  - step: 5
+    title: "Configure the device"
+    detail: "Select decoders, scan profile, keyboard/intent/SDK output, suffixes and target application. Keep settings version-controlled where the device platform supports it."
+  - step: 6
+    title: "Design scan parsing and validation"
+    detail: "Separate decode, parse, lookup and business validation. Show expected versus scanned values when a mismatch matters."
+  - step: 7
+    title: "Design exceptions before go-live"
+    detail: "Cover unreadable label, wrong object, duplicate scan, missing master data, quantity difference, no network and partial execution."
+  - step: 8
+    title: "Test in the real warehouse"
+    detail: "Test damaged labels, long distance, gloves, cold storage, forklift use, lighting, Wi-Fi roaming, duplicate reads and recovery."
+
+ui_rules:
+  - "Keep one main action per step. Warehouse screens are tools, not mini ERP desktops."
+  - "Put scan focus where the worker expects it; avoid manual tapping before every scan."
+  - "Give immediate visual, sound or vibration feedback for accepted and rejected scans."
+  - "Show Expected and Scanned values when verification fails."
+  - "Use large touch targets and short text for gloves, movement and small screens."
+  - "Do not ask users to retype data that is already encoded and trustworthy."
+  - "Manual entry should be a controlled fallback, not the normal path."
+  - "Make exception recovery obvious; a blocked worker is an operational incident."
+
+process_scenarios:
+  - id: "inbound-hu"
+    title: "Inbound HU Receipt"
+    scan: "Delivery/ASN context → SSCC/HU → optional GTIN/batch/quantity"
+    sap_action: "Identify or create HU, post/unload receipt, create or confirm putaway work."
+    best_path: "Standard EWM RF when the process matches standard receiving."
+    result: "Physical pallet is linked to the correct inbound object before putaway."
+    source_refs: [SRC-SAP-EWM-RF-HU-RECEIPT]
+  - id: "putaway"
+    title: "Putaway Verification"
+    scan: "HU/product → destination bin"
+    sap_action: "Validate destination and confirm WT."
+    best_path: "EWM RF or standard mobile warehouse app."
+    result: "Stock reaches the system bin that matches the physical bin."
+  - id: "picking"
+    title: "Picking Verification"
+    scan: "Source bin → product/HU → batch if required → destination"
+    sap_action: "Validate pick and confirm warehouse work."
+    best_path: "Rugged RF, wearable, or native mobile depending frequency and process."
+    result: "Wrong-bin and wrong-product errors are detected at execution time."
+  - id: "loading"
+    title: "Loading / Dock Check"
+    scan: "Door/document → HU/SSCC"
+    sap_action: "Validate loading context and confirm load/unload execution."
+    best_path: "RF for human loading; fixed reader only when the physical checkpoint is deterministic."
+    result: "The loaded HUs match the planned shipping context."
+    source_refs: [SRC-SAP-EWM-RF-LOAD]
+  - id: "inventory"
+    title: "Cycle Count / Physical Inventory"
+    scan: "Bin → product/HU → counted quantity"
+    sap_action: "Capture count against the correct warehouse position."
+    best_path: "RF/mobile; use hands-free devices when scan frequency is high."
+    result: "Less manual keying and clearer count traceability."
+  - id: "production"
+    title: "Production Supply / Consumption"
+    scan: "PSA/bin → component/HU → order or process context"
+    sap_action: "Verify staging, issue, consumption or receipt step."
+    best_path: "Choose the execution owner first: EWM, production app, or custom cross-process UI."
+    result: "Material movement is tied to the correct production context."
+
+decision_map:
+  - need: "Standard high-frequency EWM warehouse work"
+    choose: "Standard EWM RF"
+    why: "The process, resource/queue model and exception handling already belong to EWM."
+  - need: "Modern standard mobile warehouse UX"
+    choose: "SAP Warehouse Logistics where product scope fits"
+    why: "It already supports guided tasks and barcode validation with camera or external Android scanner."
+  - need: "Occasional scanning by supervisors or exception users"
+    choose: "Smartphone/tablet camera or paired scanner"
+    why: "A rugged RF fleet may be unnecessary for low scan frequency."
+  - need: "Special cross-process user journey"
+    choose: "Custom mobile/Fiori/native app + released APIs"
+    why: "Custom is justified by the workflow, not by a wish to repaint standard screens."
+  - need: "Hands-free repetitive picking"
+    choose: "Wearable/ring scanner, possibly voice-guided"
+    why: "The physical interaction, not just software, limits the cycle."
+  - need: "Forklift and high-rack execution"
+    choose: "Vehicle-mounted terminal + long-range scanner"
+    why: "The operator needs distance, stability and very short interactions."
+  - need: "Conveyor or gate identification"
+    choose: "Fixed scanner + edge/WCS/MFS/integration"
+    why: "This is a machine event, not a human RF screen."
+  - need: "Bulk non-line-of-sight capture"
+    choose: "RFID + edge filtering"
+    why: "Use RFID only when repeated line-of-sight barcode scanning is the real bottleneck."
+
+failure_modes:
+  - symptom: "Scanner reads correctly but SAP rejects the value."
+    check_first: "Barcode semantics and SAP object mapping: SSCC vs GTIN vs HU vs material vs bin."
+  - symptom: "Scan goes into the wrong field."
+    check_first: "Keyboard-wedge focus, suffix and UI state."
+  - symptom: "Same pallet is confirmed twice."
+    check_first: "Duplicate-read suppression, idempotency key and business status before retry."
+  - symptom: "RF user receives no work."
+    check_first: "Resource, resource group, queue, WO status and warehouse context."
+  - symptom: "Custom mobile app works in test but fails in the warehouse."
+    check_first: "Wi-Fi roaming, device profile, decoder configuration, label quality and authentication timeout."
+  - symptom: "RFID creates too many events."
+    check_first: "Reader zone, dwell/filter rules, tag population and event aggregation before SAP."
+  - symptom: "Workers bypass scanning and type values manually."
+    check_first: "Ergonomics, label quality and exception flow before adding stricter validation."
+
+real_world_patterns:
+  - title: "Zebra Picking Plus with SAP EWM"
+    type: "Vendor technical implementation"
+    observation: >-
+      Zebra documents a mobile picking configuration that connects to SAP EWM and receives scan data through DataWedge.
+      It is a useful example of a native device layer feeding an SAP warehouse application.
+    lesson: "Device middleware can isolate scanner handling from the SAP business API."
+    source_refs: [SRC-ZEBRA-PICKING-PLUS-EWM]
+  - title: "Beyond RF"
+    type: "SAP-listed partner solution"
+    observation: >-
+      The SAP listing describes a native mobile barcode solution for SAP S/4HANA WM and EWM on Zebra or Honeywell handhelds.
+    lesson: "There is a real market for replacing or extending classic RF UX when ergonomics and mobile capabilities justify it."
+    source_refs: [SRC-SAP-PARTNER-BEYOND-RF]
+  - title: "Liquid UI for SAP EWM"
+    type: "SAP-listed partner solution"
+    observation: >-
+      The SAP listing describes mobile barcode capture and RFID reader integration while keeping existing SAP warehouse processes.
+    lesson: "A scanner modernization project can focus on the interaction layer without changing the warehouse process owner."
+    source_refs: [SRC-SAP-PARTNER-LIQUID-UI-EWM]
+  - title: "Junghans warehouse digitalization"
+    type: "SAP customer reference"
+    observation: >-
+      SAP describes Junghans using handheld barcode scanners and smartphones in warehouse management with SAP Business ByDesign.
+    lesson: "Not every warehouse needs EWM-class complexity; the device pattern can also support lighter ERP warehouse execution."
+    source_refs: [SRC-SAP-BYD-JUNGHANS]
+
+assessment_answer: >-
+  I start with the warehouse step, scan frequency, environment and identifier. Then I choose the
+  label standard and device class. If standard EWM RF covers the process, I keep it standard.
+  If the user journey is different, I use a mobile or custom application with a released SAP API.
+  For fixed scanners or RFID, I separate raw device reads from the SAP business event with an
+  edge or integration layer, duplicate protection and monitoring. I design verification and
+  exception handling before the happy path, then test the solution in the real warehouse.
+
+source_refs:
+  - SRC-SAP-EWM-RF-STANDARD
+  - SRC-SAP-EWM-RF-RESOURCE
+  - SRC-SAP-EWM-RF-HU-RECEIPT
+  - SRC-SAP-EWM-RF-LOAD
+  - SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE
+  - SRC-GS1-LOGISTIC-LABEL
+  - SRC-ZEBRA-DATAWEDGE-HOWTO
+  - SRC-ZEBRA-DATAWEDGE-INTENT
+  - SRC-ZEBRA-PICKING-PLUS-EWM
+  - SRC-SAP-PARTNER-BEYOND-RF
+  - SRC-SAP-PARTNER-LIQUID-UI-EWM
+  - SRC-SAP-BYD-JUNGHANS
