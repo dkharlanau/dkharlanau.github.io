@@ -18,6 +18,26 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Strengthen structural duplicate detection
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/generate_assessment_candidates.py')
+          text = path.read_text(encoding='utf-8')
+          old = '''def existing_case_similarity(symptom: str, cases: list[dict[str, Any]], threshold: float) -> tuple[float, list[str]]:\n    scores: list[tuple[str, float]] = []\n    for case in cases:\n        comparison = f"{case.get('title', '')} {case.get('prompt', '')}"\n        score = similarity(symptom, comparison)\n        scores.append((case["id"], score))\n    scores.sort(key=lambda item: item[1], reverse=True)\n    max_score = scores[0][1] if scores else 0.0\n    matches = [case_id for case_id, score in scores if score >= threshold]\n    return max_score, matches\n'''
+          new = '''def existing_case_similarity(\n    symptom: str, failure_id: str, cases: list[dict[str, Any]], threshold: float\n) -> tuple[float, list[str]]:\n    scores: list[tuple[str, float]] = []\n    for case in cases:\n        graph_refs = set(case.get("graph_refs", []))\n        if failure_id in graph_refs:\n            score = 1.0\n        else:\n            title = str(case.get("title", ""))\n            prompt = str(case.get("prompt", ""))\n            score = max(\n                similarity(symptom, title),\n                similarity(symptom, prompt),\n                similarity(symptom, f"{title} {prompt}"),\n            )\n        scores.append((case["id"], score))\n    scores.sort(key=lambda item: item[1], reverse=True)\n    max_score = scores[0][1] if scores else 0.0\n    matches = [case_id for case_id, score in scores if score >= threshold]\n    return max_score, matches\n'''
+          if old not in text:
+              raise SystemExit('Old duplicate detection function not found')
+          text = text.replace(old, new, 1)
+          old_call = 'max_similarity, matches = existing_case_similarity(symptom, cases, threshold)'
+          new_call = 'max_similarity, matches = existing_case_similarity(symptom, failure_id, cases, threshold)'
+          if old_call not in text:
+              raise SystemExit('Duplicate detection call not found')
+          text = text.replace(old_call, new_call, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
       - name: Install generator dependencies
         run: python3 -m pip install pyyaml
       - name: Generate question candidate inventory
@@ -28,10 +48,10 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add labs/assessment/data/question-candidates.json
+          git add scripts/generate_assessment_candidates.py labs/assessment/data/question-candidates.json
           if git diff --cached --quiet; then
-            echo "Candidate inventory already current."
+            echo "Candidate generator and inventory already current."
             exit 0
           fi
-          git commit -m "feat: generate graph-backed assessment candidates"
+          git commit -m "fix: reject structurally duplicate assessment candidates"
           git push origin HEAD:main
