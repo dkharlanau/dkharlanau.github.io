@@ -1,0 +1,60 @@
+{
+  "kind": "rdp-case-tests",
+  "specVersion": "0.1",
+  "caseId": "sales-order-material-reconciliation",
+  "tests": [
+    {
+      "id": "golden-run-publishes",
+      "type": "golden",
+      "input": "run-01",
+      "expects": {"status": "published", "locatorHeaderRow": 8, "rowCount": 4, "materialCoverage": 1.0, "exceptions": 0, "quantityTotal": 27}
+    },
+    {
+      "id": "moved-table-recovers",
+      "type": "drift",
+      "input": "run-02",
+      "mutation": "move header row 8 to row 11",
+      "expects": {"locatorRecovered": true, "driftClass": "compatible"}
+    },
+    {
+      "id": "header-aliases-recover",
+      "type": "drift",
+      "input": "run-02",
+      "mutation": "Item -> Item No.; Material -> Material Number",
+      "expects": {"fieldsResolved": true, "procedureRevisionRequired": false}
+    },
+    {
+      "id": "unknown-material-does-not-guess",
+      "type": "failure",
+      "input": "run-02",
+      "referenceVersion": "2026.08.1",
+      "expects": {"unmatched": ["EXT-Q9"], "status": "review-required", "publicationDecision": "manual-review", "reasonCode": "LOOKUP_NOT_FOUND"}
+    },
+    {
+      "id": "reference-key-remains-unique",
+      "type": "boundary",
+      "input": "reference-2026.08.2",
+      "expects": {"uniqueKey": true, "duplicateMappings": 0}
+    },
+    {
+      "id": "approved-mapping-replay-publishes",
+      "type": "historical_replay",
+      "input": "run-02",
+      "procedureVersion": "0.1.1",
+      "referenceVersion": "2026.08.2",
+      "expects": {"status": "published", "rowCount": 4, "materialCoverage": 1.0, "exceptions": 0, "quantityTotal": 24}
+    },
+    {
+      "id": "leading-zero-loss-is-not-repaired",
+      "type": "mutation",
+      "mutation": "convert material 000000000000471100 to numeric representation with lost digits",
+      "expects": {"status": "review-required", "autoRepair": false, "reasonCode": "IDENTIFIER_PRECISION_LOST"}
+    },
+    {
+      "id": "duplicate-reference-key-blocks",
+      "type": "mutation",
+      "mutation": "add second target for EXT-AX7",
+      "expects": {"status": "review-required", "publicationDecision": "manual-review", "reasonCode": "KEY_NOT_UNIQUE"}
+    }
+  ]
+}
