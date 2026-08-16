@@ -209,9 +209,11 @@ Rules:
   "author": {
     "@id": "{{ author_id }}"
   },
+  {% if page_type == 'ProfilePage' %}
   "about": {
     "@id": "{{ author_id }}"
   },
+  {% endif %}
   {% if page_type == 'ProfilePage' or page_type == 'CollectionPage' %}
   "breadcrumb": {
     "@id": "{{ canonical_url }}#breadcrumb"
