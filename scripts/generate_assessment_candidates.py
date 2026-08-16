@@ -149,11 +149,22 @@ def dedup_signature(graph_id: str, failure_id: str, symptom: str) -> str:
     return hashlib.sha256(raw).hexdigest()[:24]
 
 
-def existing_case_similarity(symptom: str, cases: list[dict[str, Any]], threshold: float) -> tuple[float, list[str]]:
+def existing_case_similarity(
+    symptom: str, failure_id: str, cases: list[dict[str, Any]], threshold: float
+) -> tuple[float, list[str]]:
     scores: list[tuple[str, float]] = []
     for case in cases:
-        comparison = f"{case.get('title', '')} {case.get('prompt', '')}"
-        score = similarity(symptom, comparison)
+        graph_refs = set(case.get("graph_refs", []))
+        if failure_id in graph_refs:
+            score = 1.0
+        else:
+            title = str(case.get("title", ""))
+            prompt = str(case.get("prompt", ""))
+            score = max(
+                similarity(symptom, title),
+                similarity(symptom, prompt),
+                similarity(symptom, f"{title} {prompt}"),
+            )
         scores.append((case["id"], score))
     scores.sort(key=lambda item: item[1], reverse=True)
     max_score = scores[0][1] if scores else 0.0
@@ -173,7 +184,7 @@ def build_candidate(
     symptom = str(failure["symptom"]).strip()
     avoid = str(failure.get("avoid", "Do not repair the final symptom before proving the root cause.")).strip()
     expected = build_expected_points(failure)
-    max_similarity, matches = existing_case_similarity(symptom, cases, threshold)
+    max_similarity, matches = existing_case_similarity(symptom, failure_id, cases, threshold)
     status = "rejected_duplicate" if matches else "candidate"
     cid = candidate_id(seed["candidate_prefix"], failure_id)
     title = symptom.rstrip(".")
