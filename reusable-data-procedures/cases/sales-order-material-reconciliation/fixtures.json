@@ -1,0 +1,52 @@
+{
+  "kind": "rdp-case-fixtures",
+  "specVersion": "0.1",
+  "caseId": "sales-order-material-reconciliation",
+  "synthetic": true,
+  "sourceRuns": {
+    "run-01": {
+      "workbook": {"file": "sales-orders-2026-07.xlsx", "sheet": "Orders", "headerRow": 8, "hiddenSheets": ["Helper"]},
+      "headers": ["Sales Document", "Item", "Material", "Plant", "Order Qty", "UoM"],
+      "rows": [
+        {"Sales Document": "5000012345", "Item": "10", "Material": "000000000000471100", "Plant": "DE01", "Order Qty": 12, "UoM": "EA"},
+        {"Sales Document": "5000012345", "Item": "20", "Material": "000000000000471101", "Plant": "DE01", "Order Qty": 4, "UoM": "EA"},
+        {"Sales Document": "5000012346", "Item": "10", "Material": "EXT-AX7", "Plant": "DE02", "Order Qty": 8, "UoM": "PC"},
+        {"Sales Document": "5000012347", "Item": "10", "Material": "000000000000471102", "Plant": "DE01", "Order Qty": 3, "UoM": "EA"}
+      ]
+    },
+    "run-02": {
+      "workbook": {"file": "sales-orders-2026-08.xlsx", "sheet": "Orders Aug", "headerRow": 11, "hiddenSheets": ["Helper"]},
+      "headers": ["Sales Document", "Item No.", "Material Number", "Plant", "Order Qty", "UoM"],
+      "rows": [
+        {"Sales Document": "5000012401", "Item No.": "10", "Material Number": "000000000000471100", "Plant": "DE01", "Order Qty": 10, "UoM": "EA"},
+        {"Sales Document": "5000012401", "Item No.": "20", "Material Number": "000000000000471101", "Plant": "DE01", "Order Qty": 5, "UoM": "EA"},
+        {"Sales Document": "5000012402", "Item No.": "10", "Material Number": "EXT-AX7", "Plant": "DE02", "Order Qty": 7, "UoM": "PC"},
+        {"Sales Document": "5000012403", "Item No.": "10", "Material Number": "EXT-Q9", "Plant": "DE01", "Order Qty": 2, "UoM": "EA"}
+      ]
+    }
+  },
+  "referenceReleases": {
+    "2026.08.1": {
+      "id": "sap.material-aliases",
+      "key": "source_material",
+      "rows": [
+        {"source_material": "000000000000471100", "canonical_material": "MAT-471100"},
+        {"source_material": "000000000000471101", "canonical_material": "MAT-471101"},
+        {"source_material": "EXT-AX7", "canonical_material": "MAT-471099"},
+        {"source_material": "000000000000471102", "canonical_material": "MAT-471102"}
+      ]
+    },
+    "2026.08.2": {
+      "id": "sap.material-aliases",
+      "basedOn": "2026.08.1",
+      "decisionId": "decision.sales.ext-q9.2026-08",
+      "rows": [
+        {"source_material": "000000000000471100", "canonical_material": "MAT-471100"},
+        {"source_material": "000000000000471101", "canonical_material": "MAT-471101"},
+        {"source_material": "EXT-AX7", "canonical_material": "MAT-471099"},
+        {"source_material": "000000000000471102", "canonical_material": "MAT-471102"},
+        {"source_material": "EXT-Q9", "canonical_material": "MAT-471103"}
+      ]
+    }
+  }
+}
