@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Assessment Lab — Reasoning Routes"
-description: "A practical assessment route for SAP Lead preparation across Sales, Billing, Procurement, Production, Quality, Inventory, FI/CO logistics, Integration, AI, data, diagnostics, and architecture decisions."
+description: "A practical assessment route for SAP Lead preparation across Sales, Billing, Procurement, Production, Quality, Inventory, FI/CO logistics, Automotive JIT/JIS, Integration, AI, data, diagnostics, and architecture decisions."
 permalink: /labs/assessment/
 status: draft
 verified: false
@@ -26,7 +26,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <p>Current practice model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Assessment tracks</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>5</strong><small>Reasoning levels</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>40</strong><small>Structured practice cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>46</strong><small>Structured practice cases</small></div>
       <em>Draft route. Missing coverage stays visible instead of hiding behind a long topic list.</em>
     </div>
   </header>
@@ -34,7 +34,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">psychology_alt</span>
     <p><strong>Working rule:</strong> a Lead answer connects business intent, system responsibility, data, decision logic, integration, failure impact, financial consequence, and proof.</p>
-    <p><strong>Diagnostic rule:</strong> find the first wrong decision. Do not repair the final document or journal entry before you understand why it received that value.</p>
+    <p><strong>Diagnostic rule:</strong> find the first wrong decision. Do not repair the final document, call, or journal entry before you understand why it received that state.</p>
     <a href="/labs/assessment/data/case-sets.json">Open the practice case sets <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
@@ -60,28 +60,30 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/enterprise-context/shipping/"><span>SHP</span><strong>Shipping and Scheduling</strong><small>Shipping point, route, dates, delivery logic, EWM and TM boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
       <a href="/labs/enterprise-context/billing/"><span>BIL</span><strong>Billing & Revenue Handoff</strong><small>Due state, copying control, invoice split, pricing transfer, FI posting, correction, and e-invoice boundary.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
       <a href="/labs/enterprise-context/finance-logistics/"><span>FI</span><strong>FI/CO Logistics Bridge</strong><small>PGI/COGS, Billing/AR/revenue, account determination, recognition boundaries, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
+      <a href="/labs/enterprise-context/automotive-jit/"><span>AUTO</span><strong>Automotive JIT / JIS</strong><small>Scheduling agreements, exact calls, sequence, delivery, supplier forwarding, and OEM integration.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
       <a href="/labs/enterprise-context/sales-diagnostics/"><span>CASE</span><strong>Sales Diagnostic Casebook</strong><small>Symptom-first investigation, hypotheses, evidence, and proof of fix.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Track 02 / Procurement, Production and Logistics</p><h2>Follow demand until physical and financial completion.</h2><p>Separate sourcing, production planning, quality, inventory, warehouse execution, transportation, invoice verification, settlement, and financial reconciliation.</p></header>
+    <header><p class="research-canvas__eyebrow">Track 02 / Procurement, Production and Logistics</p><h2>Follow demand until physical and financial completion.</h2><p>Separate sourcing, production, quality, inventory, automotive exact-call execution, warehouse, transport, invoice, settlement, and financial reconciliation.</p></header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/procurement/"><span>P2P</span><strong>Procurement Decision Map</strong><small>Demand, source, item behavior, account assignment, price, approval, receipt, invoice, and GR/IR.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
       <a href="/labs/enterprise-context/production/"><span>PP</span><strong>Production Planning & Execution</strong><small>Demand, MRP, production method, order, staging, confirmation, goods receipt, and settlement.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
       <a href="/labs/enterprise-context/quality-management/"><span>QM</span><strong>Quality Management</strong><small>Inspection trigger, lot, specification, results, usage decision, stock disposition, follow-up, and certificate boundary.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Inventory Management</strong><small>Business event, movement semantics, stock state, valuation, reservations, physical inventory, EWM handoff, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
-      <a href="/labs/enterprise-context/finance-logistics/"><span>FI</span><strong>FI/CO for Logistics</strong><small>GR/IR, valuation, account determination, production cost flow, freight settlement, and journal reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
+      <a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Inventory Management</strong><small>Movement semantics, stock state, valuation, reservations, physical inventory, and EWM handoff.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/labs/enterprise-context/finance-logistics/"><span>FI</span><strong>FI/CO for Logistics</strong><small>GR/IR, valuation, account determination, production cost flow, freight settlement, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
+      <a href="/labs/enterprise-context/automotive-jit/"><span>JIS</span><strong>Automotive JIT / JIS</strong><small>Forecast versus exact call, call control, sequence, HU, Delivery, EWM/TM, and upstream supplier forwarding.</small><i class="material-symbols-outlined" aria-hidden="true">format_list_numbered</i></a>
       <a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Extended Warehouse Management</strong><small>Warehouse domains, execution objects, controls, interfaces, and ownership boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">warehouse</i></a>
       <a href="/labs/enterprise-context/transportation-management/"><span>TM</span><strong>Transportation Management</strong><small>Demand, freight units, planning, freight orders, execution, charges, and settlement.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
-      <a href="/labs/enterprise-context/logistics-capabilities/"><span>X</span><strong>Cross-Process Logistics Capabilities</strong><small>Batch, handling units, serials, packaging, and shared logistics ownership.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Track 03 / Integration and Architecture</p><h2>Design the handoff, not only the interface.</h2><p>Ask who owns the state, how the contract works, how retries and duplicates behave, and how operations prove business completion.</p></header>
+    <header><p class="research-canvas__eyebrow">Track 03 / Integration and Architecture</p><h2>Design the handoff, not only the interface.</h2><p>Ask who owns the state, how identity works, how retries and duplicates behave, and how operations prove business completion.</p></header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/integrations/"><span>INT</span><strong>Integration Architecture</strong><small>APIs, IDocs, RFC, events, queues, files, B2B, middleware, and distribution.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/enterprise-context/automotive-jit/"><span>AUTO</span><strong>Automotive Message & Call Identity</strong><small>Schedule versus exact call, duplicate identity, sequence, forwarding, and external confirmation.</small><i class="material-symbols-outlined" aria-hidden="true">sync_alt</i></a>
       <a href="/labs/enterprise-context/transportation-management/integrations/"><span>TM</span><strong>TM Integration Contracts</strong><small>ERP demand, APIs, B2B messages, execution events, and business events.</small><i class="material-symbols-outlined" aria-hidden="true">sync</i></a>
       <a href="/labs/enterprise-context/mdg/interfaces/"><span>MDG</span><strong>Master Data Distribution</strong><small>Governance ownership, replication, data quality, and downstream consequences.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/enterprise-context/deployment-models/"><span>DEP</span><strong>Deployment Models</strong><small>Public Cloud, Private Cloud, On-Premise, and architecture constraints.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
@@ -113,25 +115,26 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Coverage</p><h2>Core logistics verticals now reach the financial boundary.</h2><p>The next work can focus on industry depth and operational recovery instead of another generic module catalogue.</p></header>
+    <header><p class="research-canvas__eyebrow">Coverage</p><h2>The core vertical backlog is closed.</h2><p>The next value comes from operational recovery and cross-process cases, not another shallow product list.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Strong now</h4><ul><li>Sales decisions, shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory Management</li><li>FI/CO touchpoints across O2C, P2P, Production and TM</li><li>EWM, TM and cross-process logistics</li><li>Integration, MDG, development, deployment and AI architecture</li></ul></div>
-      <div><h4>Next P1 vertical</h4><ul><li>Automotive JIT and JIS</li></ul></div>
-      <div><h4>Next practice layers</h4><ul><li>Integration operations and recovery</li><li>Cross-process Lead cases</li><li>Weak-signal tracking</li><li>Adaptive case selection</li></ul></div>
+      <div><h4>Strong now</h4><ul><li>Sales, Shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory</li><li>FI/CO touchpoints across logistics</li><li>Automotive JIT/JIS, EWM and TM</li><li>Integration, MDG, development, deployment and AI architecture</li></ul></div>
+      <div><h4>Next P1</h4><ul><li>Integration operations and recovery</li><li>Cross-process Lead cases</li></ul></div>
+      <div><h4>Then improve the practice engine</h4><ul><li>Weak-signal tracking</li><li>Question generation from graph relations</li><li>Adaptive case selection</li></ul></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Machine-readable practice</p><h2>The same route can be used by a person or an assessment agent.</h2><p>Case sets carry expected points, follow-ups, red flags, graph references, and human references.</p></header>
     <div class="research-route-list">
-      <a href="/labs/assessment/data/case-sets.json"><span>SET</span><strong>Case set manifest</strong><small>40 cases across core, Quality, Inventory, Billing, and FI/CO logistics datasets.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
-      <a href="/labs/assessment/data/cases.jsonl"><span>JSONL</span><strong>Core assessment cases</strong><small>Sales, Procurement, Production, Logistics, Integration, Data and AI.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/assessment/data/qm-cases.jsonl"><span>QM</span><strong>Quality Management cases</strong><small>Inspection trigger, disposition, stock, and customer-evidence scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/assessment/data/inventory-cases.jsonl"><span>IM</span><strong>Inventory Management cases</strong><small>Movement semantics, stock state, transfer, physical inventory, and EWM-boundary scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/assessment/data/billing-cases.jsonl"><span>BIL</span><strong>Billing cases</strong><small>Due state, split, pricing handoff, revenue account, e-invoice, and correction scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/assessment/data/finance-logistics-cases.jsonl"><span>FI</span><strong>FI/CO logistics cases</strong><small>PGI/COGS, GR valuation, GR/IR, Billing/FI, production settlement, and freight settlement.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/data/case-sets.json"><span>SET</span><strong>Case set manifest</strong><small>46 cases across core and specialist datasets.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/data/cases.jsonl"><span>CORE</span><strong>Core assessment cases</strong><small>Sales, Procurement, Production, Logistics, Integration, Data and AI.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/data/qm-cases.jsonl"><span>QM</span><strong>Quality Management cases</strong><small>Inspection, disposition, stock, and customer-evidence scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/data/inventory-cases.jsonl"><span>IM</span><strong>Inventory cases</strong><small>Movement, stock state, physical inventory, and EWM boundary.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/data/billing-cases.jsonl"><span>BIL</span><strong>Billing cases</strong><small>Due state, split, pricing handoff, revenue account, e-invoice, and correction.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/data/finance-logistics-cases.jsonl"><span>FI</span><strong>FI/CO logistics cases</strong><small>PGI/COGS, GR valuation, GR/IR, Billing/FI, production and freight settlement.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/data/automotive-jit-cases.jsonl"><span>AUTO</span><strong>Automotive JIT/JIS cases</strong><small>Schedules, call identity, call control, sequence, delayed components, and supplier forwarding.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/assessment/data/scoring.json"><span>SCORE</span><strong>Scoring contract</strong><small>Seven dimensions, 21 points maximum, and Lead-level signals.</small><i class="material-symbols-outlined" aria-hidden="true">score</i></a>
-      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development backlog</strong><small>Prioritized gaps and done definitions for the next Lab iterations.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
+      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development backlog</strong><small>Next focus: integration recovery and cross-process Lead cases.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
   </section>
 
