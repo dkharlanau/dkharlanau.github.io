@@ -424,11 +424,17 @@ tags:
   });
 
   $('pe-export').addEventListener('click',() => {
-    const blob = new Blob([JSON.stringify(history(),null,2)],{type:'application/json'});
+    const payload = {
+      format:'sap-lead-assessment-history',
+      version:'1.0.0',
+      exported_at:new Date().toISOString(),
+      attempts:history()
+    };
+    const blob = new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'sap-lead-assessment-attempts.json';
+    link.download = 'sap-lead-assessment-history.json';
     link.click();
     URL.revokeObjectURL(url);
   });

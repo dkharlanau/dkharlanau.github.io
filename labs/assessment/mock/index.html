@@ -166,6 +166,7 @@ tags:
   const mean = values => values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
   let cases = [];
   let session = null;
+  let thresholds = null;
 
   function normalizeTrack(track) {
     if (track === 'procurement' || track === 'logistics' || track === 'production') return 'procurement-logistics';
@@ -373,7 +374,7 @@ tags:
       level:c.level,
       scores,
       total_score:total,
-      lead_signal:total >= 18,
+      lead_signal:total >= thresholds.case_total_lead_minimum,
       confidence:Number($('ma-confidence').value),
       notes:$('ma-notes').value.trim(),
       weak_signals:Object.entries(scores).filter(([,value])=>value<2).map(([id])=>id),
@@ -443,9 +444,15 @@ tags:
   }
 
   async function loadCases() {
-    const indexResponse = await fetch('/labs/assessment/data/case-sets.json',{cache:'no-store'});
+    const [indexResponse,scoringResponse] = await Promise.all([
+      fetch('/labs/assessment/data/case-sets.json',{cache:'no-store'}),
+      fetch('/labs/assessment/data/scoring.json',{cache:'no-store'})
+    ]);
     if (!indexResponse.ok) throw new Error(`Case-set index HTTP ${indexResponse.status}`);
+    if (!scoringResponse.ok) throw new Error(`Scoring contract HTTP ${scoringResponse.status}`);
     const index = await indexResponse.json();
+    const scoring = await scoringResponse.json();
+    thresholds = scoring.weak_signal_thresholds;
     const loaded = [];
     for (const set of index.sets) {
       const response = await fetch(set.url,{cache:'no-store'});

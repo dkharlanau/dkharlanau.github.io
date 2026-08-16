@@ -124,3 +124,14 @@ def test_backlog_records_completed_practice_loops() -> None:
     for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
+
+def test_browser_modes_use_shared_portability_and_lead_threshold() -> None:
+    practice = (ASSESSMENT / "practice-engine" / "index.html").read_text(encoding="utf-8")
+    mock = (ASSESSMENT / "mock" / "index.html").read_text(encoding="utf-8")
+
+    assert "format:'sap-lead-assessment-history'" in practice
+    assert "sap-lead-assessment-history.json" in practice
+    assert "lead_signal:total >= 18" not in mock
+    assert "thresholds.case_total_lead_minimum" in mock
+    assert "fetch('/labs/assessment/data/scoring.json'" in mock
+
