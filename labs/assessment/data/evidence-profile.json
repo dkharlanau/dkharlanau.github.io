@@ -1,6 +1,6 @@
 {
   "id": "sap-lead-evidence-profile",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
   "purpose": "Define what kind of evidence each assessment route should use so product facts, standards or research, and consultant heuristics are not collapsed into one verification signal.",
   "evidence_classes": [
@@ -27,38 +27,68 @@
   ],
   "defaults": {
     "enterprise_context": {
-      "expected_evidence_classes": ["sap_product_primary", "author_heuristic"],
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "external_review_mode": "required_for_load_bearing_product_claims",
       "counts_as_source_review_debt": true
     }
   },
   "route_overrides": {
     "/labs/ai-ready/": {
-      "expected_evidence_classes": ["standard_or_spec_primary", "research_primary", "author_heuristic"],
+      "expected_evidence_classes": [
+        "standard_or_spec_primary",
+        "research_primary",
+        "author_heuristic"
+      ],
       "external_review_mode": "selective_for_external_claims",
       "counts_as_source_review_debt": false,
       "reason": "The route is mainly an architecture and evaluation framework. Author heuristics should be labelled, while external technical claims use standards or primary research instead of SAP Help."
     },
     "/labs/business-ai/": {
-      "expected_evidence_classes": ["research_primary", "sap_product_primary", "author_heuristic"],
+      "expected_evidence_classes": [
+        "research_primary",
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "external_review_mode": "selective_for_examples_and_outcome_claims",
       "counts_as_source_review_debt": false,
       "reason": "The route is process-first consulting analysis. Patterns are author guidance; named products, implementations, and measured outcomes need external evidence."
     },
     "/labs/enterprise-context/business-ai/": {
-      "expected_evidence_classes": ["sap_product_primary", "author_heuristic"],
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "external_review_mode": "required_for_load_bearing_product_claims",
       "counts_as_source_review_debt": true
     },
     "/labs/enterprise-context/data-governance/": {
-      "expected_evidence_classes": ["sap_product_primary", "standard_or_spec_primary", "author_heuristic"],
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "standard_or_spec_primary",
+        "author_heuristic"
+      ],
       "external_review_mode": "required_for_named_product_or_standard_claims",
       "counts_as_source_review_debt": true
     },
     "/labs/enterprise-context/mdg/": {
-      "expected_evidence_classes": ["sap_product_primary", "author_heuristic"],
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
       "external_review_mode": "required_for_load_bearing_product_claims",
       "counts_as_source_review_debt": true
+    },
+    "/labs/enterprise-context/sales-diagnostics/": {
+      "expected_evidence_classes": [
+        "sap_product_primary",
+        "author_heuristic"
+      ],
+      "external_review_mode": "selective_for_named_product_claims",
+      "counts_as_source_review_debt": false,
+      "reason": "The page is explicitly an authored diagnostic casebook. SAP sources anchor product behavior and release-sensitive limits; hypothesis trees and diagnostic habits are author guidance rather than product facts."
     }
   },
   "rules": [

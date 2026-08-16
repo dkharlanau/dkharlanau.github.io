@@ -12,57 +12,27 @@
   "boundary": "Coverage counts only routes whose evidence profile requires external source review. Selective or heuristic routes are shown separately and are not treated as missing SAP product evidence.",
   "summary": {
     "unique_profiled_routes": 29,
-    "unique_externally_review_required_routes": 27,
-    "unique_selective_or_heuristic_routes": 2,
-    "unique_source_reviewed_routes": 21,
-    "unique_p0_evidence_debt_routes": 6,
-    "unique_p1_page_review_ready_routes": 21,
-    "source_supported_claims": 53,
-    "coverage_percent": 77.8
+    "unique_externally_review_required_routes": 26,
+    "unique_selective_or_heuristic_routes": 3,
+    "unique_source_reviewed_routes": 26,
+    "unique_p0_evidence_debt_routes": 0,
+    "unique_p1_page_review_ready_routes": 26,
+    "source_supported_claims": 63,
+    "coverage_percent": 100.0
   },
   "tracks": [
     {
       "id": "sales",
       "label": "Sales",
       "evidence_profile_routes": 10,
-      "externally_review_required_routes": 10,
-      "selective_or_heuristic_routes": 0,
-      "source_reviewed_routes": 8,
-      "evidence_debt_routes": 2,
-      "page_review_ready_routes": 8,
-      "reviewed_claims": 21,
-      "coverage_percent": 80.0,
+      "externally_review_required_routes": 9,
+      "selective_or_heuristic_routes": 1,
+      "source_reviewed_routes": 9,
+      "evidence_debt_routes": 0,
+      "page_review_ready_routes": 9,
+      "reviewed_claims": 23,
+      "coverage_percent": 100.0,
       "routes": [
-        {
-          "route": "/labs/enterprise-context/sales-diagnostics/",
-          "state": "human_review_candidate",
-          "priority": "P0",
-          "evidence_status": "not_reviewed",
-          "reviewed_claims": 0,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-        },
-        {
-          "route": "/labs/enterprise-context/sales-processes/",
-          "state": "human_review_candidate",
-          "priority": "P0",
-          "evidence_status": "not_reviewed",
-          "reviewed_claims": 0,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-        },
         {
           "route": "/labs/enterprise-context/atp/",
           "state": "human_review_candidate",
@@ -169,6 +139,21 @@
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         },
         {
+          "route": "/labs/enterprise-context/sales-processes/",
+          "state": "human_review_candidate",
+          "priority": "P1",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
+        },
+        {
           "route": "/labs/enterprise-context/shipping/",
           "state": "human_review_candidate",
           "priority": "P1",
@@ -182,6 +167,21 @@
           ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
+        },
+        {
+          "route": "/labs/enterprise-context/sales-diagnostics/",
+          "state": "human_review_candidate",
+          "priority": "P2",
+          "evidence_status": "not_reviewed",
+          "reviewed_claims": 0,
+          "external_review_required": false,
+          "external_review_mode": "selective_for_named_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate."
         }
       ]
     },
@@ -191,27 +191,12 @@
       "evidence_profile_routes": 9,
       "externally_review_required_routes": 9,
       "selective_or_heuristic_routes": 0,
-      "source_reviewed_routes": 8,
-      "evidence_debt_routes": 1,
-      "page_review_ready_routes": 8,
-      "reviewed_claims": 17,
-      "coverage_percent": 88.9,
+      "source_reviewed_routes": 9,
+      "evidence_debt_routes": 0,
+      "page_review_ready_routes": 9,
+      "reviewed_claims": 19,
+      "coverage_percent": 100.0,
       "routes": [
-        {
-          "route": "/labs/enterprise-context/logistics-capabilities/",
-          "state": "human_review_candidate",
-          "priority": "P0",
-          "evidence_status": "not_reviewed",
-          "reviewed_claims": 0,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-        },
         {
           "route": "/labs/enterprise-context/automotive-jit/",
           "state": "human_review_candidate",
@@ -259,6 +244,21 @@
         },
         {
           "route": "/labs/enterprise-context/inventory-management/",
+          "state": "human_review_candidate",
+          "priority": "P1",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
+        },
+        {
+          "route": "/labs/enterprise-context/logistics-capabilities/",
           "state": "human_review_candidate",
           "priority": "P1",
           "evidence_status": "source_supported",
@@ -340,42 +340,12 @@
       "evidence_profile_routes": 8,
       "externally_review_required_routes": 8,
       "selective_or_heuristic_routes": 0,
-      "source_reviewed_routes": 6,
-      "evidence_debt_routes": 2,
-      "page_review_ready_routes": 6,
-      "reviewed_claims": 17,
-      "coverage_percent": 75.0,
+      "source_reviewed_routes": 8,
+      "evidence_debt_routes": 0,
+      "page_review_ready_routes": 8,
+      "reviewed_claims": 21,
+      "coverage_percent": 100.0,
       "routes": [
-        {
-          "route": "/labs/enterprise-context/sales-processes/integrations/",
-          "state": "human_review_candidate",
-          "priority": "P0",
-          "evidence_status": "not_reviewed",
-          "reviewed_claims": 0,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-        },
-        {
-          "route": "/labs/enterprise-context/transportation-management/integrations/",
-          "state": "human_review_candidate",
-          "priority": "P0",
-          "evidence_status": "not_reviewed",
-          "reviewed_claims": 0,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-        },
         {
           "route": "/labs/enterprise-context/automotive-jit/",
           "state": "human_review_candidate",
@@ -465,6 +435,36 @@
           ],
           "structural_score": 5,
           "review_reason": "Primary-source review exists; human page-level verification is the next gate."
+        },
+        {
+          "route": "/labs/enterprise-context/sales-processes/integrations/",
+          "state": "human_review_candidate",
+          "priority": "P1",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
+        },
+        {
+          "route": "/labs/enterprise-context/transportation-management/integrations/",
+          "state": "human_review_candidate",
+          "priority": "P1",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
         }
       ]
     },
@@ -474,28 +474,12 @@
       "evidence_profile_routes": 5,
       "externally_review_required_routes": 3,
       "selective_or_heuristic_routes": 2,
-      "source_reviewed_routes": 2,
-      "evidence_debt_routes": 1,
-      "page_review_ready_routes": 2,
-      "reviewed_claims": 4,
-      "coverage_percent": 66.7,
+      "source_reviewed_routes": 3,
+      "evidence_debt_routes": 0,
+      "page_review_ready_routes": 3,
+      "reviewed_claims": 6,
+      "coverage_percent": 100.0,
       "routes": [
-        {
-          "route": "/labs/enterprise-context/data-governance/",
-          "state": "human_review_candidate",
-          "priority": "P0",
-          "evidence_status": "not_reviewed",
-          "reviewed_claims": 0,
-          "external_review_required": true,
-          "external_review_mode": "required_for_named_product_or_standard_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "standard_or_spec_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-        },
         {
           "route": "/labs/enterprise-context/business-ai/",
           "state": "human_review_candidate",
@@ -506,6 +490,22 @@
           "external_review_mode": "required_for_load_bearing_product_claims",
           "expected_evidence_classes": [
             "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
+        },
+        {
+          "route": "/labs/enterprise-context/data-governance/",
+          "state": "human_review_candidate",
+          "priority": "P1",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_named_product_or_standard_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "standard_or_spec_primary",
             "author_heuristic"
           ],
           "structural_score": 5,
@@ -561,81 +561,7 @@
       ]
     }
   ],
-  "next_focus": [
-    {
-      "route": "/labs/enterprise-context/data-governance/",
-      "assessment_track_count": 1,
-      "priority": "P0",
-      "evidence_status": "not_reviewed",
-      "expected_evidence_classes": [
-        "sap_product_primary",
-        "standard_or_spec_primary",
-        "author_heuristic"
-      ],
-      "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-    },
-    {
-      "route": "/labs/enterprise-context/logistics-capabilities/",
-      "assessment_track_count": 1,
-      "priority": "P0",
-      "evidence_status": "not_reviewed",
-      "expected_evidence_classes": [
-        "sap_product_primary",
-        "author_heuristic"
-      ],
-      "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-    },
-    {
-      "route": "/labs/enterprise-context/sales-diagnostics/",
-      "assessment_track_count": 1,
-      "priority": "P0",
-      "evidence_status": "not_reviewed",
-      "expected_evidence_classes": [
-        "sap_product_primary",
-        "author_heuristic"
-      ],
-      "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-    },
-    {
-      "route": "/labs/enterprise-context/sales-processes/",
-      "assessment_track_count": 1,
-      "priority": "P0",
-      "evidence_status": "not_reviewed",
-      "expected_evidence_classes": [
-        "sap_product_primary",
-        "author_heuristic"
-      ],
-      "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-    },
-    {
-      "route": "/labs/enterprise-context/sales-processes/integrations/",
-      "assessment_track_count": 1,
-      "priority": "P0",
-      "evidence_status": "not_reviewed",
-      "expected_evidence_classes": [
-        "sap_product_primary",
-        "author_heuristic"
-      ],
-      "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-    },
-    {
-      "route": "/labs/enterprise-context/transportation-management/integrations/",
-      "assessment_track_count": 1,
-      "priority": "P0",
-      "evidence_status": "not_reviewed",
-      "expected_evidence_classes": [
-        "sap_product_primary",
-        "author_heuristic"
-      ],
-      "structural_score": 5,
-      "review_reason": "Structure is mature but load-bearing external claims have not completed the required primary-source review."
-    }
-  ],
+  "next_focus": [],
   "evidence_classes": [
     {
       "id": "sap_product_primary",

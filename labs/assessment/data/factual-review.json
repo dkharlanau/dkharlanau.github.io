@@ -1,15 +1,15 @@
 {
   "id": "sap-lead-factual-review",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "updated_at": "2026-08-16",
   "policy": "/labs/assessment/data/factual-review-policy.json",
   "review_boundary": "Claims below were checked against current SAP primary sources. This does not change page-level verified, robots, sitemap, or publication status.",
   "summary": {
-    "routes_reviewed": 21,
-    "claims_reviewed": 53,
-    "source_supported": 53,
+    "routes_reviewed": 26,
+    "claims_reviewed": 63,
+    "source_supported": 63,
     "source_conflict": 0,
-    "human_verification_required": 53
+    "human_verification_required": 63
   },
   "routes": [
     {
@@ -75,6 +75,18 @@
         "FACT-CREDIT-001",
         "FACT-CREDIT-002",
         "FACT-CREDIT-003"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/data-governance/",
+      "title": "Data Governance",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-DG-001",
+        "FACT-DG-002"
       ]
     },
     {
@@ -168,6 +180,18 @@
       ]
     },
     {
+      "route": "/labs/enterprise-context/logistics-capabilities/",
+      "title": "Cross-Process Logistics Capabilities",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-LOGCAP-001",
+        "FACT-LOGCAP-002"
+      ]
+    },
+    {
       "route": "/labs/enterprise-context/mdg/",
       "title": "Master Data Governance",
       "review_status": "primary_source_review_complete",
@@ -252,6 +276,30 @@
       ]
     },
     {
+      "route": "/labs/enterprise-context/sales-processes/",
+      "title": "Sales Process Atlas",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-SPROC-001",
+        "FACT-SPROC-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/sales-processes/integrations/",
+      "title": "Sales Process Integrations",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-SPINT-001",
+        "FACT-SPINT-002"
+      ]
+    },
+    {
       "route": "/labs/enterprise-context/shipping/",
       "title": "Shipping and Scheduling",
       "review_status": "primary_source_review_complete",
@@ -273,6 +321,18 @@
       "claim_ids": [
         "FACT-TM-001",
         "FACT-TM-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/transportation-management/integrations/",
+      "title": "TM Integrations",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-TMINT-001",
+        "FACT-TMINT-002"
       ]
     }
   ],
@@ -652,6 +712,42 @@
       "human_verification_required": true
     },
     {
+      "id": "FACT-DG-001",
+      "route": "/labs/enterprise-context/data-governance/",
+      "claim": "SAP MDG Data Quality Management supports derivation rules, validation rules, data-quality KPIs, scheduled evaluations, monitoring, drilldown, and correction for product and business-partner master data. These are implementation mechanisms for governed data quality; they do not define the enterprise ownership model by themselves.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ASSESS-MDG-DQM"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/03f3f2e3d99a47b39fc106e52304e665.html"
+      ],
+      "product_scope": "SAP Master Data Governance, Data Quality Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-DG-002",
+      "route": "/labs/enterprise-context/data-governance/",
+      "claim": "MDG validation rules are managed in a central rule repository and can be used for data-quality evaluations and checks in change requests, consolidation, and other MDG processes. The rule implementation can therefore support preventive and detective controls, while ownership and acceptance thresholds remain governance decisions.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ASSESS-MDG-VALIDATION-RULES"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/61e6c725c1bf4332aadbf1b9e040b9c5.html"
+      ],
+      "product_scope": "SAP Master Data Governance",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
       "id": "FACT-EWM-001",
       "route": "/labs/enterprise-context/ewm/",
       "claim": "A warehouse task is the EWM execution document for goods movements or stock changes such as picking, putaway, internal movements, posting changes, goods receipt, or goods issue. It can reference a warehouse request or exist without one for some internal movements.",
@@ -930,6 +1026,44 @@
       "reviewed_at": "2026-08-16",
       "human_verification_required": true,
       "evidence_class": "sap_product_primary"
+    },
+    {
+      "id": "FACT-LOGCAP-001",
+      "route": "/labs/enterprise-context/logistics-capabilities/",
+      "claim": "Batch management preserves lot identity across logistics processes. SAP shows batch determination, availability and usability checks in Sales and batch assignment or determination in Production, so batch is a cross-process material identity rather than a warehouse-only attribute.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ASSESS-BATCH-MANAGEMENT"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/4eb099dbc8a6435c9b36a854a7e05522/c7feb753128eb44ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Logistics - Batch Management",
+      "release_scope": "2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-LOGCAP-002",
+      "route": "/labs/enterprise-context/logistics-capabilities/",
+      "claim": "A handling unit is a uniquely identified packaging unit that carries the packed materials and can carry batch and serial-number information through the supply chain. Serial numbers identify individual material instances and can be assigned to HU items, so HU identity and serial identity solve different traceability problems even when they travel together.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ASSESS-HANDLING-UNIT",
+        "SRC-SAP-ASSESS-SERIAL-HU"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/1dad2180e6f34b75ac77afce5cb5eda1/5b2f169885e111db2b24000f20dac9ef.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/c328b753128eb44ce10000000a174cb4-233.html"
+      ],
+      "product_scope": "SAP S/4HANA Logistics - Handling Unit and Serial Number Management",
+      "release_scope": "2025 FPS01 documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
     },
     {
       "id": "FACT-MDG-001",
@@ -1247,6 +1381,78 @@
       "human_verification_required": true
     },
     {
+      "id": "FACT-SPINT-001",
+      "route": "/labs/enterprise-context/sales-processes/integrations/",
+      "claim": "The Sales Order A2X OData V2 API is a synchronous inbound service for external applications and supports creating, reading, updating, and deleting sales orders. An API endpoint is therefore a command/query contract, not the same thing as asynchronous business-event publication.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ASSESS-SALES-ORDER-API"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/19d48293097f4a2589433856b034dfa5/00d244581efca007e10000000a441470.html"
+      ],
+      "product_scope": "SAP S/4HANA APIs for Sales",
+      "release_scope": "2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-SPINT-002",
+      "route": "/labs/enterprise-context/sales-processes/integrations/",
+      "claim": "The Sales Order business object publishes events for creation, change, deletion, and overall-processing-status change. These events carry business identifiers and status context, so event-driven consumers should use the event as a notification contract rather than assume it contains the full mutable sales-order state.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ASSESS-SALES-ORDER-EVENTS"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/19d48293097f4a2589433856b034dfa5/78168e21723f4d58a631e3790a7f96b4.html"
+      ],
+      "product_scope": "SAP S/4HANA APIs for Sales",
+      "release_scope": "2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-SPROC-001",
+      "route": "/labs/enterprise-context/sales-processes/",
+      "claim": "A standard sell-from-stock flow connects sales order, outbound delivery, picking and goods issue, and delivery-related billing. Billing transfers accounting-relevant data into Financial Accounting, so commercial, physical, and financial completion are separate checkpoints in one end-to-end process.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ASSESS-SELL-FROM-STOCK"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_CLOUD/89d896ca9cd64318b1667df5ec00e4b2/60e3856c92004daf8a71f5017fd2b9a8.html"
+      ],
+      "product_scope": "SAP S/4HANA Cloud Public Edition Sales",
+      "release_scope": "2608 Latest",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-SPROC-002",
+      "route": "/labs/enterprise-context/sales-processes/",
+      "claim": "In the sales-order outbound-delivery scenario, the sales order item is the root for subsequent logistics process steps. Outbound delivery, picking, packing, goods issue, and billing expose different process statuses; posting goods issue is the final delivery-processing step and delivery-related billing uses the delivery as its main reference.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ASSESS-SALES-PROCESS-FLOW"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/610fb16c6f8341e0a0725eeb3abb00ed.html"
+      ],
+      "product_scope": "SAP S/4HANA Logistics / Sales",
+      "release_scope": "2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
       "id": "FACT-TM-001",
       "route": "/labs/enterprise-context/transportation-management/",
       "claim": "TM creates freight units from transportation-demand documents such as order-based or delivery-based transportation requirements, orders, deliveries, and JIT calls. Freight orders are a result of transportation planning and become capacity and execution documents used for later carrier-related processing.",
@@ -1285,6 +1491,42 @@
       "reviewed_at": "2026-08-16",
       "human_verification_required": true,
       "evidence_class": "sap_product_primary"
+    },
+    {
+      "id": "FACT-TMINT-001",
+      "route": "/labs/enterprise-context/transportation-management/integrations/",
+      "claim": "In an external-planning scenario, transportation requirements can be sent as freight units or consignment orders and planning results returned as freight orders or freight bookings. SAP documents TransportationOrderGenericRequest_Out and _In as the communication APIs for this exchange.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ASSESS-TM-EXTERNAL-PLANNING"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/6e825c862de14cec93e7a3ca5c3d3a17.html"
+      ],
+      "product_scope": "SAP S/4HANA Transportation Management",
+      "release_scope": "2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-TMINT-002",
+      "route": "/labs/enterprise-context/transportation-management/integrations/",
+      "claim": "The Freight Order A2X API can create, update, and cancel freight orders and can assign or unassign freight units, report events, and calculate charges. SAP also warns not to use this API to update freight orders during the planning and subcontracting phase of SAP_COM_0414 because later external-planning replication can overwrite those updates.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ASSESS-TM-FREIGHT-ORDER-API"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_CLOUD/588780cab2774a7ab9fffca3a7f919fe/4ca2bf7c61f541e290f948cfd9b785e5.html"
+      ],
+      "product_scope": "SAP S/4HANA Cloud Transportation Management",
+      "release_scope": "Current documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
     }
   ]
 }
