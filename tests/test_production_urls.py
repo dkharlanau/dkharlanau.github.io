@@ -21,7 +21,10 @@ def test_structured_data_uses_one_person_identity():
     assert 'author_linkedin_url = \'https://www.linkedin.com/in/dkharlanau/\'' in structured
     assert 'author_github_url = \'https://github.com/dkharlanau\'' in structured
     assert '"@id": "{{ author_id }}"' in structured
-    assert structured.count('"sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"]') >= 3
+    assert structured.count('"sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"]') >= 2
+    assert structured.count('"sameAs": {{ resume.schema.sameAs | jsonify }}') == 1
+    profile_duplicate = '"sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"],\n  "url": "{{ canonical_url }}"'
+    assert profile_duplicate not in structured
 
 
 def test_expert_endpoints_use_canonical_identity_urls():

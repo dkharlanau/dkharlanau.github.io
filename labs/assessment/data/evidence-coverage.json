@@ -16,7 +16,7 @@
     "unique_selective_or_heuristic_routes": 3,
     "unique_source_reviewed_routes": 27,
     "unique_p0_evidence_debt_routes": 0,
-    "unique_p1_page_review_ready_routes": 9,
+    "unique_p1_page_review_ready_routes": 0,
     "source_supported_claims": 65,
     "coverage_percent": 100.0
   },
@@ -125,7 +125,7 @@
         },
         {
           "route": "/labs/enterprise-context/sales-diagnostics/",
-          "state": "human_review_candidate",
+          "state": "public_or_indexable",
           "priority": "P2",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
@@ -136,7 +136,7 @@
             "author_heuristic"
           ],
           "structural_score": 5,
-          "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate."
+          "review_reason": "Structure or publication state must be resolved before promotion review."
         },
         {
           "route": "/labs/enterprise-context/sales-order/",
@@ -342,14 +342,29 @@
       "selective_or_heuristic_routes": 0,
       "source_reviewed_routes": 8,
       "evidence_debt_routes": 0,
-      "page_review_ready_routes": 5,
+      "page_review_ready_routes": 0,
       "reviewed_claims": 21,
       "coverage_percent": 100.0,
       "routes": [
         {
+          "route": "/labs/enterprise-context/automotive-jit/",
+          "state": "public_or_indexable",
+          "priority": "P2",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Structure or publication state must be resolved before promotion review."
+        },
+        {
           "route": "/labs/enterprise-context/deployment-models/",
-          "state": "human_review_candidate",
-          "priority": "P1",
+          "state": "public_or_indexable",
+          "priority": "P2",
           "evidence_status": "source_supported",
           "reviewed_claims": 3,
           "external_review_required": true,
@@ -359,70 +374,10 @@
             "author_heuristic"
           ],
           "structural_score": 5,
-          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
+          "review_reason": "Structure or publication state must be resolved before promotion review."
         },
         {
           "route": "/labs/enterprise-context/development/",
-          "state": "human_review_candidate",
-          "priority": "P1",
-          "evidence_status": "source_supported",
-          "reviewed_claims": 2,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
-        },
-        {
-          "route": "/labs/enterprise-context/mdg/interfaces/",
-          "state": "human_review_candidate",
-          "priority": "P1",
-          "evidence_status": "source_supported",
-          "reviewed_claims": 2,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
-        },
-        {
-          "route": "/labs/enterprise-context/sales-processes/integrations/",
-          "state": "human_review_candidate",
-          "priority": "P1",
-          "evidence_status": "source_supported",
-          "reviewed_claims": 2,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
-        },
-        {
-          "route": "/labs/enterprise-context/transportation-management/integrations/",
-          "state": "human_review_candidate",
-          "priority": "P1",
-          "evidence_status": "source_supported",
-          "reviewed_claims": 2,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
-        },
-        {
-          "route": "/labs/enterprise-context/automotive-jit/",
           "state": "public_or_indexable",
           "priority": "P2",
           "evidence_status": "source_supported",
@@ -465,6 +420,51 @@
           ],
           "structural_score": 5,
           "review_reason": "Structure or publication state must be resolved before promotion review."
+        },
+        {
+          "route": "/labs/enterprise-context/mdg/interfaces/",
+          "state": "public_or_indexable",
+          "priority": "P2",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Structure or publication state must be resolved before promotion review."
+        },
+        {
+          "route": "/labs/enterprise-context/sales-processes/integrations/",
+          "state": "public_or_indexable",
+          "priority": "P2",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Structure or publication state must be resolved before promotion review."
+        },
+        {
+          "route": "/labs/enterprise-context/transportation-management/integrations/",
+          "state": "public_or_indexable",
+          "priority": "P2",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Structure or publication state must be resolved before promotion review."
         }
       ]
     },
@@ -476,74 +476,13 @@
       "selective_or_heuristic_routes": 2,
       "source_reviewed_routes": 4,
       "evidence_debt_routes": 0,
-      "page_review_ready_routes": 4,
+      "page_review_ready_routes": 0,
       "reviewed_claims": 8,
       "coverage_percent": 100.0,
       "routes": [
         {
-          "route": "/labs/enterprise-context/business-ai/",
-          "state": "human_review_candidate",
-          "priority": "P1",
-          "evidence_status": "source_supported",
-          "reviewed_claims": 2,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
-        },
-        {
-          "route": "/labs/enterprise-context/business-ai/agents/",
-          "state": "human_review_candidate",
-          "priority": "P1",
-          "evidence_status": "source_supported",
-          "reviewed_claims": 2,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
-        },
-        {
-          "route": "/labs/enterprise-context/data-governance/",
-          "state": "human_review_candidate",
-          "priority": "P1",
-          "evidence_status": "source_supported",
-          "reviewed_claims": 2,
-          "external_review_required": true,
-          "external_review_mode": "required_for_named_product_or_standard_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "standard_or_spec_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 5,
-          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
-        },
-        {
-          "route": "/labs/enterprise-context/mdg/",
-          "state": "human_review_candidate",
-          "priority": "P1",
-          "evidence_status": "source_supported",
-          "reviewed_claims": 2,
-          "external_review_required": true,
-          "external_review_mode": "required_for_load_bearing_product_claims",
-          "expected_evidence_classes": [
-            "sap_product_primary",
-            "author_heuristic"
-          ],
-          "structural_score": 4,
-          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
-        },
-        {
           "route": "/labs/ai-ready/",
-          "state": "human_review_candidate",
+          "state": "public_or_indexable",
           "priority": "P2",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
@@ -555,11 +494,11 @@
             "author_heuristic"
           ],
           "structural_score": 5,
-          "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate."
+          "review_reason": "Structure or publication state must be resolved before promotion review."
         },
         {
           "route": "/labs/business-ai/",
-          "state": "human_review_candidate",
+          "state": "public_or_indexable",
           "priority": "P2",
           "evidence_status": "not_reviewed",
           "reviewed_claims": 0,
@@ -571,7 +510,68 @@
             "author_heuristic"
           ],
           "structural_score": 5,
-          "review_reason": "This route uses selective external evidence and explicit author heuristics; source review is not the primary promotion gate."
+          "review_reason": "Structure or publication state must be resolved before promotion review."
+        },
+        {
+          "route": "/labs/enterprise-context/business-ai/",
+          "state": "public_or_indexable",
+          "priority": "P2",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Structure or publication state must be resolved before promotion review."
+        },
+        {
+          "route": "/labs/enterprise-context/business-ai/agents/",
+          "state": "public_or_indexable",
+          "priority": "P2",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Structure or publication state must be resolved before promotion review."
+        },
+        {
+          "route": "/labs/enterprise-context/data-governance/",
+          "state": "public_or_indexable",
+          "priority": "P2",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_named_product_or_standard_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "standard_or_spec_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Structure or publication state must be resolved before promotion review."
+        },
+        {
+          "route": "/labs/enterprise-context/mdg/",
+          "state": "public_or_indexable",
+          "priority": "P2",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Structure or publication state must be resolved before promotion review."
         }
       ]
     }

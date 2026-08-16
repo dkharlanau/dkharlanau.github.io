@@ -340,7 +340,9 @@ def test_evidence_profiles_do_not_force_sap_product_proof_for_author_heuristics(
     assert "author_heuristic" in profile["route_overrides"]["/labs/ai-ready/"]["expected_evidence_classes"]
     assert by_route["/labs/ai-ready/"]["priority"] == "P2"
     assert by_route["/labs/business-ai/"]["priority"] == "P2"
-    assert by_route["/labs/enterprise-context/business-ai/"]["priority"] == "P1"
+    assert by_route["/labs/enterprise-context/business-ai/"]["priority"] == "P2"
+    assert by_route["/labs/enterprise-context/business-ai/"]["state"] == "public_or_indexable"
+    assert by_route["/labs/enterprise-context/business-ai/"]["verified"] is True
 
 def test_broad_required_evidence_debt_is_closed_without_forcing_authored_diagnostics() -> None:
     coverage = load_json("evidence-coverage.json")

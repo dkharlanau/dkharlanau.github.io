@@ -39,8 +39,6 @@ def main() -> int:
     if gate_results.get("minItems") != 7 or gate_results.get("maxItems") != 7:
         errors.append("Finding schema must require exactly seven gate results")
 
-    if not queue.get("items"):
-        errors.append("Human review finding recorder requires a non-empty human review queue")
     if any(not str(item.get("route", "")).startswith("/labs/enterprise-context/") for item in queue.get("items", [])):
         errors.append("Human review queue contains a route outside Enterprise Context")
 

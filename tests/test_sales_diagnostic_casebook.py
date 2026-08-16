@@ -147,8 +147,11 @@ def test_human_and_machine_views_exist():
     page = PAGE_PATH.read_text(encoding="utf-8")
     endpoint = ENDPOINT_PATH.read_text(encoding="utf-8")
 
-    assert "status: draft" in page
-    assert "robots: noindex,follow" in page
+    assert "status: reviewed" in page
+    assert "verified: true" in page
+    assert "robots: index,follow" in page
+    assert "sitemap: true" in page
+    assert 'publication_wave: "public-framework-search-wave-04"' in page
     assert "Sales Diagnostic Casebook" in page
     assert "/labs/enterprise-context/data/sales-diagnostic-casebook.json" in page
     assert "site.data.labs.enterprise_context.graphs.sales_diagnostic_casebook" in endpoint
