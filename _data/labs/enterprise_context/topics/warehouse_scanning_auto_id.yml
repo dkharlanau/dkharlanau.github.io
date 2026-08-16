@@ -1,0 +1,270 @@
+id: TOPIC-WH-SCANNERS-AUTO-ID
+type: research_topic
+title: "Warehouse Scanners & Auto-ID"
+summary: >-
+  A Lead-level map of barcode and RFID capture in SAP warehouse execution:
+  identifiers, scanner classes, EWM RF, native mobile, custom applications,
+  fixed-reader events, user experience, integration choices, failure modes and tests.
+domain: "SAP S/4HANA Logistics / Warehousing"
+process_family: "Warehouse Execution and Auto-ID"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+page_url: "/labs/enterprise-context/ewm/scanners/"
+
+business_question: >-
+  How should a warehouse scanning solution identify the right physical object,
+  capture data with the right device, verify the correct SAP business context,
+  and confirm work with the smallest reliable architecture?
+
+scope:
+  include:
+    - "Rugged handheld, wearable, vehicle-mounted, fixed and camera-based scanners"
+    - "Barcode semantics: SSCC, GTIN, GS1-128 and warehouse-local identifiers"
+    - "SAP EWM RF and SAP Warehouse Logistics mobile execution"
+    - "Keyboard wedge, programmatic scanner event, custom API and edge-event patterns"
+    - "RFID as a different capture pattern with event filtering"
+    - "Inbound, putaway, picking, loading, inventory and production scenarios"
+    - "UI, exception handling, duplicate protection, monitoring and warehouse-floor testing"
+  exclude_for_now:
+    - "Detailed label-printing platform comparison"
+    - "RF spectrum engineering"
+    - "Full RFID EPCIS architecture"
+    - "Vendor hardware procurement matrix by model and price"
+
+maturity:
+  gates_complete: 6
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: in_progress
+
+memory_model:
+  phrase: "Identify → Capture → Parse → Verify → Execute → Confirm → Monitor"
+  lead_line: >-
+    The scanner is only the capture device. The architecture starts with what the code means,
+    what SAP object it must verify, and which process owns the confirmation.
+
+core_entities:
+  - id: CAP-WH-AUTO-ID
+    type: capability
+    title: "Warehouse Automatic Identification"
+    summary: "Identify physical warehouse objects with barcodes, 2D codes or RFID and connect them to digital process state."
+  - id: CAP-WH-SCAN-VERIFY
+    type: capability
+    title: "Scan-Based Warehouse Verification"
+    summary: "Verify bin, product, HU, batch, serial or document context before a warehouse action is confirmed."
+  - id: APP-SAP-EWM-RF
+    type: application_component
+    title: "SAP EWM Radio Frequency Framework"
+    summary: "Standard EWM execution channel for guided RF warehouse work."
+    source_refs: [SRC-SAP-EWM-RF-STANDARD, SRC-SAP-EWM-RF-RESOURCE]
+  - id: APP-SAP-WAREHOUSE-LOGISTICS
+    type: application_component
+    title: "SAP Warehouse Logistics Mobile App"
+    summary: "Native mobile warehouse application with barcode validation for supported SAP Logistics Management processes."
+    source_refs: [SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE]
+  - id: PLT-WH-SCANNER-DEVICE-LAYER
+    type: platform_component
+    title: "Enterprise Scanner Device Layer"
+    summary: "Device-side capture service or SDK that decodes scans and delivers them to an application."
+  - id: TERM-GS1-SSCC
+    type: term
+    title: "Serial Shipping Container Code (SSCC)"
+    summary: "Unique GS1 identifier for a logistic unit."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - id: TERM-GS1-GTIN
+    type: term
+    title: "Global Trade Item Number (GTIN)"
+    summary: "GS1 identifier for a trade item or product."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - id: TERM-GS1-128
+    type: term
+    title: "GS1-128"
+    summary: "Barcode carrier for structured GS1 Application Identifier data used in logistics."
+    source_refs: [SRC-GS1-LOGISTIC-LABEL]
+  - id: INT-WH-KEYSTROKE-SCAN
+    type: integration
+    title: "Keyboard-Wedge Scanner Integration"
+    summary: "Deliver decoded scan data as keystrokes into the focused application field."
+    source_refs: [SRC-ZEBRA-DATAWEDGE-HOWTO]
+  - id: INT-WH-PROGRAMMATIC-SCAN
+    type: integration
+    title: "Programmatic Scanner Event Integration"
+    summary: "Deliver decoded scanner data and metadata to a mobile application through a device API or event."
+    source_refs: [SRC-ZEBRA-DATAWEDGE-INTENT]
+  - id: INT-WH-FIXED-READER-EVENT
+    type: integration
+    title: "Fixed Reader / Edge Event Integration"
+    summary: "Convert repeated machine reads into a validated and deduplicated warehouse business event."
+  - id: SCN-WH-INBOUND-HU-SCAN
+    type: scenario
+    title: "Inbound HU Scanning"
+    summary: "Scan receipt context and HU/SSCC to identify or create the correct handling unit before receipt and putaway."
+    source_refs: [SRC-SAP-EWM-RF-HU-RECEIPT]
+  - id: SCN-WH-PICK-VERIFY
+    type: scenario
+    title: "Picking Scan Verification"
+    summary: "Verify source bin, product or HU, batch where relevant, and destination before confirming warehouse work."
+  - id: SCN-WH-LOAD-HU-SCAN
+    type: scenario
+    title: "Loading HU Scan Verification"
+    summary: "Scan shipping context and HUs before confirming load or unload execution."
+    source_refs: [SRC-SAP-EWM-RF-LOAD]
+  - id: CTRL-WH-DUPLICATE-SCAN
+    type: control
+    title: "Duplicate Scan Protection"
+    summary: "Prevent repeated device reads or retries from creating a duplicate business effect."
+  - id: FAIL-WH-SCAN-SEMANTICS
+    type: failure_mode
+    title: "Correct Decode, Wrong Business Meaning"
+    summary: "The scanner reads a valid value but the application treats an SSCC, GTIN, HU, material, batch or bin as the wrong business identifier."
+  - id: HEUR-WH-STANDARD-BEFORE-CUSTOM
+    type: expert_heuristic
+    title: "Standard Execution Before Custom Scanner UI"
+    summary: "Use standard SAP warehouse execution when it fits; create a custom scanner app only for a real workflow or integration gap."
+  - id: TEST-WH-REAL-FLOOR-SCAN
+    type: test_case
+    title: "Real Warehouse Scanner Test"
+    summary: "Test labels, distance, lighting, gloves, Wi-Fi roaming, duplicates, errors and recovery in the physical warehouse."
+
+decision_rules:
+  - need: "Standard high-frequency EWM work"
+    choice: "SAP EWM RF"
+    reasoning: "Keep EWM resource, queue, exception and warehouse-task logic in its standard execution channel."
+  - need: "Modern mobile experience in SAP Logistics Management"
+    choice: "SAP Warehouse Logistics"
+    reasoning: "Use the standard native app when its process scope matches the requirement."
+  - need: "Special cross-process workflow"
+    choice: "Custom mobile/Fiori/native app with released SAP APIs"
+    reasoning: "Custom should simplify a genuinely different user journey, not only restyle standard RF."
+  - need: "Fixed gate, conveyor or RFID capture"
+    choice: "Edge/WCS/MFS/integration event pattern"
+    reasoning: "Machine reads need filtering, correlation and duplicate protection before the SAP business action."
+
+synthetic_example:
+  id: SCN-WH-SYNTHETIC-OUTBOUND
+  type: scenario
+  title: "Synthetic high-volume outbound design"
+  synthetic: true
+  situation: >-
+    A distribution warehouse picks cartons with handheld scanners, moves full pallets by forklift,
+    and validates outbound pallets at a dock gate.
+  reasoning_path:
+    - "Use rugged RF for normal pick confirmation."
+    - "Use a vehicle-mounted terminal with long-range capture for forklift moves."
+    - "Encode pallet identity with SSCC and map it to HU identity."
+    - "Use a fixed dock reader only if the gate can identify one clear business checkpoint."
+    - "Deduplicate repeated gate reads before load confirmation."
+    - "Keep manual exception recovery for damaged or missing labels."
+  expected_result: >-
+    Human work stays guided by the warehouse process while the dock event becomes automatic without turning raw scanner reads into uncontrolled SAP postings.
+
+assessment_cards:
+  - question: "Where do you start when selecting warehouse scanners?"
+    answer: "I start with the process, scan frequency, physical environment and identifier. Only then do I choose handheld, wearable, vehicle-mounted, camera, fixed reader or RFID."
+  - question: "When would you build a custom scanner app?"
+    answer: "When standard RF or a standard mobile app cannot support the required user journey, device interaction or cross-system process. I keep SAP as system of record and use released APIs."
+  - question: "What is the difference between SSCC and GTIN?"
+    answer: "SSCC identifies a logistic unit such as a pallet. GTIN identifies a trade item. Mixing them in parsing logic is a common integration error."
+  - question: "How do you integrate a fixed scanner?"
+    answer: "I do not post each raw read directly into SAP. I use an edge or control layer to filter duplicates, correlate the read with the expected process state, then call the warehouse business action once."
+  - question: "What is the main UI rule?"
+    answer: "Scan-first and exception-aware. The worker should see only the information needed for the current step, with immediate feedback and a clear recovery path."
+
+relations:
+  - subject: APP-SAP-EWM-RF
+    predicate: provides_capability
+    object: CAP-WH-SCAN-VERIFY
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-EWM-RF-STANDARD, SRC-SAP-EWM-RF-HU-RECEIPT]
+  - subject: APP-SAP-WAREHOUSE-LOGISTICS
+    predicate: provides_capability
+    object: CAP-WH-SCAN-VERIFY
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE]
+  - subject: CAP-WH-AUTO-ID
+    predicate: contains
+    object: CAP-WH-SCAN-VERIFY
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: PLT-WH-SCANNER-DEVICE-LAYER
+    predicate: integrated_via
+    object: INT-WH-KEYSTROKE-SCAN
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-ZEBRA-DATAWEDGE-HOWTO]
+  - subject: PLT-WH-SCANNER-DEVICE-LAYER
+    predicate: integrated_via
+    object: INT-WH-PROGRAMMATIC-SCAN
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-ZEBRA-DATAWEDGE-INTENT]
+  - subject: SCN-WH-INBOUND-HU-SCAN
+    predicate: supported_by
+    object: APP-SAP-EWM-RF
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-EWM-RF-HU-RECEIPT]
+  - subject: TERM-GS1-SSCC
+    predicate: applies_to
+    object: SCN-WH-INBOUND-HU-SCAN
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-GS1-LOGISTIC-LABEL, SRC-SAP-EWM-RF-HU-RECEIPT]
+  - subject: SCN-WH-LOAD-HU-SCAN
+    predicate: controlled_by
+    object: CTRL-WH-DUPLICATE-SCAN
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: INT-WH-FIXED-READER-EVENT
+    predicate: can_fail_as
+    object: FAIL-WH-SCAN-SEMANTICS
+    evidence_type: reasoned_inference
+    confidence: high
+  - subject: HEUR-WH-STANDARD-BEFORE-CUSTOM
+    predicate: applies_to
+    object: CAP-WH-SCAN-VERIFY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-SCAN-VERIFY
+    predicate: tested_by
+    object: TEST-WH-REAL-FLOOR-SCAN
+    evidence_type: expert_heuristic
+    confidence: high
+
+source_refs:
+  - SRC-SAP-EWM-RF-STANDARD
+  - SRC-SAP-EWM-RF-RESOURCE
+  - SRC-SAP-EWM-RF-HU-RECEIPT
+  - SRC-SAP-EWM-RF-LOAD
+  - SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE
+  - SRC-GS1-LOGISTIC-LABEL
+  - SRC-ZEBRA-DATAWEDGE-HOWTO
+  - SRC-ZEBRA-DATAWEDGE-INTENT
+  - SRC-ZEBRA-PICKING-PLUS-EWM
+  - SRC-SAP-PARTNER-BEYOND-RF
+  - SRC-SAP-PARTNER-LIQUID-UI-EWM
+  - SRC-SAP-BYD-JUNGHANS
+
+tags:
+  - sap
+  - ewm
+  - warehousing
+  - scanners
+  - barcode
+  - gs1
+  - sscc
+  - mobile
+  - rfid
+  - integration
+  - ux
+  - assessment
