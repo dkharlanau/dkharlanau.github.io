@@ -2,9 +2,9 @@
 author: "Dzmitryi Kharlanau"
 layout: default
 title: "SAP AMS / Operations — Skill Group Index"
-description: "Practical working skills for SAP Application Management Services and operations: incident triage, root cause analysis, change impact, knowledge capture, and recurring ticket patterns."
+description: "Practical working skills for SAP Application Management Services and operations: incident triage, root cause analysis, change impact, knowledge capture, recurring ticket patterns, and draft technical diagnostics."
 permalink: /skill-hub/sap-ams/
-last_modified_at: 2026-06-09
+last_modified_at: 2026-08-16
 status: reviewed
 verified: true
 ---
@@ -61,6 +61,23 @@ verified: true
 
 <section class="section">
   <header class="section-heading">
+    <h2>Draft technical diagnostics</h2>
+  </header>
+  <p>These pages extend the operational model into technical, repeatable diagnostic Skills. They remain noindex until they are reviewed.</p>
+  <div class="topic-grid">
+    <div class="topic-card">
+      <h3><a href="/skill-hub/sap-ams/fiori-app-troubleshooting-working-skill/">Fiori App Troubleshooting</a></h3>
+      <p>Trace launchpad, browser, UI resources, service requests, Gateway, backend, authorization, cache, and performance evidence before choosing a fix.</p>
+    </div>
+    <div class="topic-card">
+      <h3><a href="/skill-hub/skill-template-contract/">Skill → Template Contract</a></h3>
+      <p>Use a Skill for the repeatable method and a linked Template for one concrete execution, evidence pack, decision trail, and result.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-heading">
     <h2>When to use this group</h2>
   </header>
   <ul>
@@ -79,6 +96,7 @@ verified: true
   </header>
   <ol>
     <li><strong>Incident Triage</strong> is the entry point: classify and route fast.</li>
+    <li><strong>Technical diagnostic Skills</strong> isolate a specific layer such as Fiori, OData, IDoc, pricing, ATP, or document flow.</li>
     <li><strong>Root Cause Analysis</strong> follows when the same incident type repeats or when a high-impact incident needs permanent resolution.</li>
     <li><strong>Change Impact Analysis</strong> prevents incidents by checking what a change will break before it goes live.</li>
     <li><strong>Operational Knowledge Capture</strong> records what the team learns during triage and root cause work.</li>
@@ -94,6 +112,7 @@ verified: true
     <li><a href="/skill-hub/dama-dmbok/">DAMA / Data</a> — When incidents involve data quality, master data, or governance gaps.</li>
     <li><a href="/skill-hub/integration-architecture/">Integration Architecture</a> — When incidents involve IDocs, APIs, RFCs, or interface failures.</li>
     <li><a href="/skill-hub/business-analysis/">Business Analysis</a> — When operational problems require stakeholder interviews or process mapping.</li>
+    <li><a href="/labs/templates/">Operational Templates</a> — Generic RCA, incident, integration, process, change, decision, runbook, and cutover records.</li>
   </ul>
 </section>
 
@@ -101,5 +120,5 @@ verified: true
   <header class="section-heading">
     <h2>Status and limitations</h2>
   </header>
-  <p>This skill group is a public working interpretation of SAP AMS operational practice. It is not official SAP or ITIL documentation. The skills are designed to be applicable across SAP modules and release versions, but specific transaction codes and monitoring tools vary by system landscape. Always validate steps against your actual system configuration.</p>
+  <p>This skill group is a public working interpretation of SAP AMS operational practice. It is not official SAP or ITIL documentation. The reviewed core skills are designed to be applicable across SAP modules and release versions. Draft technical diagnostic extensions are clearly marked and remain noindex until reviewed. Specific transaction codes and monitoring tools vary by system landscape, so validate technical steps against the actual release and deployment model.</p>
 </section>
