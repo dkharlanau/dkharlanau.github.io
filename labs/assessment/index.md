@@ -20,14 +20,14 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <p class="research-canvas__eyebrow">Assessment route / SAP Lead</p>
       <h1>Know the process.<br />Explain the decision.</h1>
       <p>The target is not to remember more SAP terms. The target is to explain ownership, trace a process, diagnose a failure, design a solution, and defend the trade-offs.</p>
-      <a class="research-canvas__button" href="#assessment-tracks">Open the assessment tracks <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#practice-modes">Start practice <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Assessment route status">
       <p>Current practice model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Assessment tracks</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>5</strong><small>Reasoning levels</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>59</strong><small>Structured practice cases</small></div>
-      <em>The vertical backlog is closed. The next work is better practice, not more topic lists.</em>
+      <em>The vertical backlog is closed. The practice layer now adapts to scoring history.</em>
     </div>
   </header>
 
@@ -36,6 +36,16 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
     <p><strong>Working rule:</strong> a Lead answer connects business intent, system responsibility, data, decision logic, integration, financial or operational impact, and proof.</p>
     <p><strong>Diagnostic rule:</strong> find the first wrong decision. Do not repair the final document, message, call, stock balance, or journal entry before you understand why it received that state.</p>
     <a href="/labs/assessment/data/case-sets.json">Open all practice case sets <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="practice-modes" data-reveal>
+    <header><p class="research-canvas__eyebrow">Practice modes</p><h2>Use a different mode for a different job.</h2><p>Single-case practice builds weak dimensions. Mock sessions test range. Review Queue turns low scores into focused reading and repeat practice.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/practice-engine/"><span>ADAPT</span><strong>Adaptive Practice Engine</strong><small>Select one case using weak dimensions, weak tracks, reasoning-level gaps, and recent history.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
+      <a href="/labs/assessment/mock/"><span>MOCK</span><strong>Mock Assessment</strong><small>Run a balanced multi-case session across Sales, Procurement & Logistics, Integration & Architecture, and AI & Data.</small><i class="material-symbols-outlined" aria-hidden="true">assignment</i></a>
+      <a href="/labs/assessment/review/"><span>REVIEW</span><strong>Review Queue</strong><small>Turn local weak signals into focused review routes, then repeat a related case.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>
+      <a href="/labs/assessment/cross-process/"><span>X</span><strong>Cross-Process Lead Cases</strong><small>Practice scenarios where the visible symptom crosses several SAP domains.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -114,16 +124,16 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Coverage</p><h2>The foundation is broad enough. Now make the practice adaptive.</h2><p>The main vertical backlog is complete. More generic pages would add volume faster than skill.</p></header>
+    <header><p class="research-canvas__eyebrow">Coverage</p><h2>The foundation is broad enough. Practice now adapts to the result.</h2><p>The main vertical backlog is complete. The next improvements should make scoring and review more useful rather than add volume.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Strong now</h4><ul><li>Sales, Shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory</li><li>FI/CO touchpoints, Automotive JIT/JIS, EWM and TM</li><li>Integration architecture and recovery operations</li><li>MDG, SAP development/deployment, Business AI and AI architecture</li></ul></div>
-      <div><h4>Practice layer</h4><ul><li>59 structured cases</li><li>Cross-process scenarios</li><li>Expected points and red flags</li><li>Follow-up questions</li><li>Graph and human references</li></ul></div>
-      <div><h4>Next iteration</h4><ul><li>Weak-signal tracking</li><li>Questions generated from graph relations</li><li>Adaptive case selection</li><li>Human review and promotion of mature pages</li></ul></div>
+      <div><h4>Knowledge base</h4><ul><li>Sales, Shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory</li><li>FI/CO touchpoints, Automotive JIT/JIS, EWM and TM</li><li>Integration architecture and recovery operations</li><li>MDG, SAP development/deployment, Business AI and AI architecture</li></ul></div>
+      <div><h4>Practice layer</h4><ul><li>59 structured cases</li><li>Adaptive single-case selection</li><li>Balanced mock sessions</li><li>Weak-signal review queue</li><li>Shared seven-dimension scoring history</li></ul></div>
+      <div><h4>Next iteration</h4><ul><li>Calibrate scoring with real assessment feedback</li><li>Generate candidate questions from graph evidence</li><li>Human review and promotion of mature pages</li><li>Portable local practice-history import and export</li></ul></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Machine-readable practice</p><h2>The assessment route is also a reusable dataset.</h2><p>Case sets carry expected points, follow-ups, red flags, graph references, and human references.</p></header>
+    <header><p class="research-canvas__eyebrow">Machine-readable practice</p><h2>The assessment route is also a reusable dataset.</h2><p>Case sets carry expected points, follow-ups, red flags, graph references, and human references. Practice contracts describe scoring, selection, review, and mock-session behavior.</p></header>
     <div class="research-route-list">
       <a href="/labs/assessment/data/case-sets.json"><span>SET</span><strong>Case Set Manifest</strong><small>59 cases across core and specialist datasets.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/labs/assessment/data/cases.jsonl"><span>CORE</span><strong>Core Cases</strong><small>Sales, Procurement, Production, Logistics, Integration, Data and AI.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
@@ -135,7 +145,10 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/data/integration-operations-cases.jsonl"><span>OPS</span><strong>Integration Operations Cases</strong><small>Commit state, retry, idempotency, ordering, queues, duplicates, and business completion.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/assessment/data/cross-process-cases.jsonl"><span>X</span><strong>Cross-Process Cases</strong><small>O2C, third-party, intercompany, stock transfer, MTO, subcontracting, and returns.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/assessment/data/scoring.json"><span>SCORE</span><strong>Scoring Contract</strong><small>Seven dimensions, 21 points maximum, and Lead-level signals.</small><i class="material-symbols-outlined" aria-hidden="true">score</i></a>
-      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-009 are complete; next themes focus on adaptive practice.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
+      <a href="/labs/assessment/data/adaptive-selection.json"><span>ADAPT</span><strong>Adaptive Selection Contract</strong><small>Weakness, coverage, reasoning level, recency, and diversity weighting.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
+      <a href="/labs/assessment/data/mock-session.json"><span>MOCK</span><strong>Mock Session Contract</strong><small>Track quotas, reasoning-level pressure, cross-process minimums, and shared scoring history.</small><i class="material-symbols-outlined" aria-hidden="true">assignment</i></a>
+      <a href="/labs/assessment/data/review-map.json"><span>REVIEW</span><strong>Review Map</strong><small>Weak dimension and weak track to focused review route.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>
+      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-012 are complete; next work focuses on calibration and review quality.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
   </section>
 
