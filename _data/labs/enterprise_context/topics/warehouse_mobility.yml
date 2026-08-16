@@ -1,0 +1,237 @@
+id: TOPIC-WAREHOUSE-MOBILITY
+type: research_topic
+title: "Warehouse Mobility Architecture"
+summary: >-
+  A Lead-level map for choosing EWM RF, standard mobile, custom mobile and device-integration patterns
+  while keeping warehouse business logic, security, connectivity and support ownership clear.
+domain: "SAP S/4HANA Logistics / Warehousing"
+process_family: "Mobile Warehouse Execution"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+page_url: "/labs/enterprise-context/ewm/mobility/"
+
+business_question: >-
+  Which mobile execution channel should a warehouse use, and how should device, application,
+  network and SAP ownership be separated so that workers can execute reliably on the warehouse floor?
+
+scope:
+  include:
+    - "SAP EWM RF and presentation-device model"
+    - "SAP Warehouse Logistics mobile execution where product scope fits"
+    - "Custom mobile, browser/Fiori and native device patterns"
+    - "Scanner middleware and programmatic capture"
+    - "Shared devices, authentication, Wi-Fi roaming and session recovery"
+    - "Offline limits, retries, observability and fleet configuration"
+    - "Wearable and voice-oriented interaction patterns at architecture level"
+  exclude_for_now:
+    - "Mobile-device procurement by brand and price"
+    - "Full MDM product comparison"
+    - "Detailed RF screen Customizing catalog"
+
+maturity:
+  gates_complete: 6
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: in_progress
+
+memory_model:
+  phrase: "Assign → Authenticate → Guide → Scan → Validate → Confirm → Recover → Observe"
+  lead_line: >-
+    Choose the execution channel from the work pattern and process owner. A custom mobile UI may improve interaction,
+    but it should not become a second warehouse management system.
+
+reuse_object_ids:
+  - OBJ-EWM-RESOURCE
+  - OBJ-EWM-QUEUE
+  - OBJ-EWM-WAREHOUSE-ORDER
+  - OBJ-EWM-WAREHOUSE-TASK
+
+core_entities:
+  - id: CAP-WH-MOBILE-EXECUTION
+    type: capability
+    title: "Mobile Warehouse Execution"
+    summary: "Guide warehouse workers through executable tasks on mobile or wearable devices with controlled validation and confirmation."
+  - id: APP-EWM-RF-MOBILITY
+    type: application_component
+    title: "SAP EWM RF Framework"
+    summary: "Standard EWM RF execution framework that separates business logic from physical presentation on supported device forms."
+    source_refs: [SRC-SAP-EWM-RF-FRAMEWORK, SRC-SAP-EWM-RF-RESOURCE]
+  - id: APP-WH-LOGISTICS-MOBILE
+    type: application_component
+    title: "SAP Warehouse Logistics Mobile App"
+    summary: "Standard native mobile warehouse execution option for supported SAP Logistics Management scope."
+    source_refs: [SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE]
+  - id: APP-WH-CUSTOM-MOBILE
+    type: application_component
+    title: "Custom Warehouse Mobile App"
+    summary: "Purpose-built mobile or browser application for a real workflow, integration or device-interaction gap."
+  - id: PLT-WH-DEVICE-MIDDLEWARE
+    type: platform_component
+    title: "Enterprise Device Capture Layer"
+    summary: "Device service or SDK that sends scans and metadata to the target application."
+    source_refs: [SRC-ZEBRA-DATAWEDGE-HOWTO, SRC-ZEBRA-DATAWEDGE-INTENT]
+  - id: CTRL-WH-MOBILE-SESSION
+    type: control
+    title: "Mobile Session Recovery"
+    summary: "Define authentication, timeout, reconnect and work-state recovery for warehouse mobility."
+  - id: CTRL-WH-MOBILE-OFFLINE
+    type: control
+    title: "Offline Business-State Control"
+    summary: "Queue only actions whose stale state, ordering, expiry and reconciliation can be handled safely."
+  - id: CTRL-WH-MOBILE-FLEET
+    type: control
+    title: "Managed Device Fleet"
+    summary: "Control device identity, configuration profile, application version and lost-device response."
+  - id: FAIL-WH-MOBILE-STALE-WORK
+    type: failure_mode
+    title: "Stale Mobile Work State"
+    summary: "The device resumes or replays work after the underlying WT, HU, stock or queue context has changed."
+  - id: FAIL-WH-MOBILE-ROAMING
+    type: failure_mode
+    title: "Warehouse Roaming Failure"
+    summary: "The mobile session or request fails during Wi-Fi handover along the real worker or forklift route."
+  - id: KPI-WH-MOBILE-LATENCY
+    type: kpi
+    title: "Mobile Response Latency"
+    summary: "Time from worker scan/action to clear application feedback."
+  - id: KPI-WH-MOBILE-SESSION-FAIL
+    type: kpi
+    title: "Session Failure Rate"
+    summary: "Frequency of authentication, timeout, reconnect or resume failures during warehouse execution."
+  - id: KPI-WH-MOBILE-MANUAL-FALLBACK
+    type: kpi
+    title: "Manual Fallback Rate"
+    summary: "Share of mobile steps bypassed through typing, paper or supervisor correction."
+  - id: HEUR-WH-MOBILE-NOT-WMS
+    type: expert_heuristic
+    title: "Mobile UI Is Not a Second WMS"
+    summary: "Keep allocation, warehouse stock, queue and execution ownership in the business system even when interaction is custom."
+  - id: SCN-WH-WEARABLE-PICK
+    type: scenario
+    title: "Wearable High-Frequency Picking"
+    summary: "A hands-free capture pattern reduces interaction cost while EWM keeps task and confirmation ownership."
+  - id: TEST-WH-MOBILE-FLOOR
+    type: test_case
+    title: "Warehouse Mobility Floor Test"
+    summary: "Test real routes, roaming, gloves, scan focus, session timeout, reconnect, duplicate retry and exception recovery."
+
+decision_rules:
+  - need: "Standard high-frequency EWM task execution"
+    choice: "EWM RF"
+    reasoning: "Reuse the standard EWM resource, queue, verification and task-confirmation model."
+  - need: "Standard native mobile scope is available and fits the process"
+    choice: "SAP Warehouse Logistics"
+    reasoning: "Prefer a supported standard mobile experience before building another warehouse client."
+  - need: "Cross-process flow, special device behavior or material UX gap"
+    choice: "Custom mobile/browser/native app"
+    reasoning: "Keep the extension thin and call explicit SAP business interfaces rather than duplicating warehouse rules."
+  - need: "Hands-free repetitive execution"
+    choice: "Wearable / voice-oriented interaction"
+    reasoning: "Optimize the physical work cycle while keeping the same business ownership and controls."
+
+assessment_cards:
+  - question: "When do you choose EWM RF instead of custom mobile?"
+    answer: "If standard EWM execution covers the warehouse flow, I prefer RF. I build custom only when the workflow, device interaction or cross-system journey is genuinely different."
+  - question: "Can warehouse work simply be queued offline?"
+    answer: "Not always. WT, HU, stock and queue state can change. Offline replay needs expiry, idempotency, conflict detection and reconciliation."
+  - question: "What do shared warehouse devices change?"
+    answer: "I separate worker identity from device identity, control session handover and manage the device configuration and application lifecycle."
+  - question: "What should be tested before go-live?"
+    answer: "The real warehouse route: Wi-Fi roaming, scanner behavior, gloves, latency, reconnect, duplicate retry, authentication timeout and exception recovery."
+
+relations:
+  - subject: APP-EWM-RF-MOBILITY
+    predicate: provides_capability
+    object: CAP-WH-MOBILE-EXECUTION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-EWM-RF-FRAMEWORK]
+  - subject: APP-WH-LOGISTICS-MOBILE
+    predicate: provides_capability
+    object: CAP-WH-MOBILE-EXECUTION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE]
+  - subject: APP-WH-CUSTOM-MOBILE
+    predicate: provides_capability
+    object: CAP-WH-MOBILE-EXECUTION
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: PLT-WH-DEVICE-MIDDLEWARE
+    predicate: provides_context_to
+    object: APP-WH-CUSTOM-MOBILE
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-ZEBRA-DATAWEDGE-INTENT]
+  - subject: CAP-WH-MOBILE-EXECUTION
+    predicate: controlled_by
+    object: CTRL-WH-MOBILE-SESSION
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-MOBILE-EXECUTION
+    predicate: controlled_by
+    object: CTRL-WH-MOBILE-OFFLINE
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-MOBILE-EXECUTION
+    predicate: controlled_by
+    object: CTRL-WH-MOBILE-FLEET
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-MOBILE-EXECUTION
+    predicate: can_fail_as
+    object: FAIL-WH-MOBILE-STALE-WORK
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-MOBILE-EXECUTION
+    predicate: can_fail_as
+    object: FAIL-WH-MOBILE-ROAMING
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-MOBILE-EXECUTION
+    predicate: measured_by
+    object: KPI-WH-MOBILE-LATENCY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-MOBILE-EXECUTION
+    predicate: measured_by
+    object: KPI-WH-MOBILE-SESSION-FAIL
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-WH-MOBILE-EXECUTION
+    predicate: measured_by
+    object: KPI-WH-MOBILE-MANUAL-FALLBACK
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: HEUR-WH-MOBILE-NOT-WMS
+    predicate: applies_to
+    object: APP-WH-CUSTOM-MOBILE
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: SCN-WH-WEARABLE-PICK
+    predicate: supported_by
+    object: CAP-WH-MOBILE-EXECUTION
+    evidence_type: synthetic_example
+    confidence: high
+  - subject: CAP-WH-MOBILE-EXECUTION
+    predicate: tested_by
+    object: TEST-WH-MOBILE-FLOOR
+    evidence_type: expert_heuristic
+    confidence: high
+
+source_refs:
+  - SRC-SAP-EWM-RF-FRAMEWORK
+  - SRC-SAP-EWM-RF-RESOURCE
+  - SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE
+  - SRC-ZEBRA-DATAWEDGE-HOWTO
+  - SRC-ZEBRA-DATAWEDGE-INTENT
+
+tags: [sap, ewm, mobility, rf, mobile, scanner, warehouse, offline, security, assessment]
