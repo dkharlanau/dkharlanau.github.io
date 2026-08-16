@@ -143,6 +143,9 @@ def test_mdg_assessment_case_set_is_registered_and_valid():
     assert mdg_set["count"] == 4
     assert manifest["total_cases"] == 63
 
+    candidates = json.loads((ASSESSMENT_DATA / "question-candidates.json").read_text(encoding="utf-8"))
+    assert candidates["published_case_count"] == manifest["total_cases"]
+
     rows = [
         json.loads(line)
         for line in (ASSESSMENT_DATA / "mdg-cases.jsonl").read_text(encoding="utf-8").splitlines()
