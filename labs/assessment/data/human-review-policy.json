@@ -1,0 +1,38 @@
+{
+  "id": "sap-lead-human-review-policy",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Turn source-supported assessment routes into an explicit human page-review queue without changing verification or publication state automatically.",
+  "eligibility": [
+    "The route is a Promotion Readiness human-review candidate.",
+    "The route has source-supported factual review for load-bearing product claims.",
+    "The route evidence profile requires external review for those claims.",
+    "The page still requires explicit human page-level verification."
+  ],
+  "review_gates": [
+    "Confirm the page scope matches the reviewed claims and does not imply broader product coverage than the evidence supports.",
+    "Check release-sensitive statements against the recorded product and release scope.",
+    "Separate documented SAP behavior from author heuristics, synthetic examples, and reasoned interpretation.",
+    "Check process ownership and integration boundaries for internal consistency with the graph.",
+    "Check diagnostic guidance for a clear first wrong decision, proof of cause, and proof of business completion.",
+    "Check that human and machine-readable routes tell the same story.",
+    "Check local links, source references, and terminology before any publication decision."
+  ],
+  "completion_rule": "A reviewer may record that the page review is complete only after all review gates are checked. Completion does not automatically set verified:true, remove noindex, or change publication status.",
+  "priority_rule": "Review core assessment routes first, then secondary source-supported routes. Priority reflects assessment value and cross-process reuse, not page age.",
+  "publication_boundary": "Human review evidence and publication decisions remain separate. The queue generator never edits page frontmatter or indexing policy.",
+  "core_assessment_wave": [
+    "/labs/enterprise-context/sales-order/",
+    "/labs/enterprise-context/pricing/",
+    "/labs/enterprise-context/procurement/",
+    "/labs/enterprise-context/atp/",
+    "/labs/enterprise-context/shipping/",
+    "/labs/enterprise-context/production/",
+    "/labs/enterprise-context/integration-operations/",
+    "/labs/enterprise-context/inventory-management/",
+    "/labs/enterprise-context/quality-management/",
+    "/labs/enterprise-context/ewm/",
+    "/labs/enterprise-context/mdg/",
+    "/labs/enterprise-context/finance-logistics/"
+  ]
+}
