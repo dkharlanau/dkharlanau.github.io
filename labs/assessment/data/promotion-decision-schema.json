@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "/labs/assessment/data/promotion-decision-schema.json",
+  "title": "SAP Lead Candidate Promotion Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "version", "candidate_id", "decided_at", "decision", "review_checks", "reviewer_note", "publication_effect"],
+  "properties": {
+    "format": {"const": "sap-lead-candidate-promotion-decision"},
+    "version": {"const": "1.0.0"},
+    "candidate_id": {"type": "string", "pattern": "^(CAND|RCAND)-[A-Z0-9-]+$"},
+    "decided_at": {"type": "string", "format": "date-time"},
+    "reviewer_label": {"type": "string", "maxLength": 120},
+    "decision": {
+      "enum": [
+        "approve_for_separate_repository_change",
+        "revise_before_promotion",
+        "reject_candidate"
+      ]
+    },
+    "review_checks": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_index", "result", "note"],
+        "properties": {
+          "check_index": {"type": "integer", "minimum": 1, "maximum": 6},
+          "result": {"enum": ["pass", "issue", "not_checked"]},
+          "note": {"type": "string", "maxLength": 2000}
+        }
+      }
+    },
+    "reviewer_note": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "publication_effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["case_manifest_changed", "case_published", "calibration_changed"],
+      "properties": {
+        "case_manifest_changed": {"const": false},
+        "case_published": {"const": false},
+        "calibration_changed": {"const": false}
+      }
+    }
+  }
+}
