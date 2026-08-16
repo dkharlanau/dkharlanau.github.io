@@ -42,14 +42,8 @@ jobs:
       - name: Check public repo hygiene
         run: python3 scripts/check_public_repo.py
 
-      - name: Check Atlas artifacts are up to date
-        run: python3 scripts/generate_atlas_artifacts.py --check
-
       - name: Run Python tests
         run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
-
-      - name: Check assessment promotion readiness is current
-        run: python3 scripts/audit_assessment_promotion_readiness.py --check
 
       - name: Generate DAMA pages
         run: node scripts/generate_dama_pages.js
@@ -145,3 +139,11 @@ jobs:
 
       - name: Validate AI-readable endpoints
         run: python3 scripts/validate_ai_endpoints.py _site
+
+      # Freshness checks remain hard gates, but run last so stale generated files do
+      # not hide independent link, SEO, sitemap, indexability, or accessibility results.
+      - name: Check Atlas artifacts are up to date
+        run: python3 scripts/generate_atlas_artifacts.py --check
+
+      - name: Check assessment promotion readiness is current
+        run: python3 scripts/audit_assessment_promotion_readiness.py --check
