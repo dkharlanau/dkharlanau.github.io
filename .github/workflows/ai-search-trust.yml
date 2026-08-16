@@ -76,6 +76,26 @@ jobs:
           print(f'Validated {len(entities)} entities and {len(sidecars)} sidecars')
           PY
 
+      - name: Check Person and page schema semantics
+        run: |
+          python3 - <<'PY'
+          import yaml
+          from pathlib import Path
+
+          schema = Path('_includes/seo/structured-data.html').read_text(encoding='utf-8')
+          assert schema.count('"sameAs": {{ resume.schema.sameAs | jsonify }}') == 1
+          duplicate = '"sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"],\n  "url": "{{ canonical_url }}"'
+          assert duplicate not in schema, 'ProfilePage Person has duplicate sameAs'
+          profile_about = "{% if page_type == 'ProfilePage' %}\n  \"about\": {\n    \"@id\": \"{{ author_id }}\""
+          assert profile_about in schema, 'author-as-about must be restricted to ProfilePage'
+
+          resume = yaml.safe_load(Path('_data/resume.yml').read_text(encoding='utf-8'))
+          same_as = resume['schema']['sameAs']
+          assert 'https://dkharlanau.github.io/' in same_as
+          assert 'https://github.com/dkharlanau' in same_as
+          print('Person and WebPage schema semantics are consistent')
+          PY
+
       - name: Check homepage content protection contract
         run: |
           python3 - <<'PY'
@@ -86,5 +106,7 @@ jobs:
           assert "{% unless page.url == '/' %}" in layout, 'knowledge CSS must remain excluded from homepage'
           graph = Path('_includes/seo/structured-data-sitewide-graph.html').read_text(encoding='utf-8')
           assert "page.url != '/'" in graph, 'knowledge graph must remain excluded from homepage'
+          trust = Path('_includes/seo/trust-strip.html').read_text(encoding='utf-8')
+          assert "page.url != '/'" in trust and 'page.ai_sidecar' in trust
           print('Homepage content protection contract is present')
           PY
