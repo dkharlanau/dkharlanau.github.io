@@ -1,0 +1,87 @@
+---
+layout: default
+title: "Reusable Data Procedures — Decision Memory"
+description: "A structured memory model for preserving approved data decisions, their scope, evidence, expiry and resulting reusable changes."
+permalink: /reusable-data-procedures/decision-memory/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Decision Memory</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Decision memory</p>
+    <h1>Keep the reason, not only the result.</h1>
+    <p>A mapping or exception is hard to trust when nobody remembers why it was approved. Decision Memory stores the business decision, scope, evidence and resulting asset change so future runs can reuse the answer and future reviewers can challenge it.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/review-inbox/">Review Inbox</a><a href="/reusable-data-procedures/decision-memory/" aria-current="page">Decision Memory</a><a href="/reusable-data-procedures/reference-data/">Reference Data</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Core object</p><h2>A decision is a governed fact about context.</h2></div>
+    <div class="rdp__model-grid">
+      <article class="rdp__model-card"><span>01</span><strong>Question</strong><p>What uncertainty was resolved? Keep it precise enough to distinguish similar future cases.</p></article>
+      <article class="rdp__model-card"><span>02</span><strong>Decision</strong><p>Accepted action, rejected alternatives and whether the decision is permanent, temporary or case-specific.</p></article>
+      <article class="rdp__model-card"><span>03</span><strong>Scope</strong><p>Concept, source family, system, company, procedure, reference dataset or other boundaries where the answer applies.</p></article>
+      <article class="rdp__model-card"><span>04</span><strong>Evidence</strong><p>Run IDs, hashes, metrics, safe examples, source contracts, business confirmation and related decisions.</p></article>
+      <article class="rdp__model-card"><span>05</span><strong>Validity</strong><p>Effective dates, review date, expiry, confidence and assumptions that would invalidate the decision.</p></article>
+      <article class="rdp__model-card"><span>06</span><strong>Outcome</strong><p>Which procedure, block, concept, reference dataset, validation or exception policy was created or changed.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Decision types</p><h2>Store reusable intent with a small vocabulary.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Type</th><th>Meaning</th><th>Likely target</th></tr></thead>
+      <tbody>
+        <tr><td>Approve semantic binding</td><td>A local field is confirmed to represent a known semantic concept.</td><td>Concept binding or source contract.</td></tr>
+        <tr><td>Approve mapping</td><td>A relation or cross-system value mapping is accepted.</td><td>Reference dataset or mapping contract.</td></tr>
+        <tr><td>Reject mapping</td><td>A plausible candidate is explicitly not equivalent.</td><td>Decision memory and negative evidence.</td></tr>
+        <tr><td>Accept repair</td><td>A known drift repair is safe for a defined scope.</td><td>Locator alias, repair budget or procedure revision.</td></tr>
+        <tr><td>Change validation</td><td>A validation rule or threshold changes for a business reason.</td><td>Procedure or policy profile.</td></tr>
+        <tr><td>Temporary exception</td><td>Known deviation is accepted for a limited time or case.</td><td>Exception policy with expiry.</td></tr>
+        <tr><td>Escalate upstream</td><td>The source contract is wrong and should not be repaired downstream.</td><td>Upstream owner or interface contract.</td></tr>
+        <tr><td>No change</td><td>Evidence was reviewed and existing behavior remains correct.</td><td>Decision record only.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Applicability</p><h2>Do not generalize a local answer into a universal rule.</h2></div>
+    <p>A decision should declare where it applies. A customer mapping confirmed for one legal entity or source system is not automatically valid for every company code, sales organization or migration stream.</p>
+    <div class="rdp__cards">
+      <article><strong>Global concept rule</strong><p>Valid for the semantic concept unless a narrower binding overrides it.</p></article>
+      <article><strong>Source-family rule</strong><p>Valid only for one export, interface, vendor format or workbook family.</p></article>
+      <article><strong>Procedure rule</strong><p>Valid only inside one procedure or procedure pack.</p></article>
+      <article><strong>Reference-data rule</strong><p>Valid for one governed mapping dataset and released version range.</p></article>
+      <article><strong>Organization rule</strong><p>Limited to company, sales organization, plant, purchasing organization or another business scope.</p></article>
+      <article><strong>One-run exception</strong><p>Applies only to one execution and should not influence future automatic decisions.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Negative knowledge</p><h2>Remember what was rejected too.</h2></div>
+    <p>Discovery becomes safer when it can retrieve previous rejections. If <code>Customer</code> and <code>Sold-to Party</code> were reviewed and rejected as equivalent for one source family, a later AI or fuzzy matcher should see that negative evidence instead of proposing the same shortcut again.</p>
+    <div class="rdp__callout"><strong>Rule:</strong> accepted and rejected decisions are both reusable evidence. Absence of an approval is not the same as an explicit rejection.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Decision ageing</p><h2>Business truth can expire.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Permanent until changed</strong><p>Stable structural or semantic decisions with no planned expiry.</p></article>
+      <article><strong>Effective-dated</strong><p>Rules or mappings valid only for a known business period.</p></article>
+      <article><strong>Review by date</strong><p>Decision stays active but loses freshness after a defined review date.</p></article>
+      <article><strong>Hard expiry</strong><p>Temporary exception becomes invalid automatically and must not silently continue.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Storage rule</p><h2>Memory should contain evidence references, not a shadow data lake.</h2></div>
+    <p>Decision records should normally store hashes, safe samples, metrics and links to retained run evidence. Raw production rows remain governed by the run and data-retention policy. A decision registry that copies sensitive data into every record is merely a new leakage surface with excellent documentation.</p>
+  </section>
+</div>
