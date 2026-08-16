@@ -1,6 +1,6 @@
 {
   "id": "sap-lead-assessment-scoring",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "updated_at": "2026-08-16",
   "scale": {
     "min": 0,
@@ -14,14 +14,19 @@
   },
   "dimensions": [
     {
-      "id": "business_context",
-      "label": "Business context",
-      "question": "Does the answer explain the business goal and outcome before technical detail?"
+      "id": "business_goal",
+      "label": "Business goal",
+      "question": "Does the answer explain the business outcome before technical detail?"
     },
     {
-      "id": "process_structure",
-      "label": "Process structure",
-      "question": "Does the answer place the topic in the correct end-to-end flow and separate major process stages?"
+      "id": "owner",
+      "label": "Owner",
+      "question": "Does the answer state which business or system component owns the decision or durable state?"
+    },
+    {
+      "id": "process_flow",
+      "label": "Process flow",
+      "question": "Does the answer place the topic in the correct end-to-end flow and trace the important objects, documents, or events?"
     },
     {
       "id": "decision_logic",
@@ -29,27 +34,30 @@
       "question": "Does the answer identify the relevant master data, configuration, determination, rule, or control?"
     },
     {
-      "id": "ownership_boundaries",
-      "label": "Ownership and boundaries",
-      "question": "Does the answer state which business or system component owns the decision, state, or handoff?"
+      "id": "boundary",
+      "label": "Boundary",
+      "question": "Does the answer explain where responsibility crosses a module, system, company, execution layer, or governance domain?"
     },
     {
-      "id": "diagnostic_evidence",
-      "label": "Diagnostics and evidence",
-      "question": "Does the answer define what evidence to inspect, how to find the first wrong decision, and how to prove the fix?"
+      "id": "failure_and_evidence",
+      "label": "Failure and evidence",
+      "question": "Does the answer explain what can fail, what evidence to inspect, how to find the first wrong decision, and how to prove the fix?"
     },
     {
-      "id": "integration_impact",
-      "label": "Integration and downstream impact",
-      "question": "Does the answer trace important effects across systems, logistics execution, data, or finance?"
-    },
-    {
-      "id": "trade_offs",
-      "label": "Trade-offs",
+      "id": "trade_off",
+      "label": "Trade-off",
       "question": "Does the answer explain alternatives, limitations, risk, and what condition would change the decision?"
     }
   ],
   "maximum_score": 21,
+  "lead_signal_minimum": 18,
+  "weak_signal_thresholds": {
+    "dimension_average_weak_below": 1.75,
+    "dimension_average_watch_below": 2.25,
+    "case_total_weak_below": 12,
+    "case_total_lead_minimum": 18,
+    "minimum_attempts_for_stable_signal": 3
+  },
   "bands": [
     {
       "min": 0,
@@ -73,7 +81,7 @@
       "min": 18,
       "max": 21,
       "label": "Lead signal",
-      "interpretation": "The answer connects business goal, process, decision logic, ownership, evidence, integration impact, and trade-offs without unnecessary detail."
+      "interpretation": "The answer connects business goal, ownership, process flow, decision logic, boundaries, evidence, and trade-offs without unnecessary detail."
     }
   ],
   "hard_red_flags": [
