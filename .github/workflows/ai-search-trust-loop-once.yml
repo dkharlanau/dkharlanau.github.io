@@ -1,0 +1,84 @@
+name: AI Search Trust Upgrade Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ai-search-trust-loop-once.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ai-search-trust-upgrade-once
+  cancel-in-progress: true
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install pyyaml
+
+      - name: Record protected homepage source hashes
+        run: |
+          git ls-files index.md '_data/home*' '_data/home_i18n/**' | sort > /tmp/home-files.txt
+          while IFS= read -r f; do sha256sum "$f"; done < /tmp/home-files.txt > /tmp/home-before.sha
+
+      - name: Build site-wide AI search and trust metadata
+        run: python3 scripts/ai_search_trust_loop.py
+
+      - name: Prove homepage rendered-text sources are untouched
+        run: |
+          while IFS= read -r f; do sha256sum "$f"; done < /tmp/home-files.txt > /tmp/home-after.sha
+          diff -u /tmp/home-before.sha /tmp/home-after.sha
+
+      - name: Prove generation is deterministic
+        run: python3 scripts/ai_search_trust_loop.py --check
+
+      - name: Validate Lab publication and search intent policy
+        run: |
+          python3 scripts/check_lab_publication_gate.py
+          python3 scripts/audit_lab_search_intents.py
+          python3 scripts/audit_p2_publication_triage.py --fail-on-policy-error
+
+      - name: Validate generated JSON sidecars
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          files = sorted(Path('ai/pages').glob('*.json'))
+          assert files, 'no AI page sidecars generated'
+          for path in files:
+              data = json.loads(path.read_text(encoding='utf-8'))
+              assert data['url'].startswith('https://dkharlanau.github.io/')
+              assert data['primary_entity']['key']
+              assert data['search']['canonical'] == data['url']
+          print(f'Validated {len(files)} AI page sidecars')
+          PY
+
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/ai-search-trust-loop-once.yml
+
+      - name: Commit upgrade
+        run: |
+          git config user.name 'DKharlanau Site Automation'
+          git config user.email 'dkharlanau@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'Build site-wide AI search trust graph'
+          git push origin HEAD:main
