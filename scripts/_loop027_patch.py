@@ -22,6 +22,16 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
     return text.replace(old, new, 1)
 
 
+# Align the permanent queue generator with the Promotion Readiness evidence-profile contract.
+generator_path = ROOT / "scripts" / "generate_assessment_human_review_queue.py"
+generator = generator_path.read_text(encoding="utf-8")
+generator = generator.replace(
+    '        if not evidence_profile.get("external_review_required", False):\n',
+    '        if not evidence_profile.get("counts_as_source_review_debt", False):\n',
+)
+generator_path.write_text(generator, encoding="utf-8")
+
+
 # Catalog registration.
 catalog_path = DATA / "catalog.json"
 catalog = load_json(catalog_path)
@@ -134,7 +144,7 @@ test = test.replace(
     '"LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027"):',
 )
 
-human_test = '''\n\ndef test_human_review_queue_is_reproducible_and_non_publishing() -> None:\n    policy = load_json("human-review-policy.json")\n    queue = load_json("human-review-queue.json")\n    promotion = load_json("promotion-readiness.json")\n\n    eligible = [\n        item for item in promotion["items"]\n        if item.get("state") == "human_review_candidate"\n        and item.get("priority") == "P1"\n        and item.get("factual_review", {}).get("status") == "source_supported"\n        and item.get("evidence_profile", {}).get("external_review_required", False)\n    ]\n    assert queue["summary"]["queued_routes"] == len(queue["items"]) == len(eligible)\n    assert queue["summary"]["core_assessment_wave"] == len(policy["core_assessment_wave"])\n    assert all(item["page_verified"] is False for item in queue["items"])\n    assert all(item["state"] == "queued_for_human_review" for item in queue["items"])\n    assert "never edits" in queue["boundary"].lower()\n\n    result = subprocess.run(\n        [sys.executable, "scripts/generate_assessment_human_review_queue.py", "--check"],\n        cwd=ROOT,\n        text=True,\n        capture_output=True,\n        check=False,\n    )\n    assert result.returncode == 0, result.stdout + result.stderr\n'''
+human_test = '''\n\ndef test_human_review_queue_is_reproducible_and_non_publishing() -> None:\n    policy = load_json("human-review-policy.json")\n    queue = load_json("human-review-queue.json")\n    promotion = load_json("promotion-readiness.json")\n\n    eligible = [\n        item for item in promotion["items"]\n        if item.get("state") == "human_review_candidate"\n        and item.get("priority") == "P1"\n        and item.get("factual_review", {}).get("status") == "source_supported"\n        and item.get("evidence_profile", {}).get("counts_as_source_review_debt", False)\n    ]\n    assert queue["summary"]["queued_routes"] == len(queue["items"]) == len(eligible)\n    assert queue["summary"]["core_assessment_wave"] == len(policy["core_assessment_wave"])\n    assert all(item["page_verified"] is False for item in queue["items"])\n    assert all(item["state"] == "queued_for_human_review" for item in queue["items"])\n    assert "never edits" in queue["boundary"].lower()\n\n    result = subprocess.run(\n        [sys.executable, "scripts/generate_assessment_human_review_queue.py", "--check"],\n        cwd=ROOT,\n        text=True,\n        capture_output=True,\n        check=False,\n    )\n    assert result.returncode == 0, result.stdout + result.stderr\n'''
 if 'def test_human_review_queue_is_reproducible_and_non_publishing()' not in test:
     test += human_test
 
