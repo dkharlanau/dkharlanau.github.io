@@ -1,0 +1,101 @@
+---
+layout: default
+title: "Human Review Queue — SAP Lead Assessment Lab"
+description: "A page-level review queue for source-supported SAP assessment routes before any verification or publication decision."
+permalink: /labs/assessment/human-review/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, review, evidence, quality]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Human Review</li></ol></nav>
+
+<div class="research-canvas human-review" id="human-review">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Page review</p>
+      <h1>Sources are checked.<br />Now read the page.</h1>
+      <p>Claim-level evidence is only one gate. This queue moves source-supported SAP routes into page-level review, where scope, wording, release boundaries, diagnostics, and machine-readable models are checked together.</p>
+      <a class="research-canvas__button" href="#review-queue">Open review queue <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Human review queue status">
+      <p>Current queue</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong id="review-total">26</strong><small>Routes queued</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong id="review-core">12</strong><small>Core assessment wave</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>0</strong><small>Auto-published</small></div>
+      <em>A reviewed claim does not make the whole page verified.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Review boundary:</strong> this queue never edits <code>verified</code>, <code>robots</code>, <code>status</code>, or sitemap settings. It only tells a reviewer what should be read next and what must be proved before a publication decision.</p>
+    <a href="/labs/assessment/data/human-review-policy.json">Open human-review policy <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="review-queue" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Core assessment wave</p>
+      <h2>Review the routes most likely to carry a Lead-level answer.</h2>
+      <p>The first wave is deliberately cross-process. Sales, procurement, production, warehouse, integration, data, and finance pages are reviewed before secondary reference routes.</p>
+    </header>
+    <div class="research-route-list" id="human-review-list">
+      <a href="/labs/enterprise-context/sales-order/"><span>01</span><strong>Sales Order Decisions</strong><small>Determination inputs, ownership boundaries, and diagnostic proof.</small><i class="material-symbols-outlined" aria-hidden="true">description</i></a>
+      <a href="/labs/enterprise-context/pricing/"><span>02</span><strong>Sales Pricing</strong><small>Condition technique, pricing analysis, and order-to-billing parity.</small><i class="material-symbols-outlined" aria-hidden="true">price_check</i></a>
+      <a href="/labs/enterprise-context/procurement/"><span>03</span><strong>Procurement</strong><small>Source determination, purchasing controls, receipt/invoice boundaries, and GR/IR.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
+      <a href="/labs/enterprise-context/atp/"><span>04</span><strong>ATP / aATP</strong><small>Confirmation logic, protection/allocation boundaries, and availability reasoning.</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
+      <a href="/labs/enterprise-context/shipping/"><span>05</span><strong>Shipping & Scheduling</strong><small>Shipping point, route, delivery execution, split causes, and warehouse handoff.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
+      <a href="/labs/enterprise-context/production/"><span>06</span><strong>Production Planning & Execution</strong><small>MRP, method selection, staging, confirmation, goods receipt, and settlement.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/labs/enterprise-context/integration-operations/"><span>07</span><strong>Integration Operations & Recovery</strong><small>Identity, ordering, retries, monitoring, reconciliation, and business completion.</small><i class="material-symbols-outlined" aria-hidden="true">sync_problem</i></a>
+      <a href="/labs/enterprise-context/inventory-management/"><span>08</span><strong>Inventory Management</strong><small>Movement and stock-state semantics, valuation effects, and EWM boundary.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/labs/enterprise-context/quality-management/"><span>09</span><strong>Quality Management</strong><small>Inspection lifecycle, usage decision, stock disposition, and logistics integration.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/enterprise-context/ewm/"><span>10</span><strong>Extended Warehouse Management</strong><small>ERP/EWM ownership, tasks/orders, staging, confirmations, and deployment boundary.</small><i class="material-symbols-outlined" aria-hidden="true">warehouse</i></a>
+      <a href="/labs/enterprise-context/mdg/"><span>11</span><strong>Master Data Governance</strong><small>Authority, validation, governance modes, replication, and deployment limitations.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/finance-logistics/"><span>12</span><strong>FI/CO Logistics Bridge</strong><small>Physical versus financial completion, accounting handoffs, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Review method</p>
+      <h2>Read for failure, not for prose polish.</h2>
+      <p>The review is complete only when the page can survive a Lead-level follow-up: what owns the decision, what evidence proves the cause, what changes across releases, and what is still consultant judgement.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h4>Scope</h4><ul><li>Does the page claim only what its evidence supports?</li><li>Are product and release boundaries visible?</li><li>Are synthetic examples clearly separated?</li></ul></div>
+      <div><h4>Reasoning</h4><ul><li>Is the first wrong decision explicit?</li><li>Are ownership and integration boundaries clear?</li><li>Is proof of business completion defined?</li></ul></div>
+      <div><h4>Consistency</h4><ul><li>Does the human page match the graph?</li><li>Do source refs point to the same behavior?</li><li>Do links and machine endpoints still work?</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Machine-readable control</p><h2>The queue is generated, not hand-maintained.</h2><p>Promotion Readiness, Factual Review, and Evidence Coverage remain the source contracts. The queue only orders work.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/data/human-review-queue.json"><span>QUEUE</span><strong>Human Review Queue</strong><small>Generated route order, review focus, evidence state, and review gates.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="/labs/assessment/data/human-review-policy.json"><span>POLICY</span><strong>Human Review Policy</strong><small>Eligibility, review gates, priority rule, completion rule, and publication boundary.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
+      <a href="/labs/assessment/promotion-readiness/"><span>INPUT</span><strong>Promotion Readiness</strong><small>Structural and evidence state before page-level review.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<script>
+(async function () {
+  try {
+    const response = await fetch('/labs/assessment/data/human-review-queue.json', {cache: 'no-store'});
+    if (!response.ok) return;
+    const data = await response.json();
+    const total = document.getElementById('review-total');
+    const core = document.getElementById('review-core');
+    if (total) total.textContent = String(data.summary.queued_routes);
+    if (core) core.textContent = String(data.summary.core_assessment_wave);
+  } catch (_) {
+    // Static fallback remains useful if the data endpoint is unavailable.
+  }
+}());
+</script>
