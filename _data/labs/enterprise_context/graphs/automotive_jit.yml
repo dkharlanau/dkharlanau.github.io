@@ -1,9 +1,9 @@
 id: GRAPH-AUTO-JIT-JIS
- type: knowledge_graph
+type: knowledge_graph
 title: "Automotive JIT / JIS — Signal to Sequence"
 domain: "SAP S/4HANA Automotive"
 process_family: "Just-In-Time and Just-In-Sequence Supply"
-process_step: "From scheduling agreement forecast and JIT schedules through short-term calls, internal control, production/packing, delivery, forwarding, and confirmation"
+process_step: "From scheduling agreement forecasts through exact calls, sequence, delivery, forwarding, and confirmation"
 status: researching
 created_at: "2026-08-16"
 updated_at: "2026-08-16"
@@ -12,293 +12,273 @@ verified_at: "2026-08-16"
 summary: >-
   A Lead-level map of Automotive JIT and JIS. It separates planning signals from execution calls,
   summarized calls from sequenced calls, classic JIT Inbound/Outbound from Next Generation JIT Supply,
-  and the customer call lifecycle from production, handling unit, delivery, EWM/TM, supplier forwarding, and monitoring boundaries.
+  and the customer-call lifecycle from production, handling unit, delivery, EWM/TM, supplier forwarding, and monitoring boundaries.
 
 thesis: >-
   Forecast and JIT delivery schedules say what the customer expects over a horizon; JIT/JIS calls say what must be supplied now.
   Sequenced calls add vehicle/sequence discipline, so the risk is not only quantity and date but order, destination, package, status, and downstream handoff.
-  A Lead diagnosis therefore follows signal → call → control → build/pick → sequence/pack → ship → confirm/reconcile.
+  A Lead diagnosis follows signal → call → control → build/pick → sequence/pack → ship → confirm/reconcile.
 
 boundary:
   includes:
     - "Sales and purchasing scheduling agreements and releases"
     - "Forecast delivery schedules and JIT delivery schedules"
     - "Classic JIT Inbound summarized and sequenced calls"
-    - "Classic call control actions, internal/external status, and monitoring"
-    - "Requirements match between calls and delivery schedules"
-    - "Classic JIT Outbound forwarding to suppliers"
+    - "Classic call control, requirements match, JIT monitoring, and JIT Outbound"
     - "Next Generation JIT Supply to Customer and sequenced JIS"
-    - "Customer/destination/external status and external-call uniqueness"
-    - "Sequence groups, packing groups, handling units, delivery, EWM and TM integration"
-    - "Exception, reorder/subsequent delivery, and monitoring boundaries"
+    - "Customer destination, sequence groups, packing/HU, delivery, EWM and TM integration"
+    - "Supplier forwarding and exception/recovery boundaries"
   excludes_for_later_deep_dives:
     - "Full EDI partner-profile and IDoc mapping catalogue"
-    - "OEM-specific VDA/Odette message implementation details"
-    - "Full repetitive manufacturing and PP/DS design"
-    - "Detailed EWM warehouse task configuration"
-    - "Detailed TM freight planning configuration"
-    - "Commercial billing/self-billing and evaluated receipt settlement variants"
+    - "OEM-specific VDA/Odette implementation details"
+    - "Full repetitive manufacturing, EWM, and TM configuration"
+    - "Commercial self-billing and settlement variants"
 
 concept_split:
   planning_signal:
     title: "Delivery Schedule"
-    purpose: "Plan and release expected quantities/dates against a long-term scheduling agreement."
+    purpose: "Plan expected quantities and dates against a long-term scheduling agreement."
     types:
       - id: AUTO-SIGNAL-FRC
         title: "Forecast Delivery Schedule"
-        horizon: "Longer-term / planning-oriented"
-        use: "Supports production and procurement planning; timing can be weekly/monthly or more detailed."
+        reading: "Longer-horizon planning signal for production/procurement."
       - id: AUTO-SIGNAL-JIT-SCHEDULE
         title: "JIT Delivery Schedule"
-        horizon: "Near-term"
-        use: "Short-term dates/times; within the JIT horizon it can override forecast schedule relevance according to configuration."
+        reading: "Near-term schedule; within the JIT horizon it can override forecast relevance according to configuration."
     source_refs: [SRC-SAP-AUTO-SA-RELEASES, SRC-SAP-AUTO-SALES-SA, SRC-SAP-AUTO-SA-FAQ]
   execution_signal:
     title: "JIT / JIS Call"
-    purpose: "Dedicated short-term execution requirement that drives concrete supply activity."
+    purpose: "Dedicated short-term execution requirement."
     types:
       - id: AUTO-CALL-SUM
         title: "Summarized JIT Call"
         sequence_sensitive: false
-        reading: "Quantity/time-focused call, often with simpler control and faster direct supply."
+        reading: "Quantity/time-focused call, often with simpler internal control."
       - id: AUTO-CALL-SEQ
         title: "Sequenced JIT Call / JIS"
         sequence_sensitive: true
-        reading: "Supply must follow customer sequence; vehicle/sequence and package/destination context become execution controls."
+        reading: "Supply must preserve customer sequence through production, packing, and delivery."
     source_refs: [SRC-SAP-AUTO-CLASSIC-CALL-CONTROL, SRC-SAP-AUTO-CLASSIC-CALL-TYPES, SRC-SAP-AUTO-NG-S2C]
 
 memory_model:
   path: "AGREEMENT → FORECAST → CALL → CONTROL → BUILD / PICK → SEQUENCE / PACK → DELIVER → FORWARD / CONFIRM → RECONCILE"
   questions:
     - key: AGREEMENT
-      question: "Which long-term relationship and customer/supplier identity owns the flow?"
-      answer: "Start with the sales or purchasing scheduling agreement, JIT customer, destination, material/component context, and partner mapping."
+      question: "Which long-term relationship owns the flow?"
+      answer: "Start with scheduling agreement, JIT customer/supplier, destination, material/component, and partner mapping."
     - key: FORECAST
-      question: "Which planning signal creates capacity and material expectation?"
+      question: "Which planning signal creates the demand expectation?"
       answer: "Forecast and JIT delivery schedules provide horizon-based requirements before or alongside exact calls."
     - key: CALL
-      question: "What execution call arrived and is it summarized or sequenced?"
-      answer: "Identify external call number, sequence, call type, requested date/time, customer destination, components, and change/cancellation context."
+      question: "What exact execution call arrived?"
+      answer: "Identify external call number, summarized/sequenced type, date/time, sequence, destination, components, and change/cancellation context."
     - key: CONTROL
       question: "Which action/status is allowed now?"
-      answer: "In classic JIT, call control maps actions to internal status and external customer progress; modern flows also use explicit lifecycle/processing status."
+      answer: "Classic call control links actions to internal/external status; modern flows also expose lifecycle and processing status."
     - key: BUILD
-      question: "Do we produce, pick from stock, or replenish externally?"
-      answer: "The call can drive internal production/picking or external replenishment depending on process generation and control data."
+      question: "Do we produce, pick, or replenish externally?"
+      answer: "Supply path depends on stock, production, component-group context, and process generation."
     - key: SEQUENCE
       question: "How is sequence and package integrity protected?"
-      answer: "For JIS, sequence number rules, delivery sequence groups, packing groups/HUs, and planned splits protect the customer's assembly order."
+      answer: "For JIS use sequence rules, sequence groups, packing groups/HUs, split rules, and explicit handling of valid gaps."
     - key: DELIVER
-      question: "How does the call become delivery and goods issue?"
-      answer: "Create delivery from eligible calls/package units, integrate HU/EWM/TM as designed, and post goods issue without losing call and sequence references."
+      question: "How does the call become delivery and PGI?"
+      answer: "Delivery, HU, EWM and TM execute the physical flow while preserving call and sequence references."
     - key: FORWARD
-      question: "Does the supplier need the same short-term demand?"
-      answer: "A system supplier can forward inbound sequenced or summarized demand to its own suppliers through JIT Outbound/forwarded JIS patterns."
+      question: "Does upstream supply need the same short-term demand?"
+      answer: "A system supplier can forward inbound sequenced or summarized demand to its own suppliers."
     - key: RECONCILE
-      question: "How do we prove call, delivery, sequence, and confirmation agree?"
-      answer: "Reconcile scheduling agreement requirements, call status, production/picking, HU/packing, delivery/PGI, supplier/customer confirmations, and exception logs."
+      question: "How do we prove fulfillment?"
+      answer: "Reconcile schedule, call status, supply, sequence/packing, delivery/PGI, forwarding, confirmations, and exception logs."
 
 process_families:
   - id: AUTO-FAMILY-CLASSIC-INBOUND
     title: "Classic JIT Inbound"
-    reading: "Automotive call processing for summarized and sequenced calls, with components groups and configurable call control."
-    key_objects: ["JIT call header", "call component", "components group", "external call number", "internal status", "external status", "action"]
-    key_controls: ["JIT customer", "components group determination", "call control determination", "requirements match", "delivery grouping/split"]
+    reading: "Summarized and sequenced call processing with call components/groups and configurable call control."
+    key_objects: ["JIT call", "call component", "components group", "external call number", "internal status", "external status", "action"]
     source_refs: [SRC-SAP-AUTO-CLASSIC-STRUCTURE, SRC-SAP-AUTO-CLASSIC-CALL-CONTROL, SRC-SAP-AUTO-CLASSIC-CALL-TYPES]
   - id: AUTO-FAMILY-CLASSIC-OUTBOUND
     title: "Classic JIT Outbound"
-    reading: "System supplier forwards received JIT demand to upstream suppliers, for sequenced or summarized requirements."
+    reading: "System supplier forwards received JIT demand to upstream suppliers."
     key_objects: ["inbound JIT call", "outbound JIT call", "supplier relationship", "forwarded component requirement"]
-    key_controls: ["mapping inbound components to supplier-relevant demand", "outbound call control", "message/partner integration"]
     source_refs: [SRC-SAP-AUTO-JIT-OUTBOUND]
   - id: AUTO-FAMILY-NG-S2C
     title: "Next Generation JIT Supply to Customer"
-    reading: "Supplier-facing JIT/JIS process with current S/4HANA apps, customer/destination data, sequence/packing groups, Logistics Execution, HU, TM and EWM integration."
+    reading: "Current S/4HANA supplier-to-customer JIT/JIS with customer/destination data, sequence/packing groups, Delivery, HU, TM and EWM integration."
     key_objects: ["customer JIT/JIS call", "sales scheduling agreement", "customer destination", "sequence group", "packing group", "handling unit", "outbound delivery"]
-    key_controls: ["external call uniqueness", "destination/external status mapping", "JIS split criteria", "sequence number profile/check", "packing/delivery split"]
     source_refs: [SRC-SAP-AUTO-NG-S2C, SRC-SAP-AUTO-NG-CUSTOMER-DATA, SRC-SAP-AUTO-NG-E2E-JIS]
 
 runtime_pipeline:
   - order: 1
     id: AUTO-RUNTIME-AGREEMENT
-    title: "Establish scheduling agreement and partner context"
-    question: "Which customer/supplier/material relationship does this demand belong to?"
-    inputs: ["sales or purchasing scheduling agreement", "sold-to/ship-to or supplier", "customer destination/assembly location", "material/component mapping", "plant/sales area"]
-    output: ["valid long-term agreement and JIT-relevant partner/material context"]
-    failure_signal: "The call is technically received but cannot be assigned to the intended customer, destination, material, or agreement."
+    title: "Establish agreement and partner context"
+    question: "Which customer/supplier/material relationship owns this demand?"
+    inputs: ["scheduling agreement", "customer/supplier", "destination/assembly location", "material/component", "plant/sales area"]
+    output: ["valid long-term relationship and JIT-relevant context"]
+    failure_signal: "Call cannot be assigned to the intended partner, destination, material, or agreement."
   - order: 2
     id: AUTO-RUNTIME-PLAN
     title: "Receive planning schedules"
-    question: "What forecast/JIT schedule did the customer or plant already communicate?"
-    inputs: ["forecast delivery schedule", "JIT delivery schedule", "JIT horizon", "cumulative quantities", "tolerance profile"]
+    question: "What forecast/JIT schedule was already communicated?"
+    inputs: ["forecast schedule", "JIT schedule", "JIT horizon", "cumulative quantities", "tolerance profile"]
     output: ["planning and delivery-relevance baseline"]
-    failure_signal: "Capacity/material planning follows a stale forecast while short-term JIT schedule relevance has changed."
+    failure_signal: "Planning follows stale forecast while near-term relevance has changed."
   - order: 3
     id: AUTO-RUNTIME-CALL
-    title: "Receive and identify the execution call"
+    title: "Identify the execution call"
     question: "What exact short-term requirement arrived?"
-    inputs: ["external call number", "call type", "sequence number if JIS", "required date/time", "components", "destination", "customer external status/change"]
+    inputs: ["external call number", "call type", "sequence", "date/time", "components", "destination", "change/cancellation"]
     output: ["accepted, changed, cancelled, duplicate, or exception call"]
-    failure_signal: "Duplicate/reused external call, wrong destination, invalid component assignment, or sequence interpretation creates the wrong execution object."
+    failure_signal: "Duplicate identity, wrong destination, component assignment, or sequence interpretation creates the wrong call state."
   - order: 4
     id: AUTO-RUNTIME-CONTROL
     title: "Apply call control and status"
-    question: "Which action is allowed for this call/component group now?"
-    inputs: ["call control", "internal processing status", "external status", "action", "components group type", "process generation"]
-    output: ["new processing status and permitted next logistical/technical action"]
-    failure_signal: "Production/delivery is blocked because status/action customizing does not represent the intended business transition."
+    question: "Which action is allowed now?"
+    inputs: ["call control", "internal status", "external status", "action", "components group/process generation"]
+    output: ["new status and permitted logistical/technical action"]
+    failure_signal: "Valid call cannot progress because action/status logic does not match the intended business transition."
     source_refs: [SRC-SAP-AUTO-CLASSIC-CALL-CONTROL]
   - order: 5
     id: AUTO-RUNTIME-MATCH
     title: "Match calls to planned requirements"
-    question: "Do exact calls fit the forecast/JIT delivery schedule baseline?"
-    inputs: ["received JIT calls", "forecast/JIT delivery schedules", "called quantity", "schedule quantity", "time window"]
+    question: "Do exact calls fit the forecast/JIT schedule baseline?"
+    inputs: ["JIT calls", "forecast/JIT schedules", "quantity", "time window"]
     output: ["critical, balanced, or not-balanced requirement picture"]
-    failure_signal: "Calls exceed planned demand or planned inventory remains because call and schedule requirements are not reconciled."
+    failure_signal: "Call and planned requirements are not reconciled, creating shortage or excess risk."
     source_refs: [SRC-SAP-AUTO-CLASSIC-REQ-MATCH]
   - order: 6
     id: AUTO-RUNTIME-SUPPLY
     title: "Produce, pick, or replenish"
     question: "How will the requested component/group be supplied?"
-    inputs: ["stock", "production state", "component group", "requested quantity", "supply date/time", "external replenishment strategy"]
-    output: ["produced/picked/replenished component group ready for sequence and packing"]
-    failure_signal: "Call is valid but missing component, production delay, or wrong replenishment path threatens sequence and delivery time."
+    inputs: ["stock", "production progress", "component group", "requested quantity/time", "replenishment strategy"]
+    output: ["supply ready for sequence and packing"]
+    failure_signal: "Missing component, production delay, or wrong replenishment path threatens the call."
   - order: 7
     id: AUTO-RUNTIME-SEQUENCE
     title: "Control sequence and packing"
-    question: "Can we preserve the required vehicle sequence through the package?"
-    inputs: ["external sequence number", "sequence-number profile/check", "delivery sequence group", "packing group", "planned HU", "split criteria"]
-    output: ["ordered packing/package units and explicit sequence exceptions"]
-    failure_signal: "False sequence-gap alarm, duplicate sequence interpretation, wrong packing group, or split destroys customer sequence."
+    question: "Can the required vehicle sequence survive physical packaging?"
+    inputs: ["sequence number", "sequence profile/check", "delivery sequence group", "packing group", "planned HU", "split criteria"]
+    output: ["ordered package units and explicit sequence exceptions"]
+    failure_signal: "Sequence parsing, gap handling, packing grouping, or split logic breaks customer order."
     source_refs: [SRC-SAP-AUTO-NG-SEQUENCE, SRC-SAP-AUTO-NG-SEQUENCE-CHECK]
   - order: 8
     id: AUTO-RUNTIME-DELIVER
     title: "Create delivery and execute logistics"
-    question: "How does sequence-safe supply become an outbound delivery and PGI?"
-    inputs: ["eligible JIT/JIS calls", "package unit", "planned HU", "shipping point", "EWM/TM integration", "subsequent delivery need"]
-    output: ["outbound delivery", "HU/warehouse/transport state", "post goods issue", "call status update"]
-    failure_signal: "Delivery cannot be created, is split unexpectedly, EWM blocks/edit state, or a delayed component requires subsequent delivery."
+    question: "How does sequence-safe supply become delivery and PGI?"
+    inputs: ["eligible calls", "package/HU", "shipping point", "EWM/TM", "subsequent-delivery need"]
+    output: ["outbound delivery", "warehouse/transport state", "PGI", "call status update"]
+    failure_signal: "Delivery split, EWM block, TM handoff, or one delayed component prevents expected completion."
     source_refs: [SRC-SAP-AUTO-NG-DELIVERY, SRC-SAP-AUTO-NG-E2E-JIS]
   - order: 9
     id: AUTO-RUNTIME-FORWARD
-    title: "Forward short-term demand upstream when required"
-    question: "Which part of the customer call must be sent to our supplier?"
-    inputs: ["inbound call", "supplier/component mapping", "outbound/forwarded JIS process", "message partner"]
-    output: ["supplier JIT/JIS requirement with traceable relationship to customer demand"]
-    failure_signal: "Customer call changes but supplier demand is missing, duplicated, late, or no longer traceable to the source sequence."
+    title: "Forward demand upstream"
+    question: "Which part of customer demand must reach our supplier?"
+    inputs: ["inbound call", "supplier/component mapping", "outbound/forwarded process", "message partner"]
+    output: ["supplier requirement traceable to customer demand"]
+    failure_signal: "Customer call changes but supplier demand is stale, duplicated, late, or untraceable."
     source_refs: [SRC-SAP-AUTO-JIT-OUTBOUND]
   - order: 10
     id: AUTO-RUNTIME-RECONCILE
     title: "Monitor, confirm, and reconcile"
-    question: "Can we prove the call was fulfilled in the required quantity, time, destination, and sequence?"
-    inputs: ["JIT monitor/application log", "call lifecycle/status", "production/picking", "packing/HU", "delivery/PGI", "ASN/customer/supplier confirmation", "forwarded call"]
-    output: ["completed, partially completed, cancelled, reordered, subsequent-delivery, or owned exception state"]
-    failure_signal: "A delivery is complete but call status, sequence, confirmation, or supplier/customer evidence remains inconsistent."
+    question: "Was the call fulfilled in quantity, time, destination, and sequence?"
+    inputs: ["monitor/log", "call status", "supply", "packing/HU", "delivery/PGI", "confirmation", "forwarded call"]
+    output: ["complete, partial, cancelled, reordered, subsequent-delivery, or owned exception state"]
+    failure_signal: "Delivery is green but call, sequence, confirmation, or supplier/customer evidence is inconsistent."
     source_refs: [SRC-SAP-AUTO-CLASSIC-MONITOR, SRC-SAP-AUTO-NG-MANAGE-CALLS]
 
 sequence_model:
   principle: >-
-    JIS is not simply JIT with a smaller time window. Sequence becomes a business key for production, packing, delivery, and often transport execution.
-    A valid gap is not always an error because different suppliers can own different sequence numbers.
-  controls:
-    - "External sequence number and parsing/profile"
-    - "Sequence-number checks and permitted gaps"
-    - "Customer/plant delivery sequence group"
-    - "Packing group and alternative package/HU identification"
-    - "JIS call split criteria"
-    - "Subsequent-delivery handling for delayed component groups"
+    JIS is not simply JIT with a smaller time window. Sequence becomes a business key for production, packing, delivery, and transport execution.
+    A sequence gap is not automatically an error because different suppliers can own different numbers.
+  controls: ["external sequence number/profile", "sequence checks and permitted gaps", "delivery sequence group", "packing group/HU", "JIS split criteria", "subsequent delivery"]
   source_refs: [SRC-SAP-AUTO-NG-SEQUENCE, SRC-SAP-AUTO-NG-SEQUENCE-CHECK, SRC-SAP-AUTO-NG-DELIVERY]
 
 integration_boundaries:
-  - boundary: "Customer EDI / Scheduling Agreement"
-    ownership: "The customer sends forecast/JIT delivery schedules and exact calls; SAP must map them to the correct agreement, customer, destination, and material context."
-    note: "VDA, AIAG and Odette define relevant delivery-schedule conventions; exact partner message implementation remains project-specific."
+  - boundary: "Customer message / Scheduling Agreement"
+    ownership: "Customer schedules and calls must map to the correct agreement, customer, destination, and material context."
+    note: "VDA, AIAG, and Odette define relevant delivery-schedule conventions; exact partner message design is project-specific."
     source_refs: [SRC-SAP-AUTO-SA-FAQ]
-  - boundary: "Classic JIT Inbound / Call Control"
-    ownership: "Call control owns allowed action/status progression per components group; the logistical action may then invoke production, delivery, goods movement, or other process logic."
+  - boundary: "Classic JIT / Call Control"
+    ownership: "Call control owns allowed action/status progression; downstream logistics executes the action."
     source_refs: [SRC-SAP-AUTO-CLASSIC-CALL-CONTROL]
-  - boundary: "JIS / Logistics Execution + HU"
-    ownership: "JIS owns call/sequence context; packing/HU and delivery execution own the physical package and shipment while preserving references."
+  - boundary: "JIS / HU and Delivery"
+    ownership: "JIS owns sequence context; packing/HU and delivery own physical package/shipment while preserving references."
     source_refs: [SRC-SAP-AUTO-NG-E2E-JIS, SRC-SAP-AUTO-NG-DELIVERY]
-  - boundary: "JIS / EWM"
-    ownership: "EWM can own warehouse task execution and can block/update call processing during picking; JIT call state must reflect warehouse execution."
-    source_refs: [SRC-SAP-AUTO-NG-MANAGE-CALLS, SRC-SAP-AUTO-NG-DELIVERY]
-  - boundary: "JIS / TM"
-    ownership: "TM owns transportation planning/execution where integrated; JIS/HU/delivery objects provide the sequence-sensitive logistics demand."
-    source_refs: [SRC-SAP-AUTO-NG-E2E-JIS]
+  - boundary: "JIS / EWM and TM"
+    ownership: "EWM and TM own warehouse/transport execution; JIT state must reflect downstream execution without losing sequence."
+    source_refs: [SRC-SAP-AUTO-NG-MANAGE-CALLS, SRC-SAP-AUTO-NG-E2E-JIS]
   - boundary: "System Supplier / Upstream Supplier"
-    ownership: "JIT Outbound or forwarded JIS transforms downstream customer demand into supplier demand without losing traceability."
+    ownership: "JIT Outbound/forwarded JIS transforms customer demand into supplier demand with traceability."
     source_refs: [SRC-SAP-AUTO-JIT-OUTBOUND]
   - boundary: "Message Technology"
-    ownership: "Classic solutions commonly expose EDI/IDoc monitoring; current Next Generation JIT applications document SOAP-based electronic interchange and message monitoring."
+    ownership: "Classic landscapes expose EDI/IDoc-era monitoring; current Next Generation apps document SOAP-based electronic interchange and message monitoring."
     source_refs: [SRC-SAP-AUTO-NG-MANAGE-CALLS]
 
 failure_modes:
   - id: AUTO-FAIL-SCHEDULE-CALL-MISMATCH
-    symptom: "Exact JIT calls do not fit forecast/JIT delivery schedule requirements."
-    first_checks: ["requirements match", "JIT horizon/relevance", "latest delivery schedule", "cumulative quantities", "call date/time", "customer change/cancellation"]
-    avoid: "Do not treat the forecast as the execution truth when a valid short-term call has superseded it."
+    symptom: "Exact calls do not fit forecast/JIT schedule requirements."
+    first_checks: ["requirements match", "JIT horizon", "latest schedule", "cumulative quantities", "call date/time", "customer change/cancellation"]
+    avoid: "Do not treat forecast as execution truth when a valid short-term call supersedes it."
   - id: AUTO-FAIL-CALL-IDENTITY
-    symptom: "Incoming call is duplicated, assigned to the wrong customer/destination, or cannot be uniquely identified."
-    first_checks: ["external call number", "uniqueness window", "sales area", "ship-to/customer destination", "assembly location", "call split rule", "partner/message mapping"]
-    avoid: "Do not solve duplicate identity by renumbering the call manually without understanding customer reuse rules."
+    symptom: "Call is duplicated, assigned to wrong destination, or cannot be uniquely identified."
+    first_checks: ["external call number", "uniqueness window", "sales area", "ship-to/destination", "assembly location", "split rule", "partner mapping"]
+    avoid: "Do not renumber manually without understanding customer reuse rules."
   - id: AUTO-FAIL-CALL-CONTROL
-    symptom: "A valid call cannot progress to the expected production/delivery action."
-    first_checks: ["components group", "call control determination", "internal status", "external status", "allowed action", "action log"]
-    avoid: "Do not force status correction until the failed action and business transition are understood."
+    symptom: "Valid call cannot progress to expected action."
+    first_checks: ["components group", "call control determination", "internal/external status", "allowed action", "action log"]
+    avoid: "Do not force status until the failed action is understood."
   - id: AUTO-FAIL-SEQUENCE
-    symptom: "JIS call appears out of sequence or packing/delivery order does not match customer sequence."
-    first_checks: ["raw external sequence", "sequence profile", "gap rules", "delivery sequence group", "packing group", "delayed/subsequent component group"]
-    avoid: "Do not assume every gap means lost demand; another supplier may own the missing sequence number."
+    symptom: "JIS appears out of sequence or packing/delivery order differs from customer sequence."
+    first_checks: ["raw sequence", "sequence profile", "gap rules", "sequence group", "packing group", "delayed/subsequent group"]
+    avoid: "Do not assume every sequence gap is lost demand."
   - id: AUTO-FAIL-SUPPLY
-    symptom: "Call is valid but component group is not ready at required time."
-    first_checks: ["stock/shortage", "production progress", "priority", "replenishment path", "component assignment", "internal buffer/subsequent-delivery option"]
-    avoid: "Do not protect one late component by stopping all other sequence-valid calls unless the package/customer rule requires it."
+    symptom: "Call is valid but component group is not ready on time."
+    first_checks: ["stock", "production progress", "priority", "replenishment path", "component assignment", "subsequent-delivery option"]
+    avoid: "Do not block all sequence-valid calls because one component is late unless package rules require it."
   - id: AUTO-FAIL-DELIVERY-HU
-    symptom: "Packing/HU is correct but delivery creation or EWM/TM handoff fails, or delivery split is unexpected."
-    first_checks: ["package unit", "planned HU", "JIS split criteria", "shipping point", "EWM task/block status", "TM/ASR integration", "subsequent delivery"]
-    avoid: "Do not recreate calls because a downstream warehouse or delivery object failed."
+    symptom: "Sequence/packing is correct but delivery, EWM, or TM handoff fails."
+    first_checks: ["package unit", "planned HU", "split criteria", "shipping point", "EWM block/task", "TM integration", "subsequent delivery"]
+    avoid: "Do not recreate the JIT call because a downstream execution object failed."
   - id: AUTO-FAIL-FORWARDING
-    symptom: "Customer call is updated but supplier-facing JIT/JIS demand is missing or stale."
-    first_checks: ["source inbound call", "forwarding action", "component/supplier mapping", "outbound call status", "message processing", "cancellation/change propagation"]
-    avoid: "Do not create an independent supplier call that loses traceability to the customer sequence."
+    symptom: "Customer call changed but supplier-facing demand is stale or missing."
+    first_checks: ["source inbound call", "forwarding action", "supplier mapping", "outbound call", "message processing", "change/cancellation propagation"]
+    avoid: "Do not create independent supplier demand that loses customer-sequence traceability."
 
 impact_traces:
   - id: AUTO-TRACE-SEQUENCE
     start: "Wrong sequence interpretation"
-    path: ["wrong production/packing order", "wrong HU/package order", "delivery sequence mismatch", "OEM assembly disruption", "premium freight/rework/line-stop risk"]
-    lead_question: "Which sequence representation is wrong: customer message, parsing/profile, grouping, or physical execution?"
+    path: ["wrong build/packing order", "wrong HU order", "delivery sequence mismatch", "OEM assembly disruption", "premium freight/rework/line-stop risk"]
+    lead_question: "Is customer message, sequence profile, grouping, or physical execution wrong?"
   - id: AUTO-TRACE-DESTINATION
-    start: "Wrong customer supply area / assembly location"
-    path: ["valid call assigned to wrong destination", "wrong delivery/package route", "warehouse/transport executes correctly for the wrong line", "customer shortage despite shipped stock"]
-    lead_question: "Was destination transferred from EDI or determined from JIT customer master data?"
+    start: "Wrong customer destination / assembly location"
+    path: ["valid call mapped to wrong line", "correct logistics for wrong destination", "customer shortage despite shipped stock"]
+    lead_question: "Was destination transferred from message or determined from JIT customer data?"
   - id: AUTO-TRACE-FORWARD
-    start: "Inbound customer call changed after supplier call was forwarded"
-    path: ["customer requirement changes", "supplier demand remains stale", "excess/shortage arrives upstream", "system supplier buffers the mismatch", "sequence/service risk increases"]
-    lead_question: "How do change and cancellation propagation remain idempotent and traceable?"
+    start: "Customer call changes after supplier demand was forwarded"
+    path: ["customer requirement changes", "supplier call stays stale", "excess/shortage arrives", "system supplier buffers mismatch", "sequence/service risk grows"]
+    lead_question: "How do change/cancellation propagation remain traceable and idempotent?"
 
 lead_lens:
   what_i_ask_first:
-    - "Is this a planning delivery schedule problem or an exact JIT/JIS execution-call problem?"
+    - "Is this a planning schedule problem or an exact JIT/JIS call problem?"
     - "Is the call summarized or sequenced, and which process generation owns it?"
-    - "What exactly is wrong: identity, quantity/time, call status, sequence, supply readiness, packaging/delivery, forwarding, or confirmation?"
-  decision_owner: "Scheduling agreements own long-term demand context; JIT/JIS owns short-term call and sequence state; Production/EWM/LE/TM own physical execution; supplier/customer interfaces own the external contract and confirmations."
-  main_trade_off: "React to exact OEM demand with minimal stock while preserving sequence, traceability, and controlled recovery when one component or message fails."
-  typical_failure: "Teams treat JIT as ordinary delivery scheduling and miss call identity, sequence, status, or upstream forwarding state."
-  proof_of_cause: "Join delivery schedule history, external call, customer/destination data, call/action log, sequence/packing group, HU/delivery/PGI, EWM/TM state, forwarded supplier call, and confirmation evidence."
-  integration_impact: "Automotive JIT/JIS connects Sales scheduling agreements, Production, MM, HU, Delivery, EWM, TM, external suppliers, and OEM EDI/message flows."
-  data_impact: "Customer destination, external call number, sequence number, component/group mapping, scheduling agreement, delivery horizon, split/grouping, and package/HU data are operational keys."
+    - "Is the defect identity, quantity/time, status, sequence, supply readiness, packaging/delivery, forwarding, or confirmation?"
+  decision_owner: "Scheduling agreements own long-term context; JIT/JIS owns exact call and sequence state; Production/EWM/LE/TM own physical execution; external interfaces own partner contract and confirmations."
+  main_trade_off: "React to exact OEM demand with minimal stock while preserving sequence, traceability, and controlled recovery."
+  typical_failure: "Treating JIT as ordinary delivery scheduling and missing call identity, sequence, status, or supplier-forwarding state."
+  proof_of_cause: "Join delivery schedule history, external call, customer/destination data, action log, sequence/packing group, HU/delivery/PGI, EWM/TM state, forwarded supplier call, and confirmation evidence."
+  integration_impact: "Automotive JIT/JIS connects Sales scheduling agreements, Production, MM, HU, Delivery, EWM, TM, suppliers, and OEM message flows."
+  data_impact: "Destination, external call number, sequence number, component/group mapping, scheduling agreement, horizon, split/grouping, and HU data are operational keys."
   sixty_second_explanation: >-
-    I separate planning schedules from execution calls. Forecast and JIT delivery schedules create the horizon-based demand picture,
-    while a JIT or JIS call is the short-term instruction that must be executed. I first prove call identity, customer destination, quantity/time and whether it is summarized or sequenced.
-    Then I follow call control/status, requirements matching, production or picking, and for JIS the sequence and packing group.
-    I keep HU, delivery, EWM and TM as downstream execution owners that must preserve the call and sequence reference.
-    If we are a system supplier, I also trace forwarded demand to our supplier. The final proof is not just PGI: call, sequence, delivery, supplier/customer confirmations and exception logs must agree.
+    I separate planning schedules from exact calls. Forecast and JIT schedules create the demand horizon, while a JIT/JIS call is the short-term execution instruction.
+    I prove call identity, destination, quantity/time and whether it is summarized or sequenced. Then I follow status/control, requirements matching, production or picking,
+    and for JIS the sequence and packing group. HU, Delivery, EWM and TM are downstream execution owners that must preserve call and sequence references.
+    If we are a system supplier, I also trace forwarded supplier demand. Completion means call, sequence, delivery, confirmations and exception logs agree.
 
 assessment_prompts:
-  - "Forecast says 100 pieces but new JIT calls require 130 in the near term. Explain planning versus execution truth and requirements matching."
+  - "Forecast says 100 but new JIT calls require 130 near-term. Explain planning versus execution truth."
   - "The OEM reuses an external call number and the system flags a duplicate. Build the identity diagnosis."
-  - "A sequenced call is received but the next call-control action is not allowed. Explain the status/action investigation."
+  - "A sequenced call is received but the next call-control action is not allowed. Explain status/action investigation."
   - "Sequence numbers are 101, 102, 105, 108. Decide whether gaps are errors before stopping production."
-  - "One JIS component group is late while the rest of the packing group is ready. Explain subsequent delivery and sequence impact."
-  - "A customer JIS call was changed after its requirements were forwarded to an upstream supplier. Design the recovery and reconciliation path."
+  - "One JIS component group is late while the rest of the packing group is ready. Explain sequence and subsequent-delivery impact."
+  - "A customer JIS call changes after requirements were forwarded to an upstream supplier. Design recovery and reconciliation."
