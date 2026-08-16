@@ -34,7 +34,7 @@ tags:
     </div>
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Active labs</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>5</strong><small>Active labs</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>18+</strong><small>Architecture and outcome views</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>10+</strong><small>Machine endpoints</small></div>
       <em>Working material is public but remains noindex until reviewed.</em>
@@ -125,6 +125,21 @@ tags:
       <a href="/labs/business-ai/scenarios/"><span>CASE</span><strong>Scenario outcomes</strong><small>{{ business_ai_scenarios.scenarios | size }} strong, mixed, and failed scenarios with evidence, missing controls, and lessons.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
       <a href="/labs/business-ai/practices/"><span>RISK</span><strong>Best practices and anti-patterns</strong><small>{{ business_ai_scenarios.best_practices | size }} operating rules and {{ business_ai_scenarios.failure_patterns | size }} recurring failure shapes.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
       <a href="/labs/business-ai/data/scenarios.json"><span>JSON</span><strong>Scenario and failure data</strong><small>Machine-readable outcomes, controls, lessons, practices, anti-patterns, and source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lab 05 / Operational Templates</p>
+      <h2>Follow the protocol. Then use judgment.</h2>
+      <p>Reusable protocols for root cause analysis, active incidents, integration failures, process deviations, runbooks, change impact, decisions, cutover, and hypercare.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/templates/"><span>RCA</span><strong>Operational Template Library</strong><small>Eight practical protocols with evidence, isolation, action, ownership, and validation steps.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="/labs/templates/#root-cause-analysis"><span>WHY</span><strong>Root Cause Analysis</strong><small>Move from symptom and impact to verified causal chain, correction, prevention, and business validation.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/templates/#integration-failure"><span>INT</span><strong>Integration Failure Analysis</strong><small>Trace trigger, connectivity, authentication, contract, mapping, processing, retry, and monitoring.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/templates/#runbook"><span>SOP</span><strong>Procedure / Runbook</strong><small>Turn repeated work into steps with expected results, evidence, stop conditions, rollback, and escalation.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
+      <a href="/labs/templates/data/catalog.json"><span>JSON</span><strong>Template protocol catalog</strong><small>Machine-readable protocol chains, diagnostic layers, required outputs, and reusable controls.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
