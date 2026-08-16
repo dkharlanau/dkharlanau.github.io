@@ -1,0 +1,147 @@
+id: TOPIC-MDG-CHANGE-REQUEST-DESIGN
+type: research_topic
+title: "SAP MDG Change Request Type Design Matrix"
+summary: "A design matrix for choosing MDG change-request patterns by business purpose, object scope, risk, authority, volume and activation behavior instead of creating one universal workflow."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/governance-engine/change-request-matrix/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "When should MDG use separate change-request types, and what must be explicit in each process contract?"
+
+memory_model:
+  phrase: "Purpose → Scope → Risk → Authority → Steps → Final Check → Activation → Recovery"
+  principle: "A change-request type is a governance contract, not merely a different button in the UI."
+
+product_boundary:
+  facts:
+    - "A change-request type is assigned to one MDG data model."
+    - "The change-request type defines which data/entity types can be processed."
+    - "SAP Business Workflow, standard/custom workflow templates or rule-based workflow can define the process flow."
+    - "Rule-based workflow can use BRFplus decision tables for status, next step and expected-agent determination."
+
+pattern_matrix:
+  - pattern: "Create new identity"
+    examples: [new-material, new-business-partner, new-supplier, new-customer]
+    scope: "Root identity plus mandatory initial dependent segments"
+    risk: high
+    authority: "Enterprise identity owner plus domain approvers where required"
+    controls: [duplicate-check, number-strategy, mandatory-core-data, final-validation]
+    recovery: "Activation error path; do not convert failed activation into business rejection"
+  - pattern: "Organizational extension"
+    examples: [material-to-plant, material-to-sales-area, supplier-to-purchasing-org, customer-to-sales-area]
+    scope: "Existing identity plus one or more organizational grains"
+    risk: medium
+    authority: "Owner of the target organization/grain"
+    controls: [existing-root-check, organizational-completeness, downstream-consumer-readiness]
+    recovery: "Return for correction or handle activation failure separately"
+  - pattern: "Sensitive attribute change"
+    examples: [bank-data, tax-id, legal-name, valuation-class, regulated-quality-field]
+    scope: "Narrow attribute group with high business impact"
+    risk: high
+    authority: "Named owner with explicit segregation/approval policy"
+    controls: [old-vs-new-evidence, negative-tests, audit-evidence, downstream-impact-check]
+    recovery: "Controlled revision, rollback/forward recovery, targeted replication"
+  - pattern: "Operational low-risk correction"
+    examples: [description-fix, non-critical-text, low-risk-local-attribute]
+    scope: "Narrow low-risk field group"
+    risk: low
+    authority: "Steward or delegated owner"
+    controls: [field-scope, validation, audit]
+    recovery: "Simple revision path"
+  - pattern: "Block / unblock / deletion status"
+    examples: [customer-block, supplier-block, mark-for-deletion]
+    scope: "Status or lifecycle control"
+    risk: high
+    authority: "Business owner aware of transactional and compliance impact"
+    controls: [open-transaction-impact, legal-retention, downstream-propagation]
+    recovery: "Explicit unblock/reactivation rules; no silent reversal"
+  - pattern: "Mass change"
+    examples: [plant-parameter-correction, supplier-policy-update, classification-update]
+    scope: "Many objects and/or organizational slices"
+    risk: high
+    authority: "Owner of the rule and population, not each row manually"
+    controls: [population-definition, sample-review, deterministic-rule, control-totals, rollback-plan]
+    recovery: "Batch-level reconciliation and targeted exception set"
+  - pattern: "Emergency correction"
+    examples: [production-blocker, incorrect-bank-routing, critical-replication-repair]
+    scope: "Minimum required change"
+    risk: high
+    authority: "Predefined emergency authority with retrospective review"
+    controls: [incident-link, narrow-scope, evidence, post-change-review]
+    recovery: "Rollback/forward plan defined before execution"
+
+cr_contract_fields:
+  - cr-type-id
+  - business-purpose
+  - data-model
+  - allowed-entity-types
+  - single-or-multi-object
+  - allowed-business-activities
+  - initial-status
+  - workflow-template-or-rule-based-workflow
+  - step-model
+  - agent-determination
+  - validation-points
+  - final-check
+  - activation-step
+  - activation-error-step
+  - replication-trigger
+  - audit-evidence
+  - owner
+
+separation_rules:
+  - "Use separate CR types when business purpose, allowed scope, authority or risk materially differs."
+  - "Do not create a new CR type only because one screen looks different."
+  - "Do not let one generic CR type expose entity types that most requesters should never edit."
+  - "Do not make approval compensate for missing deterministic validation."
+  - "Keep business rejection, technical activation failure and replication failure as different states."
+
+reference_examples:
+  sap_delivered_bp_patterns:
+    note: "SAP documentation shows delivered BP/customer/supplier CR types for create, process, block/unblock, deletion, initial load and mass maintenance. Exact available types depend on application scope and release."
+    examples:
+      - {purpose: "Create Business Partner", example_type: BP1P1}
+      - {purpose: "Process Business Partner", example_type: BP2P1}
+      - {purpose: "Block/Unblock Business Partner", example_type: BP5P1}
+      - {purpose: "Mark Business Partner for Deletion", example_type: BP6P1}
+      - {purpose: "Business Partner Initial Load", example_type: BPLP2}
+      - {purpose: "Business Partner Mass Maintenance", example_type: BPMP2}
+      - {purpose: "Create Customer", example_type: CUST1P1}
+      - {purpose: "Process Customer", example_type: CUST2P1}
+      - {purpose: "Create Supplier", example_type: SUPPL1P1}
+      - {purpose: "Process Supplier", example_type: SUPPL2P1}
+
+assessment_cards:
+  - prompt: "Why not use one change-request type for everything?"
+    answer: "Because the CR type defines scope and process context. If create, extension, sensitive change and mass correction have different authority or risk, one universal contract becomes too permissive and hard to support."
+  - prompt: "What belongs in the final check?"
+    answer: "Cross-object completeness and deterministic conditions required before activation. An approver should not manually discover validation defects that software can prove."
+  - prompt: "What is the difference between rejection and activation failure?"
+    answer: "Rejection is a business decision. Activation failure is a technical or data-state failure after the governance decision and needs a recovery path, not a new business vote."
+
+source_refs:
+  - SRC-SAP-MDG-CHANGE-REQUEST-CONFIG-2025
+  - SRC-SAP-MDG-RULE-WORKFLOW-2025
+  - SRC-SAP-MDG-RULE-WORKFLOW-TECH-2025
+  - SRC-SAP-MDG-BP-CR-SETTINGS-2025
+relations:
+  - subject: TOPIC-MDG-CHANGE-REQUEST-DESIGN
+    predicate: requires
+    object: TOPIC-MDG-GOVERNANCE-PROCESS-ENGINE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-CHANGE-REQUEST-DESIGN
+    predicate: provides_context_to
+    object: TOPIC-MDG-MATERIAL-DOMAIN
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-CHANGE-REQUEST-DESIGN
+    predicate: provides_context_to
+    object: TOPIC-MDG-BUSINESS-PARTNER-DOMAIN
+    evidence_type: reasoned_interpretation
+    confidence: high
