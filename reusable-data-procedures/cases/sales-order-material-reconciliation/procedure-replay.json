@@ -1,0 +1,71 @@
+{
+  "kind": "reusable-data-procedure",
+  "specVersion": "0.5",
+  "id": "sales.order-material-reconciliation",
+  "name": "Sales Order Material Reconciliation",
+  "purpose": "Resolve every Sales order item to one controlled material value and stop publication when material coverage, key cardinality or quantity controls are unsafe.",
+  "procedureVersion": "0.1.1",
+  "owner": "sales-data-owner",
+  "technicalSteward": "data-procedure-framework",
+  "catalog": {
+    "domain": "sales",
+    "jobFamily": "reconcile",
+    "dataConcepts": ["sap.sales-document", "sap.sales-document-item", "sap.material-id", "sap.plant-id"],
+    "sourceFamilies": ["sap-sales-export"],
+    "tags": ["reference-case", "sap-logistics", "material", "reconciliation"],
+    "sensitivity": "internal",
+    "criticality": "operational"
+  },
+  "lifecycle": {"maturity": "pilot", "trustEvidence": ["regression-tested", "drift-observed", "owner-reviewed"]},
+  "dependencies": {
+    "referenceData": [{"id": "sap.material-aliases", "version": "2026.08.2"}],
+    "externalSystems": ["SAP Sales export"]
+  },
+  "consumers": ["sales-reconciliation-output"],
+  "sources": [
+    {
+      "role": "sales_orders",
+      "description": "Monthly Sales order item export.",
+      "acceptedFormats": ["xlsx", "csv"],
+      "sheetPattern": "Orders*",
+      "locators": [{"strategy": "header-score", "requiredHeaders": ["Sales Document", "Plant"], "optionalHeaders": ["Item", "Item No.", "Material", "Material Number", "Order Qty", "UoM"], "scanFirstRows": 30, "minimumScore": 0.85}],
+      "extraction": {"stopAfterBlankRows": 2, "removeRepeatedHeaders": true, "detectFooters": true, "preserveSourceCoordinates": true},
+      "requiredFields": [
+        {"name": "Sales Document", "required": true, "type": "string", "role": "key", "nullable": false},
+        {"name": "Item", "required": true, "type": "string", "aliases": ["Item No."], "role": "key", "nullable": false},
+        {"name": "Material", "required": true, "type": "string", "aliases": ["Material Number"], "role": "attribute", "nullable": false},
+        {"name": "Plant", "required": true, "type": "string", "role": "attribute", "nullable": false},
+        {"name": "Order Qty", "required": true, "type": "number", "role": "measure", "nullable": false},
+        {"name": "UoM", "required": true, "type": "string", "role": "attribute", "nullable": false}
+      ],
+      "optionalFields": [],
+      "fingerprintPolicy": {"useColumnNames": true, "useTypes": true, "useValuePatterns": true, "useWorkbookStructure": true}
+    }
+  ],
+  "mappings": [],
+  "transforms": [
+    {"id": "material-space", "op": "normalize-space", "input": "Material", "output": "MaterialCanonicalInput"},
+    {"id": "material-key", "op": "comparison-key", "input": "MaterialCanonicalInput", "output": "MaterialLookupKey"},
+    {"id": "material-lookup", "op": "lookup", "input": "MaterialLookupKey", "output": "CanonicalMaterial", "mappingRef": "sap.material-aliases@2026.08.2", "params": {"cardinality": "many-to-one", "onUnmatched": "exception"}},
+    {"id": "route-unmatched", "op": "route-exceptions", "input": "CanonicalMaterial", "params": {"reasonCode": "LOOKUP_NOT_FOUND"}}
+  ],
+  "validations": [
+    {"id": "sales-item-unique", "rule": "unique", "target": "Sales Document + Item", "severity": "block"},
+    {"id": "material-coverage", "rule": "mapping-coverage", "target": "CanonicalMaterial", "severity": "block", "params": {"minimum": 1.0}},
+    {"id": "quantity-total", "rule": "control-total", "target": "Order Qty", "severity": "block", "params": {"compare": "source-to-result", "tolerance": 0}}
+  ],
+  "outputs": [
+    {"name": "sales_material_reconciliation", "role": "result", "format": "table", "fields": ["Sales Document", "Item", "Material", "CanonicalMaterial", "Plant", "Order Qty", "UoM"]},
+    {"name": "sales_material_exceptions", "role": "exceptions", "format": "table", "fields": ["Sales Document", "Item", "Material", "reason_code"]}
+  ],
+  "behaviorPolicy": {"onAmbiguousLocator": "manual-review", "onBreakingDrift": "manual-review", "onValidationFailure": "manual-review"},
+  "provenance": {
+    "createdAt": "2026-08-16T13:55:00Z",
+    "createdBy": "reference-case",
+    "basedOnProcedureVersion": "0.1.0",
+    "changeReason": "Pin approved sap.material-aliases release 2026.08.2 after decision.sales.ext-q9.2026-08.",
+    "sourceRunId": "case-sales-material-run-02-review",
+    "reviewedAt": "2026-08-16T13:55:00Z",
+    "reviewedBy": "sales-data-owner"
+  }
+}
