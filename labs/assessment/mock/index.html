@@ -1,0 +1,534 @@
+---
+layout: default
+title: "Mock Assessment — SAP Lead Assessment Lab"
+description: "A balanced browser-based SAP Lead mock assessment across Sales, Procurement and Logistics, Integration and Architecture, and AI and Data."
+permalink: /labs/assessment/mock/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags:
+  - sap
+  - assessment
+  - sap-lead
+  - mock-interview
+  - diagnostics
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Mock Assessment</li></ol></nav>
+
+<div class="research-canvas mock-assessment" id="mock-assessment">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Mock session</p>
+      <h1>One session.<br />Four tracks.</h1>
+      <p>A mock session should test range, not only the topic you studied last. The selector balances all four assessment tracks, prefers higher reasoning levels, includes cross-process cases, and avoids recent repetition where possible.</p>
+      <a class="research-canvas__button" href="#session">Build a session <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Mock assessment model">
+      <p>Default session</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>8</strong><small>Cases</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>4</strong><small>Tracks</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>55</strong><small>Suggested minutes</small></div>
+      <em>Scores and notes stay in this browser.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">balance</span>
+    <p><strong>Working rule:</strong> a Lead assessment is not a memory quiz. Give a structured answer first. Reveal expected points only when you are ready to review what was missing.</p>
+    <a href="/labs/assessment/data/mock-session.json">Open session contract <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="session" data-reveal>
+    <header><p class="research-canvas__eyebrow">Session setup</p><h2>Choose the length. The coverage rules stay fixed.</h2><p>Short mode gives one case per track. Standard mode gives two per track. Extended mode keeps all tracks in rotation and adds more cross-process pressure.</p></header>
+    <div class="ma-controls">
+      <label>Session length
+        <select id="ma-size">
+          <option value="4">Short · 4 cases · about 30 min</option>
+          <option value="8" selected>Standard · 8 cases · about 55 min</option>
+          <option value="12">Extended · 12 cases · about 80 min</option>
+        </select>
+      </label>
+      <button class="research-canvas__button" type="button" id="ma-start">Build new session</button>
+      <button type="button" id="ma-resume" hidden>Resume saved session</button>
+    </div>
+    <p id="ma-status" class="ma-status" aria-live="polite">Loading assessment case sets…</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="case-workspace" data-reveal hidden>
+    <header>
+      <p class="research-canvas__eyebrow">Current case</p>
+      <h2 id="ma-progress">Case 1 of 8</h2>
+      <p id="ma-timebox"></p>
+    </header>
+
+    <article class="ma-case">
+      <div class="ma-meta"><span id="ma-track"></span><span id="ma-level"></span><span id="ma-id"></span></div>
+      <h2 id="ma-title"></h2>
+      <p class="ma-prompt" id="ma-prompt"></p>
+      <div class="ma-actions">
+        <button type="button" id="ma-reveal">Reveal expected points</button>
+        <button type="button" id="ma-skip">Skip case</button>
+      </div>
+      <div id="ma-reference" hidden>
+        <div class="ecg-decision-columns">
+          <div><h4>Expected points</h4><ul id="ma-expected"></ul></div>
+          <div><h4>Follow-up questions</h4><ul id="ma-followups"></ul></div>
+          <div><h4>Red flags</h4><ul id="ma-redflags"></ul></div>
+        </div>
+      </div>
+    </article>
+
+    <form id="ma-score-form" class="ma-score-form">
+      <h3>Score the reasoning</h3>
+      <p>Use the same 0–3 dimensions as the Adaptive Practice Engine. 0 = missing, 1 = partial, 2 = solid consultant answer, 3 = Lead signal.</p>
+      <div class="ma-scores" id="ma-scores"></div>
+      <div class="ma-controls">
+        <label>Confidence
+          <select id="ma-confidence">
+            <option value="1">1 / 5</option>
+            <option value="2">2 / 5</option>
+            <option value="3" selected>3 / 5</option>
+            <option value="4">4 / 5</option>
+            <option value="5">5 / 5</option>
+          </select>
+        </label>
+        <label class="ma-note">Optional local note
+          <textarea id="ma-notes" rows="3" maxlength="4000" placeholder="What did I miss, confuse, or explain poorly?"></textarea>
+        </label>
+        <button class="research-canvas__button" type="submit">Save score and continue</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="research-canvas__inventory" id="summary" data-reveal hidden>
+    <header><p class="research-canvas__eyebrow">Session summary</p><h2>Use the result to choose the next review action.</h2><p>The summary is based only on scored cases. Skipped cases stay visible as coverage gaps but do not lower the score.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Scored cases</h4><p class="ma-metric" id="ma-scored">0</p></div>
+      <div><h4>Average score</h4><p class="ma-metric" id="ma-average">—</p></div>
+      <div><h4>Lead-level cases</h4><p class="ma-metric" id="ma-lead">0</p></div>
+    </div>
+    <div class="ma-summary-grid">
+      <article><h3>Track coverage</h3><div id="ma-track-summary"></div></article>
+      <article><h3>Reasoning levels</h3><div id="ma-level-summary"></div></article>
+      <article><h3>Weakest dimensions</h3><div id="ma-dim-summary"></div></article>
+    </div>
+    <div class="research-route-list">
+      <a href="/labs/assessment/review/"><span>REVIEW</span><strong>Open Review Queue</strong><small>Turn weak dimensions and tracks into focused review routes.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>
+      <a href="/labs/assessment/practice-engine/"><span>ADAPT</span><strong>Continue Adaptive Practice</strong><small>Use this session history to bias the next single-case selection.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
+      <a href="/labs/assessment/cross-process/"><span>X</span><strong>Cross-Process Cases</strong><small>Practice ownership and evidence across several modules.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Session design</p><h2>Coverage is more important than random variety.</h2><p>The selector uses fixed coverage rules first and scoring history second.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Track balance</h4><p>Sales, Procurement & Logistics, Integration & Architecture, and AI & Data must all appear.</p></div>
+      <div><h4>Reasoning pressure</h4><p>Diagnose, Design, and Challenge receive more weight than simple definition questions.</p></div>
+      <div><h4>Cross-process minimum</h4><p>Standard and extended sessions include cases that cross module or system boundaries.</p></div>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<style>
+.ma-controls{display:flex;flex-wrap:wrap;gap:1rem;align-items:end;margin:1rem 0 1.5rem}.ma-controls label{display:flex;flex-direction:column;gap:.4rem;min-width:13rem;font-weight:700}.ma-controls select,.ma-controls textarea{font:inherit;padding:.7rem;border:1px solid var(--border-color,#d7d7d7);border-radius:.35rem;background:var(--background-color,#fff);color:inherit}.ma-note{flex:1;min-width:18rem}.ma-status{padding:.7rem 0}.ma-case{border-top:1px solid var(--border-color,#ddd);padding-top:1.1rem}.ma-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.8rem}.ma-meta span{border:1px solid var(--border-color,#ddd);border-radius:999px;padding:.2rem .55rem;font-size:.82rem}.ma-prompt{font-size:1.15rem;max-width:78ch}.ma-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin:1rem 0}.ma-actions button{font:inherit;padding:.6rem .85rem;cursor:pointer}.ma-score-form{border-top:1px solid var(--border-color,#ddd);margin-top:1.3rem;padding-top:1.2rem}.ma-scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}.ma-score{border:1px solid var(--border-color,#ddd);padding:.75rem}.ma-score label{display:flex;flex-direction:column;gap:.45rem;font-weight:700}.ma-score select{font:inherit;padding:.55rem}.ma-metric{font-size:2rem;font-weight:800;margin:.4rem 0}.ma-summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1rem 0}.ma-summary-grid article{border:1px solid var(--border-color,#ddd);padding:1rem}.ma-summary-grid ul{padding-left:1.2rem}
+</style>
+
+<script>
+(() => {
+  'use strict';
+  const ATTEMPT_KEY = 'sapLeadAssessmentAttemptsV1';
+  const SESSION_KEY = 'sapLeadMockSessionV1';
+  const DIMENSIONS = [
+    ['business_goal','Business goal'],
+    ['owner','Owner'],
+    ['process_flow','Process flow'],
+    ['decision_logic','Decision logic'],
+    ['boundary','Boundary'],
+    ['failure_and_evidence','Failure & evidence'],
+    ['trade_off','Trade-off']
+  ];
+  const TRACKS = ['sales','procurement-logistics','integration-architecture','ai-data'];
+  const TRACK_LABELS = {
+    'sales':'Sales',
+    'procurement-logistics':'Procurement & Logistics',
+    'integration-architecture':'Integration & Architecture',
+    'ai-data':'AI & Data'
+  };
+  const LEVEL_LABELS = {explain:'Explain',trace:'Trace',diagnose:'Diagnose',design:'Design',challenge:'Challenge'};
+  const LEVEL_WEIGHT = {explain:0.1,trace:0.25,diagnose:0.7,design:0.8,challenge:0.9};
+  const $ = id => document.getElementById(id);
+  const mean = values => values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
+  let cases = [];
+  let session = null;
+
+  function normalizeTrack(track) {
+    if (track === 'procurement' || track === 'logistics' || track === 'production') return 'procurement-logistics';
+    if (track === 'integration') return 'integration-architecture';
+    if (track === 'data' || track === 'ai') return 'ai-data';
+    return track;
+  }
+
+  function readJson(key, fallback) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || 'null');
+      return value == null ? fallback : value;
+    } catch (_) {
+      return fallback;
+    }
+  }
+
+  function saveSession() {
+    if (session) localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  }
+
+  function attempts() {
+    const value = readJson(ATTEMPT_KEY, []);
+    return Array.isArray(value) ? value : [];
+  }
+
+  function appendList(id, values) {
+    const list = $(id);
+    list.replaceChildren();
+    (values || []).forEach(value => {
+      const li = document.createElement('li');
+      li.textContent = value;
+      list.appendChild(li);
+    });
+  }
+
+  function buildScoreControls() {
+    const root = $('ma-scores');
+    root.replaceChildren();
+    DIMENSIONS.forEach(([id,label]) => {
+      const card = document.createElement('div');
+      card.className = 'ma-score';
+      const control = document.createElement('label');
+      control.textContent = label;
+      const select = document.createElement('select');
+      select.id = `ma-score-${id}`;
+      select.required = true;
+      const empty = document.createElement('option');
+      empty.value = '';
+      empty.textContent = 'Select 0–3';
+      select.appendChild(empty);
+      [0,1,2,3].forEach(value => {
+        const option = document.createElement('option');
+        option.value = String(value);
+        option.textContent = `${value} / 3`;
+        select.appendChild(option);
+      });
+      control.appendChild(select);
+      card.appendChild(control);
+      root.appendChild(card);
+    });
+  }
+
+  function clearScores() {
+    DIMENSIONS.forEach(([id]) => { $(`ma-score-${id}`).value = ''; });
+    $('ma-confidence').value = '3';
+    $('ma-notes').value = '';
+  }
+
+  function trackProfile(rows) {
+    const values = {};
+    rows.forEach(row => {
+      const track = normalizeTrack(row.track);
+      if (track && Number.isFinite(row.total_score)) (values[track] ||= []).push(row.total_score);
+    });
+    return Object.fromEntries(Object.entries(values).map(([track,scores]) => [track,mean(scores)]));
+  }
+
+  function scoreCandidate(c, selected, recent, profile) {
+    let score = Math.random() * 0.08;
+    if (!recent.includes(c.id)) score += 1.1;
+    else score -= 1.5;
+    const track = normalizeTrack(c.track);
+    const trackAvg = profile[track];
+    score += trackAvg == null ? 0.45 : Math.max(0,(21-trackAvg)/21);
+    score += LEVEL_WEIGHT[c.level] || 0;
+    if (c._set === 'cross-process') score += 0.35;
+    const sameLevel = selected.filter(item => item.level === c.level).length;
+    score -= sameLevel * 0.08;
+    return score;
+  }
+
+  function chooseBest(pool, selected, recent, profile) {
+    return pool
+      .filter(candidate => !selected.some(item => item.id === candidate.id))
+      .map(candidate => ({candidate,score:scoreCandidate(candidate,selected,recent,profile)}))
+      .sort((a,b)=>b.score-a.score)[0]?.candidate || null;
+  }
+
+  function sessionRules(size) {
+    const quota = size === 4 ? 1 : size === 8 ? 2 : 3;
+    return {
+      quota,
+      crossMinimum:size === 4 ? 1 : size === 8 ? 2 : 3,
+      minutes:size === 4 ? 30 : size === 8 ? 55 : 80,
+      recentCount:5
+    };
+  }
+
+  function buildSession(size) {
+    const rules = sessionRules(size);
+    const history = attempts();
+    const recent = history.slice(-rules.recentCount).map(row => row.case_id);
+    const profile = trackProfile(history);
+    const selected = [];
+
+    const crossPool = cases.filter(c => c._set === 'cross-process');
+    for (let i=0; i<rules.crossMinimum; i += 1) {
+      const candidate = chooseBest(crossPool.filter(c => {
+        const track = normalizeTrack(c.track);
+        return TRACKS.includes(track) && selected.filter(s=>normalizeTrack(s.track)===track).length < rules.quota;
+      }), selected, recent, profile);
+      if (candidate) selected.push(candidate);
+    }
+
+    TRACKS.forEach(track => {
+      while (selected.filter(c=>normalizeTrack(c.track)===track).length < rules.quota) {
+        const candidate = chooseBest(cases.filter(c=>normalizeTrack(c.track)===track), selected, recent, profile);
+        if (!candidate) break;
+        selected.push(candidate);
+      }
+    });
+
+    while (selected.length < size) {
+      const candidate = chooseBest(cases, selected, recent, profile);
+      if (!candidate) break;
+      selected.push(candidate);
+    }
+
+    if (selected.length < size) throw new Error(`Only ${selected.length} suitable cases were available for a ${size}-case session.`);
+
+    selected.sort(() => Math.random() - 0.5);
+    session = {
+      id:`mock-${Date.now()}`,
+      created_at:new Date().toISOString(),
+      case_count:size,
+      suggested_minutes:rules.minutes,
+      case_ids:selected.slice(0,size).map(c=>c.id),
+      index:0,
+      results:[],
+      completed:false
+    };
+    saveSession();
+    renderSession();
+  }
+
+  function currentCase() {
+    if (!session || session.index >= session.case_ids.length) return null;
+    return cases.find(c=>c.id===session.case_ids[session.index]) || null;
+  }
+
+  function renderSession() {
+    if (!session) return;
+    $('case-workspace').hidden = false;
+    $('summary').hidden = true;
+    $('ma-timebox').textContent = `Suggested session time: about ${session.suggested_minutes} minutes. Use the time as a guide, not as part of the score.`;
+    renderCurrent();
+  }
+
+  function renderCurrent() {
+    if (!session) return;
+    if (session.index >= session.case_ids.length) {
+      finishSession();
+      return;
+    }
+    const c = currentCase();
+    if (!c) {
+      $('ma-status').textContent = 'A saved session references a case that is not available. Build a new session.';
+      return;
+    }
+    $('ma-progress').textContent = `Case ${session.index + 1} of ${session.case_ids.length}`;
+    $('ma-track').textContent = TRACK_LABELS[normalizeTrack(c.track)] || c.track;
+    $('ma-level').textContent = LEVEL_LABELS[c.level] || c.level;
+    $('ma-id').textContent = c.id;
+    $('ma-title').textContent = c.title;
+    $('ma-prompt').textContent = c.prompt;
+    appendList('ma-expected',c.expected_points);
+    appendList('ma-followups',c.follow_up_questions);
+    appendList('ma-redflags',c.red_flags);
+    $('ma-reference').hidden = true;
+    $('ma-reveal').textContent = 'Reveal expected points';
+    clearScores();
+    $('case-workspace').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function createAttempt(c) {
+    const scores = {};
+    DIMENSIONS.forEach(([id]) => { scores[id] = Number($(`ma-score-${id}`).value); });
+    const total = Object.values(scores).reduce((a,b)=>a+b,0);
+    return {
+      id:`attempt-${Date.now()}-${c.id}`,
+      case_id:c.id,
+      attempted_at:new Date().toISOString(),
+      track:normalizeTrack(c.track),
+      level:c.level,
+      scores,
+      total_score:total,
+      lead_signal:total >= 18,
+      confidence:Number($('ma-confidence').value),
+      notes:$('ma-notes').value.trim(),
+      weak_signals:Object.entries(scores).filter(([,value])=>value<2).map(([id])=>id),
+      graph_refs:c.graph_refs || [],
+      human_refs:c.human_refs || []
+    };
+  }
+
+  function saveAttempt(attempt) {
+    const rows = attempts();
+    rows.push(attempt);
+    localStorage.setItem(ATTEMPT_KEY, JSON.stringify(rows));
+  }
+
+  function finishSession() {
+    session.completed = true;
+    session.completed_at = new Date().toISOString();
+    saveSession();
+    $('case-workspace').hidden = true;
+    $('summary').hidden = false;
+    renderSummary();
+    $('summary').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function renderSummary() {
+    const scored = session.results.filter(result=>result.status==='scored');
+    const scores = scored.map(result=>result.total_score);
+    $('ma-scored').textContent = scored.length;
+    $('ma-average').textContent = scores.length ? `${mean(scores).toFixed(1)} / 21` : '—';
+    $('ma-lead').textContent = scored.filter(result=>result.lead_signal).length;
+
+    const trackCounts = {};
+    const levelCounts = {};
+    session.case_ids.forEach(id => {
+      const c = cases.find(item=>item.id===id);
+      if (!c) return;
+      const track = normalizeTrack(c.track);
+      trackCounts[track] = (trackCounts[track] || 0) + 1;
+      levelCounts[c.level] = (levelCounts[c.level] || 0) + 1;
+    });
+    renderSimpleList('ma-track-summary',TRACKS.map(track=>`${TRACK_LABELS[track]}: ${trackCounts[track] || 0}`));
+    renderSimpleList('ma-level-summary',Object.entries(levelCounts).map(([level,count])=>`${LEVEL_LABELS[level] || level}: ${count}`));
+
+    const dimValues = Object.fromEntries(DIMENSIONS.map(([id])=>[id,[]]));
+    scored.forEach(result => DIMENSIONS.forEach(([id]) => {
+      if (Number.isFinite(result.scores[id])) dimValues[id].push(result.scores[id]);
+    }));
+    const ranked = DIMENSIONS
+      .map(([id,label])=>({id,label,average:mean(dimValues[id])}))
+      .filter(item=>item.average != null)
+      .sort((a,b)=>a.average-b.average)
+      .slice(0,3)
+      .map(item=>`${item.label}: ${item.average.toFixed(2)} / 3`);
+    renderSimpleList('ma-dim-summary',ranked.length ? ranked : ['No scored dimension data.']);
+  }
+
+  function renderSimpleList(id,values) {
+    const root = $(id);
+    root.replaceChildren();
+    const list = document.createElement('ul');
+    values.forEach(value => {
+      const li = document.createElement('li');
+      li.textContent = value;
+      list.appendChild(li);
+    });
+    root.appendChild(list);
+  }
+
+  async function loadCases() {
+    const indexResponse = await fetch('/labs/assessment/data/case-sets.json',{cache:'no-store'});
+    if (!indexResponse.ok) throw new Error(`Case-set index HTTP ${indexResponse.status}`);
+    const index = await indexResponse.json();
+    const loaded = [];
+    for (const set of index.sets) {
+      const response = await fetch(set.url,{cache:'no-store'});
+      if (!response.ok) throw new Error(`${set.id} HTTP ${response.status}`);
+      const text = await response.text();
+      text.split(/\r?\n/).filter(line=>line.trim()).forEach(line => {
+        const item = JSON.parse(line);
+        item.track = normalizeTrack(item.track);
+        item._set = set.id;
+        loaded.push(item);
+      });
+    }
+    const unique = new Map();
+    loaded.forEach(item=>unique.set(item.id,item));
+    cases = [...unique.values()];
+    return index;
+  }
+
+  $('ma-start').addEventListener('click',() => {
+    try {
+      buildSession(Number($('ma-size').value));
+      $('ma-status').textContent = `Session built from ${cases.length} available cases.`;
+      $('ma-resume').hidden = true;
+    } catch (error) {
+      $('ma-status').textContent = error.message;
+    }
+  });
+
+  $('ma-resume').addEventListener('click',() => {
+    session = readJson(SESSION_KEY,null);
+    if (session && !session.completed) renderSession();
+  });
+
+  $('ma-reveal').addEventListener('click',() => {
+    const box = $('ma-reference');
+    box.hidden = !box.hidden;
+    $('ma-reveal').textContent = box.hidden ? 'Reveal expected points' : 'Hide expected points';
+  });
+
+  $('ma-skip').addEventListener('click',() => {
+    const c = currentCase();
+    if (!c) return;
+    session.results.push({case_id:c.id,status:'skipped',skipped_at:new Date().toISOString()});
+    session.index += 1;
+    saveSession();
+    renderCurrent();
+  });
+
+  $('ma-score-form').addEventListener('submit',event => {
+    event.preventDefault();
+    const missing = DIMENSIONS.some(([id])=>$(`ma-score-${id}`).value === '');
+    if (missing) {
+      $('ma-status').textContent = 'Score all seven dimensions before continuing.';
+      return;
+    }
+    const c = currentCase();
+    if (!c) return;
+    const attempt = createAttempt(c);
+    saveAttempt(attempt);
+    session.results.push({
+      case_id:c.id,
+      status:'scored',
+      total_score:attempt.total_score,
+      lead_signal:attempt.lead_signal,
+      scores:attempt.scores
+    });
+    session.index += 1;
+    saveSession();
+    $('ma-status').textContent = `${c.id} saved locally: ${attempt.total_score} / 21.`;
+    renderCurrent();
+  });
+
+  buildScoreControls();
+  loadCases().then(index => {
+    $('ma-status').textContent = `${cases.length} cases loaded from ${index.sets.length} case sets.`;
+    const saved = readJson(SESSION_KEY,null);
+    if (saved && !saved.completed && Array.isArray(saved.case_ids) && saved.case_ids.length) {
+      $('ma-resume').hidden = false;
+      $('ma-resume').textContent = `Resume ${saved.case_ids.length}-case session at case ${saved.index + 1}`;
+    }
+  }).catch(error => {
+    $('ma-status').textContent = `Assessment cases could not be loaded: ${error.message}`;
+    $('ma-start').disabled = true;
+  });
+})();
+</script>
