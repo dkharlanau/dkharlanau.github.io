@@ -1,0 +1,78 @@
+name: Search Promotion Loop
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "labs/**"
+      - "_data/labs/**"
+      - "scripts/search_discoverability_inventory.py"
+      - "scripts/lab_search_promotion_loop.py"
+      - "scripts/audit_lab_search_intents.py"
+      - "scripts/lab_link_gap_loop.py"
+      - "scripts/audit_assessment_promotion_readiness.py"
+      - ".github/workflows/search-promotion-loop.yml"
+
+jobs:
+  promote-readiness:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml
+
+      - name: Refresh assessment promotion readiness
+        run: python3 scripts/audit_assessment_promotion_readiness.py
+
+      - name: Build search discoverability inventory
+        run: python3 scripts/search_discoverability_inventory.py
+
+      - name: Build Lab search promotion queue
+        run: python3 scripts/lab_search_promotion_loop.py
+
+      - name: Audit search intent ownership
+        run: python3 scripts/audit_lab_search_intents.py
+
+      - name: Build internal link gap queue
+        run: python3 scripts/lab_link_gap_loop.py
+
+      - name: Enforce publication gate
+        run: python3 scripts/check_lab_publication_gate.py
+
+      - name: Promotion summary
+        if: always()
+        run: |
+          echo "## Search Promotion Loop" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f reports/seo/lab-promotion-queue.md ]; then
+            cat reports/seo/lab-promotion-queue.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload promotion reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: search-promotion-loop-${{ github.run_id }}
+          path: |
+            labs/assessment/data/promotion-readiness.json
+            reports/seo/search-discoverability.csv
+            reports/seo/search-discoverability.md
+            reports/seo/lab-promotion-queue.csv
+            reports/seo/lab-promotion-queue.md
+            reports/seo/lab-search-intents.json
+            reports/seo/lab-search-intents.md
+            reports/seo/lab-link-gaps.csv
+            reports/seo/lab-link-gaps.md
+          if-no-files-found: error
