@@ -554,10 +554,41 @@
         "scripts/validate_assessment_secondary_review_priority.py"
       ],
       "working_rule": "After the Core 12 wave, rank source-supported secondary pages by direct published-case reuse and cross-track assessment value. Priority orders review work only and never changes verification or publication state."
+    },
+    {
+      "id": "LOOP-041",
+      "priority": "P1",
+      "title": "High-reuse secondary editorial consistency pass",
+      "status": "done",
+      "outputs": [
+        "/labs/enterprise-context/integrations/",
+        "/labs/enterprise-context/sales-processes/",
+        "/labs/enterprise-context/transportation-management/"
+      ],
+      "selection": {
+        "input": "/labs/assessment/data/secondary-review-priority.json",
+        "top_five": [
+          "/labs/enterprise-context/billing/",
+          "/labs/enterprise-context/automotive-jit/",
+          "/labs/enterprise-context/integrations/",
+          "/labs/enterprise-context/sales-processes/",
+          "/labs/enterprise-context/transportation-management/"
+        ],
+        "edited": [
+          "/labs/enterprise-context/integrations/",
+          "/labs/enterprise-context/sales-processes/",
+          "/labs/enterprise-context/transportation-management/"
+        ],
+        "already_strong_no_change": [
+          "/labs/enterprise-context/billing/",
+          "/labs/enterprise-context/automotive-jit/"
+        ]
+      },
+      "working_rule": "Use the secondary review ranking to inspect high-reuse pages, but edit only real assessment gaps. Add domain-specific answer frames and evidence boundaries without changing verification or publication state."
     }
   ],
   "next_iteration_themes": [
-    "use the secondary review ranking to select the next high-reuse editorial consistency pass without pretending it is human verification",
+    "measure published-case reasoning coverage by scoring dimension so new cases target weak signals instead of raw topic count",
     "record true human page-review findings separately from automated editorial improvement",
     "select secondary P1 pages by cross-track assessment value instead of processing all routes mechanically"
   ]

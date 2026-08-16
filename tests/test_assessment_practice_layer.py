@@ -206,7 +206,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -538,3 +538,22 @@ def test_secondary_human_review_priority_ranks_only_source_supported_non_core_ro
         cwd=ROOT, text=True, capture_output=True, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_secondary_high_reuse_editorial_pass_preserves_verification_boundary() -> None:
+    pages = {
+        "integrations": ROOT / "labs" / "enterprise-context" / "integrations" / "index.md",
+        "sales-processes": ROOT / "labs" / "enterprise-context" / "sales-processes" / "index.html",
+        "transportation-management": ROOT / "labs" / "enterprise-context" / "transportation-management" / "index.html",
+    }
+    required_tokens = {
+        "integrations": ["id=\"lead-answer-frame\"", "Explain the dependency before the platform.", "Evidence boundary:"],
+        "sales-processes": ["id=\"lead-branch-answer\"", "Start from standard sell-from-stock", "Evidence boundary:"],
+        "transportation-management": ["id=\"lead-answer-frame\"", "Demand is not the plan", "Evidence boundary:"],
+    }
+    for key, path in pages.items():
+        page = path.read_text(encoding="utf-8")
+        assert "verified: false" in page
+        assert "robots: noindex,follow" in page
+        for token in required_tokens[key]:
+            assert token in page, (key, token)
