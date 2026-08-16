@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/labs/assessment/data/attempt-schema.json",
+  "title": "SAP Lead Assessment Attempt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "case_id", "attempted_at", "track", "level", "scores", "total_score", "lead_signal"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "case_id": {"type": "string", "minLength": 1},
+    "attempted_at": {"type": "string", "format": "date-time"},
+    "track": {"type": "string", "minLength": 1},
+    "level": {"enum": ["explain", "trace", "diagnose", "design", "challenge"]},
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["business_goal", "owner", "process_flow", "decision_logic", "boundary", "failure_and_evidence", "trade_off"],
+      "properties": {
+        "business_goal": {"type": "integer", "minimum": 0, "maximum": 3},
+        "owner": {"type": "integer", "minimum": 0, "maximum": 3},
+        "process_flow": {"type": "integer", "minimum": 0, "maximum": 3},
+        "decision_logic": {"type": "integer", "minimum": 0, "maximum": 3},
+        "boundary": {"type": "integer", "minimum": 0, "maximum": 3},
+        "failure_and_evidence": {"type": "integer", "minimum": 0, "maximum": 3},
+        "trade_off": {"type": "integer", "minimum": 0, "maximum": 3}
+      }
+    },
+    "total_score": {"type": "integer", "minimum": 0, "maximum": 21},
+    "lead_signal": {"type": "boolean"},
+    "confidence": {"type": "integer", "minimum": 1, "maximum": 5},
+    "notes": {"type": "string", "maxLength": 4000},
+    "weak_signals": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "graph_refs": {"type": "array", "items": {"type": "string"}},
+    "human_refs": {"type": "array", "items": {"type": "string"}}
+  }
+}
