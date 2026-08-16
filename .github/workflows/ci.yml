@@ -94,6 +94,9 @@ jobs:
       - name: Build Lab search promotion queue
         run: python3 scripts/lab_search_promotion_loop.py
 
+      - name: Enforce P2 Lab publication policy
+        run: python3 scripts/lab_p2_publication_triage.py --fail-on-unclassified
+
       - name: Audit Lab search intent ownership
         run: python3 scripts/audit_lab_search_intents.py
 
@@ -113,6 +116,9 @@ jobs:
             reports/seo/search-discoverability.md
             reports/seo/lab-promotion-queue.csv
             reports/seo/lab-promotion-queue.md
+            reports/seo/lab-p2-publication-triage.csv
+            reports/seo/lab-p2-publication-triage.md
+            reports/seo/lab-p2-publication-triage.json
             reports/seo/lab-search-intents.json
             reports/seo/lab-search-intents.md
             reports/seo/lab-link-gaps.csv
