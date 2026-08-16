@@ -1,0 +1,54 @@
+{
+  "id": "sap-lead-question-generation",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Generate new practice prompts from existing verified graph relationships and failure modes without inventing SAP behavior.",
+  "eligible_inputs": [
+    "graph failure_modes",
+    "runtime pipeline stages",
+    "impact traces",
+    "integration boundaries",
+    "Lead Lens questions",
+    "existing assessment cases"
+  ],
+  "generation_patterns": [
+    {
+      "id": "symptom_to_root_cause",
+      "template": "Start with a documented failure symptom. Ask the learner to build a hypothesis tree, identify the first wrong layer, and define proof of cause.",
+      "preferred_levels": ["diagnose"]
+    },
+    {
+      "id": "boundary_conflict",
+      "template": "Take a documented ownership boundary and make both adjacent domains look locally correct while the end-to-end result is wrong. Ask who owns the first correction.",
+      "preferred_levels": ["trace", "design", "challenge"]
+    },
+    {
+      "id": "late_stage_symptom",
+      "template": "Take a downstream symptom and require the learner to trace backwards through two or more runtime stages before changing the final document.",
+      "preferred_levels": ["diagnose", "challenge"]
+    },
+    {
+      "id": "trade_off_variant",
+      "template": "Take a valid design rule and change one condition such as volume, legal constraint, ordering need, deployment model, or recovery requirement. Ask whether the original design still holds.",
+      "preferred_levels": ["design", "challenge"]
+    },
+    {
+      "id": "cross_process_chain",
+      "template": "Join two or more graphs through a shared business event, document, value, or integration boundary. Ask for an end-to-end completion proof.",
+      "preferred_levels": ["trace", "diagnose", "design", "challenge"]
+    }
+  ],
+  "required_output_fields": ["id", "track", "level", "title", "prompt", "expected_points", "follow_up_questions", "red_flags", "graph_refs", "human_refs"],
+  "quality_rules": [
+    "Every factual expected point must be supported by the referenced graph or its source registry.",
+    "Do not invent transaction codes, tables, message types, configuration paths, or product behavior that is absent from the evidence.",
+    "Synthetic business data is allowed, but label the scenario as synthetic when published outside the assessment dataset.",
+    "A Lead case should contain at least one ownership boundary, failure proof, or trade-off. Pure terminology questions are rejected.",
+    "Avoid cases where the answer is one product name or one transaction code.",
+    "Prefer a clear first wrong decision over a long list of unrelated checks."
+  ],
+  "deduplication": {
+    "rule": "Reject a generated case when its normalized title, symptom, graph_refs, and expected_points substantially overlap an existing case.",
+    "minimum_new_signal": "At least one new boundary, failure path, or reasoning-level challenge must be present."
+  }
+}
