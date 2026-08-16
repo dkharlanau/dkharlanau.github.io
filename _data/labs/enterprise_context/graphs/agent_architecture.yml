@@ -5,7 +5,7 @@ domain: "Enterprise AI Architecture"
 process_family: "Cross-enterprise / agentic business processes"
 status: researching
 created_at: "2026-08-15"
-updated_at: "2026-08-15"
+updated_at: "2026-08-16"
 verified_at: "2026-08-15"
 
 summary: >-
@@ -365,6 +365,17 @@ agentic_engineering:
     - "Use tests, static analysis, security checks, and code review as the authority."
     - "Turn recurring review findings into reusable tests, rules, or skills."
   source_refs: [SRC-SAP-ARCH-AGENTIC-ENGINEERING]
+
+lead_lens:
+  what_i_ask_first:
+    - "What business outcome failed, and what authoritative state proves it?"
+    - "Which user, agent identity, and tool contract were active?"
+    - "Was the failure in context, tool selection, authorization, execution, or post-action verification?"
+  decision_owner: "Business process ownership defines the allowed outcome; platform, security, data, and application owners define the controlled agent boundary."
+  main_trade_off: "More autonomy can reduce manual coordination, but it increases the need for narrow tools, identity, policy, verification, observability, and deterministic recovery controls."
+  typical_failure: "The technical agent run succeeds while the selected capability, permission, business key, or resulting business state is wrong."
+  proof_of_cause: "Reconstruct goal, authorized context, agent/tool identity, selected tool, input business keys, backend authorization and commit state, then re-read the authoritative business object after correction."
+  sixty_second_explanation: "I do not diagnose an enterprise agent from the model response alone. I start with the expected business outcome, then trace context, tool selection, agent and user identity, authorization, the backend side effect, and post-action verification. MCP or another tool protocol gives access to capabilities, but business meaning, permission, validation, idempotency, and proof of the resulting SAP state remain separate controls. I stop at the first divergence and only then decide whether the fix belongs to agent logic, tool semantics, security policy, or the business system."
 
 failure_modes:
   - id: FAIL-AI-AGENT-WRONG-SOLUTION

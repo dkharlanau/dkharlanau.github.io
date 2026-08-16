@@ -11,13 +11,13 @@
   },
   "boundary": "Coverage counts only routes whose evidence profile requires external source review. Selective or heuristic routes are shown separately and are not treated as missing SAP product evidence.",
   "summary": {
-    "unique_profiled_routes": 29,
-    "unique_externally_review_required_routes": 26,
+    "unique_profiled_routes": 30,
+    "unique_externally_review_required_routes": 27,
     "unique_selective_or_heuristic_routes": 3,
-    "unique_source_reviewed_routes": 26,
+    "unique_source_reviewed_routes": 27,
     "unique_p0_evidence_debt_routes": 0,
-    "unique_p1_page_review_ready_routes": 26,
-    "source_supported_claims": 63,
+    "unique_p1_page_review_ready_routes": 27,
+    "source_supported_claims": 65,
     "coverage_percent": 100.0
   },
   "tracks": [
@@ -471,17 +471,32 @@
     {
       "id": "ai-data",
       "label": "AI and Data",
-      "evidence_profile_routes": 5,
-      "externally_review_required_routes": 3,
+      "evidence_profile_routes": 6,
+      "externally_review_required_routes": 4,
       "selective_or_heuristic_routes": 2,
-      "source_reviewed_routes": 3,
+      "source_reviewed_routes": 4,
       "evidence_debt_routes": 0,
-      "page_review_ready_routes": 3,
-      "reviewed_claims": 6,
+      "page_review_ready_routes": 4,
+      "reviewed_claims": 8,
       "coverage_percent": 100.0,
       "routes": [
         {
           "route": "/labs/enterprise-context/business-ai/",
+          "state": "human_review_candidate",
+          "priority": "P1",
+          "evidence_status": "source_supported",
+          "reviewed_claims": 2,
+          "external_review_required": true,
+          "external_review_mode": "required_for_load_bearing_product_claims",
+          "expected_evidence_classes": [
+            "sap_product_primary",
+            "author_heuristic"
+          ],
+          "structural_score": 5,
+          "review_reason": "Primary-source review exists; human page-level verification is the next gate."
+        },
+        {
+          "route": "/labs/enterprise-context/business-ai/agents/",
           "state": "human_review_candidate",
           "priority": "P1",
           "evidence_status": "source_supported",

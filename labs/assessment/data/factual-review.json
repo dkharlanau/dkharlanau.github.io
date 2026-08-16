@@ -1,15 +1,15 @@
 {
   "id": "sap-lead-factual-review",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "updated_at": "2026-08-16",
   "policy": "/labs/assessment/data/factual-review-policy.json",
   "review_boundary": "Claims below were checked against current SAP primary sources. This does not change page-level verified, robots, sitemap, or publication status.",
   "summary": {
-    "routes_reviewed": 26,
-    "claims_reviewed": 63,
-    "source_supported": 63,
+    "routes_reviewed": 27,
+    "claims_reviewed": 65,
+    "source_supported": 65,
     "source_conflict": 0,
-    "human_verification_required": 63
+    "human_verification_required": 65
   },
   "routes": [
     {
@@ -333,6 +333,18 @@
       "claim_ids": [
         "FACT-TMINT-001",
         "FACT-TMINT-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/business-ai/agents/",
+      "title": "Enterprise Agent Architecture",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-AIAG-001",
+        "FACT-AIAG-002"
       ]
     }
   ],
@@ -1525,6 +1537,44 @@
       ],
       "product_scope": "SAP S/4HANA Cloud Transportation Management",
       "release_scope": "Current documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-AIAG-001",
+      "route": "/labs/enterprise-context/business-ai/agents/",
+      "claim": "SAP Architecture Center describes MCP as the standard for agent-to-tool interaction and SAP agent architecture uses semantically enriched, governed access to SAP business capabilities. Tool access therefore does not remove the need for business semantics, controlled exposure, and validation around the underlying capability.",
+      "claim_type": "architecture_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ARCH-AGENT-MCP-ACCESS",
+        "SRC-SAP-ARCH-AGENT-GOLDEN-PATH"
+      ],
+      "official_evidence": [
+        "https://architecture.learning.sap.com/docs/ref-arch/137800",
+        "https://architecture.learning.sap.com/docs/golden-path/ai-golden-path/build-and-deliver/build-ai-agents"
+      ],
+      "product_scope": "SAP BTP agent architecture and MCP access to SAP business capabilities",
+      "release_scope": "SAP Architecture Center guidance checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-AIAG-002",
+      "route": "/labs/enterprise-context/business-ai/agents/",
+      "claim": "SAP agent architecture treats agent identity as a governed enterprise identity with authentication, scoped authorization, policy enforcement, and auditability. Agent capability and permission are separate concerns, and access must stay inside explicit authorization boundaries.",
+      "claim_type": "architecture_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-ARCH-AGENT-IDENTITY"
+      ],
+      "official_evidence": [
+        "https://architecture.learning.sap.com/docs/ref-arch/140bdb"
+      ],
+      "product_scope": "SAP enterprise AI agent identity and authorization architecture",
+      "release_scope": "SAP Architecture Center guidance checked 2026-08-16",
       "reviewed_at": "2026-08-16",
       "human_verification_required": true
     }

@@ -208,7 +208,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -255,15 +255,14 @@ def test_factual_review_keeps_source_support_separate_from_page_verification() -
     assert review["summary"]["source_supported"] == sum(1 for claim in review["claims"] if claim["status"] == "source_supported")
     assert review["summary"]["source_conflict"] == sum(1 for claim in review["claims"] if claim["status"] == "source_conflict")
     assert review["summary"]["human_verification_required"] == sum(1 for claim in review["claims"] if claim["human_verification_required"])
-    assert review["summary"]["routes_reviewed"] == 26
-    assert review["summary"]["claims_reviewed"] == 63
     assert all(item["page_verified"] is False for item in review["routes"])
     assert all(claim["status"] == "source_supported" for claim in review["claims"])
     assert all(claim["human_verification_required"] is True for claim in review["claims"])
     assert all(claim["source_refs"] for claim in review["claims"])
     assert all(claim["evidence_class"] == "sap_product_primary" for claim in review["claims"])
     assert "author_heuristic" in policy["evidence_classes"]
-    assert all(all(url.startswith("https://help.sap.com/") for url in claim["official_evidence"]) for claim in review["claims"])
+    allowed_primary_hosts = ("https://help.sap.com/", "https://architecture.learning.sap.com/")
+    assert all(all(url.startswith(allowed_primary_hosts) for url in claim["official_evidence"]) for claim in review["claims"])
     promotion_by_route = {item["route"]: item for item in promotion["items"]}
     for route in review["routes"]:
         assert promotion_by_route[route["route"]]["verified"] is False
@@ -276,7 +275,7 @@ def test_promotion_readiness_uses_factual_review_coverage_for_priority() -> None
     by_route = {item["route"]: item for item in inventory["items"]}
 
     assert inventory["factual_review_registry"] == "/labs/assessment/data/factual-review.json"
-    assert inventory["factual_review_counts"]["source_supported"] == len(reviewed_routes) == 26
+    assert inventory["factual_review_counts"]["source_supported"] == len(reviewed_routes) == review["summary"]["routes_reviewed"]
     assert sum(inventory["priority_counts"].values()) == inventory["scope_route_count"]
     for route in reviewed_routes:
         assert by_route[route]["factual_review"]["status"] == "source_supported"
@@ -300,8 +299,8 @@ def test_evidence_coverage_is_reproducible_and_tracks_review_debt() -> None:
     assert coverage["source_contracts"]["factual_review"] == "/labs/assessment/data/factual-review.json"
     assert coverage["source_contracts"]["evidence_profile"] == "/labs/assessment/data/evidence-profile.json"
     assert len(coverage["tracks"]) == 4
-    assert coverage["summary"]["unique_source_reviewed_routes"] == coverage["summary"]["unique_externally_review_required_routes"] == 26
-    assert coverage["summary"]["source_supported_claims"] >= 63
+    assert coverage["summary"]["unique_source_reviewed_routes"] == coverage["summary"]["unique_externally_review_required_routes"]
+    assert coverage["summary"]["source_supported_claims"] == factual["summary"]["source_supported"]
     assert coverage["summary"]["unique_source_reviewed_routes"] <= coverage["summary"]["unique_externally_review_required_routes"]
     assert coverage["summary"]["unique_selective_or_heuristic_routes"] >= 3
     assert all(track["source_reviewed_routes"] <= track["externally_review_required_routes"] for track in coverage["tracks"])
@@ -573,6 +572,28 @@ def test_reasoning_pressure_coverage_matches_published_case_metadata() -> None:
 
     result = subprocess.run(
         [sys.executable, "scripts/validate_assessment_reasoning_coverage.py"],
+        cwd=ROOT, text=True, capture_output=True, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_ai_agent_diagnose_seed_has_claim_level_primary_evidence() -> None:
+    factual = load_json("factual-review.json")
+    seeds = load_json("candidate-generation-seeds.json")
+    route = next(item for item in factual["routes"] if item["route"] == "/labs/enterprise-context/business-ai/agents/")
+    claims = {item["id"]: item for item in factual["claims"]}
+    seed = next(item for item in seeds["graphs"] if item["path"].endswith("agent_architecture.yml"))
+
+    assert route["review_status"] == "primary_source_review_complete"
+    assert set(route["claim_ids"]) == {"FACT-AIAG-001", "FACT-AIAG-002"}
+    assert all(claims[claim_id]["status"] == "source_supported" for claim_id in route["claim_ids"])
+    assert seed["track"] == "ai-data"
+    assert seed["level"] == "diagnose"
+    assert set(seed["failure_sources"]) == {"FAIL-AI-AGENT-RAW-MCP", "FAIL-AI-AGENT-OVERPRIVILEGED"}
+    assert seed["human_ref"] == "/labs/enterprise-context/business-ai/agents/"
+
+    result = subprocess.run(
+        [sys.executable, "scripts/generate_assessment_candidates.py", "--check"],
         cwd=ROOT, text=True, capture_output=True, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr

@@ -1,6 +1,6 @@
 {
   "id": "sap-lead-candidate-generation-seeds",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "updated_at": "2026-08-16",
   "purpose": "Whitelist graph failure modes, their evidence class, and primary-source references for deterministic assessment-question candidate generation.",
   "graphs": [
@@ -105,6 +105,25 @@
       },
       "evidence_class": "sap_product_primary",
       "selection_reason": "These failure paths add planning, receipt, and financial-close reasoning not already represented by the existing Production structure and staging cases."
+    },
+    {
+      "path": "_data/labs/enterprise_context/graphs/agent_architecture.yml",
+      "human_ref": "/labs/enterprise-context/business-ai/agents/",
+      "track": "ai-data",
+      "level": "diagnose",
+      "candidate_prefix": "CAND-AIAG",
+      "failure_prefix": "FAIL-AI-AGENT-",
+      "failure_sources": {
+        "FAIL-AI-AGENT-RAW-MCP": [
+          "SRC-SAP-ARCH-AGENT-MCP-ACCESS",
+          "SRC-SAP-ARCH-AGENT-GOLDEN-PATH"
+        ],
+        "FAIL-AI-AGENT-OVERPRIVILEGED": [
+          "SRC-SAP-ARCH-AGENT-IDENTITY"
+        ]
+      },
+      "evidence_class": "sap_product_primary",
+      "selection_reason": "The AI/Data Diagnose cell is thin. These two failure modes test tool semantics and authorization diagnosis, which are materially different from the published weak-grounding case. Design and Challenge gaps remain outside this symptom-to-root-cause generator."
     }
   ],
   "dedup_threshold": 0.55,
