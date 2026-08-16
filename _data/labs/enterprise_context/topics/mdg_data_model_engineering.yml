@@ -1,0 +1,123 @@
+id: TOPIC-MDG-DATA-MODEL-ENGINEERING
+type: research_topic
+title: "SAP MDG Data Model Engineering"
+summary: "A deeper model-engineering view of entities, keys, organizational grain, relationships, persistence, model evolution and the downstream cost of every field decision."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/data-model/engineering/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "How do I design or extend an MDG data model so that identity, grain, lifecycle, rules, activation and distribution remain coherent?"
+
+memory_model:
+  phrase: "Object → Grain → Entity → Key → Relationship → Persistence → Rule → Process → Distribution → Consumer"
+  principle: "A field is safe only when its grain, owner, lifecycle and consumers are known. Screen location is not a data-model boundary."
+
+model_contract:
+  root_questions:
+    - "What business object has an independent governance lifecycle?"
+    - "Which identifier represents business identity and which keys only qualify an organizational slice?"
+    - "Can this object be created/changed independently, or only inside a parent lifecycle?"
+  entity_questions:
+    - "Is the data global, plant, sales-area, purchasing-organization, company-code, valuation-area or another grain?"
+    - "Is it single-valued or repeating?"
+    - "Does it require its own validity or lifecycle?"
+    - "Is it governed, reference-only or reused from an external active object?"
+  relationship_questions:
+    - "What is the cardinality?"
+    - "Which key fields identify the child instance?"
+    - "What happens when the parent is deleted, blocked or reorganized?"
+    - "Which consumers need the relationship, not just the attribute?"
+
+key_engineering:
+  rule: "Treat identity and organizational qualification as separate design concerns."
+  patterns:
+    - pattern: "Global root"
+      example: "Material identity"
+      design_check: "Do not create a new root merely because a new plant or sales-area slice is required."
+    - pattern: "Organizational child"
+      example: "Material + Plant"
+      design_check: "The plant qualifier is part of the child grain; a global field cannot safely carry plant-specific meaning."
+    - pattern: "Repeating child"
+      example: "Alternative unit of measure"
+      design_check: "Use a dependent/repeating entity when cardinality and lifecycle cannot be represented safely as one attribute."
+    - pattern: "Reference entity"
+      example: "Organizational/reference value already owned elsewhere"
+      design_check: "Reference use does not transfer business ownership to the governed object."
+  source_refs: [SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025-R2]
+
+persistence_engineering:
+  mdg_active_area:
+    meaning: "MDG-generated persistence can represent both inactive/staging and active data according to the model design."
+    implications: ["MDG owns active persistence", "explicit distribution may still be required", "application business logic may need to be represented in the MDG design"]
+  reuse_active_area:
+    meaning: "Approved data is activated into existing application persistence through the reuse-area access design while MDG holds governed inactive data."
+    implications: ["reuse existing application storage/logic", "activation boundary is explicit", "staging and active values must be compared during troubleshooting"]
+  design_questions:
+    - "Who owns active truth today?"
+    - "Which existing validations/update semantics must be reused?"
+    - "What is the local availability expectation after activation?"
+    - "What must be distributed to remote consumers?"
+  source_refs: [SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025-R2]
+
+field_impact_matrix:
+  - change: "Add attribute"
+    inspect: ["entity/grain", "persistence", "UI/service exposure", "validation/derivation", "authorization", "search", "replication mapping", "consumer"]
+  - change: "Add dependent entity"
+    inspect: ["key/cardinality", "parent lifecycle", "persistence generation/reuse", "workflow completeness", "API/message structure", "migration", "consumer multiplicity"]
+  - change: "Change key or relationship"
+    inspect: ["identity compatibility", "existing staged data", "mapping", "replication contract", "migration", "downstream foreign keys"]
+  - change: "Move ownership between core and application-specific data"
+    inspect: ["governance authority", "workflow", "system of record", "federation/distribution", "local overrides", "operating model"]
+  - change: "Add validation/derivation dependency"
+    inspect: ["rule owner", "input fields", "execution point", "error handling", "provenance", "mass/consolidation use", "regression cases"]
+
+model_to_runtime_trace:
+  sequence:
+    - "Entity model defines where the value belongs."
+    - "Key/grain identifies one concrete entity instance."
+    - "Change request creates a governed runtime context."
+    - "Staging holds the proposed inactive value."
+    - "Rules validate or derive the value."
+    - "Workflow decides authority and approval."
+    - "Activation writes active truth according to active-area design."
+    - "Distribution maps the object into target contracts."
+    - "Consumer proof shows whether the model was complete enough for the business process."
+
+material_model_example:
+  root: "Material / Product"
+  scenarios:
+    - requirement: "Enable existing material in a new plant"
+      model_answer: "Extend the existing root with plant-grain entities; do not create a second material identity."
+      downstream_checks: ["MRP", "procurement", "ATP/shipping", "quality", "storage/warehouse", "valuation as required"]
+    - requirement: "Add global marketing label"
+      model_answer: "Confirm that the meaning is truly cross-organizational before placing it on a global/basic-data entity."
+      downstream_checks: ["language/text model", "search", "replication", "e-commerce or sales consumers"]
+    - requirement: "Store many hazard certificates per material/plant"
+      model_answer: "Challenge a single custom field; repeating identity, validity and document relationship can justify a dependent entity or separate governed object."
+      downstream_checks: ["cardinality", "validity", "authorization", "document lifecycle", "replication"]
+
+model_smells:
+  - "One giant custom entity used for unrelated organizational grains."
+  - "A custom field added because it is visible on the same screen."
+  - "A key changed without a cross-system identity and migration plan."
+  - "A derivation added without recording its business owner and input dependencies."
+  - "Replication mapping discovered only after the UI is finished."
+  - "Local target repair becomes the permanent way to compensate for an incomplete governed model."
+
+assessment_cases:
+  - prompt: "How would you decide whether a new Material requirement is an attribute or a dependent entity?"
+    answer_shape: ["business meaning", "grain", "cardinality", "key", "lifecycle", "rules", "replication", "consumer proof"]
+  - prompt: "Why is active-area design part of data modeling?"
+    answer_shape: ["staging", "active truth", "existing application logic", "activation", "distribution", "operations"]
+  - prompt: "What is the impact of adding a custom field in MDG?"
+    answer_shape: ["entity/grain", "persistence", "UI", "rules", "workflow/authorization", "search", "replication", "migration", "consumers"]
+
+source_refs:
+  - SRC-SAP-MDG-DATA-MODELING-CONCEPT-2025-R2
+  - SRC-SAP-MDG-VALIDATION-DERIVATION-2025
+  - SRC-SAP-MDG-CHANGE-DOCUMENTS-2025

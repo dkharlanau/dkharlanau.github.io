@@ -1,0 +1,216 @@
+id: TOPIC-MDG-LINEAGE
+type: research_topic
+title: "SAP MDG Lineage and Provenance"
+summary: "A practical lineage model for tracing one governed master-data value from its source and change request through rules, approval, activation, replication, target identity and downstream business use."
+domain: "Data and Analytics"
+process_family: "Cross-enterprise Master Data Management"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: null
+human_view: "/labs/enterprise-context/mdg/lineage/"
+source_reviewed_at: "2026-08-16"
+
+business_question: "For one important master-data value, can we prove where it came from, how it changed, who approved it, what became active, where it was distributed, and where the business consumed it?"
+
+memory_model:
+  phrase: "Origin → Governance → Transformation → Activation → Distribution → Consumption"
+  design_rule: "Lineage is useful only when identity, time, value state and evidence survive every boundary."
+
+lineage_boundary:
+  mdg_scope: >-
+    MDG provides strong governance trace through change requests, staging, workflow decisions,
+    change documents, activation and replication-related evidence. This explains the governed change lifecycle.
+  not_claimed: >-
+    This Lab does not treat MDG itself as a complete enterprise metadata-lineage catalog for every data pipeline,
+    transformation and analytics asset across the landscape.
+  external_metadata_boundary: >-
+    SAP Datasphere Catalog provides impact and lineage capabilities for catalog assets, sources,
+    transformations and downstream dependencies. Use metadata-lineage tooling when the question extends beyond the governed MDG transaction path.
+  source_refs: [SRC-SAP-MDG-CHANGE-DOCUMENTS-2025, SRC-SAP-DATASPHERE-LINEAGE-2026]
+
+lineage_dimensions:
+  - id: LIN-MDG-PROVENANCE
+    title: "Source and value provenance"
+    question: "Where did this proposed value originate?"
+    capture: ["source system or user", "source record", "original value", "time", "reason/context"]
+  - id: LIN-MDG-GOVERNANCE
+    title: "Governance lineage"
+    question: "Which governed process decided whether this value was acceptable?"
+    capture: ["change request/process ID", "type", "steps", "agents", "actions", "status", "approval evidence"]
+    source_refs: [SRC-SAP-MDG-RULE-WORKFLOW-2025-R2]
+  - id: LIN-MDG-TRANSFORMATION
+    title: "Transformation and rule lineage"
+    question: "Was the value entered, defaulted, derived, enriched, mapped or merged before activation?"
+    capture: ["rule/scenario", "inputs", "output", "rule owner", "error or decision"]
+    source_refs: [SRC-SAP-MDG-VALIDATION-DERIVATION-2025, SRC-SAP-MDG-DQM-2025]
+  - id: LIN-MDG-ACTIVATION
+    title: "Activation and audit lineage"
+    question: "Which approved value became active, when, and under whose approval?"
+    capture: ["staging before/after", "USMD change evidence", "USMD_ACT evidence", "active-area value"]
+    source_refs: [SRC-SAP-MDG-CHANGE-DOCUMENTS-2025]
+  - id: LIN-MDG-DISTRIBUTION
+    title: "Distribution and identity lineage"
+    question: "Which version reached which target and under which local identity?"
+    capture: ["target system", "message/service", "send/receive status", "source key", "target key", "mapping"]
+    source_refs: [SRC-SAP-MDG-KEY-MAPPING-2025-R2]
+  - id: LIN-MDG-CONSUMPTION
+    title: "Consumption and business-impact lineage"
+    question: "Where did a real process consume the value and what outcome depended on it?"
+    capture: ["consumer object", "business document", "determination", "result", "local override if any"]
+
+provenance_states:
+  vocabulary_status: "Lab semantic vocabulary — not SAP product status names"
+  states:
+    - id: PROV-ENTERED
+      title: "Entered"
+      meaning: "A human or inbound source supplied the value directly."
+    - id: PROV-COPIED
+      title: "Copied"
+      meaning: "The value was copied from another governed instance or template."
+    - id: PROV-DEFAULTED
+      title: "Defaulted"
+      meaning: "A configured rule proposed a standard value from context."
+    - id: PROV-DERIVED
+      title: "Derived"
+      meaning: "A rule calculated or determined the value from other data."
+    - id: PROV-ENRICHED
+      title: "Enriched"
+      meaning: "Another process or source added information to the record."
+    - id: PROV-MATCHED-MERGED
+      title: "Matched / merged"
+      meaning: "Consolidation logic influenced the surviving record or value."
+      source_refs: [SRC-SAP-MDG-CONSOLIDATION-2025]
+    - id: PROV-MAPPED
+      title: "Mapped"
+      meaning: "Identity or code representation changed for another system while business meaning should stay aligned."
+    - id: PROV-ACTIVATED
+      title: "Activated"
+      meaning: "The governed value crossed the approval boundary into active data."
+    - id: PROV-REPLICATED
+      title: "Replicated"
+      meaning: "The active object/value was sent to a consumer system."
+    - id: PROV-CONSUMED
+      title: "Consumed"
+      meaning: "A downstream business process actually used the value."
+
+change_document_model:
+  during_processing:
+    document_type: "USMD"
+    meaning: "Records user changes during change-request processing steps."
+    evidence_questions: ["who changed it?", "when?", "old value?", "new value?", "which processing context?"]
+  at_activation:
+    document_type: "USMD_ACT"
+    meaning: "Records the last change written by MDG to the active area during activation."
+    evidence_questions: ["what became active?", "when?", "which approval released it?"]
+  reuse_area_note: "With a reuse active area, additional application change documents can be written depending on the interface and Customizing."
+  source_refs: [SRC-SAP-MDG-CHANGE-DOCUMENTS-2025]
+
+identity_lineage:
+  problem: "The same business object may have different IDs in connected systems."
+  trace: "Business identity → source object ID → governed/central ID → key mapping → target object ID → target business proof"
+  controls:
+    - "Store enough context to distinguish object type and system namespace."
+    - "Do not treat equal-looking keys as proof of equal business identity."
+    - "Reconcile mapping creation or confirmation with replication success."
+    - "Keep key mapping ownership separate from business approval ownership."
+  source_refs: [SRC-SAP-MDG-KEY-MAPPING-2025-R2]
+
+audit_evidence:
+  - stage: "Request"
+    evidence: ["request reason", "source reference", "change request/process ID"]
+  - stage: "Rule processing"
+    evidence: ["validation/derivation rule", "input context", "result"]
+  - stage: "Workflow"
+    evidence: ["step", "agent", "action", "status", "timestamp"]
+  - stage: "Change history"
+    evidence: ["USMD", "old/new value", "user"]
+  - stage: "Activation"
+    evidence: ["USMD_ACT", "active record", "activation status"]
+  - stage: "Replication"
+    evidence: ["target", "message/service", "filter/model", "status/error"]
+  - stage: "Identity"
+    evidence: ["key mapping", "source/target IDs"]
+  - stage: "Consumption"
+    evidence: ["business document or determination", "reconciliation", "consumer owner"]
+
+trace_templates:
+  - id: TRACE-MDG-MATERIAL-LOADING-GROUP
+    title: "Material plant loading group to outbound-delivery proof"
+    synthetic: true
+    path:
+      - "Plant-level material requirement identifies the correct governed entity and plant qualifier."
+      - "Requester or source provides the loading-group intent."
+      - "Change request stages the proposed value."
+      - "Validation confirms allowed/reference context; derivation, if configured, must be recorded separately from manual entry."
+      - "Workflow records steward/approver decisions."
+      - "Activation makes the value active and writes activation evidence."
+      - "Replication sends the required material slice to the sales/logistics consumer where required."
+      - "Key mapping is checked if target identity differs."
+      - "Outbound delivery / shipping-point determination is used as business proof that the intended master-data context is available."
+    failure_questions:
+      - "Was the value wrong before approval or changed by a rule?"
+      - "Did activation write a different value than staging?"
+      - "Did the correct target receive the plant slice?"
+      - "Did the target store the expected local key/value?"
+      - "Did downstream determination use another source or local override?"
+  - id: TRACE-MDG-BP-SUPPLIER-PORG
+    title: "Supplier purchasing-organization data to purchase-order proof"
+    synthetic: true
+    path:
+      - "Resolve BP/supplier identity and purchasing-organization scope."
+      - "Trace source values into the governed process."
+      - "Record rule results and approval evidence."
+      - "Confirm active supplier application data."
+      - "Replicate and reconcile local key if required."
+      - "Create or validate a purchasing document as consumer proof."
+
+lineage_failure_modes:
+  - symptom: "Approved in MDG, wrong in target"
+    isolate: ["USMD/USMD_ACT value", "outbound payload", "mapping", "target processing", "local post-processing"]
+  - symptom: "Nobody knows why a field has this value"
+    isolate: ["manual/source origin", "derivation/default rule", "consolidation/mass processing", "change document history"]
+  - symptom: "Same object has different IDs"
+    isolate: ["system namespace", "key mapping", "replication confirmation", "duplicate/match decision"]
+  - symptom: "Lineage graph stops at activation"
+    isolate: ["replication evidence", "target acceptance", "consumer business document"]
+  - symptom: "Enterprise lineage question cannot be answered from MDG evidence"
+    isolate: ["metadata catalog", "data pipeline lineage", "analytics transformations", "downstream assets"]
+
+assessment_cases:
+  - prompt: "What does lineage mean in an MDG implementation?"
+    answer_shape: ["source/provenance", "CR and rules", "workflow decision", "activation/change documents", "replication/key mapping", "consumer proof", "boundary to metadata lineage"]
+  - prompt: "A material field is approved in MDG but wrong in a delivery. How do you trace it?"
+    answer_shape: ["active value", "USMD/USMD_ACT", "replication payload/status", "key/value mapping", "target record", "determination inputs", "local override"]
+  - prompt: "Does MDG provide full enterprise data lineage?"
+    answer_shape: ["strong governance/audit trace", "replication trace", "not every external transformation", "metadata/catalog lineage boundary"]
+
+relations:
+  - subject: TOPIC-MDG-LINEAGE
+    predicate: depends_on
+    object: TOPIC-MDG-DATA-MODEL-ANATOMY
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: TOPIC-MDG-LINEAGE
+    predicate: complements
+    object: TOPIC-MDG-SOLUTION-ARCHITECTURE
+    evidence_type: reasoned_interpretation
+    confidence: high
+  - subject: LIN-MDG-ACTIVATION
+    predicate: evidenced_by
+    object: SRC-SAP-MDG-CHANGE-DOCUMENTS-2025
+    evidence_type: documented_fact
+    confidence: high
+  - subject: LIN-MDG-DISTRIBUTION
+    predicate: uses
+    object: SRC-SAP-MDG-KEY-MAPPING-2025-R2
+    evidence_type: documented_fact
+    confidence: high
+
+source_refs:
+  - SRC-SAP-MDG-CHANGE-DOCUMENTS-2025
+  - SRC-SAP-MDG-VALIDATION-DERIVATION-2025
+  - SRC-SAP-MDG-RULE-WORKFLOW-2025-R2
+  - SRC-SAP-MDG-KEY-MAPPING-2025-R2
+  - SRC-SAP-MDG-CONSOLIDATION-2025
+  - SRC-SAP-DATASPHERE-LINEAGE-2026
