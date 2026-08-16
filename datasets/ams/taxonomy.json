@@ -1,0 +1,32 @@
+{
+  "schema": "dkharlanau.ams.taxonomy",
+  "schema_version": "2.0",
+  "model": "ams-next-gen",
+  "updated": "2026-08-16",
+  "dimensions": ["capability", "maturity", "business_domain", "situation"],
+  "capability_clusters": {
+    "run-recover": {"label": "Run & Recover", "bytes": ["ams-001", "ams-008", "ams-009", "ams-013", "ams-031", "ams-035", "ams-038"]},
+    "prevent-learn": {"label": "Prevent & Learn", "bytes": ["ams-005", "ams-018", "ams-019", "ams-020", "ams-022", "ams-030", "ams-043", "ams-051"]},
+    "change-improve": {"label": "Change & Improve", "bytes": ["ams-007", "ams-017", "ams-021", "ams-026", "ams-027", "ams-028", "ams-036", "ams-039", "ams-044"]},
+    "architecture-automation": {"label": "Architecture & Automation", "bytes": ["ams-003", "ams-004", "ams-006", "ams-023", "ams-024"]},
+    "control-govern": {"label": "Control & Govern", "bytes": ["ams-010", "ams-011", "ams-012", "ams-014", "ams-015", "ams-016", "ams-025", "ams-029", "ams-037", "ams-040", "ams-046", "ams-050"]},
+    "value-strategy": {"label": "Value & Strategy", "bytes": ["ams-002", "ams-032", "ams-033", "ams-034", "ams-041", "ams-042", "ams-047", "ams-048", "ams-049", "ams-052"]}
+  },
+  "maturity_levels": {
+    "1": {"label": "Firefighting", "bytes": []},
+    "2": {"label": "Controlled Operations", "bytes": ["ams-001", "ams-028", "ams-036"]},
+    "3": {"label": "Preventive AMS", "bytes": ["ams-005", "ams-006", "ams-007", "ams-008", "ams-009", "ams-011", "ams-012", "ams-013", "ams-015", "ams-017", "ams-018", "ams-019", "ams-021", "ams-026", "ams-027", "ams-029", "ams-030", "ams-031", "ams-032", "ams-035", "ams-038", "ams-040", "ams-043"]},
+    "4": {"label": "Automated Operations", "bytes": ["ams-002", "ams-003", "ams-004", "ams-010", "ams-014", "ams-016", "ams-020", "ams-022", "ams-025", "ams-033", "ams-034", "ams-037", "ams-039", "ams-042", "ams-044", "ams-046", "ams-049"]},
+    "5": {"label": "Decision Platform", "bytes": ["ams-023", "ams-024", "ams-041", "ams-047", "ams-048", "ams-050", "ams-051", "ams-052"]}
+  },
+  "entry_modes": [
+    {"id": "incident", "label": "Diagnose an Incident", "primary_cluster": "run-recover"},
+    {"id": "change", "label": "Review a Change", "primary_cluster": "change-improve"},
+    {"id": "improvement", "label": "Design an Improvement", "primary_cluster": "prevent-learn"},
+    {"id": "architecture", "label": "Challenge an Architecture", "primary_cluster": "architecture-automation"},
+    {"id": "automation", "label": "Build an Automation", "primary_cluster": "architecture-automation"},
+    {"id": "review", "label": "Run an AMS Review", "primary_cluster": "value-strategy"}
+  ],
+  "domain_guidance": "SAP modules and process domains are secondary filters. Capability describes what the operating system must do; domain describes where it is doing it.",
+  "coverage": {"ams_byte_count": 51, "all_current_bytes_classified": true}
+}

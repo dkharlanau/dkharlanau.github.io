@@ -1,0 +1,111 @@
+version: "2.0"
+model: ams-next-gen
+name: "AMS Next Gen: SAP Operations Decision System"
+thesis: "Signals become decisions, verified actions, reusable knowledge, and less future work."
+
+loop:
+  - signal
+  - diagnose
+  - decide
+  - execute
+  - verify
+  - learn
+  - automate
+  - measure
+
+clusters:
+  run-recover:
+    label: "Run & Recover"
+    short: "Restore business flow with evidence, control, and clean verification."
+    question: "What is happening, what is the impact, and what is the safest recovery path?"
+    bytes: [ams-001, ams-008, ams-009, ams-013, ams-031, ams-035, ams-038]
+  prevent-learn:
+    label: "Prevent & Learn"
+    short: "Turn repeated pain into knowledge, prevention, and reusable assets."
+    question: "Why did this happen again, and what will make the next occurrence cheaper or impossible?"
+    bytes: [ams-005, ams-018, ams-019, ams-020, ams-022, ams-030, ams-043, ams-051]
+  change-improve:
+    label: "Change & Improve"
+    short: "Move from request queues to evidence-based improvement decisions."
+    question: "Is this change worth doing, how risky is it, and how will we prove the outcome?"
+    bytes: [ams-007, ams-017, ams-021, ams-026, ams-027, ams-028, ams-036, ams-039, ams-044]
+  architecture-automation:
+    label: "Architecture & Automation"
+    short: "Reduce operational load through clean boundaries, observability, and automation."
+    question: "What should remain in SAP, what can move out, and what can become an executable procedure?"
+    bytes: [ams-003, ams-004, ams-006, ams-023, ams-024]
+  control-govern:
+    label: "Control & Govern"
+    short: "Make ownership, risk, contracts, security, and vendor boundaries explicit."
+    question: "Who decides, what evidence is required, and where is the human approval boundary?"
+    bytes: [ams-010, ams-011, ams-012, ams-014, ams-015, ams-016, ams-025, ams-029, ams-037, ams-040, ams-046, ams-050]
+  value-strategy:
+    label: "Value & Strategy"
+    short: "Connect AMS work to cost, trust, maturity, product direction, and business decisions."
+    question: "What value does this operating model create, and what should stop consuming capacity?"
+    bytes: [ams-002, ams-032, ams-033, ams-034, ams-041, ams-042, ams-047, ams-048, ams-049, ams-052]
+
+maturity:
+  1:
+    label: "Firefighting"
+    description: "We react. Knowledge and control depend on people."
+    bytes: []
+  2:
+    label: "Controlled Operations"
+    description: "Evidence, ownership, recovery, and change gates are explicit."
+    bytes: [ams-001, ams-028, ams-036]
+  3:
+    label: "Preventive AMS"
+    description: "Repeats become Problems. Knowledge and prevention reduce demand."
+    bytes: [ams-005, ams-006, ams-007, ams-008, ams-009, ams-011, ams-012, ams-013, ams-015, ams-017, ams-018, ams-019, ams-021, ams-026, ams-027, ams-029, ams-030, ams-031, ams-032, ams-035, ams-038, ams-040, ams-043]
+  4:
+    label: "Automated Operations"
+    description: "Known work becomes procedures, controls, observability, and safe automation."
+    bytes: [ams-002, ams-003, ams-004, ams-010, ams-014, ams-016, ams-020, ams-022, ams-025, ams-033, ams-034, ams-037, ams-039, ams-042, ams-044, ams-046, ams-049]
+  5:
+    label: "Decision Platform"
+    description: "Operations evidence improves architecture, investment, and business decisions."
+    bytes: [ams-023, ams-024, ams-041, ams-047, ams-048, ams-050, ams-051, ams-052]
+
+entry_modes:
+  - id: incident
+    label: "Diagnose an Incident"
+    prompt: "Start from impact and evidence. Recover safely, then decide what must be prevented."
+    cluster: run-recover
+  - id: change
+    label: "Review a Change"
+    prompt: "Test scope, risk, effort, rollback, acceptance, and business value before approval."
+    cluster: change-improve
+  - id: improvement
+    label: "Design an Improvement"
+    prompt: "Turn recurring demand or workaround cost into a measurable improvement case."
+    cluster: prevent-learn
+  - id: architecture
+    label: "Challenge an Architecture"
+    prompt: "Look for lock-in, brittle interfaces, custom-code gravity, missing signals, and automation surfaces."
+    cluster: architecture-automation
+  - id: automation
+    label: "Build an Automation"
+    prompt: "Convert known evidence and recovery logic into a controlled reusable procedure."
+    cluster: architecture-automation
+  - id: review
+    label: "Run an AMS Review"
+    prompt: "Assess maturity, vendor boundaries, cost, risk, trust, and what the organisation should stop doing."
+    cluster: value-strategy
+
+knowledge_stack:
+  - label: "Incident Lab"
+    url: "/datasets/incident-lab/"
+    role: "Synthetic situations for diagnosis, evidence, ownership, and safe-action practice."
+  - label: "Atlas Diagnostics"
+    url: "/atlas/diagnostics/"
+    role: "Technical diagnostic knowledge for SAP symptoms, objects, interfaces, and failure patterns."
+  - label: "Skill Hub"
+    url: "/skill-hub/"
+    role: "Reusable working skills for investigation, review, design, and delivery."
+  - label: "Enterprise Lab"
+    url: "/lab/"
+    role: "SAP process, object, integration, and configuration context behind the operational symptom."
+  - label: "Reusable Data Procedures"
+    url: "/reusable-data-procedures/"
+    role: "Turn repeated Excel, CSV, mapping, and validation work into executable procedures."
