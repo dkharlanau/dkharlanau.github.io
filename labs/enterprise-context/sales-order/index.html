@@ -3,10 +3,10 @@ layout: default
 title: "Sales Order Decision Map — Enterprise Context Lab"
 description: "A practical map of SAP sales-order decisions, dependencies, failure patterns, and diagnostic paths for S/4HANA Sales."
 permalink: /labs/enterprise-context/sales-order/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-16
 hide_global_cta: true
 enterprise_context_graph: true
@@ -19,6 +19,10 @@ tags:
   - atp
   - logistics
   - troubleshooting
+last_reviewed: 2026-08-16
+publication_wave: "logistics-search-wave-01"
+review_method: "primary sources + factual review + page-level editorial review"
+search_intent: "SAP sales order processing with item category and schedule line determination"
 ---
 
 {% assign graph = site.data.labs.enterprise_context.graphs.sales_order %}
@@ -37,11 +41,11 @@ tags:
       <a class="research-canvas__button" href="#memory-model">Start with the memory model <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Decision map inventory">
-      <p>Working map</p>
+      <p>Reviewed map</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.determinations | size }}</strong><small>Decision areas</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.impact_traces | size }}</strong><small>Impact traces</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Draft research · no client data · human review still required</em>
+      <em>Reviewed model · source-tracked · no client data</em>
     </div>
   </header>
 
@@ -355,7 +359,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> the assessment factual-review layer currently confirms two load-bearing controls on this route: item-category determination and schedule-line-category behavior. The wider decision map keeps its own source registry, but the page still requires end-to-end human review before any verification or publication decision.</p>
+    <p><strong>Evidence boundary:</strong> the assessment factual-review layer confirms the load-bearing item-category and schedule-line controls on this route. The wider decision map was reviewed against its SAP source registry; authored diagnostic heuristics remain separated from documented product behavior.</p>
     <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 

@@ -3,10 +3,10 @@ layout: default
 title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
 description: "A practical decision map for SAP logistics integration: APIs, IDocs, events, queues, Kafka, files, B2B, Event Mesh, TIBCO, and data distribution."
 permalink: /labs/enterprise-context/integrations/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
@@ -15,6 +15,10 @@ tags:
   - logistics
   - event-driven-architecture
   - master-data
+last_reviewed: 2026-08-16
+publication_wave: "logistics-search-wave-01"
+review_method: "primary sources + factual review + page-level editorial review"
+search_intent: "SAP integration architecture with IDoc, API, events, Event Mesh and Kafka"
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.integration_architecture_landscape %}
@@ -34,7 +38,7 @@ tags:
       <a class="research-canvas__button" href="#architecture-stack">Start with the architecture language <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Research status">
-      <p>Research status</p>
+      <p>Reviewed architecture</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ topic.interface_types | size }}</strong><small>Interface patterns</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ topic.platforms | size }}</strong><small>Platform views</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ language.terms | size }}</strong><small>Architecture terms</small></div>
@@ -64,7 +68,7 @@ tags:
       <div><h4>05 · Recovery</h4><p>Explain retries, duplicates, replay, ordering, monitoring, dead-letter or error handling, and the owner of recovery.</p></div>
       <div><h4>06 · Business proof</h4><p>Close with reconciliation in the receiving business object. A green transport status is not proof of business completion.</p></div>
     </div>
-    <p class="ecg-caption"><strong>Evidence boundary:</strong> reviewed SAP product claims support selected platform and interface behavior. The architecture stack, selection sequence, and design heuristics are authored reasoning and remain subject to page-level human review.</p>
+    <p class="ecg-caption"><strong>Evidence boundary:</strong> reviewed product documentation supports the named platform and interface behavior. The architecture stack, selection sequence, and design heuristics were reviewed as authored reasoning and are intentionally kept separate from vendor product facts.</p>
     <a href="/labs/enterprise-context/integration-operations/">Continue into runtime recovery and reconciliation <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 
