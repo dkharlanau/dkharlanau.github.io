@@ -67,3 +67,10 @@ Every important validation or derivation should record business statement, grain
 ## Assessment example
 
 If asked about a new rule, I explain **where the rule belongs, who owns it, what evidence proves it, and how the workflow reacts to failure**. That shows architecture rather than configuration memory.
+
+## Design deep dives
+
+- [Change Request Type Matrix](/labs/enterprise-context/mdg/governance-engine/change-request-matrix/) — select CR patterns by purpose, entity scope, risk, authority, volume and recovery path.
+- [BRFplus Rule Catalog](/labs/enterprise-context/mdg/governance-engine/brfplus-rules/) — keep workflow routing, validation, derivation, authorization and duplicate rules explicit and testable.
+- [Material entity map](/labs/enterprise-context/mdg/domains/material/entity-map/) and [Business Partner entity map](/labs/enterprise-context/mdg/domains/business-partner/entity-map/) — connect process scope back to real technical entities and business grains.
+- [MDG Lead Assessment Drills](/labs/enterprise-context/mdg/assessment/) — apply these contracts under rollout and incident pressure.
