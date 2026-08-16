@@ -3,10 +3,10 @@ layout: default
 title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
 description: "An enterprise-wide Business AI map linking processes, reusable patterns, technology families, implementation outcomes, failures, and evidence."
 permalink: /labs/business-ai/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-15
 hide_global_cta: true
 tags:
@@ -15,6 +15,11 @@ tags:
   - processes
   - technologies
   - architecture
+last_reviewed: 2026-08-16
+publication_wave: "public-framework-search-wave-04"
+review_method: "selective external evidence + page-level editorial review + authored heuristic boundary"
+evidence_review_mode: "selective_or_heuristic"
+search_intent: "enterprise Business AI patterns, technologies, controls and implementation evidence"
 ---
 
 {% assign catalog = site.data.labs.business_ai.catalog %}

@@ -3,13 +3,18 @@ layout: default
 title: "AI Ready — Practical AI Architecture Lab"
 description: "A practical learning area for using AI in real systems: research, knowledge, coding, data, tools, MCP, agents, evals, security, and deployment."
 permalink: /labs/ai-ready/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-15
 hide_global_cta: true
 tags: [ai, architecture, mcp, agents, rag, evals, security, automation]
+last_reviewed: 2026-08-16
+publication_wave: "public-framework-search-wave-04"
+review_method: "selective external evidence + page-level editorial review + authored heuristic boundary"
+evidence_review_mode: "selective_or_heuristic"
+search_intent: "practical AI architecture for RAG, tools, MCP, agents, evals and security"
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
