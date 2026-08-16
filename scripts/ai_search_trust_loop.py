@@ -474,7 +474,7 @@ def sidecar_payload(record: dict, relations: list[dict], sources: list[dict], re
         },
         "primary_entity": {
             "key": record["primary_topic"],
-            "id": f"https://dkharlanau.github.io{primary.get('id', '')}#entity" if primary else None,
+            "id": f"https://dkharlanau.github.io{primary.get('id', '')}" if primary else None,
             "name": primary.get("name"),
             "type": primary.get("type", "Thing"),
             "description": primary.get("description"),
