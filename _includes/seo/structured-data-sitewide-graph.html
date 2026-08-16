@@ -37,11 +37,11 @@ It intentionally emits no visible homepage content.
       "isPartOf": {"@id": "{{ '/' | absolute_url }}#website"}{% if graph_modified %},
       "dateModified": "{{ graph_modified | date_to_xmlschema }}"{% endif %}{% if page.last_reviewed %},
       "reviewedBy": {"@id": "{{ graph_author_id }}"}{% endif %}{% if graph_primary %},
-      "about": {"@id": "{{ graph_primary.id | absolute_url }}#entity"}{% endif %}{% if page.entity_mentions and page.entity_mentions.size > 0 %},
+      "about": {"@id": "{{ graph_primary.id | absolute_url }}"}{% endif %}{% if page.entity_mentions and page.entity_mentions.size > 0 %},
       "mentions": [
         {% for entity_key in page.entity_mentions %}
         {% assign entity = graph_entities[entity_key] %}
-        {% if entity %}{"@id": "{{ entity.id | absolute_url }}#entity"}{% else %}{"@type":"Thing","name":{{ entity_key | replace: '-', ' ' | jsonify }}}{% endif %}{% unless forloop.last %},{% endunless %}
+        {% if entity %}{"@id": "{{ entity.id | absolute_url }}"}{% else %}{"@type":"Thing","name":{{ entity_key | replace: '-', ' ' | jsonify }}}{% endif %}{% unless forloop.last %},{% endunless %}
         {% endfor %}
       ]{% endif %}{% if page.ai_sidecar %},
       "subjectOf": {"@type":"DataDownload","contentUrl":"{{ page.ai_sidecar | absolute_url }}","encodingFormat":"application/json"}{% endif %}{% if page.source_links and page.source_links.size > 0 %},
@@ -52,7 +52,7 @@ It intentionally emits no visible homepage content.
     }{% if graph_primary %},
     {
       "@type": {{ graph_primary.type | default: 'Thing' | jsonify }},
-      "@id": "{{ graph_primary.id | absolute_url }}#entity",
+      "@id": "{{ graph_primary.id | absolute_url }}",
       "name": {{ graph_primary.name | jsonify }},
       "url": "{{ graph_primary.id | absolute_url }}"{% if graph_primary.description %},
       "description": {{ graph_primary.description | jsonify }}{% endif %}{% if graph_primary.same_as and graph_primary.same_as.size > 0 %},
