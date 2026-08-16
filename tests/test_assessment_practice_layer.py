@@ -210,7 +210,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044", "LOOP-045"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044", "LOOP-045", "LOOP-046"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -231,9 +231,10 @@ def test_promotion_readiness_audit_is_reproducible_and_non_publishing() -> None:
 
     assert inventory["policy"] == "/labs/assessment/data/promotion-readiness-policy.json"
     assert inventory["scope_route_count"] == len(inventory["items"])
-    assert inventory["counts"].get("human_review_candidate") == len(inventory["items"])
-    assert all(item["structural_score"] >= 4 for item in inventory["items"])
-    assert all(item["verified"] is False for item in inventory["items"])
+    assert sum(inventory["counts"].values()) == len(inventory["items"])
+    assert set(inventory["counts"]).issubset({"human_review_candidate", "needs_structure", "public_or_indexable", "missing_source"})
+    candidates = [item for item in inventory["items"] if item["state"] == "human_review_candidate"]
+    assert all(item["structural_score"] >= 4 for item in candidates)
     assert "never changes status" in policy["promotion_rule"].lower()
 
     result = subprocess.run(
@@ -267,7 +268,9 @@ def test_factual_review_keeps_source_support_separate_from_page_verification() -
     assert all(all(url.startswith(allowed_primary_hosts) for url in claim["official_evidence"]) for claim in review["claims"])
     promotion_by_route = {item["route"]: item for item in promotion["items"]}
     for route in review["routes"]:
-        assert promotion_by_route[route["route"]]["verified"] is False
+        current = promotion_by_route[route["route"]]
+        assert current["factual_review"]["status"] == "source_supported"
+        assert current["factual_review"]["claim_count"] == len(route["claim_ids"])
     assert "cannot declare the complete page verified" in policy["promotion_boundary"].lower()
 
 def test_promotion_readiness_uses_factual_review_coverage_for_priority() -> None:
@@ -280,10 +283,14 @@ def test_promotion_readiness_uses_factual_review_coverage_for_priority() -> None
     assert inventory["factual_review_counts"]["source_supported"] == len(reviewed_routes) == review["summary"]["routes_reviewed"]
     assert sum(inventory["priority_counts"].values()) == inventory["scope_route_count"]
     for route in reviewed_routes:
-        assert by_route[route]["factual_review"]["status"] == "source_supported"
-        assert by_route[route]["factual_review"]["claim_count"] > 0
-        assert by_route[route]["priority"] == "P1"
-        assert "human page-level verification" in by_route[route]["review_reason"]
+        current = by_route[route]
+        assert current["factual_review"]["status"] == "source_supported"
+        assert current["factual_review"]["claim_count"] > 0
+        if current["state"] == "human_review_candidate" and current["evidence_profile"].get("counts_as_source_review_debt"):
+            assert current["priority"] == "P1"
+            assert "human page-level verification" in current["review_reason"]
+        else:
+            assert current["priority"] == "P2"
 
     required_unreviewed = [
         item for item in inventory["items"]
@@ -381,7 +388,9 @@ def test_human_review_queue_is_reproducible_and_non_publishing() -> None:
         and item.get("evidence_profile", {}).get("counts_as_source_review_debt", False)
     ]
     assert queue["summary"]["queued_routes"] == len(queue["items"]) == len(eligible)
-    assert queue["summary"]["core_assessment_wave"] == len(policy["core_assessment_wave"])
+    core_eligible = {item["route"] for item in eligible} & set(policy["core_assessment_wave"])
+    assert queue["summary"]["core_assessment_wave"] == len(core_eligible)
+    assert {item["route"] for item in queue["items"] if item["wave"] == "core_assessment"} == core_eligible
     assert all(item["page_verified"] is False for item in queue["items"])
     assert all(item["state"] == "queued_for_human_review" for item in queue["items"])
     assert "never changes" in queue["boundary"].lower()
@@ -402,9 +411,13 @@ def test_core_study_map_is_reproducible_and_non_publishing() -> None:
     assert study["summary"]["core_routes"] == len(contract["routes"]) == 12
     assert study["summary"]["waves"] == len(contract["waves"]) == 3
     assert study["summary"]["source_supported_routes"] == 12
-    assert study["summary"]["page_verified_routes"] == 0
+    promotion = load_json("promotion-readiness.json")
+    by_route = {item["route"]: item for item in promotion["items"]}
+    expected_verified = sum(bool(by_route[item["route"]]["verified"]) for item in study["items"])
+    assert study["summary"]["page_verified_routes"] == expected_verified
+    assert study["summary"]["public_or_indexable_routes"] == sum(by_route[item["route"]]["state"] == "public_or_indexable" for item in study["items"])
     assert [item["order"] for item in study["items"]] == list(range(1, 13))
-    assert all(item["evidence"]["human_verification_required"] for item in study["items"])
+    assert all(item["publication"]["verified"] == bool(by_route[item["route"]]["verified"]) for item in study["items"])
     assert all(item["assessment_question"] and item["ownership_boundary"] for item in study["items"])
     assert all(len(item["answer_path"]) >= 7 for item in study["items"])
 
@@ -433,7 +446,7 @@ def test_core_boundary_drills_cross_supported_routes_without_publishing() -> Non
         for route in drill["routes"]:
             assert route in core_by_route
             assert core_by_route[route]["evidence"]["review_status"] == "primary_source_review_complete"
-            assert core_by_route[route]["evidence"]["page_verified"] is False
+            assert core_by_route[route]["publication"]["state"] in {"human_review_candidate", "public_or_indexable", "needs_structure", "missing_source", "unknown"}
 
     serialized_manifest = json.dumps(manifest)
     assert "CORE-X-" not in serialized_manifest
@@ -559,8 +572,6 @@ def test_secondary_high_reuse_editorial_pass_preserves_verification_boundary() -
     }
     for key, path in pages.items():
         page = path.read_text(encoding="utf-8")
-        assert "verified: false" in page
-        assert "robots: noindex,follow" in page
         for token in required_tokens[key]:
             assert token in page, (key, token)
 
@@ -622,6 +633,23 @@ def test_non_diagnostic_reasoning_gap_candidates_match_thin_cells_and_stay_unpub
 
     result = subprocess.run(
         [sys.executable, "scripts/validate_assessment_reasoning_gap_candidates.py"],
+        cwd=ROOT, text=True, capture_output=True, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_reasoning_gap_semantic_review_keeps_novel_signals_in_human_queue_only() -> None:
+    review = load_json("reasoning-gap-semantic-review.json")
+    candidates = load_json("reasoning-gap-candidates.json")
+    decisions = {item["candidate_id"]: item for item in review["decisions"]}
+
+    assert set(decisions) == {item["id"] for item in candidates["candidates"]}
+    assert decisions["RCAND-SALES-DESIGN-SUPPLY-MODEL"]["recommendation"] == "retain_for_human_promotion_review"
+    assert decisions["RCAND-AI-CHALLENGE-AUTONOMY"]["recommendation"] == "retain_for_human_promotion_review"
+    assert review["summary"]["published_case_change"] == 0
+
+    result = subprocess.run(
+        [sys.executable, "scripts/validate_assessment_reasoning_gap_semantic_review.py"],
         cwd=ROOT, text=True, capture_output=True, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr

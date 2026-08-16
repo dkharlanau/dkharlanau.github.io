@@ -1,15 +1,22 @@
 {
   "id": "sap-lead-core-study-map",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
   "purpose": "Turn the twelve highest-value SAP Lead assessment routes into a repeatable study sequence built around ownership, first-wrong-decision diagnosis, evidence, and completion proof.",
   "study_rule": "Do not study the route as a product catalog. Be able to explain the business goal, decision owner, runtime path, first wrong layer, integration boundary, evidence, and trade-off in a short answer.",
-  "boundary": "This map organizes assessment study. It does not change factual-review status, human verification, candidate approval, or publication state.",
+  "boundary": "This map organizes assessment study. Claim evidence comes from factual review, while current publication state comes from Promotion Readiness. The generator changes neither source.",
+  "source_contracts": {
+    "factual_review": "/labs/assessment/data/factual-review.json",
+    "promotion_readiness": "/labs/assessment/data/promotion-readiness.json",
+    "human_review_queue": "/labs/assessment/data/human-review-queue.json"
+  },
   "summary": {
     "core_routes": 12,
     "waves": 3,
     "source_supported_routes": 12,
-    "page_verified_routes": 0,
+    "page_verified_routes": 6,
+    "public_or_indexable_routes": 6,
+    "queued_for_human_review_routes": 6,
     "direct_published_cases": 44,
     "wave_counts": {
       "decisions": 5,
@@ -66,13 +73,20 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 2,
-        "page_verified": false,
-        "human_verification_required": true
+        "human_verification_required": false
+      },
+      "publication": {
+        "state": "public_or_indexable",
+        "verified": true,
+        "status": "reviewed",
+        "robots": "index,follow",
+        "sitemap": true,
+        "priority": "P2"
       },
       "review_queue": {
-        "queue_position": 1,
-        "wave": "core_assessment",
-        "focus": "Determination inputs, document behavior, ownership boundaries, and diagnostic proof."
+        "queue_position": null,
+        "wave": null,
+        "focus": null
       },
       "published_practice": {
         "case_count": 3,
@@ -109,13 +123,20 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 2,
-        "page_verified": false,
-        "human_verification_required": true
+        "human_verification_required": false
+      },
+      "publication": {
+        "state": "public_or_indexable",
+        "verified": true,
+        "status": "reviewed",
+        "robots": "index,follow",
+        "sitemap": true,
+        "priority": "P2"
       },
       "review_queue": {
-        "queue_position": 2,
-        "wave": "core_assessment",
-        "focus": "Condition technique, pricing analysis, extension boundaries, and order-to-billing parity."
+        "queue_position": null,
+        "wave": null,
+        "focus": null
       },
       "published_practice": {
         "case_count": 5,
@@ -154,13 +175,20 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 2,
-        "page_verified": false,
-        "human_verification_required": true
+        "human_verification_required": false
+      },
+      "publication": {
+        "state": "public_or_indexable",
+        "verified": true,
+        "status": "reviewed",
+        "robots": "index,follow",
+        "sitemap": true,
+        "priority": "P2"
       },
       "review_queue": {
-        "queue_position": 3,
-        "wave": "core_assessment",
-        "focus": "Source determination, purchasing controls, receipt/invoice boundaries, and GR/IR reasoning."
+        "queue_position": null,
+        "wave": null,
+        "focus": null
       },
       "published_practice": {
         "case_count": 8,
@@ -202,13 +230,20 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 3,
-        "page_verified": false,
-        "human_verification_required": true
+        "human_verification_required": false
+      },
+      "publication": {
+        "state": "public_or_indexable",
+        "verified": true,
+        "status": "reviewed",
+        "robots": "index,follow",
+        "sitemap": true,
+        "priority": "P2"
       },
       "review_queue": {
-        "queue_position": 4,
-        "wave": "core_assessment",
-        "focus": "Confirmation logic, aATP capabilities, protection/allocation boundaries, and stock-versus-availability reasoning."
+        "queue_position": null,
+        "wave": null,
+        "focus": null
       },
       "published_practice": {
         "case_count": 2,
@@ -245,13 +280,20 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 2,
-        "page_verified": false,
-        "human_verification_required": true
+        "human_verification_required": false
+      },
+      "publication": {
+        "state": "public_or_indexable",
+        "verified": true,
+        "status": "reviewed",
+        "robots": "index,follow",
+        "sitemap": true,
+        "priority": "P2"
       },
       "review_queue": {
-        "queue_position": 5,
-        "wave": "core_assessment",
-        "focus": "Shipping point and route decisions, delivery execution, split causes, and warehouse handoff."
+        "queue_position": null,
+        "wave": null,
+        "focus": null
       },
       "published_practice": {
         "case_count": 4,
@@ -290,11 +332,18 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 2,
-        "page_verified": false,
         "human_verification_required": true
       },
+      "publication": {
+        "state": "human_review_candidate",
+        "verified": false,
+        "status": "draft",
+        "robots": "noindex,follow",
+        "sitemap": false,
+        "priority": "P1"
+      },
       "review_queue": {
-        "queue_position": 6,
+        "queue_position": 1,
         "wave": "core_assessment",
         "focus": "MRP-to-order reasoning, production method selection, staging, confirmation, goods receipt, and settlement boundary."
       },
@@ -337,11 +386,18 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 6,
-        "page_verified": false,
         "human_verification_required": true
       },
+      "publication": {
+        "state": "human_review_candidate",
+        "verified": false,
+        "status": "draft",
+        "robots": "noindex,follow",
+        "sitemap": false,
+        "priority": "P1"
+      },
       "review_queue": {
-        "queue_position": 7,
+        "queue_position": 2,
         "wave": "core_assessment",
         "focus": "Message identity, ordering, retries, monitoring, reconciliation, and technical-versus-business completion."
       },
@@ -385,11 +441,18 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 2,
-        "page_verified": false,
         "human_verification_required": true
       },
+      "publication": {
+        "state": "human_review_candidate",
+        "verified": false,
+        "status": "draft",
+        "robots": "noindex,follow",
+        "sitemap": false,
+        "priority": "P1"
+      },
       "review_queue": {
-        "queue_position": 8,
+        "queue_position": 3,
         "wave": "core_assessment",
         "focus": "Movement and stock-state semantics, valuation effects, special stock, and IM-to-EWM boundary."
       },
@@ -434,11 +497,18 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 2,
-        "page_verified": false,
         "human_verification_required": true
       },
+      "publication": {
+        "state": "human_review_candidate",
+        "verified": false,
+        "status": "draft",
+        "robots": "noindex,follow",
+        "sitemap": false,
+        "priority": "P1"
+      },
       "review_queue": {
-        "queue_position": 9,
+        "queue_position": 4,
         "wave": "core_assessment",
         "focus": "Inspection trigger, lot lifecycle, usage decision, stock disposition, and logistics integration."
       },
@@ -480,13 +550,20 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 3,
-        "page_verified": false,
-        "human_verification_required": true
+        "human_verification_required": false
+      },
+      "publication": {
+        "state": "public_or_indexable",
+        "verified": true,
+        "status": "reviewed",
+        "robots": "index,follow",
+        "sitemap": true,
+        "priority": "P2"
       },
       "review_queue": {
-        "queue_position": 10,
-        "wave": "core_assessment",
-        "focus": "ERP/EWM ownership, warehouse task/order semantics, staging, confirmations, and deployment boundary."
+        "queue_position": null,
+        "wave": null,
+        "focus": null
       },
       "published_practice": {
         "case_count": 6,
@@ -526,11 +603,18 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 2,
-        "page_verified": false,
         "human_verification_required": true
       },
+      "publication": {
+        "state": "human_review_candidate",
+        "verified": false,
+        "status": "draft",
+        "robots": "noindex,follow",
+        "sitemap": false,
+        "priority": "P1"
+      },
       "review_queue": {
-        "queue_position": 11,
+        "queue_position": 5,
         "wave": "core_assessment",
         "focus": "Governance modes, authority, validation, replication boundary, and release/deployment limitations."
       },
@@ -567,11 +651,18 @@
         "review_status": "primary_source_review_complete",
         "reviewed_at": "2026-08-16",
         "reviewed_claims": 2,
-        "page_verified": false,
         "human_verification_required": true
       },
+      "publication": {
+        "state": "human_review_candidate",
+        "verified": false,
+        "status": "draft",
+        "robots": "noindex,follow",
+        "sitemap": false,
+        "priority": "P1"
+      },
       "review_queue": {
-        "queue_position": 12,
+        "queue_position": 6,
         "wave": "core_assessment",
         "focus": "Physical-versus-financial completion, accounting handoffs, GR/IR, settlement, and reconciliation."
       },
