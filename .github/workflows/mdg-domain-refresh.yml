@@ -20,6 +20,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install generator dependency
+        run: python3 -m pip install pyyaml
       - name: Generate Atlas discovery artifacts
         run: python3 scripts/generate_atlas_artifacts.py
       - name: Commit generated files and remove one-shot workflow
