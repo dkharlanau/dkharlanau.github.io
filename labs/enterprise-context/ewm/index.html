@@ -8,7 +8,7 @@ verified: false
 robots: noindex,follow
 sitemap: false
 enterprise_context_graph: true
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
   - sap
@@ -47,6 +47,22 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">warehouse</span>
     <p><strong>Working thesis:</strong> {{ graph.thesis }}</p>
     <p><strong>Boundary:</strong> EWM owns detailed warehouse position and execution. ERP Inventory Management remains the enterprise inventory and accounting context. The useful question is not “Which transaction?” but “Which system and object owns the next decision?”</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Execution ownership model</p><h2>Do not confuse the warehouse request with the work that executes it.</h2><p>This assessment frame separates business demand, warehouse tasks, work packages, execution confirmation, and the enterprise inventory handoff.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>1. Demand and request</h4><ul><li>Which upstream process created the warehouse demand?</li><li>Which warehouse request represents that demand in EWM?</li><li>Is the demand itself correct before warehouse execution starts?</li></ul></div>
+      <div><h4>2. Task and work package</h4><ul><li>Which warehouse task expresses the stock movement or change?</li><li>How was the task grouped into a warehouse order?</li><li>Which determination rule created the unexpected bin, queue, or work package?</li></ul></div>
+      <div><h4>3. Confirm and reconcile</h4><ul><li>What physical work was confirmed and what stock state changed?</li><li>Did EWM and ERP/Inventory Management reach compatible end states?</li><li>Can the business process prove completion beyond the warehouse monitor?</li></ul></div>
+    </div>
+    <p class="ecg-caption"><strong>Lead signal:</strong> “no warehouse task”, “wrong bin”, and “ERP stock mismatch” are not one problem. They sit at different ownership layers.</p>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Evidence boundary:</strong> claim-level review currently confirms warehouse-task semantics, warehouse-order grouping, and wave-to-task/order behavior. The ownership model above is an authored diagnostic frame; deployment, production, QM, automation, and cross-system completion still require page-level human review.</p>
+    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="deep-maps" data-reveal>

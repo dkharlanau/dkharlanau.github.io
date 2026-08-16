@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
   - sap
@@ -46,6 +46,23 @@ tags:
     <p><strong>Data Book:</strong> {{ topic.memory_model.data_book }}</p>
     <p><strong>Memory line:</strong> {{ topic.memory_model.phrase }}.</p>
     <a href="/labs/enterprise-context/mdg/scenario/">Run one object from request to business proof <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Governance completion model</p><h2>Approved data is not yet business proof.</h2><p>I separate governance completion into four checkpoints. The model is intentionally broader than one MDG workflow because the business value appears only when consumers use the governed object correctly.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>REQUEST</span><h3>Change is governed</h3><p>The reason, object, ownership, required attributes, validations, and approvals are explicit.</p><strong>Proof: the request follows the intended governance process.</strong></article>
+      <article><span>ACTIVE</span><h3>Record is activated</h3><p>The approved master data becomes the authoritative active record for the chosen governance model.</p><strong>Proof: active data matches the approved decision.</strong></article>
+      <article><span>REPLICATE</span><h3>Consumers receive it</h3><p>Replication, mapping, filtering, interface ownership, and error handling deliver the expected object version.</p><strong>Proof: target systems reconcile to the governed source.</strong></article>
+      <article><span>USE</span><h3>Business process proves it</h3><p>Sales, procurement, planning, warehouse, transport, or finance can use the object without local repair.</p><strong>Proof: the target process consumes the intended data and outcome.</strong></article>
+    </div>
+    <p class="ecg-caption"><strong>Lead signal:</strong> “workflow approved” proves a governance step. It does not prove replication or business usability.</p>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Evidence boundary:</strong> claim-level review currently confirms the 2025 FPS01 classic/cloud-ready mode boundary and the effects of switching cloud-ready mode. The four-checkpoint governance model is an authored reasoning frame; domain, replication, extension, and consumer-process details still require page-level human review.</p>
+    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="mdg-graph" data-reveal>
