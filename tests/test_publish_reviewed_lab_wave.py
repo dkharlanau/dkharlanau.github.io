@@ -43,6 +43,7 @@ def test_update_page_marks_reviewed_but_keeps_search_closed(tmp_path: Path, monk
     assert "<p>Reviewed model</p>" in text
     assert 'publication_wave: "example-wave"' in text
     assert 'search_intent: "Example search intent"' in text
+    assert 'evidence_review_mode: "product_primary"' in text
 
 
 def test_update_page_refuses_replacement_drift(tmp_path: Path, monkeypatch):
@@ -87,17 +88,27 @@ def wave_fixture() -> dict:
     }
 
 
-def readiness_fixture(*, state="human_review_candidate", score=5, verified=False, status="draft") -> dict:
+def readiness_fixture(
+    *,
+    state="human_review_candidate",
+    score=5,
+    verified=False,
+    status="draft",
+    priority="P1",
+    factual_status="source_supported",
+    source_debt=True,
+) -> dict:
     return {
         "/labs/example/": {
             "route": "/labs/example/",
             "source_path": "labs/example/index.html",
             "state": state,
-            "priority": "P1",
+            "priority": priority,
             "structural_score": score,
             "verified": verified,
             "status": status,
-            "factual_review": {"status": "source_supported"},
+            "factual_review": {"status": factual_status},
+            "evidence_profile": {"counts_as_source_review_debt": source_debt},
         }
     }
 
@@ -123,3 +134,88 @@ def test_preflight_can_defer_structure_but_full_gate_cannot():
         publisher.validate_wave(
             "example-wave", wave, readiness, require_structure=True
         )
+
+
+def selective_wave_fixture() -> dict:
+    return {
+        "reviewed_at": "2026-08-16",
+        "review_mode": "selective_or_heuristic",
+        "min_structural_score": 5,
+        "routes": {
+            "/labs/example/": {
+                "source_path": "labs/example/index.html",
+                "search_intent": "Example authored framework",
+            }
+        },
+    }
+
+
+def test_selective_wave_requires_explicit_public_framework_and_no_open_source_debt():
+    wave = selective_wave_fixture()
+    readiness = readiness_fixture(
+        priority="P2",
+        factual_status="not_reviewed",
+        source_debt=False,
+    )
+
+    publisher.validate_wave(
+        "selective-wave",
+        wave,
+        readiness,
+        public_frameworks={"/labs/example/"},
+    )
+
+    with pytest.raises(RuntimeError, match="not an explicit public framework"):
+        publisher.validate_wave(
+            "selective-wave",
+            wave,
+            readiness,
+            public_frameworks=set(),
+        )
+
+    debt = readiness_fixture(
+        priority="P2",
+        factual_status="not_reviewed",
+        source_debt=True,
+    )
+    with pytest.raises(RuntimeError, match="primary-source review debt"):
+        publisher.validate_wave(
+            "selective-wave",
+            wave,
+            debt,
+            public_frameworks={"/labs/example/"},
+        )
+
+
+def test_selective_finalize_records_editorial_evidence_mode_without_opening_search(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(publisher, "ROOT", tmp_path)
+    path = tmp_path / "labs" / "example" / "index.html"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        "---\n"
+        "title: Example\n"
+        "status: draft\n"
+        "verified: false\n"
+        "robots: noindex,follow\n"
+        "sitemap: false\n"
+        "---\n"
+        "<h1>Example</h1>\n",
+        encoding="utf-8",
+    )
+    cfg = {
+        "source_path": "labs/example/index.html",
+        "search_intent": "Example authored framework",
+    }
+
+    publisher.finalize_page(
+        "/labs/example/",
+        cfg,
+        "selective-wave",
+        "2026-08-16",
+        publisher.SELECTIVE_OR_HEURISTIC,
+    )
+    text = path.read_text(encoding="utf-8")
+    assert 'evidence_review_mode: "selective_or_heuristic"' in text
+    assert "selective external evidence + page-level editorial review" in text
+    assert "robots: noindex,follow" in text
+    assert "sitemap: false" in text
