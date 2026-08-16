@@ -1,0 +1,171 @@
+---
+layout: default
+title: "Human Review Findings — SAP Lead Assessment Lab"
+description: "Record page-level human review findings against the SAP Lead Lab review gates without changing verification or publication state."
+permalink: /labs/assessment/human-review/findings/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, human-review, evidence, governance]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li><a href="/labs/assessment/human-review/">Human Review Queue</a></li><li aria-current="page">Findings</li></ol></nav>
+
+<div class="research-canvas human-findings" id="human-findings">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Human page review</p>
+      <h1>Record the review.<br />Do not fake the gate.</h1>
+      <p>This recorder turns a real page review into a portable finding file. It does not mark a page verified, remove noindex, or make a publication decision.</p>
+      <a class="research-canvas__button" href="#finding-form">Open review recorder <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Human review boundary">
+      <p>Review contract</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>7</strong><small>Explicit review gates</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>0</strong><small>Automatic verification changes</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>JSON</strong><small>Portable finding record</small></div>
+      <em>Reviewer evidence first · publication decision later</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+    <p><strong>Boundary:</strong> a completed review record is evidence that a human checked the page. It is not permission for a script to set <code>verified:true</code>, change status, or remove <code>noindex</code>.</p>
+    <a href="/labs/assessment/data/human-review-finding-schema.json">Open finding schema <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="finding-form" data-reveal>
+    <header><p class="research-canvas__eyebrow">Review target</p><h2>Choose one queued page.</h2><p>Core assessment routes come first. The recorder loads reviewed factual claim IDs for the selected route so the page review has a clear evidence boundary.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Route</h4><label for="hf-route">Queued page</label><select id="hf-route"><option value="">Loading review queue…</option></select></div>
+      <div><h4>Reviewer</h4><label for="hf-reviewer">Reviewer label</label><input id="hf-reviewer" type="text" maxlength="120" placeholder="Optional name or review role" /></div>
+      <div><h4>Claim scope</h4><p id="hf-claims">Select a route to load source-supported claims.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Seven gates</p><h2>Every gate needs an explicit result.</h2><p><strong>Pass</strong> means checked and acceptable. <strong>Issue</strong> means checked and a finding exists. <strong>Not checked</strong> is not completion.</p></header>
+    <div id="hf-gates" class="hf-gates"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Finding</p><h2>Record what materially needs attention.</h2><p>Findings are separate from the gate status so one issue can be classified by severity and ownership.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Category</h4><select id="hf-category">
+        <option value="scope_and_claims">Scope and claims</option><option value="release_scope">Release scope</option><option value="evidence_class">Evidence class</option><option value="ownership_boundary">Ownership boundary</option><option value="diagnostic_method">Diagnostic method</option><option value="human_machine_consistency">Human / machine consistency</option><option value="links_sources_terminology">Links, sources, terminology</option><option value="editorial">Editorial</option><option value="publication_policy">Publication policy</option>
+      </select></div>
+      <div><h4>Severity</h4><select id="hf-severity"><option value="note">Note</option><option value="minor">Minor</option><option value="material">Material</option><option value="blocking">Blocking</option></select></div>
+      <div><h4>Note</h4><textarea id="hf-finding-note" rows="4" maxlength="4000" placeholder="What did the reviewer find, and why does it matter?"></textarea><button type="button" id="hf-add-finding">Add finding</button></div>
+    </div>
+    <div id="hf-findings" class="research-route-list"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Disposition</p><h2>Review completion is not publication.</h2><p>If any gate has an issue, the disposition must remain <strong>needs changes</strong>. A clean review may be recorded as complete or ready for a separate publication decision.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Result</h4><select id="hf-disposition"><option value="needs_changes">Needs changes</option><option value="review_complete_no_publication_change">Review complete, no publication change</option><option value="ready_for_separate_publication_decision">Ready for separate publication decision</option></select></div>
+      <div><h4>Publication effect</h4><p><strong>verified:</strong> unchanged<br /><strong>indexing:</strong> unchanged<br /><strong>status:</strong> unchanged</p></div>
+      <div><h4>Export</h4><p id="hf-status" aria-live="polite">Complete the review gates before export.</p><button type="button" id="hf-export">Export review finding</button></div>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<style>
+.hf-gates{display:grid;gap:1rem}.hf-gate{border:1px solid var(--border-color,#ddd);padding:1rem}.hf-gate label{display:block;font-weight:700;margin:.55rem 0 .25rem}.human-findings select,.human-findings input,.human-findings textarea{font:inherit;padding:.55rem;border:1px solid var(--border-color,#ddd);border-radius:.35rem;background:var(--background-color,#fff);color:inherit;max-width:100%}.human-findings button{font:inherit;padding:.55rem .8rem;cursor:pointer}
+</style>
+
+<script>
+(() => {
+  'use strict';
+  const state = {policy:null, queue:null, factual:null, findings:[]};
+  const $ = id => document.getElementById(id);
+
+  function selectedRoute(){return $('hf-route').value;}
+  function routeClaims(route){
+    if(!state.factual || !route) return [];
+    const item=state.factual.routes.find(entry=>entry.route===route);
+    return item ? item.claim_ids || [] : [];
+  }
+
+  function renderRoutes(){
+    const select=$('hf-route');select.replaceChildren();
+    const empty=document.createElement('option');empty.value='';empty.textContent='Choose a queued route';select.appendChild(empty);
+    state.queue.items.forEach(item=>{const option=document.createElement('option');option.value=item.route;option.textContent=`${item.queue_position}. ${item.title}`;select.appendChild(option);});
+  }
+
+  function renderClaims(){
+    const claims=routeClaims(selectedRoute());
+    $('hf-claims').textContent=claims.length ? `${claims.length} reviewed claim(s): ${claims.join(', ')}` : 'No claim scope loaded for this route.';
+  }
+
+  function renderGates(){
+    const box=$('hf-gates');box.replaceChildren();
+    state.policy.review_gates.forEach((text,index)=>{
+      const article=document.createElement('article');article.className='hf-gate';article.dataset.gateIndex=String(index+1);
+      const title=document.createElement('h3');title.textContent=`Gate ${index+1}`;
+      const copy=document.createElement('p');copy.textContent=text;
+      const resultLabel=document.createElement('label');resultLabel.textContent='Result';
+      const result=document.createElement('select');result.className='hf-gate-result';
+      [['not_checked','Not checked'],['pass','Pass'],['issue','Issue']].forEach(([value,label])=>{const option=document.createElement('option');option.value=value;option.textContent=label;result.appendChild(option);});
+      const noteLabel=document.createElement('label');noteLabel.textContent='Gate note';
+      const note=document.createElement('textarea');note.className='hf-gate-note';note.rows=2;note.maxLength=2000;
+      article.append(title,copy,resultLabel,result,noteLabel,note);box.appendChild(article);
+    });
+  }
+
+  function renderFindings(){
+    const box=$('hf-findings');box.replaceChildren();
+    state.findings.forEach((item,index)=>{
+      const article=document.createElement('a');article.href='#finding-form';
+      const chip=document.createElement('span');chip.textContent=item.severity.toUpperCase();
+      const title=document.createElement('strong');title.textContent=item.category.replaceAll('_',' ');
+      const detail=document.createElement('small');detail.textContent=item.note;
+      const icon=document.createElement('i');icon.className='material-symbols-outlined';icon.setAttribute('aria-hidden','true');icon.textContent='close';
+      article.append(chip,title,detail,icon);article.addEventListener('click',event=>{event.preventDefault();state.findings.splice(index,1);renderFindings();});box.appendChild(article);
+    });
+  }
+
+  function gateResults(){
+    return Array.from(document.querySelectorAll('.hf-gate')).map(article=>({
+      gate_index:Number(article.dataset.gateIndex),
+      result:article.querySelector('.hf-gate-result').value,
+      note:article.querySelector('.hf-gate-note').value.trim()
+    }));
+  }
+
+  function validateForExport(){
+    const route=selectedRoute();if(!route)return 'Choose a review route.';
+    const gates=gateResults();if(gates.some(item=>item.result==='not_checked'))return 'Every review gate must be checked before export.';
+    const hasIssue=gates.some(item=>item.result==='issue');
+    const disposition=$('hf-disposition').value;
+    if(hasIssue && disposition!=='needs_changes')return 'A review with gate issues must use the needs changes disposition.';
+    if(disposition==='ready_for_separate_publication_decision' && gates.some(item=>item.result!=='pass'))return 'Ready for publication decision requires all seven gates to pass.';
+    if(state.findings.some(item=>item.severity==='blocking') && disposition!=='needs_changes')return 'A blocking finding requires the needs changes disposition.';
+    return '';
+  }
+
+  function buildPayload(){
+    return {
+      format:'sap-lead-human-page-review',version:'1.0.0',route:selectedRoute(),reviewed_at:new Date().toISOString(),
+      reviewer_label:$('hf-reviewer').value.trim(),reviewed_claim_ids:routeClaims(selectedRoute()),gate_results:gateResults(),findings:state.findings.slice(),
+      disposition:$('hf-disposition').value,
+      publication_effect:{verified_changed:false,indexing_changed:false,status_changed:false}
+    };
+  }
+
+  $('hf-route').addEventListener('change',renderClaims);
+  $('hf-add-finding').addEventListener('click',()=>{const note=$('hf-finding-note').value.trim();if(!note){$('hf-status').textContent='Add a finding note first.';return;}state.findings.push({category:$('hf-category').value,severity:$('hf-severity').value,note});$('hf-finding-note').value='';renderFindings();$('hf-status').textContent='Finding added to the current review record.';});
+  $('hf-export').addEventListener('click',()=>{const error=validateForExport();if(error){$('hf-status').textContent=error;return;}const payload=buildPayload();const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=`human-review-${payload.route.split('/').filter(Boolean).pop()}.json`;link.click();URL.revokeObjectURL(url);$('hf-status').textContent='Review finding exported. Repository verification and publication state were not changed.';});
+
+  Promise.all([
+    fetch('/labs/assessment/data/human-review-policy.json',{cache:'no-store'}).then(response=>response.json()),
+    fetch('/labs/assessment/data/human-review-queue.json',{cache:'no-store'}).then(response=>response.json()),
+    fetch('/labs/assessment/data/factual-review.json',{cache:'no-store'}).then(response=>response.json())
+  ]).then(([policy,queue,factual])=>{state.policy=policy;state.queue=queue;state.factual=factual;renderRoutes();renderGates();renderClaims();}).catch(()=>{$('hf-status').textContent='Human review contracts could not be loaded.';});
+})();
+</script>
