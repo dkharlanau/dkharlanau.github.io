@@ -47,19 +47,54 @@ def patch_backlog() -> None:
             "outputs": [
                 "/labs/assessment/reasoning-gaps/",
                 "/labs/assessment/data/reasoning-gap-semantic-review.json",
-                "scripts/validate_assessment_reasoning_gap_semantic_review.py"
+                "scripts/validate_assessment_reasoning_gap_semantic_review.py",
+                "scripts/generate_assessment_core_study_map.py"
             ],
-            "working_rule": "Compare non-diagnostic candidates against published reasoning, not only wording. Retain both current Design/Challenge signals for human promotion review while keeping the published case manifest unchanged."
+            "working_rule": "Compare non-diagnostic candidates against published reasoning, not only wording. Keep claim evidence separate from the current publication lifecycle, and retain both current Design/Challenge signals for human promotion review without changing the published case manifest."
         })
         value["updated_at"] = "2026-08-16"
         themes = [theme for theme in value.get("next_iteration_themes", []) if "semantic novelty review on the two new Design" not in theme]
-        themes.insert(0, "prepare one human promotion review packet for all surviving reasoning-gap candidates without publishing them automatically")
+        themes.insert(0, "complete semantic review for the remaining generated candidates before building one human promotion packet")
         value["next_iteration_themes"] = list(dict.fromkeys(themes))
         dump(path, value)
 
 
+def patch_lifecycle_tests(text: str) -> str:
+    old = '''    assert inventory["scope_route_count"] == len(inventory["items"])\n    assert inventory["counts"].get("human_review_candidate") == len(inventory["items"])\n    assert all(item["structural_score"] >= 4 for item in inventory["items"])\n    assert all(item["verified"] is False for item in inventory["items"])\n    assert "never changes status" in policy["promotion_rule"].lower()\n'''
+    new = '''    assert inventory["scope_route_count"] == len(inventory["items"])\n    assert sum(inventory["counts"].values()) == len(inventory["items"])\n    assert set(inventory["counts"]).issubset({"human_review_candidate", "needs_structure", "public_or_indexable", "missing_source"})\n    candidates = [item for item in inventory["items"] if item["state"] == "human_review_candidate"]\n    assert all(item["structural_score"] >= 4 for item in candidates)\n    assert "never changes status" in policy["promotion_rule"].lower()\n'''
+    if old in text:
+        text = text.replace(old, new, 1)
+
+    old = '''    promotion_by_route = {item["route"]: item for item in promotion["items"]}\n    for route in review["routes"]:\n        assert promotion_by_route[route["route"]]["verified"] is False\n    assert "cannot declare the complete page verified" in policy["promotion_boundary"].lower()\n'''
+    new = '''    promotion_by_route = {item["route"]: item for item in promotion["items"]}\n    for route in review["routes"]:\n        current = promotion_by_route[route["route"]]\n        assert current["factual_review"]["status"] == "source_supported"\n        assert current["factual_review"]["claim_count"] == len(route["claim_ids"])\n    assert "cannot declare the complete page verified" in policy["promotion_boundary"].lower()\n'''
+    if old in text:
+        text = text.replace(old, new, 1)
+
+    old = '''    for route in reviewed_routes:\n        assert by_route[route]["factual_review"]["status"] == "source_supported"\n        assert by_route[route]["factual_review"]["claim_count"] > 0\n        assert by_route[route]["priority"] == "P1"\n        assert "human page-level verification" in by_route[route]["review_reason"]\n'''
+    new = '''    for route in reviewed_routes:\n        current = by_route[route]\n        assert current["factual_review"]["status"] == "source_supported"\n        assert current["factual_review"]["claim_count"] > 0\n        if current["state"] == "human_review_candidate" and current["evidence_profile"].get("counts_as_source_review_debt"):\n            assert current["priority"] == "P1"\n            assert "human page-level verification" in current["review_reason"]\n        else:\n            assert current["priority"] == "P2"\n'''
+    if old in text:
+        text = text.replace(old, new, 1)
+
+    old = '''    assert queue["summary"]["queued_routes"] == len(queue["items"]) == len(eligible)\n    assert queue["summary"]["core_assessment_wave"] == len(policy["core_assessment_wave"])\n    assert all(item["page_verified"] is False for item in queue["items"])\n'''
+    new = '''    assert queue["summary"]["queued_routes"] == len(queue["items"]) == len(eligible)\n    core_eligible = {item["route"] for item in eligible} & set(policy["core_assessment_wave"])\n    assert queue["summary"]["core_assessment_wave"] == len(core_eligible)\n    assert {item["route"] for item in queue["items"] if item["wave"] == "core_assessment"} == core_eligible\n    assert all(item["page_verified"] is False for item in queue["items"])\n'''
+    if old in text:
+        text = text.replace(old, new, 1)
+
+    old = '''    assert study["summary"]["source_supported_routes"] == 12\n    assert study["summary"]["page_verified_routes"] == 0\n    assert [item["order"] for item in study["items"]] == list(range(1, 13))\n    assert all(item["evidence"]["human_verification_required"] for item in study["items"])\n    assert all(item["assessment_question"] and item["ownership_boundary"] for item in study["items"])\n'''
+    new = '''    assert study["summary"]["source_supported_routes"] == 12\n    promotion = load_json("promotion-readiness.json")\n    by_route = {item["route"]: item for item in promotion["items"]}\n    expected_verified = sum(bool(by_route[item["route"]]["verified"]) for item in study["items"])\n    assert study["summary"]["page_verified_routes"] == expected_verified\n    assert study["summary"]["public_or_indexable_routes"] == sum(by_route[item["route"]]["state"] == "public_or_indexable" for item in study["items"])\n    assert [item["order"] for item in study["items"]] == list(range(1, 13))\n    assert all(item["publication"]["verified"] == bool(by_route[item["route"]]["verified"]) for item in study["items"])\n    assert all(item["assessment_question"] and item["ownership_boundary"] for item in study["items"])\n'''
+    if old in text:
+        text = text.replace(old, new, 1)
+
+    old = '''    for key, path in pages.items():\n        page = path.read_text(encoding="utf-8")\n        assert "verified: false" in page\n        assert "robots: noindex,follow" in page\n        for token in required_tokens[key]:\n            assert token in page, (key, token)\n'''
+    new = '''    for key, path in pages.items():\n        page = path.read_text(encoding="utf-8")\n        for token in required_tokens[key]:\n            assert token in page, (key, token)\n'''
+    if old in text:
+        text = text.replace(old, new, 1)
+    return text
+
+
 def patch_tests() -> None:
     text = TESTS.read_text(encoding="utf-8")
+    text = patch_lifecycle_tests(text)
     if '"LOOP-046"' not in text:
         candidates = [
             ('"LOOP-044", "LOOP-045"):', '"LOOP-044", "LOOP-045", "LOOP-046"):'),
