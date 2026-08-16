@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
 """Build a source-level search discoverability inventory for the whole site.
 
-The inventory answers four practical questions for every public Markdown route:
-1. Is the page allowed to be indexed?
-2. Is it mature enough to be indexed?
-3. Is its metadata complete enough to publish?
-4. Does it collide with another route or title?
+The site uses both Markdown and HTML files with Jekyll front matter. This audit must
+cover both, otherwise a large part of Labs can bypass publication policy.
 
 Default outputs:
   reports/seo/search-discoverability.csv
   reports/seo/search-discoverability.md
-
-The report itself is excluded from the public site by _config.yml.
 """
 
 from __future__ import annotations
@@ -19,11 +14,10 @@ from __future__ import annotations
 import argparse
 import csv
 import re
-import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 import yaml
 
@@ -51,6 +45,7 @@ GOVERNED_ROUTE_PREFIXES = (
 )
 
 DRAFT_STATUSES = {"draft", "needs_verification", "working", "experimental"}
+SOURCE_SUFFIXES = {".md", ".html"}
 
 
 @dataclass
@@ -86,16 +81,14 @@ def parse_frontmatter(path: Path) -> dict | None:
     end = text.find("\n---", 4)
     if end == -1:
         return None
-    raw = text[4:end]
-    data = yaml.safe_load(raw)
+    data = yaml.safe_load(text[4:end])
     return data if isinstance(data, dict) else {}
 
 
 def collection_type(rel: str, config: dict) -> str:
     if not rel.startswith("_"):
         return "pages"
-    first = rel.split("/", 1)[0]
-    label = first[1:]
+    label = rel.split("/", 1)[0][1:]
     if label in (config.get("collections") or {}):
         return label
     if label == "posts":
@@ -106,6 +99,7 @@ def collection_type(rel: str, config: dict) -> str:
 def apply_defaults(rel: str, fm: dict, config: dict) -> dict:
     merged: dict = {}
     ctype = collection_type(rel, config)
+    rel_norm = rel.strip("/")
     for item in config.get("defaults") or []:
         if not isinstance(item, dict):
             continue
@@ -113,7 +107,6 @@ def apply_defaults(rel: str, fm: dict, config: dict) -> dict:
         values = item.get("values") or {}
         scope_path = str(scope.get("path") or "").strip("/")
         scope_type = scope.get("type")
-        rel_norm = rel.strip("/")
         path_match = not scope_path or rel_norm == scope_path or rel_norm.startswith(scope_path + "/")
         type_match = not scope_type or scope_type == ctype
         if path_match and type_match and isinstance(values, dict):
@@ -122,46 +115,39 @@ def apply_defaults(rel: str, fm: dict, config: dict) -> dict:
     return merged
 
 
-def slug_from_path(rel: str) -> str:
-    stem = Path(rel).stem
-    return stem.lower().replace("_", "-")
-
-
 def derive_route(rel: str, fm: dict, config: dict) -> str:
     permalink = fm.get("permalink")
     if permalink:
         route = str(permalink)
-        if not route.startswith("/"):
-            route = "/" + route
-        return route
+        return route if route.startswith("/") else "/" + route
 
     ctype = collection_type(rel, config)
     collection_cfg = (config.get("collections") or {}).get(ctype) if ctype != "pages" else None
     if isinstance(collection_cfg, dict) and collection_cfg.get("permalink"):
         pattern = str(collection_cfg["permalink"])
-        slug = slug_from_path(rel)
         path_inside = rel.split("/", 1)[1] if "/" in rel else Path(rel).name
         path_no_ext = str(Path(path_inside).with_suffix("")).replace("\\", "/")
+        slug = Path(rel).stem.lower().replace("_", "-")
         route = pattern.replace(":slug", slug).replace(":path", path_no_ext)
-        if not route.startswith("/"):
-            route = "/" + route
-        return route
+        return route if route.startswith("/") else "/" + route
 
     path = Path(rel)
-    if path.name == "index.md":
+    if path.name in {"index.md", "index.html"}:
         parent = path.parent.as_posix()
         return "/" if parent == "." else f"/{parent.strip('/')}/"
-    if path.name == "404.md":
+    if path.name in {"404.md", "404.html"}:
         return "/404.html"
+    if path.suffix == ".html":
+        return f"/{path.as_posix().strip('/')}"
     return f"/{path.with_suffix('').as_posix().strip('/')}/"
 
 
 def section_from_route(route: str) -> str:
-    parts = [p for p in route.split("/") if p]
+    parts = [part for part in route.split("/") if part]
     return parts[0] if parts else "home"
 
 
-def is_truthy_false(value: Any) -> bool:
+def is_false(value: Any) -> bool:
     return value is False or (isinstance(value, str) and value.strip().lower() in {"false", "no"})
 
 
@@ -174,7 +160,7 @@ def classify(rel: str, route: str, fm: dict) -> tuple[str, list[str], bool, bool
     sitemap = fm.get("sitemap", True)
 
     noindex = "noindex" in robots
-    sitemap_enabled = not is_truthy_false(sitemap)
+    sitemap_enabled = not is_false(sitemap)
     indexable = not noindex and sitemap_enabled
     governed = route.startswith(GOVERNED_ROUTE_PREFIXES) or "verified" in fm or "status" in fm
     mature = verified is True and status == "reviewed"
@@ -195,7 +181,7 @@ def classify(rel: str, route: str, fm: dict) -> tuple[str, list[str], bool, bool
             reasons.append("reviewed+verified page is still hidden from search")
         elif not mature and indexable:
             classification = "BLOCK_INDEX"
-            reasons.append("governed page is indexable before reviewed+verified gate")
+            reasons.append("governed page is indexable before reviewed+verified publication gate")
             critical = True
         else:
             classification = "KEEP_NOINDEX"
@@ -220,9 +206,13 @@ def classify(rel: str, route: str, fm: dict) -> tuple[str, list[str], bool, bool
     return classification, reasons, critical, governed, indexable
 
 
-def iter_markdown(repo: Path, config: dict):
-    excluded = [str(x).rstrip("/") for x in config.get("exclude") or []]
-    for path in sorted(repo.rglob("*.md")):
+def iter_source_pages(repo: Path, config: dict) -> Iterable[tuple[Path, str, dict]]:
+    excluded = [str(item).rstrip("/") for item in config.get("exclude") or []]
+    paths = sorted(
+        path for path in repo.rglob("*")
+        if path.is_file() and path.suffix.lower() in SOURCE_SUFFIXES
+    )
+    for path in paths:
         rel = path.relative_to(repo).as_posix()
         if rel.startswith(INTERNAL_PREFIXES):
             continue
@@ -234,40 +224,44 @@ def iter_markdown(repo: Path, config: dict):
         yield path, rel, apply_defaults(rel, fm, config)
 
 
+# Backward-compatible alias used by earlier tests/tools.
+def iter_markdown(repo: Path, config: dict):
+    yield from iter_source_pages(repo, config)
+
+
 def build_records(repo: Path) -> list[PageRecord]:
     config = load_yaml(repo / "_config.yml")
     records: list[PageRecord] = []
 
-    for _path, rel, fm in iter_markdown(repo, config):
+    for _path, rel, fm in iter_source_pages(repo, config):
         route = derive_route(rel, fm, config)
         classification, reasons, critical, governed, indexable = classify(rel, route, fm)
         title = str(fm.get("title") or "").strip()
-        records.append(
-            PageRecord(
-                source_path=rel,
-                route=route,
-                title=title,
-                description=str(fm.get("description") or "").strip(),
-                status=str(fm.get("status") or "").strip(),
-                verified=fm.get("verified", ""),
-                robots=str(fm.get("robots") or "index,follow"),
-                sitemap=fm.get("sitemap", True),
-                section=section_from_route(route),
-                search_intent=str(fm.get("search_intent") or title).strip(),
-                governed=governed,
-                indexable=indexable,
-                classification=classification,
-                reasons=reasons,
-                critical=critical,
-            )
-        )
+        records.append(PageRecord(
+            source_path=rel,
+            route=route,
+            title=title,
+            description=str(fm.get("description") or "").strip(),
+            status=str(fm.get("status") or "").strip(),
+            verified=fm.get("verified", ""),
+            robots=str(fm.get("robots") or "index,follow"),
+            sitemap=fm.get("sitemap", True),
+            section=section_from_route(route),
+            search_intent=str(fm.get("search_intent") or title).strip(),
+            governed=governed,
+            indexable=indexable,
+            classification=classification,
+            reasons=reasons,
+            critical=critical,
+        ))
 
     route_map: dict[str, list[PageRecord]] = defaultdict(list)
     title_map: dict[str, list[PageRecord]] = defaultdict(list)
     for record in records:
         route_map[record.route].append(record)
         if record.title and record.indexable:
-            title_map[re.sub(r"\s+", " ", record.title.lower()).strip()].append(record)
+            key = re.sub(r"\s+", " ", record.title.lower()).strip()
+            title_map[key].append(record)
 
     for route, items in route_map.items():
         if len(items) > 1:
@@ -276,9 +270,8 @@ def build_records(repo: Path) -> list[PageRecord]:
                 item.reasons.append(f"duplicate route used by {len(items)} source files")
                 item.critical = True
 
-    for _title, items in title_map.items():
-        routes = {item.route for item in items}
-        if len(routes) > 1:
+    for items in title_map.values():
+        if len({item.route for item in items}) > 1:
             for item in items:
                 if item.classification == "INDEX":
                     item.classification = "REVIEW_DUPLICATE_TITLE"
@@ -304,15 +297,20 @@ def write_csv(path: Path, records: list[PageRecord]) -> None:
 
 
 def write_markdown(path: Path, records: list[PageRecord]) -> None:
-    counts = Counter(r.classification for r in records)
-    sections = Counter(r.section for r in records)
-    critical = [r for r in records if r.critical]
-    review = [r for r in records if r.classification.startswith("REVIEW") or r.classification.startswith("MERGE") or r.classification == "BLOCK_INDEX"]
+    counts = Counter(record.classification for record in records)
+    sections = Counter(record.section for record in records)
+    critical = [record for record in records if record.critical]
+    review = [
+        record for record in records
+        if record.classification.startswith("REVIEW")
+        or record.classification.startswith("MERGE")
+        or record.classification == "BLOCK_INDEX"
+    ]
 
     lines = [
         "# Search Discoverability Inventory",
         "",
-        "Generated from source front matter and `_config.yml` defaults. This report is operational metadata, not public content.",
+        "Generated from Markdown and HTML source front matter plus `_config.yml` defaults.",
         "",
         "## Summary",
         "",
@@ -325,47 +323,43 @@ def write_markdown(path: Path, records: list[PageRecord]) -> None:
     ]
     for name, count in sorted(counts.items()):
         lines.append(f"- **{name}:** {count}")
-
     lines.extend(["", "### Sections", ""])
     for name, count in sorted(sections.items(), key=lambda item: (-item[1], item[0])):
         lines.append(f"- **/{name}/:** {count}")
 
     lines.extend([
-        "",
-        "## Critical conflicts",
-        "",
+        "", "## Critical conflicts", "",
         "| Route | Source | Classification | Reason |",
         "|---|---|---|---|",
     ])
     if critical:
         for record in critical:
-            lines.append(f"| `{record.route}` | `{record.source_path}` | {record.classification} | {'; '.join(record.reasons)} |")
+            lines.append(
+                f"| `{record.route}` | `{record.source_path}` | {record.classification} | {'; '.join(record.reasons)} |"
+            )
     else:
         lines.append("| — | — | — | No critical conflicts |")
 
     lines.extend([
-        "",
-        "## Publication review queue",
-        "",
+        "", "## Publication review queue", "",
         "| Route | Classification | Status | Verified | Search intent |",
         "|---|---|---|---|---|",
     ])
     if review:
         for record in review:
+            verified = record.verified if record.verified != "" else "—"
             lines.append(
                 f"| `{record.route}` | {record.classification} | {record.status or '—'} | "
-                f"{record.verified if record.verified != '' else '—'} | {record.search_intent or record.title or '—'} |"
+                f"{verified} | {record.search_intent or record.title or '—'} |"
             )
     else:
         lines.append("| — | — | — | — | No pages currently require publication review |")
 
     lines.extend([
-        "",
-        "## Policy",
-        "",
+        "", "## Policy", "",
         "- `INDEX`: route is allowed to be discovered.",
         "- `KEEP_NOINDEX`: intentional working/private/search-noise surface.",
-        "- `REVIEW_TO_INDEX`: reviewed+verified content is still hidden and should be consciously promoted or downgraded.",
+        "- `REVIEW_TO_INDEX`: reviewed+verified content is still hidden and is ready for a publication decision.",
         "- `BLOCK_INDEX`: immature governed content escaped the publication gate. CI must fail.",
         "- `REVIEW_METADATA`: indexable route lacks required search metadata.",
         "- `REVIEW_DUPLICATE_TITLE`: two indexable routes compete under the same title.",
@@ -391,8 +385,8 @@ def main() -> int:
     write_csv(csv_path, records)
     write_markdown(md_path, records)
 
-    critical = [r for r in records if r.critical]
-    counts = Counter(r.classification for r in records)
+    critical = [record for record in records if record.critical]
+    counts = Counter(record.classification for record in records)
     print(f"Search discoverability inventory: {len(records)} routes")
     for name, count in sorted(counts.items()):
         print(f"  {name}: {count}")
