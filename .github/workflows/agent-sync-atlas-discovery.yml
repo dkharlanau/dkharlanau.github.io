@@ -1,0 +1,45 @@
+name: Agent Sync Atlas Discovery
+
+on:
+  push:
+    branches:
+      - agent/site-trust-connectivity-20260816
+    paths:
+      - '.github/workflows/agent-sync-atlas-discovery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/site-trust-connectivity-20260816
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install pyyaml
+      - name: Regenerate Atlas discovery artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Verify Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py --check
+      - name: Protect homepage source content
+        run: |
+          git diff --exit-code origin/main -- index.html _data/home.yml _data/home || {
+            echo 'Homepage protection failed'; exit 1;
+          }
+      - name: Commit generated discovery files
+        run: |
+          git config user.name 'dkharlanau'
+          git config user.email 'dkharlanau@gmail.com'
+          if git diff --quiet; then
+            echo 'No generated changes.'
+            exit 0
+          fi
+          git add ai/verified-pages.json ai/markdown-clusters.json
+          git commit -m 'Synchronize Atlas discovery artifacts'
+          git push origin HEAD:agent/site-trust-connectivity-20260816
