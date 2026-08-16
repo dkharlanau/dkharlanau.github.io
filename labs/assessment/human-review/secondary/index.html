@@ -1,0 +1,88 @@
+---
+layout: default
+title: "Secondary Review Priority — SAP Lead Assessment Lab"
+description: "A data-driven priority order for source-supported SAP pages after the Core 12 human-review wave."
+permalink: /labs/assessment/human-review/secondary/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, human-review, prioritization, evidence]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li><a href="/labs/assessment/human-review/">Human Review</a></li><li aria-current="page">Secondary Priority</li></ol></nav>
+
+<div class="research-canvas" id="secondary-review">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Secondary page review</p>
+      <h1>Review reuse first.<br />Not alphabetical order.</h1>
+      <p>The Core 12 already defines the first review wave. This ranking orders the remaining source-supported pages by direct case reuse, cross-track value, and reviewed claim coverage.</p>
+      <a class="research-canvas__button" href="#secondary-list">Open priority list <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Secondary review status">
+      <p>Secondary wave</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong id="sr-total">14</strong><small>Routes ranked</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong id="sr-direct">—</strong><small>Routes reused by cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>0</strong><small>Auto-verified</small></div>
+      <em>Priority only · publication state unchanged</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">sort</span>
+    <p><strong>Priority rule:</strong> published-case reuse carries the most weight, then cross-track reuse, then source-supported claim depth. A high score means “review this sooner”, not “this page is more correct”.</p>
+    <a href="/labs/assessment/data/secondary-review-priority.json">Open priority dataset <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="secondary-list" data-reveal>
+    <header><p class="research-canvas__eyebrow">Ranked queue</p><h2>Start where one review improves several assessment paths.</h2><p>Each route shows direct published-case reuse and assessment-track breadth. The list is generated from current case and catalog contracts.</p></header>
+    <p id="sr-status">Loading secondary priority…</p>
+    <div class="research-route-list" id="sr-list"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Scoring model</p><h2>Simple enough to challenge.</h2><p>The model is deliberately transparent. If assessment needs change, weights can be changed in one generator instead of hiding judgement in a spreadsheet nobody remembers owning.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Direct practice reuse</h4><p><strong>4 points</strong> per published case that links directly to the page.</p></div>
+      <div><h4>Cross-track reuse</h4><p><strong>3 points</strong> per distinct case track and <strong>2 points</strong> per catalog track that uses the route as an entry point.</p></div>
+      <div><h4>Evidence depth</h4><p><strong>1 point</strong> per source-supported reviewed claim, capped at four. Evidence is a prerequisite, not a substitute for assessment value.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+    <p><strong>Boundary:</strong> every page on this list remains subject to the same seven human review gates. Ranking never changes <code>verified</code>, indexing, status, or factual-review state.</p>
+    <a href="/labs/assessment/human-review/findings/">Record a real page review <span class="material-symbols-outlined" aria-hidden="true">rate_review</span></a>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<script>
+(async function () {
+  const status=document.getElementById('sr-status');
+  const list=document.getElementById('sr-list');
+  try {
+    const response=await fetch('/labs/assessment/data/secondary-review-priority.json',{cache:'no-store'});
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data=await response.json();
+    document.getElementById('sr-total').textContent=String(data.summary.secondary_routes);
+    document.getElementById('sr-direct').textContent=String(data.summary.routes_with_direct_cases);
+    status.textContent=`${data.summary.secondary_routes} source-supported secondary routes ranked from current assessment reuse.`;
+    list.replaceChildren();
+    data.items.forEach(item=>{
+      const link=document.createElement('a');link.href=item.route;
+      const rank=document.createElement('span');rank.textContent=String(item.priority_position).padStart(2,'0');
+      const title=document.createElement('strong');title.textContent=item.route.replace('/labs/enterprise-context/','').replaceAll('/',' · ') || item.route;
+      const detail=document.createElement('small');detail.textContent=`Score ${item.priority_score} · ${item.review_wave.replaceAll('_',' ')} · ${item.review_reason}`;
+      const icon=document.createElement('i');icon.className='material-symbols-outlined';icon.setAttribute('aria-hidden','true');icon.textContent='rate_review';
+      link.append(rank,title,detail,icon);list.appendChild(link);
+    });
+  } catch (error) {
+    status.textContent=`Secondary priority could not be loaded: ${error.message}`;
+  }
+}());
+</script>
