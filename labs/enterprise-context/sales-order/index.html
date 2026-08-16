@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-16
 hide_global_cta: true
 enterprise_context_graph: true
 tags:
@@ -49,6 +49,43 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">hub</span>
     <p><strong>Working rule:</strong> when a value is wrong, do not begin with the table. Begin with the question: <em>what decided this value, which inputs were used, and who uses the result next?</em></p>
     <a href="/labs/enterprise-context/data/sales-order-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead answer frame</p>
+      <h2>Explain the first wrong decision in sixty seconds.</h2>
+      <p>A Lead answer should not become a tour of configuration. Start with the business symptom, identify the control level, trace the decision, and finish with evidence that proves both the cause and the corrected business result.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h4>1. Frame</h4>
+        <ul>
+          <li>State the expected business behavior.</li>
+          <li>Name the first wrong value, status, quantity, or date.</li>
+          <li>Place it at header, item, or schedule-line level.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>2. Trace</h4>
+        <ul>
+          <li>Read the runtime inputs before opening configuration.</li>
+          <li>Follow input → determination → output → downstream consumer.</li>
+          <li>Stop at the first layer where expected and actual behavior diverge.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>3. Prove</h4>
+        <ul>
+          <li>Separate root cause from downstream symptoms.</li>
+          <li>Explain the blast radius before changing shared configuration.</li>
+          <li>Define proof of cause and proof of business completion.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="ecg-caption"><strong>Example:</strong> if a schedule line behaves incorrectly, do not start by forcing the final schedule-line category. Check the item category and material-planning input first, because they are part of the determination context.</p>
   </section>
 
   <section class="research-canvas__inventory" id="memory-model" data-reveal>
@@ -314,6 +351,12 @@ tags:
       <ol>{% for step in graph.synthetic_case.reasoning_path %}<li>{{ step }}</li>{% endfor %}</ol>
       <p><strong>Lesson:</strong> {{ graph.synthetic_case.lesson }}</p>
     </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Evidence boundary:</strong> the assessment factual-review layer currently confirms two load-bearing controls on this route: item-category determination and schedule-line-category behavior. The wider decision map keeps its own source registry, but the page still requires end-to-end human review before any verification or publication decision.</p>
+    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
