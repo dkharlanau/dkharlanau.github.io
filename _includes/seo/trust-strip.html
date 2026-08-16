@@ -1,20 +1,21 @@
 {% comment %}
-Visible trust/provenance strip for reviewed knowledge pages.
-Excluded from the homepage and limited to pages managed by the AI discovery graph.
+Visible provenance strip for reviewed knowledge pages. It mirrors the publication metadata
+used by JSON-LD and page sidecars and is never rendered on the homepage.
 {% endcomment %}
 {% assign trust_robots = page.robots | default: '' %}
 {% assign show_trust_strip = false %}
 {% if page.url != '/' and page.status == 'reviewed' and page.verified == true and page.ai_sidecar %}
   {% assign show_trust_strip = true %}
 {% endif %}
-{% if trust_robots contains 'noindex' %}
-  {% assign show_trust_strip = false %}
-{% endif %}
+{% if trust_robots contains 'noindex' %}{% assign show_trust_strip = false %}{% endif %}
+{% assign trust_reviewed = page.last_reviewed_at | default: page.last_reviewed %}
+{% assign trust_evidence = page.evidence_review_mode | default: page.review_method %}
 {% if show_trust_strip %}
 <div class="knowledge-trust-strip" role="note" aria-label="Content review and evidence">
-  <span><strong>Author:</strong> Dzmitryi Kharlanau</span>
-  {% if page.last_reviewed %}<span><strong>Reviewed:</strong> {{ page.last_reviewed | date: '%d %b %Y' }}</span>{% endif %}
-  {% if page.evidence_review_mode %}<span><strong>Evidence:</strong> {{ page.evidence_review_mode | replace: '_', ' ' }}</span>{% endif %}
+  <span><strong>Written by:</strong> Dzmitryi Kharlanau</span>
+  {% if trust_reviewed %}<span><strong>Last reviewed:</strong> {{ trust_reviewed | date: '%d %b %Y' }}</span>{% endif %}
+  {% if trust_evidence %}<span><strong>Evidence:</strong> {{ trust_evidence | replace: '_', ' ' }}</span>{% endif %}
+  {% if page.source_links and page.source_links.size > 0 %}<span><strong>Sources:</strong> {{ page.source_links | size }} referenced</span>{% endif %}
   <a href="{{ page.ai_sidecar | relative_url }}">Machine-readable data</a>
 </div>
 {% endif %}

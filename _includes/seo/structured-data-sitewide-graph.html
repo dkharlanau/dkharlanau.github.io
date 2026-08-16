@@ -1,26 +1,40 @@
 {% comment %}
-Site-wide knowledge graph augmentation for indexable reviewed pages.
-This include adds semantic relationships without replacing the existing rich-result dispatcher.
-It intentionally emits no visible homepage content.
+Canonical knowledge-graph augmentation.
+It enriches the same #article / #webpage identities used by the primary dispatcher instead
+of creating a second parallel page identity. No visible homepage content is emitted.
 {% endcomment %}
 
-{% assign robots_directive = page.robots | default: '' %}
-{% assign graph_indexable = true %}
-{% if robots_directive contains 'noindex' %}{% assign graph_indexable = false %}{% endif %}
-{% assign graph_reviewed = false %}
-{% if page.status == 'reviewed' and page.verified == true %}{% assign graph_reviewed = true %}{% endif %}
 {% assign graph_url = page.url | absolute_url %}
 {% assign graph_author_id = '/' | absolute_url | append: '#dkharlanau' %}
+{% assign graph_website_id = '/' | absolute_url | append: '#website' %}
 {% assign graph_entities = site.data.knowledge_entities.entities | default: empty %}
 {% assign graph_primary_key = page.primary_topic | default: page.primary_entity %}
 {% assign graph_primary = graph_entities[graph_primary_key] %}
-{% assign graph_modified = page.last_reviewed | default: page.last_modified_at | default: page.updated %}
-{% assign graph_type = page.structured_data.type | default: 'WebPage' %}
-{% if page.url contains '/labs/' and graph_type == 'WebPage' %}{% assign graph_type = 'TechArticle' %}{% endif %}
-{% assign graph_node_suffix = 'knowledge-page' %}
-{% if graph_type == 'TechArticle' or graph_type == 'Article' %}{% assign graph_node_suffix = 'knowledge-article' %}{% endif %}
+{% assign graph_review_date = page.last_reviewed_at | default: page.last_reviewed %}
+{% assign graph_published = page.date_published | default: page.date | default: page.published %}
+{% assign graph_modified = page.significant_lastmod | default: page.content_updated_at | default: page.schema_updated_at | default: page.last_modified_at | default: page.updated %}
+{% assign graph_robots = page.robots | default: '' %}
+{% assign graph_indexable = true %}
+{% if graph_robots contains 'noindex' %}{% assign graph_indexable = false %}{% endif %}
+{% assign graph_reviewed = false %}
+{% if page.status == 'reviewed' and page.verified == true %}{% assign graph_reviewed = true %}{% endif %}
+{% assign graph_collection_root = false %}
+{% if page.url == '/labs/' or page.url == '/labs/enterprise-context/' %}{% assign graph_collection_root = true %}{% endif %}
 
-{% if graph_indexable and graph_reviewed and page.url != '/' %}
+{% assign graph_type = page.structured_data.type | default: 'WebPage' %}
+{% if graph_collection_root %}
+  {% assign graph_type = 'CollectionPage' %}
+{% elsif page.url contains '/labs/' and graph_reviewed and graph_indexable %}
+  {% assign graph_type = 'TechArticle' %}
+{% endif %}
+{% assign graph_node_suffix = 'webpage' %}
+{% if graph_type == 'TechArticle' or graph_type == 'Article' %}{% assign graph_node_suffix = 'article' %}{% endif %}
+
+{% assign graph_emit = false %}
+{% if graph_collection_root %}{% assign graph_emit = true %}{% endif %}
+{% if graph_reviewed and graph_indexable and page.url != '/' %}{% assign graph_emit = true %}{% endif %}
+
+{% if graph_emit %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -33,29 +47,54 @@ It intentionally emits no visible homepage content.
       "description": {{ page.description | default: page.summary | strip_html | normalize_whitespace | truncate: 300, '' | jsonify }},
       "author": {"@id": "{{ graph_author_id }}"},
       "creator": {"@id": "{{ graph_author_id }}"},
-      "mainEntityOfPage": {"@id": "{{ graph_url }}#webpage"},
-      "isPartOf": {"@id": "{{ '/' | absolute_url }}#website"}{% if graph_modified %},
-      "dateModified": "{{ graph_modified | date_to_xmlschema }}"{% endif %}{% if page.last_reviewed %},
-      "reviewedBy": {"@id": "{{ graph_author_id }}"}{% endif %}{% if graph_primary %},
-      "about": {"@id": "{{ graph_primary.id | absolute_url }}"}{% endif %}{% if page.entity_mentions and page.entity_mentions.size > 0 %},
+      {% if page.url contains '/labs/enterprise-context/' and page.url != '/labs/enterprise-context/' %}
+      "isPartOf": {"@id": "{{ '/labs/enterprise-context/' | absolute_url }}#webpage"},
+      {% else %}
+      "isPartOf": {"@id": "{{ graph_website_id }}"},
+      {% endif %}
+      {% if graph_type == 'TechArticle' or graph_type == 'Article' %}"mainEntityOfPage": {"@id": "{{ graph_url }}#webpage"},{% endif %}
+      {% if graph_published %}"datePublished": "{{ graph_published | date_to_xmlschema }}",{% endif %}
+      {% if graph_modified %}"dateModified": "{{ graph_modified | date_to_xmlschema }}",{% endif %}
+      {% if graph_review_date %}"reviewedBy": {"@id": "{{ graph_author_id }}"},{% endif %}
+      {% if graph_primary %}"about": {"@id": "{{ graph_primary.id | absolute_url }}"},{% endif %}
+      {% if page.entity_mentions and page.entity_mentions.size > 0 %}
       "mentions": [
         {% for entity_key in page.entity_mentions %}
         {% assign entity = graph_entities[entity_key] %}
         {% if entity %}{"@id": "{{ entity.id | absolute_url }}"}{% else %}{"@type":"Thing","name":{{ entity_key | replace: '-', ' ' | jsonify }}}{% endif %}{% unless forloop.last %},{% endunless %}
         {% endfor %}
-      ]{% endif %}{% if page.ai_sidecar %},
-      "subjectOf": {"@type":"DataDownload","contentUrl":"{{ page.ai_sidecar | absolute_url }}","encodingFormat":"application/json"}{% endif %}{% if page.source_links and page.source_links.size > 0 %},
+      ],
+      {% endif %}
+      {% if page.ai_sidecar %}"subjectOf": {"@type":"DataDownload","contentUrl":"{{ page.ai_sidecar | absolute_url }}","encodingFormat":"application/json"},{% endif %}
+      {% if page.source_links and page.source_links.size > 0 %}
       "citation": [
         {% for source in page.source_links %}{"@type":"WebPage","name":{{ source.title | default: source.url | jsonify }},"url":{{ source.url | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}
-      ]{% endif %}{% if page.semantic_links and page.semantic_links.size > 0 %},
-      "relatedLink": [{% for relation in page.semantic_links %}{{ relation.url | absolute_url | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}]{% endif %}
+      ],
+      {% endif %}
+      {% if page.semantic_links and page.semantic_links.size > 0 %}"relatedLink": [{% for relation in page.semantic_links %}{{ relation.url | absolute_url | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}],{% endif %}
+      "inLanguage": {{ page.locale | default: site.lang | default: 'en' | jsonify }}
+    },
+    {
+      "@type": "Person",
+      "@id": "{{ graph_author_id }}",
+      "name": {{ site.data.resume.name | default: 'Dzmitryi Kharlanau' | jsonify }},
+      "url": "{{ '/about/' | absolute_url }}",
+      "sameAs": {{ site.data.resume.schema.sameAs | default: empty | jsonify }}
+    },
+    {
+      "@type": "WebSite",
+      "@id": "{{ graph_website_id }}",
+      "url": "{{ '/' | absolute_url }}",
+      "name": "Dzmitryi Kharlanau",
+      "publisher": {"@id": "{{ graph_author_id }}"}
     }{% if graph_primary %},
     {
       "@type": {{ graph_primary.type | default: 'Thing' | jsonify }},
       "@id": "{{ graph_primary.id | absolute_url }}",
       "name": {{ graph_primary.name | jsonify }},
       "url": "{{ graph_primary.id | absolute_url }}"{% if graph_primary.description %},
-      "description": {{ graph_primary.description | jsonify }}{% endif %}{% if graph_primary.same_as and graph_primary.same_as.size > 0 %},
+      "description": {{ graph_primary.description | jsonify }}{% endif %}{% if graph_primary.aliases and graph_primary.aliases.size > 0 %},
+      "alternateName": {{ graph_primary.aliases | jsonify }}{% endif %}{% if graph_primary.same_as and graph_primary.same_as.size > 0 %},
       "sameAs": {{ graph_primary.same_as | jsonify }}{% endif %}
     }{% endif %}
   ]

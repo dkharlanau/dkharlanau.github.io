@@ -1,7 +1,7 @@
-version: "1.1.0"
+version: "1.2.0"
 updated_at: "2026-08-16"
 policy: >-
-  Canonical topic identities used by visible navigation, JSON-LD and AI sidecars.
+  Canonical topic identities used by visible navigation, JSON-LD and machine sidecars.
   Every local entity ID resolves to a real anchor on /entities/. External sameAs links are
   used only when a clear canonical product or technology identity exists.
 
@@ -23,11 +23,47 @@ entities:
     name: SAP Sales Pricing
     type: Thing
     description: Pricing, condition technique, determination and pricing analysis in SAP Sales.
+  condition-technique:
+    id: /entities/#condition-technique
+    name: Condition Technique
+    type: Thing
+    description: Reusable SAP determination pattern based on condition tables, access sequences, condition types and procedures.
   advanced-atp:
     id: /entities/#advanced-atp
     name: SAP Advanced Available-to-Promise
+    aliases:
+      - aATP
+      - Advanced ATP
     type: Thing
     description: Availability and product confirmation capabilities used to promise customer demand.
+  product-allocation:
+    id: /entities/#product-allocation
+    name: Product Allocation
+    aliases:
+      - PAL
+    type: Thing
+    description: Advanced ATP capability that limits demand consumption against allocation quantities.
+  supply-protection:
+    id: /entities/#supply-protection
+    name: Supply Protection
+    aliases:
+      - SUP
+    type: Thing
+    description: Advanced ATP capability that protects supply quantities for defined demand groups.
+  backorder-processing:
+    id: /entities/#backorder-processing
+    name: Backorder Processing
+    aliases:
+      - BOP
+    type: Thing
+    description: Advanced ATP capability for reprioritizing and reconfirming existing requirements.
+  alternative-based-confirmation:
+    id: /entities/#alternative-based-confirmation
+    name: Alternative-Based Confirmation
+    aliases:
+      - ABC
+    type: Thing
+    description: Advanced ATP capability for determining alternative products or plants when configured.
   sap-shipping:
     id: /entities/#sap-shipping
     name: SAP Shipping
@@ -41,16 +77,22 @@ entities:
   sap-ewm:
     id: /entities/#sap-ewm
     name: SAP Extended Warehouse Management
+    aliases:
+      - SAP EWM
     type: SoftwareApplication
     description: Warehouse planning and execution capabilities in embedded or decentralized deployment models.
   sap-tm:
     id: /entities/#sap-tm
     name: SAP Transportation Management
+    aliases:
+      - SAP TM
     type: SoftwareApplication
     description: Transportation planning, execution, charge management and settlement capabilities.
   sap-mdg:
     id: /entities/#sap-mdg
     name: SAP Master Data Governance
+    aliases:
+      - SAP MDG
     type: SoftwareApplication
     description: Governance, workflow and distribution capabilities for enterprise master data.
   sap-integration:
@@ -81,16 +123,22 @@ entities:
   sap-quality-management:
     id: /entities/#sap-quality-management
     name: SAP Quality Management
+    aliases:
+      - SAP QM
     type: Thing
     description: Inspection, quality decisions and logistics quality integration in SAP.
   sap-production:
     id: /entities/#sap-production
     name: SAP Production Planning and Execution
+    aliases:
+      - SAP PP
     type: Thing
     description: Planning, production execution, material flow and logistics handoffs in SAP S/4HANA.
   sap-inventory-management:
     id: /entities/#sap-inventory-management
     name: SAP Inventory Management
+    aliases:
+      - MM-IM
     type: Thing
     description: Goods movements, stock types and inventory accounting handoffs in SAP S/4HANA.
   sap-credit-management:

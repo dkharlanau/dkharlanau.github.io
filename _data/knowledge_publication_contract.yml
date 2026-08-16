@@ -1,0 +1,112 @@
+version: "1.0.0"
+updated_at: "2026-08-16"
+purpose: >-
+  One publication contract for human-readable pages, structured data, machine sidecars,
+  search discovery, review evidence, and semantic relationships.
+
+identity:
+  website_id: "https://dkharlanau.github.io/#website"
+  author_id: "https://dkharlanau.github.io/#dkharlanau"
+  author_profile: "https://dkharlanau.github.io/about/"
+
+principles:
+  - A page has one canonical subject. The author is never used as the page subject unless the page is the author profile.
+  - Visible content, JSON-LD, sidecar data, and search metadata must describe the same publication state.
+  - A review date records verification work. It does not automatically mean the page content changed.
+  - Significant lastmod changes only for meaningful content, structured-data, or important-link changes.
+  - Tags are taxonomy inputs. They are not emitted as meta keywords.
+
+page_types:
+  - match: "/labs/"
+    exact: true
+    type: CollectionPage
+  - match: "/labs/enterprise-context/"
+    exact: true
+    type: CollectionPage
+  - match: "/labs/"
+    predicate: "reviewed + verified + indexable"
+    type: TechArticle
+  - match: "/labs/"
+    predicate: "draft or noindex"
+    type: WebPage
+
+strict_scope:
+  route_prefixes:
+    - "/labs/"
+  predicate: "reviewed + verified + indexable"
+  required:
+    - title
+    - description
+    - primary_topic
+    - search_intent
+    - last_reviewed
+    - ai_sidecar
+    - semantic_links
+  minimum_semantic_links: 2
+  require_single_h1: true
+  require_unique_title: true
+  require_unique_description: true
+  require_unique_search_intent: true
+  require_known_primary_topic: true
+  require_sidecar: true
+
+canonical_dates:
+  date_published: "First public publication date when known."
+  content_updated_at: "Meaningful human-readable content change."
+  last_reviewed_at: "Most recent evidence/editorial review. A review alone does not change lastmod."
+  schema_updated_at: "Meaningful structured-data or machine-contract change."
+  significant_lastmod: "Maximum meaningful content, schema, or important-link change."
+  legacy_aliases:
+    date_published:
+      - date
+      - published
+    content_updated_at:
+      - last_modified_at
+      - updated
+    last_reviewed_at:
+      - last_reviewed
+
+entities:
+  registry: "_data/knowledge_entities.yml"
+  page_primary_field: primary_topic
+  page_mentions_field: entity_mentions
+  local_namespace: "/entities/#"
+
+provenance:
+  visible_source_field: source_links
+  structured_data_property: citation
+  review_registry: "_data/labs/publication_reviews.yml"
+  source_registry_root: "_data/labs/enterprise_context/sources/"
+  rule: >-
+    Source URLs are derived from explicit source registries. Source-supported factual review
+    requires at least one source in the page sidecar.
+
+sidecar:
+  author_id: "https://dkharlanau.github.io/#dkharlanau"
+  required_fields:
+    - url
+    - title
+    - author
+    - publication
+    - search
+    - primary_entity
+    - relationships
+    - sources
+  local_head_relations:
+    - alternate
+    - describedby
+
+semantic_relationships:
+  preferred_labels:
+    - Prerequisite
+    - Used by
+    - Integrates with
+    - Determined by
+    - Diagnose with
+    - Compare with
+  compatibility_labels:
+    - Parent context
+    - Deep dive
+    - Integration view
+    - Same domain
+    - Related topic

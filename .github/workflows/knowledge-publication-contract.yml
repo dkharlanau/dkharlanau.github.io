@@ -1,0 +1,24 @@
+name: Knowledge Publication Contract
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install contract dependencies
+        run: python3 -m pip install pyyaml
+      - name: Validate reviewed Lab publication contract
+        run: python3 scripts/check_knowledge_publication_contract.py
