@@ -1,4 +1,4 @@
-# Retry with wave 04 nested correctly under the publication ledger's waves mapping.
+# Retry with deterministic Python insertion into the publication ledger.
 name: Publish Reviewed Lab Wave 04
 
 on:
@@ -42,12 +42,12 @@ jobs:
 
           payload = build_triage(Path('.').resolve())
           counts = payload['counts']
+          routes = [row['route'] for row in payload['rows'] if row['decision'] == PUBLIC_REVIEW_NEXT]
           expected = [
               '/labs/ai-ready/',
               '/labs/business-ai/',
               '/labs/enterprise-context/sales-diagnostics/',
           ]
-          routes = [row['route'] for row in payload['rows'] if row['decision'] == PUBLIC_REVIEW_NEXT]
           errors = []
           if counts.get(PUBLIC_REVIEW_NEXT, 0) != 3:
               errors.append(f"PUBLIC_REVIEW_NEXT={counts.get(PUBLIC_REVIEW_NEXT, 0)}")
@@ -64,34 +64,34 @@ jobs:
 
       - name: Register publication wave under waves mapping
         run: |
-          if grep -q '^  public-framework-search-wave-04:' _data/labs/publication_reviews.yml; then
-            echo 'Wave already registered.'
-          else
-            cat >> _data/labs/publication_reviews.yml <<'YAML'
-
-          public-framework-search-wave-04:
-            reviewed_at: 2026-08-16
-            review_mode: selective_or_heuristic
-            review_basis: "selective external evidence + page-level editorial review + authored heuristic boundary"
-            min_structural_score: 5
-            routes:
-              /labs/ai-ready/:
-                source_path: labs/ai-ready/index.md
-                search_intent: "practical AI architecture for RAG, tools, MCP, agents, evals and security"
-              /labs/business-ai/:
-                source_path: labs/business-ai/index.md
-                search_intent: "enterprise Business AI patterns, technologies, controls and implementation evidence"
-              /labs/enterprise-context/sales-diagnostics/:
-                source_path: labs/enterprise-context/sales-diagnostics/index.html
-                search_intent: "SAP Sales diagnostic cases and symptom-first troubleshooting for Lead consultants"
-          YAML
-          fi
           python3 - <<'PY'
-          import yaml
           from pathlib import Path
+          import yaml
+
           p = Path('_data/labs/publication_reviews.yml')
-          data = yaml.safe_load(p.read_text())
-          wave = (data.get('waves') or {}).get('public-framework-search-wave-04')
+          text = p.read_text(encoding='utf-8')
+          wave_id = 'public-framework-search-wave-04'
+          if f'  {wave_id}:' not in text:
+              block = (
+                  "\n  public-framework-search-wave-04:\n"
+                  "    reviewed_at: 2026-08-16\n"
+                  "    review_mode: selective_or_heuristic\n"
+                  "    review_basis: \"selective external evidence + page-level editorial review + authored heuristic boundary\"\n"
+                  "    min_structural_score: 5\n"
+                  "    routes:\n"
+                  "      /labs/ai-ready/:\n"
+                  "        source_path: labs/ai-ready/index.md\n"
+                  "        search_intent: \"practical AI architecture for RAG, tools, MCP, agents, evals and security\"\n"
+                  "      /labs/business-ai/:\n"
+                  "        source_path: labs/business-ai/index.md\n"
+                  "        search_intent: \"enterprise Business AI patterns, technologies, controls and implementation evidence\"\n"
+                  "      /labs/enterprise-context/sales-diagnostics/:\n"
+                  "        source_path: labs/enterprise-context/sales-diagnostics/index.html\n"
+                  "        search_intent: \"SAP Sales diagnostic cases and symptom-first troubleshooting for Lead consultants\"\n"
+              )
+              p.write_text(text.rstrip() + "\n" + block, encoding='utf-8')
+          data = yaml.safe_load(p.read_text(encoding='utf-8'))
+          wave = (data.get('waves') or {}).get(wave_id)
           if not wave or len(wave.get('routes', {})) != 3:
               raise SystemExit('Wave 04 is not nested under waves with three routes.')
           print('Wave 04 registry nesting verified.')
