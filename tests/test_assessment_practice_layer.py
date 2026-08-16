@@ -204,7 +204,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -452,11 +452,16 @@ def test_board_mode_reuses_shared_scoring_without_second_history_store() -> None
 
     assert board["scoring_contract"] == "/labs/assessment/data/scoring.json"
     assert board["drill_source"] == "/labs/assessment/data/core-boundary-drills.json"
+    assert board["review_map_contract"] == "/labs/assessment/data/review-map.json"
+    assert board["review_handoff"]["history_write"] is False
     assert board["default_session"]["rounds"] <= len(drills["drills"])
     assert board["scoring"]["dimensions"] == [item["id"] for item in scoring["dimensions"]]
     assert board["scoring"]["maximum_score"] == scoring["maximum_score"] == 21
     assert board["scoring"]["lead_signal_minimum"] == scoring["lead_signal_minimum"]
     assert "localStorage" not in page
+    assert "renderReviewHandoff" in page
+    assert "dimensionScores" in page
+    assert "/labs/assessment/data/review-map.json" in page
     assert "verified: false" in page
     assert "robots: noindex,follow" in page
 

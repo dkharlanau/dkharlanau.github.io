@@ -515,10 +515,23 @@
         "scripts/validate_assessment_candidate_semantic_review.py"
       ],
       "working_rule": "Use semantic review after deterministic dedup. Retain only candidates that add a materially new Lead reasoning signal, and never publish them without a separate human promotion decision."
+    },
+    {
+      "id": "LOOP-038",
+      "priority": "P1",
+      "title": "Board Mode targeted review handoff",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/board/",
+        "/labs/assessment/data/board-mode.json",
+        "/labs/assessment/data/review-map.json",
+        "scripts/validate_assessment_board_mode.py"
+      ],
+      "working_rule": "Aggregate Board self-scores only in the current browser-memory session, then route the two weakest dimensions to the existing Review Map. Do not write history, recalibrate scoring, or create a second profile model."
     }
   ],
   "next_iteration_themes": [
-    "add a Board Mode review handoff that points low scoring dimensions to existing review-map routes without writing history",
+    "define a true human page-review findings contract without fabricating human verification",
     "record true human page-review findings separately from automated editorial improvement",
     "select secondary P1 pages by cross-track assessment value instead of processing all routes mechanically"
   ]

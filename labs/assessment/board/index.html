@@ -98,6 +98,14 @@ tags: [sap, assessment, oral-practice, diagnostics, lead]
     </div>
   </section>
 
+  <section class="research-canvas__inventory" id="board-review-handoff" data-reveal>
+    <header><p class="research-canvas__eyebrow">Targeted review handoff</p><h2>Use the weakest dimensions, not the loudest mistake.</h2><p>After a scored round, Board Mode averages each scoring dimension in the current session and points the two weakest dimensions to focused routes from the shared Review Map.</p></header>
+    <p id="board-review-status">Complete and score at least one round to build a review handoff.</p>
+    <div class="research-route-list" id="board-review-list"></div>
+    <p class="ecg-caption">This recommendation exists only in the current page session. It does not write assessment history or change calibration.</p>
+    <a href="/labs/assessment/data/review-map.json">Open shared Review Map <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">policy</span>
     <p><strong>Boundary:</strong> Board Mode uses synthetic drills and self-scoring. It does not publish a case, approve a candidate, verify a page, or write assessment history automatically.</p>
@@ -113,9 +121,11 @@ tags: [sap, assessment, oral-practice, diagnostics, lead]
     drills: [],
     scoring: null,
     contract: null,
+    reviewMap: null,
     session: [],
     roundIndex: -1,
     scores: [],
+    dimensionScores: [],
     remaining: 360,
     timer: null,
     running: false
@@ -246,14 +256,57 @@ tags: [sap, assessment, oral-practice, diagnostics, lead]
     $('board-round-state').textContent = `${state.roundIndex + 1} / ${state.session.length}`;
   }
 
+  function renderReviewHandoff() {
+    const container = $('board-review-list');
+    const status = $('board-review-status');
+    if (!container || !status || !state.scoring || !state.reviewMap) return;
+    const completed = state.dimensionScores.filter(Boolean);
+    container.replaceChildren();
+    if (!completed.length) {
+      status.textContent = 'Complete and score at least one round to build a review handoff.';
+      return;
+    }
+
+    const ranked = state.scoring.dimensions.map(dimension => {
+      const values = completed.map(item => item[dimension.id]).filter(value => Number.isFinite(value));
+      const average = values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+      return {id: dimension.id, label: dimension.label, average};
+    }).sort((left, right) => left.average - right.average || left.label.localeCompare(right.label)).slice(0, 2);
+
+    status.textContent = `Current-session review focus after ${completed.length} scored round${completed.length === 1 ? '' : 's'}.`;
+    ranked.forEach(item => {
+      const mapping = state.reviewMap.dimension_routes[item.id];
+      if (!mapping || !mapping.routes || !mapping.routes.length) return;
+      const route = mapping.routes[0];
+      const link = document.createElement('a');
+      link.href = route.url;
+      const score = document.createElement('span');
+      score.textContent = item.average.toFixed(1);
+      const title = document.createElement('strong');
+      title.textContent = `${item.label}: ${mapping.review_question}`;
+      const detail = document.createElement('small');
+      detail.textContent = `${route.label} · ${route.why}`;
+      const icon = document.createElement('i');
+      icon.className = 'material-symbols-outlined';
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = 'target';
+      link.append(score, title, detail, icon);
+      container.appendChild(link);
+    });
+  }
+
   function commitRoundScore() {
     const selects = Array.from(document.querySelectorAll('#board-score-grid select'));
     const total = selects.reduce((sum, select) => sum + Number(select.value), 0);
     state.scores[state.roundIndex] = total;
+    const dimensionScore = {};
+    selects.forEach(select => { dimensionScore[select.dataset.dimension] = Number(select.value); });
+    state.dimensionScores[state.roundIndex] = dimensionScore;
     const completed = state.scores.filter(value => Number.isFinite(value));
     const average = completed.length ? completed.reduce((a, b) => a + b, 0) / completed.length : 0;
     $('board-average').textContent = completed.length ? `${average.toFixed(1)} / 21` : '—';
     $('board-lead-rounds').textContent = String(completed.filter(value => value >= state.scoring.lead_signal_minimum).length);
+    renderReviewHandoff();
   }
 
   function nextRound() {
@@ -277,22 +330,27 @@ tags: [sap, assessment, oral-practice, diagnostics, lead]
     state.session = shuffle(state.drills).slice(0, rounds);
     state.roundIndex = 0;
     state.scores = [];
+    state.dimensionScores = [];
     $('board-average').textContent = '—';
     $('board-lead-rounds').textContent = '0';
+    renderReviewHandoff();
     renderRound();
   }
 
   Promise.all([
     fetch('/labs/assessment/data/core-boundary-drills.json', {cache: 'no-store'}).then(response => response.json()),
     fetch('/labs/assessment/data/scoring.json', {cache: 'no-store'}).then(response => response.json()),
-    fetch('/labs/assessment/data/board-mode.json', {cache: 'no-store'}).then(response => response.json())
-  ]).then(([drills, scoring, contract]) => {
+    fetch('/labs/assessment/data/board-mode.json', {cache: 'no-store'}).then(response => response.json()),
+    fetch('/labs/assessment/data/review-map.json', {cache: 'no-store'}).then(response => response.json())
+  ]).then(([drills, scoring, contract, reviewMap]) => {
     state.drills = drills.drills;
     state.scoring = scoring;
     state.contract = contract;
+    state.reviewMap = reviewMap;
     state.remaining = contract.default_session.seconds_per_round;
     $('board-timer').textContent = formatTime(state.remaining);
     renderScoreGrid();
+    renderReviewHandoff();
   }).catch(() => {
     $('board-title').textContent = 'Board Mode data could not be loaded.';
   });
