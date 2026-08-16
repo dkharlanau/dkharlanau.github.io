@@ -1,0 +1,35 @@
+{
+  "kind": "reusable-data-procedure-run",
+  "specVersion": "0.1",
+  "runId": "case-sales-material-run-02-replay",
+  "deployment": {"id": "case.manual-local", "version": "0.1"},
+  "procedure": {"id": "sales.order-material-reconciliation", "version": "0.1.1", "planHash": "case-plan-v2-reference-only"},
+  "engineVersion": "reference-case",
+  "trigger": "manual",
+  "actor": "case-runner",
+  "status": "published",
+  "startedAt": "2026-08-16T13:56:00Z",
+  "finishedAt": "2026-08-16T13:56:02Z",
+  "inputs": [
+    {"role": "sales_orders", "resource": "fixtures.json#sourceRuns/run-02", "hash": "sha256:synthetic-run-02", "fingerprint": "orders-v2-header-aliases", "selectedRegion": "Orders Aug!A11:F15", "rowCount": 4}
+  ],
+  "resolvedDependencies": [
+    {"kind": "reference-dataset", "id": "sap.material-aliases", "version": "2026.08.2"}
+  ],
+  "drift": {
+    "classification": "resolvable",
+    "findings": ["Table moved from header row 8 to 11.", "Item header changed to Item No.", "Material header changed to Material Number.", "Structural drift is accepted by existing locator and field aliases."]
+  },
+  "validationSummary": {"passed": 3, "warnings": 1, "errors": 0, "blocking": 0},
+  "exceptions": {"count": 0, "byReason": {}},
+  "controlTotals": [
+    {"name": "order-quantity", "expected": 24, "actual": 24, "status": "pass"},
+    {"name": "material-coverage", "expected": 1.0, "actual": 1.0, "status": "pass"}
+  ],
+  "outputs": [
+    {"name": "sales_material_reconciliation", "status": "published", "resource": "synthetic://case/run-02-replay/result", "hash": "sha256:synthetic-result-02-replay", "rowCount": 4},
+    {"name": "sales_material_exceptions", "status": "published", "resource": "synthetic://case/run-02-replay/exceptions", "hash": "sha256:synthetic-exceptions-empty", "rowCount": 0}
+  ],
+  "publicationDecision": "publish",
+  "metrics": {"locatorConfidence": 0.93, "materialCoverage": 1.0, "sourceQuantity": 24, "resultQuantity": 24, "replayedFromRun": "case-sales-material-run-02-review"}
+}
