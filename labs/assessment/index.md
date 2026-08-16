@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Assessment Lab — Reasoning Routes"
-description: "A practical assessment route for SAP Lead preparation across Sales, Procurement, Production, Quality, Inventory, Logistics, Integration, AI, data, diagnostics, and architecture decisions."
+description: "A practical assessment route for SAP Lead preparation across Sales, Billing, Procurement, Production, Quality, Inventory, Logistics, Integration, AI, data, diagnostics, and architecture decisions."
 permalink: /labs/assessment/
 status: draft
 verified: false
@@ -26,7 +26,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <p>Current practice model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Assessment tracks</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>5</strong><small>Reasoning levels</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>28</strong><small>Structured practice cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>34</strong><small>Structured practice cases</small></div>
       <em>Draft route. Missing coverage stays visible instead of hiding behind a long topic list.</em>
     </div>
   </header>
@@ -50,7 +50,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   </section>
 
   <section class="research-canvas__inventory" id="assessment-tracks" data-reveal>
-    <header><p class="research-canvas__eyebrow">Track 01 / Sales</p><h2>Order-to-Cash as a chain of decisions.</h2><p>Move from the sales process into the engines that decide item behavior, price, promise, credit, shipping, tax, and downstream execution.</p></header>
+    <header><p class="research-canvas__eyebrow">Track 01 / Sales</p><h2>Order-to-Cash as a chain of decisions.</h2><p>Move from sales intent into item behavior, price, promise, credit, shipping, billing, tax, finance handoff, and diagnostics.</p></header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/sales-processes/"><span>MAP</span><strong>Sales Process Atlas</strong><small>Core and special scenarios, document chains, controls, and integrations.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       <a href="/labs/enterprise-context/sales-order/"><span>SO</span><strong>Sales Order Decision Map</strong><small>Master data, determinations, partner data, dates, and document controls.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
@@ -58,6 +58,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP / aATP</strong><small>Availability, confirmations, protection, prioritization, and promise diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
       <a href="/labs/enterprise-context/credit/"><span>CR</span><strong>Credit Management</strong><small>Credit profile, exposure, check rules, blocks, decisions, and recheck.</small><i class="material-symbols-outlined" aria-hidden="true">credit_score</i></a>
       <a href="/labs/enterprise-context/shipping/"><span>SHP</span><strong>Shipping and Scheduling</strong><small>Shipping point, route, dates, delivery logic, EWM and TM boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
+      <a href="/labs/enterprise-context/billing/"><span>BIL</span><strong>Billing & Revenue Handoff</strong><small>Due state, copying control, invoice split, pricing transfer, FI posting, correction, and e-invoice boundary.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
       <a href="/labs/enterprise-context/sales-diagnostics/"><span>CASE</span><strong>Sales Diagnostic Casebook</strong><small>Symptom-first investigation, hypotheses, evidence, and proof of fix.</small><i class="material-symbols-outlined" aria-hidden="true">troubleshoot</i></a>
     </div>
   </section>
@@ -110,21 +111,22 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Coverage</p><h2>Strong areas and the next gaps.</h2><p>A visible backlog is more useful than a suspiciously perfect competence matrix.</p></header>
+    <header><p class="research-canvas__eyebrow">Coverage</p><h2>Core verticals are now broad enough to practice cross-domain reasoning.</h2><p>The next work should connect the completed verticals instead of adding another shallow catalogue.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Strong now</h4><ul><li>Sales processes and decision engines</li><li>Procurement, Production Planning, Quality and Inventory Management</li><li>EWM, TM and cross-process logistics</li><li>Integration, development and deployment choices</li><li>MDG, Business AI and AI architecture</li></ul></div>
-      <div><h4>Next P0</h4><ul><li>Billing and revenue handoff</li></ul></div>
-      <div><h4>Next P1</h4><ul><li>FI/CO touchpoints for logisticians</li><li>Automotive JIT and JIS</li><li>Integration operations and recovery</li><li>Cross-process Lead cases</li></ul></div>
+      <div><h4>Strong now</h4><ul><li>Sales decisions, shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory Management</li><li>EWM, TM and cross-process logistics</li><li>Integration, development and deployment choices</li><li>MDG, Business AI and AI architecture</li></ul></div>
+      <div><h4>Next P1 verticals</h4><ul><li>FI/CO touchpoints for logisticians</li><li>Automotive JIT and JIS</li></ul></div>
+      <div><h4>Next practice layers</h4><ul><li>Integration operations and recovery</li><li>Cross-process Lead cases</li><li>Weak-signal tracking</li><li>Adaptive case selection</li></ul></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Machine-readable practice</p><h2>The same route can be used by a person or an assessment agent.</h2><p>Case sets carry expected points, follow-ups, red flags, graph references, and human references.</p></header>
     <div class="research-route-list">
-      <a href="/labs/assessment/data/case-sets.json"><span>SET</span><strong>Case set manifest</strong><small>28 cases across core, Quality Management, and Inventory Management datasets.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/data/case-sets.json"><span>SET</span><strong>Case set manifest</strong><small>34 cases across core, Quality, Inventory, and Billing datasets.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/labs/assessment/data/cases.jsonl"><span>JSONL</span><strong>Core assessment cases</strong><small>Sales, Procurement, Production, Logistics, Integration, Data and AI.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/assessment/data/qm-cases.jsonl"><span>QM</span><strong>Quality Management cases</strong><small>Inspection trigger, disposition, stock, and customer-evidence scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/assessment/data/inventory-cases.jsonl"><span>IM</span><strong>Inventory Management cases</strong><small>Movement semantics, stock state, transfer, physical inventory, and EWM-boundary scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/data/billing-cases.jsonl"><span>BIL</span><strong>Billing cases</strong><small>Due state, split, pricing handoff, revenue account, e-invoice, and correction scenarios.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
       <a href="/labs/assessment/data/scoring.json"><span>SCORE</span><strong>Scoring contract</strong><small>Seven dimensions, 21 points maximum, and Lead-level signals.</small><i class="material-symbols-outlined" aria-hidden="true">score</i></a>
       <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development backlog</strong><small>Prioritized gaps and done definitions for the next Lab iterations.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
