@@ -1,0 +1,87 @@
+{
+  "id": "sap-lead-assessment-scoring",
+  "version": "0.1.0",
+  "updated_at": "2026-08-16",
+  "scale": {
+    "min": 0,
+    "max": 3,
+    "labels": {
+      "0": "missing or materially wrong",
+      "1": "partial knowledge without a reliable reasoning path",
+      "2": "solid consultant answer with useful structure and correct boundaries",
+      "3": "Lead-level answer with ownership, evidence, trade-offs, and downstream impact"
+    }
+  },
+  "dimensions": [
+    {
+      "id": "business_context",
+      "label": "Business context",
+      "question": "Does the answer explain the business goal and outcome before technical detail?"
+    },
+    {
+      "id": "process_structure",
+      "label": "Process structure",
+      "question": "Does the answer place the topic in the correct end-to-end flow and separate major process stages?"
+    },
+    {
+      "id": "decision_logic",
+      "label": "Decision logic",
+      "question": "Does the answer identify the relevant master data, configuration, determination, rule, or control?"
+    },
+    {
+      "id": "ownership_boundaries",
+      "label": "Ownership and boundaries",
+      "question": "Does the answer state which business or system component owns the decision, state, or handoff?"
+    },
+    {
+      "id": "diagnostic_evidence",
+      "label": "Diagnostics and evidence",
+      "question": "Does the answer define what evidence to inspect, how to find the first wrong decision, and how to prove the fix?"
+    },
+    {
+      "id": "integration_impact",
+      "label": "Integration and downstream impact",
+      "question": "Does the answer trace important effects across systems, logistics execution, data, or finance?"
+    },
+    {
+      "id": "trade_offs",
+      "label": "Trade-offs",
+      "question": "Does the answer explain alternatives, limitations, risk, and what condition would change the decision?"
+    }
+  ],
+  "maximum_score": 21,
+  "bands": [
+    {
+      "min": 0,
+      "max": 7,
+      "label": "Knowledge fragments",
+      "interpretation": "The answer contains terms or isolated facts but does not yet form a reliable process or architecture model."
+    },
+    {
+      "min": 8,
+      "max": 13,
+      "label": "Consultant baseline",
+      "interpretation": "The answer is useful and mostly correct but needs stronger ownership, evidence, or cross-process reasoning."
+    },
+    {
+      "min": 14,
+      "max": 17,
+      "label": "Senior consultant",
+      "interpretation": "The answer is structured, diagnostic, and aware of boundaries. Some trade-offs or downstream effects may still be shallow."
+    },
+    {
+      "min": 18,
+      "max": 21,
+      "label": "Lead signal",
+      "interpretation": "The answer connects business goal, process, decision logic, ownership, evidence, integration impact, and trade-offs without unnecessary detail."
+    }
+  ],
+  "hard_red_flags": [
+    "invented project or client experience",
+    "confidently wrong system ownership",
+    "manual document correction presented as root-cause analysis",
+    "technology choice without business or operating-model reasoning",
+    "AI write access without authority, approval, or rollback discussion when the action is material"
+  ],
+  "evaluation_rule": "Score the reasoning demonstrated in the answer, not the number of SAP terms mentioned. A short answer can score higher than a long answer when ownership, evidence, and trade-offs are clear."
+}
