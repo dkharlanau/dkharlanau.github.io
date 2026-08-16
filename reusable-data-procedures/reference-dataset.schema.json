@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/reusable-data-procedures/reference-dataset.schema.json",
+  "title": "Reference Dataset",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "specVersion", "id", "version", "family", "owner", "lifecycle", "columns", "key", "qualityPolicy"],
+  "properties": {
+    "kind": {"const": "reference-dataset"},
+    "specVersion": {"const": "0.1"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$"},
+    "version": {"type": "string"},
+    "family": {"enum": ["alias-dictionary", "cross-system-mapping", "code-translation", "allowed-values", "threshold-table", "exception-register", "other"]},
+    "purpose": {"type": "string"},
+    "owner": {"type": "string"},
+    "steward": {"type": "string"},
+    "sensitivity": {"enum": ["public", "internal", "confidential", "restricted"]},
+    "key": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "cardinality": {"enum": ["one-to-one", "one-to-many", "many-to-one", "many-to-many"]},
+    "columns": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["name", "type"], "properties": {"name": {"type": "string"}, "type": {"enum": ["string", "integer", "number", "boolean", "date", "datetime"]}, "concept": {"type": "string"}, "required": {"type": "boolean"}, "description": {"type": "string"}}}},
+    "effectiveDating": {"type": "object", "additionalProperties": false, "properties": {"validFromColumn": {"type": "string"}, "validToColumn": {"type": "string"}, "allowOverlap": {"type": "boolean", "default": false}}},
+    "qualityPolicy": {"type": "object", "additionalProperties": false, "properties": {"requireUniqueKey": {"type": "boolean", "default": true}, "onUnknownTarget": {"enum": ["allow", "warn", "block"]}, "onUnmatched": {"enum": ["allow", "exception", "block"]}, "onAmbiguous": {"enum": ["exception", "block"]}, "minCoverage": {"type": "number", "minimum": 0, "maximum": 1}}},
+    "source": {"type": "object", "additionalProperties": false, "properties": {"system": {"type": "string"}, "locationRef": {"type": "string"}, "authority": {"type": "string"}}},
+    "consumers": {"type": "array", "items": {"type": "string"}},
+    "lifecycle": {"type": "object", "additionalProperties": false, "required": ["status"], "properties": {"status": {"enum": ["draft", "review", "approved", "deprecated"]}, "effectiveFrom": {"type": "string", "format": "date-time"}, "effectiveTo": {"type": "string", "format": "date-time"}, "approvedBy": {"type": "string"}, "approvedAt": {"type": "string", "format": "date-time"}, "replacement": {"type": "string"}}},
+    "provenance": {"type": "object", "additionalProperties": false, "properties": {"createdAt": {"type": "string", "format": "date-time"}, "createdBy": {"type": "string"}, "changeReason": {"type": "string"}}}
+  }
+}
