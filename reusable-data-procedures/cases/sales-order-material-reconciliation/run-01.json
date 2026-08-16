@@ -1,0 +1,32 @@
+{
+  "kind": "reusable-data-procedure-run",
+  "specVersion": "0.1",
+  "runId": "case-sales-material-run-01",
+  "deployment": {"id": "case.manual-local", "version": "0.1"},
+  "procedure": {"id": "sales.order-material-reconciliation", "version": "0.1.0", "planHash": "case-plan-v1"},
+  "engineVersion": "reference-case",
+  "trigger": "manual",
+  "actor": "case-runner",
+  "status": "published",
+  "startedAt": "2026-08-16T13:50:00Z",
+  "finishedAt": "2026-08-16T13:50:02Z",
+  "inputs": [
+    {"role": "sales_orders", "resource": "fixtures.json#sourceRuns/run-01", "hash": "sha256:synthetic-run-01", "fingerprint": "orders-v1-six-fields", "selectedRegion": "Orders!A8:F12", "rowCount": 4}
+  ],
+  "resolvedDependencies": [
+    {"kind": "reference-dataset", "id": "sap.material-aliases", "version": "2026.08.1"}
+  ],
+  "drift": {"classification": "none", "findings": []},
+  "validationSummary": {"passed": 3, "warnings": 0, "errors": 0, "blocking": 0},
+  "exceptions": {"count": 0, "byReason": {}},
+  "controlTotals": [
+    {"name": "order-quantity", "expected": 27, "actual": 27, "status": "pass"},
+    {"name": "material-coverage", "expected": 1.0, "actual": 1.0, "status": "pass"}
+  ],
+  "outputs": [
+    {"name": "sales_material_reconciliation", "status": "published", "resource": "synthetic://case/run-01/result", "hash": "sha256:synthetic-result-01", "rowCount": 4},
+    {"name": "sales_material_exceptions", "status": "published", "resource": "synthetic://case/run-01/exceptions", "hash": "sha256:synthetic-exceptions-empty", "rowCount": 0}
+  ],
+  "publicationDecision": "publish",
+  "metrics": {"locatorConfidence": 0.98, "materialCoverage": 1.0, "sourceQuantity": 27, "resultQuantity": 27}
+}

@@ -1,0 +1,98 @@
+---
+layout: default
+title: "Reusable Data Procedures — Sales Order Material Reconciliation"
+description: "Reference case for reconciling a SAP Sales order export with controlled material reference data across a golden run, drift, review and replay."
+permalink: /reusable-data-procedures/cases/sales-order-material-reconciliation/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li><a href="/reusable-data-procedures/cases/">Reference Cases</a></li><li aria-current="page">Sales Order Material Reconciliation</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Reference case 01 / SAP Sales</p>
+    <h1>Sales Order Material Reconciliation.</h1>
+    <p>The business task is simple to say: take a monthly Sales order export and make sure every material can be resolved to the controlled material value used by the downstream process. The interesting part is everything that can move around that sentence.</p>
+    <nav class="rdp__subnav" aria-label="Case pages"><a href="/reusable-data-procedures/cases/">Casebook</a><a href="/reusable-data-procedures/packs/sap-logistics/">SAP Logistics Pack</a><a href="/reusable-data-procedures/review-inbox/">Review</a><a href="/reusable-data-procedures/decision-memory/">Decision Memory</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Business question</p><h2>Can every Sales order item be connected to one trusted material?</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Primary source</strong><p>A synthetic SAP Sales workbook with Sales Document, Item, Material, Plant, Order Quantity and Unit.</p></article>
+      <article><strong>Reference source</strong><p>A controlled alias dataset that maps source material values to the canonical material used by the downstream consumer.</p></article>
+      <article><strong>Key</strong><p><code>Sales Document + Item</code> must stay unique in the order source. The material alias key must also stay unique.</p></article>
+      <article><strong>Publication rule</strong><p>Publish only when all required materials resolve, key cardinality is safe and control totals remain stable.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Run 01 / golden</p><h2>The first run is intentionally boring.</h2><p>The table is on sheet <code>Orders</code>, header row 8. Four order items are present and all four material values resolve through <code>sap.material-aliases@2026.08.1</code>.</p></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Signal</th><th>Expected result</th></tr></thead>
+      <tbody>
+        <tr><td>Locator</td><td>Header-anchor locator finds row 8 with high confidence.</td></tr>
+        <tr><td>Sales key</td><td>Sales Document + Item is unique: 4 keys from 4 rows.</td></tr>
+        <tr><td>Reference key</td><td>Source material is unique in the alias dataset.</td></tr>
+        <tr><td>Coverage</td><td>4 / 4 materials resolved, 100% coverage.</td></tr>
+        <tr><td>Quantity control</td><td>27 source units remain 27 result units.</td></tr>
+        <tr><td>Decision</td><td>Publish result and zero exceptions.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Run 02 / drift</p><h2>The task is the same. The file is not.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Table moved</strong><p>The order table starts at row 11 instead of row 8. This is structural drift, not business drift.</p></article>
+      <article><strong>Headers changed</strong><p><code>Material</code> becomes <code>Material Number</code> and <code>Item</code> becomes <code>Item No.</code>. Approved aliases allow the locator to recover.</p></article>
+      <article><strong>New value</strong><p>A new source material <code>EXT-Q9</code> appears. It has no row in the pinned reference release.</p></article>
+      <article><strong>Safe outcome</strong><p>The procedure does not invent a material mapping. It creates a blocking reference-gap review item and withholds publication.</p></article>
+    </div>
+    <div class="rdp__rerun"><strong>Classification:</strong> table movement and header aliases are compatible/resolvable drift. The unknown material is a business data gap and requires a decision.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Human loop</p><h2>One question, one scoped decision.</h2></div>
+    <div class="rdp__sequence">
+      <article><h3>1. Review item</h3><p>“Should source material <code>EXT-Q9</code> map to canonical material <code>MAT-471103</code> for this Sales export family?” Evidence includes the unresolved value, source lineage and the candidate supplied by an approved business reference.</p></article>
+      <article><h3>2. Decision</h3><p>The mapping is approved for the defined Sales export source family. The decision is not global and does not redefine the meaning of <code>sap.material-id</code>.</p></article>
+      <article><h3>3. Reference release</h3><p>A new reference release <code>sap.material-aliases@2026.08.2</code> adds the approved row. The old release remains available for replay.</p></article>
+      <article><h3>4. Procedure revision</h3><p>The procedure is revised from <code>0.1.0</code> to <code>0.1.1</code> only to pin the newly approved reference version. Business transformation logic stays unchanged.</p></article>
+      <article><h3>5. Replay</h3><p>The same Run 02 source is executed again. All four rows resolve, the quantity control stays stable and publication can proceed.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">What this case proves</p><h2>The framework has to distinguish movement from meaning.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Coordinates are evidence, not identity</strong><p>Moving the table does not create a new procedure version because the locator is semantic.</p></article>
+      <article><strong>Aliases are not business mappings</strong><p>Renaming <code>Material</code> to <code>Material Number</code> is a header alias. Mapping <code>EXT-Q9</code> to a canonical material is a business decision.</p></article>
+      <article><strong>Reference data changes are traceable</strong><p>The new mapping gets a released version and an explicit decision record.</p></article>
+      <article><strong>Safe failure is part of success</strong><p>The correct Run 02 result before review is <em>withhold</em>, not a guessed output.</p></article>
+      <article><strong>Replay needs pinned evidence</strong><p>Run records show the exact procedure and reference versions used before and after the decision.</p></article>
+      <article><strong>Learning stays deterministic</strong><p>A human decision changes a versioned asset. Future execution still follows explicit contracts.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Machine-readable bundle</p><h2>The page is the explanation. The files are the case.</h2></div>
+    <div class="rdp__route-list">
+      <a href="case.json"><span>CASE</span><strong>Case manifest</strong><small>Actors, source roles, run sequence and expected decisions.</small><i class="material-symbols-outlined">data_object</i></a>
+      <a href="procedure.json"><span>PROC</span><strong>Procedure candidate</strong><small>Procedure schema 0.5 contract for the golden release.</small><i class="material-symbols-outlined">schema</i></a>
+      <a href="fixtures.json"><span>DATA</span><strong>Synthetic fixtures</strong><small>Safe source and reference rows for Run 01 and Run 02.</small><i class="material-symbols-outlined">table_view</i></a>
+      <a href="tests.json"><span>TEST</span><strong>Case tests</strong><small>Golden, drift, failure and replay expectations.</small><i class="material-symbols-outlined">science</i></a>
+      <a href="run-01.json"><span>RUN</span><strong>Expected Run 01 evidence</strong><small>Published golden execution.</small><i class="material-symbols-outlined">fact_check</i></a>
+      <a href="run-02-review.json"><span>RUN</span><strong>Expected Run 02 evidence</strong><small>Review-required execution before the reference update.</small><i class="material-symbols-outlined">rule</i></a>
+      <a href="review-item.json"><span>REV</span><strong>Reference-gap review</strong><small>One explicit unresolved business question.</small><i class="material-symbols-outlined">help_center</i></a>
+      <a href="decision-record.json"><span>DEC</span><strong>Decision record</strong><small>Scoped approval for the new external material mapping.</small><i class="material-symbols-outlined">history_edu</i></a>
+      <a href="run-02-replay.json"><span>RUN</span><strong>Expected replay evidence</strong><small>Published execution after approved reference release.</small><i class="material-symbols-outlined">replay</i></a>
+    </div>
+  </section>
+</div>
