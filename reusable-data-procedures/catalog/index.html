@@ -19,7 +19,7 @@ hide_global_cta: true
     <p class="rdp__eyebrow">Detail / Catalog & registry</p>
     <h1>A folder stores procedures. A catalog makes them reusable.</h1>
     <p>Once procedures become useful, the next problem is finding the right one, knowing whether it is trusted, and understanding what will break if it changes. The catalog is the control plane for that problem.</p>
-    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/framework/">Framework</a><a href="/reusable-data-procedures/techniques/">Techniques</a><a href="/reusable-data-procedures/catalog/" aria-current="page">Catalog</a><a href="/reusable-data-procedures/semantic-registry/">Semantic Concepts</a><a href="/reusable-data-procedures/reference-data/">Reference Data</a><a href="/reusable-data-procedures/review-inbox/">Review</a><a href="/reusable-data-procedures/decision-memory/">Decisions</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/framework/">Framework</a><a href="/reusable-data-procedures/techniques/">Techniques</a><a href="/reusable-data-procedures/catalog/" aria-current="page">Catalog</a><a href="/reusable-data-procedures/semantic-registry/">Semantic Concepts</a><a href="/reusable-data-procedures/reference-data/">Reference Data</a><a href="/reusable-data-procedures/review-inbox/">Review</a><a href="/reusable-data-procedures/decision-memory/">Decisions</a><a href="/reusable-data-procedures/packs/">Packs</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
   </header>
 
   <section class="rdp__detail-section">
@@ -57,6 +57,7 @@ hide_global_cta: true
       <article><strong>By task</strong><p>“Show approved reconciliation procedures for SAP sales exports.”</p></article>
       <article><strong>By concept</strong><p>“Which procedures consume or produce <code>sap.material-id</code>?”</p></article>
       <article><strong>By dependency</strong><p>“What will be affected if reference dataset <code>sales.customer-aliases</code> changes?”</p></article>
+      <article><strong>By pack</strong><p>“Which starter assets and tests belong to the SAP Logistics pack?”</p></article>
       <article><strong>By decision history</strong><p>“Has this mapping or semantic binding already been reviewed, accepted or rejected?”</p></article>
       <article><strong>By trust</strong><p>“Which procedures have regression fixtures, owner approval and successful recent runs?”</p></article>
       <article><strong>By policy</strong><p>“Which procedures may run locally and never send data to an AI endpoint?”</p></article>
@@ -88,7 +89,10 @@ hide_global_cta: true
     2026/
       decision-...json
   packs/
-    sap-sales-reconciliation/
+    sap-logistics-starter/
+      pack.json
+      blueprints.json
+      tests.json
   catalog/
     index.jsonl
     dependency-graph.json
@@ -99,7 +103,7 @@ review/
 
 runs/
   2026-08-16/run-.../run-report.json</code></pre>
-    <div class="rdp__callout"><strong>Rule:</strong> run history is not the catalog, and an open review queue is not decision memory. Each artifact has a different job.</div>
+    <div class="rdp__callout"><strong>Rule:</strong> run history is not the catalog, an open review queue is not decision memory, and a pack manifest is not a deployment. Each artifact has a different job.</div>
   </section>
 
   <section class="rdp__detail-section">
@@ -112,14 +116,14 @@ runs/
       <article><strong>Review item</strong><p>A temporary work object for one unresolved ambiguity, drift event, mapping gap or business question.</p></article>
       <article><strong>Decision record</strong><p>Reusable knowledge about what was accepted or rejected, where it applies and what changed because of it.</p></article>
       <article><strong>Pattern</strong><p>A recommended arrangement of blocks for a repeated problem, for example lookup enrichment with exception routing.</p></article>
-      <article><strong>Pack</strong><p>A curated group of procedures, blocks, concepts, references and examples for a domain such as SAP Sales.</p></article>
+      <article><strong>Pack</strong><p>A curated release of compatible procedures or blueprints, blocks, concepts, references, tests and governance defaults for one domain.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Impact graph</p><h2>Dependencies and decisions should be queryable before changes are approved.</h2><p>A catalog becomes much more useful when it can answer “who uses this?” and “why was this accepted?”. Procedures should expose consumed blocks, semantic concepts, reference data, upstream procedures and downstream consumers. Decision records add the reasoning behind important edges.</p></div>
-    <div class="rdp__rerun"><strong>Example:</strong> <code>sales.order-material-reconciliation</code> → consumes <code>sap.material-id</code> → uses <code>normalize-material-id@2</code> → depends on <code>material-aliases@2026.08</code> → mapping approved by <code>decision-2026-014</code>. A change now has both an impact radius and an explanation.</div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Impact graph</p><h2>Dependencies, packs and decisions should be queryable before changes are approved.</h2><p>A catalog becomes much more useful when it can answer “who uses this?”, “which release includes this?” and “why was this accepted?”. Procedures expose consumed blocks, semantic concepts, reference data, upstream procedures and downstream consumers. Packs curate compatible groups. Decision records add reasoning behind important edges.</p></div>
+    <div class="rdp__rerun"><strong>Example:</strong> <code>sap-logistics-starter@0.1.0</code> → contains <code>sales.order-material-reconciliation</code> → consumes <code>sap.material-id</code> → requires <code>sap.normalize-material-id</code> → may depend on <code>sap.material-aliases</code>. A change can now be checked against both direct consumers and pack releases.</div>
   </section>
 
-  <section class="rdp__detail-section"><div class="rdp__route-list"><a href="/reusable-data-procedures/semantic-registry/"><span>SEM</span><strong>Semantic Concept Registry</strong><small>Stable meanings, representation rules, bindings and semantic drift.</small><i class="material-symbols-outlined">hub</i></a><a href="/reusable-data-procedures/reference-data/"><span>REF</span><strong>Reference Data Registry</strong><small>Versioned mappings, code lists and controlled value spaces.</small><i class="material-symbols-outlined">table_view</i></a><a href="/reusable-data-procedures/review-inbox/"><span>REVIEW</span><strong>Review Inbox</strong><small>Structured human decisions for ambiguity, drift and gaps.</small><i class="material-symbols-outlined">rule</i></a><a href="/reusable-data-procedures/decision-memory/"><span>MEM</span><strong>Decision Memory</strong><small>Reusable accepted and rejected decisions with evidence and scope.</small><i class="material-symbols-outlined">history_edu</i></a></div></section>
+  <section class="rdp__detail-section"><div class="rdp__route-list"><a href="/reusable-data-procedures/packs/"><span>PACK</span><strong>Domain Packs</strong><small>Curated compatible assets, blueprints and test expectations.</small><i class="material-symbols-outlined">inventory_2</i></a><a href="/reusable-data-procedures/packs/sap-logistics/"><span>SAP</span><strong>SAP Logistics Starter Pack</strong><small>Sales, Procurement and shared master-data blueprints.</small><i class="material-symbols-outlined">account_tree</i></a><a href="/reusable-data-procedures/semantic-registry/"><span>SEM</span><strong>Semantic Concept Registry</strong><small>Stable meanings, representation rules, bindings and semantic drift.</small><i class="material-symbols-outlined">hub</i></a><a href="/reusable-data-procedures/reference-data/"><span>REF</span><strong>Reference Data Registry</strong><small>Versioned mappings, code lists and controlled value spaces.</small><i class="material-symbols-outlined">table_view</i></a><a href="/reusable-data-procedures/review-inbox/"><span>REVIEW</span><strong>Review Inbox</strong><small>Structured human decisions for ambiguity, drift and gaps.</small><i class="material-symbols-outlined">rule</i></a><a href="/reusable-data-procedures/decision-memory/"><span>MEM</span><strong>Decision Memory</strong><small>Reusable accepted and rejected decisions with evidence and scope.</small><i class="material-symbols-outlined">history_edu</i></a></div></section>
 </div>
