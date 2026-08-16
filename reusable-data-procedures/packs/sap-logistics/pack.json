@@ -1,0 +1,106 @@
+{
+  "kind": "rdp-domain-pack",
+  "specVersion": "0.1",
+  "id": "sap-logistics-starter",
+  "name": "SAP Logistics Starter Pack",
+  "version": "0.1.0",
+  "state": "blueprint",
+  "purpose": "Provide a reusable starting set of procedures, concepts, reference-data contracts, block requirements, tests and review rules for repeated SAP logistics data work.",
+  "domains": ["sales", "procurement", "material", "cross-domain"],
+  "owner": "data-procedure-framework",
+  "modules": [
+    {"id": "shared", "name": "Shared Logistics Foundation", "purpose": "Common concepts, identifiers, parsing, references, validation and exception behavior."},
+    {"id": "sales", "name": "Sales", "purpose": "Reusable Sales document, customer and reconciliation data work."},
+    {"id": "procurement", "name": "Procurement", "purpose": "Reusable purchasing document, supplier and reconciliation data work."},
+    {"id": "cross-process", "name": "Cross-process Controls", "purpose": "Shared coverage, key, relation and reconciliation controls.", "optional": true}
+  ],
+  "assets": {
+    "procedureBlueprints": [
+      {"id": "sales.order-material-reconciliation", "module": "sales", "state": "blueprint", "required": true},
+      {"id": "sales.customer-reference-enrichment", "module": "sales", "state": "blueprint", "required": false},
+      {"id": "sales.order-control-check", "module": "sales", "state": "blueprint", "required": false},
+      {"id": "procurement.po-material-reconciliation", "module": "procurement", "state": "blueprint", "required": true},
+      {"id": "procurement.supplier-material-cross-reference", "module": "procurement", "state": "blueprint", "required": false},
+      {"id": "procurement.price-review-preparation", "module": "procurement", "state": "blueprint", "required": false},
+      {"id": "logistics.master-data-coverage", "module": "cross-process", "state": "blueprint", "required": false},
+      {"id": "logistics.cross-source-key-audit", "module": "cross-process", "state": "blueprint", "required": false}
+    ],
+    "procedures": [],
+    "semanticConcepts": [
+      {"id": "sap.material-id", "module": "shared", "state": "candidate", "required": true},
+      {"id": "sap.business-partner-id", "module": "shared", "state": "candidate", "required": true},
+      {"id": "sap.plant-id", "module": "shared", "state": "candidate", "required": false},
+      {"id": "sap.sales-document", "module": "sales", "state": "candidate", "required": true},
+      {"id": "sap.sales-document-item", "module": "sales", "state": "candidate", "required": true},
+      {"id": "sap.purchasing-document", "module": "procurement", "state": "candidate", "required": true},
+      {"id": "sap.purchasing-document-item", "module": "procurement", "state": "blueprint", "required": true, "note": "Candidate concept discovered by the pack; prove against real Procurement cases before promotion to the shared registry."}
+    ],
+    "referenceContracts": [
+      {"id": "sap.material-aliases", "module": "shared", "state": "blueprint", "required": false},
+      {"id": "sap.business-partner-aliases", "module": "shared", "state": "blueprint", "required": false},
+      {"id": "sap.plant-crosswalk", "module": "shared", "state": "blueprint", "required": false},
+      {"id": "sap.supplier-material-cross-reference", "module": "procurement", "state": "blueprint", "required": false},
+      {"id": "sap.unit-of-measure-map", "module": "shared", "state": "blueprint", "required": false},
+      {"id": "sap.document-status-policy", "module": "cross-process", "state": "blueprint", "required": false}
+    ],
+    "referenceReleases": [],
+    "blockRequirements": [
+      {"id": "excel.locate-table-by-header-set", "module": "shared", "state": "blueprint", "required": true},
+      {"id": "sap.normalize-material-id", "module": "shared", "state": "blueprint", "required": true},
+      {"id": "sap.normalize-business-partner-id", "module": "shared", "state": "blueprint", "required": false},
+      {"id": "parse.explicit-locale-date", "module": "shared", "state": "blueprint", "required": true},
+      {"id": "parse.explicit-locale-decimal", "module": "shared", "state": "blueprint", "required": true},
+      {"id": "relation.assert-cardinality", "module": "shared", "state": "blueprint", "required": true},
+      {"id": "validate.mapping-coverage", "module": "shared", "state": "blueprint", "required": true},
+      {"id": "reconcile.row-loss-ledger", "module": "shared", "state": "blueprint", "required": true},
+      {"id": "reconcile.join-ledger", "module": "shared", "state": "blueprint", "required": true},
+      {"id": "exception.route-with-lineage", "module": "shared", "state": "blueprint", "required": true},
+      {"id": "drift.classify-source-change", "module": "shared", "state": "blueprint", "required": true}
+    ],
+    "blocks": [],
+    "policyProfiles": [
+      {"id": "team-standard", "module": "shared", "state": "candidate", "required": false},
+      {"id": "production-critical", "module": "shared", "state": "candidate", "required": false}
+    ]
+  },
+  "tests": {
+    "requiredScenarios": [
+      "identifier-text-to-numeric-mutation",
+      "workbook-table-moved",
+      "duplicate-reference-key",
+      "decimal-locale-change",
+      "date-locale-change",
+      "new-reference-gap",
+      "unknown-business-status",
+      "join-row-multiplication",
+      "control-total-drift",
+      "missing-document-item-key"
+    ],
+    "testSuiteRefs": [],
+    "minimumEvidence": ["source-lineage", "row-counts", "cardinality-result", "coverage-result", "exception-reasons", "publication-decision"]
+  },
+  "reviewDefaults": {
+    "reviewItemTypes": ["semantic-binding", "mapping-candidate", "reference-gap", "breaking-drift", "business-rule-question", "validation-override"],
+    "blockingSignals": ["required-key-missing", "unexpected-cardinality", "identifier-precision-lost", "control-total-failure"],
+    "promotionSignals": ["same-manual-fix-repeats", "same-reference-gap-repeats", "same-semantic-binding-approved-across-cases"]
+  },
+  "compatibility": {
+    "coreModel": "0.5",
+    "semanticExtension": "0.1",
+    "humanLoopExtension": "0.1",
+    "notes": [
+      "Pack is a blueprint release and does not claim production-ready implementations.",
+      "Project-specific SAP organization structures, statuses and mappings remain explicit local contracts.",
+      "Deployment paths, credentials and schedules are not part of the pack."
+    ]
+  },
+  "releaseNotes": [
+    "Initial blueprint with Shared, Sales, Procurement and Cross-process modules.",
+    "Introduces purchasing-document-item as a concept candidate to prove with real Procurement cases.",
+    "Defines review and test expectations before procedure promotion."
+  ],
+  "provenance": {
+    "createdAt": "2026-08-16T12:45:00Z",
+    "createdBy": "framework-author"
+  }
+}

@@ -1,0 +1,67 @@
+---
+layout: default
+title: "Reusable Data Procedures — Domain Packs"
+description: "A packaging model for curated sets of procedures, blocks, semantic concepts, reference data, tests and governance defaults."
+permalink: /reusable-data-procedures/packs/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Domain Packs</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Domain packs</p>
+    <h1>Package a working vocabulary, not one giant workflow.</h1>
+    <p>A domain pack is a curated release of compatible procedures, reusable blocks, semantic concepts, reference-data contracts, test scenarios and governance defaults for one area of work.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/packs/" aria-current="page">Packs</a><a href="/reusable-data-procedures/packs/sap-logistics/">SAP Logistics</a><a href="/reusable-data-procedures/testing/">Testing</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Why</p><h2>A catalog can contain hundreds of good assets and still be hard to start with.</h2><p>A pack gives a team a curated entry point. It says which assets normally belong together, which concepts they share, which tests matter and what is still only a blueprint.</p></div>
+    <div class="rdp__cards">
+      <article><strong>Procedures</strong><p>End-to-end tasks that solve a clear data job.</p></article>
+      <article><strong>Blocks</strong><p>Shared locators, normalizers, matchers, validators and exception policies.</p></article>
+      <article><strong>Concepts</strong><p>Stable domain meanings used to connect local fields and procedures.</p></article>
+      <article><strong>Reference contracts</strong><p>Expected governed mappings and code lists, without bundling uncontrolled production values.</p></article>
+      <article><strong>Test corpus</strong><p>Golden, drift, failure and mutation cases that define expected behavior.</p></article>
+      <article><strong>Policy defaults</strong><p>Recommended review, evidence and deployment controls for the pack's risk profile.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Release model</p><h2>The pack pins compatibility; the assets keep their own versions.</h2></div>
+    <p>A procedure can release independently. A pack release records a tested combination of versions or compatible ranges. This avoids turning the pack into a monolith where one small Procurement fix forces every Sales procedure to pretend it changed too.</p>
+    <div class="rdp__rerun"><strong>Pack release:</strong> manifest → pinned or compatible asset versions → pack test suite → release notes → optional deployment profiles.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">States</p><h2>Be explicit about what exists and what is still a blueprint.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>State</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Blueprint</td><td>Useful procedure or block contract is described but not implemented or production-proven yet.</td></tr>
+        <tr><td>Candidate</td><td>Asset exists and is being tested against realistic cases.</td></tr>
+        <tr><td>Ready</td><td>Pack requirements and tests are satisfied for the declared scope.</td></tr>
+        <tr><td>Deprecated</td><td>Kept for history, but a named replacement should be used for new adoption.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Boundary</p><h2>A pack is not an installer full of business data.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>No raw master data</strong><p>Reference datasets are contracts and version references. Production values remain controlled by their owner.</p></article>
+      <article><strong>No secret configuration</strong><p>Credentials, paths and schedules belong to Deployment.</p></article>
+      <article><strong>No hidden SAP truth</strong><p>The pack can describe expected concepts and patterns, but project-specific customizing and organizational meaning still need explicit contracts.</p></article>
+      <article><strong>No forced adoption</strong><p>A team can use one module or one procedure without installing every asset in the pack.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section"><div class="rdp__route-list"><a href="/reusable-data-procedures/packs/sap-logistics/"><span>SAP</span><strong>SAP Logistics Starter Pack</strong><small>Sales, Procurement and shared master-data procedure blueprints using the framework end to end.</small><i class="material-symbols-outlined">inventory_2</i></a><a href="/reusable-data-procedures/pack.schema.json"><span>SPEC</span><strong>Pack schema</strong><small>Machine contract for pack identity, modules, assets, tests and compatibility.</small><i class="material-symbols-outlined">code</i></a></div></section>
+</div>

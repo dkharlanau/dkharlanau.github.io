@@ -1,0 +1,102 @@
+{
+  "pack": "sap-logistics-starter@0.1.0",
+  "blueprintSpecVersion": "0.1",
+  "procedures": [
+    {
+      "id": "sales.order-material-reconciliation",
+      "module": "sales",
+      "purpose": "Reconcile Sales order item material identifiers against an approved material reference and publish unmatched exceptions.",
+      "sourceRoles": ["sales-order-items", "material-reference"],
+      "concepts": ["sap.sales-document", "sap.sales-document-item", "sap.material-id", "sap.plant-id"],
+      "referenceContracts": ["sap.material-aliases"],
+      "requiredBlocks": ["excel.locate-table-by-header-set", "sap.normalize-material-id", "relation.assert-cardinality", "validate.mapping-coverage", "reconcile.join-ledger", "exception.route-with-lineage"],
+      "gates": ["document-item-key-unique", "material-reference-key-unique", "join-does-not-multiply-sales-items", "mapping-coverage-within-policy"],
+      "outputs": ["reconciled-sales-items", "unmatched-materials", "run-evidence"],
+      "reviewTriggers": ["reference-gap", "unexpected-cardinality", "semantic-binding", "breaking-drift"]
+    },
+    {
+      "id": "sales.customer-reference-enrichment",
+      "module": "sales",
+      "purpose": "Enrich Sales data with an approved business-partner reference while protecting role and organization scope.",
+      "sourceRoles": ["sales-items-or-orders", "business-partner-reference"],
+      "concepts": ["sap.business-partner-id", "sap.sales-document"],
+      "referenceContracts": ["sap.business-partner-aliases"],
+      "requiredBlocks": ["sap.normalize-business-partner-id", "relation.assert-cardinality", "validate.mapping-coverage", "exception.route-with-lineage"],
+      "gates": ["reference-key-unique-for-declared-scope", "role-scope-defined", "join-does-not-multiply-facts"],
+      "outputs": ["enriched-sales-data", "unmatched-partners", "run-evidence"],
+      "reviewTriggers": ["reference-gap", "mapping-candidate", "business-rule-question"]
+    },
+    {
+      "id": "sales.order-control-check",
+      "module": "sales",
+      "purpose": "Run structural and business control checks on a recurring Sales order extract before it is consumed downstream.",
+      "sourceRoles": ["sales-order-items"],
+      "concepts": ["sap.sales-document", "sap.sales-document-item", "sap.material-id"],
+      "referenceContracts": ["sap.document-status-policy"],
+      "requiredBlocks": ["reconcile.row-loss-ledger", "parse.explicit-locale-decimal", "drift.classify-source-change"],
+      "gates": ["required-key-present", "document-item-key-unique", "row-count-within-policy", "selected-control-total-reconciles", "known-status-policy"],
+      "outputs": ["control-report", "exceptions", "run-evidence"],
+      "reviewTriggers": ["unknown-business-status", "validation-override", "breaking-drift"]
+    },
+    {
+      "id": "procurement.po-material-reconciliation",
+      "module": "procurement",
+      "purpose": "Reconcile Purchasing document item materials against an approved material reference without losing PO and item identity.",
+      "sourceRoles": ["purchasing-items", "material-reference"],
+      "concepts": ["sap.purchasing-document", "sap.purchasing-document-item", "sap.material-id", "sap.plant-id"],
+      "referenceContracts": ["sap.material-aliases"],
+      "requiredBlocks": ["excel.locate-table-by-header-set", "sap.normalize-material-id", "relation.assert-cardinality", "validate.mapping-coverage", "reconcile.join-ledger", "exception.route-with-lineage"],
+      "gates": ["purchasing-document-item-key-unique", "material-reference-key-unique", "join-does-not-multiply-purchasing-items", "mapping-coverage-within-policy"],
+      "outputs": ["reconciled-purchasing-items", "unmatched-materials", "run-evidence"],
+      "reviewTriggers": ["semantic-binding", "reference-gap", "unexpected-cardinality", "breaking-drift"]
+    },
+    {
+      "id": "procurement.supplier-material-cross-reference",
+      "module": "procurement",
+      "purpose": "Resolve supplier-specific material identifiers to internal material concepts using governed cross-reference data.",
+      "sourceRoles": ["supplier-or-purchasing-data", "supplier-material-reference"],
+      "concepts": ["sap.business-partner-id", "sap.material-id"],
+      "referenceContracts": ["sap.supplier-material-cross-reference"],
+      "requiredBlocks": ["sap.normalize-business-partner-id", "sap.normalize-material-id", "relation.assert-cardinality", "validate.mapping-coverage", "exception.route-with-lineage"],
+      "gates": ["supplier-plus-external-material-key-unique", "target-material-resolves-once", "effective-date-valid"],
+      "outputs": ["resolved-materials", "unmatched-supplier-materials", "run-evidence"],
+      "reviewTriggers": ["reference-gap", "mapping-candidate", "unexpected-cardinality"]
+    },
+    {
+      "id": "procurement.price-review-preparation",
+      "module": "procurement",
+      "purpose": "Prepare comparable purchasing price data and surface differences for review without making an automatic commercial decision.",
+      "sourceRoles": ["purchasing-price-data"],
+      "concepts": ["sap.purchasing-document", "sap.material-id", "sap.business-partner-id"],
+      "referenceContracts": ["sap.unit-of-measure-map"],
+      "requiredBlocks": ["parse.explicit-locale-date", "parse.explicit-locale-decimal", "relation.assert-cardinality", "exception.route-with-lineage"],
+      "gates": ["amount-parse-success", "unit-conversion-known-when-used", "currency-and-unit-context-present", "comparison-key-defined"],
+      "outputs": ["price-review-dataset", "parse-and-unit-exceptions", "run-evidence"],
+      "reviewTriggers": ["reference-gap", "business-rule-question", "validation-override"]
+    },
+    {
+      "id": "logistics.master-data-coverage",
+      "module": "cross-process",
+      "purpose": "Measure how operational Sales or Procurement data resolves against released material, partner and plant references.",
+      "sourceRoles": ["operational-data", "released-reference-data"],
+      "concepts": ["sap.material-id", "sap.business-partner-id", "sap.plant-id"],
+      "referenceContracts": ["sap.material-aliases", "sap.business-partner-aliases", "sap.plant-crosswalk"],
+      "requiredBlocks": ["validate.mapping-coverage", "relation.assert-cardinality", "exception.route-with-lineage"],
+      "gates": ["reference-keys-unique", "coverage-metrics-produced", "unmatched-values-retain-source-lineage"],
+      "outputs": ["coverage-report", "unmatched-values", "run-evidence"],
+      "reviewTriggers": ["reference-gap", "unexpected-cardinality"]
+    },
+    {
+      "id": "logistics.cross-source-key-audit",
+      "module": "cross-process",
+      "purpose": "Compare candidate keys and value spaces across recurring files before a reusable join or mapping is approved.",
+      "sourceRoles": ["source-a", "source-b"],
+      "concepts": ["sap.material-id", "sap.business-partner-id", "sap.plant-id"],
+      "referenceContracts": [],
+      "requiredBlocks": ["relation.assert-cardinality", "validate.mapping-coverage", "drift.classify-source-change"],
+      "gates": ["candidate-key-profile-complete", "value-overlap-measured", "cardinality-measured", "semantic-scope-reviewed"],
+      "outputs": ["key-audit-report", "mapping-candidates", "run-evidence"],
+      "reviewTriggers": ["semantic-binding", "mapping-candidate", "business-rule-question"]
+    }
+  ]
+}

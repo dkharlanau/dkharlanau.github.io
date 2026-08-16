@@ -1,0 +1,143 @@
+---
+layout: default
+title: "Reusable Data Procedures — SAP Logistics Starter Pack"
+description: "A starter domain pack for SAP logistics data work across Sales, Procurement and shared master data."
+permalink: /reusable-data-procedures/packs/sap-logistics/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+<link rel="describedby" type="application/json" href="/reusable-data-procedures/packs/sap-logistics/pack.json" title="SAP Logistics pack manifest" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li><a href="/reusable-data-procedures/packs/">Domain Packs</a></li><li aria-current="page">SAP Logistics Starter Pack</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Pack / SAP Logistics</p>
+    <h1>Use one shared data language across Sales and Procurement.</h1>
+    <p>This pack is a working blueprint for repeated SAP logistics data tasks. It does not replace SAP process knowledge. It gives that knowledge a reusable data structure: concepts, procedures, reference contracts, blocks, tests and review rules.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/packs/">Packs</a><a href="/reusable-data-procedures/packs/sap-logistics/" aria-current="page">SAP Logistics</a><a href="/reusable-data-procedures/semantic-registry/">Concepts</a><a href="/reusable-data-procedures/reference-data/">Reference Data</a><a href="/reusable-data-procedures/review-inbox/">Review</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Pack shape</p><h2>Shared foundation + Sales + Procurement + cross-process controls.</h2></div>
+    <div class="rdp__model-grid">
+      <article class="rdp__model-card"><span>CORE</span><strong>Shared foundation</strong><p>Material, business partner and plant concepts; identifier normalization; locale parsing; reference-data controls; common exception model.</p></article>
+      <article class="rdp__model-card"><span>SD</span><strong>Sales module</strong><p>Sales document reconciliation, customer enrichment, item-key validation and result controls.</p></article>
+      <article class="rdp__model-card"><span>MM</span><strong>Procurement module</strong><p>Purchasing document reconciliation, supplier-material cross-reference, price-review preparation and item-key controls.</p></article>
+      <article class="rdp__model-card"><span>X</span><strong>Cross-process module</strong><p>Shared master-data coverage, organization mappings, unit conversions, control totals and dependency-impact checks.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Semantic foundation</p><h2>Start with concepts that appear in many files.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Concept</th><th>Why it matters</th><th>Typical review risk</th></tr></thead>
+      <tbody>
+        <tr><td><code>sap.material-id</code></td><td>Shared across sales, purchasing, stock, production and master-data work.</td><td>Leading zeros, external product codes and cross-system value spaces.</td></tr>
+        <tr><td><code>sap.business-partner-id</code></td><td>Common identity for customer and supplier related work.</td><td>Role meaning, legacy customer/vendor numbers and external partner IDs.</td></tr>
+        <tr><td><code>sap.plant-id</code></td><td>Connects organizational and logistical context.</td><td>Plant aliases, external site codes and scope-specific mappings.</td></tr>
+        <tr><td><code>sap.sales-document</code></td><td>Core key for many sales extracts.</td><td>Document type, system origin and archived or migrated number ranges.</td></tr>
+        <tr><td><code>sap.sales-document-item</code></td><td>Completes the common Sales document key.</td><td>Item formatting, rejected items and repeated header/total rows in exports.</td></tr>
+        <tr><td><code>sap.purchasing-document</code></td><td>Core key for purchasing extracts.</td><td>Document category, source system and external PO references.</td></tr>
+        <tr><td><code>sap.purchasing-document-item</code></td><td>Candidate concept identified by the pack.</td><td>Needs to be proven against real Procurement cases before promotion to the shared semantic registry.</td></tr>
+      </tbody>
+    </table>
+    <div class="rdp__callout"><strong>Pack feedback loop:</strong> a domain pack is allowed to discover missing shared concepts. Those concepts should graduate into the main registry only after several cases prove the meaning and boundaries.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Procedure blueprints</p><h2>Small reusable tasks before heroic end-to-end automation.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>sales.order-material-reconciliation</strong><p>Locate Sales order data, preserve document/item keys, normalize material identifiers, validate material coverage and publish unmatched exceptions.</p></article>
+      <article><strong>sales.customer-reference-enrichment</strong><p>Relate sales partners to an approved customer or business-partner reference with explicit many-to-one checks.</p></article>
+      <article><strong>sales.order-control-check</strong><p>Check row-count invariants, status populations and selected control totals before publication.</p></article>
+      <article><strong>procurement.po-material-reconciliation</strong><p>Locate purchasing items, preserve PO/item keys, normalize material identifiers and validate lookup coverage.</p></article>
+      <article><strong>procurement.supplier-material-cross-reference</strong><p>Bridge supplier material identifiers to internal material concepts through governed reference data and unmatched routing.</p></article>
+      <article><strong>procurement.price-review-preparation</strong><p>Parse amounts and units explicitly, prepare comparable values and surface unusual differences for business review instead of inventing a pricing decision.</p></article>
+      <article><strong>logistics.master-data-coverage</strong><p>Measure how well operational files resolve against released material, partner, plant and unit reference datasets.</p></article>
+      <article><strong>logistics.cross-source-key-audit</strong><p>Compare key uniqueness, value spaces and relation cardinality across recurring exports before a join is approved.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Reference contracts</p><h2>Keep shared mappings visible and versioned.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Reference</th><th>Role</th><th>Main controls</th></tr></thead>
+      <tbody>
+        <tr><td><code>sap.material-aliases</code></td><td>Approved alternate or external material representations.</td><td>Target uniqueness, effective dates, source scope, coverage.</td></tr>
+        <tr><td><code>sap.business-partner-aliases</code></td><td>Legacy or external customer/supplier identifiers.</td><td>Role and organization scope, target uniqueness, expiry.</td></tr>
+        <tr><td><code>sap.plant-crosswalk</code></td><td>External site or local labels to plant concept.</td><td>Source-system scope and ambiguity checks.</td></tr>
+        <tr><td><code>sap.supplier-material-cross-reference</code></td><td>Supplier-specific product identifiers to internal material.</td><td>Supplier + external material composite key, effective dates, many-to-one expectation.</td></tr>
+        <tr><td><code>sap.unit-of-measure-map</code></td><td>Approved unit aliases or controlled conversions.</td><td>Dimension compatibility, conversion factor validity, source scope.</td></tr>
+        <tr><td><code>sap.document-status-policy</code></td><td>Pack-level classification for statuses used by specific procedures.</td><td>Procedure scope, effective dates and business-owner approval.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Required block families</p><h2>Reuse the boring mechanics aggressively.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Excel locator</strong><p>Header-set and semantic-anchor location before fixed coordinates.</p></article>
+      <article><strong>SAP identifier normalizer</strong><p>String-safe comparison logic with raw values preserved.</p></article>
+      <article><strong>Locale parsers</strong><p>Explicit decimal and date parsing with failures routed as exceptions.</p></article>
+      <article><strong>Cardinality guard</strong><p>Check the intended relation before any lookup or enrichment join.</p></article>
+      <article><strong>Coverage validator</strong><p>Measure matched and unmatched business impact after symmetric normalization.</p></article>
+      <article><strong>Reconciliation controls</strong><p>Row-loss ledger, join ledger, null delta and selected measure totals.</p></article>
+      <article><strong>Exception router</strong><p>Stable reason codes and source lineage for rows that need review.</p></article>
+      <article><strong>Drift classifier</strong><p>Separate compatible, resolvable, breaking and business drift.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Pack test corpus</p><h2>Test the ugly cases that appear in SAP exports and partner files.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Identifier mutation</strong><p>Material or partner ID changes from text to numeric representation without permission.</p></article>
+      <article><strong>Workbook movement</strong><p>Table starts on another row or sheet while semantic headers remain valid.</p></article>
+      <article><strong>Duplicate lookup key</strong><p>A reference release breaks an expected many-to-one relation.</p></article>
+      <article><strong>Locale change</strong><p>Amount or date formatting changes between export variants.</p></article>
+      <article><strong>Reference gap</strong><p>New supplier material, customer alias or plant code is not mapped.</p></article>
+      <article><strong>Status change</strong><p>A new or previously unseen business status appears without an approved interpretation.</p></article>
+      <article><strong>Row multiplication</strong><p>A join increases business rows when the procedure promised enrichment only.</p></article>
+      <article><strong>Control-total drift</strong><p>Rows look structurally valid but the business measure no longer reconciles.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Review policy</p><h2>The pack tells the reviewer where uncertainty belongs.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Signal</th><th>Review target</th></tr></thead>
+      <tbody>
+        <tr><td>Unknown column with strong semantic evidence</td><td>Semantic binding review.</td></tr>
+        <tr><td>Known external value missing from mapping</td><td>Reference-data gap review.</td></tr>
+        <tr><td>Key/cardinality change</td><td>Breaking-drift review. Do not auto-repair.</td></tr>
+        <tr><td>Repeated approved manual fix</td><td>Promote to block, procedure rule or reference-data change.</td></tr>
+        <tr><td>New business status or organization-specific meaning</td><td>Business-rule decision with explicit scope.</td></tr>
+        <tr><td>Temporary operational exception</td><td>Decision record with expiry and publication impact.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Adoption path</p><h2>Start with one recurring file bundle, not the whole SAP landscape.</h2></div>
+    <ol class="rdp__flow">
+      <li><span>01</span><strong>Choose</strong><p>Select one repeated Sales or Procurement task with a clear result and real monthly drift.</p></li>
+      <li><span>02</span><strong>Bind</strong><p>Connect local fields to pack concepts and identify required reference datasets.</p></li>
+      <li><span>03</span><strong>Prove</strong><p>Run the blueprint against several real or sanitized source instances and add mutations.</p></li>
+      <li><span>04</span><strong>Decide</strong><p>Resolve ambiguous mappings and business rules through Review Inbox and Decision Memory.</p></li>
+      <li><span>05</span><strong>Promote</strong><p>Turn stable choices into procedures, blocks and released references.</p></li>
+      <li><span>06</span><strong>Release</strong><p>Pin the compatible asset set as a pack version and keep deployment separate.</p></li>
+    </ol>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Boundary</p><h2>This pack is a reusable operating model, not SAP customizing documentation.</h2></div>
+    <p>It can help locate exports, interpret reusable concepts, govern mappings and validate transformations. It does not claim that every SAP system uses the same organizational setup, document behavior, status meaning or reference values. Those differences belong in source contracts, semantic scope, reference data and explicit decisions.</p>
+  </section>
+
+  <section class="rdp__detail-section"><div class="rdp__route-list"><a href="/reusable-data-procedures/packs/sap-logistics/pack.json"><span>JSON</span><strong>Pack manifest</strong><small>Machine-readable modules, blueprints, concepts, references, blocks, tests and review defaults.</small><i class="material-symbols-outlined">data_object</i></a><a href="/reusable-data-procedures/pack.schema.json"><span>SPEC</span><strong>Pack schema</strong><small>Generic machine contract for reusable domain packs.</small><i class="material-symbols-outlined">code</i></a></div></section>
+</div>
