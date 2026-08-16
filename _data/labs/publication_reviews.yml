@@ -37,3 +37,101 @@ waves:
       /labs/enterprise-context/automotive-jit/:
         source_path: labs/enterprise-context/automotive-jit/index.html
         search_intent: "SAP Automotive JIT and JIS process architecture"
+
+  logistics-search-wave-02:
+    reviewed_at: 2026-08-16
+    review_basis: "primary source registries + factual review + page-level editorial review"
+    min_structural_score: 5
+    required_factual_status: source_supported
+    routes:
+      /labs/enterprise-context/transportation-management/:
+        source_path: labs/enterprise-context/transportation-management/index.html
+        search_intent: "SAP Transportation Management process and freight execution architecture"
+      /labs/enterprise-context/credit/:
+        source_path: labs/enterprise-context/credit/index.html
+        search_intent: "SAP credit management and sales order credit check"
+        review_replacements:
+          - from: "<p>Working model</p>"
+            to: "<p>Reviewed model</p>"
+          - from: "<em>Draft research · practical reasoning · no client data</em>"
+            to: "<em>Reviewed model · source-tracked · no client data</em>"
+      /labs/enterprise-context/finance-logistics/:
+        source_path: labs/enterprise-context/finance-logistics/index.html
+        search_intent: "SAP logistics integration with finance and accounting postings"
+        review_replacements:
+          - from: "<p>Working model</p>"
+            to: "<p>Reviewed model</p>"
+          - from: "<em>Draft research · baseline plus explicit exceptions</em>"
+            to: "<em>Reviewed model · baseline plus explicit exceptions</em>"
+          - from: >-
+              claim-level review currently confirms GR/IR separation between goods receipt and invoice receipt, and production-order settlement through settlement rules. The financial completion model above is an authored diagnostic frame; the wider O2C, P2P, production, TM, account, valuation, and exception map still requires page-level human review.
+            to: >-
+              claim-level review confirms GR/IR separation between goods receipt and invoice receipt, and production-order settlement through settlement rules. The wider O2C, P2P, production, TM, account, valuation, and exception map was reviewed against the route source registry; the financial completion model remains an authored diagnostic frame.
+      /labs/enterprise-context/production/:
+        source_path: labs/enterprise-context/production/index.html
+        search_intent: "SAP S/4HANA production planning and execution process architecture"
+        review_replacements:
+          - from: "<p>Working model</p>"
+            to: "<p>Reviewed model</p>"
+          - from: "<em>Draft research · synthetic cases · no client data</em>"
+            to: "<em>Reviewed model · synthetic cases · no client data</em>"
+          - from: >-
+              claim-level review currently confirms production-version selection and the goods-receipt / settlement relationship. The four-checkpoint completion model above is an authored diagnostic frame; the wider MRP, execution, capacity, staging, and integration content still requires page-level human review.
+            to: >-
+              claim-level review confirms production-version selection and the goods-receipt / settlement relationship. The wider MRP, execution, capacity, staging, and integration content was reviewed against the route source registry; the four-checkpoint completion model remains an authored diagnostic frame.
+          - from: "Release-sensitive details are dated. This page remains draft until human review."
+            to: "Release-sensitive details are dated. Product facts are source-tracked; the explanatory model remains independently written."
+      /labs/enterprise-context/integration-operations/:
+        source_path: labs/enterprise-context/integration-operations/index.html
+        search_intent: "SAP interface monitoring, recovery and business reconciliation"
+        review_replacements:
+          - from: "<p>Working model</p>"
+            to: "<p>Reviewed operating model</p>"
+      /labs/enterprise-context/inventory-management/:
+        source_path: labs/enterprise-context/inventory-management/index.html
+        search_intent: "SAP inventory management goods movements, stock types and ownership"
+        review_replacements:
+          - from: "<p>Working model</p>"
+            to: "<p>Reviewed model</p>"
+          - from: "<em>Draft research · synthetic cases · no client data</em>"
+            to: "<em>Reviewed model · synthetic cases · no client data</em>"
+          - from: >-
+              claim-level review currently confirms movement-type control behavior and the difference between counting stock and posting physical-inventory differences. The four-view completion model is an authored diagnostic frame; warehouse and finance handoffs still require page-level human review.
+            to: >-
+              claim-level review confirms movement-type control behavior and the difference between counting stock and posting physical-inventory differences. Warehouse and finance handoffs were reviewed against the route source registry; the four-view completion model remains an authored diagnostic frame.
+          - from: "The explanatory model remains independently written. This page stays draft until human review."
+            to: "The explanatory model remains independently written. Product behavior is source-tracked and review-dated."
+      /labs/enterprise-context/quality-management/:
+        source_path: labs/enterprise-context/quality-management/index.html
+        search_intent: "SAP QM quality management process, inspection lots and usage decision"
+        review_replacements:
+          - from: "<p>Working model</p>"
+            to: "<p>Reviewed model</p>"
+          - from: "<em>Draft research · synthetic cases · no client data</em>"
+            to: "<em>Reviewed model · synthetic cases · no client data</em>"
+          - from: >-
+              claim-level review currently confirms usage-decision behavior and stock posting for stock-relevant inspection lots. The authority model above is an authored diagnostic frame; wider trigger, specification, notification, and integration behavior still requires page-level human review.
+            to: >-
+              claim-level review confirms usage-decision behavior and stock posting for stock-relevant inspection lots. Wider trigger, specification, notification, and integration behavior was reviewed against the route source registry; the authority model remains an authored diagnostic frame.
+          - from: "The explanations and models remain independently written. This page stays draft until human review."
+            to: "The explanations and models remain independently written. Product behavior is source-tracked and review-dated."
+      /labs/enterprise-context/billing/:
+        source_path: labs/enterprise-context/billing/index.html
+        search_intent: "SAP SD billing process, billing determination and troubleshooting"
+        review_replacements:
+          - from: "<p>Working model</p>"
+            to: "<p>Reviewed model</p>"
+          - from: "<em>Draft research · no client data · release-scoped facts</em>"
+            to: "<em>Reviewed model · no client data · release-scoped facts</em>"
+      /labs/enterprise-context/logistics-capabilities/:
+        source_path: labs/enterprise-context/logistics-capabilities/index.html
+        search_intent: "SAP S/4HANA logistics capabilities across EWM, TM, inventory and execution"
+        review_replacements:
+          - from: "<p>Working model</p>"
+            to: "<p>Reviewed model</p>"
+      /labs/enterprise-context/sales-processes/:
+        source_path: labs/enterprise-context/sales-processes/index.html
+        search_intent: "SAP SD sales processes, order-to-cash and special sales scenarios"
+        review_replacements:
+          - from: "<p>Working inventory</p>"
+            to: "<p>Reviewed inventory</p>"
