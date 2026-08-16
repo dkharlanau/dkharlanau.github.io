@@ -131,10 +131,44 @@ jobs:
           if old_loops not in tests:
               raise SystemExit('Loop assertion anchor not found')
           tests = tests.replace(old_loops, new_loops, 1)
+          tests = tests.replace(
+              '    assert inventory["scope_route_count"] == 38\n    assert inventory["counts"] == {"human_review_candidate": 38}',
+              '    assert inventory["scope_route_count"] == len(inventory["items"])\n    assert inventory["counts"].get("human_review_candidate") == len(inventory["items"])',
+              1,
+          )
+          tests = tests.replace(
+              '    assert "38 routes" in result.stdout',
+              '    assert f\'{inventory["scope_route_count"]} routes\' in result.stdout',
+              1,
+          )
           factual_test = '''\n\ndef test_factual_review_keeps_source_support_separate_from_page_verification() -> None:\n    policy = load_json("factual-review-policy.json")\n    review = load_json("factual-review.json")\n    promotion = load_json("promotion-readiness.json")\n\n    assert review["policy"] == "/labs/assessment/data/factual-review-policy.json"\n    assert review["summary"] == {\n        "routes_reviewed": 2,\n        "claims_reviewed": 11,\n        "source_supported": 11,\n        "source_conflict": 0,\n        "human_verification_required": 11,\n    }\n    assert all(item["page_verified"] is False for item in review["routes"])\n    assert all(claim["status"] == "source_supported" for claim in review["claims"])\n    assert all(claim["human_verification_required"] is True for claim in review["claims"])\n    assert all(claim["source_refs"] for claim in review["claims"])\n    assert all(all(url.startswith("https://help.sap.com/") for url in claim["official_evidence"]) for claim in review["claims"])\n    promotion_by_route = {item["route"]: item for item in promotion["items"]}\n    for route in review["routes"]:\n        assert promotion_by_route[route["route"]]["verified"] is False\n    assert "cannot declare the complete page verified" in policy["promotion_boundary"].lower()\n'''
           if 'test_factual_review_keeps_source_support_separate_from_page_verification' not in tests:
               tests = tests.rstrip() + factual_test + '\n'
           tests_path.write_text(tests, encoding='utf-8')
+          PY
+      - name: Refresh promotion readiness after new route registration
+        shell: bash
+        run: |
+          python3 scripts/audit_assessment_promotion_readiness.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          inventory = json.loads(Path('labs/assessment/data/promotion-readiness.json').read_text(encoding='utf-8'))
+          count = inventory['scope_route_count']
+          path = Path('labs/assessment/index.md')
+          text = path.read_text(encoding='utf-8')
+          marker = '<strong>Promotion Readiness Inventory</strong>'
+          pos = text.find(marker)
+          if pos == -1:
+              raise SystemExit('Promotion Readiness Inventory card not found')
+          start = text.rfind('<span>', 0, pos)
+          end = text.find('</span>', start)
+          if start == -1 or end == -1:
+              raise SystemExit('Promotion Readiness count span not found')
+          text = text[:start] + f'<span>{count}</span>' + text[end + len('</span>'):]
+          path.write_text(text, encoding='utf-8')
+          print(f'Promotion readiness synchronized at {count} routes.')
           PY
       - name: Refresh Atlas artifacts
         run: python3 scripts/generate_atlas_artifacts.py
@@ -146,7 +180,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add labs/assessment/data/catalog.json labs/assessment/data/backlog.json labs/assessment/index.md tests/test_assessment_practice_layer.py ai/markdown-clusters.json
+          git add labs/assessment/data/catalog.json labs/assessment/data/backlog.json labs/assessment/index.md tests/test_assessment_practice_layer.py labs/assessment/data/promotion-readiness.json ai/markdown-clusters.json
           if git diff --cached --quiet; then
             echo "Factual review layer already registered."
             exit 0
@@ -156,8 +190,9 @@ jobs:
             if git push origin HEAD:main; then exit 0; fi
             git fetch origin main
             git rebase origin/main
+            python3 scripts/audit_assessment_promotion_readiness.py
             python3 scripts/generate_atlas_artifacts.py
-            git add ai/markdown-clusters.json
+            git add labs/assessment/data/promotion-readiness.json ai/markdown-clusters.json
             if ! git diff --cached --quiet; then git commit --amend --no-edit; fi
           done
           exit 1
