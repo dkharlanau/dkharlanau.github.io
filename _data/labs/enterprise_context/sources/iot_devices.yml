@@ -1,23 +1,12 @@
 updated_at: "2026-08-16"
 scope: "IoT and operational-device integration patterns around SAP S/4HANA, EWM, Digital Manufacturing, Asset Management, Transportation and Utilities"
 policy: >-
-  Primary SAP Help sources verify current product behavior and release-sensitive boundaries.
-  Older SAP IoT or Auto-ID examples are used only as architecture patterns where the product
-  lineage may be legacy. Public text is independently written and separates current capabilities
-  from historical implementation patterns.
+  Current SAP Help sources verify product behavior and release-sensitive boundaries.
+  Open standards are used for protocol semantics. Historical product material is kept only when it is
+  clearly useful as architecture history and never as a default recommendation for a new implementation.
+  Public text is independently written.
 
 sources:
-  - id: SRC-SAP-IOT-INTEGRATION-SCENARIOS
-    publisher: SAP
-    source_type: official_help
-    title: "SAP IoT Integration Scenarios"
-    url: "https://help.sap.com/docs/PRODUCT_ID/b0403253502d496bb90844b69f468624/26b5cabe9ecd4c2789034f83b75b0087.html"
-    accessed_at: "2026-08-16"
-    verified_at: "2026-08-16"
-    product_scope: "Historical SAP IoT integration patterns"
-    status: source_verified
-    notes: "Used for business-pattern evidence such as sensor-driven goods movement, Kanban, replenishment and delivery condition alerts; not treated as a current strategic product recommendation."
-
   - id: SRC-SAP-DM-EDGE-OPCUA
     publisher: SAP
     source_type: official_help
@@ -25,8 +14,9 @@ sources:
     url: "https://help.sap.com/docs/sap-digital-manufacturing/production-connectivity-model/set-up-connectivity-to-shop-floor-with-production-connectivity-model-and-production-connector-sap-plant-connectivity-on-edge"
     accessed_at: "2026-08-16"
     verified_at: "2026-08-16"
-    product_scope: "SAP Digital Manufacturing / Edge"
+    product_scope: "SAP Digital Manufacturing / Production Connector on Edge"
     status: source_verified
+    notes: "Current SAP guidance for OPC UA shop-floor connectivity, tag subscriptions and edge execution."
 
   - id: SRC-SAP-DM-EDGE-DEVICE
     publisher: SAP
@@ -38,6 +28,18 @@ sources:
     product_scope: "SAP Digital Manufacturing for edge computing"
     status: source_verified
 
+  - id: SRC-SAP-DM-PRODUCTION-CONNECTOR
+    publisher: SAP
+    source_type: official_help
+    title: "Production Connector for SAP Digital Manufacturing"
+    url: "https://help.sap.com/docs/PRODUCTION_CONNECTOR"
+    accessed_at: "2026-08-16"
+    verified_at: "2026-08-16"
+    release_scope: "Production Connector 3.1, May 2026"
+    product_scope: "SAP Digital Manufacturing"
+    status: source_verified
+    notes: "Current product documentation for the connectivity layer between SAP Digital Manufacturing and industry-standard shop-floor data sources."
+
   - id: SRC-SAP-INTEGRATION-THING-TO-THING
     publisher: SAP
     source_type: official_help
@@ -47,6 +49,30 @@ sources:
     verified_at: "2026-08-16"
     product_scope: "SAP Integration Solution Advisory Methodology"
     status: source_verified
+    notes: "SAP models thing-to-thing integration as a separate integration style and uses MQTT in machine-to-machine examples."
+
+  - id: SRC-SAP-INTEGRATION-ASSESS-INTERFACES
+    publisher: SAP
+    source_type: official_help
+    title: "Assess Your Interfaces"
+    url: "https://help.sap.com/docs/sap-btp-guidance-framework/sap-integration-solution-advisory-methodology/assess-your-interfaces"
+    accessed_at: "2026-08-16"
+    verified_at: "2026-08-16"
+    product_scope: "SAP Integration Solution Advisory Methodology"
+    status: source_verified
+    notes: "Useful for choosing an integration style from interface characteristics before selecting technology."
+
+  - id: SRC-SAP-EWM-MFS-SETUP
+    publisher: SAP
+    source_type: official_help
+    title: "Setting Up the Material Flow System"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/48d04dbeace2581ce10000000a42189c.html"
+    accessed_at: "2026-08-16"
+    verified_at: "2026-08-16"
+    release_scope: "SAP S/4HANA 2025 FPS01"
+    product_scope: "Extended Warehouse Management / Material Flow System"
+    status: source_verified
+    notes: "Current setup guidance for connecting PLCs to EWM MFS through interface types and communication channels."
 
   - id: SRC-SAP-EWM-CATCH-WEIGHT
     publisher: SAP
@@ -80,7 +106,7 @@ sources:
     release_scope: "SAP S/4HANA 2025 FPS01 documentation context"
     product_scope: "EWM integration with SAP Auto-ID Infrastructure"
     status: source_verified
-    notes: "Useful for RFID/Auto-ID architecture history and master-data concepts; validate product strategy before choosing it for a new implementation."
+    notes: "Architecture history for RFID and Auto-ID. Validate the current product strategy before using this lineage in a new design."
 
   - id: SRC-SAP-ASSET-MEASUREMENT-DOC
     publisher: SAP
@@ -144,3 +170,25 @@ sources:
     release_scope: "2602"
     product_scope: "SAP S/4HANA Utilities / Intelligent Metering"
     status: source_verified
+
+  - id: SRC-OPCF-UA-SECURITY
+    publisher: "OPC Foundation"
+    source_type: official_standard
+    title: "OPC Unified Architecture - Security Model"
+    url: "https://reference.opcfoundation.org/specs/OPC-10000-1/4.4.1"
+    accessed_at: "2026-08-16"
+    verified_at: "2026-08-16"
+    product_scope: "OPC UA"
+    status: source_verified
+    notes: "Primary standard reference for client/server authentication, integrity, confidentiality and the OPC UA security model."
+
+  - id: SRC-OASIS-MQTT-5
+    publisher: "OASIS Open"
+    source_type: official_standard
+    title: "MQTT Version 5.0"
+    url: "https://www.oasis-open.org/standard/mqtt-v5-0-os/"
+    accessed_at: "2026-08-16"
+    verified_at: "2026-08-16"
+    product_scope: "MQTT 5.0"
+    status: source_verified
+    notes: "Primary standard reference for MQTT publish/subscribe messaging semantics."
