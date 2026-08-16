@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/reusable-data-procedures/deployment.schema.json",
+  "title": "Reusable Data Procedure Deployment",
+  "description": "Draft contract that binds a pinned procedure version to an environment, trigger, source and destination bindings, secrets references and operational policy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "specVersion", "id", "procedure", "environment", "trigger", "bindings", "operations"],
+  "properties": {
+    "kind": {"const": "reusable-data-procedure-deployment"},
+    "specVersion": {"const": "0.1"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "name": {"type": "string"},
+    "procedure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string"},
+        "version": {"type": "string"}
+      }
+    },
+    "environment": {"enum": ["local", "sandbox", "team", "production"]},
+    "policyProfile": {"type": "string"},
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {"enum": ["manual", "schedule", "inbox-arrival", "api", "event"]},
+        "schedule": {"type": "string"},
+        "eventType": {"type": "string"}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sources": {"type": "object", "additionalProperties": {"type": "string"}},
+        "destinations": {"type": "object", "additionalProperties": {"type": "string"}},
+        "referenceData": {"type": "object", "additionalProperties": {"type": "string"}}
+      }
+    },
+    "secretReferences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "reference"],
+        "properties": {
+          "name": {"type": "string"},
+          "reference": {"type": "string"}
+        }
+      }
+    },
+    "idempotency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "strategy": {"enum": ["none", "input-hash", "business-period", "custom-key"]},
+        "duplicatePolicy": {"enum": ["skip", "replace", "new-revision", "manual-review"]},
+        "keyExpression": {"type": "string"}
+      }
+    },
+    "operations": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timeoutSeconds": {"type": "integer", "minimum": 1},
+        "maxRetries": {"type": "integer", "minimum": 0},
+        "retryOn": {"type": "array", "items": {"enum": ["network", "storage", "temporary-service", "worker-lost"]}},
+        "concurrencyPolicy": {"enum": ["allow", "forbid", "replace-previous", "queue"]},
+        "resourceClass": {"type": "string"},
+        "atomicPublish": {"type": "boolean", "default": true}
+      }
+    },
+    "notifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["on", "target"],
+        "properties": {
+          "on": {"enum": ["failed", "review-required", "breaking-drift", "published"]},
+          "target": {"type": "string"}
+        }
+      }
+    }
+  }
+}

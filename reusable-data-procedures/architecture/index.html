@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Reusable Data Procedures — Architecture & Libraries"
-description: "Candidate architecture and libraries for a reusable data procedure platform: ingestion, discovery, execution, validation, catalog, dependency graph, governance and provenance."
+description: "Candidate architecture for a reusable data procedure platform: discovery, execution, catalog, deployment, run evidence, testing and governance."
 permalink: /reusable-data-procedures/architecture/
 status: draft
 verified: false
@@ -18,9 +18,21 @@ hide_global_cta: true
   <header class="rdp__detail-hero">
     <p class="rdp__eyebrow">Architecture & libraries</p>
     <h1>Separate discovery, execution and control.</h1>
-    <p>The architecture should allow experimental matching and AI assistance without making execution unpredictable. The runtime executes an approved procedure; the catalog makes assets discoverable; governance controls what may be promoted and reused.</p>
-    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/governance/">Governance</a><a href="/reusable-data-procedures/procedure-model/">Procedure Model</a><a href="/reusable-data-procedures/architecture/" aria-current="page">Architecture</a></nav>
+    <p>The runtime executes an approved procedure. A deployment decides where and when it runs. A run records what happened. The catalog makes reusable assets discoverable, while governance controls promotion and policy.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/execution-model/">Deployment & Run</a><a href="/reusable-data-procedures/testing/">Testing</a><a href="/reusable-data-procedures/governance/">Governance</a><a href="/reusable-data-procedures/architecture/" aria-current="page">Architecture</a></nav>
   </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Contract boundary</p><h2>Three runtime objects with different change reasons.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Object</th><th>Owns</th><th>Typical change</th></tr></thead>
+      <tbody>
+        <tr><td>Procedure</td><td>Business and data logic</td><td>Key semantics, parsing rule, mapping, validation or output meaning changes.</td></tr>
+        <tr><td>Deployment</td><td>Environment and operation</td><td>Schedule, folder binding, destination, retry, concurrency or policy profile changes.</td></tr>
+        <tr><td>Run</td><td>Immutable execution evidence</td><td>Never edited as normal configuration; a new execution creates a new run record.</td></tr>
+      </tbody>
+    </table>
+  </section>
 
   <section class="rdp__detail-section">
     <div class="rdp__section-head"><p class="rdp__eyebrow">Logical layers</p><h2>One platform, replaceable responsibilities.</h2></div>
@@ -31,27 +43,29 @@ hide_global_cta: true
       <article><h3>Procedure compiler</h3><p>Turn approved choices, source contracts and reusable block references into a deterministic execution graph.</p></article>
       <article><h3>Execution engine</h3><p>Apply cleanup, joins, filters, conversions, derived fields, aggregations and exception routing without depending on an LLM.</p></article>
       <article><h3>Validation engine</h3><p>Run structural, relational, reconciliation and business checks. Produce machine-readable evidence and publication decisions.</p></article>
-      <article><h3>Catalog & registry</h3><p>Index procedures, blocks, patterns, packs and reference datasets by stable ID, domain, task, owner, trust, lifecycle and policy metadata.</p></article>
-      <article><h3>Dependency graph</h3><p>Track which procedures use shared blocks or reference data and which consumers depend on their outputs. Use it for impact analysis and deprecation.</p></article>
-      <article><h3>Governance & policy</h3><p>Control lifecycle, promotion, review freshness, allowed environments, network access, AI data modes and higher-risk changes.</p></article>
-      <article><h3>Provenance & run evidence</h3><p>Keep versions, approvals, source hashes, drift, validations, exceptions and output hashes separate from catalog metadata.</p></article>
-      <article><h3>Interfaces</h3><p>CLI first, then API and UI. Agents become clients of the same catalog and execution service instead of receiving a private hidden path.</p></article>
+      <article><h3>Catalog & registry</h3><p>Index procedures, blocks, patterns, packs, deployments, test cases and reference datasets by stable ID and metadata.</p></article>
+      <article><h3>Dependency graph</h3><p>Track shared blocks, reference data, deployments, tests and consumers. Use the graph for impact analysis, deprecation and test selection.</p></article>
+      <article><h3>Deployment & orchestration</h3><p>Resolve triggers, environment bindings, secrets references, idempotency, retry, concurrency and atomic publication without changing procedure logic.</p></article>
+      <article><h3>Run evidence store</h3><p>Keep immutable run identity, input hashes, resolved versions, plan hash, drift, validations, exceptions, control totals and output hashes.</p></article>
+      <article><h3>Test corpus & compatibility</h3><p>Manage golden, drift, mutation and historical replay cases for procedures, blocks and engine versions.</p></article>
+      <article><h3>Governance & policy</h3><p>Control lifecycle, trust evidence, policy profiles, promotion, review freshness, allowed environments and higher-risk changes.</p></article>
+      <article><h3>Interfaces</h3><p>CLI first, then API and UI. Agents become clients of the same catalog and execution service rather than receiving a private execution path.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Candidate stack</p><h2>Choose libraries by responsibility.</h2><p>This is a working shortlist, not a dependency lock file. Keep adapters thin enough to replace a library when requirements change.</p></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Candidate stack</p><h2>Choose libraries by responsibility.</h2><p>This remains a working shortlist, not a dependency lock file. Keep adapters thin enough to replace a library when requirements change.</p></div>
     <div class="rdp__stack-grid">
-      <article class="rdp__stack-card"><strong>Polars</strong><p>Strong candidate for the main Python dataframe runtime, especially for columnar operations and lazy execution. Useful when a procedure should compile into an optimized transformation plan.</p></article>
-      <article class="rdp__stack-card"><strong>DuckDB</strong><p>Good embedded SQL engine for joins, aggregations, CSV/Parquet work and analytical steps. It also gives a future browser option through DuckDB-Wasm, with browser memory and threading limits to respect.</p></article>
-      <article class="rdp__stack-card"><strong>Apache Arrow / PyArrow</strong><p>Useful common in-memory and interchange layer. Parquet is a good internal artifact format for larger intermediate data and test fixtures.</p></article>
-      <article class="rdp__stack-card"><strong>openpyxl</strong><p>Python adapter when workbook-level XLSX details matter. Keep it at the boundary; the core procedure model should not depend on Excel cell objects.</p></article>
-      <article class="rdp__stack-card"><strong>SheetJS CE</strong><p>Candidate for a future browser client that needs local spreadsheet reading or preview. It is a UI/input adapter, not the procedure engine.</p></article>
-      <article class="rdp__stack-card"><strong>RapidFuzz</strong><p>Useful for field-name similarity and alias matching. Treat fuzzy text similarity as one mapping signal, never as proof of semantic equality.</p></article>
-      <article class="rdp__stack-card"><strong>Pandera</strong><p>Good fit for code-centric dataframe schema checks close to the Python runtime. It can represent typed contracts and collect multiple validation errors.</p></article>
-      <article class="rdp__stack-card"><strong>Great Expectations</strong><p>Consider when validation becomes a larger governed capability with reusable suites, persisted validation results and human-readable data-quality evidence.</p></article>
-      <article class="rdp__stack-card"><strong>Pydantic + JSON Schema</strong><p>Use for procedure, block and run-report contracts, API validation and migrations between spec versions. JSON Schema keeps contracts portable outside Python.</p></article>
-      <article class="rdp__stack-card"><strong>FastAPI</strong><p>A reasonable service boundary later: catalog entries, procedures, discovery sessions, runs and reports become explicit API resources while the engine stays a normal Python package.</p></article>
+      <article class="rdp__stack-card"><strong>Polars</strong><p>Strong candidate for the main Python dataframe runtime, especially for columnar operations and lazy execution.</p></article>
+      <article class="rdp__stack-card"><strong>DuckDB</strong><p>Good embedded SQL engine for joins, aggregations, CSV/Parquet work and analytical steps.</p></article>
+      <article class="rdp__stack-card"><strong>Apache Arrow / PyArrow</strong><p>Useful common in-memory and interchange layer. Parquet is a good internal artifact format for larger intermediates and fixtures.</p></article>
+      <article class="rdp__stack-card"><strong>openpyxl</strong><p>Python adapter when workbook-level XLSX details matter. Keep it at the boundary; the core model should not depend on Excel cell objects.</p></article>
+      <article class="rdp__stack-card"><strong>SheetJS CE</strong><p>Candidate for a future browser client that needs local spreadsheet reading or preview. It is an input adapter, not the procedure engine.</p></article>
+      <article class="rdp__stack-card"><strong>RapidFuzz</strong><p>Useful for field-name similarity and alias matching. Fuzzy similarity remains one signal, never proof of semantic equality.</p></article>
+      <article class="rdp__stack-card"><strong>Pandera</strong><p>Good fit for code-centric dataframe schema checks close to the Python runtime.</p></article>
+      <article class="rdp__stack-card"><strong>Great Expectations</strong><p>Consider when validation becomes a larger governed capability with reusable suites and persisted validation evidence.</p></article>
+      <article class="rdp__stack-card"><strong>Pydantic + JSON Schema</strong><p>Use for procedure, deployment, run and block contracts, API validation and migrations between spec versions.</p></article>
+      <article class="rdp__stack-card"><strong>FastAPI</strong><p>A reasonable service boundary later: catalog entries, deployments, runs, reports and approvals become explicit resources.</p></article>
     </div>
   </section>
 
@@ -62,8 +76,8 @@ hide_global_cta: true
       <tbody>
         <tr><td>Local framework</td><td>Git + JSON/YAML metadata</td><td>Version history, code review and simple portability.</td></tr>
         <tr><td>Team use</td><td>Git + generated search index or SQLite</td><td>Fast search without creating a service too early.</td></tr>
-        <tr><td>Shared service</td><td>PostgreSQL + object storage + Git-backed definitions</td><td>Queries, RBAC, review workflow, dependency graph and larger evidence history.</td></tr>
-        <tr><td>Enterprise</td><td>Service APIs + identity + policy integration</td><td>Controlled promotion, audit, scheduling and integration with enterprise platforms.</td></tr>
+        <tr><td>Shared service</td><td>PostgreSQL + object storage + Git-backed definitions</td><td>Queries, RBAC, review workflow, dependency graph and evidence history.</td></tr>
+        <tr><td>Enterprise</td><td>Service APIs + identity + policy integration</td><td>Controlled promotion, scheduling, audit and integration with enterprise platforms.</td></tr>
       </tbody>
     </table>
   </section>
@@ -73,32 +87,22 @@ hide_global_cta: true
     <table class="rdp__decision-table">
       <thead><tr><th>Model</th><th>Good for</th><th>Trade-off</th></tr></thead>
       <tbody>
-        <tr><td>Local Python CLI</td><td>Fast development, sensitive local files, repeatable tests, scheduled desktop/server jobs.</td><td>Distribution and environment management need work.</td></tr>
-        <tr><td>Python service</td><td>Central catalog, controlled dependencies, audit, RBAC, larger files and enterprise connectors.</td><td>Files leave the user's browser and need an approved security model.</td></tr>
-        <tr><td>Browser / WASM</td><td>Local-first discovery, privacy-friendly previews and lightweight runs without server upload.</td><td>Memory, browser APIs and library compatibility limit the workload.</td></tr>
-        <tr><td>Hybrid</td><td>Profile locally, send only metadata for semantic assistance, execute approved jobs in a governed runtime.</td><td>More moving parts, but often the strongest enterprise boundary.</td></tr>
+        <tr><td>Local Python CLI</td><td>Fast development, sensitive local files, repeatable tests, manual or desktop runs.</td><td>Distribution and environment management need work.</td></tr>
+        <tr><td>Python service</td><td>Central catalog, controlled dependencies, scheduling, audit, RBAC and larger files.</td><td>Files leave the user's browser and need an approved security model.</td></tr>
+        <tr><td>Browser / WASM</td><td>Local-first discovery, privacy-friendly previews and lightweight runs.</td><td>Memory, browser APIs and library compatibility limit the workload.</td></tr>
+        <tr><td>Hybrid</td><td>Profile locally, send only allowed metadata for semantic assistance, execute approved jobs in a governed runtime.</td><td>More moving parts, but often a strong enterprise boundary.</td></tr>
       </tbody>
     </table>
-    <div class="rdp__callout"><strong>Starting point:</strong> Python package + CLI + JSON procedure spec + Git-backed catalog. Add a service only after real cases prove what needs shared state.</div>
-  </section>
-
-  <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">AI layer</p><h2>Make semantic help a plug-in.</h2></div>
-    <div class="rdp__cards">
-      <article><strong>Metadata-only mode</strong><p>Send column names, types, descriptions and statistics without row values. Useful when data sensitivity is high.</p></article>
-      <article><strong>Masked sample mode</strong><p>Use carefully selected or masked examples when values are necessary to understand a field.</p></article>
-      <article><strong>Catalog retrieval</strong><p>Search approved procedures, blocks, aliases and previous mappings before asking a general model to invent a new answer.</p></article>
-      <article><strong>Confidence decomposition</strong><p>Store which signals created a suggestion: name similarity, overlap, dictionary match, model judgement and previous approval.</p></article>
-    </div>
+    <div class="rdp__callout"><strong>Starting point:</strong> Python package + CLI + JSON contracts + Git-backed catalog + synthetic test corpus. Add shared orchestration only after manual local execution is reliable.</div>
   </section>
 
   <section class="rdp__detail-section">
     <div class="rdp__section-head"><p class="rdp__eyebrow">Enterprise concerns</p><h2>The boring parts decide whether this can be used.</h2></div>
     <div class="rdp__cards">
-      <article><strong>Security</strong><p>File classification, encryption, temporary storage, deletion policy, secrets, approved AI endpoints and dependency review.</p></article>
-      <article><strong>Audit</strong><p>Procedure version, block versions, user decisions, run ID, source fingerprints, validations, exceptions and output hashes.</p></article>
-      <article><strong>Scale</strong><p>Streaming or lazy scans, column pruning, Parquet intermediates, bounded samples and limits on expensive pairwise discovery.</p></article>
-      <article><strong>Change impact</strong><p>Dependency graph, consumer links, replacement chains and pinned versions make shared changes reviewable before rollout.</p></article>
+      <article><strong>Security</strong><p>File classification, encryption, temporary storage, deletion policy, secrets references, approved AI endpoints and dependency review.</p></article>
+      <article><strong>Audit</strong><p>Procedure, deployment and block versions, run ID, source fingerprints, validations, exceptions and output hashes.</p></article>
+      <article><strong>Operations</strong><p>Idempotency, concurrency, retry boundaries, atomic publication, run comparison and actionable notifications.</p></article>
+      <article><strong>Change impact</strong><p>Dependency graph, test corpus, consumer links, replacement chains and pinned versions make shared changes reviewable before rollout.</p></article>
     </div>
   </section>
 

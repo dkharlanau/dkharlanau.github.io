@@ -1,0 +1,99 @@
+---
+layout: default
+title: "Reusable Data Procedures — Test Corpus"
+description: "A test strategy for reusable data procedures using golden cases, drift cases, mutation tests and historical replay."
+permalink: /reusable-data-procedures/testing/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Test Corpus</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Testing model</p>
+    <h1>Test the ugly cases on purpose.</h1>
+    <p>A procedure that only works on one clean example is a demonstration. A reusable procedure needs a small corpus that proves normal behavior, known exceptions, drift handling and failure boundaries.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/framework/">Framework</a><a href="/reusable-data-procedures/execution-model/">Deployment & Run</a><a href="/reusable-data-procedures/testing/" aria-current="page">Testing</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Corpus layers</p><h2>One happy file is not evidence.</h2></div>
+    <div class="rdp__model-grid">
+      <article class="rdp__model-card"><span>01</span><strong>Golden case</strong><p>Known input bundle with expected result, exceptions, validations and evidence summary.</p></article>
+      <article class="rdp__model-card"><span>02</span><strong>Boundary case</strong><p>Empty files, one-row tables, maximum identifier length, zero amounts, duplicate keys and null-heavy columns.</p></article>
+      <article class="rdp__model-card"><span>03</span><strong>Drift case</strong><p>Moved headers, renamed sheets, added optional columns, changed locale, duplicate target key or changed business meaning.</p></article>
+      <article class="rdp__model-card"><span>04</span><strong>Failure case</strong><p>Unreadable workbook, missing required key, invalid dates, lost identifier precision or failed control total.</p></article>
+      <article class="rdp__model-card"><span>05</span><strong>Historical replay</strong><p>Approved old run package used to compare a new procedure or engine version against known production behavior.</p></article>
+      <article class="rdp__model-card"><span>06</span><strong>Mutation case</strong><p>Start from a valid fixture and deliberately alter one property to verify that the correct drift or validation rule reacts.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Fixture design</p><h2>Small data, strong meaning.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Synthetic first</strong><p>Prefer small synthetic files that reproduce the structural or business behavior without carrying uncontrolled corporate data.</p></article>
+      <article><strong>One reason per case</strong><p>A focused fixture should make the expected behavior obvious. Large mixed examples are useful later for end-to-end checks.</p></article>
+      <article><strong>Expected evidence</strong><p>Test not only the result rows. Assert drift class, validation state, exception reason codes and selected locator.</p></article>
+      <article><strong>Stable identifiers</strong><p>Give cases IDs such as <code>excel.header-moved.001</code> or <code>join.target-duplicate.001</code> so regressions can be discussed and cataloged.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Excel mutation library</p><h2>Generate the boring failures before users do.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Mutation</th><th>Expected reaction</th></tr></thead>
+      <tbody>
+        <tr><td>Move table down by five rows</td><td>Semantic locator still resolves the same logical region.</td></tr>
+        <tr><td>Rename a header to an approved alias</td><td>Compatible or resolvable drift, no silent procedure edit.</td></tr>
+        <tr><td>Remove a required key column</td><td>Breaking drift; publication blocked.</td></tr>
+        <tr><td>Add a subtotal row</td><td>Footer/total detection excludes or routes it according to extraction policy.</td></tr>
+        <tr><td>Convert material IDs to numeric cells</td><td>Identifier classification protects leading-zero semantics or raises a controlled exception.</td></tr>
+        <tr><td>Change decimal locale</td><td>Parse-success gate detects the mismatch instead of silently changing values.</td></tr>
+        <tr><td>Duplicate lookup target key</td><td>Cardinality validation blocks or routes ambiguity.</td></tr>
+        <tr><td>Insert a second similar table</td><td>Locator confidence drops or requires review instead of choosing randomly.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Promotion gates</p><h2>Testing depth should follow risk.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Criticality</th><th>Minimum evidence</th></tr></thead>
+      <tbody>
+        <tr><td>Ad-hoc</td><td>At least one golden case and explicit manual review of outputs.</td></tr>
+        <tr><td>Operational</td><td>Golden + boundary + key drift cases, deterministic rerun and owner review.</td></tr>
+        <tr><td>Business-critical</td><td>Regression suite, historical replay where allowed, mutation tests for key assumptions, dependency impact and rollback evidence.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Engine compatibility</p><h2>Test the runtime as well as the procedure.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Procedure compatibility</strong><p>A newer engine must either execute an older supported spec consistently or reject it with a clear migration requirement.</p></article>
+      <article><strong>Block compatibility</strong><p>Shared block versions have their own fixtures. A change can be tested before every dependent procedure is rerun.</p></article>
+      <article><strong>Plan hash</strong><p>Compile a stable execution-plan signature where practical. Unexpected plan changes become review signals.</p></article>
+      <article><strong>Golden diff</strong><p>When expected output changes, review the semantic difference and change reason instead of blindly replacing fixture files.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Metrics</p><h2>Testing should teach the framework where it is weak.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Metric</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>Regression pass rate</td><td>Basic release confidence.</td></tr>
+        <tr><td>Drift classification accuracy</td><td>Shows whether harmless and breaking changes are separated correctly.</td></tr>
+        <tr><td>Locator recovery rate</td><td>Measures how often semantic location survives workbook movement.</td></tr>
+        <tr><td>Mutation kill rate</td><td>Measures whether intentional structural or data defects are actually detected.</td></tr>
+        <tr><td>Historical output delta</td><td>Highlights semantic changes between procedure or engine versions.</td></tr>
+      </tbody>
+    </table>
+  </section>
+</div>

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Reusable Data Procedures — Governance"
-description: "A lightweight governance model for ownership, lifecycle, review, promotion, deprecation, policy and change impact of reusable data procedures."
+description: "A lightweight governance model for ownership, lifecycle, review, promotion, policy profiles, deprecation and change impact of reusable data procedures."
 permalink: /reusable-data-procedures/governance/
 status: draft
 verified: false
@@ -16,10 +16,10 @@ hide_global_cta: true
 
 <div class="rdp">
   <header class="rdp__detail-hero">
-    <p class="rdp__eyebrow">Detail / Governance</p>
+    <p class="rdp__eyebrow">Governance</p>
     <h1>Govern the reusable asset, not every spreadsheet click.</h1>
     <p>The framework needs enough control to make approved procedures trustworthy without turning a monthly reconciliation into a six-person committee. Governance should scale with risk and reuse.</p>
-    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/governance/" aria-current="page">Governance</a></nav>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/execution-model/">Deployment & Run</a><a href="/reusable-data-procedures/testing/">Testing</a><a href="/reusable-data-procedures/governance/" aria-current="page">Governance</a></nav>
   </header>
 
   <section class="rdp__detail-section">
@@ -60,6 +60,20 @@ hide_global_cta: true
   </section>
 
   <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Policy profiles</p><h2>Reuse policy bundles instead of repeating controls in every procedure.</h2><p>A policy profile belongs to deployment and governance. It describes how a procedure may run, not what its business transformation means.</p></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Profile</th><th>Typical use</th><th>Example controls</th></tr></thead>
+      <tbody>
+        <tr><td>local-safe</td><td>Consultant utility on local files</td><td>No network, no raw AI samples, local evidence, manual trigger.</td></tr>
+        <tr><td>team-standard</td><td>Shared operational work</td><td>Named owner, regression cases, controlled references, team storage, review on breaking drift.</td></tr>
+        <tr><td>production-critical</td><td>Business-critical scheduled output</td><td>Approved versions, pinned blocks, atomic publication, idempotency, stronger retention, alerts and rollback evidence.</td></tr>
+        <tr><td>restricted-data</td><td>Sensitive corporate data</td><td>Approved runtime only, restricted storage, no external endpoint by default, tighter retention and access control.</td></tr>
+      </tbody>
+    </table>
+    <div class="rdp__callout"><strong>Rule:</strong> a procedure should not need a new version just because it moves from a local manual deployment to a scheduled production deployment. The policy and deployment contracts absorb that change.</div>
+  </section>
+
+  <section class="rdp__detail-section">
     <div class="rdp__section-head"><p class="rdp__eyebrow">Promotion</p><h2>Separate lifecycle from execution environment.</h2></div>
     <div class="rdp__cards">
       <article><strong>Sandbox</strong><p>Exploration, new locators, temporary samples and AI-assisted discovery are allowed according to data policy.</p></article>
@@ -78,6 +92,7 @@ hide_global_cta: true
         <tr><td>New optional alias or non-blocking validation</td><td>Minor change with regression tests.</td></tr>
         <tr><td>Required field, key, mapping cardinality or business transform</td><td>Major change. Impact analysis and owner review.</td></tr>
         <tr><td>Shared block major version</td><td>Query dependency graph before promotion.</td></tr>
+        <tr><td>Deployment schedule or destination</td><td>Deployment review. Procedure version normally stays unchanged.</td></tr>
         <tr><td>New custom code, external endpoint or AI data mode</td><td>Policy and security review according to classification.</td></tr>
       </tbody>
     </table>
