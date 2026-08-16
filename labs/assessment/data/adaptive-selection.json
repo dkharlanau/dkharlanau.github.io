@@ -1,8 +1,12 @@
 {
   "id": "sap-lead-adaptive-selection",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
   "purpose": "Choose the next assessment case from observed weak signals instead of random repetition.",
+  "case_source": "/labs/assessment/data/case-sets.json",
+  "scoring_contract": "/labs/assessment/data/scoring.json",
+  "attempt_contract": "/labs/assessment/data/attempt-schema.json",
+  "profile_contract": "/labs/assessment/data/profile-schema.json",
   "inputs": ["all active case sets", "attempt history", "optional track filter", "optional reasoning-level filter"],
   "dimensions": ["business_goal", "owner", "process_flow", "decision_logic", "boundary", "failure_and_evidence", "trade_off"],
   "weights": {
@@ -23,10 +27,10 @@
     "A manual track or reasoning-level filter is a hard constraint; weighting applies only inside the filtered pool."
   ],
   "weak_signal_thresholds": {
-    "dimension_average_weak": 1.75,
-    "dimension_average_watch": 2.25,
-    "case_total_weak": 12,
-    "case_total_lead": 18,
+    "dimension_average_weak_below": 1.75,
+    "dimension_average_watch_below": 2.25,
+    "case_total_weak_below": 12,
+    "case_total_lead_minimum": 18,
     "minimum_attempts_for_stable_signal": 3
   },
   "selection_output": {
