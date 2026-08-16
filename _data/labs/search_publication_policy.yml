@@ -1,0 +1,39 @@
+version: 1
+updated_at: 2026-08-16
+purpose: >-
+  Separate public authored frameworks from practice tools and internal assessment control pages.
+  A noindex decision can be intentional. Editorial review and search publication remain separate.
+
+public_frameworks:
+  /labs/ai-ready/:
+    search_intent: "practical AI architecture for RAG, tools, MCP, agents, evals and security"
+    audience: "AI architects, engineers and lead consultants"
+    reason: >-
+      This is a public technology framework. It explains reusable architecture choices and keeps
+      standards, research claims and author guidance as separate evidence classes.
+  /labs/business-ai/:
+    search_intent: "enterprise Business AI patterns, technologies, controls and implementation evidence"
+    audience: "enterprise architects, consultants and business technology leaders"
+    reason: >-
+      This is a public process-first Business AI framework. Named implementations and outcomes use
+      evidence, while pattern and architecture guidance remains clearly authored.
+  /labs/enterprise-context/sales-diagnostics/:
+    search_intent: "SAP Sales diagnostic cases and symptom-first troubleshooting for Lead consultants"
+    audience: "SAP SD consultants and lead consultants"
+    reason: >-
+      This is a public diagnostic casebook. SAP sources anchor product behavior; hypotheses,
+      diagnostic paths and Lead answer patterns are explicitly authored guidance.
+
+assessment_policy:
+  default: KEEP_INTERNAL_NOINDEX
+  reason: >-
+    Assessment control pages describe authoring, evidence, review and promotion machinery. They are
+    useful inside the Lab but should not compete with the public knowledge pages in external search.
+  practice_routes_from_catalog: KEEP_PRACTICE_NOINDEX
+  authoring_routes_from_catalog: KEEP_INTERNAL_NOINDEX
+
+rules:
+  - "PUBLIC_REVIEW_NEXT requires counts_as_source_review_debt=false unless factual review is already source-supported."
+  - "A public authored framework must not be relabelled source-supported only to pass publication."
+  - "Assessment practice and control routes stay noindex unless an explicit route override changes the decision."
+  - "Any remaining P2 candidate outside these rules is NEEDS_POLICY_DECISION and fails the triage check."
