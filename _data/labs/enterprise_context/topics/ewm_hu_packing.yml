@@ -1,0 +1,239 @@
+id: TOPIC-EWM-HU-PACKING
+type: research_topic
+title: "EWM Handling Units, Packing & Labels"
+summary: >-
+  A Lead-level map of handling-unit identity, packaging materials, nested HUs, packaging specifications,
+  packing work centers, label identity, repacking and physical-to-digital consistency.
+domain: "SAP S/4HANA Logistics / Warehousing"
+process_family: "Handling Unit and Packing Execution"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+page_url: "/labs/enterprise-context/ewm/handling-units-packing/"
+
+business_question: >-
+  How should EWM represent a physical logistics unit, determine how it is packed, identify it,
+  change its hierarchy and keep physical packaging consistent with digital warehouse state?
+
+scope:
+  include:
+    - "Handling unit identity, contents, packaging material and hierarchy"
+    - "Packaging specifications and packing proposals"
+    - "Packing, unpacking, repacking and deconsolidation at work centers"
+    - "External supplier HUs versus internally created HUs"
+    - "SSCC/scannable identity and controlled label reprint"
+    - "Batch and serial context inside HUs"
+    - "Physical/digital packing reconciliation and exception patterns"
+  exclude_for_now:
+    - "Printer vendor and model comparison"
+    - "Detailed dangerous-goods packing rules"
+    - "Customer-specific label templates"
+
+maturity:
+  gates_complete: 6
+  gates_total: 7
+  gates:
+    scope: done
+    sources: done
+    model: done
+    relationships: done
+    expert_reasoning: done
+    synthetic_example: done
+    ai_evaluation: in_progress
+
+memory_model:
+  phrase: "Create → Pack → Identify → Move → Repack → Ship → Reconcile"
+  lead_line: >-
+    A handling unit is not a barcode. It is the warehouse representation of a physical logistics unit,
+    with packaging material, contents, hierarchy, location, status and a scannable identity.
+
+reuse_object_ids:
+  - OBJ-EWM-HU
+  - OBJ-EWM-PACK-SPEC
+  - OBJ-EWM-WORK-CENTER
+  - OBJ-EWM-PSHU
+  - OBJ-EWM-VAS-ORDER
+
+core_entities:
+  - id: CAP-EWM-HU-MANAGEMENT
+    type: capability
+    title: "Handling Unit Management in EWM"
+    summary: "Represent physical packages and their contents as warehouse execution objects with identity, hierarchy and status."
+    source_refs: [SRC-SAP-EWM-HANDLING-UNIT]
+  - id: CAP-EWM-PACKING-EXECUTION
+    type: capability
+    title: "Packing and Repacking Execution"
+    summary: "Pack products into HUs, unpack them, repack HUs and perform controlled deconsolidation."
+    source_refs: [SRC-SAP-EWM-PACK-WORK-CENTER]
+  - id: MD-EWM-PACKAGING-SPEC
+    type: master_data
+    title: "Packaging Specification"
+    summary: "Packing master data describing packing levels, quantities, packaging materials and work instructions."
+    source_refs: [SRC-SAP-EWM-PACKAGING-SPEC]
+  - id: OBJ-EWM-HU-IDENTITY
+    type: business_object
+    title: "Handling Unit Identity"
+    summary: "Unique scannable identity that connects a physical logistics unit to the EWM HU."
+    source_refs: [SRC-SAP-EWM-HANDLING-UNIT, SRC-GS1-LOGISTIC-LABEL]
+  - id: OBJ-EWM-HU-HIERARCHY
+    type: business_object
+    title: "Handling Unit Hierarchy"
+    summary: "Parent-child packing structure where HUs can contain products and lower-level HUs."
+    source_refs: [SRC-SAP-EWM-HANDLING-UNIT]
+  - id: CTRL-EWM-HU-EXTERNAL-ID
+    type: control
+    title: "External HU Identity Control"
+    summary: "Prevent duplicate, stale or incorrectly reused external HU identifiers."
+  - id: CTRL-EWM-HU-REPRINT
+    type: control
+    title: "HU Label Reprint Control"
+    summary: "Reprint the correct physical label without unintentionally creating or reusing the wrong HU identity."
+  - id: CTRL-EWM-HU-RECONCILIATION
+    type: control
+    title: "Physical Packing Reconciliation"
+    summary: "Ensure the actual package contents and hierarchy match EWM after manual or exception handling."
+  - id: FAIL-EWM-HU-WRONG-HIERARCHY
+    type: failure_mode
+    title: "Wrong HU Hierarchy"
+    summary: "Products or lower-level HUs are physically packed differently from the digital parent-child structure."
+  - id: FAIL-EWM-HU-DUPLICATE-ID
+    type: failure_mode
+    title: "Duplicate or Reused HU Identity"
+    summary: "The same external identity is assigned to more than one active or incorrect physical logistics unit."
+  - id: FAIL-EWM-HU-LABEL-MISMATCH
+    type: failure_mode
+    title: "Label and HU Mismatch"
+    summary: "The printed/scanned identity is valid but belongs to another HU or physical package."
+  - id: KPI-EWM-PACK-REWORK
+    type: kpi
+    title: "Packing Rework Rate"
+    summary: "Share of packages that require unpacking, correction or repacking after initial packing."
+  - id: KPI-EWM-HU-MISMATCH
+    type: kpi
+    title: "HU Reconciliation Exception Rate"
+    summary: "Frequency of physical package, content or identity mismatches against EWM state."
+  - id: HEUR-EWM-HU-BUSINESS-OBJECT
+    type: expert_heuristic
+    title: "Treat the HU as a Business Object, Not a Label"
+    summary: "Use the label to identify the HU; do not let printer or scanner logic become the owner of HU lifecycle."
+  - id: SCN-EWM-NESTED-OUTBOUND-HU
+    type: scenario
+    title: "Nested Outbound Handling Units"
+    summary: "Cartons are packed into a pallet HU, identified, staged and shipped while preserving parent-child structure."
+  - id: TEST-EWM-HU-PHYSICAL-DIGITAL
+    type: test_case
+    title: "Physical-to-Digital Packing Test"
+    summary: "Test repack, damaged label, reprint, nested HU, partial unpack, wrong pallet and recovery from interrupted packing."
+
+decision_rules:
+  - need: "The physical package must move, scan or be tracked as one warehouse logistics unit"
+    choice: "Use an HU"
+    reasoning: "Model the physical packaging unit and its content as one execution object."
+  - need: "Packing should be proposed from maintained rules and levels"
+    choice: "Packaging Specification / package building"
+    reasoning: "Keep repeatable packing logic in packing master data rather than in user memory or printer templates."
+  - need: "Products or HUs must be packed, unpacked, repacked or deconsolidated"
+    choice: "Packing / deconsolidation Work Center"
+    reasoning: "Use an explicit warehouse execution point where physical and digital package state change together."
+
+assessment_cards:
+  - question: "What is an HU in EWM?"
+    answer: "A physical logistics unit made of packaging material and contained goods. It can be nested and has a unique scannable identity."
+  - question: "What is the difference between HU identity and a barcode?"
+    answer: "The HU is the business object. The barcode is one carrier used to identify it. Reprinting a label must not silently create a new HU."
+  - question: "When does a packaging specification matter?"
+    answer: "When packing levels, quantities, packaging materials or repeatable work instructions should be determined consistently."
+  - question: "What is the dangerous packing failure?"
+    answer: "A physical package can look correct while EWM has another content or hierarchy. I reconcile the physical HU before continuing the process."
+
+relations:
+  - subject: CAP-EWM-PACKING-EXECUTION
+    predicate: produces
+    object: OBJ-EWM-HU-HIERARCHY
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-EWM-PACK-WORK-CENTER, SRC-SAP-EWM-HANDLING-UNIT]
+  - subject: MD-EWM-PACKAGING-SPEC
+    predicate: influences
+    object: CAP-EWM-PACKING-EXECUTION
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-EWM-PACKAGING-SPEC, SRC-SAP-EWM-UNIFIED-PACKAGE-BUILDING]
+  - subject: CAP-EWM-HU-MANAGEMENT
+    predicate: contains
+    object: OBJ-EWM-HU-IDENTITY
+    evidence_type: reasoned_interpretation
+    confidence: high
+    source_refs: [SRC-SAP-EWM-HANDLING-UNIT]
+  - subject: CAP-EWM-HU-MANAGEMENT
+    predicate: contains
+    object: OBJ-EWM-HU-HIERARCHY
+    evidence_type: documented_fact
+    confidence: high
+    source_refs: [SRC-SAP-EWM-HANDLING-UNIT]
+  - subject: CAP-EWM-HU-MANAGEMENT
+    predicate: controlled_by
+    object: CTRL-EWM-HU-EXTERNAL-ID
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-EWM-HU-MANAGEMENT
+    predicate: controlled_by
+    object: CTRL-EWM-HU-REPRINT
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-EWM-HU-MANAGEMENT
+    predicate: controlled_by
+    object: CTRL-EWM-HU-RECONCILIATION
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-EWM-HU-MANAGEMENT
+    predicate: can_fail_as
+    object: FAIL-EWM-HU-WRONG-HIERARCHY
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: OBJ-EWM-HU-IDENTITY
+    predicate: can_fail_as
+    object: FAIL-EWM-HU-DUPLICATE-ID
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: OBJ-EWM-HU-IDENTITY
+    predicate: can_fail_as
+    object: FAIL-EWM-HU-LABEL-MISMATCH
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-EWM-PACKING-EXECUTION
+    predicate: measured_by
+    object: KPI-EWM-PACK-REWORK
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: CAP-EWM-HU-MANAGEMENT
+    predicate: measured_by
+    object: KPI-EWM-HU-MISMATCH
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: HEUR-EWM-HU-BUSINESS-OBJECT
+    predicate: applies_to
+    object: CAP-EWM-HU-MANAGEMENT
+    evidence_type: expert_heuristic
+    confidence: high
+  - subject: SCN-EWM-NESTED-OUTBOUND-HU
+    predicate: supported_by
+    object: CAP-EWM-HU-MANAGEMENT
+    evidence_type: synthetic_example
+    confidence: high
+  - subject: CAP-EWM-PACKING-EXECUTION
+    predicate: tested_by
+    object: TEST-EWM-HU-PHYSICAL-DIGITAL
+    evidence_type: expert_heuristic
+    confidence: high
+
+source_refs:
+  - SRC-SAP-EWM-HANDLING-UNIT
+  - SRC-SAP-EWM-PACK-WORK-CENTER
+  - SRC-SAP-EWM-PACKAGING-SPEC
+  - SRC-SAP-EWM-UNIFIED-PACKAGE-BUILDING
+  - SRC-SAP-EWM-WORK-CENTER
+  - SRC-GS1-LOGISTIC-LABEL
+
+tags: [sap, ewm, handling-unit, packing, packaging, sscc, labels, work-center, assessment]
