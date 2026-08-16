@@ -64,3 +64,10 @@ Party identity → Role → Organizational slice → Owner → Rule → Approval
 ```
 
 That explains both data model and operating model, which is more useful than reciting transactions.
+
+## Go deeper
+
+- [Technical entity map](/labs/enterprise-context/mdg/domains/business-partner/entity-map/) — connect BP core, supplier company-code/purchasing-org and customer sales-area entities to ownership.
+- [Change Request Type Matrix](/labs/enterprise-context/mdg/governance-engine/change-request-matrix/) — separate new identity, role extension, bank change, blocking and mass maintenance.
+- [Matching & Survivorship](/labs/enterprise-context/mdg/consolidation/survivorship/) — decide identity match and winning values without confusing score with authority.
+- [MDG Lead Assessment Drills](/labs/enterprise-context/mdg/assessment/) — practice duplicate-supplier and automotive rollout cases.
