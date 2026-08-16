@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Normalize the shared JSON-LD publication templates.
 
-The primary dispatcher owns page identity and core Article/WebPage properties.
-The sitewide graph only augments that canonical @id with knowledge relations.
+The primary dispatcher owns Article identity, core fields and knowledge relations.
+The sitewide graph augments only WebPage/CollectionPage nodes that do not use the Article path.
 Editorial review timestamps are never used as modification timestamps.
 """
 from __future__ import annotations
@@ -23,10 +23,9 @@ CANONICAL_MODIFIED = (
 )
 
 AUGMENTATION_TEMPLATE = r'''{% comment %}
-Knowledge relationship augmentation for the canonical page node.
-The primary structured-data dispatcher owns @type, title, author, dates and WebSite/Person nodes.
-This include only adds entity, provenance, machine-representation and semantic-link properties
-to the same canonical #article / #webpage identity. No second page identity is created.
+Knowledge relationship augmentation for canonical WebPage/CollectionPage nodes only.
+Article and TechArticle relations already belong to the primary structured-data dispatcher,
+so this include deliberately does not emit a second fragment for #article identities.
 {% endcomment %}
 
 {% assign graph_url = page.url | absolute_url %}
@@ -38,12 +37,12 @@ to the same canonical #article / #webpage identity. No second page identity is c
 {% if graph_robots contains 'noindex' %}{% assign graph_indexable = false %}{% endif %}
 {% assign graph_reviewed = false %}
 {% if page.status == 'reviewed' and page.verified == true %}{% assign graph_reviewed = true %}{% endif %}
-{% assign graph_node_suffix = 'webpage' %}
 {% assign graph_declared_type = page.structured_data.type | default: '' | downcase %}
-{% if graph_declared_type == 'article' or graph_declared_type == 'techarticle' %}{% assign graph_node_suffix = 'article' %}{% endif %}
-{% if page.url contains '/labs/' and graph_reviewed and graph_indexable %}{% assign graph_node_suffix = 'article' %}{% endif %}
+{% assign graph_is_article = false %}
+{% if graph_declared_type == 'article' or graph_declared_type == 'techarticle' %}{% assign graph_is_article = true %}{% endif %}
+{% if page.url contains '/labs/' and graph_reviewed and graph_indexable and page.url != '/labs/' and page.url != '/labs/enterprise-context/' %}{% assign graph_is_article = true %}{% endif %}
 {% assign graph_emit = false %}
-{% if graph_indexable and page.url != '/' %}
+{% if graph_indexable and graph_is_article == false and page.url != '/' %}
   {% if graph_primary or page.entity_mentions or page.ai_sidecar or page.source_links or page.semantic_links %}{% assign graph_emit = true %}{% endif %}
 {% endif %}
 
@@ -51,7 +50,7 @@ to the same canonical #article / #webpage identity. No second page identity is c
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@id": "{{ graph_url }}#{{ graph_node_suffix }}"{% if graph_primary %},
+  "@id": "{{ graph_url }}#webpage"{% if graph_primary %},
   "about": {"@id": "{{ graph_primary.id | absolute_url }}"}{% endif %}{% if page.entity_mentions and page.entity_mentions.size > 0 %},
   "mentions": [
     {% for entity_key in page.entity_mentions %}
@@ -221,9 +220,11 @@ def validate_invariants(contents: dict[Path, str]) -> list[str]:
         errors.append("structured-data.html is missing knowledge provenance/entity relations")
     if CANONICAL_MODIFIED not in head:
         errors.append("head.html article:modified_time does not use canonical modification precedence")
-    for forbidden in ('"@type": "Person"', '"@type": "WebSite"', '"dateModified"', '"headline"'):
+    for forbidden in ('"@type": "Person"', '"@type": "WebSite"', '"dateModified"', '"headline"', '#article'):
         if forbidden in augmentation:
-            errors.append(f"sitewide graph must not redefine core node property {forbidden}")
+            errors.append(f"sitewide graph must not redefine Article/core node property {forbidden}")
+    if "graph_is_article == false" not in augmentation:
+        errors.append("sitewide graph must be explicitly disabled for Article/TechArticle nodes")
     return errors
 
 
