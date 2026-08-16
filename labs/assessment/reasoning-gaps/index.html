@@ -1,0 +1,77 @@
+---
+layout: default
+title: "Reasoning Gap Review — SAP Lead Assessment Lab"
+description: "Review-stage SAP Lead Design and Challenge candidates created only for thin published reasoning cells."
+permalink: /labs/assessment/reasoning-gaps/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, design, challenge, question-authoring]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li><a href="/labs/assessment/reasoning-coverage/">Reasoning Coverage</a></li><li aria-current="page">Reasoning Gap Review</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Design & Challenge authoring</p>
+      <h1>Do not rename Diagnose.<br />Build the missing reasoning.</h1>
+      <p>Failure-mode generation is useful for Diagnose questions. Design and Challenge need a different contract: alternatives, ownership, trade-offs, decision-changing conditions, and evidence that can validate the decision.</p>
+      <a class="research-canvas__button" href="#gap-plan">Open gap plan <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Reasoning gap authoring state">
+      <p>Thin Lead-pressure cells</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Cells from published corpus</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>1</strong><small>Existing Diagnose signal</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>2</strong><small>New review candidates</small></div>
+      <em>Published case set unchanged</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+    <p><strong>Authoring boundary:</strong> these records fill review-stage reasoning gaps only. They are not published cases, do not change scoring, and still require semantic review plus a separate human promotion decision.</p>
+    <a href="/labs/assessment/data/reasoning-gap-candidates.json">Open reasoning-gap dataset <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="gap-plan" data-reveal>
+    <header><p class="research-canvas__eyebrow">Gap plan</p><h2>Three thin cells, three explicit treatments.</h2><p>The published corpus has one case in each cell. The response depends on the reasoning type, not on our desire to make every generator look universal.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>AI/Data · Diagnose</h4><p><strong>Existing review signal:</strong> CAND-AIAG-RAW-MCP survived semantic review. Do not generate a second Diagnose candidate before the first promotion decision.</p></div>
+      <div><h4>Sales · Design</h4><p><strong>New review candidate:</strong> choose between stock, make-to-order, and third-party supply for a new offering. The answer must compare operating models and state what changes the choice.</p></div>
+      <div><h4>AI/Data · Challenge</h4><p><strong>New review candidate:</strong> challenge an autonomous-agent proposal for a mostly deterministic SAP process. Compare workflow, bounded agent, and broader autonomy.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Design candidate</p><h2>Choose the supply model before the document type.</h2><p><strong>RCAND-SALES-DESIGN-SUPPLY-MODEL</strong> tests whether the learner can choose a sales-to-supply operating model from business constraints rather than SAP familiarity.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Alternatives</h4><p>Sell from stock · Make to order · Third-party supply.</p></div>
+      <div><h4>Decision pressure</h4><p>Customer lead time, demand uncertainty, customization, working capital, supplier dependency, inventory ownership, ATP, billing, and financial consequences.</p></div>
+      <div><h4>Lead signal</h4><p>Choose a default plus exception rules, explain ownership, and name the business condition that would change the design.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Challenge candidate</p><h2>Challenge autonomy where deterministic control is cheaper.</h2><p><strong>RCAND-AI-CHALLENGE-AUTONOMY</strong> tests whether the learner can separate the part that needs probabilistic reasoning from approvals, authorization, writes, and recovery that should remain controlled.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Alternatives</h4><p>Deterministic workflow · Bounded agent · More open-ended agent.</p></div>
+      <div><h4>Decision pressure</h4><p>Task variability, side-effect risk, latency, auditability, identity, tool scope, fallback, trajectory evaluation, and post-action verification.</p></div>
+      <div><h4>Lead signal</h4><p>Accept only the autonomy that the operating model can prove, observe, recover, and govern.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Pattern contract</p><h2>Design and Challenge need different proof.</h2><p>A good Design answer makes a choice. A good Challenge answer attacks an assumption and defines when it becomes acceptable.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/data/reasoning-gap-candidates.json"><span>D</span><strong>Design</strong><small>Constraints → alternatives → ownership → consequences → trade-offs → decision-changing condition → validation evidence.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/labs/assessment/data/reasoning-gap-candidates.json"><span>C</span><strong>Challenge</strong><small>Proposal → hidden dependency → alternative controls → authority/failure/recovery → acceptance conditions → evaluation evidence.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
+      <a href="/labs/assessment/candidate-semantic-review/"><span>NEXT</span><strong>Semantic review</strong><small>Novel wording is irrelevant unless the candidate adds a materially different Lead reasoning signal.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
