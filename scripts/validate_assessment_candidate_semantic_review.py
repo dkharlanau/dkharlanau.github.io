@@ -45,10 +45,15 @@ def main() -> None:
     cost = next(item for item in review["decisions"] if item["candidate_id"] == "CAND-PP-COST")
     assert cost["recommendation"] == "reject_semantic_duplicate"
     assert "ASSESS-FIN-005" in cost["closest_published_cases"]
-    assert review["summary"]["retain_for_human_promotion_review"] == 2
-    assert review["summary"]["reject_semantic_duplicate"] == 1
+    assert review["summary"]["retain_for_human_promotion_review"] == 3
+    assert review["summary"]["reject_semantic_duplicate"] == 2
+    raw_mcp = next(item for item in review["decisions"] if item["candidate_id"] == "CAND-AIAG-RAW-MCP")
+    overprivileged = next(item for item in review["decisions"] if item["candidate_id"] == "CAND-AIAG-OVERPRIVILEGED")
+    assert raw_mcp["recommendation"] == "retain_for_human_promotion_review"
+    assert overprivileged["recommendation"] == "reject_semantic_duplicate"
+    assert "ASSESS-AI-003" in overprivileged["closest_published_cases"]
 
-    print("Candidate semantic review valid: 2 retained for human promotion review, 1 semantic duplicate, published cases unchanged.")
+    print("Candidate semantic review valid: 3 retained for human promotion review, 2 semantic duplicates, published cases unchanged.")
 
 
 if __name__ == "__main__":

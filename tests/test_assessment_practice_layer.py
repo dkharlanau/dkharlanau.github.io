@@ -208,7 +208,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -490,6 +490,9 @@ def test_candidate_semantic_review_keeps_publication_separate_from_novelty_revie
     assert decisions["CAND-PP-GR"]["recommendation"] == "retain_for_human_promotion_review"
     assert decisions["CAND-PP-COST"]["recommendation"] == "reject_semantic_duplicate"
     assert "ASSESS-FIN-005" in decisions["CAND-PP-COST"]["closest_published_cases"]
+    assert decisions["CAND-AIAG-RAW-MCP"]["recommendation"] == "retain_for_human_promotion_review"
+    assert decisions["CAND-AIAG-OVERPRIVILEGED"]["recommendation"] == "reject_semantic_duplicate"
+    assert "ASSESS-AI-003" in decisions["CAND-AIAG-OVERPRIVILEGED"]["closest_published_cases"]
 
     result = subprocess.run(
         [sys.executable, "scripts/validate_assessment_candidate_semantic_review.py"],

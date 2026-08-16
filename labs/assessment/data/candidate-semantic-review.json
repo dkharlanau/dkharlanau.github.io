@@ -1,14 +1,17 @@
 {
   "id": "sap-lead-candidate-semantic-review",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
   "purpose": "Add a semantic review layer after deterministic candidate generation so lexical novelty is not mistaken for a new assessment signal.",
   "boundary": "This file records author-review recommendations only. It does not publish cases, change case-sets.json, or satisfy the separate human promotion decision.",
   "review_scope": {
-    "route": "/labs/enterprise-context/production/",
     "candidate_inventory": "/labs/assessment/data/question-candidates.json",
     "published_case_manifest": "/labs/assessment/data/case-sets.json",
-    "reviewed_candidates": 3
+    "reviewed_candidates": 5,
+    "routes": [
+      "/labs/enterprise-context/production/",
+      "/labs/enterprise-context/business-ai/agents/"
+    ]
   },
   "decisions": [
     {
@@ -16,7 +19,10 @@
       "recommendation": "retain_for_human_promotion_review",
       "reason": "The failure starts before production-order execution: MRP creates an incorrect supply quantity from demand, stock, lot sizing, planning strategy, or planning parameters. The current Production cases cover production model choice, production-method structure, component staging, and cross-process finance, but not a dedicated net-requirement quantity diagnosis.",
       "novel_signal": "Reconstruct net requirement and planning inputs before resizing a planned order.",
-      "closest_published_cases": ["ASSESS-PP-001", "ASSESS-PP-004"],
+      "closest_published_cases": [
+        "ASSESS-PP-001",
+        "ASSESS-PP-004"
+      ],
       "review_checks": [
         "Keep the case focused on why MRP created the quantity, not on generic MRP explanation.",
         "Require evidence for requirement quantity/date, stock and receipts, lot sizing, safety stock/planning parameters, and procurement type.",
@@ -28,7 +34,10 @@
       "recommendation": "retain_for_human_promotion_review",
       "reason": "A missing or wrong finished-goods receipt is a distinct completion boundary. Existing Production practice covers component staging and production structure, while the finance case starts after a finished product was received. A dedicated case can test whether the learner separates confirmation, inventory receipt, warehouse inbound flow, quality/batch context, and valuation.",
       "novel_signal": "Production progress is not proof that the intended finished-product inventory event occurred.",
-      "closest_published_cases": ["ASSESS-PP-003", "ASSESS-FIN-005"],
+      "closest_published_cases": [
+        "ASSESS-PP-003",
+        "ASSESS-FIN-005"
+      ],
       "review_checks": [
         "Keep the symptom at the Production to Inventory/EWM boundary.",
         "Require proof of order quantity, GR relevance, storage/batch/quality context, automatic versus manual GR, and warehouse flow where used.",
@@ -40,16 +49,47 @@
       "recommendation": "reject_semantic_duplicate",
       "reason": "The candidate asks why a physically completed production order still carries cost, variance, WIP, or settlement balance. Published case ASSESS-FIN-005 already asks why a technically complete order with finished-goods receipt still has a financial balance and requires actual debits, GR credits, order status, settlement rule/receiver, WIP or variance timing, and settlement evidence. The wording differs, but the Lead reasoning signal is materially the same.",
       "novel_signal": null,
-      "closest_published_cases": ["ASSESS-FIN-005"],
+      "closest_published_cases": [
+        "ASSESS-FIN-005"
+      ],
       "review_checks": [
         "Keep the generator record for provenance, but do not promote it as a new case.",
         "If a future case is needed, change the business problem materially, for example settlement to a sales-order receiver or period-end WIP design, rather than paraphrasing the same balance symptom."
       ]
+    },
+    {
+      "candidate_id": "CAND-AIAG-RAW-MCP",
+      "recommendation": "retain_for_human_promotion_review",
+      "reason": "The candidate tests a distinct AI/Data diagnostic path. The published AI diagnosis case focuses on trajectory, permissions, and approval bypass after a risky agent path. RAW-MCP instead asks whether the selected SAP capability and write payload are semantically correct: tool contract, semantic context, input schema, business-key resolution, and backend write validation.",
+      "novel_signal": "Tool access can be technically valid while the selected business capability, key, or field semantics are wrong.",
+      "closest_published_cases": [
+        "ASSESS-AI-003",
+        "ASSESS-INT-001"
+      ],
+      "review_checks": [
+        "Keep the case focused on tool semantics and business-key resolution rather than generic prompt quality.",
+        "Require the learner to separate MCP/tool discovery from the business contract of the SAP capability.",
+        "Require proof in the authoritative SAP object after correction, not only a successful tool response."
+      ]
+    },
+    {
+      "candidate_id": "CAND-AIAG-OVERPRIVILEGED",
+      "recommendation": "reject_semantic_duplicate",
+      "reason": "Published case ASSESS-AI-003 already tests an agent that reaches the expected result through an unnecessary write and bypasses the intended approval path. Its required reasoning includes trajectory evaluation, reduced tool permissions, explicit approval state, deterministic policy checks, and negative tests. An over-privileged-agent diagnosis would exercise materially the same Lead signal.",
+      "novel_signal": null,
+      "closest_published_cases": [
+        "ASSESS-AI-003",
+        "ASSESS-AI-001"
+      ],
+      "review_checks": [
+        "Keep the generated record for provenance but do not promote it as a new published case.",
+        "A future identity case must change the problem materially, for example cross-tenant delegated identity or conflicting user-agent authorization, rather than restating broad permissions."
+      ]
     }
   ],
   "summary": {
-    "retain_for_human_promotion_review": 2,
-    "reject_semantic_duplicate": 1,
+    "retain_for_human_promotion_review": 3,
+    "reject_semantic_duplicate": 2,
     "published_case_change": 0
   }
 }

@@ -24,9 +24,9 @@ tags: [sap, assessment, question-review, production, diagnostics]
     </div>
     <div class="research-canvas__signal" aria-label="Semantic review result">
       <p>Production batch</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Candidates reviewed</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>2</strong><small>Retain for human review</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Semantic duplicate</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>5</strong><small>Candidates reviewed</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>3</strong><small>Retain for human review</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>2</strong><small>Semantic duplicates</small></div>
       <em>Published case set unchanged</em>
     </div>
   </header>
@@ -61,6 +61,15 @@ tags: [sap, assessment, question-review, production, diagnostics]
       <div><h4>Same business problem</h4><p>A physically or technically complete production order still carries an unexplained financial balance.</p></div>
       <div><h4>Same reasoning</h4><p>Actual debits → goods-receipt credits → order status → settlement rule/receiver → variance/WIP timing → settlement proof.</p></div>
       <div><h4>Better next case</h4><p>If another finance case is needed, change the problem materially, for example sales-order settlement ownership or a period-end WIP design decision.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="ai-semantic-review" data-reveal>
+    <header><p class="research-canvas__eyebrow">AI/Data batch</p><h2>One new signal survives semantic review.</h2><p>The evidence gate produced two Agent Architecture Diagnose candidates. Semantic comparison against the published AI cases keeps only the tool-semantics failure.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Keep · RAW MCP</h4><p><strong>CAND-AIAG-RAW-MCP</strong> asks whether a technically valid tool call selected the wrong SAP capability, business key, or field semantics. The diagnostic path is tool contract → semantic context → schema → key resolution → authoritative write validation.</p></div>
+      <div><h4>Reject · Over-privileged</h4><p><strong>CAND-AIAG-OVERPRIVILEGED</strong> materially repeats <strong>ASSESS-AI-003</strong>: risky trajectory, unnecessary write scope, approval bypass, reduced permissions, deterministic policy, and negative tests.</p></div>
+      <div><h4>Publication boundary</h4><p>The surviving candidate is still review-stage only. Semantic novelty is necessary for promotion, but it is not a human promotion decision.</p></div>
     </div>
   </section>
 
