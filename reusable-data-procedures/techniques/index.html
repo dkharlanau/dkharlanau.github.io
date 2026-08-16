@@ -1,0 +1,144 @@
+---
+layout: default
+title: "Reusable Data Procedures — Techniques & Field Notes"
+description: "Practical heuristics for discovering, cleaning, mapping, validating and reusing logic across Excel, CSV and corporate data exports."
+permalink: /reusable-data-procedures/techniques/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li><a href="/reusable-data-procedures/framework/">Operating Framework</a></li><li aria-current="page">Techniques & Field Notes</li></ol>
+</nav>
+
+<div class="rdp">
+  <header class="rdp__hero">
+    <div>
+      <p class="rdp__eyebrow">Techniques & field notes</p>
+      <h1>Small rules that save large amounts of boring work.</h1>
+      <p class="rdp__lead">Repeated data tasks are rarely difficult because of one complex algorithm. They are difficult because dozens of small ambiguities appear together: the header moved, an ID became numeric, a lookup is no longer unique, or somebody added a Total row and called it progress.</p>
+      <p class="rdp__lead rdp__lead--strong">These techniques are building blocks for the framework. Each one should be observable, testable and easy to explain.</p>
+    </div>
+    <aside class="rdp__thesis"><span>Field rule</span><strong>Prefer several weak signals over one clever guess.</strong><p>A filename, one header match or one sample row can lie. A combination of structure, values, history and business rules is usually safer.</p></aside>
+  </header>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Discovery</p><h2>Know what arrived before deciding what to do with it.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Fingerprint first</strong><p>Before reading every row, capture file size, hash, workbook sheets, dimensions, table names, headers, basic types and a small safe sample. Fast fingerprints make source matching cheaper.</p></article>
+      <article><strong>Role beats filename</strong><p>Resolve a source to a logical role such as sales_orders or material_master. Filenames are only one signal because people rename files with remarkable creativity.</p></article>
+      <article><strong>Sample, then prove</strong><p>Use a sample for discovery and candidate ranking. Before execution, validate the selected rule against the full relevant dataset.</p></article>
+      <article><strong>Compare with history</strong><p>A previous approved run is valuable evidence. Compare current headers, types, cardinality and row-count ranges with the last good runs.</p></article>
+      <article><strong>Detect near-empty sheets</strong><p>Ignore cover sheets and instruction tabs only after confirming that they contain no required structure. A single hidden data table can make this assumption expensive.</p></article>
+      <article><strong>Keep a structural diff</strong><p>Added column, renamed column, type shift and lost key uniqueness are different kinds of drift. Report them separately.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Finding cells and tables</p><h2>Use anchors, scoring and boundaries.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Anchor sets</strong><p>Search for a set of expected labels rather than one cell. Three headers found near each other are much stronger evidence than one Material cell somewhere in the workbook.</p></article>
+      <article><strong>Alias dictionary</strong><p>Keep approved aliases per business field. Example: Sales Document, Sales Doc., VBELN. Do not place all similar words into one global synonym soup.</p></article>
+      <article><strong>Row score</strong><p>For each candidate row, score known labels, non-empty text cells, duplicate labels, merged cells and whether stable data appears below it.</p></article>
+      <article><strong>Column score</strong><p>Candidate key columns often have high completeness, stable format and high uniqueness. A description column tends to have lower uniqueness and longer text.</p></article>
+      <article><strong>Region grow</strong><p>After finding the header, grow the region down and sideways while row width and value density remain stable. Stop on controlled boundaries.</p></article>
+      <article><strong>Coordinate fallback</strong><p>If a vendor file has no better signal, fixed coordinates are acceptable. Mark the locator as fragile and protect it with header checks.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__example">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Locator scoring</p><h2>A simple score is often enough.</h2><p>The exact weights should be configurable and validated on real files.</p></div>
+    <pre><code>header_score =
+    0.40 * required_header_matches
+  + 0.20 * optional_header_matches
+  + 0.15 * text_density
+  + 0.15 * stable_rows_below
+  + 0.10 * historical_position_similarity
+  - 0.20 * duplicate_header_penalty
+  - 0.20 * narrative_text_penalty
+
+accept automatically only if:
+  score >= threshold
+  AND all critical headers are present
+  AND region validation passes</code></pre>
+    <div class="rdp__rerun"><strong>Important:</strong> confidence is not permission. A high locator score can choose a table candidate, but business validations still decide whether the run may continue.</div>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Cleaning patterns</p><h2>Build comparison keys without destroying display values.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Dual representation</strong><p>Keep Customer = "0004711" for output and Customer__key = "0004711" for comparison. Normalization can change the key without rewriting the display field.</p></article>
+      <article><strong>Normalize whitespace early</strong><p>Trim spaces and normalize known non-breaking spaces before duplicate detection. Invisible characters are excellent at creating visible meetings.</p></article>
+      <article><strong>Parse after classification</strong><p>Do not immediately cast every numeric-looking value. First decide whether the field is an identifier, measure, amount, quantity or date-like value.</p></article>
+      <article><strong>Locale is metadata</strong><p>Store decimal, thousands and date conventions in the source contract. Locale should not be guessed from one suspicious cell.</p></article>
+      <article><strong>Leading zeros are semantic</strong><p>If "0010" is an item number, converting it to 10 is a business change. Preserve text unless the field contract says otherwise.</p></article>
+      <article><strong>Normalize for joins</strong><p>A join can use a normalized key while the output keeps original values. This makes reconciliation easier when users ask why two rows matched.</p></article>
+      <article><strong>Never invent precision</strong><p>If Excel already converted a long identifier to scientific notation and lost digits, stop or quarantine. Formatting cannot restore missing information.</p></article>
+      <article><strong>Keep rejected parse values</strong><p>A failed date or number parse should produce an exception with raw value and rule ID, not quietly become null.</p></article>
+      <article><strong>Clean columns independently</strong><p>One bad amount should not prevent safe trimming of a customer field. Stage-level policy decides whether the whole run stops.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Mapping and joins</p><h2>Do not trust matching names without checking values.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Name + values + cardinality</strong><p>A mapping is stronger when field names are similar, values overlap and the target behaves like the expected key.</p></article>
+      <article><strong>Cardinality before join</strong><p>Check one-to-one, many-to-one and many-to-many behavior before execution. An accidental many-to-many join can multiply rows without producing an obvious error.</p></article>
+      <article><strong>Coverage is not enough</strong><p>98% lookup coverage looks good until the missing 2% contains the largest values. Report unmatched count and business impact where possible.</p></article>
+      <article><strong>Alias maps need ownership</strong><p>Customer A → Group X may be a business mapping, not cleaning. Store who approved it and its validity period.</p></article>
+      <article><strong>Composite keys are normal</strong><p>Document alone may not identify a row. Use Document + Item, Plant + Storage Location or another explicit compound key when needed.</p></article>
+      <article><strong>Join keys need normalization symmetry</strong><p>If the source key is trimmed and zero-normalized, apply the same comparison policy to the target. One-sided cleanup creates mysterious misses.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Validation gates</p><h2>Check shape, relation and business meaning at different levels.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Gate 1 · Source</strong><p>Expected file role, sheet, headers, types and structural fingerprint are compatible.</p></article>
+      <article><strong>Gate 2 · Extraction</strong><p>Header is unique, region is plausible, required columns exist and no accidental footer is included.</p></article>
+      <article><strong>Gate 3 · Data quality</strong><p>Required fields, parse success, uniqueness and accepted value domains satisfy policy.</p></article>
+      <article><strong>Gate 4 · Relations</strong><p>Lookup coverage and cardinality are within approved limits. Ambiguous mappings are blocked or routed to review.</p></article>
+      <article><strong>Gate 5 · Reconciliation</strong><p>Counts, totals or control sums compare with source expectations. This catches technically valid but incomplete extracts.</p></article>
+      <article><strong>Gate 6 · Publish</strong><p>Only approved result states reach Outbox. Warning, review and failure states remain visible in Evidence.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Drift techniques</p><h2>Repair the procedure carefully, not the current file secretly.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Alias repair</strong><p>Material Number becomes Material No. and the rest of the structure matches. Propose an alias update.</p></article>
+      <article><strong>Position repair</strong><p>The table moved from row 7 to row 12 but anchors still match. The locator can adapt without changing business logic.</p></article>
+      <article><strong>Type drift</strong><p>An ID that was text becomes numeric. Do not auto-cast until the identifier policy confirms that no information is lost.</p></article>
+      <article><strong>Cardinality drift</strong><p>A lookup key that was unique now has duplicates. Treat this as breaking or business drift, not a harmless format change.</p></article>
+      <article><strong>Semantic drift</strong><p>The same column name can change meaning after a system or process change. Technical fingerprinting cannot solve this alone.</p></article>
+      <article><strong>Repair creates a revision</strong><p>Approved v1.3 stays reproducible. The accepted repair becomes v1.4 with reason, evidence and reviewer.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Field notes</p><h2>Rules I would keep visible in the project.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Use three real files before calling a pattern stable</strong><p>One sample proves almost nothing about month-to-month drift.</p></article>
+      <article><strong>Store source coordinates for exceptions</strong><p>Sheet + row + column lets a user return to the exact place that caused a problem.</p></article>
+      <article><strong>Every exception needs a reason code</strong><p>Free-text notes are useful, but reason codes make repeated problems measurable.</p></article>
+      <article><strong>Measure manual touch rate</strong><p>A reusable procedure is improving when fewer rows and fewer structural changes need manual decisions.</p></article>
+      <article><strong>Keep canary rules</strong><p>A few cheap checks such as row-count band, key uniqueness and amount total can catch large failures early.</p></article>
+      <article><strong>Prefer explicit thresholds</strong><p>"Mostly matched" is not a control. "Coverage must be ≥ 98%, otherwise block" is.</p></article>
+      <article><strong>Separate warning from failure</strong><p>An added optional column can be a warning. A missing key field should normally block the run.</p></article>
+      <article><strong>Make exceptions reusable too</strong><p>If the same exception appears every month, it needs a rule, reference record or documented accepted exception.</p></article>
+      <article><strong>Do not let AI hide uncertainty</strong><p>If a semantic suggestion is weak, expose the evidence and confidence. A confident sentence is not stronger data.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__routes">
+    <div class="rdp__route-list">
+      <a href="/reusable-data-procedures/framework/"><span>←</span><strong>Operating Framework</strong><small>Workspace, lifecycle, locator, cleaning and publication model.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_back</i></a>
+      <a href="/reusable-data-procedures/procedure-model/"><span>→</span><strong>Procedure Model</strong><small>Turn these patterns into a versioned portable definition.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+    </div>
+  </section>
+</div>
