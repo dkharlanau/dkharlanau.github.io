@@ -1,9 +1,9 @@
 {
   "id": "sap-lead-assessment-lab",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "updated_at": "2026-08-16",
   "status": "draft",
-  "purpose": "Turn the Lab into a structured SAP Lead assessment practice route across process knowledge, diagnostics, architecture, integration, data, AI, adaptive practice, focused review, and portable local progress.",
+  "purpose": "Turn the Lab into a structured SAP Lead assessment practice route across process knowledge, diagnostics, architecture, integration, data, AI, adaptive practice, focused review, portable local progress, and provenance-aware feedback evidence.",
   "reasoning_levels": [
     {"id":"explain","label":"Explain","goal":"Describe business purpose, process flow, key objects, and system boundary in clear language."},
     {"id":"trace","label":"Trace","goal":"Follow one requirement through master data, configuration, documents, integrations, and business impact."},
@@ -24,12 +24,13 @@
     {"id":"mock","label":"Mock Assessment","route":"/labs/assessment/mock/","purpose":"Build a balanced multi-case session across all four assessment tracks."},
     {"id":"review","label":"Review Queue","route":"/labs/assessment/review/","purpose":"Turn weak dimensions and weak tracks into focused review routes, then repeat practice."},
     {"id":"progress","label":"Progress & Portability","route":"/labs/assessment/progress/","purpose":"Inspect local progress and move canonical attempt history between browsers without a server profile."},
+    {"id":"feedback","label":"Feedback & Calibration Evidence","route":"/labs/assessment/feedback/","purpose":"Record real self, peer, manager, interviewer, or formal assessment observations with explicit provenance."},
     {"id":"cross-process","label":"Cross-Process Lead Cases","route":"/labs/assessment/cross-process/","purpose":"Practice ownership and evidence where the visible symptom crosses several SAP domains."}
   ],
   "coverage": {
-    "strong_now": ["Sales processes and decision engines","Billing and revenue handoff","FI/CO touchpoints for logistics","Procurement","Production Planning and Execution","Quality Management","Inventory Management","Automotive JIT and JIS","EWM","Transportation Management","Integration architecture","Integration operations and recovery","Cross-process Lead cases","MDG","SAP development and deployment choices","Business AI and AI system architecture","Weak-signal tracking","Adaptive case selection","Mock assessment sessions","Focused review queue","Progress and portable local history"],
+    "strong_now": ["Sales processes and decision engines","Billing and revenue handoff","FI/CO touchpoints for logistics","Procurement","Production Planning and Execution","Quality Management","Inventory Management","Automotive JIT and JIS","EWM","Transportation Management","Integration architecture","Integration operations and recovery","Cross-process Lead cases","MDG","SAP development and deployment choices","Business AI and AI system architecture","Weak-signal tracking","Adaptive case selection","Mock assessment sessions","Focused review queue","Progress and portable local history","Provenance-aware feedback capture and calibration policy"],
     "next_verticals": [],
-    "next_practice_layers": ["calibrate scoring with real assessment feedback","generate candidate questions from graph relations with human approval","review and promote mature draft/noindex Lab pages","capture explicit assessment-session feedback without inventing external evidence"]
+    "next_practice_layers": ["generate candidate questions from graph relations with human approval","review and promote mature draft/noindex Lab pages","connect real feedback observations to review priorities without treating feedback as automatic scoring truth","create explicit human-reviewed calibration decisions when enough real evidence exists"]
   },
   "endpoints": {
     "human_route":"/labs/assessment/",
@@ -37,6 +38,7 @@
     "mock_route":"/labs/assessment/mock/",
     "review_route":"/labs/assessment/review/",
     "progress_route":"/labs/assessment/progress/",
+    "feedback_route":"/labs/assessment/feedback/",
     "cross_process_route":"/labs/assessment/cross-process/",
     "core_cases":"/labs/assessment/data/cases.jsonl",
     "billing_cases":"/labs/assessment/data/billing-cases.jsonl",
@@ -54,6 +56,8 @@
     "review_map":"/labs/assessment/data/review-map.json",
     "mock_session":"/labs/assessment/data/mock-session.json",
     "history_portability":"/labs/assessment/data/history-portability.json",
+    "feedback_schema":"/labs/assessment/data/feedback-schema.json",
+    "calibration_policy":"/labs/assessment/data/calibration-policy.json",
     "backlog":"/labs/assessment/data/backlog.json",
     "catalog":"/labs/assessment/data/catalog.json"
   }
