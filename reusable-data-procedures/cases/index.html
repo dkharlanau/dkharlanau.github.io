@@ -34,16 +34,31 @@ hide_global_cta: true
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Reference case 01</p><h2>Sales Order Material Reconciliation</h2><p>A monthly SAP Sales export is reconciled against a controlled material alias dataset. The second run moves the table, renames headers and introduces one unknown external material code.</p></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Reference case 01 / Sales</p><h2>Sales Order Material Reconciliation</h2><p>A monthly SAP Sales export is reconciled against a controlled material alias dataset. The second run moves the table, renames headers and introduces one unknown external material code.</p></div>
     <div class="rdp__route-list"><a href="/reusable-data-procedures/cases/sales-order-material-reconciliation/"><span>01</span><strong>Sales Order Material Reconciliation</strong><small>Golden run → structural drift → reference gap → review decision → replay.</small><i class="material-symbols-outlined">fact_check</i></a></div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Reference case 02 / Procurement</p><h2>Purchase Order Material Reconciliation</h2><p>A SAP Procurement export checks each PO item against a controlled supplier-material cross-reference. The case proves composite keys, supplier-scoped mappings and the difference between strong evidence and automatic master-data changes.</p></div>
+    <div class="rdp__route-list"><a href="/reusable-data-procedures/cases/purchase-order-material-reconciliation/"><span>02</span><strong>Purchase Order Material Reconciliation</strong><small>Golden run → supplier-material gap → scoped mapping decision → reference release → replay.</small><i class="material-symbols-outlined">fact_check</i></a></div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">What two cases tell us</p><h2>Reuse the controls, not the assumptions.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Shared framework</strong><p>Sales and Procurement both use source location, stable identifiers, controlled references, gates, review, versioning and replay.</p></article>
+      <article><strong>Different keys</strong><p>Sales uses a direct material alias. Procurement needs Supplier + Supplier Material as a composite business key.</p></article>
+      <article><strong>Different evidence</strong><p>A value on the same PO row can support a mapping proposal, but it still does not approve a controlled reference change.</p></article>
+      <article><strong>Stronger confidence</strong><p>When two domains exercise the same framework boundary in different ways, the shared pattern has better evidence than a single polished example.</p></article>
+    </div>
   </section>
 
   <section class="rdp__detail-section">
     <div class="rdp__section-head"><p class="rdp__eyebrow">Next cases</p><h2>Grow by pressure, not by taxonomy.</h2></div>
     <div class="rdp__cards">
-      <article><strong>Purchase Order Material Reconciliation</strong><p>Reuse the same foundation against purchasing document and item keys.</p></article>
-      <article><strong>Supplier Material Cross-reference</strong><p>Stress effective mappings, many-to-one relations and new supplier codes.</p></article>
+      <article><strong>Supplier Material Cross-reference</strong><p>Stress effective dating, many-to-one relations, replacement mappings and new supplier codes as the main business object.</p></article>
       <article><strong>Month-end Workbook Pipeline</strong><p>Stress multiple sheets, title rows, repeated headers, totals and late corrected files.</p></article>
+      <article><strong>Cross-source Key Audit</strong><p>Stress identifier representation, leading zeros, duplicates and conflicts across independent exports.</p></article>
     </div>
   </section>
 </div>
