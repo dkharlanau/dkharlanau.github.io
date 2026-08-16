@@ -7,7 +7,9 @@ The loop combines three independent signals:
 - source-level search quality (metadata, body, links, evidence, H1, freshness)
 
 It never marks a draft page verified. With --apply, only pages already marked
-status=reviewed and verified=true can be changed from noindex to indexable.
+status=reviewed and verified=true can be changed from noindex to indexable. After an
+apply run it refreshes the committed assessment promotion-readiness inventory so the
+control plane describes the final publication state rather than the pre-promotion state.
 """
 
 from __future__ import annotations
@@ -16,6 +18,8 @@ import argparse
 import csv
 import json
 import re
+import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -306,6 +310,13 @@ def apply_promotions(repo: Path, candidates: list[PromotionCandidate]) -> list[s
     return changed
 
 
+def sync_assessment_readiness(repo: Path) -> None:
+    script = repo / "scripts" / "audit_assessment_promotion_readiness.py"
+    if not script.exists():
+        raise RuntimeError(f"promotion readiness generator not found: {script}")
+    subprocess.run([sys.executable, str(script)], cwd=repo, check=True)
+
+
 def write_reports(repo: Path, candidates: list[PromotionCandidate], output_dir: str) -> None:
     out = repo / output_dir
     out.mkdir(parents=True, exist_ok=True)
@@ -378,9 +389,11 @@ def main() -> int:
 
     if args.apply:
         changed = apply_promotions(repo, candidates)
+        sync_assessment_readiness(repo)
         print(f"  Promoted: {len(changed)}")
         for path in changed:
             print(f"  - {path}")
+        print("  Promotion readiness: synchronized after apply")
     return 0
 
 
