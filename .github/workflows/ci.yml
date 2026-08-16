@@ -48,6 +48,9 @@ jobs:
       - name: Run Python tests
         run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
 
+      - name: Check assessment promotion readiness is current
+        run: python3 scripts/audit_assessment_promotion_readiness.py --check
+
       - name: Generate DAMA pages
         run: node scripts/generate_dama_pages.js
 
