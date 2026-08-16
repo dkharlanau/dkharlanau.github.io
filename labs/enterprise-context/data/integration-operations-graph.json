@@ -1,0 +1,51 @@
+{
+  "id": "GRAPH-INTEGRATION-OPERATIONS-RECOVERY",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "status": "researching",
+  "domain": "SAP Integration Operations",
+  "human_route": "/labs/enterprise-context/integration-operations/",
+  "source_registry": "_data/labs/enterprise_context/sources/integration_operations.yml",
+  "thesis": "A green technical status is not the same as a completed business process. Recovery must preserve identity, ordering, idempotency, commit semantics, and business reconciliation.",
+  "memory_path": ["IDENTITY","DELIVERY","ORDER","COMMIT","RETRY","EXCEPTION","RECONCILE","COMPLETE"],
+  "runtime": [
+    {"order":1,"id":"INTOPS-RUNTIME-IDENTIFY","question":"What exact business event are we tracing?","checks":["technical message ID","business key","correlation ID","source version/timestamp","target reference"]},
+    {"order":2,"id":"INTOPS-RUNTIME-LOCATE","question":"Where did processing stop?","checks":["sender log","middleware monitor","queue/RFC","AIF/IDoc","receiver application log","target document"]},
+    {"order":3,"id":"INTOPS-RUNTIME-CLASSIFY","question":"What kind of failure is it?","checks":["transport","authentication","ordering","mapping","master data","application validation","configuration","system/resource"]},
+    {"order":4,"id":"INTOPS-RUNTIME-COMMIT","question":"Did the target create durable side effects?","checks":["target object","application status","acknowledgement semantics","partial child processing","follow-on objects"]},
+    {"order":5,"id":"INTOPS-RUNTIME-RECOVER","question":"Retry, restart, replay, compensate, quarantine, or escalate?","checks":["failure class","commit state","idempotency","ordering dependency","changeable data","business deadline"]},
+    {"order":6,"id":"INTOPS-RUNTIME-ORDER","question":"Can later messages proceed safely?","checks":["queue status","business sequence","predecessor/successor","locks","partition key","scheduler"]},
+    {"order":7,"id":"INTOPS-RUNTIME-RECONCILE","question":"Did recovery create the intended result exactly once?","checks":["source event","target document","quantity/value","status","correlation","reversal/cancel","acknowledgement"]},
+    {"order":8,"id":"INTOPS-RUNTIME-CLOSE","question":"What evidence allows incident closure?","checks":["business terminal state","monitor status","reconciliation","owner confirmation","root cause/fix"]}
+  ],
+  "runbooks": [
+    {"id":"aif","monitor":"AIF Interface Monitor / Monitoring and Error Handling / Message Monitoring","rule":"Correct known application error with ownership, restart only affected message where supported, then verify business result."},
+    {"id":"idoc","monitor":"WE02/WE05 and BD87","rule":"Read payload/status history, fix cause, reprocess controlled existing IDoc where appropriate, and verify target business object."},
+    {"id":"qrfc","monitor":"SM58, SMQ1, SMQ2, SMQS/SMQR","rule":"Interpret queue/LUW status and ordering before activation; blind restart can duplicate or reorder effects."},
+    {"id":"bgrfc","monitor":"SBGRFCMON","rule":"Trace transactional/queued unit state and FIFO dependency before restart."},
+    {"id":"cloud-integration","monitor":"SAP Integration Suite message/queue/data-store monitors","rule":"Interpret exception handling, persistence, retries, and receiver commit; Completed is not always business success."}
+  ],
+  "recovery_patterns": [
+    {"id":"transient-retry","use_when":"Temporary technical failure, no unsafe partial commit","controls":["bounded retry","backoff","idempotency","alert threshold"]},
+    {"id":"correct-restart","use_when":"Correctable deterministic application/mapping/master-data error","controls":["auditable correction","same identity","post-restart reconciliation"]},
+    {"id":"source-replay","use_when":"Source can regenerate same semantic event and deduplication contract is known","controls":["same business identity","deduplication","ordering"]},
+    {"id":"compensate","use_when":"Previous attempt committed an effect that cannot be safely retried","controls":["explicit reversal/correction","reference original","downstream propagation","audit trail"]},
+    {"id":"quarantine","use_when":"Repeated poison/deterministic failure would block throughput or exhaust retry resources","controls":["retain identity","alert owner","stop endless retry","manual disposition","reconciliation backlog"]}
+  ],
+  "failure_modes": [
+    {"id":"INTOPS-FAIL-GREEN-NO-BUSINESS","symptom":"Technical monitor is green/completed but target business effect is missing.","check_first":["receiver application log","handled-exception path","target business key","follow-on commit","correlation"]},
+    {"id":"INTOPS-FAIL-DUPLICATE","symptom":"Retry creates duplicate business documents or postings.","check_first":["stable identity","previous commit state","receiver idempotency","dedup retention","replay ID"]},
+    {"id":"INTOPS-FAIL-ORDER","symptom":"Later change/cancel overtakes create or earlier update.","check_first":["queue/partition","predecessor","parallelism","manual release history","business ordering rule"]},
+    {"id":"INTOPS-FAIL-RETRY-STORM","symptom":"Deterministic error retries repeatedly and fills queues/alerts.","check_first":["error class","retry policy","backoff","quarantine","owner"]},
+    {"id":"INTOPS-FAIL-PARTIAL-COMMIT","symptom":"Message failed but target has partial durable effects.","check_first":["target objects","children","transaction boundary","application log","compensation path"]},
+    {"id":"INTOPS-FAIL-QUEUE-BLOCK","symptom":"One failed message blocks many successors.","check_first":["first failing unit","queue status","business dependency","safe isolation","successor semantics"]},
+    {"id":"INTOPS-FAIL-OWNERSHIP","symptom":"Error is visible but nobody owns correction and business confirmation.","check_first":["AIF recipient","business owner","technical owner","data/config owner","SLA/escalation"]}
+  ],
+  "lead_lens": {
+    "what_i_ask_first": ["What exact business event/key are we tracing?","Where is the first failed or ambiguous hop and did target commit?","Is ordering required and retry idempotent?","What business state proves completion?"],
+    "main_trade_off": "Recover quickly without duplicating, reordering, or silently losing business effects.",
+    "typical_failure": "Optimizing for a green monitor instead of a correct business state.",
+    "proof": ["source event","middleware message","queue/RFC/AIF/IDoc status","target app log","durable business object","downstream effect","reconciliation"]
+  },
+  "source_ids": ["SRC-SAP-INTOPS-AIF-MONITOR","SRC-SAP-INTOPS-AIF-ERROR","SRC-SAP-INTOPS-AIF-CLOUD","SRC-SAP-INTOPS-IDOC","SRC-SAP-INTOPS-QRFC","SRC-SAP-INTOPS-QRFC-STATUS","SRC-SAP-INTOPS-BGRFC","SRC-SAP-INTOPS-CI-MONITOR","SRC-SAP-INTOPS-EXACTLY-ONCE","SRC-SAP-INTOPS-QUEUES","SRC-SAP-INTOPS-ERROR-DESIGN","SRC-SAP-INTOPS-XI-RETRY"]
+}
