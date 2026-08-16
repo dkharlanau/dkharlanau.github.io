@@ -1,0 +1,39 @@
+{
+  "kind": "rdp-decision-record",
+  "specVersion": "0.1",
+  "id": "decision-supplier-material-vend-q9",
+  "reviewItemId": "review-supplier-material-vend-q9",
+  "decisionType": "approve-mapping",
+  "question": "Should supplier SUP-2000 material code VEND-Q9 map to canonical SAP Material MAT-471103 for the defined SAP Procurement export source family?",
+  "decision": "Approve SUP-2000 + VEND-Q9 -> MAT-471103 for the SAP Procurement export source family used by this procedure.",
+  "rationale": "The SAP Material on the same PO item provides strong evidence, the composite supplier-material scope is explicit, and no conflicting reference mapping exists. The approval does not make VEND-Q9 a global material identifier.",
+  "scope": {
+    "semanticConcepts": ["sap.material-id"],
+    "sourceFamilies": ["sap-procurement-export"],
+    "procedures": ["procurement.po-material-reconciliation"],
+    "referenceDatasets": ["sap.supplier-material-cross-reference"],
+    "runIds": ["case-po-material-run-02"],
+    "scopeType": "reference-data"
+  },
+  "evidence": {
+    "evidenceRefs": ["review-item.json", "run-02-review.json", "fixtures.json#sourceRuns/run-02"],
+    "facts": [
+      "SUP-2000 + VEND-Q9 is the unresolved composite key.",
+      "The same source row contains Material MAT-471103.",
+      "No duplicate or conflicting composite key exists in reference release 2026.08.1."
+    ],
+    "safeSamples": ["SUP-2000 | VEND-Q9 | MAT-471103"],
+    "businessConfirmation": "Approved for this Procurement source family and controlled reference dataset."
+  },
+  "validity": {"effectiveFrom": "2026-08-16T14:24:00Z", "reviewAt": "2026-11-16T00:00:00Z"},
+  "outcome": {
+    "action": "reference-data-change",
+    "targetId": "sap.supplier-material-cross-reference",
+    "proposedVersion": "2026.08.2",
+    "changeRef": "reference-2026.08.2.json",
+    "testRefs": ["tests.json#replay-after-approved-reference-release", "tests.json#supplier-material-is-composite-key"]
+  },
+  "status": "active",
+  "decidedBy": "procurement-data-owner",
+  "decidedAt": "2026-08-16T14:24:00Z"
+}
