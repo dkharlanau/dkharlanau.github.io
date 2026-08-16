@@ -1,0 +1,87 @@
+---
+layout: default
+title: "Promotion Decision Record — SAP Lead Assessment Lab"
+description: "Export an explicit human approve, revise, or reject decision for one SAP Lead assessment candidate without publishing it automatically."
+permalink: /labs/assessment/promotion-review/decision/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, question-review, promotion, human-review]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li><a href="/labs/assessment/promotion-review/">Promotion Review</a></li><li aria-current="page">Decision Record</li></ol></nav>
+
+<div class="research-canvas promotion-decision" id="promotion-decision">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Human promotion decision</p>
+      <h1>Record the decision.<br />Publish in a separate change.</h1>
+      <p>This recorder exports one explicit human decision: approve for a separate repository change, revise, or reject. It never edits the published case manifest itself.</p>
+      <a class="research-canvas__button" href="#decision-form">Open decision recorder <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Promotion decision boundary">
+      <p>Decision contract</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>6</strong><small>Review checks</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>3</strong><small>Decision outcomes</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>0</strong><small>Automatic publications</small></div>
+      <em>Export evidence · repository change remains separate</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Decision boundary:</strong> even “approve” means only <em>approve for a separate reviewed repository change</em>. This page cannot create a published case, assign a manifest entry, or change scoring calibration.</p>
+    <a href="/labs/assessment/data/promotion-decision-schema.json">Open decision schema <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="decision-form" data-reveal>
+    <header><p class="research-canvas__eyebrow">Candidate</p><h2>Select one semantic-surviving candidate.</h2><p>The recorder loads only candidates from the current promotion packet. Semantic duplicates never appear here.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Candidate</h4><label for="pd-candidate">Pending candidate</label><select id="pd-candidate"><option value="">Loading packet…</option></select></div>
+      <div><h4>Reviewer</h4><label for="pd-reviewer">Reviewer label</label><input id="pd-reviewer" maxlength="120" placeholder="Optional name or review role" /></div>
+      <div><h4>Novel signal</h4><p id="pd-novelty">Choose a candidate to load its semantic review.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Six checks</p><h2>Approval requires all six checks to pass.</h2><p>Revise or reject may contain issues, but no check can remain “not checked” in an exported decision.</p></header>
+    <div id="pd-checks"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision</p><h2>Make the human gate explicit.</h2><p>The exported JSON is evidence for the next repository change. It is not the repository change.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Outcome</h4><select id="pd-decision"><option value="revise_before_promotion">Revise before promotion</option><option value="reject_candidate">Reject candidate</option><option value="approve_for_separate_repository_change">Approve for separate repository change</option></select></div>
+      <div><h4>Reviewer note</h4><textarea id="pd-note" rows="5" maxlength="4000" placeholder="Why this decision? What must the next repository change preserve or fix?"></textarea></div>
+      <div><h4>Export</h4><p id="pd-status" aria-live="polite">Complete all checks and add a reviewer note.</p><button type="button" id="pd-export">Export promotion decision</button></div>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<style>
+.promotion-decision select,.promotion-decision input,.promotion-decision textarea{font:inherit;padding:.55rem;border:1px solid var(--border-color,#ddd);border-radius:.35rem;background:var(--background-color,#fff);color:inherit;max-width:100%}.promotion-decision button{font:inherit;padding:.55rem .8rem;cursor:pointer}.pd-check{border:1px solid var(--border-color,#ddd);padding:1rem;margin-bottom:1rem}.pd-check label{display:block;font-weight:700;margin:.45rem 0 .25rem}
+</style>
+
+<script>
+(() => {
+  'use strict';
+  const state={packet:null};
+  const $=id=>document.getElementById(id);
+
+  function selectedCandidate(){return state.packet ? state.packet.items.find(item=>item.candidate_id===$('pd-candidate').value) : null;}
+  function renderCandidates(){const select=$('pd-candidate');select.replaceChildren();const empty=document.createElement('option');empty.value='';empty.textContent='Choose a pending candidate';select.appendChild(empty);state.packet.items.forEach(item=>{const option=document.createElement('option');option.value=item.candidate_id;option.textContent=`${item.candidate_id} · ${item.track} · ${item.level} · ${item.title}`;select.appendChild(option);});}
+  function renderNovelty(){const item=selectedCandidate();$('pd-novelty').textContent=item ? `${item.semantic_review.novel_signal} Closest published: ${item.semantic_review.closest_published_cases.join(', ') || 'none'}.` : 'Choose a candidate to load its semantic review.';}
+  function renderChecks(){const box=$('pd-checks');box.replaceChildren();state.packet.review_rule.forEach((rule,index)=>{const article=document.createElement('article');article.className='pd-check';article.dataset.checkIndex=String(index+1);const h=document.createElement('h3');h.textContent=`Check ${index+1}`;const p=document.createElement('p');p.textContent=rule;const label=document.createElement('label');label.textContent='Result';const select=document.createElement('select');select.className='pd-result';[['not_checked','Not checked'],['pass','Pass'],['issue','Issue']].forEach(([value,text])=>{const option=document.createElement('option');option.value=value;option.textContent=text;select.appendChild(option);});const noteLabel=document.createElement('label');noteLabel.textContent='Check note';const note=document.createElement('textarea');note.className='pd-check-note';note.rows=2;note.maxLength=2000;article.append(h,p,label,select,noteLabel,note);box.appendChild(article);});}
+  function checkResults(){return Array.from(document.querySelectorAll('.pd-check')).map(article=>({check_index:Number(article.dataset.checkIndex),result:article.querySelector('.pd-result').value,note:article.querySelector('.pd-check-note').value.trim()}));}
+  function validate(){if(!selectedCandidate())return 'Choose a candidate.';const checks=checkResults();if(checks.some(item=>item.result==='not_checked'))return 'Every review check must be completed.';const decision=$('pd-decision').value;if(decision==='approve_for_separate_repository_change' && checks.some(item=>item.result!=='pass'))return 'Approval requires all six checks to pass.';if(!$('pd-note').value.trim())return 'Add a reviewer note explaining the decision.';return '';}
+  function payload(){return {format:'sap-lead-candidate-promotion-decision',version:'1.0.0',candidate_id:selectedCandidate().candidate_id,decided_at:new Date().toISOString(),reviewer_label:$('pd-reviewer').value.trim(),decision:$('pd-decision').value,review_checks:checkResults(),reviewer_note:$('pd-note').value.trim(),publication_effect:{case_manifest_changed:false,case_published:false,calibration_changed:false}};}
+  $('pd-candidate').addEventListener('change',renderNovelty);
+  $('pd-export').addEventListener('click',()=>{const error=validate();if(error){$('pd-status').textContent=error;return;}const data=payload();const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=`promotion-decision-${data.candidate_id.toLowerCase()}.json`;link.click();URL.revokeObjectURL(url);$('pd-status').textContent='Decision exported. Published case manifest remains unchanged.';});
+  fetch('/labs/assessment/data/promotion-review-packet.json',{cache:'no-store'}).then(response=>response.json()).then(packet=>{state.packet=packet;renderCandidates();renderChecks();renderNovelty();}).catch(()=>{$('pd-status').textContent='Promotion packet could not be loaded.';});
+})();
+</script>
