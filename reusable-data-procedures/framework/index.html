@@ -1,0 +1,200 @@
+---
+layout: default
+title: "Reusable Data Procedures — Operating Framework"
+description: "A practical framework for inbox-based data work: intake, workbook discovery, region location, extraction, cleaning, mapping, validation, publication and reusable procedure capture."
+permalink: /reusable-data-procedures/framework/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Operating Framework</li></ol>
+</nav>
+
+<div class="rdp">
+  <header class="rdp__hero">
+    <div>
+      <p class="rdp__eyebrow">Operating framework</p>
+      <h1>Make messy file work predictable.</h1>
+      <p class="rdp__lead">A reusable procedure needs more than a list of transformations. It needs a workspace contract, rules for finding data inside files, a cleaning discipline, validation gates and a clear place for exceptions.</p>
+      <p class="rdp__lead rdp__lead--strong">The framework treats every repeated Excel or CSV task as a controlled pipeline: Intake → Inspect → Locate → Extract → Clean → Relate → Transform → Validate → Publish → Learn.</p>
+    </div>
+    <aside class="rdp__thesis">
+      <span>Operating rule</span>
+      <strong>Never destroy the evidence that explains a result.</strong>
+      <p>Keep the original input, record what was detected, make changes explicit, and separate automatic repair from business decisions.</p>
+    </aside>
+  </header>
+
+  <section class="rdp__flow-section">
+    <div class="rdp__section-head">
+      <p class="rdp__eyebrow">Workspace contract</p>
+      <h2>A folder structure is part of the procedure.</h2>
+      <p>The names are not sacred. The responsibilities are. The same model can later map to SharePoint, S3, object storage or a managed service.</p>
+    </div>
+    <div class="rdp__cards">
+      <article><strong>Inbox/</strong><p>New files arrive here. Treat them as read-only. A procedure may copy or reference them, but it should never edit them in place.</p></article>
+      <article><strong>Staging/</strong><p>Run-specific copies, unpacked archives and technical conversions. Everything here can be rebuilt from Inbox plus the procedure.</p></article>
+      <article><strong>Quarantine/</strong><p>Unreadable, ambiguous, password-protected or structurally unsafe sources. Quarantine is a result, not a crash.</p></article>
+      <article><strong>Reference/</strong><p>Controlled lookup files, dictionaries, code lists and approved mappings. Reference data has its own owner and version.</p></article>
+      <article><strong>Procedures/</strong><p>Versioned definitions of source contracts, locators, cleaning rules, mappings, validations and outputs.</p></article>
+      <article><strong>Work/</strong><p>Intermediate tables and temporary artifacts. Useful for debugging, but never the final source of truth.</p></article>
+      <article><strong>Outbox/</strong><p>Published files or datasets only. A failed or review-required run should not quietly publish here.</p></article>
+      <article><strong>Evidence/</strong><p>Run manifest, file hashes, profiles, drift report, validation results, exception rows and procedure version.</p></article>
+      <article><strong>Archive/</strong><p>Optional retention area for immutable run packages or manifests. Retention depends on data classification, not convenience.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head">
+      <p class="rdp__eyebrow">Run lifecycle</p>
+      <h2>Ten stages, each with a clear gate.</h2>
+      <p>A stage should have an input, an output and a reason to stop. Otherwise the pipeline becomes one long function that nobody wants to debug.</p>
+    </div>
+    <ol class="rdp__flow">
+      <li><span>00</span><strong>Intake</strong><p>Assign run ID, hash files, identify source role candidates and capture arrival metadata.</p></li>
+      <li><span>01</span><strong>Inspect</strong><p>Read workbook structure: sheets, tables, named ranges, hidden content, dimensions, formulas and obvious anomalies.</p></li>
+      <li><span>02</span><strong>Locate</strong><p>Find the real data region. Do not assume that the table starts in A1 or that the first non-empty row is the header.</p></li>
+      <li><span>03</span><strong>Extract</strong><p>Turn the selected region into a logical table while preserving source coordinates and raw values where useful.</p></li>
+      <li><span>04</span><strong>Clean</strong><p>Normalize representation: whitespace, nulls, types, dates, numbers and comparison keys. Keep business changes separate.</p></li>
+      <li><span>05</span><strong>Relate</strong><p>Resolve keys, mappings and lookup relationships using evidence, cardinality and controlled reference data.</p></li>
+      <li><span>06</span><strong>Transform</strong><p>Apply explicit filters, derives, lookups, aggregations, deduplication and routing rules.</p></li>
+      <li><span>07</span><strong>Validate</strong><p>Check structure, row counts, uniqueness, coverage, domains, reconciliation totals and business invariants.</p></li>
+      <li><span>08</span><strong>Publish</strong><p>Create the output and exceptions. Publication is allowed only if the run state satisfies the procedure policy.</p></li>
+      <li><span>09</span><strong>Learn</strong><p>Turn confirmed manual fixes into aliases, rules or a new procedure version. Do not silently change an approved version.</p></li>
+    </ol>
+  </section>
+
+  <section class="rdp__example">
+    <div class="rdp__section-head">
+      <p class="rdp__eyebrow">Excel locator</p>
+      <h2>Find meaning before coordinates.</h2>
+      <p>Cell coordinates are fragile. A useful locator uses the strongest available signal and keeps fallbacks for weaker ones.</p>
+    </div>
+    <div class="rdp__example-grid">
+      <div><strong>1. Excel table</strong><p>If the workbook contains a named table with the expected columns, use it. This is usually stronger than guessing a range.</p></div>
+      <div><strong>2. Named range</strong><p>A stable business-defined range can be a good locator, but still validate its shape and headers.</p></div>
+      <div><strong>3. Semantic anchors</strong><p>Search for expected header labels or aliases such as Material, Customer, Plant or Document. Use several anchors, not one word.</p></div>
+      <div><strong>4. Header scoring</strong><p>Score candidate rows by text density, unique labels, known aliases, non-empty rows below and a change from header-like text to data-like values.</p></div>
+      <div><strong>5. Region geometry</strong><p>Look for a dense rectangle with stable column count and blank boundaries. Useful when headers are weak but the table shape is clear.</p></div>
+      <div><strong>6. Fixed coordinates</strong><p>Use A7:H500 only as a controlled fallback. If coordinates are the main locator, drift risk should be visible.</p></div>
+    </div>
+    <div class="rdp__rerun"><strong>Locator rule:</strong> save the strategy, evidence and fallback order. Do not save only the final cell range found during one run.</div>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head">
+      <p class="rdp__eyebrow">Header and region heuristics</p>
+      <h2>Useful signals for ugly workbooks.</h2>
+    </div>
+    <div class="rdp__cards">
+      <article><strong>Header density</strong><p>A likely header row has several non-empty text cells and few long narrative values.</p></article>
+      <article><strong>Known aliases</strong><p>Maintain a dictionary: Material / Material No. / MATNR / Product. An alias is evidence, not automatic semantic truth.</p></article>
+      <article><strong>Data below</strong><p>A good header candidate is followed by rows with stable value types and similar width.</p></article>
+      <article><strong>Blank boundaries</strong><p>Two or more empty rows or columns often separate sections. Treat this as a signal, not a universal rule.</p></article>
+      <article><strong>Repeated headers</strong><p>Exports may repeat the header after page breaks. Remove only rows that match the confirmed header fingerprint.</p></article>
+      <article><strong>Footer detection</strong><p>Totals, report timestamps and notes often sit under the table. Route them separately instead of deleting anything below the first blank row.</p></article>
+      <article><strong>Multiple tables</strong><p>One sheet may contain several blocks. Discover regions first, then decide which region has the required source role.</p></article>
+      <article><strong>Hidden content</strong><p>Hidden sheets, rows and columns can be either noise or business logic. Record their presence before deciding to ignore them.</p></article>
+      <article><strong>Merged cells</strong><p>Merged titles are common above tables. Fill-down is acceptable for structural headers only when the locator rule explicitly allows it.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head">
+      <p class="rdp__eyebrow">Cleaning discipline</p>
+      <h2>Separate representation cleanup from business transformation.</h2>
+      <p>This distinction matters. Trimming a non-breaking space is not the same kind of decision as changing a customer code.</p>
+    </div>
+    <div class="rdp__problem-grid">
+      <article><span>Layer 1</span><h3>Raw value</h3><p>What the source actually contained. Preserve it where traceability matters.</p></article>
+      <article><span>Layer 2</span><h3>Canonical value</h3><p>A stable representation used for comparison and joins: trimmed text, explicit nulls, parsed dates, normalized numeric representation.</p></article>
+      <article><span>Layer 3</span><h3>Business value</h3><p>A value changed by an approved rule: code conversion, status mapping, unit conversion or master-data substitution.</p></article>
+    </div>
+    <div class="rdp__cards">
+      <article><strong>Whitespace</strong><p>Trim outer spaces and detect non-breaking or unusual Unicode spaces. Keep aggressive Unicode normalization opt-in.</p></article>
+      <article><strong>Nulls</strong><p>Define which source tokens mean null: blank, N/A, NULL or dash. Never treat zero as empty without a business rule.</p></article>
+      <article><strong>Identifiers</strong><p>Read business IDs as strings unless arithmetic is meaningful. Preserve leading zeros and do not recover digits already lost by Excel.</p></article>
+      <article><strong>Dates</strong><p>Use an explicit locale and accepted formats. Ambiguous values such as 03/04/2026 should trigger a rule or review.</p></article>
+      <article><strong>Numbers</strong><p>Decimal and thousands separators need an explicit locale. A comma can mean decimal, thousands separator or text punctuation.</p></article>
+      <article><strong>Case</strong><p>Use case-folded comparison keys when useful, but keep the display value unless the output contract requires another form.</p></article>
+      <article><strong>Formulas</strong><p>Decide whether a procedure needs formulas, cached results or both. A workbook calculated on another machine may contain stale cached values.</p></article>
+      <article><strong>Units</strong><p>Do not compare 1.2 kg with 1200 g before unit semantics are known. Unit conversion belongs to business transformation, not generic cleanup.</p></article>
+      <article><strong>Totals</strong><p>Do not silently delete subtotal and total rows. Detect and classify them, because they can also be useful reconciliation evidence.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__example">
+    <div class="rdp__section-head">
+      <p class="rdp__eyebrow">Procedure sketch</p>
+      <h2>Store intent, not a macro recording.</h2>
+      <p>A human-readable definition could look like this. The exact DSL can change later.</p>
+    </div>
+    <pre><code>workspace:
+  inbox: Inbox/
+  quarantine: Quarantine/
+  outbox: Outbox/
+  evidence: Evidence/
+
+source: sales_orders
+  file: "sales_*.xlsx"
+  sheet:
+    prefer: ["Orders", "Sales Orders"]
+  locate:
+    strategy: header_anchor
+    required_headers: ["Sales Document", "Item", "Material"]
+    scan_first_rows: 40
+    fallback: region_score
+
+extract:
+  stop_after_blank_rows: 2
+  reject_duplicate_headers: true
+
+clean:
+  Material: [trim, as_string]
+  Customer: [trim, as_string]
+  NetValue: [parse_decimal: "de-DE"]
+  CreatedOn: [parse_date: "yyyy-MM-dd|dd.MM.yyyy"]
+
+validate:
+  - key_unique: [SalesDocument, Item]
+  - not_null: [SalesDocument, Item]
+  - row_count_change: "warn if > 30%"
+  - mapping_coverage: "block if < 98%"
+
+publish:
+  result: Outbox/sales_reconciliation.xlsx
+  exceptions: Outbox/sales_reconciliation_exceptions.xlsx</code></pre>
+  </section>
+
+  <section class="rdp__principles">
+    <div class="rdp__section-head">
+      <p class="rdp__eyebrow">Framework rules</p>
+      <h2>Rules worth making boring and strict.</h2>
+    </div>
+    <div class="rdp__cards">
+      <article><strong>Inbox is immutable</strong><p>Never fix the source file in place. A manual correction without evidence is invisible technical debt.</p></article>
+      <article><strong>Every run has an ID</strong><p>Inputs, procedure version, outputs, warnings and validations must be traceable to one run.</p></article>
+      <article><strong>Observe before mutate</strong><p>Profile first. Cleaning should not remove the evidence needed to understand the original problem.</p></article>
+      <article><strong>Idempotent cleanup</strong><p>Running a safe cleanup operation twice should normally produce the same result as running it once.</p></article>
+      <article><strong>Unknown means unknown</strong><p>Do not guess a date format, unit or key when evidence is weak. Quarantine or request review.</p></article>
+      <article><strong>Exceptions are data</strong><p>Keep failed rows with rule ID, reason and source coordinates. An exception file is part of the result.</p></article>
+      <article><strong>Auto-repair has a budget</strong><p>Known alias or harmless formatting drift may repair automatically. Semantic or cardinality changes require review.</p></article>
+      <article><strong>Manual fixes must graduate</strong><p>A repeated manual action should become a rule, reference mapping or explicit exception policy.</p></article>
+      <article><strong>Publish through gates</strong><p>A green file export does not mean a successful run. Publication depends on validation severity and policy.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__routes">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Next detail</p><h2>Techniques and field notes.</h2><p>The framework defines the operating model. The techniques page collects smaller patterns for discovery, cleaning, mapping and validation.</p></div>
+    <div class="rdp__route-list">
+      <a href="/reusable-data-procedures/techniques/"><span>→</span><strong>Techniques & Field Notes</strong><small>Practical heuristics, failure patterns and reusable tricks for real corporate files.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/reusable-data-procedures/procedure-model/"><span>SPEC</span><strong>Procedure Model</strong><small>How these workspace and pipeline ideas become a portable procedure object.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+    </div>
+  </section>
+</div>
