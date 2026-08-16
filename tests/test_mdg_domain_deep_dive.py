@@ -16,6 +16,8 @@ TOPIC_FILES = [
     "mdg_logistics_end_to_end_cases.yml",
 ]
 
+ALLOWED_RELATION_PREDICATES = {"requires", "provides_context_to"}
+
 
 def load(path):
     return yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -41,6 +43,15 @@ def test_mdg_domain_sources_are_official_sap_help():
     for source_id in required:
         assert sources[source_id]["publisher"] == "SAP"
         assert sources[source_id]["url"].startswith("https://help.sap.com/")
+
+
+def test_mdg_domain_relations_use_enterprise_graph_contract():
+    for filename in TOPIC_FILES:
+        data = load(TOPICS / filename)
+        for relation in data.get("relations", []):
+            assert relation["predicate"] in ALLOWED_RELATION_PREDICATES
+            assert relation["subject"].startswith("TOPIC-MDG-")
+            assert relation["object"].startswith("TOPIC-MDG-")
 
 
 def test_domain_pages_exist_and_are_noindex_drafts():
