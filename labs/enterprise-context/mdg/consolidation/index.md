@@ -53,3 +53,9 @@ Do not treat duplicate handling as cosmetic cleanup. It changes identity across 
 ## Assessment answer
 
 I would explain the difference between **matching confidence** and **business authority to merge**. The algorithm proposes evidence. Governance decides what level of evidence is enough for an irreversible identity action.
+
+## Policy deep dive
+
+Continue with [Matching & Survivorship](/labs/enterprise-context/mdg/consolidation/survivorship/) for threshold bands, review evidence, source/recency/completeness rules, manual overrides, duplicate strategies and quality metrics.
+
+The [Business Partner entity map](/labs/enterprise-context/mdg/domains/business-partner/entity-map/) shows where identity and organizational behavior diverge. The [MDG Lead Assessment Drills](/labs/enterprise-context/mdg/assessment/) include a duplicate-supplier consolidation challenge.
