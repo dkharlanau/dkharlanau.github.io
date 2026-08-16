@@ -8,12 +8,14 @@ on:
       - 'labs/**'
       - 'entities/**'
       - 'ai/pages/**'
+      - 'ai/page-knowledge-index.json'
       - '_data/knowledge_entities.yml'
       - '_data/labs/**'
       - '_data/resume.yml'
       - '_includes/seo/**'
       - '_layouts/default.html'
       - 'sitemap-pages.xml'
+      - 'sitemap-data.xml'
       - 'scripts/ai_search_trust_loop.py'
       - 'scripts/check_lab_publication_gate.py'
       - 'scripts/audit_lab_search_intents.py'
@@ -74,6 +76,20 @@ jobs:
               assert page['search']['canonical'] == page['url'], path
               assert len(page.get('relationships', [])) >= 2, path
           print(f'Validated {len(entities)} entities and {len(sidecars)} sidecars')
+          PY
+
+      - name: Check machine discovery catalog
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          catalog = Path('ai/page-knowledge-index.json').read_text(encoding='utf-8')
+          assert 'where_exp: "item", "item.ai_sidecar"' in catalog
+          links = Path('_includes/seo/page-machine-links.html').read_text(encoding='utf-8')
+          assert '/ai/page-knowledge-index.json' in links
+          sitemap = Path('sitemap-data.xml').read_text(encoding='utf-8')
+          assert '/ai/page-knowledge-index.json' in sitemap
+          assert "file.path contains '/ai/pages/'" in sitemap
+          print('Machine discovery catalog and data sitemap are connected')
           PY
 
       - name: Check Person and page schema semantics
