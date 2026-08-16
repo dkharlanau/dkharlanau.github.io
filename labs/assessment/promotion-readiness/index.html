@@ -1,0 +1,119 @@
+---
+layout: default
+title: "Promotion Readiness — SAP Lead Assessment Lab"
+description: "A human-review queue for structurally mature draft/noindex Lab pages, with factual verification kept separate from presentation readiness."
+permalink: /labs/assessment/promotion-readiness/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags:
+  - sap
+  - assessment
+  - content-governance
+  - review
+  - quality
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Promotion Readiness</li></ol></nav>
+
+<div class="research-canvas promotion-readiness" id="promotion-readiness">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Content governance</p>
+      <h1>Structure can be ready.<br />Evidence can still need review.</h1>
+      <p>The audit checks page structure, navigation, machine-readable links, and placeholder markers. It reports factual verification separately. A mature draft becomes a human-review candidate, not an automatically public page.</p>
+      <a class="research-canvas__button" href="#readiness-queue">Open review queue <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Promotion readiness status">
+      <p>Current scope</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong id="pr-routes">—</strong><small>Assessment-linked routes</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong id="pr-review">—</strong><small>Human-review candidates</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong id="pr-verified">—</strong><small>verified:true</small></div>
+      <em>No status, robots, sitemap, or verified flag is changed here.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+    <p><strong>Promotion boundary:</strong> CI green, strong navigation, or long content does not prove factual quality. Promotion requires explicit human review of claims, sources, release sensitivity, and intended index policy.</p>
+    <a href="/labs/assessment/data/promotion-readiness-policy.json">Open readiness policy <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="readiness-queue" data-reveal>
+    <header><p class="research-canvas__eyebrow">Review queue</p><h2>Start with evidence, not more formatting.</h2><p>The current assessment-linked routes already pass the structural bar. The next useful action is to review factual claims and decide whether a page should remain research-only or become indexable.</p></header>
+    <div class="pr-controls">
+      <label>Route group
+        <select id="pr-group"><option value="all">All routes</option><option value="assessment">Assessment UX</option><option value="knowledge">Enterprise knowledge</option><option value="ai">AI workstreams</option></select>
+      </label>
+      <label>Local review state
+        <select id="pr-local-filter"><option value="all">All local states</option><option value="unreviewed">Unreviewed</option><option value="needs_factual_review">Needs factual review</option><option value="keep_draft">Keep draft</option><option value="recommend_promotion">Recommend promotion</option></select>
+      </label>
+    </div>
+    <p class="pr-status" id="pr-status" aria-live="polite">Loading readiness inventory…</p>
+    <div id="pr-items" class="pr-grid"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Review decision</p><h2>A local recommendation is still not publication.</h2><p>Use local decisions to work through the queue. A repository change is still required to update verified, robots, sitemap, or status.</p></header>
+    <div class="pr-actions"><button type="button" id="pr-export">Export local review decisions</button><button type="button" id="pr-clear">Clear local review decisions</button></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Machine-readable control</p><h2>The audit is reproducible.</h2><p>The generated inventory is built from the current assessment catalog and page frontmatter. It can be checked in CI without changing publication policy.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/data/promotion-readiness.json"><span>AUDIT</span><strong>Promotion Readiness Inventory</strong><small>Current routes, structural checks, verification state, and review priority.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/data/promotion-readiness-policy.json"><span>POLICY</span><strong>Readiness Policy</strong><small>Structural checks, evidence boundary, anti-shortcut rules, and promotion rule.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
+      <a href="/labs/assessment/question-review/"><span>AUTHOR</span><strong>Question Candidate Review</strong><small>The same principle applied to generated assessment questions: evidence first, promotion second.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<style>
+.pr-controls{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}.pr-controls label{display:flex;flex-direction:column;gap:.4rem;font-weight:700;min-width:220px}.pr-controls select{font:inherit;padding:.6rem;border:1px solid var(--border-color,#ddd);border-radius:.35rem;background:var(--background-color,#fff);color:inherit}.pr-status{margin:1rem 0}.pr-grid{display:grid;gap:.9rem}.pr-card{border:1px solid var(--border-color,#ddd);padding:1rem}.pr-meta{display:flex;gap:.45rem;flex-wrap:wrap}.pr-meta span{border:1px solid var(--border-color,#ddd);border-radius:999px;padding:.18rem .5rem;font-size:.8rem}.pr-checks{display:flex;gap:.45rem;flex-wrap:wrap;margin:.7rem 0}.pr-checks span{font-size:.82rem}.pr-review{display:grid;grid-template-columns:minmax(190px,260px) 1fr auto;gap:.7rem;align-items:end;margin-top:.8rem}.pr-review label{display:flex;flex-direction:column;gap:.35rem;font-weight:700}.pr-review select,.pr-review textarea{font:inherit;padding:.55rem;border:1px solid var(--border-color,#ddd);border-radius:.35rem;background:var(--background-color,#fff);color:inherit}.pr-actions{display:flex;gap:.75rem;flex-wrap:wrap}.promotion-readiness button{font:inherit;padding:.6rem .85rem;cursor:pointer}@media(max-width:800px){.pr-review{grid-template-columns:1fr}}
+</style>
+
+<script>
+(() => {
+  'use strict';
+  const STORAGE_KEY='sapLeadPromotionReadinessReviewsV1';
+  const $=id=>document.getElementById(id);
+  let inventory=null;
+
+  function reviews(){try{const v=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{}}catch(_){return {}}}
+  function save(value){localStorage.setItem(STORAGE_KEY,JSON.stringify(value));}
+  function group(route){if(route.startsWith('/labs/assessment/'))return 'assessment';if(route.startsWith('/labs/ai-ready/')||route.startsWith('/labs/business-ai/'))return 'ai';return 'knowledge';}
+
+  function card(item){
+    const root=document.createElement('article');root.className='pr-card';root.dataset.group=group(item.route);root.dataset.local=(reviews()[item.route]?.decision)||'unreviewed';
+    const meta=document.createElement('div');meta.className='pr-meta';
+    [item.route,item.state,item.priority,`structure ${item.structural_score}/5`,item.verified?'verified:true':'verified:false'].forEach(value=>{const chip=document.createElement('span');chip.textContent=value;meta.appendChild(chip)});
+    const path=document.createElement('p');path.textContent=item.source_path||'No source file resolved.';
+    const checks=document.createElement('div');checks.className='pr-checks';Object.entries(item.checks||{}).forEach(([key,value])=>{const span=document.createElement('span');span.textContent=`${value?'✓':'×'} ${key.replaceAll('_',' ')}`;checks.appendChild(span)});
+    root.append(meta,path,checks);
+    if(item.source_path){
+      const review=document.createElement('div');review.className='pr-review';
+      const selectLabel=document.createElement('label');selectLabel.textContent='Local review decision';const select=document.createElement('select');
+      ['unreviewed','needs_factual_review','keep_draft','recommend_promotion'].forEach(value=>{const option=document.createElement('option');option.value=value;option.textContent=value.replaceAll('_',' ');select.appendChild(option)});
+      const noteLabel=document.createElement('label');noteLabel.textContent='Review note';const note=document.createElement('textarea');note.rows=2;note.maxLength=2000;
+      const current=reviews()[item.route]||{};select.value=current.decision||'unreviewed';note.value=current.note||'';selectLabel.appendChild(select);noteLabel.appendChild(note);
+      const button=document.createElement('button');button.type='button';button.textContent='Save';button.addEventListener('click',()=>{const all=reviews();all[item.route]={route:item.route,decision:select.value,note:note.value.trim(),reviewed_at:new Date().toISOString(),verified_at_audit:item.verified,structural_score:item.structural_score};save(all);root.dataset.local=select.value;applyFilters();$('pr-status').textContent=`Local review saved for ${item.route}. Repository publication state was not changed.`;});
+      review.append(selectLabel,noteLabel,button);root.appendChild(review);
+    }
+    return root;
+  }
+
+  function applyFilters(){const wantedGroup=$('pr-group').value;const wantedLocal=$('pr-local-filter').value;let visible=0;document.querySelectorAll('.pr-card').forEach(card=>{const show=(wantedGroup==='all'||card.dataset.group===wantedGroup)&&(wantedLocal==='all'||card.dataset.local===wantedLocal);card.hidden=!show;if(show)visible+=1});if(inventory)$('pr-status').textContent=`${visible} route(s) shown. ${inventory.counts.human_review_candidate||0} total human-review candidates; ${inventory.items.filter(item=>item.verified).length} verified:true.`;}
+
+  function render(data){inventory=data;$('pr-routes').textContent=data.scope_route_count;$('pr-review').textContent=data.counts.human_review_candidate||0;$('pr-verified').textContent=data.items.filter(item=>item.verified).length;const root=$('pr-items');root.replaceChildren();data.items.forEach(item=>root.appendChild(card(item)));applyFilters();}
+
+  $('pr-group').addEventListener('change',applyFilters);$('pr-local-filter').addEventListener('change',applyFilters);
+  $('pr-export').addEventListener('click',()=>{const payload={format:'lab-promotion-readiness-reviews',version:'1.0.0',exported_at:new Date().toISOString(),reviews:Object.values(reviews())};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='lab-promotion-readiness-reviews.json';link.click();URL.revokeObjectURL(url)});
+  $('pr-clear').addEventListener('click',()=>{localStorage.removeItem(STORAGE_KEY);if(inventory)render(inventory);$('pr-status').textContent='Local readiness review decisions cleared. Repository publication state was not changed.';});
+  fetch('/labs/assessment/data/promotion-readiness.json',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error(`Readiness inventory HTTP ${response.status}`);return response.json()}).then(render).catch(error=>{$('pr-status').textContent=`Readiness inventory could not be loaded: ${error.message}`});
+})();
+</script>
