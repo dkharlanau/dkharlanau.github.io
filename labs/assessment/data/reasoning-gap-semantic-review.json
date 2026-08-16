@@ -1,0 +1,43 @@
+{
+  "id": "sap-lead-reasoning-gap-semantic-review",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Decide whether non-diagnostic reasoning-gap candidates add a materially new Lead signal after published-case comparison and before any human promotion decision.",
+  "candidate_source": "/labs/assessment/data/reasoning-gap-candidates.json",
+  "published_case_manifest": "/labs/assessment/data/case-sets.json",
+  "boundary": "Semantic retention keeps a candidate in the human promotion queue only. It does not publish the case or change the published reasoning coverage.",
+  "decisions": [
+    {
+      "candidate_id": "RCAND-SALES-DESIGN-SUPPLY-MODEL",
+      "recommendation": "retain_for_human_promotion_review",
+      "closest_published_cases": ["ASSESS-XPROC-002", "ASSESS-XPROC-005"],
+      "reason": "The existing Sales Design case diagnoses ownership and customer promise in a chosen third-party flow, while the MTO Design case explains one customer-specific production model. This candidate asks the learner to choose among stock, make-to-order, and third-party operating models before configuration, define a default plus exceptions, and state the business condition that changes the design. The decision signal is materially broader and different.",
+      "novel_signal": "Select the sales-to-supply operating model from business constraints and explicit decision-changing conditions before choosing SAP process controls.",
+      "review_checks": [
+        "Keep at least three viable supply alternatives in the prompt.",
+        "Require a default model plus exception criteria rather than a generic pros-and-cons list.",
+        "Require ownership and downstream ATP, inventory, billing, production/procurement, and finance consequences.",
+        "Reject a rewrite that becomes a third-party troubleshooting case or a pure MTO explanation."
+      ]
+    },
+    {
+      "candidate_id": "RCAND-AI-CHALLENGE-AUTONOMY",
+      "recommendation": "retain_for_human_promotion_review",
+      "closest_published_cases": ["ASSESS-AI-002", "ASSESS-AI-001", "ASSESS-AI-003"],
+      "reason": "The current AI/Data Challenge case compares retrieval with fine-tuning, while the Design and Diagnose cases cover controlled AI recommendations and risky agent trajectories. This candidate challenges the autonomy level itself and requires comparison of deterministic workflow, bounded agent, and broader agent designs with explicit authority, failure, recovery, observability, and acceptance conditions. That challenge signal is not currently published.",
+      "novel_signal": "Challenge whether an agent is justified at all, and choose the minimum autonomy that the operating model can govern, observe, and recover.",
+      "review_checks": [
+        "Keep deterministic workflow as a real alternative, not a straw man.",
+        "Require the answer to separate probabilistic reasoning from deterministic authorization, approvals, writes, and recovery.",
+        "Require conditions under which broader autonomy becomes acceptable.",
+        "Reject a rewrite that becomes only a permissions diagnosis or generic AI-governance explanation."
+      ]
+    }
+  ],
+  "summary": {
+    "reviewed_candidates": 2,
+    "retain_for_human_promotion_review": 2,
+    "reject_semantic_duplicate": 0,
+    "published_case_change": 0
+  }
+}
