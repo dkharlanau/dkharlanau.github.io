@@ -45,7 +45,10 @@ def main() -> None:
     cost = next(item for item in review["decisions"] if item["candidate_id"] == "CAND-PP-COST")
     assert cost["recommendation"] == "reject_semantic_duplicate"
     assert "ASSESS-FIN-005" in cost["closest_published_cases"]
-    assert review["summary"]["retain_for_human_promotion_review"] == 3
+    active_candidate_ids = {item["id"] for item in inventory["items"] if item["status"] == "candidate"}
+    decision_ids = {item["candidate_id"] for item in review["decisions"]}
+    assert decision_ids == active_candidate_ids, (sorted(decision_ids), sorted(active_candidate_ids))
+    assert review["summary"]["retain_for_human_promotion_review"] == 5
     assert review["summary"]["reject_semantic_duplicate"] == 2
     raw_mcp = next(item for item in review["decisions"] if item["candidate_id"] == "CAND-AIAG-RAW-MCP")
     overprivileged = next(item for item in review["decisions"] if item["candidate_id"] == "CAND-AIAG-OVERPRIVILEGED")
@@ -53,7 +56,7 @@ def main() -> None:
     assert overprivileged["recommendation"] == "reject_semantic_duplicate"
     assert "ASSESS-AI-003" in overprivileged["closest_published_cases"]
 
-    print("Candidate semantic review valid: 3 retained for human promotion review, 2 semantic duplicates, published cases unchanged.")
+    print("Candidate semantic review valid: all active generated candidates reviewed; 5 retained, 2 semantic duplicates, published cases unchanged.")
 
 
 if __name__ == "__main__":

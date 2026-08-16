@@ -210,7 +210,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044", "LOOP-045", "LOOP-046"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037", "LOOP-038", "LOOP-039", "LOOP-040", "LOOP-041", "LOOP-042", "LOOP-043", "LOOP-044", "LOOP-045", "LOOP-046", "LOOP-047"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -653,3 +653,13 @@ def test_reasoning_gap_semantic_review_keeps_novel_signals_in_human_queue_only()
         cwd=ROOT, text=True, capture_output=True, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_every_active_generated_candidate_has_one_semantic_decision() -> None:
+    inventory = load_json("question-candidates.json")
+    review = load_json("candidate-semantic-review.json")
+    active = {item["id"] for item in inventory["items"] if item["status"] == "candidate"}
+    decisions = {item["candidate_id"] for item in review["decisions"]}
+    assert decisions == active
+    assert review["summary"]["retain_for_human_promotion_review"] == 5
+    assert review["summary"]["reject_semantic_duplicate"] == 2

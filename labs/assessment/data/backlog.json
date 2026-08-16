@@ -647,10 +647,22 @@
         "scripts/generate_assessment_core_study_map.py"
       ],
       "working_rule": "Compare non-diagnostic candidates against published reasoning, not only wording. Keep claim evidence separate from the current publication lifecycle, and retain both current Design/Challenge signals for human promotion review without changing the published case manifest."
+    },
+    {
+      "id": "LOOP-047",
+      "priority": "P1",
+      "title": "Complete generated-candidate semantic coverage",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/candidate-semantic-review/",
+        "/labs/assessment/data/candidate-semantic-review.json",
+        "scripts/validate_assessment_candidate_semantic_review.py"
+      ],
+      "working_rule": "Require exactly one semantic decision for every active generated candidate. Retain the billing-reference and integration-ownership signals, and prevent future generator output from bypassing semantic review."
     }
   ],
   "next_iteration_themes": [
-    "complete semantic review for the remaining generated candidates before building one human promotion packet",
+    "build one human promotion review packet from every semantic-surviving generated and non-diagnostic candidate without publishing any case",
     "prepare one human promotion review packet for the surviving reasoning-gap signals without publishing them automatically",
     "record true human page-review findings separately from automated editorial improvement",
     "select secondary P1 pages by cross-track assessment value instead of processing all routes mechanically"
