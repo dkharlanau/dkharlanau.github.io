@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "/labs/assessment/data/human-review-finding-schema.json",
+  "title": "SAP Lead Human Page Review Finding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "version", "route", "reviewed_at", "gate_results", "findings", "disposition", "publication_effect"],
+  "properties": {
+    "format": {"const": "sap-lead-human-page-review"},
+    "version": {"const": "1.0.0"},
+    "route": {"type": "string", "pattern": "^/labs/enterprise-context/.+/$"},
+    "reviewed_at": {"type": "string", "format": "date-time"},
+    "reviewer_label": {"type": "string", "maxLength": 120},
+    "reviewed_claim_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^FACT-"},
+      "uniqueItems": true
+    },
+    "gate_results": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate_index", "result", "note"],
+        "properties": {
+          "gate_index": {"type": "integer", "minimum": 1, "maximum": 7},
+          "result": {"enum": ["pass", "issue", "not_checked"]},
+          "note": {"type": "string", "maxLength": 2000}
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["category", "severity", "note"],
+        "properties": {
+          "category": {
+            "enum": [
+              "scope_and_claims",
+              "release_scope",
+              "evidence_class",
+              "ownership_boundary",
+              "diagnostic_method",
+              "human_machine_consistency",
+              "links_sources_terminology",
+              "editorial",
+              "publication_policy"
+            ]
+          },
+          "severity": {"enum": ["note", "minor", "material", "blocking"]},
+          "note": {"type": "string", "minLength": 1, "maxLength": 4000}
+        }
+      }
+    },
+    "disposition": {
+      "enum": [
+        "needs_changes",
+        "review_complete_no_publication_change",
+        "ready_for_separate_publication_decision"
+      ]
+    },
+    "publication_effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verified_changed", "indexing_changed", "status_changed"],
+      "properties": {
+        "verified_changed": {"const": false},
+        "indexing_changed": {"const": false},
+        "status_changed": {"const": false}
+      }
+    }
+  }
+}
