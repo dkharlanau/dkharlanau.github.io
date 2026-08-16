@@ -1,0 +1,138 @@
+---
+layout: default
+title: "Question Candidate Review — SAP Lead Assessment Lab"
+description: "Review graph-backed SAP Lead question candidates with source evidence, duplicate checks, and an explicit human promotion boundary."
+permalink: /labs/assessment/question-review/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags:
+  - sap
+  - assessment
+  - sap-lead
+  - question-generation
+  - evidence
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Question Review</li></ol></nav>
+
+<div class="research-canvas candidate-review" id="candidate-review">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Candidate review</p>
+      <h1>Generate from evidence.<br />Publish by review.</h1>
+      <p>The generator reads only whitelisted graph failure modes with explicit source references. It rejects likely duplicates before review. A local approval still does not add a case to the published assessment set.</p>
+      <a class="research-canvas__button" href="#candidate-inventory">Open candidate inventory <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Question generation boundary">
+      <p>Current boundary</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>59</strong><small>Published cases</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong id="qr-candidate-count">—</strong><small>Review candidates</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong id="qr-duplicate-count">—</strong><small>Duplicate rejections</small></div>
+      <em>Candidate generation never updates case-sets.json.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Publication rule:</strong> graph evidence can create a candidate, not an assessment truth. Promotion requires a separate human decision and an explicit update to the published case dataset.</p>
+    <a href="/labs/assessment/data/question-candidates.json">Open candidate inventory <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="candidate-inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Review queue</p><h2>New candidates first. Rejected duplicates stay visible.</h2><p>Each candidate carries graph references, source references, evidence mapping, and duplicate evidence. Review decisions are stored in this browser only.</p></header>
+    <p id="qr-status" class="qr-status" aria-live="polite">Loading candidate inventory…</p>
+    <div id="qr-candidates" class="qr-grid"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Duplicate evidence</p><h2>Rejection is useful output.</h2><p>A generator that mostly rejects repeated questions is doing useful maintenance work. These records explain which published cases already cover the failure mode.</p></header>
+    <div id="qr-duplicates" class="qr-grid"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Generation controls</p><h2>The pipeline is deterministic and review-stage only.</h2><p>The script validates source IDs, reads approved graph paths, compares against the published case set, and writes a generated inventory.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/data/candidate-question-schema.json"><span>SCHEMA</span><strong>Candidate Schema</strong><small>Status, prompt, expected points, evidence map, graph/source refs, and dedup result.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/assessment/data/candidate-generation-seeds.json"><span>SEEDS</span><strong>Whitelisted Generation Seeds</strong><small>Only approved graph failure modes and explicit source refs enter generation.</small><i class="material-symbols-outlined" aria-hidden="true">filter_alt</i></a>
+      <a href="/labs/assessment/data/question-generation.json"><span>RULES</span><strong>Question Generation Contract</strong><small>Patterns, quality gates, and anti-invention rules.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
+      <a href="/labs/assessment/data/case-sets.json"><span>59</span><strong>Published Case Manifest</strong><small>The candidate inventory is not referenced here until a reviewed promotion is committed.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Local review decisions</p><h2>Approval is a recommendation, not publication.</h2><p>Local decisions can be exported for later implementation. They never modify GitHub or the published case manifest from this page.</p></header>
+    <div class="qr-actions"><button type="button" id="qr-export">Export review decisions</button><button type="button" id="qr-clear">Clear local review decisions</button></div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<style>
+.qr-status{margin:1rem 0}.qr-grid{display:grid;gap:1rem}.qr-card{border:1px solid var(--border-color,#ddd);padding:1rem}.qr-meta{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.7rem}.qr-meta span{border:1px solid var(--border-color,#ddd);border-radius:999px;padding:.18rem .5rem;font-size:.8rem}.qr-card h3{margin:.4rem 0}.qr-card p,.qr-card li{max-width:88ch}.qr-evidence{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem;margin:1rem 0}.qr-evidence>div{border-top:1px solid var(--border-color,#ddd);padding-top:.7rem}.qr-review{border-top:1px solid var(--border-color,#ddd);padding-top:.8rem;margin-top:1rem}.qr-review label{display:flex;flex-direction:column;gap:.4rem;font-weight:700}.qr-review textarea,.qr-review select{font:inherit;padding:.6rem;border:1px solid var(--border-color,#ddd);border-radius:.35rem;background:var(--background-color,#fff);color:inherit}.qr-review-controls{display:grid;grid-template-columns:minmax(180px,240px) 1fr;gap:.8rem}.qr-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}.candidate-review button{font:inherit;padding:.6rem .85rem;cursor:pointer}@media(max-width:700px){.qr-review-controls{grid-template-columns:1fr}}
+</style>
+
+<script>
+(() => {
+  'use strict';
+  const STORAGE_KEY = 'sapLeadQuestionCandidateReviewsV1';
+  const $ = id => document.getElementById(id);
+  let inventory = null;
+
+  function decisions() {
+    try { const value=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); return value && typeof value==='object' && !Array.isArray(value) ? value : {}; }
+    catch (_) { return {}; }
+  }
+  function saveDecisions(value){localStorage.setItem(STORAGE_KEY,JSON.stringify(value));}
+
+  function listBlock(title,values){
+    const box=document.createElement('div');const h=document.createElement('h4');h.textContent=title;const ul=document.createElement('ul');
+    (values||[]).forEach(value=>{const li=document.createElement('li');li.textContent=value;ul.appendChild(li);});box.append(h,ul);return box;
+  }
+
+  function candidateCard(item,editable){
+    const card=document.createElement('article');card.className='qr-card';
+    const meta=document.createElement('div');meta.className='qr-meta';
+    [item.id,item.status,item.track,item.level].forEach(value=>{const chip=document.createElement('span');chip.textContent=value;meta.appendChild(chip);});
+    const title=document.createElement('h3');title.textContent=item.title;
+    const prompt=document.createElement('p');prompt.textContent=item.prompt;
+    const reason=document.createElement('p');const b=document.createElement('strong');b.textContent='Generation / dedup: ';reason.append(b,document.createTextNode(item.generation_reason));
+    const evidence=document.createElement('div');evidence.className='qr-evidence';
+    evidence.append(listBlock('Expected points',item.expected_points),listBlock('Graph refs',item.graph_refs),listBlock('Source refs',item.source_refs));
+    const dedup=document.createElement('p');dedup.textContent=`Dedup similarity ${item.dedup.max_similarity.toFixed(4)} · threshold ${item.dedup.threshold} · matching published cases ${item.dedup.matching_case_ids.length ? item.dedup.matching_case_ids.join(', ') : 'none'}.`;
+    card.append(meta,title,prompt,reason,evidence,dedup);
+
+    if(editable){
+      const review=document.createElement('div');review.className='qr-review';
+      const controls=document.createElement('div');controls.className='qr-review-controls';
+      const stateLabel=document.createElement('label');stateLabel.textContent='Local review decision';
+      const state=document.createElement('select');
+      ['deferred','approve_for_promotion','reject'].forEach(value=>{const option=document.createElement('option');option.value=value;option.textContent=value.replaceAll('_',' ');state.appendChild(option);});
+      const noteLabel=document.createElement('label');noteLabel.textContent='Reviewer note';const note=document.createElement('textarea');note.rows=3;note.maxLength=2000;
+      const current=decisions()[item.id]||{};state.value=current.decision||'deferred';note.value=current.note||'';
+      stateLabel.appendChild(state);noteLabel.appendChild(note);controls.append(stateLabel,noteLabel);
+      const button=document.createElement('button');button.type='button';button.textContent='Save local review';
+      button.addEventListener('click',()=>{const all=decisions();all[item.id]={candidate_id:item.id,decision:state.value,note:note.value.trim(),reviewed_at:new Date().toISOString(),dedup_signature:item.dedup_signature};saveDecisions(all);$('qr-status').textContent=`Local review saved for ${item.id}. Published case count is still ${inventory.published_case_count}.`;});
+      review.append(controls,button);card.appendChild(review);
+    }
+    return card;
+  }
+
+  function render(data){
+    inventory=data;$('qr-candidate-count').textContent=data.candidate_count;$('qr-duplicate-count').textContent=data.rejected_duplicate_count;
+    $('qr-status').textContent=`${data.candidate_count} candidate(s) need human review; ${data.rejected_duplicate_count} graph failure mode(s) were rejected as duplicates. Published case count remains ${data.published_case_count}.`;
+    const candidates=$('qr-candidates');const duplicates=$('qr-duplicates');candidates.replaceChildren();duplicates.replaceChildren();
+    data.items.filter(item=>item.status==='candidate').forEach(item=>candidates.appendChild(candidateCard(item,true)));
+    data.items.filter(item=>item.status==='rejected_duplicate').forEach(item=>duplicates.appendChild(candidateCard(item,false)));
+    if(!candidates.children.length){const p=document.createElement('p');p.textContent='No new candidates require review.';candidates.appendChild(p);}
+  }
+
+  $('qr-export').addEventListener('click',()=>{const payload={format:'sap-lead-question-candidate-reviews',version:'1.0.0',exported_at:new Date().toISOString(),reviews:Object.values(decisions())};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='sap-lead-question-candidate-reviews.json';link.click();URL.revokeObjectURL(url);});
+  $('qr-clear').addEventListener('click',()=>{localStorage.removeItem(STORAGE_KEY);if(inventory)render(inventory);$('qr-status').textContent='Local candidate review decisions cleared. Published data was not changed.';});
+
+  fetch('/labs/assessment/data/question-candidates.json',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error(`Candidate inventory HTTP ${response.status}`);return response.json();}).then(render).catch(error=>{$('qr-status').textContent=`Candidate inventory could not be loaded: ${error.message}`;});
+})();
+</script>
