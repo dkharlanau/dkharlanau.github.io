@@ -1,0 +1,43 @@
+{
+  "kind": "rdp-decision-record",
+  "specVersion": "0.1",
+  "id": "decision.sales.ext-q9.2026-08",
+  "reviewItemId": "review.sales.ext-q9.2026-08",
+  "decisionType": "approve-mapping",
+  "question": "Should source material EXT-Q9 map to canonical material MAT-471103 for the SAP Sales export source family?",
+  "decision": "Approve EXT-Q9 -> MAT-471103 for the SAP Sales export source family and release a new material alias dataset version.",
+  "rationale": "The mapping is confirmed by the business reference used for this source family. The decision is scoped because the same external code may not have the same meaning in another source family.",
+  "scope": {
+    "semanticConcepts": ["sap.material-id"],
+    "sourceFamilies": ["sap-sales-export"],
+    "procedures": ["sales.order-material-reconciliation"],
+    "referenceDatasets": ["sap.material-aliases"],
+    "runIds": ["case-sales-material-run-02-review"],
+    "scopeType": "source-family"
+  },
+  "evidence": {
+    "evidenceRefs": ["review-item.json", "run-02-review.json", "fixtures.json#referenceReleases/2026.08.2"],
+    "facts": [
+      "EXT-Q9 is unresolved in reference release 2026.08.1.",
+      "MAT-471103 is the confirmed canonical target for this Sales export family.",
+      "The mapping remains one source value to one target value."
+    ],
+    "safeSamples": ["EXT-Q9 -> MAT-471103"],
+    "businessConfirmation": "Synthetic case confirmation representing an approved business mapping."
+  },
+  "validity": {
+    "effectiveFrom": "2026-08-16T13:54:00Z",
+    "reviewAt": "2026-11-16T00:00:00Z",
+    "invalidatedBy": ["source-family semantic change", "material reference authority change"]
+  },
+  "outcome": {
+    "action": "reference-data-change",
+    "targetId": "sap.material-aliases",
+    "proposedVersion": "2026.08.2",
+    "changeRef": "fixtures.json#referenceReleases/2026.08.2",
+    "testRefs": ["tests.json#approved-mapping-replay-publishes", "tests.json#reference-key-remains-unique"]
+  },
+  "status": "active",
+  "decidedBy": "sales-data-owner",
+  "decidedAt": "2026-08-16T13:54:00Z"
+}
