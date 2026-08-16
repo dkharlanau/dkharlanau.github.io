@@ -1,0 +1,122 @@
+---
+layout: default
+title: "Integration Operations & Recovery — Enterprise Context Lab"
+description: "A practical SAP integration operations model for identity, ordering, retries, AIF, IDoc, qRFC/bgRFC, Integration Suite, exceptions, reconciliation, and proof of business completion."
+permalink: /labs/enterprise-context/integration-operations/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-integration
+  - sap-aif
+  - idoc
+  - qrfc
+  - bgrfc
+  - integration-suite
+  - operations
+  - idempotency
+  - troubleshooting
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.integration_operations %}
+{% assign evidence = site.data.labs.enterprise_context.sources.integration_operations %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Integration Operations</li></ol></nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Cross-process / Integration Operations</p>
+      <h1>Green message.<br />Wrong business state.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#runtime">Trace message to business completion <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Integration operations working model">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Recovery stages</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.technology_runbooks | size }}</strong><small>Runtime families</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
+      <em>Transport success is not business completion.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">sync_problem</span>
+    <p><strong>Working rule:</strong> before any retry, prove message identity, first failed hop, receiver commit state, ordering dependency, and duplicate protection. Close the incident only when the business result is reconciled.</p>
+    <a href="/labs/enterprise-context/data/integration-operations-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Memory model</p><h2>Eight questions from identity to completion.</h2><p>This model works for IDoc, AIF, queues, RFC, middleware, APIs, and event-driven flows.</p></header>
+    <div class="ecg-memory-grid">{% for item in graph.memory_model.questions %}<article class="ecg-memory-card"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item.key }}</strong><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>{% endfor %}</div>
+    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong></p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Control layers</p><h2>Recovery is architecture, not a restart button.</h2><p>Identity, delivery semantics, ordering, retry policy, ownership, and reconciliation must agree.</p></header>
+    <div class="ecg-input-grid">{% for item in graph.control_layers %}<article><span>CTRL</span><h3>{{ item.title }}</h3><p>{{ item.purpose }}</p><p><strong>Ask:</strong> {{ item.diagnostic_question }}</p></article>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header><p class="research-canvas__eyebrow">Recovery runtime</p><h2>Find commit state before replay.</h2><p>The dangerous case is not the obvious hard failure. It is the timeout or handled exception where nobody knows whether the receiver already committed.</p></header>
+    <div class="ecg-determination-list">{% for stage in graph.runtime_pipeline %}<article class="ecg-determination-detail"><header><div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>recovery stage</small></div><h3>{{ stage.title }}</h3><p class="ecg-question">{{ stage.question }}</p></header><div class="ecg-decision-columns"><div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div></div></article>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Runtime families</p><h2>Use the right monitor, but keep one operating model.</h2><p>The tools differ. The questions about identity, commit, ordering, and business proof do not.</p></header>
+    <div class="ecg-determination-list">{% for item in graph.technology_runbooks %}<article class="ecg-determination-detail"><header><div><span>OPS</span><small>runbook</small></div><h3>{{ item.title }}</h3></header><div class="ecg-decision-columns"><div><h4>Monitor</h4><p>{{ item.monitor }}</p></div><div><h4>Use for</h4><p>{{ item.use_for }}</p></div><div><h4>Recovery rule</h4><p>{{ item.recovery_rule }}</p></div></div></article>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Recovery patterns</p><h2>Retry is only one option.</h2><p>Choose the pattern from failure class and commit state, not from habit.</p></header>
+    <div class="ecg-input-grid">{% for item in graph.recovery_patterns %}<article><span>REC</span><h3>{{ item.title }}</h3><p>{{ item.use_when }}</p><p><strong>Controls:</strong> {{ item.controls | join: " · " }}</p></article>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Ordering & idempotency</p><h2>Reliable delivery can still create duplicates.</h2><p>{{ graph.idempotency_model.principle }}</p></header>
+    <div class="ecg-decision-columns"><div><h4>Ordering rule</h4><p>{{ graph.ordering_model.principle }}</p></div><div><h4>Idempotency questions</h4><ul>{% for item in graph.idempotency_model.questions %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Examples that need order</h4><ul>{% for item in graph.ordering_model.examples %}<li>{{ item }}</li>{% endfor %}</ul></div></div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failures" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>The expensive failures are often technically plausible.</h2><p>Duplicate commits, reordered updates, partial commits, retry storms, and unowned errors can all survive a superficial monitor check.</p></header>
+    <div class="ecg-determination-list">{% for failure in graph.failure_modes %}<article class="ecg-determination-detail"><header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header><div class="ecg-decision-columns"><div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div></div></article>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Observability</p><h2>Measure business risk, not only message volume.</h2><p>{{ graph.observability_model.lead_rule }}</p></header>
+    <div class="ecg-input-grid">{% for item in graph.observability_model.dimensions %}<article><span>KPI</span><h3>{{ item }}</h3><p>Use the measure to expose aging, ownership, or business-completion risk.</p></article>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>Trace the failure past the monitor.</h2><p>These chains make the business consequence visible.</p></header>
+    <div class="research-route-list">{% for item in graph.impact_traces %}<a href="#lead-lens"><span>TRACE</span><strong>{{ item.start }}</strong><small>{{ item.path | join: " → " }} · {{ item.lead_question }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" id="lead-lens" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead lens</p><h2>The recovery question is: what business effect exists now?</h2><p>Everything else follows from that.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>ASK</span><h3>What I ask first</h3><ul>{% for item in graph.lead_lens.what_i_ask_first %}<li>{{ item }}</li>{% endfor %}</ul></article>
+      <article><span>OWN</span><h3>Ownership</h3><p>{{ graph.lead_lens.decision_owner }}</p></article>
+      <article><span>TRADE</span><h3>Main trade-off</h3><p>{{ graph.lead_lens.main_trade_off }}</p></article>
+      <article><span>FAIL</span><h3>Typical failure</h3><p>{{ graph.lead_lens.typical_failure }}</p></article>
+      <article><span>PROVE</span><h3>Proof</h3><p>{{ graph.lead_lens.proof_of_cause }}</p></article>
+      <article><span>60S</span><h3>60-second explanation</h3><p>{{ graph.lead_lens.sixty_second_explanation }}</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment prompts</p><h2>Practice incidents where green is not enough.</h2></header>
+    <div class="research-route-list">{% for item in graph.assessment_prompts %}<a href="/labs/assessment/"><span>Q</span><strong>{{ item }}</strong><small>Trace identity → commit → recovery → reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Sources</p><h2>Current SAP monitoring and delivery-semantics documentation.</h2><p>The operating model stays technology-neutral enough to work across AIF, IDoc, RFC queues, and Integration Suite.</p></header>
+    <div class="research-route-list">{% for source in evidence.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>{% endfor %}</div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
