@@ -1,0 +1,348 @@
+id: GRAPH-PP-PRODUCTION-PLANNING-EXECUTION
+type: knowledge_graph
+title: "Production Planning & Execution — Demand to Settlement"
+domain: "SAP S/4HANA Production Planning and Control"
+process_family: "Plan-to-Produce / Make-to-Produce"
+process_step: "From demand signal to manufacturing completion and cost settlement"
+status: researching
+created_at: "2026-08-16"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+
+summary: >-
+  A Lead-level map of production planning and execution. It connects demand, MRP, production master data,
+  planned orders, manufacturing orders, component supply, confirmations, goods receipt, and settlement.
+  The diagnostic goal is to find the first wrong planning or execution decision instead of repairing the final order manually.
+
+thesis: >-
+  A production order is not the production process. It is an execution object created after demand, planning,
+  master-data selection, quantity, date, and production-method decisions have already shaped the result.
+
+boundary:
+  includes:
+    - "Demand and MRP context for in-house production"
+    - "Planned order to production order boundary"
+    - "BOM, routing, work center, and production version roles"
+    - "Material staging, component consumption, confirmation, and goods receipt"
+    - "Capacity and scheduling as planning constraints"
+    - "Make-to-stock and make-to-order reasoning"
+    - "Integration boundaries with Sales, Inventory Management, EWM, Quality Management, and FI/CO"
+    - "Production-order cost and settlement boundary"
+  excludes_for_later_deep_dives:
+    - "Detailed PP/DS optimizer configuration"
+    - "Process manufacturing recipe and process-order configuration"
+    - "Repetitive Manufacturing and Kanban configuration"
+    - "Detailed product costing and period-end closing"
+    - "Detailed EWM production-supply configuration"
+    - "Detailed Quality Management inspection design"
+    - "SAP Digital Manufacturing execution design"
+
+memory_model:
+  path: "DEMAND → PLAN → METHOD → ORDER → STAGE → EXECUTE → CONFIRM → RECEIVE → SETTLE"
+  questions:
+    - key: DEMAND
+      question: "What requirement should production satisfy?"
+      answer: "Start with planned independent requirements, sales-order demand, dependent requirements, stock position, and the planning strategy."
+    - key: PLAN
+      question: "Why did MRP create this receipt proposal and these dates?"
+      answer: "Trace requirement quantity and date, available supply, lot sizing, procurement type, lead times, and planning parameters before changing an order."
+    - key: METHOD
+      question: "How should this material be produced?"
+      answer: "Production version connects the valid production method to BOM and routing context; validity, lot size, plant, and master-data status matter."
+    - key: ORDER
+      question: "What changed when the plan became executable?"
+      answer: "A planned order is a planning proposal. Conversion creates a manufacturing order with executable operations, components, dates, quantities, and control data."
+    - key: STAGE
+      question: "Are the required components available at the production location?"
+      answer: "Separate component requirement from warehouse execution. Inventory Management or EWM may own the physical staging step."
+    - key: EXECUTE
+      question: "Which operations and resources perform the work?"
+      answer: "Routing operations, work centers, control keys, capacities, dates, and shop-floor decisions define the execution path."
+    - key: CONFIRM
+      question: "What production progress and consumption were actually reported?"
+      answer: "Confirmation records yield, scrap, activity and timing information and can trigger planned goods movements according to the order design."
+    - key: RECEIVE
+      question: "What event turns production output into stock or order-specific inventory?"
+      answer: "Goods receipt updates the produced quantity and inventory context and reduces the expected receipt from the manufacturing order."
+    - key: SETTLE
+      question: "How are production costs closed against their intended receiver?"
+      answer: "Read actual costs, credits, variances, settlement rule, receiver, and period-end status instead of treating logistics completion as financial completion."
+
+control_layers:
+  - id: PP-CTRL-DEMAND
+    title: "Demand and Planning Strategy"
+    purpose: "Defines which requirements drive planning and how forecast and customer demand relate."
+    diagnostic_question: "Is the system planning the right requirement in the right stock or customer context?"
+  - id: PP-CTRL-MRP
+    title: "MRP Parameters"
+    purpose: "Control procurement proposal, dates, lot sizing, safety behavior, and planning relevance."
+    diagnostic_question: "Why did planning create this quantity and date?"
+  - id: PP-CTRL-METHOD
+    title: "Production Method"
+    purpose: "Connects valid production versions, BOM alternatives, routings, work centers, and lot-size or validity constraints."
+    diagnostic_question: "Did planning and execution select the intended production method?"
+    source_refs: [SRC-SAP-PP-PRODUCTION-VERSION]
+  - id: PP-CTRL-ORDER
+    title: "Manufacturing Order Control"
+    purpose: "Controls order type, scheduling, release, operation behavior, goods movements, confirmations, and execution status."
+    diagnostic_question: "Is the order wrong because of copied master data, order control, or a later execution event?"
+  - id: PP-CTRL-COST
+    title: "Cost Object and Settlement"
+    purpose: "Separates production execution from cost collection, credits, variances, and settlement receivers."
+    diagnostic_question: "Which object collects the cost and where should the balance be settled?"
+    source_refs: [SRC-SAP-PP-SETTLEMENT, SRC-SAP-PP-SETTLEMENT-RULE]
+
+master_data_model:
+  principle: "Production master data defines a reusable method. The production order is a dated execution copy and should not become the permanent place to repair bad master data."
+  objects:
+    - object: "Material / Product master"
+      role: "Planning strategy, procurement type, MRP parameters, scheduling and production-control context."
+    - object: "Bill of Material (BOM)"
+      role: "Defines the component structure required to produce the material."
+    - object: "Routing"
+      role: "Defines operations and their sequence for discrete production."
+    - object: "Work Center"
+      role: "Provides execution resource, capacity, scheduling, and costing context for operations."
+    - object: "Production Version"
+      role: "Selects a valid production method and links BOM and routing context for a material and plant."
+      source_refs: [SRC-SAP-PP-PRODUCTION-VERSION]
+  lead_lens: >-
+    When an order contains the wrong components or operations, I first ask whether the wrong master-data method was selected
+    or whether the correct method itself is wrong. Editing the production order can prove a workaround, but it does not prove the root cause.
+
+runtime_pipeline:
+  - order: 1
+    id: PP-RUNTIME-DEMAND
+    title: "Build the demand picture"
+    question: "What requirement needs supply?"
+    inputs: ["planned independent requirements", "sales-order requirements", "dependent requirements", "current stock and receipts", "planning strategy"]
+    output: ["time-phased net requirement for planning"]
+    failure_signal: "Production is blamed for a quantity or date that originated in demand, stock, or strategy context."
+    source_refs: [SRC-SAP-PP-PLANNING]
+  - order: 2
+    id: PP-RUNTIME-MRP
+    title: "Run material requirements planning"
+    question: "What supply proposal should cover the requirement?"
+    inputs: ["net requirements", "procurement type", "lot sizing", "lead times", "MRP parameters", "production method availability"]
+    output: ["planned order or other procurement proposal with quantity and dates"]
+    failure_signal: "Planner changes the planned order without explaining why MRP produced the original proposal."
+    source_refs: [SRC-SAP-PP-PLANNING]
+  - order: 3
+    id: PP-RUNTIME-METHOD
+    title: "Select production method"
+    question: "Which BOM and routing context should be used?"
+    inputs: ["material and plant", "production version", "validity date", "lot-size range", "BOM", "routing"]
+    output: ["production method for planning and execution"]
+    failure_signal: "Correct material is planned with the wrong component or operation structure."
+    source_refs: [SRC-SAP-PP-PRODUCTION-VERSION, SRC-SAP-PP-PLANNED-ORDER-INTEGRATION]
+  - order: 4
+    id: PP-RUNTIME-ORDER
+    title: "Convert plan to manufacturing order"
+    question: "Is the proposal ready to become an executable commitment?"
+    inputs: ["planned order", "order type and production controls", "selected production method", "dates and quantities"]
+    output: ["production order with operations, components, dates, quantities, and statuses"]
+    failure_signal: "The converted order differs from planning because validity, master data, or conversion context changed."
+  - order: 5
+    id: PP-RUNTIME-STAGE
+    title: "Stage components"
+    question: "Can production access the required components at the required time and place?"
+    inputs: ["order component requirements", "inventory", "storage and supply area", "warehouse ownership", "staging method"]
+    output: ["components available for execution or a visible shortage"]
+    failure_signal: "Components exist somewhere in stock, but are not available in the production supply context."
+    source_refs: [SRC-SAP-PP-EWM-SUPPLY]
+  - order: 6
+    id: PP-RUNTIME-EXECUTE
+    title: "Execute operations"
+    question: "Can the order run on the intended resources and dates?"
+    inputs: ["released order", "routing operations", "work centers", "capacity", "component availability", "shop-floor status"]
+    output: ["physical production progress"]
+    failure_signal: "Material availability is correct but capacity, resource, sequence, or order status blocks execution."
+  - order: 7
+    id: PP-RUNTIME-CONFIRM
+    title: "Confirm production progress"
+    question: "What quantity, time, activity, scrap, and consumption actually occurred?"
+    inputs: ["operation or order", "yield and scrap", "activity and time", "goods-movement design", "backflush settings where applicable"]
+    output: ["confirmed progress, actual activity, and planned goods movements according to design"]
+    failure_signal: "The order looks complete while components, activity, scrap, or goods movements do not match the real event."
+  - order: 8
+    id: PP-RUNTIME-RECEIVE
+    title: "Post goods receipt"
+    question: "Did produced quantity enter the intended inventory context?"
+    inputs: ["manufacturing order", "produced quantity", "plant and storage context", "batch or quality context where relevant", "warehouse integration"]
+    output: ["inventory receipt, reduced expected order receipt, order credit according to valuation design"]
+    failure_signal: "Production reports completion but inventory, order quantity, warehouse inbound flow, or valuation is inconsistent."
+    source_refs: [SRC-SAP-PP-GR]
+  - order: 9
+    id: PP-RUNTIME-SETTLE
+    title: "Close the cost loop"
+    question: "Do actual production costs and credits reconcile to the intended receiver?"
+    inputs: ["actual debits", "goods-receipt credits", "variance and WIP context", "settlement rule", "receiver", "period-end status"]
+    output: ["settled production cost and explained remaining balance"]
+    failure_signal: "Order is physically complete but costs, variance, WIP, or settlement remain unexplained."
+    source_refs: [SRC-SAP-PP-SETTLEMENT, SRC-SAP-PP-SETTLEMENT-RULE]
+
+production_models:
+  - id: PP-MODEL-MTS
+    title: "Make-to-Stock"
+    demand_reading: "Production is planned for general stock based on forecast, planning strategy, customer demand consumption, and inventory position."
+    lead_question: "Is the problem in demand planning, inventory assumptions, or execution?"
+  - id: PP-MODEL-MTO
+    title: "Make-to-Order"
+    demand_reading: "Production is linked to a customer requirement and can use order-specific stock and cost behavior depending on the scenario."
+    lead_question: "Which sales-order item created the requirement and how is stock/cost ownership designed?"
+    source_refs: [SRC-SAP-PP-MTO]
+  - id: PP-MODEL-ETO
+    title: "Engineer-to-Order boundary"
+    demand_reading: "Customer demand may trigger engineering, project, configuration, procurement, and production activities before a stable execution structure exists."
+    lead_question: "Which system and object owns engineering definition, project control, and the handoff into executable production?"
+    evidence_type: reasoned_interpretation
+
+integration_boundaries:
+  - boundary: "Sales / Demand → Production Planning"
+    ownership: "Sales or demand-management context owns the requirement; production planning owns the supply response."
+    question: "Did the right customer or forecast requirement reach planning with the right quantity, date, and stock segment?"
+  - boundary: "Production Planning → Procurement"
+    ownership: "MRP identifies externally procured component demand; purchasing owns supplier and purchasing execution."
+    question: "Is the shortage a planning requirement problem or a procurement execution problem?"
+  - boundary: "Production → Inventory Management"
+    ownership: "Production owns manufacturing progress; Inventory Management owns material movements and stock state in ERP."
+    question: "Did component issue and finished-product receipt create the intended inventory state?"
+  - boundary: "Production → EWM"
+    ownership: "Production order defines component demand; EWM can own physical staging to the production supply area and warehouse execution."
+    question: "Is material unavailable to production because of planning shortage or warehouse staging execution?"
+    source_refs: [SRC-SAP-PP-EWM-SUPPLY]
+  - boundary: "Production → Quality Management"
+    ownership: "Production creates the manufacturing event; QM can own inspection and quality disposition where the process requires it."
+    question: "Can produced stock be used, or is quality status the actual business constraint?"
+  - boundary: "Production → FI/CO"
+    ownership: "Production records quantities and activities; controlling owns cost collection, variance, WIP, and settlement rules."
+    question: "Is logistics complete while the cost object is still financially open?"
+    source_refs: [SRC-SAP-PP-SETTLEMENT]
+
+failure_modes:
+  - id: PP-FAIL-WRONG-QUANTITY
+    symptom: "MRP creates too much, too little, or repeated production supply."
+    first_checks: ["requirement quantity and date", "stock and existing receipts", "planning strategy", "lot sizing", "safety stock or planning parameters", "procurement type"]
+    avoid: "Do not resize the planned order before reconstructing the net requirement."
+  - id: PP-FAIL-WRONG-DATES
+    symptom: "Production proposal or order dates do not match the business need."
+    first_checks: ["requirement date", "in-house production time", "scheduling parameters", "routing times", "factory calendar", "capacity/scheduling boundary"]
+    avoid: "Do not manually move dates until basic-date and operation-scheduling inputs are separated."
+  - id: PP-FAIL-WRONG-STRUCTURE
+    symptom: "Production order has wrong components or operations."
+    first_checks: ["production version", "validity date", "lot-size range", "BOM alternative", "routing group/counter", "master-data changes between planning and conversion"]
+    avoid: "Do not maintain the order as the long-term master-data fix."
+  - id: PP-FAIL-COMPONENT-SHORTAGE
+    symptom: "Order cannot execute because a component is unavailable."
+    first_checks: ["component requirement", "stock and reservations", "open procurement or production receipts", "storage and production supply area", "EWM staging status where relevant"]
+    avoid: "Do not equate total plant stock with component availability at the production point."
+  - id: PP-FAIL-CAPACITY
+    symptom: "Materials are available but the order cannot meet the planned date."
+    first_checks: ["work center", "available capacity", "operation duration", "queue/move/setup context", "finite versus infinite planning boundary", "PP/DS involvement where applicable"]
+    avoid: "Do not solve a resource bottleneck by changing material planning parameters."
+  - id: PP-FAIL-CONFIRMATION
+    symptom: "Order status says progress is confirmed but quantities, activities, or consumption are wrong."
+    first_checks: ["confirmation yield and scrap", "operation reference", "backflush and goods-movement settings", "failed goods movements", "reversal/correction history"]
+    avoid: "Do not post compensating movements before reconciling the confirmation event."
+  - id: PP-FAIL-GR
+    symptom: "Production is finished but stock or warehouse receipt is missing or wrong."
+    first_checks: ["order and delivery-completed status", "goods-receipt relevance", "quantity and UoM", "storage/batch/quality context", "automatic versus manual GR", "EWM inbound flow where used"]
+    avoid: "Do not mark the order complete while the inventory event remains unexplained."
+    source_refs: [SRC-SAP-PP-GR]
+  - id: PP-FAIL-COST
+    symptom: "Physically completed order still carries unexpected cost, variance, WIP, or settlement balance."
+    first_checks: ["actual component and activity postings", "goods-receipt credits", "order status", "settlement rule and receiver", "variance/WIP and period-end sequence"]
+    avoid: "Do not treat technical completion as proof of financial completion."
+    source_refs: [SRC-SAP-PP-SETTLEMENT, SRC-SAP-PP-SETTLEMENT-RULE]
+
+impact_traces:
+  - title: "Demand date → production date"
+    path: "Requirement Date → MRP → Planned Order Dates → Scheduling → Production Order"
+    lesson: "A late production order can begin with the requirement or scheduling assumptions."
+  - title: "Production version → order structure"
+    path: "Material/Plant/Date/Lot Size → Production Version → BOM + Routing → Planned/Production Order"
+    lesson: "Wrong order structure often begins before order creation."
+  - title: "Component requirement → warehouse staging"
+    path: "BOM Component → Order Requirement → Inventory/EWM Staging → Production Supply Area → Consumption"
+    lesson: "Stock existence and production availability are not the same state."
+  - title: "Confirmation → actual cost"
+    path: "Operation Confirmation → Yield/Scrap/Activity → Goods Movements + Activity Cost → Order Actuals"
+    lesson: "A confirmation is both an operational and accounting-relevant event depending on the design."
+  - title: "Goods receipt → financial close"
+    path: "Finished Product GR → Inventory + Order Credit → Variance/WIP → Settlement → Receiver"
+    lesson: "Finished stock does not prove the production cost object is closed."
+
+lead_lens:
+  what_i_ask_first: "What requirement created the need, and what is the first object whose result is wrong?"
+  decision_owner: "Separate demand ownership, MRP, production method, manufacturing execution, warehouse execution, quality disposition, and cost settlement."
+  main_trade_off: "More planning and execution sophistication can improve constraint handling, but it also adds master-data, integration, and operational ownership complexity."
+  typical_failure: "The team repairs a production order although the wrong result originated in demand, MRP parameters, production version, BOM, routing, or warehouse staging."
+  proof_of_cause: "Reproduce the result with the original requirement, master-data validity, planning parameters, selected method, order history, and downstream postings."
+  integration_impact: "Production crosses Sales, Procurement, Inventory, EWM, QM and FI/CO, so document status alone cannot prove end-to-end completion."
+  data_impact: "Material planning data, BOM, routing, work center, production version, stock state, and order data must be consistent for the same plant and date."
+  sixty_second_explanation: >-
+    I read Plan-to-Produce in nine decisions: demand, MRP proposal, production method, executable order, component staging,
+    operation execution, confirmation, goods receipt, and settlement. If the output is wrong, I move upstream until I find
+    the first wrong decision. Then I prove the cause with the exact date, plant, master-data version, document history, and posting state.
+
+practitioner_heuristics:
+  - "I start with the requirement and stock picture, not with CO02-style order repair."
+  - "I separate MRP quantity logic from production scheduling and capacity problems."
+  - "I treat the production version as a production-method selector, not as another descriptive field."
+  - "I compare master-data validity at planning time and conversion time when structure changes unexpectedly."
+  - "I separate plant stock from material physically staged for production."
+  - "I reconcile confirmation, component movements, goods receipt, and order actuals as one evidence package."
+  - "I do not call an order financially complete just because it is technically complete."
+
+anti_patterns:
+  - "Change planned-order quantity until MRP looks quiet."
+  - "Edit BOM components directly in every production order instead of fixing method selection or master data."
+  - "Use total stock as proof that EWM staging is complete."
+  - "Treat every late order as an MRP problem when the bottleneck is capacity."
+  - "Post compensating goods movements without reconciling confirmation history."
+  - "Treat TECO or delivery completion as financial settlement."
+
+synthetic_cases:
+  - id: PP-CASE-WRONG-BOM
+    title: "Converted order gets an unexpected component"
+    synthetic: true
+    scenario: "Material FG-100 at plant DE01 is planned correctly, but the converted production order contains an old component alternative."
+    lead_path: ["Freeze the exact planned-order and conversion dates.", "Check selected production version and its validity/lot-size range.", "Check the BOM alternative linked to that method.", "Check whether master data changed between planning and conversion.", "Create a clean test order after correcting the root cause instead of editing only the existing order."]
+    lesson: "A production-order component symptom can be a production-method selection problem."
+  - id: PP-CASE-STAGING
+    title: "Stock exists, production still waits"
+    synthetic: true
+    scenario: "A component shows sufficient plant stock, but the production order cannot start because the line has no material. EWM is used for production supply."
+    lead_path: ["Confirm the component requirement and required date.", "Check the production supply area and staging requirement.", "Check EWM warehouse tasks and stock at the relevant location.", "Separate planning shortage from warehouse execution failure.", "Prove completion when the correct component reaches the production supply context."]
+    lesson: "Inventory availability and shop-floor availability are different states."
+  - id: PP-CASE-COST
+    title: "Order is finished but not financially clean"
+    synthetic: true
+    scenario: "Finished goods were received and the production order is technically complete, but the order still carries an unexpected balance."
+    lead_path: ["Reconcile component and activity actuals.", "Check goods-receipt credits and produced quantity.", "Inspect variance/WIP context and period-end sequence.", "Check settlement rule and receiver.", "Explain the remaining balance before forcing settlement or closing the incident."]
+    lesson: "Physical completion and cost-object completion are separate controls."
+
+assessment_drills:
+  - question: "MRP creates too much supply. Where do you start?"
+    strong_answer: "I reconstruct the net requirement: demand, stock, existing receipts, planning strategy, lot sizing and MRP parameters before changing the proposal."
+  - question: "What does a production version do?"
+    strong_answer: "It represents a valid production method for a material and plant and connects the BOM/routing context with date and lot-size validity. I check it when planning or order structure is unexpected."
+  - question: "Why can stock exist while production has a component shortage?"
+    strong_answer: "Plant stock is not the same as material available at the production supply point. I separate planning availability, reservations and EWM or IM staging execution."
+  - question: "MTS versus MTO in one architectural difference?"
+    strong_answer: "MTS primarily produces for general stock from planning demand, while MTO links supply to a customer requirement and can use order-specific stock and cost behavior."
+  - question: "A production order has wrong operations. What do you check?"
+    strong_answer: "I check the selected production version, validity and lot size, routing assignment and master-data state at planning/conversion before editing the order."
+  - question: "Production order is technically complete. Are we done?"
+    strong_answer: "No. I still reconcile confirmations, goods movements, finished-product receipt, actual cost, variance/WIP context and settlement."
+
+source_refs:
+  - SRC-SAP-PP-OVERVIEW
+  - SRC-SAP-PP-PLANNING
+  - SRC-SAP-PP-PRODUCTION-VERSION
+  - SRC-SAP-PP-PLANNED-ORDER-INTEGRATION
+  - SRC-SAP-PP-MTO
+  - SRC-SAP-PP-EWM-SUPPLY
+  - SRC-SAP-PP-GR
+  - SRC-SAP-PP-SETTLEMENT
+  - SRC-SAP-PP-SETTLEMENT-RULE
