@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "updated": "2026-08-16",
+  "lab": {
+    "id": "operational-templates",
+    "title": "Operational Templates",
+    "purpose": "Reusable protocols for diagnosis, controlled execution, change review, and decision traceability.",
+    "default_reasoning_chain": [
+      "impact",
+      "expected_behavior",
+      "evidence",
+      "scope",
+      "isolation",
+      "root_cause_or_decision",
+      "action",
+      "validation"
+    ],
+    "rules": [
+      "Do not jump from symptom to solution.",
+      "Separate containment, correction, prevention, and validation.",
+      "Use a known-good comparison when possible.",
+      "Keep hypotheses testable and record rejected hypotheses.",
+      "A root cause must explain the observed evidence.",
+      "Close on a validated business outcome, not only a technical status."
+    ]
+  },
+  "templates": [
+    {
+      "id": "root-cause-analysis",
+      "title": "Root Cause Analysis",
+      "use_when": "A problem is important, recurring, or not explained by the first fix.",
+      "tags": ["rca", "problem-management", "diagnosis"],
+      "protocol": ["case", "problem_statement", "evidence", "scope", "hypotheses", "causal_chain", "root_cause", "actions", "validation", "lesson"],
+      "required_outputs": ["root_cause", "containment", "corrective_action", "preventive_action", "owner", "validation_evidence"]
+    },
+    {
+      "id": "incident-triage",
+      "title": "Incident Triage",
+      "use_when": "An active issue needs safe recovery and fast isolation.",
+      "tags": ["incident", "support", "troubleshooting"],
+      "protocol": ["impact", "scope", "last_known_good", "recent_changes", "capture_evidence", "layer_isolation", "containment", "consistency_check", "escalation", "closure"],
+      "diagnostic_layers": ["business_input", "master_data", "configuration", "application_code", "integration", "background_processing", "authorization", "platform"]
+    },
+    {
+      "id": "integration-failure-analysis",
+      "title": "Integration Failure Analysis",
+      "use_when": "An API, IDoc, RFC, event, queue, file, EDI, middleware, or external-service flow fails or produces the wrong result.",
+      "tags": ["integration", "api", "idoc", "events", "middleware"],
+      "protocol": ["flow_identity", "trigger", "connectivity", "authentication", "contract", "mapping", "business_validation", "processing", "persistence", "return_path", "monitoring", "recovery", "prevention"],
+      "required_outputs": ["failed_layer", "safe_retry_point", "duplicate_risk", "owner_by_boundary", "permanent_fix", "validation_case"]
+    },
+    {
+      "id": "process-deviation-analysis",
+      "title": "Process Deviation Analysis",
+      "use_when": "A business object follows the wrong route or produces the wrong business result.",
+      "tags": ["process", "sap", "document-flow", "determination"],
+      "protocol": ["process_trace", "expected_vs_actual", "first_divergence", "decision_inputs", "determination_results", "layer_isolation", "failed_control_point", "root_cause", "regression_scope", "business_validation"]
+    },
+    {
+      "id": "procedure-runbook",
+      "title": "Procedure / Runbook",
+      "use_when": "Repeated operational work should be executed consistently and safely.",
+      "tags": ["sop", "runbook", "operations"],
+      "protocol": ["purpose", "trigger", "scope", "preconditions", "roles", "steps", "decision_points", "stop_conditions", "rollback", "escalation", "done_criteria", "review_cycle"],
+      "step_contract": ["action", "input", "expected_result", "evidence", "decision"]
+    },
+    {
+      "id": "change-impact-review",
+      "title": "Change Impact Review",
+      "use_when": "A change to configuration, code, data, workflow, integration, jobs, or platform may affect connected processes.",
+      "tags": ["change", "impact", "architecture", "regression"],
+      "protocol": ["request", "current_behavior", "target_behavior", "impact_map", "assumptions", "dependencies", "test_scope", "deployment_sequence", "rollback", "monitoring", "go_no_go", "business_acceptance"],
+      "impact_dimensions": ["process", "organization", "master_data", "configuration", "custom_code", "integration", "authorization", "workflow", "forms", "reporting", "jobs", "monitoring", "compliance"]
+    },
+    {
+      "id": "decision-record",
+      "title": "Decision Record",
+      "use_when": "An architecture or process decision has meaningful trade-offs or long-term consequences.",
+      "tags": ["decision", "architecture", "leadership", "trade-off"],
+      "protocol": ["context", "constraints", "criteria", "options", "evidence", "decision", "tradeoffs", "risks", "consequences", "revisit_conditions", "review_date"]
+    },
+    {
+      "id": "cutover-hypercare-control",
+      "title": "Cutover / Hypercare Control",
+      "use_when": "A go-live, migration, major release, or process activation needs coordinated readiness and controlled execution.",
+      "tags": ["cutover", "go-live", "hypercare", "release"],
+      "protocol": ["readiness", "open_risks", "data_reconciliation", "interface_readiness", "authorization_readiness", "jobs", "monitoring", "freeze", "execution_sequence", "go_no_go", "rollback_window", "hypercare_metrics", "exit_criteria", "handover"]
+    }
+  ],
+  "lead_answer_pattern": [
+    "impact",
+    "evidence",
+    "isolation",
+    "action",
+    "validation"
+  ]
+}
