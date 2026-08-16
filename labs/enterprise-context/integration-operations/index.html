@@ -51,6 +51,26 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Completion model</p>
+      <h2>Three green lights mean three different things.</h2>
+      <p>I separate technical delivery, application processing, and business reconciliation. A monitor can prove one layer while the next layer is still wrong.</p>
+    </header>
+    <div class="ecg-decision-columns">
+      <div><h4>1. Transport complete</h4><ul><li>The expected message identity reached the intended receiver path.</li><li>Delivery semantics and ordering behaved as designed.</li><li>Retries did not create an uncontrolled duplicate.</li></ul></div>
+      <div><h4>2. Application complete</h4><ul><li>The receiver processing state and commit outcome are known.</li><li>The expected business object or update exists once.</li><li>Application errors are corrected or deliberately rejected with ownership.</li></ul></div>
+      <div><h4>3. Business complete</h4><ul><li>The downstream process state matches the sender's business intent.</li><li>Reconciliation proves quantity, value, status, or object consistency.</li><li>The incident closes on business evidence, not only a green middleware status.</li></ul></div>
+    </div>
+    <p class="ecg-caption"><strong>Lead signal:</strong> before replay, answer “did the receiver commit?” Before closure, answer “did the business process reconcile?”</p>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Evidence boundary:</strong> six claim-level checks already cover duplicate handling, ordering, queue behavior, monitoring, handled exceptions, and AIF correction/restart behavior. The three-layer completion model is an authored operating frame and does not turn the whole page into a verified product statement.</p>
+    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Memory model</p><h2>Eight questions from identity to completion.</h2><p>This model works for IDoc, AIF, queues, RFC, middleware, APIs, and event-driven flows.</p></header>
     <div class="ecg-memory-grid">{% for item in graph.memory_model.questions %}<article class="ecg-memory-card"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item.key }}</strong><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>{% endfor %}</div>
     <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong></p>

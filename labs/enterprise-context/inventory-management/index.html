@@ -50,6 +50,27 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Completion model</p>
+      <h2>Prove the same event in four state views.</h2>
+      <p>A posting can be valid in Inventory Management and still leave a warehouse, accounting, or physical-count inconsistency. I compare the state views before creating a compensating movement.</p>
+    </header>
+    <div class="ecg-control-stack">
+      <article><span>EVENT</span><h3>Business event</h3><p>What happened: receipt, issue, transfer, stock-type change, consumption, or inventory difference?</p><strong>Proof: the reference and movement semantics match the business event.</strong></article>
+      <article><span>STOCK</span><h3>Book stock</h3><p>Which quantity, plant, storage location, stock type, ownership, batch, or special-stock dimension changed?</p><strong>Proof: before/after stock state matches the intended event.</strong></article>
+      <article><span>WAREHOUSE</span><h3>Physical execution</h3><p>If EWM or another warehouse layer is involved, does its execution state represent the same physical movement?</p><strong>Proof: IM and warehouse states reconcile across the handoff.</strong></article>
+      <article><span>VALUE</span><h3>Financial effect</h3><p>Did valuation, consumption, account assignment, or accounting follow the intended movement semantics?</p><strong>Proof: material and accounting consequences tell the same business story.</strong></article>
+    </div>
+    <p class="ecg-caption"><strong>Lead signal:</strong> do not use a compensating posting until you know which state view is wrong. Otherwise the stock number may improve while the evidence chain gets worse.</p>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Evidence boundary:</strong> claim-level review currently confirms movement-type control behavior and the difference between counting stock and posting physical-inventory differences. The four-view completion model is an authored diagnostic frame; warehouse and finance handoffs still require page-level human review.</p>
+    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Memory model</p><h2>Seven questions from event to proof.</h2><p>This path separates process authority, inventory state, financial effect, and warehouse execution.</p></header>
     <div class="ecg-memory-grid">
       {% for item in graph.memory_model.questions %}

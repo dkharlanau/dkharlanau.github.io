@@ -53,6 +53,27 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Completion model</p>
+      <h2>One order can be complete in one layer and open in another.</h2>
+      <p>This is a diagnostic model, not a new SAP status model. I use four checkpoints to avoid calling production complete too early.</p>
+    </header>
+    <div class="ecg-control-stack">
+      <article><span>PLAN</span><h3>Planned correctly</h3><p>Demand, MRP result, dates, quantity, and production method represent the business need.</p><strong>Proof: the order starts from the intended requirement and master data.</strong></article>
+      <article><span>EXECUTE</span><h3>Executed correctly</h3><p>Components, operations, staging, confirmations, and exceptions represent what happened on the shop floor.</p><strong>Proof: execution evidence explains quantity, time, and consumption.</strong></article>
+      <article><span>STOCK</span><h3>Received correctly</h3><p>The finished quantity reaches the expected stock and warehouse state through the intended goods-receipt path.</p><strong>Proof: order, material document, stock state, and warehouse state agree.</strong></article>
+      <article><span>COST</span><h3>Financially closed</h3><p>Actual costs, WIP or variance, settlement rule, receiver, and settlement state agree with the process design.</p><strong>Proof: physical completion and financial completion reconcile.</strong></article>
+    </div>
+    <p class="ecg-caption"><strong>Lead signal:</strong> a technically confirmed order is not enough evidence for stock receipt or financial close. Name which completion layer is still open.</p>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Evidence boundary:</strong> claim-level review currently confirms production-version selection and the goods-receipt / settlement relationship. The four-checkpoint completion model above is an authored diagnostic frame; the wider MRP, execution, capacity, staging, and integration content still requires page-level human review.</p>
+    <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Memory model</p>
       <h2>Nine questions from demand to financial close.</h2>
       <p>The sequence keeps planning, production master data, execution, warehouse activity, and cost control separate.</p>
