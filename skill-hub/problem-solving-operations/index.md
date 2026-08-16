@@ -2,7 +2,7 @@
 author: "Dzmitryi Kharlanau"
 layout: default
 title: "Problem Solving & Operations Skills"
-description: "Cross-domain working skills for troubleshooting, API contracts, identity, asynchronous processing, process deviations, data reconciliation, procedures, release readiness, root cause analysis, and operational improvement."
+description: "Cross-domain working skills for end-to-end tracing, troubleshooting, APIs, identity, asynchronous processing, data discovery, reconciliation, configuration drift, process deviations, procedures, decisions, release readiness, root cause analysis, and operational improvement."
 permalink: /skill-hub/problem-solving-operations/
 last_modified_at: 2026-08-16
 status: needs_verification
@@ -21,51 +21,63 @@ sitemap: false
 
 <section class="section">
   <header class="section-heading"><h2>The operating model</h2></header>
-  <p><strong>Situation → Skill → Evidence → Decision → Action → Validation → Reuse</strong></p>
+  <p><strong>Situation → Trace → Diagnose → Decide → Act → Validate → Reuse</strong></p>
   <p>The core Skill should be product-neutral. A domain adapter can add specific tools, logs, transactions, APIs, or checks. This keeps the reasoning reusable while still allowing deep technical work.</p>
-  <pre><code>Evidence-Driven Troubleshooting
-├─ API contract branch
-├─ Identity / authorization branch
-├─ Batch / queue branch
-├─ Data / reconciliation branch
-├─ Process deviation branch
-├─ SAP adapter
-└─ Cloud / platform adapter
+  <pre><code>End-to-End Flow Trace
+└─ Evidence-Driven Troubleshooting
+   ├─ API Contract Troubleshooting
+   │  ├─ Authorization & Identity Diagnosis
+   │  └─ Batch & Queue Troubleshooting
+   ├─ Data Discovery & Mapping
+   │  └─ Data Reconciliation
+   ├─ Configuration Drift Analysis
+   └─ Process Deviation Analysis
 </code></pre>
 </section>
 
 <section class="section">
   <header class="section-heading"><h2>Core skills</h2></header>
   <div class="topic-grid">
+    <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/end-to-end-flow-trace-working-skill/">End-to-End Flow Trace</a></h3><p>Follow one business object across systems and find the first boundary where evidence breaks.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/evidence-driven-troubleshooting-working-skill/">Evidence-Driven Troubleshooting</a></h3><p>Reproduce a problem, identify the first failing layer, test hypotheses, and avoid random changes.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/api-contract-troubleshooting-working-skill/">API Contract Troubleshooting</a></h3><p>Trace caller, identity, route, schema, provider logic, dependencies, and consumer handling to find the first broken contract.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/authorization-identity-diagnosis-working-skill/">Authorization &amp; Identity Diagnosis</a></h3><p>Separate authentication, effective identity, propagation, resource scope, and action authorization before changing access.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/batch-queue-troubleshooting-working-skill/">Batch &amp; Queue Troubleshooting</a></h3><p>Trace scheduled and asynchronous work through states, retries, locks, acknowledgement, backlog, and throughput.</p></div>
+    <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/data-discovery-mapping-working-skill/">Data Discovery &amp; Mapping</a></h3><p>Profile unfamiliar datasets, find keys and relationships, propose mappings, and validate them on real rows.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/data-reconciliation-working-skill/">Data Reconciliation</a></h3><p>Compare two or more datasets, explain differences, classify exceptions, and produce a controlled reconciliation result.</p></div>
+    <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/configuration-drift-analysis-working-skill/">Configuration Drift Analysis</a></h3><p>Compare effective environment state and prove which difference actually explains changed behavior.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/process-deviation-analysis-working-skill/">Process Deviation Analysis</a></h3><p>Find the first point where an actual process diverged from expected behavior and explain why.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/procedure-design-working-skill/">Procedure / Runbook Design</a></h3><p>Turn repeated operational work into an executable procedure with evidence, decision points, stop conditions, rollback, and ownership.</p></div>
+    <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/decision-facilitation-working-skill/">Decision Facilitation</a></h3><p>Turn an unclear discussion into a decision or an explicit deferment with evidence, trade-offs, owner, and next action.</p></div>
     <div class="topic-card"><h3><a href="/skill-hub/problem-solving-operations/release-readiness-working-skill/">Release Readiness</a></h3><p>Make a go/no-go decision from risk, evidence, dependencies, recovery, monitoring, ownership, and business readiness.</p></div>
   </div>
 </section>
 
 <section class="section">
   <header class="section-heading"><h2>How skills compose</h2></header>
-  <p>Skills should call each other instead of copying the same reasoning.</p>
-  <pre><code>Incident or change
+  <pre><code>Business outcome missing
   ↓
-Evidence-Driven Troubleshooting
-  ├─ HTTP / contract issue → API Contract Troubleshooting
-  │                         ├─ access issue → Authorization & Identity Diagnosis
-  │                         └─ async handoff → Batch & Queue Troubleshooting
-  ├─ data mismatch → Data Reconciliation
-  ├─ wrong business route → Process Deviation Analysis
-  └─ recurring cause → Root Cause Analysis
-                         ↓
-                Procedure / Runbook Design
-                         ↓
-                 Operational Knowledge Capture
+End-to-End Flow Trace
+  ↓
+First failed boundary
+  ├─ API → API Contract Troubleshooting
+  │        ├─ identity → Authorization & Identity Diagnosis
+  │        └─ async → Batch & Queue Troubleshooting
+  ├─ data semantics → Data Discovery & Mapping → Data Reconciliation
+  ├─ environment difference → Configuration Drift Analysis
+  └─ business route → Process Deviation Analysis
 
-Planned production change
+Recurring issue
+  ↓
+Root Cause Analysis
+  ↓
+Procedure / Runbook Design
+  ↓
+Operational Knowledge Capture
+
+Planned change
+  ↓
+Decision Facilitation / Architecture Decision
   ↓
 Change Impact Analysis
   ↓
@@ -80,9 +92,9 @@ Production validation
   <table>
     <thead><tr><th>Domain</th><th>Typical evidence and tools</th><th>Core reasoning stays the same</th></tr></thead>
     <tbody>
-      <tr><td>Web / SaaS</td><td>Browser console, network trace, application logs, identity, feature flags</td><td>Reproduce → isolate layer → test → validate</td></tr>
+      <tr><td>Web / SaaS</td><td>Browser console, network trace, application logs, identity, feature flags</td><td>Trace → isolate → test → validate</td></tr>
       <tr><td>API / Integration</td><td>Request, response, correlation ID, contract, mapping, queue, retry history</td><td>Trace the first failed boundary</td></tr>
-      <tr><td>Data / Files</td><td>Schema, keys, row counts, nulls, duplicates, totals, transformations</td><td>Compare expected and actual data state</td></tr>
+      <tr><td>Data / Files</td><td>Schema, keys, row counts, nulls, duplicates, totals, transformations</td><td>Discover meaning → map → validate</td></tr>
       <tr><td>Cloud / Platform</td><td>Deployment history, service health, metrics, logs, permissions, configuration</td><td>Separate change, platform, application, and dependency failures</td></tr>
       <tr><td>SAP</td><td>Business documents, application logs, traces, jobs, queues, configuration, master data</td><td>Same core method plus SAP-specific diagnostic branches</td></tr>
     </tbody>
@@ -96,6 +108,8 @@ Production validation
     <li><a href="/skill-hub/sap-ams/change-impact-analysis-working-skill/">Change Impact Analysis</a></li>
     <li><a href="/skill-hub/integration-architecture/integration-observability-working-skill/">Integration Observability</a></li>
     <li><a href="/skill-hub/architecture/architecture-decision-record-working-skill/">Architecture Decision Record</a></li>
+    <li><a href="/triz/">TRIZ for Digital Systems</a></li>
+    <li><a href="/labs/reusable-data-procedures/">Reusable Data Procedures</a></li>
     <li><a href="/labs/templates/">Operational Templates</a></li>
     <li><a href="/skill-hub/skill-template-contract/">Skill → Template Contract</a></li>
   </ul>
