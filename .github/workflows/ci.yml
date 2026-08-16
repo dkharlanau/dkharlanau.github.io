@@ -88,6 +88,9 @@ jobs:
       - name: Build search discoverability inventory
         run: python3 scripts/search_discoverability_inventory.py
 
+      - name: Build Lab search promotion queue
+        run: python3 scripts/lab_search_promotion_loop.py
+
       - name: Enforce Lab publication gate
         run: python3 scripts/check_lab_publication_gate.py
 
@@ -99,6 +102,8 @@ jobs:
           path: |
             reports/seo/search-discoverability.csv
             reports/seo/search-discoverability.md
+            reports/seo/lab-promotion-queue.csv
+            reports/seo/lab-promotion-queue.md
           if-no-files-found: ignore
 
       - name: Check sitemap policy
