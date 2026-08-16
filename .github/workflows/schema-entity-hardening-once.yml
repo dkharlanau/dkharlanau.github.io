@@ -1,0 +1,131 @@
+name: Schema Entity Hardening Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/schema-entity-hardening-once.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: schema-entity-hardening-once
+  cancel-in-progress: true
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install pyyaml
+
+      - name: Record protected homepage source hashes
+        run: |
+          git ls-files index.md '_data/home*' '_data/home_i18n/**' | sort > /tmp/home-files.txt
+          while IFS= read -r f; do sha256sum "$f"; done < /tmp/home-files.txt > /tmp/home-before.sha
+
+      - name: Patch entity and Person schema contracts
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          script = Path('scripts/ai_search_trust_loop.py')
+          text = script.read_text(encoding='utf-8')
+          old = '"id": f"https://dkharlanau.github.io{primary.get(\'id\', \'\')}#entity" if primary else None,'
+          new = '"id": f"https://dkharlanau.github.io{primary.get(\'id\', \'\')}" if primary else None,'
+          if old not in text:
+              raise SystemExit('sidecar entity-id suffix anchor not found')
+          script.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          schema = Path('_includes/seo/structured-data.html')
+          text = schema.read_text(encoding='utf-8')
+          duplicate = '  "name": {{ resume.name | jsonify }},\n  "sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"],\n  "url": "{{ canonical_url }}",'
+          replacement = '  "name": {{ resume.name | jsonify }},\n  "url": "{{ canonical_url }}",'
+          if text.count(duplicate) != 1:
+              raise SystemExit(f'expected one ProfilePage duplicate sameAs block, found {text.count(duplicate)}')
+          schema.write_text(text.replace(duplicate, replacement, 1), encoding='utf-8')
+
+          resume = Path('_data/resume.yml')
+          data = yaml.safe_load(resume.read_text(encoding='utf-8'))
+          same_as = data['schema'].setdefault('sameAs', [])
+          wanted = ['https://dkharlanau.github.io/', 'https://github.com/dkharlanau']
+          for url in reversed(wanted):
+              if url not in same_as:
+                  same_as.insert(0, url)
+          resume.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False, width=120), encoding='utf-8')
+          PY
+
+      - name: Refresh AI sidecars and semantic metadata
+        run: python3 scripts/ai_search_trust_loop.py
+
+      - name: Prove homepage rendered-text sources are untouched
+        run: |
+          while IFS= read -r f; do sha256sum "$f"; done < /tmp/home-files.txt > /tmp/home-after.sha
+          diff -u /tmp/home-before.sha /tmp/home-after.sha
+
+      - name: Validate deterministic trust graph
+        run: python3 scripts/ai_search_trust_loop.py --check
+
+      - name: Validate canonical entity and Person contracts
+        run: |
+          python3 - <<'PY'
+          import json
+          import yaml
+          from pathlib import Path
+
+          entities = yaml.safe_load(Path('_data/knowledge_entities.yml').read_text(encoding='utf-8'))['entities']
+          assert entities
+          for key, entity in entities.items():
+              assert entity['id'] == f'/entities/#{key}', (key, entity['id'])
+
+          registry = Path('entities/index.md').read_text(encoding='utf-8')
+          assert 'site.data.knowledge_entities.entities' in registry
+
+          schema = Path('_includes/seo/structured-data.html').read_text(encoding='utf-8')
+          assert schema.count('"sameAs": {{ resume.schema.sameAs | jsonify }}') == 1
+          assert '"sameAs": ["{{ author_website_url }}", "{{ author_linkedin_url }}", "{{ author_github_url }}"],\n  "url": "{{ canonical_url }}"' not in schema
+
+          resume = yaml.safe_load(Path('_data/resume.yml').read_text(encoding='utf-8'))
+          same_as = resume['schema']['sameAs']
+          assert 'https://dkharlanau.github.io/' in same_as
+          assert 'https://github.com/dkharlanau' in same_as
+
+          sidecars = sorted(Path('ai/pages').glob('*.json'))
+          assert len(sidecars) == 30, len(sidecars)
+          for path in sidecars:
+              data = json.loads(path.read_text(encoding='utf-8'))
+              entity_id = data['primary_entity']['id']
+              assert entity_id.startswith('https://dkharlanau.github.io/entities/#'), (path, entity_id)
+              assert not entity_id.endswith('#entity'), (path, entity_id)
+          print(f'Validated {len(entities)} entities and {len(sidecars)} page sidecars')
+          PY
+
+      - name: Validate existing Lab gates
+        run: |
+          python3 scripts/check_lab_publication_gate.py
+          python3 scripts/audit_lab_search_intents.py
+
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/schema-entity-hardening-once.yml
+
+      - name: Commit schema hardening
+        run: |
+          git config user.name 'DKharlanau Site Automation'
+          git config user.email 'dkharlanau@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'Harden knowledge entity and Person schema contracts'
+          git push origin HEAD:main
