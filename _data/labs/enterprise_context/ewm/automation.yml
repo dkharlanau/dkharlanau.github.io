@@ -1,0 +1,117 @@
+id: EWM-AUTOMATION-MAP
+title: "EWM Automation & MFS — Control Boundary Map"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+summary: >-
+  A practical map for deciding what belongs in EWM, MFS, an external WCS/WCU, PLCs and equipment.
+  The goal is controlled warehouse execution, not direct ERP control of motors and sensors.
+
+lead_rule: >-
+  Keep warehouse intent and business state in EWM. Put material-flow coordination in MFS or WCS.
+  Keep real-time movement, interlocks and safety in PLCs and equipment controllers.
+memory_path: "INTENT → ROUTE → CONTROL → TELEGRAM → CONFIRM → RECOVER → MONITOR"
+
+layers:
+  - title: "EWM business layer"
+    owns: "Warehouse requests, warehouse tasks, HU/stock state, destination and confirmation context."
+    does_not_own: "Sub-second equipment control."
+  - title: "MFS / WCS coordination layer"
+    owns: "Material-flow decisions, routing checkpoints, machine-facing execution context and recovery coordination."
+    does_not_own: "ERP demand planning or machine safety logic."
+  - title: "PLC / equipment control layer"
+    owns: "Real-time movement between decision points, sensors, drives, interlocks and safety."
+    does_not_own: "Warehouse business documents."
+
+decision_map:
+  - need: "Direct EWM-driven automation with supported topology"
+    choose: "EWM MFS"
+    why: "EWM can coordinate material flow using PLCs, communication channels, communication points, conveyor segments and resources."
+  - need: "External automation platform owns detailed flow across multiple subsystems"
+    choose: "External WCS / WCU"
+    why: "Keep EWM warehouse ownership but integrate task, movement and confirmation at a controlled boundary."
+  - need: "Motor, sensor, interlock or emergency-stop logic"
+    choose: "PLC / equipment controller"
+    why: "The decision belongs near the machine and must not depend on ERP transaction latency."
+
+mfs_objects:
+  - title: "PLC"
+    purpose: "Controls physical movement and equipment logic."
+  - title: "Communication Channel"
+    purpose: "Connection used for sequential messages between MFS and a PLC."
+  - title: "Communication Point"
+    purpose: "Decision point where EWM and the PLC exchange material-flow information."
+  - title: "Conveyor Segment"
+    purpose: "Physical/logical route between communication points."
+  - title: "Resource"
+    purpose: "Movable automation resource such as equipment controlled within the material-flow design."
+
+runtime_contract:
+  - key: "Identity"
+    rule: "Know the HU, task/message and physical checkpoint involved."
+  - key: "Sequence"
+    rule: "Do not process messages in an order that creates an impossible physical state."
+  - key: "Acknowledgment"
+    rule: "Define what an ACK proves and what a timeout means."
+  - key: "Retry"
+    rule: "Retry only when the business effect is duplicate-safe."
+  - key: "Recovery"
+    rule: "After a fault, establish physical location and digital state before restarting."
+  - key: "Monitoring"
+    rule: "Watch channel state, message errors, blocked HUs, route congestion and reconciliation exceptions."
+
+failure_modes:
+  - symptom: "HU is physically present but EWM expects another location."
+    check_first: "Last trusted communication point, HU identity, task status and manual recovery activity."
+  - symptom: "Same confirmation arrives twice."
+    check_first: "Message identity, acknowledgment history and idempotency control."
+  - symptom: "PLC channel stops."
+    check_first: "Channel status, network/port, last telegram and pending acknowledgments."
+  - symptom: "Conveyor is free but HU does not route."
+    check_first: "Communication-point decision, route availability, destination/task state and blocks."
+  - symptom: "System restart leaves unknown HUs."
+    check_first: "Physical inventory of automation points versus EWM material-flow state before release."
+
+kpis:
+  - title: "Automation availability"
+    meaning: "Can the intended automated path execute during planned operating time?"
+  - title: "Telegram / message error rate"
+    meaning: "How often machine communication enters technical or application error?"
+  - title: "Stuck HU count"
+    meaning: "How many HUs require intervention because flow cannot continue?"
+  - title: "Recovery time"
+    meaning: "How long from exception detection to reconciled restart?"
+  - title: "Physical/digital mismatch count"
+    meaning: "How often actual HU location differs from trusted EWM state?"
+
+scenarios:
+  - title: "AS/RS high-rack"
+    flow: "WT/HU intent → MFS route → communication point → PLC/staker crane → next point → confirmation"
+  - title: "Conveyor routing"
+    flow: "HU identified → route decision → PLC movement → scanner/point feedback → next decision"
+  - title: "Sorter"
+    flow: "Business destination → automation routing → divert confirmation → exception lane when unresolved"
+  - title: "Goods-to-person"
+    flow: "Warehouse demand → automated container movement → workstation execution → return route"
+
+assessment_cards:
+  - question: "MFS or WCS?"
+    answer: "I start with execution ownership. If EWM can directly coordinate the supported automation flow, MFS is a strong fit. If an external platform owns detailed multi-system orchestration, I keep a clear EWM-WCS boundary."
+  - question: "Does EWM control the conveyor motor?"
+    answer: "No. EWM/MFS provides material-flow decisions and messages. PLCs execute real-time machine control and safety."
+  - question: "What matters after a lost confirmation?"
+    answer: "Do not guess or blindly resend. Establish the last trusted digital state and real physical HU position, then reconcile and continue."
+
+related:
+  - title: "Warehouse Scanners & Auto-ID"
+    url: "/labs/enterprise-context/ewm/scanners/"
+  - title: "IoT Devices Around ERP"
+    url: "/labs/enterprise-context/iot-devices/"
+  - title: "EWM Object Catalog"
+    url: "/labs/enterprise-context/ewm/objects/"
+
+source_refs:
+  - SRC-SAP-EWM-MFS
+  - SRC-SAP-EWM-MFS-COMM-CHANNEL
+  - SRC-SAP-EWM-MFS-COMM-POINT
+  - SRC-SAP-EWM-NONSAP-WCU
+  - SRC-SAP-EWM-MONITOR
