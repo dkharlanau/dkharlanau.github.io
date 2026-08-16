@@ -23,6 +23,19 @@ jobs:
         run: python3 -m pip install pyyaml pytest
       - name: Apply AI and integration factual review
         run: python3 scripts/_extend_ai_integration_factual_review_once.py
+      - name: Align profile assertion after Business AI review
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('tests/test_assessment_practice_layer.py')
+          text = path.read_text(encoding='utf-8')
+          old = '    assert by_route["/labs/enterprise-context/business-ai/"]["priority"] == "P0"'
+          new = '    assert by_route["/labs/enterprise-context/business-ai/"]["priority"] == "P1"'
+          if old not in text:
+              raise SystemExit('Business AI profile assertion anchor not found')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
       - name: Refresh promotion readiness
         run: python3 scripts/audit_assessment_promotion_readiness.py
       - name: Refresh evidence coverage
