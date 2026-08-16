@@ -91,6 +91,9 @@ jobs:
       - name: Build Lab search promotion queue
         run: python3 scripts/lab_search_promotion_loop.py
 
+      - name: Audit Lab search intent ownership
+        run: python3 scripts/audit_lab_search_intents.py
+
       - name: Enforce Lab publication gate
         run: python3 scripts/check_lab_publication_gate.py
 
@@ -104,6 +107,8 @@ jobs:
             reports/seo/search-discoverability.md
             reports/seo/lab-promotion-queue.csv
             reports/seo/lab-promotion-queue.md
+            reports/seo/lab-search-intents.json
+            reports/seo/lab-search-intents.md
           if-no-files-found: ignore
 
       - name: Check sitemap policy
