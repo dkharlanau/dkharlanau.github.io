@@ -60,6 +60,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/human-review/"><span>HUMAN</span><strong>Human Review Queue</strong><small>Read source-supported P1 pages end to end before any verification or publication decision.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
       <a href="/labs/assessment/core/"><span>CORE</span><strong>Core 12 Study Map</strong><small>Study decisions, execution/state, governance and value as one Lead reasoning route.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       <a href="/labs/assessment/core-boundaries/"><span>X</span><strong>Core Boundary Drills</strong><small>Cross-route oral practice for ownership changes and end-to-end completion proof.</small><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
+      <a href="/labs/assessment/board/"><span>BOARD</span><strong>Board Mode</strong><small>Four timed oral cross-route drills with the shared 21-point Lead scoring model.</small><i class="material-symbols-outlined" aria-hidden="true">timer</i></a>
       <a href="/labs/assessment/data/question-candidates.json"><span>GEN</span><strong>Generated Candidate Inventory</strong><small>Review-stage candidates and duplicate rejections stay outside the published case manifest.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
     </div>
   </section>
@@ -177,6 +178,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/data/evidence-coverage.json"><span>COVER</span><strong>Evidence Coverage Dataset</strong><small>Track-level source-review coverage, cross-track P0 debt, and data-driven next-focus ranking.</small><i class="material-symbols-outlined" aria-hidden="true">analytics</i></a>
       <a href="/labs/assessment/data/evidence-profile.json"><span>CLASS</span><strong>Evidence Profile</strong><small>Route-level expectations for SAP product sources, standards, research, and explicit author heuristics.</small><i class="material-symbols-outlined" aria-hidden="true">category</i></a>
       <a href="/labs/assessment/data/core-boundary-drills.json"><span>X</span><strong>Core Boundary Drill Dataset</strong><small>Eight synthetic cross-route drills for ownership and completion reasoning; never auto-published.</small><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
+      <a href="/labs/assessment/data/board-mode.json"><span>BOARD</span><strong>Board Mode Contract</strong><small>Four rounds, six minutes per round, reveal policy, shared scoring, and browser-only session boundary.</small><i class="material-symbols-outlined" aria-hidden="true">timer</i></a>
       <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>Machine-readable agent-loop state, completed capabilities, and the next assessment-development themes.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
   </section>

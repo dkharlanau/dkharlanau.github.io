@@ -174,6 +174,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "human-review": ASSESSMENT / "human-review" / "index.html",
         "core-study": ASSESSMENT / "core" / "index.html",
         "core-boundaries": ASSESSMENT / "core-boundaries" / "index.html",
+        "board": ASSESSMENT / "board" / "index.html",
         "cross-process": ASSESSMENT / "cross-process" / "index.html",
     }
     for name, path in expected_pages.items():
@@ -181,12 +182,13 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
 
     catalog = load_json("catalog.json")
     modes = {item["id"]: item for item in catalog["practice_modes"]}
-    assert set(modes) == {"adaptive", "mock", "review", "progress", "feedback", "cross-process"}
+    assert set(modes) == {"adaptive", "mock", "review", "progress", "feedback", "cross-process", "board"}
     assert modes["adaptive"]["route"] == "/labs/assessment/practice-engine/"
     assert modes["mock"]["route"] == "/labs/assessment/mock/"
     assert modes["review"]["route"] == "/labs/assessment/review/"
     assert modes["progress"]["route"] == "/labs/assessment/progress/"
     assert modes["feedback"]["route"] == "/labs/assessment/feedback/"
+    assert modes["board"]["route"] == "/labs/assessment/board/"
     authoring = {item["id"]: item for item in catalog["authoring_tools"]}
     assert authoring["question-review"]["route"] == "/labs/assessment/question-review/"
     assert authoring["factual-review"]["route"] == "/labs/assessment/factual-review/"
@@ -200,7 +202,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -432,6 +434,32 @@ def test_core_boundary_drills_cross_supported_routes_without_publishing() -> Non
 
     result = subprocess.run(
         [sys.executable, "scripts/validate_assessment_core_boundary_drills.py", "--check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_board_mode_reuses_shared_scoring_without_second_history_store() -> None:
+    board = load_json("board-mode.json")
+    scoring = load_json("scoring.json")
+    drills = load_json("core-boundary-drills.json")
+    page = (ASSESSMENT / "board" / "index.html").read_text(encoding="utf-8")
+
+    assert board["scoring_contract"] == "/labs/assessment/data/scoring.json"
+    assert board["drill_source"] == "/labs/assessment/data/core-boundary-drills.json"
+    assert board["default_session"]["rounds"] <= len(drills["drills"])
+    assert board["scoring"]["dimensions"] == [item["id"] for item in scoring["dimensions"]]
+    assert board["scoring"]["maximum_score"] == scoring["maximum_score"] == 21
+    assert board["scoring"]["lead_signal_minimum"] == scoring["lead_signal_minimum"]
+    assert "localStorage" not in page
+    assert "verified: false" in page
+    assert "robots: noindex,follow" in page
+
+    result = subprocess.run(
+        [sys.executable, "scripts/validate_assessment_board_mode.py"],
         cwd=ROOT,
         text=True,
         capture_output=True,
