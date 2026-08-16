@@ -1,0 +1,244 @@
+---
+layout: default
+title: "Production Planning & Execution — Enterprise Context Lab"
+description: "A practical SAP S/4HANA production map from demand and MRP through production method, manufacturing order, staging, confirmation, goods receipt, and settlement."
+permalink: /labs/enterprise-context/production/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - sap-pp
+  - production-planning
+  - manufacturing
+  - mrp
+  - production-order
+  - plan-to-produce
+  - troubleshooting
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.production %}
+{% assign evidence = site.data.labs.enterprise_context.sources.production %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Production</li></ol>
+</nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Deep vertical / Production Planning & Execution</p>
+      <h1>A production order is execution.<br />The important decisions start earlier.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#runtime">Trace demand to settlement <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Production deep-dive inventory">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
+      <em>Draft research · synthetic cases · no client data</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</span>
+    <p><strong>Working rule:</strong> when a production result is wrong, move upstream until the first wrong decision is visible. A manual order correction can hide bad demand, MRP parameters, production method, master data, staging, or settlement design.</p>
+    <a href="/labs/enterprise-context/data/production-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Memory model</p>
+      <h2>Nine questions from demand to financial close.</h2>
+      <p>The sequence keeps planning, production master data, execution, warehouse activity, and cost control separate.</p>
+    </header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}
+      <article class="ecg-memory-card">
+        <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+        <strong>{{ item.key }}</strong>
+        <h3>{{ item.question }}</h3>
+        <p>{{ item.answer }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong> Use it as a diagnostic path, not as a claim that every implementation executes every technical step in one identical sequence.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Production master data</p>
+      <h2>The order should consume a production method, not become the master data.</h2>
+      <p>{{ graph.master_data_model.principle }}</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for item in graph.master_data_model.objects %}
+      <article><span>MASTER</span><h3>{{ item.object }}</h3><p>{{ item.role }}</p></article>
+      {% endfor %}
+    </div>
+    <p class="ecg-lead-lens"><strong>Lead lens:</strong> {{ graph.master_data_model.lead_lens }}</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Runtime</p>
+      <h2>Plan-to-Produce is a chain of ownership changes.</h2>
+      <p>Each stage has different inputs, a different output, and a different failure signal. The useful question is not only what document is wrong, but which decision first became wrong.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for stage in graph.runtime_pipeline %}
+      <article class="ecg-determination-detail">
+        <header>
+          <div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>production stage</small></div>
+          <h3>{{ stage.title }}</h3>
+          <p class="ecg-question">{{ stage.question }}</p>
+        </header>
+        <div class="ecg-decision-columns">
+          <div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div>
+          <div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Control model</p>
+      <h2>Do not debug five control layers as one PP problem.</h2>
+      <p>Demand, MRP, production method, manufacturing-order control, and cost settlement can all create a bad final result for completely different reasons.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for item in graph.control_layers %}
+      <article><span>CONTROL</span><h3>{{ item.title }}</h3><p>{{ item.purpose }}</p><p><strong>Ask:</strong> {{ item.diagnostic_question }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Production models</p>
+      <h2>MTS, MTO and ETO change where the requirement and ownership start.</h2>
+      <p>They are not three labels for the same flow. The demand object, stock ownership, cost object, engineering boundary, and integration path can change.</p>
+    </header>
+    <div class="ecg-input-grid">
+      {% for item in graph.production_models %}
+      <article><span>MODEL</span><h3>{{ item.title }}</h3><p>{{ item.demand_reading }}</p><p><strong>Lead question:</strong> {{ item.lead_question }}</p></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Integration boundaries</p>
+      <h2>Production crosses systems before it crosses the shop floor.</h2>
+      <p>For every handoff, define who owns the requirement, physical state, quality state, and financial state.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.integration_boundaries %}
+      <a href="#failures"><span>INT</span><strong>{{ item.boundary }}</strong><small>{{ item.ownership }} {{ item.question }}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failures" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Failure modes</p>
+      <h2>The loudest production symptom is often downstream of the cause.</h2>
+      <p>A shortage can be demand, supply, staging, or execution. A wrong order structure can be production-version selection or master data. A completed order can still be financially open.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for failure in graph.failure_modes %}
+      <article class="ecg-determination-detail">
+        <header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header>
+        <div class="ecg-decision-columns">
+          <div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div>
+          <div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Impact traces</p>
+      <h2>Follow one small decision until it becomes a business consequence.</h2>
+      <p>This is the useful level for design reviews and assessment questions: show how one input changes planning, execution, inventory, or cost.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.impact_traces %}
+      <a href="#lead-lens"><span>TRACE</span><strong>{{ item.title }}</strong><small>{{ item.path }} · {{ item.lesson }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="lead-lens" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead lens</p>
+      <h2>Explain the decision, boundary, evidence, and trade-off.</h2>
+      <p>A Lead answer should survive the follow-up question “how do you know?”.</p>
+    </header>
+    <div class="ecg-input-grid">
+      <article><span>ASK</span><h3>What I ask first</h3><p>{{ graph.lead_lens.what_i_ask_first }}</p></article>
+      <article><span>OWN</span><h3>Decision ownership</h3><p>{{ graph.lead_lens.decision_owner }}</p></article>
+      <article><span>TRADE</span><h3>Main trade-off</h3><p>{{ graph.lead_lens.main_trade_off }}</p></article>
+      <article><span>FAIL</span><h3>Typical failure</h3><p>{{ graph.lead_lens.typical_failure }}</p></article>
+      <article><span>PROVE</span><h3>Proof of cause</h3><p>{{ graph.lead_lens.proof_of_cause }}</p></article>
+      <article><span>60S</span><h3>60-second explanation</h3><p>{{ graph.lead_lens.sixty_second_explanation }}</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Synthetic cases</p>
+      <h2>Practice the trace, not the transaction code.</h2>
+      <p>These cases are fictional and exist to test reasoning safely.</p>
+    </header>
+    <div class="ecg-determination-list">
+      {% for item in graph.synthetic_cases %}
+      <article class="ecg-determination-detail">
+        <header><div><span>CASE</span><small>synthetic</small></div><h3>{{ item.title }}</h3><p>{{ item.scenario }}</p></header>
+        <div class="ecg-decision-columns"><div><h4>Lead path</h4><ol>{% for step in item.lead_path %}<li>{{ step }}</li>{% endfor %}</ol></div><div><h4>Lesson</h4><p>{{ item.lesson }}</p></div></div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Assessment drills</p>
+      <h2>Short questions, structured answers.</h2>
+      <p>Use the strong answer as a coverage check, not as a script to memorize.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in graph.assessment_drills %}
+      <a href="/labs/assessment/"><span>Q</span><strong>{{ item.question }}</strong><small>{{ item.strong_answer }}</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Sources</p>
+      <h2>Primary documentation checks the facts. The model stays independently written.</h2>
+      <p>Release-sensitive details are dated. This page remains draft until human review.</p>
+    </header>
+    <div class="research-route-list">
+      {% for source in evidence.sources %}
+      <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>
+    {% include atlas/author-block.html %}
+    {% include atlas/disclaimer.html %}
+  </div>
+</div>
