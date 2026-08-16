@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Labs — Enterprise Context and AI"
-description: "Practical maps for SAP, enterprise processes, AI architecture, Business AI patterns, technologies, outcomes, failures, and digital problem solving."
+description: "Practical maps for SAP Lead assessment, enterprise processes, AI architecture, Business AI patterns, technologies, outcomes, failures, and digital problem solving."
 permalink: /labs/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-16
 hide_global_cta: true
 tags:
   - sap
@@ -30,7 +30,7 @@ tags:
       <p class="research-canvas__eyebrow">Labs / practical architecture maps</p>
       <h1>Understand the business.<br />Then map the architecture.</h1>
       <p>Simple, source-tracked maps of business processes, SAP landscapes, integrations, data, AI systems, implementation outcomes, and the decisions that connect them.</p>
-      <a class="research-canvas__button" href="#labs-inventory">Open the labs <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#assessment-route">Open the assessment route <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Current labs">
       <p>Current inventory</p>
@@ -49,6 +49,20 @@ tags:
   </section>
 
   <p><strong>Publication rule.</strong> Vendor and primary sources verify facts; explanations stay independently written. See the <a href="/legal/research-attribution/">Research and Attribution Policy</a>.</p>
+
+  <section class="research-canvas__inventory" id="assessment-route" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">SAP Lead assessment route</p>
+      <h2>Turn the knowledge map into practice.</h2>
+      <p>The assessment route uses the existing Lab as one training system. Practice a topic at five levels: explain, trace, diagnose, design, and challenge. The structured cases keep expected points, follow-up questions, red flags, and links back to the relevant material.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/"><span>LEAD</span><strong>SAP Lead Assessment Lab</strong><small>Four tracks: Sales, Procurement and Logistics, Integration and Architecture, AI and Data.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
+      <a href="/labs/assessment/#reasoning-levels"><span>5X</span><strong>Reasoning levels</strong><small>Move from explaining a topic to defending architecture trade-offs and diagnostic evidence.</small><i class="material-symbols-outlined" aria-hidden="true">stairs</i></a>
+      <a href="/labs/assessment/data/cases.jsonl"><span>CASE</span><strong>Assessment case dataset</strong><small>Structured mock-interview cases for answer scoring, retrieval, and agent evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/assessment/data/catalog.json"><span>JSON</span><strong>Assessment catalog</strong><small>Tracks, reasoning levels, current strengths, missing verticals, and machine endpoints.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+    </div>
+  </section>
 
   <section class="research-canvas__inventory" id="labs-inventory" data-reveal>
     <header>
