@@ -19,7 +19,7 @@ hide_global_cta: true
     <p class="rdp__eyebrow">Detail / Catalog & registry</p>
     <h1>A folder stores procedures. A catalog makes them reusable.</h1>
     <p>Once procedures become useful, the next problem is finding the right one, knowing whether it is trusted, and understanding what will break if it changes. The catalog is the control plane for that problem.</p>
-    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/framework/">Framework</a><a href="/reusable-data-procedures/techniques/">Techniques</a><a href="/reusable-data-procedures/catalog/" aria-current="page">Catalog</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/framework/">Framework</a><a href="/reusable-data-procedures/techniques/">Techniques</a><a href="/reusable-data-procedures/catalog/" aria-current="page">Catalog</a><a href="/reusable-data-procedures/semantic-registry/">Semantic Concepts</a><a href="/reusable-data-procedures/reference-data/">Reference Data</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
   </header>
 
   <section class="rdp__detail-section">
@@ -41,7 +41,7 @@ hide_global_cta: true
       <tbody>
         <tr><td>Domain</td><td>sales, procurement, material, finance, cross-domain</td><td>Business ownership and discovery.</td></tr>
         <tr><td>Job family</td><td>clean, enrich, reconcile, compare, consolidate, validate, migrate, publish</td><td>Find a procedure by the work to be done.</td></tr>
-        <tr><td>Data concept</td><td>material, customer, order, supplier, price, stock</td><td>Find reusable logic across systems.</td></tr>
+        <tr><td>Data concept</td><td><code>sap.material-id</code>, <code>sap.plant-id</code>, customer, order, price</td><td>Find reusable logic across systems and local column names.</td></tr>
         <tr><td>Source family</td><td>SAP export, supplier file, SharePoint workbook, API, database</td><td>Technical compatibility and adapter reuse.</td></tr>
         <tr><td>Maturity</td><td>idea, draft, pilot, approved, deprecated</td><td>Shows lifecycle, not quality by itself.</td></tr>
         <tr><td>Trust</td><td>experimental, tested, reviewed, production-proven</td><td>Shows what evidence exists before reuse.</td></tr>
@@ -55,11 +55,11 @@ hide_global_cta: true
     <div class="rdp__section-head"><p class="rdp__eyebrow">Search</p><h2>The catalog should answer capability questions.</h2></div>
     <div class="rdp__cards">
       <article><strong>By task</strong><p>“Show approved reconciliation procedures for SAP sales exports.”</p></article>
-      <article><strong>By concept</strong><p>“Which procedures already normalize Material IDs or Customer numbers?”</p></article>
-      <article><strong>By dependency</strong><p>“What will be affected if reference dataset <code>customer-aliases</code> changes?”</p></article>
+      <article><strong>By concept</strong><p>“Which procedures consume or produce <code>sap.material-id</code>?”</p></article>
+      <article><strong>By dependency</strong><p>“What will be affected if reference dataset <code>sales.customer-aliases</code> changes?”</p></article>
       <article><strong>By trust</strong><p>“Which procedures have regression fixtures, owner approval and successful recent runs?”</p></article>
       <article><strong>By policy</strong><p>“Which procedures may run locally and never send data to an AI endpoint?”</p></article>
-      <article><strong>By similarity</strong><p>“Find procedures with similar source contracts, fields or mappings to this new task.”</p></article>
+      <article><strong>By similarity</strong><p>“Find procedures with similar source contracts, concepts or mappings to this new task.”</p></article>
     </div>
   </section>
 
@@ -76,9 +76,13 @@ hide_global_cta: true
     cleaner/
     validator/
     publisher/
+  concepts/
+    sap.material-id/
+      concept.json
   reference/
-    material-aliases/
-    customer-mapping/
+    sales.customer-aliases/
+      reference.json
+      releases/
   packs/
     sap-sales-reconciliation/
   catalog/
@@ -95,13 +99,17 @@ runs/
     <div class="rdp__cards">
       <article><strong>Procedure</strong><p>One end-to-end reusable task with sources, transforms, validations and outputs.</p></article>
       <article><strong>Block</strong><p>A smaller typed component such as an Excel locator, SAP identifier cleaner or cardinality validator.</p></article>
+      <article><strong>Semantic concept</strong><p>A stable business meaning with representation rules, aliases, source bindings and relations.</p></article>
+      <article><strong>Reference dataset</strong><p>A versioned mapping, code list, allowed-value set or controlled exception register.</p></article>
       <article><strong>Pattern</strong><p>A recommended arrangement of blocks for a repeated problem, for example lookup enrichment with exception routing.</p></article>
-      <article><strong>Pack</strong><p>A curated group of procedures, blocks, references and examples for a domain such as SAP Sales or migration checks.</p></article>
+      <article><strong>Pack</strong><p>A curated group of procedures, blocks, concepts, references and examples for a domain such as SAP Sales.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Impact graph</p><h2>Dependencies should be queryable before changes are approved.</h2><p>A catalog becomes much more useful when it can answer “who uses this?”. Each procedure should expose consumed blocks, reference data, upstream procedures and downstream consumers.</p></div>
-    <div class="rdp__rerun"><strong>Example:</strong> <code>normalize-material-id@2</code> → used by 14 procedures → 5 operational → 2 business-critical. A breaking change now has an impact radius before somebody discovers it in Monday's spreadsheet.</div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Impact graph</p><h2>Dependencies should be queryable before changes are approved.</h2><p>A catalog becomes much more useful when it can answer “who uses this?”. Procedures should expose consumed blocks, semantic concepts, reference data, upstream procedures and downstream consumers.</p></div>
+    <div class="rdp__rerun"><strong>Example:</strong> <code>sales.order-material-reconciliation</code> → consumes <code>sap.material-id</code> → uses <code>normalize-material-id@2</code> → depends on <code>material-aliases@2026.08</code>. A change now has an impact radius before somebody discovers it in Monday's spreadsheet.</div>
   </section>
+
+  <section class="rdp__detail-section"><div class="rdp__route-list"><a href="/reusable-data-procedures/semantic-registry/"><span>SEM</span><strong>Semantic Concept Registry</strong><small>Stable meanings, representation rules, bindings and semantic drift.</small><i class="material-symbols-outlined">hub</i></a><a href="/reusable-data-procedures/reference-data/"><span>REF</span><strong>Reference Data Registry</strong><small>Versioned mappings, code lists and controlled value spaces.</small><i class="material-symbols-outlined">table_view</i></a></div></section>
 </div>

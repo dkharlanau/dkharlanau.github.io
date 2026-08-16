@@ -1,0 +1,30 @@
+{
+  "id": "reusable-data-procedures.semantic-registry",
+  "version": "0.1",
+  "purpose": "Provide stable business data concepts that connect source fields, procedures, reference datasets, validation hints and discovery evidence.",
+  "rules": [
+    "A concept has stable meaning, not only aliases.",
+    "A source binding is contextual evidence, not universal equality.",
+    "Representation normalization must not silently change business identity.",
+    "Cross-system value conversion belongs to governed reference data when identifiers differ.",
+    "Semantic drift can exist even when column names and types do not change.",
+    "Promote concepts only when meaning is stable enough to reuse."
+  ],
+  "relation_types": ["broader-than", "narrower-than", "related-to", "derived-from", "equivalent-in-scope"],
+  "starter_concepts": [
+    {"id":"sap.material-id","label":"Material ID","domain":"material","valueKind":"identifier","bindings":["SAP:MATNR","SAP export:Material"],"notes":["Treat as string by default","Leading zeros may be representation-sensitive"]},
+    {"id":"sap.business-partner-id","label":"Business Partner ID","domain":"business-partner","valueKind":"identifier","bindings":["SAP:PARTNER","SAP export:Business Partner"],"notes":["Role such as customer or supplier is contextual"]},
+    {"id":"sap.sales-document-id","label":"Sales Document ID","domain":"sales","valueKind":"identifier","bindings":["SAP:VBELN","SAP export:Sales Document"],"notes":["Scope includes source system/client context"]},
+    {"id":"sap.sales-document-item","label":"Sales Document Item","domain":"sales","valueKind":"identifier","bindings":["SAP:POSNR","SAP export:Item"],"notes":["Normally meaningful with parent sales document"]},
+    {"id":"sap.plant-id","label":"Plant ID","domain":"enterprise-structure","valueKind":"code","bindings":["SAP:WERKS","SAP export:Plant"],"notes":["Business role of plant depends on process context"]},
+    {"id":"sap.purchasing-document-id","label":"Purchasing Document ID","domain":"procurement","valueKind":"identifier","bindings":["SAP:EBELN","SAP export:Purchasing Document"],"notes":["Treat as string and scope to source system"]}
+  ],
+  "integration_points": {
+    "discovery": "Use approved bindings, aliases and representation hints as evidence.",
+    "mapping": "Shared concept references strengthen candidates but do not replace cardinality checks.",
+    "validation": "Concepts may provide reusable validation hints.",
+    "catalog": "Index consumed and produced concepts for capability search.",
+    "reference_data": "Reference datasets connect different governed value spaces.",
+    "ai": "Retrieve approved concepts before asking a model to infer semantics."
+  }
+}

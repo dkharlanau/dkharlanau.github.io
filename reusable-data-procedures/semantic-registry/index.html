@@ -1,0 +1,105 @@
+---
+layout: default
+title: "Reusable Data Procedures — Semantic Concept Registry"
+description: "A semantic registry for stable business data concepts, aliases, representations, source bindings and relationships used by reusable data procedures."
+permalink: /reusable-data-procedures/semantic-registry/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+<link rel="describedby" type="application/json" href="/reusable-data-procedures/semantic-registry/model.json" title="Semantic registry machine-readable model" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Semantic Concept Registry</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Semantic layer</p>
+    <h1>Give the same business thing one stable meaning.</h1>
+    <p>Column names change across Excel files, SAP tables, APIs and projects. A semantic concept gives the framework a stable business identity behind those representations. It helps discovery, mapping, validation, search and reuse speak the same language.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/semantic-registry/" aria-current="page">Semantic Concepts</a><a href="/reusable-data-procedures/reference-data/">Reference Data</a><a href="/reusable-data-procedures/procedure-model/">Procedure</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Core idea</p><h2>A concept is not just a list of aliases.</h2><p><code>Material</code>, <code>MATNR</code> and <code>productId</code> may point to the same business idea, but a useful registry also records how the identifier behaves, where it comes from and what assumptions are safe.</p></div>
+    <div class="rdp__model-grid">
+      <article class="rdp__model-card"><span>ID</span><strong>Stable concept ID</strong><p>Example: <code>sap.material-id</code>. Human labels may change; the concept ID should remain stable.</p></article>
+      <article class="rdp__model-card"><span>SEM</span><strong>Meaning</strong><p>Short business definition, scope, owner, related domain and what the concept does not mean.</p></article>
+      <article class="rdp__model-card"><span>REP</span><strong>Representation</strong><p>String or number behavior, expected length, leading-zero rules, locale, case behavior and safe comparison rules.</p></article>
+      <article class="rdp__model-card"><span>BIND</span><strong>Source bindings</strong><p>Known fields such as SAP <code>MATNR</code>, Excel <code>Material</code> or API <code>productId</code>, with system and context.</p></article>
+      <article class="rdp__model-card"><span>REL</span><strong>Relationships</strong><p>Broader, narrower, equivalent-in-scope, derived-from or related concepts.</p></article>
+      <article class="rdp__model-card"><span>RULE</span><strong>Semantic rules</strong><p>Known validations, canonical comparison behavior and warnings that procedures can reuse.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Important distinction</p><h2>Same label does not guarantee same value space.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Case</th><th>Meaning</th><th>Framework treatment</th></tr></thead>
+      <tbody>
+        <tr><td>Same concept, different representation</td><td><code>000000000000123456</code> and <code>123456</code> may represent the same material identifier.</td><td>Use an approved representation or comparison rule.</td></tr>
+        <tr><td>Same label, different scope</td><td>“Plant” may mean supplying plant, receiving plant or production plant.</td><td>Use different concepts or explicit contextual bindings.</td></tr>
+        <tr><td>Same field, changed semantics</td><td>A source keeps the header but changes what values mean.</td><td>Treat as semantic drift, not harmless schema compatibility.</td></tr>
+        <tr><td>Cross-system mapping</td><td>Two systems use different identifiers for the same business object.</td><td>Use reference data or a governed mapping, not a fake equality rule.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Concept contract</p><h2>Keep observable metadata and business meaning together.</h2></div>
+    <pre class="rdp__code-note"><code>{
+  "id": "sap.material-id",
+  "label": "Material ID",
+  "domain": "material",
+  "definition": "Identifier of a material or product master record in a declared source scope.",
+  "valueKind": "identifier",
+  "representation": {
+    "logicalType": "string",
+    "leadingZeros": "representation-sensitive",
+    "caseSensitive": false
+  },
+  "bindings": [
+    {"system": "SAP S/4HANA", "field": "MATNR", "context": "material master"},
+    {"sourceFamily": "SAP export", "headerAlias": "Material"}
+  ],
+  "relations": [
+    {"type": "related-to", "concept": "sap.material-description"}
+  ]
+}</code></pre>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">How procedures use it</p><h2>Concept references reduce duplicated reasoning.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Discovery</strong><p>A new column can be matched against known aliases, value patterns and previous source bindings before semantic AI is asked.</p></article>
+      <article><strong>Mapping</strong><p>Two fields mapped to the same concept become stronger candidates, while different concepts warn against accidental joins.</p></article>
+      <article><strong>Validation</strong><p>Concept-level rules can suggest identifier checks, date semantics, allowed comparison behavior or required reference datasets.</p></article>
+      <article><strong>Catalog search</strong><p>Search for procedures that consume or produce <code>sap.material-id</code>, regardless of local header names.</p></article>
+      <article><strong>Drift</strong><p>A stable schema with changed concept evidence becomes semantic drift and can require review.</p></article>
+      <article><strong>Agent context</strong><p>An agent retrieves an approved meaning and known bindings instead of guessing business semantics from a column name.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Starter SAP concepts</p><h2>Begin with the identifiers and fields that appear everywhere.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Concept</th><th>Typical bindings</th><th>Useful semantic note</th></tr></thead>
+      <tbody>
+        <tr><td><code>sap.material-id</code></td><td>MATNR, Material</td><td>Identifier, usually treated as string; representation may contain leading zeros.</td></tr>
+        <tr><td><code>sap.business-partner-id</code></td><td>PARTNER, Business Partner</td><td>Do not assume customer and supplier role from the identifier alone.</td></tr>
+        <tr><td><code>sap.sales-document-id</code></td><td>VBELN, Sales Document</td><td>Document identity depends on system/client context.</td></tr>
+        <tr><td><code>sap.sales-document-item</code></td><td>POSNR, Item</td><td>Usually meaningful together with the parent sales document.</td></tr>
+        <tr><td><code>sap.plant-id</code></td><td>WERKS, Plant</td><td>Context matters: supplying, receiving or production role may differ by process.</td></tr>
+        <tr><td><code>sap.purchasing-document-id</code></td><td>EBELN, Purchasing Document</td><td>Document key should remain a string and be scoped to the source system.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__callout"><strong>Rule:</strong> promote a concept only when its meaning is stable enough to be reused. A registry full of vague nouns is just a thesaurus with governance overhead.</div>
+    <div class="rdp__route-list"><a href="/reusable-data-procedures/semantic-concept.schema.json"><span>SPEC</span><strong>Semantic concept schema</strong><small>Draft machine-readable contract for concepts, representations, bindings and relations.</small><i class="material-symbols-outlined" aria-hidden="true">code</i></a><a href="/reusable-data-procedures/semantic-registry/model.json"><span>MODEL</span><strong>Semantic registry model</strong><small>Starter concepts, rules and integration points for agents and tooling.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a><a href="/reusable-data-procedures/reference-data/"><span>NEXT</span><strong>Reference Data Registry</strong><small>Version the mappings and controlled lists that connect real value spaces.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a></div>
+  </section>
+</div>

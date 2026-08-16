@@ -1,0 +1,25 @@
+{
+  "id": "reusable-data-procedures.reference-data-registry",
+  "version": "0.1",
+  "purpose": "Manage mappings, aliases, code lists and controlled reference datasets as versioned reusable assets.",
+  "families": ["alias-dictionary", "cross-system-mapping", "code-translation", "allowed-values", "threshold-table", "exception-register"],
+  "lifecycle": ["propose", "validate", "approve", "release", "observe", "deprecate"],
+  "rules": [
+    "Reference data has a stable ID, owner and released version.",
+    "Procedures pin the exact version used for reproducible runs.",
+    "Keys and expected cardinality are part of the dataset contract.",
+    "Effective dates and overlapping validity are validated when used.",
+    "Unmatched and ambiguous behavior is explicit.",
+    "Reference changes use dependency impact analysis before release.",
+    "Temporary exceptions have expiry or review policy instead of becoming permanent folklore."
+  ],
+  "quality_checks": ["key-uniqueness", "required-values", "target-validity", "effective-date-overlap", "mapping-coverage", "orphan-records", "concept-compatibility"],
+  "starter_assets": [
+    {"id":"sales.customer-aliases","family":"alias-dictionary","purpose":"Resolve known external customer names or IDs to governed business partner IDs."},
+    {"id":"enterprise.plant-map","family":"cross-system-mapping","purpose":"Map plant/location identifiers across declared source systems."},
+    {"id":"procurement.vendor-status-map","family":"code-translation","purpose":"Translate external supplier statuses into approved internal status values."},
+    {"id":"migration.allowed-material-types","family":"allowed-values","purpose":"Control accepted material types for a migration validation procedure."}
+  ],
+  "dependency_edges": ["procedure-uses-reference", "block-uses-reference", "reference-uses-concept", "reference-replaces-reference", "consumer-depends-on-reference"],
+  "run_evidence": ["reference-id", "reference-version", "content-hash", "coverage", "unmatched-count", "ambiguous-count"]
+}

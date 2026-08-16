@@ -1,0 +1,111 @@
+---
+layout: default
+title: "Reusable Data Procedures — Reference Data Registry"
+description: "A registry model for versioned mappings, code lists, aliases and controlled reference datasets used by reusable data procedures."
+permalink: /reusable-data-procedures/reference-data/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+<link rel="describedby" type="application/json" href="/reusable-data-procedures/reference-data/model.json" title="Reference data registry machine-readable model" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Reference Data Registry</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Reference layer</p>
+    <h1>Mappings are data assets, not hidden worksheet tabs.</h1>
+    <p>Many procedures depend on small but important datasets: customer aliases, plant mappings, code conversions, accepted values or manual exception lists. If these datasets change output meaning, they need identity, ownership, versioning and tests of their own.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/semantic-registry/">Semantic Concepts</a><a href="/reusable-data-procedures/reference-data/" aria-current="page">Reference Data</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Asset model</p><h2>Reference data deserves the same discipline as procedure logic.</h2></div>
+    <div class="rdp__model-grid">
+      <article class="rdp__model-card"><span>ID</span><strong>Stable dataset ID</strong><p>Example: <code>sales.customer-aliases</code> or <code>enterprise.plant-map</code>.</p></article>
+      <article class="rdp__model-card"><span>VER</span><strong>Version or effective period</strong><p>Use semantic versions, dated releases or valid-from / valid-to periods depending on the business case.</p></article>
+      <article class="rdp__model-card"><span>OWN</span><strong>Owner and steward</strong><p>The owner decides business meaning. A steward maintains records and quality.</p></article>
+      <article class="rdp__model-card"><span>KEY</span><strong>Key and cardinality</strong><p>Declare which columns identify a record and whether one-to-one or one-to-many mapping is expected.</p></article>
+      <article class="rdp__model-card"><span>SEM</span><strong>Concept bindings</strong><p>Columns can reference semantic concepts, making the value spaces and mapping purpose explicit.</p></article>
+      <article class="rdp__model-card"><span>USE</span><strong>Consumers</strong><p>Procedures and blocks that depend on the dataset are visible through the dependency graph.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Reference families</p><h2>Not every small table is the same kind of asset.</h2></div>
+    <table class="rdp__decision-table"><thead><tr><th>Family</th><th>Example</th><th>Main risk</th></tr></thead><tbody>
+      <tr><td>Alias dictionary</td><td>Legacy customer name → approved customer ID</td><td>Ambiguous or stale aliases.</td></tr>
+      <tr><td>Cross-system mapping</td><td>ERP material ID ↔ warehouse product ID</td><td>Incorrect cardinality or changed value space.</td></tr>
+      <tr><td>Code translation</td><td>External status → internal status</td><td>New source code silently falls through.</td></tr>
+      <tr><td>Allowed-value list</td><td>Approved plants or order types</td><td>Policy or organizational change.</td></tr>
+      <tr><td>Business threshold table</td><td>Country → tolerance percentage</td><td>Effective dates and ownership.</td></tr>
+      <tr><td>Exception register</td><td>Approved temporary business exceptions</td><td>Temporary record becomes permanent folklore.</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Lifecycle</p><h2>Reference data changes should be reviewable and reproducible.</h2></div>
+    <div class="rdp__sequence">
+      <article><h3>Propose</h3><p>A new record or changed mapping has a reason, source and author.</p></article>
+      <article><h3>Validate</h3><p>Check key uniqueness, nulls, duplicate targets, concept compatibility, dates and allowed domains.</p></article>
+      <article><h3>Approve</h3><p>Risk-based review confirms the new mapping or code list is valid for its declared scope.</p></article>
+      <article><h3>Release</h3><p>Create an immutable version or effective-dated snapshot. Procedures pin the version they use.</p></article>
+      <article><h3>Observe</h3><p>Track unmatched values, coverage, stale records and downstream exceptions.</p></article>
+      <article><h3>Deprecate</h3><p>Retire a version or record with replacement and history rather than deleting the evidence.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Contract</p><h2>Make data semantics visible in the dataset definition.</h2></div>
+    <pre class="rdp__code-note"><code>{
+  "id": "sales.customer-aliases",
+  "version": "2026.08",
+  "family": "alias-dictionary",
+  "owner": "sales-operations",
+  "key": ["sourceSystem", "sourceCustomer"],
+  "cardinality": "many-to-one",
+  "columns": [
+    {"name": "sourceCustomer", "concept": "customer.external-id"},
+    {"name": "businessPartner", "concept": "sap.business-partner-id"},
+    {"name": "validFrom", "concept": "time.valid-from"}
+  ],
+  "policy": {"unmatched": "exception", "ambiguous": "block"}
+}</code></pre>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Quality rules</p><h2>A lookup file needs stronger checks than “Excel opened successfully”.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Key uniqueness</strong><p>A one-to-one or many-to-one lookup must not introduce duplicate source keys unless the contract explicitly allows them.</p></article>
+      <article><strong>Target validity</strong><p>Targets can be checked against known concepts, master-data extracts or another reference dataset.</p></article>
+      <article><strong>Effective dates</strong><p>Overlapping validity periods should be detected before a run chooses two answers for the same key.</p></article>
+      <article><strong>Coverage trend</strong><p>A sudden fall in mapping coverage is run evidence and may indicate source or business drift.</p></article>
+      <article><strong>Orphan records</strong><p>Reference rows not used for a long period should be reviewed, not silently trusted forever.</p></article>
+      <article><strong>Change impact</strong><p>Before release, query which procedures, blocks and consumers use the changed dataset.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Practical storage</p><h2>Version definitions and controlled data together, but separate raw evidence.</h2></div>
+    <pre class="rdp__code-note"><code>registry/reference/
+  sales.customer-aliases/
+    reference.json
+    releases/
+      2026.07/data.parquet
+      2026.08/data.parquet
+    tests/
+      duplicate-key.json
+      unknown-target.json
+    CHANGELOG.md
+
+runs/
+  .../run-report.json   # records exact reference version used</code></pre>
+    <div class="rdp__callout"><strong>Rule:</strong> a procedure can depend on reference data, but it should not hide a mutable mapping table inside itself. Reproducibility requires the exact released reference version to appear in run evidence.</div>
+  </section>
+
+  <section class="rdp__detail-section"><div class="rdp__route-list"><a href="/reusable-data-procedures/reference-dataset.schema.json"><span>SPEC</span><strong>Reference dataset schema</strong><small>Draft contract for identity, ownership, keys, concepts, lifecycle and quality policy.</small><i class="material-symbols-outlined">code</i></a><a href="/reusable-data-procedures/reference-data/model.json"><span>MODEL</span><strong>Reference registry model</strong><small>Families, lifecycle, quality checks and starter assets for tooling.</small><i class="material-symbols-outlined">data_object</i></a><a href="/reusable-data-procedures/semantic-registry/"><span>SEM</span><strong>Semantic Concept Registry</strong><small>Define the business meanings that reference data connects.</small><i class="material-symbols-outlined">hub</i></a></div></section>
+</div>

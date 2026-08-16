@@ -1,0 +1,46 @@
+{
+  "id": "reusable-data-procedures.semantics-extension",
+  "version": "0.1",
+  "extendsFrameworkModel": "0.5",
+  "assets": {
+    "semanticConcept": {
+      "schema": "/reusable-data-procedures/semantic-concept.schema.json",
+      "registry": "/reusable-data-procedures/semantic-registry/",
+      "model": "/reusable-data-procedures/semantic-registry/model.json"
+    },
+    "referenceDataset": {
+      "schema": "/reusable-data-procedures/reference-dataset.schema.json",
+      "registry": "/reusable-data-procedures/reference-data/",
+      "model": "/reusable-data-procedures/reference-data/model.json"
+    }
+  },
+  "graphExtension": {
+    "nodes": ["semantic_concept", "reference_dataset"],
+    "edges": [
+      "procedure-consumes-concept",
+      "procedure-produces-concept",
+      "source-field-binds-to-concept",
+      "block-implements-concept-rule",
+      "reference-column-binds-to-concept",
+      "reference-connects-value-spaces",
+      "procedure-uses-reference",
+      "reference-replaces-reference",
+      "consumer-depends-on-reference"
+    ]
+  },
+  "discoveryOrder": [
+    "observe source structure",
+    "match known source binding",
+    "match approved aliases and representation hints",
+    "retrieve similar procedures and reference assets",
+    "use semantic AI only when deterministic evidence is insufficient",
+    "store accepted result as reviewed binding or proposed registry change"
+  ],
+  "rules": [
+    "Semantic equality and value equality are different questions.",
+    "Concept bindings are contextual and reviewable.",
+    "Reference datasets connect value spaces when direct equality is not valid.",
+    "Run evidence records exact reference versions used.",
+    "Core procedure schema should adopt mandatory concept bindings only after real-case validation."
+  ]
+}
