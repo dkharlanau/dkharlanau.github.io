@@ -1,0 +1,35 @@
+{
+  "kind": "reusable-data-procedure-run",
+  "specVersion": "0.1",
+  "runId": "case-sales-material-run-02-review",
+  "deployment": {"id": "case.manual-local", "version": "0.1"},
+  "procedure": {"id": "sales.order-material-reconciliation", "version": "0.1.0", "planHash": "case-plan-v1"},
+  "engineVersion": "reference-case",
+  "trigger": "manual",
+  "actor": "case-runner",
+  "status": "review-required",
+  "startedAt": "2026-08-16T13:51:00Z",
+  "finishedAt": "2026-08-16T13:51:02Z",
+  "inputs": [
+    {"role": "sales_orders", "resource": "fixtures.json#sourceRuns/run-02", "hash": "sha256:synthetic-run-02", "fingerprint": "orders-v2-header-aliases", "selectedRegion": "Orders Aug!A11:F15", "rowCount": 4}
+  ],
+  "resolvedDependencies": [
+    {"kind": "reference-dataset", "id": "sap.material-aliases", "version": "2026.08.1"}
+  ],
+  "drift": {
+    "classification": "resolvable",
+    "findings": ["Table moved from header row 8 to 11.", "Item header changed to Item No.", "Material header changed to Material Number."]
+  },
+  "validationSummary": {"passed": 2, "warnings": 1, "errors": 0, "blocking": 1},
+  "exceptions": {"count": 1, "byReason": {"LOOKUP_NOT_FOUND": 1}, "artifact": "synthetic://case/run-02/exceptions"},
+  "controlTotals": [
+    {"name": "order-quantity", "expected": 24, "actual": 24, "status": "pass"},
+    {"name": "material-coverage", "expected": 1.0, "actual": 0.75, "status": "fail"}
+  ],
+  "outputs": [
+    {"name": "sales_material_reconciliation", "status": "withheld", "resource": "synthetic://case/run-02/result", "hash": "sha256:synthetic-result-withheld", "rowCount": 3},
+    {"name": "sales_material_exceptions", "status": "prepared", "resource": "synthetic://case/run-02/exceptions", "hash": "sha256:synthetic-exception-ext-q9", "rowCount": 1}
+  ],
+  "publicationDecision": "manual-review",
+  "metrics": {"locatorConfidence": 0.93, "materialCoverage": 0.75, "sourceQuantity": 24, "resultQuantityBeforeWithhold": 24}
+}
