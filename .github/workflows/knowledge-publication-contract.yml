@@ -20,5 +20,7 @@ jobs:
           python-version: "3.12"
       - name: Install contract dependencies
         run: python3 -m pip install pyyaml
+      - name: Check generated publication metadata is current
+        run: python3 scripts/knowledge_publication_loop.py --check
       - name: Validate reviewed Lab publication contract
         run: python3 scripts/check_knowledge_publication_contract.py
