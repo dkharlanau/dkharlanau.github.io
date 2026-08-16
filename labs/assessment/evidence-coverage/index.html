@@ -1,0 +1,99 @@
+---
+layout: default
+title: "Evidence Coverage — SAP Lead Assessment Lab"
+description: "A track-level view of primary-source review coverage, evidence debt, and the next factual-review priorities for SAP Lead preparation."
+permalink: /labs/assessment/evidence-coverage/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, evidence, coverage, review]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Evidence Coverage</li></ol></nav>
+
+<div class="research-canvas evidence-coverage" id="evidence-coverage">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Evidence debt</p>
+      <h1>Review what matters next.<br />Not what is easiest next.</h1>
+      <p>This view connects the four assessment tracks with factual-review coverage. It shows which routes already have primary-source support and which mature routes still carry evidence debt.</p>
+      <a class="research-canvas__button" href="#track-coverage">Open track coverage <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Evidence coverage status">
+      <p>Current evidence layer</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong id="ec-reviewed">—</strong><small>Source-reviewed routes</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong id="ec-total">—</strong><small>Assessment routes in scope</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong id="ec-debt">—</strong><small>P0 evidence-debt routes</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong id="ec-claims">—</strong><small>Source-supported claims</small></div>
+      <em>Coverage is a planning signal. It is not a verified-page count.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Working rule:</strong> source review follows assessment value and evidence debt. A route that appears in several tracks, is structurally mature, and still has no primary-source review should move up the queue.</p>
+    <a href="/labs/assessment/data/evidence-coverage.json">Open coverage dataset <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="track-coverage" data-reveal>
+    <header><p class="research-canvas__eyebrow">Four assessment tracks</p><h2>Coverage should be balanced across the assessment.</h2><p>A strong Sales evidence base does not compensate for weak Integration or AI evidence. The generator evaluates every track from the same catalog and readiness contracts.</p></header>
+    <p id="ec-status" aria-live="polite">Loading evidence coverage…</p>
+    <div id="ec-tracks" class="ec-coverage-grid"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Next factual-review queue</p><h2>Cross-track debt comes first.</h2><p>The queue ranks P0 routes by how many assessment tracks depend on them and then by structural maturity. It does not change page status.</p></header>
+    <div id="ec-focus" class="research-route-list"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Control layer</p><h2>One dataset, three source contracts.</h2><p>The coverage result is derived from the assessment catalog, factual-review registry, and evidence-aware promotion readiness. Nothing is entered by hand in this page.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/data/evidence-coverage.json"><span>COVER</span><strong>Evidence Coverage Dataset</strong><small>Track coverage, route-level evidence state, P0 debt, and next-focus ranking.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/factual-review/"><span>FACT</span><strong>Factual Review</strong><small>Claim-level primary-source evidence and release scope.</small><i class="material-symbols-outlined" aria-hidden="true">verified_user</i></a>
+      <a href="/labs/assessment/promotion-readiness/"><span>READY</span><strong>Promotion Readiness</strong><small>Structural maturity, evidence state, review reason, and human-review priority.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<style>
+.ec-coverage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}.ec-coverage-card{border:1px solid var(--border-color,#ddd);padding:1rem}.ec-coverage-card h3{margin-top:0}.ec-coverage-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin:.8rem 0}.ec-coverage-metrics div{border:1px solid var(--border-color,#ddd);padding:.6rem}.ec-coverage-metrics strong{display:block;font-size:1.35rem}.ec-debt-list{margin:.7rem 0 0;padding-left:1.15rem}.ec-debt-list li{margin:.35rem 0}
+</style>
+
+<script>
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id);
+  function trackCard(track){
+    const article=document.createElement('article');article.className='ec-coverage-card';
+    const title=document.createElement('h3');title.textContent=track.label;
+    const coverage=document.createElement('p');coverage.textContent=`${track.coverage_percent}% source-reviewed across ${track.evidence_applicable_routes} evidence-applicable route(s).`;
+    const metrics=document.createElement('div');metrics.className='ec-coverage-metrics';
+    [[track.source_reviewed_routes,'Reviewed'],[track.evidence_debt_routes,'P0 debt'],[track.page_review_ready_routes,'Page-review ready'],[track.reviewed_claims,'Claims']].forEach(([value,label])=>{const box=document.createElement('div');const strong=document.createElement('strong');strong.textContent=value;const small=document.createElement('small');small.textContent=label;box.append(strong,small);metrics.appendChild(box)});
+    const debt=document.createElement('ul');debt.className='ec-debt-list';
+    track.routes.filter(item=>item.priority==='P0').slice(0,5).forEach(item=>{const li=document.createElement('li');const a=document.createElement('a');a.href=item.route;a.textContent=item.route.replace('/labs/enterprise-context/','').replaceAll('/','');li.appendChild(a);debt.appendChild(li)});
+    if(!debt.children.length){const li=document.createElement('li');li.textContent='No P0 evidence debt in this track.';debt.appendChild(li)}
+    article.append(title,coverage,metrics,debt);return article;
+  }
+  function focusRow(item,index){
+    const a=document.createElement('a');a.href=item.route;
+    const rank=document.createElement('span');rank.textContent=String(index+1).padStart(2,'0');
+    const strong=document.createElement('strong');strong.textContent=item.route.replace('/labs/enterprise-context/','').replaceAll('/','');
+    const small=document.createElement('small');small.textContent=`${item.assessment_track_count} assessment track(s) · ${item.evidence_status} · ${item.review_reason}`;
+    const icon=document.createElement('i');icon.className='material-symbols-outlined';icon.setAttribute('aria-hidden','true');icon.textContent='priority_high';
+    a.append(rank,strong,small,icon);return a;
+  }
+  fetch('/labs/assessment/data/evidence-coverage.json',{credentials:'same-origin'}).then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json()}).then(data=>{
+    const s=data.summary;$('ec-reviewed').textContent=s.unique_source_reviewed_routes;$('ec-total').textContent=s.unique_evidence_applicable_routes;$('ec-debt').textContent=s.unique_p0_evidence_debt_routes;$('ec-claims').textContent=s.source_supported_claims;
+    $('ec-status').textContent=`${s.coverage_percent}% of unique evidence-applicable assessment routes have claim-level primary-source review.`;
+    const tracks=$('ec-tracks');data.tracks.forEach(track=>tracks.appendChild(trackCard(track)));
+    const focus=$('ec-focus');data.next_focus.slice(0,12).forEach((item,index)=>focus.appendChild(focusRow(item,index)));
+    if(!data.next_focus.length){focus.textContent='No P0 evidence debt remains in the current assessment catalog.';}
+  }).catch(error=>{$('ec-status').textContent=`Evidence coverage could not be loaded: ${error.message}`;});
+})();
+</script>
