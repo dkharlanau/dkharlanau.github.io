@@ -1,0 +1,29 @@
+{
+  "kind": "rdp-reference-case",
+  "specVersion": "0.1",
+  "id": "sales-order-material-reconciliation",
+  "title": "Sales Order Material Reconciliation",
+  "domain": "sales",
+  "pack": "sap-logistics-starter@0.1.0",
+  "purpose": "Prove locator recovery, material reference coverage, safe review behavior and replay after an approved reference-data change.",
+  "synthetic": true,
+  "procedure": {"id": "sales.order-material-reconciliation", "goldenVersion": "0.1.0", "replayVersion": "0.1.1"},
+  "concepts": ["sap.sales-document", "sap.sales-document-item", "sap.material-id", "sap.plant-id"],
+  "referenceData": [
+    {"id": "sap.material-aliases", "goldenVersion": "2026.08.1", "replayVersion": "2026.08.2"}
+  ],
+  "sequence": [
+    {"step": 1, "id": "run-01", "state": "published", "point": "Golden input resolves all materials."},
+    {"step": 2, "id": "run-02-review", "state": "review-required", "point": "Table and headers drift safely; new material EXT-Q9 is unresolved."},
+    {"step": 3, "id": "review-material-ext-q9", "state": "decided", "point": "Reviewer approves a scoped mapping to MAT-471103."},
+    {"step": 4, "id": "reference-release-2026.08.2", "state": "approved", "point": "Reference data receives a new released version."},
+    {"step": 5, "id": "run-02-replay", "state": "published", "point": "Same source replays with pinned updated reference data."}
+  ],
+  "assertions": [
+    "Table movement alone does not require a procedure revision.",
+    "Approved header aliases may recover structural drift.",
+    "Unknown material values never receive guessed business mappings.",
+    "Reference changes are versioned and linked to a decision.",
+    "Replay records exact procedure and reference versions."
+  ]
+}
