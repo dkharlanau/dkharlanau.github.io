@@ -1,0 +1,45 @@
+{
+  "id": "sap-lead-assessment-calibration-policy",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Use real feedback as evidence for future scoring changes without letting one subjective observation silently rewrite the assessment model.",
+  "feedback_contract": "/labs/assessment/data/feedback-schema.json",
+  "scoring_contract": "/labs/assessment/data/scoring.json",
+  "principles": [
+    "Feedback is evidence, not an automatic scoring update.",
+    "Self-reflection, peer review, manager feedback, interviewer feedback, and formal results keep their source type. Do not relabel one as another.",
+    "Do not create external feedback records unless the user actually received and recorded that feedback.",
+    "A formal outcome can validate overall readiness without proving which reasoning dimension caused the result.",
+    "Dimension-level calibration needs dimension-level observations, not only a pass or fail outcome.",
+    "Exact quotes are optional user-entered evidence. Do not reconstruct or improve them and present them as verbatim feedback.",
+    "Scoring thresholds change only through an explicit reviewed calibration decision."
+  ],
+  "evidence_classes": {
+    "self_reflection": "Useful for identifying hypotheses and recurring discomfort. Treat as learner evidence, not external validation.",
+    "peer_review": "Useful when the reviewer understood the case and scoring dimensions. Keep reviewer context in source_note when the user provides it.",
+    "manager_feedback": "Useful for role expectations and observed consulting behavior. It may be broader than one technical answer.",
+    "interviewer_feedback": "High relevance to assessment behavior when the feedback was actually received. Record only what was provided.",
+    "formal_assessment_result": "Strong evidence for the final assessment outcome. It does not automatically explain the reason for the outcome."
+  },
+  "calibration_candidate_rules": [
+    "Create a calibration candidate only when the current rubric appears systematically misaligned with repeated real evidence.",
+    "Prefer at least three relevant observations before changing a dimension threshold or interpretation unless one authoritative feedback item identifies a clear rubric error.",
+    "When evidence sources disagree, keep the disagreement visible instead of averaging it away.",
+    "A candidate must name the current rule, proposed rule, supporting feedback IDs, expected effect, and risk of overfitting.",
+    "Do not lower a threshold merely because a learner repeatedly scores below it.",
+    "Do not raise a threshold merely because practice scores are high without external or cross-case evidence."
+  ],
+  "calibration_decision": {
+    "required_fields":["id","created_at","status","current_rule","proposed_rule","supporting_feedback_ids","reason","risk"],
+    "status_values":["candidate","accepted","rejected","deferred"],
+    "acceptance_rule":"Only an explicit human-reviewed accepted decision may change scoring.json or adaptive-selection thresholds."
+  },
+  "anti_overfit_checks": [
+    "Would the change still make sense across more than one SAP track?",
+    "Is the evidence about reasoning quality or only familiarity with one topic?",
+    "Does the proposed change preserve the distinction between consultant, senior consultant, and Lead signals?",
+    "Could the observed result be explained by case difficulty, language, time pressure, or unclear prompting instead of the rubric?",
+    "Does the change improve future assessment decisions rather than only explain the last result?"
+  ],
+  "privacy": "Feedback records are designed for local browser storage. The public site contains the schema and policy, not the user's private feedback content."
+}
