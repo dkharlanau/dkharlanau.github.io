@@ -3,10 +3,10 @@ layout: default
 title: "Inventory Management — Enterprise Context Lab"
 description: "A practical SAP S/4HANA Inventory Management map from business event and movement semantics through stock state, valuation, reservations, physical inventory, EWM handoff, and reconciliation."
 permalink: /labs/enterprise-context/inventory-management/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-16
 hide_global_cta: true
 enterprise_context_graph: true
@@ -19,6 +19,10 @@ tags:
   - physical-inventory
   - ewm
   - troubleshooting
+last_reviewed: 2026-08-16
+publication_wave: "logistics-search-wave-02"
+review_method: "primary sources + factual review + page-level editorial review"
+search_intent: "SAP inventory management goods movements, stock types and ownership"
 ---
 
 {% assign graph = site.data.labs.enterprise_context.graphs.inventory_management %}
@@ -35,11 +39,11 @@ tags:
       <a class="research-canvas__button" href="#runtime">Trace event to reconciliation <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Inventory Management inventory">
-      <p>Working model</p>
+      <p>Reviewed model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Draft research · synthetic cases · no client data</em>
+      <em>Reviewed model · synthetic cases · no client data</em>
     </div>
   </header>
 
@@ -66,7 +70,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review currently confirms movement-type control behavior and the difference between counting stock and posting physical-inventory differences. The four-view completion model is an authored diagnostic frame; warehouse and finance handoffs still require page-level human review.</p>
+    <p><strong>Evidence boundary:</strong> claim-level review confirms movement-type control behavior and the difference between counting stock and posting physical-inventory differences. Warehouse and finance handoffs were reviewed against the route source registry; the four-view completion model remains an authored diagnostic frame.</p>
     <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 
@@ -173,7 +177,7 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Sources</p><h2>Primary documentation checks the behavior.</h2><p>The explanatory model remains independently written. This page stays draft until human review.</p></header>
+    <header><p class="research-canvas__eyebrow">Sources</p><h2>Primary documentation checks the behavior.</h2><p>The explanatory model remains independently written. Product behavior is source-tracked and review-dated.</p></header>
     <div class="research-route-list">
       {% for source in evidence.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>{% endfor %}
     </div>

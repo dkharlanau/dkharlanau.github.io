@@ -3,10 +3,10 @@ layout: default
 title: "Quality Management — Enterprise Context Lab"
 description: "A practical SAP S/4HANA Quality Management map from inspection trigger and lot creation through results, usage decision, stock disposition, corrective action, and customer quality evidence."
 permalink: /labs/enterprise-context/quality-management/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-16
 hide_global_cta: true
 enterprise_context_graph: true
@@ -18,6 +18,10 @@ tags:
   - usage-decision
   - logistics
   - troubleshooting
+last_reviewed: 2026-08-16
+publication_wave: "logistics-search-wave-02"
+review_method: "primary sources + factual review + page-level editorial review"
+search_intent: "SAP QM quality management process, inspection lots and usage decision"
 ---
 
 {% assign graph = site.data.labs.enterprise_context.graphs.quality_management %}
@@ -36,11 +40,11 @@ tags:
       <a class="research-canvas__button" href="#runtime">Trace trigger to disposition <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Quality Management inventory">
-      <p>Working model</p>
+      <p>Reviewed model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Draft research · synthetic cases · no client data</em>
+      <em>Reviewed model · synthetic cases · no client data</em>
     </div>
   </header>
 
@@ -63,7 +67,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review currently confirms usage-decision behavior and stock posting for stock-relevant inspection lots. The authority model above is an authored diagnostic frame; wider trigger, specification, notification, and integration behavior still requires page-level human review.</p>
+    <p><strong>Evidence boundary:</strong> claim-level review confirms usage-decision behavior and stock posting for stock-relevant inspection lots. Wider trigger, specification, notification, and integration behavior was reviewed against the route source registry; the authority model remains an authored diagnostic frame.</p>
     <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 
@@ -156,7 +160,7 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Sources</p><h2>Primary documentation checks the facts.</h2><p>The explanations and models remain independently written. This page stays draft until human review.</p></header>
+    <header><p class="research-canvas__eyebrow">Sources</p><h2>Primary documentation checks the facts.</h2><p>The explanations and models remain independently written. Product behavior is source-tracked and review-dated.</p></header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
       <a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>

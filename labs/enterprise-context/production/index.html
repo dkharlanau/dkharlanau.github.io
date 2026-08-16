@@ -3,10 +3,10 @@ layout: default
 title: "Production Planning & Execution — Enterprise Context Lab"
 description: "A practical SAP S/4HANA production map from demand and MRP through production method, manufacturing order, staging, confirmation, goods receipt, and settlement."
 permalink: /labs/enterprise-context/production/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-16
 hide_global_cta: true
 enterprise_context_graph: true
@@ -19,6 +19,10 @@ tags:
   - production-order
   - plan-to-produce
   - troubleshooting
+last_reviewed: 2026-08-16
+publication_wave: "logistics-search-wave-02"
+review_method: "primary sources + factual review + page-level editorial review"
+search_intent: "SAP S/4HANA production planning and execution process architecture"
 ---
 
 {% assign graph = site.data.labs.enterprise_context.graphs.production %}
@@ -37,11 +41,11 @@ tags:
       <a class="research-canvas__button" href="#runtime">Trace demand to settlement <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Production deep-dive inventory">
-      <p>Working model</p>
+      <p>Reviewed model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary sources</small></div>
-      <em>Draft research · synthetic cases · no client data</em>
+      <em>Reviewed model · synthetic cases · no client data</em>
     </div>
   </header>
 
@@ -68,7 +72,7 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-    <p><strong>Evidence boundary:</strong> claim-level review currently confirms production-version selection and the goods-receipt / settlement relationship. The four-checkpoint completion model above is an authored diagnostic frame; the wider MRP, execution, capacity, staging, and integration content still requires page-level human review.</p>
+    <p><strong>Evidence boundary:</strong> claim-level review confirms production-version selection and the goods-receipt / settlement relationship. The wider MRP, execution, capacity, staging, and integration content was reviewed against the route source registry; the four-checkpoint completion model remains an authored diagnostic frame.</p>
     <a href="/labs/assessment/factual-review/">Open factual review <span class="material-symbols-outlined" aria-hidden="true">fact_check</span></a>
   </section>
 
@@ -249,7 +253,7 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Sources</p>
       <h2>Primary documentation checks the facts. The model stays independently written.</h2>
-      <p>Release-sensitive details are dated. This page remains draft until human review.</p>
+      <p>Release-sensitive details are dated. Product facts are source-tracked; the explanatory model remains independently written.</p>
     </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
