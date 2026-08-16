@@ -20,6 +20,8 @@ jobs:
           python-version: "3.12"
       - name: Install contract dependencies
         run: python3 -m pip install pyyaml
+      - name: Check publication schema templates are normalized
+        run: python3 scripts/normalize_publication_schema.py --check
       - name: Check generated publication metadata is current
         run: python3 scripts/knowledge_publication_loop.py --check
       - name: Validate reviewed Lab publication contract
