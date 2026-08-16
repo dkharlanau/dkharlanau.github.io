@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Reusable Data Procedures — Procedure Model"
-description: "A draft portable model for workspace policy, source contracts, locators, extraction, mappings, transforms, validations, outputs, provenance and run evidence."
+description: "A draft portable model for catalog metadata, lifecycle, dependencies, workspace policy, source contracts, locators, transforms, validations, outputs and provenance."
 permalink: /reusable-data-procedures/procedure-model/
 status: draft
 verified: false
@@ -18,34 +18,36 @@ hide_global_cta: true
   <header class="rdp__detail-hero">
     <p class="rdp__eyebrow">Procedure model</p>
     <h1>The procedure is the reusable product.</h1>
-    <p>A web app, CLI, scheduled job or agent should all be able to read the same definition. The interface may change. The operating logic should not disappear with it.</p>
-    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages">
-      <a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/framework/">Framework</a><a href="/reusable-data-procedures/techniques/">Techniques</a><a href="/reusable-data-procedures/approach/">Approach</a><a href="/reusable-data-procedures/procedure-model/" aria-current="page">Procedure Model</a><a href="/reusable-data-procedures/architecture/">Architecture</a><a href="/reusable-data-procedures/roadmap/">Roadmap</a>
-    </nav>
+    <p>A web app, CLI, scheduled job or agent should all be able to read the same definition. The interface may change. The operating logic, ownership and dependency history should not disappear with it.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/framework/">Framework</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/governance/">Governance</a><a href="/reusable-data-procedures/procedure-model/" aria-current="page">Procedure Model</a></nav>
   </header>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Core object</p><h2>Nine parts, all explicit.</h2><p>The definition should be readable enough that a consultant can review it without reverse engineering code.</p></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Core object</p><h2>Twelve parts, all explicit.</h2><p>The definition should be readable enough that a consultant can review it without reverse engineering code.</p></div>
     <div class="rdp__model-grid">
-      <article class="rdp__model-card"><span>01</span><strong>Identity</strong><p>ID, purpose, owner, domain, procedure version, status and timestamps.</p></article>
-      <article class="rdp__model-card"><span>02</span><strong>Workspace policy</strong><p>Inbox, quarantine, reference, outbox and evidence responsibilities plus publication behavior.</p></article>
-      <article class="rdp__model-card"><span>03</span><strong>Source contracts</strong><p>Logical source roles, formats, worksheet rules, required fields, types and structural fingerprints.</p></article>
-      <article class="rdp__model-card"><span>04</span><strong>Locators & extraction</strong><p>How a real table is found inside a workbook: table name, anchor headers, scoring, fallbacks and region boundaries.</p></article>
-      <article class="rdp__model-card"><span>05</span><strong>Mappings</strong><p>Relations between fields or source roles, cardinality, normalization and evidence.</p></article>
-      <article class="rdp__model-card"><span>06</span><strong>Transforms</strong><p>Deterministic cleanup and business operations: parse, normalize, filter, lookup, derive, aggregate and route exceptions.</p></article>
-      <article class="rdp__model-card"><span>07</span><strong>Validations</strong><p>Locator confidence, schema, parse success, uniqueness, coverage, control totals and business assertions.</p></article>
-      <article class="rdp__model-card"><span>08</span><strong>Output contract</strong><p>Result, exceptions and evidence outputs with formats, fields and destinations.</p></article>
-      <article class="rdp__model-card"><span>09</span><strong>Provenance</strong><p>Who approved rules, what evidence supported them, what changed and why.</p></article>
+      <article class="rdp__model-card"><span>01</span><strong>Identity</strong><p>Stable ID, name, purpose, owner and procedure version.</p></article>
+      <article class="rdp__model-card"><span>02</span><strong>Catalog metadata</strong><p>Domain, job family, data concepts, source families, sensitivity, criticality and tags.</p></article>
+      <article class="rdp__model-card"><span>03</span><strong>Lifecycle & trust</strong><p>Maturity, trust evidence, review dates, deprecation and replacement chain.</p></article>
+      <article class="rdp__model-card"><span>04</span><strong>Dependencies</strong><p>Pinned blocks, reference datasets, other procedures, external systems and known consumers.</p></article>
+      <article class="rdp__model-card"><span>05</span><strong>Workspace policy</strong><p>Inbox, quarantine, reference, outbox and evidence responsibilities plus publication behavior.</p></article>
+      <article class="rdp__model-card"><span>06</span><strong>Source contracts</strong><p>Logical source roles, formats, worksheet rules, required fields, types and structural fingerprints.</p></article>
+      <article class="rdp__model-card"><span>07</span><strong>Locators & extraction</strong><p>How a real table is found inside a workbook: table name, anchor headers, scoring, fallbacks and region boundaries.</p></article>
+      <article class="rdp__model-card"><span>08</span><strong>Mappings</strong><p>Relations between fields or source roles, cardinality, normalization and evidence.</p></article>
+      <article class="rdp__model-card"><span>09</span><strong>Transforms</strong><p>Deterministic cleanup and business operations, including references to reusable blocks.</p></article>
+      <article class="rdp__model-card"><span>10</span><strong>Validations</strong><p>Locator confidence, schema, parse success, uniqueness, coverage, control totals and business assertions.</p></article>
+      <article class="rdp__model-card"><span>11</span><strong>Outputs & runtime policy</strong><p>Result contracts plus allowed environments, network access, AI data mode and failure behavior.</p></article>
+      <article class="rdp__model-card"><span>12</span><strong>Provenance</strong><p>Who created and reviewed the version, what changed and why.</p></article>
       <article class="rdp__model-card"><span>Run</span><strong>Run report stays separate</strong><p>Actual input hashes, source coordinates, drift, validation metrics, exceptions and output statistics belong to execution history.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Separation</p><h2>Definition, reference data and run evidence are different artifacts.</h2></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Separation</p><h2>Definition, catalog, reference data and run evidence are different concerns.</h2></div>
     <table class="rdp__decision-table">
       <thead><tr><th>Artifact</th><th>Contains</th><th>Does not contain</th></tr></thead>
       <tbody>
-        <tr><td>procedure.json</td><td>Workspace policy, contracts, locators, extraction, mappings, transforms, validations and outputs.</td><td>Corporate rows from a particular run.</td></tr>
+        <tr><td>procedure.json</td><td>Reusable definition, catalog metadata, dependencies and runtime policy.</td><td>Corporate rows from a particular run.</td></tr>
+        <tr><td>catalog index</td><td>Searchable metadata and dependency links for many reusable assets.</td><td>The complete executable definition of every procedure.</td></tr>
         <tr><td>run-report.json</td><td>Resolved inputs, hashes, selected regions, drift, metrics, exceptions and output statistics.</td><td>The authoritative procedure definition.</td></tr>
         <tr><td>reference/</td><td>Approved dictionaries, code lists, aliases and mappings with ownership.</td><td>Temporary manual fixes from one run unless deliberately promoted.</td></tr>
         <tr><td>fixtures/</td><td>Small synthetic or approved regression datasets.</td><td>Uncontrolled production extracts.</td></tr>
@@ -54,16 +56,32 @@ hide_global_cta: true
   </section>
 
   <section class="rdp__detail-section">
-    <div class="rdp__section-head"><p class="rdp__eyebrow">Draft shape</p><h2>A procedure should read like a small data contract.</h2></div>
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Draft shape</p><h2>A procedure should read like a small governed data contract.</h2></div>
     <pre class="rdp__code-note"><code>{
   "kind": "reusable-data-procedure",
-  "specVersion": "0.3",
-  "id": "sales-material-reconciliation",
-  "workspacePolicy": {
-    "inbox": "Inbox/",
-    "quarantine": "Quarantine/",
-    "outbox": "Outbox/",
-    "evidence": "Evidence/"
+  "specVersion": "0.4",
+  "id": "sales.order-material-reconciliation",
+  "procedureVersion": "1.2.0",
+  "owner": "sales-operations",
+  "catalog": {
+    "domain": "sales",
+    "jobFamily": "reconcile",
+    "dataConcepts": ["sales-order", "material"],
+    "sourceFamilies": ["SAP export"],
+    "sensitivity": "internal",
+    "criticality": "operational"
+  },
+  "lifecycle": {
+    "maturity": "approved",
+    "trustEvidence": ["regression-tested", "owner-reviewed"]
+  },
+  "dependencies": {
+    "blocks": [
+      {"id": "sap.normalize-material-id", "version": "2.1.0"}
+    ],
+    "referenceData": [
+      {"id": "material-aliases", "version": "2026.08"}
+    ]
   },
   "sources": [{
     "role": "sales",
@@ -80,7 +98,7 @@ hide_global_cta: true
     ]
   }],
   "transforms": [
-    {"id": "material-key", "op": "comparison-key", "input": "sales.Material"}
+    {"id": "material-key", "op": "block-ref", "blockRef": {"id": "sap.normalize-material-id", "version": "2.1.0"}}
   ],
   "validations": [
     {"id": "sales-key", "rule": "unique", "target": "Sales Document + Item", "severity": "block"}
@@ -89,6 +107,11 @@ hide_global_cta: true
     {"name": "result", "role": "result", "format": "xlsx"},
     {"name": "exceptions", "role": "exceptions", "format": "xlsx"}
   ],
+  "runtimePolicy": {
+    "allowedEnvironments": ["team", "production"],
+    "networkAccess": "none",
+    "aiDataMode": "none"
+  },
   "provenance": {"createdAt": "2026-08-16T00:00:00Z"}
 }</code></pre>
     <div class="rdp__callout"><strong>Design preference:</strong> keep the procedure declarative where possible. Custom code will exist, but it should be a visible escape hatch rather than a secret basement where maintainability goes to disappear.</div>
@@ -99,16 +122,17 @@ hide_global_cta: true
     <div class="rdp__cards">
       <article><strong>Patch</strong><p>Description, labels or non-behavioral metadata changes.</p></article>
       <article><strong>Minor</strong><p>Compatible aliases, optional fields or non-breaking validations.</p></article>
-      <article><strong>Major</strong><p>Changed keys, locator semantics, mapping cardinality, required source contracts or output meaning.</p></article>
+      <article><strong>Major</strong><p>Changed keys, locator semantics, mapping cardinality, required source contracts, dependency contracts or output meaning.</p></article>
       <article><strong>Run-time repair</strong><p>A confirmed drift repair creates a proposed revision with evidence. Approved behavior remains reproducible.</p></article>
     </div>
   </section>
 
   <section class="rdp__detail-section">
     <div class="rdp__route-list">
-      <a href="/reusable-data-procedures/framework/"><span>FRAME</span><strong>Operating Framework</strong><small>The execution vocabulary behind this contract.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_back</i></a>
-      <a href="/reusable-data-procedures/procedure.schema.json"><span>JSON</span><strong>procedure.schema.json</strong><small>Draft 0.3 contract for workspace, locators, transforms, validations and outputs.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/reusable-data-procedures/model.json"><span>MODEL</span><strong>model.json</strong><small>Machine-readable framework, techniques and architecture.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/reusable-data-procedures/catalog/"><span>CAT</span><strong>Catalog & Registry</strong><small>How many procedure definitions become a searchable system.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/reusable-data-procedures/building-blocks/"><span>BLOCK</span><strong>Reusable Blocks</strong><small>How shared capabilities are composed without copy-paste.</small><i class="material-symbols-outlined" aria-hidden="true">view_module</i></a>
+      <a href="/reusable-data-procedures/procedure.schema.json"><span>JSON</span><strong>procedure.schema.json</strong><small>Draft 0.4 contract for catalog metadata, dependencies, workspace, locators, transforms and runtime policy.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/reusable-data-procedures/model.json"><span>MODEL</span><strong>model.json</strong><small>Machine-readable framework, catalog, composition, governance and architecture.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 </div>
