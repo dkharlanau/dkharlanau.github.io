@@ -2,18 +2,18 @@
 name: sap-mdg-domain-solution-design
 title: SAP MDG Domain Solution Design
 category: sap-data-governance
-description: Use when an SAP MDG Material, Business Partner, Customer, or Supplier solution needs domain design across identity, organizational grain, ownership, rules, change requests, workflow, activation, DRF distribution, consolidation, migration, and downstream logistics proof. Use for Lead or Architect assessment cases and solution reviews, not for a single already-isolated lineage incident.
+description: Use when an SAP MDG Material, Business Partner, Customer, or Supplier solution needs domain design across identity, technical entities, organizational grain, ownership, rules, change requests, workflow, activation, DRF distribution and recovery, consolidation, migration, and downstream logistics proof. Use for Lead or Architect assessment cases and solution reviews, not for a single already-isolated lineage incident.
 ---
 
 ## Purpose
-Design or review an SAP MDG domain solution from business identity to organizational grain, governance process, rules, activation, distribution, migration and downstream business proof.
+Design or review an SAP MDG domain solution from business identity through technical entity/grain mapping, governance process, rules, activation, distribution/recovery, consolidation or migration, and downstream business proof.
 
 ## Use when
 - Designing Material, Business Partner, Customer or Supplier governance.
 - Adding a new organizational extension or custom field/entity.
-- Reviewing change-request and workflow architecture.
-- Planning DRF distribution and target-system ownership.
-- Planning migration or consolidation into MDG.
+- Reviewing change-request types, workflow and BRFplus rule architecture.
+- Planning DRF distribution, replay, reconciliation and target-system ownership.
+- Planning migration, matching or consolidation into MDG.
 - Preparing a Lead/Architect assessment answer for MDG.
 
 ## Do not use when
@@ -27,56 +27,71 @@ Design or review an SAP MDG domain solution from business identity to organizati
 - Required organizations and consumers.
 - Current source/active systems.
 - Known ownership and approval constraints.
-- Integration and migration context if relevant.
+- Integration, migration or consolidation context if relevant.
+- Product/release scope when exact delivered entities or CR types matter.
 
 ## Workflow
 1. State the business outcome in one sentence.
-2. Define enterprise identity and duplicate policy.
+2. Define enterprise identity, duplicate policy and key/number strategy.
 3. Decompose required data by business grain.
-4. Decide attribute versus dependent/repeating entity versus separate business object.
-5. Assign business owner, steward and approval authority per grain.
-6. Define validations and derivations with deterministic tests.
-7. Define change-request types and workflow decisions by risk and purpose.
-8. Define active-area/activation boundary for the selected deployment.
-9. Define distribution contract: population, DRF model, outbound implementation, filter, target, identity mapping and acceptance.
-10. Define migration/consolidation path and reconciliation controls.
-11. Define business-process proof in O2C, P2P, MRP, EWM, QM or other consumers.
-12. Record risks, open assumptions and the first test that could falsify the design.
+4. Map critical grains to delivered technical entities; separate delivered entity, custom extension and separate lifecycle object.
+5. Assign business owner, steward, proposal rights and approval authority per grain.
+6. Select change-request patterns by purpose, allowed entity scope, risk, volume and authority.
+7. Classify important rules as workflow routing, validation, derivation, authorization/scope or identity/matching; define deterministic tests.
+8. Define active-area/activation boundary and a separate activation-error recovery path.
+9. Define distribution contract: population, DRF model, outbound implementation, filter, target, identity mapping, acceptance and monitoring.
+10. Define recovery semantics: replay, rebuild from current active truth, manual resolution or population reconciliation.
+11. If consolidation applies, separate match decision from survivorship; define thresholds, review band, winning rules, provenance and duplicate strategy.
+12. Define migration/initial-load population, reconciliation, delta cut-off and no-gap proof.
+13. Define business-process proof in O2C, P2P, MRP, EWM, QM or other consumers.
+14. Record risks, open assumptions and the first test that could falsify the design.
 
 ## Decision rules
 - Screen location never proves data grain.
+- Technical entity name never proves business ownership.
 - A field changing by organization must carry that organizational qualifier unless a clear enterprise rule says otherwise.
 - Do not pull a separate lifecycle object into Material/BP only because it references the master object.
-- Workflow controls authority; validation controls allowed state; derivation calculates values.
+- Split CR patterns when purpose, scope, authority, risk, volume or recovery behavior materially differs.
+- Workflow controls authority and movement; validation controls allowed state; derivation calculates values.
+- Keep business rejection, activation failure and replication failure as different states.
 - Activation is not replication success.
 - Sent message is not target acceptance.
-- Migration completion requires key-level reconciliation and business usability.
+- Do not replay historical payloads until current source state, target state, ordering and duplicate behavior are understood.
 - Matching score is evidence, not automatic authority for an irreversible merge unless policy explicitly allows it.
+- Matching decides identity similarity; survivorship decides value precedence.
+- Migration completion requires key-level reconciliation, organizational-slice completeness and business usability.
 - Prefer deterministic rules for exact business constraints; use human approval for judgment and authority.
 
 ## Output format
 Produce an `SAP MDG Domain Solution Design` with:
 1. Business outcome
 2. Identity model
-3. Grain/entity map
-4. Ownership map
-5. Rule catalog
-6. Change-request/workflow model
-7. Activation model
-8. Distribution contract
-9. Migration/consolidation plan
-10. Business proof cases
-11. Risks and open assumptions
-12. Recommended next decision
+3. Grain and technical entity map
+4. Ownership / decision-rights map
+5. Change-request type matrix
+6. Rule catalog
+7. Workflow and activation model
+8. Distribution and recovery contract
+9. Matching / survivorship policy if applicable
+10. Migration / initial-load / delta plan
+11. Business proof cases
+12. Operational metrics and exception ownership
+13. Risks and open assumptions
+14. Recommended next decision
 
 ## Quality gates
-- Every field/entity has a declared grain.
-- Every governed grain has a business owner.
-- Important rules have positive and negative tests.
+- Every critical field/entity has a declared business grain.
+- Delivered entity references are release-scoped when exact product facts matter.
+- Every governed grain has a business owner and explicit proposal/approval rights.
+- CR types expose only the intended scope for their purpose and risk.
+- Important rules have a business statement, owner, execution point, positive test and negative test.
 - Workflow decisions correspond to real authority.
+- Business rejection, activation error and replication error are not collapsed into one state.
 - Target systems and identity strategy are explicit.
+- Replay semantics include current-source and target-state checks.
+- Matching and survivorship are separate decisions with provenance.
 - Initialization/delta or migration cut-off has no unexplained gap.
-- Reconciliation uses keys, not only counts.
+- Reconciliation uses keys and slices, not only root-object counts.
 - At least one real downstream process proves the design.
 - SAP-version-dependent facts are sourced.
 
