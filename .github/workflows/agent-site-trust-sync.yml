@@ -1,0 +1,57 @@
+name: Agent Site Trust Sync
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/site-trust-connectivity-20260816
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-site-trust-sync-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml
+
+      - name: Regenerate trust and discovery artifacts
+        run: |
+          python3 scripts/generate_atlas_artifacts.py
+          python3 scripts/ai_search_trust_loop.py
+
+      - name: Protect homepage source and content data
+        run: |
+          changed="$(git diff --name-only)"
+          echo "$changed"
+          if echo "$changed" | grep -Eq '^(index\.html|_data/home($|[._/-]))'; then
+            echo "Homepage protection failed: generator attempted to modify homepage source/content data."
+            exit 1
+          fi
+
+      - name: Commit generated synchronization
+        run: |
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "Generated artifacts are already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Sync generated trust artifacts"
+          git push origin HEAD:agent/site-trust-connectivity-20260816
