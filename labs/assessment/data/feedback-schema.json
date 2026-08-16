@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "/labs/assessment/data/feedback-schema.json",
+  "title": "SAP Lead Assessment Feedback Evidence",
+  "description": "A provenance-aware local record of real assessment, peer, manager, interviewer, or self-reflection feedback. The schema does not imply that external feedback exists unless the user records it.",
+  "type": "object",
+  "required": ["id", "captured_at", "source_type", "event_date", "observations"],
+  "properties": {
+    "id": {"type":"string","minLength":1},
+    "captured_at": {"type":"string","format":"date-time"},
+    "event_date": {"type":"string","format":"date"},
+    "source_type": {
+      "type":"string",
+      "enum":["self_reflection","peer_review","manager_feedback","interviewer_feedback","formal_assessment_result"]
+    },
+    "source_note": {
+      "type":"string",
+      "maxLength":500,
+      "description":"User-supplied context such as 'mock review with colleague' or 'formal assessment summary'. Do not invent a source identity."
+    },
+    "assessment_outcome": {
+      "type":"string",
+      "enum":["not_recorded","positive","mixed","negative"],
+      "default":"not_recorded",
+      "description":"Coarse outcome only. Use source_note for organization-specific wording if needed."
+    },
+    "observations": {
+      "type":"array",
+      "minItems":1,
+      "items": {
+        "type":"object",
+        "required":["signal","note"],
+        "properties": {
+          "dimension_id": {
+            "type":["string","null"],
+            "enum":["business_goal","owner","process_flow","decision_logic","boundary","failure_and_evidence","trade_off",null]
+          },
+          "track": {
+            "type":["string","null"],
+            "enum":["sales","procurement-logistics","integration-architecture","ai-data",null]
+          },
+          "signal": {"type":"string","enum":["strength","gap","mixed","neutral"]},
+          "note": {"type":"string","minLength":1,"maxLength":2000}
+        },
+        "additionalProperties":false
+      }
+    },
+    "remembered_questions": {
+      "type":"array",
+      "items":{"type":"string","minLength":1,"maxLength":1000},
+      "maxItems":30,
+      "description":"Questions the user actually remembers being asked. Empty is valid."
+    },
+    "follow_up_actions": {
+      "type":"array",
+      "items":{"type":"string","minLength":1,"maxLength":1000},
+      "maxItems":30
+    },
+    "related_attempt_ids": {
+      "type":"array",
+      "items":{"type":"string","minLength":1},
+      "uniqueItems":true
+    }
+  },
+  "additionalProperties":false
+}
