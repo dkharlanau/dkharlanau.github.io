@@ -2,66 +2,96 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://dkharlanau.github.io/reusable-data-procedures/procedure.schema.json",
   "title": "Reusable Data Procedure",
-  "description": "Draft portable definition of source contracts, mappings, deterministic transforms, validations, outputs and provenance. Run data is stored separately.",
+  "description": "Draft portable definition of workspace policy, source contracts, locators, extraction, deterministic transforms, validations, outputs and provenance. Run data is stored separately.",
   "type": "object",
   "additionalProperties": false,
   "required": ["kind", "specVersion", "id", "name", "purpose", "sources", "transforms", "validations", "outputs", "provenance"],
   "properties": {
-    "kind": { "const": "reusable-data-procedure" },
-    "specVersion": { "type": "string", "const": "0.2" },
-    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
-    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
-    "purpose": { "type": "string", "minLength": 1, "maxLength": 500 },
-    "domain": { "type": "string" },
-    "procedureVersion": { "type": "string", "default": "0.1.0" },
-    "status": { "enum": ["draft", "review", "approved", "deprecated"] },
-    "owner": { "type": "string" },
-    "sources": {
-      "type": "array",
-      "minItems": 1,
-      "items": { "$ref": "#/$defs/sourceContract" }
-    },
-    "mappings": {
-      "type": "array",
-      "default": [],
-      "items": { "$ref": "#/$defs/mapping" }
-    },
-    "transforms": {
-      "type": "array",
-      "items": { "$ref": "#/$defs/transform" }
-    },
-    "validations": {
-      "type": "array",
-      "items": { "$ref": "#/$defs/validation" }
-    },
-    "outputs": {
-      "type": "array",
-      "minItems": 1,
-      "items": { "$ref": "#/$defs/output" }
-    },
+    "kind": {"const": "reusable-data-procedure"},
+    "specVersion": {"type": "string", "const": "0.3"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "name": {"type": "string", "minLength": 1, "maxLength": 120},
+    "purpose": {"type": "string", "minLength": 1, "maxLength": 500},
+    "domain": {"type": "string"},
+    "procedureVersion": {"type": "string", "default": "0.1.0"},
+    "status": {"enum": ["draft", "review", "approved", "deprecated"]},
+    "owner": {"type": "string"},
+    "workspacePolicy": {"$ref": "#/$defs/workspacePolicy"},
+    "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/sourceContract"}},
+    "mappings": {"type": "array", "default": [], "items": {"$ref": "#/$defs/mapping"}},
+    "transforms": {"type": "array", "items": {"$ref": "#/$defs/transform"}},
+    "validations": {"type": "array", "items": {"$ref": "#/$defs/validation"}},
+    "outputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/output"}},
     "runtimePolicy": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "allowCustomCode": { "type": "boolean", "default": false },
-        "onBreakingDrift": { "enum": ["stop", "manual-review"], "default": "stop" },
-        "onValidationFailure": { "enum": ["stop", "produce-exceptions", "manual-review"], "default": "stop" }
+        "allowCustomCode": {"type": "boolean", "default": false},
+        "onAmbiguousLocator": {"enum": ["quarantine", "manual-review", "stop"], "default": "manual-review"},
+        "onBreakingDrift": {"enum": ["stop", "manual-review"], "default": "stop"},
+        "onValidationFailure": {"enum": ["stop", "produce-exceptions", "manual-review"], "default": "stop"}
       }
     },
-    "provenance": { "$ref": "#/$defs/provenance" }
+    "provenance": {"$ref": "#/$defs/provenance"}
   },
   "$defs": {
+    "workspacePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "inbox": {"type": "string"},
+        "staging": {"type": "string"},
+        "quarantine": {"type": "string"},
+        "reference": {"type": "string"},
+        "work": {"type": "string"},
+        "outbox": {"type": "string"},
+        "evidence": {"type": "string"},
+        "archive": {"type": "string"},
+        "inboxImmutable": {"type": "boolean", "default": true},
+        "publishOnlyAfterGates": {"type": "boolean", "default": true}
+      }
+    },
     "fieldContract": {
       "type": "object",
       "additionalProperties": false,
       "required": ["name", "required"],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "required": { "type": "boolean" },
-        "type": { "enum": ["string", "integer", "number", "boolean", "date", "datetime", "unknown"] },
-        "aliases": { "type": "array", "items": { "type": "string" } },
-        "role": { "enum": ["key", "attribute", "measure", "date", "status", "unknown"] },
-        "nullable": { "type": "boolean" }
+        "name": {"type": "string", "minLength": 1},
+        "required": {"type": "boolean"},
+        "type": {"enum": ["string", "integer", "number", "boolean", "date", "datetime", "unknown"]},
+        "aliases": {"type": "array", "items": {"type": "string"}},
+        "role": {"enum": ["key", "attribute", "measure", "date", "status", "unknown"]},
+        "nullable": {"type": "boolean"},
+        "locale": {"type": "string"},
+        "comparisonKey": {"type": "string"}
+      }
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy"],
+      "properties": {
+        "strategy": {"enum": ["excel-table", "named-range", "header-anchor", "header-score", "region-score", "fixed-range"]},
+        "name": {"type": "string"},
+        "requiredHeaders": {"type": "array", "items": {"type": "string"}},
+        "optionalHeaders": {"type": "array", "items": {"type": "string"}},
+        "scanFirstRows": {"type": "integer", "minimum": 1},
+        "fixedRange": {"type": "string"},
+        "minimumScore": {"type": "number", "minimum": 0, "maximum": 1},
+        "fallback": {"type": "array", "items": {"$ref": "#/$defs/locator"}}
+      }
+    },
+    "extractionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "stopAfterBlankRows": {"type": "integer", "minimum": 0},
+        "removeRepeatedHeaders": {"type": "boolean"},
+        "detectFooters": {"type": "boolean"},
+        "includeHiddenRows": {"type": "boolean"},
+        "includeHiddenColumns": {"type": "boolean"},
+        "formulaMode": {"enum": ["cached-value", "formula", "both"]},
+        "preserveSourceCoordinates": {"type": "boolean", "default": true}
       }
     },
     "sourceContract": {
@@ -69,20 +99,23 @@
       "additionalProperties": false,
       "required": ["role", "requiredFields"],
       "properties": {
-        "role": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" },
-        "description": { "type": "string" },
-        "acceptedFormats": { "type": "array", "items": { "enum": ["csv", "tsv", "xlsx", "xlsm", "parquet", "json", "database", "api"] } },
-        "filePattern": { "type": "string" },
-        "sheetPattern": { "type": "string" },
-        "requiredFields": { "type": "array", "items": { "$ref": "#/$defs/fieldContract" } },
-        "optionalFields": { "type": "array", "items": { "$ref": "#/$defs/fieldContract" } },
+        "role": {"type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
+        "description": {"type": "string"},
+        "acceptedFormats": {"type": "array", "items": {"enum": ["csv", "tsv", "xlsx", "xlsm", "parquet", "json", "database", "api"]}},
+        "filePattern": {"type": "string"},
+        "sheetPattern": {"type": "string"},
+        "locators": {"type": "array", "items": {"$ref": "#/$defs/locator"}},
+        "extraction": {"$ref": "#/$defs/extractionPolicy"},
+        "requiredFields": {"type": "array", "items": {"$ref": "#/$defs/fieldContract"}},
+        "optionalFields": {"type": "array", "items": {"$ref": "#/$defs/fieldContract"}},
         "fingerprintPolicy": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "useColumnNames": { "type": "boolean", "default": true },
-            "useTypes": { "type": "boolean", "default": true },
-            "useValuePatterns": { "type": "boolean", "default": true }
+            "useColumnNames": {"type": "boolean", "default": true},
+            "useTypes": {"type": "boolean", "default": true},
+            "useValuePatterns": {"type": "boolean", "default": true},
+            "useWorkbookStructure": {"type": "boolean", "default": true}
           }
         }
       }
@@ -91,15 +124,15 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "headerSimilarity": { "type": "number", "minimum": 0, "maximum": 1 },
-        "valueOverlap": { "type": "number", "minimum": 0, "maximum": 1 },
-        "typeCompatibility": { "type": "number", "minimum": 0, "maximum": 1 },
-        "dictionaryMatch": { "type": "boolean" },
-        "previousApproval": { "type": "boolean" },
-        "semanticConfidence": { "type": "number", "minimum": 0, "maximum": 1 },
-        "approvedBy": { "type": "string" },
-        "approvedAt": { "type": "string", "format": "date-time" },
-        "note": { "type": "string" }
+        "headerSimilarity": {"type": "number", "minimum": 0, "maximum": 1},
+        "valueOverlap": {"type": "number", "minimum": 0, "maximum": 1},
+        "typeCompatibility": {"type": "number", "minimum": 0, "maximum": 1},
+        "dictionaryMatch": {"type": "boolean"},
+        "previousApproval": {"type": "boolean"},
+        "semanticConfidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "approvedBy": {"type": "string"},
+        "approvedAt": {"type": "string", "format": "date-time"},
+        "note": {"type": "string"}
       }
     },
     "mapping": {
@@ -107,12 +140,12 @@
       "additionalProperties": false,
       "required": ["id", "from", "to", "cardinality", "evidence"],
       "properties": {
-        "id": { "type": "string" },
-        "from": { "type": "string", "description": "Source role and field, for example sales.Material" },
-        "to": { "type": "string", "description": "Target role and field, for example material.Material" },
-        "cardinality": { "enum": ["one-to-one", "one-to-many", "many-to-one", "many-to-many", "unknown"] },
-        "normalization": { "type": "array", "items": { "type": "string" } },
-        "evidence": { "$ref": "#/$defs/mappingEvidence" }
+        "id": {"type": "string"},
+        "from": {"type": "string"},
+        "to": {"type": "string"},
+        "cardinality": {"enum": ["one-to-one", "one-to-many", "many-to-one", "many-to-many", "unknown"]},
+        "normalization": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"$ref": "#/$defs/mappingEvidence"}
       }
     },
     "transform": {
@@ -120,13 +153,13 @@
       "additionalProperties": false,
       "required": ["id", "op"],
       "properties": {
-        "id": { "type": "string" },
-        "op": { "enum": ["select", "rename", "cast", "normalize", "filter", "lookup", "derive", "aggregate", "deduplicate", "sort", "route-exceptions", "custom"] },
-        "input": { "type": ["string", "array"], "items": { "type": "string" } },
-        "output": { "type": "string" },
-        "params": { "type": "object" },
-        "mappingRef": { "type": "string" },
-        "description": { "type": "string" }
+        "id": {"type": "string"},
+        "op": {"enum": ["select", "rename", "cast", "trim", "normalize-space", "parse-null", "parse-date", "parse-decimal", "comparison-key", "filter", "lookup", "derive", "aggregate", "deduplicate", "sort", "route-exceptions", "custom"]},
+        "input": {"type": ["string", "array"], "items": {"type": "string"}},
+        "output": {"type": "string"},
+        "params": {"type": "object"},
+        "mappingRef": {"type": "string"},
+        "description": {"type": "string"}
       }
     },
     "validation": {
@@ -134,12 +167,12 @@
       "additionalProperties": false,
       "required": ["id", "rule", "severity"],
       "properties": {
-        "id": { "type": "string" },
-        "rule": { "enum": ["schema-compatible", "not-null", "unique", "referential-integrity", "mapping-coverage", "row-count", "value-domain", "expression", "custom"] },
-        "target": { "type": "string" },
-        "severity": { "enum": ["info", "warning", "error", "block"] },
-        "params": { "type": "object" },
-        "description": { "type": "string" }
+        "id": {"type": "string"},
+        "rule": {"enum": ["schema-compatible", "locator-confidence", "not-null", "unique", "referential-integrity", "mapping-coverage", "parse-success", "row-count", "control-total", "value-domain", "expression", "custom"]},
+        "target": {"type": "string"},
+        "severity": {"enum": ["info", "warning", "error", "block"]},
+        "params": {"type": "object"},
+        "description": {"type": "string"}
       }
     },
     "output": {
@@ -147,10 +180,12 @@
       "additionalProperties": false,
       "required": ["name"],
       "properties": {
-        "name": { "type": "string" },
-        "format": { "enum": ["csv", "xlsx", "parquet", "json", "table", "none"] },
-        "fields": { "type": "array", "items": { "type": "string" } },
-        "description": { "type": "string" }
+        "name": {"type": "string"},
+        "role": {"enum": ["result", "exceptions", "evidence", "intermediate"]},
+        "format": {"enum": ["csv", "xlsx", "parquet", "json", "table", "none"]},
+        "fields": {"type": "array", "items": {"type": "string"}},
+        "destination": {"type": "string"},
+        "description": {"type": "string"}
       }
     },
     "provenance": {
@@ -158,13 +193,13 @@
       "additionalProperties": false,
       "required": ["createdAt"],
       "properties": {
-        "createdAt": { "type": "string", "format": "date-time" },
-        "createdBy": { "type": "string" },
-        "basedOnProcedureVersion": { "type": "string" },
-        "changeReason": { "type": "string" },
-        "sourceRunId": { "type": "string" },
-        "reviewedAt": { "type": "string", "format": "date-time" },
-        "reviewedBy": { "type": "string" }
+        "createdAt": {"type": "string", "format": "date-time"},
+        "createdBy": {"type": "string"},
+        "basedOnProcedureVersion": {"type": "string"},
+        "changeReason": {"type": "string"},
+        "sourceRunId": {"type": "string"},
+        "reviewedAt": {"type": "string", "format": "date-time"},
+        "reviewedBy": {"type": "string"}
       }
     }
   }

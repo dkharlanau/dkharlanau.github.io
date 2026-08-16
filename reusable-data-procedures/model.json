@@ -1,93 +1,164 @@
 {
   "id": "reusable-data-procedures",
   "title": "Reusable Data Procedures",
-  "version": "0.2",
+  "version": "0.3",
   "status": "concept",
   "updated": "2026-08-16",
-  "purpose": "Turn repeated spreadsheet and corporate-export work into explicit, testable, versioned procedures that can be reused when the source files change.",
-  "thesis": "AI may propose structure, semantics and mappings; approved procedures execute deterministically.",
-  "primary_flow": ["files", "discover", "map", "validate", "result", "save-procedure"],
-  "repeat_flow": ["resolve-new-sources", "compare-fingerprints", "classify-drift", "reuse-compatible-logic", "review-changes", "run-approved-version"],
+  "purpose": "Turn repeated spreadsheet and corporate-export work into explicit, testable, versioned procedures that can be reused when source files change.",
+  "thesis": "Discovery may use heuristics and AI assistance; approved procedures execute deterministically and preserve evidence.",
+  "simple_flow": ["files", "discover", "map", "validate", "result", "save-procedure"],
+  "operating_flow": ["intake", "inspect", "locate", "extract", "clean", "relate", "transform", "validate", "publish", "learn"],
+  "workspace_contract": {
+    "principle": "Workspace responsibilities are stable even when folders are implemented as SharePoint locations, object-storage prefixes or service resources.",
+    "areas": {
+      "Inbox": "Immutable incoming files or references.",
+      "Staging": "Run-specific technical copies and conversions that can be rebuilt.",
+      "Quarantine": "Unreadable, ambiguous or unsafe sources that require review.",
+      "Reference": "Controlled dictionaries, code lists, lookup files and approved mappings.",
+      "Procedures": "Versioned reusable procedure definitions.",
+      "Work": "Intermediate artifacts used for execution or debugging.",
+      "Outbox": "Published result and exception artifacts from successful or policy-approved runs.",
+      "Evidence": "Run manifest, hashes, profiles, drift, validations, exceptions and procedure version.",
+      "Archive": "Optional retained run packages or manifests according to data policy."
+    },
+    "rules": [
+      "Do not modify Inbox sources in place.",
+      "Every run has a unique run identifier.",
+      "Temporary work is reproducible from source plus procedure.",
+      "Failed or review-required runs do not silently publish to Outbox.",
+      "Evidence retention follows data classification and retention policy."
+    ]
+  },
+  "pipeline": [
+    {"stage": "intake", "purpose": "Register files, hashes, arrival metadata and source-role candidates.", "gate": "Source is readable and allowed for processing."},
+    {"stage": "inspect", "purpose": "Read file and workbook structure before reading all business rows.", "gate": "Workbook or file structure is understood enough to continue."},
+    {"stage": "locate", "purpose": "Find the intended table or region using stable evidence rather than fixed coordinates alone.", "gate": "One source region has sufficient locator evidence."},
+    {"stage": "extract", "purpose": "Convert the selected region into a logical table with traceable source positions.", "gate": "Required fields and region shape are plausible."},
+    {"stage": "clean", "purpose": "Create controlled canonical representations without hiding raw source evidence.", "gate": "Critical parse and normalization rules satisfy policy."},
+    {"stage": "relate", "purpose": "Resolve mappings, keys and lookup relationships with explicit cardinality.", "gate": "Relation coverage and ambiguity are acceptable."},
+    {"stage": "transform", "purpose": "Apply deterministic business transformations.", "gate": "Transformation graph completes without unhandled errors."},
+    {"stage": "validate", "purpose": "Check schema, data quality, relations, reconciliation controls and business invariants.", "gate": "Validation severity is within publication policy."},
+    {"stage": "publish", "purpose": "Produce result, exceptions and evidence artifacts.", "gate": "Publication contract is satisfied."},
+    {"stage": "learn", "purpose": "Turn confirmed manual fixes into rules, references, aliases or a proposed procedure revision.", "gate": "Approved versions are never silently mutated."}
+  ],
   "design_principles": [
     "Capture intent and data logic rather than recorded UI actions.",
     "Separate probabilistic discovery from deterministic execution.",
+    "Preserve raw source evidence before cleaning or transformation.",
+    "Separate representation cleanup from business-value changes.",
     "Treat mapping suggestions as hypotheses with decomposed evidence.",
-    "Keep raw corporate rows out of the reusable procedure definition by default.",
-    "Model drift and repair as first-class lifecycle behavior.",
+    "Model drift, quarantine and repair as normal lifecycle behavior.",
     "Keep procedure definitions portable across CLI, API, UI and agent clients.",
-    "Version behavior-changing procedure edits and preserve provenance."
+    "Version behavior-changing procedure edits and preserve provenance.",
+    "Treat exceptions as first-class output data rather than console noise."
   ],
-  "procedure": {
-    "parts": [
-      "identity",
-      "source_contracts",
-      "mappings",
-      "transforms",
-      "validations",
-      "outputs",
-      "provenance"
+  "excel_discovery": {
+    "locator_precedence": ["excel_table", "named_range", "semantic_anchor_set", "header_scoring", "region_geometry", "fixed_coordinates"],
+    "header_signals": [
+      "required_header_alias_matches",
+      "optional_header_alias_matches",
+      "text_density",
+      "label_uniqueness",
+      "stable_rows_below",
+      "historical_position_similarity",
+      "duplicate_header_penalty",
+      "narrative_text_penalty"
     ],
-    "separate_artifacts": [
-      "run_report",
-      "synthetic_test_fixtures",
-      "enterprise_mapping_dictionary"
+    "region_signals": [
+      "rectangular_density",
+      "stable_column_count",
+      "blank_boundaries",
+      "data_type_consistency",
+      "repeated_header_detection",
+      "footer_or_total_detection"
     ],
-    "does_not_store_by_default": [
-      "uploaded_business_rows",
-      "production_result_rows",
-      "secrets"
+    "workbook_features_to_record": [
+      "sheet_names",
+      "hidden_sheets",
+      "hidden_rows_and_columns",
+      "excel_tables",
+      "named_ranges",
+      "merged_cells",
+      "formulas",
+      "used_dimensions"
+    ],
+    "rule": "Store locator strategy, evidence and fallbacks, not only the coordinates found in one run."
+  },
+  "cleaning_model": {
+    "layers": {
+      "raw": "Original source representation kept for traceability where required.",
+      "canonical": "Stable representation used for comparison, parsing and joins.",
+      "business": "Value changed by an explicit approved business rule."
+    },
+    "safe_operations": [
+      "trim_outer_whitespace",
+      "normalize_known_non_breaking_spaces",
+      "classify_null_tokens",
+      "parse_with_explicit_locale",
+      "build_comparison_key",
+      "casefold_for_comparison"
+    ],
+    "controlled_operations": [
+      "leading_zero_conversion",
+      "code_mapping",
+      "unit_conversion",
+      "fill_down",
+      "unicode_normalization",
+      "deduplication",
+      "business_defaulting"
+    ],
+    "rules": [
+      "Classify identifiers before numeric casting.",
+      "Never treat zero as null without an explicit rule.",
+      "Do not invent precision or digits already lost in the source.",
+      "Keep failed parse values as exceptions with raw value and rule ID.",
+      "Use symmetric normalization on both sides of joins.",
+      "Safe cleanup should normally be idempotent."
     ]
+  },
+  "procedure": {
+    "parts": ["identity", "workspace_policy", "source_contracts", "locators", "extraction", "mappings", "transforms", "validations", "outputs", "provenance"],
+    "separate_artifacts": ["run_report", "run_manifest", "exception_dataset", "synthetic_test_fixtures", "enterprise_mapping_dictionary"],
+    "does_not_store_by_default": ["uploaded_business_rows", "production_result_rows", "secrets"]
   },
   "source_contract": {
-    "identity_signals": [
-      "logical_role",
-      "file_pattern",
-      "sheet_pattern",
-      "required_columns",
-      "optional_columns",
-      "type_expectations",
-      "structural_fingerprint"
-    ],
-    "profile_signals": [
-      "column_type_candidates",
-      "null_rate",
-      "distinct_count",
-      "uniqueness",
-      "value_length",
-      "format_patterns",
-      "safe_samples"
-    ]
+    "identity_signals": ["logical_role", "file_pattern", "sheet_pattern", "required_columns", "optional_columns", "type_expectations", "structural_fingerprint"],
+    "profile_signals": ["column_type_candidates", "null_rate", "distinct_count", "uniqueness", "value_length", "format_patterns", "safe_samples"],
+    "locator_signals": ["excel_table", "named_range", "anchor_headers", "header_score", "region_score", "fixed_range_fallback"]
   },
-  "mapping_evidence": [
-    "header_similarity",
-    "value_overlap",
-    "type_compatibility",
-    "cardinality",
-    "enterprise_dictionary_match",
-    "previous_approved_mapping",
-    "semantic_model_judgement",
-    "human_approval"
-  ],
+  "mapping_evidence": ["header_similarity", "value_overlap", "type_compatibility", "cardinality", "enterprise_dictionary_match", "previous_approved_mapping", "semantic_model_judgement", "human_approval"],
+  "validation_gates": {
+    "source": ["file_role", "sheet_contract", "required_headers", "structural_fingerprint"],
+    "extraction": ["header_unique", "region_plausible", "required_columns", "footer_excluded"],
+    "data_quality": ["required_values", "parse_success", "uniqueness", "value_domains"],
+    "relations": ["mapping_coverage", "cardinality", "referential_integrity"],
+    "reconciliation": ["row_count_bands", "control_totals", "business_invariants"],
+    "publication": ["blocking_rules_passed", "exception_policy_satisfied"]
+  },
   "drift": {
     "classes": {
       "compatible": "The procedure can continue and records the difference.",
-      "resolvable": "A likely repair can be proposed but requires controlled confirmation.",
-      "breaking": "Execution stops because a required structural or semantic assumption is no longer safe.",
-      "business": "Technical structure may still match while the business meaning has changed."
+      "resolvable": "A known repair such as an approved alias or moved region can be proposed.",
+      "breaking": "Execution stops because a required structural or relation assumption is no longer safe.",
+      "business": "Technical structure may match while the business meaning or policy has changed."
     },
+    "repair_examples": ["header_alias_update", "table_position_move", "optional_column_added"],
+    "breaking_examples": ["required_key_removed", "key_cardinality_changed", "identifier_precision_lost"],
     "rule": "A repair creates a proposed procedure revision; it does not silently mutate an approved version."
   },
+  "field_techniques": [
+    "Use at least several real files before calling a source pattern stable.",
+    "Prefer source roles and structural fingerprints over filenames alone.",
+    "Keep source sheet, row and column coordinates for rejected values.",
+    "Give every exception a reusable reason code.",
+    "Use cheap canary checks before expensive transformations.",
+    "Measure manual-touch rate and repeated exception rate.",
+    "Separate warnings from blocking failures.",
+    "Promote repeated manual fixes into rules or reference data.",
+    "Report mapping coverage together with business impact where possible."
+  ],
   "architecture": {
-    "layers": [
-      "source_adapters",
-      "profiler",
-      "discovery_engine",
-      "procedure_editor_and_compiler",
-      "deterministic_execution_engine",
-      "validation_engine",
-      "registry_and_provenance",
-      "interfaces"
-    ],
+    "layers": ["source_adapters", "profiler", "locator_and_extractor", "discovery_engine", "procedure_editor_and_compiler", "deterministic_execution_engine", "validation_engine", "registry_and_provenance", "interfaces"],
     "recommended_start": "Python package plus CLI plus JSON procedure schema",
     "later_interfaces": ["service_api", "web_ui", "scheduled_runs", "agent_tools"],
     "execution_models": ["local_python", "python_service", "browser_wasm", "hybrid"]
@@ -106,77 +177,24 @@
     "registry_options": ["Git", "SQLite", "PostgreSQL", "object storage"]
   },
   "ai_assistance": {
-    "allowed_jobs": [
-      "explain_unknown_columns",
-      "rank_mapping_candidates",
-      "suggest_validation_rules",
-      "summarize_drift",
-      "retrieve_similar_approved_procedures"
-    ],
-    "data_modes": [
-      "metadata_only",
-      "masked_samples",
-      "approved_raw_samples"
-    ],
+    "allowed_jobs": ["explain_unknown_columns", "rank_mapping_candidates", "suggest_header_aliases", "suggest_validation_rules", "summarize_drift", "retrieve_similar_approved_procedures"],
+    "data_modes": ["metadata_only", "masked_samples", "approved_raw_samples"],
     "boundary": "Accepted AI suggestions are compiled into explicit normal procedure logic. Repeated execution does not depend on free-form model reasoning."
   },
-  "enterprise_concerns": [
-    "data_classification",
-    "retention_and_deletion",
-    "encryption",
-    "rbac",
-    "secrets",
-    "approved_ai_endpoints",
-    "dependency_review",
-    "audit_history",
-    "lineage",
-    "run_observability",
-    "source_and_output_hashes",
-    "scaling_limits"
-  ],
+  "enterprise_concerns": ["data_classification", "retention_and_deletion", "encryption", "rbac", "secrets", "approved_ai_endpoints", "dependency_review", "audit_history", "lineage", "run_observability", "source_and_output_hashes", "scaling_limits"],
   "roadmap": [
-    {
-      "phase": 0,
-      "name": "spec-and-cases",
-      "goal": "Stabilize procedure vocabulary and model against realistic repeated data-work cases."
-    },
-    {
-      "phase": 1,
-      "name": "local-runtime",
-      "goal": "Implement deterministic Python runtime, CLI, run reports and regression fixtures."
-    },
-    {
-      "phase": 2,
-      "name": "discovery-and-drift",
-      "goal": "Add profiling, mapping evidence, source matching and controlled repair."
-    },
-    {
-      "phase": 3,
-      "name": "shared-service",
-      "goal": "Add registry, API and review-oriented UI around the same core engine."
-    },
-    {
-      "phase": 4,
-      "name": "enterprise-controls",
-      "goal": "Add security profiles, audit, observability and enterprise source adapters."
-    },
-    {
-      "phase": 5,
-      "name": "ai-assistance",
-      "goal": "Add controlled semantic assistance and retrieval of approved mappings and procedures."
-    }
+    {"phase": 0, "name": "framework-and-cases", "goal": "Stabilize workspace, pipeline, locator, cleaning, validation and procedure vocabulary against realistic repeated data-work cases."},
+    {"phase": 1, "name": "local-runtime", "goal": "Implement deterministic Python runtime, Inbox workflow, CLI, run reports and regression fixtures."},
+    {"phase": 2, "name": "discovery-and-drift", "goal": "Add workbook inspection, region location, profiling, mapping evidence, source matching and controlled repair."},
+    {"phase": 3, "name": "shared-service", "goal": "Add registry, API and review-oriented UI around the same core engine."},
+    {"phase": 4, "name": "enterprise-controls", "goal": "Add security profiles, audit, observability and enterprise source adapters."},
+    {"phase": 5, "name": "ai-assistance", "goal": "Add controlled semantic assistance and retrieval of approved mappings and procedures."}
   ],
-  "evaluation_metrics": [
-    "time_to_first_procedure",
-    "time_to_repeat_run",
-    "mapping_candidate_precision",
-    "drift_detection_recall",
-    "false_blocking_rate",
-    "procedure_portability",
-    "audit_completeness"
-  ],
+  "evaluation_metrics": ["time_to_first_procedure", "time_to_repeat_run", "manual_touch_rate", "repeat_exception_rate", "locator_precision", "mapping_candidate_precision", "drift_detection_recall", "false_blocking_rate", "procedure_portability", "audit_completeness"],
   "detail_pages": {
     "overview": "/reusable-data-procedures/",
+    "framework": "/reusable-data-procedures/framework/",
+    "techniques": "/reusable-data-procedures/techniques/",
     "approach": "/reusable-data-procedures/approach/",
     "procedure_model": "/reusable-data-procedures/procedure-model/",
     "architecture": "/reusable-data-procedures/architecture/",
