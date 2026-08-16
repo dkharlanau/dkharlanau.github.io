@@ -1,8 +1,13 @@
 {
   "id": "sap-lead-question-generation",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
-  "purpose": "Generate new practice prompts from existing verified graph relationships and failure modes without inventing SAP behavior.",
+  "purpose": "Generate review-stage practice candidates from existing graph relationships and failure modes without inventing SAP behavior or silently expanding the published case set.",
+  "candidate_schema": "/labs/assessment/data/candidate-question-schema.json",
+  "generation_seeds": "/labs/assessment/data/candidate-generation-seeds.json",
+  "generated_inventory": "/labs/assessment/data/question-candidates.json",
+  "review_route": "/labs/assessment/question-review/",
+  "published_case_manifest": "/labs/assessment/data/case-sets.json",
   "eligible_inputs": [
     "graph failure_modes",
     "runtime pipeline stages",
@@ -12,43 +17,33 @@
     "existing assessment cases"
   ],
   "generation_patterns": [
-    {
-      "id": "symptom_to_root_cause",
-      "template": "Start with a documented failure symptom. Ask the learner to build a hypothesis tree, identify the first wrong layer, and define proof of cause.",
-      "preferred_levels": ["diagnose"]
-    },
-    {
-      "id": "boundary_conflict",
-      "template": "Take a documented ownership boundary and make both adjacent domains look locally correct while the end-to-end result is wrong. Ask who owns the first correction.",
-      "preferred_levels": ["trace", "design", "challenge"]
-    },
-    {
-      "id": "late_stage_symptom",
-      "template": "Take a downstream symptom and require the learner to trace backwards through two or more runtime stages before changing the final document.",
-      "preferred_levels": ["diagnose", "challenge"]
-    },
-    {
-      "id": "trade_off_variant",
-      "template": "Take a valid design rule and change one condition such as volume, legal constraint, ordering need, deployment model, or recovery requirement. Ask whether the original design still holds.",
-      "preferred_levels": ["design", "challenge"]
-    },
-    {
-      "id": "cross_process_chain",
-      "template": "Join two or more graphs through a shared business event, document, value, or integration boundary. Ask for an end-to-end completion proof.",
-      "preferred_levels": ["trace", "diagnose", "design", "challenge"]
-    }
+    {"id":"symptom_to_root_cause","template":"Start with a documented failure symptom. Ask the learner to build a hypothesis tree, identify the first wrong layer, and define proof of cause.","preferred_levels":["diagnose"]},
+    {"id":"boundary_conflict","template":"Take a documented ownership boundary and make both adjacent domains look locally correct while the end-to-end result is wrong. Ask who owns the first correction.","preferred_levels":["trace","design","challenge"]},
+    {"id":"late_stage_symptom","template":"Take a downstream symptom and require the learner to trace backwards through two or more runtime stages before changing the final document.","preferred_levels":["diagnose","challenge"]},
+    {"id":"trade_off_variant","template":"Take a valid design rule and change one condition such as volume, legal constraint, ordering need, deployment model, or recovery requirement. Ask whether the original design still holds.","preferred_levels":["design","challenge"]},
+    {"id":"cross_process_chain","template":"Join two or more graphs through a shared business event, document, value, or integration boundary. Ask for an end-to-end completion proof.","preferred_levels":["trace","diagnose","design","challenge"]}
   ],
-  "required_output_fields": ["id", "track", "level", "title", "prompt", "expected_points", "follow_up_questions", "red_flags", "graph_refs", "human_refs"],
+  "required_candidate_fields": ["id","status","generation_pattern","track","level","title","prompt","expected_points","follow_up_questions","red_flags","graph_refs","human_refs","source_refs","evidence_map","generation_reason","dedup"],
   "quality_rules": [
     "Every factual expected point must be supported by the referenced graph or its source registry.",
+    "Generation seeds must whitelist the graph input and source references before the script can emit a candidate.",
     "Do not invent transaction codes, tables, message types, configuration paths, or product behavior that is absent from the evidence.",
     "Synthetic business data is allowed, but label the scenario as synthetic when published outside the assessment dataset.",
     "A Lead case should contain at least one ownership boundary, failure proof, or trade-off. Pure terminology questions are rejected.",
     "Avoid cases where the answer is one product name or one transaction code.",
-    "Prefer a clear first wrong decision over a long list of unrelated checks."
+    "Prefer a clear first wrong decision over a long list of unrelated checks.",
+    "A rejected duplicate remains visible in the generated inventory so the generator's negative decision is reviewable."
   ],
   "deduplication": {
-    "rule": "Reject a generated case when its normalized title, symptom, graph_refs, and expected_points substantially overlap an existing case.",
+    "exact_rule": "An exact failure-mode graph reference already present in a published case is a duplicate regardless of track.",
+    "lexical_rule": "Lexical similarity is evaluated only inside the same normalized assessment track and must meet the configured threshold.",
     "minimum_new_signal": "At least one new boundary, failure path, or reasoning-level challenge must be present."
-  }
+  },
+  "publication_boundary": [
+    "question-candidates.json is never referenced by case-sets.json automatically.",
+    "A browser review decision is local evidence only and does not modify GitHub or the published case dataset.",
+    "Promotion requires an explicit human-reviewed repository change that creates or updates a published case and its manifest count.",
+    "The published case count must remain unchanged during candidate generation and review."
+  ],
+  "current_scope": "The first deterministic generator pass uses whitelisted Billing and Integration Operations failure modes to prove the evidence, deduplication, and review pipeline before adding more graphs."
 }
