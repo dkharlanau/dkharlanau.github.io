@@ -1,0 +1,44 @@
+{
+  "id": "sap-lead-factual-review-policy",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "purpose": "Review release-sensitive SAP claims against primary sources before a draft page can be recommended for human verification or publication.",
+  "review_states": [
+    "not_reviewed",
+    "source_supported",
+    "source_conflict",
+    "release_scope_unclear",
+    "needs_human_judgement"
+  ],
+  "rules": [
+    "Use SAP primary sources for SAP product behavior and release-sensitive statements.",
+    "Keep documented facts separate from consultant heuristics, design guidance, and synthetic examples.",
+    "Record product and release scope when the behavior can differ by deployment or release.",
+    "A source-supported claim is not the same as a human-verified page.",
+    "Do not change verified, robots, sitemap, or publication status from this review alone.",
+    "When primary sources disagree or scope is unclear, keep the claim in review and record the conflict instead of choosing the convenient answer.",
+    "Prefer a small set of load-bearing reviewed claims over a meaningless claim count."
+  ],
+  "claim_contract": {
+    "required": [
+      "id",
+      "route",
+      "claim",
+      "claim_type",
+      "status",
+      "source_refs",
+      "product_scope",
+      "release_scope",
+      "reviewed_at",
+      "human_verification_required"
+    ],
+    "claim_types": [
+      "documented_behavior",
+      "configuration_behavior",
+      "monitoring_behavior",
+      "release_scope",
+      "operating_heuristic"
+    ]
+  },
+  "promotion_boundary": "This layer can prove that a claim is supported by a current primary source. It cannot declare the complete page verified or public."
+}
