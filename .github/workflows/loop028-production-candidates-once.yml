@@ -47,7 +47,7 @@ jobs:
           python scripts/generate_assessment_evidence_coverage.py --check
           python scripts/generate_assessment_human_review_queue.py --check
           PYTHONDONTWRITEBYTECODE=1 python -m pytest tests/test_assessment_practice_layer.py tests/test_enterprise_context_model.py
-      - name: Commit and push
+      - name: Commit and push with retry
         run: |
           git config user.name "Dzmitryi Kharlanau"
           git config user.email "dkharlanau@gmail.com"
@@ -57,5 +57,14 @@ jobs:
             exit 0
           fi
           git commit -m "feat: expand evidence-gated Production assessment candidates"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3 4 5; do
+            echo "Push attempt ${attempt}"
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Unable to push after retries"
+          exit 1
