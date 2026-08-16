@@ -166,6 +166,20 @@ def test_mdg_assessment_case_set_is_registered_and_valid():
         assert row["human_refs"]
 
 
+def test_mdg_cases_close_ai_data_diagnose_and_challenge_thin_cells():
+    coverage = json.loads((ASSESSMENT_DATA / "reasoning-pressure-coverage.json").read_text(encoding="utf-8"))
+    ai_data = next(item for item in coverage["tracks"] if item["track"] == "ai-data")
+    levels = {item["level"]: item for item in ai_data["levels"]}
+    assert levels["diagnose"]["count"] >= coverage["policy"]["minimum_published_cases_per_lead_pressure_level"]
+    assert levels["challenge"]["count"] >= coverage["policy"]["minimum_published_cases_per_lead_pressure_level"]
+    assert levels["diagnose"]["pressure_state"] == "covered"
+    assert levels["challenge"]["pressure_state"] == "covered"
+    assert not any(
+        gap["track"] == "ai-data" and gap["level"] in {"diagnose", "challenge"}
+        for gap in coverage["authoring_gaps"]
+    )
+
+
 def test_sap_mdg_profile_includes_domain_design_skill():
     profile = load(ROOT / "agent-skills" / "profiles" / "sap-mdg.yml")
     assert "sap-mdg-domain-solution-design" in profile["skills"]
