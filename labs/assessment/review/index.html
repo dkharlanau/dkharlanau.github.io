@@ -1,0 +1,257 @@
+---
+layout: default
+title: "Review Queue — SAP Lead Assessment Lab"
+description: "A local review queue that turns SAP Lead assessment scores into focused study routes and repeat-practice actions."
+permalink: /labs/assessment/review/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags:
+  - sap
+  - assessment
+  - sap-lead
+  - review
+  - diagnostics
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Review Queue</li></ol></nav>
+
+<div class="research-canvas review-queue" id="review-queue">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Review queue</p>
+      <h1>Review the reason you missed the answer.</h1>
+      <p>The queue reads local assessment history and recommends focused material for weak reasoning dimensions and weak tracks. It does not rank pages by popularity. It ranks them by the gap your answers show.</p>
+      <a class="research-canvas__button" href="#queue">Open the queue <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Review model">
+      <p>Review model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>7</strong><small>Reasoning dimensions</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>4</strong><small>Assessment tracks</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Rule: review, then repeat</small></div>
+      <em>History stays in this browser.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">target</span>
+    <p><strong>Working rule:</strong> a low score is useful only when it changes the next practice action. Review one focused route, then answer another related case. Reading without a repeat attempt is not counted as progress.</p>
+    <a href="/labs/assessment/data/review-map.json">Open review map <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="queue" data-reveal>
+    <header><p class="research-canvas__eyebrow">Local profile</p><h2>Start from weak signals, not from the longest topic.</h2><p>The queue uses average dimension scores first, then track scores. More attempts make the signal more reliable.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Attempts</h4><p class="rq-metric" id="rq-attempts">0</p></div>
+      <div><h4>Average score</h4><p class="rq-metric" id="rq-average">—</p></div>
+      <div><h4>Lead-level attempts</h4><p class="rq-metric" id="rq-lead">0</p></div>
+    </div>
+    <p id="rq-status" class="rq-status" aria-live="polite">Loading local review profile…</p>
+    <div id="rq-items" class="rq-items"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Repeat practice</p><h2>Close the loop after review.</h2><p>After one focused review, return to a new case. The goal is not to recognize the page. The goal is to produce a stronger answer without reading it.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/practice-engine/"><span>ADAPT</span><strong>Adaptive Practice Engine</strong><small>Select the next case from weak signals and recent practice history.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
+      <a href="/labs/assessment/mock/"><span>MOCK</span><strong>Mock Assessment</strong><small>Run a balanced multi-case session across all four tracks.</small><i class="material-symbols-outlined" aria-hidden="true">assignment</i></a>
+      <a href="/labs/assessment/cross-process/"><span>X</span><strong>Cross-Process Lead Cases</strong><small>Practice cases where the visible symptom is not the owner of the root cause.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Signal interpretation</p><h2>Do not over-read one attempt.</h2><p>Use several attempts before treating a score as a stable weakness.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Weak</h4><p>Average below 1.5 in a reasoning dimension, or below 12/21 in a track. Review soon and repeat a related case.</p></div>
+      <div><h4>Watch</h4><p>Average from 1.5 to below 2.2 in a dimension, or 12 to below 17/21 in a track. Keep it in normal rotation.</p></div>
+      <div><h4>Solid</h4><p>Average 2.2 or higher in a dimension, or 17/21 or higher in a track. Maintain it with mixed cases rather than extra reading.</p></div>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<style>
+.rq-metric{font-size:2rem;font-weight:800;margin:.4rem 0}.rq-status{margin:1rem 0}.rq-items{display:grid;gap:1rem}.rq-card{border:1px solid var(--border-color,#ddd);padding:1rem}.rq-card__head{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}.rq-card__head span{border:1px solid var(--border-color,#ddd);border-radius:999px;padding:.2rem .55rem;font-size:.8rem;text-transform:uppercase}.rq-card h3{margin:.6rem 0}.rq-card p{max-width:78ch}.rq-links{display:grid;gap:.55rem;margin-top:.8rem}.rq-links a{display:block;padding:.7rem;border:1px solid var(--border-color,#ddd);text-decoration:none}.rq-links small{display:block;margin-top:.2rem}.rq-empty{border:1px dashed var(--border-color,#bbb);padding:1rem}
+</style>
+
+<script>
+(() => {
+  'use strict';
+  const STORAGE_KEY = 'sapLeadAssessmentAttemptsV1';
+  const DIMENSIONS = [
+    ['business_goal','Business goal'],
+    ['owner','Owner'],
+    ['process_flow','Process flow'],
+    ['decision_logic','Decision logic'],
+    ['boundary','Boundary'],
+    ['failure_and_evidence','Failure and evidence'],
+    ['trade_off','Trade-off']
+  ];
+  const TRACK_LABELS = {
+    'sales':'Sales',
+    'procurement-logistics':'Procurement & Logistics',
+    'integration-architecture':'Integration & Architecture',
+    'ai-data':'AI & Data'
+  };
+  const $ = id => document.getElementById(id);
+  const mean = values => values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
+
+  function normalizeTrack(track) {
+    if (track === 'procurement' || track === 'logistics') return 'procurement-logistics';
+    if (track === 'integration') return 'integration-architecture';
+    if (track === 'data' || track === 'ai') return 'ai-data';
+    return track;
+  }
+
+  function loadHistory() {
+    try {
+      const rows = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      return Array.isArray(rows) ? rows : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function buildProfile(rows) {
+    const dimensionValues = Object.fromEntries(DIMENSIONS.map(([id]) => [id, []]));
+    const trackValues = {};
+    rows.forEach(row => {
+      DIMENSIONS.forEach(([id]) => {
+        const value = row.scores && row.scores[id];
+        if (Number.isFinite(value)) dimensionValues[id].push(value);
+      });
+      const track = normalizeTrack(row.track);
+      if (track && Number.isFinite(row.total_score)) (trackValues[track] ||= []).push(row.total_score);
+    });
+    return {
+      dimensions: Object.fromEntries(Object.entries(dimensionValues).map(([id,values]) => [id,{average:mean(values),attempts:values.length}])),
+      tracks: Object.fromEntries(Object.entries(trackValues).map(([id,values]) => [id,{average:mean(values),attempts:values.length}]))
+    };
+  }
+
+  function dimensionStatus(avg) {
+    if (avg == null) return 'no data';
+    if (avg < 1.5) return 'weak';
+    if (avg < 2.2) return 'watch';
+    return 'solid';
+  }
+
+  function trackStatus(avg) {
+    if (avg == null) return 'no data';
+    if (avg < 12) return 'weak';
+    if (avg < 17) return 'watch';
+    return 'solid';
+  }
+
+  function appendRoute(container, route) {
+    const link = document.createElement('a');
+    link.href = route.url;
+    const strong = document.createElement('strong');
+    strong.textContent = route.label;
+    link.appendChild(strong);
+    if (route.why) {
+      const small = document.createElement('small');
+      small.textContent = route.why;
+      link.appendChild(small);
+    }
+    container.appendChild(link);
+  }
+
+  function renderCard(item) {
+    const card = document.createElement('article');
+    card.className = 'rq-card';
+    const head = document.createElement('div');
+    head.className = 'rq-card__head';
+    const type = document.createElement('span');
+    type.textContent = item.type;
+    const status = document.createElement('span');
+    status.textContent = item.status;
+    head.append(type,status);
+    const title = document.createElement('h3');
+    title.textContent = item.label;
+    const score = document.createElement('p');
+    score.textContent = item.scoreText;
+    const question = document.createElement('p');
+    question.textContent = item.question;
+    const routes = document.createElement('div');
+    routes.className = 'rq-links';
+    item.routes.forEach(route => appendRoute(routes, route));
+    card.append(head,title,score,question,routes);
+    return card;
+  }
+
+  async function init() {
+    const rows = loadHistory();
+    $('rq-attempts').textContent = rows.length;
+    $('rq-average').textContent = rows.length ? `${mean(rows.map(r=>r.total_score).filter(Number.isFinite)).toFixed(1)} / 21` : '—';
+    $('rq-lead').textContent = rows.filter(r=>r.lead_signal === true).length;
+
+    if (!rows.length) {
+      $('rq-status').textContent = 'No local assessment history yet.';
+      const empty = document.createElement('div');
+      empty.className = 'rq-empty';
+      const p = document.createElement('p');
+      p.textContent = 'Complete several scored cases in the Practice Engine or Mock Assessment. The queue will then rank review actions from your own results.';
+      const a = document.createElement('a');
+      a.href = '/labs/assessment/practice-engine/';
+      a.textContent = 'Open Adaptive Practice Engine';
+      empty.append(p,a);
+      $('rq-items').appendChild(empty);
+      return;
+    }
+
+    try {
+      const response = await fetch('/labs/assessment/data/review-map.json', {cache:'no-store'});
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const map = await response.json();
+      const profile = buildProfile(rows);
+      const queue = [];
+
+      DIMENSIONS.forEach(([id,label]) => {
+        const signal = profile.dimensions[id];
+        if (!signal || signal.average == null) return;
+        const contract = map.dimension_routes[id];
+        queue.push({
+          type:'dimension',
+          id,
+          label,
+          priority:(3-signal.average) + Math.min(signal.attempts,5)*0.03,
+          status:dimensionStatus(signal.average),
+          scoreText:`Average ${signal.average.toFixed(2)} / 3 across ${signal.attempts} scored attempts.`,
+          question:contract.review_question,
+          routes:contract.routes
+        });
+      });
+
+      Object.entries(profile.tracks).forEach(([id,signal]) => {
+        const routes = map.track_routes[id];
+        if (!routes || signal.average == null) return;
+        queue.push({
+          type:'track',
+          id,
+          label:TRACK_LABELS[id] || id,
+          priority:(21-signal.average)/7 + Math.min(signal.attempts,5)*0.02,
+          status:trackStatus(signal.average),
+          scoreText:`Average ${signal.average.toFixed(1)} / 21 across ${signal.attempts} attempts in this track.`,
+          question:'Can you answer a new case in this track without relying on one familiar scenario?',
+          routes
+        });
+      });
+
+      queue.sort((a,b)=>b.priority-a.priority);
+      const selected = queue.filter(item=>item.status !== 'solid').slice(0,5);
+      const finalItems = selected.length ? selected : queue.slice(0,3);
+      $('rq-status').textContent = selected.length ? 'Highest-priority review actions from local history.' : 'No strong weak signal is visible. Keep mixed practice in rotation.';
+      finalItems.forEach(item => $('rq-items').appendChild(renderCard(item)));
+    } catch (error) {
+      $('rq-status').textContent = `Review map could not be loaded: ${error.message}`;
+    }
+  }
+
+  init();
+})();
+</script>
