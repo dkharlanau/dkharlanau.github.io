@@ -23,8 +23,8 @@ tags:
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Assessment / Adaptive practice</p>
-      <h1>Do not practice what is comfortable.<br />Practice what is weak.</h1>
-      <p>The engine loads the assessment case sets, watches your local scoring history, reduces repetition, and gives more weight to weak tracks and reasoning dimensions.</p>
+      <h1>Practice the weak part of the answer.</h1>
+      <p>The engine loads all assessment case sets, reads local scoring history, reduces repetition, and gives more weight to weak tracks and reasoning dimensions.</p>
       <a class="research-canvas__button" href="#practice">Start a case <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Practice engine model">
@@ -38,33 +38,46 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">lock</span>
-    <p><strong>Privacy:</strong> case scores and optional notes are stored in browser localStorage. This page has no server endpoint for your answers or scoring history.</p>
+    <p><strong>Privacy:</strong> scores and optional notes are stored in browser localStorage. This page has no server endpoint for answers or scoring history.</p>
     <a href="/labs/assessment/data/adaptive-selection.json">Open selection contract <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
   </section>
 
   <section class="research-canvas__inventory" id="practice" data-reveal>
-    <header><p class="research-canvas__eyebrow">Case selection</p><h2>Choose a constraint or let weak signals decide.</h2><p>Filters are hard constraints. Inside the filtered pool, the engine prefers weaker and less-practiced areas and avoids the last three cases.</p></header>
-
-    <div class="practice-engine__controls" role="group" aria-label="Case filters">
-      <label>Track<select id="pe-track"><option value="all">All tracks</option><option value="sales">Sales</option><option value="procurement-logistics">Procurement & Logistics</option><option value="integration-architecture">Integration & Architecture</option><option value="ai-data">AI & Data</option></select></label>
-      <label>Reasoning level<select id="pe-level"><option value="all">All levels</option><option value="explain">Explain</option><option value="trace">Trace</option><option value="diagnose">Diagnose</option><option value="design">Design</option><option value="challenge">Challenge</option></select></label>
+    <header><p class="research-canvas__eyebrow">Case selection</p><h2>Choose a constraint or let weak signals decide.</h2><p>Track and reasoning-level filters are hard constraints. Inside the selected pool, weaker and less-practiced areas receive more weight.</p></header>
+    <div class="pe-controls" role="group" aria-label="Case filters">
+      <label>Track
+        <select id="pe-track">
+          <option value="all">All tracks</option>
+          <option value="sales">Sales</option>
+          <option value="procurement-logistics">Procurement & Logistics</option>
+          <option value="integration-architecture">Integration & Architecture</option>
+          <option value="ai-data">AI & Data</option>
+        </select>
+      </label>
+      <label>Reasoning level
+        <select id="pe-level">
+          <option value="all">All levels</option>
+          <option value="explain">Explain</option>
+          <option value="trace">Trace</option>
+          <option value="diagnose">Diagnose</option>
+          <option value="design">Design</option>
+          <option value="challenge">Challenge</option>
+        </select>
+      </label>
       <button class="research-canvas__button" type="button" id="pe-next">Select next case</button>
     </div>
+    <p class="pe-status" id="pe-status" aria-live="polite">Loading case sets…</p>
 
-    <div class="practice-engine__status" id="pe-load-status" aria-live="polite">Loading case sets…</div>
-
-    <article class="practice-engine__case" id="pe-case" hidden>
-      <div class="practice-engine__case-meta"><span id="pe-case-track"></span><span id="pe-case-level"></span><span id="pe-case-id"></span></div>
+    <article class="pe-case" id="pe-case" hidden>
+      <div class="pe-meta"><span id="pe-case-track"></span><span id="pe-case-level"></span><span id="pe-case-id"></span></div>
       <h2 id="pe-case-title"></h2>
-      <p class="practice-engine__prompt" id="pe-case-prompt"></p>
-      <p class="practice-engine__reason"><strong>Why this case:</strong> <span id="pe-selection-reason"></span></p>
-      <p class="practice-engine__reason"><strong>Focus while answering:</strong> <span id="pe-focus"></span></p>
-
-      <div class="practice-engine__actions">
+      <p class="pe-prompt" id="pe-case-prompt"></p>
+      <p><strong>Why this case:</strong> <span id="pe-selection-reason"></span></p>
+      <p><strong>Focus while answering:</strong> <span id="pe-focus"></span></p>
+      <div class="pe-actions">
         <button type="button" id="pe-reveal">Reveal expected points</button>
         <button type="button" id="pe-skip">Skip without scoring</button>
       </div>
-
       <div id="pe-reference" hidden>
         <div class="ecg-decision-columns">
           <div><h4>Expected points</h4><ul id="pe-expected"></ul></div>
@@ -76,37 +89,52 @@ tags:
   </section>
 
   <section class="research-canvas__inventory" id="score" data-reveal>
-    <header><p class="research-canvas__eyebrow">Self-score</p><h2>Score the reasoning, not confidence.</h2><p>0 = missing, 1 = partial, 2 = solid, 3 = Lead signal. A total of 18/21 is the current Lead threshold.</p></header>
+    <header><p class="research-canvas__eyebrow">Self-score</p><h2>Score the reasoning, not the amount of SAP vocabulary.</h2><p>0 = missing, 1 = partial, 2 = solid consultant answer, 3 = Lead signal. The shared scoring contract defines the thresholds.</p></header>
     <form id="pe-score-form">
-      <div class="practice-engine__scores" id="pe-scores"></div>
-      <div class="practice-engine__controls">
-        <label>Confidence<select id="pe-confidence"><option value="3">3 / 5</option><option value="1">1 / 5</option><option value="2">2 / 5</option><option value="4">4 / 5</option><option value="5">5 / 5</option></select></label>
-        <label class="practice-engine__note">Optional local note<textarea id="pe-notes" rows="3" maxlength="4000" placeholder="What did I miss or explain badly?"></textarea></label>
+      <div class="pe-scores" id="pe-scores"></div>
+      <div class="pe-controls">
+        <label>Confidence
+          <select id="pe-confidence"><option value="1">1 / 5</option><option value="2">2 / 5</option><option value="3" selected>3 / 5</option><option value="4">4 / 5</option><option value="5">5 / 5</option></select>
+        </label>
+        <label class="pe-note">Optional local note
+          <textarea id="pe-notes" rows="3" maxlength="4000" placeholder="What did I miss or explain badly?"></textarea>
+        </label>
         <button class="research-canvas__button" type="submit" id="pe-save" disabled>Save attempt locally</button>
       </div>
     </form>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Weak signals</p><h2>Your local practice profile.</h2><p>The profile becomes useful after several attempts. Before that, a low score is a hint, not a personality diagnosis. Humanity has enough dashboards doing that already.</p></header>
+    <header><p class="research-canvas__eyebrow">Weak signals</p><h2>Your local practice profile.</h2><p>The profile becomes more useful after several attempts. One low score is a signal to inspect, not a stable conclusion.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Attempts</h4><p class="practice-engine__metric" id="pe-attempts">0</p></div>
-      <div><h4>Average score</h4><p class="practice-engine__metric" id="pe-average">—</p></div>
-      <div><h4>Lead-level attempts</h4><p class="practice-engine__metric" id="pe-lead-count">0</p></div>
+      <div><h4>Attempts</h4><p class="pe-metric" id="pe-attempts">0</p></div>
+      <div><h4>Average score</h4><p class="pe-metric" id="pe-average">—</p></div>
+      <div><h4>Lead-level attempts</h4><p class="pe-metric" id="pe-lead-count">0</p></div>
     </div>
-    <div class="practice-engine__profile" id="pe-profile"></div>
-    <div class="practice-engine__actions">
+    <div id="pe-profile"></div>
+    <div class="pe-actions">
       <button type="button" id="pe-export">Export attempt history</button>
       <button type="button" id="pe-clear">Clear local history</button>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Machine-readable design</p><h2>The practice engine is data-driven.</h2><p>Selection and question-generation rules are public contracts, so the same logic can later be used by another assessment client or agent.</p></header>
+    <header><p class="research-canvas__eyebrow">Continue practice</p><h2>Use the local history in more than one way.</h2><p>All practice modes share the same attempt history and seven scoring dimensions.</p></header>
     <div class="research-route-list">
-      <a href="/labs/assessment/data/attempt-schema.json"><span>JSON</span><strong>Attempt schema</strong><small>Seven dimension scores, confidence, weak signals, and references.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/assessment/mock/"><span>MOCK</span><strong>Mock Assessment</strong><small>Run a balanced session across all four tracks.</small><i class="material-symbols-outlined" aria-hidden="true">assignment</i></a>
+      <a href="/labs/assessment/review/"><span>REVIEW</span><strong>Review Queue</strong><small>Turn weak dimensions and tracks into focused review routes.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>
+      <a href="/labs/assessment/cross-process/"><span>X</span><strong>Cross-Process Cases</strong><small>Practice ownership and evidence across several SAP domains.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Machine-readable design</p><h2>The practice engine is data-driven.</h2><p>Selection, scoring, attempts, profiles, and question-generation rules are separate public contracts.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/data/scoring.json"><span>SCORE</span><strong>Scoring contract</strong><small>Seven dimensions, score bands, and weak-signal thresholds.</small><i class="material-symbols-outlined" aria-hidden="true">score</i></a>
+      <a href="/labs/assessment/data/attempt-schema.json"><span>JSON</span><strong>Attempt schema</strong><small>Scores, confidence, weak signals, and references.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/assessment/data/profile-schema.json"><span>PROFILE</span><strong>Weak-signal profile</strong><small>Dimension, track, level, and recent-case signals.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
       <a href="/labs/assessment/data/adaptive-selection.json"><span>SEL</span><strong>Adaptive selection</strong><small>Weakness, coverage, level, recency, and diversity weighting.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
-      <a href="/labs/assessment/data/question-generation.json"><span>GEN</span><strong>Question generation</strong><small>Generate new cases from graph failures, boundaries, runtime stages, and impact traces without inventing SAP facts.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/assessment/data/question-generation.json"><span>GEN</span><strong>Question generation</strong><small>Generate candidate cases from graph failures and boundaries without inventing SAP facts.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
     </div>
   </section>
 
@@ -114,36 +142,44 @@ tags:
 </div>
 
 <style>
-.practice-engine__controls{display:flex;flex-wrap:wrap;gap:1rem;align-items:end;margin:1rem 0 1.5rem}.practice-engine__controls label{display:flex;flex-direction:column;gap:.4rem;min-width:12rem;font-weight:700}.practice-engine__controls select,.practice-engine__controls textarea{font:inherit;padding:.7rem;border:1px solid var(--border-color,#d7d7d7);border-radius:.35rem;background:var(--background-color,#fff);color:inherit}.practice-engine__note{flex:1;min-width:18rem}.practice-engine__status{padding:.8rem 0}.practice-engine__case{border-top:1px solid var(--border-color,#ddd);padding-top:1.25rem}.practice-engine__case-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem}.practice-engine__case-meta span{border:1px solid var(--border-color,#ddd);border-radius:999px;padding:.2rem .55rem;font-size:.82rem}.practice-engine__prompt{font-size:1.15rem;max-width:75ch}.practice-engine__reason{max-width:80ch}.practice-engine__actions{display:flex;gap:.75rem;flex-wrap:wrap;margin:1rem 0}.practice-engine__actions button,#pe-reveal,#pe-skip{font:inherit;padding:.6rem .85rem;cursor:pointer}.practice-engine__scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem}.practice-engine__score-card{border:1px solid var(--border-color,#ddd);padding:.8rem}.practice-engine__score-card label{display:flex;flex-direction:column;gap:.45rem;font-weight:700}.practice-engine__score-card select{font:inherit;padding:.55rem}.practice-engine__metric{font-size:2rem;font-weight:800;margin:.4rem 0}.practice-engine__profile{margin-top:1rem}.practice-engine__profile table{width:100%;border-collapse:collapse}.practice-engine__profile th,.practice-engine__profile td{text-align:left;padding:.55rem;border-bottom:1px solid var(--border-color,#ddd)}
+.pe-controls{display:flex;flex-wrap:wrap;gap:1rem;align-items:end;margin:1rem 0 1.5rem}.pe-controls label{display:flex;flex-direction:column;gap:.4rem;min-width:12rem;font-weight:700}.pe-controls select,.pe-controls textarea{font:inherit;padding:.7rem;border:1px solid var(--border-color,#d7d7d7);border-radius:.35rem;background:var(--background-color,#fff);color:inherit}.pe-note{flex:1;min-width:18rem}.pe-status{padding:.7rem 0}.pe-case{border-top:1px solid var(--border-color,#ddd);padding-top:1.1rem}.pe-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem}.pe-meta span{border:1px solid var(--border-color,#ddd);border-radius:999px;padding:.2rem .55rem;font-size:.82rem}.pe-prompt{font-size:1.15rem;max-width:78ch}.pe-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin:1rem 0}.pe-actions button{font:inherit;padding:.6rem .85rem;cursor:pointer}.pe-scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}.pe-score-card{border:1px solid var(--border-color,#ddd);padding:.75rem}.pe-score-card label{display:flex;flex-direction:column;gap:.45rem;font-weight:700}.pe-score-card select{font:inherit;padding:.55rem}.pe-metric{font-size:2rem;font-weight:800;margin:.4rem 0}.pe-profile-table{width:100%;border-collapse:collapse;margin-top:1rem}.pe-profile-table th,.pe-profile-table td{text-align:left;padding:.55rem;border-bottom:1px solid var(--border-color,#ddd)}
 </style>
 
 <script>
 (() => {
   'use strict';
   const STORAGE_KEY = 'sapLeadAssessmentAttemptsV1';
-  const dims = [
+  const DIMENSIONS = [
     ['business_goal','Business goal'],['owner','Owner'],['process_flow','Process flow'],['decision_logic','Decision logic'],['boundary','Boundary'],['failure_and_evidence','Failure & evidence'],['trade_off','Trade-off']
   ];
-  const levelRank = {explain:1,trace:2,diagnose:3,design:4,challenge:5};
+  const TRACK_LABELS = {'sales':'Sales','procurement-logistics':'Procurement & Logistics','integration-architecture':'Integration & Architecture','ai-data':'AI & Data'};
+  const LEVEL_LABELS = {explain:'Explain',trace:'Trace',diagnose:'Diagnose',design:'Design',challenge:'Challenge'};
+  const $ = id => document.getElementById(id);
+  const mean = values => values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
   let cases = [];
   let current = null;
-
-  const $ = id => document.getElementById(id);
-  const history = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch (_) { return []; } };
-  const saveHistory = rows => localStorage.setItem(STORAGE_KEY, JSON.stringify(rows));
-  const mean = xs => xs.length ? xs.reduce((a,b)=>a+b,0)/xs.length : null;
-  const esc = value => String(value == null ? '' : value);
+  let thresholds = null;
 
   function normalizeTrack(track) {
-    if (track === 'procurement') return 'procurement-logistics';
-    if (track === 'logistics') return 'procurement-logistics';
+    if (track === 'procurement' || track === 'logistics' || track === 'production') return 'procurement-logistics';
     if (track === 'integration') return 'integration-architecture';
     if (track === 'data' || track === 'ai') return 'ai-data';
     return track;
   }
 
+  function history() {
+    try {
+      const rows = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      return Array.isArray(rows) ? rows : [];
+    } catch (_) { return []; }
+  }
+
+  function saveHistory(rows) {
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(rows));
+  }
+
   function caseDimensions(c) {
-    const text = [c.prompt, ...(c.expected_points||[]), ...(c.red_flags||[])].join(' ').toLowerCase();
+    const text = [c.prompt,...(c.expected_points||[]),...(c.red_flags||[])].join(' ').toLowerCase();
     const result = new Set();
     if (/business|customer|outcome|purpose|commercial/.test(text)) result.add('business_goal');
     if (/owner|ownership|responsib|team|domain/.test(text)) result.add('owner');
@@ -152,167 +188,264 @@ tags:
     if (/boundary|integration|handoff|system|company|module|supplier|receiver/.test(text)) result.add('boundary');
     if (/proof|evidence|diagnos|failure|check|reconcile|root cause/.test(text)) result.add('failure_and_evidence');
     if (/trade-off|alternative|change if|when would|challenge|risk/.test(text)) result.add('trade_off');
-    return result.size ? [...result] : dims.map(d=>d[0]);
+    return result.size ? [...result] : DIMENSIONS.map(([id])=>id);
   }
 
   function profile(rows) {
-    const byDim = Object.fromEntries(dims.map(([id]) => [id, []]));
-    const byTrack = {};
-    const byLevel = {};
-    rows.forEach(r => {
-      dims.forEach(([id]) => { if (r.scores && Number.isFinite(r.scores[id])) byDim[id].push(r.scores[id]); });
-      const t = normalizeTrack(r.track);
-      (byTrack[t] ||= []).push(r.total_score);
-      (byLevel[r.level] ||= []).push(r.total_score);
+    const dims = Object.fromEntries(DIMENSIONS.map(([id])=>[id,[]]));
+    const tracks = {};
+    const levels = {};
+    rows.forEach(row => {
+      DIMENSIONS.forEach(([id]) => {
+        const value = row.scores && row.scores[id];
+        if (Number.isFinite(value)) dims[id].push(value);
+      });
+      const track = normalizeTrack(row.track);
+      if (track && Number.isFinite(row.total_score)) (tracks[track] ||= []).push(row.total_score);
+      if (row.level && Number.isFinite(row.total_score)) (levels[row.level] ||= []).push(row.total_score);
     });
     return {
-      dimAvg: Object.fromEntries(Object.entries(byDim).map(([k,v]) => [k, mean(v)])),
-      trackAvg: Object.fromEntries(Object.entries(byTrack).map(([k,v]) => [k, mean(v)])),
-      trackCount: Object.fromEntries(Object.entries(byTrack).map(([k,v]) => [k, v.length])),
-      levelAvg: Object.fromEntries(Object.entries(byLevel).map(([k,v]) => [k, mean(v)])),
-      levelCount: Object.fromEntries(Object.entries(byLevel).map(([k,v]) => [k, v.length]))
+      dimAvg:Object.fromEntries(Object.entries(dims).map(([id,values])=>[id,mean(values)])),
+      trackAvg:Object.fromEntries(Object.entries(tracks).map(([id,values])=>[id,mean(values)])),
+      trackCount:Object.fromEntries(Object.entries(tracks).map(([id,values])=>[id,values.length])),
+      levelCount:Object.fromEntries(Object.entries(levels).map(([id,values])=>[id,values.length]))
     };
   }
 
   function chooseCase() {
-    if (!cases.length) return null;
     const rows = history();
     const p = profile(rows);
     const trackFilter = $('pe-track').value;
     const levelFilter = $('pe-level').value;
-    let pool = cases.filter(c => (trackFilter === 'all' || normalizeTrack(c.track) === trackFilter) && (levelFilter === 'all' || c.level === levelFilter));
+    const pool = cases.filter(c => (trackFilter === 'all' || normalizeTrack(c.track) === trackFilter) && (levelFilter === 'all' || c.level === levelFilter));
     if (!pool.length) return null;
-    const recent = rows.slice(-3).map(r => r.case_id);
-    const maxTrackCount = Math.max(1, ...Object.values(p.trackCount));
-    const maxLevelCount = Math.max(1, ...Object.values(p.levelCount));
-    const weakestDim = dims.map(([id]) => [id, p.dimAvg[id]]).filter(x=>x[1]!==null).sort((a,b)=>a[1]-b[1])[0]?.[0];
-    const scored = pool.map(c => {
-      const ct = normalizeTrack(c.track);
+    const recent = rows.slice(-3).map(row=>row.case_id);
+    const dimRanking = DIMENSIONS.map(([id])=>[id,p.dimAvg[id]]).filter(([,avg])=>avg!=null).sort((a,b)=>a[1]-b[1]);
+    const weakest = dimRanking.slice(0,3).map(([id])=>id);
+    const maxTrackCount = Math.max(1,...Object.values(p.trackCount));
+    const maxLevelCount = Math.max(1,...Object.values(p.levelCount));
+
+    const ranked = pool.map(c => {
+      const track = normalizeTrack(c.track);
       const coverage = caseDimensions(c);
-      const weakDim = weakestDim && coverage.includes(weakestDim) ? 1 : 0.25;
-      const tAvg = p.trackAvg[ct];
-      const weakTrack = tAvg == null ? 1 : (21 - tAvg) / 21;
-      const coverageGap = 1 - ((p.trackCount[ct] || 0) / maxTrackCount);
+      const weakMatch = weakest.length ? coverage.filter(id=>weakest.includes(id)).length / weakest.length : 0.5;
+      const trackAvg = p.trackAvg[track];
+      const weakTrack = trackAvg == null ? 0.6 : Math.max(0,(21-trackAvg)/21);
+      const coverageGap = 1 - ((p.trackCount[track] || 0) / maxTrackCount);
       const levelGap = 1 - ((p.levelCount[c.level] || 0) / maxLevelCount);
       const recency = recent.includes(c.id) ? -1 : 0;
-      const crossBonus = String(c.id).includes('XPROC') ? 1 : 0;
-      const score = weakDim*.30 + weakTrack*.25 + coverageGap*.20 + levelGap*.10 + recency*.10 + crossBonus*.05 + Math.random()*.03;
-      return [c, score];
-    }).sort((a,b)=>b[1]-a[1]);
-    return scored[0][0];
+      const diversity = c._set === 'cross-process' ? 1 : 0;
+      const score = weakMatch*0.30 + weakTrack*0.25 + coverageGap*0.20 + levelGap*0.10 + recency*0.10 + diversity*0.05 + Math.random()*0.02;
+      return {c,score,coverage};
+    }).sort((a,b)=>b.score-a.score);
+
+    const selected = ranked[0];
+    const reasons = [];
+    if (recent.includes(selected.c.id)) reasons.push('the filtered pool is narrow enough to allow a recent case');
+    else reasons.push('it is not one of the last three scored cases');
+    if (weakest.length && selected.coverage.some(id=>weakest.includes(id))) reasons.push('it exercises a weaker reasoning dimension');
+    if (p.trackAvg[normalizeTrack(selected.c.track)] == null) reasons.push('this track has little or no scoring history');
+    else reasons.push('track score and coverage were included in the ranking');
+    if (selected.c._set === 'cross-process') reasons.push('it adds cross-process diversity');
+    return {case:selected.c,reason:reasons.join('; '),focus:(weakest.length ? weakest.filter(id=>selected.coverage.includes(id)).slice(0,3) : selected.coverage.slice(0,3))};
   }
 
-  function selectionReason(c) {
-    const rows = history();
-    if (!rows.length) return 'No history yet. This case helps establish a baseline.';
-    const p = profile(rows);
-    const weakDims = dims.map(([id,label]) => [id,label,p.dimAvg[id]]).filter(x=>x[2]!==null).sort((a,b)=>a[2]-b[2]);
-    const weakTracks = Object.entries(p.trackAvg).sort((a,b)=>a[1]-b[1]);
-    const parts = [];
-    if (weakDims[0] && caseDimensions(c).includes(weakDims[0][0])) parts.push(`it exercises your weakest current dimension: ${weakDims[0][1]}`);
-    if (weakTracks[0] && normalizeTrack(c.track) === weakTracks[0][0]) parts.push(`this track has one of your lower recent averages`);
-    if ((p.trackCount[normalizeTrack(c.track)] || 0) < 2) parts.push('this area has low practice coverage');
-    if (String(c.id).includes('XPROC')) parts.push('cross-process reasoning adds boundary diversity');
-    return parts.length ? parts.join('; ') + '.' : 'It adds coverage without repeating one of your most recent cases.';
+  function buildScores() {
+    const root = $('pe-scores');
+    root.replaceChildren();
+    DIMENSIONS.forEach(([id,label]) => {
+      const card = document.createElement('div');
+      card.className = 'pe-score-card';
+      const control = document.createElement('label');
+      control.textContent = label;
+      const select = document.createElement('select');
+      select.id = `pe-score-${id}`;
+      select.required = true;
+      const empty = document.createElement('option');
+      empty.value = '';
+      empty.textContent = 'Select 0–3';
+      select.appendChild(empty);
+      [0,1,2,3].forEach(value => {
+        const option = document.createElement('option');
+        option.value = String(value);
+        option.textContent = `${value} / 3`;
+        select.appendChild(option);
+      });
+      control.appendChild(select);
+      card.appendChild(control);
+      root.appendChild(card);
+    });
   }
 
-  function focusDimensions(c) {
-    const p = profile(history());
-    const covered = caseDimensions(c).map(id => [id, dims.find(d=>d[0]===id)?.[1] || id, p.dimAvg[id]]);
-    covered.sort((a,b) => (a[2] ?? 99) - (b[2] ?? 99));
-    return covered.slice(0,3).map(x=>x[1]).join(' · ');
+  function appendList(id,values) {
+    const root = $(id);
+    root.replaceChildren();
+    (values || []).forEach(value => {
+      const li = document.createElement('li');
+      li.textContent = value;
+      root.appendChild(li);
+    });
   }
 
-  function listInto(id, values) {
-    const el = $(id); el.innerHTML = '';
-    (values || []).forEach(v => { const li = document.createElement('li'); li.textContent = v; el.appendChild(li); });
-  }
-
-  function renderCase(c) {
-    current = c;
+  function renderCase(selection) {
+    current = selection.case;
     $('pe-case').hidden = false;
-    $('pe-case-track').textContent = normalizeTrack(c.track);
-    $('pe-case-level').textContent = c.level;
-    $('pe-case-id').textContent = c.id;
-    $('pe-case-title').textContent = c.title;
-    $('pe-case-prompt').textContent = c.prompt;
-    $('pe-selection-reason').textContent = selectionReason(c);
-    $('pe-focus').textContent = focusDimensions(c);
-    listInto('pe-expected', c.expected_points);
-    listInto('pe-followups', c.follow_up_questions);
-    listInto('pe-redflags', c.red_flags);
+    $('pe-case-track').textContent = TRACK_LABELS[normalizeTrack(current.track)] || current.track;
+    $('pe-case-level').textContent = LEVEL_LABELS[current.level] || current.level;
+    $('pe-case-id').textContent = current.id;
+    $('pe-case-title').textContent = current.title;
+    $('pe-case-prompt').textContent = current.prompt;
+    $('pe-selection-reason').textContent = selection.reason;
+    $('pe-focus').textContent = selection.focus.length ? selection.focus.map(id=>DIMENSIONS.find(([key])=>key===id)?.[1] || id).join(', ') : 'Use all seven scoring dimensions.';
+    appendList('pe-expected',current.expected_points);
+    appendList('pe-followups',current.follow_up_questions);
+    appendList('pe-redflags',current.red_flags);
     $('pe-reference').hidden = true;
     $('pe-reveal').textContent = 'Reveal expected points';
-    $('pe-save').disabled = false;
+    DIMENSIONS.forEach(([id])=>$(`pe-score-${id}`).value='');
     $('pe-notes').value = '';
-    dims.forEach(([id]) => { const el = document.querySelector(`[data-score="${id}"]`); if (el) el.value = '0'; });
-    $('pe-case').scrollIntoView({behavior:'smooth', block:'start'});
-  }
-
-  function renderScoreControls() {
-    const root = $('pe-scores'); root.innerHTML = '';
-    dims.forEach(([id,label]) => {
-      const div = document.createElement('div'); div.className = 'practice-engine__score-card';
-      const lab = document.createElement('label'); lab.textContent = label;
-      const sel = document.createElement('select'); sel.dataset.score = id;
-      [['0','0 — missing'],['1','1 — partial'],['2','2 — solid'],['3','3 — Lead signal']].forEach(([v,t]) => { const o=document.createElement('option'); o.value=v;o.textContent=t;sel.appendChild(o); });
-      lab.appendChild(sel); div.appendChild(lab); root.appendChild(div);
-    });
+    $('pe-confidence').value = '3';
+    $('pe-save').disabled = false;
   }
 
   function renderProfile() {
-    const rows = history(); const p = profile(rows);
-    $('pe-attempts').textContent = rows.length;
-    $('pe-average').textContent = rows.length ? `${mean(rows.map(r=>r.total_score)).toFixed(1)} / 21` : '—';
-    $('pe-lead-count').textContent = rows.filter(r=>r.total_score >= 18).length;
-    const root = $('pe-profile');
-    if (!rows.length) { root.innerHTML = '<p>No attempts yet. Score a few cases before treating any weak signal as stable.</p>'; return; }
-    let html = '<table><thead><tr><th>Dimension</th><th>Average</th><th>Signal</th></tr></thead><tbody>';
-    dims.forEach(([id,label]) => {
-      const avg = p.dimAvg[id];
-      const signal = avg == null ? 'No data' : avg < 1.75 ? 'Weak' : avg < 2.25 ? 'Watch' : 'Solid';
-      html += `<tr><td>${label}</td><td>${avg == null ? '—' : avg.toFixed(2)} / 3</td><td>${signal}</td></tr>`;
-    });
-    html += '</tbody></table>';
-    root.innerHTML = html;
-  }
-
-  async function loadCases() {
-    try {
-      const manifest = await fetch('/labs/assessment/data/case-sets.json').then(r => { if (!r.ok) throw new Error('case set manifest'); return r.json(); });
-      const groups = await Promise.all(manifest.sets.map(async set => {
-        const text = await fetch(set.url).then(r => { if (!r.ok) throw new Error(set.url); return r.text(); });
-        return text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map(line=>JSON.parse(line));
-      }));
-      cases = groups.flat();
-      $('pe-load-status').textContent = `${cases.length} cases loaded from ${manifest.sets.length} case sets.`;
-      const c = chooseCase(); if (c) renderCase(c);
-    } catch (e) {
-      $('pe-load-status').textContent = 'Could not load the assessment dataset. Refresh the page or use the JSONL case sets directly.';
-      console.error(e);
-    }
-  }
-
-  $('pe-next').addEventListener('click', () => { const c=chooseCase(); if(c) renderCase(c); else $('pe-load-status').textContent='No case matches the selected filters.'; });
-  $('pe-skip').addEventListener('click', () => { const c=chooseCase(); if(c) renderCase(c); });
-  $('pe-reveal').addEventListener('click', () => { const box=$('pe-reference'); box.hidden=!box.hidden; $('pe-reveal').textContent=box.hidden?'Reveal expected points':'Hide expected points'; });
-  $('pe-score-form').addEventListener('submit', e => {
-    e.preventDefault(); if (!current) return;
-    const scores = {}; dims.forEach(([id]) => scores[id] = Number(document.querySelector(`[data-score="${id}"]`).value));
-    const total = Object.values(scores).reduce((a,b)=>a+b,0);
-    const weak = dims.filter(([id]) => scores[id] < 2).map(([id])=>id);
     const rows = history();
-    rows.push({id:`attempt-${Date.now()}`,case_id:current.id,attempted_at:new Date().toISOString(),track:normalizeTrack(current.track),level:current.level,scores,total_score:total,lead_signal:total>=18,confidence:Number($('pe-confidence').value),notes:$('pe-notes').value.trim(),weak_signals:weak,graph_refs:current.graph_refs||[],human_refs:current.human_refs||[]});
-    saveHistory(rows); renderProfile();
-    $('pe-load-status').textContent = `Attempt saved locally: ${total}/21${total>=18?' · Lead signal':''}.`;
-    const c=chooseCase(); if(c) renderCase(c);
-  });
-  $('pe-clear').addEventListener('click', () => { if (window.confirm('Clear all local assessment history in this browser?')) { localStorage.removeItem(STORAGE_KEY); renderProfile(); $('pe-load-status').textContent='Local history cleared.'; } });
-  $('pe-export').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify({schema:'/labs/assessment/data/attempt-schema.json',exported_at:new Date().toISOString(),attempts:history()},null,2)],{type:'application/json'});
-    const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='sap-lead-assessment-attempts.json'; a.click(); URL.revokeObjectURL(url);
+    const totals = rows.map(row=>row.total_score).filter(Number.isFinite);
+    $('pe-attempts').textContent = rows.length;
+    $('pe-average').textContent = totals.length ? `${mean(totals).toFixed(1)} / 21` : '—';
+    $('pe-lead-count').textContent = rows.filter(row=>row.lead_signal === true).length;
+    const p = profile(rows);
+    const table = document.createElement('table');
+    table.className = 'pe-profile-table';
+    const head = document.createElement('thead');
+    head.innerHTML = '<tr><th>Dimension</th><th>Average</th><th>Signal</th></tr>';
+    const body = document.createElement('tbody');
+    DIMENSIONS.forEach(([id,label]) => {
+      const avg = p.dimAvg[id];
+      const tr = document.createElement('tr');
+      const signal = avg == null ? 'no data' : avg < thresholds.dimension_average_weak_below ? 'weak' : avg < thresholds.dimension_average_watch_below ? 'watch' : 'solid';
+      [label,avg == null ? '—' : `${avg.toFixed(2)} / 3`,signal].forEach(value => {
+        const td = document.createElement('td');
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+    table.append(head,body);
+    $('pe-profile').replaceChildren(table);
+  }
+
+  function createAttempt() {
+    const scores = {};
+    DIMENSIONS.forEach(([id])=>{scores[id]=Number($(`pe-score-${id}`).value);});
+    const total = Object.values(scores).reduce((a,b)=>a+b,0);
+    return {
+      id:`attempt-${Date.now()}-${current.id}`,
+      case_id:current.id,
+      attempted_at:new Date().toISOString(),
+      track:normalizeTrack(current.track),
+      level:current.level,
+      scores,
+      total_score:total,
+      lead_signal:total >= thresholds.case_total_lead_minimum,
+      confidence:Number($('pe-confidence').value),
+      notes:$('pe-notes').value.trim(),
+      weak_signals:Object.entries(scores).filter(([,value])=>value<2).map(([id])=>id),
+      graph_refs:current.graph_refs || [],
+      human_refs:current.human_refs || []
+    };
+  }
+
+  async function loadData() {
+    const [setsResponse,scoringResponse] = await Promise.all([
+      fetch('/labs/assessment/data/case-sets.json',{cache:'no-store'}),
+      fetch('/labs/assessment/data/scoring.json',{cache:'no-store'})
+    ]);
+    if (!setsResponse.ok || !scoringResponse.ok) throw new Error('Assessment contracts are not available.');
+    const manifest = await setsResponse.json();
+    const scoring = await scoringResponse.json();
+    thresholds = scoring.weak_signal_thresholds;
+    const loaded = [];
+    for (const set of manifest.sets) {
+      const response = await fetch(set.url,{cache:'no-store'});
+      if (!response.ok) throw new Error(`${set.id} HTTP ${response.status}`);
+      const text = await response.text();
+      text.split(/\r?\n/).filter(line=>line.trim()).forEach(line => {
+        const item = JSON.parse(line);
+        item.track = normalizeTrack(item.track);
+        item._set = set.id;
+        loaded.push(item);
+      });
+    }
+    const unique = new Map();
+    loaded.forEach(item=>unique.set(item.id,item));
+    cases = [...unique.values()];
+    $('pe-status').textContent = `${cases.length} cases loaded from ${manifest.sets.length} case sets.`;
+    renderProfile();
+  }
+
+  $('pe-next').addEventListener('click',() => {
+    const selection = chooseCase();
+    if (!selection) {
+      $('pe-status').textContent = 'No case matches the selected filters.';
+      return;
+    }
+    renderCase(selection);
+    $('pe-status').textContent = `${selection.case.id} selected.`;
   });
 
-  renderScoreControls(); renderProfile(); loadCases();
+  $('pe-reveal').addEventListener('click',() => {
+    const box = $('pe-reference');
+    box.hidden = !box.hidden;
+    $('pe-reveal').textContent = box.hidden ? 'Reveal expected points' : 'Hide expected points';
+  });
+
+  $('pe-skip').addEventListener('click',() => {
+    const selection = chooseCase();
+    if (selection) renderCase(selection);
+  });
+
+  $('pe-score-form').addEventListener('submit',event => {
+    event.preventDefault();
+    if (!current) return;
+    const missing = DIMENSIONS.some(([id])=>$(`pe-score-${id}`).value === '');
+    if (missing) {
+      $('pe-status').textContent = 'Score all seven dimensions before saving.';
+      return;
+    }
+    const attempt = createAttempt();
+    const rows = history();
+    rows.push(attempt);
+    saveHistory(rows);
+    $('pe-status').textContent = `${current.id} saved locally: ${attempt.total_score} / 21.`;
+    renderProfile();
+    const selection = chooseCase();
+    if (selection) renderCase(selection);
+  });
+
+  $('pe-export').addEventListener('click',() => {
+    const blob = new Blob([JSON.stringify(history(),null,2)],{type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'sap-lead-assessment-attempts.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  });
+
+  $('pe-clear').addEventListener('click',() => {
+    localStorage.removeItem(STORAGE_KEY);
+    current = null;
+    $('pe-case').hidden = true;
+    $('pe-save').disabled = true;
+    renderProfile();
+    $('pe-status').textContent = 'Local assessment history cleared.';
+  });
+
+  buildScores();
+  loadData().catch(error => {
+    $('pe-status').textContent = `Assessment cases could not be loaded: ${error.message}`;
+    $('pe-next').disabled = true;
+  });
 })();
 </script>
