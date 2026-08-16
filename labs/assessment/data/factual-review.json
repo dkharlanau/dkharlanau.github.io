@@ -1,15 +1,15 @@
 {
   "id": "sap-lead-factual-review",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "updated_at": "2026-08-16",
   "policy": "/labs/assessment/data/factual-review-policy.json",
   "review_boundary": "Claims below were checked against current SAP primary sources. This does not change page-level verified, robots, sitemap, or publication status.",
   "summary": {
-    "routes_reviewed": 12,
-    "claims_reviewed": 35,
-    "source_supported": 35,
+    "routes_reviewed": 16,
+    "claims_reviewed": 43,
+    "source_supported": 43,
     "source_conflict": 0,
-    "human_verification_required": 35
+    "human_verification_required": 43
   },
   "routes": [
     {
@@ -53,6 +53,18 @@
       ]
     },
     {
+      "route": "/labs/enterprise-context/business-ai/",
+      "title": "SAP Business AI",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-BAI-001",
+        "FACT-BAI-002"
+      ]
+    },
+    {
       "route": "/labs/enterprise-context/credit/",
       "title": "Credit Management",
       "review_status": "primary_source_review_complete",
@@ -76,6 +88,18 @@
         "FACT-DEPLOY-001",
         "FACT-DEPLOY-002",
         "FACT-DEPLOY-003"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/development/",
+      "title": "SAP Development Architecture",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-DEV-001",
+        "FACT-DEV-002"
       ]
     },
     {
@@ -120,6 +144,18 @@
       ]
     },
     {
+      "route": "/labs/enterprise-context/integrations/",
+      "title": "Integration Architecture",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-INT-001",
+        "FACT-INT-002"
+      ]
+    },
+    {
       "route": "/labs/enterprise-context/inventory-management/",
       "title": "Inventory Management",
       "review_status": "primary_source_review_complete",
@@ -129,6 +165,18 @@
       "claim_ids": [
         "FACT-IM-001",
         "FACT-IM-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/mdg/",
+      "title": "Master Data Governance",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-MDG-001",
+        "FACT-MDG-002"
       ]
     },
     {
@@ -263,6 +311,44 @@
       "reviewed_at": "2026-08-16",
       "human_verification_required": true,
       "evidence_class": "sap_product_primary"
+    },
+    {
+      "id": "FACT-BAI-001",
+      "route": "/labs/enterprise-context/business-ai/",
+      "claim": "Joule brings AI assistants and agents into a common SAP experience. SAP describes it as embedded into work across SAP and non-SAP systems, with a conversational UI, contextual business information, access controls, governance, analytics, and extensibility mechanisms.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-JOULE-HELP"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/JOULE/3fdd7b321eb24d1b9d40605dce822e84?locale=en-US"
+      ],
+      "product_scope": "SAP Joule",
+      "release_scope": "Cloud service documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-BAI-002",
+      "route": "/labs/enterprise-context/business-ai/",
+      "claim": "SAP AI Core is a service on SAP BTP for standardized execution and lifecycle management of AI assets. The generative AI hub is a capability of SAP AI Core and SAP AI Launchpad for governed access to and orchestration of generative AI models; it extends rather than replaces the AI Core runtime foundation.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-AI-CORE",
+        "SRC-SAP-GENAI-HUB"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/sap-ai-core-overview?locale=en-us",
+        "https://help.sap.com/docs/sap-ai-core/generative-ai/generative-ai-hub"
+      ],
+      "product_scope": "SAP AI Core and generative AI hub",
+      "release_scope": "Cloud service documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
     },
     {
       "id": "FACT-BIL-001",
@@ -469,6 +555,43 @@
       "evidence_class": "sap_product_primary"
     },
     {
+      "id": "FACT-DEV-001",
+      "route": "/labs/enterprise-context/development/",
+      "claim": "Developer extensibility in SAP S/4HANA Cloud Public Edition 2608 is available in a three-system landscape and uses a cloud-optimized ABAP subset, released SAP APIs and objects, and predefined extension points. RAP and ADT are part of this developer-extensibility model.",
+      "claim_type": "release_scope",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-S4-PUBLIC-DEVELOPER-2608",
+        "SRC-SAP-ADT-ECLIPSE-2608"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_CLOUD/6aa39f1ac05441e5a23f484f31e477e7/e1059ff581854a699f15734049f14293.html"
+      ],
+      "product_scope": "SAP S/4HANA Cloud Public Edition developer extensibility",
+      "release_scope": "2608 Latest documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-DEV-002",
+      "route": "/labs/enterprise-context/development/",
+      "claim": "RAP business objects use CDS view entities as the data-model basis. In managed implementation, the RAP provider supplies standard transactional behavior and buffering; in unmanaged implementation, the developer implements the transactional behavior and buffer, which supports reuse of existing business logic.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-RAP-IMPLEMENTATION-TYPES"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/ABAP_PLATFORM_NEW/fc4c71aa50014fd1b43721701471913d/e11757cf7e664121b9f583e7ca0eeb39.html"
+      ],
+      "product_scope": "ABAP RESTful Application Programming Model",
+      "release_scope": "ABAP Platform 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
       "id": "FACT-EWM-001",
       "route": "/labs/enterprise-context/ewm/",
       "claim": "A warehouse task is the EWM execution document for goods movements or stock changes such as picking, putaway, internal movements, posting changes, goods receipt, or goods issue. It can reference a warehouse request or exist without one for some internal movements.",
@@ -601,6 +724,46 @@
       "evidence_class": "sap_product_primary"
     },
     {
+      "id": "FACT-INT-001",
+      "route": "/labs/enterprise-context/integrations/",
+      "claim": "SAP Integration Suite is an integration platform on SAP BTP for cloud, on-premise, and hybrid scenarios. Its current capability landscape includes process integration with Cloud Integration, API management or composition, business events, B2B integration, third-party connectivity, migration assessment, and customer-managed edge execution options.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-INTEGRATION-SUITE",
+        "SRC-SAP-INTEGRATION-CONNECTIVITY"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_INTEGRATION_SUITE/51ab953548be4459bfe8539ecaeee98d/what-is-sap-integration-suite"
+      ],
+      "product_scope": "SAP Integration Suite",
+      "release_scope": "Cloud service documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-INT-002",
+      "route": "/labs/enterprise-context/integrations/",
+      "claim": "SAP Event Mesh supports asynchronous publish-and-consume business events and decoupled communication across applications. Advanced Event Mesh adds distributed event streaming, event management, monitoring, and event-broker capabilities for larger event-driven landscapes.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-EVENT-MESH",
+        "SRC-SAP-INTEGRATION-SUITE-EVENT-MESH",
+        "SRC-SAP-ADVANCED-EVENT-MESH"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_EM/bf82e6b26456494cbdd197057c09979f/what-is-sap-event-mesh",
+        "https://help.sap.com/docs/sap-integration-suite/advanced-event-mesh"
+      ],
+      "product_scope": "SAP Event Mesh and SAP Integration Suite, Advanced Event Mesh",
+      "release_scope": "Cloud service documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
       "id": "FACT-INTOPS-001",
       "route": "/labs/enterprise-context/integration-operations/",
       "claim": "Guaranteed delivery can redeliver a message. End-to-end exactly-once behavior therefore needs duplicate handling or an idempotent receiver in addition to retry-capable delivery.",
@@ -707,6 +870,45 @@
       "reviewed_at": "2026-08-16",
       "human_verification_required": true,
       "evidence_class": "sap_product_primary"
+    },
+    {
+      "id": "FACT-MDG-001",
+      "route": "/labs/enterprise-context/mdg/",
+      "claim": "SAP MDG on SAP S/4HANA 2025 FPS01 offers classic mode and cloud-ready mode. Classic mode covers a broad set of central-governance, consolidation, data-quality, and master-data domains, while cloud-ready mode currently supports the Business Partner domain and uses a cloud-ready extensibility approach.",
+      "claim_type": "release_scope",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-MDG-S4-OVERVIEW",
+        "SRC-SAP-MDG-CLASSIC",
+        "SRC-SAP-MDG-CLOUD-READY"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/be72563dbbef459c8d953b7e3b0f99dc.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/744b92a39ff34188a4c50563e62f8c10.html"
+      ],
+      "product_scope": "SAP Master Data Governance on SAP S/4HANA",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-MDG-002",
+      "route": "/labs/enterprise-context/mdg/",
+      "claim": "Switching on cloud-ready mode enables its apps but disables classic-mode consolidation and mass-processing apps and related functions. Processes created in classic mode can continue in cloud-ready mode, while processes created in cloud-ready mode cannot be continued after switching back to classic mode.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-MDG-CLOUD-READY-SWITCH"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/34085136212d495aa7718063a34c5485.html"
+      ],
+      "product_scope": "SAP Master Data Governance cloud-ready mode",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
     },
     {
       "id": "FACT-PP-001",
