@@ -168,6 +168,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "progress": ASSESSMENT / "progress" / "index.html",
         "feedback": ASSESSMENT / "feedback" / "index.html",
         "question-review": ASSESSMENT / "question-review" / "index.html",
+        "candidate-semantic-review": ASSESSMENT / "candidate-semantic-review" / "index.html",
         "factual-review": ASSESSMENT / "factual-review" / "index.html",
         "evidence-coverage": ASSESSMENT / "evidence-coverage" / "index.html",
         "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",
@@ -191,6 +192,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
     assert modes["board"]["route"] == "/labs/assessment/board/"
     authoring = {item["id"]: item for item in catalog["authoring_tools"]}
     assert authoring["question-review"]["route"] == "/labs/assessment/question-review/"
+    assert authoring["candidate-semantic-review"]["route"] == "/labs/assessment/candidate-semantic-review/"
     assert authoring["factual-review"]["route"] == "/labs/assessment/factual-review/"
     assert authoring["evidence-coverage"]["route"] == "/labs/assessment/evidence-coverage/"
     assert authoring["promotion-readiness"]["route"] == "/labs/assessment/promotion-readiness/"
@@ -202,7 +204,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034", "LOOP-035", "LOOP-036", "LOOP-037"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -464,5 +466,25 @@ def test_board_mode_reuses_shared_scoring_without_second_history_store() -> None
         text=True,
         capture_output=True,
         check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_candidate_semantic_review_keeps_publication_separate_from_novelty_review() -> None:
+    review = load_json("candidate-semantic-review.json")
+    inventory = load_json("question-candidates.json")
+    manifest = load_json("case-sets.json")
+    decisions = {item["candidate_id"]: item for item in review["decisions"]}
+
+    assert review["summary"]["published_case_change"] == 0
+    assert manifest["total_cases"] == inventory["published_case_count"]
+    assert decisions["CAND-PP-WRONG-QUANTITY"]["recommendation"] == "retain_for_human_promotion_review"
+    assert decisions["CAND-PP-GR"]["recommendation"] == "retain_for_human_promotion_review"
+    assert decisions["CAND-PP-COST"]["recommendation"] == "reject_semantic_duplicate"
+    assert "ASSESS-FIN-005" in decisions["CAND-PP-COST"]["closest_published_cases"]
+
+    result = subprocess.run(
+        [sys.executable, "scripts/validate_assessment_candidate_semantic_review.py"],
+        cwd=ROOT, text=True, capture_output=True, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr

@@ -503,10 +503,21 @@
         "scripts/validate_assessment_board_mode.py"
       ],
       "working_rule": "Use the existing Core boundary drills and shared scoring contract for timed oral practice. Do not create a second history format or publish practice data automatically."
+    },
+    {
+      "id": "LOOP-037",
+      "priority": "P1",
+      "title": "Production candidate semantic review",
+      "status": "done",
+      "outputs": [
+        "/labs/assessment/candidate-semantic-review/",
+        "/labs/assessment/data/candidate-semantic-review.json",
+        "scripts/validate_assessment_candidate_semantic_review.py"
+      ],
+      "working_rule": "Use semantic review after deterministic dedup. Retain only candidates that add a materially new Lead reasoning signal, and never publish them without a separate human promotion decision."
     }
   ],
   "next_iteration_themes": [
-    "review the three new Production candidates and promote only a clearly non-duplicate case through an explicit reviewed change",
     "add a Board Mode review handoff that points low scoring dimensions to existing review-map routes without writing history",
     "record true human page-review findings separately from automated editorial improvement",
     "select secondary P1 pages by cross-track assessment value instead of processing all routes mechanically"
