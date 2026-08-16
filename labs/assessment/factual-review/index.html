@@ -1,0 +1,67 @@
+---
+layout: default
+title: "Factual Review — SAP Lead Assessment Lab"
+description: "Primary-source review for release-sensitive SAP claims before human verification or publication."
+permalink: /labs/assessment/factual-review/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, evidence, review, sources]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Factual Review</li></ol></nav>
+
+<div class="research-canvas factual-review" id="factual-review">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Evidence control</p>
+      <h1>Check the claim.<br />Keep the boundary.</h1>
+      <p>A good page can still contain a release-sensitive detail that changed. This layer checks important SAP claims against current primary sources and records the product and release scope.</p>
+      <a class="research-canvas__button" href="#reviewed-routes">Open reviewed routes <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Factual review status">
+      <p>First review batch</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong id="fact-routes">2</strong><small>Routes reviewed</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong id="fact-claims">11</strong><small>Claims checked</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong id="fact-supported">11</strong><small>Source-supported</small></div>
+      <em>Primary-source support is not the same as page verification.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+    <p><strong>Review boundary:</strong> the claim can be supported by SAP Help and the page can still remain <code>verified:false</code>. Human review decides whether the whole page is ready and whether it should stay research-only or become public.</p>
+    <a href="/labs/assessment/data/factual-review-policy.json">Open factual-review policy <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="reviewed-routes" data-reveal>
+    <header><p class="research-canvas__eyebrow">Batch 01</p><h2>Start where an operational mistake is expensive.</h2><p>Integration recovery and billing contain several details where a wrong assumption can create duplicate documents, bad recovery, or incorrect financial output.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/integration-operations/"><span>6</span><strong>Integration Operations & Recovery</strong><small>Exactly-once behavior, handled exceptions, qRFC, bgRFC, IDoc, and AIF recovery claims reviewed against SAP primary sources.</small><i class="material-symbols-outlined" aria-hidden="true">sync_problem</i></a>
+      <a href="/labs/enterprise-context/billing/"><span>5</span><strong>Billing & Revenue Handoff</strong><small>Billing processing, copying control, pricing, collective billing, and split analysis checked against current SAP Help.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead signals</p><h2>The source check changes how the answer is framed.</h2><p>The useful result is not a citation count. It is a clearer boundary between documented behavior and consultant judgement.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Documented</h4><ul><li>Guaranteed delivery can redeliver.</li><li>Handled Cloud Integration exceptions can appear as Completed.</li><li>Copying control shapes billing data flow and pricing behavior.</li><li>Split analysis explains different billing header values.</li></ul></div>
+      <div><h4>Lead judgement</h4><ul><li>Do not equate a green technical status with business completion.</li><li>Do not replay before commit state and duplicate protection are understood.</li><li>Do not force one invoice when standard split criteria say otherwise.</li><li>Use the first wrong layer to assign ownership.</li></ul></div>
+      <div><h4>Still human-reviewed</h4><ul><li>Whether the explanation is complete for the intended audience.</li><li>Whether product and release scope are represented correctly across the whole page.</li><li>Whether a heuristic is too broad for a specific customer design.</li><li>Whether the page should remain draft/noindex.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Machine-readable evidence</p><h2>Claims are explicit records.</h2><p>Each reviewed claim carries source references, release scope, review date, and the human-verification boundary.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/data/factual-review.json"><span>FACT</span><strong>Factual Review Registry</strong><small>Eleven reviewed claims across Integration Operations and Billing.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
+      <a href="/labs/assessment/data/factual-review-policy.json"><span>POLICY</span><strong>Factual Review Policy</strong><small>Primary-source rules, claim states, release scope, and the publication boundary.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
+      <a href="/labs/assessment/promotion-readiness/"><span>NEXT</span><strong>Promotion Readiness</strong><small>Structural maturity and factual review remain separate gates.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
