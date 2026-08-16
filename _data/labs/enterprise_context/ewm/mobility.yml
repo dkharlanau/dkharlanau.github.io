@@ -1,0 +1,120 @@
+id: EWM-MOBILITY-MAP
+title: "Warehouse Mobility — Execution Channel Map"
+updated_at: "2026-08-16"
+verified_at: "2026-08-16"
+summary: >-
+  A practical architecture map for EWM RF, standard mobile, custom mobile, wearables,
+  shared devices, connectivity, offline behavior and warehouse-floor support.
+lead_rule: >-
+  Choose the execution channel from the work pattern and process owner. Improve interaction without
+  copying warehouse business logic into a second mobile system.
+memory_path: "ASSIGN → AUTHENTICATE → GUIDE → SCAN → VALIDATE → CONFIRM → RECOVER → OBSERVE"
+
+decision_dimensions:
+  - key: "PROCESS"
+    question: "Is the work standard EWM execution or a cross-process journey?"
+  - key: "FREQUENCY"
+    question: "Is the worker scanning occasionally, every task or continuously?"
+  - key: "INTERACTION"
+    question: "Handheld, mounted, wearable, voice or camera?"
+  - key: "CONNECTIVITY"
+    question: "Can the process require live business state, or can selected actions tolerate offline capture?"
+  - key: "FLEET"
+    question: "Dedicated device, shared pool, BYOD or managed industrial fleet?"
+  - key: "SECURITY"
+    question: "How are worker, device and application identities separated?"
+
+decision_map:
+  - need: "Standard high-frequency EWM warehouse work"
+    choose: "SAP EWM RF"
+    why: "It keeps resource, queue, verification and task execution in the standard EWM channel."
+  - need: "Supported standard native mobile process"
+    choose: "SAP Warehouse Logistics"
+    why: "Use standard mobile scope before building another warehouse client."
+  - need: "Special cross-process workflow or device interaction"
+    choose: "Custom mobile / browser / native app"
+    why: "Use a thin extension with explicit SAP interfaces and business ownership."
+  - need: "Hands-free repetitive work"
+    choose: "Wearable or voice-oriented interaction"
+    why: "Optimize the physical cycle without moving warehouse ownership out of EWM."
+
+execution_channels:
+  - title: "EWM RF"
+    flow: "Resource login → queue/work selection → scan/verify → WT/WO/HU action → confirmation"
+    best_for: "High-frequency standard warehouse execution."
+    caution: "Do not rebuild it only to modernize the screen style."
+  - title: "SAP Warehouse Logistics"
+    flow: "Native mobile interaction → supported warehouse task validation → confirmation"
+    best_for: "Supported SAP Logistics Management mobile scenarios."
+    caution: "Check actual product/process scope before selecting it."
+  - title: "Custom mobile / browser"
+    flow: "Device capture → custom UX → validation → released SAP interface → result"
+    best_for: "Real workflow, cross-system or device-interaction gaps."
+    caution: "Custom UX must not own stock allocation, queues or warehouse truth."
+  - title: "Wearable / voice"
+    flow: "Hands-free prompt/capture → application validation → warehouse confirmation"
+    best_for: "Very repetitive work where interaction time is the bottleneck."
+    caution: "Exception handling still needs a visible and recoverable path."
+
+runtime_controls:
+  - title: "Worker identity"
+    rule: "Business accountability follows the authenticated worker, including shared-device handover."
+  - title: "Device identity"
+    rule: "Keep a managed device identity for support, configuration and traceability."
+  - title: "Session recovery"
+    rule: "Define what happens after timeout, roaming loss, reconnect or application restart."
+  - title: "Offline state"
+    rule: "Do not queue business confirmations unless stale-state and replay conflicts can be detected."
+  - title: "Configuration"
+    rule: "Manage scanner profiles, app versions and device settings as a fleet, not one terminal at a time."
+  - title: "Observability"
+    rule: "Measure device health, network/session failures, response time and business exceptions together."
+
+failure_modes:
+  - symptom: "Worker reconnects and sees old work."
+    check_first: "WT/WO status, session restore logic and server-side work ownership."
+  - symptom: "Request timed out after scan."
+    check_first: "Business status before retry; the SAP action may already have committed."
+  - symptom: "Devices fail only while moving through the warehouse."
+    check_first: "Wi-Fi roaming and access-point handover on the real route, not office signal strength."
+  - symptom: "Shared terminal actions cannot be traced to a worker."
+    check_first: "Authentication and user/device handover design."
+  - symptom: "Workers type instead of scanning."
+    check_first: "Scan focus, ergonomics, label quality, response latency and exception UX."
+
+kpis:
+  - title: "Scan/action response latency"
+    meaning: "Time to clear accepted or rejected feedback."
+  - title: "Session failure rate"
+    meaning: "Authentication, timeout, reconnect and resume failures per shift/device."
+  - title: "Device availability"
+    meaning: "Share of required devices ready for warehouse work."
+  - title: "Manual fallback rate"
+    meaning: "Share of intended mobile steps bypassed by typing, paper or supervisor correction."
+  - title: "Task cycle time"
+    meaning: "Time per warehouse work cycle, interpreted with quality and exception rate."
+
+assessment_cards:
+  - question: "RF or custom mobile?"
+    answer: "I start with process ownership. If standard EWM RF fits, I keep it. Custom is justified by a real workflow or device gap, not by visual preference."
+  - question: "Can we make EWM offline?"
+    answer: "Only selected actions are safe to queue. Warehouse state changes, so offline replay needs idempotency, expiry, conflict detection and reconciliation."
+  - question: "What is different about a shared scanner fleet?"
+    answer: "Worker and device identity are different. I control session handover, fleet configuration, application version and lost-device response."
+  - question: "What do you test?"
+    answer: "Real routes, roaming, gloves, scan focus, response latency, session timeout, reconnect, duplicate retry and exception recovery."
+
+related:
+  - title: "Warehouse Scanners & Auto-ID"
+    url: "/labs/enterprise-context/ewm/scanners/"
+  - title: "Handling Units, Packing & Labels"
+    url: "/labs/enterprise-context/ewm/handling-units-packing/"
+  - title: "EWM Automation & MFS"
+    url: "/labs/enterprise-context/ewm/automation/"
+
+source_refs:
+  - SRC-SAP-EWM-RF-FRAMEWORK
+  - SRC-SAP-EWM-RF-RESOURCE
+  - SRC-SAP-WAREHOUSE-LOGISTICS-MOBILE
+  - SRC-ZEBRA-DATAWEDGE-HOWTO
+  - SRC-ZEBRA-DATAWEDGE-INTENT
