@@ -1,0 +1,75 @@
+---
+layout: default
+title: "Core Boundary Drills — SAP Lead Assessment Lab"
+description: "Cross-route SAP Lead drills for ownership changes between sales, procurement, ATP, shipping, production, inventory, quality, warehouse, integration, MDG, and finance."
+permalink: /labs/assessment/core-boundaries/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, lead, diagnostics, integration, logistics]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li><a href="/labs/assessment/core/">Core 12</a></li><li aria-current="page">Boundary Drills</li></ol></nav>
+
+<div class="research-canvas core-boundaries" id="core-boundaries">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Cross-route practice</p>
+      <h1>The hard part starts<br />at the boundary.</h1>
+      <p>Most difficult incidents are not owned by one module. Two local states can look reasonable while the end-to-end result is wrong. These drills train the handoff: find the first wrong owner before changing the final symptom.</p>
+      <a class="research-canvas__button" href="#boundary-drills">Open boundary drills <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Boundary drill status">
+      <p>Practice set</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>8</strong><small>Cross-route drills</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>12</strong><small>Core routes available</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>0</strong><small>Auto-published cases</small></div>
+      <em>Synthetic practice · evidence-backed route boundaries</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">swap_horiz</span>
+    <p><strong>Working rule:</strong> do not ask “Which module is broken?” first. Ask which business state should exist, which domain owns each decision, and where expected and actual states first diverge.</p>
+    <a href="/labs/assessment/data/core-boundary-drills.json">Open drill dataset <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="boundary-drills" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Eight drills</p>
+      <h2>Answer the ownership question before opening the reasoning path.</h2>
+      <p>For oral practice, read the scenario and boundary question first. Give a short answer. Only then compare your path with the expected reasoning.</p>
+    </header>
+    <div class="ecg-determination-list" id="boundary-drill-list">
+      <article class="ecg-determination-detail"><header><div><span>01</span><small>Sales Order ↔ Pricing</small></div><h3>The price looks wrong after the sales-order context changed</h3><p class="ecg-question">Which upstream sales-order decision can change the pricing path even when the condition record itself is valid?</p></header><div class="ecg-decision-columns"><div><h4>Scenario</h4><p>A valid-looking condition record exists, but the price changed after the document context changed.</p></div><div><h4>First answer path</h4><p>Document context → pricing procedure → condition eligibility → access/runtime key → record → calculation.</p></div><div><h4>Red flag</h4><p>Creating another condition record before proving the procedure and runtime key.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>02</span><small>Shipping ↔ ATP</small></div><h3>Late confirmation: Shipping date or ATP promise?</h3><p class="ecg-question">Is ATP wrong, or is it correctly evaluating the wrong upstream date?</p></header><div class="ecg-decision-columns"><div><h4>Scenario</h4><p>Physical stock exists, the requested date is not confirmed, and a route change was introduced recently.</p></div><div><h4>First answer path</h4><p>Plant → shipping point → route/calendars → material availability date → ATP scope/supply → policy controls.</p></div><div><h4>Red flag</h4><p>Changing ATP scope before checking the date that ATP actually received.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>03</span><small>Procurement ↔ Inventory ↔ FI</small></div><h3>Goods receipt exists, but procurement is not financially complete</h3><p class="ecg-question">Which domain owns the missing business event, and which domain only shows its financial consequence?</p></header><div class="ecg-decision-columns"><div><h4>Scenario</h4><p>The PO has a goods receipt and usable stock, but GR/IR is still open after the team believes the purchase is complete.</p></div><div><h4>First answer path</h4><p>PO history → inventory event → invoice receipt → GR/IR matching → source-document reconciliation.</p></div><div><h4>Red flag</h4><p>Clearing GR/IR manually before finding the missing or mismatched source event.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>04</span><small>Production ↔ Inventory ↔ FI</small></div><h3>Production confirmed, stock missing, cost still open</h3><p class="ecg-question">Which completion layer is open: execution, stock receipt, or financial settlement?</p></header><div class="ecg-decision-columns"><div><h4>Scenario</h4><p>Operations are confirmed, the finished quantity is not in expected stock, and order cost is still unsettled.</p></div><div><h4>First answer path</h4><p>Execution evidence → expected GR → inventory state → warehouse handoff → settlement rule/state.</p></div><div><h4>Red flag</h4><p>Treating confirmation as proof of goods receipt or financial close.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>05</span><small>QM ↔ Inventory ↔ EWM</small></div><h3>Quality accepted the material, but warehouse stock is still unusable</h3><p class="ecg-question">Did Quality make the wrong decision, or did Logistics fail to consume a correct one?</p></header><div class="ecg-decision-columns"><div><h4>Scenario</h4><p>The inspection has an acceptance decision, but the operational team cannot use the stock in the warehouse.</p></div><div><h4>First answer path</h4><p>Inspection context → usage decision → IM stock state → EWM stock/execution → reconciliation.</p></div><div><h4>Red flag</h4><p>Moving stock manually before proving the intended quality-decision consequence.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>06</span><small>MDG ↔ Sales ↔ Procurement</small></div><h3>Master data is approved but the consuming process still fails</h3><p class="ecg-question">Does approval prove consumer usability, or only the governance decision?</p></header><div class="ecg-decision-columns"><div><h4>Scenario</h4><p>A Material change is approved and active, but Sales and Procurement still consume an old or incomplete organizational view.</p></div><div><h4>First answer path</h4><p>Governed requirement → active record → replication/filtering/mapping → target version → process proof.</p></div><div><h4>Red flag</h4><p>Repairing the target locally without protecting the governed source of truth.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>07</span><small>Integration ↔ Sales Order</small></div><h3>The integration monitor is green, but the business object is wrong</h3><p class="ecg-question">Which green status is proven: transport, application processing, or business completion?</p></header><div class="ecg-decision-columns"><div><h4>Scenario</h4><p>An inbound sales message is technically successful, but the receiver has a duplicate or incomplete business object.</p></div><div><h4>First answer path</h4><p>Message identity → delivery → receiver commit → duplicate/order controls → business-object reconciliation.</p></div><div><h4>Red flag</h4><p>Replaying because the business result looks wrong or closing because middleware is green.</p></div></div></article>
+      <article class="ecg-determination-detail"><header><div><span>08</span><small>Shipping ↔ EWM</small></div><h3>Delivery exists, but warehouse execution never starts</h3><p class="ecg-question">Is the business demand missing, or is EWM failing to turn valid demand into warehouse work?</p></header><div class="ecg-decision-columns"><div><h4>Scenario</h4><p>An outbound delivery is due upstream, but no expected warehouse task is available for picking.</p></div><div><h4>First answer path</h4><p>Delivery relevance → warehouse request → warehouse task creation → WO grouping/queue → confirmation.</p></div><div><h4>Red flag</h4><p>Changing the delivery to force EWM before proving the warehouse request.</p></div></div></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Board method</p><h2>Draw four columns, not twelve modules.</h2><p>For each drill, keep the board small. This makes the ownership change visible and prevents the answer from becoming a configuration dump.</p></header>
+    <div class="ecg-control-stack">
+      <article><span>01</span><h3>Expected state</h3><p>What business state should exist now?</p><strong>Write one sentence.</strong></article>
+      <article><span>02</span><h3>Owners</h3><p>Which domain owns each decision or completion layer?</p><strong>Draw the handoff.</strong></article>
+      <article><span>03</span><h3>First divergence</h3><p>Where do expected and actual states first differ?</p><strong>Do not start at the final symptom.</strong></article>
+      <article><span>04</span><h3>Proof</h3><p>What evidence proves the cause and the final business completion?</p><strong>Close with reconciliation.</strong></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+    <p><strong>Publication boundary:</strong> these eight drills are synthetic authored practice. They are not part of <code>case-sets.json</code>, do not change the 59 published cases, and do not make any Core 12 page verified.</p>
+    <a href="/labs/assessment/core/">Back to Core 12 Study Map <span class="material-symbols-outlined" aria-hidden="true">route</span></a>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
