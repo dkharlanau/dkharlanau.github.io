@@ -1,9 +1,9 @@
 {
   "id": "sap-lead-assessment-lab",
-  "version": "2.12.0",
+  "version": "2.13.0",
   "updated_at": "2026-08-16",
   "status": "draft",
-  "purpose": "Turn the Lab into a structured SAP Lead assessment route across process knowledge, diagnostics, architecture, integration, data, AI, adaptive practice, feedback, evidence-backed question authoring, promotion readiness, claim-level primary-source review, and explicit human page review.",
+  "purpose": "Turn the Lab into a structured SAP Lead assessment route across process knowledge, diagnostics, architecture, integration, data, AI, adaptive practice, feedback, evidence-backed question authoring, promotion readiness, claim-level primary-source review, human page review, and a Core 12 study sequence.",
   "reasoning_levels": [
     {
       "id": "explain",
@@ -229,6 +229,12 @@
       "label": "Human Review Queue",
       "route": "/labs/assessment/human-review/",
       "purpose": "Order source-supported SAP pages for page-level human review without changing verification, indexing, or publication state automatically."
+    },
+    {
+      "id": "core-study",
+      "label": "Core 12 Study Map",
+      "route": "/labs/assessment/core/",
+      "purpose": "Organize the twelve highest-value Lead routes into decision, execution/state, and governance/value waves with one reasoning contract."
     }
   ],
   "coverage": {
@@ -277,14 +283,15 @@
       "Production now separates planned, executed, stock-received, and financially closed states in one Lead completion model",
       "Integration Operations now separates transport completion, receiver application completion, and business reconciliation",
       "Inventory Management now compares business-event, book-stock, warehouse-execution, and financial state before compensating postings",
-      "All twelve core human-review routes now expose assessment-oriented ownership or completion boundaries while remaining draft, noindex, and unverified"
+      "All twelve core human-review routes now expose assessment-oriented ownership or completion boundaries while remaining draft, noindex, and unverified",
+      "Core 12 study map connects the first assessment wave to ownership boundaries, answer paths, source-review state, and direct published practice cases"
     ],
     "next_verticals": [],
     "next_practice_layers": [
-      "review the new Production question candidates and promote only clearly non-duplicate Lead cases",
+      "review the three new Production question candidates and promote only clearly non-duplicate Lead cases",
       "capture true page-level human review separately from automated editorial improvement",
-      "select secondary P1 pages by cross-track assessment value rather than page count",
-      "connect real assessment feedback to practice priority while factual truth remains source-based"
+      "add cross-route Core 12 drills that force ownership changes between adjacent domains",
+      "select secondary P1 pages by cross-track assessment value rather than page count"
     ]
   },
   "endpoints": {
@@ -330,6 +337,9 @@
     "evidence_profile": "/labs/assessment/data/evidence-profile.json",
     "human_review_route": "/labs/assessment/human-review/",
     "human_review_policy": "/labs/assessment/data/human-review-policy.json",
-    "human_review_queue": "/labs/assessment/data/human-review-queue.json"
+    "human_review_queue": "/labs/assessment/data/human-review-queue.json",
+    "core_study_route": "/labs/assessment/core/",
+    "core_study_contract": "/labs/assessment/data/core-study-contract.json",
+    "core_study_map": "/labs/assessment/data/core-study-map.json"
   }
 }

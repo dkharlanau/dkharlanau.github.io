@@ -172,6 +172,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "evidence-coverage": ASSESSMENT / "evidence-coverage" / "index.html",
         "promotion-readiness": ASSESSMENT / "promotion-readiness" / "index.html",
         "human-review": ASSESSMENT / "human-review" / "index.html",
+        "core-study": ASSESSMENT / "core" / "index.html",
         "cross-process": ASSESSMENT / "cross-process" / "index.html",
     }
     for name, path in expected_pages.items():
@@ -191,13 +192,14 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
     assert authoring["evidence-coverage"]["route"] == "/labs/assessment/evidence-coverage/"
     assert authoring["promotion-readiness"]["route"] == "/labs/assessment/promotion-readiness/"
     assert authoring["human-review"]["route"] == "/labs/assessment/human-review/"
+    assert authoring["core-study"]["route"] == "/labs/assessment/core/"
 
 
 def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024", "LOOP-025", "LOOP-026", "LOOP-027", "LOOP-028", "LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032", "LOOP-033", "LOOP-034"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -376,6 +378,28 @@ def test_human_review_queue_is_reproducible_and_non_publishing() -> None:
 
     result = subprocess.run(
         [sys.executable, "scripts/generate_assessment_human_review_queue.py", "--check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_core_study_map_is_reproducible_and_non_publishing() -> None:
+    contract = load_json("core-study-contract.json")
+    study = load_json("core-study-map.json")
+    assert study["summary"]["core_routes"] == len(contract["routes"]) == 12
+    assert study["summary"]["waves"] == len(contract["waves"]) == 3
+    assert study["summary"]["source_supported_routes"] == 12
+    assert study["summary"]["page_verified_routes"] == 0
+    assert [item["order"] for item in study["items"]] == list(range(1, 13))
+    assert all(item["evidence"]["human_verification_required"] for item in study["items"])
+    assert all(item["assessment_question"] and item["ownership_boundary"] for item in study["items"])
+    assert all(len(item["answer_path"]) >= 7 for item in study["items"])
+
+    result = subprocess.run(
+        [sys.executable, "scripts/generate_assessment_core_study_map.py", "--check"],
         cwd=ROOT,
         text=True,
         capture_output=True,
