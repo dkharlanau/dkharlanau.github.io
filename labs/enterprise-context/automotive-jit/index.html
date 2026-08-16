@@ -1,0 +1,127 @@
+---
+layout: default
+title: "Automotive JIT / JIS — Enterprise Context Lab"
+description: "A practical SAP S/4HANA Automotive map from scheduling agreements and delivery schedules through JIT/JIS calls, call control, sequence, packing, delivery, EWM/TM, supplier forwarding, and monitoring."
+permalink: /labs/enterprise-context/automotive-jit/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+enterprise_context_graph: true
+tags:
+  - sap-s4hana
+  - automotive
+  - jit
+  - jis
+  - scheduling-agreement
+  - logistics
+  - ewm
+  - tm
+  - integration
+---
+
+{% assign graph = site.data.labs.enterprise_context.graphs.automotive_jit %}
+{% assign evidence = site.data.labs.enterprise_context.sources.automotive_jit %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Automotive JIT / JIS</li></ol></nav>
+
+<div class="research-canvas context-graph">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Industry vertical / Automotive</p>
+      <h1>Planning is not the call.<br />JIT is not automatically JIS.</h1>
+      <p>{{ graph.summary }}</p>
+      <a class="research-canvas__button" href="#runtime">Trace signal to sequence <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Automotive JIT JIS working model">
+      <p>Working model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>{{ graph.process_families | size }}</strong><small>Process families</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>{{ graph.runtime_pipeline | size }}</strong><small>Runtime stages</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ graph.failure_modes | size }}</strong><small>Failure modes</small></div>
+      <em>Classic and Next Generation stay distinct.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</span>
+    <p><strong>Working rule:</strong> delivery schedules create a horizon-based demand picture. JIT/JIS calls create exact short-term execution demand. For JIS, sequence is an operational key that must survive production, packing, delivery, warehouse, and transport execution.</p>
+    <a href="/labs/enterprise-context/data/automotive-jit-graph.json">Open graph JSON <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Signal model</p><h2>Separate planning demand from execution demand.</h2><p>A scheduling agreement can carry forecast and JIT delivery schedules. A JIT/JIS call is a more exact execution instruction with its own identity and lifecycle.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>{{ graph.concept_split.planning_signal.title }}</h4><p>{{ graph.concept_split.planning_signal.purpose }}</p><ul>{% for item in graph.concept_split.planning_signal.types %}<li><strong>{{ item.title }}:</strong> {{ item.reading }}</li>{% endfor %}</ul></div>
+      <div><h4>{{ graph.concept_split.execution_signal.title }}</h4><p>{{ graph.concept_split.execution_signal.purpose }}</p><ul>{% for item in graph.concept_split.execution_signal.types %}<li><strong>{{ item.title }}:</strong> {{ item.reading }}</li>{% endfor %}</ul></div>
+      <div><h4>Lead distinction</h4><p>A schedule answers what is expected over a horizon. A call answers what must be supplied now. JIS also answers in which sequence.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Process families</p><h2>Three related families, not one generic JIT box.</h2><p>Keep the generation and ownership clear before discussing transactions or interfaces.</p></header>
+    <div class="ecg-input-grid">
+      {% for family in graph.process_families %}<article><span>JIT</span><h3>{{ family.title }}</h3><p>{{ family.reading }}</p><p><strong>Objects:</strong> {{ family.key_objects | join: " · " }}</p></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Memory model</p><h2>Nine questions from agreement to reconciliation.</h2><p>This is easier to remember than a museum of automotive acronyms.</p></header>
+    <div class="ecg-memory-grid">
+      {% for item in graph.memory_model.questions %}<article class="ecg-memory-card"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><strong>{{ item.key }}</strong><h3>{{ item.question }}</h3><p>{{ item.answer }}</p></article>{% endfor %}
+    </div>
+    <p class="ecg-caption"><strong>{{ graph.memory_model.path }}.</strong></p>
+  </section>
+
+  <section class="research-canvas__inventory" id="runtime" data-reveal>
+    <header><p class="research-canvas__eyebrow">Runtime</p><h2>Follow the exact call through physical execution.</h2><p>A valid customer message is only the start. Identity, status, supply, sequence, package, delivery, and confirmation must remain consistent.</p></header>
+    <div class="ecg-determination-list">
+      {% for stage in graph.runtime_pipeline %}<article class="ecg-determination-detail"><header><div><span>{% if stage.order < 10 %}0{% endif %}{{ stage.order }}</span><small>automotive stage</small></div><h3>{{ stage.title }}</h3><p class="ecg-question">{{ stage.question }}</p></header><div class="ecg-decision-columns"><div><h4>Inputs</h4><ul>{% for value in stage.inputs %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Output</h4><ul>{% for value in stage.output %}<li>{{ value }}</li>{% endfor %}</ul></div><div><h4>Failure signal</h4><p>{{ stage.failure_signal }}</p></div></div></article>{% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Sequence</p><h2>JIS makes order part of the product.</h2><p>{{ graph.sequence_model.principle }}</p></header>
+    <div class="ecg-input-grid">{% for item in graph.sequence_model.controls %}<article><span>SEQ</span><h3>{{ item }}</h3><p>Protect the requested assembly order through the next execution boundary.</p></article>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Integration boundaries</p><h2>Sequence must survive every handoff.</h2><p>The JIT/JIS object does not replace Production, HU, Delivery, EWM, TM, or supplier integration. It coordinates exact demand across them.</p></header>
+    <div class="research-route-list">{% for item in graph.integration_boundaries %}<a href="#failures"><span>INT</span><strong>{{ item.boundary }}</strong><small>{{ item.ownership }}{% if item.note %} {{ item.note }}{% endif %}</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" id="failures" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure modes</p><h2>A late part is only one possible failure.</h2><p>Identity, status, sequence, destination, downstream execution, and supplier forwarding can all break while quantity still looks plausible.</p></header>
+    <div class="ecg-determination-list">{% for failure in graph.failure_modes %}<article class="ecg-determination-detail"><header><div><span>!</span><small>failure</small></div><h3>{{ failure.symptom }}</h3></header><div class="ecg-decision-columns"><div><h4>First checks</h4><ul>{% for item in failure.first_checks %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Avoid</h4><p>{{ failure.avoid }}</p></div></div></article>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Impact traces</p><h2>Small sequence errors can become line-stop problems.</h2><p>Use these traces to move from configuration details to business impact.</p></header>
+    <div class="research-route-list">{% for item in graph.impact_traces %}<a href="#lead-lens"><span>TRACE</span><strong>{{ item.start }}</strong><small>{{ item.path | join: " → " }} · {{ item.lead_question }}</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" id="lead-lens" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead lens</p><h2>Ask what kind of signal failed before asking which transaction failed.</h2><p>The strongest answer separates planning, exact call state, sequence, physical execution, and external confirmation.</p></header>
+    <div class="ecg-input-grid">
+      <article><span>ASK</span><h3>What I ask first</h3><ul>{% for item in graph.lead_lens.what_i_ask_first %}<li>{{ item }}</li>{% endfor %}</ul></article>
+      <article><span>OWN</span><h3>Decision ownership</h3><p>{{ graph.lead_lens.decision_owner }}</p></article>
+      <article><span>TRADE</span><h3>Main trade-off</h3><p>{{ graph.lead_lens.main_trade_off }}</p></article>
+      <article><span>FAIL</span><h3>Typical failure</h3><p>{{ graph.lead_lens.typical_failure }}</p></article>
+      <article><span>PROVE</span><h3>Proof of cause</h3><p>{{ graph.lead_lens.proof_of_cause }}</p></article>
+      <article><span>60S</span><h3>60-second explanation</h3><p>{{ graph.lead_lens.sixty_second_explanation }}</p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment prompts</p><h2>Practice the questions that expose architecture depth.</h2><p>Explain not only what failed, but which signal and ownership boundary became inconsistent first.</p></header>
+    <div class="research-route-list">{% for item in graph.assessment_prompts %}<a href="/labs/assessment/"><span>Q</span><strong>{{ item }}</strong><small>Trace planning → call → execution → proof.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>{% endfor %}</div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Sources</p><h2>Current SAP documentation, with classic and Next Generation separated.</h2><p>The page keeps partner-specific VDA/Odette mappings outside the core model unless they are verified for a concrete implementation.</p></header>
+    <div class="research-route-list">{% for source in evidence.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener"><span>SAP</span><strong>{{ source.title }}</strong><small>{{ source.release_scope }} · checked {{ source.verified_at }}</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>{% endfor %}</div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
