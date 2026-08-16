@@ -1,7 +1,7 @@
 {
   "id": "sap-lead-assessment-backlog",
   "updated_at": "2026-08-16",
-  "selection_rule": "Take the highest-priority queued item that closes a material Lead-assessment gap. Extend existing graph contracts before creating a new model. Prefer a deep vertical with process, data, decisions, integrations, failures, tests, evidence, and assessment cases over a broad product list.",
+  "selection_rule": "Take the highest-priority queued item that closes a material Lead-assessment gap. Extend existing contracts before creating a new model. Prefer practice that improves explanation, diagnosis, design, and challenge skills over adding another broad topic list.",
   "done_definition": ["business boundary is explicit","human page is useful without machine data","machine-readable contract exists","important ownership and integration boundaries are represented","failure modes and diagnostic questions are included","at least one assessment case points to the material","content remains draft/noindex until human review","repository validation is checked"],
   "items": [
     {"id":"LOOP-001","priority":"P0","title":"SAP Lead assessment route","status":"done","outputs":["/labs/assessment/","/labs/assessment/data/catalog.json","/labs/assessment/data/cases.jsonl","/labs/assessment/data/case-schema.json","/labs/assessment/data/scoring.json"]},
@@ -12,12 +12,15 @@
     {"id":"LOOP-006","priority":"P1","title":"FI/CO touchpoints for logistics","status":"done","outputs":["/labs/enterprise-context/finance-logistics/","/labs/enterprise-context/data/finance-logistics-graph.json","_data/labs/enterprise_context/graphs/finance_logistics.yml","_data/labs/enterprise_context/sources/finance_logistics.yml","/labs/assessment/data/finance-logistics-cases.jsonl"]},
     {"id":"LOOP-007","priority":"P1","title":"Automotive JIT and JIS vertical","status":"done","outputs":["/labs/enterprise-context/automotive-jit/","/labs/enterprise-context/data/automotive-jit-graph.json","_data/labs/enterprise_context/graphs/automotive_jit.yml","_data/labs/enterprise_context/sources/automotive_jit.yml","/labs/assessment/data/automotive-jit-cases.jsonl"]},
     {"id":"LOOP-008","priority":"P1","title":"Integration operations and recovery","status":"done","outputs":["/labs/enterprise-context/integration-operations/","/labs/enterprise-context/data/integration-operations-graph.json","_data/labs/enterprise_context/graphs/integration_operations.yml","_data/labs/enterprise_context/sources/integration_operations.yml","/labs/assessment/data/integration-operations-cases.jsonl"]},
-    {"id":"LOOP-009","priority":"P1","title":"Cross-process Lead cases","status":"done","outputs":["/labs/assessment/cross-process/","/labs/assessment/data/cross-process-cases.jsonl"],"target_scope":["standard O2C","third-party sales","intercompany","stock transfer","make-to-order","subcontracting","returns and claims"]}
+    {"id":"LOOP-009","priority":"P1","title":"Cross-process Lead cases","status":"done","outputs":["/labs/assessment/cross-process/","/labs/assessment/data/cross-process-cases.jsonl"],"target_scope":["standard O2C","third-party sales","intercompany","stock transfer","make-to-order","subcontracting","returns and claims"]},
+    {"id":"LOOP-010","priority":"P1","title":"Adaptive practice engine and weak-signal profile","status":"done","outputs":["/labs/assessment/practice-engine/","/labs/assessment/data/attempt-schema.json","/labs/assessment/data/profile-schema.json","/labs/assessment/data/adaptive-selection.json","/labs/assessment/data/question-generation.json"]},
+    {"id":"LOOP-011","priority":"P1","title":"Focused review queue","status":"done","outputs":["/labs/assessment/review/","/labs/assessment/data/review-map.json"],"working_rule":"Review one weak signal, then repeat a related case."},
+    {"id":"LOOP-012","priority":"P1","title":"Balanced mock assessment session","status":"done","outputs":["/labs/assessment/mock/","/labs/assessment/data/mock-session.json"],"working_rule":"Cover all four tracks, higher reasoning levels, and cross-process cases before using weak-signal weighting."}
   ],
   "next_iteration_themes": [
-    "weak-signal tracking from assessment scoring history",
-    "question generation from graph relations and failure modes",
-    "adaptive case selection by weak domain and reasoning level",
-    "human review and promotion of mature draft/noindex Lab pages"
+    "calibrate scoring thresholds and weak-signal rules with real assessment feedback",
+    "generate candidate questions from graph relations and failure modes with human approval before publication",
+    "review and promote mature draft/noindex Lab pages",
+    "portable import and export of local practice history without a server dependency"
   ]
 }
