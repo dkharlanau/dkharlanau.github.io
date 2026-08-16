@@ -8,6 +8,7 @@ permalink: /sitemap-data.xml
 {%- assign recommendations_json = site.pages | where: "url", "/ai/recommendations.json" | first -%}
 {%- assign catalog_json = site.pages | where: "url", "/ai/catalog.json" | first -%}
 {%- assign discovery_map_json = site.pages | where: "url", "/ai/discovery-map.json" | first -%}
+{%- assign knowledge_index_json = site.pages | where: "url", "/ai/page-knowledge-index.json" | first -%}
 {%- assign llm_legacy = site.pages | where: "url", "/LLM.txt" | first -%}
 {%- assign llm_lower = site.pages | where: "url", "/llms.txt" | first -%}
 <?xml version="1.0" encoding="UTF-8"?>
@@ -18,6 +19,7 @@ permalink: /sitemap-data.xml
   <url><loc>https://dkharlanau.github.io/ai/recommendations.json</loc><lastmod>{{ recommendations_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/ai/catalog.json</loc><lastmod>{{ catalog_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/ai/discovery-map.json</loc><lastmod>{{ discovery_map_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
+  <url><loc>https://dkharlanau.github.io/ai/page-knowledge-index.json</loc><lastmod>{{ knowledge_index_json.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/LLM.txt</loc><lastmod>{{ llm_legacy.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/llms.txt</loc><lastmod>{{ llm_lower.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/llms-full.txt</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
@@ -28,4 +30,9 @@ permalink: /sitemap-data.xml
   <url><loc>https://dkharlanau.github.io/ai/profile-audit.json</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/atlas/manifest.json</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
   <url><loc>https://dkharlanau.github.io/ai/rag/related.json</loc><lastmod>{{ site.time | date_to_xmlschema }}</lastmod></url>
+  {% for file in site.static_files %}
+    {% if file.path contains '/ai/pages/' and file.extname == '.json' %}
+  <url><loc>{{ file.path | absolute_url }}</loc></url>
+    {% endif %}
+  {% endfor %}
 </urlset>
