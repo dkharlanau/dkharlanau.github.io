@@ -44,6 +44,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/practice-engine/"><span>ADAPT</span><strong>Adaptive Practice Engine</strong><small>Select one case using weak dimensions, weak tracks, reasoning-level gaps, and recent history.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
       <a href="/labs/assessment/mock/"><span>MOCK</span><strong>Mock Assessment</strong><small>Run a balanced multi-case session across Sales, Procurement & Logistics, Integration & Architecture, and AI & Data.</small><i class="material-symbols-outlined" aria-hidden="true">assignment</i></a>
       <a href="/labs/assessment/review/"><span>REVIEW</span><strong>Review Queue</strong><small>Turn local weak signals into focused review routes, then repeat a related case.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>
+      <a href="/labs/assessment/progress/"><span>PROGRESS</span><strong>Progress & Portability</strong><small>Inspect local scoring history and move canonical attempts between browsers without a server profile.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
       <a href="/labs/assessment/cross-process/"><span>X</span><strong>Cross-Process Lead Cases</strong><small>Practice scenarios where the visible symptom crosses several SAP domains.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
     </div>
   </section>
@@ -127,8 +128,8 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
     <header><p class="research-canvas__eyebrow">Coverage</p><h2>The foundation is broad enough. Practice now adapts to the result.</h2><p>The main vertical backlog is complete. The next improvements should make scoring and review more useful rather than add volume.</p></header>
     <div class="ecg-decision-columns">
       <div><h4>Knowledge base</h4><ul><li>Sales, Shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory</li><li>FI/CO touchpoints, Automotive JIT/JIS, EWM and TM</li><li>Integration architecture and recovery operations</li><li>MDG, SAP development/deployment, Business AI and AI architecture</li></ul></div>
-      <div><h4>Practice layer</h4><ul><li>59 structured cases</li><li>Adaptive single-case selection</li><li>Balanced mock sessions</li><li>Weak-signal review queue</li><li>Shared seven-dimension scoring history</li></ul></div>
-      <div><h4>Next iteration</h4><ul><li>Calibrate scoring with real assessment feedback</li><li>Generate candidate questions from graph evidence</li><li>Human review and promotion of mature pages</li><li>Portable local practice-history import and export</li></ul></div>
+      <div><h4>Practice layer</h4><ul><li>59 structured cases</li><li>Adaptive single-case selection</li><li>Balanced mock sessions</li><li>Weak-signal review queue</li><li>Shared seven-dimension scoring history</li><li>Portable local history import and export</li></ul></div>
+      <div><h4>Next iteration</h4><ul><li>Calibrate scoring with real assessment feedback</li><li>Generate candidate questions from graph evidence</li><li>Human review and promotion of mature pages</li><li>Capture real assessment feedback for scoring calibration</li></ul></div>
     </div>
   </section>
 
@@ -148,7 +149,8 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <a href="/labs/assessment/data/adaptive-selection.json"><span>ADAPT</span><strong>Adaptive Selection Contract</strong><small>Weakness, coverage, reasoning level, recency, and diversity weighting.</small><i class="material-symbols-outlined" aria-hidden="true">tune</i></a>
       <a href="/labs/assessment/data/mock-session.json"><span>MOCK</span><strong>Mock Session Contract</strong><small>Track quotas, reasoning-level pressure, cross-process minimums, and shared scoring history.</small><i class="material-symbols-outlined" aria-hidden="true">assignment</i></a>
       <a href="/labs/assessment/data/review-map.json"><span>REVIEW</span><strong>Review Map</strong><small>Weak dimension and weak track to focused review route.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>
-      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-012 are complete; next work focuses on calibration and review quality.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
+      <a href="/labs/assessment/data/history-portability.json"><span>HISTORY</span><strong>History Portability Contract</strong><small>Versioned browser-only export, validation, merge, and replace rules.</small><i class="material-symbols-outlined" aria-hidden="true">move_up</i></a>
+      <a href="/labs/assessment/data/backlog.json"><span>LOOP</span><strong>Development State</strong><small>LOOP-001 through LOOP-013 are complete; next work focuses on calibration and review quality.</small><i class="material-symbols-outlined" aria-hidden="true">playlist_add_check</i></a>
     </div>
   </section>
 
