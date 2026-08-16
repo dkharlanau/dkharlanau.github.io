@@ -1,0 +1,307 @@
+---
+layout: default
+title: "Board Mode — SAP Lead Assessment Lab"
+description: "Timed oral SAP Lead practice using Core 12 ownership-boundary drills and the shared 21-point scoring model."
+permalink: /labs/assessment/board/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, oral-practice, diagnostics, lead]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li><a href="/labs/assessment/core/">Core 12</a></li><li aria-current="page">Board Mode</li></ol></nav>
+
+<div class="research-canvas board-mode" id="board-mode">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Timed oral practice</p>
+      <h1>Six minutes.<br />Explain the boundary.</h1>
+      <p>One synthetic cross-route scenario at a time. Speak the answer before revealing the reasoning path. Score the reasoning, not the number of SAP terms you managed to fit into one breath.</p>
+      <button class="research-canvas__button" id="board-new-session" type="button">Start new session <span class="material-symbols-outlined" aria-hidden="true">play_arrow</span></button>
+    </div>
+    <div class="research-canvas__signal" aria-label="Board Mode session">
+      <p>Default session</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Rounds</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>6:00</strong><small>Per round</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>21</strong><small>Maximum score</small></div>
+      <em>Browser-only · no automatic history writes</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">timer</span>
+    <p><strong>Board rule:</strong> state the expected business result, draw the owners, find the first divergence, prove the cause, prove end-to-end completion, then add one trade-off. The timer is pressure, not a typing contest.</p>
+    <a href="/labs/assessment/data/board-mode.json">Open Board Mode contract <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="board-session" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Current round</p>
+      <h2 id="board-title">Start a session to load a drill.</h2>
+      <p id="board-routes">The session selects four boundary drills without replacement.</p>
+    </header>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h4>Timer</h4>
+        <p class="ecg-big-number" id="board-timer" aria-live="polite">6:00</p>
+        <p><button type="button" id="board-timer-toggle">Start timer</button> <button type="button" id="board-timer-reset">Reset</button></p>
+      </div>
+      <div>
+        <h4>Scenario</h4>
+        <p id="board-scenario">No drill loaded.</p>
+      </div>
+      <div>
+        <h4>Your task</h4>
+        <p id="board-prompt">Speak your answer before revealing the hints.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">help</span>
+      <p><strong>Boundary question:</strong> <span id="board-boundary-question">Hidden. Use it only when your answer gets stuck.</span></p>
+      <button type="button" id="board-reveal-boundary">Reveal boundary question</button>
+    </div>
+
+    <div class="research-route-list">
+      <button type="button" id="board-reveal-reasoning"><span>CHECK</span><strong>Reveal reasoning path</strong><small>Finish the oral answer first. Then compare structure, not wording.</small><i class="material-symbols-outlined" aria-hidden="true">visibility</i></button>
+    </div>
+
+    <div id="board-reasoning" hidden>
+      <div class="ecg-decision-columns">
+        <div><h4>Expected reasoning</h4><ol id="board-reasoning-list"></ol></div>
+        <div><h4>Red flags</h4><ul id="board-red-flags"></ul></div>
+        <div><h4>Self-check</h4><p>Did you identify the first wrong owner, or did you spend six minutes describing the final symptom with excellent vocabulary?</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="board-score" data-reveal>
+    <header><p class="research-canvas__eyebrow">Shared scoring</p><h2>Score the answer on the same seven dimensions.</h2><p>0 means missing or materially wrong. 3 means a Lead-level answer with ownership, evidence, trade-offs, and downstream impact.</p></header>
+    <div class="ecg-control-stack" id="board-score-grid"></div>
+    <div class="research-canvas__boundary">
+      <span class="material-symbols-outlined" aria-hidden="true">score</span>
+      <p><strong>Round score:</strong> <span id="board-total">0</span> / 21 · <span id="board-band">Not scored</span></p>
+      <button type="button" id="board-next-round" disabled>Next round</button>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Session result</p><h2>Four rounds are enough to expose a pattern.</h2><p>Board Mode keeps the current session in memory only. It does not modify your persistent assessment history.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Round</h4><p id="board-round-state">0 / 4</p></div>
+      <div><h4>Average</h4><p id="board-average">—</p></div>
+      <div><h4>Lead-signal rounds</h4><p id="board-lead-rounds">0</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+    <p><strong>Boundary:</strong> Board Mode uses synthetic drills and self-scoring. It does not publish a case, approve a candidate, verify a page, or write assessment history automatically.</p>
+    <a href="/labs/assessment/core-boundaries/">Open all Core Boundary Drills <span class="material-symbols-outlined" aria-hidden="true">swap_horiz</span></a>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<script>
+(function () {
+  const state = {
+    drills: [],
+    scoring: null,
+    contract: null,
+    session: [],
+    roundIndex: -1,
+    scores: [],
+    remaining: 360,
+    timer: null,
+    running: false
+  };
+
+  const $ = id => document.getElementById(id);
+  const shuffle = items => {
+    const copy = items.slice();
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  };
+
+  function formatTime(seconds) {
+    const safe = Math.max(0, seconds);
+    return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, '0')}`;
+  }
+
+  function stopTimer() {
+    if (state.timer) clearInterval(state.timer);
+    state.timer = null;
+    state.running = false;
+    $('board-timer-toggle').textContent = 'Start timer';
+  }
+
+  function resetTimer() {
+    stopTimer();
+    state.remaining = state.contract ? state.contract.default_session.seconds_per_round : 360;
+    $('board-timer').textContent = formatTime(state.remaining);
+  }
+
+  function toggleTimer() {
+    if (state.roundIndex < 0) return;
+    if (state.running) {
+      stopTimer();
+      return;
+    }
+    state.running = true;
+    $('board-timer-toggle').textContent = 'Pause timer';
+    state.timer = setInterval(() => {
+      state.remaining -= 1;
+      $('board-timer').textContent = formatTime(state.remaining);
+      if (state.remaining <= 0) stopTimer();
+    }, 1000);
+  }
+
+  function currentDrill() {
+    return state.session[state.roundIndex] || null;
+  }
+
+  function scoreBand(total) {
+    if (!state.scoring) return 'Not scored';
+    const band = state.scoring.bands.find(item => total >= item.min && total <= item.max);
+    return band ? band.label : 'Not scored';
+  }
+
+  function renderScoreGrid() {
+    const grid = $('board-score-grid');
+    grid.innerHTML = '';
+    if (!state.scoring) return;
+    state.scoring.dimensions.forEach(dimension => {
+      const article = document.createElement('article');
+      article.innerHTML = `<span>SCORE</span><h3>${dimension.label}</h3><p>${dimension.question}</p>`;
+      const select = document.createElement('select');
+      select.dataset.dimension = dimension.id;
+      select.setAttribute('aria-label', `${dimension.label} score`);
+      [0, 1, 2, 3].forEach(value => {
+        const option = document.createElement('option');
+        option.value = String(value);
+        option.textContent = `${value} — ${state.scoring.scale.labels[String(value)]}`;
+        select.appendChild(option);
+      });
+      select.addEventListener('change', updateTotal);
+      article.appendChild(select);
+      grid.appendChild(article);
+    });
+    updateTotal();
+  }
+
+  function updateTotal() {
+    const selects = Array.from(document.querySelectorAll('#board-score-grid select'));
+    const total = selects.reduce((sum, select) => sum + Number(select.value), 0);
+    $('board-total').textContent = String(total);
+    $('board-band').textContent = scoreBand(total);
+  }
+
+  function resetScores() {
+    document.querySelectorAll('#board-score-grid select').forEach(select => { select.value = '0'; });
+    updateTotal();
+  }
+
+  function revealBoundary() {
+    const drill = currentDrill();
+    if (drill) $('board-boundary-question').textContent = drill.boundary_question;
+  }
+
+  function revealReasoning() {
+    const drill = currentDrill();
+    if (!drill) return;
+    const reasoning = $('board-reasoning-list');
+    const flags = $('board-red-flags');
+    reasoning.innerHTML = '';
+    flags.innerHTML = '';
+    drill.expected_reasoning.forEach(text => {
+      const li = document.createElement('li'); li.textContent = text; reasoning.appendChild(li);
+    });
+    drill.red_flags.forEach(text => {
+      const li = document.createElement('li'); li.textContent = text; flags.appendChild(li);
+    });
+    $('board-reasoning').hidden = false;
+    $('board-next-round').disabled = false;
+  }
+
+  function renderRound() {
+    const drill = currentDrill();
+    if (!drill) return;
+    resetTimer();
+    resetScores();
+    $('board-title').textContent = drill.title;
+    $('board-routes').textContent = drill.routes.map(route => route.replace('/labs/enterprise-context/', '').replaceAll('/', '')).join(' ↔ ');
+    $('board-scenario').textContent = drill.scenario;
+    $('board-prompt').textContent = drill.prompt;
+    $('board-boundary-question').textContent = 'Hidden. Use it only when your answer gets stuck.';
+    $('board-reasoning').hidden = true;
+    $('board-next-round').disabled = true;
+    $('board-round-state').textContent = `${state.roundIndex + 1} / ${state.session.length}`;
+  }
+
+  function commitRoundScore() {
+    const selects = Array.from(document.querySelectorAll('#board-score-grid select'));
+    const total = selects.reduce((sum, select) => sum + Number(select.value), 0);
+    state.scores[state.roundIndex] = total;
+    const completed = state.scores.filter(value => Number.isFinite(value));
+    const average = completed.length ? completed.reduce((a, b) => a + b, 0) / completed.length : 0;
+    $('board-average').textContent = completed.length ? `${average.toFixed(1)} / 21` : '—';
+    $('board-lead-rounds').textContent = String(completed.filter(value => value >= state.scoring.lead_signal_minimum).length);
+  }
+
+  function nextRound() {
+    if (state.roundIndex < 0) return;
+    commitRoundScore();
+    if (state.roundIndex + 1 >= state.session.length) {
+      stopTimer();
+      $('board-title').textContent = 'Session complete.';
+      $('board-routes').textContent = 'Review the weak scoring dimensions before starting another session.';
+      $('board-next-round').disabled = true;
+      return;
+    }
+    state.roundIndex += 1;
+    renderRound();
+  }
+
+  function newSession() {
+    if (!state.drills.length || !state.contract) return;
+    stopTimer();
+    const rounds = Math.min(state.contract.default_session.rounds, state.drills.length);
+    state.session = shuffle(state.drills).slice(0, rounds);
+    state.roundIndex = 0;
+    state.scores = [];
+    $('board-average').textContent = '—';
+    $('board-lead-rounds').textContent = '0';
+    renderRound();
+  }
+
+  Promise.all([
+    fetch('/labs/assessment/data/core-boundary-drills.json', {cache: 'no-store'}).then(response => response.json()),
+    fetch('/labs/assessment/data/scoring.json', {cache: 'no-store'}).then(response => response.json()),
+    fetch('/labs/assessment/data/board-mode.json', {cache: 'no-store'}).then(response => response.json())
+  ]).then(([drills, scoring, contract]) => {
+    state.drills = drills.drills;
+    state.scoring = scoring;
+    state.contract = contract;
+    state.remaining = contract.default_session.seconds_per_round;
+    $('board-timer').textContent = formatTime(state.remaining);
+    renderScoreGrid();
+  }).catch(() => {
+    $('board-title').textContent = 'Board Mode data could not be loaded.';
+  });
+
+  $('board-new-session').addEventListener('click', newSession);
+  $('board-timer-toggle').addEventListener('click', toggleTimer);
+  $('board-timer-reset').addEventListener('click', resetTimer);
+  $('board-reveal-boundary').addEventListener('click', revealBoundary);
+  $('board-reveal-reasoning').addEventListener('click', revealReasoning);
+  $('board-next-round').addEventListener('click', nextRound);
+}());
+</script>
