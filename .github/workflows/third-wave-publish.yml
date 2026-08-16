@@ -1,0 +1,127 @@
+name: Publish Reviewed Lab Wave 03
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/third-wave-publish.yml"
+
+concurrency:
+  group: reviewed-lab-wave-03
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml pytest
+
+      - name: Apply reviewed wave state
+        run: python3 scripts/publish_reviewed_lab_wave.py --wave lead-architecture-search-wave-03
+
+      - name: Refresh factual promotion readiness
+        run: python3 scripts/audit_assessment_promotion_readiness.py
+
+      - name: Rebuild discoverability inventory
+        run: python3 scripts/search_discoverability_inventory.py
+
+      - name: Open search only through promotion gate
+        run: python3 scripts/lab_search_promotion_loop.py --apply
+
+      - name: Check intent ownership
+        run: python3 scripts/audit_lab_search_intents.py --fail-on-missing-p1
+
+      - name: Enforce Lab publication policy
+        run: python3 scripts/check_lab_publication_gate.py
+
+      - name: Verify every approved route is indexable
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          import yaml
+
+          root = Path('.')
+          wave_id = 'lead-architecture-search-wave-03'
+          approvals = yaml.safe_load((root / '_data/labs/publication_reviews.yml').read_text())
+          wave = approvals['waves'][wave_id]
+          readiness = json.loads((root / 'labs/assessment/data/promotion-readiness.json').read_text())
+          by_route = {item['route']: item for item in readiness['items']}
+          errors = []
+          for route, cfg in wave['routes'].items():
+              path = root / cfg['source_path']
+              text = path.read_text(encoding='utf-8')
+              end = text.find('\n---', 4)
+              fm = yaml.safe_load(text[4:end])
+              if fm.get('status') != 'reviewed':
+                  errors.append(f'{route}: status={fm.get("status")}')
+              if fm.get('verified') is not True:
+                  errors.append(f'{route}: verified={fm.get("verified")}')
+              if 'noindex' in str(fm.get('robots', '')).lower():
+                  errors.append(f'{route}: robots={fm.get("robots")}')
+              if fm.get('sitemap') is not True:
+                  errors.append(f'{route}: sitemap={fm.get("sitemap")}')
+              if fm.get('publication_wave') != wave_id:
+                  errors.append(f'{route}: publication_wave={fm.get("publication_wave")}')
+              item = by_route.get(route)
+              if not item or item.get('state') != 'public_or_indexable':
+                  errors.append(f'{route}: readiness_state={None if not item else item.get("state")}')
+              if route == '/labs/enterprise-context/mdg/' and int((item or {}).get('structural_score') or 0) < 5:
+                  errors.append(f'{route}: structural_score={(item or {}).get("structural_score")}')
+          if errors:
+              raise SystemExit('Approved wave did not fully publish:\n' + '\n'.join(errors))
+          print(f'All {len(wave["routes"])} approved routes passed publication and readiness checks.')
+          PY
+
+      - name: Run publication safety tests
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 python3 -m pytest \
+            tests/test_publish_reviewed_lab_wave.py \
+            tests/test_search_discoverability_inventory.py \
+            tests/test_lab_search_promotion_loop.py
+
+      - name: Check readiness is current
+        run: python3 scripts/audit_assessment_promotion_readiness.py --check
+
+      - name: Check patch whitespace
+        run: git diff --check
+
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/third-wave-publish.yml
+
+      - name: Commit reviewed publication wave
+        run: |
+          git config user.name "DKharlanau Site Automation"
+          git config user.email "dkharlanau@users.noreply.github.com"
+          git add \
+            .github/workflows/third-wave-publish.yml \
+            labs/assessment/data/factual-review.json \
+            labs/assessment/data/promotion-readiness.json \
+            labs/enterprise-context/business-ai/index.md \
+            labs/enterprise-context/business-ai/agents/index.html \
+            labs/enterprise-context/data-governance/index.md \
+            labs/enterprise-context/deployment-models/index.md \
+            labs/enterprise-context/development/index.md \
+            labs/enterprise-context/mdg/interfaces/index.md \
+            labs/enterprise-context/sales-processes/integrations/index.html \
+            labs/enterprise-context/transportation-management/integrations/index.html \
+            labs/enterprise-context/mdg/index.md
+          git diff --cached --stat
+          git commit -m "Publish reviewed Lead architecture wave"
+          git pull --rebase origin main
+          git push origin HEAD:main
