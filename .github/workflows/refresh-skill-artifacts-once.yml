@@ -1,0 +1,55 @@
+name: Refresh Skill Artifacts Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/refresh-skill-artifacts-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml
+      - name: Regenerate Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+      - name: Validate portable skills
+        run: python3 agent-skills/exporters/validate_agent_skills.py
+      - name: Remove one-shot workflow and commit generated artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('.gitignore')
+          marker = '!.github/workflows/refresh-skill-artifacts-once.yml\n'
+          text = path.read_text(encoding='utf-8')
+          path.write_text(text.replace(marker, ''), encoding='utf-8')
+          PY
+          git rm .github/workflows/refresh-skill-artifacts-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A .gitignore .github/workflows/refresh-skill-artifacts-once.yml atlas/manifest.json llms-full.txt ai/rag/related.json ai/atlas-compact-index.json _data/expert_context.yml ai/expert-evidence.json ai/expert-promotion-inventory.json ai/verified-pages.json ai/markdown-clusters.json
+          git commit -m "chore: refresh skill discovery artifacts"
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            git fetch origin main
+            git rebase origin/main
+            python3 scripts/generate_atlas_artifacts.py
+            python3 agent-skills/exporters/validate_agent_skills.py
+            git add -A .gitignore .github/workflows/refresh-skill-artifacts-once.yml atlas/manifest.json llms-full.txt ai/rag/related.json ai/atlas-compact-index.json _data/expert_context.yml ai/expert-evidence.json ai/expert-promotion-inventory.json ai/verified-pages.json ai/markdown-clusters.json
+            git commit --amend --no-edit
+          done
+          exit 1
