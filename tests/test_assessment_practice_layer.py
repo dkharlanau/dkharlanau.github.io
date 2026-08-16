@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -119,6 +121,44 @@ def test_feedback_schema_and_calibration_policy_preserve_provenance() -> None:
     assert any("Do not create external feedback records" in rule for rule in policy["principles"])
 
 
+def test_graph_backed_candidate_inventory_is_review_stage_only() -> None:
+    manifest = load_json("case-sets.json")
+    inventory = load_json("question-candidates.json")
+    seeds = load_json("candidate-generation-seeds.json")
+    generation = load_json("question-generation.json")
+
+    assert manifest["total_cases"] == inventory["published_case_count"] == 59
+    assert generation["published_case_manifest"] == "/labs/assessment/data/case-sets.json"
+    assert generation["generated_inventory"] == "/labs/assessment/data/question-candidates.json"
+    assert seeds["dedup_threshold"] == 0.55
+    assert inventory["candidate_count"] == 2
+    assert inventory["rejected_duplicate_count"] == 12
+
+    candidates = {item["id"]: item for item in inventory["items"] if item["status"] == "candidate"}
+    assert set(candidates) == {"CAND-BIL-WRONG-REFERENCE", "CAND-INTOPS-OWNERSHIP"}
+    for item in inventory["items"]:
+        assert item["source_refs"]
+        assert item["evidence_map"]
+        assert len(item["evidence_map"]) == len(item["expected_points"])
+        assert item["dedup_signature"]
+        if item["status"] == "candidate":
+            assert not item["dedup"]["matching_case_ids"]
+        if item["status"] == "rejected_duplicate":
+            assert item["dedup"]["matching_case_ids"]
+
+
+def test_graph_backed_candidate_generator_is_reproducible() -> None:
+    result = subprocess.run(
+        [sys.executable, "scripts/generate_assessment_candidates.py", "--check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "59 published cases unchanged" in result.stdout
+
+
 def test_human_practice_routes_and_catalog_are_registered() -> None:
     expected_pages = {
         "practice-engine": ASSESSMENT / "practice-engine" / "index.html",
@@ -126,6 +166,7 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
         "review": ASSESSMENT / "review" / "index.html",
         "progress": ASSESSMENT / "progress" / "index.html",
         "feedback": ASSESSMENT / "feedback" / "index.html",
+        "question-review": ASSESSMENT / "question-review" / "index.html",
         "cross-process": ASSESSMENT / "cross-process" / "index.html",
     }
     for name, path in expected_pages.items():
@@ -139,13 +180,15 @@ def test_human_practice_routes_and_catalog_are_registered() -> None:
     assert modes["review"]["route"] == "/labs/assessment/review/"
     assert modes["progress"]["route"] == "/labs/assessment/progress/"
     assert modes["feedback"]["route"] == "/labs/assessment/feedback/"
+    authoring = {item["id"]: item for item in catalog["authoring_tools"]}
+    assert authoring["question-review"]["route"] == "/labs/assessment/question-review/"
 
 
 def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
