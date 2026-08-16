@@ -674,8 +674,11 @@ def main() -> int:
         report_md.extend(["", "## Errors", ""] + [f"- {e}" for e in errors])
     report_md.append("")
 
-    write_or_check(REPORT_JSON, report_json, args.check, changed)
-    write_or_check(REPORT_MD, "\n".join(report_md), args.check, changed)
+    # Reports are ephemeral run artifacts and are ignored by Git. A clean checkout
+    # must be able to use --check without failing because reports/seo is absent.
+    if not args.check:
+        write_or_check(REPORT_JSON, report_json, False, changed)
+        write_or_check(REPORT_MD, "\n".join(report_md), False, changed)
 
     if args.check and changed:
         print("AI search/trust metadata is stale:")
