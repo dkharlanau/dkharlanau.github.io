@@ -194,7 +194,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020", "LOOP-021", "LOOP-022", "LOOP-023", "LOOP-024"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -241,8 +241,8 @@ def test_factual_review_keeps_source_support_separate_from_page_verification() -
     assert review["summary"]["source_supported"] == sum(1 for claim in review["claims"] if claim["status"] == "source_supported")
     assert review["summary"]["source_conflict"] == sum(1 for claim in review["claims"] if claim["status"] == "source_conflict")
     assert review["summary"]["human_verification_required"] == sum(1 for claim in review["claims"] if claim["human_verification_required"])
-    assert review["summary"]["routes_reviewed"] == 16
-    assert review["summary"]["claims_reviewed"] == 43
+    assert review["summary"]["routes_reviewed"] == 21
+    assert review["summary"]["claims_reviewed"] == 53
     assert all(item["page_verified"] is False for item in review["routes"])
     assert all(claim["status"] == "source_supported" for claim in review["claims"])
     assert all(claim["human_verification_required"] is True for claim in review["claims"])
@@ -262,7 +262,7 @@ def test_promotion_readiness_uses_factual_review_coverage_for_priority() -> None
     by_route = {item["route"]: item for item in inventory["items"]}
 
     assert inventory["factual_review_registry"] == "/labs/assessment/data/factual-review.json"
-    assert inventory["factual_review_counts"]["source_supported"] == len(reviewed_routes) == 16
+    assert inventory["factual_review_counts"]["source_supported"] == len(reviewed_routes) == 21
     assert sum(inventory["priority_counts"].values()) == inventory["scope_route_count"]
     for route in reviewed_routes:
         assert by_route[route]["factual_review"]["status"] == "source_supported"
@@ -270,9 +270,14 @@ def test_promotion_readiness_uses_factual_review_coverage_for_priority() -> None
         assert by_route[route]["priority"] == "P1"
         assert "human page-level verification" in by_route[route]["review_reason"]
 
-    assert by_route["/labs/enterprise-context/pricing/"]["factual_review"]["status"] == "not_reviewed"
-    assert by_route["/labs/enterprise-context/pricing/"]["priority"] == "P0"
-    assert "primary-source review" in by_route["/labs/enterprise-context/pricing/"]["review_reason"]
+    required_unreviewed = [
+        item for item in inventory["items"]
+        if item.get("evidence_profile", {}).get("counts_as_source_review_debt")
+        and item.get("factual_review", {}).get("status") in {"not_reviewed", "needs_source_review"}
+    ]
+    for item in required_unreviewed:
+        assert item["priority"] == "P0"
+        assert "primary-source review" in item["review_reason"]
 
 def test_evidence_coverage_is_reproducible_and_tracks_review_debt() -> None:
     coverage = load_json("evidence-coverage.json")
@@ -281,8 +286,8 @@ def test_evidence_coverage_is_reproducible_and_tracks_review_debt() -> None:
     assert coverage["source_contracts"]["factual_review"] == "/labs/assessment/data/factual-review.json"
     assert coverage["source_contracts"]["evidence_profile"] == "/labs/assessment/data/evidence-profile.json"
     assert len(coverage["tracks"]) == 4
-    assert coverage["summary"]["unique_source_reviewed_routes"] >= 16
-    assert coverage["summary"]["source_supported_claims"] >= 43
+    assert coverage["summary"]["unique_source_reviewed_routes"] >= 21
+    assert coverage["summary"]["source_supported_claims"] >= 53
     assert coverage["summary"]["unique_source_reviewed_routes"] <= coverage["summary"]["unique_externally_review_required_routes"]
     assert coverage["summary"]["unique_selective_or_heuristic_routes"] >= 2
     assert all(track["source_reviewed_routes"] <= track["externally_review_required_routes"] for track in coverage["tracks"])

@@ -1,15 +1,15 @@
 {
   "id": "sap-lead-factual-review",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "updated_at": "2026-08-16",
   "policy": "/labs/assessment/data/factual-review-policy.json",
   "review_boundary": "Claims below were checked against current SAP primary sources. This does not change page-level verified, robots, sitemap, or publication status.",
   "summary": {
-    "routes_reviewed": 16,
-    "claims_reviewed": 43,
-    "source_supported": 43,
+    "routes_reviewed": 21,
+    "claims_reviewed": 53,
+    "source_supported": 53,
     "source_conflict": 0,
-    "human_verification_required": 43
+    "human_verification_required": 53
   },
   "routes": [
     {
@@ -180,6 +180,42 @@
       ]
     },
     {
+      "route": "/labs/enterprise-context/mdg/interfaces/",
+      "title": "MDG Interfaces",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-MDGI-001",
+        "FACT-MDGI-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/pricing/",
+      "title": "Sales Pricing",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-PRC-001",
+        "FACT-PRC-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/procurement/",
+      "title": "Procurement",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-PROC-001",
+        "FACT-PROC-002"
+      ]
+    },
+    {
       "route": "/labs/enterprise-context/production/",
       "title": "Production Planning & Execution",
       "review_status": "primary_source_review_complete",
@@ -201,6 +237,30 @@
       "claim_ids": [
         "FACT-QM-001",
         "FACT-QM-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/sales-order/",
+      "title": "Sales Order Decisions",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-SO-001",
+        "FACT-SO-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/shipping/",
+      "title": "Shipping and Scheduling",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-SHP-001",
+        "FACT-SHP-002"
       ]
     },
     {
@@ -911,6 +971,44 @@
       "human_verification_required": true
     },
     {
+      "id": "FACT-MDGI-001",
+      "route": "/labs/enterprise-context/mdg/interfaces/",
+      "claim": "The Data Replication Framework is used to define and execute replication from SAP S/4HANA or MDG to connected target systems. Replication models combine target systems with outbound implementations and can use filters, so successful governance and successful downstream distribution are separate responsibilities.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-MDG-DRF"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/sap_s4hana-on-premise/6d52de87aa0d4fb6a90924720a5b0549/0607694edd87437996a93e99d7ed3e28.html"
+      ],
+      "product_scope": "SAP Master Data Governance / Data Replication Framework",
+      "release_scope": "SAP S/4HANA 2025 FPS01 documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-MDGI-002",
+      "route": "/labs/enterprise-context/mdg/interfaces/",
+      "claim": "MDG separates governed staging and activation from replication to consuming systems. The data model and replication design therefore need an explicit active-data and downstream-distribution boundary; a completed change process alone does not prove that every target system can use the mastered object.",
+      "claim_type": "documented_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-MDG-DATA-MODEL",
+        "SRC-SAP-MDG-DRF"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/22d76454004f2357e10000000a44176d.html",
+        "https://help.sap.com/docs/sap_s4hana-on-premise/6d52de87aa0d4fb6a90924720a5b0549/0607694edd87437996a93e99d7ed3e28.html"
+      ],
+      "product_scope": "SAP Master Data Governance",
+      "release_scope": "SAP S/4HANA 2025 FPS01 documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
       "id": "FACT-PP-001",
       "route": "/labs/enterprise-context/production/",
       "claim": "A production version selects the alternative BOM together with the task list or master recipe and carries lot-size and validity restrictions. SAP uses production versions in planning and order creation to choose the suitable production technique.",
@@ -947,6 +1045,88 @@
       "reviewed_at": "2026-08-16",
       "human_verification_required": true,
       "evidence_class": "sap_product_primary"
+    },
+    {
+      "id": "FACT-PRC-001",
+      "route": "/labs/enterprise-context/pricing/",
+      "claim": "SAP pricing uses the condition technique. A condition type can have an access sequence that searches condition tables in a defined order until a valid condition record is found; the pricing procedure then arranges the relevant condition types and calculation steps.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-PRC-CONDITION-TECHNIQUE",
+        "SRC-SAP-PRC-ACCESS-SEQUENCES",
+        "SRC-SAP-PRC-PRICING-PROCEDURE"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c9b5e9de6e674fb99fff88d72c352291/d69fbe532789b44ce10000000a174cb4.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c9b5e9de6e674fb99fff88d72c352291/a2a1c1535fe6b74ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Sales Pricing",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-PRC-002",
+      "route": "/labs/enterprise-context/pricing/",
+      "claim": "Pricing procedure determination combines sales-area context with document and customer pricing indicators. Therefore a wrong procedure can be caused upstream by determination inputs even when the individual condition records themselves are correct.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-PRC-PRICING-PROCEDURE",
+        "SRC-SAP-SD-PRICING-PROCEDURE"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/s4hana-best-practices/setting-up-sell-from-stock-bd9-e9718dcb7c964bb736ee48ffe4a2c207/set-pricing-procedure-determination",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c9b5e9de6e674fb99fff88d72c352291/d69fbe532789b44ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Sales Pricing",
+      "release_scope": "SAP S/4HANA 2025 / best-practice configuration checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-PROC-001",
+      "route": "/labs/enterprise-context/procurement/",
+      "claim": "Automatic source determination can evaluate maintained sources and source-control objects such as purchasing info records, outline agreements, source lists, and quota arrangements. A selected supplier is therefore the result of source-of-supply logic and master data, not merely the vendor entered on the final purchase order.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-MM-SOURCE-DETERMINATION",
+        "SRC-SAP-MM-SOURCE-LIST",
+        "SRC-SAP-MM-QUOTA"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/20e8b65334e6b54ce10000000a174cb4.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/35e8b65334e6b54ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Sourcing and Procurement",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-PROC-002",
+      "route": "/labs/enterprise-context/procurement/",
+      "claim": "Purchase-order item category and account-assignment category solve different control problems. Item category shapes the procurement scenario and item processing, while account assignment determines which cost object or account receives the value when the purchase is not simply posted to valuated stock.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-MM-PO-ITEM-CATEGORIES",
+        "SRC-SAP-MM-ACCOUNT-ASSIGNMENT"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/45e8b65334e6b54ce10000000a174cb4.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/5ae8b65334e6b54ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Sourcing and Procurement",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
     },
     {
       "id": "FACT-QM-001",
@@ -986,6 +1166,85 @@
       "reviewed_at": "2026-08-16",
       "human_verification_required": true,
       "evidence_class": "sap_product_primary"
+    },
+    {
+      "id": "FACT-SHP-001",
+      "route": "/labs/enterprise-context/shipping/",
+      "claim": "Shipping-point determination uses shipping condition, loading group, and delivering plant as key inputs. The shipping point is an organizational execution unit for deliveries and shipping activities, so an unexpected shipping point should be diagnosed from those inputs before changing the delivery.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-SHP-POINTS",
+        "SRC-SAP-SHP-LOADING-GROUP",
+        "SRC-SAP-SD-DELIVERING-PLANT"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/5d1bbf53d25ab64ce10000000a174cb4.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/8fd7e5ec3c984728aadc19f6b9364988.html"
+      ],
+      "product_scope": "SAP S/4HANA Delivery Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-SHP-002",
+      "route": "/labs/enterprise-context/shipping/",
+      "claim": "Classic route determination evaluates transportation-relevant origin, destination, shipping-condition, and material transportation-group context. Route and scheduling are related but separate decisions: the route can supply transit and transportation-lead-time data used by transportation and delivery scheduling.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-SHP-ROUTE",
+        "SRC-SAP-SHP-SCHEDULING"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/c7894a248ca14f74aca67f97528e5ad7/601bbf53d25ab64ce10000000a174cb4.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/9dbdba53422bb54ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Sales and Delivery Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-SO-001",
+      "route": "/labs/enterprise-context/sales-order/",
+      "claim": "Sales document item category determination uses document and material context, including the sales document type and the material's item-category group, with additional controls such as usage or a higher-level item category where configured. The resulting item category controls important item behavior.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-SD-ITEM-CATEGORY-DETERMINATION",
+        "SRC-SAP-SD-DOCUMENT-CONTROL"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/dc89c95360267214e10000000a174cb4.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/c264b65334e6b54ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Sales",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-SO-002",
+      "route": "/labs/enterprise-context/sales-order/",
+      "claim": "Schedule line categories control delivery-relevant and requirements-related behavior at schedule-line level. Standard determination uses the sales item category together with MRP-related material context, so a schedule-line problem should be traced through item-category and material-planning inputs before changing the final order line.",
+      "claim_type": "configuration_behavior",
+      "evidence_class": "sap_product_primary",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-SD-SCHEDULE-LINE-CATEGORY"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7340a09096454b7abf4379f926a21567/cb64b65334e6b54ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Sales",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
     },
     {
       "id": "FACT-TM-001",
