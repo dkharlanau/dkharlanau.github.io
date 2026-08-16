@@ -96,7 +96,7 @@ def write_report(repo: Path, payload: dict, output_dir: str) -> None:
     out = repo / output_dir
     out.mkdir(parents=True, exist_ok=True)
     (out / "lab-search-intents.json").write_text(
-        json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+        json.dumps(payload, indent=2, ensure_ascii=False, default=str) + "\n", encoding="utf-8"
     )
 
     lines = [
