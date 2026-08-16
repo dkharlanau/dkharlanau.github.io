@@ -1,0 +1,37 @@
+name: Generate Assessment Candidates Once
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/generate-assessment-candidates-once.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install generator dependencies
+        run: python3 -m pip install pyyaml
+      - name: Generate question candidate inventory
+        run: python3 scripts/generate_assessment_candidates.py
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add labs/assessment/data/question-candidates.json
+          if git diff --cached --quiet; then
+            echo "Candidate inventory already current."
+            exit 0
+          fi
+          git commit -m "feat: generate graph-backed assessment candidates"
+          git push origin HEAD:main
