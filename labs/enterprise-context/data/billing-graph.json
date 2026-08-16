@@ -1,0 +1,79 @@
+{
+  "id": "GRAPH-SD-BILLING-REVENUE-HANDOFF",
+  "version": "1.0.0",
+  "updated_at": "2026-08-16",
+  "status": "researching",
+  "domain": "SAP S/4HANA Sales Billing",
+  "process_family": "Order-to-Cash",
+  "human_route": "/labs/enterprise-context/billing/",
+  "source_registry": "_data/labs/enterprise_context/sources/billing.yml",
+  "thesis": "Billing converts a billable business event into a customer charge and usually a financial posting. Diagnose the first wrong decision, not only the final invoice.",
+  "memory_path": ["DUE", "REFERENCE", "COPY", "SPLIT", "VALUE", "POST", "ISSUE", "CORRECT", "PROVE"],
+  "runtime": [
+    {"order":1,"id":"BIL-RUNTIME-DUE","question":"Why is the item billable now?","checks":["billing relevance","billing status","billing block","billing date or plan","completion","already billed quantity","due-list filters"]},
+    {"order":2,"id":"BIL-RUNTIME-REFERENCE","question":"Which business object and quantity are being billed?","checks":["source document","source item","quantity basis","partial billing history","document flow"]},
+    {"order":3,"id":"BIL-RUNTIME-COPY","question":"How does the source become billing state?","checks":["source type","source item category","target billing type","copying requirement","data transfer","billing quantity rule","pricing type"]},
+    {"order":4,"id":"BIL-RUNTIME-SPLIT","question":"Which billable items may share one billing header?","checks":["payer and bill-to","billing date","billing type","sales organization","currency","payment terms","tax/VAT fields","custom split logic"]},
+    {"order":5,"id":"BIL-RUNTIME-VALUE","question":"Which commercial values are copied or redetermined?","checks":["source pricing","billing pricing type","manual conditions","scales","tax context","freight/intercompany context"]},
+    {"order":6,"id":"BIL-RUNTIME-CREATE","question":"What billing document now represents the charge?","checks":["billing type","partners","dates","values","document flow","billing status"]},
+    {"order":7,"id":"BIL-RUNTIME-POST","question":"What financial posting should be created?","checks":["posting status","account key","customer/material account assignment groups","chart of accounts","sales organization","tax code","additional billing fields"]},
+    {"order":8,"id":"BIL-RUNTIME-ISSUE","question":"How is the invoice communicated externally?","checks":["billing output","customer channel","eDocument mapping where applicable","submission status","external response"]},
+    {"order":9,"id":"BIL-RUNTIME-CORRECT","question":"Should we cancel, credit, debit, or rebill?","checks":["business reason","original billing and FI state","customer receipt state","legal/localization constraints","desired correction"]},
+    {"order":10,"id":"BIL-RUNTIME-PROVE","question":"How do we prove completion?","checks":["source document flow","billing status","FI document","output/eDocument state","correction chain"]}
+  ],
+  "controls": [
+    {"id":"CFG-SD-BILLING-TYPE","label":"Billing Document Type","owns":"whole-document billing behavior"},
+    {"id":"CFG-SD-BILLING-COPY-CONTROL","label":"Copying Control","owns":"source-to-target requirements, data transfer, quantity basis, pricing type"},
+    {"id":"DET-SD-BILLING-SPLIT","label":"Split / Convergence","owns":"which items may share one billing header"},
+    {"id":"DET-SD-BILLING-PRICING-TRANSFER","label":"Pricing Transfer / Redetermination","owns":"how billing receives or recalculates price elements"},
+    {"id":"DET-SD-REVENUE-ACCOUNT","label":"Revenue Account Determination","owns":"G/L account selection at FI transfer"}
+  ],
+  "boundaries": [
+    {"from":"Sales Order / Delivery","to":"Billing","rule":"Upstream owns the billable event; Billing owns conversion into the customer charge."},
+    {"from":"Pricing","to":"Billing","rule":"Pricing owns calculation logic; Billing owns whether pricing is copied or redetermined."},
+    {"from":"Tax","to":"Billing","rule":"Tax owns tax logic; Billing carries the result and may change the runtime context."},
+    {"from":"Billing","to":"Financial Accounting","rule":"Billing owns commercial values; FI owns accounting state after transfer."},
+    {"from":"Billing","to":"Output / eDocument","rule":"Billing is the source document; external formatting, transmission and legal status remain separate responsibilities."}
+  ],
+  "correction_paths": [
+    {"id":"cancel-rebill","use_when":"The original billing event itself must be reversed and recreated.","evidence":["original billing document","cancellation document","FI reversal/offset where relevant","new billing document"]},
+    {"id":"credit-memo","use_when":"The customer receivable must be reduced through a controlled adjustment.","evidence":["credit reference/request where required","credit memo","FI receivable reduction"]},
+    {"id":"debit-memo","use_when":"The customer receivable must be increased through a controlled adjustment.","evidence":["debit reference/request where required","debit memo","FI receivable increase"]}
+  ],
+  "failure_modes": [
+    {"id":"FAIL-SD-BILLING-NOT-DUE","symptom":"Expected source is not billable.","check_first":["relevance","block","date/plan","completion","already billed quantity","due-list filters"]},
+    {"id":"FAIL-SD-BILLING-WRONG-REFERENCE","symptom":"Invoice quantity or source relationship is wrong.","check_first":["reference document/item","copying control","quantity rule","partial billing history","document flow"]},
+    {"id":"FAIL-SD-BILLING-SPLIT","symptom":"Unexpected multiple invoices.","check_first":["split analysis","payer/bill-to","currency","payment terms","billing date","sales organization","tax/VAT fields","custom logic"]},
+    {"id":"FAIL-SD-BILLING-PRICE","symptom":"Invoice value differs from expected sales value.","check_first":["billing pricing type","source pricing","billing date","manual conditions","scales","tax redetermination"]},
+    {"id":"FAIL-SD-BILLING-FI","symptom":"Invoice exists but FI transfer is blocked or account assignment is wrong.","check_first":["posting status","account key","revenue account determination","account assignment groups","chart/company context","tax code"]},
+    {"id":"FAIL-SD-BILLING-EXTERNAL","symptom":"Billing/FI are correct but customer or authority invoice state is wrong.","check_first":["output status","eDocument mapping","submission state","external response","localization rule"]},
+    {"id":"FAIL-SD-BILLING-CORRECTION","symptom":"Correction fixes the amount but leaves an unclear audit trail.","check_first":["business reason","original billing/FI state","cancellation relation","credit/debit reference","external legal status"]}
+  ],
+  "lead_lens": {
+    "what_i_ask_first": ["What is the billable event?", "Which layer is wrong: due state, reference, split, value, FI, or external issue?", "Which document owns the first incorrect value?"],
+    "main_trade_off": "Efficient billing without losing legal, accounting, and document-flow traceability.",
+    "typical_failure": "Repairing the final invoice instead of tracing the first wrong input or ownership boundary.",
+    "proof": ["document flow","due-list state","copy-control context","split analysis","pricing comparison","FI posting/account determination","output/eDocument status"]
+  },
+  "assessment_prompts": [
+    "A complete delivery does not appear in the billing due list. Build a hypothesis tree.",
+    "Two deliveries for one customer create two invoices. Prove the split reason before changing configuration.",
+    "The order value is 100 and the invoice is 105. Explain when this can be expected and what you inspect first.",
+    "The invoice value is correct but revenue posts to the wrong G/L. Separate pricing from account determination.",
+    "Billing and FI are correct but the e-invoice is rejected. Define ownership and recovery.",
+    "Compare cancellation/rebill with credit/debit correction after an invoice error."
+  ],
+  "source_ids": [
+    "SRC-SAP-BIL-PROCESSING",
+    "SRC-SAP-BIL-DUE-LIST",
+    "SRC-SAP-BIL-TYPE",
+    "SRC-SAP-BIL-COPYING-CONTROL",
+    "SRC-SAP-BIL-PRICING",
+    "SRC-SAP-BIL-SPLIT",
+    "SRC-SAP-BIL-SPLIT-ANALYSIS",
+    "SRC-SAP-BIL-ACCOUNT-DETERMINATION",
+    "SRC-SAP-BIL-CREDIT-DEBIT",
+    "SRC-SAP-BIL-CANCEL-API",
+    "SRC-SAP-BIL-EDOCUMENT"
+  ]
+}
