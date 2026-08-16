@@ -15,6 +15,10 @@ FRONT_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n", re.S)
 H1_RE = re.compile(r"<h1\b|^#\s+", re.I | re.M)
 META_KEYWORDS_RE = re.compile(r"<meta\s+[^>]*name=[\"']keywords[\"']", re.I)
 AUTHOR_ID = "https://dkharlanau.github.io/#dkharlanau"
+ALLOWED_RELATION_TYPES = {
+    "prerequisite", "used_by", "integrates_with", "determined_by", "diagnose_with",
+    "compare_with", "deep_dive", "parent_context", "same_domain", "related_topic",
+}
 
 
 def load_yaml(path: Path):
@@ -93,6 +97,8 @@ def main() -> int:
     entities = entities_doc.get("entities", {}) if isinstance(entities_doc, dict) else {}
     errors: list[str] = []
     strict_records = []
+    strict_routes: set[str] = set()
+    relation_targets: list[tuple[str, str]] = []
 
     for path in sorted((ROOT / "labs").rglob("*")):
         if path.suffix not in {".md", ".html"}:
@@ -108,6 +114,7 @@ def main() -> int:
         if not route.startswith("/labs/") or not strict_page(fm):
             continue
 
+        strict_routes.add(route)
         title = str(fm.get("seo_title") or fm.get("title") or "").strip()
         description = str(fm.get("description") or "").strip()
         primary = str(fm.get("primary_topic") or fm.get("primary_entity") or "").strip()
@@ -127,6 +134,18 @@ def main() -> int:
             errors.append(f"{route}: expected exactly one H1")
         if len(links) < 2:
             errors.append(f"{route}: fewer than two semantic links")
+        for relation in links:
+            if not isinstance(relation, dict):
+                errors.append(f"{route}: semantic relation must be a mapping")
+                continue
+            relation_type = str(relation.get("type") or "").strip()
+            target = str(relation.get("url") or "").strip()
+            if relation_type not in ALLOWED_RELATION_TYPES:
+                errors.append(f"{route}: unsupported semantic relation type {relation_type!r}")
+            if not target.startswith("/labs/"):
+                errors.append(f"{route}: semantic relation target must be a Lab route ({target})")
+            else:
+                relation_targets.append((route, target))
         if primary and primary not in entities:
             errors.append(f"{route}: unknown primary_topic {primary}")
         if isinstance(structured, dict) and structured.get("type") not in {None, "TechArticle", "techarticle"}:
@@ -158,6 +177,10 @@ def main() -> int:
                     errors.append(f"{route}: source-supported review has no sidecar sources")
 
         strict_records.append((route, title, description, intent))
+
+    for source, target in relation_targets:
+        if target not in strict_routes:
+            errors.append(f"{source}: semantic relation points to non-public/non-reviewed route {target}")
 
     for label, index in (("title", 1), ("description", 2), ("search_intent", 3)):
         values = defaultdict(list)
