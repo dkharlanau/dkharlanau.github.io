@@ -1,0 +1,77 @@
+---
+layout: default
+title: "Candidate Semantic Review — SAP Lead Assessment Lab"
+description: "Semantic review of generated SAP Lead assessment candidates after deterministic evidence and duplicate checks."
+permalink: /labs/assessment/candidate-semantic-review/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags: [sap, assessment, question-review, production, diagnostics]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li><a href="/labs/assessment/question-review/">Question Review</a></li><li aria-current="page">Semantic Review</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Candidate semantic review</p>
+      <h1>Lexically new<br />is not always a new case.</h1>
+      <p>The generator already checks evidence and likely duplicates. This pass asks a different question: does the candidate test a genuinely new Lead reasoning signal, or only describe an existing problem with different words?</p>
+      <a class="research-canvas__button" href="#decisions">Open review decisions <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Semantic review result">
+      <p>Production batch</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>3</strong><small>Candidates reviewed</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>2</strong><small>Retain for human review</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Semantic duplicate</small></div>
+      <em>Published case set unchanged</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+    <p><strong>Review boundary:</strong> this is an author-review recommendation. It can reject a weak candidate before human promotion review, but it cannot publish a case or satisfy the separate human approval gate.</p>
+    <a href="/labs/assessment/data/candidate-semantic-review.json">Open review dataset <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="decisions" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision 01</p><h2>Keep the MRP quantity diagnosis.</h2><p><strong>CAND-PP-WRONG-QUANTITY</strong> adds a real signal: reconstruct the net requirement before changing the planned order.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Why it is useful</h4><p>The current Production cases cover production model choice, production structure, staging, and cross-process completion. They do not isolate why MRP created too much, too little, or repeated supply.</p></div>
+      <div><h4>Lead path</h4><p>Requirement → stock and receipts → planning strategy → lot sizing → planning parameters → procurement type → net requirement.</p></div>
+      <div><h4>Review gate</h4><p>Do not accept a version that becomes a generic list of MRP settings. The answer must reconstruct the quantity decision.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision 02</p><h2>Keep the goods-receipt boundary diagnosis.</h2><p><strong>CAND-PP-GR</strong> tests the difference between production progress and the actual finished-product inventory event.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Why it is useful</h4><p>A confirmation can be correct while the expected finished product is still missing from the intended stock or warehouse context.</p></div>
+      <div><h4>Lead path</h4><p>Order quantity → GR relevance → quantity/UoM → storage, batch and quality context → automatic/manual GR → EWM inbound where used.</p></div>
+      <div><h4>Review gate</h4><p>Keep ownership explicit: Production progress, Inventory state, EWM execution and Quality status are related but not interchangeable.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision 03</p><h2>Reject the production-cost candidate as a semantic duplicate.</h2><p><strong>CAND-PP-COST</strong> looks new to the lexical filter, but its reasoning is already covered by <strong>ASSESS-FIN-005</strong>.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Same business problem</h4><p>A physically or technically complete production order still carries an unexplained financial balance.</p></div>
+      <div><h4>Same reasoning</h4><p>Actual debits → goods-receipt credits → order status → settlement rule/receiver → variance/WIP timing → settlement proof.</p></div>
+      <div><h4>Better next case</h4><p>If another finance case is needed, change the problem materially, for example sales-order settlement ownership or a period-end WIP design decision.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Working rule</p><h2>Use two duplicate filters.</h2><p>Lexical dedup protects the generator. Semantic review protects the assessment.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/question-review/"><span>01</span><strong>Generator review</strong><small>Evidence gate, graph provenance, lexical similarity and candidate inventory.</small><i class="material-symbols-outlined" aria-hidden="true">filter_alt</i></a>
+      <a href="/labs/assessment/candidate-semantic-review/"><span>02</span><strong>Semantic review</strong><small>Ask whether the candidate creates a new reasoning signal, not merely new wording.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/assessment/data/case-sets.json"><span>03</span><strong>Published set</strong><small>Changes only through a separate reviewed promotion. This pass keeps the published set unchanged.</small><i class="material-symbols-outlined" aria-hidden="true">lock</i></a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
