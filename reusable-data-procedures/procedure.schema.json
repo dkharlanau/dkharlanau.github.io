@@ -2,39 +2,85 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://dkharlanau.github.io/reusable-data-procedures/procedure.schema.json",
   "title": "Reusable Data Procedure",
-  "description": "Draft portable definition of workspace policy, source contracts, locators, extraction, deterministic transforms, validations, outputs and provenance. Run data is stored separately.",
+  "description": "Draft portable definition of catalog metadata, lifecycle, dependencies, workspace policy, source contracts, locators, deterministic transforms, validations, outputs and provenance. Run data is stored separately.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["kind", "specVersion", "id", "name", "purpose", "sources", "transforms", "validations", "outputs", "provenance"],
+  "required": ["kind", "specVersion", "id", "name", "purpose", "catalog", "lifecycle", "sources", "transforms", "validations", "outputs", "provenance"],
   "properties": {
     "kind": {"const": "reusable-data-procedure"},
-    "specVersion": {"type": "string", "const": "0.3"},
-    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "specVersion": {"type": "string", "const": "0.4"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$"},
     "name": {"type": "string", "minLength": 1, "maxLength": 120},
     "purpose": {"type": "string", "minLength": 1, "maxLength": 500},
-    "domain": {"type": "string"},
     "procedureVersion": {"type": "string", "default": "0.1.0"},
-    "status": {"enum": ["draft", "review", "approved", "deprecated"]},
     "owner": {"type": "string"},
+    "technicalSteward": {"type": "string"},
+    "catalog": {"$ref": "#/$defs/catalogMetadata"},
+    "lifecycle": {"$ref": "#/$defs/lifecycle"},
+    "dependencies": {"$ref": "#/$defs/dependencies"},
+    "consumers": {"type": "array", "items": {"type": "string"}},
     "workspacePolicy": {"$ref": "#/$defs/workspacePolicy"},
     "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/sourceContract"}},
     "mappings": {"type": "array", "default": [], "items": {"$ref": "#/$defs/mapping"}},
     "transforms": {"type": "array", "items": {"$ref": "#/$defs/transform"}},
     "validations": {"type": "array", "items": {"$ref": "#/$defs/validation"}},
     "outputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/output"}},
-    "runtimePolicy": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "allowCustomCode": {"type": "boolean", "default": false},
-        "onAmbiguousLocator": {"enum": ["quarantine", "manual-review", "stop"], "default": "manual-review"},
-        "onBreakingDrift": {"enum": ["stop", "manual-review"], "default": "stop"},
-        "onValidationFailure": {"enum": ["stop", "produce-exceptions", "manual-review"], "default": "stop"}
-      }
-    },
+    "runtimePolicy": {"$ref": "#/$defs/runtimePolicy"},
     "provenance": {"$ref": "#/$defs/provenance"}
   },
   "$defs": {
+    "catalogMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "jobFamily", "sensitivity", "criticality"],
+      "properties": {
+        "domain": {"type": "string"},
+        "jobFamily": {"enum": ["clean", "enrich", "reconcile", "compare", "consolidate", "validate", "migrate", "publish", "other"]},
+        "dataConcepts": {"type": "array", "items": {"type": "string"}},
+        "sourceFamilies": {"type": "array", "items": {"type": "string"}},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "sensitivity": {"enum": ["public", "internal", "confidential", "restricted"]},
+        "criticality": {"enum": ["ad-hoc", "operational", "business-critical"]},
+        "executionModes": {"type": "array", "items": {"enum": ["local", "team-service", "scheduled", "agent-triggered"]}}
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maturity"],
+      "properties": {
+        "maturity": {"enum": ["idea", "draft", "pilot", "approved", "deprecated"]},
+        "trustEvidence": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["regression-tested", "owner-reviewed", "production-proven", "fresh-review", "policy-cleared", "drift-observed"]}
+        },
+        "lastReviewedAt": {"type": "string", "format": "date-time"},
+        "reviewDueAt": {"type": "string", "format": "date-time"},
+        "deprecatedAt": {"type": "string", "format": "date-time"},
+        "replacementProcedure": {"type": "string"}
+      }
+    },
+    "dependencyRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": {"type": "string"},
+        "version": {"type": "string"},
+        "optional": {"type": "boolean", "default": false}
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "blocks": {"type": "array", "items": {"$ref": "#/$defs/dependencyRef"}},
+        "procedures": {"type": "array", "items": {"$ref": "#/$defs/dependencyRef"}},
+        "referenceData": {"type": "array", "items": {"$ref": "#/$defs/dependencyRef"}},
+        "externalSystems": {"type": "array", "items": {"type": "string"}}
+      }
+    },
     "workspacePolicy": {
       "type": "object",
       "additionalProperties": false,
@@ -154,11 +200,12 @@
       "required": ["id", "op"],
       "properties": {
         "id": {"type": "string"},
-        "op": {"enum": ["select", "rename", "cast", "trim", "normalize-space", "parse-null", "parse-date", "parse-decimal", "comparison-key", "filter", "lookup", "derive", "aggregate", "deduplicate", "sort", "route-exceptions", "custom"]},
+        "op": {"enum": ["select", "rename", "cast", "trim", "normalize-space", "parse-null", "parse-date", "parse-decimal", "comparison-key", "filter", "lookup", "derive", "aggregate", "deduplicate", "sort", "route-exceptions", "block-ref", "custom"]},
         "input": {"type": ["string", "array"], "items": {"type": "string"}},
         "output": {"type": "string"},
         "params": {"type": "object"},
         "mappingRef": {"type": "string"},
+        "blockRef": {"$ref": "#/$defs/dependencyRef"},
         "description": {"type": "string"}
       }
     },
@@ -168,10 +215,11 @@
       "required": ["id", "rule", "severity"],
       "properties": {
         "id": {"type": "string"},
-        "rule": {"enum": ["schema-compatible", "locator-confidence", "not-null", "unique", "referential-integrity", "mapping-coverage", "parse-success", "row-count", "control-total", "value-domain", "expression", "custom"]},
+        "rule": {"enum": ["schema-compatible", "locator-confidence", "not-null", "unique", "referential-integrity", "mapping-coverage", "parse-success", "row-count", "control-total", "value-domain", "expression", "block-ref", "custom"]},
         "target": {"type": "string"},
         "severity": {"enum": ["info", "warning", "error", "block"]},
         "params": {"type": "object"},
+        "blockRef": {"$ref": "#/$defs/dependencyRef"},
         "description": {"type": "string"}
       }
     },
@@ -186,6 +234,19 @@
         "fields": {"type": "array", "items": {"type": "string"}},
         "destination": {"type": "string"},
         "description": {"type": "string"}
+      }
+    },
+    "runtimePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowedEnvironments": {"type": "array", "items": {"enum": ["sandbox", "team", "production"]}},
+        "allowCustomCode": {"type": "boolean", "default": false},
+        "networkAccess": {"enum": ["none", "approved-only", "unrestricted"], "default": "none"},
+        "aiDataMode": {"enum": ["none", "metadata-only", "masked-samples", "approved-raw-samples"], "default": "none"},
+        "onAmbiguousLocator": {"enum": ["quarantine", "manual-review", "stop"], "default": "manual-review"},
+        "onBreakingDrift": {"enum": ["stop", "manual-review"], "default": "stop"},
+        "onValidationFailure": {"enum": ["stop", "produce-exceptions", "manual-review"], "default": "stop"}
       }
     },
     "provenance": {
