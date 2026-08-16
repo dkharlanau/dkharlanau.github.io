@@ -1,0 +1,95 @@
+---
+layout: default
+title: "Reusable Data Procedures — Governance"
+description: "A lightweight governance model for ownership, lifecycle, review, promotion, deprecation, policy and change impact of reusable data procedures."
+permalink: /reusable-data-procedures/governance/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Governance</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Detail / Governance</p>
+    <h1>Govern the reusable asset, not every spreadsheet click.</h1>
+    <p>The framework needs enough control to make approved procedures trustworthy without turning a monthly reconciliation into a six-person committee. Governance should scale with risk and reuse.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/building-blocks/">Blocks</a><a href="/reusable-data-procedures/governance/" aria-current="page">Governance</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Lifecycle</p><h2>Separate maturity from trust.</h2><p>A procedure can be mature but stale, or new but well tested. Lifecycle and trust should not be collapsed into one label.</p></div>
+    <div class="rdp__model-grid">
+      <article class="rdp__model-card"><span>01</span><strong>Idea</strong><p>Problem and candidate approach are recorded. No reusable execution claim yet.</p></article>
+      <article class="rdp__model-card"><span>02</span><strong>Draft</strong><p>Procedure contract exists and can run against fixtures or controlled examples.</p></article>
+      <article class="rdp__model-card"><span>03</span><strong>Pilot</strong><p>Used on real runs with an explicit owner and close review of exceptions and drift.</p></article>
+      <article class="rdp__model-card"><span>04</span><strong>Approved</strong><p>Accepted for its declared scope. Required tests, owner and policy checks are present.</p></article>
+      <article class="rdp__model-card"><span>05</span><strong>Deprecated</strong><p>Still traceable for history, but new use should move to a named replacement.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Trust evidence</p><h2>Prefer evidence badges over one magic score.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Regression tested</strong><p>Known fixtures cover important normal, boundary and failure cases.</p></article>
+      <article><strong>Owner reviewed</strong><p>The accountable business owner has reviewed purpose, rules and output meaning.</p></article>
+      <article><strong>Production proven</strong><p>Successful real runs exist for the declared source family and scope.</p></article>
+      <article><strong>Fresh review</strong><p>Review date is still valid for the procedure's criticality.</p></article>
+      <article><strong>Policy cleared</strong><p>Data classification, external calls, AI mode and custom code fit the approved policy.</p></article>
+      <article><strong>Drift observed</strong><p>The procedure has seen source changes and its repair behavior has been exercised.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Roles</p><h2>Use clear responsibility without inventing a department.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Role</th><th>Responsibility</th></tr></thead>
+      <tbody>
+        <tr><td>Author</td><td>Builds or changes procedure logic and fixtures.</td></tr>
+        <tr><td>Business owner</td><td>Owns purpose, business meaning, acceptance criteria and continued use.</td></tr>
+        <tr><td>Technical steward</td><td>Owns runtime compatibility, blocks, dependencies and operational behavior.</td></tr>
+        <tr><td>Data steward</td><td>Reviews important mappings, reference data, identifiers and data-quality rules when needed.</td></tr>
+        <tr><td>Reviewer</td><td>Checks a proposed version according to risk. One person may hold several roles in small teams.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Promotion</p><h2>Separate lifecycle from execution environment.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Sandbox</strong><p>Exploration, new locators, temporary samples and AI-assisted discovery are allowed according to data policy.</p></article>
+      <article><strong>Team</strong><p>Shared procedure versions, fixtures and reviews. Changes are visible to other users.</p></article>
+      <article><strong>Production</strong><p>Only approved versions and pinned dependencies execute. Runtime policy is stricter and evidence retention is enforced.</p></article>
+    </div>
+    <div class="rdp__callout"><strong>Important:</strong> promoting a procedure does not copy its raw input data. It promotes the definition, approved dependencies and policy.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Change control</p><h2>Review based on impact, not file size.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Change</th><th>Typical treatment</th></tr></thead>
+      <tbody>
+        <tr><td>Description or tags</td><td>Patch change. No execution review.</td></tr>
+        <tr><td>New optional alias or non-blocking validation</td><td>Minor change with regression tests.</td></tr>
+        <tr><td>Required field, key, mapping cardinality or business transform</td><td>Major change. Impact analysis and owner review.</td></tr>
+        <tr><td>Shared block major version</td><td>Query dependency graph before promotion.</td></tr>
+        <tr><td>New custom code, external endpoint or AI data mode</td><td>Policy and security review according to classification.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Expiry & deprecation</p><h2>Reusable does not mean immortal.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Review by date</strong><p>Operational and business-critical procedures have an explicit next review date.</p></article>
+      <article><strong>Stale warning</strong><p>A procedure with no recent review or successful runs remains discoverable but loses freshness evidence.</p></article>
+      <article><strong>Replacement chain</strong><p>Deprecated procedures point to a successor and explain the migration reason.</p></article>
+      <article><strong>Rollback</strong><p>Approved previous versions stay addressable so a bad revision can be rolled back without reconstructing yesterday from memory.</p></article>
+    </div>
+  </section>
+</div>
