@@ -1,0 +1,51 @@
+{
+  "kind": "rdp-synthetic-fixtures",
+  "specVersion": "0.1",
+  "caseId": "purchase-order-material-reconciliation",
+  "sourceRuns": {
+    "run-01": {
+      "workbook": "PO_August.xlsx",
+      "sheet": "Purchase Orders",
+      "headerRow": 7,
+      "headers": ["Purchasing Document", "Item", "Supplier", "Material", "Supplier Material", "Plant", "Order Quantity", "Order Unit", "Net Price", "Currency"],
+      "rows": [
+        ["4500010001", "00010", "SUP-1000", "MAT-471100", "VEND-A1", "1000", 20, "PC", 12.5, "EUR"],
+        ["4500010001", "00020", "SUP-1000", "MAT-471101", "VEND-A2", "1000", 12, "PC", 18.0, "EUR"],
+        ["4500010002", "00010", "SUP-2000", "MAT-471102", "VEND-B1", "1100", 30, "PC", 7.5, "EUR"],
+        ["4500010003", "00010", "SUP-2000", "MAT-471100", "VEND-B2", "1100", 10, "PC", 12.8, "EUR"]
+      ]
+    },
+    "run-02": {
+      "workbook": "PO_September.xlsx",
+      "sheet": "PO Export",
+      "headerRow": 11,
+      "headers": ["Purchase Order", "PO Item", "Vendor", "Material Number", "Supplier Mat.", "Plant", "Order Qty", "UoM", "Net Price", "Currency"],
+      "rows": [
+        ["4500010101", "00010", "SUP-1000", "MAT-471100", "VEND-A1", "1000", 20, "PC", 12.5, "EUR"],
+        ["4500010101", "00020", "SUP-1000", "MAT-471101", "VEND-A2", "1000", 12, "PC", 18.0, "EUR"],
+        ["4500010102", "00010", "SUP-2000", "MAT-471102", "VEND-B1", "1100", 30, "PC", 7.5, "EUR"],
+        ["4500010103", "00010", "SUP-2000", "MAT-471103", "VEND-Q9", "1100", 10, "PC", 21.0, "EUR"]
+      ]
+    }
+  },
+  "referenceReleases": {
+    "2026.08.1": [
+      {"Supplier": "SUP-1000", "SupplierMaterial": "VEND-A1", "CanonicalMaterial": "MAT-471100"},
+      {"Supplier": "SUP-1000", "SupplierMaterial": "VEND-A2", "CanonicalMaterial": "MAT-471101"},
+      {"Supplier": "SUP-2000", "SupplierMaterial": "VEND-B1", "CanonicalMaterial": "MAT-471102"},
+      {"Supplier": "SUP-2000", "SupplierMaterial": "VEND-B2", "CanonicalMaterial": "MAT-471100"}
+    ],
+    "2026.08.2": [
+      {"Supplier": "SUP-1000", "SupplierMaterial": "VEND-A1", "CanonicalMaterial": "MAT-471100"},
+      {"Supplier": "SUP-1000", "SupplierMaterial": "VEND-A2", "CanonicalMaterial": "MAT-471101"},
+      {"Supplier": "SUP-2000", "SupplierMaterial": "VEND-B1", "CanonicalMaterial": "MAT-471102"},
+      {"Supplier": "SUP-2000", "SupplierMaterial": "VEND-B2", "CanonicalMaterial": "MAT-471100"},
+      {"Supplier": "SUP-2000", "SupplierMaterial": "VEND-Q9", "CanonicalMaterial": "MAT-471103"}
+    ]
+  },
+  "notes": [
+    "All identifiers and values are synthetic.",
+    "Supplier Material is intentionally not globally unique across all possible suppliers; the reference key is Supplier + SupplierMaterial.",
+    "Run 02 contains a valid PO Material value for VEND-Q9. It may support a mapping proposal but cannot silently create reference data."
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "kind": "rdp-case-tests",
+  "specVersion": "0.1",
+  "caseId": "purchase-order-material-reconciliation",
+  "tests": [
+    {
+      "id": "golden-po-material-reconciliation",
+      "type": "golden",
+      "input": "fixtures.json#sourceRuns/run-01",
+      "procedure": "procedure.json",
+      "expected": {"publicationDecision": "publish", "rows": 4, "exceptions": 0, "mappingCoverage": 1.0, "quantityTotal": 72}
+    },
+    {
+      "id": "po-table-moved-and-headers-renamed",
+      "type": "drift",
+      "input": "fixtures.json#sourceRuns/run-02",
+      "mutation": ["header-row-7-to-11", "sheet-name-change", "approved-header-aliases"],
+      "expected": {"locatorRecovers": true, "driftClass": "resolvable", "businessMeaningChanged": false}
+    },
+    {
+      "id": "new-supplier-material-needs-review",
+      "type": "failure",
+      "input": "fixtures.json#sourceRuns/run-02",
+      "procedure": "procedure.json",
+      "expected": {"publicationDecision": "manual-review", "reasonCode": "SUPPLIER_MATERIAL_NOT_FOUND", "unresolvedSupplier": "SUP-2000", "unresolvedSupplierMaterial": "VEND-Q9"}
+    },
+    {
+      "id": "candidate-from-po-row-is-not-auto-approved",
+      "type": "boundary",
+      "input": "fixtures.json#sourceRuns/run-02",
+      "expected": {"candidateCanonicalMaterial": "MAT-471103", "automaticReferenceWrite": false, "reviewRequired": true}
+    },
+    {
+      "id": "supplier-material-is-composite-key",
+      "type": "boundary",
+      "mutation": "add another supplier using supplier material code VEND-A1 for a different canonical material",
+      "expected": {"globalSupplierMaterialUniquenessRequired": false, "compositeKey": ["Supplier", "SupplierMaterial"], "safe": true}
+    },
+    {
+      "id": "duplicate-composite-reference-key-blocks",
+      "type": "failure",
+      "mutation": "duplicate SUP-2000 + VEND-B1 with a second canonical material",
+      "expected": {"publicationDecision": "withhold", "reasonCode": "REFERENCE_KEY_NOT_UNIQUE"}
+    },
+    {
+      "id": "material-disagreement-blocks",
+      "type": "failure",
+      "mutation": "change PO Material while supplier-material mapping stays unchanged",
+      "expected": {"publicationDecision": "withhold", "failedValidation": "material-agreement"}
+    },
+    {
+      "id": "po-item-leading-zeros-preserved",
+      "type": "mutation",
+      "mutation": "convert item 00010 to numeric 10 before read",
+      "expected": {"detectionRequired": true, "silentReconstructionAllowed": false, "reviewOrBlock": true}
+    },
+    {
+      "id": "replay-after-approved-reference-release",
+      "type": "replay",
+      "input": "fixtures.json#sourceRuns/run-02",
+      "procedure": "procedure-replay.json",
+      "expected": {"publicationDecision": "publish", "rows": 4, "exceptions": 0, "mappingCoverage": 1.0, "quantityTotal": 72}
+    }
+  ],
+  "frameworkFindings": [
+    "Composite reference keys are first-class business constraints, not implementation details.",
+    "A value visible in the same PO row may support a mapping proposal but does not approve reference data.",
+    "Purchasing item identifiers must remain strings because lost leading zeros cannot be reconstructed safely from the damaged value alone."
+  ]
+}

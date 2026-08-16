@@ -1,0 +1,33 @@
+{
+  "kind": "reusable-data-procedure-run",
+  "specVersion": "0.1",
+  "runId": "case-po-material-run-02-replay",
+  "deployment": {"id": "case.manual-local", "version": "0.1"},
+  "procedure": {"id": "procurement.po-material-reconciliation", "version": "0.1.1", "planHash": "case-po-plan-v2"},
+  "engineVersion": "reference-case",
+  "trigger": "manual-replay",
+  "actor": "case-runner",
+  "status": "published",
+  "startedAt": "2026-08-16T14:25:00Z",
+  "finishedAt": "2026-08-16T14:25:02Z",
+  "inputs": [
+    {"role": "purchase_orders", "resource": "fixtures.json#sourceRuns/run-02", "hash": "sha256:synthetic-po-run-02", "fingerprint": "po-v2-ten-fields-aliases", "selectedRegion": "PO Export!A11:J15", "rowCount": 4}
+  ],
+  "resolvedDependencies": [
+    {"kind": "reference-dataset", "id": "sap.supplier-material-cross-reference", "version": "2026.08.2"}
+  ],
+  "drift": {"classification": "resolvable", "findings": ["table moved from row 7 to row 11", "approved header aliases used", "previous supplier-material reference gap is resolved by approved release 2026.08.2"]},
+  "validationSummary": {"passed": 4, "warnings": 0, "errors": 0, "blocking": 0},
+  "exceptions": {"count": 0, "byReason": {}},
+  "controlTotals": [
+    {"name": "order-quantity", "expected": 72, "actual": 72, "status": "pass"},
+    {"name": "supplier-material-coverage", "expected": 1.0, "actual": 1.0, "status": "pass"},
+    {"name": "material-agreement", "expected": 4, "actual": 4, "status": "pass"}
+  ],
+  "outputs": [
+    {"name": "po_material_reconciliation", "status": "published", "resource": "synthetic://case/po/run-02-replay/result", "hash": "sha256:synthetic-po-result-02-replay", "rowCount": 4},
+    {"name": "po_material_exceptions", "status": "published", "resource": "synthetic://case/po/run-02-replay/exceptions", "hash": "sha256:synthetic-exceptions-empty", "rowCount": 0}
+  ],
+  "publicationDecision": "publish",
+  "metrics": {"locatorConfidence": 0.94, "mappingCoverage": 1.0, "sourceQuantity": 72, "resultQuantity": 72, "materialAgreementRate": 1.0, "manualDecisionCount": 0}
+}

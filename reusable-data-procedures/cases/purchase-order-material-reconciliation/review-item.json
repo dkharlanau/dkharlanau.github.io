@@ -1,0 +1,43 @@
+{
+  "kind": "rdp-review-item",
+  "specVersion": "0.1",
+  "id": "review-supplier-material-vend-q9",
+  "type": "mapping-candidate",
+  "status": "decided",
+  "severity": "blocking",
+  "queue": "procurement-reference-gaps",
+  "assignee": "procurement-data-owner",
+  "question": "Should supplier SUP-2000 material code VEND-Q9 map to canonical SAP Material MAT-471103 for the defined SAP Procurement export source family?",
+  "context": {
+    "procedureId": "procurement.po-material-reconciliation",
+    "procedureVersion": "0.1.0",
+    "deploymentId": "case.manual-local",
+    "runId": "case-po-material-run-02",
+    "sourceRole": "purchase_orders",
+    "semanticConcept": "sap.material-id",
+    "referenceDataset": "sap.supplier-material-cross-reference",
+    "ruleId": "supplier-material-coverage",
+    "affectedConsumers": ["procurement-material-reconciliation-output"]
+  },
+  "evidence": {
+    "reasonCode": "SUPPLIER_MATERIAL_NOT_FOUND",
+    "facts": [
+      "Supplier SUP-2000 and Supplier Material VEND-Q9 are not present in reference release 2026.08.1.",
+      "The same PO item contains SAP Material MAT-471103.",
+      "Purchasing Document + Item remains unique and quantity controls pass.",
+      "The candidate is scoped to supplier SUP-2000; Supplier Material alone is not a global key."
+    ],
+    "metrics": {"mappingCoverage": 0.75, "affectedRows": 1, "locatorConfidence": 0.94},
+    "safeSamples": ["SUP-2000 | VEND-Q9 | MAT-471103"],
+    "evidenceRefs": ["run-02-review.json", "fixtures.json#sourceRuns/run-02"],
+    "confidenceComponents": {"sameRowMaterialEvidence": 0.95, "referenceHistory": 0.0, "scopeClarity": 0.95}
+  },
+  "candidates": [
+    {"id": "approve-scoped-mapping", "action": "Add SUP-2000 + VEND-Q9 -> MAT-471103 to a new reference release.", "expectedEffect": "Restore mapping coverage for the affected PO item without changing global material semantics.", "risk": "medium", "evidence": ["SAP Material is present on the same PO item", "composite supplier-material scope is explicit"]},
+    {"id": "reject-mapping", "action": "Keep VEND-Q9 unresolved and request upstream correction.", "expectedEffect": "Publication remains blocked for rows using this supplier-material pair.", "risk": "low", "evidence": ["No previous approved mapping exists"]}
+  ],
+  "businessImpact": "One PO item cannot pass the Procurement reconciliation gate until the supplier-material relationship is resolved.",
+  "decisionId": "decision-supplier-material-vend-q9",
+  "createdAt": "2026-08-16T14:22:03Z",
+  "updatedAt": "2026-08-16T14:24:00Z"
+}

@@ -1,0 +1,23 @@
+{
+  "kind": "reference-dataset",
+  "specVersion": "0.1",
+  "id": "sap.supplier-material-cross-reference",
+  "version": "2026.08.1",
+  "family": "cross-system-mapping",
+  "purpose": "Map a supplier-specific material code to one controlled SAP Material for Procurement reconciliation.",
+  "owner": "procurement-data-owner",
+  "steward": "master-data-steward",
+  "sensitivity": "internal",
+  "key": ["Supplier", "SupplierMaterial"],
+  "cardinality": "many-to-one",
+  "columns": [
+    {"name": "Supplier", "type": "string", "concept": "sap.business-partner-id", "required": true, "description": "Supplier identity within the defined Procurement source context."},
+    {"name": "SupplierMaterial", "type": "string", "required": true, "description": "Supplier-specific material code. It is not treated as globally unique."},
+    {"name": "CanonicalMaterial", "type": "string", "concept": "sap.material-id", "required": true, "description": "Controlled SAP Material resolved for the supplier code."}
+  ],
+  "qualityPolicy": {"requireUniqueKey": true, "onUnknownTarget": "block", "onUnmatched": "block", "onAmbiguous": "block", "minCoverage": 1.0},
+  "source": {"system": "controlled-reference", "locationRef": "fixtures.json#referenceReleases/2026.08.1", "authority": "procurement-data-owner"},
+  "consumers": ["procurement.po-material-reconciliation@0.1.0"],
+  "lifecycle": {"status": "approved", "effectiveFrom": "2026-08-01T00:00:00Z", "approvedBy": "procurement-data-owner", "approvedAt": "2026-08-01T09:00:00Z"},
+  "provenance": {"createdAt": "2026-08-01T08:30:00Z", "createdBy": "reference-case", "changeReason": "Golden reference release for the Procurement case."}
+}

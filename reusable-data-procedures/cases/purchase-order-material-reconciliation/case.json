@@ -1,0 +1,30 @@
+{
+  "kind": "rdp-reference-case",
+  "specVersion": "0.1",
+  "id": "purchase-order-material-reconciliation",
+  "title": "Purchase Order Material Reconciliation",
+  "domain": "procurement",
+  "pack": "sap-logistics-starter@0.1.0",
+  "purpose": "Prove composite supplier-material mapping, purchasing item identity, safe review behavior and replay after an approved cross-reference change.",
+  "synthetic": true,
+  "procedure": {"id": "procurement.po-material-reconciliation", "goldenVersion": "0.1.0", "replayVersion": "0.1.1"},
+  "concepts": ["sap.purchasing-document", "sap.purchasing-document-item", "sap.business-partner-id", "sap.material-id", "sap.plant-id"],
+  "referenceData": [
+    {"id": "sap.supplier-material-cross-reference", "goldenVersion": "2026.08.1", "replayVersion": "2026.08.2"}
+  ],
+  "sequence": [
+    {"step": 1, "id": "run-01", "state": "published", "point": "Golden PO items resolve supplier material codes with full coverage."},
+    {"step": 2, "id": "run-02-review", "state": "review-required", "point": "Table and headers drift safely; supplier material VEND-Q9 is unresolved for supplier SUP-2000."},
+    {"step": 3, "id": "review-supplier-material-vend-q9", "state": "decided", "point": "Reviewer approves the scoped supplier-material mapping to MAT-471103."},
+    {"step": 4, "id": "reference-release-2026.08.2", "state": "approved", "point": "Supplier-material cross-reference receives a new released version."},
+    {"step": 5, "id": "run-02-replay", "state": "published", "point": "The same PO source replays with pinned updated reference data."}
+  ],
+  "assertions": [
+    "Purchasing Document + Item is the stable row identity for this case.",
+    "Supplier Material alone is not a safe global key; Supplier + Supplier Material is required.",
+    "A candidate mapping observed in a PO row is evidence, not automatic master data.",
+    "Header and table movement may be recoverable without changing business logic.",
+    "Reference changes are versioned and linked to a decision.",
+    "Replay records exact procedure and reference versions."
+  ]
+}

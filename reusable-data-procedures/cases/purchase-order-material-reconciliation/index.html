@@ -1,0 +1,111 @@
+---
+layout: default
+title: "Reusable Data Procedures — Purchase Order Material Reconciliation"
+description: "Reference case for reconciling SAP Purchase Order items with a controlled supplier-material cross-reference across a golden run, drift, review and replay."
+permalink: /reusable-data-procedures/cases/purchase-order-material-reconciliation/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li><a href="/reusable-data-procedures/cases/">Reference Cases</a></li><li aria-current="page">Purchase Order Material Reconciliation</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Reference case 02 / SAP Procurement</p>
+    <h1>Purchase Order Material Reconciliation.</h1>
+    <p>The task looks close to the Sales case, but Procurement adds a useful complication: a supplier material code only has meaning together with its supplier. The case checks whether the framework can reuse the same control model without pretending the business semantics are identical.</p>
+    <nav class="rdp__subnav" aria-label="Case pages"><a href="/reusable-data-procedures/cases/">Casebook</a><a href="/reusable-data-procedures/packs/sap-logistics/">SAP Logistics Pack</a><a href="/reusable-data-procedures/review-inbox/">Review</a><a href="/reusable-data-procedures/decision-memory/">Decision Memory</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Business question</p><h2>Does each PO item agree with one controlled supplier-material relationship?</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Primary source</strong><p>A synthetic SAP Procurement workbook with Purchasing Document, Item, Supplier, Material, Supplier Material, Plant, quantity, unit, price and currency.</p></article>
+      <article><strong>Reference source</strong><p>A controlled cross-reference maps <code>Supplier + Supplier Material</code> to one canonical SAP Material.</p></article>
+      <article><strong>Key</strong><p><code>Purchasing Document + Item</code> identifies the PO row. The reference key is composite because the same supplier material text may mean something different for another supplier.</p></article>
+      <article><strong>Publication rule</strong><p>Publish only when every composite key resolves, the mapping agrees with the SAP Material, item identity is unique and quantity controls remain stable.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Run 01 / golden</p><h2>The controlled path proves the basic contract.</h2><p>Four PO items resolve through <code>sap.supplier-material-cross-reference@2026.08.1</code>. Purchasing Document + Item is unique, all mappings agree with the SAP Material and the ordered quantity stays 72.</p></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Signal</th><th>Expected result</th></tr></thead>
+      <tbody>
+        <tr><td>Locator</td><td>The PO table is found on row 7.</td></tr>
+        <tr><td>PO key</td><td>4 rows create 4 unique Purchasing Document + Item keys.</td></tr>
+        <tr><td>Reference key</td><td>Supplier + Supplier Material is unique in the controlled release.</td></tr>
+        <tr><td>Coverage</td><td>4 / 4 supplier-material pairs resolve.</td></tr>
+        <tr><td>Material agreement</td><td>The cross-reference result matches the SAP Material on all four PO items.</td></tr>
+        <tr><td>Quantity control</td><td>72 source units remain 72 result units.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Run 02 / drift</p><h2>Structural drift is recoverable. A new supplier mapping is not.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Table moved</strong><p>The table starts at row 11 instead of row 7 and the sheet changes from <code>Purchase Orders</code> to <code>PO Export</code>.</p></article>
+      <article><strong>Headers changed</strong><p><code>Purchasing Document</code> becomes <code>Purchase Order</code>, <code>Item</code> becomes <code>PO Item</code>, and other approved aliases appear.</p></article>
+      <article><strong>New supplier code</strong><p>Supplier <code>SUP-2000</code> sends <code>VEND-Q9</code>. The same PO row contains SAP Material <code>MAT-471103</code>, which is strong evidence but not an approved mapping.</p></article>
+      <article><strong>Safe outcome</strong><p>Coverage falls to 75%. The result is withheld and a mapping review is created. The procedure does not write into reference data by itself.</p></article>
+    </div>
+    <div class="rdp__rerun"><strong>Important:</strong> observing <code>VEND-Q9</code> next to <code>MAT-471103</code> is enough to propose a candidate. It is not enough to silently change a controlled cross-reference.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Why the key matters</p><h2>Supplier Material is not a global identifier.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Unsafe shortcut</strong><p>Using only <code>Supplier Material</code> as the reference key assumes every supplier uses a globally unique code space.</p></article>
+      <article><strong>Controlled model</strong><p>The key is <code>Supplier + Supplier Material</code>. Another supplier may use the same text for another material without creating a conflict.</p></article>
+      <article><strong>Cardinality gate</strong><p>One composite key must not point to two canonical materials in the same valid reference release.</p></article>
+      <article><strong>Semantic boundary</strong><p>The supplier code stays a source-specific identifier. The mapped target represents <code>sap.material-id</code>.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Human loop</p><h2>Evidence becomes a scoped reference change.</h2></div>
+    <div class="rdp__sequence">
+      <article><h3>1. Review item</h3><p>Ask whether <code>SUP-2000 + VEND-Q9</code> should map to <code>MAT-471103</code> for this Procurement source family.</p></article>
+      <article><h3>2. Decision</h3><p>The mapping is approved with composite supplier scope. It does not turn <code>VEND-Q9</code> into a global Material ID.</p></article>
+      <article><h3>3. Reference release</h3><p><code>sap.supplier-material-cross-reference@2026.08.2</code> adds the approved row while the previous release stays available for replay.</p></article>
+      <article><h3>4. Procedure revision</h3><p>Procedure <code>0.1.1</code> pins the approved reference release. Transform and validation logic remain unchanged.</p></article>
+      <article><h3>5. Replay</h3><p>The same Run 02 source now resolves all four rows, mapping coverage returns to 100% and publication proceeds.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">What this case proves</p><h2>The reusable part is the control model, not identical business logic.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Shared pattern</strong><p>Both Sales and Procurement use locate, normalize, lookup, validate, review, version and replay.</p></article>
+      <article><strong>Different meaning</strong><p>Sales used a direct material alias. Procurement needs a supplier-scoped composite cross-reference.</p></article>
+      <article><strong>Same-row evidence is still evidence</strong><p>A PO Material can support a mapping suggestion without granting permission to change reference data.</p></article>
+      <article><strong>Composite keys deserve tests</strong><p>Reference cardinality must be tested on the real business key, not on whichever column is easiest to index.</p></article>
+      <article><strong>Item IDs stay strings</strong><p><code>00010</code> must not silently become <code>10</code>. Once significant representation is lost, the framework must not invent it back.</p></article>
+      <article><strong>Safe failure is explainable</strong><p>Run 02 is a controlled review state, not an infrastructure failure.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Machine-readable bundle</p><h2>The page explains the case. The artifacts prove it.</h2></div>
+    <div class="rdp__route-list">
+      <a href="case.json"><span>CASE</span><strong>Case manifest</strong><small>Scope, concepts, reference versions and run sequence.</small><i class="material-symbols-outlined">data_object</i></a>
+      <a href="procedure.json"><span>PROC</span><strong>Procedure 0.1.0</strong><small>Golden Procurement procedure candidate.</small><i class="material-symbols-outlined">schema</i></a>
+      <a href="procedure-replay.json"><span>PROC</span><strong>Procedure 0.1.1</strong><small>Same logic pinned to the approved reference release.</small><i class="material-symbols-outlined">schema</i></a>
+      <a href="fixtures.json"><span>DATA</span><strong>Synthetic fixtures</strong><small>PO rows and supplier-material reference releases.</small><i class="material-symbols-outlined">table_view</i></a>
+      <a href="tests.json"><span>TEST</span><strong>Case tests</strong><small>Golden, composite-key, drift, failure and replay expectations.</small><i class="material-symbols-outlined">science</i></a>
+      <a href="run-01.json"><span>RUN</span><strong>Golden run</strong><small>Published execution with full coverage.</small><i class="material-symbols-outlined">fact_check</i></a>
+      <a href="run-02-review.json"><span>RUN</span><strong>Review run</strong><small>Withheld execution with one supplier-material gap.</small><i class="material-symbols-outlined">rule</i></a>
+      <a href="review-item.json"><span>REV</span><strong>Mapping review</strong><small>One scoped question for SUP-2000 + VEND-Q9.</small><i class="material-symbols-outlined">help_center</i></a>
+      <a href="decision-record.json"><span>DEC</span><strong>Decision record</strong><small>Approved composite mapping with explicit scope.</small><i class="material-symbols-outlined">history_edu</i></a>
+      <a href="reference-2026.08.1.json"><span>REF</span><strong>Reference 2026.08.1</strong><small>Golden supplier-material cross-reference.</small><i class="material-symbols-outlined">table_view</i></a>
+      <a href="reference-2026.08.2.json"><span>REF</span><strong>Reference 2026.08.2</strong><small>Approved release with VEND-Q9 mapping.</small><i class="material-symbols-outlined">table_view</i></a>
+      <a href="run-02-replay.json"><span>RUN</span><strong>Replay run</strong><small>Published execution after the reference update.</small><i class="material-symbols-outlined">replay</i></a>
+    </div>
+  </section>
+</div>
