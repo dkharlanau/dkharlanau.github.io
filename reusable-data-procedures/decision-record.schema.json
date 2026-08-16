@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/reusable-data-procedures/decision-record.schema.json",
+  "title": "Reusable Data Procedure Decision Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "specVersion", "id", "decisionType", "question", "decision", "scope", "evidence", "decidedAt"],
+  "properties": {
+    "kind": {"const": "rdp-decision-record"},
+    "specVersion": {"const": "0.1"},
+    "id": {"type": "string", "pattern": "^[a-zA-Z0-9._:-]+$"},
+    "reviewItemId": {"type": "string"},
+    "decisionType": {"enum": ["approve-semantic-binding", "approve-mapping", "reject-mapping", "accept-repair", "change-validation", "temporary-exception", "escalate-upstream", "no-change", "other"]},
+    "question": {"type": "string", "minLength": 1},
+    "decision": {"type": "string", "minLength": 1},
+    "rationale": {"type": "string"},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "semanticConcepts": {"type": "array", "items": {"type": "string"}},
+        "sourceFamilies": {"type": "array", "items": {"type": "string"}},
+        "systems": {"type": "array", "items": {"type": "string"}},
+        "organizations": {"type": "array", "items": {"type": "string"}},
+        "procedures": {"type": "array", "items": {"type": "string"}},
+        "referenceDatasets": {"type": "array", "items": {"type": "string"}},
+        "runIds": {"type": "array", "items": {"type": "string"}},
+        "scopeType": {"enum": ["global", "source-family", "procedure", "reference-data", "organization", "single-run", "custom"]}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "evidenceRefs": {"type": "array", "items": {"type": "string"}},
+        "facts": {"type": "array", "items": {"type": "string"}},
+        "safeSamples": {"type": "array", "items": {"type": "string"}},
+        "businessConfirmation": {"type": "string"},
+        "relatedDecisionIds": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "effectiveFrom": {"type": "string", "format": "date-time"},
+        "effectiveTo": {"type": "string", "format": "date-time"},
+        "reviewAt": {"type": "string", "format": "date-time"},
+        "expiresAt": {"type": "string", "format": "date-time"},
+        "invalidatedBy": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "action": {"enum": ["procedure-revision", "block-revision", "concept-binding", "reference-data-change", "validation-change", "exception-policy", "upstream-change", "none"]},
+        "targetId": {"type": "string"},
+        "proposedVersion": {"type": "string"},
+        "changeRef": {"type": "string"},
+        "testRefs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "status": {"enum": ["active", "expired", "superseded", "revoked"]},
+    "decidedBy": {"type": "string"},
+    "decidedAt": {"type": "string", "format": "date-time"},
+    "supersedes": {"type": "string"},
+    "supersededBy": {"type": "string"}
+  }
+}

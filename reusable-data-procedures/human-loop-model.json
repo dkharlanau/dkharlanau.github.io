@@ -1,0 +1,35 @@
+{
+  "id": "rdp-human-review-layer",
+  "version": "0.1",
+  "purpose": "Turn ambiguous execution signals and repeated manual interventions into governed, reusable decisions.",
+  "flow": ["signal", "review-item", "decision", "proposed-change", "test", "approval", "reuse"],
+  "review_item_types": ["ambiguous-locator", "semantic-binding", "mapping-candidate", "reference-gap", "breaking-drift", "validation-override", "business-rule-question", "duplicate-source"],
+  "review_statuses": ["open", "triaged", "in-review", "decided", "change-proposed", "applied", "closed", "superseded"],
+  "queue_views": ["blocked-runs", "recurring-exceptions", "drift-clusters", "reference-gaps", "stale-decisions", "high-impact-changes"],
+  "priority_signals": ["blocking-impact", "business-criticality", "recurrence", "affected-consumers", "due-date"],
+  "decision_types": ["approve-semantic-binding", "approve-mapping", "reject-mapping", "accept-repair", "change-validation", "temporary-exception", "escalate-upstream", "no-change"],
+  "scope_types": ["global", "source-family", "procedure", "reference-data", "organization", "single-run", "custom"],
+  "decision_outcomes": ["procedure-revision", "block-revision", "concept-binding", "reference-data-change", "validation-change", "exception-policy", "upstream-change", "none"],
+  "validity_modes": ["permanent-until-changed", "effective-dated", "review-by-date", "hard-expiry"],
+  "rules": [
+    "Do not ask a human twice for the same decision when the approved scope and evidence still apply.",
+    "A review item asks one explicit decision question.",
+    "A suggestion is not an approval.",
+    "A decision does not silently mutate an approved asset; it creates a proposed change or a scoped exception.",
+    "Accepted and rejected decisions are both reusable evidence.",
+    "Repeated temporary overrides signal missing normal logic or a broken upstream contract.",
+    "Decision memory stores evidence references and safe facts, not uncontrolled copies of production data."
+  ],
+  "graph": {
+    "nodes": ["run", "review-item", "decision", "procedure", "block", "semantic-concept", "reference-dataset", "validation", "exception-policy", "upstream-contract"],
+    "edges": ["raises", "resolves", "supported-by", "proposes-change-to", "applies-to", "supersedes", "rejects", "tests"]
+  },
+  "schemas": {
+    "review_item": "/reusable-data-procedures/review-item.schema.json",
+    "decision_record": "/reusable-data-procedures/decision-record.schema.json"
+  },
+  "pages": {
+    "review_inbox": "/reusable-data-procedures/review-inbox/",
+    "decision_memory": "/reusable-data-procedures/decision-memory/"
+  }
+}

@@ -1,0 +1,89 @@
+---
+layout: default
+title: "Reusable Data Procedures — Review Inbox"
+description: "A human-in-the-loop review model for ambiguous data decisions, drift, mapping gaps, exceptions and proposed changes."
+permalink: /reusable-data-procedures/review-inbox/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Review Inbox</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Human-in-the-loop</p>
+    <h1>Do not ask a human twice for the same decision.</h1>
+    <p>A review queue is useful only when a decision can become reusable knowledge. The framework should capture the signal, evidence, decision and resulting asset change instead of leaving the answer in chat, email or memory.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/catalog/">Catalog</a><a href="/reusable-data-procedures/review-inbox/" aria-current="page">Review Inbox</a><a href="/reusable-data-procedures/decision-memory/">Decision Memory</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Loop</p><h2>Signal → Review → Decision → Change → Test → Reuse</h2><p>The queue is not an error log. It is the place where uncertain execution is converted into controlled knowledge.</p></div>
+    <div class="rdp__sequence">
+      <article><h3>Signal</h3><p>A run detects ambiguity, breaking drift, a mapping gap, an unmatched reference value or a policy question.</p></article>
+      <article><h3>Review item</h3><p>Create one structured item with context, evidence, affected assets, candidates and the decision that is needed.</p></article>
+      <article><h3>Decision</h3><p>A reviewer accepts, rejects, limits or redirects the proposed action with a clear scope and reason.</p></article>
+      <article><h3>Proposed change</h3><p>The decision may create a procedure revision, concept binding, reference-data change, validation update or temporary exception.</p></article>
+      <article><h3>Test and approve</h3><p>Behavior-changing changes go through the relevant fixtures, impact analysis and approval policy.</p></article>
+      <article><h3>Reuse</h3><p>Later runs use the approved asset and should not reopen the same question unless the context or evidence changed.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Review item types</p><h2>Different uncertainty needs different treatment.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Type</th><th>Example</th><th>Typical outcome</th></tr></thead>
+      <tbody>
+        <tr><td>Ambiguous locator</td><td>Two worksheet regions both match the expected headers.</td><td>Improve locator evidence or bind a known region rule.</td></tr>
+        <tr><td>Semantic binding</td><td>A new field may represent Material ID, Product ID or an external supplier code.</td><td>Bind to a semantic concept or explicitly keep it local.</td></tr>
+        <tr><td>Mapping candidate</td><td>Two possible lookup fields have similar names and value overlap.</td><td>Approve one relation with cardinality evidence.</td></tr>
+        <tr><td>Reference gap</td><td>A new customer or material code is not in the released mapping.</td><td>Add, reject or route as a controlled exception.</td></tr>
+        <tr><td>Breaking drift</td><td>A required key disappeared or changed cardinality.</td><td>Stop, revise the contract or change the upstream agreement.</td></tr>
+        <tr><td>Validation override</td><td>A control total differs for a known business reason.</td><td>Create a scoped exception with expiry, or revise the rule.</td></tr>
+        <tr><td>Business-rule question</td><td>Cancelled orders appear for the first time.</td><td>Define explicit inclusion or exclusion behavior.</td></tr>
+        <tr><td>Duplicate source</td><td>The same monthly file arrived twice with a changed timestamp.</td><td>Skip, replace, create revision or request manual review.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Item contract</p><h2>Show enough evidence to decide without reopening the whole workbook.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Identity</strong><p>Review ID, type, status, severity, created time and responsible queue.</p></article>
+      <article><strong>Context</strong><p>Procedure, deployment, run, source role, semantic concept and affected dependency references.</p></article>
+      <article><strong>Evidence</strong><p>Hashes, structural facts, safe samples, counts, confidence components and relevant rule results.</p></article>
+      <article><strong>Question</strong><p>One explicit decision request. Avoid a generic “please investigate” item that transfers all thinking to the reviewer.</p></article>
+      <article><strong>Candidates</strong><p>Possible actions with evidence, expected effect and risk. A suggestion is not an approval.</p></article>
+      <article><strong>Deadline</strong><p>Optional due date and business impact when a blocked operational run needs priority.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Queue views</p><h2>Prioritize by impact and recurrence, not by who complained last.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Blocked runs</strong><p>Items that prevent publication of an operational or business-critical result.</p></article>
+      <article><strong>Recurring exceptions</strong><p>The same reason or value appears repeatedly. This is a strong signal that reusable logic is missing.</p></article>
+      <article><strong>Drift clusters</strong><p>Several source changes may come from one upstream template release and should be reviewed together.</p></article>
+      <article><strong>Reference gaps</strong><p>Unmatched values grouped by dataset, concept, frequency and business impact.</p></article>
+      <article><strong>Stale decisions</strong><p>Temporary exceptions or assumptions that reached their review or expiry date.</p></article>
+      <article><strong>High-impact changes</strong><p>Review items touching shared blocks, concepts or reference datasets with many downstream consumers.</p></article>
+    </div>
+    <div class="rdp__callout"><strong>Practical ranking:</strong> combine blocking impact, business criticality, recurrence, affected consumers and due date. Confidence alone is not priority.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Override discipline</p><h2>“Continue anyway” needs a contract.</h2></div>
+    <p>A manual override should record scope, reason, approver, affected rule, expiry and whether publication remains allowed. It must not silently rewrite the approved procedure or reference data.</p>
+    <div class="rdp__rerun"><strong>Rule:</strong> a repeated temporary override is evidence that the normal procedure, validation policy or upstream contract needs a real change.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">SAP example</p><h2>Material 4711 should not become a monthly debate.</h2></div>
+    <p>A sales export contains <code>4711</code>. The target source contains <code>000000000000004711</code>. The review item should show the semantic concept, both raw representations, source systems and possible actions. If the decision confirms that this is only an approved representation rule, the result becomes a reusable normalization block or concept rule. If the values belong to different value spaces, the decision creates or updates governed reference data instead.</p>
+  </section>
+</div>
