@@ -1,11 +1,12 @@
 {
   "id": "sap-lead-board-mode",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "updated_at": "2026-08-16",
   "purpose": "Run short oral SAP Lead practice from Core 12 boundary drills using the same seven-dimension scoring model as the rest of the assessment Lab.",
   "drill_source": "/labs/assessment/data/core-boundary-drills.json",
   "core_study_source": "/labs/assessment/data/core-study-map.json",
   "scoring_contract": "/labs/assessment/data/scoring.json",
+  "review_map_contract": "/labs/assessment/data/review-map.json",
   "default_session": {
     "rounds": 4,
     "seconds_per_round": 360,
@@ -31,6 +32,15 @@
     "maximum_score": 21,
     "lead_signal_minimum": 18,
     "rule": "Score demonstrated reasoning, ownership, evidence, and trade-offs. Do not reward the number of SAP terms mentioned."
+  },
+  "review_handoff": {
+    "trigger": "after at least one completed round",
+    "aggregation": "average each scoring dimension across completed Board rounds in the current browser-memory session",
+    "selection": "rank dimensions by lowest average score, then show up to two weakest dimensions",
+    "route_rule": "use the first focused route from review-map.json for each selected weak dimension",
+    "display": ["dimension average", "review question", "route label", "route URL", "why this route"],
+    "history_write": false,
+    "rule": "The handoff is a temporary study recommendation. It does not modify persistent assessment history or calibration."
   },
   "session_boundary": "Board Mode is browser-only oral practice. It does not publish cases, approve candidates, change factual-review state, or write assessment history automatically.",
   "future_history_rule": "If Board Mode is later connected to persistent assessment history, it must write through the existing attempt schema instead of creating a second history format."
