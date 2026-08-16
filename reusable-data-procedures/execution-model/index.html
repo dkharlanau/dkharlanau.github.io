@@ -1,0 +1,92 @@
+---
+layout: default
+title: "Reusable Data Procedures — Deployment & Run Model"
+description: "Separate reusable procedure logic from deployment configuration and immutable run evidence."
+permalink: /reusable-data-procedures/execution-model/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+---
+<link rel="stylesheet" href="/assets/reusable-data-procedures.css" />
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/reusable-data-procedures/">Reusable Data Procedures</a></li><li aria-current="page">Deployment & Run Model</li></ol></nav>
+
+<div class="rdp">
+  <header class="rdp__detail-hero">
+    <p class="rdp__eyebrow">Execution model</p>
+    <h1>Procedure ≠ Deployment ≠ Run.</h1>
+    <p>These three objects answer different questions. Keeping them separate makes the framework portable: the same approved business logic can run manually on a laptop, on a schedule, or inside a governed service without changing the procedure itself.</p>
+    <nav class="rdp__subnav" aria-label="Reusable Data Procedures pages"><a href="/reusable-data-procedures/">Overview</a><a href="/reusable-data-procedures/procedure-model/">Procedure</a><a href="/reusable-data-procedures/execution-model/" aria-current="page">Deployment & Run</a><a href="/reusable-data-procedures/testing/">Testing</a><a href="/reusable-data-procedures/governance/">Governance</a></nav>
+  </header>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Three contracts</p><h2>Keep business logic, operation and evidence apart.</h2></div>
+    <div class="rdp__model-grid">
+      <article class="rdp__model-card"><span>01</span><strong>Procedure</strong><p>What the data work means: sources, locators, cleaning, mappings, transforms, validations and output contracts.</p></article>
+      <article class="rdp__model-card"><span>02</span><strong>Deployment</strong><p>Where and when it runs: environment, trigger, source binding, destination binding, credentials reference, retry, timeout and concurrency policy.</p></article>
+      <article class="rdp__model-card"><span>03</span><strong>Run</strong><p>What actually happened: resolved inputs, hashes, versions, timing, drift, validation evidence, exceptions, outputs and publication decision.</p></article>
+    </div>
+    <div class="rdp__callout"><strong>Why this matters:</strong> changing a schedule should not create a new business procedure version. Changing a material-key normalization rule should.</div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Deployment contract</p><h2>Bind a reusable procedure to an operating context.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Area</th><th>Examples</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td>Procedure binding</td><td>procedure ID + pinned version</td><td>Production deployments never resolve an unpinned latest version.</td></tr>
+        <tr><td>Environment</td><td>local, team, production</td><td>Environment controls policy, not business semantics.</td></tr>
+        <tr><td>Trigger</td><td>manual, schedule, inbox arrival, API, event</td><td>A trigger creates a run request; it does not bypass validation gates.</td></tr>
+        <tr><td>Source binding</td><td>folder, SharePoint location, object prefix, SFTP path</td><td>Bind logical source roles to locations without hard-coding locations into procedure logic.</td></tr>
+        <tr><td>Secrets</td><td>credential reference, managed identity, vault key</td><td>Store references, never secret values, in the deployment definition.</td></tr>
+        <tr><td>Operations</td><td>timeout, retry, concurrency, queue, resource class</td><td>Retry infrastructure failures, not deterministic business failures.</td></tr>
+        <tr><td>Notification</td><td>owner on failure, reviewer on drift</td><td>Notify on actionable state changes rather than every normal run.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Idempotency</p><h2>Do not publish the same logical run twice by accident.</h2><p>Schedules, folder watchers and retries create duplicate-trigger risk. The framework needs an explicit answer before automation becomes unattended.</p></div>
+    <div class="rdp__cards">
+      <article><strong>Run key</strong><p>Build an idempotency key from deployment, logical business period and input hashes or another declared source identity.</p></article>
+      <article><strong>Duplicate policy</strong><p>Skip, replace, create revision, or require review. The choice belongs to the deployment policy.</p></article>
+      <article><strong>Atomic publication</strong><p>Prepare outputs first. Publish only after blocking gates pass so consumers never see a half-written result set.</p></article>
+      <article><strong>Retry boundary</strong><p>Retry network or temporary storage failures. Do not keep retrying a broken key cardinality and hope mathematics changes its mind.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Run evidence</p><h2>A run should be explainable without reopening the original session.</h2></div>
+    <div class="rdp__cards">
+      <article><strong>Identity</strong><p>Run ID, deployment ID, procedure version, engine version, start/end time and actor or trigger.</p></article>
+      <article><strong>Inputs</strong><p>Resolved source roles, file names or resource IDs, hashes, workbook regions and source fingerprints.</p></article>
+      <article><strong>Execution</strong><p>Pinned block versions, resolved reference-data versions, step metrics and deterministic plan hash.</p></article>
+      <article><strong>Quality</strong><p>Drift classification, validation results, exception counts, control totals and publication decision.</p></article>
+      <article><strong>Outputs</strong><p>Output names, hashes, row counts, destinations and consumer-facing publication status.</p></article>
+      <article><strong>Lineage</strong><p>Which source and rule produced an output field or exception. Full cell lineage is optional; meaningful business lineage is not.</p></article>
+    </div>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__section-head"><p class="rdp__eyebrow">Run comparison</p><h2>Compare executions as first-class objects.</h2></div>
+    <table class="rdp__decision-table">
+      <thead><tr><th>Compare</th><th>Useful signal</th></tr></thead>
+      <tbody>
+        <tr><td>This month vs last month</td><td>Source drift, row-count movement, coverage change, exception-rate change and control-total difference.</td></tr>
+        <tr><td>Procedure v1.4 vs v1.5</td><td>Output delta on the same fixture or approved historical input.</td></tr>
+        <tr><td>Retry vs original attempt</td><td>Confirm that only infrastructure state changed.</td></tr>
+        <tr><td>Manual vs scheduled deployment</td><td>Confirm environment bindings do not alter business output.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rdp__detail-section">
+    <div class="rdp__route-list">
+      <a href="/reusable-data-procedures/deployment.schema.json"><span>SPEC</span><strong>deployment.schema.json</strong><small>Draft contract for environment, trigger, bindings, idempotency and operational policy.</small><i class="material-symbols-outlined" aria-hidden="true">schedule</i></a>
+      <a href="/reusable-data-procedures/run.schema.json"><span>SPEC</span><strong>run.schema.json</strong><small>Draft immutable evidence contract for one execution.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+</div>
