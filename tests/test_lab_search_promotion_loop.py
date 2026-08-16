@@ -7,7 +7,12 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from scripts.lab_search_promotion_loop import PromotionCandidate, apply_promotions
+from scripts.lab_search_promotion_loop import (
+    FACTUAL_SOURCE_REVIEW_BONUS,
+    PromotionCandidate,
+    apply_promotions,
+    factual_review_score,
+)
 
 
 def candidate(source_path: str) -> PromotionCandidate:
@@ -28,6 +33,12 @@ def candidate(source_path: str) -> PromotionCandidate:
         h1_count=1,
         reasons=[],
     )
+
+
+def test_source_supported_review_has_independent_score_weight():
+    assert factual_review_score("source_supported") == FACTUAL_SOURCE_REVIEW_BONUS
+    assert factual_review_score("not_reviewed") == 0
+    assert factual_review_score("") == 0
 
 
 def test_apply_refuses_unreviewed_page(tmp_path: Path):
