@@ -1,15 +1,15 @@
 {
   "id": "sap-lead-factual-review",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "updated_at": "2026-08-16",
   "policy": "/labs/assessment/data/factual-review-policy.json",
   "review_boundary": "Claims below were checked against current SAP primary sources. This does not change page-level verified, robots, sitemap, or publication status.",
   "summary": {
-    "routes_reviewed": 6,
-    "claims_reviewed": 23,
-    "source_supported": 23,
+    "routes_reviewed": 12,
+    "claims_reviewed": 35,
+    "source_supported": 35,
     "source_conflict": 0,
-    "human_verification_required": 23
+    "human_verification_required": 35
   },
   "routes": [
     {
@@ -23,6 +23,18 @@
         "FACT-ATP-001",
         "FACT-ATP-002",
         "FACT-ATP-003"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/automotive-jit/",
+      "title": "Automotive JIT/JIS",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-AUTO-001",
+        "FACT-AUTO-002"
       ]
     },
     {
@@ -80,6 +92,18 @@
       ]
     },
     {
+      "route": "/labs/enterprise-context/finance-logistics/",
+      "title": "FI/CO Logistics Bridge",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-FIN-001",
+        "FACT-FIN-002"
+      ]
+    },
+    {
       "route": "/labs/enterprise-context/integration-operations/",
       "title": "Integration Operations & Recovery",
       "review_status": "primary_source_review_complete",
@@ -93,6 +117,54 @@
         "FACT-INTOPS-004",
         "FACT-INTOPS-005",
         "FACT-INTOPS-006"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/inventory-management/",
+      "title": "Inventory Management",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-IM-001",
+        "FACT-IM-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/production/",
+      "title": "Production Planning & Execution",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-PP-001",
+        "FACT-PP-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/quality-management/",
+      "title": "Quality Management",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-QM-001",
+        "FACT-QM-002"
+      ]
+    },
+    {
+      "route": "/labs/enterprise-context/transportation-management/",
+      "title": "Transportation Management",
+      "review_status": "primary_source_review_complete",
+      "reviewed_at": "2026-08-16",
+      "page_verified": false,
+      "human_verification_required": true,
+      "claim_ids": [
+        "FACT-TM-001",
+        "FACT-TM-002"
       ]
     }
   ],
@@ -147,6 +219,42 @@
         "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/e9861099432c4fd9a569f129f2d4ceb1.html"
       ],
       "product_scope": "SAP S/4HANA advanced Available-to-Promise, PAL and SUP",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-AUTO-001",
+      "route": "/labs/enterprise-context/automotive-jit/",
+      "claim": "In SAP S/4HANA 2025 FPS01, Next Generation JIT Supply to Customer supports end-to-end integration of sequenced JIS calls from the sales scheduling agreement through invoice, including EWM and TM integration.",
+      "claim_type": "release_scope",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-AUTO-NG-E2E-JIS"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f5d3e1005efd4e86acf9a65abf428082/0fea9edeb6944f98aa8f368a2484009f.html?version=2025.001"
+      ],
+      "product_scope": "SAP S/4HANA Next Generation Just-In-Time Supply to Customer",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-AUTO-002",
+      "route": "/labs/enterprise-context/automotive-jit/",
+      "claim": "In the nJIT supply-to-customer outbound process, an outbound delivery can be created from the S2C call. TM then creates freight units from that outbound delivery and transportation can continue with warehouse-driven or transport-driven execution.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-AUTO-NG-DELIVERY",
+        "SRC-SAP-AUTO-JIT-OUTBOUND"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/1495ac28b1e249bfbd363b54435f4b04.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/e2511f70a55f46cd997a9b0eff7d556d.html"
+      ],
+      "product_scope": "SAP S/4HANA nJIT, Logistics Execution, TM and EWM integration",
       "release_scope": "SAP S/4HANA 2025 FPS01",
       "reviewed_at": "2026-08-16",
       "human_verification_required": true
@@ -399,6 +507,77 @@
       "human_verification_required": true
     },
     {
+      "id": "FACT-FIN-001",
+      "route": "/labs/enterprise-context/finance-logistics/",
+      "claim": "Goods receipt and invoice receipt for valuated procurement are linked through the GR/IR clearing account. The invoice posting clears the GR/IR amount against the vendor-side posting, so operational receipt and financial invoice completion are separate events that must reconcile.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-FINLOG-GR-IR-POSTINGS",
+        "SRC-SAP-FINLOG-PO-INVOICE"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMI-SE/af9ef57f504840d2b81be8667206d485/825eb6531de6b64ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Sourcing and Procurement / Financial Accounting",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-FIN-002",
+      "route": "/labs/enterprise-context/finance-logistics/",
+      "claim": "Production-order settlement transfers actual order costs to one or more receiver cost objects according to the settlement rule. A settlement rule contains distribution rules that define receiver, share, and settlement type, so production completion does not by itself prove that controlling settlement is complete.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-FINLOG-PRODUCTION-SETTLEMENT"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/34de0103497c4b80a7c7fbf6952ff971/4904b753128eb44ce10000000a174cb4.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/34de0103497c4b80a7c7fbf6952ff971/5804b753128eb44ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Product Cost by Order",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-IM-001",
+      "route": "/labs/enterprise-context/inventory-management/",
+      "claim": "A movement type defines the business purpose of a goods movement and controls important Inventory Management behavior such as quantity updates, stock and material valuation, consumption accounts, input fields, and some subsequent documents.",
+      "claim_type": "configuration_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-IM-MOVEMENT-TYPE"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/1663bd534f22b44ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Inventory Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-IM-002",
+      "route": "/labs/enterprise-context/inventory-management/",
+      "claim": "Physical inventory separates the count from the posting of differences. SAP supports posting differences after a recorded count or entering the count and posting the difference in one step, so a completed count alone does not prove that book stock was corrected.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-IM-PHYSICAL-INVENTORY",
+        "SRC-SAP-IM-INVENTORY-DIFFERENCE"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/5161bd534f22b44ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Inventory Management and Physical Inventory",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
       "id": "FACT-INTOPS-001",
       "route": "/labs/enterprise-context/integration-operations/",
       "claim": "Guaranteed delivery can redeliver a message. End-to-end exactly-once behavior therefore needs duplicate handling or an idempotent receiver in addition to retry-capable delivery.",
@@ -497,6 +676,117 @@
       ],
       "product_scope": "SAP Application Interface Framework",
       "release_scope": "SAP S/4HANA 2025 FPS01 documentation checked 2026-08-16",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-PP-001",
+      "route": "/labs/enterprise-context/production/",
+      "claim": "A production version selects the alternative BOM together with the task list or master recipe and carries lot-size and validity restrictions. SAP uses production versions in planning and order creation to choose the suitable production technique.",
+      "claim_type": "configuration_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-PP-PRODUCTION-VERSION"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/bc6b9325fedd4344a84412b2195064fa/31c5bf53f106b44ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Production Planning",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-PP-002",
+      "route": "/labs/enterprise-context/production/",
+      "claim": "Goods receipt for a manufacturing order posts the finished material to stock and reduces the expected receipt. The order is credited by the goods movement and the cost flow follows the order settlement rule, so physical completion and cost settlement are related but not the same checkpoint.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-PP-GR",
+        "SRC-SAP-PP-SETTLEMENT-RULE"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/sap_s4hana_on-premise/f899ce30af9044299d573ea30b533f1c/b739c95360267614e10000000a174cb4.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/34de0103497c4b80a7c7fbf6952ff971/5804b753128eb44ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Production Orders and PP/DS integration",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-QM-001",
+      "route": "/labs/enterprise-context/quality-management/",
+      "claim": "The usage decision confirms completion of the inspection lot and records whether the inspected goods are accepted or rejected. It can also trigger follow-up actions, so it is a quality disposition decision rather than only a comment on results.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-QM-USAGE-DECISION",
+        "SRC-SAP-QM-LOT-COMPLETION"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/2bc3ee8d1c83404e8cf62418640004f2/8d83b6535fe6b74ce10000000a174cb4.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/2bc3ee8d1c83404e8cf62418640004f2/c164ba53422bb54ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Quality Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-QM-002",
+      "route": "/labs/enterprise-context/quality-management/",
+      "claim": "For a stock-relevant inspection lot, stock can be posted during usage-decision processing and SAP creates the corresponding material-document postings. A non-stock-relevant lot cannot use the usage-decision stock-posting functions.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-QM-LOT-COMPLETION",
+        "SRC-SAP-QM-GR"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/2bc3ee8d1c83404e8cf62418640004f2/06edba53422bb54ce10000000a174cb4.html"
+      ],
+      "product_scope": "SAP S/4HANA Quality Management and Inventory Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-TM-001",
+      "route": "/labs/enterprise-context/transportation-management/",
+      "claim": "TM creates freight units from transportation-demand documents such as order-based or delivery-based transportation requirements, orders, deliveries, and JIT calls. Freight orders are a result of transportation planning and become capacity and execution documents used for later carrier-related processing.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-TM-FREIGHT-UNIT",
+        "SRC-SAP-TM-FREIGHT-ORDER-MGMT"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/2e86e6dc652b4f4aa4ac39c2d88595ca.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/733c8b37b3f546a1b08750e8aeabb887/ff8bbbea9bd0421b9f833793d8d52b3d.html"
+      ],
+      "product_scope": "SAP S/4HANA Transportation Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
+      "reviewed_at": "2026-08-16",
+      "human_verification_required": true
+    },
+    {
+      "id": "FACT-TM-002",
+      "route": "/labs/enterprise-context/transportation-management/",
+      "claim": "A freight settlement document represents freight-document costs from TM to MM. Posting it can create the service purchase order and service entry sheet that form the basis for carrier invoice verification, so freight execution and financial settlement are distinct completion layers.",
+      "claim_type": "documented_behavior",
+      "status": "source_supported",
+      "source_refs": [
+        "SRC-SAP-TM-FREIGHT-SETTLEMENT",
+        "SRC-SAP-TM-FSD"
+      ],
+      "official_evidence": [
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/7eb8bdf270d84b16ab8a755d09b11e81.html",
+        "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/e3dc5400c1cc41d1bc0ae0e7fd9aa5a2/2f90ba3c7a8540e59f5ca0959d82e994.html"
+      ],
+      "product_scope": "SAP S/4HANA Transportation Management and Materials Management",
+      "release_scope": "SAP S/4HANA 2025 FPS01",
       "reviewed_at": "2026-08-16",
       "human_verification_required": true
     }

@@ -192,7 +192,7 @@ def test_backlog_records_completed_practice_loops() -> None:
     backlog = load_json("backlog.json")
     items = {item["id"]: item for item in backlog["items"]}
 
-    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019"):
+    for loop_id in ("LOOP-010", "LOOP-011", "LOOP-012", "LOOP-013", "LOOP-014", "LOOP-015", "LOOP-016", "LOOP-017", "LOOP-018", "LOOP-019", "LOOP-020"):
         assert items[loop_id]["status"] == "done"
         assert items[loop_id]["outputs"]
 
@@ -239,8 +239,8 @@ def test_factual_review_keeps_source_support_separate_from_page_verification() -
     assert review["summary"]["source_supported"] == sum(1 for claim in review["claims"] if claim["status"] == "source_supported")
     assert review["summary"]["source_conflict"] == sum(1 for claim in review["claims"] if claim["status"] == "source_conflict")
     assert review["summary"]["human_verification_required"] == sum(1 for claim in review["claims"] if claim["human_verification_required"])
-    assert review["summary"]["routes_reviewed"] == 6
-    assert review["summary"]["claims_reviewed"] == 23
+    assert review["summary"]["routes_reviewed"] == 12
+    assert review["summary"]["claims_reviewed"] == 35
     assert all(item["page_verified"] is False for item in review["routes"])
     assert all(claim["status"] == "source_supported" for claim in review["claims"])
     assert all(claim["human_verification_required"] is True for claim in review["claims"])
@@ -258,7 +258,7 @@ def test_promotion_readiness_uses_factual_review_coverage_for_priority() -> None
     by_route = {item["route"]: item for item in inventory["items"]}
 
     assert inventory["factual_review_registry"] == "/labs/assessment/data/factual-review.json"
-    assert inventory["factual_review_counts"]["source_supported"] == len(reviewed_routes) == 6
+    assert inventory["factual_review_counts"]["source_supported"] == len(reviewed_routes) == 12
     assert sum(inventory["priority_counts"].values()) == inventory["scope_route_count"]
     for route in reviewed_routes:
         assert by_route[route]["factual_review"]["status"] == "source_supported"
