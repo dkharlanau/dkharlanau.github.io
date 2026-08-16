@@ -12,6 +12,19 @@
   "referenceData": [
     {"id": "sap.material-aliases", "goldenVersion": "2026.08.1", "replayVersion": "2026.08.2"}
   ],
+  "artifacts": {
+    "procedureGolden": "procedure.json",
+    "procedureReplay": "procedure-replay.json",
+    "fixtures": "fixtures.json",
+    "tests": "tests.json",
+    "referenceGolden": "reference-2026.08.1.json",
+    "referenceReplay": "reference-2026.08.2.json",
+    "runGolden": "run-01.json",
+    "runReview": "run-02-review.json",
+    "reviewItem": "review-item.json",
+    "decisionRecord": "decision-record.json",
+    "runReplay": "run-02-replay.json"
+  },
   "sequence": [
     {"step": 1, "id": "run-01", "state": "published", "point": "Golden input resolves all materials."},
     {"step": 2, "id": "run-02-review", "state": "review-required", "point": "Table and headers drift safely; new material EXT-Q9 is unresolved."},
@@ -25,5 +38,10 @@
     "Unknown material values never receive guessed business mappings.",
     "Reference changes are versioned and linked to a decision.",
     "Replay records exact procedure and reference versions."
+  ],
+  "modelFindings": [
+    "Field aliases are explicit, but locator contracts do not yet reference a reusable semantic alias set directly.",
+    "A reference-data decision may require a small procedure revision when the procedure pins exact reference versions.",
+    "Safe failure needs expected run evidence, not only a test assertion."
   ]
 }
