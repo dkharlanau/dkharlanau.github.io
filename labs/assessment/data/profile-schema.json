@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dkharlanau.github.io/labs/assessment/data/profile-schema.json",
+  "title": "SAP Lead Assessment Weak-Signal Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["generated_at", "attempt_count", "dimension_signals", "track_signals", "reasoning_level_signals"],
+  "properties": {
+    "generated_at": {"type": "string", "format": "date-time"},
+    "attempt_count": {"type": "integer", "minimum": 0},
+    "average_total_score": {"type": ["number", "null"], "minimum": 0, "maximum": 21},
+    "lead_signal_count": {"type": "integer", "minimum": 0},
+    "dimension_signals": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/signal"
+      }
+    },
+    "track_signals": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/signal21"
+      }
+    },
+    "reasoning_level_signals": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/signal21"
+      }
+    },
+    "recent_case_ids": {"type": "array", "maxItems": 10, "items": {"type": "string"}},
+    "recommended_focus": {"type": "array", "maxItems": 5, "items": {"type": "string"}}
+  },
+  "$defs": {
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempts", "average", "status"],
+      "properties": {
+        "attempts": {"type": "integer", "minimum": 0},
+        "average": {"type": ["number", "null"], "minimum": 0, "maximum": 3},
+        "status": {"enum": ["no_data", "weak", "watch", "solid"]}
+      }
+    },
+    "signal21": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempts", "average", "status"],
+      "properties": {
+        "attempts": {"type": "integer", "minimum": 0},
+        "average": {"type": ["number", "null"], "minimum": 0, "maximum": 21},
+        "status": {"enum": ["no_data", "weak", "watch", "solid"]}
+      }
+    }
+  }
+}
