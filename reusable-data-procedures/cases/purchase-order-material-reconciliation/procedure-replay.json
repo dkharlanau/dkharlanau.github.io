@@ -1,0 +1,69 @@
+{
+  "kind": "reusable-data-procedure",
+  "specVersion": "0.5",
+  "id": "procurement.po-material-reconciliation",
+  "name": "Purchase Order Material Reconciliation",
+  "purpose": "Resolve each Purchase Order item through a controlled supplier-material cross-reference and stop publication when purchasing item identity, mapping coverage, material agreement or quantity controls are unsafe.",
+  "procedureVersion": "0.1.1",
+  "owner": "procurement-data-owner",
+  "technicalSteward": "data-procedure-framework",
+  "catalog": {
+    "domain": "procurement",
+    "jobFamily": "reconcile",
+    "dataConcepts": ["sap.purchasing-document", "sap.purchasing-document-item", "sap.business-partner-id", "sap.material-id", "sap.plant-id"],
+    "sourceFamilies": ["sap-procurement-export"],
+    "tags": ["reference-case", "sap-logistics", "procurement", "supplier-material", "reconciliation"],
+    "sensitivity": "internal",
+    "criticality": "operational"
+  },
+  "lifecycle": {"maturity": "pilot", "trustEvidence": ["regression-tested", "drift-observed", "owner-reviewed"]},
+  "dependencies": {
+    "referenceData": [{"id": "sap.supplier-material-cross-reference", "version": "2026.08.2"}],
+    "externalSystems": ["SAP Procurement export"]
+  },
+  "consumers": ["procurement-material-reconciliation-output"],
+  "sources": [
+    {
+      "role": "purchase_orders",
+      "description": "Purchase Order item export with supplier material information.",
+      "acceptedFormats": ["xlsx", "csv"],
+      "sheetPattern": "*PO*",
+      "locators": [{"strategy": "header-score", "requiredHeaders": ["Plant", "Currency"], "optionalHeaders": ["Purchasing Document", "Purchase Order", "Item", "PO Item", "Supplier", "Vendor", "Material", "Material Number", "Supplier Material", "Supplier Mat.", "Order Quantity", "Order Qty", "Order Unit", "UoM", "Net Price"], "scanFirstRows": 35, "minimumScore": 0.85}],
+      "extraction": {"stopAfterBlankRows": 2, "removeRepeatedHeaders": true, "detectFooters": true, "preserveSourceCoordinates": true},
+      "requiredFields": [
+        {"name": "Purchasing Document", "required": true, "type": "string", "aliases": ["Purchase Order"], "role": "key", "nullable": false},
+        {"name": "Item", "required": true, "type": "string", "aliases": ["PO Item"], "role": "key", "nullable": false},
+        {"name": "Supplier", "required": true, "type": "string", "aliases": ["Vendor"], "role": "attribute", "nullable": false},
+        {"name": "Material", "required": true, "type": "string", "aliases": ["Material Number"], "role": "attribute", "nullable": false},
+        {"name": "Supplier Material", "required": true, "type": "string", "aliases": ["Supplier Mat."], "role": "attribute", "nullable": false},
+        {"name": "Plant", "required": true, "type": "string", "role": "attribute", "nullable": false},
+        {"name": "Order Quantity", "required": true, "type": "number", "aliases": ["Order Qty"], "role": "measure", "nullable": false},
+        {"name": "Order Unit", "required": true, "type": "string", "aliases": ["UoM"], "role": "attribute", "nullable": false},
+        {"name": "Net Price", "required": true, "type": "number", "role": "measure", "nullable": false},
+        {"name": "Currency", "required": true, "type": "string", "role": "attribute", "nullable": false}
+      ],
+      "optionalFields": [],
+      "fingerprintPolicy": {"useColumnNames": true, "useTypes": true, "useValuePatterns": true, "useWorkbookStructure": true}
+    }
+  ],
+  "mappings": [],
+  "transforms": [
+    {"id": "supplier-space", "op": "normalize-space", "input": "Supplier", "output": "SupplierLookupKey"},
+    {"id": "supplier-material-space", "op": "normalize-space", "input": "Supplier Material", "output": "SupplierMaterialCanonicalInput"},
+    {"id": "supplier-material-key", "op": "comparison-key", "input": "SupplierMaterialCanonicalInput", "output": "SupplierMaterialLookupKey"},
+    {"id": "supplier-material-lookup", "op": "lookup", "input": ["SupplierLookupKey", "SupplierMaterialLookupKey"], "output": "CanonicalMaterial", "mappingRef": "sap.supplier-material-cross-reference@2026.08.2", "params": {"key": ["Supplier", "SupplierMaterial"], "cardinality": "many-to-one", "onUnmatched": "exception"}},
+    {"id": "route-unmatched", "op": "route-exceptions", "input": "CanonicalMaterial", "params": {"reasonCode": "SUPPLIER_MATERIAL_NOT_FOUND"}}
+  ],
+  "validations": [
+    {"id": "po-item-unique", "rule": "unique", "target": "Purchasing Document + Item", "severity": "block"},
+    {"id": "supplier-material-coverage", "rule": "mapping-coverage", "target": "CanonicalMaterial", "severity": "block", "params": {"minimum": 1.0}},
+    {"id": "material-agreement", "rule": "expression", "target": "Material = CanonicalMaterial", "severity": "block", "params": {"expression": "Material == CanonicalMaterial"}},
+    {"id": "quantity-total", "rule": "control-total", "target": "Order Quantity", "severity": "block", "params": {"compare": "source-to-result", "tolerance": 0}}
+  ],
+  "outputs": [
+    {"name": "po_material_reconciliation", "role": "result", "format": "table", "fields": ["Purchasing Document", "Item", "Supplier", "Material", "Supplier Material", "CanonicalMaterial", "Plant", "Order Quantity", "Order Unit", "Net Price", "Currency"]},
+    {"name": "po_material_exceptions", "role": "exceptions", "format": "table", "fields": ["Purchasing Document", "Item", "Supplier", "Material", "Supplier Material", "reason_code"]}
+  ],
+  "behaviorPolicy": {"onAmbiguousLocator": "manual-review", "onBreakingDrift": "manual-review", "onValidationFailure": "manual-review"},
+  "provenance": {"createdAt": "2026-08-16T14:25:00Z", "createdBy": "reference-case", "basedOnProcedureVersion": "0.1.0", "changeReason": "Pin approved supplier-material cross-reference release 2026.08.2 after review decision.", "sourceRunId": "case-po-material-run-02", "reviewedAt": "2026-08-16T14:24:00Z", "reviewedBy": "procurement-data-owner"}
+}
