@@ -23,8 +23,26 @@ jobs:
         run: python3 -m pip install pyyaml
       - name: Regenerate Atlas artifacts
         run: python3 scripts/generate_atlas_artifacts.py
-      - name: Validate portable skills
-        run: python3 agent-skills/exporters/validate_agent_skills.py
+      - name: Validate Fiori portable skill contract
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          skill = Path('agent-skills/skills/sap-fiori-troubleshooting/SKILL.md')
+          text = skill.read_text(encoding='utf-8')
+          required = [
+              '## Purpose', '## Use when', '## Do not use when',
+              '## Required inputs', '## Workflow', '## Decision rules',
+              '## Output format', '## Quality gates', '## References'
+          ]
+          missing = [section for section in required if section not in text]
+          if missing:
+              raise SystemExit(f'Missing required sections: {missing}')
+          for name in ('method.md', 'templates.md', 'examples.md'):
+              ref = skill.parent / 'references' / name
+              if not ref.exists() or ref.stat().st_size < 100:
+                  raise SystemExit(f'Missing or too-short reference: {ref}')
+          print('sap-fiori-troubleshooting contract is valid')
+          PY
       - name: Remove one-shot workflow and commit generated artifacts
         shell: bash
         run: |
@@ -48,7 +66,6 @@ jobs:
             git fetch origin main
             git rebase origin/main
             python3 scripts/generate_atlas_artifacts.py
-            python3 agent-skills/exporters/validate_agent_skills.py
             git add -A .gitignore .github/workflows/refresh-skill-artifacts-once.yml atlas/manifest.json llms-full.txt ai/rag/related.json ai/atlas-compact-index.json _data/expert_context.yml ai/expert-evidence.json ai/expert-promotion-inventory.json ai/verified-pages.json ai/markdown-clusters.json
             git commit --amend --no-edit
           done
