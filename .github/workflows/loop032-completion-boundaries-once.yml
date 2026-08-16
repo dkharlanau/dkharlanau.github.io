@@ -1,0 +1,81 @@
+name: LOOP032 Completion Boundaries Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/loop032-completion-boundaries-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: python -m pip install pytest pyyaml
+      - name: Apply LOOP-032
+        run: python scripts/_loop032_completion_boundaries.py
+      - name: Register LOOP-032 in assessment contract test
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('tests/test_assessment_practice_layer.py')
+          t = p.read_text(encoding='utf-8')
+          t = t.replace('"LOOP-029", "LOOP-030", "LOOP-031"):', '"LOOP-029", "LOOP-030", "LOOP-031", "LOOP-032"):')
+          p.write_text(t, encoding='utf-8')
+          PY
+      - name: Refresh assessment and Atlas artifacts
+        run: |
+          python scripts/audit_assessment_promotion_readiness.py
+          python scripts/generate_assessment_evidence_coverage.py
+          python scripts/generate_assessment_human_review_queue.py
+          python scripts/generate_atlas_artifacts.py
+      - name: Validate completion boundary pass
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          production = Path('labs/enterprise-context/production/index.html').read_text(encoding='utf-8')
+          integration = Path('labs/enterprise-context/integration-operations/index.html').read_text(encoding='utf-8')
+          inventory = Path('labs/enterprise-context/inventory-management/index.html').read_text(encoding='utf-8')
+          for text in (production, integration, inventory):
+              assert 'Completion model' in text
+              assert 'Evidence boundary:' in text
+              assert 'verified: false' in text
+              assert 'robots: noindex,follow' in text
+          assert 'physical completion and financial completion reconcile' in production
+          assert 'Three green lights mean three different things' in integration
+          assert 'four state views' in inventory
+          PY
+          python scripts/audit_assessment_promotion_readiness.py --check
+          python scripts/generate_assessment_evidence_coverage.py --check
+          python scripts/generate_assessment_human_review_queue.py --check
+          python scripts/generate_assessment_candidates.py --check
+          PYTHONDONTWRITEBYTECODE=1 python -m pytest tests/test_assessment_practice_layer.py tests/test_enterprise_context_model.py
+      - name: Commit and push with retry
+        run: |
+          git config user.name "Dzmitryi Kharlanau"
+          git config user.email "dkharlanau@gmail.com"
+          git add labs/enterprise-context/production labs/enterprise-context/integration-operations labs/enterprise-context/inventory-management labs/assessment scripts tests ai _data
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "feat: clarify execution and completion boundaries"
+          for attempt in 1 2 3 4 5; do
+            echo "Push attempt ${attempt}"
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 2
+          done
+          exit 1
