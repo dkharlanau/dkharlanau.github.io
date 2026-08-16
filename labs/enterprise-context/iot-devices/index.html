@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "IoT Devices Around ERP — Physical Signal to Business Action"
-description: "A practical Enterprise Context map of scales, sensors, RFID, telematics, PLCs, smart tools, cameras, meters, robots and industrial output devices around SAP."
+description: "A practical Enterprise Context map of scales, sensors, RFID, RTLS, telematics, PLCs, smart tools, cameras, meters, warehouse automation, robots and industrial output devices around SAP."
 permalink: /labs/enterprise-context/iot-devices/
 status: draft
 verified: false
@@ -17,6 +17,9 @@ tags:
   - manufacturing
   - asset-management
   - integration
+  - ot
+  - mfs
+  - rtls
 ---
 
 {% assign topic = site.data.labs.enterprise_context.topics.iot_devices_erp_integration %}
@@ -32,13 +35,13 @@ tags:
       <p class="research-canvas__eyebrow">Enterprise Context / Physical Operations</p>
       <h1>{{ topic.title }}</h1>
       <p>{{ topic.summary }}</p>
-      <a class="research-canvas__button" href="#device-map">Open the device map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <a class="research-canvas__button" href="#architecture-boundary">Start with the boundary <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Research status">
       <p>Working model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>{{ topic.device_families | size }}</strong><small>Device families</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>{{ topic.integration_patterns | size }}</strong><small>Integration patterns</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>{{ evidence.sources | size }}</strong><small>Primary references</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>{{ topic.maturity.gates_complete }}/{{ topic.maturity.gates_total }}</strong><small>Research gates</small></div>
       <em>Source checked {{ topic.verified_at }}</em>
     </div>
   </header>
@@ -51,20 +54,35 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Related map</p>
-      <h2>Scanners are one device family inside a larger physical-integration landscape.</h2>
-      <p>The scanner map goes deeper into barcodes, RF, mobile UI and warehouse execution. This page covers the wider device landscape.</p>
+      <p class="research-canvas__eyebrow">Related maps</p>
+      <h2>This topic connects warehouse devices to the wider physical enterprise.</h2>
+      <p>The scanner map goes deeper into barcodes, RF and mobile execution. EWM covers warehouse ownership. Integrations covers the enterprise interface layer.</p>
     </header>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/ewm/scanners/"><span>SCAN</span><strong>Warehouse Scanners & Auto-ID</strong><small>Handheld, wearable, fixed scanning, RFID, barcode standards, RF/mobile UI and EWM execution patterns.</small><i class="material-symbols-outlined" aria-hidden="true">qr_code_scanner</i></a>
-      <a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Warehouse Execution</strong><small>Warehouse requests, tasks, orders, resources, automation and integration ownership.</small><i class="material-symbols-outlined" aria-hidden="true">warehouse</i></a>
+      <a href="/labs/enterprise-context/ewm/scanners/"><span>SCAN</span><strong>Warehouse Scanners & Auto-ID</strong><small>Handheld, wearable, fixed scanning, RFID, barcode standards, RF/mobile UI and EWM execution.</small><i class="material-symbols-outlined" aria-hidden="true">qr_code_scanner</i></a>
+      <a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Warehouse Execution</strong><small>Warehouse requests, tasks, orders, resources, automation and execution ownership.</small><i class="material-symbols-outlined" aria-hidden="true">warehouse</i></a>
+      <a href="/labs/enterprise-context/production/"><span>PROD</span><strong>Production</strong><small>Production execution context behind PLC, machine, smart-tool and shop-floor signals.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
+      <a href="/labs/enterprise-context/integrations/"><span>INT</span><strong>Integration Landscape</strong><small>APIs, events, middleware and integration platform choices beyond the physical device boundary.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/enterprise-context/data/iot-devices.json"><span>JSON</span><strong>Machine-readable topic</strong><small>The same device map as structured data for retrieval and agent use.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="architecture-boundary" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Lead architecture boundary</p>
+      <h2>Separate telemetry, business events and commands.</h2>
+      <p>A physical signal can arrive every millisecond. A business event may happen once per handling unit or production cycle. A command can move equipment. These are different contracts and should not be mixed.</p>
+    </header>
+    <div class="research-route-list">
+      {% for layer in topic.architecture_layers %}
+      <article><span>L{{ forloop.index }}</span><strong>{{ layer.layer }}</strong><small><b>Owns:</b> {{ layer.owns }}</small><p><b>Examples:</b> {{ layer.examples | join: ", " }}</p></article>
+      {% endfor %}
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="memory-model" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lead memory model</p>
+      <p class="research-canvas__eyebrow">Memory model</p>
       <h2>{{ topic.memory_model.phrase }}</h2>
       <p>A device should not jump directly from a voltage, tag or coordinate into an ERP posting. Each stage has a different responsibility.</p>
     </header>
@@ -77,9 +95,21 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Decision dimensions</p>
+      <h2>Six questions usually matter more than the hardware brand.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.decision_dimensions %}
+      <article><span>{{ item.key }}</span><strong>{{ item.question }}</strong><small>{{ item.lead_point }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Signal classes</p>
       <h2>Start with the physical fact, not the hardware model.</h2>
-      <p>A camera, scanner and RFID gate can all produce identity. A scale and torque tool both produce measurements. This keeps architecture reusable when hardware changes.</p>
+      <p>A camera, scanner and RFID gate can all produce identity. A scale and torque tool both produce measurements. This keeps the architecture reusable when hardware changes.</p>
     </header>
     <div class="research-route-list">
       {% for signal in topic.signal_classes %}
@@ -91,8 +121,8 @@ tags:
   <section class="research-canvas__inventory" id="device-map" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Device map</p>
-      <h2>Useful IoT devices around ERP and operational SAP processes.</h2>
-      <p>Each device is mapped to its signals, SAP objects, best-fit scenarios, integration options and one design caution.</p>
+      <h2>Useful devices around ERP and operational SAP processes.</h2>
+      <p>Each family is mapped to signals, SAP objects, best-fit scenarios, integration options and one design caution.</p>
     </header>
     <div class="research-route-list">
       {% for device in topic.device_families %}
@@ -110,8 +140,8 @@ tags:
   <section class="research-canvas__inventory" id="integration" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Integration patterns</p>
-      <h2>Seven recurring ways to connect the physical world.</h2>
-      <p>The right pattern depends on frequency, latency, ownership, safety, resilience and how much device-specific behavior SAP should see.</p>
+      <h2>Recurring boundaries from local peripherals to automated warehouses.</h2>
+      <p>The pattern depends on frequency, latency, ownership, safety, resilience and how much device-specific behavior SAP should see.</p>
     </header>
     <div class="research-route-list">
       {% for pattern in topic.integration_patterns %}
@@ -122,11 +152,23 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Protocol map</p>
+      <h2>Protocol is a boundary decision, not the architecture itself.</h2>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.protocol_map %}
+      <article><span>→</span><strong>{{ item.boundary }}</strong><small><b>{{ item.typical_technology }}</b> · {{ item.rule }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Architecture decision</p>
       <h2>Choose the lightest boundary that still protects the process.</h2>
     </header>
     <div class="research-route-list">
-      {% for item in topic.decision_guide %}
+      {% for item in topic.lead_decision_guide %}
       <article><span>→</span><strong>{{ item.need }}</strong><small><b>{{ item.choice }}</b> · {{ item.reason }}</small></article>
       {% endfor %}
     </div>
@@ -134,8 +176,49 @@ tags:
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
+      <p class="research-canvas__eyebrow">Controls</p>
+      <h2>Reliable device integration needs more than successful connectivity.</h2>
+      <p>Context, duplicate protection, offline behavior, security, time quality and observability are part of the design.</p>
+    </header>
+    <div class="research-route-list">
+      {% for control in topic.control_model %}
+      <article><span>CTRL</span><strong>{{ control.title }}</strong><small>{{ control.purpose }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Operational ownership</p>
+      <h2>Someone must own every boundary after go-live.</h2>
+      <p>Device integration often crosses teams. The support model should be designed together with the interface.</p>
+    </header>
+    <div class="research-route-list">
+      {% for item in topic.ownership_model %}
+      <article><span>OWN</span><strong>{{ item.owner }}</strong><small>{{ item.owns }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Run contract</p>
+      <h2>Design recovery before the first outage.</h2>
+    </header>
+    <div class="research-route-list">
+      <article><span>ID</span><strong>Event identity</strong><small>{{ topic.operational_contract.event_identity }}</small></article>
+      <article><span>TRACE</span><strong>Correlation</strong><small>{{ topic.operational_contract.correlation }}</small></article>
+      <article><span>OFF</span><strong>Offline policy</strong><small>{{ topic.operational_contract.offline_policy }}</small></article>
+      <article><span>ERR</span><strong>Exception policy</strong><small>{{ topic.operational_contract.exception_policy }}</small></article>
+      <article><span>REC</span><strong>Reconciliation</strong><small>{{ topic.operational_contract.reconciliation }}</small></article>
+      <article><span>MON</span><strong>Monitoring</strong><small>{{ topic.operational_contract.monitoring }}</small></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header>
       <p class="research-canvas__eyebrow">Design rules</p>
-      <h2>Most IoT failures start at the boundary between telemetry and business state.</h2>
+      <h2>Most IoT failures start where telemetry becomes business state.</h2>
     </header>
     <div class="research-route-list">
       {% for rule in topic.design_rules %}
@@ -171,7 +254,7 @@ tags:
   <section class="research-canvas__inventory" id="assessment" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Assessment lens</p>
-      <h2>Lead answers should explain ownership, not only protocols.</h2>
+      <h2>Lead answers should explain ownership, failure and recovery, not only protocols.</h2>
     </header>
     <div class="research-route-list">
       {% for card in topic.assessment_cards %}
@@ -183,8 +266,8 @@ tags:
   <section class="research-canvas__inventory" id="sources" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Evidence</p>
-      <h2>Primary references and lifecycle notes.</h2>
-      <p>Current SAP Help verifies Digital Manufacturing Edge, S/4HANA/EWM, Asset Management, APM, TM, Global Track and Trace and Utilities. Older SAP IoT and Auto-ID material is kept only where it explains a still-useful integration pattern.</p>
+      <h2>Current SAP documentation plus protocol standards.</h2>
+      <p>SAP Help verifies product behavior and integration boundaries. OPC Foundation and OASIS are used for protocol-level facts. Historical Auto-ID material is clearly marked and is not treated as the default product strategy.</p>
     </header>
     <div class="research-route-list">
       {% for source in evidence.sources %}
