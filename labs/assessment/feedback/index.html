@@ -1,0 +1,238 @@
+---
+layout: default
+title: "Feedback & Calibration Evidence — SAP Lead Assessment Lab"
+description: "A browser-only SAP Lead feedback log that keeps self-reflection and external feedback separate and turns real observations into calibration evidence."
+permalink: /labs/assessment/feedback/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-16
+hide_global_cta: true
+tags:
+  - sap
+  - assessment
+  - sap-lead
+  - feedback
+  - calibration
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/assessment/">SAP Lead Assessment</a></li><li aria-current="page">Feedback & Calibration</li></ol></nav>
+
+<div class="research-canvas feedback-log" id="feedback-log">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Assessment / Feedback evidence</p>
+      <h1>Record what was actually observed.</h1>
+      <p>Feedback is useful when its source stays visible. Self-reflection is not interviewer feedback, and a formal result does not automatically explain which reasoning dimension caused it.</p>
+      <a class="research-canvas__button" href="#capture">Capture feedback <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Feedback evidence model">
+      <p>Evidence model</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>5</strong><small>Source types</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>7</strong><small>Reasoning dimensions</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>0</strong><small>Automatic threshold changes</small></div>
+      <em>Records stay in this browser.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">fact_check</span>
+    <p><strong>Evidence rule:</strong> record the source you actually have. Do not reconstruct interviewer comments, invent external validation, or convert a pass/fail outcome into dimension-level feedback unless that detail was provided.</p>
+    <a href="/labs/assessment/data/calibration-policy.json">Open calibration policy <span class="material-symbols-outlined" aria-hidden="true">data_object</span></a>
+  </section>
+
+  <section class="research-canvas__inventory" id="capture" data-reveal>
+    <header><p class="research-canvas__eyebrow">Capture</p><h2>One feedback event, several observations.</h2><p>An event can contain strengths, gaps, mixed signals, remembered questions, and follow-up actions.</p></header>
+    <form id="fb-form">
+      <div class="fb-grid">
+        <label>Source type
+          <select id="fb-source" required>
+            <option value="self_reflection">Self-reflection</option>
+            <option value="peer_review">Peer review</option>
+            <option value="manager_feedback">Manager feedback</option>
+            <option value="interviewer_feedback">Interviewer feedback</option>
+            <option value="formal_assessment_result">Formal assessment result</option>
+          </select>
+        </label>
+        <label>Event date<input id="fb-date" type="date" required /></label>
+        <label>Overall outcome
+          <select id="fb-outcome"><option value="not_recorded">Not recorded</option><option value="positive">Positive</option><option value="mixed">Mixed</option><option value="negative">Negative</option></select>
+        </label>
+        <label class="fb-wide">Source context<input id="fb-source-note" type="text" maxlength="500" placeholder="Optional: context you actually know" /></label>
+      </div>
+
+      <div class="fb-observation-editor">
+        <h3>Add an observation</h3>
+        <div class="fb-grid">
+          <label>Dimension
+            <select id="fb-dimension">
+              <option value="">Not dimension-specific</option>
+              <option value="business_goal">Business goal</option><option value="owner">Owner</option><option value="process_flow">Process flow</option><option value="decision_logic">Decision logic</option><option value="boundary">Boundary</option><option value="failure_and_evidence">Failure & evidence</option><option value="trade_off">Trade-off</option>
+            </select>
+          </label>
+          <label>Track
+            <select id="fb-track">
+              <option value="">Not track-specific</option>
+              <option value="sales">Sales</option><option value="procurement-logistics">Procurement & Logistics</option><option value="integration-architecture">Integration & Architecture</option><option value="ai-data">AI & Data</option>
+            </select>
+          </label>
+          <label>Signal
+            <select id="fb-signal"><option value="gap">Gap</option><option value="strength">Strength</option><option value="mixed">Mixed</option><option value="neutral">Neutral</option></select>
+          </label>
+          <label class="fb-wide">Observation<textarea id="fb-note" rows="3" maxlength="2000" placeholder="What was actually observed? Do not improve it into a stronger claim."></textarea></label>
+        </div>
+        <button type="button" id="fb-add-observation">Add observation</button>
+        <div id="fb-pending" class="fb-pending"></div>
+      </div>
+
+      <div class="fb-grid">
+        <label class="fb-wide">Remembered questions<textarea id="fb-questions" rows="4" placeholder="One real remembered question per line. Leave empty if you do not remember the wording."></textarea></label>
+        <label class="fb-wide">Follow-up actions<textarea id="fb-actions" rows="4" placeholder="One action per line"></textarea></label>
+      </div>
+      <button class="research-canvas__button" type="submit">Save feedback locally</button>
+    </form>
+    <p id="fb-status" class="fb-status" aria-live="polite"></p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence summary</p><h2>Keep source and signal separate.</h2><p>The summary counts recorded observations. It does not convert them into new scoring thresholds.</p></header>
+    <div class="ecg-decision-columns">
+      <div><h4>Feedback events</h4><p class="fb-metric" id="fb-events">0</p></div>
+      <div><h4>External-source events</h4><p class="fb-metric" id="fb-external">0</p></div>
+      <div><h4>Recorded observations</h4><p class="fb-metric" id="fb-observations">0</p></div>
+    </div>
+    <div id="fb-summary" class="fb-summary"></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Recent evidence</p><h2>Review the record before changing the rubric.</h2><p>Recent entries are shown with their original source type and observations.</p></header>
+    <div id="fb-recent" class="fb-recent"></div>
+    <div class="fb-actions"><button type="button" id="fb-export">Export feedback</button><button type="button" id="fb-clear">Clear local feedback</button></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Calibration boundary</p><h2>Evidence can suggest a change. It cannot silently make one.</h2><p>Scoring and adaptive thresholds remain unchanged until a separate reviewed calibration decision is accepted.</p></header>
+    <div class="research-route-list">
+      <a href="/labs/assessment/data/feedback-schema.json"><span>SCHEMA</span><strong>Feedback Evidence Schema</strong><small>Source, outcome, observations, remembered questions, and follow-up actions.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/assessment/data/calibration-policy.json"><span>POLICY</span><strong>Calibration Policy</strong><small>Evidence classes, anti-overfit checks, and human approval rule.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
+      <a href="/labs/assessment/progress/"><span>PROGRESS</span><strong>Progress & Portability</strong><small>Compare real feedback with the practice history before changing the scoring model.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
+      <a href="/labs/assessment/review/"><span>REVIEW</span><strong>Review Queue</strong><small>Use observed gaps as review evidence, not as automatic threshold changes.</small><i class="material-symbols-outlined" aria-hidden="true">target</i></a>
+    </div>
+  </section>
+
+  <div class="research-canvas__support" data-reveal>{% include atlas/author-block.html %}{% include atlas/disclaimer.html %}</div>
+</div>
+
+<style>
+.fb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.85rem;margin:1rem 0}.fb-grid label{display:flex;flex-direction:column;gap:.4rem;font-weight:700}.fb-grid input,.fb-grid select,.fb-grid textarea{font:inherit;padding:.65rem;border:1px solid var(--border-color,#ddd);border-radius:.35rem;background:var(--background-color,#fff);color:inherit}.fb-wide{grid-column:1/-1}.fb-observation-editor{border:1px solid var(--border-color,#ddd);padding:1rem;margin:1rem 0}.feedback-log button{font:inherit;padding:.65rem .85rem;cursor:pointer}.fb-pending{display:grid;gap:.5rem;margin-top:.8rem}.fb-pending-item{border-top:1px solid var(--border-color,#ddd);padding-top:.6rem}.fb-status{margin:1rem 0}.fb-metric{font-size:2rem;font-weight:800;margin:.4rem 0}.fb-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.8rem}.fb-summary article,.fb-entry{border:1px solid var(--border-color,#ddd);padding:.85rem}.fb-recent{display:grid;gap:.8rem}.fb-entry__meta{display:flex;gap:.45rem;flex-wrap:wrap}.fb-entry__meta span{border:1px solid var(--border-color,#ddd);border-radius:999px;padding:.18rem .5rem;font-size:.8rem}.fb-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+</style>
+
+<script>
+(() => {
+  'use strict';
+  const STORAGE_KEY = 'sapLeadAssessmentFeedbackV1';
+  const FORMAT = 'sap-lead-assessment-feedback';
+  const VERSION = '1.0.0';
+  const EXTERNAL = new Set(['peer_review','manager_feedback','interviewer_feedback','formal_assessment_result']);
+  const DIM_LABELS = {business_goal:'Business goal',owner:'Owner',process_flow:'Process flow',decision_logic:'Decision logic',boundary:'Boundary',failure_and_evidence:'Failure & evidence',trade_off:'Trade-off'};
+  const TRACK_LABELS = {sales:'Sales','procurement-logistics':'Procurement & Logistics','integration-architecture':'Integration & Architecture','ai-data':'AI & Data'};
+  const SOURCE_LABELS = {self_reflection:'Self-reflection',peer_review:'Peer review',manager_feedback:'Manager feedback',interviewer_feedback:'Interviewer feedback',formal_assessment_result:'Formal assessment result'};
+  const $ = id => document.getElementById(id);
+  let pending = [];
+
+  function records() {
+    try { const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); return Array.isArray(value) ? value : []; }
+    catch (_) { return []; }
+  }
+  function save(rows) { localStorage.setItem(STORAGE_KEY,JSON.stringify(rows)); }
+  function lines(value,max) { return value.split(/\r?\n/).map(v=>v.trim()).filter(Boolean).slice(0,max); }
+
+  function renderPending() {
+    const root = $('fb-pending'); root.replaceChildren();
+    pending.forEach((item,index) => {
+      const box = document.createElement('div'); box.className='fb-pending-item';
+      const text = document.createElement('p');
+      const scope = [item.dimension_id ? DIM_LABELS[item.dimension_id] : null,item.track ? TRACK_LABELS[item.track] : null].filter(Boolean).join(' / ') || 'General';
+      text.textContent = `${item.signal.toUpperCase()} · ${scope}: ${item.note}`;
+      const remove = document.createElement('button'); remove.type='button'; remove.textContent='Remove';
+      remove.addEventListener('click',()=>{pending.splice(index,1);renderPending();});
+      box.append(text,remove); root.appendChild(box);
+    });
+  }
+
+  function renderSummary() {
+    const rows = records();
+    const observations = rows.flatMap(row=>Array.isArray(row.observations) ? row.observations : []);
+    $('fb-events').textContent = rows.length;
+    $('fb-external').textContent = rows.filter(row=>EXTERNAL.has(row.source_type)).length;
+    $('fb-observations').textContent = observations.length;
+
+    const byDimension = {};
+    observations.forEach(item => {
+      if (!item.dimension_id) return;
+      const entry = byDimension[item.dimension_id] ||= {strength:0,gap:0,mixed:0,neutral:0};
+      entry[item.signal] = (entry[item.signal] || 0) + 1;
+    });
+    const summary = $('fb-summary'); summary.replaceChildren();
+    Object.entries(byDimension).forEach(([id,counts]) => {
+      const card = document.createElement('article');
+      const title = document.createElement('h3'); title.textContent = DIM_LABELS[id] || id;
+      const text = document.createElement('p'); text.textContent = `Gaps ${counts.gap || 0} · Strengths ${counts.strength || 0} · Mixed ${counts.mixed || 0} · Neutral ${counts.neutral || 0}`;
+      card.append(title,text); summary.appendChild(card);
+    });
+    if (!summary.children.length) {
+      const p = document.createElement('p'); p.textContent='No dimension-specific feedback recorded yet.'; summary.appendChild(p);
+    }
+
+    const recent = $('fb-recent'); recent.replaceChildren();
+    rows.slice().sort((a,b)=>Date.parse(b.captured_at)-Date.parse(a.captured_at)).slice(0,10).forEach(row => {
+      const card = document.createElement('article'); card.className='fb-entry';
+      const meta = document.createElement('div'); meta.className='fb-entry__meta';
+      [SOURCE_LABELS[row.source_type] || row.source_type,row.event_date,row.assessment_outcome || 'not_recorded'].forEach(value=>{const chip=document.createElement('span');chip.textContent=value;meta.appendChild(chip);});
+      const context = document.createElement('p'); context.textContent = row.source_note || 'No additional source context recorded.';
+      const list = document.createElement('ul');
+      (row.observations || []).forEach(item=>{const li=document.createElement('li');const scope=[item.dimension_id ? DIM_LABELS[item.dimension_id] : null,item.track ? TRACK_LABELS[item.track] : null].filter(Boolean).join(' / ') || 'General';li.textContent=`${item.signal}: ${scope} — ${item.note}`;list.appendChild(li);});
+      card.append(meta,context,list); recent.appendChild(card);
+    });
+    if (!recent.children.length) { const p=document.createElement('p');p.textContent='No feedback evidence recorded yet.';recent.appendChild(p); }
+  }
+
+  $('fb-add-observation').addEventListener('click',() => {
+    const note = $('fb-note').value.trim();
+    if (!note) { $('fb-status').textContent='Observation text is required.'; return; }
+    pending.push({dimension_id:$('fb-dimension').value || null,track:$('fb-track').value || null,signal:$('fb-signal').value,note});
+    $('fb-note').value=''; $('fb-status').textContent='Observation added to this feedback event.'; renderPending();
+  });
+
+  $('fb-form').addEventListener('submit',event => {
+    event.preventDefault();
+    if (!pending.length) { $('fb-status').textContent='Add at least one observation before saving.'; return; }
+    const row = {
+      id:`feedback-${Date.now()}`,
+      captured_at:new Date().toISOString(),
+      event_date:$('fb-date').value,
+      source_type:$('fb-source').value,
+      source_note:$('fb-source-note').value.trim(),
+      assessment_outcome:$('fb-outcome').value,
+      observations:pending.map(item=>({...item})),
+      remembered_questions:lines($('fb-questions').value,30),
+      follow_up_actions:lines($('fb-actions').value,30),
+      related_attempt_ids:[]
+    };
+    const rows=records(); rows.push(row); save(rows);
+    pending=[]; renderPending(); event.target.reset(); $('fb-date').value=new Date().toISOString().slice(0,10); $('fb-status').textContent='Feedback evidence saved locally.'; renderSummary();
+  });
+
+  $('fb-export').addEventListener('click',() => {
+    const payload={format:FORMAT,version:VERSION,exported_at:new Date().toISOString(),feedback:records()};
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='sap-lead-assessment-feedback.json';link.click();URL.revokeObjectURL(url);
+    $('fb-status').textContent=`${payload.feedback.length} feedback events exported.`;
+  });
+
+  $('fb-clear').addEventListener('click',()=>{localStorage.removeItem(STORAGE_KEY);pending=[];renderPending();renderSummary();$('fb-status').textContent='Local feedback evidence cleared.';});
+
+  $('fb-date').value=new Date().toISOString().slice(0,10);
+  renderPending(); renderSummary();
+})();
+</script>
