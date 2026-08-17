@@ -33,7 +33,7 @@ semantic_links:
     title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
     url: "/labs/business-ai/erp-agent-gateway/"
   - type: "deep_dive"
-    title: "Open Enterprise AI Research — ERP Evidence, Safety, Readiness, and Benchmarks"
+    title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
     url: "/labs/business-ai/open-research/"
   - type: "deep_dive"
     title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"

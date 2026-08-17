@@ -46,7 +46,7 @@ semantic_links:
     title: "Document-to-ERP AI Pilot — From PDF to Controlled Transaction"
     url: "/labs/business-ai/document-to-erp-ai/"
   - type: "related_topic"
-    title: "Open Enterprise AI Research — ERP Evidence, Safety, Readiness, and Benchmarks"
+    title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
     url: "/labs/business-ai/open-research/"
 # ai-discovery-managed:end
 ---
@@ -73,6 +73,7 @@ semantic_links:
 
   <section class="research-canvas__boundary" data-reveal aria-label="Gateway principle">
     <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+    <p><strong>Problem.</strong> An agent can cross from useful reasoning into an unsafe ERP action unless identity, policy, confirmation, and transaction controls are explicit.</p>
     <p><strong>Core rule.</strong> The agent never receives broad ERP power just because the user has it. It receives a narrow set of tools with explicit input schemas, policy checks, and observable results.</p>
     <p><strong>Another rule.</strong> A tool description is not a security control. Authorization must live outside the model prompt.</p>
   </section>

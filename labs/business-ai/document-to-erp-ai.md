@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Document-to-ERP AI Pilot — From PDF to Controlled Transaction"
-description: "A vendor-neutral Enterprise AI pilot for turning business documents into validated ERP transaction proposals with controls, approvals, metrics, and auditability."
+description: "A vendor-neutral Enterprise AI pilot for turning business documents into validated ERP proposals with controls, approvals, metrics, and audit trails."
 permalink: /labs/business-ai/document-to-erp-ai/
 status: reviewed
 verified: true
@@ -45,7 +45,7 @@ semantic_links:
     title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
     url: "/labs/business-ai/erp-agent-gateway/"
   - type: "related_topic"
-    title: "Open Enterprise AI Research — ERP Evidence, Safety, Readiness, and Benchmarks"
+    title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
     url: "/labs/business-ai/open-research/"
   - type: "related_topic"
     title: "SAP Decision Cards — Enterprise Context Lab"

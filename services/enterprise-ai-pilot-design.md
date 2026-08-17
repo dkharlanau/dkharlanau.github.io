@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Enterprise AI Pilot Design for ERP — Documents, Agents, Controls"
-description: "A practical Enterprise AI pilot design service for ERP and document workflows, covering architecture, business controls, evaluation, integration, and safe production boundaries."
+description: "Enterprise AI pilot design for ERP and document workflows, covering architecture, controls, evaluation, integration, and safe production boundaries."
 permalink: /services/enterprise-ai-pilot-design/
 last_modified_at: 2026-08-17
 ---

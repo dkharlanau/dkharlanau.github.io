@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Open Enterprise AI Research — ERP Evidence, Safety, Readiness, and Benchmarks"
+title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
 description: "An open research programme for ERP and Enterprise AI covering evidence quality, agent safety, AI readiness, document benchmarks, and reproducible tests."
 permalink: /labs/business-ai/open-research/
 status: reviewed
