@@ -1,0 +1,95 @@
+---
+layout: default
+title: "Where Should Sales Item Behavior Live? — SAP Sales Decision Card"
+description: "A SAP Lead decision model for placing sales behavior in document type, item category, schedule line category, master data, or an extension."
+permalink: /labs/enterprise-context/decisions/sales-item-behavior-ownership/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-17
+hide_global_cta: true
+review_method: "authored architecture reasoning over SAP sales-document control documentation; pending publication review"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-architecture-decisions"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "Sales Order Decision Map"
+    url: "/labs/enterprise-context/sales-order/"
+  - type: "related_topic"
+    title: "SAP Sales Control Plane"
+    url: "/labs/enterprise-context/sales-processes/control-plane/"
+source_links:
+  - title: "How Sales Documents are Controlled"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/c264b65334e6b54ce10000000a174cb4.html"
+  - title: "Item Categories"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/c864b65334e6b54ce10000000a174cb4.html"
+  - title: "Schedule Line Categories"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7340a09096454b7abf4379f926a21567/cb64b65334e6b54ce10000000a174cb4.html"
+tags: [sap, sales, item-category, schedule-line, determination, clean-core, extension]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Sales item behavior</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Decision Card / Sales Architecture</p>
+      <h1>Where should sales<br />item behavior live?</h1>
+      <p>When a sales item behaves differently, my first question is which standard control layer owns that behavior. Custom code is the last layer, not the first reflex.</p>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Control stack</p>
+      <div class="research-canvas__signal-line"><span>HDR</span><strong>Document type</strong><small>Commercial frame</small></div>
+      <div class="research-canvas__signal-line"><span>ITM</span><strong>Item category</strong><small>Item business behavior</small></div>
+      <div class="research-canvas__signal-line"><span>SCH</span><strong>Schedule line</strong><small>Quantity and supply behavior</small></div>
+      <em>Use the narrowest standard owner that matches the business meaning.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Decision in one sentence:</strong> place the rule at the lowest standard control level that directly represents its business meaning, and use an extension only when document type, item category, schedule line, determination, or governed master data cannot express the requirement clearly.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Control ownership</p><h2>Do not make one enhancement own the whole order.</h2></header>
+    <div class="decision-table"><table><thead><tr><th>Control layer</th><th>Good fit</th><th>Warning sign</th></tr></thead><tbody>
+      <tr><td><strong>Sales document type</strong></td><td>Overall transaction class, document-wide checks, number/control frame, common business behavior.</td><td>The rule applies only to one kind of item but changes every order of the document type.</td></tr>
+      <tr><td><strong>Item category</strong></td><td>Pricing relevance, delivery/billing relevance, item-level business role, special process behavior.</td><td>The logic is really about supply quantity/date or movement behavior.</td></tr>
+      <tr><td><strong>Schedule line category</strong></td><td>Requirements transfer, availability, delivery relevance, movement and quantity/date execution behavior.</td><td>The rule is purely commercial and has nothing to do with supply or schedule lines.</td></tr>
+      <tr><td><strong>Master data / determination</strong></td><td>Reusable attributes that should vary by material, customer, plant, business context, or valid configuration key.</td><td>Business users cannot explain why a value is selected without reading code.</td></tr>
+      <tr><td><strong>Extension</strong></td><td>A real gap with explicit input contract, owner, tests, fallback, and clean-core boundary.</td><td>The enhancement re-implements standard determination or contains unrelated policy branches.</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision test</p><h2>Ask what should change downstream.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Should the item be priced?</h3><p>Start with item behavior and pricing relevance before inventing code that suppresses conditions later.</p></div>
+      <div><h3>Should it be delivered or billed?</h3><p>Item category is a natural control candidate when the business role changes delivery or billing relevance.</p></div>
+      <div><h3>Should supply be planned or checked?</h3><p>Schedule-line behavior is the stronger owner when requirements transfer, ATP, delivery relevance, or movement semantics change.</p></div>
+      <div><h3>Should the same product behave differently by context?</h3><p>Use standard determination inputs or governed rules when possible so the variation is visible and testable.</p></div>
+      <div><h3>Does no standard layer represent the requirement?</h3><p>Then define an extension contract. Name exactly which standard result it changes and what happens if the extension is unavailable.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+    <p><strong>Anti-pattern:</strong> a central user exit with dozens of customer, material, country, and process branches that silently rewrites item or schedule-line behavior after standard determination.</p>
+    <p><strong>Lead check:</strong> explain the upstream inputs, the selected control object, the downstream consequence, and one test that proves the chosen layer is correct.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence path</p><h2>Trace control before extension.</h2></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/sales-order/"><span>ORDER</span><strong>Sales Order decisions</strong><small>Item category, schedule line, partner, plant, route, pricing, and other runtime decisions.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+      <a href="/labs/enterprise-context/sales-processes/control-plane/"><span>TRACE</span><strong>Sales Control Plane</strong><small>Follow document type → item → schedule line → stock → logistics → billing consequences.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/development/"><span>EXT</span><strong>Development and clean core</strong><small>Choose an extension only after the standard business owner is clear.</small><i class="material-symbols-outlined" aria-hidden="true">code</i></a>
+    </div>
+  </section>
+</div>
