@@ -2,12 +2,14 @@
 {% assign page_locale = page.locale | default: site.lang | default: 'en' %}
 {% assign locale_data = site.data.home_i18n[page_locale] %}
 {% assign page_direction = locale_data.meta.dir | default: 'ltr' %}
+{% assign page_faq = site.data.page_faqs[page.url] %}
 <html lang="{{ page_locale }}" dir="{{ page_direction }}">
 
 <head>
   {% include head.html %}
   {% include seo/page-machine-links.html %}
   {% unless page.url == '/' %}<link rel="stylesheet" href="{{ '/assets/knowledge-trust.css' | relative_url }}" />{% endunless %}
+  {% if page_faq %}<link rel="stylesheet" href="{{ '/assets/page-faq.css' | relative_url }}" />{% endif %}
   {% if page.ddd_framework %}
   <link rel="stylesheet" href="{{ '/assets/ddd-framework.css' | relative_url }}" />
   <link rel="stylesheet" href="{{ '/assets/ddd-framework-v03.css' | relative_url }}" />
@@ -102,6 +104,7 @@
   {% include header.html %}
   <main id="content" class="page-content wrapper{% if is_home %} page-content--home{% else %} page-content--knowledge{% endif %}">
     {{ content }}
+    {% if page_faq %}{% include page-faq.html faq=page_faq %}{% endif %}
     {% include seo/trust-strip.html %}
     {% include seo/semantic-related.html %}
     {% if page.sales_master_data_graph %}
