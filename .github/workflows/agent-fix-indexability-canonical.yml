@@ -24,36 +24,7 @@ jobs:
           python-version: '3.12'
       - run: python3 -m pip install pytest pyyaml
       - name: Fix duplicate canonical audit semantics
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-
-          path = Path('scripts/audit_indexability.py')
-          text = path.read_text(encoding='utf-8')
-          pattern = re.compile(
-              r'    for canonical, paths in all_canonicals\.items\(\):\n'
-              r'.*?'
-              r'(?=    # --- CSV output)',
-              re.DOTALL,
-          )
-          replacement = '''    for canonical, paths in all_canonicals.items():
-              if len(paths) > 1:
-                  canonical_rows = [row for row in rows if row["canonical"] == canonical]
-                  indexable_rows = [row for row in canonical_rows if "noindex" not in row["robots"].lower()]
-                  if len(indexable_rows) > 1:
-                      indexable_paths = [row["output_path"] for row in indexable_rows]
-                      for row in indexable_rows:
-                          if "duplicate_canonical" not in row["classification"]:
-                              row["classification"] += ", duplicate_canonical" if row["classification"] != "indexable_ok" else "duplicate_canonical"
-                      critical_issues.append(f"Duplicate canonical '{canonical}' on {', '.join(indexable_paths)}")
-
-'''
-          updated, count = pattern.subn(replacement, text, count=1)
-          if count != 1:
-              raise SystemExit(f'Expected one duplicate canonical section, found {count}')
-          path.write_text(updated, encoding='utf-8')
-          PY
+        run: python3 scripts/_tmp_patch_indexability_canonical.py
       - name: Run focused regressions
         run: python3 -m pytest -q tests/test_indexability_legacy_canonical.py tests/test_indexing_policy_jsonl.py
       - name: Protect homepage source content
