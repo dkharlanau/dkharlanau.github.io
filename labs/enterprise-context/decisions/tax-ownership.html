@@ -1,0 +1,55 @@
+---
+layout: default
+title: "Who Owns Wrong Tax in an SAP Sales Order? — Decision Card"
+description: "A SAP Lead decision model for separating tax policy, master data, pricing determination, transaction context, and integration ownership."
+permalink: /labs/enterprise-context/decisions/tax-ownership/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-07"
+search_intent: "SAP Sales tax determination ownership customer material tax classification departure destination pricing"
+evidence_review_mode: "SAP tax-determination and condition-technique inputs checked against primary SAP Help sources; policy ownership, diagnosis, correction, and reconciliation guidance is authored reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
+hide_global_cta: true
+structured_data:
+  type: TechArticle
+# ai-discovery-managed:start
+primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--tax-ownership.json"
+entity_mentions: ["sap-sales", "sap-pricing", "sap-billing"]
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "SAP Sales Pricing Engine"
+    url: "/labs/enterprise-context/pricing/"
+  - type: "related_topic"
+    title: "Sales Billing"
+    url: "/labs/enterprise-context/billing/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
+source_links:
+  - title: "Pricing Procedure and Condition Technique"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/8f6bd0531d8b4208e10000000a174cb4.html"
+  - title: "Tax Determination"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/1fbed153e8b34208e10000000a174cb4.html"
+  - title: "Defining the Tax Category by Departure Country (SD)"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/536bd0531d8b4208e10000000a174cb4.html"
+# ai-discovery-managed:end
+tags: [sap, sales, tax, pricing, master-data, billing, architecture]
+---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_tax_ownership %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Tax ownership</li></ol></nav>
+<div class="research-canvas">
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Decision Card / Sales + Tax</p><h1>Who owns wrong tax<br />in a sales order?</h1><p>Wrong tax can appear in Sales, but the first wrong decision may be legal policy, customer or material classification, departure or destination context, pricing determination, or an external tax service.</p></div><div class="research-canvas__signal"><p>My default</p><div class="research-canvas__signal-line"><span>RULE</span><strong>Tax policy</strong><small>Finance / Tax owner</small></div><div class="research-canvas__signal-line"><span>INPUT</span><strong>Master data</strong><small>Taxability and location</small></div><div class="research-canvas__signal-line"><span>RUN</span><strong>Pricing</strong><small>Determine, do not invent</small></div><em>Do not fix tax by overwriting the final amount.</em></div></header>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Decision in one sentence:</strong> Tax or Finance owns the legal policy, master-data owners maintain the reusable tax inputs, Sales pricing applies the configured determination, and integration owns only the contract when an external tax engine is authoritative.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Diagnosis</p><h2>Trace inputs before changing a tax condition.</h2></header><div class="ecg-decision-columns"><div><h3>Legal rule</h3><p>Which country, jurisdiction, exemption, registration, or business rule should apply? This is not a developer decision.</p></div><div><h3>Transaction context</h3><p>Check departure, destination, ship-to, plant, company, and the business event that determines the tax context.</p></div><div><h3>Master data</h3><p>Check customer and material tax classifications and any reusable taxability indicators used by the process.</p></div><div><h3>Pricing path</h3><p>Trace the tax condition, access, condition record, tax code, and calculation path. A correct final percentage can still come from the wrong rule.</p></div><div><h3>External service</h3><p>If an external tax engine is authoritative, prove the request inputs, response, mapping, fallback, and version used for the document.</p></div></div></section>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>Anti-pattern:</strong> manually change the tax amount or hard-code a customer exception in Sales because one invoice looks wrong.</p><p><strong>I change the default when:</strong> a country-specific legal solution or external tax engine owns rate and jurisdiction determination. Even then, business policy, input ownership, audit evidence, and fallback stay explicit.</p><p><strong>Lead proof:</strong> explain the legal rule, show the determination inputs, reproduce the tax result, and confirm the billing and FI outcome.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Separate legal ownership from technical determination.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/pricing/"><span>PRICE</span><strong>Pricing Engine</strong><small>Condition technique, records, procedure, and pricing diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">price_check</i></a><a href="/labs/enterprise-context/billing/"><span>BILL</span><strong>Billing</strong><small>Prove the commercial and accounting result after correction.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a><a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Tax ownership case</strong><small>A tax amount is wrong for one order. Find the first wrong input before overriding it.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a></div></section>
+</div>
