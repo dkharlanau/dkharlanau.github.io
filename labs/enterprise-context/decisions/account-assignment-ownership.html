@@ -3,16 +3,24 @@ layout: default
 title: "Where Should Procurement Cost Ownership Live? — SAP Procurement Decision Card"
 description: "A SAP Lead decision model for purchase-order account assignment, cost ownership, receiving objects, and the boundary to FI/CO account determination."
 permalink: /labs/enterprise-context/decisions/account-assignment-ownership/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-03"
+search_intent: "SAP purchase order account assignment cost ownership cost center WBS asset FI CO"
+evidence_review_mode: "SAP purchasing account-assignment and automatic-account-determination behavior checked against primary SAP Help sources; business-receiver ownership and diagnosis guidance is authored cross-domain reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
 hide_global_cta: true
-review_method: "authored decision reasoning over SAP account-assignment documentation; pending publication review"
 structured_data:
   type: TechArticle
+# ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--account-assignment-ownership.json"
+entity_mentions:
+  - "sap-procurement"
 semantic_links:
   - type: "parent_context"
     title: "SAP Decision Cards"
@@ -23,11 +31,20 @@ semantic_links:
   - type: "related_topic"
     title: "FI/CO for Logistics"
     url: "/labs/enterprise-context/finance-logistics/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
 source_links:
   - title: "Account Assignment"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/cd7eb65334e6b54ce10000000a174cb4.html"
+  - title: "Entering Account Assignments"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/b47db65334e6b54ce10000000a174cb4.html"
+  - title: "Automatic Account Determination"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/651d8af3ea974ad1a4d74449122c620e/89f2a87accc849d4b5682feb619ce9ad.html"
+# ai-discovery-managed:end
 tags: [sap, procurement, account-assignment, fico, cost-center, project, purchase-order]
 ---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_account_assignment %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Procurement cost ownership</li></ol></nav>
 
@@ -74,13 +91,14 @@ tags: [sap, procurement, account-assignment, fico, cost-center, project, purchas
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">warning</span>
-    <p><strong>Anti-pattern:</strong> changing the G/L account until the invoice posts. That can make accounting technically acceptable while the business cost still belongs to the wrong object.</p>
+    <p><strong>Anti-pattern:</strong> changing the G/L account until the invoice posts. SAP account assignment defines the receiver object and can support multiple receivers; automatic account determination is a separate posting layer. Fixing only the account can therefore leave the business ownership wrong.</p>
     <p><strong>Lead check:</strong> prove the receiver first, then the account-assignment category, then the automatic or manual account logic, and finally the downstream FI/CO result.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Evidence path</p><h2>Trace ownership into value.</h2></header>
+    <header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Trace ownership into value.</h2></header>
     <div class="research-route-list">
+      <a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Account Assignment Ownership</strong><small>Practice separating the business receiver, account category, and financial posting as a Lead diagnosis.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
       <a href="/labs/enterprise-context/procurement/#procurement-master-data"><span>DOMAIN</span><strong>Procurement controls</strong><small>Document behavior, account assignment, master data, and process variants.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
       <a href="/labs/enterprise-context/finance-logistics/"><span>VALUE</span><strong>FI/CO for Logistics</strong><small>Follow the business event into accounting documents, value flow, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
       <a href="/labs/enterprise-context/procurement/#sources"><span>EVID</span><strong>Primary Procurement sources</strong><small>SAP Help evidence behind the account-assignment behavior.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
