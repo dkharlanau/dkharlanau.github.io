@@ -115,15 +115,15 @@ source_links:
     </header>
     <div class="ecg-decision-columns">
       <div>
-        <h4>1. Requirement and source</h4>
+        <h3>1. Requirement and source</h3>
         <ul><li>State what demand started the process and what should be procured.</li><li>Trace source-of-supply logic before blaming the supplier field.</li><li>Separate supplier choice from purchasing price determination.</li></ul>
       </div>
       <div>
-        <h4>2. Item and control</h4>
+        <h3>2. Item and control</h3>
         <ul><li>Separate item category from account-assignment category.</li><li>Identify approval, output, and organizational ownership.</li><li>Check the first wrong rule or master-data input before changing the PO.</li></ul>
       </div>
       <div>
-        <h4>3. Execute and reconcile</h4>
+        <h3>3. Execute and reconcile</h3>
         <ul><li>Trace goods or service receipt, invoice verification, and PO history.</li><li>Separate physical completion from GR/IR and financial completion.</li><li>Close with proof of cause, corrected process state, and reconciliation.</li></ul>
       </div>
     </div>
@@ -241,9 +241,9 @@ source_links:
       <p>{{ graph.account_assignment_model.principle }}</p>
     </header>
     <div class="ecg-decision-columns">
-      <div><h4>Common objects</h4><ul>{% for item in graph.account_assignment_model.common_objects %}<li>{{ item }}</li>{% endfor %}</ul></div>
-      <div><h4>Multiple assignment</h4><p>{{ graph.account_assignment_model.multiple_assignment }}</p></div>
-      <div><h4>Diagnostic split</h4><p>First prove item behavior. Then prove the account assignment category and object. Only after that move into G/L and FI/CO account determination.</p></div>
+      <div><h3>Common objects</h3><ul>{% for item in graph.account_assignment_model.common_objects %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h3>Multiple assignment</h3><p>{{ graph.account_assignment_model.multiple_assignment }}</p></div>
+      <div><h3>Diagnostic split</h3><p>First prove item behavior. Then prove the account assignment category and object. Only after that move into G/L and FI/CO account determination.</p></div>
     </div>
   </section>
 
@@ -255,9 +255,9 @@ source_links:
     </header>
     <div class="ecg-rail" aria-label="Purchasing price path"><div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">Source</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--input">Reference</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--decision">Condition</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--decision">Validity / Unit</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--output">PO Value</span></div></div>
     <div class="ecg-decision-columns">
-      <div><h4>Standard sources</h4><ul>{% for item in graph.purchasing_price_model.standard_sources %}<li>{{ item }}</li>{% endfor %}</ul></div>
-      <div><h4>Five checks</h4><ul>{% for item in graph.purchasing_price_model.checks %}<li>{{ item }}</li>{% endfor %}</ul></div>
-      <div><h4>Do not start here</h4><p>Manual net-price overwrite can hide a wrong source, reference, validity period, order unit, or condition design.</p></div>
+      <div><h3>Standard sources</h3><ul>{% for item in graph.purchasing_price_model.standard_sources %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h3>Five checks</h3><ul>{% for item in graph.purchasing_price_model.checks %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h3>Do not start here</h3><p>Manual net-price overwrite can hide a wrong source, reference, validity period, order unit, or condition design.</p></div>
     </div>
   </section>
 
@@ -268,9 +268,9 @@ source_links:
       <p>Approval is a business-control decision. I first identify the active workflow model, then distinguish a valid approval block from a broken workflow.</p>
     </header>
     <div class="ecg-decision-columns">
-      <div><h4>Current model</h4><ul>{% for item in graph.approval_model.current_direction %}<li>{{ item }}</li>{% endfor %}</ul></div>
-      <div><h4>Diagnostic path</h4><ol>{% for item in graph.approval_model.diagnostic_path %}<li>{{ item }}</li>{% endfor %}</ol></div>
-      <div><h4>Lead lens</h4><p>{{ graph.approval_model.lead_lens }}</p></div>
+      <div><h3>Current model</h3><ul>{% for item in graph.approval_model.current_direction %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h3>Diagnostic path</h3><ol>{% for item in graph.approval_model.diagnostic_path %}<li>{{ item }}</li>{% endfor %}</ol></div>
+      <div><h3>Lead lens</h3><p>{{ graph.approval_model.lead_lens }}</p></div>
     </div>
   </section>
 
@@ -282,9 +282,9 @@ source_links:
     </header>
     <div class="ecg-rail" aria-label="Procurement execution and settlement path"><div class="ecg-rail__branch"><span class="ecg-node ecg-node--input">PO</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--decision">Goods / Service Receipt</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--decision">PO History + GR/IR</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--decision">Supplier Invoice</span><span class="ecg-arrow">→</span><span class="ecg-node ecg-node--output">Liability / Reconciliation</span></div></div>
     <div class="ecg-decision-columns">
-      <div><h4>Receipt</h4><ul>{% for item in graph.execution_and_finance.goods_receipt.business_effects %}<li>{{ item }}</li>{% endfor %}</ul></div>
-      <div><h4>Invoice verification</h4><ul>{% for item in graph.execution_and_finance.invoice_verification.business_effects %}<li>{{ item }}</li>{% endfor %}</ul></div>
-      <div><h4>GR/IR</h4><p>{{ graph.execution_and_finance.gr_ir.lead_lens }}</p></div>
+      <div><h3>Receipt</h3><ul>{% for item in graph.execution_and_finance.goods_receipt.business_effects %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h3>Invoice verification</h3><ul>{% for item in graph.execution_and_finance.invoice_verification.business_effects %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h3>GR/IR</h3><p>{{ graph.execution_and_finance.gr_ir.lead_lens }}</p></div>
     </div>
   </section>
 
@@ -335,7 +335,7 @@ source_links:
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Practitioner rules</p><h2>What I keep visible during design and troubleshooting.</h2></header>
-    <div class="ecg-decision-columns"><div><h4>Heuristics</h4><ul>{% for item in graph.practitioner_heuristics %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h4>Anti-patterns</h4><ul>{% for item in graph.anti_patterns %}<li>{{ item }}</li>{% endfor %}</ul></div></div>
+    <div class="ecg-decision-columns"><div><h3>Heuristics</h3><ul>{% for item in graph.practitioner_heuristics %}<li>{{ item }}</li>{% endfor %}</ul></div><div><h3>Anti-patterns</h3><ul>{% for item in graph.anti_patterns %}<li>{{ item }}</li>{% endfor %}</ul></div></div>
   </section>
 
   <section class="research-canvas__inventory" id="sources" data-reveal>

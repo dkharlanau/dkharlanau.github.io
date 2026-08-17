@@ -116,15 +116,15 @@ source_links:
     </header>
     <div class="ecg-decision-columns">
       <div>
-        <h4>1. Execution context</h4>
+        <h3>1. Execution context</h3>
         <ul><li>Confirm the delivering plant before debugging Shipping.</li><li>Trace plant + shipping condition + loading group into shipping point.</li><li>Trace origin, destination, shipping policy, and transportation group into route.</li></ul>
       </div>
       <div>
-        <h4>2. Date construction</h4>
+        <h3>2. Date construction</h3>
         <ul><li>Separate route/transit data from pick-pack, loading, and calendar effects.</li><li>Trace requested delivery date backward to material availability, loading, GI, and transportation dates.</li><li>Check whether ATP is consuming the date you actually intended.</li></ul>
       </div>
       <div>
-        <h4>3. Execute and prove</h4>
+        <h3>3. Execute and prove</h3>
         <ul><li>Distinguish delivery-due state from warehouse or transport execution.</li><li>Identify the handoff to EWM or TM instead of changing SD to repair their downstream state.</li><li>Prove the corrected dates and the executable delivery path end to end.</li></ul>
       </div>
     </div>
@@ -248,9 +248,9 @@ source_links:
       <p>I do not assume the route proposed in the sales order must survive unchanged. Delivery processing can have additional information, especially weight-group context.</p>
     </header>
     <div class="ecg-decision-columns">
-      <div><h4>Sales-order key</h4><ul>{% for value in graph.route_model.sales_order_inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h4>Delivery adds</h4><ul>{% for value in graph.route_model.delivery_additional_input %}<li>{{ value }}</li>{% endfor %}</ul></div>
-      <div><h4>Route drives next</h4><ul>{% for value in graph.route_model.route_data_that_matters_next %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Sales-order key</h3><ul>{% for value in graph.route_model.sales_order_inputs %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Delivery adds</h3><ul>{% for value in graph.route_model.delivery_additional_input %}<li>{{ value }}</li>{% endfor %}</ul></div>
+      <div><h3>Route drives next</h3><ul>{% for value in graph.route_model.route_data_that_matters_next %}<li>{{ value }}</li>{% endfor %}</ul></div>
     </div>
     <div class="ecg-rail" aria-label="Route determination key">
       <div class="ecg-rail__branch">
