@@ -1,4 +1,4 @@
-name: AI Metadata Preview
+name: AI Metadata Preview Cleanup
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  preview:
+  cleanup:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
@@ -19,54 +19,17 @@ jobs:
         with:
           ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
           fetch-depth: 0
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install dependencies
-        run: python3 -m pip install pyyaml
-      - name: Normalize pilot anchors
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          doc = Path('labs/business-ai/document-to-erp-ai.md')
-          text = doc.read_text(encoding='utf-8')
-          for anchor in ('capture', 'extract', 'validate', 'approve', 'write', 'audit', 'mock'):
-              text = text.replace(f'href="#{anchor}"', 'href="#pilot-design"')
-          marker = '<section class="research-canvas__inventory" data-reveal>\n    <header>\n      <p class="research-canvas__eyebrow">Metrics</p>'
-          text = text.replace(marker, '<section class="research-canvas__inventory" id="metrics" data-reveal>\n    <header>\n      <p class="research-canvas__eyebrow">Metrics</p>', 1)
-          doc.write_text(text, encoding='utf-8')
-
-          gateway = Path('labs/business-ai/erp-agent-gateway.md')
-          text = gateway.read_text(encoding='utf-8')
-          for anchor in ('identity', 'catalog', 'policy', 'adapter', 'result', 'audit'):
-              text = text.replace(f'href="#{anchor}"', 'href="#gateway-design"')
-          marker = '<section class="research-canvas__inventory" data-reveal>\n    <header>\n      <p class="research-canvas__eyebrow">Failure lab</p>'
-          text = text.replace(marker, '<section class="research-canvas__inventory" id="tests" data-reveal>\n    <header>\n      <p class="research-canvas__eyebrow">Failure lab</p>', 1)
-          gateway.write_text(text, encoding='utf-8')
-
-          research = Path('labs/business-ai/open-research.md')
-          text = research.read_text(encoding='utf-8')
-          text = text.replace('href="#registry-fields"', 'href="#evidence-registry"')
-          text = text.replace('href="#readiness-dimensions"', 'href="#readiness"')
-          marker = '<section class="research-canvas__inventory" data-reveal>\n    <header>\n      <p class="research-canvas__eyebrow">Question backlog</p>'
-          text = text.replace(marker, '<section class="research-canvas__inventory" id="questions" data-reveal>\n    <header>\n      <p class="research-canvas__eyebrow">Question backlog</p>', 1)
-          research.write_text(text, encoding='utf-8')
-          PY
-      - name: Generate canonical metadata
-        run: python3 scripts/knowledge_publication_loop.py
-      - name: Commit changes if needed
+      - name: Remove this temporary workflow from the PR branch
         env:
           TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
         run: |
-          if git diff --quiet; then
-            echo 'Pilot navigation and generated metadata are already current.'
+          if [ ! -f .github/workflows/ai-metadata-preview.yml ]; then
+            echo 'Temporary workflow is already removed.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add labs/ ai/ _data/labs/semantic_relations.yml
-          git commit -m 'Fix pilot navigation and refresh metadata'
+          git rm .github/workflows/ai-metadata-preview.yml
+          git commit -m 'Remove temporary metadata preview workflow'
           git pull --rebase origin "${TARGET_BRANCH}"
           git push origin HEAD:"${TARGET_BRANCH}"
