@@ -9,7 +9,7 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-17
 hide_global_cta: true
-review_method: "authored decision reasoning draft; pending publication-contract review and AI sidecar generation"
+review_method: "authored decision reasoning draft; individual cards may be promoted only after source and publication review"
 structured_data:
   type: TechArticle
 primary_topic: "sap-architecture-decisions"
@@ -63,20 +63,23 @@ tags:
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
     <p><strong>Working rule:</strong> a Lead answer should not stop at “it depends”. State the default, name the decision drivers, show the failure owner, and explain the condition that changes the design.</p>
     <p><strong>Knowledge chain:</strong> each decision should sit between a domain and an applied scenario, with reviewed evidence behind factual claims: Domain → Decision → Scenario → Evidence.</p>
-    <p><strong>Publication state:</strong> this decision layer is intentionally noindex while the cards pass the same source, sidecar, and publication checks as the reviewed Enterprise Context pages.</p>
+    <p><strong>Publication state:</strong> this hub remains noindex while the decision set evolves. Individual cards can be reviewed and indexable when their source, search, sidecar, and publication contracts are complete.</p>
   </section>
 
   <section class="research-canvas__inventory" id="decision-map" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Decision map</p>
-      <h2>Eight cross-domain choices worth being able to defend.</h2>
-      <p>The goal is not to memorize one answer. The goal is to make the reasoning reusable across projects and assessment questions.</p>
+      <h2>Eleven cross-domain choices worth being able to defend.</h2>
+      <p>Two Procurement cards have already passed the first public review wave. The other cards stay draft until their own evidence and publication checks are complete.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/decisions/idoc-api-event/"><span>INT</span><strong>IDoc, API, or event?</strong><small>Choose the interaction pattern from coupling, response needs, replay, volume, and recovery ownership before selecting middleware.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/enterprise-context/decisions/idoc-failure-ownership/"><span>OPS</span><strong>Who owns an IDoc failure?</strong><small>Separate transport, mapping, application, master-data, and business failures, then keep one owner accountable for end-to-end reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">support_agent</i></a>
-      <a href="/labs/enterprise-context/decisions/source-selection-ownership/"><span>MM</span><strong>Where should supplier selection logic live?</strong><small>Keep source policy in standard procurement objects when possible; use extensions only for a real gap with explicit ownership, audit, and fallback.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
-      <a href="/labs/enterprise-context/decisions/po-change-impact/"><span>MM</span><strong>What can break after a PO change?</strong><small>Trace changed commitments across approval, supplier communication, integrations, logistics execution, finance, and dependent business promises.</small><i class="material-symbols-outlined" aria-hidden="true">change_circle</i></a>
+      <a href="/labs/enterprise-context/decisions/source-selection-ownership/"><span>MM ✓</span><strong>Where should supplier selection logic live?</strong><small>Reviewed. Keep source policy in standard procurement objects when possible; use extensions only for a real gap with explicit ownership, audit, and fallback.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
+      <a href="/labs/enterprise-context/decisions/po-change-impact/"><span>MM ✓</span><strong>What can break after a PO change?</strong><small>Reviewed. Trace changed commitments across approval, supplier communication, integrations, logistics execution, finance, and dependent business promises.</small><i class="material-symbols-outlined" aria-hidden="true">change_circle</i></a>
+      <a href="/labs/enterprise-context/decisions/account-assignment-ownership/"><span>MM</span><strong>Where should procurement cost ownership live?</strong><small>Separate the business receiver, account-assignment category, and FI/CO posting logic before correcting an account.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/decisions/grir-ownership/"><span>MM/FI</span><strong>Who owns an open GR/IR balance?</strong><small>Explain the missing receipt, invoice, quantity, or closure event before treating reconciliation as Finance housekeeping.</small><i class="material-symbols-outlined" aria-hidden="true">balance</i></a>
+      <a href="/labs/enterprise-context/decisions/subcontracting-vs-standard-procurement/"><span>MM</span><strong>Subcontracting or standard external procurement?</strong><small>Choose from component ownership, supplier stock, provision, consumption, and the reconciliation expected at goods receipt.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
       <a href="/labs/enterprise-context/decisions/sto-vs-intercompany/"><span>LOG</span><strong>STO or intercompany sales?</strong><small>Choose from ownership, legal entities, commercial flow, billing need, stock transfer responsibility, and receiving process.</small><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
       <a href="/labs/enterprise-context/decisions/master-data-validation/"><span>DATA</span><strong>Where should master-data validation live?</strong><small>Separate governance-time prevention from transaction-time protection and integration-time contract checks.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
       <a href="/labs/enterprise-context/decisions/delivery-block-ownership/"><span>SD</span><strong>Where should delivery blocking logic live?</strong><small>Keep commercial policy, master-data quality, credit, compliance, and technical failure from collapsing into one generic block.</small><i class="material-symbols-outlined" aria-hidden="true">block</i></a>
