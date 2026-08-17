@@ -1,0 +1,94 @@
+---
+layout: default
+title: "What Can Break After a Purchase Order Change? — SAP Procurement Decision Card"
+description: "A SAP Lead impact-analysis model for evaluating purchase order changes across approval, output, logistics, integration, receipt, invoice, and reconciliation."
+permalink: /labs/enterprise-context/decisions/po-change-impact/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-17
+hide_global_cta: true
+review_method: "authored cross-process impact reasoning over reviewed Procurement material; pending publication-contract review"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-procurement-decisions"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "Procurement Process & Decision Map"
+    url: "/labs/enterprise-context/procurement/"
+  - type: "related_topic"
+    title: "Integration Operations"
+    url: "/labs/enterprise-context/integration-operations/"
+source_links:
+  - title: "Purchase Orders (MM-PUR-PO)"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/9d7eb65334e6b54ce10000000a174cb4.html"
+  - title: "Flexible Workflow for Purchase Orders"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/b33a97f3014f43c488ec798633824081.html"
+tags: [sap, procurement, purchase-order, change-impact, workflow, integration, reconciliation]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">PO change impact</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Decision Card / Procurement</p>
+      <h1>What can break after<br />a purchase order change?</h1>
+      <p>A PO change is not only a field update. I treat it as a change to a business contract that may already have approval, supplier communication, logistics execution, accounting, and external copies.</p>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Impact path</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Changed meaning</strong><small>What business promise moved?</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Downstream copies</strong><small>Who already consumed it?</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Reconcile</strong><small>How do we prove alignment?</small></div>
+      <em>Document saved does not mean process synchronized.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Decision in one sentence:</strong> before accepting a PO change, classify which business commitments changed, identify every downstream consumer that may already hold the old state, and define how approval, communication, execution, and financial reconciliation return to one consistent version.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Change classes</p><h2>Different fields create different blast radiuses.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Quantity</h3><p>Check open quantity, confirmations, receipts, invoice quantities, tolerances, and whether downstream documents already consume the original value.</p></div>
+      <div><h3>Date or schedule</h3><p>Check planning, supplier confirmation, inbound execution, warehouse timing, and any dependent customer or production promise.</p></div>
+      <div><h3>Price or conditions</h3><p>Check approval policy, supplier communication, invoice expectations, account effects, and whether a later invoice is compared with the old or new commercial state.</p></div>
+      <div><h3>Plant, storage, or account assignment</h3><p>Check whether the logistical or financial owner changed and whether existing follow-on documents still belong to the same process.</p></div>
+      <div><h3>Supplier or source</h3><p>Treat this as a major sourcing change, not a cosmetic correction. Revisit eligibility, communication, confirmations, and any external document already sent.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Impact model</p><h2>Walk the process in six directions.</h2></header>
+    <div class="decision-table"><table><thead><tr><th>Boundary</th><th>Question</th><th>Evidence of completion</th></tr></thead><tbody>
+      <tr><td><strong>Approval</strong></td><td>Does the changed value require a new approval decision or make the previous approval no longer meaningful?</td><td>The current document state is covered by the intended approval policy.</td></tr>
+      <tr><td><strong>Supplier communication</strong></td><td>Has the supplier already received a previous version, and how will the changed commitment be communicated?</td><td>The supplier-side state matches the active PO state.</td></tr>
+      <tr><td><strong>Integration</strong></td><td>Which interfaces, messages, APIs, events, or external systems may hold the old value?</td><td>Required consumers have the expected current state or a controlled correction path.</td></tr>
+      <tr><td><strong>Logistics execution</strong></td><td>Do confirmations, inbound documents, receipts, services, warehouse tasks, or quality steps already exist?</td><td>Open and completed quantities still reconcile with the changed contract.</td></tr>
+      <tr><td><strong>Finance</strong></td><td>Has the change affected expected invoice values, account assignment, liabilities, or GR/IR reconciliation?</td><td>Physical and financial completion remain explainable together.</td></tr>
+      <tr><td><strong>Dependent business process</strong></td><td>Did another process rely on the old date, quantity, source, or ownership?</td><td>The dependent promise has been recalculated, accepted, or explicitly managed as an exception.</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+    <p><strong>Anti-pattern:</strong> “the PO saved successfully, therefore the change is complete.” Save success proves only that one application accepted the document state. It says nothing about supplier acknowledgement, external copies, open receipts, invoice expectations, or downstream business promises.</p>
+    <p><strong>Recovery owner:</strong> the team changing the contract should know which downstream owners must confirm alignment. Technical teams can repair messages, but the process owner closes the reconciliation.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Assessment drill</p><h2>Use one field change and trace it to completion.</h2></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/procurement/#impact-traces"><span>DOMAIN</span><strong>Procurement impact traces</strong><small>Reviewed cross-process traces from procurement decisions into logistics and finance.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/enterprise-context/integration-operations/"><span>OPS</span><strong>Integration operations</strong><small>Recovery, replay, monitoring, ownership, and reconciliation after a changed business state crosses a system boundary.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/enterprise-context/procurement/#sources"><span>EVID</span><strong>Primary procurement sources</strong><small>SAP Help references behind the reviewed Procurement model.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+</div>
