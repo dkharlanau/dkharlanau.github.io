@@ -1,0 +1,58 @@
+---
+layout: default
+title: "Where Should SAP Extension Logic Live? — Clean Core Decision Card"
+description: "A SAP Lead decision model for choosing standard configuration, on-stack extensibility, developer extensibility, or side-by-side design from coupling and lifecycle."
+permalink: /labs/enterprise-context/decisions/clean-core-extension-placement/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-06"
+search_intent: "SAP clean core extension on-stack side-by-side key user developer extensibility decision"
+evidence_review_mode: "SAP extensibility option and clean-core guidance checked against primary SAP Help sources; coupling, lifecycle, failure, and ownership guidance is authored architecture reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
+hide_global_cta: true
+structured_data:
+  type: TechArticle
+# ai-discovery-managed:start
+primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--clean-core-extension-placement.json"
+entity_mentions:
+  - "sap-s4hana"
+  - "sap-integration"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "SAP Development Architecture"
+    url: "/labs/enterprise-context/development/"
+  - type: "related_topic"
+    title: "SAP Integration Architecture"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
+source_links:
+  - title: "Extensibility"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/82dc267d4b0b4b309b40c22f700fe5c2.html"
+  - title: "Side-By-Side Extensibility"
+    url: "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/12354e1b9ec04cfd97b99e1402a741f6.html"
+  - title: "Clean Core Extensibility and ABAP-Based Extensions"
+    url: "https://help.sap.com/docs/abap-cloud/developer-guide-from-classic-abap-to-abap-cloud/clean-core-extensibility-and-abap-based-extensions"
+# ai-discovery-managed:end
+tags: [sap, clean-core, extensibility, abap-cloud, btp, architecture]
+---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_clean_core_extension %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Extension placement</li></ol></nav>
+<div class="research-canvas">
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Decision Card / Clean Core</p><h1>Where should SAP<br />extension logic live?</h1><p>RAP, CAP, BAdI, key-user tools, and BTP are not the first decision. Start with business ownership, coupling, transactional consistency, data location, lifecycle, and failure behavior.</p></div><div class="research-canvas__signal"><p>My default</p><div class="research-canvas__signal-line"><span>STD</span><strong>Standard first</strong><small>Configure before extending</small></div><div class="research-canvas__signal-line"><span>NEAR</span><strong>On-stack</strong><small>When transaction coupling is real</small></div><div class="research-canvas__signal-line"><span>OUT</span><strong>Side-by-side</strong><small>When lifecycle should be decoupled</small></div><em>Choose the boundary before the technology.</em></div></header>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Decision in one sentence:</strong> use standard behavior when it represents the requirement, use released on-stack extensibility for rules that must live close to the SAP transaction, and use side-by-side extensibility when the capability should be loosely coupled or own a separate lifecycle.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Placement test</p><h2>Ask what the extension must own.</h2></header><div class="decision-table"><table><thead><tr><th>Need</th><th>Default direction</th></tr></thead><tbody><tr><td>Small UI, field, form, or simple business adaptation</td><td><strong>Key-user extensibility</strong> where supported.</td></tr><tr><td>Complex logic tightly coupled to the SAP business object or transaction</td><td><strong>Developer/on-stack extensibility</strong> through released objects and extension points.</td></tr><tr><td>Cross-system process, separate product lifecycle, external data, or independent scaling</td><td><strong>Side-by-side on BTP</strong> using released APIs or events.</td></tr><tr><td>Requirement already represented by standard configuration or master data</td><td><strong>No extension</strong>. Fix the design at the standard owner.</td></tr><tr><td>Direct modification of SAP internals</td><td><strong>Exception only</strong>, with explicit technical debt and upgrade consequence.</td></tr></tbody></table></div></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Decision drivers</p><h2>Coupling is more useful than fashion.</h2></header><div class="ecg-decision-columns"><div><h3>Transaction boundary</h3><p>If the rule must be part of the same business transaction and consistency boundary, moving it outside can create new failure modes.</p></div><div><h3>Data ownership</h3><p>Keep logic close to the system that owns the authoritative state unless the extension intentionally owns a separate business capability.</p></div><div><h3>Latency and availability</h3><p>A synchronous external dependency can turn an S/4 transaction into a network-availability problem. Make that trade-off explicit.</p></div><div><h3>Lifecycle</h3><p>Side-by-side is stronger when teams need independent deployment, scaling, runtime, or technology choices.</p></div><div><h3>Release stability</h3><p>Prefer released APIs, events, BAdIs, CDS views, and ABAP Cloud contracts over direct use of internal objects.</p></div></div></section>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>Anti-pattern:</strong> move logic to BTP only to call it clean core, while every sales or procurement save now depends synchronously on that remote service. The code moved; the coupling did not.</p><p><strong>I change the default when:</strong> legal isolation, independent scale, external data ownership, product-team lifecycle, or a required cross-system process outweighs local transaction coupling.</p><p><strong>Lead check:</strong> name the business owner, consistency boundary, failure mode, released contract, and upgrade path before choosing the implementation technology.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Choose the extension boundary before the framework.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/development/"><span>DOMAIN</span><strong>SAP Development Architecture</strong><small>Reviewed RAP, CAP, ABAP Cloud, BTP, and clean-core trade-offs.</small><i class="material-symbols-outlined" aria-hidden="true">code</i></a><a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Extension placement case</strong><small>A logistics rule needs SAP data plus an external risk service. Decide what stays on-stack and what moves out.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a><a href="/labs/enterprise-context/integrations/"><span>BOUND</span><strong>Integration Architecture</strong><small>Use the interface boundary to make failure, latency, and ownership explicit.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a></div></section>
+</div>
