@@ -99,11 +99,11 @@ semantic_links:
       <p>Enterprise AI announcements often mix product availability, planned features, customer stories, vendor estimates, and measured production results. They should not all receive the same evidence grade.</p>
     </header>
     <div class="research-route-list">
-      <a href="#registry-fields"><span>E1</span><strong>Claim</strong><small>What exactly is being claimed: capability, productivity, automation rate, quality, cost, user adoption, or business outcome?</small><i class="material-symbols-outlined" aria-hidden="true">subject</i></a>
-      <a href="#registry-fields"><span>E2</span><strong>Source type</strong><small>Official documentation, release plan, standard, customer case, research paper, benchmark, analyst note, or secondary report.</small><i class="material-symbols-outlined" aria-hidden="true">source</i></a>
-      <a href="#registry-fields"><span>E3</span><strong>Evidence status</strong><small>Confirmed capability, reported customer result, measured independent result, inference, planned feature, or unresolved claim.</small><i class="material-symbols-outlined" aria-hidden="true">verified</i></a>
-      <a href="#registry-fields"><span>E4</span><strong>Boundary</strong><small>Process, geography, release, data requirement, implementation condition, architecture dependency, and known limitation.</small><i class="material-symbols-outlined" aria-hidden="true">border_all</i></a>
-      <a href="#registry-fields"><span>E5</span><strong>What to test</strong><small>One practical experiment that would tell us whether the claim matters in an enterprise landscape.</small><i class="material-symbols-outlined" aria-hidden="true">experiment</i></a>
+      <a href="#evidence-registry"><span>E1</span><strong>Claim</strong><small>What exactly is being claimed: capability, productivity, automation rate, quality, cost, user adoption, or business outcome?</small><i class="material-symbols-outlined" aria-hidden="true">subject</i></a>
+      <a href="#evidence-registry"><span>E2</span><strong>Source type</strong><small>Official documentation, release plan, standard, customer case, research paper, benchmark, analyst note, or secondary report.</small><i class="material-symbols-outlined" aria-hidden="true">source</i></a>
+      <a href="#evidence-registry"><span>E3</span><strong>Evidence status</strong><small>Confirmed capability, reported customer result, measured independent result, inference, planned feature, or unresolved claim.</small><i class="material-symbols-outlined" aria-hidden="true">verified</i></a>
+      <a href="#evidence-registry"><span>E4</span><strong>Boundary</strong><small>Process, geography, release, data requirement, implementation condition, architecture dependency, and known limitation.</small><i class="material-symbols-outlined" aria-hidden="true">border_all</i></a>
+      <a href="#evidence-registry"><span>E5</span><strong>What to test</strong><small>One practical experiment that would tell us whether the claim matters in an enterprise landscape.</small><i class="material-symbols-outlined" aria-hidden="true">experiment</i></a>
     </div>
   </section>
 
@@ -134,12 +134,12 @@ semantic_links:
       <p>The readiness assessment starts from the process and authority model. A powerful model cannot repair unclear ownership, broken master data, missing interfaces, or an approval process that nobody can explain.</p>
     </header>
     <div class="research-route-list">
-      <a href="#readiness-dimensions"><span>A1</span><strong>Process</strong><small>Stable steps, clear exceptions, decision ownership, measurable pain, and known cost of error.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
-      <a href="#readiness-dimensions"><span>A2</span><strong>Data and documents</strong><small>Availability, quality, identity, lineage, master-data reliability, document variation, and retention constraints.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
-      <a href="#readiness-dimensions"><span>A3</span><strong>Integration</strong><small>Read and write interfaces, event availability, error semantics, idempotency, and system-of-record boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="#readiness-dimensions"><span>A4</span><strong>Security and authority</strong><small>Identity, permissions, delegated access, sensitive data, tool scope, approval, and forbidden actions.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
-      <a href="#readiness-dimensions"><span>A5</span><strong>Evaluation and operations</strong><small>Test cases, failure metrics, monitoring, traceability, fallback, support ownership, and change management.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
-      <a href="#readiness-dimensions"><span>A6</span><strong>Economics</strong><small>Transaction volume, manual effort, exception rate, model/tool cost, integration cost, and value of avoided error.</small><i class="material-symbols-outlined" aria-hidden="true">payments</i></a>
+      <a href="#readiness"><span>A1</span><strong>Process</strong><small>Stable steps, clear exceptions, decision ownership, measurable pain, and known cost of error.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="#readiness"><span>A2</span><strong>Data and documents</strong><small>Availability, quality, identity, lineage, master-data reliability, document variation, and retention constraints.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <a href="#readiness"><span>A3</span><strong>Integration</strong><small>Read and write interfaces, event availability, error semantics, idempotency, and system-of-record boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="#readiness"><span>A4</span><strong>Security and authority</strong><small>Identity, permissions, delegated access, sensitive data, tool scope, approval, and forbidden actions.</small><i class="material-symbols-outlined" aria-hidden="true">policy</i></a>
+      <a href="#readiness"><span>A5</span><strong>Evaluation and operations</strong><small>Test cases, failure metrics, monitoring, traceability, fallback, support ownership, and change management.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
+      <a href="#readiness"><span>A6</span><strong>Economics</strong><small>Transaction volume, manual effort, exception rate, model/tool cost, integration cost, and value of avoided error.</small><i class="material-symbols-outlined" aria-hidden="true">payments</i></a>
     </div>
   </section>
 
@@ -173,7 +173,7 @@ semantic_links:
     <p><strong>Useful contribution format.</strong> State the business problem, expected result, failure condition, source or assumption, and what a repeatable test should prove.</p>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="questions" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Question backlog</p>
       <h2>Questions worth answering in public.</h2>

@@ -84,12 +84,12 @@ semantic_links:
       <p>The agent can decide which capability may help. The gateway decides whether that capability is available, whether the request is valid, and whether a human must approve the action.</p>
     </header>
     <div class="research-route-list">
-      <a href="#identity"><span>01</span><strong>User and agent identity</strong><small>Resolve who is asking, which agent is acting, the tenant or company context, roles, and delegated permissions.</small><i class="material-symbols-outlined" aria-hidden="true">badge</i></a>
-      <a href="#catalog"><span>02</span><strong>Tool catalog</strong><small>Expose small business capabilities such as get order, check stock, simulate price, create draft, or release blocked document.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
-      <a href="#policy"><span>03</span><strong>Policy gateway</strong><small>Validate tool, scope, object, amount, process status, business role, environment, and required approval before execution.</small><i class="material-symbols-outlined" aria-hidden="true">gavel</i></a>
-      <a href="#adapter"><span>04</span><strong>ERP adapters</strong><small>Translate the approved capability call into MCP, REST, OData, BAPI, IDoc, workflow, event, or another controlled system interface.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="#result"><span>05</span><strong>Structured result</strong><small>Return business result, warnings, transaction identifiers, changed fields, and machine-readable errors instead of vague success text.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="#audit"><span>06</span><strong>Audit and replay</strong><small>Record request, user, agent, policy result, approval, tool version, ERP response, and final business state for later review.</small><i class="material-symbols-outlined" aria-hidden="true">history</i></a>
+      <a href="#gateway-design"><span>01</span><strong>User and agent identity</strong><small>Resolve who is asking, which agent is acting, the tenant or company context, roles, and delegated permissions.</small><i class="material-symbols-outlined" aria-hidden="true">badge</i></a>
+      <a href="#gateway-design"><span>02</span><strong>Tool catalog</strong><small>Expose small business capabilities such as get order, check stock, simulate price, create draft, or release blocked document.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
+      <a href="#gateway-design"><span>03</span><strong>Policy gateway</strong><small>Validate tool, scope, object, amount, process status, business role, environment, and required approval before execution.</small><i class="material-symbols-outlined" aria-hidden="true">gavel</i></a>
+      <a href="#gateway-design"><span>04</span><strong>ERP adapters</strong><small>Translate the approved capability call into MCP, REST, OData, BAPI, IDoc, workflow, event, or another controlled system interface.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="#gateway-design"><span>05</span><strong>Structured result</strong><small>Return business result, warnings, transaction identifiers, changed fields, and machine-readable errors instead of vague success text.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="#gateway-design"><span>06</span><strong>Audit and replay</strong><small>Record request, user, agent, policy result, approval, tool version, ERP response, and final business state for later review.</small><i class="material-symbols-outlined" aria-hidden="true">history</i></a>
     </div>
   </section>
 
@@ -117,7 +117,7 @@ semantic_links:
     </div>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="tests" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Failure lab</p>
       <h2>Test the bad day before the boardroom demo.</h2>

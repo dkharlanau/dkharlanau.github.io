@@ -86,12 +86,12 @@ semantic_links:
       <p>The first version should use synthetic documents and a mock transaction API. Real ERP adapters come later. This keeps the experiment honest: first prove the decision boundary, then spend time on landscape-specific integration.</p>
     </header>
     <div class="research-route-list">
-      <a href="#capture"><span>01</span><strong>Capture and classify</strong><small>Receive PDF, image, email attachment, or structured document and identify the business document type.</small><i class="material-symbols-outlined" aria-hidden="true">upload_file</i></a>
-      <a href="#extract"><span>02</span><strong>Extract and normalize</strong><small>Convert text into a canonical business object with field confidence and source references.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="#validate"><span>03</span><strong>Validate against enterprise context</strong><small>Check master data, units, currencies, duplicate risk, dates, status, tolerances, and process rules.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="#approve"><span>04</span><strong>Explain and approve</strong><small>Show what was read, what was inferred, what failed validation, and why human confirmation is required.</small><i class="material-symbols-outlined" aria-hidden="true">approval</i></a>
-      <a href="#write"><span>05</span><strong>Execute through an adapter</strong><small>Write only the approved transaction through a narrow ERP interface with idempotency and a transaction reference.</small><i class="material-symbols-outlined" aria-hidden="true">sync_alt</i></a>
-      <a href="#audit"><span>06</span><strong>Audit the whole chain</strong><small>Keep document hash, extracted fields, rule results, model version, approvals, tool calls, ERP response, and final status.</small><i class="material-symbols-outlined" aria-hidden="true">history</i></a>
+      <a href="#pilot-design"><span>01</span><strong>Capture and classify</strong><small>Receive PDF, image, email attachment, or structured document and identify the business document type.</small><i class="material-symbols-outlined" aria-hidden="true">upload_file</i></a>
+      <a href="#pilot-design"><span>02</span><strong>Extract and normalize</strong><small>Convert text into a canonical business object with field confidence and source references.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="#pilot-design"><span>03</span><strong>Validate against enterprise context</strong><small>Check master data, units, currencies, duplicate risk, dates, status, tolerances, and process rules.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="#pilot-design"><span>04</span><strong>Explain and approve</strong><small>Show what was read, what was inferred, what failed validation, and why human confirmation is required.</small><i class="material-symbols-outlined" aria-hidden="true">approval</i></a>
+      <a href="#pilot-design"><span>05</span><strong>Execute through an adapter</strong><small>Write only the approved transaction through a narrow ERP interface with idempotency and a transaction reference.</small><i class="material-symbols-outlined" aria-hidden="true">sync_alt</i></a>
+      <a href="#pilot-design"><span>06</span><strong>Audit the whole chain</strong><small>Keep document hash, extracted fields, rule results, model version, approvals, tool calls, ERP response, and final status.</small><i class="material-symbols-outlined" aria-hidden="true">history</i></a>
     </div>
   </section>
 
@@ -128,7 +128,7 @@ semantic_links:
     <p><strong>Keep expected answers explicit.</strong> Each document should have a known canonical object, expected validation outcome, required approval, and expected final action.</p>
   </section>
 
-  <section class="research-canvas__inventory" data-reveal>
+  <section class="research-canvas__inventory" id="metrics" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Metrics</p>
       <h2>Field accuracy is only the first line of the report.</h2>
@@ -153,7 +153,7 @@ semantic_links:
       <a href="/labs/enterprise-context/integrations/"><span>SAP</span><strong>SAP adapter</strong><small>Use an API, BAPI, IDoc, event, or controlled custom interface depending on process and landscape. The pilot should not pretend one interface style fits everything.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/copilot/copilot-mcp"><span>D365</span><strong>Dynamics 365 adapter</strong><small>Dynamics 365 now documents an ERP MCP server that can expose data and business logic to compatible agents.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
       <a href="https://docs.oracle.com/en/cloud/saas/fusion-ai/aiafl/ai-erp.html"><span>ORA</span><strong>Oracle reference</strong><small>Oracle documents agentic ERP scenarios including payables and invoice-related work. The pilot can compare its control assumptions with those product directions.</small><i class="material-symbols-outlined" aria-hidden="true">open_in_new</i></a>
-      <a href="#mock"><span>MOCK</span><strong>Reference ERP API</strong><small>A small deterministic service for public testing, repeatable benchmarks, and failure injection before any real ERP is connected.</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
+      <a href="#pilot-design"><span>MOCK</span><strong>Reference ERP API</strong><small>A small deterministic service for public testing, repeatable benchmarks, and failure injection before any real ERP is connected.</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
     </div>
   </section>
 
