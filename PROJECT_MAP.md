@@ -1,149 +1,148 @@
 # PROJECT_MAP.md
 
-Compact map of the `dkharlanau.github.io` repository.
-Last updated: 2026-06-09
+Compact map of `dkharlanau.github.io`.
+Last updated: 2026-08-17.
 
-## Important Directories
+## Product Architecture
+
+The public repository has many physical directories, but the site is organised around six product areas. Do not mirror every directory in the global navigation.
+
+| Product area | Primary route | Purpose |
+|---|---|---|
+| Profile | `/`, `/about/`, `/cv/` | Identity, experience, certifications, public profile |
+| Knowledge | `/knowledge/` | Human knowledge entry point for Atlas, Scenarios, Research, Journal, and Notes |
+| Labs | `/labs/` | Active workspaces for SAP Enterprise, AI architecture, Business AI, operational protocols, and assessment practice |
+| Frameworks | `/frameworks/` | Reusable methods: TRIZ Digital, Decision Design, Reusable Data Procedures, operational protocols |
+| Machine layer | `/machine/` | Technical map for datasets, AI-readable exports, skills, tools, and MCP packages |
+| Services | `/services/` | Consulting services and commercial signal |
+
+The global navigation should stay product-level. Deep domain navigation belongs inside the relevant product.
+
+## Canonical Route Rules
+
+- Keep established deep URLs stable unless there is a strong technical reason to move them.
+- Prefer a hub or alias over a mass directory move. A clean taxonomy is not worth breaking external references.
+- `/labs/enterprise-context/` remains the canonical physical route for the SAP Enterprise workspace. In UI copy, call the workspace **SAP Enterprise** because its scope now covers far more than context.
+- `/lab/` is a compatibility route that redirects to `/labs/`.
+- `/labs/reusable-data-procedures/` is a compatibility route that redirects to the canonical `/reusable-data-procedures/` workspace.
+- `/triz/`, `/ddd/`, and `/reusable-data-procedures/` remain canonical framework routes even though they are grouped under `/frameworks/` in navigation.
+- Generated artifacts, sitemaps, and AI exports must not be hand-edited when a generator owns them.
+
+## Knowledge
+
+| Section | Path | Role |
+|---|---|---|
+| Knowledge hub | `knowledge/index.md` | Routes users to the correct knowledge maturity and format |
+| Atlas | `atlas/` | Curated concepts, diagnostics, SAP notes, maps, data quality, automation, AI operations |
+| Scenarios | `scenarios/` | Business pain mapped to process context and diagnostic workflow |
+| Research | `research/` | Briefs, comparisons, watchlists, working evidence |
+| Journal | `_blog/`, `blog/` | Long-form analysis |
+| Notes | `_notes/`, `notes/` | Short-form working observations |
+| Radar / News | `_radar/`, `_news/`, `radar/`, `news/` | Dated signals and updates |
+
+## Labs
+
+`labs/` is for active exploration and practice, not for every reusable method.
+
+| Workspace | Physical path | Scope |
+|---|---|---|
+| SAP Enterprise | `labs/enterprise-context/` | SAP business domains, processes, logistics, data, integration, development, analytics, industries |
+| AI Ready | `labs/ai-ready/` | Data, RAG, MCP, agents, evals, security, deployment, production decisions |
+| Business AI | `labs/business-ai/` | Process → AI job → pattern → technology → control → outcome → evidence |
+| Operational Protocols | `labs/templates/` | RCA, incident response, integration failures, runbooks, cutover, hypercare |
+| SAP Lead Assessment | `labs/assessment/` | Cases, mocks, review, reasoning levels, evidence coverage, progress |
+
+### SAP Enterprise domain map
+
+The existing `labs/enterprise-context/` tree is intentionally not mass-moved. Treat it as a graph with several domain families:
+
+- **Core context:** `domains/`, `model/`, `frameworks/`, `industries/`, `deployment-models/`
+- **Sales:** `sales-processes/`, `sales-order/`, `pricing/`, `atp/`, `shipping/`, `billing/`, `credit/`, `tax/`, `condition-contract-management/`, `sales-analytics/`, `sales-diagnostics/`
+- **Procurement and logistics:** `procurement/`, `inventory-management/`, `material-behavior/`, `ewm/`, `transportation-management/`, `production/`, `quality-management/`
+- **Master data:** `master-data/`, `mdg/`, `data-governance/`, `data/`
+- **Technology:** `integrations/`, `integration-operations/`, `development/`, `business-ai/`, `end-to-end-analytics/`, `iot-devices/`
+- **Cross-functional / industry:** `automotive-jit/`, `finance-logistics/`, `logistics-capabilities/`
+
+A topic may belong to several families. Do not duplicate it only to satisfy the directory tree. Express cross-domain meaning through links, metadata, and graph relationships.
+
+## Frameworks
+
+| Framework | Canonical path | Purpose |
+|---|---|---|
+| TRIZ for Digital Systems | `triz/` | Contradictions, separation operators, resource scan, digital patterns, cases, workbench |
+| Decision Design | `ddd/` | Decision canvas, structured decision model, schemas, examples, agent context |
+| Reusable Data Procedures | `reusable-data-procedures/` | Repeatable file discovery, mapping, validation, procedure execution and governance |
+| Operational Protocols | `labs/templates/` | Reusable operational analysis and execution protocols |
+
+Frameworks must remain reusable across SAP, AI, data, and general digital-system cases.
+
+## Machine Layer
+
+| Area | Path | Purpose |
+|---|---|---|
+| Datasets | `datasets/` | Canonical machine-readable data collections |
+| AI-readable exports | `ai/` | JSON/YAML indexes, discovery maps, evidence, generated exports |
+| Skill Hub | `skill-hub/` | Human-readable map of reusable skills |
+| Agent Skills | `agent-skills/` | Portable installable agent skill packages |
+| Agent Tools | `agent-tools/` | Static public tool descriptions |
+| MCP | `mcp/` | Source and documentation for local MCP packages; GitHub Pages does not execute them |
+| Discovery | `.well-known/` | Machine discovery and agent skill manifests |
+| Search | `search/` | Human search surface |
+
+## Services and Profile
+
+- `services/` contains consulting service descriptions.
+- `about.md`, `cv/`, `certifications.md`, `education.md`, and `publications.md` form the public profile layer.
+- Localised home/profile routes live under `de/`, `fr/`, `es/`, `it/`, `nl/`, `pl/`, `pt-br/`, `ar/`, and `zh-cn/`.
+
+## Platform and Build Directories
 
 | Directory | Purpose |
-|-----------|---------|
-| `atlas/` | Knowledge Atlas — curated diagnostic, conceptual, and SAP-specific content |
-| `scenarios/` | Business-pain-to-diagnostic-workflow scenarios |
-| `services/` | Consulting service descriptions |
-| `research/` | Research briefs, comparisons, watchlists |
-| `datasets/` | Canonical machine-readable dataset collections |
-| `ai/` | Machine-readable exports (JSON/YAML) for AI agents and search systems |
-| `_data/` | Jekyll data files (resume, home, certifications, changelog, etc.) |
-| `_includes/` | Jekyll partials (sections, components, SEO, Atlas blocks) |
-| `_layouts/` | Jekyll layouts (default, blog, note, radar) |
-| `_blog/` | Blog post collection |
-| `_notes/` | Notes collection |
-| `_radar/` | Radar signal collection |
-| `_news/` | News signal collection |
-| `legal/` | Policies (privacy, terms, disclosure, responsible AI, accessibility, datasets) |
-| `docs/` | Internal documentation (Atlas backlog, SEO, content contracts, AI readiness) |
-| `docs/ai/` | AI-agent-readiness documentation |
-| `scripts/` | Python generators, validators, and maintenance scripts |
-| `bin/` | Setup and dataset generation scripts |
-| `tests/` | pytest test suite |
-| `.github/` | GitHub Actions workflows and PR templates |
-| `.well-known/` | Agent skills and machine-readable discovery files |
-| `_site/` | **Generated Jekyll build output — never edit directly** |
-
-## Public Content Sections
-
-| Section | Path | Type |
-|---------|------|------|
-| Home | `index.md` | Landing |
-| About | `about.md` | Profile |
-| Services | `services/index.md`, `services/*.md` | Commercial signal |
-| Atlas | `atlas/index.md`, `atlas/*/*.md` | Knowledge base |
-| Scenarios | `scenarios/index.md`, `scenarios/*.md` | Business pain workflows |
-| Research | `research/index.md`, `research/**/*.md` | Research briefs |
-| Blog | `blog/index.md`, `_blog/*.md` | Long-form essays |
-| Notes | `notes/index.md`, `_notes/*.md` | Short-form notes |
-| Datasets | `datasets/index.md`, `datasets/*/` | Data collections |
-| AI Sources | `ai/index.md`, `ai/*.{json,yml}` | Machine-readable exports |
-| Legal | `legal/*.md` | Policies |
-| Changelog | `changelog.md` | Release history |
+|---|---|
+| `_data/` | Jekyll data and structured content inputs |
+| `_includes/` | Shared components, navigation, SEO, product partials |
+| `_layouts/` | Jekyll layouts |
+| `assets/` | CSS, JavaScript, images, icons |
+| `config/` | Content-quality and discovery policy |
+| `docs/` | Internal project documentation and contracts |
+| `scripts/`, `bin/` | Generators, validators, maintenance tools |
+| `tests/` | Automated test suite |
+| `.github/` | CI workflows and PR templates |
+| `legal/` | Public policies |
 
 ## Generated Artifacts
 
-| Artifact | Source | Generator |
-|----------|--------|-----------|
-| `_site/` | All source files | `bundle exec jekyll build` |
-| `llms-full.txt` | Verified Atlas pages | `scripts/generate_atlas_artifacts.py` |
-| `sitemap.xml` | Site structure | Jekyll + `jekyll-sitemap` plugin |
-| `sitemap-pages.xml` | Page sitemap | Jekyll |
-| `sitemap-atlas.xml` | Atlas sitemap | Jekyll |
-| `sitemap-data.xml` | Dataset sitemap | Jekyll |
-| `atlas/manifest.json` | Atlas page registry | `scripts/generate_atlas_artifacts.py` |
-| `ai/catalog.json` | Dataset catalog | `bin/enrich_datasets.py` |
-| `docs/dama/*.html` | DAMA dataset pages | `scripts/generate_dama_pages.js` |
+Common generated files include `_site/`, `llms-full.txt`, Atlas manifests and AI indexes, sitemap files, quality reports, and other outputs named by their generators. Never edit generated output to fix the source problem. Fix the source or generator, regenerate, and validate.
 
-## Scripts
+## Link Integrity
 
-| Script | Purpose |
-|--------|---------|
-| `bin/setup` | Environment setup |
-| `bin/enrich_datasets.py` | Dataset metadata enrichment |
-| `bin/generate_dataset_pages.py` | Dataset page generation |
-| `scripts/check_public_repo.py` | Public-safety check |
-| `scripts/check_links.py` | Link validation |
-| `scripts/check_seo.py` | SEO validation |
-| `scripts/generate_atlas_artifacts.py` | Atlas manifest and llms-full generation |
-| `scripts/generate_dama_pages.js` | DAMA HTML page generation |
-| `scripts/validate_site_content.py` | Content validation |
-| `scripts/content_maintenance_scan.py` | Content maintenance scan |
-| `scripts/propose_atlas_update.py` | Atlas update proposal |
-| `scripts/match_atlas_signal.py` | Signal-to-Atlas matching |
-| `scripts/indexnow_submit.py` | IndexNow submission |
+Structural changes must preserve link integrity.
 
-## Tests
+Minimum validation before merge:
 
-| Test File | Coverage |
-|-----------|----------|
-| `tests/test_atlas_artifacts.py` | Atlas artifact generation |
-| `tests/test_atlas_backlog_pipeline.py` | Atlas backlog pipeline |
-| `tests/test_atlas_pr_workflow.py` | Atlas PR workflow |
-| `tests/test_atlas_proposal_quality.py` | Atlas proposal quality |
-| `tests/test_atlas_rag_evaluation.py` | Atlas RAG evaluation |
-| `tests/test_atlas_signal_matcher.py` | Signal matching |
-| `tests/test_atlas_update_proposals.py` | Update proposals |
-| `tests/test_content_maintenance.py` | Content maintenance |
-| `tests/test_discovery_outputs.py` | Discovery outputs |
-| `tests/test_indexnow_hardening.py` | IndexNow hardening |
-| `tests/test_li2resume.py` | Resume generation |
-| `tests/test_research_atlas_proposals.py` | Research proposals |
-| `tests/test_seo_discovery.py` | SEO discovery |
-| `tests/test_signal_to_atlas_schema.py` | Signal-to-Atlas schema |
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
+python3 scripts/check_public_repo.py
+bundle exec jekyll build --trace
+python3 scripts/check_links.py _site
+python3 scripts/check_seo.py _site
+python3 scripts/content_quality.py check --site-dir _site
+python3 scripts/generate_atlas_artifacts.py --check
+```
 
-## SEO / Sitemap / LLMs Files
+CI contains additional indexing, sitemap, date, accessibility, AI-endpoint, and Lab publication checks. A structural PR is not ready while required CI checks are failing.
 
-| File | Purpose |
-|------|---------|
-| `robots.txt` | Crawler policy with AI-specific rules |
-| `sitemap.xml` | Sitemap index |
-| `sitemap-pages.xml` | Page-level sitemap |
-| `sitemap-atlas.xml` | Atlas page sitemap |
-| `sitemap-data.xml` | Dataset sitemap |
-| `llms.txt` | LLM access manifest (Jekyll-generated from `_includes/llms-manifest.txt`) |
-| `llms-full.txt` | Full-text verified Atlas content |
-| `_includes/llms-manifest.txt` | Source manifest for `llms.txt` |
-| `_includes/seo/structured-data.html` | JSON-LD structured data |
+## Where New Work Goes
 
-## Where to Add Atlas Pages
+Use the problem type, not the technology name, to choose the home:
 
-- **Concepts**: `atlas/concepts/<slug>.md` — durable explanations
-- **Diagnostics**: `atlas/diagnostics/<slug>.md` — diagnostic patterns
-- **SAP notes**: `atlas/sap/<slug>.md` — SAP-specific configuration/support
-- **Maps**: `atlas/maps/<slug>.md` — process and dependency maps
-- **AI operations**: `atlas/ai-operations/<slug>.md` — AI-assisted support patterns
-- **Data quality**: `atlas/data-quality/<slug>.md` — master data and governance
-- **Automation**: `atlas/automation/<slug>.md` — support automation patterns
+- Durable reviewed explanation → `atlas/`
+- Business problem / diagnostic workflow → `scenarios/`
+- Fast-moving cited evidence → `research/`
+- Active SAP / AI exploration or assessment practice → `labs/`
+- Reusable reasoning or execution method → existing framework under `/frameworks/`
+- Canonical structured data → `datasets/`
+- Generated or curated machine endpoint → `ai/`
+- Portable agent capability → `agent-skills/` or `agent-tools/`
 
-All new Atlas pages must start at **Level 1** (`status: needs_verification`, `verified: false`, `robots: noindex,follow`, `sitemap: false`).
-
-## Where to Add Scenario Pages
-
-- `scenarios/<slug>.md` — business pain scenarios
-
-All new Scenario pages must start at **Level 1** (`status: needs_verification`, `verified: false`, `robots: noindex,follow`, `sitemap: false`).
-
-## Where to Add Docs
-
-- `docs/ai/*.md` — AI-agent-readiness documentation
-- `docs/atlas/*.md` — Atlas backlog, pipeline, and editorial docs
-- `docs/seo/*.md` — SEO and discovery docs
-- `docs/templates/*.md` — Content templates
-- `docs/research/*.md` — Research contracts
-- `docs/scenarios/*.md` — Scenarios backlog
-
-## Where Not to Add Content
-
-- `_site/` — generated build output
-- `llms-full.txt` — generated artifact
-- `sitemap-*.xml` — generated artifacts
-- Root-level duplicate folders (`TRIZ-bytes/`, `DAMA/`, `LLM-prompts/`, `agentic-bytes/`) — keep under `datasets/`
-- Any path containing private corpus, client data, or internal incident details
-- Any path that would expose unverified draft material as indexable
+Do not create a new root directory simply because a topic has become large. First decide whether it is a domain inside an existing product, a reusable framework, or a machine-facing representation of existing knowledge.
