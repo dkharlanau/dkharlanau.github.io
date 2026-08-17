@@ -1,0 +1,55 @@
+---
+layout: default
+title: "Who Owns a Warehouse Execution Mismatch? — SAP EWM Decision Card"
+description: "A SAP Lead decision model for separating S/4 delivery intent, EWM warehouse execution, confirmation, integration, and inventory reconciliation."
+permalink: /labs/enterprise-context/decisions/ewm-execution-ownership/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-07"
+search_intent: "SAP EWM warehouse task execution ownership S4 delivery goods issue goods receipt reconciliation"
+evidence_review_mode: "SAP EWM warehouse-task and S/4HANA communication behavior checked against primary SAP Help sources; ownership, failure classification, and reconciliation guidance is authored reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
+hide_global_cta: true
+structured_data:
+  type: TechArticle
+# ai-discovery-managed:start
+primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--ewm-execution-ownership.json"
+entity_mentions: ["sap-ewm", "sap-inventory-management", "sap-integration"]
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "SAP EWM"
+    url: "/labs/enterprise-context/ewm/"
+  - type: "related_topic"
+    title: "Inventory Management"
+    url: "/labs/enterprise-context/inventory-management/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
+source_links:
+  - title: "Warehouse Task"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/8fcccb53ad377114e10000000a174cb4.html"
+  - title: "Communication from EWM to SAP S/4HANA"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/65cecb53ad377114e10000000a174cb4.html"
+  - title: "Confirmation of Product Warehouse Tasks"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/02f7bb66616c4589a8e1115ab799e8f3.html"
+# ai-discovery-managed:end
+tags: [sap, ewm, warehouse, execution, inventory, integration, reconciliation]
+---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_ewm_execution_ownership %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">EWM execution ownership</li></ol></nav>
+<div class="research-canvas">
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Decision Card / EWM</p><h1>Who owns a warehouse<br />execution mismatch?</h1><p>A delivery can be correct in S/4HANA while the warehouse execution is wrong, or EWM can confirm physical work while the ERP follow-on state is still missing. The visible system does not automatically own the cause.</p></div><div class="research-canvas__signal"><p>My default</p><div class="research-canvas__signal-line"><span>ASK</span><strong>S/4 delivery</strong><small>Business request</small></div><div class="research-canvas__signal-line"><span>DO</span><strong>EWM task</strong><small>Physical execution</small></div><div class="research-canvas__signal-line"><span>PROVE</span><strong>Reconcile</strong><small>Warehouse and ERP state</small></div><em>Physical completion and ERP completion are different proofs.</em></div></header>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Decision in one sentence:</strong> S/4HANA owns the business delivery or goods-movement request, EWM owns warehouse execution and warehouse-task confirmation, and the integration boundary must carry the confirmed result back so inventory and follow-on processes reconcile.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Trace</p><h2>Follow the request into execution and back.</h2></header><div class="ecg-decision-columns"><div><h3>1. Business request</h3><p>Start from the inbound, outbound, stock-transfer, or posting-change document and the quantity that the business expects to move.</p></div><div><h3>2. Warehouse object</h3><p>Check the distributed EWM document, warehouse request, warehouse task, warehouse order, stock, HU, batch, and serial context where relevant.</p></div><div><h3>3. Physical execution</h3><p>Prove what was actually picked, put away, staged, packed, loaded, or moved. A planned task is not execution evidence.</p></div><div><h3>4. Confirmation</h3><p>Check warehouse-task confirmation, exception codes, partial quantities, destination changes, and delivery confirmation.</p></div><div><h3>5. ERP result</h3><p>Reconcile S/4 delivery status, material document, goods receipt or goods issue, inventory quantity, and downstream billing or planning effects.</p></div></div></section>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>Anti-pattern:</strong> post a manual goods issue or goods receipt in S/4HANA only to make ERP stock match a warehouse screen. That can hide the broken execution or interface state and create a second inconsistency.</p><p><strong>I change the ownership model when:</strong> a non-SAP automation layer controls conveyors or machines. EWM can still own warehouse-management decisions while the automation layer owns equipment execution.</p><p><strong>Lead proof:</strong> requested quantity, physical movement, EWM confirmation, ERP inventory, and financial or customer consequence all reconcile.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Do not repair ERP before proving warehouse state.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/ewm/"><span>EWM</span><strong>Warehouse Execution Map</strong><small>Objects, tasks, waves, automation, mobility, and integration boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">warehouse</i></a><a href="/labs/enterprise-context/inventory-management/"><span>IM</span><strong>Inventory Management</strong><small>Goods movements, stock state, and accounting handoff.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a><a href="/labs/assessment/cross-process/"><span>CASE</span><strong>EWM execution case</strong><small>Warehouse says the goods moved, while ERP inventory and delivery status disagree.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a></div></section>
+</div>
