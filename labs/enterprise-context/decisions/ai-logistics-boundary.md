@@ -3,30 +3,26 @@ layout: default
 title: "Which SAP Logistics Decisions Should AI Not Own? — Decision Card"
 description: "A compact SAP decision model for separating AI assistance from accountable logistics decisions, controls, and postings."
 permalink: /labs/enterprise-context/decisions/ai-logistics-boundary/
-status: reviewed
-verified: true
-robots: index,follow
-sitemap: true
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
 last_modified_at: 2026-08-17
-last_reviewed: 2026-08-17
 hide_global_cta: true
-review_method: "authored decision model over reviewed enterprise, integration, data, and AI-readiness material"
+review_method: "authored decision reasoning draft over reviewed enterprise and integration material; pending publication-contract review"
 structured_data:
   type: TechArticle
-primary_topic: "sap-ai-decision-boundary"
+primary_topic: "sap-architecture-decisions"
 semantic_links:
-  - type: "part_of"
+  - type: "parent_context"
     title: "SAP Decision Cards"
     url: "/labs/enterprise-context/decisions/"
   - type: "related_topic"
-    title: "Business AI Lab"
-    url: "/labs/business-ai/"
+    title: "SAP Integration Architecture"
+    url: "/labs/enterprise-context/integrations/"
   - type: "related_topic"
-    title: "AI Ready Architecture"
-    url: "/labs/ai-ready/"
-  - type: "related_topic"
-    title: "Enterprise Context Lab"
-    url: "/labs/enterprise-context/"
+    title: "Procurement Process & Decision Map"
+    url: "/labs/enterprise-context/procurement/"
 tags: [sap, ai, logistics, governance, agents, architecture]
 ---
 
