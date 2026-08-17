@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Decision Cards — Enterprise Context Lab"
-description: "Thirteen reviewed SAP Lead decision models for logistics, procurement, integration, master data, operations, and AI boundaries."
+description: "Sixteen reviewed SAP Lead decision models for logistics, procurement, pricing, integration, master data, clean core, operations, and AI."
 permalink: /labs/enterprise-context/decisions/
 status: reviewed
 verified: true
@@ -9,9 +9,9 @@ robots: index,follow
 sitemap: true
 last_modified_at: 2026-08-17
 last_reviewed: 2026-08-17
-publication_wave: "decision-search-wave-05"
-search_intent: "SAP Lead architecture decision cards logistics procurement integration master data AI"
-evidence_review_mode: "authored index over thirteen individually reviewed Decision Cards with page-level source and publication contracts"
+publication_wave: "decision-search-wave-06"
+search_intent: "SAP Lead architecture decision cards logistics procurement pricing integration clean core master data AI"
+evidence_review_mode: "authored index over sixteen individually reviewed Decision Cards with page-level source and publication contracts"
 review_method: "reviewed child routes + page-level editorial review"
 hide_global_cta: true
 structured_data:
@@ -19,107 +19,43 @@ structured_data:
 # ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
 ai_sidecar: "/ai/pages/labs--enterprise-context--decisions.json"
-entity_mentions:
-  - "sap-sales"
-  - "sap-procurement"
-  - "sap-integration"
-  - "sap-mdg"
-  - "sap-business-ai"
+entity_mentions: ["sap-sales", "sap-pricing", "sap-procurement", "sap-integration", "sap-mdg", "sap-business-ai"]
 semantic_links:
-  - type: "related_topic"
-    title: "SAP Integration Architecture"
-    url: "/labs/enterprise-context/integrations/"
-  - type: "related_topic"
-    title: "Procurement Process & Decision Map"
-    url: "/labs/enterprise-context/procurement/"
-  - type: "related_topic"
-    title: "SAP Sales Process Atlas"
-    url: "/labs/enterprise-context/sales-processes/"
   - type: "parent_model"
     title: "Enterprise Business Domains"
     url: "/labs/enterprise-context/domains/"
   - type: "applied_scenario"
     title: "Cross-Process SAP Lead Cases"
     url: "/labs/assessment/cross-process/"
+  - type: "related_topic"
+    title: "SAP Development Architecture"
+    url: "/labs/enterprise-context/development/"
 # ai-discovery-managed:end
-tags:
-  - sap
-  - architecture
-  - decision-making
-  - logistics
-  - procurement
-  - sales
-  - integration
-  - operations
-  - master-data
-  - business-ai
+tags: [sap, architecture, decision-making, logistics, procurement, pricing, sales, integration, operations, master-data, clean-core, business-ai]
 ---
 
-<nav class="breadcrumbs" aria-label="Breadcrumb">
-  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Decision Cards</li></ol>
-</nav>
-
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Decision Cards</li></ol></nav>
 <div class="research-canvas">
-  <header class="research-canvas__hero" data-reveal>
-    <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Enterprise Context / Decision Cards</p>
-      <h1>Good SAP answers explain<br />the choice and its boundary.</h1>
-      <p>These cards are not product summaries. Each one starts with a real design question, makes the default choice explicit, and shows what would make me change that choice.</p>
-      <a class="research-canvas__button" href="#decision-map">Open the decision map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
-    </div>
-    <div class="research-canvas__signal" aria-label="Decision card model">
-      <p>Lead answer pattern</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>Context</strong><small>What problem exists?</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>Choice</strong><small>What is my default?</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>Boundary</strong><small>When does it change?</small></div>
-      <em>Decision reasoning is separated from vendor facts.</em>
-    </div>
-  </header>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
-    <p><strong>Working rule:</strong> a Lead answer should not stop at “it depends”. State the default, name the decision drivers, show the failure owner, and explain the condition that changes the design.</p>
-    <p><strong>Knowledge chain:</strong> each decision sits between a domain and an applied scenario, with reviewed evidence behind factual claims: Domain → Decision → Scenario → Evidence.</p>
-    <p><strong>Publication state:</strong> all thirteen cards have passed individual source and publication review. The hub is now a public index of the reviewed decision set.</p>
-  </section>
-
-  <section class="research-canvas__inventory" id="decision-map" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Decision map</p>
-      <h2>Thirteen reviewed cross-domain choices worth being able to defend.</h2>
-      <p>Each card states a default, the drivers that can change it, an ownership boundary, and a path to scenario or evidence.</p>
-    </header>
-    <div class="research-route-list">
-      <a href="/labs/enterprise-context/decisions/idoc-api-event/"><span>INT ✓</span><strong>IDoc, API, or event?</strong><small>Reviewed. Choose the interaction pattern from coupling, response needs, replay, volume, and recovery ownership before selecting middleware.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="/labs/enterprise-context/decisions/idoc-failure-ownership/"><span>OPS ✓</span><strong>Who owns an IDoc failure?</strong><small>Reviewed. Separate transport, mapping, application, master-data, and business failures, then keep one owner accountable for end-to-end reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">support_agent</i></a>
-      <a href="/labs/enterprise-context/decisions/source-selection-ownership/"><span>MM ✓</span><strong>Where should supplier selection logic live?</strong><small>Reviewed. Keep source policy in standard procurement objects when possible; use extensions only for a real gap with explicit ownership, audit, and fallback.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
-      <a href="/labs/enterprise-context/decisions/po-change-impact/"><span>MM ✓</span><strong>What can break after a PO change?</strong><small>Reviewed. Trace changed commitments across approval, supplier communication, integrations, logistics execution, finance, and dependent business promises.</small><i class="material-symbols-outlined" aria-hidden="true">change_circle</i></a>
-      <a href="/labs/enterprise-context/decisions/account-assignment-ownership/"><span>MM ✓</span><strong>Where should procurement cost ownership live?</strong><small>Reviewed. Separate the business receiver, account-assignment category, and FI/CO posting logic before correcting an account.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/decisions/grir-ownership/"><span>MM/FI ✓</span><strong>Who owns an open GR/IR balance?</strong><small>Reviewed. Explain the missing receipt, invoice, quantity, or closure event before treating reconciliation as Finance housekeeping.</small><i class="material-symbols-outlined" aria-hidden="true">balance</i></a>
-      <a href="/labs/enterprise-context/decisions/subcontracting-vs-standard-procurement/"><span>MM ✓</span><strong>Subcontracting or standard external procurement?</strong><small>Reviewed. Choose from component ownership, supplier stock, provision, consumption, and the reconciliation expected at goods receipt.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
-      <a href="/labs/enterprise-context/decisions/delivery-block-ownership/"><span>SD ✓</span><strong>Where should delivery blocking logic live?</strong><small>Reviewed. Keep commercial policy, credit, compliance, master-data, and technical failure from collapsing into one generic block.</small><i class="material-symbols-outlined" aria-hidden="true">block</i></a>
-      <a href="/labs/enterprise-context/decisions/confirmed-date-ownership/"><span>SD ✓</span><strong>Who owns a wrong confirmed delivery date?</strong><small>Reviewed. Separate requested date, ATP confirmation, plant/supply, shipping scheduling, transportation, and customer commitment before overwriting dates.</small><i class="material-symbols-outlined" aria-hidden="true">event</i></a>
-      <a href="/labs/enterprise-context/decisions/sales-item-behavior-ownership/"><span>SD ✓</span><strong>Where should sales item behavior live?</strong><small>Reviewed. Choose the narrowest standard owner across document type, item category, schedule line category, determination, and extension.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/decisions/sto-vs-intercompany/"><span>LOG ✓</span><strong>STO or intercompany sales?</strong><small>Reviewed. Distinguish purchase-order-driven stock transfer to a receiving plant from sales-order-driven customer fulfillment by another company’s plant; billing alone does not decide the model.</small><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
-      <a href="/labs/enterprise-context/decisions/master-data-validation/"><span>DATA ✓</span><strong>Where should master-data validation live?</strong><small>Reviewed. Prevent enterprise data defects in governance, protect process-specific risks in the transaction, and keep interface validation focused on the exchange contract.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
-      <a href="/labs/enterprise-context/decisions/ai-logistics-boundary/"><span>AI ✓</span><strong>Which SAP logistics decisions should AI not own?</strong><small>Reviewed. Let AI retrieve, classify, and propose first; increase action authority only with bounded permissions, deterministic gates, recovery, and accountable ownership.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Reusable answer frame</p><h2>Context → drivers → default → exception → recovery.</h2></div>
-    <ol>
-      <li><span>01</span><strong>Context</strong><p>State the business outcome and the boundary that needs an owner.</p></li>
-      <li><span>02</span><strong>Drivers</strong><p>Name the few variables that actually change the decision.</p></li>
-      <li><span>03</span><strong>Default</strong><p>Give a preferred design instead of hiding behind a list of options.</p></li>
-      <li><span>04</span><strong>Exception</strong><p>Explain what would make the default wrong.</p></li>
-      <li><span>05</span><strong>Recovery</strong><p>Close with failure ownership, reconciliation, and proof of business completion.</p></li>
-    </ol>
-  </section>
-
-  <section class="research-canvas__boundary" data-reveal>
-    <span class="material-symbols-outlined" aria-hidden="true">school</span>
-    <p><strong>Assessment use:</strong> pick a card, defend the default for two minutes, then challenge it with a different volume, legal structure, recovery requirement, or risk boundary.</p>
-    <a href="/labs/assessment/cross-process/">Practice all thirteen cross-process cases <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
-  </section>
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Enterprise Context / Decision Cards</p><h1>Good SAP answers explain<br />the choice and its boundary.</h1><p>Each card starts with a real design question, states a default, and shows what changes the decision.</p><a class="research-canvas__button" href="#decision-map">Open the decision map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a></div><div class="research-canvas__signal"><p>Lead answer pattern</p><div class="research-canvas__signal-line"><span>01</span><strong>Context</strong><small>What problem exists?</small></div><div class="research-canvas__signal-line"><span>02</span><strong>Choice</strong><small>What is my default?</small></div><div class="research-canvas__signal-line"><span>03</span><strong>Boundary</strong><small>When does it change?</small></div><em>Decision reasoning is separated from vendor facts.</em></div></header>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Knowledge chain:</strong> Domain → Decision → Scenario → Evidence.</p><p><strong>Publication state:</strong> all sixteen cards are individually reviewed and indexable.</p></section>
+<section class="research-canvas__inventory" id="decision-map" data-reveal><header><p class="research-canvas__eyebrow">Decision map</p><h2>Sixteen reviewed choices worth being able to defend.</h2></header><div class="research-route-list">
+<a href="/labs/enterprise-context/decisions/idoc-api-event/"><span>INT ✓</span><strong>IDoc, API, or event?</strong><small>Choose interaction style from response need, coupling, replay, volume, and recovery.</small><i class="material-symbols-outlined">hub</i></a>
+<a href="/labs/enterprise-context/decisions/idoc-failure-ownership/"><span>OPS ✓</span><strong>Who owns an IDoc failure?</strong><small>Classify the failed boundary, assign correction, replay, and reconciliation ownership.</small><i class="material-symbols-outlined">support_agent</i></a>
+<a href="/labs/enterprise-context/decisions/retry-idempotency/"><span>OPS ✓</span><strong>When is an integration retry safe?</strong><small>Prove receiver state, duplicate safety, ordering, and final business state before replay.</small><i class="material-symbols-outlined">replay</i></a>
+<a href="/labs/enterprise-context/decisions/source-selection-ownership/"><span>MM ✓</span><strong>Where should supplier selection logic live?</strong><small>Keep source policy in standard procurement objects unless a real gap is proven.</small><i class="material-symbols-outlined">shopping_cart</i></a>
+<a href="/labs/enterprise-context/decisions/po-change-impact/"><span>MM ✓</span><strong>What can break after a PO change?</strong><small>Trace changed commitments across approval, supplier, planning, integration, logistics, and finance.</small><i class="material-symbols-outlined">change_circle</i></a>
+<a href="/labs/enterprise-context/decisions/account-assignment-ownership/"><span>MM ✓</span><strong>Where should procurement cost ownership live?</strong><small>Separate business receiver, account assignment, and FI/CO posting logic.</small><i class="material-symbols-outlined">account_tree</i></a>
+<a href="/labs/enterprise-context/decisions/grir-ownership/"><span>MM/FI ✓</span><strong>Who owns an open GR/IR balance?</strong><small>Explain the missing business or value event before financial clearing.</small><i class="material-symbols-outlined">balance</i></a>
+<a href="/labs/enterprise-context/decisions/subcontracting-vs-standard-procurement/"><span>MM ✓</span><strong>Subcontracting or standard procurement?</strong><small>Choose from component ownership, provision, consumption, and reconciliation.</small><i class="material-symbols-outlined">factory</i></a>
+<a href="/labs/enterprise-context/decisions/delivery-block-ownership/"><span>SD ✓</span><strong>Where should delivery blocking logic live?</strong><small>Keep commercial, credit, compliance, data, and technical controls separate.</small><i class="material-symbols-outlined">block</i></a>
+<a href="/labs/enterprise-context/decisions/confirmed-date-ownership/"><span>SD ✓</span><strong>Who owns a wrong confirmed delivery date?</strong><small>Separate request, ATP, supply, scheduling, transport, and customer promise.</small><i class="material-symbols-outlined">event</i></a>
+<a href="/labs/enterprise-context/decisions/sales-item-behavior-ownership/"><span>SD ✓</span><strong>Where should sales item behavior live?</strong><small>Choose the narrowest standard control layer before extending.</small><i class="material-symbols-outlined">account_tree</i></a>
+<a href="/labs/enterprise-context/decisions/pricing-ownership/"><span>SD ✓</span><strong>Where should SAP Sales pricing logic live?</strong><small>Separate commercial data, search path, calculation structure, and true custom logic.</small><i class="material-symbols-outlined">price_check</i></a>
+<a href="/labs/enterprise-context/decisions/sto-vs-intercompany/"><span>LOG ✓</span><strong>STO or intercompany sales?</strong><small>Distinguish internal stock supply from customer fulfillment by another company.</small><i class="material-symbols-outlined">swap_horiz</i></a>
+<a href="/labs/enterprise-context/decisions/master-data-validation/"><span>DATA ✓</span><strong>Where should master-data validation live?</strong><small>Prevent centrally, protect transactions locally, validate contracts at the edge.</small><i class="material-symbols-outlined">database</i></a>
+<a href="/labs/enterprise-context/decisions/clean-core-extension-placement/"><span>DEV ✓</span><strong>Where should SAP extension logic live?</strong><small>Choose standard, on-stack, or side-by-side from coupling and lifecycle.</small><i class="material-symbols-outlined">architecture</i></a>
+<a href="/labs/enterprise-context/decisions/ai-logistics-boundary/"><span>AI ✓</span><strong>Which SAP logistics decisions should AI not own?</strong><small>Increase authority only with bounded permissions, controls, recovery, and accountable ownership.</small><i class="material-symbols-outlined">psychology</i></a>
+</div></section>
+<section class="research-canvas__method" data-reveal><div><p class="research-canvas__eyebrow">Reusable answer frame</p><h2>Context → drivers → default → exception → recovery.</h2></div><ol><li><span>01</span><strong>Context</strong><p>State the business outcome.</p></li><li><span>02</span><strong>Drivers</strong><p>Name what changes the decision.</p></li><li><span>03</span><strong>Default</strong><p>Give a preferred design.</p></li><li><span>04</span><strong>Exception</strong><p>Explain when the default fails.</p></li><li><span>05</span><strong>Recovery</strong><p>Name ownership and proof of completion.</p></li></ol></section>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined">school</span><p><strong>Assessment use:</strong> defend one card for two minutes, then challenge it with a different risk, volume, coupling, or recovery requirement.</p><a href="/labs/assessment/cross-process/">Practice all sixteen cases <span class="material-symbols-outlined">arrow_forward</span></a></section>
 </div>
