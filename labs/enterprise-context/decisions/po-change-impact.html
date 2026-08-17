@@ -3,16 +3,25 @@ layout: default
 title: "What Can Break After a Purchase Order Change? — SAP Procurement Decision Card"
 description: "A SAP Lead impact-analysis model for evaluating purchase order changes across approval, output, logistics, integration, receipt, invoice, and reconciliation."
 permalink: /labs/enterprise-context/decisions/po-change-impact/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-01"
+search_intent: "SAP purchase order change impact approval workflow integration and reconciliation"
+evidence_review_mode: "SAP workflow restart behavior checked against primary SAP Help sources; downstream impact, ownership, and reconciliation guidance is authored cross-process reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
 hide_global_cta: true
-review_method: "authored cross-process impact reasoning over reviewed Procurement material; pending publication-contract review"
 structured_data:
   type: TechArticle
-primary_topic: "sap-procurement-decisions"
+# ai-discovery-managed:start
+primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--po-change-impact.json"
+entity_mentions:
+  - "sap-procurement"
+  - "sap-integration"
 semantic_links:
   - type: "parent_context"
     title: "SAP Decision Cards"
@@ -29,10 +38,12 @@ semantic_links:
 source_links:
   - title: "Purchase Orders (MM-PUR-PO)"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/9d7eb65334e6b54ce10000000a174cb4.html"
-  - title: "Flexible Workflow for Purchase Orders"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/b33a97f3014f43c488ec798633824081.html"
+  - title: "How to Configure the Flexible Workflow for Purchase Orders"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/bd5b25de619d4f4da609fa86261a1126.html"
+# ai-discovery-managed:end
 tags: [sap, procurement, purchase-order, change-impact, workflow, integration, reconciliation]
 ---
+{% assign procurement_evidence = site.data.labs.enterprise_context.sources.procurement %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">PO change impact</li></ol></nav>
 
