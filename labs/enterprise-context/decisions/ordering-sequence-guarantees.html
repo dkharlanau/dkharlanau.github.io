@@ -1,0 +1,56 @@
+---
+layout: default
+title: "When Does SAP Integration Need Message Ordering? — Decision Card"
+description: "A SAP Lead decision model for sequence guarantees, EOIO, queue scope, throughput, blocking, and recovery."
+permalink: /labs/enterprise-context/decisions/ordering-sequence-guarantees/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-07"
+search_intent: "SAP Integration Suite message ordering EOIO exclusive queue sequence guarantee"
+evidence_review_mode: "SAP EOIO and JMS queue behavior checked against primary SAP Help sources; sequence scope and recovery guidance is authored reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
+hide_global_cta: true
+structured_data:
+  type: TechArticle
+# ai-discovery-managed:start
+primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--ordering-sequence-guarantees.json"
+entity_mentions: ["sap-integration"]
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "Integration Operations & Recovery"
+    url: "/labs/enterprise-context/integration-operations/"
+  - type: "related_decision"
+    title: "When Is an SAP Integration Retry Safe?"
+    url: "/labs/enterprise-context/decisions/retry-idempotency/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
+source_links:
+  - title: "Quality of Service Exactly Once In Order"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/quality-of-service-exactly-once-in-order?locale=en-US&version=CLOUD"
+  - title: "Configure the JMS Receiver Adapter"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/configure-jms-receiver-adapter"
+  - title: "Monitoring Scenarios that Include Message Queues"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/monitoring-scenarios-that-include-message-queues"
+# ai-discovery-managed:end
+tags: [sap, integration, eoio, ordering, queues, recovery]
+---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_ordering_sequence %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Message ordering</li></ol></nav>
+<div class="research-canvas">
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Decision Card / Integration</p><h1>When does integration<br />need message ordering?</h1><p>Ordering is needed when a later business event becomes invalid if it overtakes its predecessor. Global serialization is usually too expensive.</p></div><div class="research-canvas__signal"><p>My default</p><div class="research-canvas__signal-line"><span>KEY</span><strong>Business stream</strong><small>What must stay ordered?</small></div><div class="research-canvas__signal-line"><span>RULE</span><strong>Predecessor</strong><small>What must finish first?</small></div><div class="research-canvas__signal-line"><span>COST</span><strong>Trade-off</strong><small>Blocking and throughput</small></div><em>Ordering is a business invariant, not a queue preference.</em></div></header>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Decision in one sentence:</strong> require ordered processing only where predecessor completion changes business meaning, keep the sequence scope narrow, and design retries and reconciliation inside the same ordering model.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Decision test</p><h2>Ask whether overtaking changes the result.</h2></header><div class="decision-table"><table><thead><tr><th>Situation</th><th>Default</th></tr></thead><tbody><tr><td>Create before change or cancel for the same object</td><td><strong>Order that object stream.</strong></td></tr><tr><td>Independent orders or customers</td><td><strong>Keep parallel processing.</strong></td></tr><tr><td>Receiver is idempotent but messages arrive out of sequence</td><td><strong>Idempotency is not enough.</strong></td></tr><tr><td>One failed predecessor blocks successors</td><td><strong>Accept and operate the blocking</strong> if strict order is required.</td></tr><tr><td>Version checks can reject stale updates</td><td><strong>Prefer version-aware processing</strong> when it removes the need for broad serialization.</td></tr></tbody></table></div></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Lead checks</p><h2>Define the sequence before choosing the queue.</h2></header><div class="ecg-decision-columns"><div><h3>Business key</h3><p>Order one sales order, purchase order, material stream, or other real business unit. Do not serialize unrelated work.</p></div><div><h3>Predecessor rule</h3><p>State which event must complete before the next event is valid.</p></div><div><h3>Failure behavior</h3><p>Strict ordering creates head-of-line blocking. Define correction, parking, replay, and escalation ownership.</p></div><div><h3>Throughput</h3><p>Exclusive sequential processing reduces parallelism. Use it only where correctness needs it.</p></div><div><h3>End-to-end proof</h3><p>Queue order is not enough if sender, protocol, receiver, or downstream logic can reorder the same business events.</p></div></div></section>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>Anti-pattern:</strong> put every message in one exclusive queue because “order matters”. One unrelated failure can stop everything.</p><p><strong>Lead proof:</strong> name the sequence key, predecessor rule, duplicate model, blocked-message behavior, throughput cost, and reconciliation method.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Preserve the business sequence.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/integration-operations/"><span>OPS</span><strong>Integration Operations</strong><small>Queues, retries, monitoring, and recovery.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a><a href="/labs/enterprise-context/decisions/retry-idempotency/"><span>RETRY</span><strong>Retry Safety</strong><small>Connect ordering to duplicate protection and receiver state.</small><i class="material-symbols-outlined" aria-hidden="true">replay</i></a><a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Ordering case</strong><small>An update reaches S/4 before create for the same object.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a></div></section>
+</div>
