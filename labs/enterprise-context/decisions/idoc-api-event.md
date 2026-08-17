@@ -3,27 +3,23 @@ layout: default
 title: "IDoc, API, or Event? — SAP Integration Decision Card"
 description: "A compact SAP integration decision model for choosing IDoc, synchronous API, or event-driven interaction."
 permalink: /labs/enterprise-context/decisions/idoc-api-event/
-status: reviewed
-verified: true
-robots: index,follow
-sitemap: true
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
 last_modified_at: 2026-08-17
-last_reviewed: 2026-08-17
 hide_global_cta: true
-review_method: "authored decision model over reviewed SAP integration architecture material"
+review_method: "authored decision reasoning draft over reviewed SAP integration material; pending publication-contract review"
 structured_data:
   type: TechArticle
-primary_topic: "sap-integration-pattern-selection"
+primary_topic: "sap-architecture-decisions"
 semantic_links:
-  - type: "part_of"
+  - type: "parent_context"
     title: "SAP Decision Cards"
     url: "/labs/enterprise-context/decisions/"
-  - type: "depends_on"
+  - type: "same_domain"
     title: "SAP Integration Architecture"
     url: "/labs/enterprise-context/integrations/"
-  - type: "related_topic"
-    title: "Integration Operations & Recovery"
-    url: "/labs/enterprise-context/integration-operations/"
 tags: [sap, integration, idoc, api, events, architecture]
 ---
 
