@@ -3,30 +3,26 @@ layout: default
 title: "STO or Intercompany Sales? — SAP Logistics Decision Card"
 description: "A compact SAP logistics decision model for choosing stock transport order or intercompany sales flow."
 permalink: /labs/enterprise-context/decisions/sto-vs-intercompany/
-status: reviewed
-verified: true
-robots: index,follow
-sitemap: true
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
 last_modified_at: 2026-08-17
-last_reviewed: 2026-08-17
 hide_global_cta: true
-review_method: "authored decision model over reviewed procurement, sales, inventory, and finance-logistics material"
+review_method: "authored decision reasoning draft over reviewed procurement and sales material; pending publication-contract review"
 structured_data:
   type: TechArticle
-primary_topic: "sap-sto-vs-intercompany"
+primary_topic: "sap-architecture-decisions"
 semantic_links:
-  - type: "part_of"
+  - type: "parent_context"
     title: "SAP Decision Cards"
     url: "/labs/enterprise-context/decisions/"
-  - type: "depends_on"
+  - type: "related_topic"
     title: "Procurement Process & Decision Map"
     url: "/labs/enterprise-context/procurement/"
   - type: "related_topic"
-    title: "Sales Processes"
+    title: "SAP Sales Process Atlas"
     url: "/labs/enterprise-context/sales-processes/"
-  - type: "related_topic"
-    title: "FI/CO for Logistics"
-    url: "/labs/enterprise-context/finance-logistics/"
 tags: [sap, logistics, procurement, sales, sto, intercompany]
 ---
 
