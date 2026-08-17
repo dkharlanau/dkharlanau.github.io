@@ -9,6 +9,11 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-17
 hide_global_cta: true
+tags:
+  - architecture
+  - decision-making
+  - problem-solving
+  - data-procedures
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
