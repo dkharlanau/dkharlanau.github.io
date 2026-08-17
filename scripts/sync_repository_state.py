@@ -165,6 +165,7 @@ def main() -> int:
     run("scripts/audit_assessment_promotion_readiness.py")
     run("scripts/generate_assessment_core_study_map.py")
     run("scripts/generate_assessment_reasoning_coverage.py")
+    run("scripts/generate_assessment_promotion_review_packet.py")
     run("scripts/generate_atlas_artifacts.py")
 
     run("scripts/knowledge_publication_loop.py", "--check")
@@ -172,8 +173,10 @@ def main() -> int:
     run("scripts/audit_assessment_promotion_readiness.py", "--check")
     run("scripts/generate_assessment_core_study_map.py", "--check")
     run("scripts/generate_assessment_reasoning_coverage.py", "--check")
+    run("scripts/generate_assessment_promotion_review_packet.py", "--check")
     run("scripts/generate_atlas_artifacts.py", "--check")
     run("scripts/validate_assessment_reasoning_coverage.py")
+    run("scripts/validate_assessment_promotion_review_packet.py")
     run("scripts/validate_enterprise_context.py")
     return 0
 

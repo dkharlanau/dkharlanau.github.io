@@ -141,7 +141,7 @@ def test_mdg_assessment_case_set_is_registered_and_valid():
     manifest = json.loads((ASSESSMENT_DATA / "case-sets.json").read_text(encoding="utf-8"))
     mdg_set = next(item for item in manifest["sets"] if item["id"] == "mdg-lead")
     assert mdg_set["count"] == 4
-    assert manifest["total_cases"] == 63
+    assert manifest["total_cases"] == sum(item["count"] for item in manifest["sets"])
 
     candidates = json.loads((ASSESSMENT_DATA / "question-candidates.json").read_text(encoding="utf-8"))
     assert candidates["published_case_count"] == manifest["total_cases"]
