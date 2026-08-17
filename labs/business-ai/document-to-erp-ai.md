@@ -47,9 +47,11 @@ semantic_links:
   - type: "related_topic"
     title: "Open Enterprise AI Research — ERP Evidence, Safety, Readiness, and Benchmarks"
     url: "/labs/business-ai/open-research/"
+  - type: "related_topic"
+    title: "SAP Decision Cards — Enterprise Context Lab"
+    url: "/labs/enterprise-context/decisions/"
 # ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/business-ai/">Business AI</a></li><li><a href="/labs/business-ai/pilots/">Pilots</a></li><li aria-current="page">Document-to-ERP AI</li></ol>
 </nav>
