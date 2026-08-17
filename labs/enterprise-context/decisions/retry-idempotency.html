@@ -1,0 +1,57 @@
+---
+layout: default
+title: "When Is an SAP Integration Retry Safe? — Decision Card"
+description: "A SAP Lead decision model for retry, duplicate protection, idempotency, receiver state, ordering, and business reconciliation."
+permalink: /labs/enterprise-context/decisions/retry-idempotency/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-06"
+search_intent: "SAP Integration Suite retry idempotency duplicate message safe replay exactly once"
+evidence_review_mode: "SAP Integration Suite retry, duplicate-handling, and Exactly Once guidance checked against primary SAP Help sources; replay ownership and reconciliation guidance is authored operating-model reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
+hide_global_cta: true
+structured_data:
+  type: TechArticle
+# ai-discovery-managed:start
+primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--retry-idempotency.json"
+entity_mentions:
+  - "sap-integration"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "Integration Operations & Recovery"
+    url: "/labs/enterprise-context/integration-operations/"
+  - type: "related_topic"
+    title: "SAP Integration Architecture"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
+source_links:
+  - title: "Quality of Service Exactly Once"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/quality-of-service-exactly-once"
+  - title: "Define Idempotent Process Call"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/define-idempotent-process-call?version=CLOUD"
+  - title: "Receiver Isn't Idempotent"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/cloud-integration-handles-retry-receiver-isn-t-idempotent"
+# ai-discovery-managed:end
+tags: [sap, integration, retry, idempotency, duplicate, recovery, reconciliation]
+---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_retry_idempotency %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Retry safety</li></ol></nav>
+<div class="research-canvas">
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Decision Card / Integration Operations</p><h1>When is an integration<br />retry safe?</h1><p>A red message does not prove that the receiver changed nothing. Before replay, I prove the message identity, receiver state, duplicate behavior, ordering dependency, and the business effect that must exist after recovery.</p></div><div class="research-canvas__signal"><p>My default</p><div class="research-canvas__signal-line"><span>STATE</span><strong>Check receiver</strong><small>Did it commit?</small></div><div class="research-canvas__signal-line"><span>ID</span><strong>Protect duplicates</strong><small>Can the same business event repeat?</small></div><div class="research-canvas__signal-line"><span>PROOF</span><strong>Reconcile</strong><small>Verify business state after replay</small></div><em>Retry is a business action, not a monitor button.</em></div></header>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Decision in one sentence:</strong> retry only when the business identity is stable, receiver commit state is understood, duplicate handling is safe, ordering constraints are known, and the recovered business result can be reconciled.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Five gates</p><h2>Do not replay from technical status alone.</h2></header><div class="ecg-decision-columns"><div><h3>Identity</h3><p>Use a stable message or business key. A new technical message ID can hide a duplicate business event.</p></div><div><h3>Receiver state</h3><p>Distinguish “not delivered” from “delivered but acknowledgement lost”. A timeout can leave the receiver committed.</p></div><div><h3>Idempotency</h3><p>Prefer duplicate handling close to the application that writes the business state. Middleware protection reduces risk but cannot always prove receiver commit state.</p></div><div><h3>Ordering</h3><p>Check whether another message depends on this one. A safe duplicate check does not make an out-of-order business sequence correct.</p></div><div><h3>Reconciliation</h3><p>After replay, prove the target document, quantity, value, status, and downstream effects expected by the business process.</p></div></div></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Failure classes</p><h2>The same retry button has different risk.</h2></header><div class="decision-table"><table><thead><tr><th>Situation</th><th>Default</th></tr></thead><tbody><tr><td>Receiver proves nothing was committed</td><td><strong>Retry can be reasonable</strong> after the original cause is removed.</td></tr><tr><td>Receiver is idempotent with stable identity</td><td><strong>Retry is safer</strong>, but still check ordering and final business state.</td></tr><tr><td>Timeout after the receiver call</td><td><strong>Do not blind-retry.</strong> First prove whether the receiver committed.</td></tr><tr><td>Receiver is not idempotent</td><td><strong>Use stronger duplicate protection</strong> and accept that middleware-only handling can leave residual risk.</td></tr><tr><td>Business event has downstream side effects</td><td><strong>Reconcile before and after replay</strong>; transport success is not enough.</td></tr></tbody></table></div></section>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>Anti-pattern:</strong> “message is red, therefore resend it”. This can create duplicate orders, receipts, invoices, or follow-on events when the receiver already committed.</p><p><strong>Lead check:</strong> name the retry owner, duplicate key, receiver guarantee, ordering rule, and post-replay evidence before approving reprocessing.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Recover the business event, not only the message.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/integration-operations/"><span>OPS</span><strong>Integration Operations & Recovery</strong><small>Reviewed retry, identity, queue, monitoring, and reconciliation model.</small><i class="material-symbols-outlined" aria-hidden="true">sync_problem</i></a><a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Timeout and replay case</strong><small>Middleware reports failure after a receiver timeout. Decide whether replay is safe.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a><a href="/labs/enterprise-context/decisions/idoc-failure-ownership/"><span>OWNER</span><strong>IDoc failure ownership</strong><small>Connect retry safety to correction, replay, and process reconciliation ownership.</small><i class="material-symbols-outlined" aria-hidden="true">support_agent</i></a></div></section>
+</div>
