@@ -1,13 +1,13 @@
 ---
 layout: default
 title: "Enterprise Business Domains — Enterprise Context Lab"
-description: "A simple enterprise map that separates business ownership from processes, SAP products, data objects, and platform capabilities."
+description: "A simple enterprise map that separates business ownership from processes, SAP products, data objects, decisions, scenarios, and platform capabilities."
 permalink: /labs/enterprise-context/domains/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-17
 hide_global_cta: true
 tags:
   - sap
@@ -92,6 +92,20 @@ tags:
       {% for object in data_topic.master_data_objects %}
       <a href="/labs/enterprise-context/data-governance/#objects"><span>04</span><strong>{{ object.title }}</strong><small>{{ object.business_role }}</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
       {% endfor %}
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="knowledge-chain" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Knowledge chain</p>
+      <h2>Domain → decision → scenario → evidence.</h2>
+      <p>A domain tells us who owns the problem. A decision explains the choice. A scenario tests the choice in a real flow. Evidence shows why the answer is credible. Keeping these levels connected makes the site easier to use for assessment preparation, architecture work, search, and AI retrieval.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/domains/"><span>01</span><strong>Domain</strong><small>Start with business ownership or a cross-cutting platform concern. Do not start with the SAP product name.</small><i class="material-symbols-outlined" aria-hidden="true">domain</i></a>
+      <a href="/labs/enterprise-context/decisions/"><span>02</span><strong>Decision</strong><small>State the design question, decision drivers, default answer, exceptions, and failure owner.</small><i class="material-symbols-outlined" aria-hidden="true">fork_right</i></a>
+      <a href="/scenarios/"><span>03</span><strong>Scenario</strong><small>Apply the decision to an end-to-end process, incident, integration flow, or transformation case.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/atlas/"><span>04</span><strong>Evidence</strong><small>Use reviewed Atlas pages, field notes, datasets, publications, and verified professional evidence for factual support.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
     </div>
   </section>
 
