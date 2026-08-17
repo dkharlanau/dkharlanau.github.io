@@ -24,6 +24,31 @@ tags:
   - agents
   - security
   - integration
+# ai-discovery-managed:start
+primary_topic: "business-ai"
+ai_sidecar: "/ai/pages/labs--business-ai--erp-agent-gateway.json"
+entity_mentions:
+  - "sap-integration"
+semantic_links:
+  - type: "parent_context"
+    title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
+    url: "/labs/business-ai/"
+  - type: "related_topic"
+    title: "AI Ready — Practical AI Architecture Lab"
+    url: "/labs/ai-ready/"
+  - type: "integrates_with"
+    title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
+    url: "/labs/enterprise-context/business-ai/agents/"
+  - type: "related_topic"
+    title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
+    url: "/labs/business-ai/pilots/"
+  - type: "related_topic"
+    title: "Document-to-ERP AI Pilot — From PDF to Controlled Transaction"
+    url: "/labs/business-ai/document-to-erp-ai/"
+  - type: "related_topic"
+    title: "Open Enterprise AI Research — ERP Evidence, Safety, Readiness, and Benchmarks"
+    url: "/labs/business-ai/open-research/"
+# ai-discovery-managed:end
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
