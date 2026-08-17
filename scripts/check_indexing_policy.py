@@ -208,7 +208,7 @@ def check_built_html(site_dir: Path, repo_dir: Path) -> list[str]:
             flags=re.IGNORECASE | re.DOTALL,
         )
         static_extensions = {
-            ".json", ".yml", ".yaml", ".xml", ".txt", ".css", ".js",
+            ".json", ".jsonl", ".yml", ".yaml", ".xml", ".txt", ".css", ".js",
             ".svg", ".png", ".jpg", ".jpeg", ".webp", ".avif", ".pdf",
         }
         page_dir = html_path.parent
