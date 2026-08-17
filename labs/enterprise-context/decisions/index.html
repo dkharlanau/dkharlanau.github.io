@@ -1,0 +1,95 @@
+---
+layout: default
+title: "SAP Decision Cards — Enterprise Context Lab"
+description: "Compact SAP Lead decision models for logistics, procurement, integration, master data, and AI boundaries."
+permalink: /labs/enterprise-context/decisions/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-17
+hide_global_cta: true
+review_method: "authored decision reasoning draft; pending publication-contract review and AI sidecar generation"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-architecture-decisions"
+semantic_links:
+  - type: "related_topic"
+    title: "SAP Integration Architecture"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "related_topic"
+    title: "Procurement Process & Decision Map"
+    url: "/labs/enterprise-context/procurement/"
+  - type: "related_topic"
+    title: "SAP Sales Process Atlas"
+    url: "/labs/enterprise-context/sales-processes/"
+tags:
+  - sap
+  - architecture
+  - decision-making
+  - logistics
+  - procurement
+  - integration
+  - master-data
+  - business-ai
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li aria-current="page">Decision Cards</li></ol>
+</nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Enterprise Context / Decision Cards</p>
+      <h1>Good SAP answers explain<br />the choice and its boundary.</h1>
+      <p>These cards are not product summaries. Each one starts with a real design question, makes the default choice explicit, and shows what would make me change that choice.</p>
+      <a class="research-canvas__button" href="#decision-map">Open the decision map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+    </div>
+    <div class="research-canvas__signal" aria-label="Decision card model">
+      <p>Lead answer pattern</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Context</strong><small>What problem exists?</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Choice</strong><small>What is my default?</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Boundary</strong><small>When does it change?</small></div>
+      <em>Decision reasoning is separated from vendor facts.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Working rule:</strong> a Lead answer should not stop at “it depends”. State the default, name the decision drivers, show the failure owner, and explain the condition that changes the design.</p>
+    <p><strong>Publication state:</strong> this decision layer is intentionally noindex while the cards pass the same source, sidecar, and publication checks as the reviewed Enterprise Context pages.</p>
+  </section>
+
+  <section class="research-canvas__inventory" id="decision-map" data-reveal>
+    <header>
+      <p class="research-canvas__eyebrow">Decision map</p>
+      <h2>Five cross-domain choices worth being able to defend.</h2>
+      <p>The goal is not to memorize one answer. The goal is to make the reasoning reusable across projects and assessment questions.</p>
+    </header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/decisions/idoc-api-event/"><span>INT</span><strong>IDoc, API, or event?</strong><small>Choose the interaction pattern from coupling, response needs, replay, volume, and recovery ownership before selecting middleware.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/enterprise-context/decisions/sto-vs-intercompany/"><span>LOG</span><strong>STO or intercompany sales?</strong><small>Choose from ownership, legal entities, commercial flow, billing need, stock transfer responsibility, and receiving process.</small><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
+      <a href="/labs/enterprise-context/decisions/master-data-validation/"><span>DATA</span><strong>Where should master-data validation live?</strong><small>Separate governance-time prevention from transaction-time protection and integration-time contract checks.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <a href="/labs/enterprise-context/decisions/delivery-block-ownership/"><span>SD</span><strong>Where should delivery blocking logic live?</strong><small>Keep commercial policy, master-data quality, credit, compliance, and technical failure from collapsing into one generic block.</small><i class="material-symbols-outlined" aria-hidden="true">block</i></a>
+      <a href="/labs/enterprise-context/decisions/ai-logistics-boundary/"><span>AI</span><strong>Which SAP logistics decisions should AI not own?</strong><small>Use AI for evidence, classification, proposals, and triage before giving it authority over irreversible business postings or controls.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+    </div>
+  </section>
+
+  <section class="research-canvas__method" data-reveal>
+    <div><p class="research-canvas__eyebrow">Reusable answer frame</p><h2>Context → drivers → default → exception → recovery.</h2></div>
+    <ol>
+      <li><span>01</span><strong>Context</strong><p>State the business outcome and the boundary that needs an owner.</p></li>
+      <li><span>02</span><strong>Drivers</strong><p>Name the few variables that actually change the decision.</p></li>
+      <li><span>03</span><strong>Default</strong><p>Give a preferred design instead of hiding behind a list of options.</p></li>
+      <li><span>04</span><strong>Exception</strong><p>Explain what would make the default wrong.</p></li>
+      <li><span>05</span><strong>Recovery</strong><p>Close with failure ownership, reconciliation, and proof of business completion.</p></li>
+    </ol>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">school</span>
+    <p><strong>Assessment use:</strong> pick a card, defend the default for two minutes, then challenge it with a different volume, legal structure, recovery requirement, or risk boundary.</p>
+    <a href="/labs/assessment/">Continue in the SAP Lead Assessment lab <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </section>
+</div>
