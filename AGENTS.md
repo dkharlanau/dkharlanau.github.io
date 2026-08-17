@@ -3,37 +3,55 @@
 Project-specific guidance for AI coding and research agents working in this public GitHub Pages repository.
 Use this file as the main entry point. Open deeper docs only when the task needs them.
 
-**Last updated:** 2026-08-01. The repository now includes a deterministic sitewide content-quality and AI-search-readiness pipeline; follow that pipeline for content, metadata, link-graph, and publication-safety work.
+**Last updated:** 2026-08-17. The repository uses product-level navigation, stable deep URLs, and a deterministic sitewide content-quality and AI-search-readiness pipeline.
 
 ## Repository Purpose
 
-This is the public personal site and structured knowledge base of **Dzmitryi Kharlanau**, an SAP consultant focused on SAP AMS diagnostics, SD/MM/MM-PUR/MDG support, BP/customer/vendor replication, integration troubleshooting, and AI-ready support knowledge systems.
+This is the public personal site and structured knowledge system of **Dzmitryi Kharlanau**, an SAP consultant focused on SAP operations, logistics, integration, data, diagnostics, and practical AI.
 
-The site serves three purposes:
-1. **Public entity signal** — who Dzmitryi Kharlanau is, what he works on, and where his expertise lies.
-2. **Knowledge Atlas** — curated, conservative diagnostic and conceptual content for SAP support and operations.
-3. **Scenarios** — business-pain-to-diagnostic-workflow mappings that connect Atlas content to real support cost and process outcomes.
+The site has six product areas:
+1. **Profile** — public identity, experience, certifications, and professional evidence.
+2. **Knowledge** — reviewed and working human-readable knowledge: Atlas, Scenarios, Research, Journal, and Notes.
+3. **Labs** — active SAP, AI, operational, and assessment workspaces.
+4. **Frameworks** — reusable reasoning and execution methods that can be applied across domains.
+5. **Machine layer** — datasets, AI-readable exports, skills, tools, discovery files, and MCP source packages.
+6. **Services** — consulting services and engagement context.
 
 Everything committed to this repository is public. Treat every file accordingly.
 
 ## High-Level Site Structure
 
-| Area | Path | Purpose |
+| Area | Primary path | Purpose |
 |------|------|---------|
-| Home | `index.md` | Positioning, trust signals, CTAs |
-| About / Profile | `about.md` | Canonical human-readable and machine-readable profile |
-| Services | `services/` | Consulting service descriptions and engagement model |
+| Profile | `/`, `about.md`, `cv/` | Positioning, identity, experience, trust signals |
+| Knowledge | `knowledge/` | Product hub for Atlas, Scenarios, Research, Journal, and Notes |
 | Knowledge Atlas | `atlas/` | Curated diagnostic, conceptual, and SAP-specific content |
 | Scenarios | `scenarios/` | Business pain mapped to SAP process context and diagnostic workflows |
-| Research / Radar | `research/`, `_radar/`, `_news/` | Research briefs, comparisons, watchlists, signal tracking |
+| Research / Radar | `research/`, `_radar/`, `_news/` | Briefs, comparisons, watchlists, signal tracking |
+| Labs | `labs/` | SAP Enterprise, AI Ready, Business AI, operational protocols, assessment practice |
+| Frameworks | `frameworks/` | Product hub for TRIZ, Decision Design, Reusable Data Procedures, operational protocols |
+| Machine layer | `machine/` | Product hub for datasets, AI exports, skills, tools, and MCP |
 | Datasets | `datasets/` | Canonical machine-readable dataset collections |
-| AI-readable exports | `ai/` | JSON/YAML machine endpoints (resume, catalog, discovery map, etc.) |
-| Quality pipeline | `scripts/content_quality.py`, `config/content-quality.yml` | Sitewide article-quality, publication-safety, link-graph, search, and AI-retrieval checks |
-| Quality reports | `reports/` | Locally generated audit, summary, review-queue, and rollout reports; normally ignored/generated |
+| AI-readable exports | `ai/` | JSON/YAML machine endpoints and generated indexes |
 | Agent Skills | `agent-skills/` | Portable agent skill packages for Codex, Claude Code, and similar tools |
-| Blog | `_blog/`, `blog/index.md` | Long-form essays |
-| Notes | `_notes/`, `notes/index.md` | Short-form working notes |
+| Agent Tools | `agent-tools/` | Static public tool descriptions |
+| Services | `services/` | Consulting service descriptions and engagement model |
+| Quality pipeline | `scripts/content_quality.py`, `config/content-quality.yml` | Publication safety, link graph, search, quality, and AI-retrieval checks |
+| Quality reports | `reports/` | Locally generated audit and review outputs; normally ignored/generated |
 | Legal | `legal/` | Privacy, terms, disclosure, responsible AI, accessibility |
+
+## Structural Routing Rules
+
+- Global navigation is product-level. Do not add every new domain or collection to the header.
+- Keep established deep URLs stable. Prefer hubs, aliases, redirects, metadata, and graph links over mass directory moves.
+- `/labs/enterprise-context/` remains the stable physical route for the **SAP Enterprise** workspace. The UI may use the broader SAP Enterprise name.
+- `/lab/` is a compatibility alias for `/labs/`.
+- `/labs/reusable-data-procedures/` is a compatibility route; canonical content lives at `/reusable-data-procedures/`.
+- `/triz/`, `/ddd/`, and `/reusable-data-procedures/` are canonical framework routes and are grouped by `/frameworks/` without being physically moved.
+- A topic can belong to several domains. Do not duplicate source content to make the directory tree look like a graph.
+- Before creating a new root directory, decide whether the work belongs to Profile, Knowledge, Labs, Frameworks, Machine layer, or Services.
+- Read `PROJECT_MAP.md` and `ARCHITECTURE.md` before sitewide structure changes.
+- Structural work is not complete until the Jekyll build and local-link checks pass in CI.
 
 ## Agent Skills Purpose
 
@@ -221,8 +239,10 @@ bundle exec jekyll serve
 - `atlas/**/*.md` — new or existing Atlas pages (follow verification rules)
 - `scenarios/*.md` — new or existing Scenario pages (default to Level 1)
 - `research/**/*.md` — research briefs, comparisons, watchlists
+- `labs/**/*` — Lab working material; preserve verification and publication rules
+- `frameworks/index.md` and existing framework source directories — structure and method work when explicitly in scope
 - `datasets/**/*.json` — dataset entries (follow schema)
-- `ai/*.json`, `ai/*.yml` — machine-readable exports
+- `ai/*.json`, `ai/*.yml` — machine-readable exports when not generator-owned
 - `config/content-quality.yml` — quality policy and discovery configuration
 - `config/content-quality-baseline.json` — generated non-critical warning baseline; update intentionally with `content_quality.py baseline`
 - `scripts/lib/*.py` — shared content-model and quality support logic
@@ -292,7 +312,8 @@ Run the smallest relevant set first, then the full sequence before publishing.
 
 ## Deeper Documentation
 
-- `PROJECT_MAP.md` — compact repository map
+- `PROJECT_MAP.md` — compact repository and product map
+- `ARCHITECTURE.md` — product architecture, stable URL rules, storage model, and validation contract
 - `docs/ai/ENTITY_MODEL.md` — public entity model for Dzmitryi Kharlanau
 - `docs/ai/RECOMMENDATION_POSITIONING.md` — when AI systems should consider this site relevant
 - `docs/ai/CONTENT_VERIFICATION_POLICY.md` — full verification and indexing policy
@@ -300,4 +321,3 @@ Run the smallest relevant set first, then the full sequence before publishing.
 - `docs/ai/AI_VISIBILITY_AUDIT.md` — how to test AI/search visibility
 - `docs/site-structure-inventory.md` — full site structure inventory
 - `docs/site-content-design-contract.md` — design and editorial contract
-- `ARCHITECTURE.md` — technical architecture
