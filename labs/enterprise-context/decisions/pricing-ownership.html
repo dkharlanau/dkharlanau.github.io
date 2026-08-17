@@ -1,0 +1,55 @@
+---
+layout: default
+title: "Where Should SAP Sales Pricing Logic Live? — Decision Card"
+description: "A SAP Lead decision model for placing commercial values, search logic, calculation rules, and pricing extensions in the correct SAP Sales layer."
+permalink: /labs/enterprise-context/decisions/pricing-ownership/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-06"
+search_intent: "SAP Sales pricing condition technique condition records access sequence custom logic ownership"
+evidence_review_mode: "SAP condition-technique, pricing-procedure, and access-sequence behavior checked against primary SAP Help sources; placement and extension guidance is authored architecture reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
+hide_global_cta: true
+structured_data:
+  type: TechArticle
+# ai-discovery-managed:start
+primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--pricing-ownership.json"
+entity_mentions:
+  - "sap-pricing"
+  - "sap-sales"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "SAP Sales Pricing Engine"
+    url: "/labs/enterprise-context/pricing/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
+source_links:
+  - title: "Condition Technique and Pricing"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/d69fbe532789b44ce10000000a174cb4.html"
+  - title: "Pricing Procedures"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/eff06b275ea640c4a827fc099df3b4aa/2897bd53d34ab64ce10000000a174cb4.html"
+  - title: "Access Sequences"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/a376cd9ea00d476b96f18dea1247e6a5/b78dc95360267214e10000000a174cb4.html"
+# ai-discovery-managed:end
+tags: [sap, sales, pricing, condition-technique, condition-records, architecture]
+---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_pricing_ownership %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Pricing ownership</li></ol></nav>
+<div class="research-canvas">
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Decision Card / Sales Pricing</p><h1>Where should SAP Sales<br />pricing logic live?</h1><p>A wrong price is not a request for a pricing exit. First separate commercial data, search strategy, calculation sequence, eligibility, and true custom calculation.</p></div><div class="research-canvas__signal"><p>My default</p><div class="research-canvas__signal-line"><span>DATA</span><strong>Condition record</strong><small>Commercial value and validity</small></div><div class="research-canvas__signal-line"><span>PATH</span><strong>Condition technique</strong><small>How SAP finds the value</small></div><div class="research-canvas__signal-line"><span>CODE</span><strong>Extension last</strong><small>Only for a real gap</small></div><em>Do not hide commercial policy inside code.</em></div></header>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Decision in one sentence:</strong> keep reusable prices and discounts in condition records, keep search and calculation structure in the standard condition technique, and use custom logic only when the requirement cannot be represented clearly by standard pricing objects.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Ownership map</p><h2>Put each pricing decision in the narrowest standard layer.</h2></header><div class="decision-table"><table><thead><tr><th>Decision</th><th>Preferred owner</th></tr></thead><tbody><tr><td>Commercial value and validity</td><td><strong>Condition record</strong> with explicit key, currency, unit, dates, and business owner.</td></tr><tr><td>Calculation sequence</td><td><strong>Pricing procedure + condition types</strong>.</td></tr><tr><td>Which record wins</td><td><strong>Access sequence + condition tables</strong>.</td></tr><tr><td>Condition eligibility</td><td><strong>Standard requirements, exclusion, or condition controls</strong> when they match the rule.</td></tr><tr><td>True calculated gap</td><td><strong>Bounded formula or released extension point</strong> with named inputs, tests, fallback, and owner.</td></tr></tbody></table></div></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Diagnosis</p><h2>Find the first pricing decision that diverged.</h2></header><div class="ecg-decision-columns"><div><h3>Procedure</h3><p>Confirm the expected pricing procedure and its determination inputs before analysing one condition line.</p></div><div><h3>Condition</h3><p>Check whether the expected price, discount, surcharge, freight, or tax component is present and active.</p></div><div><h3>Search</h3><p>Trace the access sequence and condition tables actually searched. A valid record in the wrong key is still not the selected record.</p></div><div><h3>Record</h3><p>Check key fields, dates, currency, unit, scales, and maintenance ownership.</p></div><div><h3>Calculation</h3><p>Only then inspect formulas, custom logic, external pricing, or repricing behavior.</p></div></div></section>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>I change the default when:</strong> an external service is explicitly authoritative for pricing or the commercial calculation cannot be represented safely in the local condition model.</p><p><strong>Anti-pattern:</strong> overwrite the final amount in code for selected customers or materials. The result can be technically correct and commercially impossible to explain.</p><p><strong>Lead check:</strong> prove the pricing path and name the business owner of the value before approving custom logic.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Trace price from rule to runtime result.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/pricing/"><span>DOMAIN</span><strong>SAP Sales Pricing Engine</strong><small>Reviewed pricing procedure, conditions, access, records, extensions, and diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">price_check</i></a><a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Pricing ownership case</strong><small>A customer-specific price is wrong and the proposed fix is a custom override.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a><a href="/labs/enterprise-context/sales-order/"><span>ORDER</span><strong>Sales Order decisions</strong><small>Connect pricing to document context and downstream billing.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a></div></section>
+</div>
