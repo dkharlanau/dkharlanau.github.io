@@ -3,7 +3,7 @@ layout: default
 title: "SAP Consulting Services — Dzmitryi Kharlanau | AMS, O2C, Integration"
 description: "SAP consulting path for diagnosing SAP transformation friction, stabilizing O2C and integration operations, structuring operational memory, and extending with side-by-side AI and automation."
 permalink: /services/
-last_modified_at: 2026-07-24
+last_modified_at: 2026-08-17
 ---
 
 <div class="service-canvas" data-service-canvas>
@@ -26,6 +26,7 @@ last_modified_at: 2026-07-24
       <a href="/services/sap-planning-and-replenishment-assessment/"><span>03</span><strong>Planning exceptions</strong><small>Shortages, expedites, allocation and fulfilment disputes.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/services/sap-integration-reliability-assessment/"><span>04</span><strong>Integration recovery</strong><small>Business flows blocked behind apparently healthy interfaces.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/services/sap-ai-ml-enablement/"><span>05</span><strong>AI around SAP</strong><small>One controlled task with evidence and human review.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/services/enterprise-ai-pilot-design/"><span>06</span><strong>Enterprise AI pilot</strong><small>ERP, document, or agent workflow with controls and evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </nav>
   </section>
 
@@ -41,6 +42,7 @@ last_modified_at: 2026-07-24
       <li class="service-path" data-reveal><span class="service-path__number">03</span><div><p class="service-path__label">Logistics &amp; planning</p><h3>Reduce shortages, expedites, and allocation disputes.</h3></div><p><strong>When:</strong> shortages, expedites, allocation disputes, or exception queues consume planning capacity and margin.</p><p><strong>Start:</strong> make the route from exception signal to evidence, owner, approval, and prevention visible.</p><a href="/services/sap-planning-and-replenishment-assessment/">Explore logistics and planning <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></li>
       <li class="service-path" data-reveal><span class="service-path__number">04</span><div><p class="service-path__label">Integration &amp; automation</p><h3>Reduce handoff cost before automating it.</h3></div><p><strong>When:</strong> interfaces look healthy until a business flow blocks, or manual recovery becomes the unofficial process.</p><p><strong>Start:</strong> separate source, mapping, transport, target, and recovery ownership before selecting a platform or automation pattern.</p><a href="/services/sap-integration-reliability-assessment/">Explore integration reliability <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></li>
       <li class="service-path" data-reveal><span class="service-path__number">05</span><div><p class="service-path__label">Enterprise AI around SAP</p><h3>Test one AI task with evidence and review.</h3></div><p><strong>When:</strong> teams want useful AI around SAP but need evidence, boundaries, ownership, and review before scaling.</p><p><strong>Start:</strong> ground one narrow use case in operating context, deterministic checks, measurable value, and accountable human review.</p><a href="/services/sap-ai-ml-enablement/">Explore enterprise AI <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></li>
+      <li class="service-path" data-reveal><span class="service-path__number">06</span><div><p class="service-path__label">Enterprise AI pilot</p><h3>Design one ERP AI pilot that can fail safely.</h3></div><p><strong>When:</strong> a team wants to test document AI, ERP agents, MCP, or another AI-assisted workflow across SAP, Dynamics 365, Oracle, or a mixed landscape.</p><p><strong>Start:</strong> define one process, source of truth, authority boundary, representative test set, failure cases, and measurable exit criteria.</p><a href="/services/enterprise-ai-pilot-design/">Explore Enterprise AI pilot design <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></li>
     </ol>
   </section>
 
@@ -74,7 +76,7 @@ last_modified_at: 2026-07-24
   </section>
 
   <section class="service-canvas__cta" data-reveal>
-    <div><p class="service-canvas__eyebrow">Next step</p><h2>Bring one operating problem.</h2><p>Start with a visible incident pattern, data issue, integration failure, or planning constraint.</p></div>
+    <div><p class="service-canvas__eyebrow">Next step</p><h2>Bring one operating problem.</h2><p>Start with a visible incident pattern, data issue, integration failure, planning constraint, or AI pilot question.</p></div>
     <a class="service-canvas__button service-canvas__button--primary" href="https://www.linkedin.com/in/dkharlanau" target="_blank" rel="noopener noreferrer">Discuss the problem <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 </div>
@@ -109,7 +111,8 @@ last_modified_at: 2026-07-24
     {"@type": "ListItem", "position": 4, "name": "SAP AI and ML Enablement", "url": "https://dkharlanau.github.io/services/sap-ai-ml-enablement/"},
     {"@type": "ListItem", "position": 5, "name": "SAP Integration Reliability Assessment", "url": "https://dkharlanau.github.io/services/sap-integration-reliability-assessment/"},
     {"@type": "ListItem", "position": 6, "name": "SAP Master Data Stability Assessment", "url": "https://dkharlanau.github.io/services/sap-master-data-stability-assessment/"},
-    {"@type": "ListItem", "position": 7, "name": "SAP Planning and Replenishment Assessment", "url": "https://dkharlanau.github.io/services/sap-planning-and-replenishment-assessment/"}
+    {"@type": "ListItem", "position": 7, "name": "SAP Planning and Replenishment Assessment", "url": "https://dkharlanau.github.io/services/sap-planning-and-replenishment-assessment/"},
+    {"@type": "ListItem", "position": 8, "name": "Enterprise AI Pilot Design for ERP", "url": "https://dkharlanau.github.io/services/enterprise-ai-pilot-design/"}
   ]
 }
 </script>

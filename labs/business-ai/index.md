@@ -26,18 +26,24 @@ structured_data:
 primary_topic: "business-ai"
 ai_sidecar: "/ai/pages/labs--business-ai.json"
 semantic_links:
+  - type: "deep_dive"
+    title: "Document-to-ERP AI Pilot — From PDF to Controlled Transaction"
+    url: "/labs/business-ai/document-to-erp-ai/"
+  - type: "deep_dive"
+    title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
+    url: "/labs/business-ai/erp-agent-gateway/"
+  - type: "deep_dive"
+    title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
+    url: "/labs/business-ai/open-research/"
+  - type: "deep_dive"
+    title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
+    url: "/labs/business-ai/pilots/"
   - type: "related_topic"
     title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
     url: "/labs/enterprise-context/business-ai/"
   - type: "related_topic"
     title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
     url: "/labs/enterprise-context/business-ai/agents/"
-  - type: "related_topic"
-    title: "SAP Decision Cards — Enterprise Context Lab"
-    url: "/labs/enterprise-context/decisions/"
-  - type: "integrates_with"
-    title: "IDoc, API, or Event? — SAP Integration Decision Card"
-    url: "/labs/enterprise-context/decisions/idoc-api-event/"
 # ai-discovery-managed:end
 ---
 {% assign catalog = site.data.labs.business_ai.catalog %}
@@ -97,6 +103,7 @@ semantic_links:
       <a href="/labs/business-ai/practices/"><span>07</span><strong>Best Practices and Anti-Patterns</strong><small>{{ scenario_library.best_practices | size }} operating rules and {{ scenario_library.failure_patterns | size }} recurring failure shapes for design reviews and assessments.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
       <a href="/labs/business-ai/matrix/"><span>08</span><strong>Assessment Decision Matrix</strong><small>{{ assessment_matrix.profiles | size }} process profiles linking AI job, autonomy, risk, KPI, system authority, controls, failure patterns, and evidence.</small><i class="material-symbols-outlined" aria-hidden="true">grid_view</i></a>
       <a href="/labs/business-ai/model/"><span>09</span><strong>Graph Model</strong><small>Nodes and edges for companies, processes, domains, patterns, technologies, outcomes, controls, metrics, evidence, limitations, and decision profiles.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
+      <a href="/labs/business-ai/pilots/"><span>10</span><strong>Open Enterprise AI Pilots</strong><small>Vendor-neutral pilots for document-to-ERP automation, ERP agent access, safety benchmarks, readiness, and open evidence.</small><i class="material-symbols-outlined" aria-hidden="true">science</i></a>
       <a href="/labs/business-ai/data/processes.json"><span>PROC</span><strong>Process Data</strong><small>Machine-readable stages, AI jobs, patterns, technologies, controls, and owning domains.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/labs/business-ai/data/domains.json"><span>DOM</span><strong>Domain Data</strong><small>Machine-readable business jobs, enterprise systems, technology families, architecture questions, and case IDs.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/labs/business-ai/data/technologies.json"><span>TECH</span><strong>Technology Data</strong><small>Machine-readable capability families, platform roles, fit conditions, limits, and primary-source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
