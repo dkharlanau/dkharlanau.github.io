@@ -38,6 +38,11 @@ def matching_div_end(text: str, start: int) -> int | None:
     return None
 
 
+def last_heading_in(text: str) -> int | None:
+    headings = list(HEADING_RE.finditer(text))
+    return int(headings[-1].group(1)) if headings else None
+
+
 def normalize_text(text: str) -> tuple[str, int]:
     changes = 0
     cursor = 0
@@ -73,8 +78,10 @@ def normalize_text(text: str) -> tuple[str, int]:
             if open_count != close_count:
                 raise RuntimeError("Unbalanced H4 tags while normalizing decision columns")
             changes += open_count
-            if open_count:
-                last_heading_level = 3
+
+        block_last_heading = last_heading_in(block)
+        if block_last_heading is not None:
+            last_heading_level = block_last_heading
 
         parts.append(block)
         cursor = block_end
