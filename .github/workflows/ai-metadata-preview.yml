@@ -1,0 +1,27 @@
+name: AI Metadata Preview
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml
+      - name: Generate canonical metadata
+        run: python3 scripts/knowledge_publication_loop.py
+      - name: Show generated diff
+        run: |
+          echo '=== GENERATED METADATA DIFF START ==='
+          git diff -- labs/ ai/pages/ _data/labs/semantic_relations.yml
+          echo '=== GENERATED METADATA DIFF END ==='
