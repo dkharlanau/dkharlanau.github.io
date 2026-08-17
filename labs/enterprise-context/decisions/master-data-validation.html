@@ -1,18 +1,27 @@
 ---
 layout: default
 title: "Where Should Master-Data Validation Live? — SAP Decision Card"
-description: "A compact decision model for placing master-data validation in governance, application, integration, or transaction controls."
+description: "A SAP Lead decision model for placing master-data validation in governance, application, integration, or transaction controls."
 permalink: /labs/enterprise-context/decisions/master-data-validation/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-05"
+search_intent: "SAP master data validation MDG transaction integration ownership design"
+evidence_review_mode: "SAP MDG validation-rule capabilities and Integration Suite contract-validation capabilities checked against primary SAP sources; rule placement, ownership, prevention, and reconciliation guidance is authored architecture reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
 hide_global_cta: true
-review_method: "authored decision reasoning draft over reviewed MDG and integration material; pending publication-contract review"
 structured_data:
   type: TechArticle
+# ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--master-data-validation.json"
+entity_mentions:
+  - "sap-mdg"
+  - "sap-integration"
 semantic_links:
   - type: "parent_context"
     title: "SAP Decision Cards"
@@ -20,8 +29,23 @@ semantic_links:
   - type: "related_topic"
     title: "SAP Master Data Governance"
     url: "/labs/enterprise-context/mdg/"
+  - type: "related_topic"
+    title: "SAP Integration Architecture"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
+source_links:
+  - title: "Managing Validation Rules"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/47cd340e7449473698b6f604c977ae2b.html?locale=en-US&state=PRODUCTION&version=2025.001"
+  - title: "Validation and Derivation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6d52de87aa0d4fb6a90924720a5b0549/8395e68123e24177982795ca05e127e9.html"
+  - title: "API Validation"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/api-validation?locale=en-US"
+# ai-discovery-managed:end
 tags: [sap, master-data, mdg, validation, governance, integration]
 ---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_master_data_validation %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Master-data validation</li></ol></nav>
 
@@ -50,7 +74,7 @@ tags: [sap, master-data, mdg, validation, governance, integration]
     <tr><td>Interface contract</td><td><strong>Integration boundary</strong></td><td>The sender and receiver need an explicit, testable exchange agreement.</td></tr>
   </tbody></table></div></section>
 
-  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>I change the default when:</strong> a source system is authoritative and cannot be governed centrally, a regulatory rule must stop a transaction even if the master record is valid, a migration needs temporary controls, or a consumer has a stricter contract than the enterprise model.</p><p><strong>Failure ownership:</strong> do not let every downstream team “fix” the same bad record independently. Capture the failing rule, identify the authoritative source, assign a correction owner, and preserve a reconciliation path for already distributed data.</p></section>
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>I change the default when:</strong> a source system is authoritative and cannot be governed centrally, a regulatory rule must stop a transaction even if the master record is valid, a migration needs temporary controls, or a consumer has a stricter contract than the enterprise model.</p><p><strong>Failure ownership:</strong> do not let every downstream team “fix” the same bad record independently. Capture the failing rule, identify the authoritative source, assign a correction owner, and preserve a reconciliation path for already distributed data.</p><p><strong>Lead trap:</strong> a green replication proves technical delivery. It does not prove that the master record is fit for every business process.</p></section>
 
-  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Evidence path</p><h2>Follow the data from governance to consumption.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/master-data/"><span>01</span><strong>Master Data</strong><small>Objects, dependencies, ownership, and process impact.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a><a href="/labs/enterprise-context/mdg/"><span>02</span><strong>MDG</strong><small>Governance, change, validation, approval, distribution, and stewardship.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a><a href="/labs/enterprise-context/integrations/"><span>03</span><strong>Integration</strong><small>Contract, delivery, recovery, and data-distribution boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a></div></section>
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Follow the data from governance to consumption.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/master-data/"><span>01</span><strong>Master Data</strong><small>Objects, dependencies, ownership, and process impact.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a><a href="/labs/enterprise-context/mdg/"><span>02</span><strong>MDG</strong><small>Governance, change, validation, approval, distribution, and stewardship.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a><a href="/labs/enterprise-context/integrations/"><span>03</span><strong>Integration</strong><small>Contract, delivery, recovery, and data-distribution boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a><a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Master-data validation case</strong><small>A material replicates successfully but later breaks Sales execution. Decide which control should have prevented it.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a></div></section>
 </div>
