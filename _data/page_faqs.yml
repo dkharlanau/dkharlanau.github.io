@@ -1,0 +1,165 @@
+"/services/":
+  eyebrow: "Business questions"
+  title: "Frequently asked questions before starting"
+  intro: "Use these questions to choose the right problem boundary before discussing a project, platform, or delivery model."
+  schema: false
+  items:
+    - question: "When is a SAP transformation friction audit the right starting point?"
+      answer: >-
+        It is the right starting point when change is happening but value is lost across process, data, integration, handover, and support boundaries. The goal is to find the friction before scaling more delivery work.
+    - question: "How do you protect clean-core S/4HANA during new delivery work?"
+      answer: >-
+        Separate deterministic ERP logic that must stay close to transactional truth from automation, APIs, events, analytics, and edge services that should remain portable. The boundary is a business and lifecycle decision, not a slogan.
+    - question: "What is the fastest way to prove value before a larger SAP transformation programme?"
+      answer: >-
+        Start with one audit slice, one repeat incident pattern, one handover gap, or one manual workflow where time, cost, or business risk is already visible. A narrow problem creates a measurable first decision.
+
+"/services/sap-o2c-process-audit/":
+  eyebrow: "O2C business FAQ"
+  title: "Questions business and SAP teams usually ask"
+  intro: "The useful questions are about blocked revenue, ownership, evidence, and repeatability, not only SD configuration."
+  items:
+    - question: "What business problem is large enough to justify an O2C audit?"
+      answer: >-
+        Repeated blocked orders, late deliveries, billing backlog, credit or pricing exceptions, manual releases, and recurring customer complaints are strong signals. The key condition is that the problem repeats and its owner or root cause is still unclear.
+    - question: "Is this mainly an SAP SD configuration review?"
+      answer: >-
+        No. Configuration is only one possible cause. The audit also checks master data, ATP or aATP, credit, pricing, enhancements, interfaces, timing, manual workarounds, and the ownership of business decisions.
+    - question: "What evidence should the business provide first?"
+      answer: >-
+        Start with a small set of representative document flows: order, delivery, billing or return, plus the visible business consequence. Add the relevant error, block, timestamp, master-data context, and interface evidence where available.
+    - question: "How do you separate a valid business control from a system defect?"
+      answer: >-
+        First state the rule the business wants. Then trace the SAP condition that enforces it and test whether the required data and context are correct. A valid control with bad data needs a different fix from a wrong rule or defective enhancement.
+    - question: "What should management receive at the end?"
+      answer: >-
+        A breakpoint map, evidence-backed findings, an owner decision map, and a ranked backlog. The result should show what can be fixed now, what needs process or data work, and what needs a larger architecture decision.
+    - question: "Should AI release blocked orders or override credit decisions?"
+      answer: >-
+        Not by default. AI can prepare evidence, group similar cases, and suggest a next action. Releasing commercial controls should remain behind deterministic checks, explicit authority, and accountable approval.
+
+"/services/sap-integration-architecture/":
+  eyebrow: "Architecture FAQ"
+  title: "Questions to answer before choosing middleware"
+  intro: "Most integration decisions become easier after ownership, contract, timing, recovery, and business completion are clear."
+  items:
+    - question: "When do we need architecture work instead of another interface fix?"
+      answer: >-
+        Architecture work is justified when the same failures return, several teams disagree about ownership, contracts change unpredictably, recovery depends on people, or different interfaces solve the same business interaction in incompatible ways.
+    - question: "Should we prefer APIs, events, or IDocs for new SAP integrations?"
+      answer: >-
+        There is no universal winner. Use APIs when a consumer needs a controlled request or current fact, events when other systems need to react to a business change without tight coupling, and IDocs when their business semantics and operational model fit the landscape well.
+    - question: "Where should validation and orchestration live in a clean-core design?"
+      answer: >-
+        Keep rules that protect SAP transactional integrity close to the system of record. Put cross-system orchestration, replaceable transformation, channel logic, and edge automation outside the core when that improves lifecycle independence without weakening control.
+    - question: "What does a good recovery model include?"
+      answer: >-
+        It defines correlation, retries, duplicate handling, replay, reconciliation, business error ownership, and the evidence that proves the receiving business object reached the expected state. A green middleware message is not enough.
+    - question: "Who should own an integration contract?"
+      answer: >-
+        Ownership should connect business meaning and technical lifecycle. One accountable owner must be able to approve semantic or breaking changes, while producer and consumer teams keep clear responsibilities for implementation and operation.
+    - question: "Should a company standardize on one integration platform?"
+      answer: >-
+        Standardize principles, contracts, observability, security, and ownership first. A mature landscape may still need APIs, event brokers, B2B exchange, files, or streaming for different interaction types. Forcing every flow into one runtime can create a new form of coupling.
+
+"/services/enterprise-ai-pilot-design/":
+  eyebrow: "Enterprise AI FAQ"
+  title: "Business questions before an ERP AI pilot"
+  intro: "A useful pilot proves a business decision and a control model, not only that a model can produce an impressive answer."
+  items:
+    - question: "What is a strong business case for an Enterprise AI pilot?"
+      answer: >-
+        Look for work where people spend real time interpreting documents, assembling evidence, classifying exceptions, or navigating context before a decision. The cost, delay, or risk should already be visible before AI enters the discussion.
+    - question: "When should we not use AI?"
+      answer: >-
+        Do not use AI when a rule, query, workflow, integration, or ordinary application can solve the task reliably. Deterministic work does not become better merely because a language model is added to it.
+    - question: "How small should the first pilot be?"
+      answer: >-
+        Small enough to have one process owner, one measurable outcome, a limited set of inputs and actions, and clear exit criteria. It should still contain difficult and unsafe cases, otherwise the pilot only tests the happy path.
+    - question: "Do we need production ERP data to start?"
+      answer: >-
+        Not always. Synthetic or sanitized examples are often enough to test architecture, extraction, tool contracts, approval logic, and failure handling. Production-like data becomes important when the hypothesis depends on real variation, volume, or business context.
+    - question: "How should we measure whether the pilot worked?"
+      answer: >-
+        Measure business validity, human correction, unsafe action rate, traceability, processing time, operating cost, and the share of cases that still need manual work. Model accuracy alone is not an operating KPI.
+    - question: "When may an AI agent write to ERP?"
+      answer: >-
+        Only when the action is narrow, the identity is known, permissions are explicit, inputs are validated, the transaction is auditable, failure can be recovered, and the business risk allows that level of autonomy. High-risk actions should require confirmation or approval.
+    - question: "Should we build the AI solution or buy a product?"
+      answer: >-
+        Decide after the process and control boundary are clear. Buy when the product matches the business job and governance model. Build when differentiation, unusual integration, control, or portability justify owning more of the lifecycle.
+
+"/labs/enterprise-context/integrations/":
+  eyebrow: "Integration architecture FAQ"
+  title: "Questions that expose the real architecture decision"
+  intro: "Answer these with a business object and a failure scenario. Product names can come later."
+  items:
+    - question: "How do I choose between synchronous and asynchronous integration?"
+      answer: >-
+        Ask whether the sender needs an immediate business answer and whether both systems must be available at the same time. Synchronous calls create direct runtime dependency. Asynchronous patterns reduce that dependency but require stronger state, retry, and reconciliation design.
+    - question: "When is an event better than an API call?"
+      answer: >-
+        An event is useful when a business fact has already happened and several consumers may react independently. An API call is better when a consumer asks for data or requests a controlled action from an owner system.
+    - question: "Does event-driven architecture mean we need Kafka or Event Mesh everywhere?"
+      answer: >-
+        No. Event-driven architecture starts with business semantics and coupling. A broker or streaming platform is selected only when its delivery, scale, routing, retention, ordering, or ecosystem properties fit the interaction.
+    - question: "What is business completion in an integration flow?"
+      answer: >-
+        It is evidence that the receiving business object reached the state the process actually needs. Transport success, HTTP 200, or a delivered message can be useful technical signals, but they are not always proof of business completion.
+    - question: "How should master data be distributed across systems?"
+      answer: >-
+        Name the authoritative source, the approved consumers, the distribution contract, local derivations, and the reconciliation model. The important question is not only how data moves, but how the landscape proves that copies remain usable and consistent enough for the business process.
+    - question: "What is the clean-core rule for integration?"
+      answer: >-
+        Keep authoritative SAP business decisions and transactional safeguards where they belong. Keep replaceable mediation, channel-specific transformation, cross-system orchestration, and external integration logic portable when possible. Clean core is a boundary discipline, not zero integration logic.
+
+"/labs/enterprise-context/business-ai/agents/":
+  eyebrow: "Agent architecture FAQ"
+  title: "Questions before giving an AI agent real authority"
+  intro: "The model is only one component. Identity, tools, state, permissions, recovery, and business accountability decide whether the architecture is safe."
+  items:
+    - question: "When is an AI agent better than a normal workflow?"
+      answer: >-
+        Use an agent when the path genuinely needs dynamic planning, tool choice, or context-dependent reasoning. Use a workflow when the steps and decision rules are already known. The least complex mechanism that can own the task safely is usually the better design.
+    - question: "Does MCP make ERP access safe?"
+      answer: >-
+        No. MCP can standardize how tools and context are exposed to an agent, but authorization, identity, business validation, audit, rate limits, and recovery still need separate controls. A tool description is not a security policy.
+    - question: "Should an agent inherit all permissions of the human user?"
+      answer: >-
+        Usually no. Effective permission should be limited by the user, the agent, the tool, the business action, and the current context. The agent should receive only the authority needed for the task.
+    - question: "How much autonomy should an enterprise agent have?"
+      answer: >-
+        Autonomy should follow business risk. Reading and explaining can often be broader. Preparing an action needs stronger validation. Committing financial, commercial, master-data, or logistics changes needs narrow tools, explicit policy, and often human confirmation.
+    - question: "How do you make agent actions reliable when systems retry or fail?"
+      answer: >-
+        Treat every side effect as a transaction design problem. Use stable identifiers, idempotency where possible, durable business state, clear retry rules, compensation or recovery paths, and traces that connect the agent decision to the resulting business object.
+    - question: "Do we need a multi-agent architecture?"
+      answer: >-
+        Only when responsibilities, authority, or lifecycle boundaries are genuinely different and the handoff can be made explicit. Splitting one vague agent into several vague agents mostly creates more messages and more places to lose context.
+    - question: "What should we monitor in production?"
+      answer: >-
+        Monitor business outcome, tool usage, unsafe or denied actions, human corrections, retries, latency, cost, agent version, and the final state of affected business objects. Token counts are operational data, not proof that the process worked.
+
+"/labs/business-ai/pilots/":
+  eyebrow: "Pilot FAQ"
+  title: "Questions that decide whether a pilot is worth running"
+  intro: "A pilot is useful when it can change a business or architecture decision, including the decision to stop."
+  items:
+    - question: "What is the difference between a demo, a proof of concept, and a pilot?"
+      answer: >-
+        A demo shows that something can look useful. A proof of concept tests a technical hypothesis. A pilot tests whether the solution can work inside a real business process with representative data, controls, owners, failure cases, and measurable outcomes.
+    - question: "Which Enterprise AI use case should go first?"
+      answer: >-
+        Prefer a narrow task with visible manual effort, enough representative examples, a clear owner, and limited authority. Document interpretation, evidence assembly, exception classification, and assistive ERP analysis are often easier first steps than autonomous transactions.
+    - question: "What makes a pilot fail safely?"
+      answer: >-
+        Limit the action boundary, use test or reversible operations where possible, require approval for risky changes, keep an audit trail, define fallback behavior, and include cases that the system must refuse rather than force through.
+    - question: "How much data is enough for a first pilot?"
+      answer: >-
+        Enough to represent normal cases, meaningful variation, ambiguity, and known failure modes. A small but deliberately difficult test set is more useful than a large collection of easy examples.
+    - question: "What is a good exit criterion?"
+      answer: >-
+        Define the minimum business validity, correction rate, unsafe action threshold, processing improvement, traceability, and operating cost before building. The result may be scale, redesign, remain assistive, fix foundations first, or stop.
+    - question: "Why keep the architecture vendor-neutral at the start?"
+      answer: >-
+        Because process ownership, authority, data, integration, and evaluation exist regardless of the chosen platform. Vendor products matter, but they should fit the operating model instead of defining it by accident.
