@@ -1,0 +1,72 @@
+---
+layout: null
+permalink: /ai/entity-graph.jsonld
+sitemap: false
+---
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": {{ site.data.identity.entity_id | jsonify }},
+      "name": {{ site.data.identity.name | jsonify }},
+      "url": {{ site.data.identity.canonical_url | jsonify }},
+      "jobTitle": {{ site.data.identity.role.title | jsonify }},
+      "description": {{ site.data.identity.positioning | jsonify }},
+      "worksFor": {
+        "@id": "{{ site.data.identity.role.organization_url }}#organization"
+      },
+      "sameAs": [
+        {{ site.data.identity.profiles.linkedin | jsonify }},
+        {{ site.data.identity.profiles.github | jsonify }},
+        {{ site.data.identity.profiles.x | jsonify }}
+      ],
+      "knowsAbout": {{ site.data.identity.scope | jsonify }},
+      "mainEntityOfPage": {
+        "@id": "{{ site.data.identity.canonical_url }}#webpage"
+      },
+      "subjectOf": [
+        {"@id": "https://dkharlanau.github.io/ai/identity.json#document"},
+        {"@id": "https://dkharlanau.github.io/ai/profile-audit.json#document"},
+        {"@id": "https://dkharlanau.github.io/llms.txt#document"},
+        {"@id": "https://dkharlanau.github.io/ai/catalog.json#catalog"}
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "{{ site.data.identity.role.organization_url }}#organization",
+      "name": {{ site.data.identity.role.organization | jsonify }},
+      "url": {{ site.data.identity.role.organization_url | jsonify }}
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://dkharlanau.github.io/#website",
+      "url": "https://dkharlanau.github.io/",
+      "name": {{ site.data.identity.name | jsonify }},
+      "publisher": {
+        "@id": {{ site.data.identity.entity_id | jsonify }}
+      }
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "{{ site.data.identity.canonical_url }}#webpage",
+      "url": {{ site.data.identity.canonical_url | jsonify }},
+      "name": "About Dzmitryi Kharlanau",
+      "mainEntity": {
+        "@id": {{ site.data.identity.entity_id | jsonify }}
+      },
+      "isPartOf": {
+        "@id": "https://dkharlanau.github.io/#website"
+      }
+    },
+    {
+      "@type": "DataDownload",
+      "@id": "https://dkharlanau.github.io/ai/identity.json#document",
+      "contentUrl": "https://dkharlanau.github.io/ai/identity.json",
+      "encodingFormat": "application/json",
+      "about": {
+        "@id": {{ site.data.identity.entity_id | jsonify }}
+      }
+    }
+  ]
+}
