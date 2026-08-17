@@ -1,0 +1,56 @@
+---
+layout: default
+title: "Who Should Own Scarce-Supply Priority in aATP? — Decision Card"
+description: "A SAP Lead decision model for separating product allocation, supply protection, backorder processing, and customer promise ownership."
+permalink: /labs/enterprise-context/decisions/aatp-prioritization/
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
+last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-07"
+search_intent: "SAP aATP product allocation supply protection backorder processing priority ownership"
+evidence_review_mode: "SAP product-allocation, supply-protection, and BOP confirmation-strategy behavior checked against primary SAP Help sources; business-policy ownership and exception guidance is authored reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
+hide_global_cta: true
+structured_data:
+  type: TechArticle
+# ai-discovery-managed:start
+primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--aatp-prioritization.json"
+entity_mentions: ["advanced-atp", "product-allocation", "supply-protection", "backorder-processing", "sap-sales"]
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "SAP ATP and aATP Promise Engine"
+    url: "/labs/enterprise-context/atp/"
+  - type: "related_topic"
+    title: "Sales Order Decision Map"
+    url: "/labs/enterprise-context/sales-order/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
+source_links:
+  - title: "Product Allocation (CA-ATP-PAL)"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/cfc8aa5747c46c10e10000000a441470.html"
+  - title: "Using Supply Protection and Product Allocation"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/e9861099432c4fd9a569f129f2d4ceb1.html"
+  - title: "Confirmation Strategies"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/1ba3a457ef816b10e10000000a441470.html"
+# ai-discovery-managed:end
+tags: [sap, aatp, atp, product-allocation, supply-protection, backorder-processing, sales]
+---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_aatp_prioritization %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">aATP prioritization</li></ol></nav>
+<div class="research-canvas">
+<header class="research-canvas__hero" data-reveal><div class="research-canvas__hero-copy"><p class="research-canvas__eyebrow">Decision Card / aATP</p><h1>Who should own<br />scarce-supply priority?</h1><p>When supply is short, the wrong answer is to let the loudest order win. Priority should come from an explicit business policy that aATP can apply consistently across new demand and existing confirmations.</p></div><div class="research-canvas__signal"><p>My default</p><div class="research-canvas__signal-line"><span>CAP</span><strong>PAL</strong><small>Upper consumption limit</small></div><div class="research-canvas__signal-line"><span>KEEP</span><strong>SUP</strong><small>Protected minimum supply</small></div><div class="research-canvas__signal-line"><span>MOVE</span><strong>BOP</strong><small>Reprioritize confirmations</small></div><em>Sales owns the promise, not ad hoc supply stealing.</em></div></header>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Decision in one sentence:</strong> the business owns the scarce-supply policy, Product Allocation limits consumption, Supply Protection reserves minimum supply for defined groups, and Backorder Processing applies prioritization rules when existing confirmations need to be recalculated.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Choose the control</p><h2>Different supply problems need different mechanisms.</h2></header><div class="decision-table"><table><thead><tr><th>Question</th><th>Default mechanism</th></tr></thead><tbody><tr><td>How much may a customer, region, channel, or group consume?</td><td><strong>Product Allocation</strong> as an upper limit.</td></tr><tr><td>Which demand group must retain minimum access to supply?</td><td><strong>Supply Protection</strong>.</td></tr><tr><td>How should existing confirmations change after supply or demand changes?</td><td><strong>Backorder Processing</strong> with explicit confirmation strategies and segments.</td></tr><tr><td>What quantity and date can one order receive now?</td><td><strong>PAC and configured aATP checks</strong>.</td></tr><tr><td>What do we tell the customer?</td><td><strong>Sales / commercial owner</strong>, using the confirmed result and known execution constraints.</td></tr></tbody></table></div></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Lead checks</p><h2>Make priority explainable before making it automatic.</h2></header><div class="ecg-decision-columns"><div><h3>Business segment</h3><p>Which customer, region, channel, order type, or demand group receives different treatment and why?</p></div><div><h3>Policy horizon</h3><p>Is the rule a stable allocation policy, a protected minimum, or a temporary reprioritization after disruption?</p></div><div><h3>Interaction</h3><p>PAL and SUP can complement each other, but poorly aligned characteristics can also block supply in ways the business did not intend.</p></div><div><h3>Existing promises</h3><p>BOP can improve one confirmation by reducing or delaying another. Treat that as a customer-impact decision, not only an ATP batch job.</p></div><div><h3>Evidence</h3><p>Prove the segment, strategy, allocation or protection object, confirmation before and after the run, and affected customer promises.</p></div></div></section>
+<section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>Anti-pattern:</strong> manually increase one order confirmation because the customer is important, without updating the policy that should govern all comparable demand.</p><p><strong>I change the default when:</strong> legal, contractual, safety, or emergency priorities require a different rule. The exception should still be explicit, auditable, and time-bounded.</p><p><strong>Lead proof:</strong> explain who owns priority, which aATP control represents it, what other demand loses or gains supply, and how customer communication changes.</p></section>
+<section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Protect policy, not one order.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>aATP Promise Engine</strong><small>PAC, PAL, SUP, BOP, ABC, scheduling, and diagnostics.</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a><a href="/labs/enterprise-context/decisions/confirmed-date-ownership/"><span>DATE</span><strong>Confirmed Date Ownership</strong><small>Connect supply confirmation to execution and customer promise.</small><i class="material-symbols-outlined" aria-hidden="true">event</i></a><a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Scarce-supply case</strong><small>One strategic customer asks for supply already confirmed to other demand.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a></div></section>
+</div>
