@@ -1,0 +1,67 @@
+---
+layout: default
+title: "Who Owns an IDoc Failure? — SAP Integration Decision Card"
+description: "A compact SAP Lead decision model for assigning ownership across transport, mapping, application, master-data, and business-process failures."
+permalink: /labs/enterprise-context/decisions/idoc-failure-ownership/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-17
+hide_global_cta: true
+review_method: "authored decision reasoning draft over reviewed SAP integration and operations material; pending publication-contract review"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-architecture-decisions"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "SAP Integration Operations"
+    url: "/labs/enterprise-context/integration-operations/"
+  - type: "related_decision"
+    title: "IDoc, API, or Event?"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+tags: [sap, integration, idoc, ams, support, ownership]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">IDoc failure ownership</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Decision Card / Integration Operations</p>
+      <h1>Who owns an<br />IDoc failure?</h1>
+      <p>“The IDoc failed” is not an ownership model. The useful question is which boundary failed, who can correct it, and who proves that the business process finished.</p>
+    </div>
+    <div class="research-canvas__signal"><p>My default</p><div class="research-canvas__signal-line"><span>01</span><strong>Classify</strong><small>Find the failed boundary</small></div><div class="research-canvas__signal-line"><span>02</span><strong>Recover</strong><small>Assign the correcting team</small></div><div class="research-canvas__signal-line"><span>03</span><strong>Reconcile</strong><small>Prove business completion</small></div><em>Technical success is not the end state.</em></div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">rule</span><p><strong>Decision in one sentence:</strong> ownership should follow the failed boundary, but one process owner must remain accountable for end-to-end reconciliation so that a technically repaired IDoc does not become an invisible business gap.</p></section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure classification</p><h2>Do not send every red status to the integration team.</h2></header>
+    <div class="decision-table"><table><thead><tr><th>Failure boundary</th><th>Typical owner</th><th>What must be checked</th></tr></thead><tbody>
+      <tr><td><strong>Transport / connectivity</strong></td><td>Integration or platform operations</td><td>Partner connection, queue, RFC/HTTP destination, middleware route, certificate, network, retry policy.</td></tr>
+      <tr><td><strong>Mapping / contract</strong></td><td>Integration development</td><td>Message version, required fields, mapping logic, code conversion, schema compatibility.</td></tr>
+      <tr><td><strong>SAP application processing</strong></td><td>Functional or application support</td><td>Customizing, document status, business rule, lock, posting prerequisite, application log.</td></tr>
+      <tr><td><strong>Master data</strong></td><td>Data owner or governance team</td><td>Missing or invalid business partner, material, plant, purchasing, sales, tax, accounting, or mapping data.</td></tr>
+      <tr><td><strong>Business exception</strong></td><td>Business process owner</td><td>Whether the message is valid at all, whether the business should proceed, and whether manual approval or cancellation is required.</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Lead answer</p><h2>Recovery needs two owners, not one vague queue.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Correction owner</h3><p>The team that can remove the root cause. This may be integration, functional support, master data, security, or the business.</p></div>
+      <div><h3>Process owner</h3><p>The owner who confirms that the expected business document or state exists after recovery. This prevents “green middleware, broken business process”.</p></div>
+      <div><h3>Replay owner</h3><p>Replay must be controlled. The team needs to know whether the message is idempotent, whether duplicates are possible, and whether the target state already exists.</p></div>
+      <div><h3>Problem owner</h3><p>Repeated failures should leave incident mode. A recurring master-data or mapping defect belongs in problem management with a permanent corrective action.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>I reject the design when:</strong> ownership is based only on the technical component, replay is allowed without duplicate checks, monitoring stops at message status, or nobody reconciles the receiving business object.</p><p><strong>Operational rule:</strong> classify first, correct second, replay only when safe, then reconcile the business outcome. If the same pattern repeats, convert it into a problem record and remove the cause.</p></section>
+
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Evidence path</p><h2>Connect the incident to the wider operating model.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/integration-operations/"><span>01</span><strong>Integration operations</strong><small>Monitoring, recovery, replay, reconciliation, and support ownership.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a><a href="/labs/enterprise-context/integrations/"><span>02</span><strong>Integration architecture</strong><small>Contracts, interaction styles, interfaces, platforms, and architectural boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a><a href="/labs/enterprise-context/decisions/idoc-api-event/"><span>03</span><strong>IDoc, API, or event?</strong><small>Choose the interaction pattern before deciding how failures will be operated.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a></div></section>
+</div>
