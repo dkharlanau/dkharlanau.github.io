@@ -3,16 +3,24 @@ layout: default
 title: "Who Owns an Open GR/IR Balance? — SAP Procurement Decision Card"
 description: "A SAP Lead decision model for open GR/IR balances, quantity mismatches, missing receipts or invoices, ownership, and business reconciliation."
 permalink: /labs/enterprise-context/decisions/grir-ownership/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-03"
+search_intent: "SAP GR IR open balance ownership goods receipt invoice receipt reconciliation"
+evidence_review_mode: "SAP GR/IR posting and clearing behavior checked against primary SAP Help sources; ownership classification, diagnosis order, and business-completion guidance is authored cross-process reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
 hide_global_cta: true
-review_method: "authored ownership model over SAP GR/IR and invoice-verification documentation; pending publication review"
 structured_data:
   type: TechArticle
+# ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--grir-ownership.json"
+entity_mentions:
+  - "sap-procurement"
 semantic_links:
   - type: "parent_context"
     title: "SAP Decision Cards"
@@ -23,13 +31,20 @@ semantic_links:
   - type: "related_topic"
     title: "FI/CO for Logistics"
     url: "/labs/enterprise-context/finance-logistics/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
 source_links:
-  - title: "Invoices for Purchase Orders"
-    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/be5eb6531de6b64ce10000000a174cb4.html"
+  - title: "Postings at Goods Receipt and Invoice Receipt"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/825eb6531de6b64ce10000000a174cb4.html"
   - title: "Clear GR/IR Clearing Account"
-    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/72256b54f94c8f4ce10000000a4450e5.html"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/72256b54f94c8f4ce10000000a4450e5.html"
+  - title: "Reconcile GR/IR Accounts: Business Background"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0fa84c9d9c634132b7c4abb9ffdd8f06/14bfe1818e1b4fec9f3e873599e2b754.html"
+# ai-discovery-managed:end
 tags: [sap, procurement, grir, invoice-verification, goods-receipt, finance, reconciliation]
 ---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_grir_ownership %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">GR/IR ownership</li></ol></nav>
 
@@ -77,13 +92,14 @@ tags: [sap, procurement, grir, invoice-verification, goods-receipt, finance, rec
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">warning</span>
-    <p><strong>Anti-pattern:</strong> treating MR11 or another clearing action as the diagnosis. Clearing is a financial action after the business state is explained, not a substitute for finding why the receipt and invoice did not reconcile.</p>
+    <p><strong>Anti-pattern:</strong> treating MR11 or another clearing action as the diagnosis. SAP supports clearing residual GR/IR differences when no more goods or invoices are expected, but that makes clearing a closure step, not a substitute for explaining the mismatch.</p>
     <p><strong>Lead check:</strong> close with one sentence that proves physical completion, commercial completion, and accounting completion are aligned.</p>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Evidence path</p><h2>Start in the PO history and end in reconciliation.</h2></header>
+    <header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Start in PO history and end in reconciliation.</h2></header>
     <div class="research-route-list">
+      <a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Open GR/IR Ownership</strong><small>Practice the same quantity, value, ownership, and reconciliation path as a Lead diagnosis.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
       <a href="/labs/enterprise-context/procurement/"><span>DOMAIN</span><strong>Procurement process map</strong><small>Receipt, invoice verification, PO history, failure modes, and settlement boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
       <a href="/labs/enterprise-context/finance-logistics/"><span>VALUE</span><strong>FI/CO for Logistics</strong><small>Accounting documents, value flow, GR/IR, and reconciliation ownership.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
       <a href="/labs/enterprise-context/procurement/#sources"><span>EVID</span><strong>Primary sources</strong><small>SAP Help documentation behind goods-receipt, invoice-receipt, and GR/IR behavior.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
