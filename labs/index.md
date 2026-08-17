@@ -25,7 +25,7 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Labs / learn by tracing decisions</p>
       <h1>Connect process,<br />architecture, and judgment.</h1>
-      <p>Labs are working environments for topics that need exploration, practice, and structured reasoning. Stable methods live under Frameworks. Reviewed reference knowledge lives in the Atlas. Reviewed architecture choices are collected as Decision Cards.</p>
+      <p>Labs are working environments for topics that need exploration, practice, and structured reasoning. Stable methods live under Frameworks. Reviewed reference knowledge lives in the Atlas.</p>
       <a class="research-canvas__button" href="#lab-routes">Open the lab map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
     <div class="research-canvas__signal" aria-label="Lab structure">
@@ -47,11 +47,10 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Lab map</p>
       <h2>Four workspaces, one assessment route.</h2>
-      <p>Start from the domain you need to explain. Use Decision Cards when the question becomes “what would you choose and why?”. Move to the assessment lab when you want to defend the choice under questioning.</p>
+      <p>Start from the domain you need to explain. Move to the assessment lab when you want to defend decisions under questioning.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/"><span>SAP</span><strong>SAP Enterprise</strong><small>Sales, procurement, logistics, master data, production, quality, integration, development, analytics, and cross-functional SAP capabilities.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/decisions/"><span>DEC</span><strong>SAP Decision Cards</strong><small>Compact Lead-level choices with context, decision drivers, default, exceptions, recovery ownership, and evidence paths.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
       <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture</strong><small>Data, retrieval, MCP, tools, agents, evaluations, security, deployment, and production boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
       <a href="/labs/business-ai/"><span>BIZ</span><strong>Business AI</strong><small>Business process → AI job → pattern → technology → control → outcome → evidence, including failed and mixed cases.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       <a href="/labs/templates/"><span>OPS</span><strong>Operational Protocols</strong><small>RCA, incident response, integration failure analysis, runbooks, change impact, cutover, and hypercare.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
@@ -63,7 +62,7 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">SAP Enterprise</p>
       <h2>Business domain first. SAP component second.</h2>
-      <p>The existing Enterprise Context URL remains stable, but its role is broader: it is the SAP enterprise knowledge workspace. Decision Cards connect those domain models through explicit trade-offs.</p>
+      <p>The existing Enterprise Context URL remains stable, but its role is broader: it is the SAP enterprise knowledge workspace.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/sales-processes/"><span>01</span><strong>Sales</strong><small>Processes, sales orders, pricing, ATP, shipping, billing, credit, tax, analytics, diagnostics, and special cases.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
@@ -71,7 +70,6 @@ tags:
       <a href="/labs/enterprise-context/master-data/"><span>03</span><strong>Master Data and Governance</strong><small>Master data, MDG, data governance, replication dependencies, and enterprise data responsibility.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
       <a href="/labs/enterprise-context/integrations/"><span>04</span><strong>Integration and Technology</strong><small>APIs, IDocs, events, middleware, integration operations, development, analytics, and AI touchpoints.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
       <a href="/labs/enterprise-context/automotive-jit/"><span>05</span><strong>Cross-functional and Industry</strong><small>Automotive JIT, finance-logistics connections, common logistics capabilities, industries, and deployment models.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
-      <a href="/labs/enterprise-context/decisions/"><span>→</span><strong>Cross-domain decisions</strong><small>IDoc vs API vs event, STO vs intercompany, validation ownership, delivery controls, and AI autonomy boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
     </div>
   </section>
 
@@ -94,7 +92,7 @@ tags:
     <ol>
       <li><span>01</span><strong>Model</strong><p>Define the process, owners, data, rules, systems, and boundaries.</p></li>
       <li><span>02</span><strong>Connect</strong><p>Trace dependencies across SAP, integration, data, and operations.</p></li>
-      <li><span>03</span><strong>Exercise</strong><p>Use decision cards and assessment cases to explain, diagnose, design, and challenge the model.</p></li>
+      <li><span>03</span><strong>Exercise</strong><p>Use assessment cases to explain, diagnose, design, and challenge the model.</p></li>
     </ol>
   </section>
 </div>
