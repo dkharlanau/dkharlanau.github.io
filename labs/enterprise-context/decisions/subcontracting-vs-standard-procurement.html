@@ -1,0 +1,95 @@
+---
+layout: default
+title: "Subcontracting or Standard External Procurement? — SAP Procurement Decision Card"
+description: "A SAP Lead decision model for choosing subcontracting versus standard external procurement based on component ownership, supplier execution, stock, and reconciliation."
+permalink: /labs/enterprise-context/decisions/subcontracting-vs-standard-procurement/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-17
+hide_global_cta: true
+review_method: "authored decision reasoning over SAP subcontracting and component-provision documentation; pending publication review"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-architecture-decisions"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "Procurement Process & Decision Map"
+    url: "/labs/enterprise-context/procurement/"
+  - type: "related_topic"
+    title: "Inventory Management"
+    url: "/labs/enterprise-context/inventory-management/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
+source_links:
+  - title: "Provision of Components"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/91b21005dded4984bcccf4a69ae1300c/e061bd534f22b44ce10000000a174cb4.html"
+  - title: "Segmentation: Subcontracting"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/25a41481f62e469ba0e61015a0d39d20/4a10cc55c801727fe10000000a44538d.html"
+tags: [sap, procurement, subcontracting, special-stock, inventory, supplier, special-procurement]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Subcontracting or standard procurement</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Decision Card / Special Procurement</p>
+      <h1>Subcontracting or<br />standard external procurement?</h1>
+      <p>The key question is not whether a supplier performs work. It is who owns the components, how they move, and what the goods receipt must consume and reconcile.</p>
+    </div>
+    <div class="research-canvas__signal">
+      <p>My default</p>
+      <div class="research-canvas__signal-line"><span>STD</span><strong>Standard PO</strong><small>Supplier owns its production inputs</small></div>
+      <div class="research-canvas__signal-line"><span>SUB</span><strong>Subcontracting</strong><small>We provide controlled components</small></div>
+      <div class="research-canvas__signal-line"><span>PROOF</span><strong>Reconcile</strong><small>Finished receipt + component consumption</small></div>
+      <em>Choose from ownership and material flow, not from the supplier contract name.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Decision in one sentence:</strong> use subcontracting when your business owns or controls components that are provided to the supplier and their consumption must be connected to receipt of the ordered product; use standard external procurement when the supplier owns its input material and you buy the resulting product or service as the commercial object.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision drivers</p><h2>Four questions separate the processes.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Who owns the components?</h3><p>If company-owned components remain visible while physically located at the supplier, the inventory model matters and normal external procurement may be too weak.</p></div>
+      <div><h3>Who plans component demand?</h3><p>Subcontracting can connect the ordered assembly with components that must be provided, planned, and monitored for that supplier.</p></div>
+      <div><h3>What does goods receipt mean?</h3><p>The finished-material receipt can also be the point where component consumption is posted or reconciled. That is more than receiving a normal externally purchased material.</p></div>
+      <div><h3>What variance must remain explainable?</h3><p>Planned component quantities, supplier stock, scrap, subsequent adjustment, finished receipt, invoice, and GR/IR can all expose a different part of the same variance.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Comparison</p><h2>The commercial PO can look similar while the ownership model is different.</h2></header>
+    <div class="decision-table"><table><thead><tr><th>Question</th><th>Standard external procurement</th><th>Subcontracting</th></tr></thead><tbody>
+      <tr><td><strong>Supplier inputs</strong></td><td>Normally outside your stock model and supplier responsibility.</td><td>Selected components are provided and remain visible as company-controlled material.</td></tr>
+      <tr><td><strong>Inventory at supplier</strong></td><td>No company component stock is required for the normal process.</td><td>Components can be tracked as material provided to the supplier / special stock.</td></tr>
+      <tr><td><strong>Receipt</strong></td><td>Receives the ordered external material or service.</td><td>Receives the ordered product and connects the process to component consumption.</td></tr>
+      <tr><td><strong>Main reconciliation</strong></td><td>Ordered versus received versus invoiced.</td><td>Also reconcile components provided, consumed, remaining, returned, or adjusted.</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+    <p><strong>I change the design when:</strong> components are delivered directly by another supplier, special sales-order or project stock must remain separated, MRP must plan supplier-specific component provision, or the business needs another special-procurement variant.</p>
+    <p><strong>Anti-pattern:</strong> using normal procurement and an offline spreadsheet to track components at the supplier. That removes the inventory and reconciliation problem from SAP without removing it from the business.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Practice the shortage, not just the happy path.</h2></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/procurement/#procurement-memory-cards"><span>DOMAIN</span><strong>Procurement process atlas</strong><small>Compare standard P2P and subcontracting as explicit process variants.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
+      <a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Subcontracting shortage case</strong><small>Components are at supplier, output is short, and consumption does not reconcile.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
+      <a href="/labs/enterprise-context/inventory-management/"><span>STOCK</span><strong>Inventory Management</strong><small>Trace special stock, goods movements, component provision, and quantity ownership.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/labs/enterprise-context/procurement/#procurement-process-sources"><span>EVID</span><strong>Special-process sources</strong><small>SAP Help evidence behind the subcontracting process boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+</div>
