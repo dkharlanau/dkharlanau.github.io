@@ -1,0 +1,89 @@
+---
+layout: default
+title: "Where Should Procurement Cost Ownership Live? — SAP Procurement Decision Card"
+description: "A SAP Lead decision model for purchase-order account assignment, cost ownership, receiving objects, and the boundary to FI/CO account determination."
+permalink: /labs/enterprise-context/decisions/account-assignment-ownership/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-17
+hide_global_cta: true
+review_method: "authored decision reasoning over SAP account-assignment documentation; pending publication review"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-architecture-decisions"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "Procurement Process & Decision Map"
+    url: "/labs/enterprise-context/procurement/"
+  - type: "related_topic"
+    title: "FI/CO for Logistics"
+    url: "/labs/enterprise-context/finance-logistics/"
+source_links:
+  - title: "Account Assignment"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/cd7eb65334e6b54ce10000000a174cb4.html"
+tags: [sap, procurement, account-assignment, fico, cost-center, project, purchase-order]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Procurement cost ownership</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Decision Card / Procurement</p>
+      <h1>Where should procurement<br />cost ownership live?</h1>
+      <p>The account assignment is not only an accounting field. It says which business object consumes the purchase and therefore which owner should explain the cost.</p>
+    </div>
+    <div class="research-canvas__signal">
+      <p>My default</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Business receiver</strong><small>Who consumes the purchase?</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Account category</strong><small>Which object carries the cost?</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>FI/CO</strong><small>How is value posted?</small></div>
+      <em>Do not use the G/L account to hide a wrong business receiver.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Decision in one sentence:</strong> choose the account-assignment object from the business receiver of the purchase, then let account determination and FI/CO rules translate that ownership into postings.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision drivers</p><h2>Start with consumption, not with the account number.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Operational expense</h3><p>If a cost center consumes the service or material directly, the cost-center assignment should make that ownership visible.</p></div>
+      <div><h3>Project work</h3><p>If the purchase belongs to a project or WBS-controlled outcome, the project object should carry the cost and reporting responsibility.</p></div>
+      <div><h3>Asset investment</h3><p>If the purchase creates or improves an asset, the investment object is not interchangeable with a normal operating expense receiver.</p></div>
+      <div><h3>Order-based work</h3><p>Maintenance, production, internal orders, or customer-related work can require an order or sales-order-based receiver.</p></div>
+      <div><h3>Shared cost</h3><p>If several receivers consume the same purchase, multiple account assignment is a business allocation decision, not a spreadsheet correction after invoice posting.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Ownership split</p><h2>Three decisions should stay separate.</h2></header>
+    <div class="decision-table"><table><thead><tr><th>Decision</th><th>Owner question</th><th>Failure signal</th></tr></thead><tbody>
+      <tr><td><strong>Business receiver</strong></td><td>Which cost object should own this purchase?</td><td>The spend is visible in the wrong project, cost center, asset, or order.</td></tr>
+      <tr><td><strong>Account assignment category</strong></td><td>Which type of receiver and required fields describe that ownership?</td><td>The document allows the wrong data shape or misses the required receiver.</td></tr>
+      <tr><td><strong>G/L and posting logic</strong></td><td>How should the value hit accounting for the chosen business event?</td><td>The business receiver is correct but the financial account or posting logic is wrong.</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+    <p><strong>Anti-pattern:</strong> changing the G/L account until the invoice posts. That can make accounting technically acceptable while the business cost still belongs to the wrong object.</p>
+    <p><strong>Lead check:</strong> prove the receiver first, then the account-assignment category, then the automatic or manual account logic, and finally the downstream FI/CO result.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence path</p><h2>Trace ownership into value.</h2></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/procurement/#procurement-master-data"><span>DOMAIN</span><strong>Procurement controls</strong><small>Document behavior, account assignment, master data, and process variants.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
+      <a href="/labs/enterprise-context/finance-logistics/"><span>VALUE</span><strong>FI/CO for Logistics</strong><small>Follow the business event into accounting documents, value flow, and reconciliation.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
+      <a href="/labs/enterprise-context/procurement/#sources"><span>EVID</span><strong>Primary Procurement sources</strong><small>SAP Help evidence behind the account-assignment behavior.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+</div>
