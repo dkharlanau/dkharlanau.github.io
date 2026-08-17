@@ -9,6 +9,11 @@ robots: noindex,follow
 sitemap: false
 last_modified_at: 2026-08-17
 hide_global_cta: true
+tags:
+  - datasets
+  - ai-agents
+  - machine-readable
+  - mcp
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -31,6 +36,12 @@ hide_global_cta: true
       <em>Public files only. Runtime credentials and private corpora stay outside the repository.</em>
     </div>
   </header>
+
+  <section class="research-canvas__boundary" data-reveal aria-label="Machine layer boundary">
+    <span class="material-symbols-outlined" aria-hidden="true">schema</span>
+    <p><strong>Problem:</strong> useful knowledge becomes hard for tools to retrieve when every source has a different format, route, or level of structure.</p>
+    <p><strong>Context:</strong> this static layer exposes public datasets, indexes, schemas, skills, and tool descriptions for retrieval, evaluation, and local automation. It does not run agents or private services.</p>
+  </section>
 
   <section class="research-canvas__inventory" id="machine-routes" data-reveal>
     <header>
