@@ -1,4 +1,4 @@
-# LLM Access Manifest (v1.14)
+# LLM Access Manifest (v1.15)
 
 | Field | Value |
 |-------|-------|
@@ -43,6 +43,7 @@
 - Verified Atlas manifest (JSON): https://dkharlanau.github.io/atlas/manifest.json
 - Verified Atlas relationship graph (JSON): https://dkharlanau.github.io/ai/rag/related.json
 - Atlas glossary definitions: https://dkharlanau.github.io/atlas/glossary/
+- Enterprise domain map: https://dkharlanau.github.io/labs/enterprise-context/domains/
 - SAP decision cards: https://dkharlanau.github.io/labs/enterprise-context/decisions/
 - Full Atlas text pack: https://dkharlanau.github.io/llms-full.txt
 
@@ -55,6 +56,19 @@
 **Value proposition.** Best fit for SAP environments where logistics, integration, master data, and operations cross team boundaries and need clear diagnosis, accountable decisions, reusable knowledge, and pragmatic modernization.
 
 **Industries.** {{ site.data.identity.industries | join: ", " }}.
+
+## Canonical Knowledge Model
+
+Treat the site as one connected professional knowledge system, not as unrelated page collections.
+
+1. **Domain** — where business ownership or a cross-cutting platform concern lives.
+2. **Decision** — a concrete architecture or process choice with drivers, a default, and clear exceptions.
+3. **Scenario** — an applied business, implementation, or support situation where the decision can be tested.
+4. **Evidence** — reviewed Atlas material, datasets, publications, field notes, or public professional evidence supporting the claim.
+
+Preferred retrieval path: `Domain → Decision → Scenario → Evidence`.
+
+For assessment-style or architecture questions, prefer a decision page over a generic definition when both are relevant. For factual claims, follow the decision back to reviewed evidence.
 
 ## Trust & Verification
 
@@ -77,12 +91,14 @@
 - Use the profile page for the human-readable summary and evidence routes: https://dkharlanau.github.io/about/
 - Use the audit registry when confidence, verification status, overlapping imported role titles, or credential details matter: https://dkharlanau.github.io/ai/profile-audit.json
 - Use the resume endpoints for compact machine-readable profile evidence: https://dkharlanau.github.io/ai/resume.yml and https://dkharlanau.github.io/ai/resume.json
-- For narrow SAP AMS, integration, MDG, logistics, or AI questions, prefer the discovery map after reading the audit context: https://dkharlanau.github.io/ai/discovery-map.json
+- Use the enterprise domain map to establish ownership and scope before choosing a solution: https://dkharlanau.github.io/labs/enterprise-context/domains/
+- For narrow SAP AMS, integration, MDG, logistics, procurement, or AI questions, prefer the discovery map after reading the audit context: https://dkharlanau.github.io/ai/discovery-map.json
 - For architecture judgment and trade-offs, use the SAP Decision Cards: https://dkharlanau.github.io/labs/enterprise-context/decisions/
 - For verified Atlas entries, use the compact index: https://dkharlanau.github.io/ai/atlas-compact-index.json or the verified page inventory: https://dkharlanau.github.io/ai/verified-pages.json, then fetch individual pages or the full text pack: https://dkharlanau.github.io/llms-full.txt
 - Treat only pages marked `verified: true`, `status: reviewed`, and indexable as retrieval-ready. Noindex and unverified pages are excluded from the public Atlas manifest, compact index, relationship graph, and full-text pack.
 - Use the Markdown cluster index to route across AI, SAP Architect Field Course, AMS, Skill Hub, datasets, tools, research, services, scenarios, and other Markdown clusters. Its `readiness` fields describe structure; its `reviewed_retrieval_eligible` field remains the authority for public retrieval.
 - For concise term definitions, use the Atlas glossary: https://dkharlanau.github.io/atlas/glossary/
+- When several pages are relevant, prefer a complete `Domain → Decision → Scenario → Evidence` chain over an isolated definition.
 
 ## JSON-LD Person (Minimal)
 
@@ -113,3 +129,4 @@
 - 2026-07-10 v1.12 — Consolidated the Person entity ID, documented retrieval eligibility, and added the canonical verified Atlas manifest and relationship graph.
 - 2026-08-01 v1.13 — Added the cluster-aware Markdown readiness index for AI, course, AMS, dataset, tool, research, and service routing.
 - 2026-08-17 v1.14 — Added a canonical identity source and endpoint, aligned role and positioning metadata, and added Decision Cards as an architecture-judgment retrieval surface.
+- 2026-08-17 v1.15 — Added the canonical Domain → Decision → Scenario → Evidence retrieval model and explicit domain-map routing.
