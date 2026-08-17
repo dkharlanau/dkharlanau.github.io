@@ -1,18 +1,105 @@
 {
-  "$schema":"https://json-schema.org/draft/2020-12/schema",
-  "id":"https://dkharlanau.github.io/labs/enterprise-context/decisions/retry-idempotency/#knowledge",
-  "url":"https://dkharlanau.github.io/labs/enterprise-context/decisions/retry-idempotency/",
-  "title":"When Is an SAP Integration Retry Safe? — Decision Card",
-  "description":"A SAP Lead decision model for retry, duplicate protection, idempotency, receiver state, ordering, and business reconciliation.",
-  "language":"en",
-  "author":{"id":"https://dkharlanau.github.io/#dkharlanau","name":"Dzmitryi Kharlanau","profile":"https://dkharlanau.github.io/about/"},
-  "publication":{"status":"reviewed","verified":true,"last_reviewed":"2026-08-17","last_modified_at":"2026-08-17","evidence_review_mode":"SAP Integration Suite retry, duplicate-handling, and Exactly Once guidance checked against primary SAP Help sources; replay ownership and reconciliation guidance is authored operating-model reasoning","publication_wave":"decision-search-wave-06"},
-  "search":{"intent":"SAP Integration Suite retry idempotency duplicate message safe replay exactly once","canonical":"https://dkharlanau.github.io/labs/enterprise-context/decisions/retry-idempotency/","robots":"index,follow"},
-  "primary_entity":{"key":"sap-architecture-decisions","id":"https://dkharlanau.github.io/entities/#sap-architecture-decisions","name":"SAP Architecture Decisions","type":"Thing","description":"Authored decision models that connect SAP domain evidence to explicit defaults, trade-offs, exceptions, and recovery ownership.","same_as":[]},
-  "mentions":["sap-integration"],
-  "tags":["duplicate","idempotency","integration","reconciliation","recovery","retry","sap"],
-  "relationships":[{"type":"parent_context","title":"SAP Decision Cards","url":"/labs/enterprise-context/decisions/"},{"type":"same_domain","title":"Integration Operations & Recovery","url":"/labs/enterprise-context/integration-operations/"},{"type":"related_topic","title":"Who Owns an IDoc Failure?","url":"/labs/enterprise-context/decisions/idoc-failure-ownership/"},{"type":"applied_scenario","title":"Cross-Process SAP Lead Cases","url":"/labs/assessment/cross-process/"}],
-  "sources":[{"title":"Quality of Service Exactly Once","url":"https://help.sap.com/docs/integration-suite/sap-integration-suite/quality-of-service-exactly-once"},{"title":"Define Idempotent Process Call","url":"https://help.sap.com/docs/integration-suite/sap-integration-suite/define-idempotent-process-call?version=CLOUD"},{"title":"Receiver Isn't Idempotent","url":"https://help.sap.com/docs/integration-suite/sap-integration-suite/cloud-integration-handles-retry-receiver-isn-t-idempotent"}],
-  "factual_review":{"status":"source_supported","claim_count":3,"source_supported_count":3,"source_conflict_count":0,"evidence_classes":["sap_product_primary","author_heuristic"],"reviewed_at":"2026-08-17","human_verification_required":false},
-  "machine_readable":["/ai/pages/labs--enterprise-context--integration-operations.json","/labs/assessment/data/cross-process-cases.jsonl"]
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "id": "https://dkharlanau.github.io/labs/enterprise-context/decisions/retry-idempotency/#knowledge",
+  "url": "https://dkharlanau.github.io/labs/enterprise-context/decisions/retry-idempotency/",
+  "title": "When Is an SAP Integration Retry Safe? — Decision Card",
+  "description": "A SAP Lead decision model for retry, duplicate protection, idempotency, receiver state, ordering, and business reconciliation.",
+  "language": "en",
+  "author": {
+    "id": "https://dkharlanau.github.io/#dkharlanau",
+    "name": "Dzmitryi Kharlanau",
+    "profile": "https://dkharlanau.github.io/about/"
+  },
+  "publication": {
+    "status": "reviewed",
+    "verified": true,
+    "last_reviewed": "2026-08-17",
+    "last_modified_at": "2026-08-17",
+    "evidence_review_mode": "SAP Integration Suite retry, duplicate-handling, and Exactly Once guidance checked against primary SAP Help sources; replay ownership and reconciliation guidance is authored operating-model reasoning",
+    "publication_wave": "decision-search-wave-06",
+    "date_published": null,
+    "content_updated_at": "2026-08-17",
+    "last_reviewed_at": "2026-08-17",
+    "schema_updated_at": null,
+    "significant_lastmod": "2026-08-17"
+  },
+  "search": {
+    "intent": "SAP Integration Suite retry idempotency duplicate message safe replay exactly once",
+    "canonical": "https://dkharlanau.github.io/labs/enterprise-context/decisions/retry-idempotency/",
+    "robots": "index,follow"
+  },
+  "primary_entity": {
+    "key": "sap-architecture-decisions",
+    "id": "https://dkharlanau.github.io/entities/#sap-architecture-decisions",
+    "name": "SAP Architecture Decisions",
+    "type": "Thing",
+    "description": "Authored decision models that connect SAP domain evidence to explicit defaults, trade-offs, exceptions, and recovery ownership.",
+    "same_as": []
+  },
+  "mentions": [
+    "sap-integration"
+  ],
+  "tags": [
+    "duplicate",
+    "idempotency",
+    "integration",
+    "reconciliation",
+    "recovery",
+    "retry",
+    "sap"
+  ],
+  "relationships": [
+    {
+      "type": "parent_context",
+      "title": "SAP Decision Cards — Enterprise Context Lab",
+      "url": "/labs/enterprise-context/decisions/"
+    },
+    {
+      "type": "same_domain",
+      "title": "Who Owns a Warehouse Execution Mismatch? — SAP EWM Decision Card",
+      "url": "/labs/enterprise-context/decisions/ewm-execution-ownership/"
+    },
+    {
+      "type": "integrates_with",
+      "title": "When Does SAP Integration Need Message Ordering? — Decision Card",
+      "url": "/labs/enterprise-context/decisions/ordering-sequence-guarantees/"
+    },
+    {
+      "type": "same_domain",
+      "title": "What Can Break After a Purchase Order Change? — SAP Procurement Decision Card",
+      "url": "/labs/enterprise-context/decisions/po-change-impact/"
+    },
+    {
+      "type": "same_domain",
+      "title": "Who Owns an Open GR/IR Balance? — SAP Procurement Decision Card",
+      "url": "/labs/enterprise-context/decisions/grir-ownership/"
+    },
+    {
+      "type": "integrates_with",
+      "title": "IDoc, API, or Event? — SAP Integration Decision Card",
+      "url": "/labs/enterprise-context/decisions/idoc-api-event/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Quality of Service Exactly Once",
+      "url": "https://help.sap.com/docs/integration-suite/sap-integration-suite/quality-of-service-exactly-once"
+    },
+    {
+      "title": "Define Idempotent Process Call",
+      "url": "https://help.sap.com/docs/integration-suite/sap-integration-suite/define-idempotent-process-call?version=CLOUD"
+    },
+    {
+      "title": "Receiver Isn't Idempotent",
+      "url": "https://help.sap.com/docs/integration-suite/sap-integration-suite/cloud-integration-handles-retry-receiver-isn-t-idempotent"
+    }
+  ],
+  "factual_review": {
+    "status": null,
+    "claim_count": null,
+    "source_supported_count": null,
+    "source_conflict_count": null,
+    "evidence_classes": []
+  },
+  "machine_readable": []
 }

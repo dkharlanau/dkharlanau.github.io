@@ -16,23 +16,33 @@ review_method: "primary SAP sources + factual review + page-level editorial revi
 hide_global_cta: true
 structured_data:
   type: TechArticle
+tags: [sap, sales, tax, pricing, master-data, billing, architecture]
 # ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
 ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--tax-ownership.json"
-entity_mentions: ["sap-sales", "sap-pricing", "sap-billing"]
+entity_mentions:
+  - "sap-sales"
+  - "sap-pricing"
+  - "sap-billing"
 semantic_links:
   - type: "parent_context"
-    title: "SAP Decision Cards"
+    title: "SAP Decision Cards — Enterprise Context Lab"
     url: "/labs/enterprise-context/decisions/"
   - type: "same_domain"
-    title: "SAP Sales Pricing Engine"
-    url: "/labs/enterprise-context/pricing/"
-  - type: "related_topic"
-    title: "Sales Billing"
-    url: "/labs/enterprise-context/billing/"
-  - type: "applied_scenario"
-    title: "Cross-Process SAP Lead Cases"
-    url: "/labs/assessment/cross-process/"
+    title: "Where Should SAP Sales Pricing Logic Live? — Decision Card"
+    url: "/labs/enterprise-context/decisions/pricing-ownership/"
+  - type: "same_domain"
+    title: "Where Should Delivery Blocking Logic Live? — SAP Sales Decision Card"
+    url: "/labs/enterprise-context/decisions/delivery-block-ownership/"
+  - type: "same_domain"
+    title: "Who Should Own Scarce-Supply Priority in aATP? — Decision Card"
+    url: "/labs/enterprise-context/decisions/aatp-prioritization/"
+  - type: "same_domain"
+    title: "Which SAP Logistics Decisions Should AI Not Own? — Decision Card"
+    url: "/labs/enterprise-context/decisions/ai-logistics-boundary/"
+  - type: "same_domain"
+    title: "Where Should SAP Extension Logic Live? — Clean Core Decision Card"
+    url: "/labs/enterprise-context/decisions/clean-core-extension-placement/"
 source_links:
   - title: "Pricing Procedure and Condition Technique"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/8f6bd0531d8b4208e10000000a174cb4.html"
@@ -41,7 +51,6 @@ source_links:
   - title: "Defining the Tax Category by Departure Country (SD)"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/536bd0531d8b4208e10000000a174cb4.html"
 # ai-discovery-managed:end
-tags: [sap, sales, tax, pricing, master-data, billing, architecture]
 ---
 {% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_tax_ownership %}
 

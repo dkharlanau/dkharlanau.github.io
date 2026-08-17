@@ -47,7 +47,7 @@ tags: [sap, assessment, machine-readable, mcp, datasets]
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Canonical data</p><h2>Start from contracts, not from assumptions.</h2><p>The current manifest contains 63 structured cases across core and specialist sets.</p></header>
+    <header><p class="research-canvas__eyebrow">Canonical data</p><h2>Start from contracts, not from assumptions.</h2><p>The current manifest contains 72 structured cases across core and specialist sets.</p></header>
     <div class="research-route-list">
       <a href="/labs/assessment/data/case-sets.json"><span>MANIFEST</span><strong>Case Set Manifest</strong><small>Active files, counts, coverage, schema route, and loading rule.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/labs/assessment/data/case-schema.json"><span>SCHEMA</span><strong>Case Schema</strong><small>Required fields for case ID, track, level, prompt, expected points, follow-ups, red flags, graph refs, and human refs.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>

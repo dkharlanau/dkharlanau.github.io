@@ -1,18 +1,107 @@
 {
-  "$schema":"https://json-schema.org/draft/2020-12/schema",
-  "id":"https://dkharlanau.github.io/labs/enterprise-context/decisions/tax-ownership/#knowledge",
-  "url":"https://dkharlanau.github.io/labs/enterprise-context/decisions/tax-ownership/",
-  "title":"Who Owns Wrong Tax in an SAP Sales Order? — Decision Card",
-  "description":"A SAP Lead decision model for separating tax policy, master data, pricing determination, transaction context, and integration ownership.",
-  "language":"en",
-  "author":{"id":"https://dkharlanau.github.io/#dkharlanau","name":"Dzmitryi Kharlanau","profile":"https://dkharlanau.github.io/about/"},
-  "publication":{"status":"reviewed","verified":true,"last_reviewed":"2026-08-17","last_modified_at":"2026-08-17","publication_wave":"decision-search-wave-07"},
-  "search":{"intent":"SAP Sales tax determination ownership customer material tax classification departure destination pricing","canonical":"https://dkharlanau.github.io/labs/enterprise-context/decisions/tax-ownership/","robots":"index,follow"},
-  "primary_entity":{"key":"sap-architecture-decisions","id":"https://dkharlanau.github.io/entities/#sap-architecture-decisions","name":"SAP Architecture Decisions","type":"Thing"},
-  "mentions":["sap-sales","sap-pricing","sap-billing"],
-  "tags":["architecture","billing","master-data","pricing","sales","sap","tax"],
-  "relationships":[{"type":"parent_context","title":"SAP Decision Cards","url":"/labs/enterprise-context/decisions/"},{"type":"same_domain","title":"SAP Sales Pricing Engine","url":"/labs/enterprise-context/pricing/"},{"type":"applied_scenario","title":"Cross-Process SAP Lead Cases","url":"/labs/assessment/cross-process/"}],
-  "sources":[{"title":"Pricing Procedure and Condition Technique","url":"https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/8f6bd0531d8b4208e10000000a174cb4.html"},{"title":"Tax Determination","url":"https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/1fbed153e8b34208e10000000a174cb4.html"},{"title":"Defining the Tax Category by Departure Country (SD)","url":"https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/536bd0531d8b4208e10000000a174cb4.html"}],
-  "factual_review":{"status":"source_supported","claim_count":3,"source_supported_count":3,"source_conflict_count":0,"evidence_classes":["sap_product_primary","author_heuristic"],"reviewed_at":"2026-08-17","human_verification_required":false},
-  "machine_readable":["/labs/assessment/data/cross-process-cases.jsonl","/ai/pages/labs--enterprise-context--pricing.json"]
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "id": "https://dkharlanau.github.io/labs/enterprise-context/decisions/tax-ownership/#knowledge",
+  "url": "https://dkharlanau.github.io/labs/enterprise-context/decisions/tax-ownership/",
+  "title": "Who Owns Wrong Tax in an SAP Sales Order? — Decision Card",
+  "description": "A SAP Lead decision model for separating tax policy, master data, pricing determination, transaction context, and integration ownership.",
+  "language": "en",
+  "author": {
+    "id": "https://dkharlanau.github.io/#dkharlanau",
+    "name": "Dzmitryi Kharlanau",
+    "profile": "https://dkharlanau.github.io/about/"
+  },
+  "publication": {
+    "status": "reviewed",
+    "verified": true,
+    "last_reviewed": "2026-08-17",
+    "last_modified_at": "2026-08-17",
+    "evidence_review_mode": "SAP tax-determination and condition-technique inputs checked against primary SAP Help sources; policy ownership, diagnosis, correction, and reconciliation guidance is authored reasoning",
+    "publication_wave": "decision-search-wave-07",
+    "date_published": null,
+    "content_updated_at": "2026-08-17",
+    "last_reviewed_at": "2026-08-17",
+    "schema_updated_at": null,
+    "significant_lastmod": "2026-08-17"
+  },
+  "search": {
+    "intent": "SAP Sales tax determination ownership customer material tax classification departure destination pricing",
+    "canonical": "https://dkharlanau.github.io/labs/enterprise-context/decisions/tax-ownership/",
+    "robots": "index,follow"
+  },
+  "primary_entity": {
+    "key": "sap-architecture-decisions",
+    "id": "https://dkharlanau.github.io/entities/#sap-architecture-decisions",
+    "name": "SAP Architecture Decisions",
+    "type": "Thing",
+    "description": "Authored decision models that connect SAP domain evidence to explicit defaults, trade-offs, exceptions, and recovery ownership.",
+    "same_as": []
+  },
+  "mentions": [
+    "sap-sales",
+    "sap-pricing",
+    "sap-billing"
+  ],
+  "tags": [
+    "architecture",
+    "billing",
+    "master-data",
+    "pricing",
+    "sales",
+    "sap",
+    "tax"
+  ],
+  "relationships": [
+    {
+      "type": "parent_context",
+      "title": "SAP Decision Cards — Enterprise Context Lab",
+      "url": "/labs/enterprise-context/decisions/"
+    },
+    {
+      "type": "same_domain",
+      "title": "Where Should SAP Sales Pricing Logic Live? — Decision Card",
+      "url": "/labs/enterprise-context/decisions/pricing-ownership/"
+    },
+    {
+      "type": "same_domain",
+      "title": "Where Should Delivery Blocking Logic Live? — SAP Sales Decision Card",
+      "url": "/labs/enterprise-context/decisions/delivery-block-ownership/"
+    },
+    {
+      "type": "same_domain",
+      "title": "Who Should Own Scarce-Supply Priority in aATP? — Decision Card",
+      "url": "/labs/enterprise-context/decisions/aatp-prioritization/"
+    },
+    {
+      "type": "same_domain",
+      "title": "Which SAP Logistics Decisions Should AI Not Own? — Decision Card",
+      "url": "/labs/enterprise-context/decisions/ai-logistics-boundary/"
+    },
+    {
+      "type": "same_domain",
+      "title": "Where Should SAP Extension Logic Live? — Clean Core Decision Card",
+      "url": "/labs/enterprise-context/decisions/clean-core-extension-placement/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Pricing Procedure and Condition Technique",
+      "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/8f6bd0531d8b4208e10000000a174cb4.html"
+    },
+    {
+      "title": "Tax Determination",
+      "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/1fbed153e8b34208e10000000a174cb4.html"
+    },
+    {
+      "title": "Defining the Tax Category by Departure Country (SD)",
+      "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8999cee59b7c44fdb53fbbb4d703f8e6/536bd0531d8b4208e10000000a174cb4.html"
+    }
+  ],
+  "factual_review": {
+    "status": null,
+    "claim_count": null,
+    "source_supported_count": null,
+    "source_conflict_count": null,
+    "evidence_classes": []
+  },
+  "machine_readable": []
 }

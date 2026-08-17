@@ -16,23 +16,31 @@ review_method: "primary SAP sources + factual review + page-level editorial revi
 hide_global_cta: true
 structured_data:
   type: TechArticle
+tags: [sap, integration, eoio, ordering, queues, recovery]
 # ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
 ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--ordering-sequence-guarantees.json"
-entity_mentions: ["sap-integration"]
+entity_mentions:
+  - "sap-integration"
 semantic_links:
   - type: "parent_context"
-    title: "SAP Decision Cards"
+    title: "SAP Decision Cards — Enterprise Context Lab"
     url: "/labs/enterprise-context/decisions/"
-  - type: "same_domain"
-    title: "Integration Operations & Recovery"
-    url: "/labs/enterprise-context/integration-operations/"
-  - type: "related_decision"
-    title: "When Is an SAP Integration Retry Safe?"
+  - type: "integrates_with"
+    title: "When Is an SAP Integration Retry Safe? — Decision Card"
     url: "/labs/enterprise-context/decisions/retry-idempotency/"
-  - type: "applied_scenario"
-    title: "Cross-Process SAP Lead Cases"
-    url: "/labs/assessment/cross-process/"
+  - type: "same_domain"
+    title: "Who Owns a Warehouse Execution Mismatch? — SAP EWM Decision Card"
+    url: "/labs/enterprise-context/decisions/ewm-execution-ownership/"
+  - type: "integrates_with"
+    title: "IDoc, API, or Event? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+  - type: "integrates_with"
+    title: "Who Owns an IDoc Failure? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-failure-ownership/"
+  - type: "same_domain"
+    title: "Where Should Master-Data Validation Live? — SAP Decision Card"
+    url: "/labs/enterprise-context/decisions/master-data-validation/"
 source_links:
   - title: "Quality of Service Exactly Once In Order"
     url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/quality-of-service-exactly-once-in-order?locale=en-US&version=CLOUD"
@@ -41,7 +49,6 @@ source_links:
   - title: "Monitoring Scenarios that Include Message Queues"
     url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/monitoring-scenarios-that-include-message-queues"
 # ai-discovery-managed:end
-tags: [sap, integration, eoio, ordering, queues, recovery]
 ---
 {% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_ordering_sequence %}
 

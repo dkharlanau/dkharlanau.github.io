@@ -16,23 +16,32 @@ review_method: "primary SAP sources + factual review + page-level editorial revi
 hide_global_cta: true
 structured_data:
   type: TechArticle
+tags: [sap, aatp, atp, product-allocation, supply-protection, backorder-processing, sales]
 # ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
 ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--aatp-prioritization.json"
-entity_mentions: ["advanced-atp", "product-allocation", "supply-protection", "backorder-processing", "sap-sales"]
+entity_mentions:
+  - "advanced-atp"
+  - "sap-sales"
 semantic_links:
   - type: "parent_context"
-    title: "SAP Decision Cards"
+    title: "SAP Decision Cards — Enterprise Context Lab"
     url: "/labs/enterprise-context/decisions/"
   - type: "same_domain"
-    title: "SAP ATP and aATP Promise Engine"
-    url: "/labs/enterprise-context/atp/"
+    title: "Who Owns a Wrong Confirmed Delivery Date? — SAP Sales Decision Card"
+    url: "/labs/enterprise-context/decisions/confirmed-date-ownership/"
   - type: "related_topic"
-    title: "Sales Order Decision Map"
-    url: "/labs/enterprise-context/sales-order/"
-  - type: "applied_scenario"
-    title: "Cross-Process SAP Lead Cases"
-    url: "/labs/assessment/cross-process/"
+    title: "SAP ATP and aATP Promise Engine — Enterprise Context Lab"
+    url: "/labs/enterprise-context/atp/"
+  - type: "same_domain"
+    title: "Where Should Delivery Blocking Logic Live? — SAP Sales Decision Card"
+    url: "/labs/enterprise-context/decisions/delivery-block-ownership/"
+  - type: "same_domain"
+    title: "Where Should SAP Sales Pricing Logic Live? — Decision Card"
+    url: "/labs/enterprise-context/decisions/pricing-ownership/"
+  - type: "same_domain"
+    title: "Where Should Sales Item Behavior Live? — SAP Sales Decision Card"
+    url: "/labs/enterprise-context/decisions/sales-item-behavior-ownership/"
 source_links:
   - title: "Product Allocation (CA-ATP-PAL)"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/cfc8aa5747c46c10e10000000a441470.html"
@@ -41,7 +50,6 @@ source_links:
   - title: "Confirmation Strategies"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/1ba3a457ef816b10e10000000a441470.html"
 # ai-discovery-managed:end
-tags: [sap, aatp, atp, product-allocation, supply-protection, backorder-processing, sales]
 ---
 {% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_aatp_prioritization %}
 

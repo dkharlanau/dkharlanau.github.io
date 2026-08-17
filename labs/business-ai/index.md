@@ -33,8 +33,11 @@ semantic_links:
     title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
     url: "/labs/enterprise-context/business-ai/agents/"
   - type: "related_topic"
-    title: "AI Ready — Practical AI Architecture Lab"
-    url: "/labs/ai-ready/"
+    title: "SAP Decision Cards — Enterprise Context Lab"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "integrates_with"
+    title: "IDoc, API, or Event? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
 # ai-discovery-managed:end
 ---
 {% assign catalog = site.data.labs.business_ai.catalog %}

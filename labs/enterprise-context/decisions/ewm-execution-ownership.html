@@ -16,23 +16,32 @@ review_method: "primary SAP sources + factual review + page-level editorial revi
 hide_global_cta: true
 structured_data:
   type: TechArticle
+tags: [sap, ewm, warehouse, execution, inventory, integration, reconciliation]
 # ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
 ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--ewm-execution-ownership.json"
-entity_mentions: ["sap-ewm", "sap-inventory-management", "sap-integration"]
+entity_mentions:
+  - "sap-ewm"
+  - "sap-integration"
 semantic_links:
   - type: "parent_context"
-    title: "SAP Decision Cards"
+    title: "SAP Decision Cards — Enterprise Context Lab"
     url: "/labs/enterprise-context/decisions/"
   - type: "same_domain"
-    title: "SAP EWM"
-    url: "/labs/enterprise-context/ewm/"
-  - type: "related_topic"
-    title: "Inventory Management"
-    url: "/labs/enterprise-context/inventory-management/"
-  - type: "applied_scenario"
-    title: "Cross-Process SAP Lead Cases"
-    url: "/labs/assessment/cross-process/"
+    title: "What Can Break After a Purchase Order Change? — SAP Procurement Decision Card"
+    url: "/labs/enterprise-context/decisions/po-change-impact/"
+  - type: "integrates_with"
+    title: "When Is an SAP Integration Retry Safe? — Decision Card"
+    url: "/labs/enterprise-context/decisions/retry-idempotency/"
+  - type: "same_domain"
+    title: "Who Owns an Open GR/IR Balance? — SAP Procurement Decision Card"
+    url: "/labs/enterprise-context/decisions/grir-ownership/"
+  - type: "integrates_with"
+    title: "IDoc, API, or Event? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
+  - type: "integrates_with"
+    title: "Who Owns an IDoc Failure? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-failure-ownership/"
 source_links:
   - title: "Warehouse Task"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/8fcccb53ad377114e10000000a174cb4.html"
@@ -41,7 +50,6 @@ source_links:
   - title: "Confirmation of Product Warehouse Tasks"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9832125c23154a179bfa1784cdc9577a/02f7bb66616c4589a8e1115ab799e8f3.html"
 # ai-discovery-managed:end
-tags: [sap, ewm, warehouse, execution, inventory, integration, reconciliation]
 ---
 {% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_ewm_execution_ownership %}
 

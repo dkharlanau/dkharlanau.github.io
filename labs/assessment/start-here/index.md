@@ -26,7 +26,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
       <p>Preparation model</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Assessment tracks</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>5</strong><small>Reasoning levels</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>63</strong><small>Structured cases</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>72</strong><small>Structured cases</small></div>
       <em>Depth comes from repeated reasoning, not from opening more tabs.</em>
     </div>
   </header>

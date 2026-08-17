@@ -22,14 +22,17 @@ primary_topic: "ai-architecture"
 ai_sidecar: "/ai/pages/labs--ai-ready.json"
 semantic_links:
   - type: "related_topic"
+    title: "Which SAP Logistics Decisions Should AI Not Own? — Decision Card"
+    url: "/labs/enterprise-context/decisions/ai-logistics-boundary/"
+  - type: "related_topic"
     title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
     url: "/labs/enterprise-context/business-ai/agents/"
   - type: "related_topic"
     title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
     url: "/labs/business-ai/"
-  - type: "related_topic"
-    title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
-    url: "/labs/enterprise-context/business-ai/"
+  - type: "integrates_with"
+    title: "IDoc, API, or Event? — SAP Integration Decision Card"
+    url: "/labs/enterprise-context/decisions/idoc-api-event/"
 # ai-discovery-managed:end
 ---
 <nav class="breadcrumbs" aria-label="Breadcrumb">
