@@ -3,23 +3,17 @@ layout: default
 title: "SAP Decision Cards — Enterprise Context Lab"
 description: "Compact SAP Lead decision models for logistics, procurement, integration, master data, and AI boundaries."
 permalink: /labs/enterprise-context/decisions/
-status: reviewed
-verified: true
-robots: index,follow
-sitemap: true
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
 last_modified_at: 2026-08-17
-last_reviewed: 2026-08-17
 hide_global_cta: true
-publication_wave: "lead-decision-wave-01"
-review_method: "editorial review over reviewed Enterprise Context source pages; authored decision reasoning; no client data"
-search_intent: "SAP architecture decision examples for logistics integration procurement master data and AI"
+review_method: "authored decision reasoning draft; pending publication-contract review and AI sidecar generation"
 structured_data:
   type: TechArticle
 primary_topic: "sap-architecture-decisions"
 semantic_links:
-  - type: "part_of"
-    title: "Enterprise Context Lab"
-    url: "/labs/enterprise-context/"
   - type: "related_topic"
     title: "SAP Integration Architecture"
     url: "/labs/enterprise-context/integrations/"
@@ -27,8 +21,8 @@ semantic_links:
     title: "Procurement Process & Decision Map"
     url: "/labs/enterprise-context/procurement/"
   - type: "related_topic"
-    title: "SAP Lead Assessment"
-    url: "/labs/assessment/"
+    title: "SAP Sales Process Atlas"
+    url: "/labs/enterprise-context/sales-processes/"
 tags:
   - sap
   - architecture
@@ -64,7 +58,7 @@ tags:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
     <p><strong>Working rule:</strong> a Lead answer should not stop at “it depends”. State the default, name the decision drivers, show the failure owner, and explain the condition that changes the design.</p>
-    <p><strong>Evidence boundary:</strong> product facts stay on the reviewed domain pages. These cards add authored architecture judgment on top of that evidence.</p>
+    <p><strong>Publication state:</strong> this decision layer is intentionally noindex while the cards pass the same source, sidecar, and publication checks as the reviewed Enterprise Context pages.</p>
   </section>
 
   <section class="research-canvas__inventory" id="decision-map" data-reveal>
