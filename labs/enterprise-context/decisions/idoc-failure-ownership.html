@@ -3,16 +3,24 @@ layout: default
 title: "Who Owns an IDoc Failure? — SAP Integration Decision Card"
 description: "A compact SAP Lead decision model for assigning ownership across transport, mapping, application, master-data, and business-process failures."
 permalink: /labs/enterprise-context/decisions/idoc-failure-ownership/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-02"
+search_intent: "SAP IDoc failure ownership monitoring reprocessing and business reconciliation"
+evidence_review_mode: "SAP monitoring, error-handling, and retry capabilities checked against primary SAP Help sources; failure classification, ownership, replay safety, and reconciliation guidance is authored operating-model reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
 hide_global_cta: true
-review_method: "authored decision reasoning draft over reviewed SAP integration and operations material; pending publication-contract review"
 structured_data:
   type: TechArticle
+# ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--idoc-failure-ownership.json"
+entity_mentions:
+  - "sap-integration"
 semantic_links:
   - type: "parent_context"
     title: "SAP Decision Cards"
@@ -23,8 +31,19 @@ semantic_links:
   - type: "related_decision"
     title: "IDoc, API, or Event?"
     url: "/labs/enterprise-context/decisions/idoc-api-event/"
+source_links:
+  - title: "Monitor IDocs"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/9c4986bda35f4840ae438960ffbef64d/086439eaf4e049e6be3487ca76e7ad48.html"
+  - title: "Error Handling"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/18fe3fab96864826bfa0be0de4f65b85/0e8f002ea0894c51bd957168699669c5.html"
+  - title: "Message Monitoring"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/message-monitoring"
+  - title: "Quality of Service Exactly Once"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/quality-of-service-exactly-once"
+# ai-discovery-managed:end
 tags: [sap, integration, idoc, ams, support, ownership]
 ---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_idoc_failure %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">IDoc failure ownership</li></ol></nav>
 
