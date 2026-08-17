@@ -1,0 +1,95 @@
+---
+layout: default
+title: "Who Owns a Wrong Confirmed Delivery Date? — SAP Sales Decision Card"
+description: "A SAP Lead decision model for separating requested date, ATP confirmation, scheduling, shipping, transportation, and customer-commitment ownership."
+permalink: /labs/enterprise-context/decisions/confirmed-date-ownership/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-17
+hide_global_cta: true
+review_method: "authored cross-domain decision reasoning over SAP ATP and sales scheduling documentation; pending publication review"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-architecture-decisions"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "SAP Sales Process Atlas"
+    url: "/labs/enterprise-context/sales-processes/"
+  - type: "related_topic"
+    title: "SAP ATP and aATP Promise Engine"
+    url: "/labs/enterprise-context/atp/"
+  - type: "related_topic"
+    title: "SAP Shipping"
+    url: "/labs/enterprise-context/shipping/"
+source_links:
+  - title: "Product Availability Check (CA-ATP-PAC)"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/86990a56d448792de10000000a44538d.html"
+  - title: "Delivery Times, Commitment Dates, and Delivery Address in Sales Documents"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/a464b65334e6b54ce10000000a174cb4.html"
+tags: [sap, sales, atp, aatp, confirmed-date, scheduling, shipping, customer-promise]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Confirmed delivery date</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Decision Card / Sales + ATP + Shipping</p>
+      <h1>Who owns a wrong<br />confirmed delivery date?</h1>
+      <p>A date shown in a sales order can combine customer request, product availability, plant choice, loading and transit assumptions, and commercial promise. I first find which date decision became wrong.</p>
+    </div>
+    <div class="research-canvas__signal">
+      <p>Diagnosis path</p>
+      <div class="research-canvas__signal-line"><span>REQ</span><strong>Request</strong><small>What did the customer ask?</small></div>
+      <div class="research-canvas__signal-line"><span>ATP</span><strong>Confirm</strong><small>When can supply fulfill it?</small></div>
+      <div class="research-canvas__signal-line"><span>SHIP</span><strong>Schedule</strong><small>Can logistics execute it?</small></div>
+      <em>One date field can hide several decision engines.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Decision in one sentence:</strong> do not overwrite the confirmed date until you separate the customer request, ATP confirmation, shipping/transport scheduling, and any commercial commitment that may intentionally differ from the raw system result.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Five owners</p><h2>Ask which engine moved the date.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Customer request</h3><p>Start with requested delivery date, quantity, ship-to context, and whether the requirement itself was entered correctly.</p></div>
+      <div><h3>Supply / ATP</h3><p>Availability determines which quantity can be confirmed and on which date under the active scope and confirmation rules.</p></div>
+      <div><h3>Plant and sourcing</h3><p>A different delivering plant or supply alternative can change availability, lead time, stock ownership, and the date that can be promised.</p></div>
+      <div><h3>Shipping and transportation</h3><p>Pick/pack, loading, route, transit, calendars, and transportation planning can move the execution date even when stock is available.</p></div>
+      <div><h3>Commercial promise</h3><p>Sales owns communication and exception handling when the business promise differs from the technically calculated date.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure map</p><h2>The same late date has different first checks.</h2></header>
+    <div class="decision-table"><table><thead><tr><th>Symptom</th><th>First question</th><th>Do not start with</th></tr></thead><tbody>
+      <tr><td><strong>Confirmed quantity is late</strong></td><td>Did ATP fail to find sufficient supply on the requested date?</td><td>Changing route or transit time without proving availability.</td></tr>
+      <tr><td><strong>Stock exists but date is still late</strong></td><td>Is the stock in the ATP scope and at the relevant plant/segment?</td><td>Assuming physical stock equals confirmable stock.</td></tr>
+      <tr><td><strong>ATP date looks correct, delivery date does not</strong></td><td>Which scheduling, route, calendar, or transportation step moved execution?</td><td>Re-running ATP as the only diagnosis.</td></tr>
+      <tr><td><strong>System date is acceptable, customer promise is not</strong></td><td>Was a commercial promise made outside the system result?</td><td>Calling the calculation wrong before checking the commitment.</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+    <p><strong>Anti-pattern:</strong> manually changing the requested or confirmed date until the order looks correct. That can hide the real shortage, wrong plant, schedule assumption, or customer commitment and makes later rescheduling harder to explain.</p>
+    <p><strong>Lead check:</strong> finish with proof that the confirmed quantity/date, logistics execution date, and customer-facing promise are intentionally aligned.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence path</p><h2>Trace promise through supply and execution.</h2></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP / aATP</strong><small>Availability, scope, confirmation, alternatives, allocation, and proof of promise.</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
+      <a href="/labs/enterprise-context/shipping/"><span>SHIP</span><strong>Shipping</strong><small>Plant, shipping point, route, scheduling, picking, loading, and PGI boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
+      <a href="/labs/enterprise-context/sales-order/"><span>ORDER</span><strong>Sales Order decisions</strong><small>Trace the order inputs and determinations that feed the promise.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
+    </div>
+  </section>
+</div>
