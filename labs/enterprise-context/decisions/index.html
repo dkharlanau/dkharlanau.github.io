@@ -1,18 +1,30 @@
 ---
 layout: default
 title: "SAP Decision Cards — Enterprise Context Lab"
-description: "Compact SAP Lead decision models for logistics, procurement, integration, master data, operations, and AI boundaries."
+description: "Thirteen reviewed SAP Lead decision models for logistics, procurement, integration, master data, operations, and AI boundaries."
 permalink: /labs/enterprise-context/decisions/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-05"
+search_intent: "SAP Lead architecture decision cards logistics procurement integration master data AI"
+evidence_review_mode: "authored index over thirteen individually reviewed Decision Cards with page-level source and publication contracts"
+review_method: "reviewed child routes + page-level editorial review"
 hide_global_cta: true
-review_method: "authored decision reasoning draft; individual cards may be promoted only after source and publication review"
 structured_data:
   type: TechArticle
+# ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions.json"
+entity_mentions:
+  - "sap-sales"
+  - "sap-procurement"
+  - "sap-integration"
+  - "sap-mdg"
+  - "sap-business-ai"
 semantic_links:
   - type: "related_topic"
     title: "SAP Integration Architecture"
@@ -26,6 +38,10 @@ semantic_links:
   - type: "parent_model"
     title: "Enterprise Business Domains"
     url: "/labs/enterprise-context/domains/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
+# ai-discovery-managed:end
 tags:
   - sap
   - architecture
@@ -63,15 +79,15 @@ tags:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">rule</span>
     <p><strong>Working rule:</strong> a Lead answer should not stop at “it depends”. State the default, name the decision drivers, show the failure owner, and explain the condition that changes the design.</p>
-    <p><strong>Knowledge chain:</strong> each decision should sit between a domain and an applied scenario, with reviewed evidence behind factual claims: Domain → Decision → Scenario → Evidence.</p>
-    <p><strong>Publication state:</strong> this hub remains noindex while the decision set evolves. Individual cards can be reviewed and indexable when their source, search, sidecar, and publication contracts are complete.</p>
+    <p><strong>Knowledge chain:</strong> each decision sits between a domain and an applied scenario, with reviewed evidence behind factual claims: Domain → Decision → Scenario → Evidence.</p>
+    <p><strong>Publication state:</strong> all thirteen cards have passed individual source and publication review. The hub is now a public index of the reviewed decision set.</p>
   </section>
 
   <section class="research-canvas__inventory" id="decision-map" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Decision map</p>
-      <h2>Thirteen cross-domain choices worth being able to defend.</h2>
-      <p>Eleven cards have passed public review. Two cards stay draft until their own evidence and publication checks are complete.</p>
+      <h2>Thirteen reviewed cross-domain choices worth being able to defend.</h2>
+      <p>Each card states a default, the drivers that can change it, an ownership boundary, and a path to scenario or evidence.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/decisions/idoc-api-event/"><span>INT ✓</span><strong>IDoc, API, or event?</strong><small>Reviewed. Choose the interaction pattern from coupling, response needs, replay, volume, and recovery ownership before selecting middleware.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
@@ -85,8 +101,8 @@ tags:
       <a href="/labs/enterprise-context/decisions/confirmed-date-ownership/"><span>SD ✓</span><strong>Who owns a wrong confirmed delivery date?</strong><small>Reviewed. Separate requested date, ATP confirmation, plant/supply, shipping scheduling, transportation, and customer commitment before overwriting dates.</small><i class="material-symbols-outlined" aria-hidden="true">event</i></a>
       <a href="/labs/enterprise-context/decisions/sales-item-behavior-ownership/"><span>SD ✓</span><strong>Where should sales item behavior live?</strong><small>Reviewed. Choose the narrowest standard owner across document type, item category, schedule line category, determination, and extension.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/enterprise-context/decisions/sto-vs-intercompany/"><span>LOG ✓</span><strong>STO or intercompany sales?</strong><small>Reviewed. Distinguish purchase-order-driven stock transfer to a receiving plant from sales-order-driven customer fulfillment by another company’s plant; billing alone does not decide the model.</small><i class="material-symbols-outlined" aria-hidden="true">swap_horiz</i></a>
-      <a href="/labs/enterprise-context/decisions/master-data-validation/"><span>DATA</span><strong>Where should master-data validation live?</strong><small>Separate governance-time prevention from transaction-time protection and integration-time contract checks.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
-      <a href="/labs/enterprise-context/decisions/ai-logistics-boundary/"><span>AI</span><strong>Which SAP logistics decisions should AI not own?</strong><small>Use AI for evidence, classification, proposals, and triage before giving it authority over irreversible business postings or controls.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/enterprise-context/decisions/master-data-validation/"><span>DATA ✓</span><strong>Where should master-data validation live?</strong><small>Reviewed. Prevent enterprise data defects in governance, protect process-specific risks in the transaction, and keep interface validation focused on the exchange contract.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <a href="/labs/enterprise-context/decisions/ai-logistics-boundary/"><span>AI ✓</span><strong>Which SAP logistics decisions should AI not own?</strong><small>Reviewed. Let AI retrieve, classify, and propose first; increase action authority only with bounded permissions, deterministic gates, recovery, and accountable ownership.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
     </div>
   </section>
 
@@ -104,6 +120,6 @@ tags:
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">school</span>
     <p><strong>Assessment use:</strong> pick a card, defend the default for two minutes, then challenge it with a different volume, legal structure, recovery requirement, or risk boundary.</p>
-    <a href="/labs/assessment/">Continue in the SAP Lead Assessment lab <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <a href="/labs/assessment/cross-process/">Practice all thirteen cross-process cases <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
   </section>
 </div>
