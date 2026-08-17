@@ -1,0 +1,92 @@
+---
+layout: default
+title: "Who Owns an Open GR/IR Balance? — SAP Procurement Decision Card"
+description: "A SAP Lead decision model for open GR/IR balances, quantity mismatches, missing receipts or invoices, ownership, and business reconciliation."
+permalink: /labs/enterprise-context/decisions/grir-ownership/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-17
+hide_global_cta: true
+review_method: "authored ownership model over SAP GR/IR and invoice-verification documentation; pending publication review"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-architecture-decisions"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "Procurement Process & Decision Map"
+    url: "/labs/enterprise-context/procurement/"
+  - type: "related_topic"
+    title: "FI/CO for Logistics"
+    url: "/labs/enterprise-context/finance-logistics/"
+source_links:
+  - title: "Invoices for Purchase Orders"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/be5eb6531de6b64ce10000000a174cb4.html"
+  - title: "Clear GR/IR Clearing Account"
+    url: "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/72256b54f94c8f4ce10000000a4450e5.html"
+tags: [sap, procurement, grir, invoice-verification, goods-receipt, finance, reconciliation]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">GR/IR ownership</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Decision Card / Procurement + Finance</p>
+      <h1>Who owns an open<br />GR/IR balance?</h1>
+      <p>An open GR/IR balance is an accounting signal, but the cause often sits in a procurement or logistics state that did not complete as expected.</p>
+    </div>
+    <div class="research-canvas__signal">
+      <p>My default</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Prove quantity</strong><small>What was received and invoiced?</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Find owner</strong><small>Which business event is missing?</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Clear last</strong><small>Only after the process is understood</small></div>
+      <em>Do not turn reconciliation into account housekeeping.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Decision in one sentence:</strong> Procurement or the relevant logistics owner should explain why receipt and invoice states differ; Finance owns accounting policy and controlled clearing, but should not be asked to erase an unexplained business mismatch.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Failure classes</p><h2>Open GR/IR is a symptom with several owners.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Goods received, invoice missing</h3><p>Confirm whether the supplier invoice is still expected, blocked elsewhere, or never reached invoice verification.</p></div>
+      <div><h3>Invoice posted, receipt missing</h3><p>Check whether the physical receipt is pending, the wrong PO/item was referenced, or the expected goods-receipt event will never occur.</p></div>
+      <div><h3>Quantity difference</h3><p>Compare PO history, receipt quantities, invoice quantities, reversals, returns, and final-delivery or final-invoice intent.</p></div>
+      <div><h3>Price or value difference</h3><p>Separate quantity reconciliation from purchase-price, invoice-price, exchange-rate, delivery-cost, or account-determination effects.</p></div>
+      <div><h3>Process truly finished</h3><p>If no further receipt or invoice is expected, controlled clearing may be appropriate, but only with business evidence for closure.</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Ownership map</p><h2>Accounting sees the balance. The process explains it.</h2></header>
+    <div class="decision-table"><table><thead><tr><th>Question</th><th>Primary owner</th><th>Evidence</th></tr></thead><tbody>
+      <tr><td><strong>Was the supplier commitment fulfilled?</strong></td><td>Procurement / supplier owner</td><td>PO, confirmation, open quantity, final delivery or cancellation state.</td></tr>
+      <tr><td><strong>Was the material or service actually received?</strong></td><td>Warehouse, service receiver, or logistics owner</td><td>Material document, service entry, reversal, return, and physical evidence.</td></tr>
+      <tr><td><strong>Was the supplier invoice correctly posted?</strong></td><td>Invoice verification / AP process</td><td>Invoice document, quantity/value comparison, blocks, credit memo, reversal.</td></tr>
+      <tr><td><strong>Can the residual balance be cleared?</strong></td><td>Finance with business confirmation</td><td>Proof that no further receipt or invoice is expected and the remaining balance is understood.</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+    <p><strong>Anti-pattern:</strong> treating MR11 or another clearing action as the diagnosis. Clearing is a financial action after the business state is explained, not a substitute for finding why the receipt and invoice did not reconcile.</p>
+    <p><strong>Lead check:</strong> close with one sentence that proves physical completion, commercial completion, and accounting completion are aligned.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Evidence path</p><h2>Start in the PO history and end in reconciliation.</h2></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/procurement/"><span>DOMAIN</span><strong>Procurement process map</strong><small>Receipt, invoice verification, PO history, failure modes, and settlement boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
+      <a href="/labs/enterprise-context/finance-logistics/"><span>VALUE</span><strong>FI/CO for Logistics</strong><small>Accounting documents, value flow, GR/IR, and reconciliation ownership.</small><i class="material-symbols-outlined" aria-hidden="true">account_balance</i></a>
+      <a href="/labs/enterprise-context/procurement/#sources"><span>EVID</span><strong>Primary sources</strong><small>SAP Help documentation behind goods-receipt, invoice-receipt, and GR/IR behavior.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+</div>
