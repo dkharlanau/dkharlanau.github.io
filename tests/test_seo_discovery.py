@@ -487,15 +487,16 @@ def test_structured_data_has_organization():
     assert "Organization" in text
 
 
-def test_article_publisher_is_site_author_not_employer():
+def test_article_publisher_references_canonical_site_author():
     path = REPO_ROOT / "_includes" / "seo" / "structured-data.html"
     text = path.read_text(encoding="utf-8")
     article_block = text.split(
         "{% comment %} Article / TechArticle", 1
     )[1].split("{% comment %} ProfilePage entities", 1)[0]
     publisher = article_block.split('"publisher":', 1)[1].split("},", 1)[0]
-    assert '"@type": "Person"' in publisher
     assert '"@id": "{{ author_id }}"' in publisher
+    assert '"@type": "Person"' not in publisher
+    assert '"sameAs"' not in publisher
     assert "resume.schema.worksFor" not in publisher
 
 

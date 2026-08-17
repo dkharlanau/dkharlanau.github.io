@@ -1,0 +1,142 @@
+version: 1
+updated_at: "2026-08-16"
+policy: "Explicit relations are curated business/architecture links. Generated similarity links are only fallback navigation."
+
+routes:
+  /labs/enterprise-context/sales-order/:
+    - type: determined_by
+      to: /labs/enterprise-context/pricing/
+    - type: determined_by
+      to: /labs/enterprise-context/atp/
+    - type: used_by
+      to: /labs/enterprise-context/shipping/
+    - type: used_by
+      to: /labs/enterprise-context/billing/
+    - type: diagnose_with
+      to: /labs/enterprise-context/sales-diagnostics/
+    - type: integrates_with
+      to: /labs/enterprise-context/sales-processes/integrations/
+
+  /labs/enterprise-context/pricing/:
+    - type: used_by
+      to: /labs/enterprise-context/sales-order/
+    - type: used_by
+      to: /labs/enterprise-context/billing/
+    - type: diagnose_with
+      to: /labs/enterprise-context/sales-diagnostics/
+
+  /labs/enterprise-context/atp/:
+    - type: used_by
+      to: /labs/enterprise-context/sales-order/
+    - type: integrates_with
+      to: /labs/enterprise-context/production/
+    - type: integrates_with
+      to: /labs/enterprise-context/inventory-management/
+    - type: diagnose_with
+      to: /labs/enterprise-context/sales-diagnostics/
+
+  /labs/enterprise-context/shipping/:
+    - type: prerequisite
+      to: /labs/enterprise-context/sales-order/
+    - type: integrates_with
+      to: /labs/enterprise-context/ewm/
+    - type: integrates_with
+      to: /labs/enterprise-context/transportation-management/
+    - type: used_by
+      to: /labs/enterprise-context/billing/
+    - type: diagnose_with
+      to: /labs/enterprise-context/sales-diagnostics/
+
+  /labs/enterprise-context/billing/:
+    - type: prerequisite
+      to: /labs/enterprise-context/sales-order/
+    - type: prerequisite
+      to: /labs/enterprise-context/shipping/
+    - type: integrates_with
+      to: /labs/enterprise-context/finance-logistics/
+    - type: diagnose_with
+      to: /labs/enterprise-context/sales-diagnostics/
+
+  /labs/enterprise-context/procurement/:
+    - type: integrates_with
+      to: /labs/enterprise-context/inventory-management/
+    - type: integrates_with
+      to: /labs/enterprise-context/production/
+    - type: integrates_with
+      to: /labs/enterprise-context/quality-management/
+    - type: integrates_with
+      to: /labs/enterprise-context/finance-logistics/
+
+  /labs/enterprise-context/production/:
+    - type: integrates_with
+      to: /labs/enterprise-context/procurement/
+    - type: integrates_with
+      to: /labs/enterprise-context/inventory-management/
+    - type: integrates_with
+      to: /labs/enterprise-context/quality-management/
+    - type: integrates_with
+      to: /labs/enterprise-context/atp/
+
+  /labs/enterprise-context/inventory-management/:
+    - type: integrates_with
+      to: /labs/enterprise-context/procurement/
+    - type: integrates_with
+      to: /labs/enterprise-context/production/
+    - type: integrates_with
+      to: /labs/enterprise-context/ewm/
+    - type: integrates_with
+      to: /labs/enterprise-context/finance-logistics/
+
+  /labs/enterprise-context/ewm/:
+    - type: integrates_with
+      to: /labs/enterprise-context/shipping/
+    - type: integrates_with
+      to: /labs/enterprise-context/inventory-management/
+    - type: integrates_with
+      to: /labs/enterprise-context/transportation-management/
+
+  /labs/enterprise-context/transportation-management/:
+    - type: integrates_with
+      to: /labs/enterprise-context/shipping/
+    - type: integrates_with
+      to: /labs/enterprise-context/ewm/
+    - type: integrates_with
+      to: /labs/enterprise-context/transportation-management/integrations/
+
+  /labs/enterprise-context/mdg/:
+    - type: integrates_with
+      to: /labs/enterprise-context/mdg/interfaces/
+    - type: compare_with
+      to: /labs/enterprise-context/data-governance/
+
+  /labs/enterprise-context/data-governance/:
+    - type: compare_with
+      to: /labs/enterprise-context/mdg/
+    - type: integrates_with
+      to: /labs/enterprise-context/mdg/interfaces/
+
+  /labs/enterprise-context/development/:
+    - type: prerequisite
+      to: /labs/enterprise-context/deployment-models/
+    - type: integrates_with
+      to: /labs/enterprise-context/integrations/
+
+  /labs/enterprise-context/integrations/:
+    - type: used_by
+      to: /labs/enterprise-context/sales-processes/integrations/
+    - type: integrates_with
+      to: /labs/enterprise-context/integration-operations/
+    - type: integrates_with
+      to: /labs/enterprise-context/development/
+
+  /labs/enterprise-context/business-ai/:
+    - type: deep_dive
+      to: /labs/enterprise-context/business-ai/agents/
+    - type: integrates_with
+      to: /labs/enterprise-context/integrations/
+
+  /labs/enterprise-context/business-ai/agents/:
+    - type: parent_context
+      to: /labs/enterprise-context/business-ai/
+    - type: integrates_with
+      to: /labs/enterprise-context/integrations/

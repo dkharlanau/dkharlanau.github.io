@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP MDG Interface Contracts — Enterprise Context Lab"
-description: "Object-level SAP MDG interface contracts for Business Partner, Customer, Supplier, and Material, including mapping, errors, reconciliation, and downstream proof."
+description: "Object-level SAP MDG interface contracts for Business Partner, Customer, Supplier and Material, covering mappings, errors, reconciliation and downstream proof."
 permalink: /labs/enterprise-context/mdg/interfaces/
 status: reviewed
 verified: true
@@ -22,24 +22,49 @@ ai_sidecar: "/ai/pages/labs--enterprise-context--mdg--interfaces.json"
 entity_mentions:
   - "sap-integration"
 semantic_links:
-  - type: "Parent context"
+  - type: "parent_context"
     title: "SAP Master Data Governance — Enterprise Context Lab"
     url: "/labs/enterprise-context/mdg/"
-  - type: "Same domain"
+  - type: "same_domain"
     title: "Data, Master Data and Governance — Enterprise Context Lab"
     url: "/labs/enterprise-context/data-governance/"
-  - type: "Integration view"
+  - type: "integrates_with"
     title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
     url: "/labs/enterprise-context/integrations/"
-  - type: "Integration view"
+  - type: "integrates_with"
     title: "SAP Sales Integration Map — IDocs, APIs, Events and Handoffs"
     url: "/labs/enterprise-context/sales-processes/integrations/"
-  - type: "Related topic"
+  - type: "related_topic"
     title: "SAP EWM — Deployment & Warehouse Execution Map"
     url: "/labs/enterprise-context/ewm/"
-  - type: "Integration view"
+  - type: "integrates_with"
     title: "SAP TM — Integration Contracts, APIs & Events"
     url: "/labs/enterprise-context/transportation-management/integrations/"
+source_links:
+  - title: "What Is SAP Integration Suite?"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/decide-on-integration-technology"
+  - title: "Connectivity Options"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/connectivity-options"
+  - title: "Understanding the Basic Concepts"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/understanding-basic-concepts-a81309fbdc4446b98e138a328bf1776c"
+  - title: "Trading Partner Management"
+    url: "https://help.sap.com/docs/SAP_INTEGRATION_SUITE/sap-integration-suite/trading-partner-management"
+  - title: "IDoc Adapter"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/idoc-adapter"
+  - title: "Kafka Adapter"
+    url: "https://help.sap.com/docs/SAP_INTEGRATION_SUITE/sap-integration-suite/kafka-adapter"
+  - title: "What Is SAP Event Mesh?"
+    url: "https://help.sap.com/docs/SAP_EM/bf82e6b26456494cbdd197057c09979f/what-is-sap-event-mesh"
+  - title: "Event Mesh"
+    url: "https://help.sap.com/docs/SAP_INTEGRATION_SUITE/sap-integration-suite/event-mesh"
+  - title: "What Is SAP Integration Suite, Advanced Event Mesh?"
+    url: "https://help.sap.com/docs/sap-integration-suite/advanced-event-mesh"
+  - title: "Event Mesh Bridge"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/event-mesh-bridge"
+  - title: "Synchronization of Master Data"
+    url: "https://help.sap.com/docs/master-data-integration/sap-master-data-integration-prod/synchronization-of-master-data"
+  - title: "Integration Models"
+    url: "https://help.sap.com/docs/master-data-integration/sap-master-data-integration-prod/integration-models"
 # ai-discovery-managed:end
 ---
 {% assign topic = site.data.labs.enterprise_context.topics.mdg_object_contracts %}
@@ -67,6 +92,7 @@ semantic_links:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">sync_alt</span>
+    <p><strong>Problem:</strong> transport success can hide a master-data failure. The consumer may receive a message but still reject, misidentify, or fail to use the governed object.</p>
     <p><strong>Boundary:</strong> a successful message is not the business outcome. The target still has to identify the object, map codes, accept the data, and use it in a transaction.</p>
     <p><strong>Material warning:</strong> one business object can require several technical messages. MATMAS alone must not be assumed to cover classification, revision, quality, or every dependent data set.</p>
     <a href="/labs/enterprise-context/mdg/extensions/">Choose an extension path <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>

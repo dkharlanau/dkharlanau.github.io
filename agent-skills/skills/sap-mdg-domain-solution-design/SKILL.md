@@ -5,6 +5,8 @@ category: sap-data-governance
 description: Use when an SAP MDG Material, Business Partner, Customer, or Supplier solution needs domain design across identity, technical entities, organizational grain, ownership, rules, change requests, workflow, activation, DRF distribution and recovery, consolidation, migration, and downstream logistics proof. Use for Lead or Architect assessment cases and solution reviews, not for a single already-isolated lineage incident.
 ---
 
+# SAP MDG Domain Solution Design
+
 ## Purpose
 Design or review an SAP MDG domain solution from business identity through technical entity/grain mapping, governance process, rules, activation, distribution/recovery, consolidation or migration, and downstream business proof.
 

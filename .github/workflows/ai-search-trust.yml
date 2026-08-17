@@ -10,6 +10,7 @@ on:
       - 'ai/pages/**'
       - 'ai/page-knowledge-index.json'
       - '_data/knowledge_entities.yml'
+      - '_data/knowledge_publication_contract.yml'
       - '_data/labs/**'
       - '_data/resume.yml'
       - '_includes/seo/**'
@@ -17,6 +18,8 @@ on:
       - 'sitemap-pages.xml'
       - 'sitemap-data.xml'
       - 'scripts/ai_search_trust_loop.py'
+      - 'scripts/knowledge_publication_loop.py'
+      - 'scripts/check_knowledge_publication_contract.py'
       - 'scripts/check_lab_publication_gate.py'
       - 'scripts/audit_lab_search_intents.py'
       - '.github/workflows/ai-search-trust.yml'
@@ -44,10 +47,11 @@ jobs:
         run: python -m pip install pyyaml
 
       - name: Check generated knowledge metadata
-        run: python3 scripts/ai_search_trust_loop.py --check
+        run: python3 scripts/knowledge_publication_loop.py --check
 
       - name: Check publication and intent policy
         run: |
+          python3 scripts/check_knowledge_publication_contract.py
           python3 scripts/check_lab_publication_gate.py
           python3 scripts/audit_lab_search_intents.py
 
@@ -116,8 +120,10 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          script = Path('scripts/ai_search_trust_loop.py').read_text(encoding='utf-8')
-          assert 'if route == "/"' in script, 'generator must explicitly exclude homepage'
+          script = Path('scripts/knowledge_publication_loop.py').read_text(encoding='utf-8')
+          legacy = Path('scripts/ai_search_trust_loop.py').read_text(encoding='utf-8')
+          assert 'if route == "/"' in legacy, 'generator must explicitly exclude homepage'
+          assert 'align_last_modified = lambda raw, fm: raw' in script, 'review dates must not rewrite modification dates'
           layout = Path('_layouts/default.html').read_text(encoding='utf-8')
           assert "{% unless page.url == '/' %}" in layout, 'knowledge CSS must remain excluded from homepage'
           graph = Path('_includes/seo/structured-data-sitewide-graph.html').read_text(encoding='utf-8')
