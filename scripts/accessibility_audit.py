@@ -8,6 +8,9 @@ Checks built HTML for:
 - Image alt text on meaningful images
 - Skip link presence
 
+Script and style source are removed before semantic parsing so JavaScript string
+literals are not mistaken for rendered headings, links, or images.
+
 Outputs a report; CI can fail on critical issues.
 
 Usage:
@@ -28,6 +31,7 @@ GENERIC_ANCHORS = {
 
 CRITICAL_MISSING_LANDMARKS = {"main", "header", "footer"}
 
+NON_DOM_RE = re.compile(r"<(script|style)\b[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL)
 HEADING_RE = re.compile(r"<h([1-6])[^>]*>(.*?)</h\1>", re.IGNORECASE | re.DOTALL)
 LINK_RE = re.compile(r'<a[^>]+href=["\'](.*?)["\'][^>]*>(.*?)</a>', re.IGNORECASE | re.DOTALL)
 IMG_RE = re.compile(r"<img[^>]*>", re.IGNORECASE | re.DOTALL)
@@ -49,13 +53,19 @@ def strip_html(text: str) -> str:
     return re.sub(r"<[^>]+>", "", text).strip()
 
 
+def semantic_html(text: str) -> str:
+    """Return markup that represents the static DOM rather than source-code literals."""
+    return NON_DOM_RE.sub("", text)
+
+
 def check_page(html_path: Path, site_dir: Path, text: str) -> tuple[list[str], list[str]]:
     """Return (critical_issues, warnings) for a single HTML file."""
     critical: list[str] = []
     warnings: list[str] = []
     rel = html_path.relative_to(site_dir).as_posix()
 
-    lower = text.lower()
+    dom_text = semantic_html(text)
+    lower = dom_text.lower()
 
     # Landmarks
     landmarks = {
@@ -72,11 +82,11 @@ def check_page(html_path: Path, site_dir: Path, text: str) -> tuple[list[str], l
         warnings.append("missing <nav> landmark")
 
     # Skip link
-    if not SKIP_LINK_RE.search(text):
+    if not SKIP_LINK_RE.search(dom_text):
         warnings.append("missing skip navigation link")
 
     # Headings
-    headings = HEADING_RE.findall(text)
+    headings = HEADING_RE.findall(dom_text)
     h1_count = sum(1 for level, _ in headings if level == "1")
     if h1_count == 0:
         critical.append("missing <h1>")
@@ -88,10 +98,12 @@ def check_page(html_path: Path, site_dir: Path, text: str) -> tuple[list[str], l
         level = int(level_str)
         if prev_level > 0 and level > prev_level + 1:
             warnings.append(f"skipped heading level (h{prev_level} to h{level})")
-        prev_level = max(prev_level, level)
+        # Heading hierarchy is contextual. A later H2 resets the expected depth;
+        # keeping the historical maximum would hide a later H2 -> H4 skip.
+        prev_level = level
 
     # Links
-    for href, anchor in LINK_RE.findall(text):
+    for href, anchor in LINK_RE.findall(dom_text):
         clean = strip_html(anchor)
         if not clean:
             continue
@@ -100,7 +112,7 @@ def check_page(html_path: Path, site_dir: Path, text: str) -> tuple[list[str], l
             warnings.append(f"generic anchor text: '{clean}' -> {href}")
 
     # Images
-    for img_tag in IMG_RE.findall(text):
+    for img_tag in IMG_RE.findall(dom_text):
         src_match = SRC_RE.search(img_tag)
         src = src_match.group(1) if src_match else ""
         alt_match = ALT_RE.search(img_tag)

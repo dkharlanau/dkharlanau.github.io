@@ -91,7 +91,7 @@ tags:
       <article class="sm-card">
         <header>
           <code>{{ item.id }}</code>
-          <h4>{{ item.field }}</h4>
+          <h3>{{ item.field }}</h3>
           <p class="sm-hook">{{ item.level }}</p>
         </header>
         <div class="sm-blast">
@@ -102,10 +102,10 @@ tags:
         <details>
           <summary>Copy, change, recheck <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
           <div class="sm-detail-grid">
-            <section><h5>Manual change</h5><p>{{ item.manual_override }}</p></section>
-            <section><h5>Reference behavior</h5><p>{{ item.reference_behavior }}</p></section>
-            <section><h5>Redetermination</h5><p>{{ item.redetermination }}</p></section>
-            <section><h5>Downstream</h5><p class="sm-extension-list">{% for target in item.downstream %}<code>{{ target }}</code>{% endfor %}</p></section>
+            <section><h4>Manual change</h4><p>{{ item.manual_override }}</p></section>
+            <section><h4>Reference behavior</h4><p>{{ item.reference_behavior }}</p></section>
+            <section><h4>Redetermination</h4><p>{{ item.redetermination }}</p></section>
+            <section><h4>Downstream</h4><p class="sm-extension-list">{% for target in item.downstream %}<code>{{ target }}</code>{% endfor %}</p></section>
           </div>
         </details>
       </article>
@@ -143,7 +143,7 @@ tags:
     <div class="sm-card-grid">
       {% for row in matrix.rows %}
       <article class="sm-card">
-        <header><code>{{ row.mechanism }}</code><h4>{{ row.procedure }}</h4><p class="sm-hook">{{ row.engine }}</p></header>
+        <header><code>{{ row.mechanism }}</code><h3>{{ row.procedure }}</h3><p class="sm-hook">{{ row.engine }}</p></header>
         <p class="sm-question">{{ row.assignment_anchor }}</p>
         <div class="sm-io">
           <div><span>Condition technique</span><strong>{{ row.condition_technique }}</strong></div>
@@ -167,7 +167,7 @@ tags:
     <div class="sm-card-grid">
       {% for mechanism in context_group.mechanisms %}
       <article class="sm-card" id="{{ mechanism.code | downcase | replace: '.', '-' }}">
-        <header><code>{{ mechanism.code }}</code><h4>{{ mechanism.title }}</h4><p class="sm-hook">{{ mechanism.memory_hook }}</p></header>
+        <header><code>{{ mechanism.code }}</code><h3>{{ mechanism.title }}</h3><p class="sm-hook">{{ mechanism.memory_hook }}</p></header>
         <p class="sm-question">{{ mechanism.question }}</p>
         <div class="sm-io">
           <div><span>Inputs</span>{% for input in mechanism.inputs %}<small>{{ input.name }}</small>{% endfor %}</div>
@@ -180,9 +180,9 @@ tags:
         <details>
           <summary>Debug, test, configure <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
           <div class="sm-detail-grid">
-            <section><h5>Configuration surfaces</h5><ul>{% for item in mechanism.configuration_surfaces %}<li>{{ item }}</li>{% endfor %}</ul></section>
-            <section><h5>Failure traces</h5><ul>{% for failure in mechanism.failure_modes %}<li><strong>{{ failure.symptom }}</strong><span>{{ failure.prove }}</span></li>{% endfor %}</ul></section>
-            <section><h5>Proof tests</h5><ul>{% for test in mechanism.tests %}<li><strong>{{ test.id }}</strong><span>{{ test.setup }} <b>Prove:</b> {{ test.assert }}</span></li>{% endfor %}</ul></section>
+            <section><h4>Configuration surfaces</h4><ul>{% for item in mechanism.configuration_surfaces %}<li>{{ item }}</li>{% endfor %}</ul></section>
+            <section><h4>Failure traces</h4><ul>{% for failure in mechanism.failure_modes %}<li><strong>{{ failure.symptom }}</strong><span>{{ failure.prove }}</span></li>{% endfor %}</ul></section>
+            <section><h4>Proof tests</h4><ul>{% for test in mechanism.tests %}<li><strong>{{ test.id }}</strong><span>{{ test.setup }} <b>Prove:</b> {{ test.assert }}</span></li>{% endfor %}</ul></section>
           </div>
         </details>
       </article>
@@ -205,8 +205,8 @@ tags:
         <details>
           <summary>Prove it <span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary>
           <div class="sm-detail-grid">
-            <section><h5>Proof path</h5><ol>{% for step in case.proof_path %}<li>{{ step }}</li>{% endfor %}</ol></section>
-            <section><h5>Lead conclusion</h5><p>{{ case.lead_conclusion }}</p></section>
+            <section><h4>Proof path</h4><ol>{% for step in case.proof_path %}<li>{{ step }}</li>{% endfor %}</ol></section>
+            <section><h4>Lead conclusion</h4><p>{{ case.lead_conclusion }}</p></section>
           </div>
         </details>
       </article>
