@@ -15,11 +15,11 @@
         {% if page.home_locale %}
         {% include home-language-switcher.html %}
         {% else %}
+        <a href="/knowledge/" class="nav-link{% if page.url contains '/knowledge/' or page.url contains '/atlas/' or page.url contains '/scenarios/' or page.url contains '/research/' or page.url contains '/blog/' or page.url contains '/notes/' or page.url contains '/radar/' %} is-active{% endif %}">Knowledge</a>
+        <a href="/labs/" class="nav-link{% if page.url contains '/labs/' %} is-active{% endif %}"{% if page.url == '/labs/' %} aria-current="page"{% endif %}>{{ nav_ui.labs | default: 'Labs' }}</a>
+        <a href="/frameworks/" class="nav-link{% if page.url contains '/frameworks/' or page.url contains '/triz/' or page.url contains '/ddd/' or page.url contains '/reusable-data-procedures/' or page.url contains '/skill-hub/' %} is-active{% endif %}">Frameworks</a>
         <a href="/services/" class="nav-link{% if page.url contains '/services/' %} is-active{% endif %}"{% if page.url contains '/services/' %} aria-current="page"{% endif %}>{{ nav_ui.services | default: 'Services' }}</a>
-        <a href="/scenarios/" class="nav-link{% if page.url contains '/scenarios/' %} is-active{% endif %}"{% if page.url contains '/scenarios/' %} aria-current="page"{% endif %}>{{ nav_ui.scenarios | default: 'Scenarios' }}</a>
-        <a href="/atlas/" class="nav-link{% if page.url contains '/atlas/' %} is-active{% endif %}"{% if page.url contains '/atlas/' %} aria-current="page"{% endif %}>{{ nav_ui.atlas | default: 'Atlas' }}</a>
-        <a href="/labs/" class="nav-link{% if page.url contains '/labs/' %} is-active{% endif %}"{% if page.url contains '/labs/' %} aria-current="page"{% endif %}>{{ nav_ui.labs | default: 'Labs' }}</a>
-        <a href="/blog/" class="nav-link{% if page.url contains '/blog/' %} is-active{% endif %}"{% if page.url contains '/blog/' %} aria-current="page"{% endif %}>{{ nav_ui.journal | default: 'Journal' }}</a>
+        <a href="/about/" class="nav-link{% if page.url == '/about/' %} is-active{% endif %}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>About</a>
         <a href="/search/" class="nav-link nav-link--utility{% if page.url == '/search/' %} is-active{% endif %}" aria-label="{{ nav_ui.search | default: 'Search' }}"{% if page.url == '/search/' %} aria-current="page"{% endif %}>
           <span class="material-symbols-outlined" aria-hidden="true">search</span>
           <span class="nav-link__search-label">{{ nav_ui.search | default: 'Search' }}</span>
