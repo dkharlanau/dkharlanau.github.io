@@ -23,6 +23,31 @@ tags:
   - document-ai
   - integration
   - ai-governance
+# ai-discovery-managed:start
+primary_topic: "business-ai"
+ai_sidecar: "/ai/pages/labs--business-ai--document-to-erp-ai.json"
+entity_mentions:
+  - "sap-integration"
+semantic_links:
+  - type: "parent_context"
+    title: "Business AI Lab — Processes, Patterns, Technologies, Evidence"
+    url: "/labs/business-ai/"
+  - type: "related_topic"
+    title: "AI Ready — Practical AI Architecture Lab"
+    url: "/labs/ai-ready/"
+  - type: "integrates_with"
+    title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
+    url: "/labs/enterprise-context/business-ai/agents/"
+  - type: "related_topic"
+    title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
+    url: "/labs/business-ai/pilots/"
+  - type: "related_topic"
+    title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
+    url: "/labs/business-ai/erp-agent-gateway/"
+  - type: "related_topic"
+    title: "Open Enterprise AI Research — ERP Evidence, Safety, Readiness, and Benchmarks"
+    url: "/labs/business-ai/open-research/"
+# ai-discovery-managed:end
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
