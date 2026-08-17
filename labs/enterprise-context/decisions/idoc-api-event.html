@@ -3,16 +3,24 @@ layout: default
 title: "IDoc, API, or Event? — SAP Integration Decision Card"
 description: "A compact SAP integration decision model for choosing IDoc, synchronous API, or event-driven interaction."
 permalink: /labs/enterprise-context/decisions/idoc-api-event/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-02"
+search_intent: "SAP IDoc vs API vs event integration architecture decision"
+evidence_review_mode: "SAP integration capabilities checked against primary SAP Help sources; interaction-style selection, trade-offs, and ownership guidance is authored architecture reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
 hide_global_cta: true
-review_method: "authored decision reasoning draft over reviewed SAP integration material; pending publication-contract review"
 structured_data:
   type: TechArticle
+# ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--idoc-api-event.json"
+entity_mentions:
+  - "sap-integration"
 semantic_links:
   - type: "parent_context"
     title: "SAP Decision Cards"
@@ -20,8 +28,25 @@ semantic_links:
   - type: "same_domain"
     title: "SAP Integration Architecture"
     url: "/labs/enterprise-context/integrations/"
+  - type: "operated_by"
+    title: "Integration Operations & Recovery"
+    url: "/labs/enterprise-context/integration-operations/"
+  - type: "related_decision"
+    title: "Who Owns an IDoc Failure?"
+    url: "/labs/enterprise-context/decisions/idoc-failure-ownership/"
+source_links:
+  - title: "What Is SAP Integration Suite?"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/decide-on-integration-technology"
+  - title: "IDoc Adapter"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/idoc-adapter"
+  - title: "What Is SAP Event Mesh?"
+    url: "https://help.sap.com/docs/SAP_EM/bf82e6b26456494cbdd197057c09979f/what-is-sap-event-mesh"
+  - title: "Quality of Service Exactly Once"
+    url: "https://help.sap.com/docs/integration-suite/sap-integration-suite/quality-of-service-exactly-once"
+# ai-discovery-managed:end
 tags: [sap, integration, idoc, api, events, architecture]
 ---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_integration_style %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">IDoc, API, or Event?</li></ol></nav>
 
@@ -43,7 +68,7 @@ tags: [sap, integration, idoc, api, events, architecture]
       <div><h3>1. Does the sender need an answer now?</h3><p>If the next business step cannot continue without a result, a request-response API is usually the cleanest contract.</p></div>
       <div><h3>2. Can the receiver be temporarily unavailable?</h3><p>If yes, prefer a pattern with durable delivery, retry, queueing, or controlled reprocessing instead of making availability a shared runtime problem.</p></div>
       <div><h3>3. Is this a command, document, or fact?</h3><p>“Create this object” is different from “this object changed”. Events should not be disguised remote procedure calls.</p></div>
-      <div><h3>4. Who owns replay and duplicates?</h3><p>At-least-once delivery is useful only when the receiver can recognise duplicates and the support team knows how replay is controlled.</p></div>
+      <div><h3>4. Who owns replay and duplicates?</h3><p>Reliable delivery is useful only when the receiver can recognise duplicates where needed and the support team knows how replay is controlled.</p></div>
       <div><h3>5. How many consumers exist?</h3><p>A point-to-point interface can be simpler for one receiver. Events become more attractive when independent consumers need the same business fact.</p></div>
     </div>
   </section>
@@ -59,5 +84,5 @@ tags: [sap, integration, idoc, api, events, architecture]
 
   <section class="research-canvas__boundary" data-reveal><span class="material-symbols-outlined" aria-hidden="true">warning</span><p><strong>I change the default when:</strong> ordering is strict, payloads are very large, legal acknowledgement is required, the interface is external B2B, the landscape has a mandated platform, or the receiving application has only one supported contract.</p><p><strong>Failure ownership:</strong> transport success is not business success. The design needs a clear owner for retries, duplicate handling, reconciliation, and proof that the receiver reached the expected business state.</p></section>
 
-  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Evidence path</p><h2>Read the deeper model before choosing middleware.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/integrations/"><span>01</span><strong>Integration architecture</strong><small>Interaction types, contracts, platforms, terminology, and architecture rules.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a><a href="/labs/enterprise-context/integration-operations/"><span>02</span><strong>Integration operations</strong><small>Monitoring, recovery, replay, reconciliation, and ownership after go-live.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a></div></section>
+  <section class="research-canvas__inventory" data-reveal><header><p class="research-canvas__eyebrow">Evidence path</p><h2>Read the deeper model before choosing middleware.</h2></header><div class="research-route-list"><a href="/labs/enterprise-context/integrations/"><span>01</span><strong>Integration architecture</strong><small>Interaction types, contracts, platforms, terminology, and architecture rules.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a><a href="/labs/enterprise-context/integration-operations/"><span>02</span><strong>Integration operations</strong><small>Monitoring, recovery, replay, reconciliation, and ownership after go-live.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a><a href="/labs/enterprise-context/decisions/idoc-failure-ownership/"><span>03</span><strong>IDoc failure ownership</strong><small>Classify the failed boundary, control replay, and prove the business outcome after recovery.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a></div></section>
 </div>
