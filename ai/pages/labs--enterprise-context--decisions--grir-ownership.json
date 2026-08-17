@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "id": "https://dkharlanau.github.io/labs/enterprise-context/decisions/grir-ownership/#knowledge",
+  "url": "https://dkharlanau.github.io/labs/enterprise-context/decisions/grir-ownership/",
+  "title": "Who Owns an Open GR/IR Balance? — SAP Procurement Decision Card",
+  "description": "A SAP Lead decision model for open GR/IR balances, quantity mismatches, missing receipts or invoices, ownership, and business reconciliation.",
+  "language": "en",
+  "author": {
+    "id": "https://dkharlanau.github.io/#dkharlanau",
+    "name": "Dzmitryi Kharlanau",
+    "profile": "https://dkharlanau.github.io/about/"
+  },
+  "publication": {
+    "status": "reviewed",
+    "verified": true,
+    "last_reviewed": "2026-08-17",
+    "last_modified_at": "2026-08-17",
+    "evidence_review_mode": "SAP GR/IR posting and clearing behavior checked against primary SAP Help sources; ownership classification, diagnosis order, and business-completion guidance is authored cross-process reasoning",
+    "publication_wave": "decision-search-wave-03"
+  },
+  "search": {
+    "intent": "SAP GR IR open balance ownership goods receipt invoice receipt reconciliation",
+    "canonical": "https://dkharlanau.github.io/labs/enterprise-context/decisions/grir-ownership/",
+    "robots": "index,follow"
+  },
+  "primary_entity": {
+    "key": "sap-architecture-decisions",
+    "id": "https://dkharlanau.github.io/entities/#sap-architecture-decisions",
+    "name": "SAP Architecture Decisions",
+    "type": "Thing",
+    "description": "Authored decision models that connect SAP domain evidence to explicit defaults, trade-offs, exceptions, and recovery ownership.",
+    "same_as": []
+  },
+  "mentions": ["sap-procurement"],
+  "tags": ["finance", "goods-receipt", "grir", "invoice-verification", "procurement", "reconciliation", "sap"],
+  "relationships": [
+    {"type": "parent_context", "title": "SAP Decision Cards", "url": "/labs/enterprise-context/decisions/"},
+    {"type": "same_domain", "title": "Procurement Process & Decision Map", "url": "/labs/enterprise-context/procurement/"},
+    {"type": "related_topic", "title": "FI/CO for Logistics", "url": "/labs/enterprise-context/finance-logistics/"},
+    {"type": "applied_scenario", "title": "Cross-Process SAP Lead Cases", "url": "/labs/assessment/cross-process/"}
+  ],
+  "sources": [
+    {"title": "Postings at Goods Receipt and Invoice Receipt", "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/825eb6531de6b64ce10000000a174cb4.html"},
+    {"title": "Clear GR/IR Clearing Account", "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ed84b70c199d4470ae2e5ccb93b2e45b/72256b54f94c8f4ce10000000a4450e5.html"},
+    {"title": "Reconcile GR/IR Accounts: Business Background", "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0fa84c9d9c634132b7c4abb9ffdd8f06/14bfe1818e1b4fec9f3e873599e2b754.html"}
+  ],
+  "factual_review": {
+    "status": "source_supported",
+    "claim_count": 3,
+    "source_supported_count": 3,
+    "source_conflict_count": 0,
+    "evidence_classes": ["sap_product_primary", "author_heuristic"],
+    "reviewed_at": "2026-08-17",
+    "human_verification_required": false
+  },
+  "machine_readable": [
+    "/labs/assessment/data/cross-process-cases.jsonl",
+    "/ai/pages/labs--enterprise-context--procurement.json",
+    "/ai/pages/labs--enterprise-context--finance-logistics.json"
+  ]
+}
