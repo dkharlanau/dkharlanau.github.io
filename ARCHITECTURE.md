@@ -1,74 +1,175 @@
-# CV AI Architecture
+# Site Architecture
 
-This site is a Jekyll project tuned for fast storytelling iterations, structured data reuse, and AI-friendly exports.
+This repository is a public Jekyll site, knowledge system, and machine-readable source layer. The physical directory tree is intentionally richer than the global navigation. Product architecture and storage architecture are related, but they are not the same thing.
 
-## System overview
+## Product model
 
-- **Static site generator:** Jekyll 4 (GitHub Pages compatible).
-- **Design system:** `assets/main.css` implements the light Neubrutalist theme with section primitives (`.section`, `.neub-card`, `.hero-*`, `.note-*`).
-- **Content model:** Declarative data in `_data/`, component partials in `_includes/`, document types via collections.
-- **AI surface:** JSON mirrors of major datasets in `/ai` for agent handoff or prompt grounding.
+The site has six top-level product areas:
 
-## Content pipeline
+1. **Profile** — identity, experience, certifications, and public professional context.
+2. **Knowledge** — Atlas, Scenarios, Research, Journal, and Notes.
+3. **Labs** — active SAP, AI, operational, and assessment workspaces.
+4. **Frameworks** — reusable reasoning and execution methods.
+5. **Machine layer** — datasets, AI-readable exports, skills, tools, and MCP source packages.
+6. **Services** — consulting offers and engagement context.
 
-### Homepage
-- Section order is defined in `index.md` (`sections` front matter array).
-- Copy and structure data live in `_data/home.yml`.
-- Rendering is handled by `_includes/page-builder.html`, which routes to `_includes/sections/*.html` partials (e.g. `signals.html` for the social/channel strip and `llm-profiles.html` for machine-readable downloads).
-- Adjust styling or layout in `assets/main.css`; each partial uses consistent class hooks.
-- Reusable UI components (such as the social line) sit in `_includes/components/` and are styled with `.social-*` helpers.
+The global header should navigate products, not expose every content collection. Deep links belong inside their product hub.
 
-### Resume
-- `_data/resume.yml` powers both `cv/index.html` and `ai/resume.json`.
-- Modify data once to update markup, downloads, and structured exports.
+Canonical product hubs:
 
-### Notes collection
-- `_notes/` contains individual notes (`_notes/*.md`).
-- Collection defaults (`_config.yml`) apply the `_layouts/note.html` layout and ensure clean permalinks (`/notes/:slug/`).
-- `notes/index.md` lists all notes using `site.notes`, styled via `.notes-landing` and `.note-card` classes.
-- To add a new note, drop a Markdown file in `_notes/` with at least `title`, `date`, and optional `tags`, `summary`, `subtitle`.
+- `/knowledge/`
+- `/labs/`
+- `/frameworks/`
+- `/machine/`
+- `/services/`
 
-### Standalone pages
-- `/changelog/` reads `_data/changelog.yml` through `changelog.html` to provide a release snapshot view.
-- The `/legal/` directory houses evergreen policies (code of conduct, terms of engagement, privacy notice, professional disclosure, responsible AI statement, accessibility statement) authored as standalone Markdown pages.
+Profile is reached through `/`, `/about/`, and `/cv/`.
 
-## AI & automation
+## Stable URL principle
 
-### Static SAP agent platform
+Do not mass-move established content only to make the directory tree look like the product taxonomy. Existing external and internal links are part of the architecture.
 
-`/agent-tools/` is a static GitHub Pages section, separate from the protected personal-brand homepage. It serves Markdown, CSS, browser JavaScript, and pre-generated JSON only: no backend, database, runtime endpoint, authentication service, serverless function, or remote MCP process is introduced.
+Use these rules:
 
-The existing Atlas pipeline remains canonical: reviewed, verified, indexable Atlas frontmatter generates `atlas/manifest.json`, `ai/atlas-compact-index.json`, `ai/rag/related.json`, and `ai/verified-pages.json`. The Agent Tools registry follows a parallel public source flow: `data/agent-tools/tools.json` → `scripts/generate_agent_tool_artifacts.py` → `ai/agent-tools.json` → browser-only directory filtering.
+- Keep mature deep routes stable.
+- Add hubs, aliases, or redirects when the information architecture changes.
+- Use canonical links on compatibility pages.
+- Run the built-site link checker after every structural change.
+- Change a canonical deep route only when there is a concrete benefit that justifies redirect and link-migration work.
 
-`mcp/sap-diagnostics-mcp` is a separate local stdio package. It consumes a local checkout’s committed public artifacts and remains Level 0 (credential-free, read-only, deterministic). GitHub Pages publishes source and documentation but never executes the package. Remote MCP hosting is a future separate-runtime decision.
+Examples:
 
-- `ai/resume.json`, `ai/resume.yml`, and `ai/home.json` expose resume and homepage data for copilots or APIs.
-- Add further exports by creating files with `layout: null` and serialising data structures using `| jsonify`.
-- `LLM.txt` remains the long-form system profile surface, and the homepage `llm-profiles` section links to all machine-readable variants.
+- `/lab/` is a compatibility alias for `/labs/`.
+- `/labs/reusable-data-procedures/` redirects to canonical `/reusable-data-procedures/`.
+- The UI calls `/labs/enterprise-context/` **SAP Enterprise**, while the established physical URL remains stable.
+- `/triz/`, `/ddd/`, and `/reusable-data-procedures/` remain canonical routes but are grouped under the Frameworks product.
 
-## SEO & metadata
+## Knowledge architecture
 
-- `_includes/seo/structured-data.html` emits Person, WebSite, Breadcrumb, and Article JSON-LD based on the current page context.
-- `_config.yml` provides language, author, and Twitter metadata for `jekyll-seo-tag`.
-- Social profiles are centralised in `_data/social.yml` and reused in both UI components and structured data.
+`/knowledge/` is the human entry point for content with different purposes and maturity levels.
 
-## Styling guidelines
+- `atlas/` — curated concepts, diagnostics, SAP notes, maps, data quality, automation, and AI operations.
+- `scenarios/` — business problems connected to SAP context and diagnostic workflows.
+- `research/` — briefs, comparisons, watchlists, and changing evidence.
+- `_blog/` + `blog/` — long-form analysis.
+- `_notes/` + `notes/` — shorter working notes.
+- `_radar/`, `_news/` — dated signals.
 
-- Custom properties in `:root` control typography, spacing, and colour tokens.
-- Components share the `neub-card` shell for consistent shadow and border language.
-- Responsive behaviour is handled with modern CSS (grid, clamp) and media queries at 960px/720px/540px breakpoints.
-- When introducing new components, prefer extending existing utility classes (e.g., `.section-heading`, `.chip-list`).
+A topic can appear in several views, but its primary source should not be duplicated. Use links and metadata to express relationships.
 
-## Development workflow
+## Lab architecture
 
-1. Update or add data in `_data/` for repeatable content.
-2. Compose/reuse partials in `_includes/sections` or create new ones in `_includes/components` as needed.
-3. Style new primitives in `assets/main.css`, keeping tokens centralised.
-4. Run `bundle exec jekyll serve` locally (after adding a Gemfile) to preview.
-5. For AI surfaces, mirror any new structures in `/ai` with JSON exports.
+`/labs/` contains active workspaces, not every method or dataset.
 
-## Future extensions
+### SAP Enterprise
 
-- Define additional collections (e.g., `case_studies`, `playbooks`) using the same pattern as notes.
-- Introduce CMS integration by mapping `_data/home.yml` to a headless backend if needed.
-- Expand structured data with more Schema.org entities (Projects, Articles) as content grows.
+Physical path: `labs/enterprise-context/`.
+
+The workspace covers:
+
+- business domains and deployment context;
+- Sales, pricing, ATP, shipping, billing, credit, tax, and diagnostics;
+- Procurement, inventory, EWM, transportation, production, and quality;
+- master data, MDG, and data governance;
+- integration, development, analytics, and AI touchpoints;
+- industry and cross-functional capabilities.
+
+Directory placement is not the knowledge graph. Cross-domain relationships should be expressed in structured metadata and links.
+
+### AI Ready
+
+`labs/ai-ready/` covers data, retrieval, MCP, agents, tools, evaluations, security, deployment, and production boundaries.
+
+### Business AI
+
+`labs/business-ai/` connects business process, AI job, reusable pattern, technology family, control, outcome, and evidence.
+
+### Assessment
+
+`labs/assessment/` is a practice and evaluation layer. It reuses Lab and Knowledge material instead of copying it. It covers explanation, tracing, diagnosis, design, challenge, mocks, review, evidence coverage, and progress.
+
+### Operational Protocols
+
+`labs/templates/` contains reusable operational protocols such as RCA, integration failure analysis, runbooks, change impact, cutover, and hypercare. It is exposed from both Labs and Frameworks because it is used for practice and as a reusable method.
+
+## Framework architecture
+
+`/frameworks/` groups reusable methods that should travel across domains:
+
+- `triz/` — TRIZ for Digital Systems;
+- `ddd/` — structured decision design;
+- `reusable-data-procedures/` — governed repeatable data work;
+- `labs/templates/` — operational analysis and execution protocols.
+
+A framework should not be copied under SAP, AI, or data merely because a case uses it.
+
+## Machine layer
+
+`/machine/` is a human-readable map to machine-facing assets.
+
+- `datasets/` — canonical structured datasets.
+- `ai/` — JSON/YAML exports, generated indexes, discovery maps, evidence surfaces.
+- `skill-hub/` — human-readable capability map.
+- `agent-skills/` — portable agent skill packages.
+- `agent-tools/` — static public tool descriptions.
+- `mcp/` — source and documentation for local MCP packages.
+- `.well-known/` — discovery manifests.
+
+GitHub Pages remains a static host. It does not execute MCP, agents, databases, authentication services, or private runtime components.
+
+## Jekyll and rendering
+
+- **Static site generator:** Jekyll 4.
+- **Content inputs:** Markdown, HTML, JSON/YAML, and Jekyll `_data/`.
+- **Shared UI:** `_includes/` and `_layouts/`.
+- **Design system:** `assets/main.css` and shared component classes.
+- **Collections:** `_blog/`, `_notes/`, `_radar/`, `_news/`, `_glossary/` and configured Jekyll collections.
+
+The homepage uses `index.md`, `_data/home.yml`, and section includes. Resume/profile views reuse structured profile data where possible.
+
+## Generated and AI-readable artifacts
+
+Generated output must be treated as output, not source.
+
+Examples include:
+
+- `_site/`;
+- `llms-full.txt`;
+- Atlas manifests and compact indexes;
+- expert evidence and promotion inventories;
+- related-page indexes;
+- sitemap files;
+- content-quality reports.
+
+Fix the source or generator, regenerate, and validate. Do not patch generated files by hand.
+
+## Link and publication validation
+
+The structural safety contract is enforced through CI. A normal validation sequence is:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
+python3 scripts/check_public_repo.py
+bundle exec jekyll build --trace
+python3 scripts/content_quality.py check --site-dir _site
+python3 scripts/check_links.py _site
+python3 scripts/check_seo.py _site
+python3 scripts/generate_atlas_artifacts.py --check
+```
+
+CI also checks indexing policy, sitemap policy, date consistency, content quality, accessibility, AI-readable endpoints, Lab publication policy, and other repository contracts.
+
+A structural change is not complete if required CI checks fail.
+
+## Design rule for future growth
+
+Before adding a new root directory, classify the work:
+
+- durable explanation → Knowledge;
+- active exploration or practice → Lab;
+- reusable reasoning/execution method → Framework;
+- structured representation for tools → Machine layer;
+- commercial offer → Services;
+- identity/evidence → Profile.
+
+When a topic becomes large, first deepen its domain model. Do not automatically promote it to a new top-level product. The filesystem has no shortage of folders; the reader has a finite attention span.
