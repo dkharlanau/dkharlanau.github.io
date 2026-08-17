@@ -42,6 +42,9 @@ jobs:
       - name: Check public repo hygiene
         run: python3 scripts/check_public_repo.py
 
+      - name: Check source heading hierarchy
+        run: python3 scripts/normalize_heading_hierarchy.py --check
+
       - name: Run Python tests
         run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
 
