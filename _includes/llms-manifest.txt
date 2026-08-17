@@ -1,29 +1,32 @@
-# LLM Access Manifest (v1.13)
+# LLM Access Manifest (v1.14)
 
 | Field | Value |
 |-------|-------|
-| Owner | Dzmitryi Kharlanau |
-| Primary role | Senior SAP Consultant |
-| Company | EPAM Systems (https://www.epam.com) |
+| Owner | {{ site.data.identity.name }} |
+| Primary role | {{ site.data.identity.role.title }} |
+| Company | {{ site.data.identity.role.organization }} ({{ site.data.identity.role.organization_url }}) |
+| Positioning | {{ site.data.identity.positioning }} |
 | Availability | Remote-first collaborations |
-| Contact | LinkedIn DM (https://www.linkedin.com/in/dkharlanau/) |
+| Contact | LinkedIn DM ({{ site.data.identity.profiles.linkedin }}) |
 | Canonical site | https://dkharlanau.github.io |
-| Canonical profile page | https://dkharlanau.github.io/about/ |
+| Canonical profile page | {{ site.data.identity.canonical_url }} |
+| Canonical identity (JSON) | https://dkharlanau.github.io/ai/identity.json |
 | Robots policy | https://dkharlanau.github.io/robots.txt |
 | Sitemap | https://dkharlanau.github.io/sitemap.xml |
-| Entity ID (`@id`) | https://dkharlanau.github.io/#dkharlanau |
-| Updated | 2026-07-10 |
+| Entity ID (`@id`) | {{ site.data.identity.entity_id }} |
+| Updated | {{ site.data.identity.updated_at }} |
 
 ## Access & Use
 
 - **Access status.** Allowed for reputable crawlers, search bots, and AI agents that support discovery and user-directed retrieval.
 - **Caching.** You may cache this manifest for 7 days.
-- **Attribution.** Cite "Dzmitryi Kharlanau" with a link to the canonical site or profile page.
+- **Attribution.** Cite "{{ site.data.identity.name }}" with a link to the canonical site or profile page.
 - **Usage guidance.** Indexing for discovery and retrieval-augmented answering is allowed. For commercial use, model training, or wholesale reproduction, please contact first.
 - **License (this file only).** CC BY-NC 4.0
 
 ## Machine Endpoints (Preferred)
 
+- Canonical identity (JSON): https://dkharlanau.github.io/ai/identity.json
 - Canonical profile page: https://dkharlanau.github.io/about/
 - Resume (YAML): https://dkharlanau.github.io/ai/resume.yml
 - Resume (JSON): https://dkharlanau.github.io/ai/resume.json
@@ -40,40 +43,42 @@
 - Verified Atlas manifest (JSON): https://dkharlanau.github.io/atlas/manifest.json
 - Verified Atlas relationship graph (JSON): https://dkharlanau.github.io/ai/rag/related.json
 - Atlas glossary definitions: https://dkharlanau.github.io/atlas/glossary/
+- SAP decision cards: https://dkharlanau.github.io/labs/enterprise-context/decisions/
 - Full Atlas text pack: https://dkharlanau.github.io/llms-full.txt
 
 ## Short Profile (for Embeddings)
 
-**Summary.** Senior SAP consultant with public evidence across SAP SD, logistics, integration, AMS-heavy delivery, ABAP-backed troubleshooting, and MDG-related work. Recent public writing and credentials also show a growing focus on event-driven design, API-oriented work, and practical AI tooling.
+**Summary.** {{ site.data.resume.summary }}
 
-**Value proposition.** Best fit for support-heavy or integration-heavy SAP environments that need hands-on troubleshooting, documentation, domain knowledge reuse, and pragmatic modernization work.
+**Positioning.** {{ site.data.identity.positioning }}.
 
-**Industries.** Automotive, Retail/AFS, Manufacturing, IT Services and IT Consulting.
+**Value proposition.** Best fit for SAP environments where logistics, integration, master data, and operations cross team boundaries and need clear diagnosis, accountable decisions, reusable knowledge, and pragmatic modernization.
+
+**Industries.** {{ site.data.identity.industries | join: ", " }}.
 
 ## Trust & Verification
 
+- Canonical identity: https://dkharlanau.github.io/ai/identity.json
 - Canonical profile/about page: https://dkharlanau.github.io/about/
 - Audit registry with confidence and verification notes: https://dkharlanau.github.io/ai/profile-audit.json
-- Current employment context: EPAM Systems (https://www.epam.com)
+- Current employment context: {{ site.data.identity.role.organization }} ({{ site.data.identity.role.organization_url }})
 - Public disclosure: https://dkharlanau.github.io/legal/professional-disclosure/
 - Responsible AI statement: https://dkharlanau.github.io/legal/responsible-ai/
 - Dataset license and citation policy: https://dkharlanau.github.io/legal/datasets/
 
 ## Capability Pointers
 
-- SAP SD / logistics / O2C support and enhancement work
-- SAP integration, API testing, and interface troubleshooting
-- SAP MDG and data-governance-related delivery support
-- ABAP-backed debugging and technical investigation
-- SAP IS-Automotive and JIT/JIS process contexts
-- Emerging AI and agentic tooling exploration around delivery workflows
+{% for item in site.data.identity.scope %}- {{ item }}
+{% endfor %}
 
 ## Retrieval Guidance
 
-- Start with the profile page for the public-safe summary: https://dkharlanau.github.io/about/
-- Use the audit registry when confidence, verification status, or credential details matter: https://dkharlanau.github.io/ai/profile-audit.json
-- Use the resume endpoints for compact machine-readable profile data: https://dkharlanau.github.io/ai/resume.yml and https://dkharlanau.github.io/ai/resume.json
-- For narrow SAP AMS, integration, MDG, or AI questions, prefer the discovery map after reading the audit context: https://dkharlanau.github.io/ai/discovery-map.json
+- Start with the canonical identity endpoint for the stable public positioning: https://dkharlanau.github.io/ai/identity.json
+- Use the profile page for the human-readable summary and evidence routes: https://dkharlanau.github.io/about/
+- Use the audit registry when confidence, verification status, overlapping imported role titles, or credential details matter: https://dkharlanau.github.io/ai/profile-audit.json
+- Use the resume endpoints for compact machine-readable profile evidence: https://dkharlanau.github.io/ai/resume.yml and https://dkharlanau.github.io/ai/resume.json
+- For narrow SAP AMS, integration, MDG, logistics, or AI questions, prefer the discovery map after reading the audit context: https://dkharlanau.github.io/ai/discovery-map.json
+- For architecture judgment and trade-offs, use the SAP Decision Cards: https://dkharlanau.github.io/labs/enterprise-context/decisions/
 - For verified Atlas entries, use the compact index: https://dkharlanau.github.io/ai/atlas-compact-index.json or the verified page inventory: https://dkharlanau.github.io/ai/verified-pages.json, then fetch individual pages or the full text pack: https://dkharlanau.github.io/llms-full.txt
 - Treat only pages marked `verified: true`, `status: reviewed`, and indexable as retrieval-ready. Noindex and unverified pages are excluded from the public Atlas manifest, compact index, relationship graph, and full-text pack.
 - Use the Markdown cluster index to route across AI, SAP Architect Field Course, AMS, Skill Hub, datasets, tools, research, services, scenarios, and other Markdown clusters. Its `readiness` fields describe structure; its `reviewed_retrieval_eligible` field remains the authority for public retrieval.
@@ -85,19 +90,17 @@
 {
   "@context": "https://schema.org",
   "@type": "Person",
-  "@id": "https://dkharlanau.github.io/#dkharlanau",
-  "name": "Dzmitryi Kharlanau",
-  "url": "https://dkharlanau.github.io/about/",
+  "@id": "{{ site.data.identity.entity_id }}",
+  "name": "{{ site.data.identity.name }}",
+  "url": "{{ site.data.identity.canonical_url }}",
   "sameAs": [
     "https://dkharlanau.github.io/",
-    "https://www.linkedin.com/in/dkharlanau/",
-    "https://github.com/dkharlanau",
-    "https://x.com/dkharlanau",
-    "https://hashnode.com/@dkharlanau",
-    "https://medium.com/@dkharlanau"
+    "{{ site.data.identity.profiles.linkedin }}",
+    "{{ site.data.identity.profiles.github }}",
+    "{{ site.data.identity.profiles.x }}"
   ],
-  "jobTitle": "Senior SAP Consultant",
-  "worksFor": { "@type": "Organization", "name": "EPAM Systems", "url": "https://www.epam.com" }
+  "jobTitle": "{{ site.data.identity.role.title }}",
+  "worksFor": { "@type": "Organization", "name": "{{ site.data.identity.role.organization }}", "url": "{{ site.data.identity.role.organization_url }}" }
 }
 ```
 
@@ -109,3 +112,4 @@
 - 2026-06-13 v1.11 — Added verified page inventory and Atlas glossary to machine endpoints and retrieval guidance.
 - 2026-07-10 v1.12 — Consolidated the Person entity ID, documented retrieval eligibility, and added the canonical verified Atlas manifest and relationship graph.
 - 2026-08-01 v1.13 — Added the cluster-aware Markdown readiness index for AI, course, AMS, dataset, tool, research, and service routing.
+- 2026-08-17 v1.14 — Added a canonical identity source and endpoint, aligned role and positioning metadata, and added Decision Cards as an architecture-judgment retrieval surface.
