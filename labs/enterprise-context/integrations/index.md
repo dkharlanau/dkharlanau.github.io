@@ -110,12 +110,12 @@ source_links:
       <p>For an assessment answer, move through the design in a fixed order. A technology name is useful only after the business interaction and failure model are clear.</p>
     </header>
     <div class="ecg-decision-columns">
-      <div><h4>01 · Business interaction</h4><p>What business object or event crosses the boundary, who owns it, and does the sender need an immediate answer?</p></div>
-      <div><h4>02 · Contract and semantics</h4><p>Define identity, version, required fields, idempotency expectation, ordering need, and what a successful receiver state means.</p></div>
-      <div><h4>03 · Delivery pattern</h4><p>Choose synchronous request, asynchronous command, event, queue, stream, file, or B2B exchange from the dependency and operating model.</p></div>
-      <div><h4>04 · Platform fit</h4><p>Only now select the SAP or non-SAP runtime, broker, mediation layer, or streaming platform that fits the contract.</p></div>
-      <div><h4>05 · Recovery</h4><p>Explain retries, duplicates, replay, ordering, monitoring, dead-letter or error handling, and the owner of recovery.</p></div>
-      <div><h4>06 · Business proof</h4><p>Close with reconciliation in the receiving business object. A green transport status is not proof of business completion.</p></div>
+      <div><h3>01 · Business interaction</h3><p>What business object or event crosses the boundary, who owns it, and does the sender need an immediate answer?</p></div>
+      <div><h3>02 · Contract and semantics</h3><p>Define identity, version, required fields, idempotency expectation, ordering need, and what a successful receiver state means.</p></div>
+      <div><h3>03 · Delivery pattern</h3><p>Choose synchronous request, asynchronous command, event, queue, stream, file, or B2B exchange from the dependency and operating model.</p></div>
+      <div><h3>04 · Platform fit</h3><p>Only now select the SAP or non-SAP runtime, broker, mediation layer, or streaming platform that fits the contract.</p></div>
+      <div><h3>05 · Recovery</h3><p>Explain retries, duplicates, replay, ordering, monitoring, dead-letter or error handling, and the owner of recovery.</p></div>
+      <div><h3>06 · Business proof</h3><p>Close with reconciliation in the receiving business object. A green transport status is not proof of business completion.</p></div>
     </div>
     <p class="ecg-caption"><strong>Evidence boundary:</strong> reviewed product documentation supports the named platform and interface behavior. The architecture stack, selection sequence, and design heuristics were reviewed as authored reasoning and are intentionally kept separate from vendor product facts.</p>
     <a href="/labs/enterprise-context/integration-operations/">Continue into runtime recovery and reconciliation <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
