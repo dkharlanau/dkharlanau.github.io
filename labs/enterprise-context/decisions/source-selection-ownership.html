@@ -1,0 +1,97 @@
+---
+layout: default
+title: "Where Should Supplier Selection Logic Live? — SAP Procurement Decision Card"
+description: "A SAP Lead decision model for placing supplier and source-of-supply logic in standard procurement objects, governance, or custom extensions."
+permalink: /labs/enterprise-context/decisions/source-selection-ownership/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-17
+hide_global_cta: true
+review_method: "authored decision reasoning over reviewed Procurement source-of-supply material; pending publication-contract review"
+structured_data:
+  type: TechArticle
+primary_topic: "sap-procurement-decisions"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Decision Cards"
+    url: "/labs/enterprise-context/decisions/"
+  - type: "same_domain"
+    title: "Procurement Process & Decision Map"
+    url: "/labs/enterprise-context/procurement/"
+  - type: "applied_scenario"
+    title: "Purchase Order Material Reconciliation"
+    url: "/reusable-data-procedures/cases/purchase-order-material-reconciliation/"
+source_links:
+  - title: "Source Determination"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/9c7fb65334e6b54ce10000000a174cb4.html"
+  - title: "Determining the Source Under a Quota Arrangement"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/907fb65334e6b54ce10000000a174cb4.html"
+  - title: "Source List"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/757fb65334e6b54ce10000000a174cb4.html"
+  - title: "Purchasing Info Records"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/af9ef57f504840d2b81be8667206d485/487fb65334e6b54ce10000000a174cb4.html"
+tags: [sap, procurement, sourcing, supplier, source-determination, architecture]
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Supplier selection ownership</li></ol></nav>
+
+<div class="research-canvas">
+  <header class="research-canvas__hero" data-reveal>
+    <div class="research-canvas__hero-copy">
+      <p class="research-canvas__eyebrow">Decision Card / Procurement</p>
+      <h1>Where should supplier<br />selection logic live?</h1>
+      <p>A supplier field in a PO is an output of several business rules. I first decide which object should own the rule, then I decide whether an extension is needed.</p>
+    </div>
+    <div class="research-canvas__signal">
+      <p>My default</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Standard sourcing</strong><small>Use the procurement model first</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Governed data</strong><small>Keep validity and ownership explicit</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Extension</strong><small>Add only for a real gap</small></div>
+      <em>Do not hide sourcing policy inside document exits.</em>
+    </div>
+  </header>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">rule</span>
+    <p><strong>Decision in one sentence:</strong> keep supplier and source-of-supply policy in standard procurement objects when the rule fits their business meaning; use an extension only when the requirement cannot be represented clearly and the new owner, audit path, and fallback are explicit.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision drivers</p><h2>Ask what the rule is trying to control.</h2></header>
+    <div class="ecg-decision-columns">
+      <div><h3>Eligibility</h3><p>Is the question which suppliers are allowed or blocked for a material, plant, purchasing organization, or time period?</p></div>
+      <div><h3>Allocation</h3><p>Does demand need to be distributed between valid sources rather than assigned to one fixed source?</p></div>
+      <div><h3>Commercial relationship</h3><p>Is the requirement about a purchasing relationship, agreement, conditions, units, or supplier-specific material information?</p></div>
+      <div><h3>External optimization</h3><p>Does the decision depend on data that SAP Procurement does not own, such as a planning or optimization result?</p></div>
+      <div><h3>Override and audit</h3><p>Who may override the result, for how long, and where can support explain why this supplier was selected?</p></div>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Ownership model</p><h2>Put each rule where its business meaning is visible.</h2></header>
+    <div class="decision-table"><table><thead><tr><th>Rule type</th><th>Preferred owner</th><th>Lead check</th></tr></thead><tbody>
+      <tr><td><strong>Allowed or fixed sources</strong></td><td>Standard source-of-supply controls and governed master data.</td><td>Can a buyer and support team explain validity, plant scope, and block status without reading custom code?</td></tr>
+      <tr><td><strong>Demand allocation</strong></td><td>Quota or another explicit allocation model.</td><td>Is the allocation policy separate from supplier price and from technical interface routing?</td></tr>
+      <tr><td><strong>Supplier-specific commercial data</strong></td><td>Purchasing relationship objects, agreements, and conditions.</td><td>Are price, unit, validity, and source eligibility treated as separate decisions?</td></tr>
+      <tr><td><strong>External recommendation</strong></td><td>External engine proposes; SAP-side control validates and accepts.</td><td>What happens when the recommendation is missing, stale, or conflicts with a blocked source?</td></tr>
+      <tr><td><strong>Exceptional policy</strong></td><td>Extension with one named business owner.</td><td>Is the rule testable, traceable, and removable, or is it permanent policy hidden in code?</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <section class="research-canvas__boundary" data-reveal>
+    <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+    <p><strong>I change the default when:</strong> source selection depends on cross-enterprise optimization, supplier risk data outside the SAP ownership boundary, regulatory controls, or another system that is explicitly authoritative for the decision.</p>
+    <p><strong>Failure ownership:</strong> a technically valid supplier value is still wrong when the sourcing policy, validity, or business authority is wrong. The owner of the selection rule must be visible before support changes the PO.</p>
+  </section>
+
+  <section class="research-canvas__inventory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Connect the architecture choice to a real data problem.</h2></header>
+    <div class="research-route-list">
+      <a href="/labs/enterprise-context/procurement/#source-determination"><span>DOMAIN</span><strong>Procurement source determination</strong><small>Reviewed model of source objects, validity, quotas, agreements, controls, and diagnostic sequence.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/reusable-data-procedures/cases/purchase-order-material-reconciliation/"><span>CASE</span><strong>Supplier-material reconciliation</strong><small>A synthetic Procurement case where supplier scope changes the key and a new mapping must pass human review before replay.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/labs/enterprise-context/procurement/#sources"><span>EVID</span><strong>Primary procurement sources</strong><small>SAP Help references behind the reviewed Procurement model.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+    </div>
+  </section>
+</div>
