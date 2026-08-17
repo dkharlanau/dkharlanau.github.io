@@ -46,14 +46,15 @@ tags:
   <section class="research-canvas__inventory" id="lab-routes" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lab map</p>
-      <h2>Four workspaces, one assessment route.</h2>
-      <p>Start from the domain you need to explain. Move to the assessment lab when you want to defend decisions under questioning.</p>
+      <h2>Four workspaces, one assessment system.</h2>
+      <p>Start from the domain you need to explain. Use Start Here when you want a preparation route, then move into cases, mocks, review, and Board Mode.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/"><span>SAP</span><strong>SAP Enterprise</strong><small>Sales, procurement, logistics, master data, production, quality, integration, development, analytics, and cross-functional SAP capabilities.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture</strong><small>Data, retrieval, MCP, tools, agents, evaluations, security, deployment, and production boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
       <a href="/labs/business-ai/"><span>BIZ</span><strong>Business AI</strong><small>Business process → AI job → pattern → technology → control → outcome → evidence, including failed and mixed cases.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       <a href="/labs/templates/"><span>OPS</span><strong>Operational Protocols</strong><small>RCA, incident response, integration failure analysis, runbooks, change impact, cutover, and hypercare.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="/labs/assessment/start-here/"><span>START</span><strong>SAP Lead Assessment — Start Here</strong><small>Use a practical study → case → pressure → review loop instead of reading the site as a long syllabus.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       <a href="/labs/assessment/"><span>LEAD</span><strong>SAP Lead Assessment</strong><small>Practice Sales, Procurement and Logistics, Integration and Architecture, AI and Data at explain, trace, diagnose, design, and challenge levels.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
     </div>
   </section>

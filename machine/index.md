@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Machine Layer — Data, Agent Tools, and AI-Readable Sources"
-description: "A technical entry point to datasets, machine-readable exports, agent skills, agent tools, and the SAP diagnostics MCP package."
+description: "A technical entry point to datasets, machine-readable exports, agent skills, agent tools, and local MCP packages."
 permalink: /machine/
 status: draft
 verified: false
@@ -54,6 +54,7 @@ tags:
       <a href="/ai/"><span>AI</span><strong>AI-readable sources</strong><small>Generated and curated JSON, YAML, discovery maps, indexes, and expert evidence surfaces.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
       <a href="/skill-hub/"><span>SKILL</span><strong>Skill Hub</strong><small>Human-readable map of reusable analysis, architecture, development, and decision skills.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
       <a href="/agent-tools/"><span>TOOL</span><strong>Agent Tools</strong><small>Static tool descriptions for SAP diagnostics, ABAP, integration, data analysis, evaluation, and related work.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
+      <a href="/machine/assessment/"><span>ASSESS</span><strong>SAP Lead Assessment Access</strong><small>Case manifest, schemas, practice contracts, JSONL case sets, and the local read-only assessment MCP route.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
       <a href="/mcp/sap-diagnostics-mcp/"><span>MCP</span><strong>SAP Diagnostics MCP</strong><small>A local, read-only package that consumes committed public artifacts. GitHub Pages publishes it but does not execute it.</small><i class="material-symbols-outlined" aria-hidden="true">terminal</i></a>
     </div>
   </section>
