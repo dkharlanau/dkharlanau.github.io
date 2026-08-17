@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Assessment Lab — Reasoning Routes"
-description: "A practical SAP Lead assessment route across Sales, Procurement, Production, Quality, Inventory, FI/CO logistics, Automotive JIT/JIS, Integration Operations, AI, data, diagnostics, and architecture decisions."
+description: "SAP Lead assessment practice across Sales, Procurement, Logistics, Integration, AI, data, diagnostics, and architecture decisions."
 permalink: /labs/assessment/
 status: draft
 verified: false
@@ -143,9 +143,9 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Coverage</p><h2>The foundation is broad enough. Practice now adapts to the result.</h2><p>The main vertical backlog is complete. The next improvements should make scoring and review more useful rather than add volume.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Knowledge base</h4><ul><li>Sales, Shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory</li><li>FI/CO touchpoints, Automotive JIT/JIS, EWM and TM</li><li>Integration architecture and recovery operations</li><li>MDG, SAP development/deployment, Business AI and AI architecture</li></ul></div>
-      <div><h4>Practice layer</h4><ul><li>59 structured cases</li><li>Adaptive single-case selection</li><li>Balanced mock sessions</li><li>Weak-signal review queue</li><li>Shared seven-dimension scoring history</li><li>Portable local history import and export</li><li>Provenance-aware feedback evidence</li></ul></div>
-      <div><h4>Next iteration</h4><ul><li>Extend candidate generation only to graphs with strong failure evidence</li><li>Continue factual review across remaining logistics verticals</li><li>Connect real feedback to review priorities without automatic scoring changes</li><li>Create reviewed calibration decisions when enough evidence exists</li></ul></div>
+      <div><h3>Knowledge base</h3><ul><li>Sales, Shipping, Billing and diagnostics</li><li>Procurement, Production, Quality and Inventory</li><li>FI/CO touchpoints, Automotive JIT/JIS, EWM and TM</li><li>Integration architecture and recovery operations</li><li>MDG, SAP development/deployment, Business AI and AI architecture</li></ul></div>
+      <div><h3>Practice layer</h3><ul><li>59 structured cases</li><li>Adaptive single-case selection</li><li>Balanced mock sessions</li><li>Weak-signal review queue</li><li>Shared seven-dimension scoring history</li><li>Portable local history import and export</li><li>Provenance-aware feedback evidence</li></ul></div>
+      <div><h3>Next iteration</h3><ul><li>Extend candidate generation only to graphs with strong failure evidence</li><li>Continue factual review across remaining logistics verticals</li><li>Connect real feedback to review priorities without automatic scoring changes</li><li>Create reviewed calibration decisions when enough evidence exists</li></ul></div>
     </div>
   </section>
 

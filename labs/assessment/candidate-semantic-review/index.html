@@ -40,45 +40,45 @@ tags: [sap, assessment, question-review, production, diagnostics]
   <section class="research-canvas__inventory" id="decisions" data-reveal>
     <header><p class="research-canvas__eyebrow">Decision 01</p><h2>Keep the MRP quantity diagnosis.</h2><p><strong>CAND-PP-WRONG-QUANTITY</strong> adds a real signal: reconstruct the net requirement before changing the planned order.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Why it is useful</h4><p>The current Production cases cover production model choice, production structure, staging, and cross-process completion. They do not isolate why MRP created too much, too little, or repeated supply.</p></div>
-      <div><h4>Lead path</h4><p>Requirement → stock and receipts → planning strategy → lot sizing → planning parameters → procurement type → net requirement.</p></div>
-      <div><h4>Review gate</h4><p>Do not accept a version that becomes a generic list of MRP settings. The answer must reconstruct the quantity decision.</p></div>
+      <div><h3>Why it is useful</h3><p>The current Production cases cover production model choice, production structure, staging, and cross-process completion. They do not isolate why MRP created too much, too little, or repeated supply.</p></div>
+      <div><h3>Lead path</h3><p>Requirement → stock and receipts → planning strategy → lot sizing → planning parameters → procurement type → net requirement.</p></div>
+      <div><h3>Review gate</h3><p>Do not accept a version that becomes a generic list of MRP settings. The answer must reconstruct the quantity decision.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Decision 02</p><h2>Keep the goods-receipt boundary diagnosis.</h2><p><strong>CAND-PP-GR</strong> tests the difference between production progress and the actual finished-product inventory event.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Why it is useful</h4><p>A confirmation can be correct while the expected finished product is still missing from the intended stock or warehouse context.</p></div>
-      <div><h4>Lead path</h4><p>Order quantity → GR relevance → quantity/UoM → storage, batch and quality context → automatic/manual GR → EWM inbound where used.</p></div>
-      <div><h4>Review gate</h4><p>Keep ownership explicit: Production progress, Inventory state, EWM execution and Quality status are related but not interchangeable.</p></div>
+      <div><h3>Why it is useful</h3><p>A confirmation can be correct while the expected finished product is still missing from the intended stock or warehouse context.</p></div>
+      <div><h3>Lead path</h3><p>Order quantity → GR relevance → quantity/UoM → storage, batch and quality context → automatic/manual GR → EWM inbound where used.</p></div>
+      <div><h3>Review gate</h3><p>Keep ownership explicit: Production progress, Inventory state, EWM execution and Quality status are related but not interchangeable.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Decision 03</p><h2>Reject the production-cost candidate as a semantic duplicate.</h2><p><strong>CAND-PP-COST</strong> looks new to the lexical filter, but its reasoning is already covered by <strong>ASSESS-FIN-005</strong>.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Same business problem</h4><p>A physically or technically complete production order still carries an unexplained financial balance.</p></div>
-      <div><h4>Same reasoning</h4><p>Actual debits → goods-receipt credits → order status → settlement rule/receiver → variance/WIP timing → settlement proof.</p></div>
-      <div><h4>Better next case</h4><p>If another finance case is needed, change the problem materially, for example sales-order settlement ownership or a period-end WIP design decision.</p></div>
+      <div><h3>Same business problem</h3><p>A physically or technically complete production order still carries an unexplained financial balance.</p></div>
+      <div><h3>Same reasoning</h3><p>Actual debits → goods-receipt credits → order status → settlement rule/receiver → variance/WIP timing → settlement proof.</p></div>
+      <div><h3>Better next case</h3><p>If another finance case is needed, change the problem materially, for example sales-order settlement ownership or a period-end WIP design decision.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="legacy-generated-review" data-reveal>
     <header><p class="research-canvas__eyebrow">Generated backlog close</p><h2>The semantic registry now covers every active generated candidate.</h2><p>Two older candidates predated the semantic-review layer. Both add distinct diagnostic pressure and stay in human promotion review.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Billing reference</h4><p><strong>CAND-BIL-WRONG-REFERENCE</strong> tests source-document relationship, copy-control path, copied quantity/value, and document-flow proof before downstream repair.</p></div>
-      <div><h4>Integration ownership</h4><p><strong>CAND-INTOPS-OWNERSHIP</strong> tests the missing operating contract between technical correction ownership and business confirmation ownership.</p></div>
-      <div><h4>Invariant</h4><p>Every active generated candidate now has exactly one semantic decision. A future generator expansion cannot silently bypass semantic review.</p></div>
+      <div><h3>Billing reference</h3><p><strong>CAND-BIL-WRONG-REFERENCE</strong> tests source-document relationship, copy-control path, copied quantity/value, and document-flow proof before downstream repair.</p></div>
+      <div><h3>Integration ownership</h3><p><strong>CAND-INTOPS-OWNERSHIP</strong> tests the missing operating contract between technical correction ownership and business confirmation ownership.</p></div>
+      <div><h3>Invariant</h3><p>Every active generated candidate now has exactly one semantic decision. A future generator expansion cannot silently bypass semantic review.</p></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="ai-semantic-review" data-reveal>
     <header><p class="research-canvas__eyebrow">AI/Data batch</p><h2>One new signal survives semantic review.</h2><p>The evidence gate produced two Agent Architecture Diagnose candidates. Semantic comparison against the published AI cases keeps only the tool-semantics failure.</p></header>
     <div class="ecg-decision-columns">
-      <div><h4>Keep · RAW MCP</h4><p><strong>CAND-AIAG-RAW-MCP</strong> asks whether a technically valid tool call selected the wrong SAP capability, business key, or field semantics. The diagnostic path is tool contract → semantic context → schema → key resolution → authoritative write validation.</p></div>
-      <div><h4>Reject · Over-privileged</h4><p><strong>CAND-AIAG-OVERPRIVILEGED</strong> materially repeats <strong>ASSESS-AI-003</strong>: risky trajectory, unnecessary write scope, approval bypass, reduced permissions, deterministic policy, and negative tests.</p></div>
-      <div><h4>Publication boundary</h4><p>The surviving candidate is still review-stage only. Semantic novelty is necessary for promotion, but it is not a human promotion decision.</p></div>
+      <div><h3>Keep · RAW MCP</h3><p><strong>CAND-AIAG-RAW-MCP</strong> asks whether a technically valid tool call selected the wrong SAP capability, business key, or field semantics. The diagnostic path is tool contract → semantic context → schema → key resolution → authoritative write validation.</p></div>
+      <div><h3>Reject · Over-privileged</h3><p><strong>CAND-AIAG-OVERPRIVILEGED</strong> materially repeats <strong>ASSESS-AI-003</strong>: risky trajectory, unnecessary write scope, approval bypass, reduced permissions, deterministic policy, and negative tests.</p></div>
+      <div><h3>Publication boundary</h3><p>The surviving candidate is still review-stage only. Semantic novelty is necessary for promotion, but it is not a human promotion decision.</p></div>
     </div>
   </section>
 

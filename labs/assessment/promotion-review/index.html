@@ -72,7 +72,7 @@ tags: [sap, assessment, question-review, promotion, governance]
     document.getElementById('pr-pending').textContent=String(data.summary.pending_candidates);
     document.getElementById('pr-published').textContent=String(data.summary.published_case_count);
     rules.replaceChildren();
-    data.review_rule.forEach((rule,index)=>{const card=document.createElement('article');const title=document.createElement('h4');title.textContent=`0${index+1}`;const copy=document.createElement('p');copy.textContent=rule;card.append(title,copy);rules.appendChild(card);});
+    data.review_rule.forEach((rule,index)=>{const card=document.createElement('article');const title=document.createElement('h3');title.textContent=`0${index+1}`;const copy=document.createElement('p');copy.textContent=rule;card.append(title,copy);rules.appendChild(card);});
     status.textContent=`${data.summary.pending_candidates} candidates are pending explicit human review. ${data.summary.semantic_duplicates_excluded} semantic duplicate(s) were excluded before this packet.`;
     items.replaceChildren();
     data.items.forEach(item=>{
