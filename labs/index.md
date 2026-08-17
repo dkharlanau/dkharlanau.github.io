@@ -1,24 +1,20 @@
 ---
 layout: default
-title: "Labs — Enterprise Context and AI"
-description: "Practical maps for SAP Lead assessment, enterprise processes, AI architecture, Business AI patterns, technologies, outcomes, failures, and digital problem solving."
+title: "Labs — SAP, AI and Assessment"
+description: "Working models and practice systems for SAP Lead assessment, enterprise architecture, AI systems, Business AI, and operational methods."
 permalink: /labs/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-16
+last_modified_at: 2026-08-17
 hide_global_cta: true
 tags:
   - sap
   - enterprise-architecture
-  - research
+  - assessment
   - business-ai
 ---
-
-{% assign business_ai_processes = site.data.labs.business_ai.process_map %}
-{% assign business_ai_tech = site.data.labs.business_ai.technology_landscape %}
-{% assign business_ai_scenarios = site.data.labs.business_ai.scenario_library %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li aria-current="page">Labs</li></ol>
@@ -27,133 +23,100 @@ tags:
 <div class="research-canvas">
   <header class="research-canvas__hero" data-reveal>
     <div class="research-canvas__hero-copy">
-      <p class="research-canvas__eyebrow">Labs / practical architecture maps</p>
-      <h1>Understand the business.<br />Then map the architecture.</h1>
-      <p>Simple, source-tracked maps of business processes, SAP landscapes, integrations, data, AI systems, implementation outcomes, and the decisions that connect them.</p>
-      <a class="research-canvas__button" href="#assessment-route">Open the assessment route <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
+      <p class="research-canvas__eyebrow">Labs / models and practice</p>
+      <h1>Model the system.<br />Then test the reasoning.</h1>
+      <p>Labs are working environments for architecture maps, assessment practice, AI design, and operational protocols. Stable explanations belong in Knowledge. Reusable methods belong in Frameworks.</p>
+      <a class="research-canvas__button" href="#active-labs">Open active labs <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
     </div>
-    <div class="research-canvas__signal" aria-label="Current labs">
-      <p>Current inventory</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>5</strong><small>Active labs</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>18+</strong><small>Architecture and outcome views</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>10+</strong><small>Machine endpoints</small></div>
-      <em>Working material is public but remains noindex until reviewed.</em>
+    <div class="research-canvas__signal" aria-label="Lab model">
+      <p>Simple boundary</p>
+      <div class="research-canvas__signal-line"><span>01</span><strong>4</strong><small>Core working labs</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>1</strong><small>Protocol library</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>1</strong><small>Assessment engine</small></div>
+      <em>Working material remains noindex until reviewed.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal aria-label="Lab boundary">
     <span class="material-symbols-outlined" aria-hidden="true">science</span>
-    <p><strong>Problem:</strong> product-first learning makes it hard to connect business ownership, process, architecture, evidence, and operational controls.</p>
-    <p><strong>Working rule.</strong> Facts, expert judgment, synthetic examples, fast-moving technology notes, and failure evidence stay separate.</p>
-    <a href="/research/">Open Research <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+    <p><strong>Labs model and exercise.</strong> Use <a href="/knowledge/">Knowledge</a> for published explanations, <a href="/frameworks/">Frameworks</a> for reusable methods, and <a href="/machine/">Machine Layer</a> for structured endpoints.</p>
   </section>
 
-  <p><strong>Publication rule.</strong> Vendor and primary sources verify facts; explanations stay independently written. See the <a href="/legal/research-attribution/">Research and Attribution Policy</a>.</p>
-
-  <section class="research-canvas__inventory" id="assessment-route" data-reveal>
+  <section class="research-canvas__inventory" id="active-labs" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">SAP Lead assessment route</p>
-      <h2>Turn the knowledge map into practice.</h2>
-      <p>The assessment route uses the existing Lab as one training system. Practice a topic at five levels: explain, trace, diagnose, design, and challenge. The structured cases keep expected points, follow-up questions, red flags, and links back to the relevant material.</p>
+      <p class="research-canvas__eyebrow">Assessment route</p>
+      <h2>Practice Lead-level reasoning.</h2>
+      <p>The assessment system connects domain knowledge with explanation, tracing, diagnosis, design, trade-offs, evidence, and review.</p>
     </header>
     <div class="research-route-list">
-      <a href="/labs/assessment/"><span>LEAD</span><strong>SAP Lead Assessment Lab</strong><small>Four tracks: Sales, Procurement and Logistics, Integration and Architecture, AI and Data.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
-      <a href="/labs/assessment/#reasoning-levels"><span>5X</span><strong>Reasoning levels</strong><small>Move from explaining a topic to defending architecture trade-offs and diagnostic evidence.</small><i class="material-symbols-outlined" aria-hidden="true">stairs</i></a>
-      <a href="/labs/assessment/data/cases.jsonl"><span>CASE</span><strong>Assessment case dataset</strong><small>Structured mock-interview cases for answer scoring, retrieval, and agent evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/assessment/data/catalog.json"><span>JSON</span><strong>Assessment catalog</strong><small>Tracks, reasoning levels, current strengths, missing verticals, and machine endpoints.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/assessment/"><span>LEAD</span><strong>SAP Lead Assessment Lab</strong><small>Sales, Procurement and Logistics, Integration and Architecture, AI and Data.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
+      <a href="/labs/assessment/mock/"><span>MOCK</span><strong>Mock assessment</strong><small>Practice cases and interview-style questions built on the same knowledge model.</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
+      <a href="/labs/assessment/progress/"><span>GAP</span><strong>Progress and gaps</strong><small>Track reasoning coverage, evidence coverage, weak areas, and promotion readiness.</small><i class="material-symbols-outlined" aria-hidden="true">monitoring</i></a>
     </div>
   </section>
 
-  <section class="research-canvas__inventory" id="labs-inventory" data-reveal>
+  <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lab 01 / Enterprise Context</p>
-      <h2>Business first, system second.</h2>
-      <p>Move from business ownership and industry context to deployment model, process, SAP component, integration, data, and AI responsibility.</p>
+      <p class="research-canvas__eyebrow">Lab 01 / SAP Enterprise</p>
+      <h2>Business process, SAP capability, decision, integration.</h2>
+      <p>The former Enterprise Context area is the main SAP enterprise model. It connects Sales, Procurement, Logistics, master data, development, integration, analytics, industries, and cross-functional capabilities.</p>
     </header>
     <div class="research-route-list">
-      <a href="/labs/enterprise-context/"><span>01</span><strong>Enterprise Context Graph</strong><small>Sales, Supply Chain, processes, applications, boundaries, licensing, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/domains/"><span>02</span><strong>Enterprise Business Domains</strong><small>What the business owns, separate from processes and SAP products.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/enterprise-context/deployment-models/"><span>03</span><strong>SAP S/4HANA Deployment Models</strong><small>Public Cloud, Private Cloud, and On-Premise.</small><i class="material-symbols-outlined" aria-hidden="true">cloud</i></a>
-      <a href="/labs/enterprise-context/industries/"><span>04</span><strong>SAP Industry Solutions</strong><small>Automotive, retail, fashion, industrial manufacturing, and mill products.</small><i class="material-symbols-outlined" aria-hidden="true">factory</i></a>
-      <a href="/labs/enterprise-context/business-ai/"><span>05</span><strong>SAP Business AI Detail</strong><small>Joule, agents, build tools, runtime, model access, grounding, governance, and SAP-specific integration.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      <a href="/labs/enterprise-context/integrations/"><span>06</span><strong>SAP Integration Architecture</strong><small>APIs, IDocs, RFC, events, Kafka, queues, files, B2B, middleware, logistics, and master-data distribution.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="/labs/enterprise-context/model/"><span>07</span><strong>Model and authoring rules</strong><small>IDs, node types, relationships, evidence, dates, and maturity gates.</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/labs/enterprise-context/data/catalog.json"><span>08</span><strong>Machine-readable catalog</strong><small>JSON for tools, AI experiments, and structured analysis.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/enterprise-context/"><span>SAP</span><strong>SAP Enterprise Lab</strong><small>Start from the complete model and move into domains, processes, capabilities, data, and technology.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/enterprise-context/sales-processes/"><span>SD</span><strong>Sales</strong><small>Order-to-cash processes, sales documents, pricing, ATP, shipping, billing, tax, credit, diagnostics, and analytics.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
+      <a href="/labs/enterprise-context/procurement/"><span>MM</span><strong>Procurement</strong><small>Purchase-to-pay processes, inventory, special procurement, integration, and cross-process dependencies.</small><i class="material-symbols-outlined" aria-hidden="true">inventory_2</i></a>
+      <a href="/labs/enterprise-context/integrations/"><span>INT</span><strong>Integration</strong><small>APIs, IDocs, RFC, events, queues, middleware, files, logistics flows, and operational ownership.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/enterprise-context/master-data/"><span>DATA</span><strong>Master Data and Governance</strong><small>Business Partner, material data, MDG, governance, distribution, quality, and process impact.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
+      <a href="/labs/enterprise-context/development/"><span>DEV</span><strong>Development</strong><small>ABAP, RAP, CAP, CDS, extensibility, clean core, and deployment choices.</small><i class="material-symbols-outlined" aria-hidden="true">code</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lab 02 / AI Ready</p>
-      <h2>Build AI systems, not isolated demos.</h2>
-      <p>A vendor-neutral architecture map for data, retrieval, tools, MCP, agents, evaluations, security, deployment, and production decisions.</p>
+      <h2>Design AI as a production system.</h2>
+      <p>A vendor-neutral map for retrieval, tools, MCP, agents, evaluation, security, deployment, boundaries, and operating controls.</p>
     </header>
     <div class="research-route-list">
-      <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture Lab</strong><small>Foundations, RAG, MCP, agents, evals, security, deployment, decision matrix, and hands-on track.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
-      <a href="/labs/ai-ready/data/catalog.json"><span>JSON</span><strong>AI architecture catalog</strong><small>Dated tracks, decision rules, production rules, labs, and primary-source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="/labs/ai-ready/data/eval-sample.jsonl"><span>EVAL</span><strong>Sample eval dataset</strong><small>Architecture cases with expected patterns, controls, and failure signals.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture Lab</strong><small>Architecture choices, system boundaries, data and RAG, agents, tools, evals, security, and build-operate decisions.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
+      <a href="/labs/ai-ready/practice/"><span>LAB</span><strong>Hands-on practice</strong><small>Use architecture questions and exercises instead of reading isolated feature descriptions.</small><i class="material-symbols-outlined" aria-hidden="true">experiment</i></a>
+      <a href="/labs/ai-ready/data/catalog.json"><span>JSON</span><strong>AI architecture catalog</strong><small>Machine-readable tracks, rules, examples, and dated source references.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lab 03 / TRIZ for Digital Systems</p>
-      <h2>Start from the contradiction.</h2>
-      <p>A reworked TRIZ method for IT architecture, business processes, integration, data, automation, and AI. The stable method is separated from dated technology signals.</p>
+      <p class="research-canvas__eyebrow">Lab 03 / Business AI</p>
+      <h2>Start from the business job and control point.</h2>
+      <p>Business AI is organised around processes, patterns, technologies, controls, outcomes, evidence, and failure modes.</p>
     </header>
     <div class="research-route-list">
-      <a href="/triz/"><span>TRIZ</span><strong>TRIZ for Digital Systems</strong><small>Three passes, nine reasoning steps, separation operators, resource scan, digital patterns, AI boundaries, and synthetic cases.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
-      <a href="/triz/operators/"><span>OPS</span><strong>Contradiction operators and resources</strong><small>Separate conflicts by time, condition, context, system level, authority, or representation before choosing technology.</small><i class="material-symbols-outlined" aria-hidden="true">call_split</i></a>
-      <a href="/triz/workbench/"><span>WB</span><strong>Practical workbench</strong><small>From evidence and useful function to options, complexity tax, authority chain, counter-metrics, and experiment.</small><i class="material-symbols-outlined" aria-hidden="true">edit_note</i></a>
-      <a href="/triz/signals/"><span>2026</span><strong>Current digital signals</strong><small>Dated notes on MCP, A2A, object-centric process data, simulation, process intelligence, and AI observability.</small><i class="material-symbols-outlined" aria-hidden="true">radar</i></a>
-      <a href="/datasets/triz-digital-framework/catalog.json"><span>JSON</span><strong>TRIZ digital catalog</strong><small>Method, contradiction types, operators, resources, allocation rules, authority model, risk tiers, metrics, and sources.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-      <a href="/datasets/triz-digital-framework/reasoning-schema.json"><span>SCHEMA</span><strong>Reasoning contract</strong><small>JSON Schema for inspectable problem analysis and agent output.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
-      <a href="/datasets/triz-digital-framework/cases.jsonl"><span>EVAL</span><strong>TRIZ reasoning cases</strong><small>Synthetic problem-to-contradiction examples for retrieval, reasoning, and agent evaluation.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/business-ai/"><span>AI</span><strong>Business AI Lab</strong><small>Enterprise-wide use cases, patterns, technologies, controls, cases, outcomes, and anti-patterns.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
+      <a href="/labs/business-ai/processes/"><span>PROC</span><strong>Processes</strong><small>Find AI work through end-to-end business processes rather than vendor feature lists.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
+      <a href="/labs/business-ai/scenarios/"><span>CASE</span><strong>Scenario outcomes</strong><small>Strong, mixed, and failed examples with missing controls and lessons.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
     </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
     <header>
-      <p class="research-canvas__eyebrow">Lab 04 / Business AI</p>
-      <h2>Process first. Evidence includes failures.</h2>
-      <p>Enterprise-wide Business AI across processes, domains, reusable patterns, technology families, platforms, strong implementations, mixed outcomes, failed pilots, and recurring anti-patterns.</p>
+      <p class="research-canvas__eyebrow">Lab 04 / Operations</p>
+      <h2>Make repeated analysis explicit.</h2>
+      <p>Protocols for incidents, root cause analysis, integrations, process deviations, runbooks, change impact, cutover, and hypercare.</p>
     </header>
     <div class="research-route-list">
-      <a href="/labs/business-ai/"><span>AI</span><strong>Business AI Lab</strong><small>Business process → pattern → technology → control → outcome → evidence.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      <a href="/labs/business-ai/processes/"><span>PROC</span><strong>Enterprise processes</strong><small>{{ business_ai_processes.processes | size }} end-to-end process chains with AI jobs and control points.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
-      <a href="/labs/business-ai/technologies/"><span>TECH</span><strong>Technology landscape</strong><small>{{ business_ai_tech.families | size }} capability families and {{ business_ai_tech.platforms | size }} platform examples across vendors.</small><i class="material-symbols-outlined" aria-hidden="true">memory</i></a>
-      <a href="/labs/business-ai/scenarios/"><span>CASE</span><strong>Scenario outcomes</strong><small>{{ business_ai_scenarios.scenarios | size }} strong, mixed, and failed scenarios with evidence, missing controls, and lessons.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
-      <a href="/labs/business-ai/practices/"><span>RISK</span><strong>Best practices and anti-patterns</strong><small>{{ business_ai_scenarios.best_practices | size }} operating rules and {{ business_ai_scenarios.failure_patterns | size }} recurring failure shapes.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
-      <a href="/labs/business-ai/data/scenarios.json"><span>JSON</span><strong>Scenario and failure data</strong><small>Machine-readable outcomes, controls, lessons, practices, anti-patterns, and source registry.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
-    </div>
-  </section>
-
-  <section class="research-canvas__inventory" data-reveal>
-    <header>
-      <p class="research-canvas__eyebrow">Lab 05 / Operational Templates</p>
-      <h2>Follow the protocol. Then use judgment.</h2>
-      <p>Reusable protocols for root cause analysis, active incidents, integration failures, process deviations, runbooks, change impact, decisions, cutover, and hypercare.</p>
-    </header>
-    <div class="research-route-list">
-      <a href="/labs/templates/"><span>RCA</span><strong>Operational Template Library</strong><small>Eight practical protocols with evidence, isolation, action, ownership, and validation steps.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
-      <a href="/labs/templates/#root-cause-analysis"><span>WHY</span><strong>Root Cause Analysis</strong><small>Move from symptom and impact to verified causal chain, correction, prevention, and business validation.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/templates/#integration-failure"><span>INT</span><strong>Integration Failure Analysis</strong><small>Trace trigger, connectivity, authentication, contract, mapping, processing, retry, and monitoring.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="/labs/templates/#runbook"><span>SOP</span><strong>Procedure / Runbook</strong><small>Turn repeated work into steps with expected results, evidence, stop conditions, rollback, and escalation.</small><i class="material-symbols-outlined" aria-hidden="true">rule</i></a>
-      <a href="/labs/templates/data/catalog.json"><span>JSON</span><strong>Template protocol catalog</strong><small>Machine-readable protocol chains, diagnostic layers, required outputs, and reusable controls.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/labs/templates/"><span>SOP</span><strong>Operational Template Library</strong><small>Reusable analysis and execution protocols with evidence, actions, ownership, validation, stop conditions, and escalation.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="/reusable-data-procedures/"><span>RDP</span><strong>Reusable Data Procedures</strong><small>A full framework for repeated file, mapping, validation, reference-data, and data-procedure work.</small><i class="material-symbols-outlined" aria-hidden="true">schema</i></a>
     </div>
   </section>
 
   <section class="research-canvas__method" data-reveal>
-    <div><p class="research-canvas__eyebrow">Method</p><h2>Model, connect, exercise.</h2></div>
+    <div><p class="research-canvas__eyebrow">Working model</p><h2>Context → Process → Capability → Decision → Evidence.</h2></div>
     <ol>
-      <li><span>01</span><strong>Model</strong><p>Define the problem, owners, data, rules, systems, and boundaries.</p></li>
-      <li><span>02</span><strong>Connect</strong><p>Link integrations, tools, failures, controls, tests, and evidence.</p></li>
-      <li><span>03</span><strong>Exercise</strong><p>Use synthetic cases, build small systems, and test the reasoning.</p></li>
+      <li><span>01</span><strong>Context</strong><p>Define business ownership, landscape, constraints, and boundaries.</p></li>
+      <li><span>02</span><strong>Process</strong><p>Trace the end-to-end flow and the documents or events that move it.</p></li>
+      <li><span>03</span><strong>Capability</strong><p>Map SAP, data, integration, AI, and operational responsibilities.</p></li>
+      <li><span>04</span><strong>Decision</strong><p>Explain alternatives, trade-offs, risks, and why one design is preferred.</p></li>
+      <li><span>05</span><strong>Evidence</strong><p>Test the explanation with cases, diagnostics, failures, sources, and assessment questions.</p></li>
     </ol>
   </section>
-
-  <div class="research-canvas__support" data-reveal>
-    {% include atlas/author-block.html %}
-    {% include atlas/disclaimer.html %}
-  </div>
 </div>
