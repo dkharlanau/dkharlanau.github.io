@@ -37,7 +37,7 @@ const scoreCase = (item, query) => {
   const haystack = tokens([item.id, item.track, item.level, item.title, item.prompt, ...(item.expected_points || []), ...(item.red_flags || [])].join(' '));
   return tokens(query).reduce((score, token) => score + haystack.filter((candidate) => candidate === token).length, 0);
 };
-const publicCase = (item) => ({ ...item, canonical_url: `/labs/assessment/#${item.id.toLowerCase()}`, limitations: [limitation] });
+const publicCase = (item) => ({ ...item, limitations: [limitation] });
 const trackSummary = () => tracks.map((track) => {
   const items = cases.filter((item) => item.track === track);
   return {
@@ -105,7 +105,7 @@ const toolDefinitions = [
   }],
   ['get_assessment_case', 'Get one assessment case with rubric points, follow-ups, red flags, and study routes.', {
     case_id: { type: 'string' }
-  }],
+  }, ['case_id']],
   ['list_assessment_tracks', 'List tracks, reasoning-level coverage, case counts, and source routes.', {}],
   ['build_practice_set', 'Build a deterministic practice set from track and reasoning-level filters.', {
     track: { type: 'string', enum: tracks },
@@ -117,12 +117,12 @@ const toolDefinitions = [
   }],
   ['get_study_sources', 'Return the human-readable site routes linked to a case.', {
     case_id: { type: 'string' }
-  }]
+  }, ['case_id']]
 ];
-const listTools = () => toolDefinitions.map(([name, description, properties]) => ({
+const listTools = () => toolDefinitions.map(([name, description, properties, required = []]) => ({
   name,
   description,
-  inputSchema: { type: 'object', properties, additionalProperties: false }
+  inputSchema: { type: 'object', properties, ...(required.length ? { required } : {}), additionalProperties: false }
 }));
 
 function searchCases(args = {}) {
