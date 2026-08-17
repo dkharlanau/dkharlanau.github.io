@@ -3,30 +3,26 @@ layout: default
 title: "Where Should Delivery Blocking Logic Live? — SAP Sales Decision Card"
 description: "A compact SAP sales decision model for separating commercial, credit, compliance, data, and technical delivery blocks."
 permalink: /labs/enterprise-context/decisions/delivery-block-ownership/
-status: reviewed
-verified: true
-robots: index,follow
-sitemap: true
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
 last_modified_at: 2026-08-17
-last_reviewed: 2026-08-17
 hide_global_cta: true
-review_method: "authored decision model over reviewed sales, credit, master-data, and integration material"
+review_method: "authored decision reasoning draft over reviewed sales and credit material; pending publication-contract review"
 structured_data:
   type: TechArticle
-primary_topic: "sap-delivery-block-ownership"
+primary_topic: "sap-architecture-decisions"
 semantic_links:
-  - type: "part_of"
+  - type: "parent_context"
     title: "SAP Decision Cards"
     url: "/labs/enterprise-context/decisions/"
   - type: "related_topic"
-    title: "Sales Processes"
+    title: "SAP Sales Process Atlas"
     url: "/labs/enterprise-context/sales-processes/"
   - type: "related_topic"
     title: "SAP Credit Management"
     url: "/labs/enterprise-context/credit/"
-  - type: "related_topic"
-    title: "Master Data"
-    url: "/labs/enterprise-context/master-data/"
 tags: [sap, sales, delivery, controls, credit, master-data]
 ---
 
