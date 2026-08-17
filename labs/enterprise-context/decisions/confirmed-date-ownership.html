@@ -3,16 +3,24 @@ layout: default
 title: "Who Owns a Wrong Confirmed Delivery Date? — SAP Sales Decision Card"
 description: "A SAP Lead decision model for separating requested date, ATP confirmation, scheduling, shipping, transportation, and customer-commitment ownership."
 permalink: /labs/enterprise-context/decisions/confirmed-date-ownership/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow
+sitemap: true
 last_modified_at: 2026-08-17
+last_reviewed: 2026-08-17
+publication_wave: "decision-search-wave-03"
+search_intent: "SAP confirmed delivery date ATP scheduling ownership and customer promise"
+evidence_review_mode: "SAP availability confirmation and scheduling behavior checked against primary SAP Help sources; ownership separation, diagnosis order, and customer-promise guidance is authored cross-domain reasoning"
+review_method: "primary SAP sources + factual review + page-level editorial review"
 hide_global_cta: true
-review_method: "authored cross-domain decision reasoning over SAP ATP and sales scheduling documentation; pending publication review"
 structured_data:
   type: TechArticle
+# ai-discovery-managed:start
 primary_topic: "sap-architecture-decisions"
+ai_sidecar: "/ai/pages/labs--enterprise-context--decisions--confirmed-date-ownership.json"
+entity_mentions:
+  - "sap-sales"
 semantic_links:
   - type: "parent_context"
     title: "SAP Decision Cards"
@@ -26,13 +34,20 @@ semantic_links:
   - type: "related_topic"
     title: "SAP Shipping"
     url: "/labs/enterprise-context/shipping/"
+  - type: "applied_scenario"
+    title: "Cross-Process SAP Lead Cases"
+    url: "/labs/assessment/cross-process/"
 source_links:
   - title: "Product Availability Check (CA-ATP-PAC)"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/86990a56d448792de10000000a44538d.html"
+  - title: "Scheduling"
+    url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/f132c385e0234fe68ae9ff35b2da178c/ac970a564b52fb37e10000000a44147b.html"
   - title: "Delivery Times, Commitment Dates, and Delivery Address in Sales Documents"
     url: "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7b24a64d9d0941bda1afa753263d9e39/a464b65334e6b54ce10000000a174cb4.html"
+# ai-discovery-managed:end
 tags: [sap, sales, atp, aatp, confirmed-date, scheduling, shipping, customer-promise]
 ---
+{% assign decision_evidence = site.data.labs.enterprise_context.sources.decision_confirmed_date %}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/enterprise-context/">Enterprise Context</a></li><li><a href="/labs/enterprise-context/decisions/">Decision Cards</a></li><li aria-current="page">Confirmed delivery date</li></ol></nav>
 
@@ -85,8 +100,9 @@ tags: [sap, sales, atp, aatp, confirmed-date, scheduling, shipping, customer-pro
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Evidence path</p><h2>Trace promise through supply and execution.</h2></header>
+    <header><p class="research-canvas__eyebrow">Scenario + evidence</p><h2>Trace promise through supply and execution.</h2></header>
     <div class="research-route-list">
+      <a href="/labs/assessment/cross-process/"><span>CASE</span><strong>Confirmed Date Ownership</strong><small>Practice the same ownership split as an end-to-end Lead diagnosis.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
       <a href="/labs/enterprise-context/atp/"><span>ATP</span><strong>ATP / aATP</strong><small>Availability, scope, confirmation, alternatives, allocation, and proof of promise.</small><i class="material-symbols-outlined" aria-hidden="true">inventory</i></a>
       <a href="/labs/enterprise-context/shipping/"><span>SHIP</span><strong>Shipping</strong><small>Plant, shipping point, route, scheduling, picking, loading, and PGI boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
       <a href="/labs/enterprise-context/sales-order/"><span>ORDER</span><strong>Sales Order decisions</strong><small>Trace the order inputs and determinations that feed the promise.</small><i class="material-symbols-outlined" aria-hidden="true">receipt_long</i></a>
