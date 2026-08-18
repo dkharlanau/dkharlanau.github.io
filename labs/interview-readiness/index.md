@@ -69,10 +69,9 @@ tags:
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Six career tracks</p><h2>Prepare for the interview that crosses module boundaries.</h2><p>A Lead discussion rarely stays inside one box. Functional depth still matters, but architecture, AI, delivery discipline, and consulting judgment determine whether the answer survives real project pressure.</p></header>
     <div class="research-route-list">
-      {% assign career_tracks = site.data.career.roadmap.tracks | sort %}
-      {% for pair in career_tracks %}
-        {% assign track_id = pair[0] %}
-        {% assign track = pair[1] %}
+      {% assign career_track_order = "sales,logistics,integration,ai,delivery,leadership" | split: "," %}
+      {% for track_id in career_track_order %}
+        {% assign track = site.data.career.roadmap.tracks[track_id] %}
         <a href="/labs/interview-readiness/roadmap/#{{ track_id }}"><span>0{{ track.order }}</span><strong>{{ track.label }}</strong><small>{{ track.statement }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       {% endfor %}
     </div>
