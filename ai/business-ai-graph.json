@@ -11,6 +11,7 @@ sitemap: false
 {% assign scenarios = site.data.labs.business_ai.scenario_library %}
 {% assign matrix = site.data.labs.business_ai.assessment_matrix %}
 {% assign technologies = site.data.labs.business_ai.technology_landscape %}
+{% assign sap_links = site.data.labs.business_ai.sap_process_links %}
 {% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
 {% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
 {% assign expansion_c = site.data.labs.business_ai.expansion_2026_08_15_c %}
@@ -41,6 +42,7 @@ sitemap: false
     "legacy_review_state": "structured",
     "legacy_source_confidence": "unknown",
     "legacy_evidence_level": "proof_gap",
+    "sap_link_model": "Vendor-neutral process and stage IDs link to SAP-specific capability nodes. SAP pages remain the implementation source.",
     "note": "Generated defaults describe migration state only. They do not promote evidence to approved or runtime-proven status."
   },
   "manifest": {
@@ -61,6 +63,12 @@ sitemap: false
     ],
     "end_to_end_processes": [
       {% for node in process_map.processes %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"EndToEndProcess","title":{{ node.title | jsonify }},"domain_ids":{{ node.domains | default: empty_list | jsonify }},"pattern_ids":{{ node.pattern_ids | default: empty_list | jsonify }},"technology_family_ids":{{ node.technology_families | default: empty_list | jsonify }},"control_points":{{ node.control_points | default: empty_list | jsonify }},"legacy_stages":{{ node.stages | default: empty_list | jsonify }}}{% endfor %}
+    ],
+    "process_stages": [
+      {% for node in sap_links.process_stages %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"ProcessStage","title":{{ node.title | jsonify }},"process_id":{{ node.process_id | jsonify }}}{% endfor %}
+    ],
+    "enterprise_capabilities": [
+      {% for node in sap_links.capabilities %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"EnterpriseCapability","platform":{{ sap_links.platform | jsonify }},"title":{{ node.title | jsonify }},"family":{{ node.family | jsonify }},"canonical_url":{{ node.canonical_url | jsonify }},"operational_context_urls":{{ node.operational_context_urls | default: empty_list | jsonify }}}{% endfor %}
     ],
     "patterns": [
       {% for node in all_patterns %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"Pattern","title":{{ node.title | jsonify }},"business_job":{{ node.business_job | jsonify }},"automation_level":{{ node.automation_level | jsonify }}}{% endfor %}
@@ -91,8 +99,17 @@ sitemap: false
     "process-crosses-domain": [
       {% assign first_edge = true %}{% for process in process_map.processes %}{% for target_id in process.domains %}{% unless first_edge %},{% endunless %}{"id":{{ process.id | append: "-domain-" | append: target_id | jsonify }},"type":"process-crosses-domain","from":{{ process.id | jsonify }},"to":{{ target_id | jsonify }}}{% assign first_edge = false %}{% endfor %}{% endfor %}
     ],
+    "process-has-stage": [
+      {% for stage in sap_links.process_stages %}{% unless forloop.first %},{% endunless %}{"id":{{ stage.process_id | append: "-stage-" | append: stage.id | jsonify }},"type":"process-has-stage","from":{{ stage.process_id | jsonify }},"to":{{ stage.id | jsonify }}}{% endfor %}
+    ],
     "process-uses-pattern": [
       {% assign first_edge = true %}{% for process in process_map.processes %}{% for target_id in process.pattern_ids %}{% unless first_edge %},{% endunless %}{"id":{{ process.id | append: "-pattern-" | append: target_id | jsonify }},"type":"process-uses-pattern","from":{{ process.id | jsonify }},"to":{{ target_id | jsonify }}}{% assign first_edge = false %}{% endfor %}{% endfor %}
+    ],
+    "stage-maps-to-capability": [
+      {% for link in sap_links.stage_links %}{% unless forloop.first %},{% endunless %}{"id":{{ link.id | jsonify }},"type":"stage-maps-to-capability","from":{{ link.stage_id | jsonify }},"to":{{ link.capability_id | jsonify }},"decision_points":{{ link.decision_points | default: empty_list | jsonify }},"deterministic_rules":{{ link.deterministic_rules | default: empty_list | jsonify }},"data_dependencies":{{ link.data_dependencies | default: empty_list | jsonify }},"integration_boundaries":{{ link.integration_boundaries | default: empty_list | jsonify }},"authority":{{ link.authority | jsonify }},"control_points":{{ link.control_points | default: empty_list | jsonify }}}{% endfor %}
+    ],
+    "domain-maps-to-capability": [
+      {% for link in sap_links.domain_links %}{% unless forloop.first %},{% endunless %}{"id":{{ link.id | jsonify }},"type":"domain-maps-to-capability","from":{{ link.domain_id | jsonify }},"to":{{ link.capability_id | jsonify }},"decision_points":{{ link.decision_points | default: empty_list | jsonify }},"deterministic_rules":{{ link.deterministic_rules | default: empty_list | jsonify }},"data_dependencies":{{ link.data_dependencies | default: empty_list | jsonify }},"integration_boundaries":{{ link.integration_boundaries | default: empty_list | jsonify }},"authority":{{ link.authority | jsonify }},"control_points":{{ link.control_points | default: empty_list | jsonify }}}{% endfor %}
     ],
     "domain-supports-case": [
       {% assign first_edge = true %}{% for domain in domain_map.domains %}{% for target_id in domain.case_ids %}{% unless first_edge %},{% endunless %}{"id":{{ domain.id | append: "-case-" | append: target_id | jsonify }},"type":"domain-supports-case","from":{{ domain.id | jsonify }},"to":{{ target_id | jsonify }}}{% assign first_edge = false %}{% endfor %}{% endfor %}
@@ -108,9 +125,12 @@ sitemap: false
     ]
   },
   "proof_gaps": [
-    "Legacy process stages are strings and do not yet have stable graph IDs.",
+    "Priority SAP process stages now have stable graph IDs; remaining legacy process stages are still strings until later normalization.",
     "Legacy case process labels are not yet normalized to EndToEndProcess IDs.",
     "Scenario outcome_state remains unknown until legacy scenario status is explicitly mapped.",
     "Legacy evidence sources default to unknown confidence and proof_gap until source records are reviewed against the normalized contract."
-  ]
+  ],
+  "platform_boundaries": {
+    "sap": {{ sap_links.non_sap_usage | jsonify }}
+  }
 }
