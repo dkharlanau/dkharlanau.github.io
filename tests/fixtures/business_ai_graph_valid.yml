@@ -1,0 +1,55 @@
+schema: dkharlanau.business-ai.graph
+contract_version: "1.0.0"
+nodes:
+  - id: source-to-pay
+    type: BusinessDomain
+  - id: source-to-pay-process
+    type: EndToEndProcess
+  - id: invoice-processing
+    type: ProcessStage
+  - id: document-to-workflow
+    type: Pattern
+  - id: example-case
+    type: BusinessAICase
+    case_kind: ai_implementation
+    review_state: challenged
+    autonomy_level: L2
+    evidence_grade: B
+  - id: example-outcome
+    type: ScenarioOutcome
+    outcome_state: positive
+  - id: example-metric
+    type: Metric
+  - id: example-source
+    type: EvidenceSource
+    source_confidence: high
+    evidence_level: source_fact
+edges:
+  - id: source-to-pay-domain-link
+    type: process-crosses-domain
+    from: source-to-pay-process
+    to: source-to-pay
+  - id: source-to-pay-stage-link
+    type: process-has-stage
+    from: source-to-pay-process
+    to: invoice-processing
+  - id: stage-pattern-link
+    type: stage-uses-pattern
+    from: invoice-processing
+    to: document-to-workflow
+  - id: case-process-link
+    type: case-applies-to-process
+    from: example-case
+    to: source-to-pay-process
+  - id: case-outcome-link
+    type: case-has-outcome
+    from: example-case
+    to: example-outcome
+  - id: case-metric-link
+    type: case-reports-metric
+    from: example-case
+    to: example-metric
+  - id: metric-evidence-link
+    type: metric-supported-by-evidence
+    from: example-metric
+    to: example-source
