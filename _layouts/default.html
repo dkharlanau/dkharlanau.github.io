@@ -153,7 +153,12 @@
   <footer class="site-footer" id="site-footer">
     {% include footer.html %}
   </footer>
+  {% assign structured_robots = page.robots | default: '' %}
+  {% assign structured_indexable = true %}
+  {% if structured_robots contains 'noindex' %}{% assign structured_indexable = false %}{% endif %}
+  {% if structured_indexable or page.collection == 'glossary' %}
   {% include seo/structured-data.html %}
+  {% endif %}
   {% include seo/lab-breadcrumb-data.html %}
   {% include seo/structured-data-sitewide-graph.html %}
 </body>

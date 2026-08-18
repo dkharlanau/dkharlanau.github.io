@@ -21,7 +21,10 @@
   </div>
 </section>
 
-{% unless faq.schema == false %}
+{% assign faq_robots = page.robots | default: '' %}
+{% assign faq_indexable = true %}
+{% if faq_robots contains 'noindex' %}{% assign faq_indexable = false %}{% endif %}
+{% if faq.schema == true and faq_indexable %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -40,5 +43,5 @@
   ]
 }
 </script>
-{% endunless %}
+{% endif %}
 {% endif %}
