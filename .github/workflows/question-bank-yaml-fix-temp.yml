@@ -1,0 +1,70 @@
+name: Question Bank YAML Fix Temp
+
+on:
+  push:
+    branches:
+      - agent/question-bank-v2
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/question-bank-v2
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install YAML parser
+        run: python3 -m pip install pyyaml
+
+      - name: Quote YAML scalars that contain mapping separators
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+          import yaml
+
+          path = Path('_data/career/question_bank.yml')
+          lines = path.read_text(encoding='utf-8').splitlines()
+          fixed = []
+          pattern = re.compile(r'^(\s+(?:prompt|pressure|evidence): )(.*)$')
+          for line in lines:
+              match = pattern.match(line)
+              if not match:
+                  fixed.append(line)
+                  continue
+              prefix, value = match.groups()
+              stripped = value.lstrip()
+              if ': ' in value and not stripped.startswith(("'", '"', '|', '>')):
+                  line = prefix + json.dumps(value, ensure_ascii=False)
+              fixed.append(line)
+          text = '\n'.join(fixed) + '\n'
+          yaml.safe_load(text)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit YAML normalization
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add _data/career/question_bank.yml
+          if git diff --cached --quiet; then
+            echo "Question Bank YAML is already normalized."
+            exit 0
+          fi
+          git commit -m "Normalize Question Bank YAML"
+          git push origin HEAD:agent/question-bank-v2
