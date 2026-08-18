@@ -1,0 +1,442 @@
+version: 2
+updated_at: '2026-08-18'
+title: SAP Lead Question Bank
+summary: Four Lead-level question types for every skill in the SAP Lead Career Roadmap.
+types:
+  explain:
+    label: Explain
+    pressure: Now explain it in 60 seconds to a stakeholder outside your module. What do you remove, and what must stay?
+    evidence: Name the business goal, main objects, owners, process boundaries, and the evidence that proves the flow.
+  diagnose:
+    label: Diagnose
+    pressure: Which single observation would eliminate the largest number of possible causes, and what would you check next if it is normal?
+    evidence: Use document, data, configuration, code, log, or runtime evidence. State what each check proves or rejects.
+  design:
+    label: Design
+    pressure: What fails first in your design, who owns recovery, and what would make you choose a different option?
+    evidence: Compare options, ownership, failure behaviour, testability, operating cost, and the decision trade-off.
+  challenge:
+    label: Challenge
+    pressure: What evidence would change your position, and what safer alternative would you offer if the original request is rejected?
+    evidence: State the weak assumption, business or technical risk, evidence needed, and a practical alternative.
+skills:
+- skill_id: sales-o2c
+  questions:
+  - type: explain
+    prompt: Explain Order-to-Cash as one business control flow. Where do customer demand, sales processing, logistics execution, billing, and accounting ownership change?
+  - type: diagnose
+    prompt: A customer order is created correctly, but the expected business outcome never reaches billing. How would you trace the Order-to-Cash failure boundary?
+  - type: design
+    prompt: Design ownership and control points for an Order-to-Cash process that crosses SAP, warehouse execution, tax, and finance services.
+  - type: challenge
+    prompt: A programme wants every Order-to-Cash exception handled by one central support queue. What would you challenge before accepting that model?
+- skill_id: sales-pricing
+  questions:
+  - type: explain
+    prompt: Explain SAP pricing to a commercial lead without listing configuration tables. Which business inputs and decision layers determine the final price?
+  - type: diagnose
+    prompt: Pricing is wrong only for one sales area and one customer group. How do you separate master data, condition records, access logic, and custom code?
+  - type: design
+    prompt: Design a pricing control model for a global template with local commercial rules. What should be standard, local, and explicitly governed?
+  - type: challenge
+    prompt: The business wants to add a new pricing condition for every exception. What would you challenge before extending the pricing procedure?
+- skill_id: sales-atp
+  questions:
+  - type: explain
+    prompt: Explain the difference between physical stock, ATP, confirmed quantity, and delivery readiness to a business stakeholder.
+  - type: diagnose
+    prompt: Stock is visible, but the sales order cannot confirm the requested quantity. How would you narrow the cause without guessing?
+  - type: design
+    prompt: Design an availability decision model for a business with several plants, channels, and priority customers.
+  - type: challenge
+    prompt: A sponsor wants each sales channel to calculate availability independently. What risks and evidence would you put on the table?
+- skill_id: sales-shipping
+  questions:
+  - type: explain
+    prompt: Explain how a sales order becomes an executable delivery. Which dates, statuses, organisational data, and owners matter?
+  - type: diagnose
+    prompt: A sales order is confirmed, but delivery creation fails for a subset of items. What would you inspect first and why?
+  - type: design
+    prompt: Design the ownership boundary between sales, warehouse, transport, and customer service for delivery execution.
+  - type: challenge
+    prompt: The business wants a background job to bypass recurring delivery blocks. What would you challenge before automating the workaround?
+- skill_id: sales-billing
+  questions:
+  - type: explain
+    prompt: Explain billing relevance and the accounting hand-off in a way that connects commercial rules, logistics completion, and finance impact.
+  - type: diagnose
+    prompt: Goods issue is complete, but billing cannot be created. How do you structure the investigation across document flow, status, data, and configuration?
+  - type: design
+    prompt: Design controls for billing completeness across several sales channels and legal entities.
+  - type: challenge
+    prompt: A team proposes manual billing as the permanent fallback for recurring failures. What would you challenge and what evidence would you require?
+- skill_id: sales-credit
+  questions:
+  - type: explain
+    prompt: Explain how credit management changes order execution. Who owns the risk decision and who owns the technical enforcement?
+  - type: diagnose
+    prompt: An order is blocked for credit even though the customer appears to have enough headroom. How would you prove where the mismatch comes from?
+  - type: design
+    prompt: Design a credit-release operating model that balances commercial urgency, auditability, and clear ownership.
+  - type: challenge
+    prompt: Sales asks for an automatic credit override for strategic customers. What assumptions would you challenge before agreeing?
+- skill_id: sales-diagnostics
+  questions:
+  - type: explain
+    prompt: Explain your diagnostic model for a broken sales process. How do you move from symptom to evidence without jumping straight to configuration?
+  - type: diagnose
+    prompt: A sales issue appears after a transport, but only for some orders. How do you separate data, configuration, enhancement, code, and interface causes?
+  - type: design
+    prompt: Design a reusable sales diagnostic playbook that a support team can use under production pressure.
+  - type: challenge
+    prompt: A senior consultant says the issue is 'probably custom code' before checking the document flow. How would you challenge that conclusion?
+- skill_id: logistics-p2p
+  questions:
+  - type: explain
+    prompt: Explain Procure-to-Pay from demand to invoice and payment impact. Where do purchasing, warehouse, supplier, and finance ownership change?
+  - type: diagnose
+    prompt: A purchase order is valid, goods are received, but invoice processing is blocked. How would you trace the failure boundary?
+  - type: design
+    prompt: Design controls for a Procure-to-Pay process that uses central purchasing with local receiving and finance teams.
+  - type: challenge
+    prompt: A programme wants one approval workflow for every purchase regardless of value or risk. What would you challenge?
+- skill_id: logistics-inventory
+  questions:
+  - type: explain
+    prompt: Explain the difference between physical stock, book stock, movement logic, reservations, status, and usable inventory.
+  - type: diagnose
+    prompt: Stock exists in the system, but the business process cannot consume it. What evidence would you check before changing master data?
+  - type: design
+    prompt: Design an inventory control model for plants with different operational constraints but one reporting standard.
+  - type: challenge
+    prompt: Operations asks to solve stock discrepancies by allowing more manual adjustments. What would you challenge first?
+- skill_id: logistics-master-data
+  questions:
+  - type: explain
+    prompt: Explain how material and master data settings control logistics behaviour rather than simply describe the material.
+  - type: diagnose
+    prompt: One material group behaves differently during purchasing and goods movement. How do you isolate the controlling master-data and configuration factors?
+  - type: design
+    prompt: Design governance for material changes that can affect purchasing, warehouse, sales, and finance.
+  - type: challenge
+    prompt: A global template team wants no local master-data exceptions. What evidence would you request before supporting that rule?
+- skill_id: logistics-ewm
+  questions:
+  - type: explain
+    prompt: Explain the boundary between Inventory Management and EWM. Which decisions belong in warehouse execution and which should remain outside it?
+  - type: diagnose
+    prompt: A delivery is ready in ERP, but warehouse execution cannot proceed in EWM. How would you trace the hand-off and ownership?
+  - type: design
+    prompt: Design an EWM boundary for a warehouse that needs advanced execution only for part of its product flow.
+  - type: challenge
+    prompt: The programme wants EWM for every warehouse because it is the strategic product. What would you challenge before agreeing?
+- skill_id: logistics-tm
+  questions:
+  - type: explain
+    prompt: Explain where Transportation Management fits between sales, delivery, warehouse execution, carrier planning, and freight cost.
+  - type: diagnose
+    prompt: A delivery is ready, but no valid transport plan is created. How would you separate order, delivery, planning, master-data, and integration causes?
+  - type: design
+    prompt: Design the system and ownership boundary for transport planning across several countries and carriers.
+  - type: challenge
+    prompt: The business wants transport planning embedded in every local sales process. What would you challenge about that ownership model?
+- skill_id: logistics-production-quality
+  questions:
+  - type: explain
+    prompt: Explain how production, inventory, quality status, warehouse execution, and sales availability can affect the same logistics outcome.
+  - type: diagnose
+    prompt: A received material exists in stock but cannot be used because of quality status. How do you identify the real decision owner?
+  - type: design
+    prompt: Design cross-functional controls for a material flow that can be blocked by production or quality decisions.
+  - type: challenge
+    prompt: A logistics team wants to own every blocked material case end to end. What boundary would you challenge?
+- skill_id: logistics-mdg
+  questions:
+  - type: explain
+    prompt: Explain MDG as an operating model for ownership, approval, replication, and downstream process quality.
+  - type: diagnose
+    prompt: A master-data change was approved but one consuming system still uses the old value. How would you trace governance, replication, and consumption?
+  - type: design
+    prompt: Design a governance model for master data used by purchasing, sales, warehouse, finance, and AI retrieval.
+  - type: challenge
+    prompt: A sponsor says a central MDG team should own every data-quality problem. What would you challenge about that statement?
+- skill_id: integration-patterns
+  questions:
+  - type: explain
+    prompt: Explain how you choose between API, IDoc, event, file, and synchronous calls from business and operational requirements.
+  - type: diagnose
+    prompt: An integration works technically but produces the wrong business sequence. How would you decide whether the pattern itself is part of the problem?
+  - type: design
+    prompt: Choose an integration pattern for a process that needs near-real-time updates, replay, and temporary target outages.
+  - type: challenge
+    prompt: A platform team wants one integration technology for every use case. What would you challenge and how would you decide exceptions?
+- skill_id: integration-recovery
+  questions:
+  - type: explain
+    prompt: Explain why retry, idempotency, duplicate control, monitoring, and ownership are part of integration design rather than support details.
+  - type: diagnose
+    prompt: Messages are duplicated after a target outage and retry. How would you find whether the problem is contract, middleware, target behaviour, or business logic?
+  - type: design
+    prompt: Design a recoverable integration where the target can be unavailable for several hours without losing business intent.
+  - type: challenge
+    prompt: Operations wants automatic unlimited retries for every failed message. What would you challenge before allowing it?
+- skill_id: integration-development
+  questions:
+  - type: explain
+    prompt: Explain how you separate process, configuration, enhancement, custom code, and external integration responsibilities.
+  - type: diagnose
+    prompt: A production issue appears after an enhancement release. How would you prove whether custom code is the cause rather than configuration or data?
+  - type: design
+    prompt: Design an extension boundary for a requirement that does not fit standard SAP behaviour but changes often.
+  - type: challenge
+    prompt: A team proposes custom code because standard configuration is 'too restrictive'. What questions do you ask before agreeing?
+- skill_id: integration-cleancore
+  questions:
+  - type: explain
+    prompt: Explain clean core in practical terms. Which changes belong in the core, side-by-side extensions, or external services?
+  - type: diagnose
+    prompt: Upgrade effort keeps growing because of extensions. How would you identify which design decisions are creating unnecessary core coupling?
+  - type: design
+    prompt: Design a clean-core boundary for a business process that still needs custom rules and several integrations.
+  - type: challenge
+    prompt: An architecture board says 'no custom code in SAP' as an absolute rule. What would you challenge about that position?
+- skill_id: integration-deployment
+  questions:
+  - type: explain
+    prompt: Explain how public cloud, private cloud, and on-premise choices change extension, integration, upgrade, and operating constraints.
+  - type: diagnose
+    prompt: A design works in one deployment model but fails operationally in another. How would you identify the constraint that changed?
+  - type: design
+    prompt: Design a deployment decision framework for a programme with regulatory, integration, and upgrade constraints.
+  - type: challenge
+    prompt: A sponsor chooses a deployment model mainly because it is the company standard. What evidence would you ask for before accepting the decision?
+- skill_id: integration-observability
+  questions:
+  - type: explain
+    prompt: Explain why a green interface status is not enough to prove that an end-to-end business process succeeded.
+  - type: diagnose
+    prompt: All technical interfaces are green, but customer orders are missing in the target process. How do you build an end-to-end evidence path?
+  - type: design
+    prompt: Design observability for a process that spans SAP, middleware, warehouse, and an external customer platform.
+  - type: challenge
+    prompt: Operations wants one dashboard with every technical metric. What would you challenge about that observability approach?
+- skill_id: integration-ownership
+  questions:
+  - type: explain
+    prompt: Explain the ownership model for a cross-system business process. Who owns outcome, data, contract, processing, and recovery?
+  - type: diagnose
+    prompt: Every technical team says its component is healthy, but the business outcome is wrong. How do you drive ownership and diagnosis?
+  - type: design
+    prompt: Design a RACI and escalation model for an integration that crosses four systems and three support teams.
+  - type: challenge
+    prompt: A middleware team is asked to own all integration incidents end to end. What would you challenge about that model?
+- skill_id: ai-readiness
+  questions:
+  - type: explain
+    prompt: Explain what makes an SAP process ready for AI assistance and what makes it a poor candidate.
+  - type: diagnose
+    prompt: An AI pilot gives inconsistent value across users. How would you separate process, data, control, evaluation, and operating-model causes?
+  - type: design
+    prompt: Design an AI-readiness gate for SAP use cases before teams are allowed to build a pilot.
+  - type: challenge
+    prompt: A sponsor wants AI because the manual process is slow. What evidence do you require before approving the use case?
+- skill_id: ai-business-value
+  questions:
+  - type: explain
+    prompt: Explain how you connect an AI use case to a measurable business job, outcome, owner, and acceptable risk.
+  - type: diagnose
+    prompt: An AI assistant is widely used but the target process KPI does not improve. How would you diagnose the value gap?
+  - type: design
+    prompt: Design success measures for an AI assistant that supports SAP incident triage.
+  - type: challenge
+    prompt: The business measures AI success by number of generated answers. What would you challenge and what measures would you replace it with?
+- skill_id: ai-retrieval
+  questions:
+  - type: explain
+    prompt: Explain retrieval, grounding, permissions, context, and generation as separate layers of an AI answer.
+  - type: diagnose
+    prompt: Retrieval quality drops after a documentation update. How do you separate source, indexing, chunking, permissions, retrieval, and generation issues?
+  - type: design
+    prompt: Design a retrieval layer for SAP operating knowledge with role-based access and traceable sources.
+  - type: challenge
+    prompt: A team wants to fix wrong answers by switching to a larger model. What would you challenge before changing the model?
+- skill_id: ai-agents-mcp
+  questions:
+  - type: explain
+    prompt: Explain what agents, tools, and MCP enable in enterprise work, and what governance problems they do not solve.
+  - type: diagnose
+    prompt: An agent calls the correct tool but produces the wrong business action. How would you trace tool contract, state, permissions, and decision logic?
+  - type: design
+    prompt: Design an agent workflow that can read SAP context, propose an action, request approval, and recover from tool failure.
+  - type: challenge
+    prompt: A sponsor wants a fully autonomous agent because the workflow is repetitive. What evidence do you require before removing human approval?
+- skill_id: ai-evaluation
+  questions:
+  - type: explain
+    prompt: Explain how you define a useful evaluation for an AI assistant before production release.
+  - type: diagnose
+    prompt: Offline evaluation scores are strong, but users report poor answers in production. How would you investigate the mismatch?
+  - type: design
+    prompt: Design an evaluation set for an SAP operations assistant, including success metrics and important failure classes.
+  - type: challenge
+    prompt: A team wants to release because the model benchmark is high. What would you challenge about that evidence?
+- skill_id: ai-security
+  questions:
+  - type: explain
+    prompt: Explain the main security boundaries for enterprise AI: identity, permissions, data exposure, prompt injection, logging, and human control.
+  - type: diagnose
+    prompt: An AI assistant returns information that a user should not see. How would you trace the control failure across retrieval and tool access?
+  - type: design
+    prompt: Design access controls for an AI assistant that can read SAP support data and invoke approved tools.
+  - type: challenge
+    prompt: A project says read-only AI is low risk and therefore needs minimal security review. What would you challenge?
+- skill_id: ai-data-governance
+  questions:
+  - type: explain
+    prompt: Explain how lineage, ownership, freshness, master data, and access affect AI quality and safety.
+  - type: diagnose
+    prompt: An AI answer is grounded in an approved source but still uses outdated business data. How would you trace the governance failure?
+  - type: design
+    prompt: Design data-governance controls for an AI solution that combines SAP master data and operating documents.
+  - type: challenge
+    prompt: A team wants to copy production data into a separate AI store to move faster. What would you challenge before approving it?
+- skill_id: delivery-lifecycle
+  questions:
+  - type: explain
+    prompt: Explain the delivery lifecycle from design through build, test, release, handover, and improvement. Which gates matter to a Lead?
+  - type: diagnose
+    prompt: A change repeatedly fails late in the lifecycle. How would you identify which earlier quality gate is missing or ineffective?
+  - type: design
+    prompt: Design a delivery model with explicit entry and exit evidence for build, test, release, and handover.
+  - type: challenge
+    prompt: A programme manages quality mainly through status meetings and expert review. What would you challenge about that model?
+- skill_id: delivery-testing
+  questions:
+  - type: explain
+    prompt: Explain why testing an end-to-end SAP process needs more than unit tests and happy-path business scripts.
+  - type: diagnose
+    prompt: A production defect passed every planned test. How would you find the missing risk, data variation, boundary, or failure path?
+  - type: design
+    prompt: Design a risk-based test strategy for a process that crosses SAP configuration, custom code, data, and interfaces.
+  - type: challenge
+    prompt: Delivery wants to reduce regression testing because the code change is small. What would you challenge before agreeing?
+- skill_id: delivery-cicd
+  questions:
+  - type: explain
+    prompt: Explain what CI/CD and automated quality gates should do in SAP delivery, and what still needs human judgment.
+  - type: diagnose
+    prompt: A pipeline is green, but the release still introduces a business regression. How would you identify which gate or evidence is missing?
+  - type: design
+    prompt: Design an automated promotion pipeline for SAP content with code, configuration, documentation, and quality checks.
+  - type: challenge
+    prompt: A team wants every check automated so humans never block a release. What would you challenge about that goal?
+- skill_id: delivery-release
+  questions:
+  - type: explain
+    prompt: Explain release and change control as a business-risk decision, not just a transport sequence.
+  - type: diagnose
+    prompt: A technically correct release creates a production outage during cutover. How would you trace sequencing, dependency, readiness, and rollback failures?
+  - type: design
+    prompt: Design a release plan for changes that span SAP, middleware, external systems, and business procedures.
+  - type: challenge
+    prompt: The programme wants one fixed release window for all changes regardless of risk. What would you challenge?
+- skill_id: delivery-ams
+  questions:
+  - type: explain
+    prompt: Explain the difference between incident recovery, problem management, root-cause removal, and reusable operational learning.
+  - type: diagnose
+    prompt: A critical incident returns every month after temporary fixes. How would you move the team from recovery to problem elimination?
+  - type: design
+    prompt: Design an AMS operating model that connects triage, ownership, evidence, root cause, prevention, and knowledge reuse.
+  - type: challenge
+    prompt: Management measures support mainly by ticket closure time. What would you challenge about that KPI?
+- skill_id: delivery-observability
+  questions:
+  - type: explain
+    prompt: Explain how operational KPIs should connect technical signals to business outcome, user impact, and recovery time.
+  - type: diagnose
+    prompt: System health looks normal while users report a major process slowdown. How would you find the missing operational signal?
+  - type: design
+    prompt: Design a small observability scorecard for one critical SAP process and its supporting integrations.
+  - type: challenge
+    prompt: A team proposes hundreds of dashboard metrics to improve control. What would you challenge about that approach?
+- skill_id: delivery-memory
+  questions:
+  - type: explain
+    prompt: Explain what good handover and operational memory should leave behind after a project or major release.
+  - type: diagnose
+    prompt: A support team repeatedly rediscovers the same diagnostic steps. How would you find why operational knowledge is not becoming reusable?
+  - type: design
+    prompt: Design a handover package that includes runbooks, ownership, known risks, diagnostic evidence, and update rules.
+  - type: challenge
+    prompt: A project says documentation can be completed after go-live when the team has more time. What would you challenge?
+- skill_id: lead-answer
+  questions:
+  - type: explain
+    prompt: 'Explain the structure of a strong SAP Lead answer: business goal, owner, flow, decision, boundary, evidence, and trade-off.'
+  - type: diagnose
+    prompt: Your technically correct interview answer loses the panel after two minutes. How would you diagnose the structure problem?
+  - type: design
+    prompt: Design a two-minute answer structure for a complex SAP architecture question with one clear decision and one trade-off.
+  - type: challenge
+    prompt: An interviewer asks for a yes-or-no answer to a decision that depends on missing context. How do you challenge the framing without avoiding the question?
+- skill_id: lead-challenge
+  questions:
+  - type: explain
+    prompt: Explain how a Lead challenges a weak requirement without simply blocking the business request.
+  - type: diagnose
+    prompt: A requested solution looks wrong, but several senior stakeholders already support it. How would you gather evidence before pushing back?
+  - type: design
+    prompt: 'Design a constructive challenge: expose the assumption, show the risk, propose an alternative, and define the decision evidence.'
+  - type: challenge
+    prompt: A stakeholder says 'just implement what the business asked for'. How would you respond at Lead level?
+- skill_id: lead-stakeholders
+  questions:
+  - type: explain
+    prompt: Explain how you handle a decision where business, architecture, delivery, and operations optimise different outcomes.
+  - type: diagnose
+    prompt: A programme decision is stuck because every stakeholder uses a different success criterion. How would you make the conflict explicit?
+  - type: design
+    prompt: Design a decision workshop for a cross-functional SAP issue with competing priorities and limited time.
+  - type: challenge
+    prompt: A sponsor wants consensus from every stakeholder before making the decision. What would you challenge about that approach?
+- skill_id: lead-evidence
+  questions:
+  - type: explain
+    prompt: Explain what counts as strong evidence for a Lead-level claim about delivery, architecture, or problem solving.
+  - type: diagnose
+    prompt: A project story sounds impressive but does not prove what role you personally played. How would you strengthen the evidence?
+  - type: design
+    prompt: Design a short evidence story with context, your decision, trade-off, result, and lesson.
+  - type: challenge
+    prompt: A candidate presents only successful projects as leadership evidence. What would you challenge about that portfolio?
+- skill_id: lead-decision
+  questions:
+  - type: explain
+    prompt: Explain how you compare options through value, risk, cost, delivery, operations, and reversibility.
+  - type: diagnose
+    prompt: A decision keeps reopening because teams disagree after every new detail. How would you diagnose the missing decision frame?
+  - type: design
+    prompt: Design a decision record for a cross-system SAP choice with options, evidence, trade-offs, owner, and revisit trigger.
+  - type: challenge
+    prompt: A stakeholder asks for the 'best architecture' without defining constraints. How would you challenge the question?
+- skill_id: lead-team
+  questions:
+  - type: explain
+    prompt: Explain what technical leadership means beyond solving the hardest issue yourself.
+  - type: diagnose
+    prompt: A strong consultant depends on you for every important decision. How would you diagnose whether the problem is skill, delegation, trust, or review design?
+  - type: design
+    prompt: Design a mentoring and review model that raises decision quality without creating a permanent approval bottleneck.
+  - type: challenge
+    prompt: A project rewards the Lead for personally solving the most incidents. What would you challenge about that incentive?
+- skill_id: lead-readiness
+  questions:
+  - type: explain
+    prompt: Explain what separates a strong senior consultant from a SAP Lead across judgment, communication, evidence, and cross-boundary ownership.
+  - type: diagnose
+    prompt: A candidate has deep module knowledge but struggles in architecture and stakeholder questions. How would you diagnose the readiness gap?
+  - type: design
+    prompt: Design a 30-day preparation plan for a SAP Lead assessment using roadmap skills, evidence stories, interview practice, and scored cases.
+  - type: challenge
+    prompt: A promotion decision is based mainly on years of experience and certifications. What would you challenge about that evidence model?
