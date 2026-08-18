@@ -24,9 +24,10 @@ sitemap: false
 {% assign expansion_sources = expansion.source_registry | default: empty_list %}
 {% assign expansion_b_sources = expansion_b.source_registry | default: empty_list %}
 {% assign expansion_c_sources = expansion_c.source_registry | default: empty_list %}
+{% assign scenario_sources = scenarios.source_registry | default: empty_list %}
 {% assign all_patterns = catalog.patterns | concat: expansion_patterns | concat: expansion_b_patterns | concat: expansion_c_patterns %}
 {% assign all_cases = catalog.cases | concat: expansion_cases | concat: expansion_b_cases | concat: expansion_c_cases %}
-{% assign all_sources = catalog.source_registry | concat: expansion_sources | concat: expansion_b_sources | concat: expansion_c_sources %}
+{% assign all_sources = catalog.source_registry | concat: expansion_sources | concat: expansion_b_sources | concat: expansion_c_sources | concat: scenario_sources %}
 {% assign failure_patterns = scenarios.failure_patterns | default: empty_list %}
 {% assign best_practices = scenarios.best_practices | default: empty_list %}
 {
@@ -38,6 +39,8 @@ sitemap: false
   "normalization": {
     "legacy_case_kind": "ai_implementation",
     "legacy_review_state": "structured",
+    "legacy_source_confidence": "unknown",
+    "legacy_evidence_level": "proof_gap",
     "note": "Generated defaults describe migration state only. They do not promote evidence to approved or runtime-proven status."
   },
   "manifest": {
@@ -81,7 +84,7 @@ sitemap: false
       {% for node in matrix.profiles %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"DecisionProfile","process":{{ node.process | jsonify }},"pattern_ids":{{ node.pattern_ids | default: empty_list | jsonify }},"autonomy_level":{{ node.recommended_autonomy | jsonify }},"risk_class":{{ node.risk_class | jsonify }},"failure_pattern_ids":{{ node.failure_pattern_ids | default: empty_list | jsonify }},"scenario_ids":{{ node.scenario_ids | default: empty_list | jsonify }},"required_controls":{{ node.required_controls | default: empty_list | jsonify }}}{% endfor %}
     ],
     "evidence_sources": [
-      {% for node in all_sources %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"EvidenceSource","record":{{ node | jsonify }}}{% endfor %}
+      {% for node in all_sources %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"EvidenceSource","source_confidence":{{ node.source_confidence | default: "unknown" | jsonify }},"evidence_level":{{ node.evidence_level | default: "proof_gap" | jsonify }},"record":{{ node | jsonify }}}{% endfor %}
     ]
   },
   "edges": {
@@ -107,6 +110,7 @@ sitemap: false
   "proof_gaps": [
     "Legacy process stages are strings and do not yet have stable graph IDs.",
     "Legacy case process labels are not yet normalized to EndToEndProcess IDs.",
-    "Scenario outcome_state remains unknown until legacy scenario status is explicitly mapped."
+    "Scenario outcome_state remains unknown until legacy scenario status is explicitly mapped.",
+    "Legacy evidence sources default to unknown confidence and proof_gap until source records are reviewed against the normalized contract."
   ]
 }
