@@ -13,14 +13,34 @@ publication_wave: "career-search-wave-01"
 review_method: "editorial review + Career Factory validation + internal route review"
 search_intent: "SAP Lead career roadmap for sales procurement logistics integration AI delivery and leadership"
 structured_data:
-  type: CollectionPage
+  type: TechArticle
 hide_global_cta: true
 tags:
-  - sap
-  - interview
-  - roadmap
-  - sap-lead
-  - career
+  - sap-lead-career
+  - career-roadmap
+# ai-discovery-managed:start
+primary_topic: "sap-lead-career-roadmap"
+ai_sidecar: "/ai/pages/labs--interview-readiness--roadmap.json"
+semantic_links:
+  - type: "parent_context"
+    title: "SAP Lead Interview Readiness — Practical Preparation Lab"
+    url: "/labs/interview-readiness/"
+  - type: "related_topic"
+    title: "Sales Order Decision Map — Enterprise Context Lab"
+    url: "/labs/enterprise-context/sales-order/"
+  - type: "related_topic"
+    title: "Procurement Process & Decision Map — Enterprise Context Lab"
+    url: "/labs/enterprise-context/procurement/"
+  - type: "integrates_with"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "related_topic"
+    title: "AI Ready — Practical AI Architecture Lab"
+    url: "/labs/ai-ready/"
+  - type: "related_topic"
+    title: "SAP Development Architecture — RAP, CAP, ABAP Cloud and Clean Core"
+    url: "/labs/enterprise-context/development/"
+# ai-discovery-managed:end
 ---
 
 <link rel="stylesheet" href="/assets/css/interview-readiness.css" />
