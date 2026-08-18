@@ -51,9 +51,10 @@ semantic_links:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Interview Readiness / SAP Lead</p>
       <h1>Know it.<br />Explain it. Defend it.</h1>
-      <p>Interview readiness is not a reading list. It is a working map of what you can explain, connect, and defend when another senior person starts asking follow-up questions.</p>
+      <p>Interview readiness is not a reading list. It is a working map of what you can explain, connect, defend, and prove when another senior person starts asking follow-up questions.</p>
       <a class="research-canvas__button" href="#today">Start today's session <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
       <nav class="ir-nav" aria-label="Interview Readiness sections">
+        <a href="#intelligence">Professional Intelligence</a>
         <a href="/labs/interview-readiness/roadmap/">Career Roadmap</a>
         <a href="/labs/interview-readiness/questions/">Questions</a>
         <a href="/labs/interview-readiness/stories/">Stories</a>
@@ -66,6 +67,7 @@ semantic_links:
       <div class="research-canvas__signal-line"><span>01</span><strong>Refresh</strong><small>Recall the process and vocabulary</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>Explain</strong><small>Give a clear answer without notes</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>Defend</strong><small>Handle trade-offs and follow-ups</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong>Prove</strong><small>Connect the claim to evidence</small></div>
       <em>Progress stays in this browser. No account is required.</em>
     </div>
   </header>
@@ -87,7 +89,48 @@ semantic_links:
   <section class="research-canvas__inventory" id="today" data-reveal>
     <header><p class="research-canvas__eyebrow">Today</p><h2>Work on the weakest useful topics, not the longest chapter.</h2><p>The daily set starts with low-readiness practice topics and spreads work across several domains. Use the Career Roadmap for the complete skills picture.</p></header>
     <div class="ir-daily" id="ir-daily-plan"></div>
-    <div class="ir-toolbar"><a class="ir-button ir-button--primary" href="/labs/interview-readiness/roadmap/">Open career roadmap</a><a class="ir-button" href="/labs/interview-readiness/practice/">Run interview mode</a></div>
+    <div class="ir-toolbar"><a class="ir-button ir-button--primary" href="/labs/interview-readiness/roadmap/">Open career roadmap</a><a class="ir-button" href="/labs/interview-readiness/practice/">Run interview mode</a><a class="ir-button" href="#intelligence">Review weak points</a></div>
+  </section>
+
+  <section class="research-canvas__inventory" id="intelligence" data-reveal>
+    <header><p class="research-canvas__eyebrow">Professional Intelligence</p><h2>Turn preparation into a decision about what to improve next.</h2><p>This layer combines topic readiness, defence depth, browser-local project stories, and pressure-practice history. It is not a personality score. It is a work queue.</p></header>
+    <div class="ir-grid" id="ir-intelligence-metrics" aria-label="Professional intelligence metrics"></div>
+    <div class="ir-split">
+      <article class="ir-card">
+        <p class="ir-kicker">Skill debt</p>
+        <h3>Your next five useful topics</h3>
+        <p class="ir-muted">Low-readiness topics are ranked first, with extra weight for Lead answer structure, recovery, architecture, evidence, and end-to-end process control.</p>
+        <div class="ir-topic-list" id="ir-skill-debt"></div>
+      </article>
+      <article class="ir-card">
+        <p class="ir-kicker">Proof gap</p>
+        <h3>Where the evidence is still thin</h3>
+        <div id="ir-evidence-panel"></div>
+        <div class="ir-toolbar"><a class="ir-button" href="/labs/interview-readiness/stories/">Story bank</a><a class="ir-button" href="/labs/interview-readiness/practice/">Pressure practice</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="decision-chain" data-reveal>
+    <header><p class="research-canvas__eyebrow">Decision graph</p><h2>Build answers as a chain, not as a pile of SAP facts.</h2><p>The useful Lead path is business problem → process → decision → evidence → architecture and control → outcome. Every Lab should eventually strengthen one or more links in this chain.</p></header>
+    <div class="ir-grid">
+      <article class="ir-card"><p class="ir-kicker">01 / Business problem</p><h3>Start with the job that is failing.</h3><p>Customer promise, purchase execution, stock use, warehouse flow, integration recovery, or a decision that is too slow.</p><p><a class="ir-link" href="/scenarios/">Open scenarios <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p></article>
+      <article class="ir-card"><p class="ir-kicker">02 / Process</p><h3>Trace the end-to-end flow.</h3><p>Keep the main document, data, ownership, and hand-off points visible before diving into configuration.</p><p><a class="ir-link" href="/labs/enterprise-context/">Open SAP Enterprise <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p></article>
+      <article class="ir-card"><p class="ir-kicker">03 / Decision</p><h3>Make the trade-off explicit.</h3><p>Compare options through business value, coupling, delivery cost, operational cost, risk, and reversibility.</p><p><a class="ir-link" href="/labs/assessment/core-boundaries/">Challenge a boundary <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p></article>
+      <article class="ir-card"><p class="ir-kicker">04 / Evidence</p><h3>Separate fact from inference.</h3><p>Use source facts, supported inference, runtime proof, unsupported claims, and proof gaps deliberately.</p><p><a class="ir-link" href="/labs/assessment/evidence-coverage/">Check evidence coverage <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p></article>
+      <article class="ir-card"><p class="ir-kicker">05 / Architecture & control</p><h3>Design for failure and ownership.</h3><p>Include integration pattern, observability, retry, idempotency, security, fallback, and the owner of recovery.</p><p><a class="ir-link" href="/labs/enterprise-context/integrations/">Open integration architecture <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p></article>
+      <article class="ir-card"><p class="ir-kicker">06 / Outcome</p><h3>Finish with what changes.</h3><p>Cycle time, customer impact, stability, control, cost, decision quality, or a clear lesson that changes the next design.</p><p><a class="ir-link" href="/labs/interview-readiness/stories/">Attach project evidence <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p></article>
+    </div>
+  </section>
+
+  <section class="research-canvas__inventory" id="pressure-routes" data-reveal>
+    <header><p class="research-canvas__eyebrow">Pressure routes</p><h2>When the answer looks comfortable, make the problem less polite.</h2><p>Use these routes to test whether the same reasoning survives architecture review, cost pressure, failure, incomplete evidence, and senior stakeholder challenge.</p></header>
+    <div class="ir-grid">
+      <article class="ir-card"><p class="ir-kicker">Boundary challenge</p><h3>Core Boundaries</h3><p>Defend where standard, extension, integration, data, and ownership should sit.</p><p><a class="ir-link" href="/labs/assessment/core-boundaries/">Open challenge <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p></article>
+      <article class="ir-card"><p class="ir-kicker">Executive challenge</p><h3>Architecture Board</h3><p>Translate a technical choice into business risk, options, sequence, and accountable decision.</p><p><a class="ir-link" href="/labs/assessment/board/">Enter the board <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p></article>
+      <article class="ir-card"><p class="ir-kicker">Mixed pressure</p><h3>Mock Assessment</h3><p>Switch topics and handle follow-up questions without losing the answer structure.</p><p><a class="ir-link" href="/labs/assessment/mock/">Run mock <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p></article>
+      <article class="ir-card"><p class="ir-kicker">Proof challenge</p><h3>Evidence Coverage</h3><p>Find claims that sound strong but are not yet supported by a project, result, artefact, or observed test.</p><p><a class="ir-link" href="/labs/assessment/evidence-coverage/">Review proof <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></p></article>
+    </div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
@@ -133,6 +176,103 @@ semantic_links:
   const counts = document.getElementById('ir-counts');
   const tracks = document.getElementById('ir-track-summary');
   const daily = document.getElementById('ir-daily-plan');
+  const intelligenceMetrics = document.getElementById('ir-intelligence-metrics');
+  const skillDebt = document.getElementById('ir-skill-debt');
+  const evidencePanel = document.getElementById('ir-evidence-panel');
+
+  const PRIORITY = {
+    'lead-answer': 12,
+    'integration-operations': 11,
+    'lead-challenge': 10,
+    'lead-evidence': 10,
+    'integration-patterns': 9,
+    'integration-architecture': 9,
+    'procurement-p2p': 8,
+    'sales-o2c': 8,
+    'lead-mock': 8,
+    'ai-readiness': 7,
+    'logistics-inventory': 7
+  };
+
+  function metric(label, value, note) {
+    const card = document.createElement('article');
+    card.className = 'ir-card';
+    const kicker = document.createElement('p'); kicker.className = 'ir-kicker'; kicker.textContent = label;
+    const number = document.createElement('p'); number.className = 'ir-metric'; number.textContent = value;
+    const copy = document.createElement('p'); copy.className = 'ir-muted'; copy.textContent = note;
+    card.append(kicker, number, copy);
+    return card;
+  }
+
+  function evidenceDepth(stories) {
+    if (!stories.length) return 0;
+    const fields = ['decision','tradeoff','result','lesson'];
+    const points = stories.reduce((sum, story) => sum + fields.reduce((row, field) => row + (String(story[field] || '').trim() ? 1 : 0), 0), 0);
+    return Math.round(points / (stories.length * fields.length) * 100);
+  }
+
+  function renderIntelligence(data) {
+    if (!intelligenceMetrics || !skillDebt || !evidencePanel) return;
+    const topicRows = IR.TOPICS.map(topic => ({topic, status: IR.statusObject(IR.getStatus(topic.id))}));
+    const defended = topicRows.filter(row => row.status.score === 3).length;
+    const explained = topicRows.filter(row => row.status.score >= 2).length;
+    const stories = IR.storyBank();
+    const attempts = IR.practiceHistory();
+    const evidence = evidenceDepth(stories);
+    const pressure = attempts.length && Number.isFinite(Number(attempts[0].percent)) ? `${Math.round(Number(attempts[0].percent))}%` : '—';
+
+    intelligenceMetrics.replaceChildren(
+      metric('Practice readiness', `${data.overall}%`, 'Average depth across the current topic bank.'),
+      metric('Can explain', `${Math.round(explained / IR.TOPICS.length * 100)}%`, 'Topics at Can explain or Can defend.'),
+      metric('Can defend', `${Math.round(defended / IR.TOPICS.length * 100)}%`, 'Topics already marked at the highest defence level.'),
+      metric('Evidence depth', `${evidence}%`, stories.length ? `${stories.length} browser-local project ${stories.length === 1 ? 'story' : 'stories'} checked for decision, trade-off, result, and lesson.` : 'No project stories saved yet.'),
+      metric('Last pressure run', pressure, attempts.length ? `${attempts.length} mixed interview ${attempts.length === 1 ? 'session' : 'sessions'} stored in this browser.` : 'No mixed interview session stored yet.')
+    );
+
+    const debt = topicRows
+      .filter(row => row.status.score < 3)
+      .sort((a,b) => a.status.score - b.status.score || (PRIORITY[b.topic.id] || 0) - (PRIORITY[a.topic.id] || 0) || a.topic.title.localeCompare(b.topic.title))
+      .slice(0,5);
+
+    skillDebt.replaceChildren();
+    debt.forEach(row => {
+      const item = document.createElement('div');
+      item.className = 'ir-topic';
+      const copy = document.createElement('div');
+      copy.className = 'ir-topic__copy';
+      const title = document.createElement('strong'); title.textContent = row.topic.title;
+      const why = document.createElement('small'); why.textContent = row.topic.why;
+      copy.append(title, why);
+      const actions = document.createElement('div');
+      actions.className = 'ir-topic__actions';
+      const state = document.createElement('span'); state.className = 'ir-pill'; state.textContent = row.status.label;
+      const link = document.createElement('a'); link.className = 'ir-link'; link.href = row.topic.href; link.textContent = 'Open source';
+      actions.append(state, link);
+      item.append(copy, actions);
+      skillDebt.appendChild(item);
+    });
+
+    evidencePanel.replaceChildren();
+    const gaps = [];
+    if (!stories.length) gaps.push('No project evidence is saved yet. Start with one production incident, one architecture decision, and one stakeholder conflict.');
+    else {
+      if (stories.length < 3) gaps.push('Story range is still narrow. Add evidence from a different kind of project pressure.');
+      if (!stories.some(story => String(story.tradeoff || '').trim())) gaps.push('No saved story has an explicit trade-off. Lead answers need the cost of the decision, not only the result.');
+      if (!stories.some(story => String(story.lesson || '').trim())) gaps.push('No saved story records a lesson. Add what changed in your later decisions.');
+    }
+    if (!attempts.length) gaps.push('There is no mixed pressure-practice history yet. Run Interview Mode before trusting a comfortable topic score.');
+    if (defended / IR.TOPICS.length < 0.4) gaps.push('Less than 40% of practice topics are at Can defend. Prioritise follow-up questions over more reading.');
+    if (!gaps.length) gaps.push('No obvious browser-local proof gap was found. Move to the scored Assessment Lab and look for cross-process weaknesses.');
+
+    gaps.forEach(text => {
+      const note = document.createElement('div');
+      note.className = 'ir-notice';
+      const icon = document.createElement('span'); icon.className = 'material-symbols-outlined'; icon.setAttribute('aria-hidden','true'); icon.textContent = 'fact_check';
+      const p = document.createElement('p'); p.textContent = text;
+      note.append(icon,p);
+      evidencePanel.appendChild(note);
+    });
+  }
 
   function render() {
     const data = IR.summary();
@@ -156,6 +296,8 @@ semantic_links:
       row.innerHTML = `<span class="ir-daily__time">${item.minutes} min</span><div><strong>${action}: ${item.title}</strong><small>${item.why}</small></div><a class="ir-link" href="${item.href}">Open source <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>`;
       daily.appendChild(row);
     });
+
+    renderIntelligence(data);
   }
   render();
   window.addEventListener('interview-readiness-change', render);
