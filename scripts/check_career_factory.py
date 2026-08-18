@@ -45,9 +45,16 @@ def discover_permalink_map() -> dict[str, str]:
         if permalink:
             routes[permalink.rstrip("/") + "/"] = rel.as_posix()
         elif path.name == "index.md":
-            implicit = "/" + rel.parent.as_posix().strip("/") + "/"
-            routes[implicit] = rel.as_posix()
+            routes["/" + rel.parent.as_posix().strip("/") + "/"] = rel.as_posix()
     return routes
+
+
+def internal_route_exists(href: str, routes: dict[str, str]) -> bool:
+    normalized = href.split("#", 1)[0].split("?", 1)[0].rstrip("/") + "/"
+    if normalized in routes:
+        return True
+    directory = ROOT / normalized.lstrip("/")
+    return (directory / "index.html").exists() or (directory / "index.md").exists()
 
 
 def validate_roadmap(data: dict[str, Any]) -> tuple[list[str], set[str]]:
@@ -110,8 +117,7 @@ def validate_roadmap(data: dict[str, Any]) -> tuple[list[str], set[str]]:
                 errors.append(f"{where} source #{source_index}: kind, label, and href are required")
                 continue
             if href.startswith("/"):
-                normalized = href.split("#", 1)[0].split("?", 1)[0].rstrip("/") + "/"
-                if normalized not in routes:
+                if not internal_route_exists(href, routes):
                     errors.append(f"{where}: source route does not exist: {href}")
             elif not re.match(r"^https://", href):
                 errors.append(f"{where}: source href must be an internal route or HTTPS URL: {href}")
