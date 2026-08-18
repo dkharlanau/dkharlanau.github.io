@@ -27,7 +27,7 @@ tags:
     <div class="research-canvas__hero-copy">
       <p class="research-canvas__eyebrow">Career Roadmap / SAP Lead</p>
       <h1>Turn Labs into<br />interview evidence.</h1>
-      <p>This roadmap sits above the Labs. It translates technical material into career skills, interview signals, evidence routes, and practice. The goal is not to finish a reading list. The goal is to know what you can explain, diagnose, design, and defend as a Lead.</p>
+      <p>This roadmap sits above the Labs. It puts technical material into career context: skills, interview signals, evidence routes, and practice. The goal is not to finish a reading list. The goal is to know what you can explain, diagnose, design, and defend as a Lead.</p>
       <a class="research-canvas__button" href="#career-tracks">Open the map <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
       <nav class="ir-nav" aria-label="Interview Readiness sections"><a href="/labs/interview-readiness/">Dashboard</a><a href="/labs/interview-readiness/questions/">Questions</a><a href="/labs/interview-readiness/stories/">Stories</a><a href="/labs/interview-readiness/practice/">Practice</a><a href="/labs/interview-readiness/progress/">Progress</a></nav>
     </div>
