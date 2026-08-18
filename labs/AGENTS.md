@@ -29,6 +29,19 @@ For a new static `labs/**/index.html` route, there is no YAML frontmatter contra
 - map the route as a `sources` entry on one or more relevant skills; or
 - add the route to `lab_exclusions` with a useful reason when it is deliberately not career material.
 
+## Required agent loop
+
+When an agent adds or materially expands Lab content, it must run this reasoning loop before the change is complete:
+
+1. **Discover** — identify the new business, SAP, architecture, AI, delivery, or leadership capability introduced by the Lab.
+2. **Map** — connect it to one to three existing skill IDs in `_data/career/roadmap.yml`.
+3. **Create** — if no existing skill accurately describes the interview capability, add a new skill with track, tier, rationale, interview signal, capabilities, and sources.
+4. **Prove** — prefer a direct Lab route as evidence and add Assessment, Framework, Machine, or Story routes when they improve the interview path.
+5. **Regenerate** — run `python3 scripts/generate_career_factory.py` so `/ai/career-factory.json` reflects the new state.
+6. **Validate** — run the Career Factory validator and tests. A stale machine inventory is a CI failure.
+
+The generated inventory is not merely reporting. It is the work queue for the next agent. Entries with `state: needs_decision` include heuristic `suggested_skills`; these are candidates, not automatic truth. Agents must review the match before changing the roadmap.
+
 Rules:
 
 - Skill IDs come from `_data/career/roadmap.yml`.
@@ -37,12 +50,17 @@ Rules:
 - `career_impact: none` and `lab_exclusions` are real decisions, not escape hatches. Give a useful reason.
 - A Lab can be unverified/noindex and still map to the career roadmap as working study material. Publication eligibility and career relevance are separate concerns.
 - Do not change a page to `verified: true` merely because it is useful for interview preparation.
+- Do not hand-edit `ai/career-factory.json`. It is generated from Labs and `_data/career/roadmap.yml`.
+- CI/CD itself is part of Lead readiness: delivery automation, quality gates, evidence, rollback, and human-review boundaries should be mapped when a Lab demonstrates them.
 
 Run before publishing:
 
 ```bash
+python3 scripts/generate_career_factory.py
 python3 scripts/check_career_factory.py
 python3 scripts/check_career_factory.py --changed-from origin/main
+python3 scripts/generate_career_factory.py --check
+PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_career_factory.py tests/test_interview_readiness.py
 ```
 
 The permanent `Career Factory` workflow enforces this contract on pull requests that touch Labs or the career model.
