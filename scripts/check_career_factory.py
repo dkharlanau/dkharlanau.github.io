@@ -35,6 +35,10 @@ def parse_frontmatter(path: Path) -> dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
+def normalize_route(href: str) -> str:
+    return href.split("#", 1)[0].split("?", 1)[0].rstrip("/") + "/"
+
+
 def discover_permalink_map() -> dict[str, str]:
     routes: dict[str, str] = {}
     for path in ROOT.rglob("*.md"):
@@ -43,18 +47,56 @@ def discover_permalink_map() -> dict[str, str]:
             continue
         permalink = str(parse_frontmatter(path).get("permalink") or "").strip()
         if permalink:
-            routes[permalink.rstrip("/") + "/"] = rel.as_posix()
+            routes[normalize_route(permalink)] = rel.as_posix()
         elif path.name == "index.md":
             routes["/" + rel.parent.as_posix().strip("/") + "/"] = rel.as_posix()
     return routes
 
 
 def internal_route_exists(href: str, routes: dict[str, str]) -> bool:
-    normalized = href.split("#", 1)[0].split("?", 1)[0].rstrip("/") + "/"
+    normalized = normalize_route(href)
     if normalized in routes:
         return True
     directory = ROOT / normalized.lstrip("/")
     return (directory / "index.html").exists() or (directory / "index.md").exists()
+
+
+def roadmap_lab_routes(data: dict[str, Any]) -> set[str]:
+    mapped: set[str] = set()
+    for skill in data.get("skills") or []:
+        if not isinstance(skill, dict):
+            continue
+        for source in skill.get("sources") or []:
+            if not isinstance(source, dict):
+                continue
+            href = str(source.get("href") or "").strip()
+            if href.startswith("/labs/"):
+                mapped.add(normalize_route(href))
+    return mapped
+
+
+def validate_lab_exclusions(data: dict[str, Any], routes: dict[str, str]) -> tuple[list[str], set[str]]:
+    errors: list[str] = []
+    excluded: set[str] = set()
+    raw = data.get("lab_exclusions") or []
+    if not isinstance(raw, list):
+        return ["roadmap.yml: lab_exclusions must be a list when present"], excluded
+    for index, item in enumerate(raw, start=1):
+        where = f"roadmap.yml lab_exclusions #{index}"
+        if not isinstance(item, dict):
+            errors.append(f"{where}: expected an object")
+            continue
+        href = str(item.get("href") or "").strip()
+        reason = str(item.get("reason") or "").strip()
+        if not href.startswith("/labs/"):
+            errors.append(f"{where}: href must be a /labs/ route")
+            continue
+        if len(reason) < 12:
+            errors.append(f"{where}: reason must explain why the route is not career material")
+        if not internal_route_exists(href, routes):
+            errors.append(f"{where}: route does not exist: {href}")
+        excluded.add(normalize_route(href))
+    return errors, excluded
 
 
 def validate_roadmap(data: dict[str, Any]) -> tuple[list[str], set[str]]:
@@ -122,6 +164,8 @@ def validate_roadmap(data: dict[str, Any]) -> tuple[list[str], set[str]]:
             elif not re.match(r"^https://", href):
                 errors.append(f"{where}: source href must be an internal route or HTTPS URL: {href}")
 
+    exclusion_errors, _ = validate_lab_exclusions(data, routes)
+    errors.extend(exclusion_errors)
     if len(tracks) < 5:
         errors.append("roadmap.yml: expected at least five career tracks")
     if len(skill_ids) < 30:
@@ -160,7 +204,7 @@ def validate_declared_lab_metadata(skill_ids: set[str]) -> list[str]:
     return errors
 
 
-def changed_lab_markdown(base: str) -> list[str]:
+def changed_lab_content(base: str) -> list[str]:
     command = ["git", "diff", "--name-status", "--find-renames", f"{base}...HEAD", "--", "labs"]
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True)
     if result.returncode != 0:
@@ -172,31 +216,51 @@ def changed_lab_markdown(base: str) -> list[str]:
             continue
         status = parts[0]
         candidate = parts[1] if status.startswith("A") and len(parts) >= 2 else parts[2] if status.startswith("R") and len(parts) >= 3 else ""
-        if candidate.startswith("labs/") and candidate.endswith(".md") and candidate not in LAB_POLICY_FILES:
+        if not candidate.startswith("labs/") or candidate in LAB_POLICY_FILES:
+            continue
+        if candidate.endswith(".md") or candidate.endswith(".html"):
             paths.append(candidate)
     return sorted(set(paths))
 
 
-def validate_new_lab_contract(base: str, skill_ids: set[str]) -> list[str]:
+def html_route(rel: str) -> str:
+    path = Path(rel)
+    if path.name == "index.html":
+        return "/" + path.parent.as_posix().strip("/") + "/"
+    return "/" + path.as_posix().lstrip("/")
+
+
+def validate_new_lab_contract(base: str, skill_ids: set[str], data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    for rel in changed_lab_markdown(base):
+    routes = discover_permalink_map()
+    mapped_routes = roadmap_lab_routes(data)
+    _, excluded_routes = validate_lab_exclusions(data, routes)
+    for rel in changed_lab_content(base):
         path = ROOT / rel
         if not path.exists():
             continue
-        fm = parse_frontmatter(path)
-        if fm.get("career_impact") not in {"mapped", "none"}:
-            errors.append(
-                f"{rel}: new Lab Markdown must declare career_impact: mapped|none. "
-                "If mapped, add career_skills. If none, add career_reason."
-            )
+        if rel.endswith(".md"):
+            fm = parse_frontmatter(path)
+            if fm.get("career_impact") not in {"mapped", "none"}:
+                errors.append(
+                    f"{rel}: new Lab Markdown must declare career_impact: mapped|none. "
+                    "If mapped, add career_skills. If none, add career_reason."
+                )
+                continue
+            errors.extend(validate_metadata(rel, fm, skill_ids))
             continue
-        errors.extend(validate_metadata(rel, fm, skill_ids))
+        route = normalize_route(html_route(rel))
+        if route not in mapped_routes and route not in excluded_routes:
+            errors.append(
+                f"{rel}: new static Lab route {route} needs a career decision. "
+                "Reference the route from a skill source in roadmap.yml, or add lab_exclusions with a useful reason."
+            )
     return errors
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Lab-to-career roadmap factory.")
-    parser.add_argument("--changed-from", help="Git base ref used to enforce the contract on new Lab Markdown files.")
+    parser.add_argument("--changed-from", help="Git base ref used to enforce the contract on newly added Lab content.")
     args = parser.parse_args()
     try:
         data = load_yaml(ROADMAP_PATH)
@@ -204,8 +268,8 @@ def main() -> int:
         errors.extend(validate_declared_lab_metadata(skill_ids))
         new_pages: list[str] = []
         if args.changed_from:
-            new_pages = changed_lab_markdown(args.changed_from)
-            errors.extend(validate_new_lab_contract(args.changed_from, skill_ids))
+            new_pages = changed_lab_content(args.changed_from)
+            errors.extend(validate_new_lab_contract(args.changed_from, skill_ids, data))
     except (OSError, ValueError, yaml.YAMLError, RuntimeError) as exc:
         print(f"Career Factory failed: {exc}", file=sys.stderr)
         return 2
@@ -216,7 +280,7 @@ def main() -> int:
         return 2
     print(f"Career Factory passed: {len(skill_ids)} skills across {len(data.get('tracks') or {})} tracks.")
     if args.changed_from:
-        print(f"New Lab Markdown checked for explicit career impact: {len(new_pages)}")
+        print(f"New Lab content checked for explicit career impact: {len(new_pages)}")
     return 0
 
 
