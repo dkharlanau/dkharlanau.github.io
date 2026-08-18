@@ -1,3 +1,7 @@
+---
+career_impact: none
+career_reason: "Agent policy file for Lab contributors; it defines the career mapping contract but is not interview study content."
+---
 # Labs Agent Contract
 
 This file applies to work under `labs/` in addition to the repository-level `AGENTS.md`.
