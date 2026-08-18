@@ -1,0 +1,141 @@
+<section class="content-section" aria-labelledby="modern-data-platforms">
+  <h2 id="modern-data-platforms">Modern data platforms</h2>
+
+  <p>An SAP Lead does not need to become a platform engineer. But you should understand where common data platforms sit in enterprise architecture, why companies use them, and what changes when SAP data leaves the transactional system.</p>
+
+  <p>The useful question is not <strong>“Which platform is best?”</strong> Ask <strong>“Which workload, data boundary, operating model, and ecosystem are we designing for?”</strong></p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Platform</th>
+          <th scope="col">Core idea</th>
+          <th scope="col">Typical strength</th>
+          <th scope="col">SAP Lead lens</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Databricks</strong></td>
+          <td>Lakehouse-based data and AI platform</td>
+          <td>Data engineering, analytics, ML, and AI on a shared platform</td>
+          <td>Useful when SAP data must be combined with large non-SAP datasets, engineering pipelines, data science, or AI workloads</td>
+        </tr>
+        <tr>
+          <td><strong>Snowflake</strong></td>
+          <td>Cloud data platform with separated storage and compute</td>
+          <td>Governed SQL analytics, data engineering, sharing, and elastic workloads</td>
+          <td>Useful as a central analytical layer where SAP and non-SAP data are modeled and consumed across teams</td>
+        </tr>
+        <tr>
+          <td><strong>Microsoft Fabric</strong></td>
+          <td>End-to-end SaaS analytics platform built around OneLake</td>
+          <td>Integrated ingestion, engineering, warehouse, real-time analytics, and Power BI</td>
+          <td>Strong architectural fit when the enterprise already uses Microsoft data and BI services</td>
+        </tr>
+        <tr>
+          <td><strong>Google BigQuery</strong></td>
+          <td>Fully managed serverless data platform</td>
+          <td>Large-scale analytics without infrastructure management</td>
+          <td>Strong fit when the data estate and analytics workloads are centered on Google Cloud</td>
+        </tr>
+        <tr>
+          <td><strong>Amazon Redshift</strong></td>
+          <td>Fully managed cloud data warehouse with provisioned and serverless options</td>
+          <td>SQL analytics inside the AWS ecosystem</td>
+          <td>Strong fit when AWS is the strategic cloud and governed analytical warehousing is the main need</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>This is a positioning map, not a product ranking. The platforms overlap and their product boundaries change. Use the comparison model, then verify current features in vendor documentation.</p>
+
+  <h3>Databricks</h3>
+  <p><strong>Remember:</strong> lakehouse + data engineering + analytics + AI.</p>
+  <p>Databricks positions its platform around enterprise data, analytics, and AI on a lakehouse architecture. For an SAP Lead, the important point is the architectural role: SAP data can become one governed source among many and can be combined with logs, documents, IoT, external data, analytics, and AI workloads.</p>
+  <p><strong>Interview signal:</strong> explain why a lakehouse may be useful when the problem is broader than classic BI and includes engineering or AI workloads.</p>
+  <p>Official reference: <a href="https://docs.databricks.com/aws/en/introduction/">Databricks — What is Databricks?</a></p>
+
+  <h3>Snowflake</h3>
+  <p><strong>Remember:</strong> cloud data platform + elastic compute + analytical workload separation.</p>
+  <p>Snowflake separates persisted storage from independent compute resources called virtual warehouses. For an SAP Lead, focus on ingestion or replication, batch versus change-data-capture patterns, semantic ownership after extraction, access, quality, and downstream consumption.</p>
+  <p><strong>Interview signal:</strong> explain why moving SAP tables into a warehouse is not the same as moving an SAP business model.</p>
+  <p>Official reference: <a href="https://docs.snowflake.com/en/user-guide/intro-key-concepts">Snowflake — Key concepts and architecture</a></p>
+
+  <h3>Microsoft Fabric</h3>
+  <p><strong>Remember:</strong> integrated analytics SaaS + OneLake + Power BI ecosystem.</p>
+  <p>Microsoft Fabric combines ingestion, engineering, data science, real-time analytics, warehousing, databases, and Power BI. OneLake is the shared logical data lake across Fabric workloads.</p>
+  <p>For an SAP Lead, discuss how SAP data reaches Fabric, where transformation logic belongs, how semantic models relate to SAP business definitions, and whether the architecture duplicates logic already available in SAP analytical products.</p>
+  <p><strong>Interview signal:</strong> explain the difference between an analytics platform and the SAP transactional system that still owns operational execution.</p>
+  <p>Official reference: <a href="https://learn.microsoft.com/en-us/fabric/fundamentals/microsoft-fabric-overview">Microsoft Fabric overview</a></p>
+
+  <h3>Google BigQuery</h3>
+  <p><strong>Remember:</strong> serverless analytics at Google Cloud scale.</p>
+  <p>BigQuery is a fully managed data platform with a serverless architecture. For an SAP Lead, the design questions remain familiar: extraction pattern, freshness, business semantics, raw versus curated data, access, lineage, and cost.</p>
+  <p><strong>Interview signal:</strong> explain why serverless infrastructure removes some platform operations but does not remove data architecture or governance work.</p>
+  <p>Official reference: <a href="https://cloud.google.com/bigquery/docs/introduction">BigQuery overview</a></p>
+
+  <h3>Amazon Redshift</h3>
+  <p><strong>Remember:</strong> managed AWS data warehouse + SQL analytics.</p>
+  <p>Amazon Redshift is a fully managed cloud data warehouse, and AWS also provides Redshift Serverless. For an SAP Lead, focus on the SAP ingestion boundary, analytical modeling, integration with the wider AWS estate, workload and cost decisions, monitoring, and recovery.</p>
+  <p><strong>Interview signal:</strong> explain why a managed warehouse can simplify infrastructure while end-to-end data ownership remains an enterprise responsibility.</p>
+  <p>Official reference: <a href="https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html">Amazon Redshift overview</a></p>
+
+  <h3>What changes when SAP data leaves SAP?</h3>
+  <ol>
+    <li><strong>Transaction ownership does not move.</strong> The operational ERP still executes the business transaction. The target platform normally receives data for analytics, AI, reporting, data products, or cross-system processing.</li>
+    <li><strong>Business semantics can be lost.</strong> SAP meaning may depend on document flow, status logic, organizational structure, units, currencies, master data validity, configuration, and authorization context.</li>
+    <li><strong>Freshness becomes a design decision.</strong> Choose daily batch, incremental loads, CDC, streaming, or live access from the business requirement.</li>
+    <li><strong>Recovery must be designed.</strong> Define checkpoints, duplicate handling, replay, late-arriving data, schema changes, monitoring, reconciliation, and ownership.</li>
+    <li><strong>Governance crosses systems.</strong> Security, retention, lineage, privacy, data quality, and access rules must survive the movement.</li>
+  </ol>
+
+  <h3>Compare platforms with the same questions</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Dimension</th>
+          <th scope="col">Questions to ask</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Workload</strong></td><td>BI only, engineering, ML/AI, streaming, data products, or a mix?</td></tr>
+        <tr><td><strong>Cloud strategy</strong></td><td>AWS, Azure/Microsoft, Google Cloud, multi-cloud, or platform-neutral?</td></tr>
+        <tr><td><strong>Data model</strong></td><td>Warehouse-first, lakehouse, open files, curated marts, or semantic layer?</td></tr>
+        <tr><td><strong>SAP integration</strong></td><td>Batch, CDC, APIs, events, files, replication product, or virtual access?</td></tr>
+        <tr><td><strong>Latency</strong></td><td>What freshness is actually required by the business decision?</td></tr>
+        <tr><td><strong>Semantics</strong></td><td>Where are SAP business definitions preserved and governed?</td></tr>
+        <tr><td><strong>Governance</strong></td><td>Who owns lineage, access, quality, retention, and sensitive fields?</td></tr>
+        <tr><td><strong>Operations</strong></td><td>Who monitors failed loads, duplicates, schema drift, and reconciliation?</td></tr>
+        <tr><td><strong>Skills</strong></td><td>Which platform can the organization realistically build and operate?</td></tr>
+        <tr><td><strong>Cost</strong></td><td>How do storage, compute, concurrency, data movement, and idle capacity affect cost?</td></tr>
+        <tr><td><strong>Portability</strong></td><td>How much depends on proprietary services or formats?</td></tr>
+        <tr><td><strong>AI readiness</strong></td><td>Can governed enterprise data be safely reused for ML, retrieval, and agent workloads?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>SAP Lead assessment drill</h3>
+  <ol>
+    <li>What is the practical difference between a data warehouse and a lakehouse?</li>
+    <li>Why might a company choose Databricks for a data-and-AI program?</li>
+    <li>What is the architectural value of Snowflake separating storage and compute?</li>
+    <li>Why is OneLake important to the Microsoft Fabric model?</li>
+    <li>What does serverless change in BigQuery, and what responsibilities remain?</li>
+    <li>Where does Redshift fit in an AWS-centered data architecture?</li>
+    <li>If SAP data is replicated to one of these platforms, where should business semantics be owned?</li>
+    <li>When is daily batch enough, and when would CDC or streaming be justified?</li>
+    <li>How do you prove that the target contains complete and reconciled SAP data?</li>
+    <li>When should you challenge the requirement to copy SAP data at all?</li>
+  </ol>
+
+  <p>A useful Lead-level answer pattern is:</p>
+  <blockquote>
+    <p><strong>Business decision → required data → source of truth → latency → movement pattern → target platform → semantic ownership → controls → operations → cost and trade-offs.</strong></p>
+  </blockquote>
+
+  <p>Do not choose Databricks, Snowflake, Fabric, BigQuery, or Redshift from the product name first. Start from the workload, required freshness, SAP semantics, cloud strategy, governance, operating skills, recovery model, and cost.</p>
+</section>
