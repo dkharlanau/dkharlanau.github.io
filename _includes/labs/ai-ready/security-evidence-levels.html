@@ -1,0 +1,28 @@
+<section id="ai-security-evidence-levels">
+  <h2>Evidence levels for AI security review</h2>
+
+  <p>Not every security statement carries the same evidentiary weight. For Codex Security and similar AI-assisted reviews, label findings by how strong the evidence is.</p>
+
+  <h3>Source fact</h3>
+  <p>Something directly visible in code, configuration, logs, test output, scanner output, or provided materials.</p>
+  <p><strong>Example:</strong> “The pull request removes a role-checking helper from the account export route.”</p>
+
+  <h3>Supported inference</h3>
+  <p>A reasonable conclusion drawn from available source facts.</p>
+  <p><strong>Example:</strong> “Because the route previously called the role-checking helper and now does not, authorization behavior may have changed for this action.”</p>
+
+  <h3>Runtime proof</h3>
+  <p>Evidence observed from approved runtime testing.</p>
+  <p><strong>Example:</strong> “In the approved staging environment, a user without the export role successfully triggered the export endpoint.”</p>
+  <p>Use this label only when runtime activity was explicitly authorized and observed.</p>
+
+  <h3>Unsupported claim</h3>
+  <p>A statement that goes beyond available evidence.</p>
+  <p><strong>Example:</strong> “This issue allows any attacker to export all customer accounts” when no runtime test, access path, or data exposure proof has been established.</p>
+
+  <h3>Proof gap</h3>
+  <p>Something that remains unproven and needs more evidence or human review.</p>
+  <p><strong>Example:</strong> “The review does not confirm whether upstream middleware still blocks this route at runtime.”</p>
+
+  <p>This distinction protects credibility. It also helps customers understand what they can decide now and what still needs validation. A source fact or runtime proof can support a decision. A supported inference can justify more investigation. A proof gap should stay visible until it is resolved. An unsupported claim should not be presented as a finding.</p>
+</section>

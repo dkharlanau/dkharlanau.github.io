@@ -1,0 +1,137 @@
+<section id="data-products-vs-pipelines">
+  <h2>Data Products versus Data Pipelines</h2>
+
+  <p><strong>A pipeline moves data. A product keeps a promise.</strong></p>
+
+  <p>A data pipeline is an implementation mechanism. It extracts, transforms, validates, and moves data from one place to another. A data product is the thing a consumer can rely on over time. It has an owner, a defined meaning, a service expectation, quality controls, and a managed lifecycle.</p>
+
+  <p>The same pipeline can support several products, and one product can depend on several pipelines. Treating them as the same thing creates a common failure: the technical flow is green, but nobody can say whether the delivered data is correct, fresh, understood, or still safe to use.</p>
+
+  <h3>The practical difference</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Question</th>
+        <th>Data pipeline</th>
+        <th>Data product</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Primary purpose</td>
+        <td>Move and transform data.</td>
+        <td>Provide trusted data for a defined consumer need.</td>
+      </tr>
+      <tr>
+        <td>Success signal</td>
+        <td>The job completed and records arrived.</td>
+        <td>The consumer received correct, understandable, fresh, usable data.</td>
+      </tr>
+      <tr>
+        <td>Ownership</td>
+        <td>Usually technical ownership of the flow.</td>
+        <td>Accountability for meaning, quality, freshness, change, and retirement.</td>
+      </tr>
+      <tr>
+        <td>Interface</td>
+        <td>Files, tables, topics, APIs, transformations.</td>
+        <td>A documented contract that consumers can build against.</td>
+      </tr>
+      <tr>
+        <td>Lifecycle</td>
+        <td>Build, run, repair, optimize.</td>
+        <td>Design, publish, monitor, evolve, deprecate, retire.</td>
+      </tr>
+      <tr>
+        <td>Main failure</td>
+        <td>The data does not move.</td>
+        <td>The promise to the consumer becomes false.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Six components of a data product</h3>
+
+  <p>The components work together. Ownership gives the promise an accountable person. Contracts and lineage explain the promise. Monitoring and retirement rules keep it true over time.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>What it means</th>
+        <th>Failure when missing</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Owner</strong></td>
+        <td>One named person owns freshness, correctness, and retirement.</td>
+        <td>A failure becomes everybody's problem and nobody's action.</td>
+      </tr>
+      <tr>
+        <td><strong>Contract</strong></td>
+        <td>The schema, refresh cadence, meaning, and breaking-change policy are documented.</td>
+        <td>A producer changes the shape or meaning and consumers fail without warning.</td>
+      </tr>
+      <tr>
+        <td><strong>Lineage</strong></td>
+        <td>Sources, transformations, and consumers are known.</td>
+        <td>A wrong metric cannot be traced, explained, or contained.</td>
+      </tr>
+      <tr>
+        <td><strong>SLA</strong></td>
+        <td>A measurable promise such as “fresh within four hours of source update”.</td>
+        <td>Stale data still looks current.</td>
+      </tr>
+      <tr>
+        <td><strong>Quality monitors</strong></td>
+        <td>Active checks alert when the product breaks its contract.</td>
+        <td>Bad data reaches a report, model, or decision silently.</td>
+      </tr>
+      <tr>
+        <td><strong>Deprecation policy</strong></td>
+        <td>Consumers receive notice, migration guidance, and a retirement date.</td>
+        <td>A cleanup removes a dependency still used in production.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>SAP example</h3>
+
+  <p>Imagine an S/4HANA sales dataset used by finance, sales analytics, and an AI assistant.</p>
+
+  <p>The <strong>pipeline</strong> may replicate sales orders, billing documents, exchange rates, and customer attributes into a cloud data platform every hour.</p>
+
+  <p>The <strong>data product</strong> could be <em>Sales Margin by Customer and Product</em>. Its contract defines which documents are included, how cancellations are handled, which currency conversion rule is used, when the data is considered fresh, and who must approve a breaking semantic change.</p>
+
+  <p>If the hourly load succeeds but the margin logic uses an obsolete exchange-rate rule, the pipeline is healthy and the product is broken. That distinction matters.</p>
+
+  <h3>What a Lead should challenge</h3>
+
+  <ul>
+    <li><strong>Who is the consumer?</strong> A product without a real consumer is usually a dataset looking for a reason to exist.</li>
+    <li><strong>What exactly is promised?</strong> Define meaning, scope, freshness, access, quality, and change rules.</li>
+    <li><strong>Where do business semantics live?</strong> Copying SAP tables does not automatically create a reusable business product.</li>
+    <li><strong>How is failure detected?</strong> Technical pipeline monitoring is not enough. Add business-level checks and reconciliation.</li>
+    <li><strong>How do consumers learn about change?</strong> Schema and semantic changes need versioning and notice.</li>
+    <li><strong>How does it end?</strong> Every product needs a retirement path, otherwise the estate only grows.</li>
+  </ul>
+
+  <h3>Assessment drill</h3>
+
+  <ol>
+    <li>Can a successful pipeline still produce a failed data product? Give an example.</li>
+    <li>Why is an owner part of the product rather than just the operating model?</li>
+    <li>What belongs in a data contract besides column names and data types?</li>
+    <li>How would you define an SLA for replicated SAP sales data?</li>
+    <li>Which controls prove that the target is complete and reconciled with SAP?</li>
+    <li>How would you introduce a breaking change without damaging consumers?</li>
+  </ol>
+
+  <h3>Lead-level answer pattern</h3>
+
+  <p><strong>Consumer need → product promise → owner → contract → source and lineage → pipeline → SLA and quality controls → change policy → retirement.</strong></p>
+
+  <p>A useful interview answer is: “I separate the data product from the pipeline that implements it. The pipeline is responsible for movement and transformation. The product is responsible for a stable consumer promise: meaning, freshness, quality, ownership, lineage, controlled change, and retirement.”</p>
+</section>
