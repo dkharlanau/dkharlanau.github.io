@@ -42,7 +42,8 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">timer</span>
-    <p><strong>Suggested pace:</strong> around two and a half minutes for the main answer. Then open the pressure follow-up and answer again without rebuilding the whole speech from zero.</p>
+    <p><strong>Problem:</strong> knowing a topic is not the same as producing a clear Lead-level answer under pressure. This mode exposes gaps in structure, evidence, and judgment instead of rewarding recognition.</p>
+    <p><strong>Context:</strong> use it after reviewing the roadmap or a Lab. Give the main answer around two and a half minutes, then open the pressure follow-up and test whether the same reasoning survives a different angle.</p>
     <p><strong>Rating:</strong> Weak = unclear or incomplete. Acceptable = correct and structured. Strong = clear, evidence-aware, and still useful after the follow-up changes the angle.</p>
   </section>
 
