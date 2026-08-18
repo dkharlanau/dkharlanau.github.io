@@ -1,0 +1,35 @@
+---
+layout: null
+permalink: /machine/business-ai/views/case-evidence.json
+sitemap: false
+---
+{% assign contract = site.data.labs.business_ai.contract %}
+{% assign catalog = site.data.labs.business_ai.catalog %}
+{% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
+{% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
+{% assign all_cases = catalog.cases | concat: expansion.cases | concat: expansion_b.cases %}
+{
+  "schema": "business-ai-case-evidence@1",
+  "contract_version": {{ contract.contract.version | jsonify }},
+  "generated_at": {{ site.time | date_to_xmlschema | jsonify }},
+  "cases": [
+    {% for item in all_cases %}
+      {% unless forloop.first %},{% endunless %}
+      {
+        "id": {{ item.id | jsonify }},
+        "canonical_ref": {{ "/labs/business-ai/cases/#" | append: item.id | jsonify }},
+        "case_kind": {{ item.case_kind | jsonify }},
+        "review_state": {{ item.review_state | jsonify }},
+        "projected_review_state": {{ item.review_state | default: "candidate" | jsonify }},
+        "process_ids": {{ item.process_ids | jsonify }},
+        "process_label": {{ item.process | jsonify }},
+        "pattern_id": {{ item.pattern | jsonify }},
+        "evidence_grade": {{ item.evidence_grade | jsonify }},
+        "reported_results": {{ item.reported_results | jsonify }},
+        "source_ids": {{ item.source_ids | jsonify }},
+        "limitations": {{ item.limits | jsonify }},
+        "proof_gaps": [{% unless item.review_state %}"Explicit review state is missing in the canonical case record."{% endunless %}{% unless item.process_ids %}{% unless item.review_state %},{% endunless %}"Stable Business AI process IDs are missing in the canonical case record."{% endunless %}]
+      }
+    {% endfor %}
+  ]
+}
