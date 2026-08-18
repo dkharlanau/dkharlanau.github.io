@@ -21,7 +21,7 @@ sitemap: false
   "canonical_contract": "/docs/strategy/business-ai-data-contract/",
   "publication_policy": {
     "scope": "public repository records only",
-    "review_rule": "Missing review state is projected as candidate and exposed through projection_flags; it is never promoted to approved.",
+    "review_rule": "Missing review fields use explicit projection defaults and projection_flags. A generated view never promotes evidence.",
     "private_material": "excluded"
   },
   "nodes": [
@@ -61,7 +61,7 @@ sitemap: false
       {% endfor %}
     {% endfor %}
     {% for source in all_sources %}
-      ,{"id":{{ "evidence-" | append: source.id | jsonify }},"type":"EvidenceSource","title":{{ source.title | default: source.id | jsonify }},"canonical_ref":"/labs/business-ai/cases/","source_url":{{ source.url | jsonify }},"source_confidence":{{ source.source_confidence | default: "medium" | jsonify }},"evidence_level":{{ source.evidence_level | default: "source_fact" | jsonify }}}
+      ,{"id":{{ "evidence-" | append: source.id | jsonify }},"type":"EvidenceSource","title":{{ source.title | default: source.id | jsonify }},"canonical_ref":"/labs/business-ai/cases/","source_url":{{ source.url | jsonify }},"source_confidence":{{ source.source_confidence | default: "medium" | jsonify }},"evidence_level":{{ source.evidence_level | default: "source_fact" | jsonify }},"projection_flags":[{% assign source_flag = false %}{% unless source.source_confidence %}"missing-explicit-source-confidence"{% assign source_flag = true %}{% endunless %}{% unless source.evidence_level %}{% if source_flag %},{% endif %}"missing-explicit-evidence-level"{% endunless %}]}
     {% endfor %}
     {% for mapping in context.process_links %}
       {% for page in mapping.context_pages %}
@@ -82,16 +82,10 @@ sitemap: false
       {% endfor %}
       {% for control in process.control_points %}
         {% assign control_slug = control | slugify %}
-        {% for stage in process.stages %}
-          {% assign stage_slug = stage | slugify %}
-          ,{"id":{{ "edge-stage-control-" | append: process.id | append: "-" | append: stage_slug | append: "-" | append: control_slug | jsonify }},"type":"stage-has-control","from":{{ "stage-" | append: process.id | append: "-" | append: stage_slug | jsonify }},"to":{{ "control-" | append: process.id | append: "-" | append: control_slug | jsonify }}}
-        {% endfor %}
+        ,{"id":{{ "edge-process-control-" | append: process.id | append: "-" | append: control_slug | jsonify }},"type":"process-has-control","from":{{ "process-" | append: process.id | jsonify }},"to":{{ "control-" | append: process.id | append: "-" | append: control_slug | jsonify }}}
       {% endfor %}
       {% for pattern_id in process.pattern_ids %}
-        {% for stage in process.stages %}
-          {% assign stage_slug = stage | slugify %}
-          ,{"id":{{ "edge-stage-pattern-" | append: process.id | append: "-" | append: stage_slug | append: "-" | append: pattern_id | jsonify }},"type":"stage-uses-pattern","from":{{ "stage-" | append: process.id | append: "-" | append: stage_slug | jsonify }},"to":{{ "pattern-" | append: pattern_id | jsonify }}}
-        {% endfor %}
+        ,{"id":{{ "edge-process-pattern-" | append: process.id | append: "-" | append: pattern_id | jsonify }},"type":"process-uses-pattern","from":{{ "process-" | append: process.id | jsonify }},"to":{{ "pattern-" | append: pattern_id | jsonify }}}
       {% endfor %}
     {% endfor %}
     {% for item in all_cases %}
