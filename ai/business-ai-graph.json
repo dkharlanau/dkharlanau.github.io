@@ -15,6 +15,9 @@ sitemap: false
 {% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
 {% assign expansion_c = site.data.labs.business_ai.expansion_2026_08_15_c %}
 {% assign empty_list = "" | split: "" %}
+{% assign catalog_patterns = catalog.patterns | default: empty_list %}
+{% assign catalog_cases = catalog.cases | default: empty_list %}
+{% assign catalog_sources = catalog.source_registry | default: empty_list %}
 {% assign expansion_patterns = expansion.patterns | default: empty_list %}
 {% assign expansion_b_patterns = expansion_b.patterns | default: empty_list %}
 {% assign expansion_c_patterns = expansion_c.patterns | default: empty_list %}
@@ -25,9 +28,9 @@ sitemap: false
 {% assign expansion_b_sources = expansion_b.source_registry | default: empty_list %}
 {% assign expansion_c_sources = expansion_c.source_registry | default: empty_list %}
 {% assign scenario_sources = scenarios.source_registry | default: empty_list %}
-{% assign all_patterns = catalog.patterns | concat: expansion_patterns | concat: expansion_b_patterns | concat: expansion_c_patterns %}
-{% assign all_cases = catalog.cases | concat: expansion_cases | concat: expansion_b_cases | concat: expansion_c_cases %}
-{% assign all_sources = catalog.source_registry | concat: expansion_sources | concat: expansion_b_sources | concat: expansion_c_sources | concat: scenario_sources %}
+{% assign all_patterns = catalog_patterns | concat: expansion_patterns | concat: expansion_b_patterns | concat: expansion_c_patterns %}
+{% assign all_cases = catalog_cases | concat: expansion_cases | concat: expansion_b_cases | concat: expansion_c_cases %}
+{% assign all_sources = catalog_sources | concat: expansion_sources | concat: expansion_b_sources | concat: expansion_c_sources | concat: scenario_sources %}
 {% assign failure_patterns = scenarios.failure_patterns | default: empty_list %}
 {% assign best_practices = scenarios.best_practices | default: empty_list %}
 {
