@@ -58,7 +58,136 @@ def aggregate_catalog(catalog, extensions):
     return patterns, cases, sources
 
 
-def validate_structure(contract, domain_map, process_map, catalog, extensions, scenarios, matrix, technologies):
+def source_route_exists(route: str) -> bool:
+    if not isinstance(route, str) or not route.startswith("/"):
+        return False
+    relative = route.strip("/")
+    target = ROOT / relative
+    if target.is_file():
+        return True
+    if target.is_dir():
+        return any((target / name).exists() for name in ("index.md", "index.html"))
+    return any(
+        candidate.exists()
+        for candidate in (
+            ROOT / f"{relative}.md",
+            ROOT / f"{relative}.html",
+            target / "index.md",
+            target / "index.html",
+        )
+    )
+
+
+def require_boundary_fields(record, label):
+    for field in (
+        "decision_points",
+        "deterministic_rules",
+        "data_dependencies",
+        "integration_boundaries",
+        "authority",
+        "control_points",
+    ):
+        value = record.get(field)
+        if value in (None, "", []):
+            raise GraphIntegrityError(f"{label} is missing boundary field {field}")
+
+
+def validate_cross_product_links(sap_links, domains, processes):
+    if not sap_links:
+        return {
+            "process_stages": {},
+            "enterprise_capabilities": {},
+            "sap_stage_links": {},
+            "sap_domain_links": {},
+        }
+
+    capabilities = records_by_id(sap_links.get("capabilities", []), "SAP capability")
+    stages = records_by_id(sap_links.get("process_stages", []), "process stage")
+    stage_links = records_by_id(sap_links.get("stage_links", []), "SAP stage link")
+    domain_links = records_by_id(sap_links.get("domain_links", []), "SAP domain link")
+
+    for capability_id, capability in capabilities.items():
+        canonical_url = capability.get("canonical_url")
+        if not source_route_exists(canonical_url):
+            raise GraphIntegrityError(
+                f"{capability_id} references missing SAP route: {canonical_url}"
+            )
+        for route in capability.get("operational_context_urls", []):
+            if not source_route_exists(route):
+                raise GraphIntegrityError(
+                    f"{capability_id} references missing operational context route: {route}"
+                )
+
+    stable_process_ids = set()
+    for stage_id, stage in stages.items():
+        process_id = stage.get("process_id")
+        if process_id not in processes:
+            raise GraphIntegrityError(
+                f"{stage_id} references missing process: {process_id}"
+            )
+        legacy_stage_names = {
+            str(name).casefold() for name in processes[process_id].get("stages", [])
+        }
+        if str(stage.get("title", "")).casefold() not in legacy_stage_names:
+            raise GraphIntegrityError(
+                f"{stage_id} title does not match a legacy stage in {process_id}"
+            )
+        stable_process_ids.add(process_id)
+
+    linked_families = set()
+    for link_id, link in stage_links.items():
+        stage_id = link.get("stage_id")
+        capability_id = link.get("capability_id")
+        if stage_id not in stages:
+            raise GraphIntegrityError(
+                f"{link_id} references missing process stage: {stage_id}"
+            )
+        if capability_id not in capabilities:
+            raise GraphIntegrityError(
+                f"{link_id} references missing SAP capability: {capability_id}"
+            )
+        require_boundary_fields(link, link_id)
+        linked_families.add(capabilities[capability_id].get("family"))
+
+    for link_id, link in domain_links.items():
+        domain_id = link.get("domain_id")
+        capability_id = link.get("capability_id")
+        if domain_id not in domains:
+            raise GraphIntegrityError(
+                f"{link_id} references missing Business AI domain: {domain_id}"
+            )
+        if capability_id not in capabilities:
+            raise GraphIntegrityError(
+                f"{link_id} references missing SAP capability: {capability_id}"
+            )
+        require_boundary_fields(link, link_id)
+        linked_families.add(capabilities[capability_id].get("family"))
+
+    if len({family for family in linked_families if family}) < 4:
+        raise GraphIntegrityError(
+            "SAP cross-product links must cover at least four major process families"
+        )
+
+    return {
+        "process_stages": stages,
+        "enterprise_capabilities": capabilities,
+        "sap_stage_links": stage_links,
+        "sap_domain_links": domain_links,
+        "stable_stage_process_ids": stable_process_ids,
+    }
+
+
+def validate_structure(
+    contract,
+    domain_map,
+    process_map,
+    catalog,
+    extensions,
+    scenarios,
+    matrix,
+    technologies,
+    sap_links=None,
+):
     patterns, cases, sources = aggregate_catalog(catalog, extensions)
     sources.extend(scenarios.get("source_registry", []))
 
@@ -124,7 +253,7 @@ def validate_structure(contract, domain_map, process_map, catalog, extensions, s
                 f"{profile_id} has invalid recommended_autonomy: {autonomy!r}"
             )
 
-    return {
+    indexes = {
         "domains": domains,
         "processes": processes,
         "patterns": pattern_map,
@@ -135,6 +264,8 @@ def validate_structure(contract, domain_map, process_map, catalog, extensions, s
         "decision_profiles": profile_map,
         "technology_families": technology_map,
     }
+    indexes.update(validate_cross_product_links(sap_links or {}, domains, processes))
+    return indexes
 
 
 def coverage_gaps(indexes, catalog, domain_map, process_map, matrix, reviewed_at, stale_after_days=180):
@@ -148,8 +279,12 @@ def coverage_gaps(indexes, catalog, domain_map, process_map, matrix, reviewed_at
                 "reason": "Domain has no linked public case yet.",
             })
 
+    stable_stage_process_ids = indexes.get("stable_stage_process_ids", set())
     for process in process_map.get("processes", []):
-        if any(not isinstance(stage, dict) or not stage.get("id") for stage in process.get("stages", [])):
+        if (
+            any(not isinstance(stage, dict) or not stage.get("id") for stage in process.get("stages", []))
+            and process["id"] not in stable_stage_process_ids
+        ):
             gaps.append({
                 "kind": "stable-stage-id",
                 "id": process["id"],
@@ -218,6 +353,8 @@ def build_report():
     scenarios = load_yaml(DATA / "scenario_library.yml")
     matrix = load_yaml(DATA / "assessment_matrix.yml")
     technologies = load_yaml(DATA / "technology_landscape.yml")
+    sap_links_path = DATA / "sap_process_links.yml"
+    sap_links = load_yaml(sap_links_path) if sap_links_path.exists() else {}
 
     indexes = validate_structure(
         contract,
@@ -228,6 +365,7 @@ def build_report():
         scenarios,
         matrix,
         technologies,
+        sap_links,
     )
     gaps = coverage_gaps(
         indexes,
@@ -237,11 +375,14 @@ def build_report():
         matrix,
         catalog.get("reviewed_at"),
     )
+    countable = {
+        key: value for key, value in indexes.items() if isinstance(value, dict)
+    }
     return {
         "schema": "dkharlanau.business-ai.graph-integrity",
         "contract_version": contract["contract"]["version"],
         "structural_errors": 0,
-        "counts": {key: len(value) for key, value in indexes.items()},
+        "counts": {key: len(value) for key, value in countable.items()},
         "coverage_gap_count": len(gaps),
         "coverage_gaps": gaps,
     }

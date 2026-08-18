@@ -1,6 +1,6 @@
 contract:
   id: business-ai-graph
-  version: "1.1.0"
+  version: "1.2.0"
   schema_version: "1"
   compatibility: additive-minor
   purpose: "Canonical contract for Business AI entities, relationships, evidence fields, review state, and generated views."
@@ -35,6 +35,9 @@ source_of_truth:
     expansion_2026_08_15_c:
       path: _data/labs/business_ai/expansion_2026_08_15_c.yml
       role: catalog-extension
+    sap_process_links:
+      path: _data/labs/business_ai/sap_process_links.yml
+      role: sap-enterprise-cross-product-links
 
 generated_outputs:
   - labs/business-ai/data/catalog.json
@@ -114,6 +117,7 @@ entity_types:
   - Pattern
   - TechnologyFamily
   - EnterprisePlatform
+  - EnterpriseCapability
   - BusinessAICase
   - ScenarioOutcome
   - FailurePattern
@@ -127,6 +131,9 @@ entity_types:
   - Limitation
 
 required_fields_by_entity:
+  EnterpriseCapability:
+    - platform
+    - canonical_url
   BusinessAICase:
     - case_kind
     - review_state
@@ -149,6 +156,12 @@ relationship_types:
   - id: stage-uses-pattern
     from: ProcessStage
     to: Pattern
+  - id: stage-maps-to-capability
+    from: ProcessStage
+    to: EnterpriseCapability
+  - id: domain-maps-to-capability
+    from: BusinessDomain
+    to: EnterpriseCapability
   - id: pattern-needs-technology
     from: Pattern
     to: TechnologyFamily
