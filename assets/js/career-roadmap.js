@@ -23,7 +23,8 @@
   const health = document.getElementById('career-health');
   const activeLabel = document.getElementById('career-active-label');
   const reset = document.getElementById('career-reset');
-  let activeTrack = 'all';
+  const initialHash = window.location.hash.replace(/^#/, '');
+  let activeTrack = tracks[initialHash] ? initialHash : 'all';
   let activeTier = 'all';
 
   function status(skillId) {
@@ -40,9 +41,18 @@
     return Object.entries(tracks).sort((a, b) => (a[1].order || 99) - (b[1].order || 99));
   }
 
+  function selectTrack(trackId) {
+    activeTrack = trackId;
+    if (trackId === 'all') {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    } else {
+      history.replaceState(null, '', `#${trackId}`);
+    }
+    render();
+  }
+
   function renderHealth() {
     if (!health) return;
-    const sourceCount = skills.reduce((sum, skill) => sum + (skill.sources || []).length, 0);
     const defendCount = skills.filter(skill => status(skill.id).score === 3).length;
     const mappedLabs = new Set(
       skills.flatMap(skill => (skill.sources || []).filter(source => source.kind === 'lab').map(source => source.href))
@@ -62,7 +72,7 @@
     all.dataset.track = 'all';
     all.setAttribute('aria-pressed', activeTrack === 'all' ? 'true' : 'false');
     all.innerHTML = `<div class="career-track-card__top"><strong>All tracks</strong><span class="career-track-card__score">${scoreFor(skills)}%</span></div><div class="career-track-card__bar"><span style="width:${scoreFor(skills)}%"></span></div><small>${skills.length} skills across the full SAP Lead map.</small>`;
-    all.addEventListener('click', () => { activeTrack = 'all'; render(); });
+    all.addEventListener('click', () => selectTrack('all'));
     trackGrid.appendChild(all);
 
     sortedTracks().forEach(([trackId, track]) => {
@@ -72,9 +82,10 @@
       button.type = 'button';
       button.className = 'career-track-card';
       button.dataset.track = trackId;
+      button.id = `career-track-${trackId}`;
       button.setAttribute('aria-pressed', activeTrack === trackId ? 'true' : 'false');
       button.innerHTML = `<div class="career-track-card__top"><strong>${track.label}</strong><span class="career-track-card__score">${score}%</span></div><div class="career-track-card__bar"><span style="width:${score}%"></span></div><small>${track.statement}</small>`;
-      button.addEventListener('click', () => { activeTrack = trackId; render(); });
+      button.addEventListener('click', () => selectTrack(trackId));
       trackGrid.appendChild(button);
     });
   }
@@ -173,6 +184,13 @@
       if (window.confirm('Reset all Interview Readiness topic states in this browser?')) IR.resetReadiness();
     });
   }
+  window.addEventListener('hashchange', () => {
+    const next = window.location.hash.replace(/^#/, '');
+    if (tracks[next] && next !== activeTrack) {
+      activeTrack = next;
+      render();
+    }
+  });
   window.addEventListener('interview-readiness-change', render);
   render();
 })();
