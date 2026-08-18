@@ -60,6 +60,17 @@ jobs:
       - name: Build Jekyll site
         run: bundle exec jekyll build --trace
 
+      - name: Check Business AI graph quality
+        run: python3 scripts/check_business_ai_graph_quality.py --site _site --report reports/business-ai-graph-quality.json
+
+      - name: Upload Business AI graph quality report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: business-ai-graph-quality
+          path: reports/business-ai-graph-quality.json
+          if-no-files-found: ignore
+
       - name: Check rendered structured data
         run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_rendered_structured_data.py
 
