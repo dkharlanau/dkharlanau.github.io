@@ -1,6 +1,6 @@
 contract:
   id: business-ai-graph
-  version: "1.0.0"
+  version: "1.1.0"
   schema_version: "1"
   compatibility: additive-minor
   purpose: "Canonical contract for Business AI entities, relationships, evidence fields, review state, and generated views."
@@ -17,6 +17,9 @@ source_of_truth:
     process_map:
       path: _data/labs/business_ai/process_map.yml
       role: end-to-end-processes-and-stages
+    enterprise_context_links:
+      path: _data/labs/business_ai/enterprise_context_links.yml
+      role: vendor-specific-enterprise-context-cross-links
     scenario_library:
       path: _data/labs/business_ai/scenario_library.yml
       role: outcomes-failures-controls-practices
@@ -44,6 +47,10 @@ generated_outputs:
   - labs/business-ai/data/processes.json
   - labs/business-ai/data/scenarios.json
   - labs/business-ai/data/technologies.json
+  - machine/business-ai/graph.json
+  - machine/business-ai/manifest.json
+  - machine/business-ai/views/process-context.json
+  - machine/business-ai/views/case-evidence.json
 
 id_policy:
   entity_pattern: "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
@@ -112,6 +119,7 @@ entity_types:
   - Pattern
   - TechnologyFamily
   - EnterprisePlatform
+  - EnterpriseContextPage
   - BusinessAICase
   - ScenarioOutcome
   - FailurePattern
@@ -133,6 +141,8 @@ required_fields_by_entity:
   EvidenceSource:
     - source_confidence
     - evidence_level
+  EnterpriseContextPage:
+    - canonical_ref
 
 relationship_types:
   - id: process-crosses-domain
@@ -141,6 +151,12 @@ relationship_types:
   - id: process-has-stage
     from: EndToEndProcess
     to: ProcessStage
+  - id: process-has-enterprise-context
+    from: EndToEndProcess
+    to: EnterpriseContextPage
+  - id: stage-has-enterprise-context
+    from: ProcessStage
+    to: EnterpriseContextPage
   - id: stage-uses-pattern
     from: ProcessStage
     to: Pattern
@@ -159,9 +175,15 @@ relationship_types:
   - id: case-applies-to-process
     from: BusinessAICase
     to: EndToEndProcess
+  - id: case-uses-pattern
+    from: BusinessAICase
+    to: Pattern
   - id: case-uses-platform
     from: BusinessAICase
     to: EnterprisePlatform
+  - id: case-supported-by-evidence
+    from: BusinessAICase
+    to: EvidenceSource
   - id: case-reports-metric
     from: BusinessAICase
     to: Metric
