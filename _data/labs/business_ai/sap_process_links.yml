@@ -1,0 +1,394 @@
+schema_version: "1.0"
+reviewed_at: "2026-08-18"
+platform: "SAP"
+principle: "Business AI process and stage IDs remain vendor-neutral. SAP capability records add implementation context through links to existing SAP Enterprise pages without copying configuration content."
+
+capabilities:
+  - id: "sap-sales-order-management"
+    title: "SAP sales order management"
+    family: "lead-to-cash"
+    canonical_url: "/labs/enterprise-context/sales-order/"
+    operational_context_urls:
+      - "/labs/enterprise-context/sales-processes/"
+      - "/labs/enterprise-context/sales-diagnostics/"
+
+  - id: "sap-pricing"
+    title: "SAP pricing"
+    family: "lead-to-cash"
+    canonical_url: "/labs/enterprise-context/pricing/"
+    operational_context_urls:
+      - "/labs/enterprise-context/sales-order/"
+
+  - id: "sap-atp-promise"
+    title: "SAP availability and promise"
+    family: "lead-to-cash"
+    canonical_url: "/labs/enterprise-context/atp/"
+    operational_context_urls:
+      - "/labs/enterprise-context/sales-order/"
+
+  - id: "sap-shipping"
+    title: "SAP shipping and delivery"
+    family: "lead-to-cash"
+    canonical_url: "/labs/enterprise-context/shipping/"
+    operational_context_urls:
+      - "/labs/enterprise-context/sales-processes/"
+
+  - id: "sap-billing"
+    title: "SAP billing"
+    family: "lead-to-cash"
+    canonical_url: "/labs/enterprise-context/billing/"
+    operational_context_urls:
+      - "/labs/enterprise-context/finance-logistics/"
+
+  - id: "sap-procurement"
+    title: "SAP procurement"
+    family: "source-to-pay"
+    canonical_url: "/labs/enterprise-context/procurement/"
+    operational_context_urls:
+      - "/labs/enterprise-context/inventory-management/"
+
+  - id: "sap-inventory-management"
+    title: "SAP inventory management"
+    family: "source-to-pay"
+    canonical_url: "/labs/enterprise-context/inventory-management/"
+    operational_context_urls:
+      - "/labs/enterprise-context/material-behavior/"
+
+  - id: "sap-ewm"
+    title: "SAP Extended Warehouse Management"
+    family: "forecast-to-fulfill"
+    canonical_url: "/labs/enterprise-context/ewm/"
+    operational_context_urls:
+      - "/labs/enterprise-context/inventory-management/"
+
+  - id: "sap-transportation-management"
+    title: "SAP Transportation Management"
+    family: "forecast-to-fulfill"
+    canonical_url: "/labs/enterprise-context/transportation-management/"
+    operational_context_urls:
+      - "/labs/enterprise-context/shipping/"
+
+  - id: "sap-master-data"
+    title: "SAP master data"
+    family: "master-data"
+    canonical_url: "/labs/enterprise-context/master-data/"
+    operational_context_urls:
+      - "/labs/enterprise-context/mdg/"
+      - "/labs/enterprise-context/data-governance/"
+
+  - id: "sap-integration-operations"
+    title: "SAP integration operations"
+    family: "integration-operations"
+    canonical_url: "/labs/enterprise-context/integration-operations/"
+    operational_context_urls:
+      - "/labs/enterprise-context/integrations/"
+
+process_stages:
+  - id: "lead-to-cash-order-capture"
+    process_id: "lead-to-cash"
+    title: "Order capture"
+  - id: "lead-to-cash-availability-promise"
+    process_id: "lead-to-cash"
+    title: "Availability and promise"
+  - id: "lead-to-cash-delivery-fulfillment"
+    process_id: "lead-to-cash"
+    title: "Delivery and fulfillment"
+  - id: "lead-to-cash-billing-receivables"
+    process_id: "lead-to-cash"
+    title: "Billing and receivables"
+  - id: "source-to-pay-purchase-order"
+    process_id: "source-to-pay"
+    title: "Purchase order"
+  - id: "source-to-pay-supplier-confirmation"
+    process_id: "source-to-pay"
+    title: "Supplier confirmation"
+  - id: "source-to-pay-receipt-service-entry"
+    process_id: "source-to-pay"
+    title: "Receipt and service entry"
+  - id: "source-to-pay-invoice"
+    process_id: "source-to-pay"
+    title: "Invoice"
+  - id: "forecast-to-fulfill-inventory-target"
+    process_id: "forecast-to-fulfill"
+    title: "Inventory target"
+  - id: "forecast-to-fulfill-warehouse-execution"
+    process_id: "forecast-to-fulfill"
+    title: "Warehouse execution"
+  - id: "forecast-to-fulfill-transport-execution"
+    process_id: "forecast-to-fulfill"
+    title: "Transport execution"
+  - id: "forecast-to-fulfill-customer-fulfillment"
+    process_id: "forecast-to-fulfill"
+    title: "Customer fulfillment"
+
+stage_links:
+  - id: "l2c-order-capture-to-sap-sales-order"
+    stage_id: "lead-to-cash-order-capture"
+    capability_id: "sap-sales-order-management"
+    decision_points:
+      - "Interpret customer intent and prepare a valid order proposal."
+    deterministic_rules:
+      - "Customer and material identity"
+      - "Sales area and document rules"
+      - "Quantity and unit validation"
+    data_dependencies:
+      - "Customer master"
+      - "Material master"
+      - "Customer material references"
+    integration_boundaries:
+      - "Email, EDI, portal, CRM, or document intake may propose structured input; SAP remains the transaction authority."
+    authority: "AI may extract, match, explain, or prepare. Commercial order commitment remains in governed SAP processing."
+    control_points:
+      - "Low-confidence matches stop for review."
+      - "Order creation uses standard authorization and validation."
+
+  - id: "l2c-order-capture-to-sap-pricing"
+    stage_id: "lead-to-cash-order-capture"
+    capability_id: "sap-pricing"
+    decision_points:
+      - "Explain or propose commercial inputs without replacing the pricing engine."
+    deterministic_rules:
+      - "Condition determination"
+      - "Scale, currency, unit, validity, and exclusion rules"
+    data_dependencies:
+      - "Condition records"
+      - "Customer and material attributes"
+    integration_boundaries:
+      - "AI may collect context, but the calculated price must come from the governed pricing service."
+    authority: "AI can recommend or explain. It does not invent the committed price."
+    control_points:
+      - "Pricing result is recalculated by SAP before commitment."
+
+  - id: "l2c-promise-to-sap-atp"
+    stage_id: "lead-to-cash-availability-promise"
+    capability_id: "sap-atp-promise"
+    decision_points:
+      - "Explain supply or promise changes and prepare exception handling."
+    deterministic_rules:
+      - "Availability check"
+      - "Allocation and confirmation rules"
+    data_dependencies:
+      - "Stock and receipts"
+      - "Demand and confirmations"
+      - "Material and location data"
+    integration_boundaries:
+      - "AI reads promise context; ATP or the designated availability service owns the confirmation."
+    authority: "AI may explain or recommend an action. It does not create an unsupported delivery promise."
+    control_points:
+      - "Confirmed quantity and date must come from the authoritative availability service."
+
+  - id: "l2c-delivery-to-sap-shipping"
+    stage_id: "lead-to-cash-delivery-fulfillment"
+    capability_id: "sap-shipping"
+    decision_points:
+      - "Prioritize and explain delivery exceptions."
+    deterministic_rules:
+      - "Delivery relevance"
+      - "Picking, packing, goods issue, and status rules"
+    data_dependencies:
+      - "Sales order"
+      - "Delivery and inventory status"
+    integration_boundaries:
+      - "Warehouse and carrier systems may provide events; SAP delivery status remains governed."
+    authority: "AI can triage and prepare actions. Physical and inventory-changing execution follows SAP and warehouse controls."
+    control_points:
+      - "Goods issue and inventory changes require standard transaction authorization."
+
+  - id: "l2c-billing-to-sap-billing"
+    stage_id: "lead-to-cash-billing-receivables"
+    capability_id: "sap-billing"
+    decision_points:
+      - "Explain billing blocks, differences, and follow-up work."
+    deterministic_rules:
+      - "Billing relevance"
+      - "Copying and accounting rules"
+      - "Tax and posting controls"
+    data_dependencies:
+      - "Order and delivery status"
+      - "Pricing and partner data"
+    integration_boundaries:
+      - "AI may prepare investigation context; billing and accounting posting remain deterministic."
+    authority: "AI assists diagnosis. It does not bypass billing or accounting controls."
+    control_points:
+      - "Posting uses standard authorization, period, tax, and accounting controls."
+
+  - id: "s2p-po-to-sap-procurement"
+    stage_id: "source-to-pay-purchase-order"
+    capability_id: "sap-procurement"
+    decision_points:
+      - "Prepare a purchase order proposal from approved demand or supplier input."
+    deterministic_rules:
+      - "Supplier and material identity"
+      - "Purchasing organization and document rules"
+      - "Approval and release rules"
+    data_dependencies:
+      - "Supplier master"
+      - "Material and purchasing data"
+      - "Source and contract data"
+    integration_boundaries:
+      - "AI may prepare data; SAP procurement workflow owns the governed purchasing document."
+    authority: "AI can prepare or recommend. Approval and commitment remain governed."
+    control_points:
+      - "Release strategy or approval remains enforceable."
+
+  - id: "s2p-confirmation-to-sap-procurement"
+    stage_id: "source-to-pay-supplier-confirmation"
+    capability_id: "sap-procurement"
+    decision_points:
+      - "Compare supplier confirmation with the purchase order and route material differences."
+    deterministic_rules:
+      - "Quantity, unit, price, and date tolerances"
+    data_dependencies:
+      - "Purchase order"
+      - "Supplier confirmation"
+    integration_boundaries:
+      - "Document AI or agents may extract and compare; accepted changes use controlled ERP updates."
+    authority: "AI may classify differences and prepare updates inside defined tolerances."
+    control_points:
+      - "Material differences leave the autonomous path."
+
+  - id: "s2p-receipt-to-sap-inventory"
+    stage_id: "source-to-pay-receipt-service-entry"
+    capability_id: "sap-inventory-management"
+    decision_points:
+      - "Explain receipt exceptions without fabricating physical receipt evidence."
+    deterministic_rules:
+      - "Movement type and quantity rules"
+      - "Purchase order and stock status checks"
+    data_dependencies:
+      - "Purchase order"
+      - "Material, batch, location, and stock data"
+    integration_boundaries:
+      - "Scanners, WMS, or external services may provide events; inventory posting stays controlled."
+    authority: "AI can assist investigation. It does not confirm a physical receipt without source evidence."
+    control_points:
+      - "Inventory-changing postings require authoritative execution evidence."
+
+  - id: "s2p-invoice-to-sap-procurement"
+    stage_id: "source-to-pay-invoice"
+    capability_id: "sap-procurement"
+    decision_points:
+      - "Extract and compare invoice data, then isolate real exceptions."
+    deterministic_rules:
+      - "Duplicate checks"
+      - "Price and quantity tolerances"
+      - "Purchase order and receipt matching"
+    data_dependencies:
+      - "Supplier invoice"
+      - "Purchase order"
+      - "Receipt or service entry"
+    integration_boundaries:
+      - "Document AI supplies proposed fields; ERP matching and posting controls decide acceptance."
+    authority: "AI may extract and prepare. Posting is allowed only through governed validation."
+    control_points:
+      - "Low-confidence extraction and material mismatches stop for review."
+
+  - id: "f2f-inventory-to-sap-inventory"
+    stage_id: "forecast-to-fulfill-inventory-target"
+    capability_id: "sap-inventory-management"
+    decision_points:
+      - "Explain inventory risk and recommend a response."
+    deterministic_rules:
+      - "Stock categories and movement rules"
+    data_dependencies:
+      - "Current stock"
+      - "Demand, supply, and location data"
+    integration_boundaries:
+      - "Predictions may influence planning, but inventory facts come from authoritative systems."
+    authority: "AI recommends; governed planning and execution create inventory changes."
+    control_points:
+      - "Recommendations are measured against service, stock, and correction outcomes."
+
+  - id: "f2f-warehouse-to-sap-ewm"
+    stage_id: "forecast-to-fulfill-warehouse-execution"
+    capability_id: "sap-ewm"
+    decision_points:
+      - "Prioritize warehouse exceptions or propose task sequencing."
+    deterministic_rules:
+      - "Warehouse task state"
+      - "Stock and bin rules"
+      - "Physical execution constraints"
+    data_dependencies:
+      - "Warehouse stock"
+      - "Tasks, resources, and delivery status"
+    integration_boundaries:
+      - "Robots, scanners, and optimization services may propose or execute bounded actions; EWM remains task and stock authority."
+    authority: "AI autonomy is bounded by physical safety, stock accuracy, and warehouse task state."
+    control_points:
+      - "Conflicting physical and system state stops autonomous execution."
+
+  - id: "f2f-transport-to-sap-tm"
+    stage_id: "forecast-to-fulfill-transport-execution"
+    capability_id: "sap-transportation-management"
+    decision_points:
+      - "Recommend routing, consolidation, or exception actions under transport constraints."
+    deterministic_rules:
+      - "Capacity and service constraints"
+      - "Shipment and freight execution status"
+    data_dependencies:
+      - "Orders and deliveries"
+      - "Carrier, route, capacity, and event data"
+    integration_boundaries:
+      - "Optimization or prediction can propose plans; TM and connected execution services retain governed transport state."
+    authority: "AI may optimize or explain inside explicit hard constraints."
+    control_points:
+      - "Hard capacity, compliance, and service constraints cannot be relaxed by language-model reasoning."
+
+  - id: "f2f-fulfillment-to-sap-shipping"
+    stage_id: "forecast-to-fulfill-customer-fulfillment"
+    capability_id: "sap-shipping"
+    decision_points:
+      - "Explain customer fulfilment risk across order, warehouse, and transport state."
+    deterministic_rules:
+      - "Delivery and goods-movement status"
+    data_dependencies:
+      - "Sales order"
+      - "Delivery"
+      - "Warehouse and transport events"
+    integration_boundaries:
+      - "AI can combine read-only context across systems; execution remains with the system that owns each state change."
+    authority: "AI can explain and coordinate investigation. It does not become a new system of record."
+    control_points:
+      - "Every proposed action is routed to the owning system and authorization boundary."
+
+domain_links:
+  - id: "master-data-domain-to-sap-master-data"
+    domain_id: "master-data"
+    capability_id: "sap-master-data"
+    decision_points:
+      - "Match external descriptions to governed business objects and identify duplicates."
+    deterministic_rules:
+      - "Key assignment"
+      - "Required attributes"
+      - "Data-quality and governance rules"
+    data_dependencies:
+      - "Customer, supplier, material, and other governed master records"
+      - "Cross-system key mappings"
+    integration_boundaries:
+      - "AI may suggest a match or enrichment; SAP or MDG workflow owns approved master identity and distribution."
+    authority: "AI can propose. Creation, merge, and governed attribute changes require the defined data-owner path."
+    control_points:
+      - "No downstream AI action should depend on an unapproved invented identity."
+
+  - id: "it-operations-domain-to-sap-integration-operations"
+    domain_id: "it-operations"
+    capability_id: "sap-integration-operations"
+    decision_points:
+      - "Triage interface failures, correlate evidence, and prepare recovery actions."
+    deterministic_rules:
+      - "Message identity and status"
+      - "Retry and idempotency rules"
+      - "Authorization and endpoint contracts"
+    data_dependencies:
+      - "Interface payload metadata"
+      - "Logs and monitoring state"
+      - "Business object and message identifiers"
+    integration_boundaries:
+      - "AI may correlate and explain across logs and systems; each integration runtime remains authoritative for message state."
+    authority: "AI can investigate and prepare a bounded recovery. Production-changing actions follow approval, authorization, and rollback rules."
+    control_points:
+      - "Do not retry blindly when side effects or duplicate posting are possible."
+      - "Runtime proof is claimed only when an approved test or observed execution provides it."
+
+non_sap_usage:
+  rule: "EndToEndProcess, ProcessStage, BusinessDomain, Pattern, and evidence concepts stay vendor-neutral. SAP capability nodes contain SAP-specific routes and controls. Other ERP platforms should add their own capability-link dataset against the same neutral IDs instead of reusing SAP capability IDs."
