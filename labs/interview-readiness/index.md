@@ -3,21 +3,45 @@ layout: default
 title: "SAP Lead Interview Readiness — Practical Preparation Lab"
 description: "A practical SAP Lead interview context for Sales, Logistics, Integration, AI, Delivery and Leadership, with a career roadmap, evidence, practice and progress."
 permalink: /labs/interview-readiness/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+sitemap: true
 last_modified_at: 2026-08-18
+last_reviewed: 2026-08-18
+publication_wave: "career-search-wave-01"
+review_method: "editorial review + route validation + Career Factory coverage"
+search_intent: "SAP Lead interview preparation for sales, procurement, integration, AI and leadership"
+structured_data:
+  type: TechArticle
 hide_global_cta: true
 tags:
-  - sap
-  - sap-lead
-  - interview
-  - logistics
-  - integration
-  - business-ai
+  - sap-lead-career
+  - interview-readiness
+# ai-discovery-managed:start
+primary_topic: "sap-lead-interview-readiness"
+ai_sidecar: "/ai/pages/labs--interview-readiness.json"
+semantic_links:
+  - type: "deep_dive"
+    title: "SAP Lead Career Roadmap — Skills, Labs, Evidence, Practice"
+    url: "/labs/interview-readiness/roadmap/"
+  - type: "related_topic"
+    title: "Sales Order Decision Map — Enterprise Context Lab"
+    url: "/labs/enterprise-context/sales-order/"
+  - type: "related_topic"
+    title: "Procurement Process & Decision Map — Enterprise Context Lab"
+    url: "/labs/enterprise-context/procurement/"
+  - type: "integrates_with"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "related_topic"
+    title: "AI Ready — Practical AI Architecture Lab"
+    url: "/labs/ai-ready/"
+  - type: "diagnose_with"
+    title: "SAP Sales Diagnostic Casebook — Enterprise Context Lab"
+    url: "/labs/enterprise-context/sales-diagnostics/"
+# ai-discovery-managed:end
 ---
-
 <link rel="stylesheet" href="/assets/css/interview-readiness.css" />
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Interview Readiness</li></ol></nav>

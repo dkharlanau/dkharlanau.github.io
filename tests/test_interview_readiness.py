@@ -2,18 +2,33 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-PAGES = [
+PUBLIC_PAGES = [
     ROOT / "labs/interview-readiness/index.md",
     ROOT / "labs/interview-readiness/roadmap/index.md",
+]
+
+UTILITY_PAGES = [
     ROOT / "labs/interview-readiness/questions/index.md",
     ROOT / "labs/interview-readiness/stories/index.md",
     ROOT / "labs/interview-readiness/practice/index.md",
     ROOT / "labs/interview-readiness/progress/index.md",
 ]
 
+ALL_PAGES = PUBLIC_PAGES + UTILITY_PAGES
 
-def test_interview_readiness_pages_exist_and_remain_unreviewed_labs():
-    for page in PAGES:
+
+def test_public_interview_readiness_pages_are_reviewed_and_indexable():
+    for page in PUBLIC_PAGES:
+        assert page.exists(), page
+        text = page.read_text(encoding="utf-8")
+        assert "status: reviewed" in text
+        assert "verified: true" in text
+        assert "robots: index,follow" in text
+        assert "sitemap: true" in text
+
+
+def test_interview_readiness_utility_pages_remain_working_noindex_surfaces():
+    for page in UTILITY_PAGES:
         assert page.exists(), page
         text = page.read_text(encoding="utf-8")
         assert "verified: false" in text
