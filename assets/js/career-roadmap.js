@@ -23,6 +23,7 @@
   const health = document.getElementById('career-health');
   const activeLabel = document.getElementById('career-active-label');
   const reset = document.getElementById('career-reset');
+  const factoryControl = document.getElementById('career-factory-control');
   const initialHash = window.location.hash.replace(/^#/, '');
   let activeTrack = tracks[initialHash] ? initialHash : 'all';
   let activeTier = 'all';
@@ -172,6 +173,35 @@
     });
   }
 
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+  }
+
+  async function renderFactory() {
+    if (!factoryControl) return;
+    try {
+      const response = await fetch('/ai/career-factory.json', {cache: 'no-store'});
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const inventory = await response.json();
+      const summary = inventory.summary || {};
+      const pending = (inventory.lab_inventory || []).filter(item => item.state === 'needs_decision').slice(0, 8);
+      const coverage = Number(summary.decision_coverage_percent || 0);
+      const queue = pending.length ? `<div class="career-factory-queue">${pending.map(item => {
+        const suggestions = (item.suggested_skills || []).map(candidate => `<span>${escapeHtml(candidate.skill_id)}</span>`).join('');
+        return `<article class="career-factory-row"><div><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.route)}</small></div><div class="career-factory-suggestions">${suggestions || '<span>review needed</span>'}</div></article>`;
+      }).join('')}</div>` : '<div class="career-factory-ok"><strong>No open Lab career decisions.</strong><p>Every inventoried Lab page is mapped or deliberately excluded.</p></div>';
+      factoryControl.innerHTML = `<div class="career-factory-metrics">
+        <article class="career-factory-metric"><strong>${summary.lab_pages || 0}</strong><span>Lab pages inventoried</span></article>
+        <article class="career-factory-metric"><strong>${summary.mapped || 0}</strong><span>Mapped to skills</span></article>
+        <article class="career-factory-metric"><strong>${summary.needs_decision || 0}</strong><span>Need career decision</span></article>
+        <article class="career-factory-metric"><strong>${summary.skills || skills.length}</strong><span>Career skills</span></article>
+      </div><div class="career-factory-meter"><div class="career-factory-meter__head"><strong>Career decision coverage</strong><span>${coverage}%</span></div><div class="career-factory-meter__bar"><span style="width:${Math.max(0, Math.min(100, coverage))}%"></span></div></div>${queue}`;
+    } catch (error) {
+      factoryControl.innerHTML = '<div class="career-factory-ok"><strong>Career Factory inventory is unavailable.</strong><p>The roadmap still works; repository CI will validate the machine inventory.</p></div>';
+      console.warn('Career Factory inventory could not be loaded.', error);
+    }
+  }
+
   function render() {
     renderHealth();
     renderTracks();
@@ -193,4 +223,5 @@
   });
   window.addEventListener('interview-readiness-change', render);
   render();
+  renderFactory();
 })();
