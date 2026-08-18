@@ -6,12 +6,16 @@ on:
       - 'labs/**'
       - '_data/career/**'
       - 'assets/js/career-roadmap.js'
+      - 'assets/js/interview-question-bank.js'
       - 'assets/css/career-roadmap.css'
+      - 'assets/css/interview-readiness.css'
       - 'ai/career-roadmap.json'
       - 'ai/career-factory.json'
       - 'scripts/check_career_factory.py'
       - 'scripts/generate_career_factory.py'
       - 'tests/test_career_factory.py'
+      - 'tests/test_interview_readiness.py'
+      - 'tests/test_question_bank_v2.py'
       - '.github/workflows/career-factory.yml'
   push:
     branches: [main]
@@ -19,12 +23,16 @@ on:
       - 'labs/**'
       - '_data/career/**'
       - 'assets/js/career-roadmap.js'
+      - 'assets/js/interview-question-bank.js'
       - 'assets/css/career-roadmap.css'
+      - 'assets/css/interview-readiness.css'
       - 'ai/career-roadmap.json'
       - 'ai/career-factory.json'
       - 'scripts/check_career_factory.py'
       - 'scripts/generate_career_factory.py'
       - 'tests/test_career_factory.py'
+      - 'tests/test_interview_readiness.py'
+      - 'tests/test_question_bank_v2.py'
       - '.github/workflows/career-factory.yml'
 
 permissions:
@@ -58,4 +66,4 @@ jobs:
         run: python3 scripts/generate_career_factory.py --check
 
       - name: Run Career Factory tests
-        run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_career_factory.py tests/test_interview_readiness.py
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_career_factory.py tests/test_interview_readiness.py tests/test_question_bank_v2.py
