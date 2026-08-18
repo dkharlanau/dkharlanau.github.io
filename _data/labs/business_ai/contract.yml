@@ -1,0 +1,214 @@
+contract:
+  id: business-ai-graph
+  version: "1.0.0"
+  schema_version: "1"
+  compatibility: additive-minor
+  purpose: "Canonical contract for Business AI entities, relationships, evidence fields, review state, and generated views."
+
+source_of_truth:
+  contract: _data/labs/business_ai/contract.yml
+  datasets:
+    catalog:
+      path: _data/labs/business_ai/catalog.yml
+      role: cases-patterns-sources
+    domain_map:
+      path: _data/labs/business_ai/domain_map.yml
+      role: domains-and-process-links
+    process_map:
+      path: _data/labs/business_ai/process_map.yml
+      role: end-to-end-processes-and-stages
+    scenario_library:
+      path: _data/labs/business_ai/scenario_library.yml
+      role: outcomes-failures-controls-practices
+    assessment_matrix:
+      path: _data/labs/business_ai/assessment_matrix.yml
+      role: lead-decisions-autonomy-risk-and-controls
+    technology_landscape:
+      path: _data/labs/business_ai/technology_landscape.yml
+      role: technologies-and-platforms
+    expansion_2026_08_15:
+      path: _data/labs/business_ai/expansion_2026_08_15.yml
+      role: catalog-extension
+    expansion_2026_08_15_b:
+      path: _data/labs/business_ai/expansion_2026_08_15_b.yml
+      role: catalog-extension
+    expansion_2026_08_15_c:
+      path: _data/labs/business_ai/expansion_2026_08_15_c.yml
+      role: catalog-extension
+
+generated_outputs:
+  - labs/business-ai/data/catalog.json
+  - labs/business-ai/data/domains.json
+  - labs/business-ai/data/matrix.json
+  - labs/business-ai/data/patterns.json
+  - labs/business-ai/data/processes.json
+  - labs/business-ai/data/scenarios.json
+  - labs/business-ai/data/technologies.json
+
+id_policy:
+  entity_pattern: "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+  relationship_pattern: "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+  rules:
+    - "IDs are stable public identifiers, not display labels."
+    - "Renaming a title does not rename its ID."
+    - "A retired ID is not reused for another concept."
+    - "Cross-dataset references use IDs, not titles."
+
+vocabularies:
+  case_kind:
+    - ai_implementation
+    - ai_foundation
+    - solution_evidence
+  evidence_grade:
+    - A
+    - B
+    - C
+    - S
+  source_confidence:
+    - high
+    - medium
+    - low
+  review_state:
+    - candidate
+    - sourced
+    - structured
+    - challenged
+    - review_ready
+    - approved
+    - rejected
+    - needs_more_evidence
+  autonomy_level:
+    - L0
+    - L1
+    - L2
+    - L3
+    - L4
+    - L5
+  outcome_state:
+    - positive
+    - mixed
+    - negative
+    - unknown
+  evidence_level:
+    - source_fact
+    - supported_inference
+    - runtime_proof
+    - unsupported_claim
+    - proof_gap
+
+field_vocabularies:
+  case_kind: case_kind
+  evidence_grade: evidence_grade
+  source_confidence: source_confidence
+  review_state: review_state
+  autonomy_level: autonomy_level
+  outcome_state: outcome_state
+  evidence_level: evidence_level
+
+entity_types:
+  - BusinessDomain
+  - EndToEndProcess
+  - ProcessStage
+  - Pattern
+  - TechnologyFamily
+  - EnterprisePlatform
+  - BusinessAICase
+  - ScenarioOutcome
+  - FailurePattern
+  - BestPractice
+  - DecisionProfile
+  - Company
+  - Industry
+  - Metric
+  - EvidenceSource
+  - ControlPoint
+  - Limitation
+
+required_fields_by_entity:
+  BusinessAICase:
+    - case_kind
+    - review_state
+  ScenarioOutcome:
+    - outcome_state
+  EvidenceSource:
+    - source_confidence
+    - evidence_level
+
+relationship_types:
+  - id: process-crosses-domain
+    from: EndToEndProcess
+    to: BusinessDomain
+  - id: process-has-stage
+    from: EndToEndProcess
+    to: ProcessStage
+  - id: stage-uses-pattern
+    from: ProcessStage
+    to: Pattern
+  - id: pattern-needs-technology
+    from: Pattern
+    to: TechnologyFamily
+  - id: platform-provides-technology
+    from: EnterprisePlatform
+    to: TechnologyFamily
+  - id: stage-has-control
+    from: ProcessStage
+    to: ControlPoint
+  - id: company-implements-case
+    from: Company
+    to: BusinessAICase
+  - id: case-applies-to-process
+    from: BusinessAICase
+    to: EndToEndProcess
+  - id: case-uses-platform
+    from: BusinessAICase
+    to: EnterprisePlatform
+  - id: case-reports-metric
+    from: BusinessAICase
+    to: Metric
+  - id: case-has-outcome
+    from: BusinessAICase
+    to: ScenarioOutcome
+  - id: case-has-limitation
+    from: BusinessAICase
+    to: Limitation
+  - id: metric-supported-by-evidence
+    from: Metric
+    to: EvidenceSource
+  - id: outcome-exhibits-failure
+    from: ScenarioOutcome
+    to: FailurePattern
+  - id: practice-mitigates-failure
+    from: BestPractice
+    to: FailurePattern
+  - id: decision-requires-control
+    from: DecisionProfile
+    to: ControlPoint
+  - id: decision-measures-metric
+    from: DecisionProfile
+    to: Metric
+  - id: decision-tests-failure
+    from: DecisionProfile
+    to: FailurePattern
+  - id: decision-supported-by-outcome
+    from: DecisionProfile
+    to: ScenarioOutcome
+
+consumers:
+  jekyll:
+    reads: _data/labs/business_ai
+    rule: "Pages read canonical YAML sources and render views."
+  machine:
+    reads: canonical-contract-and-generated-views
+    rule: "Machine endpoints must preserve stable IDs and contract version."
+  agents:
+    reads: canonical-contract-and-context-packs
+    rule: "Agents may propose changes but do not promote review state without the required review."
+  analysis:
+    reads: canonical-graph-and-coverage-views
+    rule: "Analysis must keep source facts, supported inferences, runtime proof, unsupported claims, and proof gaps distinct."
+
+compatibility_rules:
+  - "Patch changes may clarify descriptions without changing meaning."
+  - "Minor changes may add optional fields, entity types, relationships, or vocabulary values."
+  - "Removing or renaming IDs, required fields, or vocabulary values requires a major contract version."
+  - "Generated views declare the contract version they were built from."
