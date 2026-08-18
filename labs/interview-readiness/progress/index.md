@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Interview Progress — Readiness and Weak Areas"
-description: "A browser-local SAP Lead interview readiness view showing topic depth, track coverage, recent practice, and weak areas."
+description: "Track SAP Lead interview problems in context with roadmap depth, track coverage, recent practice, weak areas, and project story evidence."
 permalink: /labs/interview-readiness/progress/
 status: draft
 verified: false

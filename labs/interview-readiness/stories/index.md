@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Interview Story Bank — Projects, Decisions, Failures, Results"
-description: "A browser-local story bank for SAP Lead interviews: project context, role, decision, trade-off, result, and lesson."
+description: "A browser-local SAP interview story bank for project problems, decisions, failures, trade-offs, results, and lessons."
 permalink: /labs/interview-readiness/stories/
 status: draft
 verified: false

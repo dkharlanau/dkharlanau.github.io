@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Interview Roadmap — Sales, Logistics, Integration, AI"
-description: "A browser-local SAP Lead interview roadmap for Sales, Procurement and Logistics, Integration and Architecture, AI and Data, and Lead judgment."
+description: "An SAP Lead interview preparation context for Sales, Logistics, Integration, AI, Data, and Lead judgment, with browser-local topic depth."
 permalink: /labs/interview-readiness/roadmap/
 status: draft
 verified: false

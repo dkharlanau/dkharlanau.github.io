@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Interview Questions — Sales, Logistics, Integration, AI"
-description: "A practical SAP Lead interview question bank covering Sales, Procurement and Logistics, Integration and Architecture, AI and Data, and leadership judgment."
+description: "SAP Lead interview questions in realistic context across Sales, Logistics, Integration, AI, Data, and leadership judgment."
 permalink: /labs/interview-readiness/questions/
 status: draft
 verified: false

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Interview Readiness — Practical Preparation Lab"
-description: "A practical SAP Lead interview preparation workspace covering Sales, Procurement and Logistics, Integration and Architecture, AI and Data, leadership judgment, stories, questions, and progress."
+description: "A practical SAP Lead interview context for Sales, Logistics, Integration, AI and leadership, with a roadmap, questions, stories, practice, and progress."
 permalink: /labs/interview-readiness/
 status: draft
 verified: false

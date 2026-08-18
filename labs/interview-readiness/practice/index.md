@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Interview Practice — 30-Minute Interview Mode"
-description: "A balanced SAP Lead interview practice session across Sales, Logistics, Integration, AI and Data, and leadership judgment."
+description: "Practice SAP Lead interview problems in realistic context across Sales, Logistics, Integration, AI, Data, and leadership judgment."
 permalink: /labs/interview-readiness/practice/
 status: draft
 verified: false
