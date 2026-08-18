@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Career Roadmap — Skills, Labs, Evidence, Practice"
-description: "A skills-first SAP Lead career roadmap connecting Sales, Procurement and Logistics, Integration, AI, Delivery and Leadership to Labs, Skill Hub, evidence and assessment practice."
+description: "A skills-first SAP Lead career roadmap connecting Sales, Logistics, Integration, AI, Delivery and Leadership to Labs, evidence and interview practice."
 permalink: /labs/interview-readiness/roadmap/
 status: reviewed
 verified: true
