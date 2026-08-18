@@ -1,0 +1,46 @@
+---
+layout: null
+permalink: /machine/business-ai/manifest.json
+sitemap: false
+---
+{% assign contract = site.data.labs.business_ai.contract %}
+{% assign catalog = site.data.labs.business_ai.catalog %}
+{% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
+{% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
+{% assign all_patterns = catalog.patterns | concat: expansion.patterns | concat: expansion_b.patterns %}
+{% assign all_cases = catalog.cases | concat: expansion.cases | concat: expansion_b.cases %}
+{% assign all_sources = catalog.source_registry | concat: expansion.source_registry | concat: expansion_b.source_registry %}
+{
+  "schema": "business-ai-graph-manifest@1",
+  "graph_version": {{ contract.contract.version | jsonify }},
+  "contract_version": {{ contract.contract.version | jsonify }},
+  "generated_at": {{ site.time | date_to_xmlschema | jsonify }},
+  "schema_ref": "/machine/business-ai/",
+  "graph_url": "/machine/business-ai/graph.json",
+  "source_contract": "/docs/strategy/business-ai-data-contract/",
+  "source_revisions": {
+    "catalog": {{ catalog.reviewed_at | jsonify }},
+    "domain_map": {{ site.data.labs.business_ai.domain_map.reviewed_at | jsonify }},
+    "process_map": {{ site.data.labs.business_ai.process_map.reviewed_at | jsonify }},
+    "technology_landscape": {{ site.data.labs.business_ai.technology_landscape.reviewed_at | jsonify }},
+    "enterprise_context_links": {{ site.data.labs.business_ai.enterprise_context_links.reviewed_at | jsonify }}
+  },
+  "counts": {
+    "domains": {{ site.data.labs.business_ai.domain_map.domains | size }},
+    "processes": {{ site.data.labs.business_ai.process_map.processes | size }},
+    "patterns": {{ all_patterns | size }},
+    "cases": {{ all_cases | size }},
+    "evidence_sources": {{ all_sources | size }},
+    "technology_families": {{ site.data.labs.business_ai.technology_landscape.families | size }},
+    "platforms": {{ site.data.labs.business_ai.technology_landscape.platforms | size }},
+    "sap_process_links": {{ site.data.labs.business_ai.enterprise_context_links.process_links | size }}
+  },
+  "views": [
+    {"id":"process-context","url":"/machine/business-ai/views/process-context.json","purpose":"Vendor-neutral processes with SAP Enterprise context and boundary metadata."},
+    {"id":"case-evidence","url":"/machine/business-ai/views/case-evidence.json","purpose":"Cases with evidence grade, reported metrics, sources, limitations, and explicit review gaps."}
+  ],
+  "quality": {
+    "command": "python3 scripts/check_business_ai_graph_quality.py --site _site",
+    "policy": "Structural errors block publication. Coverage and evidence gaps remain visible as advisory findings."
+  }
+}
