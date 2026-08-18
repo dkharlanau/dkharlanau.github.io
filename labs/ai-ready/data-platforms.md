@@ -37,7 +37,7 @@ The useful question is not **“Which platform is best?”** The useful question
 | **Google BigQuery** | Fully managed serverless data and analytics platform | Large-scale SQL analytics without infrastructure management | Strong fit when the data estate and analytics workloads are centered on Google Cloud |
 | **Amazon Redshift** | Fully managed cloud data warehouse, with provisioned and serverless options | SQL analytics inside the AWS ecosystem | Strong fit when AWS is the strategic cloud and the main need is governed analytical warehousing |
 
-This is a positioning map, not a product ranking. All five platforms overlap. Product boundaries also change over time, because apparently software vendors have discovered that every box on an architecture diagram can become a product feature.
+This is a positioning map, not a product ranking. All five platforms overlap, and product boundaries change over time. Use the comparison model here, then verify current features in vendor documentation.
 
 ## Databricks
 
