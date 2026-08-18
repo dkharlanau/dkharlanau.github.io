@@ -1,3 +1,21 @@
+---
+layout: default
+title: "Business AI Data and Graph Contract"
+description: "Canonical technical contract for Business AI graph entities, relationships, evidence fields, review state, machine outputs, and SAP Enterprise context links."
+permalink: /docs/strategy/business-ai-data-contract/
+status: draft
+verified: false
+robots: noindex,follow
+sitemap: false
+last_modified_at: 2026-08-18
+hide_global_cta: true
+tags:
+  - business-ai
+  - knowledge-graph
+  - data-contract
+  - machine-readable
+---
+
 # Business AI Data and Graph Contract
 
 Status: canonical technical contract  
