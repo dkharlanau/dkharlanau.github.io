@@ -8,7 +8,7 @@ The site has six top-level product areas:
 
 1. **Profile** — identity, experience, certifications, and public professional context.
 2. **Knowledge** — Atlas, Scenarios, Research, Journal, and Notes.
-3. **Labs** — active SAP, AI, operational, and assessment workspaces.
+3. **Labs** — active SAP, AI, operational, interview, and assessment workspaces.
 4. **Frameworks** — reusable reasoning and execution methods.
 5. **Machine layer** — datasets, AI-readable exports, skills, tools, and MCP source packages.
 6. **Services** — consulting offers and engagement context.
@@ -84,9 +84,25 @@ Directory placement is not the knowledge graph. Cross-domain relationships shoul
 
 `labs/business-ai/` connects business process, AI job, reusable pattern, technology family, control, outcome, and evidence.
 
+### Interview Readiness
+
+`labs/interview-readiness/` is a preparation layer over the existing SAP, AI, and Assessment material. It does not create a second source of truth for SAP topics.
+
+The workspace has five views:
+
+- `roadmap/` — browser-local topic states: Not reviewed, Refreshed, Can explain, Can defend;
+- `questions/` — interview prompts across explanation, tracing, diagnosis, design, challenge, and Lead judgment;
+- `stories/` — browser-local project evidence structured as context, role, decision, trade-off, result, and lesson;
+- `practice/` — a balanced mixed interview session across Sales, Procurement and Logistics, Integration and Architecture, AI and Data, and Lead judgment;
+- `progress/` — combined roadmap depth, practice history, and story coverage.
+
+Interview Readiness stores only preparation state in browser localStorage. It remains separate from Assessment attempt history so self-reported topic depth is not confused with scored case evidence.
+
 ### Assessment
 
 `labs/assessment/` is a practice and evaluation layer. It reuses Lab and Knowledge material instead of copying it. It covers explanation, tracing, diagnosis, design, challenge, mocks, review, evidence coverage, and progress.
+
+Interview Readiness answers “what should I repeat and can I discuss it in an interview?”. Assessment answers “can I reason through a case under pressure?”. The two layers may link to the same source material but should not merge their scoring models.
 
 ### Operational Protocols
 
@@ -110,7 +126,7 @@ A framework should not be copied under SAP, AI, or data merely because a case us
 - `datasets/` — canonical structured datasets.
 - `ai/` — JSON/YAML exports, generated indexes, discovery maps, evidence surfaces.
 - `skill-hub/` — human-readable capability map.
-- `agent-skills/` — portable agent skill packages.
+- `agent-skills/` — portable installable agent skill packages.
 - `agent-tools/` — static public tool descriptions.
 - `mcp/` — source and documentation for local MCP packages.
 - `.well-known/` — discovery manifests.
@@ -166,7 +182,7 @@ A structural change is not complete if required CI checks fail.
 Before adding a new root directory, classify the work:
 
 - durable explanation → Knowledge;
-- active exploration or practice → Lab;
+- active exploration, interview preparation, or practice → Lab;
 - reusable reasoning/execution method → Framework;
 - structured representation for tools → Machine layer;
 - commercial offer → Services;

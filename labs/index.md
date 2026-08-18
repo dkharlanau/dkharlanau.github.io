@@ -1,18 +1,19 @@
 ---
 layout: default
-title: "Labs — SAP Enterprise, AI, and Assessment"
-description: "Practical workspaces for SAP enterprise knowledge, AI architecture, Business AI, operational protocols, and SAP Lead assessment practice."
+title: "Labs — SAP Enterprise, AI, Interview and Assessment"
+description: "Practical workspaces for SAP enterprise knowledge, AI architecture, Business AI, operational protocols, SAP Lead interview preparation, and assessment practice."
 permalink: /labs/
 status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-17
+last_modified_at: 2026-08-18
 hide_global_cta: true
 tags:
   - sap
   - enterprise-architecture
   - assessment
+  - interview
   - business-ai
 ---
 
@@ -32,28 +33,29 @@ tags:
       <p>Core workspaces</p>
       <div class="research-canvas__signal-line"><span>01</span><strong>SAP</strong><small>Enterprise processes</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>AI</strong><small>Architecture and use</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>Lead</strong><small>Assessment practice</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Lead</strong><small>Interview and assessment practice</small></div>
       <em>Working material remains noindex until reviewed.</em>
     </div>
   </header>
 
   <section class="research-canvas__boundary" data-reveal aria-label="Lab boundary">
     <span class="material-symbols-outlined" aria-hidden="true">science</span>
-    <p><strong>Lab means active work.</strong> Use it for connected process maps, architecture choices, experiments, cases, and assessment practice.</p>
-    <p><strong>Framework means reusable method.</strong> TRIZ, Decision Design, and Reusable Data Procedures now have one home under <a href="/frameworks/">Frameworks</a>.</p>
+    <p><strong>Lab means active work.</strong> Use it for connected process maps, architecture choices, experiments, cases, interview preparation, and assessment practice.</p>
+    <p><strong>Framework means reusable method.</strong> TRIZ, Decision Design, and Reusable Data Procedures have one home under <a href="/frameworks/">Frameworks</a>.</p>
   </section>
 
   <section class="research-canvas__inventory" id="lab-routes" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Lab map</p>
-      <h2>Four workspaces, one assessment system.</h2>
-      <p>Start from the domain you need to explain. Use Start Here when you want a preparation route, then move into cases, mocks, review, and Board Mode.</p>
+      <h2>Knowledge, interview readiness, and pressure practice.</h2>
+      <p>Start from the domain you need to understand. Use Interview Readiness to decide what to repeat and how deeply you can discuss it. Use Assessment when you want cases, scoring, review, and Board Mode.</p>
     </header>
     <div class="research-route-list">
       <a href="/labs/enterprise-context/"><span>SAP</span><strong>SAP Enterprise</strong><small>Sales, procurement, logistics, master data, production, quality, integration, development, analytics, and cross-functional SAP capabilities.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/ai-ready/"><span>AI</span><strong>AI Ready Architecture</strong><small>Data, retrieval, MCP, tools, agents, evaluations, security, deployment, and production boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">architecture</i></a>
       <a href="/labs/business-ai/"><span>BIZ</span><strong>Business AI</strong><small>Business process → AI job → pattern → technology → control → outcome → evidence, including failed and mixed cases.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
       <a href="/labs/templates/"><span>OPS</span><strong>Operational Protocols</strong><small>RCA, incident response, integration failure analysis, runbooks, change impact, cutover, and hypercare.</small><i class="material-symbols-outlined" aria-hidden="true">checklist</i></a>
+      <a href="/labs/interview-readiness/"><span>INTERVIEW</span><strong>SAP Lead Interview Readiness</strong><small>Track what you refreshed, what you can explain, what you can defend, which interview questions expose gaps, and which project stories are ready.</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
       <a href="/labs/assessment/start-here/"><span>START</span><strong>SAP Lead Assessment — Start Here</strong><small>Use a practical study → case → pressure → review loop instead of reading the site as a long syllabus.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       <a href="/labs/assessment/"><span>LEAD</span><strong>SAP Lead Assessment</strong><small>Practice Sales, Procurement and Logistics, Integration and Architecture, AI and Data at explain, trace, diagnose, design, and challenge levels.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
     </div>
@@ -78,7 +80,7 @@ tags:
     <header>
       <p class="research-canvas__eyebrow">Outside Labs</p>
       <h2>Do not duplicate a method just because a case uses it.</h2>
-      <p>Three substantial projects now have a clear framework role. Their existing URLs remain unchanged.</p>
+      <p>Three substantial projects have a clear framework role. Their existing URLs remain unchanged.</p>
     </header>
     <div class="research-route-list">
       <a href="/triz/"><span>TRIZ</span><strong>TRIZ for Digital Systems</strong><small>Contradictions, separation operators, resources, patterns, failure modes, cases, and a practical workbench.</small><i class="material-symbols-outlined" aria-hidden="true">compare_arrows</i></a>
@@ -93,7 +95,7 @@ tags:
     <ol>
       <li><span>01</span><strong>Model</strong><p>Define the process, owners, data, rules, systems, and boundaries.</p></li>
       <li><span>02</span><strong>Connect</strong><p>Trace dependencies across SAP, integration, data, and operations.</p></li>
-      <li><span>03</span><strong>Exercise</strong><p>Use assessment cases to explain, diagnose, design, and challenge the model.</p></li>
+      <li><span>03</span><strong>Exercise</strong><p>Use interview questions and assessment cases to explain, diagnose, design, and challenge the model.</p></li>
     </ol>
   </section>
 </div>
