@@ -42,7 +42,6 @@ semantic_links:
     url: "/labs/enterprise-context/development/"
 # ai-discovery-managed:end
 ---
-
 <link rel="stylesheet" href="/assets/css/interview-readiness.css" />
 <link rel="stylesheet" href="/assets/css/career-roadmap.css" />
 
