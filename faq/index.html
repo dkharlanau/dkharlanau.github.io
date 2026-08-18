@@ -63,6 +63,8 @@ last_modified_at: 2026-08-18
 </section>
 </main>
 
+{% assign faq_robots = page.robots | default: '' %}
+{% unless faq_robots contains 'noindex' %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -96,3 +98,4 @@ last_modified_at: 2026-08-18
   ]
 }
 </script>
+{% endunless %}
