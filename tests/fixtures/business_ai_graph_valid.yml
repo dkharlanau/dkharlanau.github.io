@@ -1,5 +1,5 @@
 schema: dkharlanau.business-ai.graph
-contract_version: "1.1.0"
+contract_version: "1.2.0"
 nodes:
   - id: source-to-pay
     type: BusinessDomain
@@ -7,6 +7,10 @@ nodes:
     type: EndToEndProcess
   - id: invoice-processing
     type: ProcessStage
+  - id: sap-procurement
+    type: EnterpriseCapability
+    platform: SAP
+    canonical_url: /labs/enterprise-context/procurement/
   - id: document-to-workflow
     type: Pattern
   - id: example-case
@@ -33,6 +37,10 @@ edges:
     type: process-has-stage
     from: source-to-pay-process
     to: invoice-processing
+  - id: stage-capability-link
+    type: stage-maps-to-capability
+    from: invoice-processing
+    to: sap-procurement
   - id: stage-pattern-link
     type: stage-uses-pattern
     from: invoice-processing
