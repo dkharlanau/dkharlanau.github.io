@@ -3,11 +3,17 @@ layout: default
 title: "SAP Lead Interview Readiness — Practical Preparation Lab"
 description: "A practical SAP Lead interview context for Sales, Logistics, Integration, AI, Delivery and Leadership, with a career roadmap, evidence, practice and progress."
 permalink: /labs/interview-readiness/
-status: draft
-verified: false
-robots: noindex,follow
-sitemap: false
+status: reviewed
+verified: true
+robots: index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1
+sitemap: true
 last_modified_at: 2026-08-18
+last_reviewed: 2026-08-18
+publication_wave: "career-search-wave-01"
+review_method: "editorial review + route validation + Career Factory coverage"
+search_intent: "SAP Lead interview preparation for sales, procurement, integration, AI and leadership"
+structured_data:
+  type: CollectionPage
 hide_global_cta: true
 tags:
   - sap
