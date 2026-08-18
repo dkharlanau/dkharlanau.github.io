@@ -39,7 +39,7 @@ The contract owns shared values that cross datasets:
 - outcome state;
 - evidence level.
 
-Existing Business AI semantics are reused. Case kinds remain `ai_implementation`, `ai_foundation`, and `solution_evidence`. Evidence grades remain A/B/C/S. Autonomy remains L0-L5 from the existing assessment matrix.
+The contract reuses current Business AI semantics where they already exist. Evidence grades remain A/B/C/D from the catalog. Autonomy remains L0-L5 from the assessment matrix. Case kind, review state, outcome state, source confidence, and evidence level are shared contract fields for normalized graph records and later case-review work.
 
 The review-state vocabulary is defined now because graph and agent outputs need a stable field. The allowed transition lifecycle and human review rules are developed in roadmap issue #320.
 
