@@ -1,3 +1,4 @@
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -53,15 +54,19 @@ def test_career_roadmap_page_is_data_driven():
     page = (ROOT / "labs" / "interview-readiness" / "roadmap" / "index.md").read_text(encoding="utf-8")
     assert "site.data.career.roadmap" in page
     assert 'id="career-roadmap-data"' in page
+    assert 'id="career-factory-control"' in page
     assert "/assets/js/career-roadmap.js" in page
+    assert "/ai/career-factory.json" in page
     assert "Delivery & Operations" in ROADMAP.read_text(encoding="utf-8")
     assert "Career Factory" in page
 
 
-def test_career_factory_ci_enforces_new_lab_impact():
+def test_career_factory_ci_enforces_new_lab_impact_and_inventory():
     workflow = (ROOT / ".github" / "workflows" / "career-factory.yml").read_text(encoding="utf-8")
     assert "Career Factory" in workflow
     assert "--changed-from origin/${{ github.base_ref }}" in workflow
+    assert "generate_career_factory.py --check" in workflow
+    assert "ai/career-factory.json" in workflow
     assert "labs/**" in workflow
     contract = (ROOT / "labs" / "AGENTS.md").read_text(encoding="utf-8")
     assert "career_impact: mapped" in contract
@@ -69,6 +74,8 @@ def test_career_factory_ci_enforces_new_lab_impact():
     assert "career_skills" in contract
     assert "index.html" in contract
     assert "lab_exclusions" in contract
+    assert "Required agent loop" in contract
+    assert "suggested_skills" in contract
     validator = (ROOT / "scripts" / "check_career_factory.py").read_text(encoding="utf-8")
     assert "changed_lab_content" in validator
     assert "candidate.endswith(\".html\")" in validator
@@ -79,3 +86,32 @@ def test_machine_readable_career_endpoint_exists():
     endpoint = (ROOT / "ai" / "career-roadmap.json").read_text(encoding="utf-8")
     assert "dkharlanau.career.roadmap" in endpoint
     assert "site.data.career.roadmap.skills" in endpoint
+
+
+def test_career_factory_inventory_is_current_and_agent_usable():
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "generate_career_factory.py"), "--check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    payload = json.loads((ROOT / "ai" / "career-factory.json").read_text(encoding="utf-8"))
+    assert payload["schema"] == "dkharlanau.career.factory"
+    assert payload["summary"]["skills"] >= 40
+    assert payload["summary"]["lab_pages"] > 0
+    assert payload["summary"]["decision_coverage_percent"] >= 0
+    assert set(payload["track_stats"]) == {"sales", "logistics", "integration", "ai", "delivery", "leadership"}
+    for item in payload["lab_inventory"]:
+        assert item["state"] in {"mapped", "excluded", "needs_decision"}
+        if item["state"] == "needs_decision":
+            assert "suggested_skills" in item
+
+
+def test_career_roadmap_ui_reads_factory_inventory():
+    script = (ROOT / "assets" / "js" / "career-roadmap.js").read_text(encoding="utf-8")
+    style = (ROOT / "assets" / "css" / "career-roadmap.css").read_text(encoding="utf-8")
+    assert "fetch('/ai/career-factory.json'" in script
+    assert "decision_coverage_percent" in script
+    assert "career-factory-metrics" in style
+    assert "career-factory-queue" in style

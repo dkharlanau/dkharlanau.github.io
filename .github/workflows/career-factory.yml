@@ -8,7 +8,9 @@ on:
       - 'assets/js/career-roadmap.js'
       - 'assets/css/career-roadmap.css'
       - 'ai/career-roadmap.json'
+      - 'ai/career-factory.json'
       - 'scripts/check_career_factory.py'
+      - 'scripts/generate_career_factory.py'
       - 'tests/test_career_factory.py'
       - '.github/workflows/career-factory.yml'
   push:
@@ -19,7 +21,9 @@ on:
       - 'assets/js/career-roadmap.js'
       - 'assets/css/career-roadmap.css'
       - 'ai/career-roadmap.json'
+      - 'ai/career-factory.json'
       - 'scripts/check_career_factory.py'
+      - 'scripts/generate_career_factory.py'
       - 'tests/test_career_factory.py'
       - '.github/workflows/career-factory.yml'
 
@@ -49,6 +53,9 @@ jobs:
       - name: Enforce new Lab career impact
         if: github.event_name == 'pull_request'
         run: python3 scripts/check_career_factory.py --changed-from origin/${{ github.base_ref }}
+
+      - name: Check Career Factory inventory freshness
+        run: python3 scripts/generate_career_factory.py --check
 
       - name: Run Career Factory tests
         run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_career_factory.py tests/test_interview_readiness.py
