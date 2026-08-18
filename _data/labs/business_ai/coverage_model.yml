@@ -1,0 +1,118 @@
+schema_version: "1.0"
+reviewed_at: "2026-08-18"
+purpose: "Measure evidence coverage and research gaps without rewarding raw content volume."
+
+strong_case_rule:
+  source: scenario_library
+  statuses: ["strong_pattern"]
+  meaning: "A scenario is counted as a strong case only when the curated scenario library marks it as a strong pattern."
+
+strong_evidence_rule:
+  grades: ["A", "B"]
+  meaning: "A or B evidence is treated as stronger public evidence for portfolio analysis. A remains stronger than B; this grouping is only a coverage threshold."
+
+negative_evidence_rule:
+  evidence_kinds: ["observed_failure", "observed_mixed_outcome", "observed_limited_pilot"]
+  meaning: "Only source-backed observed records count as negative evidence. Plausible risks are reported separately."
+
+measurement_rule:
+  case_fields: ["metrics", "reported_metrics"]
+  scenario_fields: ["reported_results"]
+  meaning: "A public metric exists when the record contains an explicit reported metric/result. This does not prove causal impact."
+
+control_rule:
+  case_fields: ["controls"]
+  scenario_fields: ["good_controls", "missing_controls"]
+  process_fields: ["control_points"]
+  decision_profile_fields: ["required_controls"]
+  meaning: "Control coverage means explicit control information exists. It does not prove the control operated effectively at runtime."
+
+priority_model:
+  name: "Evidence-gap research priority"
+  score_range: [0, 100]
+  weights:
+    strategic_relevance: 35
+    strong_evidence_gap: 25
+    control_gap: 15
+    negative_evidence_gap: 15
+    machine_readiness_gap: 10
+  formula: "sum(weight * factor), where each factor is between 0 and 1; higher means more research need."
+  factor_rules:
+    strategic_relevance: "Configured for each strategic slice. It expresses project priority, not an objective market fact."
+    strong_evidence_gap: "1 - min(strong_evidence_count / target_strong_evidence, 1)."
+    control_gap: "1 when the slice has no explicit SAP/enterprise authority-control link; 0.5 when only partial links exist; 0 when the configured target is met."
+    negative_evidence_gap: "1 when no source-backed negative evidence is linked to the slice; 0.5 when only one record is linked; 0 when two or more are linked."
+    machine_readiness_gap: "1 when no stable process/stage IDs are available; 0.5 when coverage is partial; 0 when the configured stable-stage target is met or the slice is intentionally domain-only."
+  interpretation: "The score ranks research need under these declared weights. It is not an objective measure of business value or AI opportunity."
+
+strategic_slices:
+  - id: "sales-lead-to-cash"
+    title: "Sales / Lead-to-Cash / Order-to-Cash"
+    domain_ids: ["sales-o2c"]
+    process_ids: ["lead-to-cash"]
+    strategic_relevance: 1.0
+    target_strong_evidence: 5
+    target_control_links: 4
+    target_stable_stages: 4
+
+  - id: "procurement-source-to-pay"
+    title: "Procurement / Source-to-Pay"
+    domain_ids: ["procurement-p2p"]
+    process_ids: ["source-to-pay"]
+    strategic_relevance: 1.0
+    target_strong_evidence: 5
+    target_control_links: 4
+    target_stable_stages: 4
+
+  - id: "inventory-fulfilment-logistics"
+    title: "Inventory, fulfilment, EWM and transportation"
+    domain_ids: ["planning-inventory", "warehouse-logistics"]
+    process_ids: ["forecast-to-fulfill"]
+    strategic_relevance: 1.0
+    target_strong_evidence: 6
+    target_control_links: 4
+    target_stable_stages: 4
+
+  - id: "master-data-mdg"
+    title: "Master data and MDG"
+    domain_ids: ["master-data"]
+    process_ids: []
+    strategic_relevance: 0.9
+    target_strong_evidence: 4
+    target_control_links: 1
+    target_stable_stages: 0
+
+  - id: "integration-operations"
+    title: "Integration and operations"
+    domain_ids: ["it-operations"]
+    process_ids: []
+    strategic_relevance: 1.0
+    target_strong_evidence: 4
+    target_control_links: 1
+    target_stable_stages: 0
+
+  - id: "manufacturing-planning"
+    title: "Manufacturing and planning"
+    domain_ids: ["manufacturing-quality", "planning-inventory"]
+    process_ids: ["forecast-to-fulfill"]
+    strategic_relevance: 0.8
+    target_strong_evidence: 5
+    target_control_links: 2
+    target_stable_stages: 2
+
+trend_contract:
+  snapshot_key: "contract_version + reviewed_at"
+  stable_dimensions:
+    - domain
+    - end_to_end_process
+    - process_stage
+    - pattern
+    - technology_family
+    - industry
+    - evidence_grade
+    - implementation_maturity
+    - autonomy_level
+    - control_coverage
+    - measurable_outcome
+    - negative_evidence
+  rule: "Future snapshots use the same dimension IDs and weighting version so changes can be compared. A weighting change creates a new coverage-model version rather than silently rewriting history."
