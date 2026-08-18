@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-18
 hide_global_cta: true
 tags: [ai, rag, retrieval, embeddings, data, evals]
 ---
@@ -37,6 +37,8 @@ For every important answer, define:
 - how the user can trace the answer back to it.
 
 If nobody knows which document owns the policy, a better embedding model will not settle the argument.
+
+{% include labs/ai-ready/modern-data-platforms.html %}
 
 ## Retrieval pipeline
 
