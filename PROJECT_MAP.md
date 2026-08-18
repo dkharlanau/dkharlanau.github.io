@@ -1,7 +1,7 @@
 # PROJECT_MAP.md
 
 Compact map of `dkharlanau.github.io`.
-Last updated: 2026-08-17.
+Last updated: 2026-08-18.
 
 ## Product Architecture
 
@@ -11,7 +11,7 @@ The public repository has many physical directories, but the site is organised a
 |---|---|---|
 | Profile | `/`, `/about/`, `/cv/` | Identity, experience, certifications, public profile |
 | Knowledge | `/knowledge/` | Human knowledge entry point for Atlas, Scenarios, Research, Journal, and Notes |
-| Labs | `/labs/` | Active workspaces for SAP Enterprise, AI architecture, Business AI, operational protocols, and assessment practice |
+| Labs | `/labs/` | Active workspaces for SAP Enterprise, AI architecture, Business AI, operational protocols, interview readiness, and assessment practice |
 | Frameworks | `/frameworks/` | Reusable methods: TRIZ Digital, Decision Design, Reusable Data Procedures, operational protocols |
 | Machine layer | `/machine/` | Technical map for datasets, AI-readable exports, skills, tools, and MCP packages |
 | Services | `/services/` | Consulting services and commercial signal |
@@ -50,7 +50,19 @@ The global navigation should stay product-level. Deep domain navigation belongs 
 | AI Ready | `labs/ai-ready/` | Data, RAG, MCP, agents, evals, security, deployment, production decisions |
 | Business AI | `labs/business-ai/` | Process → AI job → pattern → technology → control → outcome → evidence |
 | Operational Protocols | `labs/templates/` | RCA, incident response, integration failures, runbooks, cutover, hypercare |
+| Interview Readiness | `labs/interview-readiness/` | Interview roadmap, questions, project stories, mixed practice, and browser-local progress across SAP Lead domains |
 | SAP Lead Assessment | `labs/assessment/` | Cases, mocks, review, reasoning levels, evidence coverage, progress |
+
+### Interview Readiness relationship
+
+Interview Readiness is a preparation layer over existing Labs. It does not duplicate SAP or AI source material.
+
+- `roadmap/` records four topic states: Not reviewed, Refreshed, Can explain, Can defend.
+- `questions/` provides explain, trace, diagnose, design, challenge, and Lead-level prompts.
+- `stories/` stores browser-local interview stories structured around context, role, decision, trade-off, result, and lesson.
+- `practice/` mixes Sales, Logistics, Integration, AI, and Lead judgment into a balanced session.
+- `progress/` combines roadmap depth, practice history, and story coverage.
+- Browser-local Interview Readiness state is separate from the scored attempt history used by `labs/assessment/`.
 
 ### SAP Enterprise domain map
 
@@ -82,7 +94,7 @@ Frameworks must remain reusable across SAP, AI, data, and general digital-system
 |---|---|---|
 | Datasets | `datasets/` | Canonical machine-readable data collections |
 | AI-readable exports | `ai/` | JSON/YAML indexes, discovery maps, evidence, generated exports |
-| Skill Hub | `skill-hub/` | Human-readable map of reusable skills |
+| Skill Hub | `skill-hub/` | Human-readable capability map |
 | Agent Skills | `agent-skills/` | Portable installable agent skill packages |
 | Agent Tools | `agent-tools/` | Static public tool descriptions |
 | MCP | `mcp/` | Source and documentation for local MCP packages; GitHub Pages does not execute them |
@@ -139,7 +151,7 @@ Use the problem type, not the technology name, to choose the home:
 - Durable reviewed explanation → `atlas/`
 - Business problem / diagnostic workflow → `scenarios/`
 - Fast-moving cited evidence → `research/`
-- Active SAP / AI exploration or assessment practice → `labs/`
+- Active SAP / AI exploration, interview preparation, or assessment practice → `labs/`
 - Reusable reasoning or execution method → existing framework under `/frameworks/`
 - Canonical structured data → `datasets/`
 - Generated or curated machine endpoint → `ai/`
