@@ -28,7 +28,10 @@ def test_public_career_surfaces_are_reviewed_and_indexable():
         assert "noindex" not in str(data.get("robots", "")).lower()
         assert data.get("sitemap") is True
         assert data.get("search_intent")
-        assert (data.get("structured_data") or {}).get("type") == "CollectionPage"
+        assert (data.get("structured_data") or {}).get("type") == "TechArticle"
+        assert data.get("primary_topic")
+        assert data.get("ai_sidecar")
+        assert len(data.get("semantic_links") or []) >= 2
 
 
 def test_career_roadmap_connects_labs_skill_hub_and_assessment():
@@ -42,6 +45,11 @@ def test_career_roadmap_connects_labs_skill_hub_and_assessment():
     assert "/skill-hub/ai-assisted-analysis/" in text
     assert "/ai/career-roadmap.json" in text
     assert "/ai/career-factory.json" in text
+
+
+def test_career_sidecars_exist():
+    assert (ROOT / "ai" / "pages" / "labs--interview-readiness.json").exists()
+    assert (ROOT / "ai" / "pages" / "labs--interview-readiness--roadmap.json").exists()
 
 
 def test_primary_navigation_exposes_career_route():
