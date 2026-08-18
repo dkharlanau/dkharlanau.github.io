@@ -1,0 +1,118 @@
+---
+layout: null
+permalink: /machine/business-ai/graph.json
+sitemap: false
+---
+{% assign contract = site.data.labs.business_ai.contract %}
+{% assign domains = site.data.labs.business_ai.domain_map.domains %}
+{% assign processes = site.data.labs.business_ai.process_map.processes %}
+{% assign catalog = site.data.labs.business_ai.catalog %}
+{% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
+{% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
+{% assign all_patterns = catalog.patterns | concat: expansion.patterns | concat: expansion_b.patterns %}
+{% assign all_cases = catalog.cases | concat: expansion.cases | concat: expansion_b.cases %}
+{% assign all_sources = catalog.source_registry | concat: expansion.source_registry | concat: expansion_b.source_registry %}
+{% assign technologies = site.data.labs.business_ai.technology_landscape %}
+{% assign context = site.data.labs.business_ai.enterprise_context_links %}
+{
+  "schema": "business-ai-graph@1",
+  "contract_version": {{ contract.contract.version | jsonify }},
+  "generated_at": {{ site.time | date_to_xmlschema | jsonify }},
+  "canonical_contract": "/docs/strategy/business-ai-data-contract/",
+  "publication_policy": {
+    "scope": "public repository records only",
+    "review_rule": "Missing review state is projected as candidate and exposed through projection_flags; it is never promoted to approved.",
+    "private_material": "excluded"
+  },
+  "nodes": [
+    {% assign first_node = true %}
+    {% for domain in domains %}
+      {% unless first_node %},{% endunless %}{% assign first_node = false %}
+      {"id":{{ "domain-" | append: domain.id | jsonify }},"type":"BusinessDomain","title":{{ domain.title | jsonify }},"canonical_ref":{{ "/labs/business-ai/domains/#" | append: domain.id | jsonify }}}
+    {% endfor %}
+    {% for process in processes %}
+      {% unless first_node %},{% endunless %}{% assign first_node = false %}
+      {"id":{{ "process-" | append: process.id | jsonify }},"type":"EndToEndProcess","title":{{ process.title | jsonify }},"canonical_ref":{{ "/labs/business-ai/processes/#" | append: process.id | jsonify }},"source_ref":"_data/labs/business_ai/process_map.yml"}
+      {% for stage in process.stages %}
+        ,{"id":{{ "stage-" | append: process.id | append: "-" | append: (stage | slugify) | jsonify }},"type":"ProcessStage","title":{{ stage | jsonify }},"canonical_ref":{{ "/labs/business-ai/processes/#" | append: process.id | jsonify }},"process_id":{{ process.id | jsonify }}}
+      {% endfor %}
+      {% for control in process.control_points %}
+        ,{"id":{{ "control-" | append: process.id | append: "-" | append: (control | slugify) | jsonify }},"type":"ControlPoint","title":{{ control | jsonify }},"canonical_ref":{{ "/labs/business-ai/processes/#" | append: process.id | jsonify }},"process_id":{{ process.id | jsonify }}}
+      {% endfor %}
+    {% endfor %}
+    {% for pattern in all_patterns %}
+      ,{"id":{{ "pattern-" | append: pattern.id | jsonify }},"type":"Pattern","title":{{ pattern.title | jsonify }},"canonical_ref":{{ "/labs/business-ai/patterns/#" | append: pattern.id | jsonify }}}
+    {% endfor %}
+    {% for family in technologies.families %}
+      ,{"id":{{ "technology-" | append: family.id | jsonify }},"type":"TechnologyFamily","title":{{ family.title | jsonify }},"canonical_ref":{{ "/labs/business-ai/technologies/#" | append: family.id | jsonify }}}
+    {% endfor %}
+    {% for platform in technologies.platforms %}
+      ,{"id":{{ "platform-" | append: platform.id | jsonify }},"type":"EnterprisePlatform","title":{{ platform.name | jsonify }},"canonical_ref":{{ "/labs/business-ai/technologies/#" | append: platform.id | jsonify }},"source_id":{{ platform.source_id | jsonify }}}
+    {% endfor %}
+    {% for item in all_cases %}
+      ,{"id":{{ "case-" | append: item.id | jsonify }},"type":"BusinessAICase","title":{{ item.title | jsonify }},"canonical_ref":{{ "/labs/business-ai/cases/#" | append: item.id | jsonify }},"case_kind":{{ item.case_kind | default: "ai_implementation" | jsonify }},"review_state":{{ item.review_state | default: "candidate" | jsonify }},"evidence_grade":{{ item.evidence_grade | jsonify }},"pattern_id":{{ item.pattern | jsonify }},"process_ids":{{ item.process_ids | default: empty | jsonify }},"source_ids":{{ item.source_ids | default: empty | jsonify }},"limitations":{{ item.limits | default: empty | jsonify }},"reported_results":{{ item.reported_results | default: empty | jsonify }},"projection_flags":[{% unless item.case_kind %}"missing-explicit-case-kind"{% endunless %}{% unless item.case_kind or item.review_state %}{% unless item.case_kind %},{% endunless %}{% endunless %}{% unless item.review_state %}"missing-explicit-review-state"{% endunless %}]}
+      {% for metric in item.reported_results %}
+        ,{"id":{{ "metric-" | append: item.id | append: "-" | append: forloop.index | jsonify }},"type":"Metric","title":{{ metric.metric | jsonify }},"canonical_ref":{{ "/labs/business-ai/cases/#" | append: item.id | jsonify }},"value":{{ metric.value | jsonify }},"claim_type":{{ metric.claim_type | jsonify }}}
+      {% endfor %}
+      {% for limit in item.limits %}
+        ,{"id":{{ "limitation-" | append: item.id | append: "-" | append: forloop.index | jsonify }},"type":"Limitation","title":{{ limit | truncate: 120 | jsonify }},"canonical_ref":{{ "/labs/business-ai/cases/#" | append: item.id | jsonify }},"text":{{ limit | jsonify }}}
+      {% endfor %}
+    {% endfor %}
+    {% for source in all_sources %}
+      ,{"id":{{ "evidence-" | append: source.id | jsonify }},"type":"EvidenceSource","title":{{ source.title | default: source.id | jsonify }},"canonical_ref":"/labs/business-ai/cases/","source_url":{{ source.url | jsonify }},"source_confidence":{{ source.source_confidence | default: "medium" | jsonify }},"evidence_level":{{ source.evidence_level | default: "source_fact" | jsonify }}}
+    {% endfor %}
+    {% for mapping in context.process_links %}
+      {% for page in mapping.context_pages %}
+        ,{"id":{{ "context-" | append: mapping.id | append: "-" | append: page.id | jsonify }},"type":"EnterpriseContextPage","title":{{ page.title | jsonify }},"canonical_ref":{{ page.canonical_ref | jsonify }},"vendor":"SAP","boundary_types":{{ page.boundary_types | jsonify }}}
+      {% endfor %}
+    {% endfor %}
+  ],
+  "edges": [
+    {% assign first_edge = true %}
+    {% for process in processes %}
+      {% for domain_id in process.domains %}
+        {% unless first_edge %},{% endunless %}{% assign first_edge = false %}
+        {"type":"process-crosses-domain","from":{{ "process-" | append: process.id | jsonify }},"to":{{ "domain-" | append: domain_id | jsonify }}}
+      {% endfor %}
+      {% for stage in process.stages %}
+        ,{"type":"process-has-stage","from":{{ "process-" | append: process.id | jsonify }},"to":{{ "stage-" | append: process.id | append: "-" | append: (stage | slugify) | jsonify }}}
+      {% endfor %}
+      {% for control in process.control_points %}
+        {% for stage in process.stages %}
+          ,{"type":"stage-has-control","from":{{ "stage-" | append: process.id | append: "-" | append: (stage | slugify) | jsonify }},"to":{{ "control-" | append: process.id | append: "-" | append: (control | slugify) | jsonify }}}
+        {% endfor %}
+      {% endfor %}
+      {% for pattern_id in process.pattern_ids %}
+        {% for stage in process.stages %}
+          ,{"type":"stage-uses-pattern","from":{{ "stage-" | append: process.id | append: "-" | append: (stage | slugify) | jsonify }},"to":{{ "pattern-" | append: pattern_id | jsonify }}}
+        {% endfor %}
+      {% endfor %}
+    {% endfor %}
+    {% for item in all_cases %}
+      ,{"type":"case-uses-pattern","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "pattern-" | append: item.pattern | jsonify }}}
+      {% for process_id in item.process_ids %}
+        ,{"type":"case-applies-to-process","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "process-" | append: process_id | jsonify }}}
+      {% endfor %}
+      {% for source_id in item.source_ids %}
+        ,{"type":"case-supported-by-evidence","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "evidence-" | append: source_id | jsonify }}}
+      {% endfor %}
+      {% for metric in item.reported_results %}
+        ,{"type":"case-reports-metric","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "metric-" | append: item.id | append: "-" | append: forloop.index | jsonify }}}
+        {% for source_id in item.source_ids %}
+          ,{"type":"metric-supported-by-evidence","from":{{ "metric-" | append: item.id | append: "-" | append: forloop.parentloop.index | jsonify }},"to":{{ "evidence-" | append: source_id | jsonify }}}
+        {% endfor %}
+      {% endfor %}
+      {% for limit in item.limits %}
+        ,{"type":"case-has-limitation","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "limitation-" | append: item.id | append: "-" | append: forloop.index | jsonify }}}
+      {% endfor %}
+    {% endfor %}
+    {% for mapping in context.process_links %}
+      {% for page in mapping.context_pages %}
+        ,{"type":"process-has-enterprise-context","from":{{ "process-" | append: mapping.process_id | jsonify }},"to":{{ "context-" | append: mapping.id | append: "-" | append: page.id | jsonify }},"boundary_types":{{ page.boundary_types | jsonify }}}
+        {% for stage in page.stages %}
+          ,{"type":"stage-has-enterprise-context","from":{{ "stage-" | append: mapping.process_id | append: "-" | append: (stage | slugify) | jsonify }},"to":{{ "context-" | append: mapping.id | append: "-" | append: page.id | jsonify }},"boundary_types":{{ page.boundary_types | jsonify }}}
+        {% endfor %}
+      {% endfor %}
+    {% endfor %}
+  ]
+}
