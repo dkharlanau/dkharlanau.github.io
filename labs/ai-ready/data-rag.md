@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-18
 hide_global_cta: true
 tags: [ai, rag, retrieval, embeddings, data, evals]
 ---
@@ -150,4 +150,4 @@ Examples:
 - Test stale, conflicting, forbidden, and missing evidence.
 - Trace query, filters, retrieved IDs, scores, reranking, and final citations.
 
-Related: [Practical Use Cases](/labs/ai-ready/use-cases/) · [Evals and Reliability](/labs/ai-ready/evals-reliability/) · [RAG with Evals Lab](/labs/ai-ready/labs/rag-evals/)
+Related: [Modern Data Platforms](/labs/ai-ready/data-platforms/) · [Practical Use Cases](/labs/ai-ready/use-cases/) · [Evals and Reliability](/labs/ai-ready/evals-reliability/) · [RAG with Evals Lab](/labs/ai-ready/labs/rag-evals/)
