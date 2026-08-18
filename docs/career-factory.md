@@ -29,7 +29,9 @@ Source routes can point to Labs, Assessment, Frameworks, the Machine layer, or o
 
 ## Lab-to-career contract
 
-Existing Labs are grandfathered. Every **new** `labs/**/*.md` file must make an explicit decision in frontmatter.
+Existing Labs are grandfathered. Every new Lab page must make an explicit career decision.
+
+For new Markdown, use frontmatter.
 
 Mapped:
 
@@ -47,6 +49,8 @@ career_impact: none
 career_reason: "Navigation-only page; it does not add a new interview skill or evidence source."
 ```
 
+For a new static `labs/**/index.html` route, make the decision in `_data/career/roadmap.yml`: reference the route from a relevant skill source, or add it to `lab_exclusions` with a useful reason.
+
 If a new Lab introduces a real skill that does not exist in the roadmap, add the skill to `_data/career/roadmap.yml`. Do not map it to a vaguely similar skill only to make CI green.
 
 ## CI
@@ -56,9 +60,9 @@ If a new Lab introduces a real skill that does not exist in the roadmap, add the
 - roadmap schema and minimum Lead-level scope;
 - unique skill IDs;
 - track, tier, and capability references;
-- internal source routes;
+- Markdown and static-HTML source routes;
 - any Lab page that already declares career metadata;
-- every newly added Lab Markdown file on a pull request;
+- every newly added Lab Markdown or HTML page on a pull request;
 - regression tests for the career UI and machine endpoint.
 
 Run locally:
@@ -76,7 +80,7 @@ When an agent creates a Lab page:
 1. Decide whether the page adds or strengthens an interview skill.
 2. Find the best existing skill ID in `_data/career/roadmap.yml`.
 3. If no accurate skill exists, add one with an interview signal and evidence source.
-4. Add `career_impact` metadata to the new Lab page.
+4. Record the career decision in Markdown frontmatter or the central roadmap model for static HTML.
 5. Run the Career Factory validation.
 6. Keep publication status separate. Career relevance does not mean the page is human-reviewed or indexable.
 
