@@ -1,0 +1,167 @@
+schema_version: "1.0"
+reviewed_at: "2026-08-18"
+status: "working_map"
+
+purpose: "Connect vendor-neutral Business AI process nodes to existing SAP Enterprise context without copying SAP configuration content."
+
+semantics:
+  vendor_neutral_rule: "Business AI EndToEndProcess and ProcessStage nodes stay vendor neutral."
+  sap_context_rule: "EnterpriseContextPage nodes point to SAP-specific implementation, diagnostic, data, integration, authority, and control context."
+  other_erp_rule: "A non-SAP ERP example may attach its own implementation-context nodes to the same Business AI process and stage IDs. It must not reuse SAP-specific semantics or routes."
+  publication_rule: "Cross-links reference public source pages only. They do not promote evidence review state."
+
+process_links:
+  - id: "sap-lead-to-cash"
+    process_id: "lead-to-cash"
+    title: "SAP Lead-to-Cash and Order-to-Cash context"
+    context_pages:
+      - id: "sap-sales-processes"
+        title: "SAP sales processes"
+        canonical_ref: "/labs/enterprise-context/sales-processes/"
+        stages: ["lead and opportunity", "solution and offer", "quote and pricing", "order capture"]
+        boundary_types: ["data", "authority", "control"]
+      - id: "sap-sales-order"
+        title: "SAP sales order"
+        canonical_ref: "/labs/enterprise-context/sales-order/"
+        stages: ["order capture", "availability and promise"]
+        boundary_types: ["data", "authority", "control"]
+      - id: "sap-atp"
+        title: "SAP availability and promise"
+        canonical_ref: "/labs/enterprise-context/atp/"
+        stages: ["availability and promise"]
+        boundary_types: ["decision", "data", "control"]
+      - id: "sap-shipping"
+        title: "SAP shipping"
+        canonical_ref: "/labs/enterprise-context/shipping/"
+        stages: ["delivery and fulfillment"]
+        boundary_types: ["integration", "control"]
+      - id: "sap-billing"
+        title: "SAP billing"
+        canonical_ref: "/labs/enterprise-context/billing/"
+        stages: ["billing and receivables", "returns and claims"]
+        boundary_types: ["authority", "integration", "control"]
+      - id: "sap-sales-diagnostics"
+        title: "SAP sales diagnostics"
+        canonical_ref: "/labs/enterprise-context/sales-diagnostics/"
+        stages: ["order capture", "availability and promise", "delivery and fulfillment", "billing and receivables"]
+        boundary_types: ["evidence", "integration", "control"]
+    decision_points:
+      - "Whether AI proposes information, prepares a document, or changes a committed sales transaction."
+      - "Whether price, promise date, allocation, credit, tax, and billing values come from authoritative deterministic services."
+    business_rule_areas: ["pricing", "availability and allocation", "credit", "tax", "billing"]
+    data_dependencies: ["customer master", "product master", "sales document state", "pricing conditions", "availability state"]
+    integration_boundaries: ["CRM or commerce to ERP", "order to fulfilment", "delivery to billing", "ERP to external customer channels"]
+    authority_boundaries: ["commercial commitment", "price override", "credit decision", "order release", "billing posting"]
+    control_boundaries: ["identity validation", "pricing validation", "ATP validation", "credit checks", "posting and audit trail"]
+
+  - id: "sap-source-to-pay"
+    process_id: "source-to-pay"
+    title: "SAP Source-to-Pay context"
+    context_pages:
+      - id: "sap-procurement"
+        title: "SAP procurement"
+        canonical_ref: "/labs/enterprise-context/procurement/"
+        stages: ["demand and requisition", "supplier discovery", "sourcing and negotiation", "contract and catalog", "purchase order", "supplier confirmation", "receipt and service entry", "invoice"]
+        boundary_types: ["data", "authority", "control"]
+      - id: "sap-master-data"
+        title: "SAP master data"
+        canonical_ref: "/labs/enterprise-context/master-data/"
+        stages: ["supplier discovery", "contract and catalog", "purchase order", "invoice"]
+        boundary_types: ["data", "control"]
+      - id: "sap-integrations"
+        title: "SAP integrations"
+        canonical_ref: "/labs/enterprise-context/integrations/"
+        stages: ["supplier confirmation", "receipt and service entry", "invoice", "payment"]
+        boundary_types: ["integration", "evidence"]
+    decision_points:
+      - "Which extracted or generated values may continue automatically and which differences require buyer or AP review."
+      - "Whether tolerance, duplicate, approval, and payment rules remain deterministic and authoritative."
+    business_rule_areas: ["approval limits", "price and quantity tolerance", "duplicate invoice controls", "segregation of duties", "payment authorization"]
+    data_dependencies: ["supplier master", "material and service master", "purchase order", "goods or service receipt", "invoice state"]
+    integration_boundaries: ["supplier channel to ERP", "procurement suite to ERP", "document intake to validation", "invoice to finance and payment"]
+    authority_boundaries: ["supplier approval", "purchase commitment", "exception acceptance", "invoice release", "payment release"]
+    control_boundaries: ["supplier identity", "tolerance checks", "duplicate checks", "approval workflow", "segregation of duties"]
+
+  - id: "sap-forecast-to-fulfill"
+    process_id: "forecast-to-fulfill"
+    title: "SAP inventory and fulfilment context"
+    context_pages:
+      - id: "sap-inventory-management"
+        title: "SAP inventory management"
+        canonical_ref: "/labs/enterprise-context/inventory-management/"
+        stages: ["inventory target", "production or procurement plan", "customer fulfillment"]
+        boundary_types: ["data", "control"]
+      - id: "sap-ewm"
+        title: "SAP Extended Warehouse Management"
+        canonical_ref: "/labs/enterprise-context/ewm/"
+        stages: ["warehouse execution", "customer fulfillment"]
+        boundary_types: ["integration", "authority", "control"]
+      - id: "sap-transportation-management"
+        title: "SAP Transportation Management"
+        canonical_ref: "/labs/enterprise-context/transportation-management/"
+        stages: ["transport execution", "customer fulfillment"]
+        boundary_types: ["integration", "decision", "control"]
+      - id: "sap-logistics-capabilities"
+        title: "SAP logistics capabilities"
+        canonical_ref: "/labs/enterprise-context/logistics-capabilities/"
+        stages: ["supply and capacity plan", "inventory target", "warehouse execution", "transport execution", "customer fulfillment"]
+        boundary_types: ["data", "integration", "control"]
+    decision_points:
+      - "Whether AI recommends a plan or is allowed to release an execution decision."
+      - "Whether optimization respects capacity, inventory, service, warehouse, and transport constraints owned by business systems."
+    business_rule_areas: ["planning horizon", "capacity constraints", "inventory policy", "allocation", "service level"]
+    data_dependencies: ["demand history", "inventory position", "supply plan", "warehouse state", "transport state", "customer commitments"]
+    integration_boundaries: ["planning to ERP", "ERP to EWM", "ERP or EWM to TM", "execution confirmations back to planning"]
+    authority_boundaries: ["planner override", "allocation release", "warehouse task execution", "transport commitment"]
+    control_boundaries: ["hard constraints", "inventory policy", "execution confirmation", "exception handling", "service-level monitoring"]
+
+  - id: "sap-master-data-change"
+    process_id: "master-data-change"
+    title: "SAP master-data and MDG context"
+    context_pages:
+      - id: "sap-master-data"
+        title: "SAP master data"
+        canonical_ref: "/labs/enterprise-context/master-data/"
+        stages: ["request", "search and duplicate check", "classification and enrichment", "validation", "activation", "distribution", "reconciliation"]
+        boundary_types: ["data", "authority", "control"]
+      - id: "sap-mdg"
+        title: "SAP Master Data Governance"
+        canonical_ref: "/labs/enterprise-context/mdg/"
+        stages: ["request", "search and duplicate check", "classification and enrichment", "validation", "approval", "activation", "distribution"]
+        boundary_types: ["data", "authority", "control"]
+      - id: "sap-data-governance"
+        title: "SAP data governance"
+        canonical_ref: "/labs/enterprise-context/data-governance/"
+        stages: ["validation", "approval", "activation", "distribution", "reconciliation"]
+        boundary_types: ["data", "control", "evidence"]
+    decision_points:
+      - "Whether AI proposes classification or enrichment while governance workflow owns approval and activation."
+      - "Whether duplicate and identity decisions have enough deterministic evidence before a record becomes authoritative."
+    business_rule_areas: ["duplicate policy", "mandatory attributes", "key mapping", "approval", "distribution"]
+    data_dependencies: ["golden-record candidates", "reference data", "key mappings", "change request", "downstream distribution status"]
+    integration_boundaries: ["source systems to governance", "governance to ERP", "master-data distribution", "downstream reconciliation"]
+    authority_boundaries: ["record ownership", "change approval", "activation", "merge or duplicate decision"]
+    control_boundaries: ["duplicate check", "mandatory-field validation", "workflow approval", "distribution confirmation", "reconciliation"]
+
+  - id: "sap-incident-to-resolution"
+    process_id: "incident-to-resolution"
+    title: "SAP integration operations context"
+    context_pages:
+      - id: "sap-integration-operations"
+        title: "SAP integration operations"
+        canonical_ref: "/labs/enterprise-context/integration-operations/"
+        stages: ["signal and incident intake", "triage", "evidence collection", "diagnosis", "remediation proposal", "approval", "execution", "validation and closure"]
+        boundary_types: ["integration", "evidence", "authority", "control"]
+      - id: "sap-integrations"
+        title: "SAP integrations"
+        canonical_ref: "/labs/enterprise-context/integrations/"
+        stages: ["evidence collection", "diagnosis", "remediation proposal", "validation and closure"]
+        boundary_types: ["integration", "evidence"]
+    decision_points:
+      - "Whether an assistant only gathers evidence and proposes remediation or can execute an approved operational action."
+      - "Whether failure evidence is sufficient to distinguish source, mapping, transport, authorization, or target-system causes."
+    business_rule_areas: ["retry policy", "message ownership", "change approval", "rollback", "production access"]
+    data_dependencies: ["message and interface state", "application logs", "configuration", "authorization context", "business object state"]
+    integration_boundaries: ["source system", "middleware or API layer", "target system", "monitoring and alerting"]
+    authority_boundaries: ["production write access", "retry or replay", "configuration change", "incident closure"]
+    control_boundaries: ["evidence sufficiency", "approval", "least privilege", "rollback", "post-change validation", "audit trail"]
