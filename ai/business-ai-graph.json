@@ -1,0 +1,112 @@
+---
+layout: null
+permalink: /ai/business-ai-graph.json
+robots: noindex,follow
+sitemap: false
+---
+{% assign contract = site.data.labs.business_ai.contract %}
+{% assign catalog = site.data.labs.business_ai.catalog %}
+{% assign domain_map = site.data.labs.business_ai.domain_map %}
+{% assign process_map = site.data.labs.business_ai.process_map %}
+{% assign scenarios = site.data.labs.business_ai.scenario_library %}
+{% assign matrix = site.data.labs.business_ai.assessment_matrix %}
+{% assign technologies = site.data.labs.business_ai.technology_landscape %}
+{% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
+{% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
+{% assign expansion_c = site.data.labs.business_ai.expansion_2026_08_15_c %}
+{% assign empty_list = "" | split: "" %}
+{% assign expansion_patterns = expansion.patterns | default: empty_list %}
+{% assign expansion_b_patterns = expansion_b.patterns | default: empty_list %}
+{% assign expansion_c_patterns = expansion_c.patterns | default: empty_list %}
+{% assign expansion_cases = expansion.cases | default: empty_list %}
+{% assign expansion_b_cases = expansion_b.cases | default: empty_list %}
+{% assign expansion_c_cases = expansion_c.cases | default: empty_list %}
+{% assign expansion_sources = expansion.source_registry | default: empty_list %}
+{% assign expansion_b_sources = expansion_b.source_registry | default: empty_list %}
+{% assign expansion_c_sources = expansion_c.source_registry | default: empty_list %}
+{% assign all_patterns = catalog.patterns | concat: expansion_patterns | concat: expansion_b_patterns | concat: expansion_c_patterns %}
+{% assign all_cases = catalog.cases | concat: expansion_cases | concat: expansion_b_cases | concat: expansion_c_cases %}
+{% assign all_sources = catalog.source_registry | concat: expansion_sources | concat: expansion_b_sources | concat: expansion_c_sources %}
+{% assign failure_patterns = scenarios.failure_patterns | default: empty_list %}
+{% assign best_practices = scenarios.best_practices | default: empty_list %}
+{
+  "schema": "dkharlanau.business-ai.graph",
+  "schema_version": "1.0",
+  "contract_version": {{ contract.contract.version | jsonify }},
+  "reviewed_at": {{ catalog.reviewed_at | jsonify }},
+  "source_model": "_data/labs/business_ai/contract.yml",
+  "normalization": {
+    "legacy_case_kind": "ai_implementation",
+    "legacy_review_state": "structured",
+    "note": "Generated defaults describe migration state only. They do not promote evidence to approved or runtime-proven status."
+  },
+  "manifest": {
+    "canonical_sources": {{ contract.source_of_truth.datasets | jsonify }},
+    "filtered_views": [
+      "/labs/business-ai/data/catalog.json",
+      "/labs/business-ai/data/domains.json",
+      "/labs/business-ai/data/matrix.json",
+      "/labs/business-ai/data/patterns.json",
+      "/labs/business-ai/data/processes.json",
+      "/labs/business-ai/data/scenarios.json",
+      "/labs/business-ai/data/technologies.json"
+    ]
+  },
+  "nodes": {
+    "business_domains": [
+      {% for node in domain_map.domains %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"BusinessDomain","title":{{ node.title | jsonify }},"case_ids":{{ node.case_ids | default: empty_list | jsonify }}}{% endfor %}
+    ],
+    "end_to_end_processes": [
+      {% for node in process_map.processes %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"EndToEndProcess","title":{{ node.title | jsonify }},"domain_ids":{{ node.domains | default: empty_list | jsonify }},"pattern_ids":{{ node.pattern_ids | default: empty_list | jsonify }},"technology_family_ids":{{ node.technology_families | default: empty_list | jsonify }},"control_points":{{ node.control_points | default: empty_list | jsonify }},"legacy_stages":{{ node.stages | default: empty_list | jsonify }}}{% endfor %}
+    ],
+    "patterns": [
+      {% for node in all_patterns %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"Pattern","title":{{ node.title | jsonify }},"business_job":{{ node.business_job | jsonify }},"automation_level":{{ node.automation_level | jsonify }}}{% endfor %}
+    ],
+    "technology_families": [
+      {% for node in technologies.families %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"TechnologyFamily","title":{{ node.title | jsonify }},"job":{{ node.job | jsonify }}}{% endfor %}
+    ],
+    "cases": [
+      {% for node in all_cases %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"BusinessAICase","title":{{ node.title | jsonify }},"case_kind":{{ node.case_kind | default: "ai_implementation" | jsonify }},"review_state":{{ node.review_state | default: "structured" | jsonify }},"company":{{ node.company | jsonify }},"industry":{{ node.industry | jsonify }},"process":{{ node.process | jsonify }},"pattern_id":{{ node.pattern | jsonify }},"evidence_grade":{{ node.evidence_grade | jsonify }},"source_ids":{{ node.source_ids | default: empty_list | jsonify }},"limitations":{{ node.limits | default: empty_list | jsonify }},"canonical_url":{{ "/labs/business-ai/cases/#" | append: node.id | jsonify }}}{% endfor %}
+    ],
+    "scenario_outcomes": [
+      {% for node in scenarios.scenarios %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"ScenarioOutcome","outcome_state":"unknown","status":{{ node.status | jsonify }},"company":{{ node.company | jsonify }},"process":{{ node.process | jsonify }},"source_ids":{{ node.source_ids | default: empty_list | jsonify }}}{% endfor %}
+    ],
+    "failure_patterns": [
+      {% for node in failure_patterns %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"FailurePattern","title":{{ node.title | jsonify }},"problem":{{ node.problem | jsonify }}}{% endfor %}
+    ],
+    "best_practices": [
+      {% for node in best_practices %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"BestPractice","title":{{ node.title | jsonify }},"practice":{{ node.practice | jsonify }},"source_ids":{{ node.source_ids | default: empty_list | jsonify }}}{% endfor %}
+    ],
+    "decision_profiles": [
+      {% for node in matrix.profiles %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"DecisionProfile","process":{{ node.process | jsonify }},"pattern_ids":{{ node.pattern_ids | default: empty_list | jsonify }},"autonomy_level":{{ node.recommended_autonomy | jsonify }},"risk_class":{{ node.risk_class | jsonify }},"failure_pattern_ids":{{ node.failure_pattern_ids | default: empty_list | jsonify }},"scenario_ids":{{ node.scenario_ids | default: empty_list | jsonify }},"required_controls":{{ node.required_controls | default: empty_list | jsonify }}}{% endfor %}
+    ],
+    "evidence_sources": [
+      {% for node in all_sources %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"EvidenceSource","record":{{ node | jsonify }}}{% endfor %}
+    ]
+  },
+  "edges": {
+    "process-crosses-domain": [
+      {% assign first_edge = true %}{% for process in process_map.processes %}{% for target_id in process.domains %}{% unless first_edge %},{% endunless %}{"id":{{ process.id | append: "-domain-" | append: target_id | jsonify }},"type":"process-crosses-domain","from":{{ process.id | jsonify }},"to":{{ target_id | jsonify }}}{% assign first_edge = false %}{% endfor %}{% endfor %}
+    ],
+    "process-uses-pattern": [
+      {% assign first_edge = true %}{% for process in process_map.processes %}{% for target_id in process.pattern_ids %}{% unless first_edge %},{% endunless %}{"id":{{ process.id | append: "-pattern-" | append: target_id | jsonify }},"type":"process-uses-pattern","from":{{ process.id | jsonify }},"to":{{ target_id | jsonify }}}{% assign first_edge = false %}{% endfor %}{% endfor %}
+    ],
+    "domain-supports-case": [
+      {% assign first_edge = true %}{% for domain in domain_map.domains %}{% for target_id in domain.case_ids %}{% unless first_edge %},{% endunless %}{"id":{{ domain.id | append: "-case-" | append: target_id | jsonify }},"type":"domain-supports-case","from":{{ domain.id | jsonify }},"to":{{ target_id | jsonify }}}{% assign first_edge = false %}{% endfor %}{% endfor %}
+    ],
+    "case-uses-pattern": [
+      {% assign first_edge = true %}{% for case in all_cases %}{% if case.pattern %}{% unless first_edge %},{% endunless %}{"id":{{ case.id | append: "-pattern-" | append: case.pattern | jsonify }},"type":"case-uses-pattern","from":{{ case.id | jsonify }},"to":{{ case.pattern | jsonify }}}{% assign first_edge = false %}{% endif %}{% endfor %}
+    ],
+    "decision-tests-failure": [
+      {% assign first_edge = true %}{% for profile in matrix.profiles %}{% for target_id in profile.failure_pattern_ids %}{% unless first_edge %},{% endunless %}{"id":{{ profile.id | append: "-failure-" | append: target_id | jsonify }},"type":"decision-tests-failure","from":{{ profile.id | jsonify }},"to":{{ target_id | jsonify }}}{% assign first_edge = false %}{% endfor %}{% endfor %}
+    ],
+    "decision-supported-by-outcome": [
+      {% assign first_edge = true %}{% for profile in matrix.profiles %}{% for target_id in profile.scenario_ids %}{% unless first_edge %},{% endunless %}{"id":{{ profile.id | append: "-outcome-" | append: target_id | jsonify }},"type":"decision-supported-by-outcome","from":{{ profile.id | jsonify }},"to":{{ target_id | jsonify }}}{% assign first_edge = false %}{% endfor %}{% endfor %}
+    ]
+  },
+  "proof_gaps": [
+    "Legacy process stages are strings and do not yet have stable graph IDs.",
+    "Legacy case process labels are not yet normalized to EndToEndProcess IDs.",
+    "Scenario outcome_state remains unknown until legacy scenario status is explicitly mapped."
+  ]
+}
