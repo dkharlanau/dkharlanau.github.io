@@ -3,44 +3,62 @@ layout: default
 title: "SAP Consulting FAQ — Dzmitryi Kharlanau"
 description: "Practical answers about SAP AMS, SD/MM process problems, master data, integration, clean core, and AI around SAP."
 permalink: /faq/
-last_modified_at: 2026-07-25
+last_modified_at: 2026-08-18
 ---
+
+{% assign faq = site.data.faq %}
 
 <main class="faq-canvas">
 <section class="section faq-canvas__hero">
   <header>
-    <p class="faq-canvas__eyebrow">Manager FAQ</p>
-    <h1>Questions before commissioning SAP work.</h1>
-    <p>The first decision is not a product choice. It is what blocks the process, who owns the outcome, and what evidence would change the next action.</p>
+    <p class="faq-canvas__eyebrow">{{ faq.eyebrow }}</p>
+    <h1>{{ faq.title }}</h1>
+    <p>{{ faq.intro }}</p>
   </header>
 </section>
 
 <section class="section faq-canvas__section" aria-labelledby="faq-list-title">
-  <header class="faq-canvas__heading"><p class="faq-canvas__eyebrow">Decision guide</p><h2 id="faq-list-title">Start with the question that matches the constraint.</h2></header>
+  <header class="faq-canvas__heading">
+    <p class="faq-canvas__eyebrow">Decision guide</p>
+    <h2 id="faq-list-title">{{ faq.decision_title }}</h2>
+  </header>
   <div class="faq-canvas__list">
-    <details open><summary><span>01</span><h2>What kind of SAP problem is the right fit?</h2><i class="material-symbols-outlined" aria-hidden="true">add</i></summary><p>The best fit is a problem that crosses boundaries: an order or invoice that cannot progress, recurring data repair, interfaces that are technically green but operationally unreliable, support cost that rises without an obvious volume explanation, or a change programme that creates more support work than it removes. The work begins with one visible failure pattern, then follows the dependencies around it.</p></details>
-    <details><summary><span>02</span><h2>Does this cover both SD/MM process work and technical investigation?</h2><i class="material-symbols-outlined" aria-hidden="true">add</i></summary><p>Yes. The public record includes SAP SD, MM, logistics, O2C, Automotive, Retail/AFS, MDG-related work, ABAP, and integration troubleshooting. That does not mean every problem needs a broad investigation; it means the investigation can distinguish a process issue from a data, configuration, enhancement, interface, or ownership issue before work is sent to the wrong team.</p></details>
-    <details><summary><span>03</span><h2>How does the first piece of work avoid becoming another generic assessment?</h2><i class="material-symbols-outlined" aria-hidden="true">add</i></summary><p>Choose one representative slice: a repeated delivery block, a failed Business Partner replication, a billing backlog, a noisy interface, or a planning exception. Agree the business consequence, collect a small safe evidence set, trace the flow, and produce a decision-ready brief. A broad transformation can follow later if the evidence warrants it.</p></details>
-    <details><summary><span>04</span><h2>What should a manager receive at the end of the first piece of work?</h2><i class="material-symbols-outlined" aria-hidden="true">add</i></summary><p>Usually a clear scope and symptom statement, an evidence checklist, an owner and dependency map, a reasoned split between quick controls and structural work, and a prioritised backlog. For support work, this may also include a KEDB structure or runbook. The intended result is not a slide deck that describes a problem; it is a practical basis for a business and delivery decision.</p></details>
-    <details><summary><span>05</span><h2>How is this different from simply closing incidents faster?</h2><i class="material-symbols-outlined" aria-hidden="true">add</i></summary><p>Fast closure is useful, but it can hide recurrence, undocumented workarounds, and fragile handovers. The better question is whether the next occurrence will be easier to diagnose, whether the accountable owner is clear, and whether the underlying control has improved. This is why incident patterns, evidence, and operational memory matter alongside SLA reporting.</p></details>
-    <details><summary><span>06</span><h2>Do MDG, a new integration platform, or BTP have to be the answer?</h2><i class="material-symbols-outlined" aria-hidden="true">add</i></summary><p>No. MDG can be appropriate when governance, traceability, and controlled change are genuinely required. Middleware, APIs, events, and BTP services can be appropriate when boundaries and operating responsibilities are clear. They are not substitutes for an owner, a data rule, a recovery model, or a business decision. The first job is to make that distinction explicit.</p></details>
-    <details><summary><span>07</span><h2>How should clean core and custom extensions be assessed?</h2><i class="material-symbols-outlined" aria-hidden="true">add</i></summary><p>Clean core is a decision about lifecycle burden, not a slogan about where code sits. Some logic should remain close to transactional truth; some should move to a side-by-side service with a clear contract; some should be retired. The meaningful test is whether the capability has a business owner, a support model, an upgrade path, and a reason to exist.</p></details>
-    <details><summary><span>08</span><h2>Where can AI help around SAP—and where should it stop?</h2><i class="material-symbols-outlined" aria-hidden="true">add</i></summary><p>AI can help retrieve prior knowledge, summarize evidence, compare recurring patterns, and draft a recommendation for review. It should not independently post business transactions, approve financial or commercial decisions, alter master data, or make unreviewed recovery changes. When a deterministic rule or ordinary automation is sufficient, it is usually the better tool.</p></details>
-    <details><summary><span>09</span><h2>How can internal teams, partners, and vendors work together?</h2><i class="material-symbols-outlined" aria-hidden="true">add</i></summary><p>By making the handoffs inspectable. Each finding should identify the process owner, data owner, technical or interface owner, the evidence required for the next step, and the decision that remains open. That makes it easier for internal teams and partners to contribute without turning every issue into a long escalation chain.</p></details>
-    <details><summary><span>10</span><h2>What evidence supports this positioning?</h2><i class="material-symbols-outlined" aria-hidden="true">add</i></summary><p>The <a href="/cv/">professional record</a> and <a href="/about/">profile</a> show public work history, domains, credentials, and publications. The <a href="/atlas/">Knowledge Atlas</a>, <a href="/scenarios/">scenarios</a>, <a href="/datasets/">datasets</a>, and <a href="/publications/">publications</a> show how the diagnostic and operating ideas are made concrete. Atlas and scenario pages keep their existing verification labels; they should be read with those boundaries in mind.</p></details>
+    {% for item in faq.items %}
+    <details{% if forloop.first %} open{% endif %}>
+      <summary>
+        <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+        <h2>{{ item.question }}</h2>
+        <i class="material-symbols-outlined" aria-hidden="true">add</i>
+      </summary>
+      <p>{{ item.answer }}</p>
+      {% if item.links and item.links.size > 0 %}
+      <p>
+        {% for link in item.links %}<a href="{{ link.url | relative_url }}">{{ link.label }}</a>{% unless forloop.last %} · {% endunless %}{% endfor %}
+      </p>
+      {% endif %}
+    </details>
+    {% endfor %}
   </div>
 </section>
 
 <section class="section faq-canvas__section">
   <div class="section-shell">
-    <header class="faq-canvas__heading"><p class="faq-canvas__eyebrow">Choose a starting point</p><h2>Start from the constraint you can already see.</h2></header>
-    <div class="decision-table"><table><thead><tr><th>If the visible problem is…</th><th>A sensible first route</th><th>Useful public context</th></tr></thead><tbody>
-      <tr><td>Repeated support incidents and weak handover</td><td><a href="/services/sap-ams-consulting/">SAP AMS consulting</a></td><td><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational memory for SAP AMS</a></td></tr>
-      <tr><td>Orders, deliveries, billing, or returns that keep breaking</td><td><a href="/services/sap-o2c-process-audit/">O2C process audit</a></td><td><a href="/atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/">O2C diagnostics hub</a></td></tr>
-      <tr><td>Failed replication, duplicate data, or repeated data correction</td><td><a href="/services/sap-master-data-stability-assessment/">Master data stability assessment</a></td><td><a href="/atlas/data-quality/sap-mdg-governance-patterns/">MDG governance patterns</a></td></tr>
-      <tr><td>Interface failures with unclear recovery ownership</td><td><a href="/services/sap-integration-reliability-assessment/">Integration reliability assessment</a></td><td><a href="/atlas/concepts/integration-ownership-model/">Integration ownership model</a></td></tr>
-      <tr><td>Pressure to introduce AI before the work is stable</td><td><a href="/services/sap-ai-ml-enablement/">Side-by-side AI and automation</a></td><td><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-based automation versus AI</a></td></tr>
-    </tbody></table></div>
+    <header class="faq-canvas__heading">
+      <p class="faq-canvas__eyebrow">Choose a starting point</p>
+      <h2>Start from the constraint you can already see.</h2>
+    </header>
+    <div class="decision-table">
+      <table>
+        <thead><tr><th>If the visible problem is…</th><th>A sensible first route</th><th>Useful public context</th></tr></thead>
+        <tbody>
+          <tr><td>Repeated support incidents and weak handover</td><td><a href="/services/sap-ams-consulting/">SAP AMS consulting</a></td><td><a href="/atlas/automation/operational-memory-for-sap-ams/">Operational memory for SAP AMS</a></td></tr>
+          <tr><td>Orders, deliveries, billing, or returns that keep breaking</td><td><a href="/services/sap-o2c-process-audit/">O2C process audit</a></td><td><a href="/atlas/diagnostics/sap-sd-order-to-cash-diagnostics-hub/">O2C diagnostics hub</a></td></tr>
+          <tr><td>Failed replication, duplicate data, or repeated data correction</td><td><a href="/services/sap-master-data-stability-assessment/">Master data stability assessment</a></td><td><a href="/atlas/data-quality/sap-mdg-governance-patterns/">MDG governance patterns</a></td></tr>
+          <tr><td>Interface failures with unclear recovery ownership</td><td><a href="/services/sap-integration-reliability-assessment/">Integration reliability assessment</a></td><td><a href="/atlas/concepts/integration-ownership-model/">Integration ownership model</a></td></tr>
+          <tr><td>Pressure to introduce AI before the work is stable</td><td><a href="/services/sap-ai-ml-enablement/">Side-by-side AI and automation</a></td><td><a href="/atlas/automation/rule-based-automation-vs-ai/">Rule-based automation versus AI</a></td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>
 </main>
@@ -49,11 +67,32 @@ last_modified_at: 2026-07-25
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  "@id": "{{ page.url | absolute_url }}#faq",
+  "url": "{{ page.url | absolute_url }}",
+  "name": {{ page.title | jsonify }},
   "mainEntity": [
-    {"@type":"Question","name":"What kind of SAP problem is the right fit?","acceptedAnswer":{"@type":"Answer","text":"The best fit is a problem that crosses process, data, integration, application, and operational boundaries. Work begins with one visible failure pattern and follows its dependencies."}},
-    {"@type":"Question","name":"How do you start without creating another generic assessment?","acceptedAnswer":{"@type":"Answer","text":"Choose one representative failure pattern, agree the business consequence, collect a safe evidence set, trace the flow, and produce a decision-ready brief."}},
-    {"@type":"Question","name":"Where can AI help around SAP?","acceptedAnswer":{"@type":"Answer","text":"AI can help retrieve knowledge, summarize evidence, compare recurring patterns, and draft material for review. It should not independently post transactions, approve high-impact decisions, alter master data, or make unreviewed recovery changes."}},
-    {"@type":"Question","name":"What evidence supports the positioning?","acceptedAnswer":{"@type":"Answer","text":"The public CV and profile show work history, domains, credentials, and publications. The Knowledge Atlas, scenarios, datasets, and publications show the diagnostic and operating ideas with their existing verification labels."}}
+    {% for item in faq.items %}
+    {
+      "@type": "Question",
+      "name": {{ item.question | jsonify }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ item.answer | jsonify }}
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "{{ page.url | absolute_url }}#breadcrumb",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ '/' | absolute_url }}"},
+    {"@type": "ListItem", "position": 2, "name": "FAQ", "item": "{{ page.url | absolute_url }}"}
   ]
 }
 </script>
