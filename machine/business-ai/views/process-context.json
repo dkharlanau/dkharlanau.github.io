@@ -1,0 +1,34 @@
+---
+layout: null
+permalink: /machine/business-ai/views/process-context.json
+sitemap: false
+---
+{% assign contract = site.data.labs.business_ai.contract %}
+{% assign process_map = site.data.labs.business_ai.process_map %}
+{% assign context = site.data.labs.business_ai.enterprise_context_links %}
+{
+  "schema": "business-ai-process-context@1",
+  "contract_version": {{ contract.contract.version | jsonify }},
+  "generated_at": {{ site.time | date_to_xmlschema | jsonify }},
+  "semantics": {{ context.semantics | jsonify }},
+  "process_links": [
+    {% for mapping in context.process_links %}
+      {% unless forloop.first %},{% endunless %}
+      {% assign matched_process = nil %}
+      {% for process in process_map.processes %}{% if process.id == mapping.process_id %}{% assign matched_process = process %}{% endif %}{% endfor %}
+      {
+        "id": {{ mapping.id | jsonify }},
+        "process_id": {{ mapping.process_id | jsonify }},
+        "process_title": {{ matched_process.title | jsonify }},
+        "process_canonical_ref": {{ "/labs/business-ai/processes/#" | append: mapping.process_id | jsonify }},
+        "context_pages": {{ mapping.context_pages | jsonify }},
+        "decision_points": {{ mapping.decision_points | jsonify }},
+        "business_rule_areas": {{ mapping.business_rule_areas | jsonify }},
+        "data_dependencies": {{ mapping.data_dependencies | jsonify }},
+        "integration_boundaries": {{ mapping.integration_boundaries | jsonify }},
+        "authority_boundaries": {{ mapping.authority_boundaries | jsonify }},
+        "control_boundaries": {{ mapping.control_boundaries | jsonify }}
+      }
+    {% endfor %}
+  ]
+}
