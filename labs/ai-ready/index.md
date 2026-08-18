@@ -7,7 +7,7 @@ status: reviewed
 verified: true
 robots: index,follow
 sitemap: true
-last_modified_at: 2026-08-16
+last_modified_at: 2026-08-18
 hide_global_cta: true
 tags: [ai, architecture, mcp, agents, rag, evals, security, automation]
 last_reviewed: 2026-08-16
@@ -49,7 +49,7 @@ semantic_links:
     </div>
     <div class="research-canvas__signal" aria-label="Review status">
       <p>Current baseline</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>7</strong><small>Architecture areas</small></div>
+      <div class="research-canvas__signal-line"><span>01</span><strong>8</strong><small>Architecture areas</small></div>
       <div class="research-canvas__signal-line"><span>02</span><strong>4</strong><small>Hands-on labs</small></div>
       <div class="research-canvas__signal-line"><span>03</span><strong>2026-07-28</strong><small>MCP revision tracked</small></div>
       <em>Reviewed 15 Aug 2026. Fast-moving protocol details are dated.</em>
@@ -85,11 +85,12 @@ semantic_links:
     <div class="research-route-list">
       <a href="/labs/ai-ready/system-boundaries/"><span>01</span><strong>System Boundaries</strong><small>Model vs application, structured output, state, memory, deterministic rules.</small><i class="material-symbols-outlined" aria-hidden="true">foundation</i></a>
       <a href="/labs/ai-ready/data-rag/"><span>02</span><strong>Data and RAG</strong><small>Sources, metadata, lexical/vector/hybrid retrieval, reranking, citations, permissions.</small><i class="material-symbols-outlined" aria-hidden="true">database</i></a>
-      <a href="/labs/ai-ready/tools-mcp/"><span>03</span><strong>Tools and MCP</strong><small>Typed tools, resources, prompts, transport, authorization, write safety, reuse.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="/labs/ai-ready/agent-architecture/"><span>04</span><strong>Agent Architecture</strong><small>Workflow, router, bounded tool loop, workers, budgets, termination, approval.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
-      <a href="/labs/ai-ready/evals-reliability/"><span>05</span><strong>Evals and Reliability</strong><small>Golden cases, deterministic graders, model graders, trajectory tests, regressions.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
-      <a href="/labs/ai-ready/security-governance/"><span>06</span><strong>Security and Governance</strong><small>Prompt injection, least privilege, secrets, sensitive data, approvals, audit.</small><i class="material-symbols-outlined" aria-hidden="true">shield</i></a>
-      <a href="/labs/ai-ready/build-operate/"><span>07</span><strong>Build and Operate</strong><small>Versions, deployment, traces, budgets, retries, degraded modes, rollback.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
+      <a href="/labs/ai-ready/data-platforms/"><span>03</span><strong>Modern Data Platforms</strong><small>Databricks, Snowflake, Fabric, BigQuery, Redshift, and the SAP data boundary.</small><i class="material-symbols-outlined" aria-hidden="true">dns</i></a>
+      <a href="/labs/ai-ready/tools-mcp/"><span>04</span><strong>Tools and MCP</strong><small>Typed tools, resources, prompts, transport, authorization, write safety, reuse.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
+      <a href="/labs/ai-ready/agent-architecture/"><span>05</span><strong>Agent Architecture</strong><small>Workflow, router, bounded tool loop, workers, budgets, termination, approval.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
+      <a href="/labs/ai-ready/evals-reliability/"><span>06</span><strong>Evals and Reliability</strong><small>Golden cases, deterministic graders, model graders, trajectory tests, regressions.</small><i class="material-symbols-outlined" aria-hidden="true">fact_check</i></a>
+      <a href="/labs/ai-ready/security-governance/"><span>07</span><strong>Security and Governance</strong><small>Prompt injection, least privilege, secrets, sensitive data, approvals, audit.</small><i class="material-symbols-outlined" aria-hidden="true">shield</i></a>
+      <a href="/labs/ai-ready/build-operate/"><span>08</span><strong>Build and Operate</strong><small>Versions, deployment, traces, budgets, retries, degraded modes, rollback.</small><i class="material-symbols-outlined" aria-hidden="true">rocket_launch</i></a>
     </div>
   </section>
 
