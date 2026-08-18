@@ -7,9 +7,12 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-15
+last_modified_at: 2026-08-18
 hide_global_cta: true
 tags: [ai, security, governance, prompt-injection, authorization, pii]
+career_impact: mapped
+career_skills:
+  - ai-security
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -134,6 +137,44 @@ intended use
 NIST AI RMF and the Generative AI Profile are useful references for organizing risk work across the lifecycle. They are voluntary frameworks, not a replacement for legal, security, or industry requirements.
 
 Reviewed source: [NIST AI RMF: Generative AI Profile](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence), reviewed 15 Aug 2026.
+
+## Evidence levels for AI security review
+
+Not every security statement carries the same evidentiary weight. For Codex Security and similar AI-assisted reviews, label findings by how strong the evidence is.
+
+### Source fact
+
+Something directly visible in code, configuration, logs, test output, scanner output, or provided materials.
+
+**Example:** “The pull request removes a role-checking helper from the account export route.”
+
+### Supported inference
+
+A reasonable conclusion drawn from available source facts.
+
+**Example:** “Because the route previously called the role-checking helper and now does not, authorization behavior may have changed for this action.”
+
+### Runtime proof
+
+Evidence observed from approved runtime testing.
+
+**Example:** “In the approved staging environment, a user without the export role successfully triggered the export endpoint.”
+
+Use this label only when runtime activity was explicitly authorized and observed.
+
+### Unsupported claim
+
+A statement that goes beyond available evidence.
+
+**Example:** “This issue allows any attacker to export all customer accounts” when no runtime test, access path, or data exposure proof has been established.
+
+### Proof gap
+
+Something that remains unproven and needs more evidence or human review.
+
+**Example:** “The review does not confirm whether upstream middleware still blocks this route at runtime.”
+
+This distinction protects credibility. It also helps customers understand what they can decide now and what still needs validation. A source fact or runtime proof can support a decision. A supported inference can justify more investigation. A proof gap should stay visible until it is resolved. An unsupported claim should not be presented as a finding.
 
 ## Minimum production controls
 
