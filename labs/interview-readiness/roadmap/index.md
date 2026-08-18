@@ -33,11 +33,11 @@ tags:
     </div>
     <div class="research-canvas__signal" aria-label="Career Factory model">
       <p>Career Factory</p>
-      <div class="research-canvas__signal-line"><span>01</span><strong>Labs</strong><small>Technical and business material</small></div>
-      <div class="research-canvas__signal-line"><span>02</span><strong>Skills</strong><small>What a Lead must demonstrate</small></div>
-      <div class="research-canvas__signal-line"><span>03</span><strong>Evidence</strong><small>Projects, decisions, artefacts</small></div>
-      <div class="research-canvas__signal-line"><span>04</span><strong>Practice</strong><small>Pressure-test the answer</small></div>
-      <em>CI checks the connection when Labs grow.</em>
+      <div class="research-canvas__signal-line"><span>01</span><strong>Discover</strong><small>Labs and Assessment change</small></div>
+      <div class="research-canvas__signal-line"><span>02</span><strong>Map</strong><small>Convert material into skills</small></div>
+      <div class="research-canvas__signal-line"><span>03</span><strong>Prove</strong><small>Attach evidence and stories</small></div>
+      <div class="research-canvas__signal-line"><span>04</span><strong>Defend</strong><small>Pressure-test the answer</small></div>
+      <em>CI blocks silent gaps in the career graph.</em>
     </div>
   </header>
 
@@ -71,17 +71,23 @@ tags:
     <div class="career-skill-list" id="career-skill-list"></div>
   </section>
 
+  <section class="research-canvas__inventory" id="career-factory" data-reveal>
+    <header><p class="research-canvas__eyebrow">Factory control room</p><h2>Every Lab change needs a career decision.</h2><p>The repository continuously inventories Lab pages, mapped skills, deliberate exclusions, and material that still needs a decision. Agents get the same queue as the human view.</p></header>
+    <div class="career-factory-control" id="career-factory-control" aria-live="polite"><p>Loading Career Factory inventory…</p></div>
+  </section>
+
   <section class="research-canvas__inventory" data-reveal>
     <header><p class="research-canvas__eyebrow">Factory rules</p><h2>The roadmap is maintained by the repository, not by memory.</h2><p>When Labs change, agents must make an explicit career decision. CI checks the contract before the change can quietly become part of the site.</p></header>
     <div class="career-factory-note">
       <span class="material-symbols-outlined" aria-hidden="true">factory</span>
-      <div><strong>New Lab page?</strong><p>Add <code>career_impact: mapped</code> with one or more skill IDs, or <code>career_impact: none</code> with a reason. The source model lives in <code>_data/career/roadmap.yml</code>. The <code>Career Factory</code> workflow validates skill IDs, source routes, and every new Lab Markdown file.</p></div>
+      <div><strong>New Lab page?</strong><p>Add <code>career_impact: mapped</code> with one or more skill IDs, or <code>career_impact: none</code> with a reason. Then regenerate the Career Factory inventory. CI validates skill IDs, source routes, inventory freshness, and every new Lab Markdown or static HTML route.</p></div>
     </div>
     <div class="research-route-list">
       <a href="/labs/interview-readiness/questions/"><span>Q</span><strong>Question Bank</strong><small>Turn mapped skills into explain, diagnose, design, and challenge questions.</small><i class="material-symbols-outlined" aria-hidden="true">quiz</i></a>
       <a href="/labs/interview-readiness/stories/"><span>E</span><strong>Story Bank</strong><small>Attach project evidence to the skills you claim at Lead level.</small><i class="material-symbols-outlined" aria-hidden="true">work_history</i></a>
       <a href="/labs/assessment/practice-engine/"><span>P</span><strong>Assessment Practice</strong><small>Pressure-test reasoning when self-reported confidence is not enough.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
-      <a href="/ai/career-roadmap.json"><span>AI</span><strong>Machine-readable Roadmap</strong><small>The same career model is available to agents and external tooling as JSON.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/ai/career-roadmap.json"><span>AI</span><strong>Machine-readable Roadmap</strong><small>The career skill model for agents and external tooling.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/ai/career-factory.json"><span>CI</span><strong>Career Factory Inventory</strong><small>Coverage, unmapped Lab material, and suggested skill mappings for the next agent run.</small><i class="material-symbols-outlined" aria-hidden="true">precision_manufacturing</i></a>
     </div>
   </section>
 </div>
