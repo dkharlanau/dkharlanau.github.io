@@ -38,12 +38,15 @@ def parse_frontmatter(path: Path) -> dict[str, Any]:
 def discover_permalink_map() -> dict[str, str]:
     routes: dict[str, str] = {}
     for path in ROOT.rglob("*.md"):
-        rel_parts = path.relative_to(ROOT).parts
-        if any(part in EXCLUDED_DIRS or part.startswith(".") for part in rel_parts):
+        rel = path.relative_to(ROOT)
+        if any(part in EXCLUDED_DIRS or part.startswith(".") for part in rel.parts):
             continue
         permalink = str(parse_frontmatter(path).get("permalink") or "").strip()
         if permalink:
-            routes[permalink.rstrip("/") + "/"] = path.relative_to(ROOT).as_posix()
+            routes[permalink.rstrip("/") + "/"] = rel.as_posix()
+        elif path.name == "index.md":
+            implicit = "/" + rel.parent.as_posix().strip("/") + "/"
+            routes[implicit] = rel.as_posix()
     return routes
 
 
