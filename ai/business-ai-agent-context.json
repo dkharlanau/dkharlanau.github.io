@@ -1,0 +1,71 @@
+---
+layout: null
+permalink: /ai/business-ai-agent-context.json
+robots: noindex,follow
+sitemap: false
+---
+{% assign model = site.data.labs.business_ai.agent_operating_model %}
+{% assign contract = site.data.labs.business_ai.contract %}
+{% assign process_map = site.data.labs.business_ai.process_map %}
+{% assign sap_links = site.data.labs.business_ai.sap_process_links %}
+{% assign domain_map = site.data.labs.business_ai.domain_map %}
+{% assign catalog = site.data.labs.business_ai.catalog %}
+{% assign expansion = site.data.labs.business_ai.expansion_2026_08_15 %}
+{% assign expansion_b = site.data.labs.business_ai.expansion_2026_08_15_b %}
+{% assign expansion_c = site.data.labs.business_ai.expansion_2026_08_15_c %}
+{% assign empty_list = "" | split: "" %}
+{% assign all_cases = catalog.cases | concat: expansion.cases | concat: expansion_b.cases | concat: expansion_c.cases %}
+{% assign all_patterns = catalog.patterns | concat: expansion.patterns | concat: expansion_b.patterns | concat: expansion_c.patterns %}
+{
+  "schema": {{ model.context_schema.id | jsonify }},
+  "schema_version": {{ model.context_schema.version | jsonify }},
+  "contract_version": {{ contract.contract.version | jsonify }},
+  "generated_at": {{ site.time | date_to_xmlschema | jsonify }},
+  "freshness": {
+    "operating_model_reviewed_at": {{ model.reviewed_at | jsonify }},
+    "business_ai_reviewed_at": {{ catalog.reviewed_at | jsonify }},
+    "rule": {{ model.context_schema.freshness_rule | jsonify }}
+  },
+  "canonical_id_indexes": {
+    "process_ids": [{% for item in process_map.processes %}{% unless forloop.first %},{% endunless %}{{ item.id | jsonify }}{% endfor %}],
+    "process_stage_ids": [{% for item in sap_links.process_stages %}{% unless forloop.first %},{% endunless %}{{ item.id | jsonify }}{% endfor %}],
+    "domain_ids": [{% for item in domain_map.domains %}{% unless forloop.first %},{% endunless %}{{ item.id | jsonify }}{% endfor %}],
+    "pattern_ids": [{% for item in all_patterns %}{% unless forloop.first %},{% endunless %}{{ item.id | jsonify }}{% endfor %}],
+    "case_ids": [{% for item in all_cases %}{% unless forloop.first %},{% endunless %}{{ item.id | jsonify }}{% endfor %}]
+  },
+  "canonical_id_rules": {{ contract.id_policy | jsonify }},
+  "evidence_policy": {
+    "evidence_levels": {{ contract.vocabularies.evidence_level | jsonify }},
+    "review_states": {{ contract.vocabularies.review_state | jsonify }},
+    "agent_maximum_state": {{ contract.review_lifecycle.agent_maximum_state | jsonify }},
+    "human_approval_state": {{ contract.review_lifecycle.human_approval_state | jsonify }},
+    "publication_boundary": {{ model.publication_boundary | jsonify }}
+  },
+  "packs": {
+    {% assign first_role = true %}
+    {% for role_pair in model.roles %}
+      {% unless first_role %},{% endunless %}{% assign first_role = false %}
+      {{ role_pair[0] | jsonify }}: {
+        "role_id": {{ role_pair[0] | jsonify }},
+        "pack_version": {{ model.context_schema.version | jsonify }},
+        "contract_version": {{ contract.contract.version | jsonify }},
+        "freshness": {{ model.reviewed_at | jsonify }},
+        "mission": {{ role_pair[1].mission | jsonify }},
+        "source_refs": {{ role_pair[1].source_refs | jsonify }},
+        "context_selection": {{ role_pair[1].context_selection | jsonify }},
+        "eligibility": {
+          "public_only": true,
+          "approved_not_required_for_working_research": true,
+          "approval_promotion_allowed": false,
+          "private_material_allowed": false
+        },
+        "skills": {{ role_pair[1].skills | jsonify }},
+        "allowed_outputs": {{ role_pair[1].allowed_outputs | jsonify }},
+        "review_boundary": {{ role_pair[1].review_boundary | jsonify }},
+        "stop_conditions": {{ role_pair[1].stop_conditions | jsonify }},
+        "handoff_to": {{ role_pair[1].handoff_to | jsonify }}
+      }
+    {% endfor %}
+  },
+  "handoff_contract": {{ model.orchestration.handoff_contract | jsonify }}
+}
