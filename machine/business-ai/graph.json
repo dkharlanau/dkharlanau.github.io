@@ -74,51 +74,51 @@ sitemap: false
     {% for process in processes %}
       {% for domain_id in process.domains %}
         {% unless first_edge %},{% endunless %}{% assign first_edge = false %}
-        {"type":"process-crosses-domain","from":{{ "process-" | append: process.id | jsonify }},"to":{{ "domain-" | append: domain_id | jsonify }}}
+        {"id":{{ "edge-process-domain-" | append: process.id | append: "-" | append: domain_id | jsonify }},"type":"process-crosses-domain","from":{{ "process-" | append: process.id | jsonify }},"to":{{ "domain-" | append: domain_id | jsonify }}}
       {% endfor %}
       {% for stage in process.stages %}
         {% assign stage_slug = stage | slugify %}
-        ,{"type":"process-has-stage","from":{{ "process-" | append: process.id | jsonify }},"to":{{ "stage-" | append: process.id | append: "-" | append: stage_slug | jsonify }}}
+        ,{"id":{{ "edge-process-stage-" | append: process.id | append: "-" | append: stage_slug | jsonify }},"type":"process-has-stage","from":{{ "process-" | append: process.id | jsonify }},"to":{{ "stage-" | append: process.id | append: "-" | append: stage_slug | jsonify }}}
       {% endfor %}
       {% for control in process.control_points %}
         {% assign control_slug = control | slugify %}
         {% for stage in process.stages %}
           {% assign stage_slug = stage | slugify %}
-          ,{"type":"stage-has-control","from":{{ "stage-" | append: process.id | append: "-" | append: stage_slug | jsonify }},"to":{{ "control-" | append: process.id | append: "-" | append: control_slug | jsonify }}}
+          ,{"id":{{ "edge-stage-control-" | append: process.id | append: "-" | append: stage_slug | append: "-" | append: control_slug | jsonify }},"type":"stage-has-control","from":{{ "stage-" | append: process.id | append: "-" | append: stage_slug | jsonify }},"to":{{ "control-" | append: process.id | append: "-" | append: control_slug | jsonify }}}
         {% endfor %}
       {% endfor %}
       {% for pattern_id in process.pattern_ids %}
         {% for stage in process.stages %}
           {% assign stage_slug = stage | slugify %}
-          ,{"type":"stage-uses-pattern","from":{{ "stage-" | append: process.id | append: "-" | append: stage_slug | jsonify }},"to":{{ "pattern-" | append: pattern_id | jsonify }}}
+          ,{"id":{{ "edge-stage-pattern-" | append: process.id | append: "-" | append: stage_slug | append: "-" | append: pattern_id | jsonify }},"type":"stage-uses-pattern","from":{{ "stage-" | append: process.id | append: "-" | append: stage_slug | jsonify }},"to":{{ "pattern-" | append: pattern_id | jsonify }}}
         {% endfor %}
       {% endfor %}
     {% endfor %}
     {% for item in all_cases %}
-      ,{"type":"case-uses-pattern","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "pattern-" | append: item.pattern | jsonify }}}
+      ,{"id":{{ "edge-case-pattern-" | append: item.id | append: "-" | append: item.pattern | jsonify }},"type":"case-uses-pattern","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "pattern-" | append: item.pattern | jsonify }}}
       {% for process_id in item.process_ids %}
-        ,{"type":"case-applies-to-process","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "process-" | append: process_id | jsonify }}}
+        ,{"id":{{ "edge-case-process-" | append: item.id | append: "-" | append: process_id | jsonify }},"type":"case-applies-to-process","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "process-" | append: process_id | jsonify }}}
       {% endfor %}
       {% for source_id in item.source_ids %}
-        ,{"type":"case-supported-by-evidence","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "evidence-" | append: source_id | jsonify }}}
+        ,{"id":{{ "edge-case-evidence-" | append: item.id | append: "-" | append: source_id | jsonify }},"type":"case-supported-by-evidence","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "evidence-" | append: source_id | jsonify }}}
       {% endfor %}
       {% for metric in item.reported_results %}
         {% assign metric_index = forloop.index %}
-        ,{"type":"case-reports-metric","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "metric-" | append: item.id | append: "-" | append: metric_index | jsonify }}}
+        ,{"id":{{ "edge-case-metric-" | append: item.id | append: "-" | append: metric_index | jsonify }},"type":"case-reports-metric","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "metric-" | append: item.id | append: "-" | append: metric_index | jsonify }}}
         {% for source_id in item.source_ids %}
-          ,{"type":"metric-supported-by-evidence","from":{{ "metric-" | append: item.id | append: "-" | append: metric_index | jsonify }},"to":{{ "evidence-" | append: source_id | jsonify }}}
+          ,{"id":{{ "edge-metric-evidence-" | append: item.id | append: "-" | append: metric_index | append: "-" | append: source_id | jsonify }},"type":"metric-supported-by-evidence","from":{{ "metric-" | append: item.id | append: "-" | append: metric_index | jsonify }},"to":{{ "evidence-" | append: source_id | jsonify }}}
         {% endfor %}
       {% endfor %}
       {% for limit in item.limits %}
-        ,{"type":"case-has-limitation","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "limitation-" | append: item.id | append: "-" | append: forloop.index | jsonify }}}
+        ,{"id":{{ "edge-case-limitation-" | append: item.id | append: "-" | append: forloop.index | jsonify }},"type":"case-has-limitation","from":{{ "case-" | append: item.id | jsonify }},"to":{{ "limitation-" | append: item.id | append: "-" | append: forloop.index | jsonify }}}
       {% endfor %}
     {% endfor %}
     {% for mapping in context.process_links %}
       {% for page in mapping.context_pages %}
-        ,{"type":"process-has-enterprise-context","from":{{ "process-" | append: mapping.process_id | jsonify }},"to":{{ "context-" | append: mapping.id | append: "-" | append: page.id | jsonify }},"boundary_types":{{ page.boundary_types | jsonify }}}
+        ,{"id":{{ "edge-process-context-" | append: mapping.id | append: "-" | append: page.id | jsonify }},"type":"process-has-enterprise-context","from":{{ "process-" | append: mapping.process_id | jsonify }},"to":{{ "context-" | append: mapping.id | append: "-" | append: page.id | jsonify }},"boundary_types":{{ page.boundary_types | jsonify }}}
         {% for stage in page.stages %}
           {% assign stage_slug = stage | slugify %}
-          ,{"type":"stage-has-enterprise-context","from":{{ "stage-" | append: mapping.process_id | append: "-" | append: stage_slug | jsonify }},"to":{{ "context-" | append: mapping.id | append: "-" | append: page.id | jsonify }},"boundary_types":{{ page.boundary_types | jsonify }}}
+          ,{"id":{{ "edge-stage-context-" | append: mapping.id | append: "-" | append: stage_slug | append: "-" | append: page.id | jsonify }},"type":"stage-has-enterprise-context","from":{{ "stage-" | append: mapping.process_id | append: "-" | append: stage_slug | jsonify }},"to":{{ "context-" | append: mapping.id | append: "-" | append: page.id | jsonify }},"boundary_types":{{ page.boundary_types | jsonify }}}
         {% endfor %}
       {% endfor %}
     {% endfor %}
