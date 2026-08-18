@@ -1,0 +1,45 @@
+name: Question Bank Atlas Sync Temp
+
+on:
+  push:
+    branches:
+      - agent/question-bank-v2
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/question-bank-v2
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python3 -m pip install pyyaml
+
+      - name: Generate Atlas discovery artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Commit affected discovery artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ai/expert-promotion-inventory.json ai/markdown-clusters.json
+          if git diff --cached --quiet; then
+            echo "Atlas discovery artifacts are already synchronized."
+            exit 0
+          fi
+          git commit -m "Sync Question Bank discovery artifacts"
+          git push origin HEAD:agent/question-bank-v2
