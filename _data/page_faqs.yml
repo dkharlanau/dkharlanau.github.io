@@ -163,3 +163,207 @@
     - question: "Why keep the architecture vendor-neutral at the start?"
       answer: >-
         Because process ownership, authority, data, integration, and evaluation exist regardless of the chosen platform. Vendor products matter, but they should fit the operating model instead of defining it by accident.
+
+"/labs/enterprise-context/procurement/":
+  eyebrow: "Procurement FAQ"
+  title: "Questions that separate purchasing symptoms from procurement decisions"
+  intro: "A purchase order is one point in a longer chain. These questions help locate the first wrong decision before changing the document."
+  items:
+    - question: "What should I check before changing a supplier on a purchase order?"
+      answer: >-
+        Start with the requirement and source-of-supply logic. Check source list, quota arrangement, purchasing info record, contracts or scheduling agreements, validity, plant, purchasing organization, and any fixed or blocked source. A wrong supplier field can be the result of an earlier sourcing decision.
+    - question: "What is the difference between item category and account assignment?"
+      answer: >-
+        Item category defines how the procurement item behaves, including whether goods receipt, service entry, subcontracting, consignment, or another special process is expected. Account assignment answers where the cost is charged. They solve different business questions and should be diagnosed separately.
+    - question: "Does source determination choose the cheapest supplier?"
+      answer: >-
+        Not by itself. Source determination first decides which sources are valid and eligible for the requirement. Price matters inside the commercial decision, but validity, plant, purchasing organization, fixed sources, quotas, blocks, and agreements can determine which source may be used.
+    - question: "Why can a purchase order be correct but the process still fail later?"
+      answer: >-
+        The PO only defines part of the process. Goods receipt, service confirmation, invoice verification, GR/IR, output, workflow, and downstream accounting still have their own controls. A correct order does not prove physical or financial completion.
+    - question: "Who owns an open GR/IR problem?"
+      answer: >-
+        Ownership depends on the first wrong state. Purchasing may own an incorrect PO, receiving may own a missing or wrong goods receipt, accounts payable may own invoice handling, and master-data or integration teams may own supporting defects. The balance is a symptom, not an ownership model.
+    - question: "When should procurement automation stop and ask for a human decision?"
+      answer: >-
+        Stop when the action changes supplier choice, commercial commitment, account assignment, approval, quantity, or another material business decision that is not fully determined by policy. Automation can prepare evidence and validate rules, but ambiguous or high-impact choices need an accountable owner.
+
+"/services/sap-planning-and-replenishment-assessment/":
+  eyebrow: "Planning business FAQ"
+  title: "Questions behind recurring shortages and expedites"
+  intro: "The useful question is not whether another alert can be created. It is whether the signal becomes an owned decision with evidence and a safe action boundary."
+  schema: false
+  items:
+    - question: "When is a recurring shortage a planning problem rather than a one-off incident?"
+      answer: >-
+        Treat it as a planning problem when the same exception class repeats, teams keep expediting or reallocating, and the reason is not captured in a stable decision path. Repetition across demand, supply, master data, policy, or timing is stronger evidence than one urgent case.
+    - question: "How do MRP, ATP, and inventory differ in a shortage discussion?"
+      answer: >-
+        Inventory describes physical or book stock, MRP plans supply and demand over time, and ATP or aATP evaluates what can be promised under its scope and policy. Mixing these views creates false explanations because each answers a different business question.
+    - question: "Who should own a customer commitment when supply is constrained?"
+      answer: >-
+        The owner should be defined by business policy, not by whichever team sees the exception first. Planning can prepare the supply picture, but commercial priority, allocation, and customer commitment often need an explicit sales, supply, or cross-functional decision owner.
+    - question: "What evidence should we collect before changing planning configuration?"
+      answer: >-
+        Use a small sample of repeated exceptions with demand, supply, dates, planning parameters, allocation or policy context, current document state, prior actions, and final business outcome. The goal is to find the first wrong assumption before changing a shared rule.
+    - question: "Can AI automatically reallocate supply or change confirmations?"
+      answer: >-
+        Not as a default. AI can summarize evidence, group similar exceptions, and suggest review questions. Reallocating constrained supply or changing a customer promise affects commercial and operational commitments and should stay behind deterministic checks and accountable approval.
+    - question: "What should management receive from a planning assessment?"
+      answer: >-
+        A decision-path map, evidence and ownership model, failure taxonomy, safe automation boundary, and a ranked backlog that separates data, process, control, integration, and platform work.
+
+"/services/sap-master-data-stability-assessment/":
+  eyebrow: "Master data business FAQ"
+  title: "Questions behind recurring master-data repair"
+  intro: "Repeated manual correction usually means the change lifecycle, ownership, or prevention control is weak somewhere before the transaction fails."
+  schema: false
+  items:
+    - question: "When is a master-data issue large enough to justify an assessment?"
+      answer: >-
+        When the same object class causes blocked transactions, repeated manual repair, duplicate records, failed replication, or recurring escalation. The important signal is repeated operational cost, not the number of fields in one bad record.
+    - question: "Do we need SAP MDG to solve master-data quality problems?"
+      answer: >-
+        Not automatically. First define which decisions need governance, who owns them, what must be validated, and which changes are low risk. MDG can support governance, but a tool cannot replace missing ownership or a poorly designed data contract.
+    - question: "Why can a source record be correct while the target process still fails?"
+      answer: >-
+        The target may need a role, organizational view, relationship, key mapping, reference value, or activation state that the source record does not prove. Replication success also does not guarantee that the receiving business process can use the object.
+    - question: "How should duplicate prevention work?"
+      answer: >-
+        Define business identity, authoritative keys, search rules, source-system responsibility, and the conditions that require human review. Prevention should happen before downstream replication where possible, because cleaning duplicates later is more expensive and riskier.
+    - question: "Who owns master data: business or IT?"
+      answer: >-
+        The business should own meaning, policy, and material decisions. IT owns technical controls, platforms, integration, and operational reliability. Good governance makes both responsibilities explicit instead of assigning the whole object to one team.
+    - question: "Can AI merge duplicate business partners automatically?"
+      answer: >-
+        It should not make that decision by default. AI can propose duplicate candidates and summarize evidence, but legal identity, contractual relationships, tax context, credit exposure, and downstream references can make a merge high risk.
+
+"/labs/enterprise-context/master-data/":
+  eyebrow: "Master data architecture FAQ"
+  title: "Questions before changing a BP, customer, or product record"
+  intro: "The word correct is incomplete without a role, organizational level, runtime consumer, and replication state."
+  schema: false
+  items:
+    - question: "Why can a Business Partner be valid for one process and fail in another?"
+      answer: >-
+        A Business Partner has several business contexts. General identity, customer roles, sales-area data, company-code data, partner functions, and credit data can be complete at different levels. Always ask which role and organizational view the failing process needs.
+    - question: "What does it mean when someone says the material master is correct?"
+      answer: >-
+        It is not enough evidence. Product behavior depends on the relevant organizational view, such as sales organization and distribution channel or plant. Compare the failing and working cases at the same level used by the runtime decision.
+    - question: "Is there one universal precedence order for master data?"
+      answer: >-
+        No. Precedence belongs to a specific determination. Plant, shipping condition, partner determination, pricing, ATP, and other decisions can use different inputs and rules. Trace the actual engine instead of assuming one global priority.
+    - question: "Why is successful replication not proof of correct master data?"
+      answer: >-
+        Replication proves movement, not business usability. The target can receive the message and still have a missing role, wrong mapping, incomplete organizational extension, stale reference data, or a local rule that changes the result.
+    - question: "How should a master-data change be regression tested?"
+      answer: >-
+        Identify every important runtime consumer of the changed field and test the affected organizational levels. A field changed to fix shipping may also influence pricing, ATP, credit, billing, procurement, or reporting.
+    - question: "Where should validation live?"
+      answer: >-
+        Put deterministic validity checks as close as possible to the point where incorrect data can still be prevented. Keep cross-system consistency and consumer-specific validation explicit rather than assuming one central rule can safely own every context.
+
+"/labs/enterprise-context/pricing/":
+  eyebrow: "Pricing FAQ"
+  title: "Questions that find the first wrong pricing decision"
+  intro: "A condition record is only one step. Start with document context and follow the search and calculation path until reality diverges from expectation."
+  items:
+    - question: "Why is the price wrong even though the condition record exists?"
+      answer: >-
+        The expected pricing procedure, condition type, access, and runtime key may not have been used. The record may also be inactive because of a requirement, exclusion, scale, formula, or another condition interaction. Existence is not proof of selection or activation.
+    - question: "What should I check first in SAP pricing troubleshooting?"
+      answer: >-
+        Start with the expected commercial result and document context, then confirm the pricing procedure. After that, follow condition eligibility, access sequence, runtime key, record match, calculation, and condition interaction in order.
+    - question: "Why can sales order and billing prices differ?"
+      answer: >-
+        Order and billing can be different pricing contexts depending on configuration, pricing type, dates, copied conditions, and later business changes. Compare the two pricing paths before assuming that one document copied the other incorrectly.
+    - question: "How do I know whether the problem is configuration or master data?"
+      answer: >-
+        Configuration defines the search and calculation rules; master data and condition records provide runtime inputs. Prove which rule path executed and which values it used. Changing shared configuration to repair one bad record can create a much larger blast radius.
+    - question: "Where should custom pricing logic live?"
+      answer: >-
+        Use standard condition technique and supported configuration first. Add custom logic only when the business rule cannot be represented safely in standard behavior, and place it where its data, transaction coupling, lifecycle, and upgrade impact are explicit.
+    - question: "Can AI decide customer prices or discounts?"
+      answer: >-
+        AI can help analyze patterns or prepare a recommendation, but final price determination should remain inside controlled commercial rules and approval policy. A probabilistic suggestion should not silently replace contractual, regulatory, or margin controls.
+
+"/labs/enterprise-context/atp/":
+  eyebrow: "ATP and aATP FAQ"
+  title: "Questions behind an unexpected confirmation"
+  intro: "Availability is a promise calculation over time and policy. A stock number is only one input."
+  items:
+    - question: "Why can SAP show stock but confirm zero quantity?"
+      answer: >-
+        The stock may not be inside the relevant ATP scope, plant, date, checking context, or policy boundary. Existing requirements, receipts, safety or protection rules, scheduling, and advanced aATP controls can all change what is available to promise.
+    - question: "What is the difference between inventory and ATP?"
+      answer: >-
+        Inventory tells you what stock exists. ATP evaluates what quantity can be promised for a requirement and date using a defined scope of supply and demand. The two numbers can legitimately differ.
+    - question: "Do classic ATP controls still matter when aATP is used?"
+      answer: >-
+        Yes. Requirement relevance, checking group, checking rule, scope, plant, and scheduling still form the context in which advanced capabilities operate. Advanced logic does not repair a wrong basic availability context.
+    - question: "What is the difference between Product Allocation and Supply Protection?"
+      answer: >-
+        Both control scarce supply, but they express different business policies. Product Allocation limits confirmation against allocation quantities, while Supply Protection reserves supply for protected groups or priorities. The design should start from the business rule, not the feature name.
+    - question: "Why did a previously confirmed order lose or gain quantity after BOP?"
+      answer: >-
+        Backorder Processing can re-evaluate confirmations according to its selection and confirmation strategies. The important question is which business priority rule was applied and whether the resulting commitments remain acceptable downstream.
+    - question: "Who should own scarce-supply priority?"
+      answer: >-
+        SAP executes the configured rule, but the business must own the policy. Sales priority, customer importance, contractual commitments, supply constraints, and margin can conflict, so scarce-supply decisions need explicit governance.
+    - question: "What is the fastest diagnostic path for a wrong ATP result?"
+      answer: >-
+        Reconstruct the requirement, plant, material availability date, ATP relevance, scope, supply-demand picture, PAC result, and any PAL, Supply Protection, alternatives, or BOP rules. Find the first point where the actual promise differs from the expected one.
+
+"/labs/enterprise-context/decisions/clean-core-extension-placement/":
+  eyebrow: "Clean core FAQ"
+  title: "Questions before choosing on-stack or side-by-side extensibility"
+  intro: "Clean core is a boundary decision about coupling and lifecycle. Moving code is not the same as reducing dependency."
+  items:
+    - question: "What does clean core mean for a real SAP extension decision?"
+      answer: >-
+        Prefer standard behavior first, then released extensibility contracts. Keep logic close to SAP when it must share the transaction and authoritative state. Move capabilities side-by-side when they should have a separate lifecycle, cross-system scope, or independent runtime.
+    - question: "Is side-by-side on SAP BTP always more clean-core compliant?"
+      answer: >-
+        No. A remote service can still be tightly coupled if every SAP transaction depends on it synchronously. The code may be outside S/4HANA while the business transaction becomes more fragile because of network, latency, or availability dependency.
+    - question: "When should logic stay on-stack?"
+      answer: >-
+        Keep logic on-stack when it is tightly coupled to an SAP business object, must participate in the same consistency boundary, or needs authoritative transactional state with low latency. Use released extension points and ABAP Cloud-compatible contracts where possible.
+    - question: "When is side-by-side a better fit?"
+      answer: >-
+        Side-by-side is strong for cross-system processes, external data ownership, independent scaling, separate product-team lifecycle, different runtime needs, or capabilities that should evolve without coupling their deployment to the S/4HANA core.
+    - question: "Should we extend SAP when configuration or master data can represent the rule?"
+      answer: >-
+        Usually no. If standard configuration or governed master data already owns the requirement, an extension creates another rule owner and another lifecycle without adding business value.
+    - question: "Why do released APIs, events, BAdIs, and CDS views matter?"
+      answer: >-
+        Released contracts define a supported boundary that is safer across upgrades than direct dependency on internal objects. They do not remove design responsibility, but they reduce accidental coupling to implementation details.
+    - question: "How should existing custom code be assessed for clean core?"
+      answer: >-
+        Classify each extension by business owner, transaction coupling, data ownership, released dependency, failure behavior, change frequency, and upgrade cost. The target can be keep, replace with standard, refactor on-stack, move side-by-side, or retire.
+
+"/labs/enterprise-context/integration-operations/":
+  eyebrow: "Integration operations FAQ"
+  title: "Questions to answer before retrying a failed interface"
+  intro: "Recovery starts with message identity and receiver state. A restart button is not a recovery model."
+  items:
+    - question: "Why can the middleware message be green while the business process is wrong?"
+      answer: >-
+        Technical delivery, application processing, and business completion are different states. A message can arrive successfully while the receiver rejects, partially processes, duplicates, or commits a business object that does not match the sender's intent.
+    - question: "What should I know before retrying or replaying a message?"
+      answer: >-
+        Know the message identity, first failed hop, receiver commit state, ordering dependency, and duplicate protection. If the receiver may already have committed, a blind retry can create a second business transaction.
+    - question: "What is the dangerous case after a timeout?"
+      answer: >-
+        The dangerous case is unknown commit state. The sender may see a timeout while the receiver completed the transaction. Recovery must check the target business object or idempotency key before deciding whether another write is safe.
+    - question: "Does exactly-once delivery mean the business transaction can never duplicate?"
+      answer: >-
+        No. Delivery semantics apply to a specific technical boundary. Duplicates can still appear through retries across other hops, application behavior, manual recovery, or missing business idempotency. Business uniqueness needs its own control.
+    - question: "When should we replay a message and when should we repair data first?"
+      answer: >-
+        Replay when the original payload is still valid and the failure is safely recoverable. Repair data or business state first when the receiver rejected the message for a valid reason, reference data changed, ordering is wrong, or replay would repeat the same defect.
+    - question: "Who owns an interface incident?"
+      answer: >-
+        Ownership follows the first wrong state. The source owns bad source data or business intent, integration owns transport and mapping defects, the target owns target processing, and a business owner must confirm the final process result. One incident may cross several teams, but each decision should have one accountable owner.
+    - question: "Which metrics matter more than message volume?"
+      answer: >-
+        Track aging failures, retry count, duplicates, unknown commit cases, business reconciliation failures, manual recovery effort, time to ownership, and time to business completion. High message throughput is not evidence of a healthy process.
