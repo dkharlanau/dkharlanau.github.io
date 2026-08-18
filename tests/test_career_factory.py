@@ -67,6 +67,12 @@ def test_career_factory_ci_enforces_new_lab_impact():
     assert "career_impact: mapped" in contract
     assert "career_impact: none" in contract
     assert "career_skills" in contract
+    assert "index.html" in contract
+    assert "lab_exclusions" in contract
+    validator = (ROOT / "scripts" / "check_career_factory.py").read_text(encoding="utf-8")
+    assert "changed_lab_content" in validator
+    assert "candidate.endswith(\".html\")" in validator
+    assert "new static Lab route" in validator
 
 
 def test_machine_readable_career_endpoint_exists():
