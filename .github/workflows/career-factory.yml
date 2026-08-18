@@ -1,0 +1,54 @@
+name: Career Factory
+
+on:
+  pull_request:
+    paths:
+      - 'labs/**'
+      - '_data/career/**'
+      - 'assets/js/career-roadmap.js'
+      - 'assets/css/career-roadmap.css'
+      - 'ai/career-roadmap.json'
+      - 'scripts/check_career_factory.py'
+      - 'tests/test_career_factory.py'
+      - '.github/workflows/career-factory.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'labs/**'
+      - '_data/career/**'
+      - 'assets/js/career-roadmap.js'
+      - 'assets/css/career-roadmap.css'
+      - 'ai/career-roadmap.json'
+      - 'scripts/check_career_factory.py'
+      - 'tests/test_career_factory.py'
+      - '.github/workflows/career-factory.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python3 -m pip install pytest pyyaml
+
+      - name: Validate career roadmap model
+        run: python3 scripts/check_career_factory.py
+
+      - name: Enforce new Lab career impact
+        if: github.event_name == 'pull_request'
+        run: python3 scripts/check_career_factory.py --changed-from origin/${{ github.base_ref }}
+
+      - name: Run Career Factory tests
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests/test_career_factory.py tests/test_interview_readiness.py

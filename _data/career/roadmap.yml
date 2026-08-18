@@ -1,0 +1,455 @@
+version: 1
+updated_at: 2026-08-18
+title: SAP Lead Career Roadmap
+summary: A skills-first map that connects interview readiness to Labs, assessment practice, frameworks, and public evidence.
+
+stages:
+  - id: know
+    label: Know
+    description: Explain the business purpose, main objects, and process flow.
+  - id: diagnose
+    label: Diagnose
+    description: Find the failure boundary, collect evidence, and separate causes from symptoms.
+  - id: design
+    label: Design
+    description: Compare options, define ownership, and build a recoverable solution.
+  - id: lead
+    label: Lead
+    description: Defend trade-offs, challenge weak requirements, and drive a decision across teams.
+
+tiers:
+  core:
+    label: Core
+    description: Expected from a strong SAP Lead candidate.
+  cross_boundary:
+    label: Cross-boundary
+    description: Connects modules, systems, data, operations, and business outcomes.
+  differentiator:
+    label: Differentiator
+    description: Makes the profile stronger than a narrow module specialist.
+
+tracks:
+  sales:
+    order: 1
+    label: Sales & O2C
+    short_label: Sales
+    statement: Control the commercial flow from demand and pricing to delivery, billing, and accounting hand-off.
+  logistics:
+    order: 2
+    label: Procurement & Logistics
+    short_label: Logistics
+    statement: Connect purchasing, inventory, warehouse, production, quality, and master data decisions.
+  integration:
+    order: 3
+    label: Integration & Architecture
+    short_label: Integration
+    statement: Design boundaries that remain observable, recoverable, and owned after go-live.
+  ai:
+    order: 4
+    label: AI & Data
+    short_label: AI & Data
+    statement: Qualify AI use cases through process, data, control, evaluation, and production ownership.
+  delivery:
+    order: 5
+    label: Delivery & Operations
+    short_label: Delivery
+    statement: Show that the solution can be tested, released, operated, observed, and improved safely.
+  leadership:
+    order: 6
+    label: Lead & Consulting
+    short_label: Leadership
+    statement: Turn technical knowledge into decisions, alignment, evidence, and accountable delivery.
+
+skills:
+  - id: sales-o2c
+    track: sales
+    title: Order-to-Cash control
+    tier: core
+    why: Explain the full business flow before discussing one transaction or configuration point.
+    interview_signal: You can connect customer demand, sales documents, logistics execution, billing, and accounting impact.
+    capabilities: [know, diagnose, design, lead]
+    sources:
+      - {kind: lab, label: Sales Processes, href: /labs/enterprise-context/sales-processes/}
+  - id: sales-pricing
+    track: sales
+    title: Pricing and commercial conditions
+    tier: core
+    why: Pricing failures cross master data, condition records, access logic, custom code, and commercial ownership.
+    interview_signal: You can explain condition technique without turning the answer into a configuration dump.
+    capabilities: [know, diagnose, design]
+    sources:
+      - {kind: lab, label: Pricing, href: /labs/enterprise-context/pricing/}
+  - id: sales-atp
+    track: sales
+    title: ATP and business promise
+    tier: core
+    why: Separate physical stock, availability, confirmation, delivery readiness, and the promise made to the customer.
+    interview_signal: You can explain why stock can exist while an order still cannot be confirmed or delivered.
+    capabilities: [know, diagnose, design]
+    sources:
+      - {kind: lab, label: ATP, href: /labs/enterprise-context/atp/}
+  - id: sales-shipping
+    track: sales
+    title: Shipping and delivery execution
+    tier: core
+    why: Trace readiness from the sales order into delivery, picking, goods issue, and exceptions.
+    interview_signal: You can find where ownership changes between sales, warehouse, transport, and finance.
+    capabilities: [know, diagnose, design]
+    sources:
+      - {kind: lab, label: Shipping, href: /labs/enterprise-context/shipping/}
+  - id: sales-billing
+    track: sales
+    title: Billing and accounting hand-off
+    tier: core
+    why: Billing is where commercial rules, document flow, blocks, and finance consequences meet.
+    interview_signal: You can diagnose why billing did not happen even when logistics execution succeeded.
+    capabilities: [know, diagnose, design]
+    sources:
+      - {kind: lab, label: Billing, href: /labs/enterprise-context/billing/}
+  - id: sales-credit
+    track: sales
+    title: Credit and order risk
+    tier: cross_boundary
+    why: Credit connects business risk, order checks, blocks, release decisions, and execution.
+    interview_signal: You can explain who owns the risk decision and what evidence supports release or rejection.
+    capabilities: [know, diagnose, lead]
+    sources:
+      - {kind: lab, label: Credit Management, href: /labs/enterprise-context/credit/}
+  - id: sales-diagnostics
+    track: sales
+    title: Sales diagnostics
+    tier: cross_boundary
+    why: A Lead should move from symptom to document flow, data, configuration, enhancement, and interface evidence.
+    interview_signal: You can structure a production investigation instead of guessing the most familiar cause.
+    capabilities: [diagnose, lead]
+    sources:
+      - {kind: lab, label: Sales Diagnostics, href: /labs/enterprise-context/sales-diagnostics/}
+
+  - id: logistics-p2p
+    track: logistics
+    title: Procure-to-Pay control
+    tier: core
+    why: Explain demand, sourcing, purchasing, receipt, invoice, and ownership across the process.
+    interview_signal: You can show where purchasing decisions depend on master data, inventory, finance, and suppliers.
+    capabilities: [know, diagnose, design, lead]
+    sources:
+      - {kind: lab, label: Procurement, href: /labs/enterprise-context/procurement/}
+  - id: logistics-inventory
+    track: logistics
+    title: Inventory and movement logic
+    tier: core
+    why: Separate physical stock, book stock, movement types, reservations, status, and availability.
+    interview_signal: You can investigate why stock exists but cannot be used by the business process.
+    capabilities: [know, diagnose, design]
+    sources:
+      - {kind: lab, label: Inventory Management, href: /labs/enterprise-context/inventory-management/}
+  - id: logistics-master-data
+    track: logistics
+    title: Material and master data behaviour
+    tier: core
+    why: Master data is process control, not administrative background.
+    interview_signal: You connect material settings and governance choices to concrete process behaviour.
+    capabilities: [know, diagnose, design]
+    sources:
+      - {kind: lab, label: Material Behaviour, href: /labs/enterprise-context/material-behavior/}
+      - {kind: lab, label: Master Data, href: /labs/enterprise-context/master-data/}
+  - id: logistics-ewm
+    track: logistics
+    title: Warehouse and EWM boundaries
+    tier: cross_boundary
+    why: Know what belongs in warehouse execution and what remains in inventory, sales, transport, or production.
+    interview_signal: You can explain when EWM adds useful control and when it adds unnecessary complexity.
+    capabilities: [know, design, lead]
+    sources:
+      - {kind: lab, label: EWM, href: /labs/enterprise-context/ewm/}
+  - id: logistics-tm
+    track: logistics
+    title: Transportation boundaries
+    tier: cross_boundary
+    why: Transport planning and execution depend on sales, delivery, warehouse, carrier, and cost decisions.
+    interview_signal: You can place TM correctly in an end-to-end logistics architecture.
+    capabilities: [know, design]
+    sources:
+      - {kind: lab, label: Transportation Management, href: /labs/enterprise-context/transportation-management/}
+  - id: logistics-production-quality
+    track: logistics
+    title: Production and quality touchpoints
+    tier: cross_boundary
+    why: A logistics Lead must trace demand, supply, staging, quality status, and blocked execution across boundaries.
+    interview_signal: You know enough outside MM and SD to find the real owner of a blocked process.
+    capabilities: [know, diagnose]
+    sources:
+      - {kind: lab, label: Production, href: /labs/enterprise-context/production/}
+      - {kind: lab, label: Quality Management, href: /labs/enterprise-context/quality-management/}
+  - id: logistics-mdg
+    track: logistics
+    title: MDG and data governance
+    tier: differentiator
+    why: Governance decisions affect approval, replication, ownership, and downstream process quality.
+    interview_signal: You can discuss data quality as an operating model, not just a master-data tool.
+    capabilities: [know, diagnose, design, lead]
+    sources:
+      - {kind: lab, label: MDG, href: /labs/enterprise-context/mdg/}
+      - {kind: lab, label: Data Governance, href: /labs/enterprise-context/data-governance/}
+
+  - id: integration-patterns
+    track: integration
+    title: Integration pattern selection
+    tier: core
+    why: Choose API, IDoc, event, file, or synchronous call from business and operational needs.
+    interview_signal: You can explain why a pattern fits the process instead of choosing a technology by habit.
+    capabilities: [know, design, lead]
+    sources:
+      - {kind: lab, label: Integrations, href: /labs/enterprise-context/integrations/}
+  - id: integration-recovery
+    track: integration
+    title: Integration recovery and idempotency
+    tier: core
+    why: Production integration is about monitoring, retry, duplicate control, ownership, and recovery.
+    interview_signal: You can design for failure instead of treating transport success as business success.
+    capabilities: [diagnose, design, lead]
+    sources:
+      - {kind: lab, label: Integration Operations, href: /labs/enterprise-context/integration-operations/}
+  - id: integration-development
+    track: integration
+    title: Configuration, code, and extension boundary
+    tier: core
+    why: Separate process, configuration, enhancement, custom code, and external integration responsibilities.
+    interview_signal: You know when ABAP or an extension is justified and when it is only hiding a process problem.
+    capabilities: [diagnose, design, lead]
+    sources:
+      - {kind: lab, label: Development, href: /labs/enterprise-context/development/}
+  - id: integration-cleancore
+    track: integration
+    title: Clean core and side-by-side architecture
+    tier: cross_boundary
+    why: Core stability must be balanced with business change, integration, and extension needs.
+    interview_signal: You can defend a boundary without repeating clean-core slogans.
+    capabilities: [know, design, lead]
+    sources:
+      - {kind: framework, label: Frameworks, href: /frameworks/}
+      - {kind: assessment, label: Core Boundaries, href: /labs/assessment/core-boundaries/}
+  - id: integration-deployment
+    track: integration
+    title: Deployment model trade-offs
+    tier: cross_boundary
+    why: Public cloud, private cloud, and on-premise choices change extension, operations, upgrade, and ownership constraints.
+    interview_signal: You can discuss architecture choices as business and operating decisions.
+    capabilities: [know, design, lead]
+    sources:
+      - {kind: lab, label: Deployment Models, href: /labs/enterprise-context/deployment-models/}
+  - id: integration-observability
+    track: integration
+    title: End-to-end observability
+    tier: cross_boundary
+    why: Technical message status is not enough when the business outcome spans several systems.
+    interview_signal: You connect monitoring evidence to process outcome, SLA, recovery, and ownership.
+    capabilities: [diagnose, design, lead]
+    sources:
+      - {kind: lab, label: End-to-End Analytics, href: /labs/enterprise-context/end-to-end-analytics/}
+  - id: integration-ownership
+    track: integration
+    title: Cross-system ownership
+    tier: differentiator
+    why: Every integration needs owners for the business outcome, data, contract, processing, and recovery.
+    interview_signal: You can stop the common situation where every component is green but nobody owns the failure.
+    capabilities: [design, lead]
+    sources:
+      - {kind: lab, label: Logistics Capabilities, href: /labs/enterprise-context/logistics-capabilities/}
+      - {kind: assessment, label: Architecture Board, href: /labs/assessment/board/}
+
+  - id: ai-readiness
+    track: ai
+    title: AI readiness and use-case qualification
+    tier: core
+    why: Start with process, data, controls, evaluation, and operating boundary before choosing a model.
+    interview_signal: You can reject weak AI use cases for concrete business and control reasons.
+    capabilities: [know, diagnose, design, lead]
+    sources:
+      - {kind: lab, label: AI Ready, href: /labs/ai-ready/}
+  - id: ai-business-value
+    track: ai
+    title: Business AI value
+    tier: core
+    why: An AI use case needs a measurable job, outcome, owner, and acceptable risk.
+    interview_signal: You measure work reduction, cycle time, decision quality, or risk instead of generated-answer counts.
+    capabilities: [know, design, lead]
+    sources:
+      - {kind: lab, label: Business AI, href: /labs/business-ai/}
+  - id: ai-retrieval
+    track: ai
+    title: Retrieval, grounding, and context
+    tier: cross_boundary
+    why: Source quality, chunking, retrieval, permissions, and generation are different failure layers.
+    interview_signal: You can diagnose a wrong answer without blaming the model first.
+    capabilities: [know, diagnose, design]
+    sources:
+      - {kind: lab, label: AI Ready, href: /labs/ai-ready/}
+  - id: ai-agents-mcp
+    track: ai
+    title: Agents, tools, and MCP
+    tier: differentiator
+    why: Agents need tool contracts, state, approvals, permissions, and recovery paths.
+    interview_signal: You explain what MCP enables and what governance problems it does not solve.
+    capabilities: [know, design, lead]
+    sources:
+      - {kind: machine, label: Machine Layer, href: /machine/}
+      - {kind: lab, label: AI Ready, href: /labs/ai-ready/}
+  - id: ai-evaluation
+    track: ai
+    title: AI evaluation
+    tier: core
+    why: Define what good means before arguing about model quality or production readiness.
+    interview_signal: You can define task-level metrics, failure classes, test sets, and release criteria.
+    capabilities: [diagnose, design, lead]
+    sources:
+      - {kind: lab, label: AI Ready, href: /labs/ai-ready/}
+  - id: ai-security
+    track: ai
+    title: AI security and access control
+    tier: cross_boundary
+    why: Identity, permissions, data exposure, prompt injection, logging, and human control are production requirements.
+    interview_signal: You can keep AI assistance inside the same enterprise control model as other production capabilities.
+    capabilities: [diagnose, design, lead]
+    sources:
+      - {kind: lab, label: AI Ready, href: /labs/ai-ready/}
+  - id: ai-data-governance
+    track: ai
+    title: Data governance for AI
+    tier: differentiator
+    why: Retrieval quality and automation safety depend on governed source data and clear ownership.
+    interview_signal: You connect AI quality to lineage, access, freshness, master data, and evidence.
+    capabilities: [know, diagnose, design, lead]
+    sources:
+      - {kind: lab, label: Data Governance, href: /labs/enterprise-context/data-governance/}
+
+  - id: delivery-lifecycle
+    track: delivery
+    title: Delivery lifecycle and quality gates
+    tier: core
+    why: A Lead must turn a design into controlled build, test, release, handover, and improvement work.
+    interview_signal: You can define gates and acceptance evidence instead of managing delivery by meeting cadence.
+    capabilities: [design, lead]
+    sources:
+      - {kind: assessment, label: Assessment Start, href: /labs/assessment/start-here/}
+  - id: delivery-testing
+    track: delivery
+    title: Test strategy across process boundaries
+    tier: core
+    why: Unit tests are not enough when a business process crosses configuration, code, data, and interfaces.
+    interview_signal: You can design risk-based testing with business outcomes and failure paths.
+    capabilities: [diagnose, design, lead]
+    sources:
+      - {kind: assessment, label: Evidence Coverage, href: /labs/assessment/evidence-coverage/}
+  - id: delivery-cicd
+    track: delivery
+    title: CI/CD and automated quality gates
+    tier: differentiator
+    why: Repeatable checks reduce regression risk and make delivery rules visible to humans and agents.
+    interview_signal: You can explain what should be automated, what still needs human review, and how a failed gate blocks promotion.
+    capabilities: [know, design, lead]
+    sources:
+      - {kind: framework, label: Frameworks, href: /frameworks/}
+  - id: delivery-release
+    track: delivery
+    title: Release and change control
+    tier: core
+    why: A technically correct change still needs sequencing, rollback, ownership, and business readiness.
+    interview_signal: You can discuss release risk, dependencies, cutover, rollback, and communication.
+    capabilities: [design, lead]
+    sources:
+      - {kind: assessment, label: Core Boundaries, href: /labs/assessment/core-boundaries/}
+  - id: delivery-ams
+    track: delivery
+    title: AMS, incident, and problem management
+    tier: core
+    why: Lead-level delivery includes production diagnosis, containment, recovery, prevention, and operational ownership.
+    interview_signal: You distinguish incident recovery from root-cause removal and reusable operational learning.
+    capabilities: [diagnose, design, lead]
+    sources:
+      - {kind: lab, label: Integration Operations, href: /labs/enterprise-context/integration-operations/}
+      - {kind: assessment, label: Mock Practice, href: /labs/assessment/mock/}
+  - id: delivery-observability
+    track: delivery
+    title: Operational observability and KPIs
+    tier: cross_boundary
+    why: Operational control needs technical signals tied to process outcome, user impact, and recovery time.
+    interview_signal: You can design a small useful control model instead of a dashboard museum.
+    capabilities: [diagnose, design, lead]
+    sources:
+      - {kind: lab, label: End-to-End Analytics, href: /labs/enterprise-context/end-to-end-analytics/}
+  - id: delivery-memory
+    track: delivery
+    title: Handover and operational memory
+    tier: differentiator
+    why: Good delivery leaves runbooks, evidence, ownership, and reusable diagnostic knowledge behind.
+    interview_signal: You reduce rediscovery after handover and make support quality less dependent on one person.
+    capabilities: [design, lead]
+    sources:
+      - {kind: lab, label: Templates, href: /labs/templates/}
+
+  - id: lead-answer
+    track: leadership
+    title: Lead-level answer structure
+    tier: core
+    why: Keep answers anchored in business goal, owner, flow, decision, boundary, evidence, and trade-off.
+    interview_signal: Your answer remains clear when the interviewer changes depth or challenges an assumption.
+    capabilities: [know, lead]
+    sources:
+      - {kind: assessment, label: Start Here, href: /labs/assessment/start-here/}
+  - id: lead-challenge
+    track: leadership
+    title: Challenge a weak requirement
+    tier: core
+    why: Seniority is visible when you can disagree constructively and offer a safer decision path.
+    interview_signal: You ask for evidence, expose assumptions, and propose an option rather than simply saying no.
+    capabilities: [diagnose, design, lead]
+    sources:
+      - {kind: assessment, label: Core Boundaries, href: /labs/assessment/core-boundaries/}
+  - id: lead-stakeholders
+    track: leadership
+    title: Stakeholder conflict and alignment
+    tier: core
+    why: Business, architecture, delivery, and operations often optimise different outcomes.
+    interview_signal: You make the trade-off explicit and drive a decision with owners and consequences.
+    capabilities: [design, lead]
+    sources:
+      - {kind: assessment, label: Architecture Board, href: /labs/assessment/board/}
+  - id: lead-evidence
+    track: leadership
+    title: Evidence and project stories
+    tier: core
+    why: Claims about leadership need a project, decision, failure, result, lesson, or public artefact behind them.
+    interview_signal: You can prove the role you played without inflating the story.
+    capabilities: [know, lead]
+    sources:
+      - {kind: assessment, label: Evidence Coverage, href: /labs/assessment/evidence-coverage/}
+      - {kind: career, label: Story Bank, href: /labs/interview-readiness/stories/}
+  - id: lead-decision
+    track: leadership
+    title: Decision framing and trade-offs
+    tier: cross_boundary
+    why: A Lead should compare options through value, risk, cost, delivery, operations, and reversibility.
+    interview_signal: You can explain why a choice is good enough now and what would make you revisit it.
+    capabilities: [diagnose, design, lead]
+    sources:
+      - {kind: assessment, label: Architecture Board, href: /labs/assessment/board/}
+  - id: lead-team
+    track: leadership
+    title: Team leadership and mentoring
+    tier: cross_boundary
+    why: Technical leadership includes review quality, delegation, feedback, and raising the decision quality of the team.
+    interview_signal: You can explain how you make other consultants more effective, not only how you solve hard issues yourself.
+    capabilities: [lead]
+    sources:
+      - {kind: assessment, label: Feedback Calibration, href: /labs/assessment/feedback/}
+  - id: lead-readiness
+    track: leadership
+    title: Role readiness and executive communication
+    tier: differentiator
+    why: Promotion depends on cross-boundary judgment and communication, not only topic coverage.
+    interview_signal: You can translate technical detail into risk, options, sequence, and a decision for senior stakeholders.
+    capabilities: [design, lead]
+    sources:
+      - {kind: assessment, label: Promotion Readiness, href: /labs/assessment/promotion-readiness/}
+      - {kind: assessment, label: Human Review, href: /labs/assessment/human-review/}

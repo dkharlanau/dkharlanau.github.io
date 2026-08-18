@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "SAP Lead Interview Readiness — Practical Preparation Lab"
-description: "A practical SAP Lead interview context for Sales, Logistics, Integration, AI and leadership, with a roadmap, questions, stories, practice, and progress."
+description: "A practical SAP Lead interview context for Sales, Logistics, Integration, AI, Delivery and Leadership, with a career roadmap, evidence, practice and progress."
 permalink: /labs/interview-readiness/
 status: draft
 verified: false
@@ -30,7 +30,7 @@ tags:
       <p>Interview readiness is not a reading list. It is a working map of what you can explain, connect, and defend when another senior person starts asking follow-up questions.</p>
       <a class="research-canvas__button" href="#today">Start today's session <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span></a>
       <nav class="ir-nav" aria-label="Interview Readiness sections">
-        <a href="/labs/interview-readiness/roadmap/">Roadmap</a>
+        <a href="/labs/interview-readiness/roadmap/">Career Roadmap</a>
         <a href="/labs/interview-readiness/questions/">Questions</a>
         <a href="/labs/interview-readiness/stories/">Stories</a>
         <a href="/labs/interview-readiness/practice/">Practice</a>
@@ -48,32 +48,32 @@ tags:
 
   <section class="research-canvas__boundary" data-reveal>
     <span class="material-symbols-outlined" aria-hidden="true">route</span>
-    <p><strong>Labs hold the source material.</strong> This layer tells you what to revisit and how deeply you should be able to discuss it.</p>
-    <p><strong>Assessment adds pressure.</strong> When a topic looks solid here, use the <a href="/labs/assessment/">SAP Lead Assessment</a> to test diagnosis, design, challenge, and evidence.</p>
+    <p><strong>Labs hold the source material.</strong> The <a href="/labs/interview-readiness/roadmap/">Career Roadmap</a> translates it into skills, interview signals, and evidence routes across six Lead tracks.</p>
+    <p><strong>Assessment adds pressure.</strong> When a skill looks solid, use the <a href="/labs/assessment/">SAP Lead Assessment</a> to test diagnosis, design, challenge, and evidence.</p>
   </section>
 
   <section class="research-canvas__inventory" id="readiness-summary" data-reveal>
-    <header><p class="research-canvas__eyebrow">Current position</p><h2>One number is useful only when you can see what sits behind it.</h2><p>The score is derived from topic states. A topic at “Can defend” counts more than one you only refreshed.</p></header>
+    <header><p class="research-canvas__eyebrow">Practice position</p><h2>One number is useful only when you can see what sits behind it.</h2><p>This score comes from the current interview-practice topic bank. The Career Roadmap adds the broader skills layer, including Delivery & Operations.</p></header>
     <div class="ir-split">
-      <div class="ir-score-ring"><div><strong id="ir-overall">0%</strong><span>overall readiness</span><small class="ir-muted" id="ir-counts">No topics reviewed yet.</small></div></div>
-      <div class="ir-grid" id="ir-track-summary" aria-label="Readiness by track"></div>
+      <div class="ir-score-ring"><div><strong id="ir-overall">0%</strong><span>practice readiness</span><small class="ir-muted" id="ir-counts">No topics reviewed yet.</small></div></div>
+      <div class="ir-grid" id="ir-track-summary" aria-label="Practice readiness by track"></div>
     </div>
   </section>
 
   <section class="research-canvas__inventory" id="today" data-reveal>
-    <header><p class="research-canvas__eyebrow">Today</p><h2>Work on the weakest useful topics, not the longest chapter.</h2><p>The daily set starts with low-readiness topics and spreads work across several tracks. The plan changes as you update the roadmap.</p></header>
+    <header><p class="research-canvas__eyebrow">Today</p><h2>Work on the weakest useful topics, not the longest chapter.</h2><p>The daily set starts with low-readiness practice topics and spreads work across several domains. Use the Career Roadmap for the complete skills picture.</p></header>
     <div class="ir-daily" id="ir-daily-plan"></div>
-    <div class="ir-toolbar"><a class="ir-button ir-button--primary" href="/labs/interview-readiness/roadmap/">Open full roadmap</a><a class="ir-button" href="/labs/interview-readiness/practice/">Run interview mode</a></div>
+    <div class="ir-toolbar"><a class="ir-button ir-button--primary" href="/labs/interview-readiness/roadmap/">Open career roadmap</a><a class="ir-button" href="/labs/interview-readiness/practice/">Run interview mode</a></div>
   </section>
 
   <section class="research-canvas__inventory" data-reveal>
-    <header><p class="research-canvas__eyebrow">Five tracks</p><h2>Prepare for the interview that crosses module boundaries.</h2><p>A Lead discussion rarely stays inside one box. The roadmap mixes process knowledge with integration, data, AI, and judgment.</p></header>
+    <header><p class="research-canvas__eyebrow">Six career tracks</p><h2>Prepare for the interview that crosses module boundaries.</h2><p>A Lead discussion rarely stays inside one box. Functional depth still matters, but architecture, AI, delivery discipline, and consulting judgment determine whether the answer survives real project pressure.</p></header>
     <div class="research-route-list">
-      <a href="/labs/interview-readiness/roadmap/#sales"><span>01</span><strong>Sales</strong><small>Order-to-Cash, sales order, pricing, ATP, shipping, billing, credit, tax, diagnostics, and special cases.</small><i class="material-symbols-outlined" aria-hidden="true">shopping_cart</i></a>
-      <a href="/labs/interview-readiness/roadmap/#logistics"><span>02</span><strong>Procurement & Logistics</strong><small>Procure-to-Pay, inventory, material behaviour, EWM, TM, production, quality, master data, MDG, and finance boundaries.</small><i class="material-symbols-outlined" aria-hidden="true">local_shipping</i></a>
-      <a href="/labs/interview-readiness/roadmap/#integration"><span>03</span><strong>Integration & Architecture</strong><small>Patterns, operations, failure analysis, clean core, deployment choices, observability, ownership, and trade-offs.</small><i class="material-symbols-outlined" aria-hidden="true">hub</i></a>
-      <a href="/labs/interview-readiness/roadmap/#ai"><span>04</span><strong>AI & Data</strong><small>Readiness, retrieval, agents, MCP, evaluation, security, production controls, data quality, and business value.</small><i class="material-symbols-outlined" aria-hidden="true">psychology</i></a>
-      <a href="/labs/interview-readiness/roadmap/#leadership"><span>05</span><strong>Lead Judgment</strong><small>Answer structure, requirement challenge, stakeholder conflict, failure handling, evidence, stories, mocks, and feedback.</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
+      {% assign career_track_order = "sales,logistics,integration,ai,delivery,leadership" | split: "," %}
+      {% for track_id in career_track_order %}
+        {% assign track = site.data.career.roadmap.tracks[track_id] %}
+        <a href="/labs/interview-readiness/roadmap/#{{ track_id }}"><span>0{{ track.order }}</span><strong>{{ track.label }}</strong><small>{{ track.statement }}</small><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      {% endfor %}
     </div>
   </section>
 
@@ -114,7 +114,7 @@ tags:
     const data = IR.summary();
     overall.textContent = data.overall + '%';
     const reviewed = IR.TOPICS.length - data.statuses['not-reviewed'];
-    counts.textContent = reviewed ? `${reviewed} of ${IR.TOPICS.length} topics touched.` : 'No topics reviewed yet.';
+    counts.textContent = reviewed ? `${reviewed} of ${IR.TOPICS.length} practice topics touched.` : 'No topics reviewed yet.';
 
     tracks.replaceChildren();
     Object.entries(data.tracks).forEach(([id,track]) => {
