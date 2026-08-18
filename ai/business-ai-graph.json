@@ -37,9 +37,19 @@ sitemap: false
   "contract_version": {{ contract.contract.version | jsonify }},
   "reviewed_at": {{ catalog.reviewed_at | jsonify }},
   "source_model": "_data/labs/business_ai/contract.yml",
+  "case_contract": {
+    "schema_version": {{ contract.case_schema.version | jsonify }},
+    "migration_policy": {{ contract.case_schema.migration_policy | jsonify }},
+    "agent_maximum_state": {{ contract.review_lifecycle.agent_maximum_state | jsonify }},
+    "human_approval_state": {{ contract.review_lifecycle.human_approval_state | jsonify }},
+    "review_lifecycle": {{ contract.review_lifecycle | jsonify }}
+  },
   "normalization": {
-    "legacy_case_kind": "ai_implementation",
-    "legacy_review_state": "structured",
+    "legacy_case_kind": "unknown",
+    "legacy_review_state": "Conservative inference: structured only when source IDs, a pattern, and evidence grade are present; sourced when only source IDs are present; otherwise candidate.",
+    "legacy_implementation_maturity": "unknown",
+    "legacy_measurement_state": "unknown",
+    "legacy_transferability": "unknown",
     "legacy_source_confidence": "unknown",
     "legacy_evidence_level": "proof_gap",
     "sap_link_model": "Vendor-neutral process and stage IDs link to SAP-specific capability nodes. SAP pages remain the implementation source.",
@@ -77,7 +87,13 @@ sitemap: false
       {% for node in technologies.families %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"TechnologyFamily","title":{{ node.title | jsonify }},"job":{{ node.job | jsonify }}}{% endfor %}
     ],
     "cases": [
-      {% for node in all_cases %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"BusinessAICase","title":{{ node.title | jsonify }},"case_kind":{{ node.case_kind | default: "ai_implementation" | jsonify }},"review_state":{{ node.review_state | default: "structured" | jsonify }},"company":{{ node.company | jsonify }},"industry":{{ node.industry | jsonify }},"process":{{ node.process | jsonify }},"pattern_id":{{ node.pattern | jsonify }},"evidence_grade":{{ node.evidence_grade | jsonify }},"source_ids":{{ node.source_ids | default: empty_list | jsonify }},"limitations":{{ node.limits | default: empty_list | jsonify }},"canonical_url":{{ "/labs/business-ai/cases/#" | append: node.id | jsonify }}}{% endfor %}
+      {% for node in all_cases %}
+      {% assign case_pattern_ids = node.pattern_ids | default: empty_list %}{% if case_pattern_ids == empty_list and node.pattern %}{% assign case_pattern_ids = node.pattern | split: "|" %}{% endif %}
+      {% assign case_metrics = node.metrics | default: node.reported_metrics | default: empty_list %}
+      {% assign case_limits = node.limitations | default: node.limits | default: empty_list %}
+      {% assign case_note = node.consultant_interpretation | default: node.consultant_note %}
+      {% assign inferred_state = node.review_state %}{% unless inferred_state %}{% if node.source_ids and node.pattern and node.evidence_grade %}{% assign inferred_state = "structured" %}{% elsif node.source_ids %}{% assign inferred_state = "sourced" %}{% else %}{% assign inferred_state = "candidate" %}{% endif %}{% endunless %}
+      {% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"BusinessAICase","title":{{ node.title | jsonify }},"case_kind":{{ node.case_kind | default: "unknown" | jsonify }},"review_state":{{ inferred_state | jsonify }},"business_problem":{{ node.business_problem | jsonify }},"company":{{ node.company | jsonify }},"industry":{{ node.industry | jsonify }},"process_label":{{ node.process_label | default: node.process | jsonify }},"process_id":{{ node.process_id | jsonify }},"process_stage_ids":{{ node.process_stage_ids | default: empty_list | jsonify }},"ai_job":{{ node.ai_job | jsonify }},"pattern_ids":{{ case_pattern_ids | jsonify }},"implementation_maturity":{{ node.implementation_maturity | default: "unknown" | jsonify }},"implementation_summary":{{ node.implementation_summary | default: node.implementation | jsonify }},"autonomy_level":{{ node.autonomy_level | jsonify }},"systems_of_record":{{ node.systems_of_record | default: empty_list | jsonify }},"data_dependencies":{{ node.data_dependencies | default: empty_list | jsonify }},"integration_boundaries":{{ node.integration_boundaries | default: empty_list | jsonify }},"authority_boundary":{{ node.authority_boundary | jsonify }},"controls":{{ node.controls | default: empty_list | jsonify }},"human_review":{{ node.human_review | jsonify }},"metrics":{{ case_metrics | jsonify }},"measurement_state":{{ node.measurement_state | default: "unknown" | jsonify }},"evidence_grade":{{ node.evidence_grade | jsonify }},"evidence_claims":{{ node.evidence_claims | default: empty_list | jsonify }},"source_ids":{{ node.source_ids | default: empty_list | jsonify }},"source_types":{{ node.source_types | default: empty_list | jsonify }},"limitations":{{ case_limits | jsonify }},"proof_gaps":{{ node.proof_gaps | default: empty_list | jsonify }},"transferability":{{ node.transferability | default: "unknown" | jsonify }},"failure_notes":{{ node.failure_notes | default: empty_list | jsonify }},"consultant_interpretation":{{ case_note | jsonify }},"canonical_url":{{ "/labs/business-ai/cases/#" | append: node.id | jsonify }}}{% endfor %}
     ],
     "scenario_outcomes": [
       {% for node in scenarios.scenarios %}{% unless forloop.first %},{% endunless %}{"id":{{ node.id | jsonify }},"type":"ScenarioOutcome","outcome_state":"unknown","status":{{ node.status | jsonify }},"company":{{ node.company | jsonify }},"process":{{ node.process | jsonify }},"source_ids":{{ node.source_ids | default: empty_list | jsonify }}}{% endfor %}
@@ -115,7 +131,7 @@ sitemap: false
       {% assign first_edge = true %}{% for domain in domain_map.domains %}{% for target_id in domain.case_ids %}{% unless first_edge %},{% endunless %}{"id":{{ domain.id | append: "-case-" | append: target_id | jsonify }},"type":"domain-supports-case","from":{{ domain.id | jsonify }},"to":{{ target_id | jsonify }}}{% assign first_edge = false %}{% endfor %}{% endfor %}
     ],
     "case-uses-pattern": [
-      {% assign first_edge = true %}{% for case in all_cases %}{% if case.pattern %}{% unless first_edge %},{% endunless %}{"id":{{ case.id | append: "-pattern-" | append: case.pattern | jsonify }},"type":"case-uses-pattern","from":{{ case.id | jsonify }},"to":{{ case.pattern | jsonify }}}{% assign first_edge = false %}{% endif %}{% endfor %}
+      {% assign first_edge = true %}{% for case in all_cases %}{% assign pattern_id = case.pattern %}{% if pattern_id %}{% unless first_edge %},{% endunless %}{"id":{{ case.id | append: "-pattern-" | append: pattern_id | jsonify }},"type":"case-uses-pattern","from":{{ case.id | jsonify }},"to":{{ pattern_id | jsonify }}}{% assign first_edge = false %}{% endif %}{% endfor %}
     ],
     "decision-tests-failure": [
       {% assign first_edge = true %}{% for profile in matrix.profiles %}{% for target_id in profile.failure_pattern_ids %}{% unless first_edge %},{% endunless %}{"id":{{ profile.id | append: "-failure-" | append: target_id | jsonify }},"type":"decision-tests-failure","from":{{ profile.id | jsonify }},"to":{{ target_id | jsonify }}}{% assign first_edge = false %}{% endfor %}{% endfor %}
@@ -127,6 +143,7 @@ sitemap: false
   "proof_gaps": [
     "Priority SAP process stages now have stable graph IDs; remaining legacy process stages are still strings until later normalization.",
     "Legacy case process labels are not yet normalized to EndToEndProcess IDs.",
+    "Legacy case kind, implementation maturity, measurement state, and transferability remain unknown until reviewed evidence supports them.",
     "Scenario outcome_state remains unknown until legacy scenario status is explicitly mapped.",
     "Legacy evidence sources default to unknown confidence and proof_gap until source records are reviewed against the normalized contract."
   ],
