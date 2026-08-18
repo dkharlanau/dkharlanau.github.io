@@ -37,7 +37,13 @@ def test_find_sensitive_keys_case_insensitive():
 def test_check_required_files_finds_missing(tmp_path):
     missing = check_required_files(tmp_path)
     assert all(f"Missing required file: {rel}" in missing for rel in [
-        "robots.txt", "sitemap.xml", "llms.txt", "ai/resume.json", "ai/resume.yml"
+        "robots.txt",
+        "sitemap.xml",
+        "llms.txt",
+        "ai/resume.json",
+        "ai/resume.yml",
+        "ai/business-ai-graph.json",
+        "ai/business-ai-agent-context.json",
     ])
 
 
@@ -48,6 +54,8 @@ def test_check_required_files_passes(tmp_path):
     (tmp_path / "ai").mkdir()
     (tmp_path / "ai" / "resume.json").write_text("{}")
     (tmp_path / "ai" / "resume.yml").write_text("---\n")
+    (tmp_path / "ai" / "business-ai-graph.json").write_text("{}")
+    (tmp_path / "ai" / "business-ai-agent-context.json").write_text("{}")
     assert check_required_files(tmp_path) == []
 
 
