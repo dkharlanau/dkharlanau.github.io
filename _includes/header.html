@@ -1,4 +1,8 @@
 {% assign nav_ui = locale_data.ui.navigation %}
+{% assign career_nav_active = false %}
+{% if page.url contains '/labs/interview-readiness/' or page.url contains '/labs/assessment/' %}
+  {% assign career_nav_active = true %}
+{% endif %}
 <header class="site-header" data-site-header>
   <div class="wrapper site-header__inner">
     <a class="site-brand" href="/" aria-label="{{ nav_ui.home | default: 'Home' }} — Dzmitryi Kharlanau">
@@ -16,7 +20,8 @@
         {% include home-language-switcher.html %}
         {% else %}
         <a href="/knowledge/" class="nav-link{% if page.url contains '/knowledge/' or page.url contains '/atlas/' or page.url contains '/scenarios/' or page.url contains '/research/' or page.url contains '/blog/' or page.url contains '/notes/' or page.url contains '/radar/' or page.url contains '/news/' %} is-active{% endif %}"{% if page.url contains '/knowledge/' %} aria-current="page"{% endif %}>Knowledge</a>
-        <a href="/labs/" class="nav-link{% if page.url contains '/labs/' or page.url == '/lab/' %} is-active{% endif %}"{% if page.url == '/labs/' %} aria-current="page"{% endif %}>{{ nav_ui.labs | default: 'Labs' }}</a>
+        <a href="/labs/" class="nav-link{% if page.url contains '/labs/' and career_nav_active != true or page.url == '/lab/' %} is-active{% endif %}"{% if page.url == '/labs/' %} aria-current="page"{% endif %}>{{ nav_ui.labs | default: 'Labs' }}</a>
+        <a href="/labs/interview-readiness/" class="nav-link{% if career_nav_active %} is-active{% endif %}"{% if page.url == '/labs/interview-readiness/' %} aria-current="page"{% endif %}>Career</a>
         <a href="/frameworks/" class="nav-link{% if page.url contains '/frameworks/' or page.url contains '/triz/' or page.url contains '/ddd/' or page.url contains '/reusable-data-procedures/' %} is-active{% endif %}"{% if page.url contains '/frameworks/' %} aria-current="page"{% endif %}>Frameworks</a>
         <a href="/services/" class="nav-link{% if page.url contains '/services/' %} is-active{% endif %}"{% if page.url contains '/services/' %} aria-current="page"{% endif %}>{{ nav_ui.services | default: 'Services' }}</a>
         <a href="/about/" class="nav-link{% if page.url contains '/about/' or page.url contains '/cv/' %} is-active{% endif %}"{% if page.url contains '/about/' %} aria-current="page"{% endif %}>{{ nav_ui.about | default: 'About' }}</a>
