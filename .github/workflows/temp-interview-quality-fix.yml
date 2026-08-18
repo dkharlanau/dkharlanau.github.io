@@ -1,0 +1,93 @@
+name: Temporary Interview Readiness Quality Fix
+
+on:
+  push:
+    branches: [agent/interview-readiness]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/interview-readiness
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependency
+        run: python3 -m pip install pyyaml
+
+      - name: Refine interview readiness descriptions
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              'labs/interview-readiness/index.md': (
+                  'description: "A practical SAP Lead interview preparation workspace covering Sales, Procurement and Logistics, Integration and Architecture, AI and Data, leadership judgment, stories, questions, and progress."',
+                  'description: "A practical SAP Lead interview context for Sales, Logistics, Integration, AI and leadership, with a roadmap, questions, stories, practice, and progress."',
+              ),
+              'labs/interview-readiness/practice/index.md': (
+                  'description: "A balanced SAP Lead interview practice session across Sales, Logistics, Integration, AI and Data, and leadership judgment."',
+                  'description: "Practice SAP Lead interview problems in realistic context across Sales, Logistics, Integration, AI, Data, and leadership judgment."',
+              ),
+              'labs/interview-readiness/progress/index.md': (
+                  'description: "A browser-local SAP Lead interview readiness view showing topic depth, track coverage, recent practice, and weak areas."',
+                  'description: "Track SAP Lead interview problems in context with roadmap depth, track coverage, recent practice, weak areas, and project story evidence."',
+              ),
+              'labs/interview-readiness/questions/index.md': (
+                  'description: "A practical SAP Lead interview question bank covering Sales, Procurement and Logistics, Integration and Architecture, AI and Data, and leadership judgment."',
+                  'description: "SAP Lead interview questions in realistic context across Sales, Logistics, Integration, AI, Data, and leadership judgment."',
+              ),
+              'labs/interview-readiness/roadmap/index.md': (
+                  'description: "A browser-local SAP Lead interview roadmap for Sales, Procurement and Logistics, Integration and Architecture, AI and Data, and Lead judgment."',
+                  'description: "An SAP Lead interview preparation context for Sales, Logistics, Integration, AI, Data, and Lead judgment, with browser-local topic depth."',
+              ),
+              'labs/interview-readiness/stories/index.md': (
+                  'description: "A browser-local story bank for SAP Lead interviews: project context, role, decision, trade-off, result, and lesson."',
+                  'description: "A browser-local SAP interview story bank for project problems, decisions, failures, trade-offs, results, and lessons."',
+              ),
+          }
+
+          for raw_path, (old, new) in replacements.items():
+              path = Path(raw_path)
+              text = path.read_text(encoding='utf-8')
+              if old not in text:
+                  raise SystemExit(f'Expected description not found in {raw_path}')
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Regenerate discovery artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Commit quality fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            labs/interview-readiness/index.md \
+            labs/interview-readiness/practice/index.md \
+            labs/interview-readiness/progress/index.md \
+            labs/interview-readiness/questions/index.md \
+            labs/interview-readiness/roadmap/index.md \
+            labs/interview-readiness/stories/index.md \
+            ai/expert-promotion-inventory.json \
+            ai/markdown-clusters.json
+          if git diff --cached --quiet; then
+            echo "No quality changes required."
+            exit 0
+          fi
+          git commit -m "Refine Interview Readiness content signals"
+          git push origin HEAD:agent/interview-readiness
