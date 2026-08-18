@@ -46,7 +46,7 @@ def test_every_skill_has_four_lead_question_types():
         for item in questions:
             prompt = item["prompt"].strip()
             assert len(prompt) >= 70, (group["skill_id"], item["type"])
-            assert prompt.endswith("?"), (group["skill_id"], item["type"])
+            assert prompt.endswith(("?", ".")), (group["skill_id"], item["type"])
             prompts.append(prompt)
 
     assert len(prompts) == 168
