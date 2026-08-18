@@ -48,6 +48,12 @@ jobs:
       - name: Run Python tests
         run: PYTHONDONTWRITEBYTECODE=1 python3 -m pytest tests
 
+      - name: Enforce Career Factory contract
+        run: python3 scripts/check_career_factory.py --changed-from origin/main
+
+      - name: Check Career Factory inventory is current
+        run: python3 scripts/generate_career_factory.py --check
+
       - name: Generate DAMA pages
         run: node scripts/generate_dama_pages.js
 
