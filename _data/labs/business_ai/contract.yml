@@ -1,6 +1,6 @@
 contract:
   id: business-ai-graph
-  version: "1.0.0"
+  version: "1.1.0"
   schema_version: "1"
   compatibility: additive-minor
   purpose: "Canonical contract for Business AI entities, relationships, evidence fields, review state, and generated views."
@@ -44,6 +44,7 @@ generated_outputs:
   - labs/business-ai/data/processes.json
   - labs/business-ai/data/scenarios.json
   - labs/business-ai/data/technologies.json
+  - ai/business-ai-graph.json
 
 id_policy:
   entity_pattern: "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
@@ -68,6 +69,7 @@ vocabularies:
     - high
     - medium
     - low
+    - unknown
   review_state:
     - candidate
     - sourced
@@ -141,6 +143,9 @@ relationship_types:
   - id: process-has-stage
     from: EndToEndProcess
     to: ProcessStage
+  - id: process-uses-pattern
+    from: EndToEndProcess
+    to: Pattern
   - id: stage-uses-pattern
     from: ProcessStage
     to: Pattern
@@ -153,12 +158,18 @@ relationship_types:
   - id: stage-has-control
     from: ProcessStage
     to: ControlPoint
+  - id: domain-supports-case
+    from: BusinessDomain
+    to: BusinessAICase
   - id: company-implements-case
     from: Company
     to: BusinessAICase
   - id: case-applies-to-process
     from: BusinessAICase
     to: EndToEndProcess
+  - id: case-uses-pattern
+    from: BusinessAICase
+    to: Pattern
   - id: case-uses-platform
     from: BusinessAICase
     to: EnterprisePlatform

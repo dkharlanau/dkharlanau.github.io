@@ -14,6 +14,7 @@ REQUIRED_FILES = [
     "llms.txt",
     "ai/resume.json",
     "ai/resume.yml",
+    "ai/business-ai-graph.json",
 ]
 
 SENSITIVE_KEYS = {
@@ -116,6 +117,10 @@ def main() -> int:
     if resume_json.exists():
         findings.extend(check_json_file(resume_json, root))
         findings.extend(check_resume_for_sensitive_data(resume_json, root))
+
+    graph_json = root / "ai" / "business-ai-graph.json"
+    if graph_json.exists():
+        findings.extend(check_json_file(graph_json, root))
 
     resume_yml = root / "ai" / "resume.yml"
     if resume_yml.exists():
