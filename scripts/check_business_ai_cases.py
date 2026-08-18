@@ -45,10 +45,21 @@ def aggregate_cases():
     return cases, source_ids
 
 
+def infer_legacy_review_state(record: dict) -> str:
+    source_ids = record.get("source_ids") or []
+    pattern_ids = record.get("pattern_ids") or ([] if not record.get("pattern") else [record["pattern"]])
+    if source_ids and pattern_ids and record.get("evidence_grade"):
+        return "structured"
+    if source_ids:
+        return "sourced"
+    return "candidate"
+
+
 def normalize_case(record: dict) -> dict:
     normalized = dict(record)
     normalized.setdefault("case_kind", "unknown")
-    normalized.setdefault("review_state", "structured")
+    if not normalized.get("review_state"):
+        normalized["review_state"] = infer_legacy_review_state(normalized)
     normalized.setdefault("implementation_maturity", "unknown")
 
     if "pattern_ids" not in normalized and normalized.get("pattern"):
@@ -224,9 +235,8 @@ def migration_gaps(case: dict, contract: dict) -> list[str]:
     ):
         if normalized.get(field) == "unknown" and field not in gaps:
             gaps.append(field)
-    if not normalized.get("evidence_claims"):
-        if "evidence_claims" not in gaps:
-            gaps.append("evidence_claims")
+    if not normalized.get("evidence_claims") and "evidence_claims" not in gaps:
+        gaps.append("evidence_claims")
     return gaps
 
 
