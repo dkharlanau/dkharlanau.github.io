@@ -13,15 +13,34 @@ publication_wave: "career-search-wave-01"
 review_method: "editorial review + route validation + Career Factory coverage"
 search_intent: "SAP Lead interview preparation for sales, procurement, integration, AI and leadership"
 structured_data:
-  type: CollectionPage
+  type: TechArticle
 hide_global_cta: true
 tags:
-  - sap
-  - sap-lead
-  - interview
-  - logistics
-  - integration
-  - business-ai
+  - sap-lead-career
+  - interview-readiness
+# ai-discovery-managed:start
+primary_topic: "sap-lead-interview-readiness"
+ai_sidecar: "/ai/pages/labs--interview-readiness.json"
+semantic_links:
+  - type: "deep_dive"
+    title: "SAP Lead Career Roadmap — Skills, Labs, Evidence, Practice"
+    url: "/labs/interview-readiness/roadmap/"
+  - type: "related_topic"
+    title: "Sales Order Decision Map — Enterprise Context Lab"
+    url: "/labs/enterprise-context/sales-order/"
+  - type: "related_topic"
+    title: "Procurement Process & Decision Map — Enterprise Context Lab"
+    url: "/labs/enterprise-context/procurement/"
+  - type: "integrates_with"
+    title: "SAP Integration Architecture — Logistics, Events and Data Distribution"
+    url: "/labs/enterprise-context/integrations/"
+  - type: "related_topic"
+    title: "AI Ready — Practical AI Architecture Lab"
+    url: "/labs/ai-ready/"
+  - type: "diagnose_with"
+    title: "SAP Sales Diagnostic Casebook — Enterprise Context Lab"
+    url: "/labs/enterprise-context/sales-diagnostics/"
+# ai-discovery-managed:end
 ---
 
 <link rel="stylesheet" href="/assets/css/interview-readiness.css" />
