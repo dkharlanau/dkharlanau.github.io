@@ -42,7 +42,6 @@ semantic_links:
     url: "/labs/enterprise-context/sales-diagnostics/"
 # ai-discovery-managed:end
 ---
-
 <link rel="stylesheet" href="/assets/css/interview-readiness.css" />
 
 <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">Interview Readiness</li></ol></nav>
