@@ -1,4 +1,5 @@
 from pathlib import Path
+import subprocess
 import sys
 
 import yaml
@@ -73,6 +74,17 @@ def test_all_role_skills_are_indexed_and_new_skills_exist():
     assert NEW_SKILLS <= indexed
     for skill in NEW_SKILLS:
         assert (ROOT / "agent-skills" / "skills" / skill / "SKILL.md").exists()
+
+
+def test_portable_skill_validator_accepts_new_skill_set():
+    completed = subprocess.run(
+        [sys.executable, str(EXPORTERS / "validate_agent_skills.py")],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
 
 
 def test_approval_is_human_only():
