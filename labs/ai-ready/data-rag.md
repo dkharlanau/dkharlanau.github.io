@@ -40,6 +40,8 @@ If nobody knows which document owns the policy, a better embedding model will no
 
 {% include labs/ai-ready/modern-data-platforms.html %}
 
+{% include labs/ai-ready/data-products-vs-pipelines.html %}
+
 ## Retrieval pipeline
 
 ```text
