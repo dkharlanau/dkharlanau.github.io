@@ -51,6 +51,11 @@ def validate_contract(contract: dict) -> None:
         not (source_paths & set(outputs)),
         "A generated output cannot also be a canonical source.",
     )
+    for source_path in source_paths:
+        _require(
+            (ROOT / source_path).exists(),
+            f"Canonical dataset does not exist: {source_path}.",
+        )
 
     vocabularies = contract.get("vocabularies", {})
     required_vocabularies = {
@@ -197,24 +202,20 @@ def validate_graph_payload(payload: dict, contract: dict) -> None:
         edge_ids.add(edge_id)
 
 
-def validate_catalog_alignment(contract: dict, catalog: dict, assessment: dict) -> None:
+def validate_source_alignment(contract: dict, catalog: dict, assessment: dict) -> None:
     validate_contract(contract)
-    catalog_meta = catalog.get("catalog", {})
+
     _require(
-        set(catalog_meta.get("allowed_case_kinds", []))
-        == set(contract["vocabularies"]["case_kind"]),
-        "Catalog case kinds differ from the canonical contract.",
-    )
-    _require(
-        set(catalog_meta.get("evidence_grades", {}))
+        set(catalog.get("evidence_grades", {}))
         == set(contract["vocabularies"]["evidence_grade"]),
         "Catalog evidence grades differ from the canonical contract.",
     )
-    _require(
-        set(catalog_meta.get("source_confidence", {}))
-        == set(contract["vocabularies"]["source_confidence"]),
-        "Catalog source confidence differs from the canonical contract.",
-    )
+    for case in catalog.get("cases", []):
+        grade = case.get("evidence_grade")
+        _require(
+            grade in contract["vocabularies"]["evidence_grade"],
+            f"Catalog case {case.get('id')} has invalid evidence grade {grade!r}.",
+        )
 
     autonomy_ids = {
         item.get("id") for item in assessment.get("autonomy_levels", [])
@@ -241,7 +242,7 @@ def main(argv=None) -> int:
             ROOT / "_data" / "labs" / "business_ai" / "assessment_matrix.yml"
         )
         validate_graph_payload(graph, contract)
-        validate_catalog_alignment(contract, catalog, assessment)
+        validate_source_alignment(contract, catalog, assessment)
     except (OSError, yaml.YAMLError, ContractError) as exc:
         print(f"Business AI contract failed: {exc}", file=sys.stderr)
         return 1
