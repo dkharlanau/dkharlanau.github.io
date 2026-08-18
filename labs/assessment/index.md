@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-17
+last_modified_at: 2026-08-18
 hide_global_cta: true
 tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
 ---
@@ -80,6 +80,7 @@ tags: [sap, assessment, sap-lead, logistics, integration, business-ai]
   <section class="research-canvas__inventory" id="assessment-tracks" data-reveal>
     <header><p class="research-canvas__eyebrow">Track 01 / Sales</p><h2>Order-to-Cash as a chain of decisions.</h2><p>Move from sales intent into item behavior, price, promise, credit, shipping, billing, tax, finance handoff, and diagnostics.</p></header>
     <div class="research-route-list">
+      <a href="/labs/assessment/sales/"><span>LEAD</span><strong>Sales Lead Assessment Map</strong><small>30-second, 2-minute, and scenario answer frames across the full Order-to-Cash chain.</small><i class="material-symbols-outlined" aria-hidden="true">record_voice_over</i></a>
       <a href="/labs/enterprise-context/sales-processes/"><span>MAP</span><strong>Sales Process Atlas</strong><small>Core and special scenarios, document chains, controls, and integrations.</small><i class="material-symbols-outlined" aria-hidden="true">route</i></a>
       <a href="/labs/enterprise-context/sales-order/"><span>SO</span><strong>Sales Order Decision Map</strong><small>Master data, determinations, partner data, dates, and document controls.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/labs/enterprise-context/pricing/"><span>PRC</span><strong>Pricing Engine</strong><small>Condition technique, calculation, diagnostics, extensions, and scenario differences.</small><i class="material-symbols-outlined" aria-hidden="true">price_check</i></a>
