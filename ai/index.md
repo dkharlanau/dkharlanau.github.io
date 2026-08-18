@@ -3,7 +3,7 @@ layout: default
 title: AI Routing Hub
 permalink: /ai/
 description: "AI routing hub for Dzmitryi Kharlanau's profile, discovery map, intent entities, and machine-readable knowledge assets."
-last_modified_at: 2026-08-18
+last_modified_at: 2026-07-10
 hide_global_cta: true
 ---
 
@@ -46,11 +46,10 @@ hide_global_cta: true
     <div class="ai-route-list">
       <a href="/ai/principles.json"><span>05</span><strong>Consulting principles</strong><small>Operating heuristics for SAP AMS improvement, support knowledge, architecture, and change design.</small><em>Method</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
       <a href="/datasets/manifest.json"><span>06</span><strong>Dataset manifest</strong><small>Index of published data material for AMS, agentic tooling, and governance work.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/ai/business-ai-graph.json"><span>07</span><strong>Business AI graph</strong><small>Typed processes, patterns, cases, outcomes, failure links, evidence records, and explicit proof gaps.</small><em>Graph</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/about/"><span>08</span><strong>Profile page</strong><small>Canonical public page for identity, expertise, credentials, and reference checks.</small><em>Identity</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/notes/"><span>09</span><strong>Working notes</strong><small>Human-readable perspectives on SAP transformation, integration, clean core, and AI-supported operations.</small><em>Context</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/certifications/"><span>10</span><strong>Certification register</strong><small>Public learning record with issuer and verification links where available.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
-      <a href="/publications/"><span>11</span><strong>Publication register</strong><small>Public articles, SAP technical notes, architecture writing, and reusable knowledge surfaces.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/about/"><span>07</span><strong>Profile page</strong><small>Canonical public page for identity, expertise, credentials, and reference checks.</small><em>Identity</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/notes/"><span>08</span><strong>Working notes</strong><small>Human-readable perspectives on SAP transformation, integration, clean core, and AI-supported operations.</small><em>Context</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/certifications/"><span>09</span><strong>Certification register</strong><small>Public learning record with issuer and verification links where available.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
+      <a href="/publications/"><span>10</span><strong>Publication register</strong><small>Public articles, SAP technical notes, architecture writing, and reusable knowledge surfaces.</small><em>Evidence</em><i class="material-symbols-outlined" aria-hidden="true">arrow_forward</i></a>
     </div>
   </section>
 
