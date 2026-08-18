@@ -1,0 +1,45 @@
+name: Temporary Professional Intelligence Sync
+
+on:
+  push:
+    branches:
+      - agent/professional-intelligence-layer
+
+permissions:
+  contents: write
+
+jobs:
+  sync-generated-artifact:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/professional-intelligence-layer
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: python3 -m pip install pyyaml
+
+      - name: Regenerate deterministic Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Commit regenerated Markdown cluster index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ai/markdown-clusters.json
+          if git diff --cached --quiet; then
+            echo "Markdown cluster index is already synchronized."
+            exit 0
+          fi
+          git commit -m "Regenerate Markdown cluster index"
+          git push origin HEAD:agent/professional-intelligence-layer
