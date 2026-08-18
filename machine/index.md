@@ -7,7 +7,7 @@ status: draft
 verified: false
 robots: noindex,follow
 sitemap: false
-last_modified_at: 2026-08-17
+last_modified_at: 2026-08-18
 hide_global_cta: true
 tags:
   - datasets
@@ -52,6 +52,7 @@ tags:
     <div class="research-route-list">
       <a href="/datasets/"><span>DATA</span><strong>Datasets</strong><small>Canonical structured collections, manifests, schemas, and domain-specific data packages.</small><i class="material-symbols-outlined" aria-hidden="true">dataset</i></a>
       <a href="/ai/"><span>AI</span><strong>AI-readable sources</strong><small>Generated and curated JSON, YAML, discovery maps, indexes, and expert evidence surfaces.</small><i class="material-symbols-outlined" aria-hidden="true">data_object</i></a>
+      <a href="/machine/business-ai/"><span>GRAPH</span><strong>Business AI Graph</strong><small>Versioned graph, evidence views, and SAP Enterprise context links for agents and analysis.</small><i class="material-symbols-outlined" aria-hidden="true">account_tree</i></a>
       <a href="/skill-hub/"><span>SKILL</span><strong>Skill Hub</strong><small>Human-readable map of reusable analysis, architecture, development, and decision skills.</small><i class="material-symbols-outlined" aria-hidden="true">school</i></a>
       <a href="/agent-tools/"><span>TOOL</span><strong>Agent Tools</strong><small>Static tool descriptions for SAP diagnostics, ABAP, integration, data analysis, evaluation, and related work.</small><i class="material-symbols-outlined" aria-hidden="true">construction</i></a>
       <a href="/machine/assessment/"><span>ASSESS</span><strong>SAP Lead Assessment Access</strong><small>Case manifest, schemas, practice contracts, JSONL case sets, and the local read-only assessment MCP route.</small><i class="material-symbols-outlined" aria-hidden="true">psychology_alt</i></a>
