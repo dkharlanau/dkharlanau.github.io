@@ -33,20 +33,17 @@ semantic_links:
     title: "ERP Agent Gateway Pilot — Safe AI Tool Access to Enterprise Systems"
     url: "/labs/business-ai/erp-agent-gateway/"
   - type: "deep_dive"
+    title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
+    url: "/labs/business-ai/implementation-readiness/"
+  - type: "deep_dive"
     title: "Open Enterprise AI Research — ERP Evidence, Safety, and Readiness"
     url: "/labs/business-ai/open-research/"
   - type: "deep_dive"
     title: "Open Enterprise AI Pilots — ERP, Documents, Agents, and Controls"
     url: "/labs/business-ai/pilots/"
-  - type: "deep_dive"
-    title: "AI Implementation Readiness — Evals, Safeguards, Observability, Release and Rollback"
-    url: "/labs/business-ai/implementation-readiness/"
   - type: "related_topic"
     title: "SAP Business AI and AI Platform Landscape — Enterprise Context Lab"
     url: "/labs/enterprise-context/business-ai/"
-  - type: "related_topic"
-    title: "Enterprise Agent Architecture — Tools, Identity, Autonomy and Governance"
-    url: "/labs/enterprise-context/business-ai/agents/"
 # ai-discovery-managed:end
 ---
 {% assign catalog = site.data.labs.business_ai.catalog %}
