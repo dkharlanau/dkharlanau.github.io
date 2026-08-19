@@ -171,17 +171,36 @@ semantic_links:
     </div>
 
     <div class="research-canvas__table-wrap">
-      <h3>Stakeholder visibility</h3>
-      <p>Stakeholder visibility means understanding who is connected to the problem and who may influence whether the opportunity can move forward. Start with the people closest to the work, then identify the person who owns the outcome and the teams that can enable or constrain validation and adoption.</p>
+      <h3>Stakeholder discovery</h3>
+      <p>Once a workflow problem begins to take shape, discovery needs to clarify who is connected to it. Different stakeholders often experience the same workflow in different ways: one group may carry the daily burden, another may own the business result, and another may influence whether a future change can move forward.</p>
+      <p>Stakeholder discovery helps identify who experiences the pain, who owns the outcome, who influences decisions, who needs to support validation, and who cares about adoption, approval, risk, or success measures. Opportunities become easier to validate when this ownership is visible.</p>
       <table>
-        <thead><tr><th scope="col">Stakeholder</th><th scope="col">What they can tell you</th><th scope="col">Why they matter</th></tr></thead>
+        <thead><tr><th scope="col">Stakeholder type</th><th scope="col">What they usually tell you</th><th scope="col">Why they matter</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Operators</th><td>What happens today, where friction appears, which exceptions occur, and how the problem affects daily work.</td><td>They experience the pain and provide workflow evidence.</td></tr>
-          <tr><th scope="row">Outcome owner</th><td>Which result matters: turnaround time, quality, risk, cost, service, or another business measure.</td><td>A team lead, department head, process owner, or sponsor can connect the problem to an accountable business outcome.</td></tr>
-          <tr><th scope="row">Enabling and control teams</th><td>What must be true for access, validation, approval, procurement, compliance, security, or adoption.</td><td>IT, security, procurement, legal, compliance, and similar teams may not own the pain, but they can shape whether the solution can proceed.</td></tr>
-          <tr><th scope="row">Interested contact</th><td>Initial context, internal interest, and possible introductions.</td><td>Interest is useful, but it is weak evidence if the contact does not experience the pain, own the outcome, or have a path to the people who do.</td></tr>
+          <tr><th scope="row">Affected users</th><td>What the work feels like day to day, where friction appears, and which exceptions make the workflow harder.</td><td>They reveal practical workflow friction and provide current-state evidence.</td></tr>
+          <tr><th scope="row">Outcome owner</th><td>What business result needs to improve, such as turnaround time, quality, risk, cost, or service.</td><td>They help validate priority, accountability, and what success should mean.</td></tr>
+          <tr><th scope="row">Influencers</th><td>What constraints, approvals, dependencies, or risks may affect progress.</td><td>They help identify what could block, shape, validate, or govern the opportunity. This may include IT, security, procurement, legal, compliance, or other control teams.</td></tr>
+          <tr><th scope="row">Executive sponsor or senior stakeholder</th><td>Why the issue matters at a broader business level and how it connects to wider priorities.</td><td>They can create urgency, visibility, sponsorship, or access to the people needed for progress.</td></tr>
         </tbody>
       </table>
+      <p>An interested contact is still useful, but interest alone is weak evidence if that person does not experience the pain, own the outcome, influence a decision, or provide a path to the people who do.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Identifying the outcome owner</h3>
+        <p>An outcome owner is the person accountable for improving the workflow or business result. They may be a team lead, department head, process owner, or business sponsor.</p>
+        <p>The outcome owner may not perform the work every day. Their role is to connect the workflow problem to a result that matters and help judge whether improving it is a real priority.</p>
+      </div>
+      <div>
+        <h3>Questions that reveal ownership</h3>
+        <ul>
+          <li>Who is accountable for the current workflow result?</li>
+          <li>Who is measured on the outcome that should improve?</li>
+          <li>Who can decide that the problem deserves deeper validation?</li>
+          <li>Who needs to agree on success measures or acceptable boundaries?</li>
+        </ul>
+      </div>
     </div>
 
     <div class="ecg-decision-columns">
