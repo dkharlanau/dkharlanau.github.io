@@ -31,7 +31,6 @@ semantic_links:
     url: "/labs/ai-ready/"
 # ai-discovery-managed:end
 ---
-
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li><a href="/labs/business-ai/">Business AI</a></li><li aria-current="page">AI Fluency</li></ol>
 </nav>
