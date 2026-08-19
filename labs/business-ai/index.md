@@ -90,29 +90,83 @@ semantic_links:
   <section class="research-canvas__inventory" id="ai-opportunity-qualification" data-reveal>
     <header>
       <p class="research-canvas__eyebrow">Opportunity qualification</p>
-      <h2>How strong AI opportunities become visible.</h2>
-      <p>Customers often begin with broad AI requests. These requests can sound promising, but they usually need translation before they can be assessed.</p>
+      <h2>Start with the problem. Increase confidence with evidence.</h2>
+      <p>Strong AI opportunities begin with a customer problem, workflow challenge, or operational constraint. Customers often describe a possible solution before they have clearly described the problem. That is normal. The useful move is to understand the work behind the request before judging the AI idea.</p>
     </header>
+
     <div class="ecg-decision-columns">
       <div>
         <h3>Translate interest into evidence</h3>
         <p>Strong AI opportunities become visible through business evidence, not through interest in AI alone.</p>
-        <p>Instead of asking <em>“Does this customer want AI?”</em>, effective partners ask:</p>
+        <p>Instead of asking <em>“Does this customer want AI?”</em>, ask:</p>
         <ul>
           <li>What business problem or decision needs to improve?</li>
           <li>Where does the problem appear in the process or workflow?</li>
           <li>Who performs the work, makes the decision, or owns the outcome?</li>
           <li>What data and business context are available?</li>
           <li>Why is AI suitable here instead of standard automation or process redesign?</li>
-          <li>What measurable value could the AI use case create?</li>
+          <li>What measurable value could the use case create?</li>
           <li>What risks, controls, or human approvals are required?</li>
           <li>Has the customer agreed to validate the use case through a workshop, prototype, pilot, or another meaningful next step?</li>
         </ul>
       </div>
       <div>
         <h3>Qualification chain</h3>
-        <p>A strong AI opportunity connects <strong>business problem → workflow → data → AI capability → measurable value → controlled validation</strong>.</p>
+        <p>A strong AI opportunity connects <strong>business problem → workflow → owner → data → AI capability → measurable value → controlled validation</strong>.</p>
         <p>This keeps the conversation grounded in a business outcome. AI is a possible capability inside the solution, not the starting requirement.</p>
+      </div>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Example: “AI for contract review”</h3>
+      <p>The customer is not simply asking for AI for contract review. The request describes a workflow problem that can be made more concrete.</p>
+      <table>
+        <thead><tr><th scope="col">Problem</th><th scope="col">Description</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Workflow</th><td>Reviewers identify and assess clauses across different contract types.</td></tr>
+          <tr><th scope="row">Pain</th><td>Reviews take too long, and similar contracts are assessed inconsistently.</td></tr>
+          <tr><th scope="row">Owner</th><td>The Head of Legal Operations owns the process.</td></tr>
+          <tr><th scope="row">Reason to act</th><td>Delays affect business stakeholders, and the team wants more consistent review.</td></tr>
+          <tr><th scope="row">Boundary</th><td>Human oversight still matters because legal decisions require review and accountability.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="research-canvas__table-wrap">
+      <h3>Opportunity states</h3>
+      <p>Use these stages to describe how much confidence the available evidence supports. The important question is not how excited the customer sounds. It is how much is actually known.</p>
+      <table>
+        <thead><tr><th scope="col">Opportunity state</th><th scope="col">What it means</th><th scope="col">What is usually known</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Lead</th><td>The earliest indication that a potential AI opportunity may exist.</td><td>There is customer interest or a possible problem area, but the opportunity is not yet clear.</td></tr>
+          <tr><th scope="row">Stage 0</th><td>Structured validation of whether the opportunity is real and ready to progress.</td><td>The problem is becoming more specific, a plausible use case is emerging, and stakeholders or next steps are becoming visible.</td></tr>
+          <tr><th scope="row">Stage 1</th><td>The opportunity has enough evidence to justify deeper joint work.</td><td>The customer problem, relevant stakeholders, reason AI may be worth exploring, and justified next steps are clear enough to support structured opportunity development.</td></tr>
+        </tbody>
+      </table>
+      <p>A Lead can come from a customer conversation, event, referral, outreach, or inbound interest. It may be worth exploring, but it usually needs more discovery before anyone can judge whether there is a real opportunity.</p>
+    </div>
+
+    <div class="ecg-decision-columns">
+      <div>
+        <h3>Evidence that builds confidence</h3>
+        <p>As the opportunity progresses, look for evidence that answers a few practical questions:</p>
+        <ul>
+          <li>Is the customer problem clear?</li>
+          <li>Is the workflow understood?</li>
+          <li>Are relevant stakeholders visible?</li>
+          <li>Is there a plausible direction to explore?</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Business problem clarity</h3>
+        <p>Problem clarity exists when the customer can describe a specific operational challenge that is important enough to investigate.</p>
+        <p>Try to understand:</p>
+        <ul>
+          <li>What is happening today?</li>
+          <li>Who is affected by the problem?</li>
+          <li>What is the impact on time, cost, risk, speed, quality, or customer experience?</li>
+          <li>What would a better outcome look like?</li>
+        </ul>
       </div>
     </div>
   </section>
