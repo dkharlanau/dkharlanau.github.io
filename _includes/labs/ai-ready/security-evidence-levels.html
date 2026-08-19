@@ -1,3 +1,50 @@
+<section id="ai-security-review-intake">
+  <h2>Start with five review questions</h2>
+
+  <p>Do not begin with a scanner, a model, or a fix. First define what the customer needs to know and what evidence would be strong enough to support a decision.</p>
+
+  <ol>
+    <li>
+      <strong>What is the target?</strong>
+      Is the customer asking about a whole repository or service, a backlog slice, a specific pull request, or an already validated finding?
+    </li>
+    <li>
+      <strong>What is the timing?</strong>
+      First assessment, high-risk review, pre-merge review, backlog triage, or post-validation remediation?
+    </li>
+    <li>
+      <strong>What evidence is needed?</strong>
+      Candidate findings, validated findings, attack-path evidence, source-supported review, remediation guidance, or revalidation?
+    </li>
+    <li>
+      <strong>Is remediation ready?</strong>
+      Is there enough evidence to prepare a bounded fix, or does the team need more validation first?
+    </li>
+    <li>
+      <strong>How will we search for and analyze errors?</strong>
+      Which signals should be checked first: changed code, tests, logs, configuration, scanner output, data flows, authorization paths, integration boundaries, or approved runtime behavior? Define how a suspicious signal becomes a reproducible defect or a documented proof gap.
+    </li>
+  </ol>
+
+  <h3>Error search and analysis loop</h3>
+
+  <p>Finding an error is not the same as understanding it. A useful review traces a signal to the smallest supported explanation before anyone starts writing a fix.</p>
+
+  <pre><code>symptom or risk signal
+-&gt; locate evidence
+-&gt; reproduce or trace the behavior
+-&gt; isolate the smallest failure surface
+-&gt; test alternative explanations
+-&gt; classify the evidence
+-&gt; decide: validate, remediate, or stop</code></pre>
+
+  <p>Good search starts from observable signals. Review the diff for changed assumptions, follow failing tests to the responsible branch, connect log errors to the request or job that produced them, inspect authorization and data-flow boundaries, and compare scanner findings with the actual code path.</p>
+
+  <p>During analysis, ask: What input triggers the problem? Where is the first incorrect state or decision? Is the issue local or caused upstream? Can another control still block the path? Is the behavior reproducible? What evidence would disprove the current theory? This prevents a suspicious pattern from being promoted into a confident claim just because it looks dramatic.</p>
+
+  <p>For AI-assisted review, use agents to widen the search surface, correlate evidence, and test hypotheses. Keep the final claim tied to code, configuration, logs, tests, scanner output, or explicitly approved runtime evidence. The goal is not to produce more findings. The goal is to reduce uncertainty without inventing certainty.</p>
+</section>
+
 <section id="ai-security-evidence-levels">
   <h2>Evidence levels for AI security review</h2>
 
