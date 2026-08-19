@@ -1,0 +1,77 @@
+name: Temporary Lead Drills Quality Fix
+
+on:
+  push:
+    branches:
+      - agent/lead-drills-wave
+
+permissions:
+  contents: write
+
+jobs:
+  fix-quality-and-sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/lead-drills-wave
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: python3 -m pip install pyyaml
+
+      - name: Fix semantic signals and description length
+        shell: python
+        run: |
+          from pathlib import Path
+
+          replacements = {
+              Path('labs/interview-readiness/decision-cards/index.md'): (
+                  'description: "Practice SAP Lead architecture decisions with decision drivers, trade-offs, failure modes, and pressure questions."',
+                  'description: "Practice SAP Lead architecture problems through decisions, trade-offs, failure modes, and pressure questions."',
+              ),
+              Path('labs/interview-readiness/drills/index.md'): (
+                  'description: "Practice SAP Lead decisions, production diagnostics, pressure cases, and project evidence in one interview drill hub."',
+                  'description: "Practice SAP Lead decisions, diagnostics, pressure cases, and project evidence in realistic interview context."',
+              ),
+              Path('labs/interview-readiness/evidence-bank/index.md'): (
+                  'description: "Check whether SAP interview stories support Lead-level claims with decisions, trade-offs, results, lessons, and broad project coverage."',
+                  'description: "Check the evidence problem behind SAP Lead claims through decisions, trade-offs, results, lessons, and project coverage."',
+              ),
+              Path('machine/index.md'): (
+                  'description: "A technical entry point to datasets, machine-readable exports, agent skills, agent tools, local MCP packages, professional intelligence contracts, and SAP Lead drill routes."',
+                  'description: "Technical entry point for datasets, AI-readable exports, agent tools, MCP packages, professional intelligence, and SAP Lead drills."',
+              ),
+          }
+          for path, (old, new) in replacements.items():
+              text = path.read_text(encoding='utf-8')
+              if old not in text:
+                  raise SystemExit(f'Expected text not found in {path}')
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+      - name: Regenerate Career Factory inventory
+        run: python3 scripts/generate_career_factory.py
+
+      - name: Regenerate Atlas artifacts
+        run: python3 scripts/generate_atlas_artifacts.py
+
+      - name: Commit quality fixes and generated state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add labs/interview-readiness/decision-cards/index.md labs/interview-readiness/drills/index.md labs/interview-readiness/evidence-bank/index.md machine/index.md ai/career-factory.json ai/markdown-clusters.json ai/expert-promotion-inventory.json _data/expert_context.yml ai/expert-evidence.json
+          if git diff --cached --quiet; then
+            echo "Quality fixes are already synchronized."
+            exit 0
+          fi
+          git commit -m "Resolve Lead drill content quality findings"
+          git push origin HEAD:agent/lead-drills-wave
