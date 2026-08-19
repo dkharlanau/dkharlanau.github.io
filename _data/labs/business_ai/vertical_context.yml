@@ -1,0 +1,151 @@
+version: 1
+updated_at: 2026-08-19
+title: Business AI Vertical Context
+summary: A machine-readable model for adapting AI discovery, readiness, value, routing, and handoff to the customer's operating environment.
+
+definition: >-
+  Vertical context is the set of industry-specific realities that shape an AI opportunity, including the customer's workflows, stakeholders, risks, governance expectations, and success metrics.
+
+vertical_solution_application: >-
+  The process of adapting a recommendation to the customer's real operating environment without assuming that an industry label is enough to select a solution.
+
+principles:
+  - Many AI workflow patterns repeat across industries, while the operating conditions around them may differ materially.
+  - Industry knowledge should improve discovery and routing, not replace evidence.
+  - A seller does not need complete industry expertise before making progress.
+  - Unknown vertical requirements should be recorded as proof gaps and assigned to the right validation owner.
+  - The same technical pattern can require different controls, stakeholders, value measures, or handoff paths in different customer environments.
+
+evidence_areas:
+  - id: workflow
+    label: Workflow
+    meaning: The process, handoffs, systems, decisions, exceptions, and outputs the customer relies on.
+    why_it_matters: Keeps the recommendation grounded in real work instead of an industry label.
+    capture:
+      - Inputs
+      - Systems
+      - Handoffs
+      - Decision points
+      - Exceptions
+      - Approvals
+      - Outputs
+  - id: stakeholders
+    label: Stakeholders
+    meaning: The people who sponsor, use, approve, govern, support, or operate the solution.
+    why_it_matters: Shows who cares, who decides, who can block progress, and who must validate the opportunity.
+    capture:
+      - Affected users
+      - Outcome owner
+      - Approvers
+      - Control owners
+      - Technical and deployment owners
+      - Executive sponsor
+  - id: risk
+    label: Risk
+    meaning: Business, operational, legal, regulatory, data, safety, or reputational concerns that may change the acceptable design.
+    why_it_matters: Shows what cannot be assumed and where stronger evidence or specialist review may be required.
+    capture:
+      - Error impact
+      - Financial exposure
+      - Customer impact
+      - Compliance concern
+      - Safety concern
+      - Reputational effect
+  - id: governance
+    label: Governance
+    meaning: Approval steps, oversight, permissions, auditability, escalation, and operating controls.
+    why_it_matters: Helps determine what must be validated before a route can move into delivery or handoff.
+    capture:
+      - Permissions
+      - Human review
+      - Approval
+      - Audit evidence
+      - Escalation
+      - Rollback
+      - Operating ownership
+  - id: success-metrics
+    label: Success metrics
+    meaning: The outcomes the customer will use to judge whether the workflow improved.
+    why_it_matters: Connects the opportunity to value and prevents technical success from being mistaken for business success.
+    capture:
+      - Cycle time
+      - Quality
+      - Risk
+      - Cost
+      - Throughput
+      - Service
+      - User effort
+      - Other agreed outcome
+
+recommendation_effects:
+  - id: discovery
+    question: Which workflow steps, decision rights, exceptions, or controls are specific to this operating environment?
+    may_change: Stakeholders invited, evidence requested, and discovery depth.
+  - id: readiness
+    question: Which approvals, data conditions, controls, or operating owners must exist before the customer can move?
+    may_change: Whether a plausible route is ready or premature.
+  - id: value
+    question: Which operational or business outcome matters most in this environment?
+    may_change: Value emphasis, baseline, and success metric.
+  - id: solution-fit
+    question: Does the proposed surface, capability, authority level, integration model, and deployment approach fit the operating environment?
+    may_change: Preferred route, route combination, or technical handoff.
+  - id: controls-handoff
+    question: Which specialist review or governance evidence is required before implementation?
+    may_change: Validation owner, handoff timing, and control requirements.
+
+vertical_discovery_questions:
+  - question: How does this workflow actually run here?
+    capture: Inputs, systems, handoffs, decisions, exceptions, approvals, and outputs.
+  - question: Who has decision rights?
+    capture: Users, process owner, approvers, control owners, technical owners, and sponsor.
+  - question: What makes an error material?
+    capture: Operational, financial, customer, compliance, safety, or reputational impact.
+  - question: Which controls cannot disappear?
+    capture: Permissions, segregation of duties, human review, audit evidence, escalation, rollback, or another safeguard.
+  - question: Which data can be used?
+    capture: Source systems, sensitivity, permissions, retention expectations, quality, and access constraints.
+  - question: How will the customer judge success?
+    capture: The agreed operational or business outcome and its evidence.
+  - question: What is still unknown?
+    capture: Explicit proof gaps, next validation owner, and decision dependency.
+
+handoff_fields:
+  - id: workflow-reality
+    label: Workflow reality
+    capture: Where the AI capability sits in the real process, including systems, handoffs, exceptions, and approvals.
+  - id: stakeholder-map
+    label: Stakeholder map
+    capture: Who uses, owns, approves, governs, sponsors, or operates the solution.
+  - id: material-risks
+    label: Material risks
+    capture: Which risks could change scope, authority, deployment, validation, or the decision to proceed.
+  - id: required-controls
+    label: Required controls
+    capture: Which permissions, review, audit, escalation, or operating controls must remain visible.
+  - id: success-evidence
+    label: Success evidence
+    capture: Which metric or observable outcome should improve and what baseline or validation evidence is needed.
+  - id: proof-gaps
+    label: Proof gaps
+    capture: Which vertical assumptions are unproven, who should validate them, and what decision depends on the answer.
+
+lead_check:
+  - id: workflow
+    question: What is different about how this customer performs the work?
+  - id: stakeholders
+    question: Who uses, owns, approves, governs, and operates the workflow?
+  - id: risk-governance
+    question: Which errors, permissions, approvals, or audit needs could change the acceptable route?
+  - id: success
+    question: Which outcome matters here, and how would the customer know the workflow improved?
+  - id: gap
+    question: Which vertical assumption still needs evidence, and who is the right person to validate it?
+
+routing_rule: >-
+  Adapt the questions and recommendation to the customer's environment, but do not invent industry facts. Use known context to improve the route and turn unknown context into explicit validation work.
+
+related_pages:
+  - /labs/business-ai/
+  - /labs/business-ai/routing/
+  - /labs/ai-ready/
